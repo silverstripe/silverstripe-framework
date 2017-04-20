@@ -3,11 +3,13 @@ pt:
     ENTERINFO: 'Por favor insira um nome de utilizador e password.'
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualquer
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Olá
+    TEXT1: 'Este é o seu'
+    TEXT2: 'link para alterar password'
+    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar password'
   SilverStripe\Forms\DateField:
@@ -15,32 +17,17 @@ pt:
     TODAY: Hoje
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escolha)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Qualquer
-  ForgotPasswordEmail_ss:
-    HELLO: Olá
-    TEXT1: 'Este é o seu'
-    TEXT2: 'link para alterar password'
-    TEXT3: para
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords não coincidem'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords não podem estar em branco'
   SilverStripe\Forms\FormField:
     NONE: nenhum
-  GridAction:
-    Delete: Apagar
-  SilverStripe\Forms\GridField\GridField:
-    Filter: Filtrar
-    Find: Procurar
-    LinkExisting: 'Link existente'
-    NewRecord: 'Novo %s'
-    NoItemsFound: 'Não foram encontrados elementos'
-    PRINTEDAT: 'Impresso em'
-    PRINTEDBY: 'Impresso por'
-    RelationSearch: 'Pesquisa relacionada'
-    ResetFilter: Redefinir
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Não tem permissões para apagar'
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportar para CSV'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancelar
   SilverStripe\Security\Group:
@@ -114,8 +101,6 @@ pt:
     ROLES: Regras
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exportar para CSV'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDITINFO: 'Editar este ficheiro'
     FIELDNOTSET: 'Informação do ficheiro não encontrada'

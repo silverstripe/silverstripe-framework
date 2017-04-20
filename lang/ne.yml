@@ -3,13 +3,10 @@ ne:
     ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
     ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'
     ERRORNOTREC: 'त्यो प्रयोगकता / पासओड बुझन् सकिएन'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: हाई
   SilverStripe\Forms\DropdownField:
     CHOOSE: (छान्)
-  ForgotPasswordEmail_ss:
-    HELLO: हाई
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
     VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'

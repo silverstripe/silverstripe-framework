@@ -3,11 +3,13 @@ az:
     ENTERINFO: 'Zəhmət olmasa istifadəçi adı və ya parolu yazın.'
     ERRORNOTADMIN: 'İstifadəçi administrator deyil'
     ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: İstənilən
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Salam
+    TEXT1: 'Burada sizin'
+    TEXT2: 'parolu sıfırlma linki'
+    TEXT3: üçün
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parolu dəyiş'
   SilverStripe\Forms\DateField:
@@ -15,13 +17,8 @@ az:
     TODAY: 'bu gün'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçin)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: İxtiyari
-  ForgotPasswordEmail_ss:
-    HELLO: Salam
-    TEXT1: 'Burada sizin'
-    TEXT2: 'parolu sıfırlma linki'
-    TEXT3: üçün
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Parollar uyğun gəlmir'
     VALIDATIONPASSWORDSNOTEMPTY: 'Parollar boş ola bilməz'
@@ -97,5 +94,5 @@ az:
     ROLES: Rollar
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Əsas
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV-yə ixrac et'

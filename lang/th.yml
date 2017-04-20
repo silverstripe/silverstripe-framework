@@ -1,5 +1,5 @@
 th:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: อัพโหลดครั้งแรก
     LASTEDIT: เปลี่ยนแปลงล่าสุด
     SIZE: ขนาด
@@ -7,11 +7,13 @@ th:
   SilverStripe\Security\BasicAuth:
     ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: ใดๆ
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: สวัสดี
+    TEXT1: นี่คือ
+    TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
+    TEXT3: สำหรับ
   SilverStripe\Forms\ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
@@ -24,37 +26,18 @@ th:
     CHOOSE: (เลือก)
   SilverStripe\Forms\EmailField:
     VALIDATION: กรุณากรอกที่อยู่อีเมล
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: ใดๆ
-  ForgotPasswordEmail_ss:
-    HELLO: สวัสดี
-    TEXT1: นี่คือ
-    TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
-    TEXT3: สำหรับ
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
     VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
     VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
   SilverStripe\Forms\FormField:
     NONE: ไม่มี
-  GridAction:
-    DELETE_DESCRIPTION: ลบ
-    Delete: ลบ
-    UnlinkRelation: ยกเลิกการลิงก์
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'เพิ่ม {name}'
-    Filter: ตัวกรองข้อมูล
-    FilterBy: กรองข้อมูลจาก
-    Find: ค้นหา
-    LinkExisting: ลิงก์ที่มีอยู่
-    NewRecord: 'ใหม่ %s'
-    NoItemsFound: ไม่พบรายการที่ต้องการ
-    PRINTEDAT: ถูกสั่งพิมพ์ที่
-    PRINTEDBY: พิมพ์โดย
-    PlaceHolder: 'ค้นหา {type}'
-    ResetFilter: รีเซ็ต
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
+  SilverStripe\Forms\GridField\GridField:
+    OF: จาก
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: ยกเลิก
     Create: สร้าง
@@ -111,7 +94,7 @@ th:
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: จำนวน
     FIELDLABELCURRENCY: สกุลเงิน
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: หน้า
     View: เปิดดู
   SilverStripe\Security\Permission:
@@ -136,12 +119,7 @@ th:
     ROLES: บทบาท
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: หลัก
-  TableListField:
-    CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
-    Print: พิมพ์
-  TableListField_PageControls_ss:
-    OF: จาก
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: ขนาดสัดส่วน
     EDIT: แก้ไข
     EDITINFO: แก้ไขไฟล์นี้

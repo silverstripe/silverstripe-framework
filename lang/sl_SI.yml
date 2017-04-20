@@ -1,5 +1,5 @@
 sl_SI:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     HEIGHT: Višina
     LASTEDIT: 'Nazadnje spremenjeno'
     SIZE: 'Velikost datoteke'
@@ -10,7 +10,7 @@ sl_SI:
     ENTERINFO: 'Prosimo vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Ta uporabnik ni administrator.'
     ERRORNOTREC: 'Uporabniško ime ali geslo je neveljavno'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
   SilverStripe\Security\CMSMemberLoginForm:
@@ -20,10 +20,11 @@ sl_SI:
   SilverStripe\Security\CMSSecurity:
     TimedOutTitleAnonymous: 'Vaša seja je potekla.'
     TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
-    CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Živjo
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za resetiranje gesla'
+    TEXT3: za
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
@@ -31,7 +32,7 @@ sl_SI:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manj kot minuto'
   SilverStripe\Forms\DateField:
     NOTSET: 'ni nastavljeno'
@@ -43,22 +44,12 @@ sl_SI:
     CHOOSE: (Izberi)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosimo vtipkajte e-poštni naslov'
-  ForgotPasswordEmail_ss:
-    HELLO: Živjo
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za resetiranje gesla'
-    TEXT3: za
-  GridAction:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
     UnlinkRelation: 'Odstrani povezavo'
   SilverStripe\Forms\GridField\GridField:
-    Add: 'Dodaj {name}'
-    Filter: Filter
-    FilterBy: 'Filtriraj po'
-    Find: Najdi
-    NewRecord: 'Nov %s'
-    ResetFilter: Resetiraj
+    OF: od
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -66,7 +57,7 @@ sl_SI:
     DeletePermissionsFailure: 'Nimate pravic za brisanje'
     Deleted: 'Izbrisano %s %s'
     Save: Shrani
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Uredi
   SilverStripe\Security\Group:
     AddRole: 'Dodaj vlogo za to skupino'
@@ -137,12 +128,7 @@ sl_SI:
     MEMBERS: Uporabniki
     PERMISSIONS: Dovoljenja
     ROLES: Vloge
-  TableListField:
-    CSVEXPORT: 'Izvozi v CSV'
-    Print: Natisni
-  TableListField_PageControls_ss:
-    OF: od
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimenzije
     EDIT: Uredi
     EDITINFO: 'Uredi datoteko'

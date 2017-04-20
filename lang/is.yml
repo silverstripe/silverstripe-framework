@@ -3,11 +3,13 @@ is:
     ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
     ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
     ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Einhver
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hæ
+    TEXT1: 'Hérna er þitt'
+    TEXT2: 'endursetja lykilorð'
+    TEXT3: fyrir
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Breyta lykliorði'
   SilverStripe\Forms\CurrencyField:
@@ -17,13 +19,8 @@ is:
     TODAY: 'í dag'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Veldu)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Einhver
-  ForgotPasswordEmail_ss:
-    HELLO: Hæ
-    TEXT1: 'Hérna er þitt'
-    TEXT2: 'endursetja lykilorð'
-    TEXT3: fyrir
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
@@ -94,5 +91,5 @@ is:
     ROLES: Hlutverk
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Aðal
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Flytja út í CSV'

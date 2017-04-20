@@ -1,5 +1,5 @@
 sk:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Prvýkrát nahrané'
     HEIGHT: Výška
     LASTEDIT: 'Posledne zmenené'
@@ -11,7 +11,7 @@ sk:
     ENTERINFO: 'Prosím zadajte používateľské meno a heslo.'
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
     ERRORNOTREC: 'Toto používateľské meno / heslo nebolo rozpoznané'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ktorýkoľvek
     NOANSWER: Nie
     YESANSWER: Áno
@@ -27,11 +27,11 @@ sk:
     SUCCESSCONTENT: '<p>Úspešné prihlásenie. Ak nebudete automaticky presmerovaní <a target="_top" href="{link}">kliknite tu</a></p>'
     TimedOutTitleAnonymous: 'Čas Vášho sedenia vypršal.'
     TimedOutTitleMember: 'Ahoj {name}!<br />Čas Vášho sedenia vypršal.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Heslo pre účet s e-mailovou adresou {email} bol zmenené. Ak ste nechceli zmeniť vaše heslo, prosím zmeňte ho pomocou odkazu uvedeného nižšie.'
-    CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
-    CHANGEPASSWORDTEXT3: 'Zmeniť heslo'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 'Dobrý deň'
+    TEXT1: 'Tu je váš'
+    TEXT2: 'odkaz na resetovanie hesla'
+    TEXT3: pre
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
@@ -45,7 +45,7 @@ sk:
     SHOWONCLICKTITLE: 'Zmeniť heslo'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'menej ako minúta'
     TIMEDIFFAGO: '{difference} pred'
     TIMEDIFFIN: 'v {difference}'
@@ -63,13 +63,8 @@ sk:
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosím zadajte email adresu'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Každý
-  ForgotPasswordEmail_ss:
-    HELLO: 'Dobrý deň'
-    TEXT1: 'Tu je váš'
-    TEXT2: 'odkaz na resetovanie hesla'
-    TEXT3: pre
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Čas Vášho sedenia vypršal. Prosím znova odošlite formulár.'
     CSRF_FAILED_MESSAGE: 'Zdá sa, že nastal technický problém. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste to opäť.'
@@ -81,27 +76,11 @@ sk:
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
   SilverStripe\Forms\FormField:
     NONE: žiadne
-  GridAction:
-    DELETE_DESCRIPTION: Zmazať
-    Delete: Zmazať
-    UnlinkRelation: Odpojiť
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Pridať {name}'
-    Filter: Filter
-    FilterBy: 'Filtrovať podľa'
-    Find: Vyhľadať
-    LinkExisting: 'Prepojenie existujúcich'
-    NewRecord: 'Nový %s'
-    NoItemsFound: 'Žiadne položky'
-    PRINTEDAT: 'Vytlačené v'
-    PRINTEDBY: Vytlačené
-    PlaceHolder: 'Vyhľadať {type}'
-    PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
-    RelationSearch: 'Vzťah hľadania'
-    ResetFilter: Reset
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     EditPermissionsFailure: 'Žiadne oprávnenie pre odpojenie záznamu'
+  SilverStripe\Forms\GridField\GridField:
+    OF: z
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Zrušiť
     Create: Vytvoriť
@@ -109,7 +88,7 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané %s %s'
     Save: Uložiť
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Editovať
   SilverStripe\Security\Group:
     PLURALNAME: Skupiny
@@ -187,7 +166,7 @@ sk:
     IsNullLabel: 'Je Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: 'Zadaná hodnota ''{value}'' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Stránka
     View: Zobraziť
   SilverStripe\Security\PasswordValidator:
@@ -195,8 +174,7 @@ sk:
     PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové hoslo, prosím'
     TOOSHORT: 'Heslo je príliš krátke, musí byť %s alebo viacej znakov dlhé'
   SilverStripe\Security\Permission:
-    PLURALNAME: Oprávnenia
-    SINGULARNAME: Oprávnenie
+    UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
@@ -208,8 +186,6 @@ sk:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia role'
     SINGULARNAME: 'Kód oprávnenia role'
-  Permissions:
-    UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
   SilverStripe\Security\Security:
@@ -241,15 +217,9 @@ sk:
     SINGULARNAME: 'Heslo člena'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Hlavné
-  TableListField:
-    CSVEXPORT: 'Exportovať do CSV'
-    CSVIMPORT: 'Import CSV'
-    Print: Tlačiť
-  TableListField_PageControls_ss:
-    OF: z
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosím zadajte platný formát času ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Rozmery
     EDIT: Editovať
     EDITINFO: 'Editovať súbor'

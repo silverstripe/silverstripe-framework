@@ -1,5 +1,5 @@
 ar:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'أول المرفوعات'
     LASTEDIT: 'آخر التعديلات'
     SIZE: 'الحجم'
@@ -9,17 +9,19 @@ ar:
     ENTERINFO: 'فضلاً أدخل اسم المستخدم و كلمة المرور'
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
     ERRORNOTREC: 'اسم المستخدم أو الرقم السري غير صحيح'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: أي
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: أهلاً
+    TEXT1: هنا
+    TEXT2: 'رابط إعادة تعيين كلمة المرور'
+    TEXT3: لـ
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
     MAXIMUM: 'يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً.'
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'أقل من دقيقة'
     TIMEDIFFAGO: '{الفرق} منذ'
     TIMEDIFFIN: 'في {الفرق}'
@@ -35,13 +37,8 @@ ar:
     CHOOSE: (اختر)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'يرجى إدخال عنوان بريد إلكتروني'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: أي
-  ForgotPasswordEmail_ss:
-    HELLO: أهلاً
-    TEXT1: هنا
-    TEXT2: 'رابط إعادة تعيين كلمة المرور'
-    TEXT3: لـ
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
@@ -50,27 +47,11 @@ ar:
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
   SilverStripe\Forms\FormField:
     NONE: لايوجد
-  GridAction:
-    DELETE_DESCRIPTION: حذف
-    Delete: حذف
-    UnlinkRelation: 'إلغاء الربط'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'إضافة {اسم}'
-    Filter: 'مرشح'
-    FilterBy: 'ترشيح باستخدام'
-    Find: ابحث
-    LinkExisting: 'الرابط موجود'
-    NewRecord: 'جديد %s'
-    NoItemsFound: 'لا يوجد عناصر'
-    PRINTEDAT: 'تم الطباعة في'
-    PRINTEDBY: 'تم الطباعة بواسطة'
-    PlaceHolder: 'البحث {النوع}'
-    PlaceHolderWithLabels: 'البحث {نوع} بواسطة {اسم}'
-    RelationSearch: 'ابحث عن علاقة'
-    ResetFilter: 'إعادة تعيين'
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'لا يوجد أية تصريحات حذف'
     EditPermissionsFailure: 'لا يوجد تصريح لإلغاء الربط بين السجلات'
+  SilverStripe\Forms\GridField\GridField:
+    OF: 'من'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: إلغاء
     Create: إنشاء
@@ -78,7 +59,7 @@ ar:
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
     Deleted: '%s %s تم حذفه'
     Save: حفظ
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: تعديل
   SilverStripe\Security\Group:
     AddRole: 'إضافة دور لهذه المجموعة'
@@ -155,7 +136,7 @@ ar:
     IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: صفحة
     View: عرض
   SilverStripe\Security\PasswordValidator:
@@ -163,9 +144,7 @@ ar:
     PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
     TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'
   SilverStripe\Security\Permission:
-    AdminGroup: الإدارة
-    FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
-    FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
+    UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'تم تعيينها إلى "{عنوان}"'
     FromGroup: 'موروثة من المجموعة "{عنوان}"'
@@ -176,8 +155,6 @@ ar:
     Title: عنوان
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'لا يمكن تعيين كود "s%" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)'
-  Permissions:
-    UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
   SilverStripe\Security\Security:
@@ -203,14 +180,9 @@ ar:
     ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: الرئيسة
-  TableListField:
-    CSVEXPORT: 'تصدير إلى CSV'
-    Print: طباعة
-  TableListField_PageControls_ss:
-    OF: 'من'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: الأبعاد
     EDIT: تعديل
     EDITINFO: 'قم بتعديل هذا الملف'

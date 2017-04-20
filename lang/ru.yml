@@ -1,5 +1,5 @@
 ru:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Первая загрузка'
     HEIGHT: Высота
     LASTEDIT: 'Последнее изменение'
@@ -11,7 +11,7 @@ ru:
     ENTERINFO: 'Пожалуйста, введите имя пользователя и пароль.'
     ERRORNOTADMIN: 'Такой пользователь не является администратором.'
     ERRORNOTREC: 'Такое имя пользователя или пароль не существует'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Все
     NOANSWER: Нет
     YESANSWER: Да
@@ -27,10 +27,11 @@ ru:
     SUCCESSCONTENT: '<p>Вы вошли в систему. Если вы не были автоматически перенаправлены <a target="_top" href="{link}">нажмите здесь</a></p>'
     TimedOutTitleAnonymous: 'Время вашего сеанса истекло.'
     TimedOutTitleMember: '{name}!<br />Время вашего сеанса истекло.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
-    CHANGEPASSWORDTEXT3: 'Изменить пароль'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Здравствуйте
+    TEXT1: 'Это ваша'
+    TEXT2: 'ссылка переустановки пароля'
+    TEXT3: для
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Нет
     YESANSWER: Да
@@ -44,7 +45,7 @@ ru:
     SHOWONCLICKTITLE: 'Изменить пароль'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'меньше минуты'
     TIMEDIFFAGO: '{difference} назад'
     TIMEDIFFIN: 'через {difference}'
@@ -62,13 +63,8 @@ ru:
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Любой
-  ForgotPasswordEmail_ss:
-    HELLO: Здравствуйте
-    TEXT1: 'Это ваша'
-    TEXT2: 'ссылка переустановки пароля'
-    TEXT3: для
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Срок действия сеанса истек. Пожалуйста, отправьте данные формы еще раз.'
     CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
@@ -80,27 +76,11 @@ ru:
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   SilverStripe\Forms\FormField:
     NONE: 'не выбрано'
-  GridAction:
-    DELETE_DESCRIPTION: Удалить
-    Delete: Удалить
-    UnlinkRelation: 'Отменить связь'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Добавить {name}'
-    Filter: Фильтр
-    FilterBy: 'Фильтр по'
-    Find: Найти
-    LinkExisting: Связать
-    NewRecord: 'Новый(-ая) %s'
-    NoItemsFound: 'Элементов не найдено'
-    PRINTEDAT: 'Когда распечатано:'
-    PRINTEDBY: 'Кем распечатано:'
-    PlaceHolder: 'Найти {type}'
-    PlaceHolderWithLabels: 'Найти {type} по {name}'
-    RelationSearch: 'Поиск отношений'
-    ResetFilter: Сброс
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
+  SilverStripe\Forms\GridField\GridField:
+    OF: из
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Отмена
     Create: Создать
@@ -108,7 +88,7 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
     Save: 'Сохранить'
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: 'Редактировать'
   SilverStripe\Security\Group:
     PLURALNAME: Группы
@@ -186,7 +166,7 @@ ru:
     IsNullLabel: Недействительно
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Страница
     View: Просмотр
   SilverStripe\Security\PasswordValidator:
@@ -194,8 +174,7 @@ ru:
     PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
     TOOSHORT: 'Слишком короткий пароль, минимальная длина - %s символов'
   SilverStripe\Security\Permission:
-    PLURALNAME: 'Права доступа'
-    SINGULARNAME: 'Право доступа'
+    UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'
@@ -207,8 +186,6 @@ ru:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
     SINGULARNAME: 'Код роли доступа'
-  Permissions:
-    UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
   SilverStripe\Security\Security:
@@ -240,14 +217,9 @@ ru:
     SINGULARNAME: Пароль
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Основное
-  TableListField:
-    CSVEXPORT: 'Экспорт в CSV'
-    Print: Печать
-  TableListField_PageControls_ss:
-    OF: из
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 'Размеры'
     EDIT: 'Редактировать'
     EDITINFO: 'Редактировать этот файл'

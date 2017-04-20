@@ -128,7 +128,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink')
-                ->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"));
+                ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.UnlinkRelation', "Unlink"));
         } else {
             if (!$record->canDelete()) {
                 return null;
@@ -142,8 +142,8 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action')
-                ->setAttribute('title', _t('GridAction.Delete', "Delete"))
-                ->setDescription(_t('GridAction.DELETE_DESCRIPTION', 'Delete'));
+                ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.Delete', "Delete"))
+                ->setDescription(_t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.DELETE_DESCRIPTION', 'Delete'));
         }
         return $field->Field();
     }
@@ -169,7 +169,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if ($actionName == 'deleterecord') {
                 if (!$item->canDelete()) {
                     throw new ValidationException(
-                        _t('GridFieldAction_Delete.DeletePermissionsFailure', "No delete permissions")
+                        _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.DeletePermissionsFailure', "No delete permissions")
                     );
                 }
 
@@ -177,7 +177,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             } else {
                 if (!$item->canEdit()) {
                     throw new ValidationException(
-                        _t('GridFieldAction_Delete.EditPermissionsFailure', "No permission to unlink record")
+                        _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
 

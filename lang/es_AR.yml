@@ -1,5 +1,5 @@
 es_AR:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Agregado por primera vez'
     LASTEDIT: 'Modificado por última vez'
     SIZE: Tamaño
@@ -8,11 +8,13 @@ es_AR:
     ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hola
+    TEXT1: 'Aquí esta tu'
+    TEXT2: 'vínculo para restablecer la contraseña'
+    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar Contraseña'
   SilverStripe\Forms\DateField:
@@ -20,13 +22,8 @@ es_AR:
     TODAY: hoy
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Selecciona)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Cualquiera
-  ForgotPasswordEmail_ss:
-    HELLO: Hola
-    TEXT1: 'Aquí esta tu'
-    TEXT2: 'vínculo para restablecer la contraseña'
-    TEXT3: para
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no son iguales'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
@@ -107,5 +104,5 @@ es_AR:
     ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exportar a CSV'

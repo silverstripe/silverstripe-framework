@@ -3,7 +3,7 @@ ms:
     ENTERINFO: 'Maukkan ID pengguna dan katalaluan'
     ERRORNOTADMIN: 'Pengguna ini bukan pentadbir.'
     ERRORNOTREC: 'ID pengguna dan katalaluan tidak dikenali'
-  ChangePasswordEmail_ss:
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Anda telah mengubah kata lalaun untuk'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Tukar Kata Aluan'

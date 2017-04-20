@@ -1,5 +1,5 @@
 zh_CN:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: '第一次被上传'
     LASTEDIT: 上一次被更改
     SIZE: 大小
@@ -8,15 +8,12 @@ zh_CN:
     ENTERINFO: '请输入用户名和密码'
     ERRORNOTADMIN: 此用户没有管理员权限。
     ERRORNOTREC: '没有找到此用户名/密码'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 嗨
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: '更改密码'
   SilverStripe\Forms\DropdownField:
     CHOOSE: （选择）
-  ForgotPasswordEmail_ss:
-    HELLO: 嗨
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: '（密码相互不匹配）'
     VALIDATIONPASSWORDSNOTEMPTY: '密码不能空白'

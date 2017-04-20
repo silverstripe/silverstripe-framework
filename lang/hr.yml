@@ -1,5 +1,5 @@
 hr:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: Uploadano
     HEIGHT: Visina
     LASTEDIT: 'Zadnja promjena'
@@ -11,7 +11,7 @@ hr:
     ENTERINFO: 'Unesite korisničko ime i lozinu'
     ERRORNOTADMIN: 'Korisnik nije administrator'
     ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Bilo koji'
     NOANSWER: Ne
     YESANSWER: Da
@@ -21,10 +21,11 @@ hr:
     SUCCESS: Uspjeh
     TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
     TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
-    CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Pozdrav
+    TEXT1: 'Ovdje je Vaš'
+    TEXT2: 'link za resetiranje lozinke'
+    TEXT3: za
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
@@ -32,7 +33,7 @@ hr:
     SHOWONCLICKTITLE: 'Promjenite lozinku'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manje od minute'
     TIMEDIFFAGO: 'prije {difference}'
     TIMEDIFFIN: 'za {difference}'
@@ -46,26 +47,18 @@ hr:
     CHOOSE: (Odaberite)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Molimo unesite email adresu'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'bilo koji'
-  ForgotPasswordEmail_ss:
-    HELLO: Pozdrav
-    TEXT1: 'Ovdje je Vaš'
-    TEXT2: 'link za resetiranje lozinke'
-    TEXT3: za
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
   SilverStripe\Forms\FormField:
     NONE: nijedan
-  GridAction:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Obriši
     Delete: Obriši
   SilverStripe\Forms\GridField\GridField:
-    Add: 'Dodaj {name}'
-    Filter: Filter
-    FilterBy: 'Filtriraj po'
-    Find: Pronađi
+    OF: od
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Odustani
     Create: Kreiraj
@@ -73,7 +66,7 @@ hr:
     DeletePermissionsFailure: 'Nema dozvole brisanja'
     Deleted: 'Obrisano %s %s'
     Save: Spremi
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Uredi
   SilverStripe\Security\Group:
     Code: 'Krupni kod'
@@ -129,7 +122,7 @@ hr:
     Preview: Pregled
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Stranica
     View: Pregled
   SilverStripe\Security\Permission:
@@ -156,11 +149,7 @@ hr:
     ROLES: Uloge
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Osnovno
-  TableListField:
-    Print: Ispiši
-  TableListField_PageControls_ss:
-    OF: od
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDIT: Uredi
     EDITINFO: 'Uredi ovu datoteku'
     REMOVE: Ukloni

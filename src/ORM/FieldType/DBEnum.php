@@ -142,7 +142,7 @@ class DBEnum extends DBString
      */
     public function scaffoldSearchField($title = null)
     {
-        $anyText = _t('Enum.ANY', 'Any');
+        $anyText = _t('SilverStripe\\ORM\\FieldType\\DBEnum.ANY', 'Any');
         return $this->formField($title, null, true, $anyText, "($anyText)");
     }
 

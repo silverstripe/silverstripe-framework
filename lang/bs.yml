@@ -1,5 +1,5 @@
 bs:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Prvo postavljeno'
     LASTEDIT: 'Zadnja promjena'
     SIZE: Veličina
@@ -8,12 +8,14 @@ bs:
     ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
     ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
     ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Pozdrav
+    TEXT1: 'Ovo je Vaš'
+    TEXT2: 'link za ponovno podešavanje šifre'
+    TEXT3: za
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
@@ -24,11 +26,6 @@ bs:
     TODAY: danas
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izaberite)
-  ForgotPasswordEmail_ss:
-    HELLO: Pozdrav
-    TEXT1: 'Ovo je Vaš'
-    TEXT2: 'link za ponovno podešavanje šifre'
-    TEXT3: za
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Šifre se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Polja za unos šifre ne smiju ostati prazna'
@@ -78,5 +75,5 @@ bs:
     PERMISSIONS: Ovlaštenja
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Glavno
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Izvezi u CSV'

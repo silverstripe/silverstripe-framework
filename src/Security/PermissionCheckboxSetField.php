@@ -267,7 +267,7 @@ class PermissionCheckboxSetField extends FormField
                 "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
                 "<li class=\"help\">" .
                 _t(
-                    'Permissions.UserPermissionsIntro',
+                    'SilverStripe\\Security\\Permission.UserPermissionsIntro',
                     'Assigning groups to this user will adjust the permissions they have.'
                     . ' See the groups section for details of permissions on individual groups.'
                 ) .

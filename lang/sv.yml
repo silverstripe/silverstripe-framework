@@ -1,5 +1,5 @@
 sv:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Först uppladdad'
     HEIGHT: Höjd
     LASTEDIT: 'Senast ändrad'
@@ -11,7 +11,7 @@ sv:
     ENTERINFO: 'Var god ange användarnamn och lösenord'
     ERRORNOTADMIN: 'Den användaren är inte administratör'
     ERRORNOTREC: 'Användarnamnet / lösenordet hittas inte'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Vilken som helst'
     NOANSWER: Nej
     YESANSWER: Ja
@@ -27,10 +27,11 @@ sv:
     SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
     TimedOutTitleAnonymous: 'Din session har upphört.'
     TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
-    CHANGEPASSWORDTEXT3: 'Ändra lösenord'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hej
+    TEXT1: 'Här är din'
+    TEXT2: 'Återställningslänk för lösenord'
+    TEXT3: för
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nej
     YESANSWER: Ja
@@ -43,7 +44,7 @@ sv:
     SHOWONCLICKTITLE: 'Ändra lösenord'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mindre än en minut'
     TIMEDIFFAGO: '{difference} sen'
     TIMEDIFFIN: 'om {difference}'
@@ -60,13 +61,8 @@ sv:
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Vilken som helst'
-  ForgotPasswordEmail_ss:
-    HELLO: Hej
-    TEXT1: 'Här är din'
-    TEXT2: 'Återställningslänk för lösenord'
-    TEXT3: för
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Din session har upphört. Var god och skicka in formuläret på nytt.'
     CSRF_FAILED_MESSAGE: 'Ett tekniskt fel uppstod. Var god klicka på bakåt-knappen, ladda om sidan i webbläsaren och försök igen'
@@ -77,27 +73,11 @@ sv:
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   SilverStripe\Forms\FormField:
     NONE: ingen
-  GridAction:
-    DELETE_DESCRIPTION: Radera
-    Delete: Radera
-    UnlinkRelation: Avlänka
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Lägg till {name}'
-    Filter: Filtrera
-    FilterBy: 'Filtrera på'
-    Find: Hitta
-    LinkExisting: 'Länk finns'
-    NewRecord: 'Ny %s'
-    NoItemsFound: 'Inget hittades'
-    PRINTEDAT: Utskrivet
-    PRINTEDBY: 'Utskrivet av'
-    PlaceHolder: 'Hitta {type}'
-    PlaceHolderWithLabels: 'Hitta {type} efter {name}'
-    RelationSearch: Relationssökning
-    ResetFilter: Rensa
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     EditPermissionsFailure: 'Rättigheter för avlänkning saknas'
+  SilverStripe\Forms\GridField\GridField:
+    OF: av
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Skapa
@@ -105,7 +85,7 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
     Save: Spara
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Redigera
   SilverStripe\Security\Group:
     AddRole: 'Lägg till roll för den här gruppen'
@@ -183,7 +163,7 @@ sv:
     IsNullLabel: 'Är NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Sida
     View: Visa
   SilverStripe\Security\PasswordValidator:
@@ -191,9 +171,7 @@ sv:
     PREVPASSWORD: 'Du har redan använt samma lösenord tidigare, var god och välj ett nytt lösenord'
     TOOSHORT: 'Lösenordet är för kort, det måste innehålla %s eller fler tecken.'
   SilverStripe\Security\Permission:
-    AdminGroup: Administratör
-    FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
-    FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
+    UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -204,8 +182,6 @@ sv:
     Title: Rollnamn
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Koden "%s" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
-  Permissions:
-    UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   SilverStripe\Security\Security:
@@ -231,14 +207,9 @@ sv:
     ROLESDESCRIPTION: 'Roller är fördefinierade uppsättningar av tillstånd, och kan tilldelas grupper. <br/> De ärvs från föräldragrupper om det krävs.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Allmän
-  TableListField:
-    CSVEXPORT: 'Exportera till CSV'
-    Print: 'Skriv ut'
-  TableListField_PageControls_ss:
-    OF: av
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensioner
     EDIT: Ändra
     EDITINFO: 'Redigera filen'

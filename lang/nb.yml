@@ -1,5 +1,5 @@
 nb:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Først opplastet'
     LASTEDIT: 'Sist endret'
     SIZE: Filstørrelse
@@ -9,11 +9,13 @@ nb:
     ENTERINFO: 'Vennligst skriv inn et brukernavn og passord'
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
     ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Sann eller usann'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hei
+    TEXT1: 'Her er din'
+    TEXT2: 'lenke for nullstilling av passord'
+    TEXT3: for
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
@@ -21,7 +23,7 @@ nb:
     SHOWONCLICKTITLE: 'Endre passord'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mindre enn ett minutt'
     TIMEDIFFAGO: '{difference} siden'
     TIMEDIFFIN: 'i {difference}'
@@ -37,13 +39,8 @@ nb:
     CHOOSE: (Velg)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Noen
-  ForgotPasswordEmail_ss:
-    HELLO: Hei
-    TEXT1: 'Her er din'
-    TEXT2: 'lenke for nullstilling av passord'
-    TEXT3: for
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene stemmer ikke overens'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
@@ -52,27 +49,11 @@ nb:
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
   SilverStripe\Forms\FormField:
     NONE: ingen
-  GridAction:
-    DELETE_DESCRIPTION: Slett
-    Delete: Slett
-    UnlinkRelation: 'Koble fra'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Legg til {name}'
-    Filter: Filtrer
-    FilterBy: 'Filtrer på '
-    Find: Finn
-    LinkExisting: 'Knytt til eksisterende'
-    NewRecord: 'Ny %s'
-    NoItemsFound: 'Ingen elementer ble funnet'
-    PRINTEDAT: 'Skrevet ut ved'
-    PRINTEDBY: 'Skrevet ut av'
-    PlaceHolder: 'Finn {type}'
-    PlaceHolderWithLabels: 'Finn {type} ved {name}'
-    RelationSearch: Relasjonssøk
-    ResetFilter: Tilbakestille
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     EditPermissionsFailure: 'Ikke tilgang til å fjerne oppføringer'
+  SilverStripe\Forms\GridField\GridField:
+    OF: av
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Opprett
@@ -80,7 +61,7 @@ nb:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     Deleted: 'Slettet %s %s'
     Save: Lagre
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Rediger
   SilverStripe\Security\Group:
     AddRole: 'Legg til en rolle for denne gruppen'
@@ -157,7 +138,7 @@ nb:
     IsNullLabel: 'Er tom'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Side
     View: Viser
   SilverStripe\Security\PasswordValidator:
@@ -165,9 +146,7 @@ nb:
     PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
     TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'
   SilverStripe\Security\Permission:
-    AdminGroup: Administratorer
-    FULLADMINRIGHTS: 'Fulle administrative rettigheter'
-    FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
+    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
@@ -178,8 +157,6 @@ nb:
     Title: Tittel
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
-  Permissions:
-    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Vennligst skriv inn et gyldig telefonnummer'
   SilverStripe\Security\Security:
@@ -205,14 +182,9 @@ nb:
     ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Hovedinnstillinger
-  TableListField:
-    CSVEXPORT: 'Eksporter til CSV'
-    Print: 'Skriv ut'
-  TableListField_PageControls_ss:
-    OF: av
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensjoner
     EDIT: Rediger
     EDITINFO: 'Rediger denne filen'

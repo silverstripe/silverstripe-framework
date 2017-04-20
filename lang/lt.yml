@@ -1,5 +1,5 @@
 lt:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: Įkelta
     HEIGHT: Aukštis
     LASTEDIT: Redaguota
@@ -11,7 +11,7 @@ lt:
     ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Bet koks'
     NOANSWER: Ne
     YESANSWER: Taip
@@ -27,9 +27,11 @@ lt:
     SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
     TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
     TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Sveiki
+    TEXT1: Jūsų
+    TEXT2: 'slaptažodžio atstatymo nuoroda'
+    TEXT3: svetainei
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Taip
@@ -40,7 +42,7 @@ lt:
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mažiau nei min.'
     TIMEDIFFAGO: 'prieš {difference}'
     TIMEDIFFIN: 'po {difference}'
@@ -57,13 +59,8 @@ lt:
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Bet koks'
-  ForgotPasswordEmail_ss:
-    HELLO: Sveiki
-    TEXT1: Jūsų
-    TEXT2: 'slaptažodžio atstatymo nuoroda'
-    TEXT3: svetainei
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
     CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl.'
@@ -74,27 +71,11 @@ lt:
     VALIDCURRENCY: 'Prašome suvesti teisingą valiutą'
   SilverStripe\Forms\FormField:
     NONE: nėra
-  GridAction:
-    DELETE_DESCRIPTION: Ištrinti
-    Delete: Ištrinti
-    UnlinkRelation: Atkabinti
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Sukurti {name}'
-    Filter: Filtruoti
-    FilterBy: 'Filtruoti pagal '
-    Find: Rasti
-    LinkExisting: 'Pasirinkti esamą'
-    NewRecord: 'Naujas %s'
-    NoItemsFound: 'Įrašų nerasta'
-    PRINTEDAT: Atspausdinta
-    PRINTEDBY: Atspausdino
-    PlaceHolder: 'Rasti {type}'
-    PlaceHolderWithLabels: 'Rasti {type} pagal {name}'
-    RelationSearch: 'Sąryšių paieška'
-    ResetFilter: Atstatyti
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     EditPermissionsFailure: 'Nėra leidimų atjungti įrašą'
+  SilverStripe\Forms\GridField\GridField:
+    OF: iš
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Atšaukti
     Create: Sukurti
@@ -102,7 +83,7 @@ lt:
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     Deleted: 'Ištrinta %s %s'
     Save: Išsaugoti
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Redaguoti
   SilverStripe\Security\Group:
     AddRole: 'Pridėti rolę šiai grupei'
@@ -180,7 +161,7 @@ lt:
     IsNullLabel: Tuščias
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Puslapis
     View: Rodoma
   SilverStripe\Security\PasswordValidator:
@@ -188,9 +169,7 @@ lt:
     PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
     TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių'
   SilverStripe\Security\Permission:
-    AdminGroup: Administratorius
-    FULLADMINRIGHTS: 'Pilnos administravimo teisės'
-    FULLADMINRIGHTS_HELP: 'Turi ir viršija visus kitus leidimus.'
+    UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'priskirta "{title}"'
     FromGroup: 'paveldėta iš grupės "{title}"'
@@ -201,8 +180,6 @@ lt:
     Title: Pavadinimas
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
-  Permissions:
-    UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Įveskite teisingą telefono numerį'
   SilverStripe\Security\Security:
@@ -228,14 +205,9 @@ lt:
     ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Pagrindinis
-  TableListField:
-    CSVEXPORT: 'Ekportuoti į CSV'
-    Print: Spausdinti
-  TableListField_PageControls_ss:
-    OF: iš
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Matmenys
     EDIT: Redaguoti
     EDITINFO: 'Redaguoti šią bylą'

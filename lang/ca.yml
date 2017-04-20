@@ -1,5 +1,5 @@
 ca:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Carregat per primer cop'
     LASTEDIT: 'Darrer canvi'
     SIZE: Mida
@@ -8,9 +8,11 @@ ca:
     ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
     ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
     ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hola
+    TEXT1: 'Aquí teniu el vostre'
+    TEXT2: 'enllaç de reinici de la contrasenya'
+    TEXT3: per
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Canvia la contrasenya'
   SilverStripe\Forms\CurrencyField:
@@ -20,11 +22,6 @@ ca:
     TODAY: avui
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Trieu)
-  ForgotPasswordEmail_ss:
-    HELLO: Hola
-    TEXT1: 'Aquí teniu el vostre'
-    TEXT2: 'enllaç de reinici de la contrasenya'
-    TEXT3: per
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Les contrasenyes no concorden'
     VALIDATIONPASSWORDSNOTEMPTY: 'Les contrasenyes no poden deixar-se en blanc'
@@ -90,5 +87,5 @@ ca:
     PERMISSIONS: Permisos
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exporta a CSV'

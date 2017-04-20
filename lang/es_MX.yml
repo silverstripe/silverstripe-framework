@@ -1,5 +1,5 @@
 es_MX:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Agregado por primera vez'
     LASTEDIT: 'Modificado por última vez'
     SIZE: Tamaño
@@ -8,14 +8,16 @@ es_MX:
     ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hey
+    TEXT1: 'Estás aquí'
+    TEXT2: 'vínculo para restablecer la contraseña'
+    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     TIMEDIFFAGO: '{difference} atrás'
     TIMEDIFFIN: 'en {difference}'
   SilverStripe\Forms\DateField:
@@ -28,38 +30,18 @@ es_MX:
     INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seleccione)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Cualquiera
-  ForgotPasswordEmail_ss:
-    HELLO: Hey
-    TEXT1: 'Estás aquí'
-    TEXT2: 'vínculo para restablecer la contraseña'
-    TEXT3: para
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
     VALIDATOR: Verificador
   SilverStripe\Forms\FormField:
     NONE: Ninguno
-  GridAction:
-    Delete: Eliminar
-    UnlinkRelation: Desvincular
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Agregar {name}'
-    Filter: Filtro
-    FilterBy: 'Filtrar por'
-    Find: Buscar
-    LinkExisting: 'Enlazar existente'
-    NewRecord: 'Nuevo %s'
-    NoItemsFound: 'No hay ítems encontrados'
-    PRINTEDAT: 'Impreso en'
-    PRINTEDBY: 'Imprimir por'
-    PlaceHolder: 'Buscar {type}'
-    PlaceHolderWithLabels: 'Buscar {type} por {name}'
-    RelationSearch: 'Buscar relación'
-    ResetFilter: Resetear
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'No borrar permisos'
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportar a CSV'
   SilverStripe\Security\Group:
     Code: 'Código del grupo'
     DefaultGroupTitleAdministrators: Administradores
@@ -151,11 +133,9 @@ es_MX:
     PERMISSIONS: Permisos
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exportar a CSV'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensiones
     EDITINFO: 'Editar este archivo'
     FIELDNOTSET: 'Información acerca del archivo no encontrada'

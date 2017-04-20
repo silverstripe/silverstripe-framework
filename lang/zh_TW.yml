@@ -1,5 +1,5 @@
 zh_TW:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 第一次上傳
     LASTEDIT: 最後一次更新
     SIZE: 大小
@@ -8,13 +8,10 @@ zh_TW:
     ENTERINFO: '請輸入帳號密碼。'
     ERRORNOTADMIN: '那個使用者不是管理員。'
     ERRORNOTREC: 那組帳號密碼不對。
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 您好
   SilverStripe\Forms\DropdownField:
     CHOOSE: (選擇)
-  ForgotPasswordEmail_ss:
-    HELLO: 您好
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的

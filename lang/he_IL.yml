@@ -1,5 +1,5 @@
 he_IL:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'הועלה לראשונה'
     LASTEDIT: 'שונה לאחרונה'
     SIZE: גודל
@@ -9,15 +9,12 @@ he_IL:
     ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
     ERRORNOTADMIN: 'משתמש זה אינו מנהל'
     ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: היי
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'שינוי סיסמה'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (בחר)
-  ForgotPasswordEmail_ss:
-    HELLO: היי
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
     VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'

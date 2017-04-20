@@ -1,5 +1,5 @@
 fa_IR:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'نخستین بارگذاری'
     HEIGHT: ارتفاع
     LASTEDIT: 'آخرین تغییرات'
@@ -11,7 +11,7 @@ fa_IR:
     ENTERINFO: 'لطفاً یک نام‌کاربری و گذرواژه را وارد نمایید.'
     ERRORNOTADMIN: 'این کاربر یک مدیر نیست.'
     ERRORNOTREC: 'این نام کاربری / گذرواژه شناخته‌شده نیست'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: هر
     NOANSWER: خیر
     YESANSWER: بله
@@ -27,10 +27,11 @@ fa_IR:
     SUCCESSCONTENT: '<p>ورود موفق. اگر به‌طور خودکار ارجاع نشدید <a target="_top" href="{link}">اینجا را کلیک کنید.</a></p>'
     TimedOutTitleAnonymous: 'جلسه شما به پایان رسیده است.'
     TimedOutTitleMember: 'سلام {name}!<br />زمان جلسه شما به پایان رسیده است.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'شما گذرواژه‌تان را تغییر دادید برای'
-    CHANGEPASSWORDTEXT3: 'تغییر گذرواژه'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: درود
+    TEXT1: 'شما اینجاست'
+    TEXT2: 'لینک ازنوسازی گذرواژه'
+    TEXT3: برای
   SilverStripe\Forms\CheckboxField:
     NOANSWER: خیر
     YESANSWER: بله
@@ -44,7 +45,7 @@ fa_IR:
     SHOWONCLICKTITLE: 'تغییر گذرواژه'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: ﷼
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'کمتر از یک دقیقه'
     TIMEDIFFAGO: '{difference} پیش'
     TIMEDIFFIN: 'در {difference}'
@@ -61,13 +62,8 @@ fa_IR:
     SOURCE_VALIDATION: 'لطفاً یک ارزش از لیست فراهم‌شده برگزینید. {value} یک گزینه معتبر نیست'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'لطفاً یک نشانی ایمیل وارد نمایید'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: هر
-  ForgotPasswordEmail_ss:
-    HELLO: درود
-    TEXT1: 'شما اینجاست'
-    TEXT2: 'لینک ازنوسازی گذرواژه'
-    TEXT3: برای
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'جلسه شما به پایان رسیده است. لطفاً فرم را مجدداً ارسال کنید.'
     CSRF_FAILED_MESSAGE: 'به‌نظر می‌آید یک نقص فنی به‌وجود آمده‌است. لطفاً بر روی دکمه‌ی بازگشت کلیک کنید، در مرورگر خود دکمه‌ی ازنو را بزنید، و مجدداً تلاش نمایید.'
@@ -78,27 +74,11 @@ fa_IR:
     VALIDCURRENCY: 'لطفاً یک واحد پول معتبر وارد نمایید'
   SilverStripe\Forms\FormField:
     NONE: 'هیچ‌کدام'
-  GridAction:
-    DELETE_DESCRIPTION: حذف
-    Delete: حذف
-    UnlinkRelation: 'حذف لینک'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'افزودن {name}'
-    Filter: پالایش
-    FilterBy: 'پالایش براساس'
-    Find: بگرد
-    LinkExisting: 'لینک موجود'
-    NewRecord: '%s جدید'
-    NoItemsFound: 'هیچ آیتمی یافت نشد'
-    PRINTEDAT: 'پرینت‌شده در'
-    PRINTEDBY: 'پرینت‌شده توسط'
-    PlaceHolder: 'یافتن {type}'
-    PlaceHolderWithLabels: 'یافتن {type} از روی {name}'
-    RelationSearch: 'جستجوی رابط'
-    ResetFilter: 'از نو'
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     EditPermissionsFailure: 'دسترسی‌های حذف لینک وجود ندارد'
+  SilverStripe\Forms\GridField\GridField:
+    OF: از
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: لغو
     Create: ایجاد
@@ -106,7 +86,7 @@ fa_IR:
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     Deleted: 'حذف شده %s %s'
     Save: ذخیره
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: ویرایش
   SilverStripe\Security\Group:
     PLURALNAME: گروه‌ها
@@ -160,7 +140,7 @@ fa_IR:
     FIELDLABELCURRENCY: 'واحد پول'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'خالی است'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: صفحه
     View: 'نمایش'
   SilverStripe\Security\PasswordValidator:
@@ -198,14 +178,9 @@ fa_IR:
     SINGULARNAME: 'گذرواژه کاربر'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: اصلی
-  TableListField:
-    CSVEXPORT: 'خروجی‌گیری به CSV'
-    Print: چاپ
-  TableListField_PageControls_ss:
-    OF: از
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'لطفاً یک قالب زمان معتبر وارد نمایید ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: ابعاد
     EDIT: ویرایش
     EDITINFO: 'ویرایش این فایل'

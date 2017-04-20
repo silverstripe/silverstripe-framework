@@ -1,5 +1,5 @@
 et_EE:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Esmakordselt üles laaditud'
     LASTEDIT: 'Viimati muudetud'
     SIZE: Failisuurus
@@ -9,13 +9,14 @@ et_EE:
     ENTERINFO: 'Palun sisesta kasutajanimi ja parool.'
     ERRORNOTADMIN: 'Antud kasutaja ei ole administraator.'
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Kõik
     NOANSWER: Ei
     YESANSWER: Jah
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Tere
+    TEXT1: 'Siin on sinu'
+    TEXT2: 'Parooli tühistus link'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Jah
@@ -24,7 +25,7 @@ et_EE:
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
     MAXIMUM: 'Parool võib olla kuni {max} märki pikk.'
     SHOWONCLICKTITLE: 'Muuda parool'
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'vähem kui minut'
     TIMEDIFFAGO: tagasi
   SilverStripe\Forms\DateField:
@@ -39,12 +40,8 @@ et_EE:
     CHOOSE: (Vali)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Sisestage e-posti aadress'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Kõik
-  ForgotPasswordEmail_ss:
-    HELLO: Tere
-    TEXT1: 'Siin on sinu'
-    TEXT2: 'Parooli tühistus link'
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Paroolid ei katu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Paroolid ei saa olla tühjad'
@@ -53,25 +50,10 @@ et_EE:
     VALIDCURRENCY: 'Sisestage kehtiv valuuta'
   SilverStripe\Forms\FormField:
     NONE: puudub
-  GridAction:
-    DELETE_DESCRIPTION: Kustuta
-    Delete: Kustuta
-    UnlinkRelation: 'Tühista linkimine'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Lisa {name}'
-    Filter: Filtreeri
-    FilterBy: Filtreerimisalus
-    Find: Otsi
-    LinkExisting: 'Lingi olemasolev'
-    NewRecord: 'Uus %s'
-    NoItemsFound: 'Üksusi ei leitud'
-    PRINTEDAT: 'Printimiskoht:'
-    PRINTEDBY: Printis
-    PlaceHolder: 'Leia {type}'
-    RelationSearch: 'Seose otsing'
-    ResetFilter: Lähtesta
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
+  SilverStripe\Forms\GridField\GridField:
+    OF: /
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Loobu
     Create: Loo
@@ -79,7 +61,7 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Redigeeri
   SilverStripe\Security\Group:
     AddRole: 'Lisa selle grupi jaoks rolle'
@@ -148,12 +130,11 @@ et_EE:
     IsNullLabel: 'On tühi'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ei ole number, sellele väljale võib sisestada ainult numbreid'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Leht
     View: Kuva
   SilverStripe\Security\Permission:
-    AdminGroup: Administraator
-    FULLADMINRIGHTS: 'Täielikud administraatoriõigused'
+    UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'määratud grupile "{title}"'
     FromGroup: 'päritud grupilt "{title}"'
@@ -162,8 +143,6 @@ et_EE:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ainult administraator saab rakendada'
     Title: Pealkiri
-  Permissions:
-    UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Sisestage kehtiv telefoninumber'
   SilverStripe\Security\Security:
@@ -188,14 +167,9 @@ et_EE:
     ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Avaleht
-  TableListField:
-    CSVEXPORT: 'Ekspordi CSV-vormingusse'
-    Print: Prindi
-  TableListField_PageControls_ss:
-    OF: /
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Mõõtmed
     EDIT: Muuda
     EDITINFO: 'Muuda seda faili'

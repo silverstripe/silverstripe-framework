@@ -1,5 +1,5 @@
 bg:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: Създаден
     HEIGHT: Височина
     LASTEDIT: 'Последна промяна'
@@ -11,7 +11,7 @@ bg:
     ENTERINFO: 'Моля, въведете потребителско име и парола.'
     ERRORNOTADMIN: 'Този потребител не е администратор.'
     ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Всички
     NOANSWER: Не
     YESANSWER: Да
@@ -23,9 +23,11 @@ bg:
     SUCCESS: Успешно
     TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
     TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Здравей!
+    TEXT1: 'Това е Вашият'
+    TEXT2: 'адрес за рестартирване на парола'
+    TEXT3: за
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Не
     YESANSWER: Да
@@ -34,7 +36,7 @@ bg:
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'по-малко от минута'
     TIMEDIFFAGO: 'преди {difference}'
     TIMEDIFFIN: 'за {difference}'
@@ -50,13 +52,8 @@ bg:
     CHOOSE: (Избери)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Някой
-  ForgotPasswordEmail_ss:
-    HELLO: Здравей!
-    TEXT1: 'Това е Вашият'
-    TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
@@ -65,26 +62,10 @@ bg:
     VALIDCURRENCY: 'Моля, въведете коректна валута.'
   SilverStripe\Forms\FormField:
     NONE: нищо
-  GridAction:
-    DELETE_DESCRIPTION: Изтриване
-    Delete: Изтрий
-    UnlinkRelation: Откачане
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Добави {name}'
-    Filter: Филтър
-    FilterBy: 'Филтриране по'
-    Find: Търси
-    LinkExisting: 'Свържи към съществуващ'
-    NewRecord: 'Нов %s'
-    NoItemsFound: 'Няма намерени елементи'
-    PRINTEDAT: 'Отпечатано на'
-    PRINTEDBY: 'Отпечатано от'
-    PlaceHolder: 'Намери {type}'
-    PlaceHolderWithLabels: 'Намери {type} по {name}'
-    RelationSearch: 'Търсене на връзка'
-    ResetFilter: Изчистване
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Експортирай на CSV'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Създай
     Delete: Изтрий
@@ -183,11 +164,9 @@ bg:
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Главно
-  TableListField:
-    CSVEXPORT: 'Експортирай на CSV'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 'Размери'
     EDITINFO: 'Редактирай този файл'
     FIELDNOTSET: 'Информация за файла не беше намерена'

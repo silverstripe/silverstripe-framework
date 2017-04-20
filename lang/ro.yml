@@ -3,9 +3,10 @@ ro:
     ENTERINFO: 'Vă rugăm introduceţi un utilizator și o parolă.'
     ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
     ERRORNOTREC: 'Numele utilizator sau parola este nerecunoscută'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Salut
+    TEXT2: 'link de resetare a parolei'
+    TEXT3: pentru
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parola trebuie să conțină cel puțin {min} caractere.'
     BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
@@ -15,18 +16,10 @@ ro:
     TODAY: astăzi
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Alege)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Oricare
-  ForgotPasswordEmail_ss:
-    HELLO: Salut
-    TEXT2: 'link de resetare a parolei'
-    TEXT3: pentru
   SilverStripe\Forms\GridField\GridField:
-    Filter: Filtru
-    Find: Gaseste
-    PRINTEDAT: 'Imprimat la'
-    PRINTEDBY: 'Imprimat de'
-    ResetFilter: Reseteaza
+    CSVEXPORT: 'Exportati ca CSV'
   SilverStripe\Security\Group:
     Code: 'Cod Grup'
     Locked: 'Blocat?'
@@ -62,7 +55,5 @@ ro:
     GROUPNAME: 'Numele grupului'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Pincipal
-  TableListField:
-    CSVEXPORT: 'Exportati ca CSV'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDITINFO: 'Editeaza acest fisier'

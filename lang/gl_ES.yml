@@ -1,5 +1,5 @@
 gl_ES:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Primeiro subido'
     LASTEDIT: 'Último cambio'
     SIZE: 'Tamaño ficheiro'
@@ -8,10 +8,13 @@ gl_ES:
     ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
     ERRORNOTADMIN: 'Ese usuario non é un administrador.'
     ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ningún
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    HELLO: Ola
+    TEXT1: 'Estás aquí'
+    TEXT2: 'ligazón de reinicio do contrasinal'
+    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar Contrasinal'
   SilverStripe\Forms\CurrencyField:
@@ -20,34 +23,18 @@ gl_ES:
     NOTSET: 'sen establecer'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoller)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Ningún
-  ForgotPasswordEmail_ss:
-    HELLO: Ola
-    TEXT1: 'Estás aquí'
-    TEXT2: 'ligazón de reinicio do contrasinal'
-    TEXT3: para
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Os contrasinais non pode ser baleiro'
     VALIDATOR: Validador
   SilverStripe\Forms\FormField:
     NONE: ningún
-  GridAction:
-    Delete: Eliminar
-    UnlinkRelation: Desligar
-  SilverStripe\Forms\GridField\GridField:
-    Filter: Filtro
-    Find: Atopar
-    LinkExisting: 'Ligazón existente'
-    NewRecord: 'Novo %s'
-    NoItemsFound: 'Ningún elemento atopado'
-    PRINTEDAT: 'Impreso ás'
-    PRINTEDBY: 'Impreso por'
-    RelationSearch: 'Busca relacionada'
-    ResetFilter: Reiniciar
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Non eliminar permisos'
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportar a CSV'
   SilverStripe\Security\Group:
     AddRole: 'Engadir un role para este grupo'
     Code: 'Código de Grupo'
@@ -133,8 +120,6 @@ gl_ES:
     ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exportar a CSV'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDITINFO: 'Editar este ficheiro'
     FIELDNOTSET: 'Ficheiro de información non atopado'

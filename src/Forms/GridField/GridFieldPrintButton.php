@@ -60,7 +60,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $button = new GridField_FormAction(
             $gridField,
             'print',
-            _t('TableListField.Print', 'Print'),
+            _t('SilverStripe\\Forms\\GridField\\GridField.Print', 'Print'),
             'print',
             null
         );

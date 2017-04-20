@@ -1,5 +1,5 @@
 zh:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: '首先上传的'
     LASTEDIT: 最近更改的
     SIZE: 文件尺寸
@@ -9,7 +9,7 @@ zh:
     ENTERINFO: '请输入一个用户名和密码。'
     ERRORNOTADMIN: 那个用户不是一名管理员。
     ERRORNOTREC: '那个用户名 / 密码无法被辨认'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 任何
     NOANSWER: 不是
     YESANSWER: 是
@@ -25,9 +25,11 @@ zh:
     SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
     TimedOutTitleAnonymous: '你的登陆超时已过期。'
     TimedOutTitleMember: '你好{name}!<br />你的登陆超时已过期。'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: '您的密码已更改为：'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 您好
+    TEXT1: 这是您的
+    TEXT2: '密码重设链接'
+    TEXT3: 为
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 不是
     YESANSWER: 是
@@ -38,7 +40,7 @@ zh:
     SHOWONCLICKTITLE: '更改密码'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: 货币字符
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 少于一分钟
     TIMEDIFFAGO: '{difference} 以前'
     TIMEDIFFIN: '在 {difference} 中'
@@ -55,13 +57,8 @@ zh:
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   SilverStripe\Forms\EmailField:
     VALIDATION: '请输入一个电子邮件地址'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 任何
-  ForgotPasswordEmail_ss:
-    HELLO: 您好
-    TEXT1: 这是您的
-    TEXT2: '密码重设链接'
-    TEXT3: 为
   SilverStripe\Forms\Form:
     CSRF_FAILED_MESSAGE: 似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。
     VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
@@ -71,27 +68,11 @@ zh:
     VALIDCURRENCY: '请输入一个有效的货币'
   SilverStripe\Forms\FormField:
     NONE: '无'
-  GridAction:
-    DELETE_DESCRIPTION: '删除'
-    Delete: '删除'
-    UnlinkRelation: 解除链接
-  SilverStripe\Forms\GridField\GridField:
-    Add: '添加 {name}'
-    Filter: 过滤器
-    FilterBy: 过滤条件
-    Find: 查找
-    LinkExisting: 链接已存在
-    NewRecord: '新 %s'
-    NoItemsFound: 没有找到任何项目
-    PRINTEDAT: 印刷地
-    PRINTEDBY: 印刷人
-    PlaceHolder: '查找 {type}'
-    PlaceHolderWithLabels: '通过 {name} 查找 {type}'
-    RelationSearch: '关系搜索'
-    ResetFilter: 重设
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: '没有删除权限'
     EditPermissionsFailure: 没有解除记录链接的权限
+  SilverStripe\Forms\GridField\GridField:
+    OF: 的
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: 取消
     Create: 创建
@@ -99,7 +80,7 @@ zh:
     DeletePermissionsFailure: '没有删除权限'
     Deleted: '已删除的 %s %s'
     Save: 保存
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: 编辑
   SilverStripe\Security\Group:
     AddRole: '在这个小组中添加一个角色'
@@ -177,7 +158,7 @@ zh:
     IsNullLabel: 为空
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: 页面
     View: 查看
   SilverStripe\Security\PasswordValidator:
@@ -185,9 +166,7 @@ zh:
     PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
     TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'
   SilverStripe\Security\Permission:
-    AdminGroup: 管理员
-    FULLADMINRIGHTS: '完全管理权'
-    FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
+    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
@@ -198,8 +177,6 @@ zh:
     Title: '标题'
   SilverStripe\Security\PermissionRoleCode:
     PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
-  Permissions:
-    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: '请输入一个有效的电话号码'
   SilverStripe\Security\Security:
@@ -225,14 +202,9 @@ zh:
     ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 主要的
-  TableListField:
-    CSVEXPORT: '导出到 CSV'
-    Print: 打印
-  TableListField_PageControls_ss:
-    OF: 的
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 尺寸
     EDIT: 编辑
     EDITINFO: 编辑该文件

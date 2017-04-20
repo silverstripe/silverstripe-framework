@@ -1,5 +1,5 @@
 fi_FI:
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ei
     YESANSWER: Kyllä
   SilverStripe\Forms\CheckboxField:

@@ -1,5 +1,5 @@
 ast:
-  ChangePasswordEmail_ss:
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Camudar contraseña'

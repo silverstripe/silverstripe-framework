@@ -1,5 +1,5 @@
 tr:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Yüklenme tarihi'
     LASTEDIT: 'Güncellenme tarihi'
     SIZE: Boyutu
@@ -8,13 +8,15 @@ tr:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
     ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Herhangi
     NOANSWER: Hayır
     YESANSWER: Evet
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Merhaba
+    TEXT1: 'Profilinize ait'
+    TEXT2: 'şifre sıfırlama linki'
+    TEXT3: için
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Hayır
     YESANSWER: Evet
@@ -27,18 +29,13 @@ tr:
     TODAY: bugün
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçiniz)
-  ForgotPasswordEmail_ss:
-    HELLO: Merhaba
-    TEXT1: 'Profilinize ait'
-    TEXT2: 'şifre sıfırlama linki'
-    TEXT3: için
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
     VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
     VALIDATOR: 'Geçerlilik tespiti'
   SilverStripe\Forms\FormField:
     NONE: hiç
-  GridAction:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Sil
   SilverStripe\Security\Group:
     Code: 'Grup Kodu'
@@ -104,8 +101,8 @@ tr:
     PERMISSIONS: İzinler
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 'Ana (Esas)'
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV olarak kaydet'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDITINFO: 'Dosyayı düzenle'
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'

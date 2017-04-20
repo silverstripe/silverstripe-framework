@@ -1,5 +1,5 @@
 sl:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Naloženo na začetku'
     LASTEDIT: 'Zadnje naloženo'
     SIZE: 'Velikost datoteke'
@@ -9,17 +9,19 @@ sl:
     ENTERINFO: 'Vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Katerikoli
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 'Pozdravljeni,'
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za ponastavitev gesla'
+    TEXT3: za
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manj kot minuta'
     TIMEDIFFAGO: 'pred {difference}'
     TIMEDIFFIN: 'v {difference}'
@@ -35,13 +37,8 @@ sl:
     CHOOSE: (Izberi)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Katerikoli
-  ForgotPasswordEmail_ss:
-    HELLO: 'Pozdravljeni,'
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za ponastavitev gesla'
-    TEXT3: za
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
     VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
@@ -51,26 +48,10 @@ sl:
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
   SilverStripe\Forms\FormField:
     NONE: brez
-  GridAction:
-    DELETE_DESCRIPTION: Izbriši
-    Delete: Izbriši
-    UnlinkRelation: 'Odstrani povezavo'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Dodaj {name}'
-    Filter: Filter
-    FilterBy: 'Filtriraj po'
-    Find: Poišči
-    LinkExisting: 'Poveži na'
-    NewRecord: 'Novih %s'
-    NoItemsFound: 'Ni rezultatov'
-    PRINTEDAT: 'Tiskano pri'
-    PRINTEDBY: Natisnil
-    PlaceHolder: 'Poišči {type} '
-    PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
-    RelationSearch: 'Povezano iskanje'
-    ResetFilter: Ponastavi
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
+  SilverStripe\Forms\GridField\GridField:
+    OF: od
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -78,7 +59,7 @@ sl:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Deleted: 'Izbrisanih %s %s'
     Save: Shrani
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Uredi
   SilverStripe\Security\Group:
     AddRole: 'Skupinam pripiši vloge'
@@ -149,7 +130,7 @@ sl:
     IsNullLabel: 'Prazno polje'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Stran
     View: Poglej
   SilverStripe\Security\Permission:
@@ -186,14 +167,9 @@ sl:
     ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Domov
-  TableListField:
-    CSVEXPORT: 'Izvozi kot CSV-datoteko'
-    Print: Natisni
-  TableListField_PageControls_ss:
-    OF: od
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimenzije
     EDIT: Uredi
     EDITINFO: 'Uredi datoteko'

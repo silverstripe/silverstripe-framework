@@ -1,5 +1,5 @@
 hi:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     HEIGHT: लंबाई
     WIDTH: चौड़ाई
   SilverStripe\Security\BasicAuth:

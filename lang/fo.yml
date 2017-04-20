@@ -1,5 +1,5 @@
 fo:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     LASTEDIT: 'Seinast broyting'
     SIZE: Stødd
     TYPE: Slag
@@ -7,9 +7,9 @@ fo:
     ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
     ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
     ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hey
+    TEXT1: 'Her er títt'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Broyt loyniorð'
   SilverStripe\Forms\DateField:
@@ -17,9 +17,6 @@ fo:
     TODAY: 'í dag'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Áset)
-  ForgotPasswordEmail_ss:
-    HELLO: Hey
-    TEXT1: 'Her er títt'
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
     VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
@@ -76,5 +73,5 @@ fo:
     PERMISSIONS: Rættindi
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Alment
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Útles til CSV'

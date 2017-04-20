@@ -1,5 +1,5 @@
 fi:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
     HEIGHT: Korkeus
     LASTEDIT: 'Viimeksi muokattu'
@@ -11,7 +11,7 @@ fi:
     ENTERINFO: 'Anna käyttäjänimi ja salasana'
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Yhtään
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -27,11 +27,11 @@ fi:
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
     TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
     TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Tilin salasana on vaihdettu. Sähköpostiosoite on {email}. Mikäli et pyytänyt salasanan vaihtoa, vaihda salasanasi alla olevasta linkistä'
-    CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
-    CHANGEPASSWORDTEXT3: 'Vaihda salasana'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hei
+    TEXT1: 'Tässä on sinun'
+    TEXT2: 'salasanan vaihtolinkki'
+    TEXT3: kohteeseen
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -45,7 +45,7 @@ fi:
     SHOWONCLICKTITLE: 'Vaihda salasana'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'alle minuutti'
     TIMEDIFFAGO: '{difference} sitten'
     TIMEDIFFIN: '&raquo; {difference}'
@@ -63,13 +63,8 @@ fi:
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Yhtään
-  ForgotPasswordEmail_ss:
-    HELLO: Hei
-    TEXT1: 'Tässä on sinun'
-    TEXT2: 'salasanan vaihtolinkki'
-    TEXT3: kohteeseen
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
     CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
@@ -81,27 +76,11 @@ fi:
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
   SilverStripe\Forms\FormField:
     NONE: 'Ei yhtään'
-  GridAction:
-    DELETE_DESCRIPTION: Poista
-    Delete: Poista
-    UnlinkRelation: 'Pura linkitys'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Lisää {name}'
-    Filter: Suodatin
-    FilterBy: 'Suodata &raquo;'
-    Find: Etsi
-    LinkExisting: 'Linkitä olemassaoleva'
-    NewRecord: 'Uusi %s'
-    NoItemsFound: 'Ei kohteita'
-    PRINTEDAT: Tulostettu
-    PRINTEDBY: Tulostaja
-    PlaceHolder: 'Etsi {type}'
-    PlaceHolderWithLabels: 'Etsi {type} &raquo; {name}'
-    RelationSearch: Relaatiohaku
-    ResetFilter: Nollaa
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     EditPermissionsFailure: 'Ei oikeuksia purkaa linkitystä tietueeseen'
+  SilverStripe\Forms\GridField\GridField:
+    OF: /
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Peruuta
     Create: Luo
@@ -109,7 +88,7 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin %s %s'
     Save: Tallenna
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Muokkaa
   SilverStripe\Security\Group:
     PLURALNAME: Ryhmät
@@ -187,7 +166,7 @@ fi:
     IsNullLabel: 'On nolla'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Sivu
     View: Näytä
   SilverStripe\Security\PasswordValidator:
@@ -195,8 +174,7 @@ fi:
     PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
     TOOSHORT: 'Salasanan on oltava vähintään %s merkkiä'
   SilverStripe\Security\Permission:
-    PLURALNAME: Oikeudet
-    SINGULARNAME: Oikeus
+    UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
@@ -208,8 +186,6 @@ fi:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
-  Permissions:
-    UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   SilverStripe\Security\Security:
@@ -241,15 +217,9 @@ fi:
     SINGULARNAME: 'Käyttäjän salasana'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Yleiset
-  TableListField:
-    CSVEXPORT: 'Vie CSV:nä'
-    CSVIMPORT: 'Tuo CSV'
-    Print: Tulosta
-  TableListField_PageControls_ss:
-    OF: /
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Mitat
     EDIT: Muokkaa
     EDITINFO: 'Muokkaa tätä tiedostoa'

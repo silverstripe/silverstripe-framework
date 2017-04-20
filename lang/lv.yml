@@ -3,11 +3,13 @@ lv:
     ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
     ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
     ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jebkurš
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Sveiki
+    TEXT1: 'Šeit ir Jūsu'
+    TEXT2: 'paroles atiestatīšanas saite'
+    TEXT3: ' '
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mainīt paroli'
   SilverStripe\Forms\CurrencyField:
@@ -17,13 +19,8 @@ lv:
     TODAY: šodien
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izvēlieties)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Jebkuru
-  ForgotPasswordEmail_ss:
-    HELLO: Sveiki
-    TEXT1: 'Šeit ir Jūsu'
-    TEXT2: 'paroles atiestatīšanas saite'
-    TEXT3: ' '
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
     VALIDATIONPASSWORDSNOTEMPTY: 'Paroles nedrīkst būt tukšas'
@@ -103,5 +100,5 @@ lv:
     ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Sākums
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Eksportēt uz CSV'

@@ -289,7 +289,7 @@ trait FileUploadReceiver
         $fileObject = null;
 
         if (empty($tmpFile)) {
-            $error = _t('UploadField.FIELDNOTSET', 'File information not found');
+            $error = _t('SilverStripe\\AssetAdmin\\Forms\\UploadField.FIELDNOTSET', 'File information not found');
             return null;
         }
 

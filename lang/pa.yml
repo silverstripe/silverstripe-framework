@@ -2,13 +2,10 @@ pa:
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ'
     ERRORNOTADMIN: 'ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: ਹਾਏ
   SilverStripe\Forms\DropdownField:
     CHOOSE: '( ਚੁਣੋ )'
-  ForgotPasswordEmail_ss:
-    HELLO: ਹਾਏ
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '

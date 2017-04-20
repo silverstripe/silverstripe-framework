@@ -1,5 +1,5 @@
 mi:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Tukuatu tuatahi'
     LASTEDIT: 'Hurihanga tōmuri'
     SIZE: 'Rahi kōnae'
@@ -9,11 +9,13 @@ mi:
     ENTERINFO: 'Tāurua he ingoa kaiwhakamahi me te kupuhipa'
     ERRORNOTADMIN: 'Ehara tēnā kaiwhakamahi i te kaiwhakahaere'
     ERRORNOTREC: 'Kāore i te mōhiotia tēnā ingoa kaiwhakamahi / kupuhipa'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Ko tētahi'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: 'Kia ora'
+    TEXT1: 'Anei tō'
+    TEXT2: 'hono tautuhi kupuhipa anō'
+    TEXT3: mā
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Kia {min} pūāhua i te iti rawa te roa o ngā kupuhipa.'
     BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
@@ -21,7 +23,7 @@ mi:
     SHOWONCLICKTITLE: 'Huri Kupuhipa'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'iti iho i te meneti kotahi'
     TIMEDIFFAGO: '{difference} i mua'
     TIMEDIFFIN: 'i roto i te {difference}'
@@ -37,13 +39,8 @@ mi:
     CHOOSE: (Kōwhiri)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Tāurua he wāhitau īmēra '
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Ko tētahi'
-  ForgotPasswordEmail_ss:
-    HELLO: 'Kia ora'
-    TEXT1: 'Anei tō'
-    TEXT2: 'hono tautuhi kupuhipa anō'
-    TEXT3: mā
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
     VALIDATIONPASSWORDSNOTEMPTY: 'Kia kaua e noho piako ngā kupuhipa'
@@ -52,27 +49,11 @@ mi:
     VALIDCURRENCY: 'Tāurua he moni tika'
   SilverStripe\Forms\FormField:
     NONE: Kore
-  GridAction:
-    DELETE_DESCRIPTION: Muku
-    Delete: Muku
-    UnlinkRelation: Wetehono
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Tāpiri {name}'
-    Filter: Tātari
-    FilterBy: 'Tātari mā'
-    Find: Rapu
-    LinkExisting: 'Hono Tīari'
-    NewRecord: '%s hōu'
-    NoItemsFound: 'Kāore i kitea he tūemi'
-    PRINTEDAT: 'I tāngia i'
-    PRINTEDBY: 'I tāngia e'
-    PlaceHolder: 'Tapu {type}'
-    PlaceHolderWithLabels: 'Rapu {type} mā te {name}'
-    RelationSearch: 'Rapu whanaunga'
-    ResetFilter: 'Tautuhi anō'
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
     EditPermissionsFailure: 'Kāore ō whakaaetanga kia wetehono pūkete'
+  SilverStripe\Forms\GridField\GridField:
+    OF: o
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Whakakore
     Create: Hanga
@@ -80,7 +61,7 @@ mi:
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Kua mukua %s %s'
     Save: Tiaki
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Whakatika
   SilverStripe\Security\Group:
     AddRole: 'Tāpiritia he tūnga mō tēnei rōpū'
@@ -156,7 +137,7 @@ mi:
     IsNullLabel: 'He Kore Tēnei'
   SilverStripe\Forms\NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Whārangi
     View: Tiro
   SilverStripe\Security\PasswordValidator:
@@ -164,9 +145,7 @@ mi:
     PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'
     TOOSHORT: 'He poto rawa te kupuhipa, me %s pūāhua neke atu te roa'
   SilverStripe\Security\Permission:
-    AdminGroup: Kaiwhakahaere
-    FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
-    FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
+    UserPermissionsIntro: 'Mā te tautapa rōpū ki tēnei kaiwhakamahi e whakarite āna whakaaetanga. Tirohia te wāhanga rōpū mō ngā taipitopito o ngā whakaaetanga o ngā rōpū takitahi.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -175,8 +154,6 @@ mi:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ka taea anake te tono e ngā kaiwhakahaere'
     Title: Taitara
-  Permissions:
-    UserPermissionsIntro: 'Mā te tautapa rōpū ki tēnei kaiwhakamahi e whakarite āna whakaaetanga. Tirohia te wāhanga rōpū mō ngā taipitopito o ngā whakaaetanga o ngā rōpū takitahi.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Tāurua he tau waea tika'
   SilverStripe\Security\Security:
@@ -202,14 +179,9 @@ mi:
     ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Matua
-  TableListField:
-    CSVEXPORT: 'Kaweake ki CSV'
-    Print: Tā
-  TableListField_PageControls_ss:
-    OF: o
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 'Ngā Rahinga'
     EDIT: Whakatika
     EDITINFO: 'Whakatikatia tēnei kōnae'

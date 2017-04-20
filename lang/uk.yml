@@ -1,5 +1,5 @@
 uk:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Вперше завантажено'
     LASTEDIT: 'Востаннє змінено'
     SIZE: 'Розмір'
@@ -8,8 +8,7 @@ uk:
     ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
     ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Привіт
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
@@ -21,18 +20,13 @@ uk:
     TODAY: сьогодні
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Оберіть)
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Будь-який
-  ForgotPasswordEmail_ss:
-    HELLO: Привіт
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
   SilverStripe\Forms\GridField\GridField:
-    Add: 'Додати {name}'
-    Filter: Фільтр
-    FilterBy: 'Фільтр по'
-    Find: Пошук
+    CSVEXPORT: 'Експортувати в CSV'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Відмінити
     Create: Створити
@@ -75,7 +69,7 @@ uk:
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Сторінка
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
@@ -99,7 +93,5 @@ uk:
     PERMISSIONS: Дозволи
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Головна
-  TableListField:
-    CSVEXPORT: 'Експортувати в CSV'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     EDITINFO: 'Редагувати цей файл'

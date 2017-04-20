@@ -1,5 +1,5 @@
 id:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Pertama diunggah'
     LASTEDIT: 'Terakhir diubah'
     SIZE: 'Ukuran berkas'
@@ -9,7 +9,7 @@ id:
     ENTERINFO: 'Mohon isikan nama pengguna dan kata kunci.'
     ERRORNOTADMIN: 'Pengguna tersebut bukan pengelola.'
     ERRORNOTREC: 'Nama pengguna dan kata kunci tidak dikenal'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Semua
     NOANSWER: Tidak
     YESANSWER: Ya
@@ -25,9 +25,11 @@ id:
     SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
     TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
     TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hai
+    TEXT1: 'Berikut ini '
+    TEXT2: 'tautan ganti kata kunci'
+    TEXT3: untuk
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Tidak
     YESANSWER: Ya
@@ -38,7 +40,7 @@ id:
     SHOWONCLICKTITLE: 'Ganti Kata Kunci'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'kurang dari semenit'
     TIMEDIFFAGO: '{difference} yang lalu'
     TIMEDIFFIN: 'pada {difference}'
@@ -55,13 +57,8 @@ id:
     SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Mohon isikan alamat email'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Semua
-  ForgotPasswordEmail_ss:
-    HELLO: Hai
-    TEXT1: 'Berikut ini '
-    TEXT2: 'tautan ganti kata kunci'
-    TEXT3: untuk
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Sesi Anda sudah habis. Mohon kirim ulang formulir.'
     CSRF_FAILED_MESSAGE: 'Kemungkinan ada masalah teknis. Mohon klik tombol kembali, muat ulang browser, dan coba lagi.'
@@ -72,27 +69,11 @@ id:
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
   SilverStripe\Forms\FormField:
     NONE: 'tidak ada'
-  GridAction:
-    DELETE_DESCRIPTION: Hapus
-    Delete: Hapus
-    UnlinkRelation: Unlink
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Tambah {name}'
-    Filter: Saring
-    FilterBy: 'Saring menurut '
-    Find: Cari
-    LinkExisting: 'Tautan yang Ada'
-    NewRecord: '%s baru'
-    NoItemsFound: 'Tidak ada data'
-    PRINTEDAT: 'Dicetak pada'
-    PRINTEDBY: 'Dicetak oleh'
-    PlaceHolder: 'Cari {type}'
-    PlaceHolderWithLabels: 'Cari {type} menurut {name}'
-    RelationSearch: 'Cari yang terkait'
-    ResetFilter: Reset
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     EditPermissionsFailure: 'Tidak ada ijin membuka tautan'
+  SilverStripe\Forms\GridField\GridField:
+    OF: dari
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Batal
     Create: Buat
@@ -100,7 +81,7 @@ id:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     Deleted: '%s %s dihapus'
     Save: Simpan
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Edit
   SilverStripe\Security\Group:
     AddRole: 'Tambahkan peran untuk kelompok ini'
@@ -178,7 +159,7 @@ id:
     IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Laman
     View: Tampilkan
   SilverStripe\Security\PasswordValidator:
@@ -186,9 +167,7 @@ id:
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
     TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari %s karakter atau lebih'
   SilverStripe\Security\Permission:
-    AdminGroup: Pengelola
-    FULLADMINRIGHTS: 'Hak pengelolaan penuh'
-    FULLADMINRIGHTS_HELP: 'Abaikan dan kesampingkan semua perijinan yang terhubung lainnya.'
+    UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
@@ -199,8 +178,6 @@ id:
     Title: Judul
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
-  Permissions:
-    UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Mohon isikan nomer telpon yang benar'
   SilverStripe\Security\Security:
@@ -226,14 +203,9 @@ id:
     ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Utama
-  TableListField:
-    CSVEXPORT: 'Ekspor ke CSV'
-    Print: Cetak
-  TableListField_PageControls_ss:
-    OF: dari
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensi
     EDIT: Edit
     EDITINFO: 'Edit berkas ini'

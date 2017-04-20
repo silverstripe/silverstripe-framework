@@ -1,5 +1,5 @@
 af:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Eerste opgelaai'
     LASTEDIT: 'Laaste verander'
     SIZE: 'Lêer grootte'
@@ -8,15 +8,17 @@ af:
     ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
     ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
     ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Enige
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    TEXT1: 'Hier is u'
+    TEXT2: 'wagwoord herstel skakel'
+    TEXT3: vir
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: R
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     TIMEDIFFAGO: '{difference} terug'
   SilverStripe\Forms\DateField:
     NOTSET: 'Nie gestel nie'
@@ -30,12 +32,8 @@ af:
     CHOOSE: (Kies)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Verskaf asseblief  ''n epos adres '
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Enige
-  ForgotPasswordEmail_ss:
-    TEXT1: 'Hier is u'
-    TEXT2: 'wagwoord herstel skakel'
-    TEXT3: vir
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Wagwoorde pas nie'
     VALIDATIONPASSWORDSNOTEMPTY: 'Wagwoorde kan nie leeg wees nie'
@@ -44,24 +42,10 @@ af:
     VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
   SilverStripe\Forms\FormField:
     NONE: geen
-  GridAction:
-    DELETE_DESCRIPTION: Verwyder
-    Delete: Verwyder
-    UnlinkRelation: Ontkoppel
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Voeg {name}'
-    Find: Vind
-    LinkExisting: 'Koppel bestaande'
-    NewRecord: 'Nuwe %s'
-    NoItemsFound: 'Geen items gevind nie'
-    PRINTEDAT: 'Gedruk te'
-    PRINTEDBY: 'Gedruk deur'
-    PlaceHolder: 'Vind {type}'
-    PlaceHolderWithLabels: 'Vind {type} by {name}'
-    RelationSearch: 'Soek vir verwantskap'
-    ResetFilter: Herstel
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
+  SilverStripe\Forms\GridField\GridField:
+    OF: van
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: 'Kanselleer '
     Create: Skep
@@ -133,7 +117,7 @@ af:
     FIELDLABELCURRENCY: 'Geld eenheid'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Bladsy
     View: Wys
   SilverStripe\Security\Permission:
@@ -168,14 +152,9 @@ af:
     ROLESDESCRIPTION: ' '
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Hoof
-  TableListField:
-    CSVEXPORT: 'Voer uit na CSV lêer'
-    Print: Druk
-  TableListField_PageControls_ss:
-    OF: van
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Afmetings
     EDIT: Verander
     EDITINFO: 'Verander die lêer'

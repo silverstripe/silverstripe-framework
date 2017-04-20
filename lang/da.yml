@@ -1,5 +1,5 @@
 da:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Først uploadet'
     LASTEDIT: 'Sidst ændret'
     SIZE: Størrelse

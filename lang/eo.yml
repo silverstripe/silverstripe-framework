@@ -1,5 +1,5 @@
 eo:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Unue alŝutita'
     HEIGHT: Alto
     LASTEDIT: 'Laste ŝanĝita'
@@ -11,7 +11,7 @@ eo:
     ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
     ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ajna
     NOANSWER: Ne
     YESANSWER: Jes
@@ -27,15 +27,15 @@ eo:
     SUCCESSCONTENT: '<p>Ensaluto suksesis. Se vi ne aŭtomate alidirektiĝos, <a target="_top" href="{link}">alklaku ĉi tie</a></p>'
     TimedOutTitleAnonymous: 'Via seanco eltempiĝis.'
     TimedOutTitleMember: 'He, {name}!<br />Via seanco eltempiĝis.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton bonvolu ŝanĝi vian pasvorton per la suba ligilo.'
-    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
-    CHANGEPASSWORDTEXT3: 'Ŝangi pasvorton'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Saluton
+    TEXT1: 'Jen via'
+    TEXT2: 'pasvorta reagorda ligilo'
+    TEXT3: por
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Jes
-  CheckboxSetField_ss:
+  SilverStripe\Forms\CheckboxSetField.ss:
     NOOPTIONSAVAILABLE: 'Mankas ebloj'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Pasvorto devas esti almenaŭ {min} signojn longa.'
@@ -47,7 +47,7 @@ eo:
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'malpli ol minuto'
     TIMEDIFFAGO: 'antaŭ {difference}'
     TIMEDIFFIN: 'en {difference}'
@@ -65,13 +65,8 @@ eo:
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Ajna
-  ForgotPasswordEmail_ss:
-    HELLO: Saluton
-    TEXT1: 'Jen via'
-    TEXT2: 'pasvorta reagorda ligilo'
-    TEXT3: por
   SilverStripe\Forms\Form:
     BAD_METHOD: 'Ĉi tiu formularo bezonas {method} sendaĵon'
     CSRF_EXPIRED_MESSAGE: 'Via seanco finiĝis. Bonvole resendu la formularon.'
@@ -85,27 +80,11 @@ eo:
   SilverStripe\Forms\FormField:
     EXAMPLE: 'ekz-e {format}'
     NONE: neniu
-  GridAction:
-    DELETE_DESCRIPTION: Forigi
-    Delete: Forigi
-    UnlinkRelation: Malligi
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Aldoni je {name}'
-    Filter: Filtri
-    FilterBy: 'Filtri laŭ'
-    Find: Serĉi
-    LinkExisting: 'Ligi ekzistantajn'
-    NewRecord: 'Novaj %s'
-    NoItemsFound: 'Neniu elemento troviĝis'
-    PRINTEDAT: 'Presita ĉe'
-    PRINTEDBY: 'Presita de'
-    PlaceHolder: 'Serĉi je {type}'
-    PlaceHolderWithLabels: 'Serĉi je {type} laŭ {name}'
-    RelationSearch: 'Serĉi rilatojn'
-    ResetFilter: Restartigi
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     EditPermissionsFailure: 'Mankas permeso malligi rikordon'
+  SilverStripe\Forms\GridField\GridField:
+    OF: de
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Rezigni
     Create: Krei
@@ -113,7 +92,7 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita %s %s'
     Save: Konservi
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Redakti
   SilverStripe\Security\Group:
     PLURALNAME: Grupoj
@@ -192,7 +171,7 @@ eo:
     IsNullLabel: 'Estas senvalora'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ne estas numero, nur numeroj estas akcepteblaj por ĉi tiu kampo'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Paĝo
     View: Vido
   SilverStripe\Security\PasswordValidator:
@@ -200,8 +179,7 @@ eo:
     PREVPASSWORD: 'Vi jam uzis tiun pasvorton pasintece, do bonvole elektu novan pasvorton'
     TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ %s signojn longa'
   SilverStripe\Security\Permission:
-    PLURALNAME: Permesoj
-    SINGULARNAME: Permeso
+    UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'agordita al "{title}"'
     FromGroup: 'heredita el grupo "{title}"'
@@ -213,8 +191,6 @@ eo:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permesrolaj kodoj'
     SINGULARNAME: 'Permesrola kodo'
-  Permissions:
-    UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
   SilverStripe\Security\Security:
@@ -246,15 +222,9 @@ eo:
     SINGULARNAME: 'Membra pasvorto'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Ĉefaj
-  TableListField:
-    CSVEXPORT: 'Eksporti al CSV'
-    CSVIMPORT: 'Importi el CSV'
-    Print: Presi
-  TableListField_PageControls_ss:
-    OF: de
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bonvole enigu validan horan formaton ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensioj
     EDIT: Redakti
     EDITINFO: 'Redakti ĉi tiun dosieron'

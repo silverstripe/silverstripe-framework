@@ -1,10 +1,8 @@
 en_GB:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     SIZE: Size
     TYPE: Type
-  ChangePasswordEmail_ss:
-    HELLO: Hello
-  ForgotPasswordEmail_ss:
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hello
   SilverStripe\Security\Member:
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'

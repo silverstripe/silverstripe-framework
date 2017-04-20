@@ -1,5 +1,5 @@
 de:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Erstmalig hochgeladen'
     HEIGHT: Höhe
     LASTEDIT: 'Letzte Änderung'
@@ -11,7 +11,7 @@ de:
     ENTERINFO: 'Bitte geben Sie einen Nutzernamen und ein Passwort ein'
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Der  Nutzername oder das Passwort wurden nicht erkannt'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: alle
     NOANSWER: Nein
     YESANSWER: Ja
@@ -27,10 +27,11 @@ de:
     SUCCESSCONTENT: '<p>Login erfolgreich. Falls Sie nicht automatisch weitergeleitet werden, bitte <a target="_top" href="{link}">hier klicken</a></p>'
     TimedOutTitleAnonymous: 'Ihre Sitzung ist abgelaufen.'
     TimedOutTitleMember: 'Hallo {name}!<br />Ihre Sitzung ist abgelaufen.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
-    CHANGEPASSWORDTEXT3: 'Passwort ändern'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hallo
+    TEXT1: 'Hier ist Ihr'
+    TEXT2: 'Link zum Zurücksetzen des Passworts'
+    TEXT3: für
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nein
     YESANSWER: Ja
@@ -42,7 +43,7 @@ de:
     SHOWONCLICKTITLE: 'Passwort ändern'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'weniger als eine Minute'
     TIMEDIFFAGO: 'vor {difference}'
     TIMEDIFFIN: 'in {difference}'
@@ -60,13 +61,8 @@ de:
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: alle
-  ForgotPasswordEmail_ss:
-    HELLO: Hallo
-    TEXT1: 'Hier ist Ihr'
-    TEXT2: 'Link zum Zurücksetzen des Passworts'
-    TEXT3: für
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Ihre Sitzung ist abgelaufen. Bitte schicken Sie das Formular erneut ab.'
     CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
@@ -78,27 +74,11 @@ de:
     VALIDCURRENCY: 'Bitte geben Sie einen korrekten Betrag ein'
   SilverStripe\Forms\FormField:
     NONE: keine
-  GridAction:
-    DELETE_DESCRIPTION: Löschen
-    Delete: Löschen
-    UnlinkRelation: 'Verbindung entfernen'
-  SilverStripe\Forms\GridField\GridField:
-    Add: '{name} hinzufügen'
-    Filter: Filter
-    FilterBy: 'Filtern nach'
-    Find: Suchen
-    LinkExisting: 'Bestehenden Datensatz verknüpfen'
-    NewRecord: 'Neue(r) %s'
-    NoItemsFound: 'Keine Elemente gefunden'
-    PRINTEDAT: 'Gedruckt am'
-    PRINTEDBY: 'Gedruckt von'
-    PlaceHolder: '{type} suchen'
-    PlaceHolderWithLabels: 'Suche {type} über {name}'
-    RelationSearch: Relationssuche
-    ResetFilter: Zurücksetzen
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
     EditPermissionsFailure: 'Sie haben keine Berechtigung, die Verknüpfung zu lösen'
+  SilverStripe\Forms\GridField\GridField:
+    OF: von
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Abbrechen
     Create: Erstellen
@@ -106,7 +86,7 @@ de:
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Bearbeiten
   SilverStripe\Security\Group:
     PLURALNAME: Gruppen
@@ -177,7 +157,7 @@ de:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Seite
     View: Anzeigen
   SilverStripe\Security\PasswordValidator:
@@ -185,8 +165,7 @@ de:
     PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
     TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens %s Zeichen lang sein'
   SilverStripe\Security\Permission:
-    PLURALNAME: Berechtigungen
-    SINGULARNAME: Zugriffsberechtigung
+    UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
@@ -198,8 +177,6 @@ de:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: Berechtigungsrollencodes
     SINGULARNAME: Berechtigungsrollencode
-  Permissions:
-    UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   SilverStripe\Security\Security:
@@ -231,14 +208,9 @@ de:
     SINGULARNAME: Benutzerpasswort
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Hauptteil
-  TableListField:
-    CSVEXPORT: 'Als CSV-Datei exportieren'
-    Print: Drucken
-  TableListField_PageControls_ss:
-    OF: von
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensionen
     EDIT: Bearbeiten
     EDITINFO: 'Diese Datei bearbeiten'

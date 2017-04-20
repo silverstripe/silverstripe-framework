@@ -1,5 +1,5 @@
 fr:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Premier chargement'
     HEIGHT: Hauteur
     LASTEDIT: 'Dernière modification'
@@ -10,11 +10,13 @@ fr:
     ENTERINFO: 'Entrer un identifiant et un mot de passe s''il vous plaît.'
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
     ERRORNOTREC: 'Cet identifiant / mot de passe n''est pas reconnu'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Tout
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Salut
+    TEXT1: 'Voici votre'
+    TEXT2: 'lien de réinitialisation de mot de passe'
+    TEXT3: pour
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
     BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
@@ -23,7 +25,7 @@ fr:
     SHOWONCLICKTITLE: 'Changer le mot de passe'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'moins d''une minute'
     TIMEDIFFAGO: 'Il y a {difference}'
     TIMEDIFFIN: 'Dans {difference}'
@@ -39,13 +41,8 @@ fr:
     CHOOSE: (Choisir)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Saisissez une adresse de courrier électronique'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Tous
-  ForgotPasswordEmail_ss:
-    HELLO: Salut
-    TEXT1: 'Voici votre'
-    TEXT2: 'lien de réinitialisation de mot de passe'
-    TEXT3: pour
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Les mots de passe ne correspondent pas'
     VALIDATIONPASSWORDSNOTEMPTY: 'Les mots de passe peuvent être vides'
@@ -54,27 +51,11 @@ fr:
     VALIDCURRENCY: 'Saisissez une monnaie valide'
   SilverStripe\Forms\FormField:
     NONE: aucun
-  GridAction:
-    DELETE_DESCRIPTION: Supprime
-    Delete: Supprimer
-    UnlinkRelation: Séparer
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Ajouter {name}'
-    Filter: Filtrer
-    FilterBy: 'Filtrer par'
-    Find: Trouver
-    LinkExisting: 'Lien existant'
-    NewRecord: 'Nouveau %s'
-    NoItemsFound: 'Aucun élément n’a été trouvé.'
-    PRINTEDAT: 'Imprimé le'
-    PRINTEDBY: 'Imprimé par'
-    PlaceHolder: 'Rechercher {type}'
-    PlaceHolderWithLabels: 'Rechercher {type} par {name}'
-    RelationSearch: 'Rechercher relations'
-    ResetFilter: Réinitialiser
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     EditPermissionsFailure: 'Pas de permissions pour délier l''enregistrement'
+  SilverStripe\Forms\GridField\GridField:
+    OF: de
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Annuler
     Create: Créer
@@ -82,7 +63,7 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '%s %s supprimés'
     Save: Enregistrer
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Editer
   SilverStripe\Security\Group:
     AddRole: 'Ajouter un rôle pour ce groupe'
@@ -158,7 +139,7 @@ fr:
     IsNullLabel: 'Est Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: "«\_{value}\_» n’est pas un chiffre, seule donnée acceptée dans ce champ "
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Page
     View: Afficher
   SilverStripe\Security\PasswordValidator:
@@ -166,9 +147,7 @@ fr:
     PREVPASSWORD: 'Vous avez déjà utilisé ce mot de passe par le passé, veuillez en choisir un autre'
     TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins %s caractères'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrateur
-    FULLADMINRIGHTS: 'Droits d''administration complets'
-    FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
+    UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: "hérité du groupe «\_{title}\_»"
@@ -177,8 +156,6 @@ fr:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Limité aux administrateurs'
     Title: Titre
-  Permissions:
-    UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Entrer un numéro de téléphone valide'
   SilverStripe\Security\Security:
@@ -203,14 +180,9 @@ fr:
     ROLESDESCRIPTION: 'Les rôles sont des regroupements logiques d’autorisations qui peuvent être assignés à des groupes.<br />Ils peuvent être hérités de groupes parents, si nécessaire.'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exporter vers un fichier CSV'
-    Print: Imprimer
-  TableListField_PageControls_ss:
-    OF: de
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Saisissez l’heure au format valide ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Modifier
     EDITINFO: 'Modifier ce fichier'

@@ -1,5 +1,5 @@
 es:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Agregado por primera vez'
     HEIGHT: Alto
     LASTEDIT: 'Modificado por última vez'
@@ -11,7 +11,7 @@ es:
     ENTERINFO: 'Por favor introduzca su nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'Ese usuario no es un administrador.'
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
     NOANSWER: 'No'
     YESANSWER: Sí
@@ -27,15 +27,15 @@ es:
     SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
     TimedOutTitleAnonymous: 'Expiró su sesión.'
     TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Se ha cambiado la contraseña de la cuenta con dirección de correo electrónico {email}. Si no cambió su contraseña, por favor cambie su contraseña usando el siguiente enlace'
-    CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
-    CHANGEPASSWORDTEXT3: 'Cambiar contraseña'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Hola
+    TEXT1: 'Aquí tiene su'
+    TEXT2: 'enlace para restablecer contraseña'
+    TEXT3: para
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sí
-  CheckboxSetField_ss:
+  SilverStripe\Forms\CheckboxSetField.ss:
     NOOPTIONSAVAILABLE: 'No hay opciones disponibles'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Las constraseñas deben tener al menos {min} caracteres de longitud.'
@@ -47,10 +47,25 @@ es:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Símbolo
-  Date:
-    LessThanMinuteAgo: 'Hace menos de un minuto'
-    TIMEDIFFAGO: 'hace {difference}'
-    TIMEDIFFIN: 'en {difference}'
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} día'
+      other: '{count} días'
+    HOURS_SHORT_PLURALS:
+      one: '{count} hora'
+      other: '{count} horas'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} minuto'
+      other: '{count} minutos'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} mes'
+      other: '{count} meses'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} segundo'
+      other: '{count} segundos'
+    YEARS_SHORT_PLURALS:
+      one: '{count} año'
+      other: '{count} años'
   SilverStripe\Forms\DateField:
     NOTSET: 'sin establecer'
     TODAY: hoy
@@ -65,13 +80,8 @@ es:
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: Cualquiera
-  ForgotPasswordEmail_ss:
-    HELLO: Hola
-    TEXT1: 'Aquí tiene su'
-    TEXT2: 'enlace para restablecer contraseña'
-    TEXT3: para
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
     CSRF_FAILED_MESSAGE: 'Parece que hubo un problema técnico. Por favor, haga clic en el botón Volver, recargue su navegador y vuelva a intentarlo.'
@@ -84,27 +94,11 @@ es:
   SilverStripe\Forms\FormField:
     EXAMPLE: 'p.ej. {format}'
     NONE: ninguna
-  GridAction:
-    DELETE_DESCRIPTION: Borrar
-    Delete: Borrar
-    UnlinkRelation: Desenlazar
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Añadir {name}'
-    Filter: Filtro
-    FilterBy: 'Filtrar por'
-    Find: Buscar
-    LinkExisting: 'Enlace Existente'
-    NewRecord: 'Nuevo %s'
-    NoItemsFound: 'No se encontraron registros'
-    PRINTEDAT: 'Impreso en'
-    PRINTEDBY: 'Impreso por'
-    PlaceHolder: 'Buscar {type}'
-    PlaceHolderWithLabels: 'Buscar {type} por {name}'
-    RelationSearch: 'Búsqueda de relación'
-    ResetFilter: Restaurar
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     EditPermissionsFailure: 'No se pudo editar permisos'
+  SilverStripe\Forms\GridField\GridField:
+    OF: de
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Crear
@@ -112,7 +106,7 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado %s %s'
     Save: Guardar
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Editar
   SilverStripe\Security\Group:
     PLURALNAME: Grupos
@@ -200,7 +194,7 @@ es:
     IsNullLabel: 'Es Nulo'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' no es un número, sólo números pueden ser aceptados para este campo'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: Página
     View: Vista
   SilverStripe\Security\PasswordValidator:
@@ -208,11 +202,7 @@ es:
     PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
     TOOSHORT: 'Tu contraseña es muy corta'
   SilverStripe\Security\Permission:
-    PLURALNAME: Permisos
-    PLURALS:
-      one: 'Un Permiso'
-      other: '{count} Permisos'
-    SINGULARNAME: Permiso
+    UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
@@ -230,8 +220,6 @@ es:
       one: 'Un Código de Rol de Permiso'
       other: '{count} Códigos de Roles de Permiso'
     SINGULARNAME: 'Código del Rol de Permiso'
-  Permissions:
-    UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
   SilverStripe\Security\Security:
@@ -261,25 +249,6 @@ es:
       one: 'Un Objeto de Dato'
       other: '{count} Objetos de Datos'
     SINGULARNAME: 'Objeto de Dato'
-  SilverStripe\ORM\FieldType\DBDate:
-    DAYS_SHORT_PLURALS:
-      one: '{count} día'
-      other: '{count} días'
-    HOURS_SHORT_PLURALS:
-      one: '{count} hora'
-      other: '{count} horas'
-    MINUTES_SHORT_PLURALS:
-      one: '{count} minuto'
-      other: '{count} minutos'
-    MONTHS_SHORT_PLURALS:
-      one: '{count} mes'
-      other: '{count} meses'
-    SECONDS_SHORT_PLURALS:
-      one: '{count} segundo'
-      other: '{count} segundos'
-    YEARS_SHORT_PLURALS:
-      one: '{count} año'
-      other: '{count} años'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Contraseñas de los Miembros'
     PLURALS:
@@ -294,15 +263,9 @@ es:
     SINGULARNAME: 'Hash de inicio de sesión'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exportar a CSV'
-    CSVIMPORT: 'Importar CSV'
-    Print: Imprimir
-  TableListField_PageControls_ss:
-    OF: de
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensiones
     EDIT: Editar
     EDITINFO: 'Editar este archivo'

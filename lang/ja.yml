@@ -1,5 +1,5 @@
 ja:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 初回アップロード日時
     LASTEDIT: 最終更新日
     SIZE: ファイルサイズ
@@ -9,17 +9,19 @@ ja:
     ENTERINFO: 'ユーザー名とパスワードを入力してください'
     ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
-  Boolean:
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 何でも
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: こんにちわ！
+    TEXT1: 'ここ''貴方の'
+    TEXT2: パスワードリセットのリンク
+    TEXT3: は
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'パスワードは少なくとも {min} 文字の長さが必要です。'
     BETWEEN: 'パスワードは {min} から {max} までの長さでなければならない。'
     MAXIMUM: 'パスワードは{max} 文字以内でなければなりません。'
     SHOWONCLICKTITLE: パスワード変更
-  Date:
+  SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: １分以下
     TIMEDIFFAGO: '{difference}前'
     TIMEDIFFIN: '{difference}以内'
@@ -35,13 +37,8 @@ ja:
     CHOOSE: (選択)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'メールアドレスを入力してください'
-  Enum:
+  SilverStripe\ORM\FieldType\DBEnum:
     ANY: 何でも
-  ForgotPasswordEmail_ss:
-    HELLO: こんにちわ！
-    TEXT1: 'ここ''貴方の'
-    TEXT2: パスワードリセットのリンク
-    TEXT3: は
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
     VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
@@ -50,27 +47,11 @@ ja:
     VALIDCURRENCY: '有効な通貨を入力してください'
   SilverStripe\Forms\FormField:
     NONE: 何もありません
-  GridAction:
-    DELETE_DESCRIPTION: 削除
-    Delete: 削除
-    UnlinkRelation: リンク解除
-  SilverStripe\Forms\GridField\GridField:
-    Add: '{name}を追加'
-    Filter: フィルタ
-    FilterBy: によってフィルター
-    Find: 探す
-    LinkExisting: 既存のリンク
-    NewRecord: 新しい%s
-    NoItemsFound: '項目が見つかりませんでした'
-    PRINTEDAT: で印刷
-    PRINTEDBY: によって印刷
-    PlaceHolder: '{type}を探す'
-    PlaceHolderWithLabels: '{name} によって{type} を検索する'
-    RelationSearch: 関連検索
-    ResetFilter: リセット
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DeletePermissionsFailure: 削除権限がありません
     EditPermissionsFailure: レコードのリンクを解除するための権限がありません
+  SilverStripe\Forms\GridField\GridField:
+    OF: の
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: キャンセル
     Create: 作成
@@ -78,7 +59,7 @@ ja:
     DeletePermissionsFailure: 削除権限がありません
     Deleted: '削除済み %s %s'
     Save: 保存
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: 編集
   SilverStripe\Security\Group:
     AddRole: 'このグループに役割を追加'
@@ -154,7 +135,7 @@ ja:
     IsNullLabel: NULLである
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
-  Pagination:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
     Page: ページ
     View: 閲覧
   SilverStripe\Security\PasswordValidator:
@@ -162,9 +143,7 @@ ja:
     PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
     TOOSHORT: パスワードが短すぎます、%文字以上でなければなりません
   SilverStripe\Security\Permission:
-    AdminGroup: '管理者'
-    FULLADMINRIGHTS: '完全な管理権'
-    FULLADMINRIGHTS_HELP: 暗黙的に定義または他のすべての割り当てられた権限を無効にする。
+    UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
@@ -173,8 +152,6 @@ ja:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: '管理者のみ適用可能'
     Title: タイトル
-  Permissions:
-    UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: '電話番号を入力してください'
   SilverStripe\Security\Security:
@@ -199,14 +176,9 @@ ja:
     ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: メイン
-  TableListField:
-    CSVEXPORT: CSVにエクスポート
-    Print: 印刷
-  TableListField_PageControls_ss:
-    OF: の
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
-  UploadField:
+  SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 大きさ
     EDIT: 編集
     EDITINFO: このファイルを編集

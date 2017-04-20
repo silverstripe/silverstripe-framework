@@ -1,5 +1,5 @@
 pt_BR:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Primeiro upload'
     LASTEDIT: 'Última Alteração'
     SIZE: Tamanho
@@ -8,9 +8,11 @@ pt_BR:
     ENTERINFO: 'Por favor entre nome de usuário e senha.'
     ERRORNOTADMIN: 'Este usuário não é um administrador'
     ERRORNOTREC: 'Este nome de usuário / senha não é reconhecido'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: Olá
+    TEXT1: 'Este é seu'
+    TEXT2: 'link para reiniciar sua senha'
+    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Trocar senha'
   SilverStripe\Forms\CurrencyField:
@@ -20,11 +22,6 @@ pt_BR:
     TODAY: hoje
   SilverStripe\Forms\DropdownField:
     CHOOSE: Selecione
-  ForgotPasswordEmail_ss:
-    HELLO: Olá
-    TEXT1: 'Este é seu'
-    TEXT2: 'link para reiniciar sua senha'
-    TEXT3: para
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Senha não confere'
     VALIDATIONPASSWORDSNOTEMPTY: 'As Passwords não podem estar vazias'
@@ -89,5 +86,5 @@ pt_BR:
     PERMISSIONS: Permissões
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  TableListField:
+  SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exportar para CSV'

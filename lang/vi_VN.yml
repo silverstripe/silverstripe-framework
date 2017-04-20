@@ -1,5 +1,5 @@
 vi_VN:
-  ChangePasswordEmail_ss:
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
   SilverStripe\Forms\DateField:
     TODAY: 'hôm nay'

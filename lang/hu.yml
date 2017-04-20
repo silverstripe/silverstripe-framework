@@ -1,5 +1,5 @@
 hu:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Először feltöltve'
     LASTEDIT: 'Utoljára változott'
     SIZE: Méret
@@ -8,15 +8,12 @@ hu:
     ENTERINFO: 'Kérünk, ajd meg egy felhasználónevet és jelszót.'
     ERRORNOTADMIN: 'Ez a felhasználó nem adminisztrátor. '
     ERRORNOTREC: 'Ez a felhasználónév / jelszó nem létezik'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
-    HELLO: Szia!
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    HELLO: Szia
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Jelszó Megváltoztatása'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Válassz)
-  ForgotPasswordEmail_ss:
-    HELLO: Szia
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'A jelszavak nem egyeznek meg.'
     VALIDATIONPASSWORDSNOTEMPTY: 'A jelszó nem lehet üres.'

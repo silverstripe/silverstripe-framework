@@ -59,7 +59,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $button = new GridField_FormAction(
             $gridField,
             'export',
-            _t('TableListField.CSVEXPORT', 'Export to CSV'),
+            _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),
             'export',
             null
         );

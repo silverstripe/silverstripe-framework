@@ -1,5 +1,5 @@
 si:
-  AssetTableField:
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'
     LASTEDIT: 'අවසාන ලිපිය වෙනස්  කරන ලදී'
     SIZE: තරම
@@ -8,17 +8,14 @@ si:
     ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
     ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
     ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     HELLO: කොහොමද
+    TEXT1: 'මෙය ඔබගේ'
+    TEXT3: සඳහා
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (තොරන්න)
-  ForgotPasswordEmail_ss:
-    HELLO: කොහොමද
-    TEXT1: 'මෙය ඔබගේ'
-    TEXT3: සඳහා
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'මුර පද අසමානය'
     VALIDATIONPASSWORDSNOTEMPTY: 'මුර පදය විය නොහැක'
