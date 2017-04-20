@@ -1,0 +1,19 @@
+'SilverStripe\Security\Group':
+  mygroup:
+    Code: mygroup
+SilverStripe\Security\Member:
+  user-in-mygroup:
+    Email: user-in-mygroup@test.com
+    Password: test
+    Groups: '=>SilverStripe\Security\Group.mygroup'
+  user-without-groups:
+    Email: user-without-groups@test.com
+    Password: test
+  failed-login:
+    Email: failedlogin@test.com
+    Password: Password
+    FailedLoginCount: 0
+'SilverStripe\Security\Permission':
+  mycode:
+    Code: MYCODE
+    Group: '=>SilverStripe\Security\Group.mygroup'

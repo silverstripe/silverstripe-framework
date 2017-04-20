@@ -1,0 +1,34 @@
+km:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: ផ្លាស់ប្តូរពាក្យសំងាត់
+  DataObject:
+    SINGULARNAME: 'Data Objects'
+  DropdownField:
+    CHOOSE: (ជ្រើសរើស)
+  File:
+    PLURALNAME: ឯកសារ
+    SINGULARNAME: ឯកសារ
+  Group:
+    Code: លេខកូដក្រុម
+    Locked: 'មិនអាចប្រើ'
+    Parent: 'ចំណាត់ក្រុមដើម'
+    has_many_Permissions: ការអនុញ្ញាតិ្ត
+    many_many_Members: សមាជិក
+  Member:
+    EMAIL: អ៊ីម៉េល
+    INTERFACELANG: ភាសាប្រើសំរាប់ទំព័រមុខ
+    PLURALNAME: សមាជិក
+    SINGULARNAME: សមាជិក
+    SUBJECTPASSWORDCHANGED: ពាក្យសំងាត់របស់អ្នកបានផ្លាស់ប្តូរ
+    SUBJECTPASSWORDRESET: លីងសំរាប់ប្តូរពាក្យសំងាត់របស់អ្នក
+    belongs_many_many_Groups: 'ចំណាត់ក្រុម'
+    db_LockedOutUntil: 'ដោះចេញរហូតដល់'
+    db_PasswordExpiry: 'កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់'
+  NullableField:
+    IsNullLabel: ទទេ
+  Security:
+    ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម'
+  Versioned:
+    has_many_Versions: ជំនាន់

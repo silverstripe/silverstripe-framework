@@ -1,0 +1,99 @@
+---
+Name: corefieldtypes
+---
+SilverStripe\Core\Injector\Injector:
+  Boolean:
+    class: SilverStripe\ORM\FieldType\DBBoolean
+  Currency:
+    class: SilverStripe\ORM\FieldType\DBCurrency
+  DBClassName:
+    class: SilverStripe\ORM\FieldType\DBClassName
+  Date:
+    class: SilverStripe\ORM\FieldType\DBDate
+  Datetime:
+    class: SilverStripe\ORM\FieldType\DBDatetime
+  DBDatetime:
+    class: SilverStripe\ORM\FieldType\DBDatetime
+  Decimal:
+    class: SilverStripe\ORM\FieldType\DBDecimal
+  Double:
+    class: SilverStripe\ORM\FieldType\DBDouble
+  Enum:
+    class: SilverStripe\ORM\FieldType\DBEnum
+  Float:
+    class: SilverStripe\ORM\FieldType\DBFloat
+  ForeignKey:
+    class: SilverStripe\ORM\FieldType\DBForeignKey
+  HTMLText:
+    class: SilverStripe\ORM\FieldType\DBHTMLText
+    properties:
+      ProcessShortcodes: true
+  HTMLFragment:
+    class: SilverStripe\ORM\FieldType\DBHTMLText
+  HTMLVarchar:
+    class: SilverStripe\ORM\FieldType\DBHTMLVarchar
+  Int:
+    class: SilverStripe\ORM\FieldType\DBInt
+  BigInt:
+    class: SilverStripe\ORM\FieldType\DBBigInt
+  Locale:
+    class: SilverStripe\ORM\FieldType\DBLocale
+  DBLocale:
+    class: SilverStripe\ORM\FieldType\DBLocale
+  Money:
+    class: SilverStripe\ORM\FieldType\DBMoney
+  MultiEnum:
+    class: SilverStripe\ORM\FieldType\DBMultiEnum
+  Percentage:
+    class: SilverStripe\ORM\FieldType\DBPercentage
+  PolymorphicForeignKey:
+    class: SilverStripe\ORM\FieldType\DBPolymorphicForeignKey
+  PrimaryKey:
+    class: SilverStripe\ORM\FieldType\DBPrimaryKey
+  Text:
+    class: SilverStripe\ORM\FieldType\DBText
+  Time:
+    class: SilverStripe\ORM\FieldType\DBTime
+  Varchar:
+    class: SilverStripe\ORM\FieldType\DBVarchar
+  Year:
+    class: SilverStripe\ORM\FieldType\DBYear
+---
+Name: coresearchfilters
+---
+SilverStripe\Core\Injector\Injector:
+  DataListFilter.default: %$DataListFilter.ExactMatch
+  DataListFilter.EndsWith:
+    class: SilverStripe\ORM\Filters\EndsWithFilter
+  DataListFilter.ExactMatch:
+    class: SilverStripe\ORM\Filters\ExactMatchFilter
+  DataListFilter.Fulltext:
+    class: SilverStripe\ORM\Filters\FulltextFilter
+  DataListFilter.GreaterThan:
+    class: SilverStripe\ORM\Filters\GreaterThanFilter
+  DataListFilter.GreaterThanOrEqual:
+    class: SilverStripe\ORM\Filters\GreaterThanOrEqualFilter
+  DataListFilter.LessThan:
+    class: SilverStripe\ORM\Filters\LessThanFilter
+  DataListFilter.LessThanOrEqual:
+    class: SilverStripe\ORM\Filters\LessThanOrEqualFilter
+  DataListFilter.PartialMatch:
+    class: SilverStripe\ORM\Filters\PartialMatchFilter
+  DataListFilter.StartsWith:
+    class: SilverStripe\ORM\Filters\StartsWithFilter
+  DataListFilter.WithinRange:
+    class: SilverStripe\ORM\Filters\WithinRangeFilter
+---
+Name: coresearchaliases
+---
+SilverStripe\Core\Injector\Injector:
+  EndsWithFilter: %$DataListFilter.EndsWith
+  ExactMatchFilter: %$DataListFilter.ExactMatch
+  FulltextFilter: %$DataListFilter.Fulltext
+  GreaterThanFilter: $&DataListFilter.GreaterThan
+  GreaterThanOrEqualFilter: %$DataListFilter.GreaterThanOrEqual
+  LessThanFilter: %$DataListFilter.LessThan
+  LessThanOrEqualFilter: %$DataListFilter.LessThanOrEqual
+  PartialMatchFilter: %$DataListFilter.PartialMatch
+  StartsWithFilter: %$DataListFilter.StartsWith
+  WithinRangeFilter: %$DataListFilter.WithinRange

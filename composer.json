@@ -1,0 +1,80 @@
+{
+  "name": "silverstripe/framework",
+  "type": "silverstripe-module",
+  "description": "The SilverStripe framework",
+  "homepage": "http://silverstripe.org",
+  "license": "BSD-3-Clause",
+  "keywords": ["silverstripe", "framework"],
+  "authors": [
+    {
+      "name": "SilverStripe",
+      "homepage": "http://silverstripe.com"
+    },
+    {
+      "name": "The SilverStripe Community",
+      "homepage": "http://silverstripe.org"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "composer/installers": "~1.0",
+    "embed/embed": "^3.0",
+    "league/flysystem": "~1.0.12",
+    "monolog/monolog": "~1.11",
+    "nikic/php-parser": "^2 || ^3",
+    "silverstripe/config": "^1@dev",
+    "silverstripe/assets": "^1@dev",
+    "swiftmailer/swiftmailer": "~5.4",
+    "symfony/cache": "^3.3@dev",
+    "symfony/config": "^2.8",
+    "symfony/translation": "^2.8",
+    "symfony/yaml": "~2.7",
+    "vlucas/phpdotenv": "^2.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7",
+    "silverstripe/versioned": "^1.0@dev",
+    "silverstripe/behat-extension": "^2.1.0",
+    "silverstripe/serve": "dev-master",
+    "silverstripe/testsession": "^2.0.0-alpha3",
+    "se/selenium-server-standalone": "2.41.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "4.0.x-dev"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "SilverStripe\\Control\\": "src/Control/",
+      "SilverStripe\\Control\\Tests\\": "tests/php/Control/",
+      "SilverStripe\\Core\\": "src/Core/",
+      "SilverStripe\\Core\\Tests\\": "tests/php/Core/",
+      "SilverStripe\\Dev\\": "src/Dev/",
+      "SilverStripe\\Dev\\Tests\\": "tests/php/Dev/",
+      "SilverStripe\\Forms\\": "src/Forms/",
+      "SilverStripe\\Forms\\Tests\\": "tests/php/Forms/",
+      "SilverStripe\\i18n\\": "src/i18n/",
+      "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
+      "SilverStripe\\Logging\\": "src/Logging/",
+      "SilverStripe\\ORM\\": "src/ORM/",
+      "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
+      "SilverStripe\\Security\\": "src/Security/",
+      "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
+      "SilverStripe\\View\\": "src/View/",
+      "SilverStripe\\View\\Tests\\": "tests/php/View/"
+    },
+    "files": ["src/Core/Constants.php"],
+    "classmap": ["tests/behat/features/bootstrap"]
+  },
+  "include-path": [
+      "src/",
+      "thirdparty/"
+  ],
+  "scripts": {
+    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ tests/php",
+    "php-peg": "php thirdparty/php-peg/cli.php src/View/SSTemplateParser.peg > src/View/SSTemplateParser.php"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

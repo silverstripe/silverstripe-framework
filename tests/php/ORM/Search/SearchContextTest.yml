@@ -1,0 +1,72 @@
+SilverStripe\ORM\Tests\Search\SearchContextTest\Person:
+  person1:
+    Name: James
+    Email: james@example.com
+    HairColor: brown
+    EyeColor: brown
+  person2:
+    Name: John
+    Email: john@example.com
+    HairColor: blond
+    EyeColor: blue
+  person3:
+    Name: Jane
+    Email: jane@example.com
+    HairColor: brown
+    EyeColor: green
+  person4:
+    Name: Hemi
+    Email: hemi@example.com
+    HairColor: black
+    EyeColor: brown
+  person5:
+    Name: Sara
+    Email: sara@example.com
+    HairColor: black
+    EyeColor: green
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Action:
+  action1:
+    Description: Get search context working
+    SolutionArea: technical
+  action2:
+    Description: Get relationship editor working
+    SolutionArea: design
+  action3:
+    Description: Get RSS feeds working
+    SolutionArea: technical
+  action4:
+    Description: New logotype
+    SolutionArea: design
+
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Deadline:
+  deadline1:
+    CompletionDate: 2008-05-29 09:00:00
+  deadline2:
+    CompletionDate: 2008-05-20 09:00:00
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Project:
+  project1:
+    Name: CRM Application
+    DeadlineID: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Deadline.deadline1
+    Actions:
+      - =>SilverStripe\ORM\Tests\Search\SearchContextTest\Action.action1
+      - =>SilverStripe\ORM\Tests\Search\SearchContextTest\Action.action2
+  project2:
+    Name: Blog Website
+    DeadlineID: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Deadline.deadline2
+    Actions:
+      - =>SilverStripe\ORM\Tests\Search\SearchContextTest\Action.action3
+      - =>SilverStripe\ORM\Tests\Search\SearchContextTest\Action.action4
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\AllFilterTypes:
+  filter1:
+    ExactMatch: Match me exactly
+    PartialMatch: Match me partially
+    Negation: Shouldnt match me
+    HiddenValue: Filtered value
+    CollectionMatch: ExistingCollectionValue
+    StartsWith: 12345-6789 CamelCase
+    EndsWith: abcd-efgh-ijkl
+    FulltextField: one two three

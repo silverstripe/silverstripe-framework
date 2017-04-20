@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Standard module phpunit configuration.
+Requires PHPUnit ^5.7
+-->
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+	<testsuite name="Default">
+		<directory>tests/php</directory>
+    </testsuite>
+    <testsuite name="framework">
+        <directory>tests/php</directory>
+    </testsuite>
+    <testsuite name="cms">
+        <directory>cms/tests</directory>
+    </testsuite>
+</phpunit>

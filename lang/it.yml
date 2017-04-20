@@ -1,0 +1,740 @@
+it:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Sembra tu non abbia i permessi necessari per aggiungere {ObjectTitle} a {CampaignTitle}'
+    ErrorGeneral: 'Spiacente, ma c''è stato un errore'
+    ErrorItemPermissionDenied: 'Sembra tu non abbia i permessi necessari per aggiungere {ObjectTitle} alla campagna'
+    ErrorNotFound: 'Non è stato possibile trovare {Type}'
+    Success: '{ObjectTitle} aggiunto a {CampaignTitle} con successo'
+  AssetAdmin:
+    ALLOWEDEXTS: 'Estensioni consentite per l''upload'
+    HIDEALLOWEDEXTS: 'Nascondi estensioni permesse'
+    NEWFOLDER: NuovaCartella
+    SHOWALLOWEDEXTS: 'Mostra le estensioni consentite'
+  AssetTableField:
+    CREATED: 'Inizialmente caricato'
+    DIM: Dimensioni
+    FILENAME: 'Nome del file'
+    FOLDER: Cartella
+    HEIGHT: Altezza
+    LASTEDIT: 'Ultima modifica'
+    OWNER: Proprietario
+    PATH: Percorso
+    SIZE: Dimensione
+    TITLE: Titolo
+    TYPE: 'Tipo di file'
+    URL: URL
+    WIDTH: Larghezza
+  AssetUploadField:
+    ChooseFiles: 'Scegli file'
+    DRAGFILESHERE: 'Trascina file qui'
+    DROPAREA: 'Area di Trascinamento'
+    EDITALL: 'Modifica tutti'
+    EDITANDORGANIZE: 'Modifica & organizza'
+    EDITINFO: 'Modifica file'
+    FILES: Files
+    FROMCOMPUTER: 'Scegli file dal tuo computer'
+    FROMCOMPUTERINFO: 'Carica dal tuo conputer'
+    INSERTURL: 'Inserisci da URL'
+    REMOVEINFO: 'Rimuovi questo file da questo campo'
+    TOTAL: Totale
+    UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
+    UPLOADOR: O
+  BBCodeParser:
+    ALIGNEMENT: Allineamento
+    ALIGNEMENTEXAMPLE: 'allinea a destra'
+    BOLD: 'Testo Grassetto'
+    BOLDEXAMPLE: Grassetto
+    CODE: 'Blocco di Codice'
+    CODEDESCRIPTION: 'Blocco di codice non formattato'
+    CODEEXAMPLE: 'Blocco di codice'
+    COLORED: 'Testo Colorato'
+    COLOREDEXAMPLE: 'testo blu'
+    EMAILLINK: 'Link Email'
+    EMAILLINKDESCRIPTION: 'Crea link ad un indirizzo email'
+    IMAGE: Immagine
+    IMAGEDESCRIPTION: 'Visualizza un''immagine nel tuo post'
+    ITALIC: 'Testo Corsivo'
+    ITALICEXAMPLE: Corsivo
+    LINK: 'Link sito'
+    LINKDESCRIPTION: 'Link a un altro sito o URL'
+    STRUCK: 'Testo Sbarrato'
+    STRUCKEXAMPLE: Sbarrato
+    UNDERLINE: 'Testo Sottolineato'
+    UNDERLINEEXAMPLE: Sottolineato
+    UNORDERED: 'Lista non ordinata'
+    UNORDEREDDESCRIPTION: 'Lista non ordinata'
+    UNORDEREDEXAMPLE1: 'Argomento 1 non ordinato'
+  BackLink_Button_ss:
+    Back: Indietro
+  BasicAuth:
+    ENTERINFO: 'Per favore inserisci un nome utente e la password.'
+    ERRORNOTADMIN: 'Questo utente non è amministratore.'
+    ERRORNOTREC: 'Nome utente / password non riconosciuti'
+  Boolean:
+    ANY: Qualsiasi
+    NOANSWER: 'No'
+    YESANSWER: Sì
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Aggiungere Alla Campagna'
+  CMSLoadingScreen_ss:
+    LOADING: 'Caricamento in corso...'
+    REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
+  CMSMain:
+    ACCESS: 'Accesso alla sezione ''{title}'''
+    ACCESSALLINTERFACES: 'Accesso a tutte le sezioni del CMS'
+    ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
+    SAVE: Salva
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
+    BUTTONLOGIN: 'Accedi nuovamente'
+    BUTTONLOGOUT: Scollegati
+    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Preview del sito'
+  CMSPagesController_Tools_ss:
+    FILTER: Filtro
+  CMSProfileController:
+    MENUTITLE: 'Il mio Profilo'
+  CMSSecurity:
+    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
+    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
+    SUCCESS: Successo
+    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
+    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
+    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
+  CampaignAdmin:
+    ACCESS_HELP: 'Consentire la visione della sezione pubblicazione della campagna'
+    MENUTITLE: Campagne
+  Campaigns:
+    AddToCampaign: 'Aggiungere Alla Campagna'
+    AddToCampaignFormFieldLabel: 'Selezionare una Campagna'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
+    CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
+    CHANGEPASSWORDTEXT3: 'Cambia password'
+    EMAIL: Email
+    HELLO: Ciao
+    PASSWORD: Password
+  ChangeSet:
+    DESCRIPTION_AND: '{first} e {second}'
+    DESCRIPTION_ITEM: elemento
+    DESCRIPTION_ITEMS: elementi
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, e {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'altro elemento'
+    DESCRIPTION_OTHER_ITEMS: 'altri elementi'
+    NAME: Nome
+    PLURALNAME: Campagne
+    SINGULARNAME: Campagna
+    STATE: Stato
+  ChangeSetItem:
+    PLURALNAME: 'Cambiare gli elementi del set'
+    SINGULARNAME: 'Cambiare l''elemento del set'
+  CheckboxField:
+    NOANSWER: 'No'
+    YESANSWER: Sì
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. ''{value}'' non è un''opzione valida'
+  ConfirmedPasswordField:
+    ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
+    BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
+    CURRENT_PASSWORD_ERROR: 'La password che hai inserito non è corretta.'
+    CURRENT_PASSWORD_MISSING: 'Devi inserire la tua password attuale.'
+    LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
+    MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
+    SHOWONCLICKTITLE: 'Cambia password'
+  ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Devi loggarti con la tua password per vedere la bozza o il contenuto archiviato. <a href="%s">Premi qui per tornare indietro al sito pubblicato.</a>'
+    NOTLOGGEDIN: 'Non autenticato'
+  CreditCardField:
+    FIRST: primo
+    FOURTH: quarto
+    SECOND: secondo
+    THIRD: terzo
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Data Object'
+    SINGULARNAME: 'Data Object'
+  Date:
+    DAY: giorno
+    DAYS: giorni
+    HOUR: ora
+    HOURS: ora
+    LessThanMinuteAgo: 'meno di un minuto'
+    MIN: minuto
+    MINS: minuti
+    MONTH: mese
+    MONTHS: mesi
+    SEC: secondo
+    SECS: secondi
+    TIMEDIFFAGO: '{difference} fa'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: anno
+    YEARS: anni
+  DateField:
+    NOTSET: 'non impostato'
+    TODAY: oggi
+    VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
+    VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
+    VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
+  DatetimeField:
+    NOTSET: 'Non impostato'
+  Director:
+    INVALID_REQUEST: 'Richiesta non valida'
+  DropdownField:
+    CHOOSE: (Scegli)
+    CHOOSESEARCH: '(Scegliere o Cercare)'
+    CHOOSE_MODEL: '(Scegliere {name})'
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
+  EmailField:
+    VALIDATION: 'Inserisci un indirizzo e-mail'
+  Enum:
+    ANY: Qualsiasi
+  File:
+    AviType: 'File video AVI'
+    Content: Contenuto
+    CssType: 'File CSS'
+    DRAFT: Bozza
+    DmgType: 'Immagine disco Apple'
+    DocType: 'Documento Word'
+    Filename: 'Nome del file'
+    GifType: 'Immagine GIF - consigliata per diagrammi'
+    GzType: 'File compresso GZIP'
+    HtlType: 'File HTML'
+    HtmlType: 'File HTML'
+    INVALIDEXTENSION: 'Estensione non consentita (valide: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Estensione non consentita'
+    INVALIDEXTENSION_SHORT: 'Estensione non consentita'
+    IcoType: Icona
+    JpgType: 'Immagine JPEG - consigliata per foto'
+    JsType: 'File Javascript'
+    MODIFIED: Modificato
+    Mp3Type: 'File audio MP3'
+    MpgType: 'File video MPEG'
+    NOVALIDUPLOAD: 'Il file caricato non è valido'
+    Name: Nome
+    PLURALNAME: File
+    PdfType: 'File Adobe Acrobat PDF'
+    PngType: 'Immagine PNG - consigliata per utilizzo generico'
+    SINGULARNAME: File
+    TiffType: 'Immagine TIFF'
+    Title: Titolo
+    WavType: 'File audio WAV'
+    XlsType: 'Foglio di calcolo Excel'
+    ZipType: 'File compresso ZIP'
+  Filesystem:
+    SYNCRESULTS: 'Sincronizzazione completata: {createdcount} elementi creati, {deletedcount} elementi eliminati'
+  Folder:
+    PLURALNAME: Cartelle
+    SINGULARNAME: Cartella
+  ForgotPasswordEmail_ss:
+    HELLO: Ciao
+    TEXT1: 'Questa è la tua'
+    TEXT2: 'Link per l''azzeramento della password'
+    TEXT3: per
+  Form:
+    CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
+    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
+    FIELDISREQUIRED: '{name} è richiesto'
+    SubmitBtnLabel: Vai
+    VALIDATIONCREDIT: 'Assicurati che il numero di carta di credito sia inserito correttamente'
+    VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
+    VALIDATIONNOTUNIQUE: 'Il valore inserito non è unico'
+    VALIDATIONPASSWORDSDONTMATCH: 'Le password non corrispondono'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Le password non possono essere vuote'
+    VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
+    VALIDATOR: Valiidatore
+    VALIDCURRENCY: 'Inserisci una valuta valida'
+  FormField:
+    NONE: nessuno
+  GridAction:
+    DELETE_DESCRIPTION: Elimina
+    Delete: Elimina
+    UnlinkRelation: Scollega
+  GridField:
+    Add: 'Aggiungi {name}'
+    Filter: Filtra
+    FilterBy: 'Filtra per'
+    Find: Trova
+    LEVELUP: 'Livello superiore'
+    LinkExisting: 'Collega esistente'
+    NewRecord: 'Nuovo %s'
+    NoItemsFound: 'Nessun elemento trovato'
+    PRINTEDAT: 'Stampato alle'
+    PRINTEDBY: 'Stampato da'
+    PlaceHolder: 'Trova {type}'
+    PlaceHolderWithLabels: 'Trova {type} per {name}'
+    RelationSearch: 'Cerca relazione'
+    ResetFilter: Azzera
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Non hai i permessi per eliminare'
+    EditPermissionsFailure: 'Non hai i permessi per modificare'
+  GridFieldDetailForm:
+    CancelBtn: Annulla
+    Create: Crea
+    Delete: Elimina
+    DeletePermissionsFailure: 'Non hai i permessi per eliminare'
+    Deleted: 'Eliminato %s %s'
+    Save: Salva
+    Saved: 'Salvato {name} {link}'
+  GridFieldEditButton_ss:
+    EDIT: Modifica
+  GridFieldItemEditView:
+    Go_back: 'Torna indietro'
+  Group:
+    AddRole: 'Aggiungi un ruolo per questo gruppo'
+    Code: 'Codice gruppo'
+    DefaultGroupTitleAdministrators: Amministratori
+    DefaultGroupTitleContentAuthors: 'Autori di contenuto'
+    Description: Descrizione
+    GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
+    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "%s" (richiede accesso ADMIN)'
+    Locked: 'Bloccato?'
+    NoRoles: 'Nessun ruolo trovato'
+    PLURALNAME: Gruppi
+    Parent: 'Gruppo padre'
+    RolesAddEditLink: 'Gestisci ruoli'
+    SINGULARNAME: Gruppo
+    Sort: 'Tipo ordinamento'
+    has_many_Permissions: Permessi
+    many_many_Members: Membri
+  GroupImportForm:
+    Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: '<div class="advanced"><h4>Utilizzo avanzato</h4><ul><li>Colonne consentite: <em>%s</em></li><li>Gruppi esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li><li>Possono essere create gerarchie usando la colonna <em>ParentCode</em></li><li>Codici di autorizzazione possono essere assegnati con la colonna <em>PermissionCode</em>. I codici di autorizzazione preesistenti non saranno cancellati.</li></ul></div>'
+    ResultCreated: 'Creati {count} gruppi'
+    ResultDeleted: 'Eliminati %d gruppi'
+    ResultUpdated: 'Aggiornati %d gruppi'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
+    ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
+    ANCHORVALUE: Ancora
+    BUTTONADDURL: 'Aggiungi url'
+    CAPTIONTEXT: 'Didascalia di testo'
+    CSSCLASS: 'Allineamento / stile'
+    CSSCLASSCENTER: 'Centrato, su se stesso.'
+    CSSCLASSLEFT: 'Sulla sinistra, con il testo attorno.'
+    CSSCLASSLEFTALONE: 'Sulla sinistra, da sola.'
+    CSSCLASSRIGHT: 'Sulla destra, con il testo attorno.'
+    DETAILS: Dettagli
+    EMAIL: 'Indirizzo email'
+    FOLDER: Cartella
+    IMAGEALT: 'Testo alternativo (alt)'
+    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato nel caso l''immagine non possa essere visualizzata'
+    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
+    IMAGEDIMENSIONS: Dimensioni
+    IMAGEHEIGHTPX: Altezza
+    IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
+    IMAGETITLETEXT: 'Titolo (tooltip)'
+    IMAGETITLETEXTDESC: 'Per informazioni aggiuntive sull''immagine'
+    IMAGEWIDTHPX: Larghezza
+    INSERTMEDIA: 'Inserisci media da'
+    LINK: 'Inserisci Link'
+    LINKANCHOR: 'Link ad un''ancora su questa pagina'
+    LINKDESCR: 'Descrizione del link'
+    LINKDETAILS: 'Dettagli link'
+    LINKEMAIL: 'Link ad un indirizzo email'
+    LINKEXTERNAL: 'Link a un altro sito'
+    LINKFILE: 'Link per scaricare un file'
+    LINKINTERNAL: 'Link ad una pagina di questo sito'
+    LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
+    LINKTO: 'Tipo di link'
+    PAGE: Pagina
+    SUBJECT: 'Oggetto email'
+    URL: URL
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file. Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
+    URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
+    UpdateMEDIA: 'Aggiorna media'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Possono essere incorporati solo URL assoluti'
+    ERROR_HOSTNAME: 'L''hostname di questo file non è incluso nella whitelist'
+    ERROR_ID: 'Sono necessari entrambi i parametri "ID" e "FileURL" per identificare il file'
+    ERROR_NOTFOUND: 'Impossibile trovare il file da visualizzare'
+    ERROR_OEMBED_REMOTE: 'L''incorporamento è consentito solo con file remoti'
+    ERROR_SCHEME: 'Lo schema di questo file non è incluso nella whitelist'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
+  HtmlEditorField:
+    ADDURL: 'Aggiungi URL'
+    ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
+    ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
+    ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
+    ANCHORVALUE: Ancora
+    BUTTONADDURL: 'Aggiungi url'
+    BUTTONINSERT: Inserisci
+    BUTTONINSERTLINK: 'Inserisci link'
+    BUTTONREMOVELINK: 'Rimuovi link'
+    BUTTONUpdate: Aggiorna
+    CAPTIONTEXT: 'Didascalia di testo'
+    CSSCLASS: 'Allineamento / stile'
+    CSSCLASSCENTER: 'Centrato, su se stesso.'
+    CSSCLASSLEFT: 'Sulla sinistra, con il testo inserito attorno.'
+    CSSCLASSLEFTALONE: 'Sulla sinistra, da sola.'
+    CSSCLASSRIGHT: 'Sulla destra, con il testo inserito attorno.'
+    DETAILS: Dettagli
+    EMAIL: 'Indirizzo email'
+    FILE: File
+    FOLDER: Cartella
+    FROMCMS: 'Dal CMS'
+    FROMCOMPUTER: 'Dal tuo computer'
+    FROMWEB: 'Dal web'
+    FindInFolder: 'Trova nella Cartella'
+    IMAGEALT: 'Testo alternativo (alt)'
+    IMAGEDIMENSIONS: Dimensioni
+    IMAGEHEIGHTPX: Altezza
+    IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
+    IMAGETITLETEXT: 'Titolo (tooltip)'
+    IMAGETITLETEXTDESC: 'Per informazioni addizionali sull''immagine'
+    IMAGEWIDTHPX: Larghezza
+    INSERTMEDIA: 'Inserisci Media'
+    LINK: 'Inserisci Link'
+    LINKANCHOR: 'Ancora su questa pagina'
+    LINKDESCR: 'Descrizione del link'
+    LINKEMAIL: 'Indirizzo email'
+    LINKEXTERNAL: 'Un altro sito web'
+    LINKFILE: 'Scarica un file'
+    LINKINTERNAL: 'Pagina su questo sito'
+    LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
+    LINKTO: 'Collega a'
+    PAGE: Pagina
+    SUBJECT: 'Oggetto email'
+    URL: URL
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file. Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
+    URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
+    UpdateMEDIA: 'Aggiorna Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe_ss:
+    TITLE: 'Iframe per l''inserimento dell''immagine'
+  LeftAndMain:
+    CANCEL: Annulla
+    CANT_REORGANISE: 'Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate.'
+    DELETED: Eliminato.
+    HELP: Aiuto
+    PERMAGAIN: 'Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password.'
+    PERMALREADY: 'Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto.'
+    PERMDEFAULT: 'Devi essere autenticato per accedere all''area amministrativa; Per favore inserisci le tue credenziali qui sotto'
+    PreviewButton: Anteprima
+    REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
+    SAVEDUP: Salvato.
+    ShowAsList: 'Mostra come lista'
+    TooManyPages: 'Troppe pagine'
+    ValidationError: 'Errore di validazione'
+    VersionUnknown: sconosciuto
+  LeftAndMain_Menu_ss:
+    Hello: Ciao
+    LOGOUT: Disconnetti
+  ListboxField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. %s non è un''opzione valida'
+  LoginAttempt:
+    Email: 'Indirizzo e-mail'
+    IP: 'Indirizzo IP'
+    PLURALNAME: 'Tentativi d''accesso'
+    SINGULARNAME: 'Tentativo d''accesso'
+    Status: Stato
+  Member:
+    ADDGROUP: 'Aggiungi gruppo'
+    BUTTONCHANGEPASSWORD: 'Cambia password'
+    BUTTONLOGIN: Accedi
+    BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
+    BUTTONLOSTPASSWORD: 'Ho perso la mia password'
+    CANTEDIT: 'Non hai i permessi per fare questo'
+    CONFIRMNEWPASSWORD: 'Conferma nuova password'
+    CONFIRMPASSWORD: 'Conferma password'
+    CURRENT_PASSWORD: 'Password Attuale'
+    DATEFORMAT: 'Formato della data'
+    DefaultAdminFirstname: 'Amministratore Predefinito'
+    DefaultDateTime: predefinito
+    EDIT_PASSWORD: 'Nuova password'
+    EMAIL: Email
+    EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
+    ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
+    ERRORLOCKEDOUT2: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra {count} minuti.'
+    ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
+    ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
+    ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
+    FIRSTNAME: Nome
+    INTERFACELANG: 'Lingua dell''interfaccia'
+    INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
+    KEEPMESIGNEDIN: 'Resta autenticato'
+    LOGGEDINAS: 'Sei collegato come {name}.'
+    NEWPASSWORD: 'Nuova password'
+    NoPassword: 'Manca la password per questo utente.'
+    PASSWORD: Password
+    PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
+    PLURALNAME: Utenti
+    SINGULARNAME: Utente
+    SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
+    SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
+    SURNAME: Cognome
+    TIMEFORMAT: 'Formato dell''ora'
+    ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
+    WELCOMEBACK: 'Bentornato, {firstname}'
+    YOUROLDPASSWORD: 'La tua vecchia password'
+    belongs_many_many_Groups: Gruppi
+    db_LastVisited: 'Ultima visita in data'
+    db_Locale: 'Localizzazione interfaccia'
+    db_LockedOutUntil: 'Bloccato fino al'
+    db_NumVisit: 'Numero di visite'
+    db_Password: Password
+    db_PasswordExpiry: 'Data di scadenza della password'
+  MemberAuthenticator:
+    TITLE: 'E-mail &amp; Password'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) o PM (Post meridiem)'
+    Custom: Personalizza
+    DATEFORMATBAD: 'Il formato della data non è valido'
+    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
+    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
+    FOURDIGITYEAR: 'Anno a quattro cifre'
+    FULLNAMEMONTH: 'Nome completo del mese (es. Giugno)'
+    HOURNOLEADING24: 'Ore senza zero iniziale, formato 24 ore'
+    MINUTENOLEADING: 'Minuti senza zero iniziale'
+    MONTHNOLEADING: 'Mese senza zero iniziale'
+    Preview: Anteprima
+    SHORTMONTH: 'Nome corto del mese (es. Giu)'
+    TWODIGITDAY: 'Giorno del mese a due cifre'
+    TWODIGITHOUR: 'Ora a due cifre (00 a 23)'
+    TWODIGITMINUTE: 'Minuti a due cifre (00 a 59)'
+    TWODIGITMONTH: 'Mese a due cifre (01=Gennaio, ecc.)'
+    TWODIGITSECOND: 'Secondi a due cifre (00 a 59)'
+    TWODIGITYEAR: 'Anno a due cifre'
+    Toggle: 'Mostra aiuto per la formattazione'
+  MemberImportForm:
+    Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: '<div class="advanced"><h4>Utilizzo avanzato</h4><ul><li>Colonne consentite: <em>%s</em></li><li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li><li>Possono essere assegnati gruppi usando la colonna <em>Groups</em>. I gruppi sono identificati dalla proprietà <em>Code</em>, possono essere specificati più gruppi separandoli con la virgola. I gruppi preesistenti non saranno cancellati.</li></ul></div>'
+    ResultCreated: 'Creati {count} utenti'
+    ResultDeleted: 'Eliminati %d utenti'
+    ResultNone: 'Nessun cambiamento'
+    ResultUpdated: 'Aggiornati {count} utenti'
+  MemberPassword:
+    PLURALNAME: 'Password utenti'
+    SINGULARNAME: 'Password utente'
+  MemberTableField:
+    APPLY_FILTER: 'Applica filtro'
+  ModelAdmin:
+    DELETE: Elimina
+    DELETEDRECORDS: 'Eliminati {count} record.'
+    EMPTYBEFOREIMPORT: 'Cancella database prima dell''import'
+    IMPORT: 'Importa da CSV'
+    IMPORTEDRECORDS: 'Importati {count} record.'
+    NOCSVFILE: 'Scegli un file CSV da importare'
+    NOIMPORT: 'Nulla da importare.'
+    RESET: Azzera
+    Title: 'Modelli di dati'
+    UPDATEDRECORDS: 'Aggiornati {count} record.'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'Colonne database'
+    IMPORTSPECLINK: 'Mostra specifiche per %s'
+    IMPORTSPECRELATIONS: Relazioni
+    IMPORTSPECTITLE: 'Specifiche per %s'
+  ModelAdmin_Tools_ss:
+    FILTER: Filtra
+    IMPORT: Importa
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Importa
+    SEARCHLISTINGS: Cerca
+  MoneyField:
+    FIELDLABELAMOUNT: Importo
+    FIELDLABELCURRENCY: Valuta
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. È stata fornita l''opzione non valida {value}'
+  NullableField:
+    IsNullLabel: 'è nullo.'
+  NumericField:
+    VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
+  Pagination:
+    Page: Pagina
+    View: Visualizza
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
+    PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
+    TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
+  Permission:
+    AdminGroup: Amministratore
+    CMS_ACCESS_CATEGORY: 'Accesso CMS'
+    FULLADMINRIGHTS: 'Diritti di amministrazione'
+    FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
+    PLURALNAME: Permessi
+    SINGULARNAME: Permesso
+  PermissionCheckboxSetField:
+    AssignedTo: 'assegnato a "{title}"'
+    FromGroup: 'ereditato dal gruppo "{title}"'
+    FromRole: 'ereditato dal ruolo "{title}"'
+    FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
+  PermissionRole:
+    OnlyAdminCanApply: 'Solo l''amministratore può applicare'
+    PLURALNAME: Ruoli
+    SINGULARNAME: Ruolo
+    Title: Titolo
+  PermissionRoleCode:
+    PLURALNAME: 'Codici di ruolo'
+    PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
+    SINGULARNAME: 'Codice Ruolo'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
+    UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
+  PhoneNumberField:
+    VALIDATION: 'Per favore inserisci un numero di telefono valido'
+  RememberLoginHash:
+    PLURALNAME: 'Ricordare gli Hash di Login'
+    SINGULARNAME: 'Ricordare l''Hash di Login'
+  Security:
+    ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
+    BUTTONSEND: 'Inviami il link per azzerare la password'
+    CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
+    CHANGEPASSWORDHEADER: 'Cambia la tua password'
+    ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
+    ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
+    LOGGEDOUT: 'Sei stato disconnesso. Se vuoi autenticarti nuovamente, inserisci qui sotto le tue credenziali.'
+    LOGIN: Entra
+    LOSTPASSWORDHEADER: 'Password smarrita'
+    NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
+    NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
+    NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
+    PASSWORDSENTHEADER: 'Link per azzeramento della password inviato a ''{email}'''
+    PASSWORDSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato a ''{email}'', fornito un account esistente per questo indirizzo e-mail.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Consente di vedere, aggiungere e modificare utenti, come assegnare a loro permessi e ruoli.'
+    APPLY_ROLES: 'Applica ruoli ai gruppi'
+    APPLY_ROLES_HELP: 'Abilità di modificare i ruoli assegnati a un gruppo. Richiede il permesso "Accesso alla sezione ''Utenti''".'
+    EDITPERMISSIONS: 'Modifica i permessi e gli indirizzi IP in ogni gruppo'
+    EDITPERMISSIONS_HELP: 'Capacità di modificare Permessi e Indirizzi IP per un gruppo. Richiede il permesso "Accesso alla sezione ''Sicurezza''"'
+    GROUPNAME: 'Nome del gruppo'
+    IMPORTGROUPS: 'Importa gruppi'
+    IMPORTUSERS: 'Importa utenti'
+    MEMBERS: Utenti
+    MENUTITLE: Sicurezza
+    MemberListCaution: 'Attenzione: Gli utenti rimossi da questa lista verranno rimossi anche da tutti i gruppi e dal database'
+    NEWGROUP: 'Nuovo gruppo'
+    PERMISSIONS: Permessi
+    ROLES: Ruoli
+    ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto, questi possono essere ereditati dai gruppi padre.'
+    TABROLES: Ruoli
+    Users: Utenti
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Importa da CSV'
+    FileFieldLabel: 'File CSV <small>(Estensioni consentite: *.csv)</small>'
+  SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Cambia visualizzazione'
+    Desktop: Desktop
+    DualWindowView: 'Finestra doppia'
+    Edit: Modifica
+    EditView: 'Modalità modifica'
+    Mobile: Mobile
+    PreviewState: 'Stato anteprima'
+    PreviewView: 'Modalità anteprima'
+    Responsive: Responsivo
+    SplitView: 'Modalità promiscua'
+    Tablet: 'Preview mode'
+    ViewDeviceWidth: 'Seleziona una larghezza di preview'
+    Width: larghezza
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'Il mio Profilo'
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Campagne
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Sicurezza
+  SilverStripe\Assets\File:
+    PLURALNAME: File
+    SINGULARNAME: File
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Cartelle
+    SINGULARNAME: Cartella
+  SilverStripe\Assets\Image:
+    PLURALNAME: Immagini
+    SINGULARNAME: Immagine
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Object'
+    SINGULARNAME: 'Data Object'
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Campagne
+    SINGULARNAME: Campagna
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: 'Cambiare gli elementi del set'
+    SINGULARNAME: 'Cambiare l''elemento del set'
+  SilverStripe\Security\Group:
+    PLURALNAME: Gruppi
+    SINGULARNAME: Gruppo
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Tentativi d''accesso'
+    SINGULARNAME: 'Tentativo d''accesso'
+  SilverStripe\Security\Member:
+    PLURALNAME: Utenti
+    SINGULARNAME: Utente
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Password utenti'
+    SINGULARNAME: 'Password utente'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Permessi
+    SINGULARNAME: Permesso
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Ruoli
+    SINGULARNAME: Ruolo
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Codici di ruolo'
+    SINGULARNAME: 'Codice di ruolo'
+  SiteTree:
+    TABMAIN: Principale
+  TableListField:
+    CSVEXPORT: 'Esporta come CSV'
+    Print: Stampa
+  TableListField_PageControls_ss:
+    OF: di
+  TextField:
+    VALIDATEMAXLENGTH: 'Il valore di {name} non deve superare i {maxLength} caratteri di lunghezza'
+  TimeField:
+    VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
+  ToggleField:
+    LESS: meno
+    MORE: più
+  UploadField:
+    ATTACHFILE: 'Allega un file'
+    ATTACHFILES: 'Allega file'
+    AttachFile: 'Allega file'
+    CHOOSEANOTHERFILE: 'Scegli un altro file'
+    CHOOSEANOTHERINFO: 'Sostituisci questo file con un altro dal CMS'
+    DELETE: Elimina
+    DELETEINFO: 'Elimina permanentemente questo file dal CMS'
+    DOEDIT: Salva
+    DROPFILE: 'Trascina un file'
+    DROPFILES: 'trascina file'
+    Dimensions: Dimensioni
+    EDIT: Modifica
+    EDITINFO: 'Modifica questo file'
+    FIELDNOTSET: 'Informazioni file non trovate'
+    FROMCOMPUTER: 'Dal tuo computer'
+    FROMCOMPUTERINFO: 'Seleziona dal tuo computer'
+    FROMFILES: 'Dal CMS'
+    HOTLINKINFO: 'Info: Questa immagine sarà collegata. Assicurati di avere il permesso di farlo.'
+    MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
+    MAXNUMBEROFFILESONE: 'Puoi caricare solo un file'
+    MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
+    OVERWRITEWARNING: 'Esiste già un file con lo stesso nome'
+    REMOVE: Rimuovi
+    REMOVEINFO: 'Rimuove il file da qui, ma non lo elimina dal CMS'
+    STARTALL: 'Avvia tutti'
+    Saved: Salvato
+    UPLOADSINTO: 'salva in /{path}'
+  Versioned:
+    INFERRED_TITLE: 'Generato dalla pubblicazione di ''{title}'' alle {created}'
+    has_many_Versions: Versioni
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Archiviare
+    Archived: '%s %s archiviata'
+    BUTTONARCHIVEDESC: 'Nascondere e mettere in archivio'
+    BUTTONPUBLISH: Pubblicare
+    BUTTONUNPUBLISH: Nascondere
+    BUTTONUNPUBLISHDESC: 'Rimuovere questo record dal sito pubblicato'
+    Published: 'Pubblicato {name} {link}'
+    Unpublished: 'Nascosto %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

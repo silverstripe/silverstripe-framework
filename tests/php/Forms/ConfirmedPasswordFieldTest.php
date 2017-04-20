@@ -1,0 +1,146 @@
+<?php
+
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Control\Tests\ControllerTest\TestController;
+use SilverStripe\Security\Member;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\ConfirmedPasswordField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
+
+class ConfirmedPasswordFieldTest extends SapphireTest
+{
+
+    public function testSetValue()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA');
+        $this->assertEquals('valueA', $field->Value());
+        $this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+        $this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+        $field->setValue('valueB');
+        $this->assertEquals('valueB', $field->Value());
+        $this->assertEquals('valueB', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+        $this->assertEquals('valueB', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+    }
+
+    public function testHashHidden()
+    {
+        $field = new ConfirmedPasswordField('Password', 'Password', 'valueA');
+        $field->setCanBeEmpty(true);
+
+        $this->assertEquals('valueA', $field->Value());
+        $this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+        $this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+
+        $member = new Member();
+        $member->Password = "valueB";
+        $member->write();
+
+        /**
+ * @skipUpgrade
+*/
+        $form = new Form(new TestController(), 'Form', new FieldList($field), new FieldList());
+        $form->loadDataFrom($member);
+
+        $this->assertEquals('', $field->Value());
+        $this->assertEquals('', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+        $this->assertEquals('', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+    }
+
+    public function testSetShowOnClick()
+    {
+        //hide by default and display show/hide toggle button
+        $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, true);
+        $fieldHTML = $field->Field();
+        $this->assertContains(
+            "showOnClickContainer",
+            $fieldHTML,
+            "Test class for hiding/showing the form contents is set"
+        );
+        $this->assertContains(
+            "showOnClick",
+            $fieldHTML,
+            "Test class for hiding/showing the form contents is set"
+        );
+
+        //show all by default
+        $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, false);
+        $fieldHTML = $field->Field();
+        $this->assertNotContains(
+            "showOnClickContainer",
+            $fieldHTML,
+            "Test class for hiding/showing the form contents is set"
+        );
+        $this->assertNotContains(
+            "showOnClick",
+            $fieldHTML,
+            "Test class for hiding/showing the form contents is set"
+        );
+    }
+
+    public function testValidation()
+    {
+        $field = new ConfirmedPasswordField(
+            'Test',
+            'Testing',
+            array(
+            "_Password" => "abc123",
+            "_ConfirmPassword" => "abc123"
+            )
+        );
+        $validator = new RequiredFields();
+        /**
+ * @skipUpgrade
+*/
+        $form = new Form(new TestController(), 'Form', new FieldList($field), new FieldList(), $validator);
+        $this->assertTrue(
+            $field->validate($validator),
+            "Validates when both passwords are the same"
+        );
+        $field->setName("TestNew"); //try changing name of field
+        $this->assertTrue(
+            $field->validate($validator),
+            "Validates when field name is changed"
+        );
+        //non-matching password should make the field invalid
+        $field->setValue(
+            array(
+            "_Password" => "abc123",
+            "_ConfirmPassword" => "123abc"
+            )
+        );
+        $this->assertFalse(
+            $field->validate($validator),
+            "Does not validate when passwords differ"
+        );
+    }
+
+    public function testFormValidation()
+    {
+        /**
+ * @skipUpgrade
+*/
+        $form = new Form(
+            new Controller(),
+            'Form',
+            new FieldList($field = new ConfirmedPasswordField('Password')),
+            new FieldList()
+        );
+
+        $form->loadDataFrom(
+            array(
+            'Password' => array(
+                '_Password' => '123',
+                '_ConfirmPassword' => '999',
+            )
+            )
+        );
+
+        $this->assertEquals('123', $field->children->first()->Value());
+        $this->assertEquals('999', $field->children->last()->Value());
+        $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+    }
+}

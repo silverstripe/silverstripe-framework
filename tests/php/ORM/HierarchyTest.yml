@@ -1,0 +1,55 @@
+SilverStripe\ORM\Tests\HierarchyTest\TestObject:
+  obj1:
+    Title: Obj 1
+  obj2:
+    Title: Obj 2
+  obj3:
+    Title: Obj 3
+  obj2a:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj2
+    Title: Obj 2a
+  obj2b:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj2
+    Title: Obj 2b
+  obj3a:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3
+    Title: Obj 3a
+  obj3b:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3
+    Title: Obj 3b
+  obj3c:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3
+    Title: Obj 3c
+  obj3d:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3
+    Title: Obj 3d
+  obj2aa:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj2a
+    Title: Obj 2aa
+  obj2ab:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj2a
+    Title: Obj 2ab
+  obj3aa:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3a
+    Title: Obj 3aa
+  obj3ab:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3a
+    Title: Obj 3ab
+  obj3ba:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3b
+    Title: Obj 3ba
+  obj3bb:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3b
+    Title: Obj 3bb
+  obj3ca:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3c
+    Title: Obj 3c
+SilverStripe\ORM\Tests\HierarchyTest\HideTestObject:
+  obj4:
+    Title: Obj 4
+  obj4a:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HideTestObject.obj4
+    Title: Obj 4a
+SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject:
+  obj4b:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HideTestObject.obj4

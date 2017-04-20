@@ -1,0 +1,78 @@
+'SilverStripe\Security\Permission':
+  admin:
+    Code: ADMIN
+  security-admin:
+    Code: CMS_ACCESS_SecurityAdmin
+'SilverStripe\Security\Group':
+  admingroup:
+    Title: Admin
+    Code: admin
+    Permissions: '=>SilverStripe\Security\Permission.admin'
+  securityadminsgroup:
+    Title: securityadminsgroup
+    Code: securityadminsgroup
+    Permissions: '=>SilverStripe\Security\Permission.security-admin'
+  staffgroup:
+    Title: staffgroup
+    Code: staffgroup
+  managementgroup:
+    Title: managementgroup
+    Code: managementgroup
+    Parent: '=>SilverStripe\Security\Group.staffgroup'
+  accountinggroup:
+    Title: accountinggroup
+    Code: accountinggroup
+    Parent: '=>SilverStripe\Security\Group.staffgroup'
+  ceogroup:
+    Title: ceogroup
+    Code: ceogroup
+    Parent: '=>SilverStripe\Security\Group.managementgroup'
+  memberlessgroup:
+    Title: Memberless Group
+    code: memberless
+'SilverStripe\Security\Member':
+  admin:
+    FirstName: Admin
+    Email: admin@silverstripe.com
+    Groups: '=>SilverStripe\Security\Group.admingroup'
+  other-admin:
+    FirstName: OtherAdmin
+    Email: other-admin@silverstripe.com
+    Groups: '=>SilverStripe\Security\Group.admingroup'
+  test:
+    FirstName: Test
+    Surname: User
+    Email: testuser@example.com
+    Password: 1nitialPassword
+    PasswordExpiry: 2030-01-01
+    Groups: '=>SilverStripe\Security\Group.securityadminsgroup'
+  expiredpassword:
+    FirstName: Test
+    Surname: User
+    Email: expired@silverstripe.com
+    Password: 1nitialPassword
+    PasswordExpiry: 2006-01-01
+  noexpiry:
+    FirstName: Test
+    Surname: User
+    Email: noexpiry@silverstripe.com
+    Password: 1nitialPassword
+  staffmember:
+    Email: staffmember@test.com
+    Groups: '=>SilverStripe\Security\Group.staffgroup'
+  managementmember:
+    Email: managementmember@test.com
+    Groups: '=>SilverStripe\Security\Group.managementgroup'
+  accountingmember:
+    Email: accountingmember@test.com
+    Groups: '=>SilverStripe\Security\Group.accountinggroup'
+  ceomember:
+    Email: ceomember@test.com
+    Groups: '=>SilverStripe\Security\Group.ceogroup'
+  grouplessmember:
+    FirstName: Groupless Member
+  noformatmember:
+    Email: noformat@test.com
+  delocalemember:
+    Email: delocalemember@test.com
+    Locale: de_DE

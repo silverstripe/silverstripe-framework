@@ -1,0 +1,5 @@
+"ExternalIdentifier","FirstName","Biography","Birthday","  AdditionalIdentifier "
+222b,"John","","1988-01-31",""
+222b,"John","He's a good guy","",""
+9000a,"Jamie","Pretty old\, with an escaped comma","1882-01-31",""
+,"Fiona","A wise woman","","sql'unsafeid"

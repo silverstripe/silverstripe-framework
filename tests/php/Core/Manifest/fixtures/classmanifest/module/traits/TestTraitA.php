@@ -1,0 +1,6 @@
+<?php
+
+/**
+ * @ignore
+ */
+trait TestTraitA {}

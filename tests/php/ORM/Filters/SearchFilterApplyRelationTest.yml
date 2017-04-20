@@ -1,0 +1,37 @@
+SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneGrandChild:
+  grant_child:
+    Title: I am has_one object
+
+SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild:
+  grant_child1:
+    Title: I am has_many object1
+  grant_child2:
+    Title: I am has_many object2
+  grant_child3:
+    Title: I am has_many object3
+  grant_child4:
+    Title: I am has_many object4
+
+SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild:
+  grant_child1:
+    Title: I am many_many object1
+  grant_child2:
+    Title: I am many_many object2
+
+SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\TestObject:
+  do1:
+    SearchFilterApplyRelationTest_HasOneGrandChild: =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneGrandChild.grant_child
+    SearchFilterApplyRelationTest_HasManyGrandChildren:
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild.grant_child1
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild.grant_child2
+    ManyManyGrandChildren:
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild.grant_child1
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild.grant_child2
+  do2:
+    SearchFilterApplyRelationTest_HasOneGrandChild: =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneGrandChild.grant_child
+    SearchFilterApplyRelationTest_HasManyGrandChildren:
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild.grant_child3
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild.grant_child4
+    ManyManyGrandChildren:
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild.grant_child1
+      - =>SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild.grant_child2

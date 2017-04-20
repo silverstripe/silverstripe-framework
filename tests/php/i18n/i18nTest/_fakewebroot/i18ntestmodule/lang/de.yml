@@ -1,0 +1,16 @@
+de:
+  NONAMESPACE: Include Entity without Namespace (de)
+  SPRINTFNONAMESPACE: My replacement no namespace: %s (de)
+  SPRINTFINCLUDENONAMESPACE: My include replacement no namespace: %s (de)
+  LAYOUTTEMPLATENONAMESPACE: Layout Template no namespace (de)
+  i18nTestModule:
+    # Comment for entity
+    ENTITY: Entity with "Double Quotes" (de)
+    ADDITION: Addition (de)
+    MAINTEMPLATE: Main Template (de)
+    WITHNAMESPACE: Include Entity with Namespace (de)
+    LAYOUTTEMPLATE: Layout Template (de)
+    SPRINTFNAMESPACE: My replacement: %s (de)
+    PRIORITYNOTICE: Low Module Priority (de)
+  i18nTestModuleInclude.ss:
+    SPRINTFINCLUDENAMESPACE: My include replacement: %s (de)

@@ -1,0 +1,25 @@
+---
+Name: corecache
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Core\Cache\CacheFactory:
+    class: 'SilverStripe\Core\Cache\DefaultCacheFactory'
+    constructor:
+      args:
+        directory: '`TEMP_FOLDER`'
+        version: null
+      logger: %$Psr\Log\LoggerInterface
+  Psr\SimpleCache\CacheInterface.GDBackend_Manipulations:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "GDBackend_Manipulations"
+      defaultLifetime: 100
+  Psr\SimpleCache\CacheInterface.cacheblock:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "cacheblock"
+      defaultLifetime: 600
+  Psr\SimpleCache\CacheInterface.LeftAndMain_CMSVersion:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "LeftAndMain_CMSVersion"

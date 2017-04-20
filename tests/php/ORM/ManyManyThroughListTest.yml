@@ -1,0 +1,19 @@
+SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject:
+  parent1:
+    Title: 'my object'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\Item:
+  child1:
+    Title: 'item 1'
+  child2:
+    Title: 'item 2'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject:
+  join1:
+    Title: 'join 1'
+    Sort: 4
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child1
+  join2:
+    Title: 'join 2'
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2

@@ -1,0 +1,90 @@
+language: php
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - tidy
+
+env:
+  global:
+    - COMPOSER_ROOT_VERSION=4.0.x-dev
+    - DISPLAY=":99"
+    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+      env:
+        - DB=PGSQL
+        - PHPUNIT_TEST=framework
+    - php: 5.6
+      env:
+        - DB=MYSQL
+        - PHPUNIT_COVERAGE_TEST=framework
+        - PHPCS_TEST=1
+    - php: 7.0
+      env:
+        - DB=MYSQL
+        - PHPUNIT_TEST=framework
+    - php: 7.1.2
+      env:
+        - DB=MYSQL
+        - PDO=1
+        - PHPUNIT_TEST=framework
+    - php: 5.6
+      env:
+       - DB=MYSQL
+       - BEHAT_TEST=framework
+    - php: 5.6
+      env:
+        - DB=MYSQL
+        - PHPUNIT_TEST=cms
+    - php: 5.6
+      env:
+        - DB=MYSQL
+        - BEHAT_TEST=cms
+
+before_script:
+# Init PHP
+  - export CORE_RELEASE=$TRAVIS_BRANCH
+  - printf "\n" | pecl install imagick
+  - if [[ $PHPCS_TEST ]]; then pyrus install pear/PHP_CodeSniffer; fi
+  - phpenv rehash
+  - phpenv config-rm xdebug.ini
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
+# Install composer dependencies
+  - composer validate
+  - composer install --prefer-dist
+  - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi
+  - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi
+  - composer require silverstripe/config:1.0.x-dev silverstripe/admin:1.0.x-dev silverstripe/assets:1.0.x-dev silverstripe/versioned:1.0.x-dev --prefer-dist
+  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/cms:4.0.x-dev silverstripe/campaign-admin:1.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi
+
+# Bootstrap dependencies
+  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then php ./cms/tests/bootstrap/mysite.php; fi
+
+# Start behat services
+  - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
+  - if [[ $BEHAT_TEST ]]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi
+  - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> serve.log &); fi
+
+script:
+  - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
+  - if [[ $BEHAT_TEST == framework ]]; then vendor/bin/behat --config tests/behat/config.yml .; fi
+  - if [[ $BEHAT_TEST == cms ]]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi
+  - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
+  - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
+  - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
+  - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
+
+after_success:
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
+
+after_failure:
+  - if [[ $BEHAT_TEST ]]; then php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/; fi

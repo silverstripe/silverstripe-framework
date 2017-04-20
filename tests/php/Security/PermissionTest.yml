@@ -1,0 +1,63 @@
+'SilverStripe\Security\PermissionRole':
+  author:
+    Title: Author
+  access:
+   Title: Access Administrator
+
+'SilverStripe\Security\PermissionRoleCode':
+  author1:
+    Role: '=>SilverStripe\Security\PermissionRole.author'
+    Code: CMS_ACCESS_MyAdmin
+  author2:
+    Role: '=>SilverStripe\Security\PermissionRole.author'
+    Code: CMS_ACCESS_AssetAdmin
+  access1:
+    Role: '=>SilverStripe\Security\PermissionRole.access'
+    Code: CMS_ACCESS_SecurityAdmin
+  access2:
+    Role: '=>SilverStripe\Security\PermissionRole.access'
+    Code: EDIT_PERMISSIONS
+
+
+'SilverStripe\Security\Member':
+  author:
+    FirstName: Test
+    Surname: Author
+  access:
+    FirstName: Test
+    Surname: Access Administrator
+  globalauthor:
+    FirstName: Test
+    Surname: Global Author
+  leftandmain:
+    FirstName: Left
+    Surname: AndMain
+    Email: leftandmain@example.com
+
+'SilverStripe\Security\Group':
+  author:
+    Title: Authors
+    Members: '=>SilverStripe\Security\Member.author'
+    Roles: '=>SilverStripe\Security\PermissionRole.author'
+  access:
+    Title: Access Administrators + Authors
+    Members: '=>SilverStripe\Security\Member.access'
+    Roles: '=>SilverStripe\Security\PermissionRole.access,=>SilverStripe\Security\PermissionRole.author'
+  globalauthor:
+    Parent: '=>SilverStripe\Security\Group.author'
+    Title: Global Authors
+    Members: '=>SilverStripe\Security\Member.globalauthor'
+  leftandmain:
+    Title: LeftAndMain
+    Members: '=>SilverStripe\Security\Member.leftandmain'
+
+'SilverStripe\Security\Permission':
+  extra1:
+    Code: SITETREE_VIEW_ALL
+    Group: '=>SilverStripe\Security\Group.author'
+  globalauthor:
+    Code: SITETREE_EDIT_ALL
+    Group: '=>SilverStripe\Security\Group.globalauthor'
+  leftandmain:
+    Code: CMS_ACCESS_LeftAndMain
+    Group: '=>SilverStripe\Security\Group.leftandmain'

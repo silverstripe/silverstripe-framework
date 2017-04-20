@@ -1,0 +1,4 @@
+docs/ export-ignore
+
+# Line endings
+sake text eol=lf

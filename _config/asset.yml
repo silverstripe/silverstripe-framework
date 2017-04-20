@@ -1,0 +1,6 @@
+---
+Name: coreassetfield
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\FileHandleField:
+    class: SilverStripe\Forms\FileField

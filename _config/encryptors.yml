@@ -1,0 +1,17 @@
+---
+name: coreencryptors
+---
+'SilverStripe\Security\PasswordEncryptor':
+  encryptors:
+    none:
+      'SilverStripe\Security\PasswordEncryptor_None':
+    md5:
+      'SilverStripe\Security\PasswordEncryptor_LegacyPHPHash': md5
+    sha1:
+      'SilverStripe\Security\PasswordEncryptor_LegacyPHPHash': sha1
+    md5_v2.4:
+      'SilverStripe\Security\PasswordEncryptor_PHPHash': md5
+    sha1_v2.4:
+      'SilverStripe\Security\PasswordEncryptor_PHPHash': sha1
+    blowfish:
+      'SilverStripe\Security\PasswordEncryptor_Blowfish':

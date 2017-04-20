@@ -1,0 +1,14 @@
+---
+Name: coreconfig
+---
+SilverStripe\Core\Injector\Injector:
+  FormSchema:
+    class: SilverStripe\Forms\Schema\FormSchema
+  FixtureFactory:
+    class: SilverStripe\Dev\FixtureFactory
+SilverStripe\Control\HTTP:
+  cache_control:
+    max-age: 0
+    must-revalidate: "true"
+    no-transform: "true"
+  vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"

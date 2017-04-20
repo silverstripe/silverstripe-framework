@@ -1,0 +1,20 @@
+---
+Name: rootroutes
+---
+SilverStripe\Control\Director:
+  rules:
+    '': SilverStripe\Control\Controller
+---
+Name: coreroutes
+After:
+  - '#rootroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'Security//$Action/$ID/$OtherID': SilverStripe\Security\Security
+    'CMSSecurity//$Action/$ID/$OtherID': SilverStripe\Security\CMSSecurity
+    'dev': SilverStripe\Dev\DevelopmentAdmin
+    'interactive': SilverStripe\Dev\SapphireREPL
+    'InstallerTest//$Action/$ID/$OtherID': SilverStripe\Dev\InstallerTest
+    'SapphireInfo//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireInfo
+    'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL

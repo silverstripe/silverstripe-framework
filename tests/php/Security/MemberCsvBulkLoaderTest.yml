@@ -1,0 +1,7 @@
+'SilverStripe\Security\Group':
+  existinggroup:
+    Code: existinggroup
+'SilverStripe\Security\Member':
+  existingauthor:
+    Email: existingauthor@test.com
+    FirstName: Existing Author

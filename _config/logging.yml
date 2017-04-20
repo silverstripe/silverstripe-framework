@@ -1,0 +1,45 @@
+---
+Name: logging
+---
+SilverStripe\Core\Injector\Injector:
+  ErrorHandler:
+    class: SilverStripe\Logging\MonologErrorHandler
+    properties:
+      Logger: %$Psr\Log\LoggerInterface
+  Psr\Log\LoggerInterface:
+    type: singleton
+    class: Monolog\Logger
+    constructor:
+      - "error-log"
+    calls:
+      DisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ] ]
+
+---
+Name: dev-logging
+Only:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  DisplayErrorHandler:
+    class: SilverStripe\Logging\HTTPOutputHandler
+    constructor:
+      - "notice"
+    properties:
+      Formatter: %$SilverStripe\Logging\DetailedErrorFormatter
+---
+Name: live-logging
+Except:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  DisplayErrorHandler:
+    class: SilverStripe\Logging\HTTPOutputHandler
+    constructor:
+      - "error"
+    properties:
+      Formatter: %$FriendlyErrorFormatter
+  FriendlyErrorFormatter:
+    class: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
+    properties:
+      Title: "There has been an error"
+      Body: "The website server has not been able to respond to your request"

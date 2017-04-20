@@ -1,0 +1,12 @@
+SilverStripe\ORM\Tests\SQLUpdateTest\TestBase:
+  test1:
+    Title: 'Object 1'
+    Description: 'Description 1'
+  test2:
+    Title: 'Object 2'
+    Description: 'Description 2'
+SilverStripe\ORM\Tests\SQLUpdateTest\TestChild:
+  test3:
+    Title: 'Object 3'
+    Description: 'Description 3'
+    Details: 'Details 3'

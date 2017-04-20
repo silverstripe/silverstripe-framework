@@ -1,0 +1,6 @@
+vi:
+  AssetUploadField:
+    ChooseFiles: 'Chọn file'
+    DRAGFILESHERE: 'Gắp và thả file vào đây'
+    EDITANDORGANIZE: 'Sửa và sắp xếp'
+    EDITINFO: 'Sửa file'

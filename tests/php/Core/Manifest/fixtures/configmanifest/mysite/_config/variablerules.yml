@@ -1,0 +1,80 @@
+---
+Only:
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Foo
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsFoo: Yes
+---
+Only:
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: 'Qux'
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsQux: Yes
+---
+Only:
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Bar
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsBar: Yes
+---
+Only:
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Qux
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsQux: Yes
+---
+Only:
+  envorconstant:
+    CONSTANTMATCHESVALUE_Baz: Baz
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BazIsBaz: Yes
+---
+Except:
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Foo
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsFoo: No
+---
+Except:
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Qux
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsQux: No
+---
+Except:
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Bar
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsBar: No
+---
+Except:
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Qux
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsQux: No
+---
+Except:
+  envorconstant:
+    CONSTANTMATCHESVALUE_Baz: Baz
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BazIsBaz: No

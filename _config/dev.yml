@@ -1,0 +1,13 @@
+---
+Name: DevelopmentAdmin
+---
+SilverStripe\Dev\DevelopmentAdmin:
+  registered_controllers:
+    build:
+      controller: SilverStripe\Dev\DevBuildController
+      links:
+        build: 'Build/rebuild this environment. Call this whenever you have updated your project sources'
+    tasks:
+      controller: SilverStripe\Dev\TaskRunner
+      links:
+        tasks: 'See a list of build tasks to run'

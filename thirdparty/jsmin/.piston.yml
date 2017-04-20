@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: e71eac35ce7a0f191d199be9e35a8d12f1f999fd
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/rgrove/jsmin-php/

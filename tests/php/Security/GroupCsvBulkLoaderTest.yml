@@ -1,0 +1,7 @@
+'SilverStripe\Security\Permission':
+  permission1:
+    Code: CODE1
+'SilverStripe\Security\Group':
+  existinggroup:
+    Code: existinggroup
+    Permissions: '=>SilverStripe\Security\Permission.permission1'

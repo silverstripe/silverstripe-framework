@@ -1,0 +1,226 @@
+<?php
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataModel;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Permission;
+use SilverStripe\Core\Startup\ParameterConfirmationToken;
+use SilverStripe\Core\Startup\ErrorControlChain;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Director;
+
+
+
+
+/************************************************************************************
+ ************************************************************************************
+ **                                                                                **
+ **  If you can read this text in your browser then you don't have PHP installed.  **
+ **  Please install PHP 5.5.0 or higher                       .                    **
+ **                                                                                **
+ ************************************************************************************
+ ************************************************************************************/
+
+if (version_compare(phpversion(), '5.5.0', '<')) {
+	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+	echo str_replace('$PHPVersion', phpversion(), file_get_contents("Dev/Install/php5-required.html"));
+	die();
+}
+
+/**
+ * Main file that handles every page request.
+ *
+ * The main.php does a number of set-up activities for the request.
+ *
+ *  - Includes the .env file in your webroot
+ *  - Gets an up-to-date manifest from {@link ManifestBuilder}
+ *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
+ *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should
+ *    be defined in an _config.php
+ *  - Sets up the default director rules using {@link Director::$rules}
+ *
+ * After that, it calls {@link Director::direct()}, which is responsible for doing most of the
+ * real work.
+ *
+ * CONFIGURING THE WEBSERVER
+ *
+ * To use SilverStripe, every request that doesn't point directly to a file should be rewritten to
+ * framework/main.php?url=(url).  For example, http://www.example.com/about-us/rss would be rewritten
+ * to http://www.example.com/framework/main.php?url=about-us/rss
+ *
+ * It's important that requests that point directly to a file aren't rewritten; otherwise, visitors
+ * won't be able to download any CSS, JS, image files, or other downloads.
+ *
+ * On Apache, RewriteEngine can be used to do this.
+ *
+ * @see Director::direct()
+ */
+
+// require composers autoloader, unless it is already installed
+if(!class_exists('Composer\\Autoload\\ClassLoader', false)) {
+	if (file_exists($autoloadPath = dirname(__DIR__) . '/vendor/autoload.php')) {
+		require_once $autoloadPath;
+	}
+	else {
+		if (!headers_sent()) {
+			header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+			header('Content-Type: text/plain');
+		}
+		echo "Failed to include composer's autoloader, unable to continue\n";
+		exit(1);
+	}
+}
+
+// IIS will sometimes generate this.
+if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
+	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+}
+
+// Enable the entity loader to be able to load XML in Zend_Locale_Data
+libxml_disable_entity_loader(false);
+
+/**
+ * Figure out the request URL
+ */
+global $url;
+
+// Helper to safely parse and load a querystring fragment
+$parseQuery = function($query) {
+	parse_str($query, $_GET);
+	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+};
+
+// Apache rewrite rules and IIS use this
+if (isset($_GET['url']) && php_sapi_name() !== 'cli-server') {
+
+	// Prevent injection of url= querystring argument by prioritising any leading url argument
+	if(isset($_SERVER['QUERY_STRING']) &&
+		preg_match('/^(?<url>url=[^&?]*)(?<query>.*[&?]url=.*)$/', $_SERVER['QUERY_STRING'], $results)
+	) {
+		$queryString = $results['query'].'&'.$results['url'];
+		$parseQuery($queryString);
+	}
+
+	$url = $_GET['url'];
+
+	// IIS includes get variables in url
+	$i = strpos($url, '?');
+	if($i !== false) {
+		$url = substr($url, 0, $i);
+	}
+
+	// Lighttpd and PHP 5.4's built-in webserver use this
+} else {
+	// Get raw URL -- still needs to be decoded below (after parsing out query string).
+	$url = $_SERVER['REQUEST_URI'];
+
+	// Querystring args need to be explicitly parsed
+	if(strpos($url,'?') !== false) {
+		list($url, $query) = explode('?',$url,2);
+		$parseQuery($query);
+	}
+
+	// Decode URL now that it has been separated from query string.
+	$url = urldecode($url);
+
+	// Pass back to the webserver for files that exist
+	if(php_sapi_name() === 'cli-server' && file_exists(BASE_PATH . $url) && is_file(BASE_PATH . $url)) {
+		return false;
+	}
+}
+
+// Remove base folders from the URL if webroot is hosted in a subfolder
+if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+
+/**
+ * Include SilverStripe's core code
+ */
+require_once('Core/Startup/ErrorControlChain.php');
+require_once('Core/Startup/ParameterConfirmationToken.php');
+
+// Prepare tokens and execute chain
+$reloadToken = ParameterConfirmationToken::prepare_tokens(array('isTest', 'isDev', 'flush'));
+$chain = new ErrorControlChain();
+$chain
+	->then(function($chain) use ($reloadToken) {
+		// If no redirection is necessary then we can disable error supression
+		if (!$reloadToken) $chain->setSuppression(false);
+
+		// Load in core
+		require_once('Core/Core.php');
+
+		// Connect to database
+		global $databaseConfig;
+		if ($databaseConfig) DB::connect($databaseConfig);
+
+		// Check if a token is requesting a redirect
+		if (!$reloadToken) return;
+
+		// Otherwise, we start up the session if needed
+		if(!isset($_SESSION) && Session::request_contains_session_id()) {
+			Session::start();
+		}
+
+		// Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
+		if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
+			$reloadToken->reloadWithToken();
+			return;
+		}
+
+		// Fail and redirect the user to the login page
+		$loginPage = Director::absoluteURL(Security::config()->login_url);
+		$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
+		header('location: '.$loginPage, true, 302);
+		die;
+	})
+	// Finally if a token was requested but there was an error while figuring out if it's allowed, do it anyway
+	->thenIfErrored(function() use ($reloadToken){
+		if ($reloadToken) {
+			$reloadToken->reloadWithToken();
+		}
+	})
+	->execute();
+
+global $databaseConfig;
+
+// Redirect to the installer if no database is selected
+if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+
+    // Is there an _ss_environment.php file?
+    if(file_exists(BASE_PATH . '/_ss_environment.php') || file_exists(dirname(BASE_PATH) . '/_ss_environment.php')) {
+        header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+        $dv = new SilverStripe\Dev\DebugView();
+        echo $dv->renderHeader();
+        echo $dv->renderInfo(
+            "Configuraton Error",
+            Director::absoluteBaseURL()
+        );
+        echo $dv->renderParagraph(
+            'You need to replace your _ss_environment.php file with a .env file, or with environment variables.<br><br>'
+            . 'See the <a href="https://docs.silverstripe.org/en/4/getting_started/environment_management/">'
+            . 'Environment Management</a> docs for more information.'
+        );
+        echo $dv->renderFooter();
+
+        die();
+    }
+
+	if(!file_exists(BASE_PATH . '/install.php')) {
+		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+		die('SilverStripe Framework requires a $databaseConfig defined.');
+	}
+	$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
+	$installURL = "http$s://" . $host . BASE_URL . '/install.php';
+
+	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
+	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
+	$installURL = str_replace('\\', '', $installURL);
+
+	header("Location: $installURL");
+	die();
+}
+
+// Direct away - this is the "main" function, that hands control to the appropriate controller
+DataModel::set_inst(new DataModel());
+Director::direct($url, DataModel::inst());

@@ -1,0 +1,28 @@
+---
+Only:
+  ClassExists: SilverStripe\Control\Director
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Class:
+    DirectorExists: Yes
+---
+Only:
+  ClassExists: NoSuchClass
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Class:
+    NoSuchClassExists: Yes
+---
+Except:
+  ClassExists: SilverStripe\Control\Director
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Class:
+    DirectorExists: No
+---
+Except:
+  ClassExists: NoSuchClass
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Class:
+    NoSuchClassExists: No

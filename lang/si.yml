@@ -1,0 +1,126 @@
+si:
+  AssetAdmin:
+    NEWFOLDER: 'අලත් ගොනුවක්'
+  AssetTableField:
+    CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'
+    DIM: මාන
+    FILENAME: 'ලිපි නම'
+    LASTEDIT: 'අවසාන ලිපිය වෙනස්  කරන ලදී'
+    OWNER: 'හිමි කරැ'
+    SIZE: තරම
+    TITLE: මතකව
+    TYPE: වර්ගය
+  BBCodeParser:
+    COLORED: 'පාට කළ අකුරු'
+    COLOREDEXAMPLE: 'නිල් පැහැ අකුරු'
+    IMAGE: පින්තූරය
+    ITALIC: 'ඇල අකුරු'
+    ITALICEXAMPLE: ඇල
+  BasicAuth:
+    ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
+    ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
+    ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
+  CMSMain:
+    SAVE: 'සේවි කරන්න'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
+    CHANGEPASSWORDTEXT2: 'ප්රවිශ්ට වීමට පහත දත්ත යොදාගන්න'
+    HELLO: කොහොමද
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
+  CreditCardField:
+    FIRST: 'පළමු'
+    SECOND: දෙවන
+  DataObject:
+    PLURALNAME: 'දත්ත වස්තු'
+    SINGULARNAME: 'දත්ත වස්තුව'
+  DropdownField:
+    CHOOSE: (තොරන්න)
+  File:
+    PLURALNAME: ලිපි
+    SINGULARNAME: ලිපිය
+  ForgotPasswordEmail_ss:
+    HELLO: කොහොමද
+    TEXT1: 'මෙය ඔබගේ'
+    TEXT3: සඳහා
+  Form:
+    VALIDATIONNOTUNIQUE: 'අගය අද්විතීය නොවේ'
+    VALIDATIONPASSWORDSDONTMATCH: 'මුර පද අසමානය'
+    VALIDATIONPASSWORDSNOTEMPTY: 'මුර පදය විය නොහැක'
+  Group:
+    Code: 'කාන්ඩ සංකේතය'
+    Locked: 'අගුලුලාද?'
+    Parent: 'මවු කාන්ඩය'
+    has_many_Permissions: 'අවසර'
+    many_many_Members: සාමාජිකයින්
+  HtmlEditorField:
+    BUTTONINSERTLINK: 'බැදීමක් යොදන්න'
+    BUTTONREMOVELINK: 'බැදීම ගලවන්න'
+    CSSCLASS: 'අලයින්මන්ට් / ස්ටයිල්'
+    CSSCLASSLEFT: 'වම් පැත්තට, අකුරැ වටේට යොදන්න'
+    CSSCLASSRIGHT: 'දකුනු පැත්තට, අකුරැ වටේට යොදන්න'
+    EMAIL: 'ඊමේල් ලිපිනය'
+    FILE: ලිපිය
+    FOLDER: ගොනුව
+    IMAGEDIMENSIONS: මාන
+    IMAGEHEIGHTPX: දිග
+    IMAGEWIDTHPX: පලල
+    LINK: 'පාට කල වචන වලට බැදමක් යොදන්න/සංස්කරනය කරන්න'
+    LINKDESCR: 'බැදීම් විස්තරය'
+    LINKEMAIL: 'ඊමේල් ලිපිනය'
+    LINKEXTERNAL: 'වෙනත් වෙබ් අඩවියක්'
+    LINKFILE: 'ලිපියක් බාගත කරන්න'
+    LINKINTERNAL: 'අඩවියේ පිටුවක්'
+    LINKOPENNEWWIN: 'අලුත් වින්ඩෝවක අරින්නද?'
+    LINKTO: බැදේ
+    PAGE: පිටුව
+  Image_iframe_ss:
+    TITLE: 'පිංතූර අප්ලෝඩ් කරන Iframe ඵක'
+  LeftAndMain:
+    HELP: උදවි
+    PERMAGAIN: 'ඹබ CMS ඵකෙන් ඉවත් වී ඇත. නැවත ඇතුල් වීමට නම හා මුරපදය යොදන්න'
+  Member:
+    BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
+    BUTTONLOGIN: ඇතුල්වන්න
+    BUTTONLOGINOTHER: 'වෙනත් නමකින් ඇතුල්වන්න'
+    BUTTONLOSTPASSWORD: 'මුර පදය නැති වී ඇත'
+    CONFIRMNEWPASSWORD: 'අලුත් මුර පදය හරිද'
+    CONFIRMPASSWORD: 'මුර පදය හරිද'
+    EMAIL: 'ඊමේල් '
+    ERRORNEWPASSWORD: 'අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න'
+    ERRORPASSWORDNOTMATCH: 'ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න'
+    FIRSTNAME: 'මුල් නම'
+    INTERFACELANG: භාෂා
+    NEWPASSWORD: 'අලුත් මුර පදයක්'
+    PASSWORD: 'මුර පදය'
+    PLURALNAME: සාමාජිකයින්
+    SINGULARNAME: සාමාජිකයා
+    SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'
+    SUBJECTPASSWORDRESET: 'මුර පදය අලුත් කරන ලිපිනය'
+    SURNAME: වාසගම
+    YOUROLDPASSWORD: 'පරන මුර පදය'
+    belongs_many_many_Groups: කාන්ඩ
+    db_LockedOutUntil: 'අගුලුලා ඇත්තේ'
+    db_PasswordExpiry: 'මුර පදය කල් ඉකුත් වීමේ දිනය'
+  MemberAuthenticator:
+    TITLE: 'ඊමේල් හා මුර පදය'
+  PhoneNumberField:
+    VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
+  Security:
+    ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
+    BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
+    CHANGEPASSWORDBELOW: 'පහතින් මුර පදය වෙනස්  කල හැක'
+    CHANGEPASSWORDHEADER: 'මුර පදය අලුත් කරන්න'
+    ENTERNEWPASSWORD: 'අලුත් මුර පදය ඇතුල් කරන්න'
+    ERRORPASSWORDPERMISSION: 'ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න'
+    LOGGEDOUT: 'ඹබ පිටවී ඇත, නැවත ඇතුල් වීමට ඹබගේ දත්ත යොදන්න'
+    NOTERESETPASSWORD: 'ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න'
+  SecurityAdmin:
+    NEWGROUP: 'අලුත් කන්ඩාමක්'
+  SiteTree:
+    TABMAIN: ප්‍රදාන
+  ToggleField:
+    LESS: 'අඩු'
+    MORE: වැඩි
+  Versioned:
+    has_many_Versions: වෙලුම

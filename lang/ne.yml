@@ -1,0 +1,79 @@
+ne:
+  BasicAuth:
+    ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
+    ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'
+    ERRORNOTREC: 'त्यो प्रयोगकता / पासओड बुझन् सकिएन'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
+    CHANGEPASSWORDTEXT2: 'दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :'
+    HELLO: हाई
+  DropdownField:
+    CHOOSE: (छान्)
+  ForgotPasswordEmail_ss:
+    HELLO: हाई
+  Form:
+    VALIDATIONNOTUNIQUE: 'लेखिएको मान भिन्न छैन '
+    VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
+    VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
+  HtmlEditorField:
+    BUTTONINSERTLINK: 'लिन्क राखनुहोस्'
+    BUTTONREMOVELINK: 'लिन्क हटाउनुहोस्'
+    CSSCLASS: 'समरेखिन / स्टाईल'
+    CSSCLASSCENTER: 'आँफैमा बिच्मा'
+    CSSCLASSLEFT: 'बाँयामा, टेक्स राप गरियोस्'
+    CSSCLASSRIGHT: 'दाँयामा, टेक्स राप गरियोस्'
+    EMAIL: 'ईमेल ठेगाना  '
+    FILE: फाइल
+    FOLDER: फोल्डर
+    IMAGEDIMENSIONS: आयाम
+    IMAGEHEIGHTPX: उचाई
+    IMAGEWIDTHPX: चौडाई
+    LINK: 'हाईलाईट गरिएको टेक्समा लिन्क हाल्नुहोस्/मिलाउनुहोस्'
+    LINKDESCR: 'लिन्क विवरण'
+    LINKEMAIL: 'ईमेल ठेगाना  '
+    LINKEXTERNAL: 'अर्को वेबसाईट'
+    LINKFILE: 'फाइल डाउनलोओद गर्नु '
+    LINKINTERNAL: 'साईटको पेज'
+    LINKOPENNEWWIN: 'लिन्क नयाँ विन्डोमा खोल्नुहोस् '
+    LINKTO: 'लिन्क गर्नुस्'
+    PAGE: पेज
+    URL: 'यू.र्.ल् '
+  Image_iframe_ss:
+    TITLE: 'तस्बिर उप्लोओद गर्ने Iफ्रमे'
+  Member:
+    BUTTONCHANGEPASSWORD: 'पासओड परिवर्तन गर्नुहोस् '
+    BUTTONLOGIN: 'भित्र जानुस्'
+    BUTTONLOGINOTHER: 'अरु कोही भएर भित्र जानुस् '
+    BUTTONLOSTPASSWORD: 'मैले मेरो पासओड हराएँ'
+    CONFIRMNEWPASSWORD: 'नयाँ पासओड Confirm गर्नुहोस् '
+    CONFIRMPASSWORD: 'Confirm पासओड'
+    EMAIL: इमेल
+    ERRORNEWPASSWORD: 'तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल'
+    ERRORPASSWORDNOTMATCH: 'पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल'
+    FIRSTNAME: 'पहिलो नाम'
+    INTERFACELANG: 'चलाउने भाषा'
+    NEWPASSWORD: 'नयाँ पासओड'
+    PASSWORD: पासओड
+    SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'
+    SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
+    SURNAME: थर
+    YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
+  MemberAuthenticator:
+    TITLE: 'ईमेल &amp; पासओड'
+  PhoneNumberField:
+    VALIDATION: 'कृपया मिल्ने फोन नम्बर हाल्नुहोस् '
+  Security:
+    ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
+    BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'
+    CHANGEPASSWORDBELOW: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न सक्नुहुन्छ तल ।'
+    CHANGEPASSWORDHEADER: 'पासओड परिवर्तन गर्नुहोस्  '
+    ENTERNEWPASSWORD: 'कृपया नयाँ पासओड लेखनुहोस्'
+    ERRORPASSWORDPERMISSION: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।'
+    LOGGEDOUT: 'तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  '
+    NOTEPAGESECURED: 'त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । '
+    NOTERESETPASSWORD: 'तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ '
+  SiteTree:
+    TABMAIN: मुख्य
+  ToggleField:
+    LESS: थोरै
+    MORE: धेरै

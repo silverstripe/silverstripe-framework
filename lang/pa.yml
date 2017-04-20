@@ -1,0 +1,61 @@
+pa:
+  BasicAuth:
+    ENTERINFO: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ'
+    ERRORNOTADMIN: 'ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
+    HELLO: ਹਾਏ
+  DropdownField:
+    CHOOSE: '( ਚੁਣੋ )'
+  ForgotPasswordEmail_ss:
+    HELLO: ਹਾਏ
+  Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
+  HtmlEditorField:
+    BUTTONINSERTLINK: 'ਿਲੰਕ ਪਾਉ'
+    BUTTONREMOVELINK: 'ਿਲੰਕ ਕੱਟੋਂ'
+    EMAIL: 'ਈਮੇਲ ਪਤਾ'
+    FILE: ਫਾਈਲ
+    FOLDER: ਫੋਲਡਰ
+    IMAGEHEIGHTPX: "ਲੰਬਾਈ\t"
+    IMAGEWIDTHPX: "ਚੌੜਾਈ\t"
+    LINK: 'Insert/edit link for highlighted text'
+    LINKDESCR: 'ਜੋੜ ਵਰਣਨ'
+    LINKEMAIL: 'ਈਮੇਲ ਪਤਾ'
+    LINKEXTERNAL: 'ਦੂਸਰੀ ਵੈੱਬ-ਸਾਈਟ '
+    LINKFILE: ਡਾਉਨਲੋਡ
+    LINKINTERNAL: "ਸਾਈਟ ਉੱਤੇ ਪੰਨਾ\t"
+    LINKOPENNEWWIN: 'ਿਲੰਕ ਨੰੂ  ਨਵੀ window ਿਵੱਚ ਖੋਲੋ'
+    LINKTO: 'ਜੋੜ ਨੰੂ '
+    PAGE: ਪੰਨਾ
+  Member:
+    BUTTONCHANGEPASSWORD: 'ਤਬਦੀਲ Password'
+    BUTTONLOGIN: 'ਲੋਗ ਇਨ'
+    BUTTONLOSTPASSWORD: 'ਮੈਂ ਆਪਣਾ password ਗੁਆ ਿਲਆ ਹੈ।'
+    EMAIL: ਇਮੇਲ
+    ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
+    FIRSTNAME: 'ਪਹਿਲਾਂ ਨਾਮ'
+    INTERFACELANG: 'ਦਖਲ ਭਾਸ਼ਾ'
+    NEWPASSWORD: 'ਨਵਾਂ Password'
+    REMEMBERME: 'ਮੈਂਨੰੂ ਅਗਲੀ ਵਾਰ ਯਾਦ ਰੱਖਣਾ'
+    SUBJECTPASSWORDCHANGED: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲ ਗਆ ਹੈ।         '
+    SUBJECTPASSWORDRESET: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲਣ ਦਾ ਜੋੜ'
+    SURNAME: ਗੋਤ
+    VALIDATIONMEMBEREXISTS: 'There already exists a member with this email'
+    YOUROLDPASSWORD: 'ਤੁਹਾਡਾ ਪੁਰਾਣਾ password'
+  MemberAuthenticator:
+    TITLE: 'ਈਮੇਲ &amp; '
+  PhoneNumberField:
+    VALIDATION: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ਫ਼ੋਨ ਨੰਬਰ ਪਾਉ'
+  Security:
+    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
+    CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'
+    CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
+    ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'
+    LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
+  SiteTree:
+    TABMAIN: "ਮੁੱਖ\t"
+  ToggleField:
+    LESS: "ਘੱਟ\t"
+    MORE: "ਹੋਰ\t"

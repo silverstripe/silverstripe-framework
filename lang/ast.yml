@@ -1,0 +1,43 @@
+ast:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Camudar contraseña'
+  DataObject:
+    PLURALNAME: 'Oxetos de datos'
+    SINGULARNAME: 'Oxetu de datos'
+  DateField:
+    NOTSET: 'nun s''establez'
+    TODAY: hoi
+  DropdownField:
+    CHOOSE: (Escoyer)
+  File:
+    PLURALNAME: Ficheros
+    SINGULARNAME: Ficheru
+  Group:
+    Code: 'Códigu de grupu'
+    DefaultGroupTitleAdministrators: Alministradores
+    Description: Descripción
+    Locked: '¿Bloquiáu?'
+    Parent: 'Grupu padre'
+    Sort: 'Orde de clasificación'
+    has_many_Permissions: Permisos
+    many_many_Members: Miembros
+  Member:
+    EMAIL: Corréu
+    INTERFACELANG: 'Llingua de la interfaz'
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembru
+    SUBJECTPASSWORDCHANGED: 'Se camudó la to contraseña'
+    SUBJECTPASSWORDRESET: 'Enllaz pa reaniciar la contraseña'
+    belongs_many_many_Groups: Grupos
+    db_LockedOutUntil: 'Bloquiáu fasta'
+    db_PasswordExpiry: 'Data d''espiración de la contraseña'
+  NullableField:
+    IsNullLabel: 'Ye nulu'
+  PermissionCheckboxSetField:
+    FromRoleOnGroup: 'heredáu del rol "%s" nel grupu "%s"'
+  Security:
+    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'
+  Versioned:
+    has_many_Versions: Versiones

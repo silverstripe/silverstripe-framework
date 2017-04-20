@@ -1,0 +1,4 @@
+SilverStripe\Security\MemberLoginForm:
+  required_fields:
+    - Email
+    - Password

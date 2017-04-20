@@ -1,0 +1,11 @@
+---
+Name: requestprocessors
+---
+SilverStripe\Core\Injector\Injector:
+  FlushRequestFilter:
+    class: SilverStripe\Control\FlushRequestFilter
+  SilverStripe\Control\RequestProcessor:
+    properties:
+      filters:
+        - '%$FlushRequestFilter'
+

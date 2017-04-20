@@ -1,0 +1,11 @@
+'SilverStripe\Security\Group':
+  group:
+    Code: group
+  untouchable:
+    Code: untouchable
+'SilverStripe\Security\Permission':
+  perm1:
+    Code: ADMIN
+    Group: '=>SilverStripe\Security\Group.untouchable'
+  perm2:
+    Code: NON-ADMIN

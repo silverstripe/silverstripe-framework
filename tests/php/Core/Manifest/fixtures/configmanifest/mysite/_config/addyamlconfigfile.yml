@@ -1,0 +1,59 @@
+---
+After: 'mysite/testfile#fragment'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: 'test-module/testfile#fragment'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: '*'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: '*/testfile'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: '*/*#fragment'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: '#fragment'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: 'test-module#fragment'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: 'test-module'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: 'test-module/*'
+---
+ClassManifestTest:
+    testParam: false
+
+---
+After: 'test-module/*#*'
+---
+ClassManifestTest:
+    testParam: false

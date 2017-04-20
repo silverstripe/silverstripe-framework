@@ -1,0 +1,76 @@
+SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat:
+  hat1:
+    Colour: Blue
+  hat2:
+    Colour: Red
+  hat3:
+    Colour: Green
+  hat4:
+    Colour: Pink
+SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader:
+  cheerleader1:
+    Name: Heather
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat2
+  cheerleader2:
+    Name: Bob
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat4
+  cheerleader3:
+    Name: Jenny
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat1
+  cheerleader4:
+    Name: Sam
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat3
+
+SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom:
+  mom1:
+    Name: Ethel
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat2
+  mom2:
+    Name: Eileene
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat4
+  mom3:
+    Name: Gertrude
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat1
+  mom4:
+    Name: Andrew
+    Hat: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat.hat3
+
+SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Team:
+  team1:
+    Name: Team 1
+    City: Cologne
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader3
+  team2:
+    Name: Team 2
+    City: Wellington
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader2
+  team3:
+    Name: Team 3
+    City: Auckland
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader4
+  team4:
+    Name: Team 4
+    City: Melbourne
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader1
+
+SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\TeamGroup:
+  group1:
+    Name: Group 1
+    City: Cologne
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader3
+    CheerleadersMom: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom.mom3
+  group2:
+    Name: Group 2
+    City: Wellington
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader2
+    CheerleadersMom: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom.mom2
+  group3:
+    Name: Group 3
+    City: Auckland
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader4
+    CheerleadersMom: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom.mom4
+  group4:
+    Name: Group 4
+    City: Melbourne
+    Cheerleader: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader.cheerleader1
+    CheerleadersMom: =>SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom.mom1

@@ -1,0 +1,4 @@
+ja:
+  Month:
+    PLURALS:
+      other: '{count}日'

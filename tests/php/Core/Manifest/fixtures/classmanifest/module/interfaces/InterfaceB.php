@@ -1,0 +1,5 @@
+<?php
+/**
+ * @ignore
+ */
+interface InterfaceB {  }

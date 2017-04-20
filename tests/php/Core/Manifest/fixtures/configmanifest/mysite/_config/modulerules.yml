@@ -1,0 +1,28 @@
+---
+Only:
+  ModuleExists: mysite
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Module:
+    MysiteExists: Yes
+---
+Only:
+  ModuleExists: nosuchmodule
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Module:
+    NoSuchModuleExists: Yes
+---
+Except:
+  ModuleExists: mysite
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Module:
+    MysiteExists: No
+---
+Except:
+  ModuleExists: nosuchmodule
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  Module:
+    NoSuchModuleExists: No

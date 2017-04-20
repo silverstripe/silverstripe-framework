@@ -1,0 +1,240 @@
+pt:
+  AssetAdmin:
+    NEWFOLDER: 'Nova pasta'
+  AssetUploadField:
+    ChooseFiles: 'Escolher ficheiros'
+    DRAGFILESHERE: 'Arrastar os ficheiros para aqui'
+    DROPAREA: 'Área de arraste'
+    EDITANDORGANIZE: 'Editar e organizar'
+    FROMCOMPUTER: 'Escolher ficheiros do seu computador'
+    UPLOADOR: OU
+  BBCodeParser:
+    ALIGNEMENT: Alinhamento
+    ALIGNEMENTEXAMPLE: 'Alinhado à direita'
+    BOLD: 'Texto Negrito'
+    BOLDEXAMPLE: Negrito
+    CODE: 'Bloco de código'
+    CODEDESCRIPTION: 'Bloco de código não formatado'
+    CODEEXAMPLE: 'Bloco de código'
+    COLORED: 'Texto colorido'
+    COLOREDEXAMPLE: 'Texto azul'
+    EMAILLINKDESCRIPTION: 'Criar link para o endereço de email'
+    IMAGE: Imagem
+    IMAGEDESCRIPTION: 'Apresentar imagem na sua publicação'
+    ITALIC: 'Texto Itálico'
+    ITALICEXAMPLE: Itálico
+    LINKDESCRIPTION: 'Link para outro site ou URL'
+    UNDERLINE: 'Texto Sublinhado'
+    UNDERLINEEXAMPLE: Sublinhado
+    UNORDERED: 'Lista não ordenada'
+    UNORDEREDDESCRIPTION: 'Lista não ordenada'
+    UNORDEREDEXAMPLE1: 'item não ordenado 1'
+  BasicAuth:
+    ENTERINFO: 'Por favor insira um nome de utilizador e password.'
+    ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
+    ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
+  Boolean:
+    ANY: Qualquer
+  CMSMain:
+    SAVE: Guardar
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
+    CHANGEPASSWORDTEXT2: 'Pode utilizar agora as seguintes credenciais para se autenticar:'
+    HELLO: Olá
+    PASSWORD: Palavra-chave
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Mudar password'
+  CreditCardField:
+    FIRST: primeiro
+    FOURTH: quarto
+    SECOND: segundo
+    THIRD: terceiro
+  DataObject:
+    PLURALNAME: 'Objectos de Dados'
+    SINGULARNAME: 'Objecto de Dados'
+  DateField:
+    NOTSET: 'Não inserido'
+    TODAY: Hoje
+  DropdownField:
+    CHOOSE: (Escolha)
+  Enum:
+    ANY: Qualquer
+  File:
+    Content: Conteúdo
+    Filename: 'Nome do ficheiro'
+    HtlType: 'Ficheiro HTML'
+    NOVALIDUPLOAD: 'O carregamento do ficheiro é válido'
+    Name: Nome
+    PLURALNAME: Ficheiros
+    SINGULARNAME: Ficheiro
+    Title: Título
+    ZipType: 'Ficheiro compactado (ZIP)'
+  ForgotPasswordEmail_ss:
+    HELLO: Olá
+    TEXT1: 'Este é o seu'
+    TEXT2: 'link para alterar password'
+    TEXT3: para
+  Form:
+    VALIDATIONNOTUNIQUE: 'O valor inserido não é único'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords não coincidem'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords não podem estar em branco'
+  FormField:
+    NONE: nenhum
+  GridAction:
+    Delete: Apagar
+  GridField:
+    Filter: Filtrar
+    Find: Procurar
+    LinkExisting: 'Link existente'
+    NewRecord: 'Novo %s'
+    NoItemsFound: 'Não foram encontrados elementos'
+    PRINTEDAT: 'Impresso em'
+    PRINTEDBY: 'Impresso por'
+    RelationSearch: 'Pesquisa relacionada'
+    ResetFilter: Redefinir
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Não tem permissões para apagar'
+  GridFieldDetailForm:
+    CancelBtn: Cancelar
+  Group:
+    Code: 'Grupo de código'
+    DefaultGroupTitleAdministrators: Administradores
+    DefaultGroupTitleContentAuthors: 'Autores de Conteúdo'
+    Description: Descrição
+    Locked: 'Fechado?'
+    NoRoles: 'Não foram encontradas regras'
+    Parent: 'Grupo pai'
+    Sort: 'Ordem de ordenação'
+    has_many_Permissions: Permissões
+    many_many_Members: Membros
+  GroupImportForm:
+    ResultDeleted: 'Apagados %d grupos'
+  HtmlEditorField:
+    ANCHORVALUE: Âncora
+    BUTTONINSERT: Inserir
+    BUTTONINSERTLINK: 'Inserir link'
+    BUTTONREMOVELINK: 'Remover link'
+    CSSCLASS: 'Alinhamento / estilo'
+    CSSCLASSCENTER: 'Centrado sozinho.'
+    CSSCLASSLEFT: 'Na esquerda, com texto envolvido.'
+    CSSCLASSLEFTALONE: 'No lado esquerdo, por si só.'
+    CSSCLASSRIGHT: 'Na direita, com texto envolvido.'
+    DETAILS: Detalhes
+    EMAIL: 'Endereço email'
+    FILE: Ficheiro
+    FOLDER: Pasta
+    FROMCMS: 'A partir do CMS'
+    FROMCOMPUTER: 'Do seu computador'
+    IMAGEDIMENSIONS: Dimensões
+    IMAGEHEIGHTPX: Altura
+    IMAGEWIDTHPX: Largura
+    LINK: 'Inserir/editar link no texto seleccionado'
+    LINKANCHOR: 'Âncora nesta página'
+    LINKDESCR: 'Descrição do link'
+    LINKEMAIL: 'Endereço email'
+    LINKEXTERNAL: 'Outro site'
+    LINKFILE: 'Descarregar ficheiro'
+    LINKINTERNAL: 'Página no site'
+    LINKOPENNEWWIN: 'Abrir link noutra janela?'
+    LINKTO: 'Link para'
+    PAGE: Página
+  Image_iframe_ss:
+    TITLE: 'Iframe de envio de Imagem'
+  LeftAndMain:
+    HELP: Ajuda
+    PERMAGAIN: 'Saiu do CMS. Se se deseja autenticar novamente insira as suas credenciais abaixo.'
+  LoginAttempt:
+    Email: 'Endereço de Email'
+    IP: 'Endereço IP'
+    Status: Estado
+  Member:
+    BUTTONCHANGEPASSWORD: 'Alterar Password'
+    BUTTONLOGIN: Entrar
+    BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
+    BUTTONLOSTPASSWORD: 'Recuperar Password'
+    CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
+    CONFIRMPASSWORD: 'Confirmar Password'
+    DefaultAdminFirstname: 'Administrador por Omissão'
+    EMPTYNEWPASSWORD: 'A password não pode ser vazia, tente novamente.'
+    ENTEREMAIL: 'Por favor introduza um endereço de email para obter uma ligação para o reinício da palavra-chave. '
+    ERRORNEWPASSWORD: 'As passwords novas não coincidem, por favor tente novamente'
+    ERRORPASSWORDNOTMATCH: 'A sua password actual está errada, por favor tente novamente'
+    FIRSTNAME: 'Primeiro nome'
+    INTERFACELANG: 'Linguagem do Interface'
+    NEWPASSWORD: 'Nova Password'
+    PLURALNAME: Membros
+    SINGULARNAME: Membro
+    SUBJECTPASSWORDCHANGED: 'A sua password foi alterada'
+    SUBJECTPASSWORDRESET: 'Link para recuperar a password'
+    SURNAME: Sobrenome
+    YOUROLDPASSWORD: 'Password antiga'
+    belongs_many_many_Groups: Grupos
+    db_LastVisited: 'Data da Última Visita'
+    db_LockedOutUntil: 'Bloqueado até'
+    db_NumVisit: 'Número de Visitas'
+    db_Password: Palavra-chave
+    db_PasswordExpiry: 'Data de expiração da password'
+  MemberAuthenticator:
+    TITLE: 'Email e Password'
+  MemberImportForm:
+    ResultDeleted: 'Apagados %d utilizadores'
+    ResultNone: 'Sem alterações'
+  MemberTableField:
+    APPLY_FILTER: 'Aplicar filtros'
+  MoneyField:
+    FIELDLABELAMOUNT: Quantidade
+    FIELDLABELCURRENCY: Moeda
+  NullableField:
+    IsNullLabel: 'é Vazio'
+  Permission:
+    AdminGroup: Administrador
+    FULLADMINRIGHTS: 'Direitos de Administrador'
+  PermissionCheckboxSetField:
+    FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
+  PermissionRole:
+    Title: Título
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
+  PhoneNumberField:
+    VALIDATION: 'Por favor insira um número de telefone válido'
+  Security:
+    ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
+    BUTTONSEND: 'Enviar o link para recuperar a password'
+    CHANGEPASSWORDBELOW: 'Pode modificar a sua password abaixo.'
+    CHANGEPASSWORDHEADER: 'Mudar a password'
+    ENTERNEWPASSWORD: 'Por favor insira uma nova password.'
+    ERRORPASSWORDPERMISSION: 'Tem de estar autenticado para poder alterar a sua password!'
+    LOGGEDOUT: 'Terminou a autenticação.  Se se deseja autenticar novamente insira as suas credenciais abaixo.'
+    NOTEPAGESECURED: 'Esta página é privada. Insira as suas credenciais abaixo para a visualizar.'
+    NOTERESETPASSWORD: 'Insira o seu endereço de email, e será enviado um link que poderá utilizar para recuperar a sua password'
+  SecurityAdmin:
+    APPLY_ROLES: 'Aplicar regras a grupos'
+    EDITPERMISSIONS: 'Gerir permissões de grupos'
+    GROUPNAME: 'Nome do Grupo'
+    IMPORTGROUPS: 'Importar grupos'
+    MEMBERS: Membros
+    NEWGROUP: 'Novo grupo'
+    PERMISSIONS: Permissões
+    ROLES: Regras
+    Users: Utilizadores
+  SiteTree:
+    TABMAIN: Principal
+  TableListField:
+    CSVEXPORT: 'Exportar para CSV'
+  ToggleField:
+    LESS: menos
+    MORE: mais
+  UploadField:
+    ATTACHFILES: 'Adicionar ficheiros'
+    DELETEINFO: 'Remover permanentemente este ficheiro do sistema'
+    DOEDIT: Guardar
+    DROPFILE: 'arrastar um ficheiro'
+    EDITINFO: 'Editar este ficheiro'
+    FIELDNOTSET: 'Informação do ficheiro não encontrada'
+    FROMCOMPUTER: 'Do computador'
+    FROMFILES: 'De ficheiros'
+    REMOVEINFO: 'Remover este ficheiro daqui, mas não apaga do sistema'
+    STARTALL: 'Iniciar todos'
+    Saved: Guardado
+  Versioned:
+    has_many_Versions: Versões

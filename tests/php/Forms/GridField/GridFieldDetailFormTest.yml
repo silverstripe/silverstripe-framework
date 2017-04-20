@@ -1,0 +1,21 @@
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person:
+  joe:
+    FirstName: Joe
+    Surname: Bloggs
+  jane:
+    FirstName: Jane
+    Surname: Doe
+
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup:
+  group:
+    Name: My Group
+    People:
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.joe
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.jane
+
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category:
+  category1:
+    Name: Category 1
+    People:
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.joe
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.jane

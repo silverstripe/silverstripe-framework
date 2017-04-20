@@ -1,0 +1,191 @@
+summary: Learn how to crop and resize images in templates and PHP code
+
+# Image
+
+Image files can be stored either through the `[api:Image]` dataobject, or though [api:DBFile] fields.
+In either case, the same image resizing and manipulation functionality is available though the common
+[api:ImageManipulation] trait.
+
+## Usage
+
+### Managing images through form fields
+
+Images can be uploaded like any other file, through [api:FileField].
+Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
+
+### Inserting images into the WYSIWYG editor
+
+Images can be inserted into `[api:HTMLValue]` database fields
+through the built-in WYSIWYG editor. In order to retain a relationship
+to the underlying `[api:Image]` records, images are saved as [shortcodes](/developer-guides/extending/shortcodes).
+The shortcode (`[image id="<id>" alt="My text" ...]`) will be converted
+into an `<img>` tag on your website automatically.
+
+See [HTMLEditorField](/forms/field-types/htmleditorfield).
+
+### Manipulating images in Templates
+
+You can manipulate images directly from templates to create images that are
+resized and cropped to suit your needs.  This doesn't affect the original
+image or clutter the CMS with any additional files, and any images you create
+in this way are cached for later use. In most cases the pixel aspect ratios of
+images are preserved (meaning images are not stretched).
+
+![](../../_images/image-methods.jpg)
+
+Here are some examples, assuming the `$Image` object has dimensions of 200x100px:
+
+	:::ss
+	// Scaling functions
+	$Image.ScaleWidth(150) // Returns a 150x75px image
+	$Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
+	$Image.ScaleHeight(150) // Returns a 300x150px image (up-sampled. Try to avoid doing this)
+	$Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
+	$Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
+	$Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
+	
+	// Warning: This method can distort images that are not the correct aspect ratio
+	$Image.ResizedImage(200, 300) // Forces dimensions of this image to the given values.
+	
+	// Cropping functions
+	$Image.Fill(150,150) // Returns a 150x150px image resized and cropped to fill specified dimensions (up-sampled)
+	$Image.FillMax(150,150) // Returns a 100x100px image (like Fill but prevents up-sampling)
+	$Image.CropWidth(150) // Returns a 150x100px image (trims excess pixels off the x axis from the center)
+	$Image.CropHeight(50) // Returns a 200x50px image (trims excess pixels off the y axis from the center)
+	
+	// Padding functions (add space around an image)
+	$Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added at the top and bottom
+	$Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
+	
+	// Metadata
+	$Image.Width // Returns width of image
+	$Image.Height // Returns height of image
+	$Image.Orientation // Returns Orientation
+	$Image.Title // Returns the friendly file name
+	$Image.Name // Returns the actual file name
+	$Image.FileName // Returns the actual file name including directory path from web root
+	$Image.Link // Returns relative URL path to image
+	$Image.AbsoluteLink // Returns absolute URL path to image
+
+Image methods are chainable. Example:
+
+	:::ss
+	<body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
+
+### Padded Image Resize
+
+The Pad method allows you to resize an image with existing ratio and will
+pad any surplus space. You can specify the color of the padding using a hex code such as FFFFFF or 000000.
+
+You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
+png images.
+
+	:::php
+	$Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
+	$Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
+	$Image.Pad(80, 80, FFFFFF) // white padding with no transparency
+
+### Manipulating images in PHP
+
+The image manipulation functions can be used in your code with the same names, example: `$image->Fill(150,150)`.
+
+Some of the MetaData functions need to be prefixed with 'get', example `getHeight()`, `getOrientation()` etc.
+
+Please refer to the [api:ImageManipulation] API documentation for specific functions.
+
+### Creating custom image functions
+
+You can also create your own functions by decorating the `Image` class.
+
+	:::php
+	class MyImage extends DataExtension {
+		
+		public function Landscape()	{
+			return $this->owner->getWidth() > $this->owner->getHeight();
+		}
+		
+		public function Portrait() {
+			return $this->owner->getWidth() < $this->owner->getHeight();
+		}
+		
+		public function PerfectSquare()	{
+			$variant = $this->owner->variantName(__FUNCTION__);
+			return $this->owner->manipulateImage($variant, function(Image_Backend $backend) {
+			return $backend->croppedResize(100,100);
+			});
+		}
+		
+		public function Exif(){
+			//http://www.v-nessa.net/2010/08/02/using-php-to-extract-image-exif-data
+			$mime = $this->owner->getMimeType();
+			$content = $this->owner->getAsString();
+			$image = "data://{$mime};base64," . base64_encode($content);
+			$d=new ArrayList();	
+			$exif = exif_read_data($image, 0, true);
+			foreach ($exif as $key => $section) {
+				$a=new ArrayList();	
+				foreach ($section as $name => $val) {
+					$a->push(new ArrayData(array(
+						"Title"=>$name,
+						"Content"=>$val
+					)));
+			}
+				$d->push(new ArrayData(array(
+					"Title"=>strtolower($key),
+					"Content"=>$a
+				)));
+			}
+			return $d;
+		}
+	}
+
+	:::yml
+	Image:
+	  extensions:
+	    - MyImage
+	SilverStripe\Filesystem\Storage\DBFile:
+	  extensions:
+	    - MyImage
+
+### Form Upload
+
+For usage on a website form, see [api:FileField].
+
+### Image Quality
+
+To adjust the quality of the generated images when they are resized add the
+following to your mysite/config/config.yml file:
+
+	:::yml
+	GDBackend:
+	  default_quality: 90
+	# or
+	ImagickBackend:
+	  default_quality: 90
+
+The default value is 75.
+
+By default SilverStripe image functions will not resample an image if no
+cropping or resizing is taking place. You can tell SilverStripe to always to
+always produce resampled output by adding this to your
+mysite/config/config.yml file:
+
+	:::yml
+	# Configure resampling for File dataobject
+	File:
+	  force_resample: true
+	# DBFile can be configured independently
+	SilverStripe\Filesystem\Storage\DBFile:
+	  force_resample: true
+
+If you are intending to resample images with SilverStripe it is good practice
+to upload high quality (minimal compression) images as these will produce
+better results when resampled. Very high resolution images may cause GD to
+crash so a good size for website images is around 2000px on the longest edge.
+
+## API Documentation
+
+ * [api:File]
+ * [api:Image]
+ * [api:DBFile]
+ * [api:ImageManipulation]

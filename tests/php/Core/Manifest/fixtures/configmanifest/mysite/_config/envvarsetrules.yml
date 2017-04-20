@@ -1,0 +1,28 @@
+---
+Only:
+  EnvVarSet: ENVVARSET_FOO
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvVarSet:
+    FooSet: Yes
+---
+Only:
+  EnvVarSet: ENVVARSET_BAR
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvVarSet:
+    BarSet: Yes
+---
+Except:
+  EnvVarSet: ENVVARSET_FOO
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvVarSet:
+    FooSet: No
+---
+Except:
+  EnvVarSet: ENVVARSET_BAR
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  EnvVarSet:
+    BarSet: No

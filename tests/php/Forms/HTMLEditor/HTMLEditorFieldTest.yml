@@ -1,0 +1,13 @@
+SilverStripe\Assets\Image:
+  example_image:
+    FileFilename: example.jpg
+    FileHash: f5c7c2f814b0f20ceb30b72edbac220d6eff65ed
+    Name: example.jpg
+
+SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject:
+  home:
+    Title: Home Page
+  about:
+    Title: About Us
+  contact:
+    Title: Contact Us

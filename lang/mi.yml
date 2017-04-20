@@ -1,0 +1,533 @@
+mi:
+  AssetAdmin:
+    NEWFOLDER: KōpakiHōu
+    SHOWALLOWEDEXTS: 'Whakaaturia mai ngā toronga e whakaaetia ana'
+  AssetTableField:
+    CREATED: 'Tukuatu tuatahi'
+    DIM: 'Ngā Rahinga'
+    FILENAME: 'Ingoa Kōnae'
+    FOLDER: Kōpaki
+    LASTEDIT: 'Hurihanga tōmuri'
+    OWNER: Kaipupuri
+    SIZE: 'Rahi kōnae'
+    TITLE: Taitara
+    TYPE: 'Momo kōnae'
+    URL: PRO
+  AssetUploadField:
+    ChooseFiles: 'Kōwhiri kōnae'
+    DRAGFILESHERE: 'Tōia mai ngā kōnae ki konei'
+    DROPAREA: 'Wāhi Taka'
+    EDITALL: 'Whakatika katoa'
+    EDITANDORGANIZE: 'Whakatika me te Whakaraupapa'
+    EDITINFO: 'Whakatika kōnae'
+    FILES: 'Ngā kōnae'
+    FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
+    FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
+    TOTAL: Tapeke
+    UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
+    UPLOADOR: 'TĒNEI RĀNEI'
+  BBCodeParser:
+    ALIGNEMENT: Tiaroaro
+    ALIGNEMENTEXAMPLE: 'i tiaro matautia'
+    BOLD: 'Tuhinga Taekaha'
+    BOLDEXAMPLE: Taekaha
+    CODE: 'Paraka Waehere'
+    CODEDESCRIPTION: 'Paraka waehere kāore hōpututia'
+    CODEEXAMPLE: 'Paraka Waehere'
+    COLORED: 'Tuhinga whaikano'
+    COLOREDEXAMPLE: 'tuhinga kikorangi'
+    EMAILLINK: 'Hono īmēra'
+    EMAILLINKDESCRIPTION: 'Hanga hononga ki tētahi wāhitau īmēra'
+    IMAGE: Atahanga
+    IMAGEDESCRIPTION: 'Whakaaturia tētahi atahanga i tō tare'
+    ITALIC: 'Tuhinga Tītaha'
+    ITALICEXAMPLE: Tītaha
+    LINK: 'Hono paetukutuku'
+    LINKDESCRIPTION: 'Hono ki tētahi atu paetukutuku, PRO rānei'
+    STRUCK: 'Tuhinga i Tāhīpaetia'
+    STRUCKEXAMPLE: 'I tāhīpaetia'
+    UNDERLINE: 'Tuhinga i tōrarotia'
+    UNDERLINEEXAMPLE: 'I tōrarotia'
+    UNORDERED: 'Rārangi kāore i raupapatia'
+    UNORDEREDDESCRIPTION: 'Rārangi kāore i raupapatia'
+    UNORDEREDEXAMPLE1: 'tūemi 1 kāore i raupapatia'
+  BackLink_Button_ss:
+    Back: Hoki
+  BasicAuth:
+    ENTERINFO: 'Tāurua he ingoa kaiwhakamahi me te kupuhipa'
+    ERRORNOTADMIN: 'Ehara tēnā kaiwhakamahi i te kaiwhakahaere'
+    ERRORNOTREC: 'Kāore i te mōhiotia tēnā ingoa kaiwhakamahi / kupuhipa'
+  Boolean:
+    ANY: 'Ko tētahi'
+  CMSLoadingScreen_ss:
+    LOADING: 'Uta ana...'
+    REQUIREJS: 'Ka hiahia te CMS kia whakahohea te JavaScript'
+  CMSMain:
+    ACCESS: 'Uru ki te wāhanga ''{title}'''
+    ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
+    ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
+    SAVE: Tiaki
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Arokite Paetukutuku'
+  CMSProfileController:
+    MENUTITLE: 'Taku Kōtaha'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
+    CHANGEPASSWORDTEXT2: 'Ka taea te whakamahi i ēnei taipitopito tuakiri ināianei hei takiuru:'
+    EMAIL: Īmēra
+    HELLO: 'Kia ora'
+    PASSWORD: Kupuhipa
+  ConfirmedPasswordField:
+    ATLEAST: 'Kia {min} pūāhua i te iti rawa te roa o ngā kupuhipa.'
+    BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
+    MAXIMUM: 'Kaua i hipa i te {max} pūāhua te roa o ngā kupuhipa.'
+    SHOWONCLICKTITLE: 'Huri Kupuhipa'
+  ContentController:
+    NOTLOGGEDIN: 'kāore i te takiuru'
+  CreditCardField:
+    FIRST: tuatahi
+    FOURTH: tuawhā
+    SECOND: tuarua
+    THIRD: tuatoru
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Ngā Ahanoa Raraunga'
+    SINGULARNAME: 'Ahanoa Raraunga'
+  Date:
+    DAY: rā
+    DAYS: 'ngā rā'
+    HOUR: haora
+    HOURS: 'ngā haora'
+    LessThanMinuteAgo: 'iti iho i te meneti kotahi'
+    MIN: meneti
+    MINS: 'ngā meneti'
+    MONTH: marama
+    MONTHS: 'ngā marama'
+    SEC: hēkona
+    SECS: 'ngā hēkona'
+    TIMEDIFFAGO: '{difference} i mua'
+    TIMEDIFFIN: 'i roto i te {difference}'
+    YEAR: tau
+    YEARS: 'ngā tau'
+  DateField:
+    NOTSET: 'kāore i tautuhia'
+    TODAY: 'tēnei rā'
+    VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
+    VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
+    VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
+  DatetimeField:
+    NOTSET: 'Kāore i tautuhia'
+  Director:
+    INVALID_REQUEST: 'Tono muhu'
+  DropdownField:
+    CHOOSE: (Kōwhiri)
+  EmailField:
+    VALIDATION: 'Tāurua he wāhitau īmēra '
+  Enum:
+    ANY: 'Ko tētahi'
+  File:
+    AviType: 'kōnae ataata AVI'
+    Content: 'Ngā Ihirangi'
+    CssType: 'kōnae CSS'
+    DmgType: 'atahanga kōpae Apple'
+    DocType: 'tuhinga Word'
+    Filename: 'Ingoa Kōnae'
+    GifType: 'atahanga GIF - he pai mō ngā hoahoa'
+    GzType: 'kōnae kōpeke GZIP'
+    HtlType: 'kōnae HTML'
+    HtmlType: 'kōnae HTML'
+    INVALIDEXTENSION: 'Kāore e whakaaetia te toronga (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Kāore e whakaaetia te toronga'
+    IcoType: 'atahanga Ata'
+    JpgType: 'atahanga JPEG - he pai mō ngā whakaahua'
+    JsType: 'kōnae Javascript'
+    Mp3Type: 'kōnae ororongo MP3'
+    MpgType: 'kōnae ataata MPEG'
+    NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
+    Name: Ingoa
+    PLURALNAME: 'Ngā Kōnae'
+    PdfType: 'kōnae Adobe Acrobat PDF'
+    PngType: 'atahanga PNG - he hōputu pai hei whakamahi whānui noa'
+    SINGULARNAME: Kōnae
+    TiffType: 'Hōputu atatahanga tūtohu '
+    Title: Taitara
+    WavType: 'kōnae ororongo WAV'
+    XlsType: 'ripakaute Excel'
+    ZipType: 'kōnae kōpeke ZIP'
+  Filesystem:
+    SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
+  Folder:
+    PLURALNAME: 'Ngā Kōpaki'
+    SINGULARNAME: Kōpaki
+  ForgotPasswordEmail_ss:
+    HELLO: 'Kia ora'
+    TEXT1: 'Anei tō'
+    TEXT2: 'hono tautuhi kupuhipa anō'
+    TEXT3: mā
+  Form:
+    FIELDISREQUIRED: 'Ka hiahiatia te {name}'
+    SubmitBtnLabel: Haere
+    VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
+    VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
+    VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Kia kaua e noho piako ngā kupuhipa'
+    VALIDATIONSTRONGPASSWORD: 'Kia kotahi tonu te mati, kia tahi hoki te pūāhua retawhika i te iti rawa o ngā kupuhipa'
+    VALIDATOR: Pūwhakamana
+    VALIDCURRENCY: 'Tāurua he moni tika'
+  FormField:
+    NONE: Kore
+  GridAction:
+    DELETE_DESCRIPTION: Muku
+    Delete: Muku
+    UnlinkRelation: Wetehono
+  GridField:
+    Add: 'Tāpiri {name}'
+    Filter: Tātari
+    FilterBy: 'Tātari mā'
+    Find: Rapu
+    LEVELUP: 'Whakaawhiwhi ki runga'
+    LinkExisting: 'Hono Tīari'
+    NewRecord: '%s hōu'
+    NoItemsFound: 'Kāore i kitea he tūemi'
+    PRINTEDAT: 'I tāngia i'
+    PRINTEDBY: 'I tāngia e'
+    PlaceHolder: 'Tapu {type}'
+    PlaceHolderWithLabels: 'Rapu {type} mā te {name}'
+    RelationSearch: 'Rapu whanaunga'
+    ResetFilter: 'Tautuhi anō'
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
+    EditPermissionsFailure: 'Kāore ō whakaaetanga kia wetehono pūkete'
+  GridFieldDetailForm:
+    CancelBtn: Whakakore
+    Create: Hanga
+    Delete: Muku
+    DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
+    Deleted: 'Kua mukua %s %s'
+    Save: Tiaki
+    Saved: 'I tiakina te {name} {link}'
+  GridFieldEditButton_ss:
+    EDIT: Whakatika
+  GridFieldItemEditView:
+    Go_back: Hoki
+  Group:
+    AddRole: 'Tāpiritia he tūnga mō tēnei rōpū'
+    Code: 'Waehere Rōpū'
+    DefaultGroupTitleAdministrators: 'Ngā Kaiwhakahaere'
+    DefaultGroupTitleContentAuthors: 'Ngā Kaituhi Ihirangi'
+    Description: Whakaahuatanga
+    GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
+    Locked: 'Kua maukati?'
+    NoRoles: 'Kāore i kitea he tūnga'
+    PLURALNAME: 'Ngā Rōpū'
+    Parent: 'Rōpū Matua'
+    RolesAddEditLink: 'Whakahaere tūnga'
+    SINGULARNAME: Rōpū
+    Sort: 'Raupapa Kōmaka'
+    has_many_Permissions: 'Ngā Whakaaetanga'
+    many_many_Members: 'Ngā Mema'
+  GroupImportForm:
+    Help1: '<p>Kawea mai ngā kaiwhakamahi i te hōputu <em>CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
+    ResultCreated: 'I hangaia e {count} ngā rōpū'
+    ResultDeleted: 'Kua mukua e %d ngā rōpū'
+    ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Kua kitea he koromeke mutunga kore i roto i te aroākapanga "{type}". Hurihia te matua hei whakaea i tēnei'
+  HtmlEditorField:
+    ADDURL: 'Tāpiri PRO'
+    ADJUSTDETAILSDIMENSIONS: 'Ngā taipitopito &amp; ngā rahinga'
+    ANCHORVALUE: Punga
+    BUTTONADDURL: 'Tāpiri PRO'
+    BUTTONINSERT: Kōkohu
+    BUTTONINSERTLINK: 'Kōkuhu hono'
+    BUTTONREMOVELINK: 'Tango hono'
+    BUTTONUpdate: Whakahōu
+    CAPTIONTEXT: 'Tuhinga tapanga'
+    CSSCLASS: 'Tiaroaro / kāhua'
+    CSSCLASSCENTER: 'I tauwaengatia, i tōna kotahi'
+    CSSCLASSLEFT: 'I te taha mauī, me te tuhinga e takai huri noa ana'
+    CSSCLASSLEFTALONE: 'Kei te mauī, i tōna kotahi'
+    CSSCLASSRIGHT: 'I te taha matau, me te tuhinga e takai huri noa ana'
+    DETAILS: 'Ngā Taipitopito'
+    EMAIL: 'Wāhitau Īmēra'
+    FILE: Kōnae
+    FOLDER: Kōpaki
+    FROMCMS: 'Mai i te CMS'
+    FROMCOMPUTER: 'Mai i tō rorohiko'
+    FROMWEB: 'Mai i te tukutuku'
+    FindInFolder: 'Rapu i te Kōpaki'
+    IMAGEALT: 'Tuhinga kē (alt)'
+    IMAGEDIMENSIONS: 'Ngā Rahinga'
+    IMAGEHEIGHTPX: Teitei
+    IMAGETITLE: 'Tuhinga taitara (ākiutauta) - mō ngā mōhiohio tāpiri mō te atahanga'
+    IMAGETITLETEXT: 'Tuhinga taitara (ākiutauta) '
+    IMAGETITLETEXTDESC: 'Mō ētahi atu mōhiohio mō te atahanga'
+    IMAGEWIDTHPX: Whānui
+    LINK: 'Kōkuhu hono'
+    LINKANCHOR: 'He punga kei tēnei whārangi'
+    LINKDESCR: 'Whakaahuatanga hono'
+    LINKEMAIL: 'Wāhitau Īmēra'
+    LINKEXTERNAL: 'Tētahi atu paetukutuku'
+    LINKFILE: 'Tīkina ake he kōnae'
+    LINKINTERNAL: 'Whārangi kei te pae'
+    LINKOPENNEWWIN: 'Ka whakatuwhera hono i te matapihi hōu?'
+    LINKTO: 'Hono ki'
+    PAGE: Whārangi
+    URL: PRO
+    URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
+  Image:
+    PLURALNAME: 'Ngā Kōnae'
+    SINGULARNAME: Kōnae
+  Image_Cached:
+    PLURALNAME: 'Ngā Kōnae'
+    SINGULARNAME: Kōnae
+  Image_iframe_ss:
+    TITLE: 'Iframe Tukuatu Atahanga'
+  LeftAndMain:
+    CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
+    DELETED: 'I mukua'
+    HELP: Āwhina
+    PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
+    PreviewButton: Arokite
+    REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
+    SAVEDUP: 'Kua Tiakina'
+    ShowAsList: 'whakaaturia hei rārangi'
+    TooManyPages: 'He nui rawa ngā whārangi'
+    ValidationError: 'Hapa manatoko'
+  LeftAndMain_Menu_ss:
+    Hello: 'Kia ora'
+    LOGOUT: Takiputa
+  LoginAttempt:
+    Email: 'Wāhitau Īmēra'
+    IP: 'Wāhitau KI'
+    PLURALNAME: 'Ngā Whakamātau Takiuru'
+    SINGULARNAME: 'Whakamātau Takiuru'
+    Status: Tūnga
+  Member:
+    ADDGROUP: 'Tāpiri rōpū'
+    BUTTONCHANGEPASSWORD: 'Huri Kupuhipa'
+    BUTTONLOGIN: Takiuru
+    BUTTONLOGINOTHER: 'Takiuru hei tangata kē'
+    BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
+    CANTEDIT: 'Kāore ō whakaaetanga kia pēnā'
+    CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
+    CONFIRMPASSWORD: 'Whakaū Kupuhipa'
+    DATEFORMAT: 'Hōputu Rā'
+    DefaultAdminFirstname: 'Kaiwhakahaere Taunoa'
+    DefaultDateTime: taunoa
+    EMAIL: Īmēra
+    EMPTYNEWPASSWORD: 'Kāore e whakaaetia kia piako te kupuhipa hōu, ngana anō'
+    ENTEREMAIL: 'Tāurua he wāhitau īmēra kia whiwhi i te hono tautuhi kupuhipa anō.'
+    ERRORLOCKEDOUT2: 'Kua monokia rangitahitia tō pūkete nā te nui rawa o ngā ngana takiuru kua rahua. Ngana anō ā muri i te {count} meneti.'
+    ERRORNEWPASSWORD: 'Kua rerekē tō tāuru kupuhipa, whakamātau anō'
+    ERRORPASSWORDNOTMATCH: 'Kāore i te ōrite tō kupuhipa o nāianei, ngana anō'
+    ERRORWRONGCRED: 'Te āhua nei ehara i te wāhitau īmerā tika, i te kuphipa tika rānei. Ngana anō'
+    FIRSTNAME: 'Ingoa Tuatahi'
+    INTERFACELANG: 'Reo Atanga'
+    INVALIDNEWPASSWORD: 'Kāore i taea te whakaae ki taua kupuhipa: {password}'
+    LOGGEDINAS: 'Kua takiuru koe hei {name}.'
+    NEWPASSWORD: 'Kupuhipa Hōu'
+    NoPassword: 'Kāore he kupuhipa i tēnei mema.'
+    PASSWORD: Kupuhipa
+    PLURALNAME: 'Ngā Mema'
+    SINGULARNAME: Mema
+    SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
+    SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
+    SURNAME: 'Ingoa Whānau'
+    TIMEFORMAT: 'Hōputu Wā'
+    ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
+    WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
+    YOUROLDPASSWORD: 'Tō kupuhipa tawhito'
+    belongs_many_many_Groups: 'Ngā Rōpū'
+    db_LastVisited: 'Rā Toronga Tōmua'
+    db_Locale: 'Tauwāhi Atanga'
+    db_LockedOutUntil: 'Ka maukatia tae atu ki te'
+    db_NumVisit: 'Maha o ngā Toronga'
+    db_Password: Kupuhipa
+    db_PasswordExpiry: 'Rā Mōnehu Kupuhipa'
+  MemberAuthenticator:
+    TITLE: 'Īmērā &amp; Kupuhipa'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
+    Custom: Ritenga
+    DATEFORMATBAD: 'He muhu te hōputu rā'
+    DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
+    DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
+    FOURDIGITYEAR: 'Tau matiwhā'
+    FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
+    MINUTENOLEADING: 'Meneti, kāore he kore i mua'
+    MONTHNOLEADING: 'Mati marama kāore he kore i mua'
+    Preview: Arokite
+    SHORTMONTH: 'Ingoa marama poto (hei tauira, Pip)'
+    TWODIGITDAY: 'Rā marama matirua'
+    TWODIGITHOUR: 'Ngā mati haora e rua (00 ki te 23)'
+    TWODIGITMINUTE: 'Ngā mati meneti e rua (00 ki te 59)'
+    TWODIGITMONTH: 'Marama matirua (01=Kohitātea)'
+    TWODIGITSECOND: 'Ngā mati hēkona e rua (00 ki te 59)'
+    TWODIGITYEAR: 'Tau matirua'
+    Toggle: 'Whakaaturia te āwhina whakahōputu'
+  MemberImportForm:
+    Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
+    ResultCreated: 'I hangaia e {count} ngā mema'
+    ResultDeleted: 'Kua mukua e %d ngā mema'
+    ResultNone: 'Kāore he huringa'
+    ResultUpdated: 'I whakahōutia e {count} mhā mema'
+  MemberPassword:
+    PLURALNAME: 'Ngā Kupuhipa Mema'
+    SINGULARNAME: 'Kupuhipa Mema'
+  MemberTableField:
+    APPLY_FILTER: 'Hoatu Tātari'
+  ModelAdmin:
+    DELETE: Muku
+    DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
+    EMPTYBEFOREIMPORT: 'Whakakapi raraunga'
+    IMPORT: 'Kawemai i CSV'
+    IMPORTEDRECORDS: 'I kawea mai e {count} ngā pūkete.'
+    NOCSVFILE: 'Pūtirotiro kia kitea he kōnae CSV hei kawemai'
+    NOIMPORT: 'Kāore he mea hei kawemai'
+    RESET: 'Tautuhi Anō'
+    Title: 'Ngā Tauira Raraunga'
+    UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
+  ModelAdmin_ImportSpec_ss:
+    IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
+    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
+    IMPORTSPECRELATIONS: 'Ngā Pānga'
+    IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
+  ModelAdmin_Tools_ss:
+    FILTER: Tātari
+    IMPORT: Kawemai
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Kawemai
+    SEARCHLISTINGS: Rapu
+  MoneyField:
+    FIELDLABELAMOUNT: Rahinga
+    FIELDLABELCURRENCY: Moni
+  NullableField:
+    IsNullLabel: 'He Kore Tēnei'
+  NumericField:
+    VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
+  Pagination:
+    Page: Whārangi
+    View: Tiro
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: %s'
+    PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'
+    TOOSHORT: 'He poto rawa te kupuhipa, me %s pūāhua neke atu te roa'
+  Permission:
+    AdminGroup: Kaiwhakahaere
+    CMS_ACCESS_CATEGORY: 'Uru CMS'
+    FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
+    FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
+    PLURALNAME: 'Ngā Whakaaetanga'
+    SINGULARNAME: Whakaaetanga
+  PermissionCheckboxSetField:
+    AssignedTo: 'kua tautapatia ki  "{title}"'
+    FromGroup: 'I tukuna iho i te rōpū "{title}"'
+    FromRole: 'I tukuna iho i te tūnga "{title}"'
+    FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
+  PermissionRole:
+    OnlyAdminCanApply: 'Ka taea anake te tono e ngā kaiwhakahaere'
+    PLURALNAME: 'Ngā Tūnga'
+    SINGULARNAME: Tūranga
+    Title: Taitara
+  PermissionRoleCode:
+    SINGULARNAME: 'Waehere Tūnga Whakaaetanga'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
+    UserPermissionsIntro: 'Mā te tautapa rōpū ki tēnei kaiwhakamahi e whakarite āna whakaaetanga. Tirohia te wāhanga rōpū mō ngā taipitopito o ngā whakaaetanga o ngā rōpū takitahi.'
+  PhoneNumberField:
+    VALIDATION: 'Tāurua he tau waea tika'
+  Security:
+    ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
+    BUTTONSEND: 'Tukuna mai te hono tautuhi kupuhipa anō'
+    CHANGEPASSWORDBELOW: 'Ka taea te huri i tō kupuhipa i raro'
+    CHANGEPASSWORDHEADER: 'Hurihia tō kupuhipa'
+    ENTERNEWPASSWORD: 'Tāurua he kupuhipa hōu'
+    ERRORPASSWORDPERMISSION: 'Me takiuru koe i mua i te huri i tō kupuhipa!'
+    LOGGEDOUT: 'Kua takiputaina atu koe. Ki te pīrangi koe ki te takiuru atu anō, tāurutia ō taipitopito tuakiri ki raro. '
+    LOGIN: Takiuru
+    LOSTPASSWORDHEADER: 'Kupuhipa Ngaro'
+    NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
+    NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'
+    NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'
+    PASSWORDSENTHEADER: 'I tukuna he hono tautuhi kupuhipa anō ki ''{email}'''
+    PASSWORDSENTTEXT: 'Kia ora! Kua tukuna he hono tautuhi anō ki ''{email}'',engari rā kei te tīariari he pūkete mō taua wāhitau īmēra.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Tukuna te tiro, te tāpiri me te whakatika i ngā kaiwhakamahi, me te tautapa anō hoki i ngā whakaaetanga me ngā tūnga ki a rātou.'
+    APPLY_ROLES: 'Hoatu tūnga ki ngā rōpū'
+    APPLY_ROLES_HELP: 'Te āhei ki te whakatika tūnga kua tautapatia ki tētahi rōpū. Ka hiahiatia te whakaaetanga "Uru ki te wāhanga ''Ngā Kaiwhakamahi''"'
+    EDITPERMISSIONS: 'Whakahaere whakaaetanga mō ngā rōpū'
+    EDITPERMISSIONS_HELP: 'Te āhei ki te whakatika i Ngā Whakaaetanga me Ngā Wāhitau KI mō tētahi rōpū. Ka hiahiatia te whakaaetanga "Uru ki te wāhanga ''Haumarutanga''".'
+    GROUPNAME: 'Ingoa rōpū'
+    IMPORTGROUPS: 'Kawea mai ngā rōpū'
+    IMPORTUSERS: 'Kawe kaiwhakamahi mai'
+    MEMBERS: 'Ngā Mema'
+    MENUTITLE: Haumarutanga
+    MemberListCaution: 'Whakatūpato: Mā te tango mema i tēnei rārangi, ka tangohia i ngā rōpū katoa me te pātengi raraunga'
+    NEWGROUP: 'Rōpū Hōu'
+    PERMISSIONS: 'Ngā Whakaaetanga'
+    ROLES: 'Ngā Tūnga'
+    ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
+    TABROLES: 'Ngā Tūnga'
+    Users: 'Ngā Kaiwhakamahi'
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Kawemai i CSV'
+    FileFieldLabel: 'Kōnae CSV <small>(Ngā toronga ka whakaaetia: *.csv)</small>'
+  SilverStripeNavigator:
+    Auto: Aunoa
+    ChangeViewMode: 'Hurihia te aratau tiro'
+    Desktop: Papamahi
+    DualWindowView: 'Matapihi Takirua'
+    Edit: Whakatika
+    EditView: 'Aratau whakatika'
+    Mobile: Pūkoro
+    PreviewState: 'Tūnga Arokite'
+    PreviewView: 'Aratau arokite'
+    Responsive: Urupare
+    SplitView: 'Aratau weherua'
+    Tablet: Paparorohiko
+    ViewDeviceWidth: 'Tīpakohia he whānui arokite'
+    Width: whānui
+  SiteTree:
+    TABMAIN: Matua
+  TableListField:
+    CSVEXPORT: 'Kaweake ki CSV'
+    Print: Tā
+  TableListField_PageControls_ss:
+    OF: o
+  TimeField:
+    VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
+  ToggleField:
+    LESS: 'iti iho'
+    MORE: 'nui ake'
+  UploadField:
+    ATTACHFILE: 'Tāpiritia tētahi kōnae'
+    ATTACHFILES: 'Tāpiri kōnae'
+    AttachFile: 'Tāpiritia t/ētahi kōnae'
+    CHOOSEANOTHERFILE: 'Kōwhiria tētahi kōnae anō'
+    CHOOSEANOTHERINFO: 'Whakakapia tēnei kōnae ki tētahi atu mai i te pātaka kōnae'
+    DELETE: 'Muku i ngā kōnae'
+    DELETEINFO: 'Muku pūmautia tēnei kōnae i te pātaka kōnae'
+    DOEDIT: Tiaki
+    DROPFILE: 'whakamakeretia tētahi kōnae'
+    DROPFILES: 'taka kōnae'
+    Dimensions: 'Ngā Rahinga'
+    EDIT: Whakatika
+    EDITINFO: 'Whakatikatia tēnei kōnae'
+    FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
+    FROMCOMPUTER: 'Mai i tō rorohiko'
+    FROMCOMPUTERINFO: 'Tīpako mai i ngā kōnae'
+    FROMFILES: 'I ngā kōnae'
+    HOTLINKINFO: 'Mōhiohio: Ka honoweratia tēnei atahanga. Me whakarite kia whai whakaaetanga koe i te kaihanga pae taketake kia pēnā.'
+    MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
+    MAXNUMBEROFFILESONE: 'Ka taea tētahi kōnae kotahi anake te tukuatu'
+    MAXNUMBEROFFILESSHORT: 'Ka taea te tukuatu i ngā kōnae {count} anake '
+    OVERWRITEWARNING: 'Kei te tīari kē tētahi kōnae me te ingoa ōrite'
+    REMOVE: Tango
+    REMOVEINFO: 'Tangohia tēnei kōane i konei, engari kaua e muku i te pātaka kōnae'
+    STARTALL: 'Tīmata katoa'
+    Saved: 'Kua Tiakina'
+    UPLOADSINTO: 'ka tiaki ki /{path}'
+  Versioned:
+    has_many_Versions: 'Ngā Putanga'

@@ -1,0 +1,14 @@
+SilverStripe\ORM\Tests\DBMoneyTest\TestObject:
+  test1:
+    MyMoneyCurrency: EUR
+    MyMoneyAmount: 1.23
+  test2:
+    MyMoneyCurrency: USD
+    MyMoneyAmount: 4.45
+  test3:
+    MyMoneyCurrency: NZD
+    MyMoneyAmount: 7.66
+SilverStripe\ORM\Tests\DBMoneyTest\TestObjectSubclass:
+  test2:
+    MyOtherMoneyCurrency: GBP
+    MyOtherMoneyAmount: 2.46

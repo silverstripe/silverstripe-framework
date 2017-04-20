@@ -1,0 +1,179 @@
+is:
+  BBCodeParser:
+    ALIGNEMENT: Textastilling
+    ALIGNEMENTEXAMPLE: 'hægri jafnað'
+    BOLD: 'Feitletraður texti'
+    BOLDEXAMPLE: Feitletrað
+    CODE: 'Kóða blokk'
+    CODEDESCRIPTION: 'Ósniðin kóða blokk'
+    CODEEXAMPLE: 'Kóða blokk'
+    COLORED: 'Litaður texti'
+    COLOREDEXAMPLE: 'blár texti'
+    EMAILLINK: 'Tölvupóst hlekkur'
+    EMAILLINKDESCRIPTION: 'Búa til hlekk fyrir tölvupóstfang'
+    IMAGE: Mynd
+    IMAGEDESCRIPTION: 'Sýna mynd í póstinum'
+    ITALIC: 'Skáletraður texti'
+    ITALICEXAMPLE: Skáletrun
+    LINK: 'Heimasíðu hlekkur'
+    LINKDESCRIPTION: 'Tengja við aðra heimasíðu eða slóð'
+    UNDERLINE: 'Undirstrikaður texti'
+    UNDERLINEEXAMPLE: Undirstrikað
+    UNORDERED: 'Óraðaður listi'
+    UNORDEREDDESCRIPTION: 'Óraðaður listi'
+    UNORDEREDEXAMPLE1: 'Óraðaður hlutur 1'
+  BasicAuth:
+    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
+    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
+    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
+  Boolean:
+    ANY: Einhver
+  CMSMain:
+    SAVE: Vista
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
+    CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
+    EMAIL: Tölvupóstur
+    HELLO: Hæ
+    PASSWORD: Lykilorð
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Breyta lykliorði'
+  CreditCardField:
+    FIRST: fyrsta
+    FOURTH: fjórða
+    SECOND: annað
+    THIRD: þriðja
+  CurrencyField:
+    CURRENCYSYMBOL: kr
+  DataObject:
+    PLURALNAME: 'Gagna hlutir'
+    SINGULARNAME: 'Gagna hlutir'
+  DateField:
+    NOTSET: 'ekki valið'
+    TODAY: 'í dag'
+  DropdownField:
+    CHOOSE: (Veldu)
+  Enum:
+    ANY: Einhver
+  File:
+    Content: Efni
+    Filename: Skráarnafn
+    NOVALIDUPLOAD: 'Það er ekki hægt að sækja þessa skrá'
+    Name: Nafn
+    PLURALNAME: Skrár
+    SINGULARNAME: Skrá
+    Title: Titill
+  ForgotPasswordEmail_ss:
+    HELLO: Hæ
+    TEXT1: 'Hérna er þitt'
+    TEXT2: 'endursetja lykilorð'
+    TEXT3: fyrir
+  Form:
+    VALIDATIONNOTUNIQUE: 'Gildið sem þú slóst inn er ekki einkvæmt'
+    VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
+    VALIDATOR: Staðfesta
+  FormField:
+    NONE: ekkert
+  Group:
+    Code: 'Hóp kóði'
+    Description: Lýsing
+    Locked: 'Læst?'
+    Parent: 'Yfir hópur'
+    Sort: Röðun
+    has_many_Permissions: Leyfi
+    many_many_Members: Félagar
+  HtmlEditorField:
+    ANCHORVALUE: Markstikla
+    BUTTONINSERTLINK: 'Bæta við hlekk'
+    BUTTONREMOVELINK: 'Fjarlægja hlekk'
+    CSSCLASS: 'Textastilling / stíll'
+    CSSCLASSCENTER: 'Miðjað, eitt og sér'
+    CSSCLASSLEFT: 'Til vinstri, með textann umhverfis'
+    CSSCLASSLEFTALONE: 'Til vinstri, eitt og sér '
+    CSSCLASSRIGHT: 'Til hægri, með textann umhverfis'
+    EMAIL: Tölvupóstfang
+    FILE: Skrá
+    FOLDER: Mappa
+    IMAGEDIMENSIONS: Stærð
+    IMAGEHEIGHTPX: Hæð
+    IMAGEWIDTHPX: Breidd
+    LINK: Hlekkur
+    LINKANCHOR: 'Markstikla á þessari síðu'
+    LINKDESCR: 'Lýsing á hlekk'
+    LINKEMAIL: Tölvupóstfang
+    LINKEXTERNAL: 'Önnur heimasíða'
+    LINKFILE: 'Hlaða niður skrá'
+    LINKINTERNAL: 'Síða innan heimasíðunnar'
+    LINKOPENNEWWIN: 'Opna hlekk í nýjum glugga?'
+    LINKTO: 'Hlekkur í'
+    PAGE: Síða
+    URL: 'Veffang (URL)'
+  LoginAttempt:
+    Email: Tölvupóstfang
+    IP: 'IP tala'
+    Status: Staða
+  Member:
+    BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
+    BUTTONLOGIN: Innskrá
+    BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
+    BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
+    CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
+    CONFIRMPASSWORD: 'Staðfesta lykilorð'
+    EMAIL: Tölvupóstur
+    EMPTYNEWPASSWORD: 'Nýja lykilorðið má ekki vera autt, vinsamlegast reyndu aftur'
+    ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
+    ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
+    ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
+    FIRSTNAME: Fornafn
+    INTERFACELANG: 'Tungumál viðmóts'
+    NEWPASSWORD: 'Nýtt lykilorð'
+    PASSWORD: Lykilorð
+    PLURALNAME: Félagar
+    SINGULARNAME: Félagar
+    SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
+    SUBJECTPASSWORDRESET: 'Linkur til að búa til nýtt lykilorð'
+    SURNAME: Eftirnafn
+    YOUROLDPASSWORD: 'Gamla lykilorðið þitt'
+    belongs_many_many_Groups: Hópar
+    db_LastVisited: 'Síðast heimsótt'
+    db_LockedOutUntil: 'Læst úti þar til'
+    db_NumVisit: 'Fjöldi heimsókna'
+    db_Password: Lykilorð
+    db_PasswordExpiry: 'Lykilorð rennur út'
+  MemberAuthenticator:
+    TITLE: 'Tölvupóstur &amp; Lykilorð'
+  MoneyField:
+    FIELDLABELAMOUNT: Reikningur
+    FIELDLABELCURRENCY: Gjaldmiðill
+  NullableField:
+    IsNullLabel: 'Er Null'
+  Permission:
+    FULLADMINRIGHTS: 'Full stjórnanda réttindi'
+  PhoneNumberField:
+    VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
+  Security:
+    ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
+    BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
+    CHANGEPASSWORDBELOW: 'Þú getur breytt lykilorðinu þínu fyrir neðan.'
+    CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
+    ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
+    ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
+    LOGGEDOUT: 'Þú hefur verið útskráð(ur). Ef þú villt innskrá þig aftur, sláðu þá inn auðkennið þín fyrir neðan.'
+    LOGIN: Innskrá
+    NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
+    NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'
+  SecurityAdmin:
+    GROUPNAME: 'Nafn hóps'
+    MEMBERS: Félagar
+    PERMISSIONS: Leyfi
+    ROLES: Hlutverk
+  SiteTree:
+    TABMAIN: Aðal
+  TableListField:
+    CSVEXPORT: 'Flytja út í CSV'
+  ToggleField:
+    LESS: minna
+    MORE: meira
+  Versioned:
+    has_many_Versions: útgáfur

@@ -1,0 +1,7 @@
+'SilverStripe\Security\PermissionRole':
+  role:
+    Title: role
+'SilverStripe\Security\PermissionRoleCode':
+  code:
+    Code: ADMIN
+    Role: '=>SilverStripe\Security\PermissionRole.role'
