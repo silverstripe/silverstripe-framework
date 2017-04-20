@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use SilverStripe\Admin\Forms\EditorExternalLinkFormFactory;
 use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -9,6 +10,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
@@ -33,6 +35,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
     private static $allowed_actions = array(
         'LinkForm',
+        'EditorExternalLink',
         'viewfile',
         'getanchors'
     );
@@ -180,7 +183,22 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         return $form;
     }
-
+    
+    /**
+     * Builds and returns the external link form
+     *
+     * @return null|Form
+     */
+    public function EditorExternalLink()
+    {
+        /** @var EditorExternalLinkFormFactory $factory */
+        $factory = Injector::inst()->get(EditorExternalLinkFormFactory::class);
+        if ($factory) {
+            return $factory->getForm($this->controller, "{$this->name}/EditorExternalLink");
+        }
+        return null;
+    }
+    
     /**
      * Get the folder ID to filter files by for the "from cms" tab
      *
