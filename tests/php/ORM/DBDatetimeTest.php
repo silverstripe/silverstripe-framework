@@ -29,7 +29,7 @@ class DBDatetimeTest extends SapphireTest
     public function testNowWithMockDate()
     {
         // Test setting
-        $mockDate = '2001-12-31 22:10:59';
+        $mockDate = '2001-12-31T22:10:59';
         DBDatetime::set_mock_now($mockDate);
         $systemDatetime = DBDatetime::create_field('Datetime', date('Y-m-d H:i:s'));
         $nowDatetime = DBDatetime::now();
@@ -55,10 +55,10 @@ class DBDatetimeTest extends SapphireTest
         $this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
 
         $date = DBDatetime::create_field('Datetime', '0');
-        $this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'String zero is UNIX epoch time');
+        $this->assertEquals('1970-01-01T00:00:00', $date->getValue(), 'String zero is UNIX epoch time');
 
         $date = DBDatetime::create_field('Datetime', 0);
-        $this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
+        $this->assertEquals('1970-01-01T00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
     }
 
     public function testExtendedDateTimes()
@@ -98,7 +98,7 @@ class DBDatetimeTest extends SapphireTest
     public function testURLDateTime()
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
-        $this->assertEquals('2001-12-31%2022%3A10%3A59', $date->URLDateTime());
+        $this->assertEquals('2001-12-31T22%3A10%3A59', $date->URLDateTime());
     }
 
     public function testAgoInPast()

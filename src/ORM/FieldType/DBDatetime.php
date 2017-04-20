@@ -132,32 +132,18 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
-        $dateFormat = $field->getDateField()->getDateFormat();
-        $timeFormat = $field->getTimeField()->getTimeFormat();
+        $dateTimeFormat = $field->getDatetimeFormat();
 
         // Set date formatting hints and example
-        $date = static::now()->Format($dateFormat);
+        $date = static::now()->Format($dateTimeFormat);
         $field
-            ->getDateField()
             ->setDescription(_t(
                 'FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
                 [ 'format' => $date ]
             ))
-            ->setAttribute('placeholder', $dateFormat);
-
-        // Set time formatting hints and example
-        $time = static::now()->Format($timeFormat);
-        $field
-            ->getTimeField()
-            ->setDescription(_t(
-                'FormField.EXAMPLE',
-                'e.g. {format}',
-                'Example format',
-                [ 'format' => $time ]
-            ))
-            ->setAttribute('placeholder', $timeFormat);
+            ->setAttribute('placeholder', $dateTimeFormat);
 
         return $field;
     }

@@ -10,12 +10,14 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 /**
  * Form field used for editing date time string
  *
+ * # Localization
+ *
+ * See {@link DateField}
+ *
  * # Configuration
  *
  * - "timezone": Set a different timezone for viewing. {@link dataValue()} will still save
  * the time in PHP's default timezone (date_default_timezone_get()), its only a view setting.
- * - "datetimeorder": An sprintf() template to determine in which order the date and time values will
- * be combined. This is necessary as those separate formats are set in their invididual fields.
  */
 class DatetimeField extends TextField
 {
@@ -162,6 +164,7 @@ class DatetimeField extends TextField
 
         // Parse from submitted value
         $this->value = $this->localisedToISO8601($value);
+
         return $this;
     }
 
@@ -222,7 +225,7 @@ class DatetimeField extends TextField
             // Browsers expect ISO 8601 dates, localisation is handled on the client
             $formatter->setPattern(DBDatetime::ISO_DATETIME);
         } elseif ($this->datetimeFormat) {
-            // Don't invoke getDateFormat() directly to avoid infinite loop
+            // Don't invoke getDatetimeFormat() directly to avoid infinite loop
             $ok = $formatter->setPattern($this->datetimeFormat);
             if (!$ok) {
                 throw new InvalidArgumentException("Invalid date format {$this->datetimeFormat}");
@@ -239,7 +242,7 @@ class DatetimeField extends TextField
      *
      * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
      */
-    public function getDateFormat()
+    public function getDatetimeFormat()
     {
         if ($this->getHTML5()) {
             // Browsers expect ISO 8601 dates, localisation is handled on the client
@@ -557,7 +560,7 @@ class DatetimeField extends TextField
                 _t(
                     'DateField.VALIDDATEFORMAT2',
                     "Please enter a valid date format ({format})",
-                    ['format' => $this->getDateFormat()]
+                    ['format' => $this->getDatetimeFormat()]
                 )
             );
             return false;
@@ -634,26 +637,6 @@ class DatetimeField extends TextField
         // Note: DateField has no timezone option, and TimeField::setTimezone
         // should be ignored
         $this->timezone = $timezone;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateTimeOrder()
-    {
-        return $this->dateTimeOrder;
-    }
-
-    /**
-     * Set date time order format string. Use {date} and {time} as placeholders.
-     *
-     * @param string $dateTimeOrder
-     * @return $this
-     */
-    public function setDateTimeOrder($dateTimeOrder)
-    {
-        $this->dateTimeOrder = $dateTimeOrder;
         return $this;
     }
 }

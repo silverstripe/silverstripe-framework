@@ -37,26 +37,18 @@ class DatetimeFieldTest extends SapphireTest
         $form = $this->getMockForm();
         $form->Fields()->push($dateTimeField);
 
-        $dateTimeField->setSubmittedValue([
-            'date' => '2003-03-29',
-            'time' => '23:59:38'
-        ]);
+        $dateTimeField->setSubmittedValue('2003-03-29T23:59:38');
         $validator = new RequiredFields();
         $this->assertTrue($dateTimeField->validate($validator));
         $m = new Model();
         $form->saveInto($m);
-        $this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
+        $this->assertEquals('2003-03-29T23:59:38', $m->MyDatetime);
     }
 
     public function testFormSaveIntoLocalised()
     {
         $dateTimeField = new DatetimeField('MyDatetime');
-
-        $dateTimeField->getDateField()
-            ->setHTML5(false)
-            ->setLocale('en_NZ');
-
-        $dateTimeField->getTimeField()
+        $dateTimeField
             ->setHTML5(false)
             ->setLocale('en_NZ');
 
@@ -64,15 +56,12 @@ class DatetimeFieldTest extends SapphireTest
         $form->Fields()->push($dateTimeField);
 
         // en_NZ standard format
-        $dateTimeField->setSubmittedValue([
-            'date' => '29/03/2003',
-            'time' => '11:59:38 pm'
-        ]);
+        $dateTimeField->setSubmittedValue('29/03/2003 11:59:38 pm');
         $validator = new RequiredFields();
         $this->assertTrue($dateTimeField->validate($validator));
         $m = new Model();
         $form->saveInto($m);
-        $this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
+        $this->assertEquals('2003-03-29T23:59:38', $m->MyDatetime);
     }
 
     public function testDataValue()
@@ -119,33 +108,23 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertEquals($f->dataValue(), '2003-03-29 23:59:38');
     }
 
-    public function testSetValueWithArray()
+    public function testSetValue()
     {
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
-        $datetimeField->setSubmittedValue([
-            'date' => '2003-03-29',
-            'time' => '23:00:00'
-        ]);
+        $datetimeField->setSubmittedValue('2003-03-29 23:00:00');
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
     }
 
-    public function testSetValueWithArrayLocalised()
+    public function testSetValueWithLocalised()
     {
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
 
-        $datetimeField->getDateField()
-            ->setHTML5(false)
-            ->setLocale('en_NZ');
-
-        $datetimeField->getTimeField()
+        $datetimeField
             ->setHTML5(false)
             ->setLocale('en_NZ');
 
         // Values can only be localized (= non-ISO) in array notation
-        $datetimeField->setSubmittedValue([
-            'date' => '29/03/2003',
-            'time' => '11:00:00 pm'
-        ]);
+        $datetimeField->setSubmittedValue('29/03/2003 11:00:00 pm');
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
     }
 
@@ -167,11 +146,7 @@ class DatetimeFieldTest extends SapphireTest
         // Berlin and Auckland have 12h time difference in northern hemisphere winter
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
 
-        $datetimeField->getDateField()
-            ->setHTML5(false)
-            ->setLocale('en_NZ');
-
-        $datetimeField->getTimeField()
+        $datetimeField
             ->setHTML5(false)
             ->setLocale('en_NZ');
 
@@ -182,8 +157,7 @@ class DatetimeFieldTest extends SapphireTest
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
         );
-        $this->assertEquals('25/12/2003', $datetimeField->getDateField()->Value());
-        $this->assertEquals('11:59:59 AM', $datetimeField->getTimeField()->Value());
+
         $this->assertEquals(
             '2003-12-24 23:59:59',
             $datetimeField->dataValue(),
@@ -197,72 +171,15 @@ class DatetimeFieldTest extends SapphireTest
         // Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
 
-        $datetimeField->getDateField()
-            ->setHTML5(false)
-            ->setLocale('en_NZ');
-
-        $datetimeField->getTimeField()
+        $datetimeField
             ->setHTML5(false)
             ->setLocale('en_NZ');
 
         $datetimeField->setTimezone('Europe/Moscow');
-        $datetimeField->setSubmittedValue([
-            // pass in default format, at user time (Moscow)
-            'date' => '24/06/2003',
-            'time' => '11:59:59 pm',
-        ]);
+        // pass in default format, at user time (Moscow)
+        $datetimeField->setSubmittedValue('24/06/2003 11:59:59 pm');
         $this->assertTrue($datetimeField->validate(new RequiredFields()));
         $this->assertEquals('2003-06-24 21:59:59', $datetimeField->dataValue(), 'Data value matches server timezone');
-    }
-
-    public function testSetDateField()
-    {
-        $form = $this->getMockForm();
-        $field = new DatetimeField('Datetime', 'Datetime');
-        $field->setForm($form);
-        $field->setSubmittedValue([
-            'date' => '2003-06-24',
-            'time' => '23:59:59',
-        ]);
-        $dateField = new DateField('Datetime[date]');
-        $field->setDateField($dateField);
-
-        $this->assertEquals(
-            $dateField->getForm(),
-            $form,
-            'Sets form on new field'
-        );
-
-        $this->assertEquals(
-            '2003-06-24',
-            $dateField->dataValue(),
-            'Sets existing value on new field'
-        );
-    }
-
-    public function testSetTimeField()
-    {
-        $form = $this->getMockForm();
-        $field = new DatetimeField('Datetime', 'Datetime');
-        $field->setForm($form);
-        $field->setSubmittedValue([
-            'date' => '2003-06-24',
-            'time' => '23:59:59',
-        ]);
-        $timeField = new TimeField('Datetime[time]');
-        $field->setTimeField($timeField);
-
-        $this->assertEquals(
-            $timeField->getForm(),
-            $form,
-            'Sets form on new field'
-        );
-
-        $this->assertEquals(
-            '23:59:59',
-            $timeField->dataValue(),
-            'Sets existing value on new field'
-        );
     }
 
     public function testGetName()
@@ -270,8 +187,6 @@ class DatetimeFieldTest extends SapphireTest
         $field = new DatetimeField('Datetime');
 
         $this->assertEquals('Datetime', $field->getName());
-        $this->assertEquals('Datetime[date]', $field->getDateField()->getName());
-        $this->assertEquals('Datetime[time]', $field->getTimeField()->getName());
     }
 
     public function testSetName()
@@ -279,8 +194,6 @@ class DatetimeFieldTest extends SapphireTest
         $field = new DatetimeField('Datetime', 'Datetime');
         $field->setName('CustomDatetime');
         $this->assertEquals('CustomDatetime', $field->getName());
-        $this->assertEquals('CustomDatetime[date]', $field->getDateField()->getName());
-        $this->assertEquals('CustomDatetime[time]', $field->getTimeField()->getName());
     }
 
     protected function getMockForm()
