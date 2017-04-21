@@ -221,7 +221,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                         ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', "Reset"))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );
-                $fields->addExtraClass('filter-buttons');
+                $fields->addExtraClass('grid-field__filter-buttons');
                 $fields->addExtraClass('no-change-track');
             }
 
