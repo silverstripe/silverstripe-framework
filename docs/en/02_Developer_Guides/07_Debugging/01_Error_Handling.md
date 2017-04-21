@@ -95,7 +95,7 @@ for you to try.
 To send emails, you can use Monolog's [NativeMailerHandler](https://github.com/Seldaek/monolog/blob/master/src/Monolog/Handler/NativeMailerHandler.php#L74), like this:
 
 	SilverStripe\Core\Injector\Injector:
-	  Logger: 
+	  Psr\Log\LoggerInterface: 
 	    calls:
 	      MailHandler: [ pushHandler, [ %$MailHandler ] ]
 	  MailHandler:
@@ -120,7 +120,7 @@ The calls key, `MailHandler`, can be anything you like: its main purpose is to l
 To log to a file, you can use Monolog's [StreamHandler](https://github.com/Seldaek/monolog/blob/master/src/Monolog/Handler/StreamHandler.php#L74), like this:
 
 	SilverStripe\Core\Injector\Injector:
-	  Logger: 
+	  Psr\Log\LoggerInterface: 
 	    calls:
 	      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
 	  LogFileHandler:
@@ -137,7 +137,7 @@ You can disable a handler by removing its pushHandlers call from the calls optio
 The handler key of the default handler is `DisplayErrorHandler`, so you can disable it like this:
 
 	SilverStripe\Core\Injector\Injector:
-	  Logger:
+	  Psr\Log\LoggerInterface:
 	    calls:
 	      DisplayErrorHandler:	%%remove%%
 
@@ -153,7 +153,7 @@ non-dev.
 	  environment: dev
 	---
 	SilverStripe\Core\Injector\Injector:
-	  Logger:
+	  Psr\Log\LoggerInterface:
 	    calls:
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
 	  DisplayErrorHandler:
@@ -168,7 +168,7 @@ non-dev.
 	  environment: dev
 	---
 	SilverStripe\Core\Injector\Injector:
-	  Logger:
+	  Psr\Log\LoggerInterface:
 	    calls:
 	      - [ pushHandler, [ %$LogFileHandler ]] 
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
