@@ -1,55 +1,17 @@
 lv:
-  BBCodeParser:
-    ALIGNEMENT: Līdzināšana
-    ALIGNEMENTEXAMPLE: "izlīdzināts pa labi"
-    BOLD: "Treknraksta teksts"
-    BOLDEXAMPLE: Treknraksts
-    CODE: Blokkods
-    CODEDESCRIPTION: "Neformatēts blokkods"
-    CODEEXAMPLE: Blokkods
-    COLORED: "Iekrāsots teksts"
-    COLOREDEXAMPLE: "zils teksts"
-    EMAILLINK: "E-pasta saite"
-    EMAILLINKDESCRIPTION: "Izveidot saiti uz e-pasta adresi"
-    IMAGE: Attēls
-    IMAGEDESCRIPTION: "Rādīt attēlu rakstā"
-    ITALIC: "Slīpraksta teksts"
-    ITALICEXAMPLE: Slīpraksts
-    LINK: "Tīmekļa vietnes saite"
-    LINKDESCRIPTION: "Saite uz citu tīmekļa vietni vai URL"
-    STRUCK: "Pārsvītrot tekstu"
-    STRUCKEXAMPLE: Pārsvītrots
-    UNDERLINE: "Pasvītrots teksts"
-    UNDERLINEEXAMPLE: Pasvītrots
-    UNORDERED: "Nesakārtots saraksts"
-    UNORDEREDDESCRIPTION: "Nesakārtots saraksts"
-    UNORDEREDEXAMPLE1: "nesakārtots elements 1"
   BasicAuth:
     ENTERINFO: "Lūdz ievadiet lietotājvārdu un paroli."
     ERRORNOTADMIN: "Šis lietotājs nav administrators."
     ERRORNOTREC: "Šis lietotājvārds / parole nav atpazīts"
   Boolean:
     ANY: Jebkurš
-  CMSMain:
-    SAVE: Saglabāt
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: "Jūs nomainījāt savu paroli "
-    CHANGEPASSWORDTEXT2: "Lai pieslēgtos, izmantojiet sekojošus datus:"
-    EMAIL: E-pasts
     HELLO: Sveiki
-    PASSWORD: Parole
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: "Mainīt paroli"
-  CreditCardField:
-    FIRST: pirmais
-    FOURTH: ceturtais
-    SECOND: otrais
-    THIRD: trešais
   CurrencyField:
     CURRENCYSYMBOL: Ls
-  DataObject:
-    PLURALNAME: "Datu Objekti"
-    SINGULARNAME: "Datu Objekts"
   DateField:
     NOTSET: "nav uzstādīts"
     TODAY: šodien
@@ -57,21 +19,12 @@ lv:
     CHOOSE: (Izvēlieties)
   Enum:
     ANY: Jebkuru
-  File:
-    Content: Saturs
-    Filename: "Faila nosaukums"
-    NOVALIDUPLOAD: "Augšupielādei nederīgs fails"
-    Name: Nosaukms
-    PLURALNAME: Faili
-    SINGULARNAME: Fails
-    Title: Virsraksts
   ForgotPasswordEmail_ss:
     HELLO: Sveiki
     TEXT1: "Šeit ir Jūsu"
     TEXT2: "paroles atiestatīšanas saite"
     TEXT3: " "
   Form:
-    VALIDATIONNOTUNIQUE: "Ievadītā vērtība nav unikāla"
     VALIDATIONPASSWORDSDONTMATCH: "Paroles nesakrīt"
     VALIDATIONPASSWORDSNOTEMPTY: "Paroles nedrīkst būt tukšas"
     VALIDATOR: Validators
@@ -87,35 +40,6 @@ lv:
     Sort: "Kārtošanas secība"
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
-  HtmlEditorField:
-    ANCHORVALUE: Enkurs
-    BUTTONINSERTLINK: "Ievietot saiti"
-    BUTTONREMOVELINK: "Noņemt saiti"
-    CAPTIONTEXT: "Virsraksta teksts"
-    CSSCLASS: "Novietojums / stils"
-    CSSCLASSCENTER: "Neatkarīgs, centrēts"
-    CSSCLASSLEFT: "Kreisajā pusē ar tekstu apkārt."
-    CSSCLASSLEFTALONE: "Patstāvīgi, kreisajā pusē."
-    CSSCLASSRIGHT: "Labajā pusē ar tekstu apkārt."
-    EMAIL: "E-pasta adrese"
-    FILE: Fails
-    FOLDER: Mape
-    IMAGEDIMENSIONS: Izmēri
-    IMAGEHEIGHTPX: Augstums
-    IMAGETITLE: "Apraksts (paskaidre)  - papildus informācijai par attēlu"
-    IMAGEWIDTHPX: Platums
-    LINK: Saite
-    LINKANCHOR: "Enkurs uz šo lapu"
-    LINKDESCR: "Saites apraksts"
-    LINKEMAIL: "E-pasta adrese"
-    LINKEXTERNAL: "Cita tīmekļa vietne"
-    LINKFILE: "Lejupielādēt failu"
-    LINKINTERNAL: "Vietnes lapa"
-    LINKOPENNEWWIN: "Atvērt saiti jaunā logā?"
-    LINKTO: "Saite uz"
-    PAGE: Lapa
-  Image_iframe_ss:
-    TITLE: "Attēla augšupielādes iframe bloks"
   LoginAttempt:
     Email: "E-pasta adrese"
     IP: "IP Adrese"
@@ -137,17 +61,13 @@ lv:
     INTERFACELANG: "Saskarnes Valoda"
     NEWPASSWORD: "Jaunā parole"
     PASSWORD: Parole
-    PLURALNAME: Dalībnieki
-    SINGULARNAME: Dalībnieks
     SUBJECTPASSWORDCHANGED: "Jūsu parole tika nomainīta"
     SUBJECTPASSWORDRESET: "Jūsu paroles atiestatīšanas saite "
     SURNAME: Uzvārds
     YOUROLDPASSWORD: "Jūsu vecā parole"
     belongs_many_many_Groups: Grupas
-    db_LastVisited: "Pēdējā apmeklējuma datums"
     db_Locale: "Saskarnes lokalizācija"
     db_LockedOutUntil: "Izslēgts līdz"
-    db_NumVisit: "Apmeklējumu skaits"
     db_Password: Parole
     db_PasswordExpiry: "Paroles Termiņa Izbeigšanās Datums"
   MemberAuthenticator:
@@ -163,8 +83,6 @@ lv:
     FULLADMINRIGHTS_HELP: "Ietver un pārraksta visas pārējās piesaistītās atļaujas"
   PermissionCheckboxSetField:
     FromRoleOnGroup: "mantots no lomas \"%s\" grupā \"%s\""
-  Permissions:
-    PERMISSIONS_CATEGORY: "Lomu un piekļuves atļaujas"
   PhoneNumberField:
     VALIDATION: "Lūdzu ievadiet derīgu tālruņa numuru"
   Security:
@@ -174,7 +92,6 @@ lv:
     CHANGEPASSWORDHEADER: "Mainīt paroli"
     ENTERNEWPASSWORD: "Lūdzu ievadiet jaunu paroli."
     ERRORPASSWORDPERMISSION: "Lai mainītu paroli, Jums ir jāpieslēdzas!"
-    LOGGEDOUT: "Jūs esat atslēdzies. Ja jūs vēlaties vēlreiz pieslēgties, ievadiet zemāk savus datus. "
     LOGIN: Pieslēgties
     NOTEPAGESECURED: "Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates"
     NOTERESETPASSWORD: "Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli."
@@ -188,8 +105,3 @@ lv:
     TABMAIN: Sākums
   TableListField:
     CSVEXPORT: "Eksportēt uz CSV"
-  ToggleField:
-    LESS: mazāk
-    MORE: vairāk
-  Versioned:
-    has_many_Versions: Versijas

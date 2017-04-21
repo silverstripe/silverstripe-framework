@@ -1,60 +1,26 @@
 fo:
-  AssetAdmin:
-    NEWFOLDER: "Nýggj skjátta"
   AssetTableField:
-    FILENAME: Fílunavn
     LASTEDIT: "Seinast broyting"
-    OWNER: Eigari
     SIZE: Stødd
-    TITLE: Heiti
     TYPE: Slag
-  BBCodeParser:
-    COLOREDEXAMPLE: "bláur tekstur"
-    EMAILLINK: "Teldupost leinka"
-    IMAGE: Mynd
-    ITALIC: Skráskrift
-    ITALICEXAMPLE: Skráskrift
-    LINK: Heimasíðuleinka
-    UNDERLINE: "Undirstrikaður tekstur"
-    UNDERLINEEXAMPLE: Undirstrikað
   BasicAuth:
     ENTERINFO: "Vinarliga inntøppa eitt brúkaranavn og loyniorð."
     ERRORNOTADMIN: "Hasin brúkarin er ikki ein fyrisitari."
     ERRORNOTREC: "Brúkaranavn / loyniorð er skeivt"
-  CMSMain:
-    SAVE: Goym
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: "Tú broytti loyniorðið hjá"
-    EMAIL: Teldupostur
     HELLO: Hey
-    PASSWORD: Loyniorð
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: "Broyt loyniorð"
-  CreditCardField:
-    FIRST: fyrsta
-    FOURTH: fjóra
-    SECOND: næsta
-    THIRD: triða
-  DataObject:
-    PLURALNAME: "Dáta eindir"
-    SINGULARNAME: "Dáta eind"
   DateField:
     NOTSET: "ikki ásett"
     TODAY: "í dag"
   DropdownField:
     CHOOSE: (Áset)
-  File:
-    Content: Innihald
-    Filename: Fílunavn
-    Name: Navn
-    PLURALNAME: Fílur
-    SINGULARNAME: Fíla
-    Title: Heiti
   ForgotPasswordEmail_ss:
     HELLO: Hey
     TEXT1: "Her er títt"
   Form:
-    VALIDATIONNOTUNIQUE: "Virðið sum bleiv inntøppað er ikki eintýðugt"
     VALIDATIONPASSWORDSDONTMATCH: "Loyniorð samsvara ikki"
     VALIDATIONPASSWORDSNOTEMPTY: "Loyniorð kunnu ikki verða tóm"
   FormField:
@@ -67,28 +33,6 @@ fo:
     Sort: "Raða eftir"
     has_many_Permissions: Loyvir
     many_many_Members: Limir
-  HtmlEditorField:
-    BUTTONINSERTLINK: "Stovna leinku"
-    BUTTONREMOVELINK: "Strika leinku"
-    CSSCLASSCENTER: "Í miðuni, einsamalt."
-    CSSCLASSLEFT: "Til vinstru, við tekstinum rundan um."
-    CSSCLASSRIGHT: "Til høgru, við tekstinum rundan um."
-    EMAIL: Teldupostadressu
-    FILE: Fíla
-    FOLDER: Skjátta
-    IMAGEHEIGHTPX: Hædd
-    IMAGEWIDTHPX: Breidd
-    LINK: Leinkja
-    LINKDESCR: "Leinku frágreiðing"
-    LINKEMAIL: Teldupostadressa
-    LINKEXTERNAL: "Eina aðra heimasíðu"
-    LINKFILE: "Heinta fílu niður"
-    LINKOPENNEWWIN: "Lat leinku upp í nýggjum vindeyga?"
-    LINKTO: "Leinka til"
-    PAGE: Síða
-  LeftAndMain:
-    HELP: Leiðbeiningar
-    PERMAGAIN: "Tú ert blivin útritaður av CMS skipanini. Um tú ynskir at innrita aftur, inntøppa so títt brúkaranavn og loyniorð niðanfyri:"
   LoginAttempt:
     Email: Teldupostur
     IP: "IP adressa"
@@ -106,22 +50,16 @@ fo:
     INTERFACELANG: "Mál á markamóti"
     NEWPASSWORD: "Nýtt loyniorð"
     PASSWORD: Loyniorð
-    PLURALNAME: Limir
-    SINGULARNAME: Limur
     SUBJECTPASSWORDCHANGED: "Títt loyniorð er nú broytt"
     SUBJECTPASSWORDRESET: "Leinka til at nullstilla títt loyniorð"
     SURNAME: Eftirnavn
     YOUROLDPASSWORD: "Tygara gamla loyniorð"
     belongs_many_many_Groups: Bólkur
     db_LockedOutUntil: "Útihýstur inn til"
-    db_NumVisit: "Tal av vitjanum"
     db_Password: Loyniorð
     db_PasswordExpiry: "Loyniorð gongur út"
   MemberAuthenticator:
     TITLE: "Teldupostadressa &amp; Loyniorð"
-  ModelAdmin:
-    DELETE: Strika
-    IMPORT: "Innles frá CSV"
   PhoneNumberField:
     VALIDATION: "Vinarliga inntøppa eitt galdandi telefonnummar"
   Security:
@@ -130,7 +68,6 @@ fo:
     CHANGEPASSWORDHEADER: "Broyt títt loyniorð"
     ENTERNEWPASSWORD: "Vinarliga inntøppa eitt nýtt loyniorð"
     ERRORPASSWORDPERMISSION: "Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!"
-    LOGGEDOUT: "Tú ert blivin útritaður. Um tygum ynskja at innrita aftur, inntøppa so tínar upplýsningar niðanfyri."
     LOGIN: Innrita
   SecurityAdmin:
     GROUPNAME: Bólkaheiti
@@ -141,8 +78,3 @@ fo:
     TABMAIN: Alment
   TableListField:
     CSVEXPORT: "Útles til CSV"
-  ToggleField:
-    LESS: minni
-    MORE: meira
-  Versioned:
-    has_many_Versions: Útgávur
