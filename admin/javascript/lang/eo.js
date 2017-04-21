@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('eo', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈu vi vere volas enarĥivigi tiujn paĝojn?\n\nTiuj paĝoj kaj ĉiuj idaj paĝoj estos malpublikigitaj kaj senditaj al la arĥivo.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈi vi vere volas forigi tiujn paĝojn el la publika stadio?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Vi elektis {num} paĝojn.\n\nĈu vi vere volas forigi ilin?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈu vi vere volas forigi tiujn paĝojn?\n\nTiuj paĝoj kaj ĉiuj idaj paĝoj estos forigitaj kaj senditaj al la arĥivo.",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈi vi vere volas publikigi?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈu vi vere volas restaŭri al stadio?\n\nIdoj de enarĥivigitaj paĝoj estos restaŭritaj al la radika nivelo, escepte se tiuj paĝoj ankaŭ estos restaŭritaj.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Vi elektis {num} paĝo(j)n.\n\nĈi vi vere volas malpublikigi?",

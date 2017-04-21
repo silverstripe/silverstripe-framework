@@ -1,52 +1,15 @@
 az:
-  BBCodeParser:
-    ALIGNEMENT: Yönlənmə
-    ALIGNEMENTEXAMPLE: "sağa yönəlmə"
-    BOLD: "Qalın mətn"
-    BOLDEXAMPLE: Qalın
-    CODE: "Kod bloku"
-    CODEDESCRIPTION: "Formatlanmamış kod bloku"
-    CODEEXAMPLE: "Kod bloku"
-    COLORED: "Rəngli mətn"
-    COLOREDEXAMPLE: "mavi mətn"
-    EMAILLINK: "E-poçt link"
-    EMAILLINKDESCRIPTION: "E-poçta link yarat"
-    IMAGE: Şəkil
-    IMAGEDESCRIPTION: "Postunuzda şəkil görünsün"
-    ITALIC: "Kursiv mətn"
-    ITALICEXAMPLE: Kursiv
-    LINK: "Vebsayt linki"
-    LINKDESCRIPTION: "Başqa veb sayta və ya URL-ə link"
-    STRUCK: "Struck-out mətn"
-    UNDERLINE: "Altından xətt çəkilmiş mətn"
-    UNDERLINEEXAMPLE: "Altından xətt çəkilmiş"
-    UNORDERED: "Sıralanmamış siyahı"
-    UNORDEREDDESCRIPTION: "Sıralanmamış siyahı"
-    UNORDEREDEXAMPLE1: "nizamlanmamış element 1"
   BasicAuth:
     ENTERINFO: "Zəhmət olmasa istifadəçi adı və ya parolu yazın."
     ERRORNOTADMIN: "İstifadəçi administrator deyil"
     ERRORNOTREC: "Belə istifadəçi adı və ya parol tanınmadı"
   Boolean:
     ANY: İstənilən
-  CMSMain:
-    SAVE: "Yadda saxla"
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: "Siz parolu bu url üçün dəyişdiniz"
-    CHANGEPASSWORDTEXT2: "Siz aşağıdakilarla daxil ola bilərsiniz."
-    EMAIL: E-poçt
     HELLO: Salam
-    PASSWORD: Parol
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: "Parolu dəyiş"
-  CreditCardField:
-    FIRST: birinci
-    FOURTH: dördüncü
-    SECOND: ikinci
-    THIRD: üçüncü
-  DataObject:
-    PLURALNAME: "Data Obyektlər"
-    SINGULARNAME: "Data Obyekt"
   DateField:
     NOTSET: "təyin edilməyib"
     TODAY: "bu gün"
@@ -54,21 +17,12 @@ az:
     CHOOSE: (Seçin)
   Enum:
     ANY: İxtiyari
-  File:
-    Content: Məzmun
-    Filename: "Faylın adı"
-    NOVALIDUPLOAD: "Fayl yükləmək üçün yararlı deyil"
-    Name: Ad
-    PLURALNAME: Fayllar
-    SINGULARNAME: Fayl
-    Title: Başlıq
   ForgotPasswordEmail_ss:
     HELLO: Salam
     TEXT1: "Burada sizin"
     TEXT2: "parolu sıfırlma linki"
     TEXT3: üçün
   Form:
-    VALIDATIONNOTUNIQUE: "Daxil edilən məlumat unikal deyil"
     VALIDATIONPASSWORDSDONTMATCH: "Parollar uyğun gəlmir"
     VALIDATIONPASSWORDSNOTEMPTY: "Parollar boş ola bilməz"
   FormField:
@@ -83,31 +37,6 @@ az:
     Sort: Sıralama
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
-  HtmlEditorField:
-    ANCHORVALUE: Ankor
-    BUTTONINSERTLINK: "Link əlavə et"
-    BUTTONREMOVELINK: "Linki sil"
-    CAPTIONTEXT: Mətn
-    CSSCLASSCENTER: Mərkəzləşmiş.
-    CSSCLASSLEFT: "Solda, mətnin kəsilməsi ilə."
-    CSSCLASSLEFTALONE: "Özünün solunda."
-    CSSCLASSRIGHT: "Sağda, mətnin kəsilməsi ilə."
-    EMAIL: "E-poçt ünvanı"
-    FILE: Fayl
-    FOLDER: Qovluq
-    IMAGEDIMENSIONS: Ölçülər
-    IMAGEHEIGHTPX: Uzunluq
-    IMAGEWIDTHPX: En
-    LINK: Link
-    LINKANCHOR: "Bu səhifədə ankor"
-    LINKDESCR: "Link təsviri"
-    LINKEMAIL: E-poçt
-    LINKEXTERNAL: "Başqa vebsayt"
-    LINKFILE: "Faylı yüklə"
-    LINKINTERNAL: "Saytda olan səhifə"
-    LINKOPENNEWWIN: "Link yeni pəncərədə açılsın?"
-    LINKTO: "Linki qoy"
-    PAGE: Səhifə
   LoginAttempt:
     Email: E-poçt
     IP: "İP ünvan"
@@ -128,17 +57,13 @@ az:
     INTERFACELANG: "İnterfeys dili"
     NEWPASSWORD: "Yeni parol"
     PASSWORD: Parol
-    PLURALNAME: Üzvlər
-    SINGULARNAME: Üzv
     SUBJECTPASSWORDCHANGED: "Sizin parolunuz dəyişildi"
     SUBJECTPASSWORDRESET: "Parolu sıfırlama linki"
     SURNAME: Soyad
     YOUROLDPASSWORD: "Sizin keçmiş parol"
     belongs_many_many_Groups: Qruplar
-    db_LastVisited: "Son ziyarət tarixi"
     db_Locale: "İnterfeys dili"
     db_LockedOutUntil: "Bloklanıb, açılma vaxtı"
-    db_NumVisit: "Ziyarət sayı"
     db_Password: Parol
     db_PasswordExpiry: "Parolun etibarlılığının bitmə vaxtı"
   MemberAuthenticator:
@@ -153,8 +78,6 @@ az:
     FULLADMINRIGHTS_HELP: "Başqa təyin edilmiş bütün icazələr rədd olunur."
   PermissionCheckboxSetField:
     FromRoleOnGroup: "\"%s\" rolundan \"%s\" qrupunda törəyib"
-  Permissions:
-    PERMISSIONS_CATEGORY: İcazələr
   PhoneNumberField:
     VALIDATION: "Düzgün telefon nömrəsi daxil et."
   Security:
@@ -164,7 +87,6 @@ az:
     CHANGEPASSWORDHEADER: "Parolu dəyiş"
     ENTERNEWPASSWORD: "Yeni şifrəni daxil edin."
     ERRORPASSWORDPERMISSION: "Parolu dəyişmək üçün hesaba daxil olmalısınız!"
-    LOGGEDOUT: "Hesabdan çıxdınız. Yenidən daxil olmaq üçün məlumatları daxil edin."
     LOGIN: "Daxil ol"
     NOTEPAGESECURED: "Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. "
     NOTERESETPASSWORD: "E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik"
@@ -177,8 +99,3 @@ az:
     TABMAIN: Əsas
   TableListField:
     CSVEXPORT: "CSV-yə ixrac et"
-  ToggleField:
-    LESS: "daha az"
-    MORE: "daha çox"
-  Versioned:
-    has_many_Versions: Versiyalar
