@@ -49,8 +49,8 @@ class SecurityTest extends FunctionalTest
     protected function setUp()
     {
         // This test assumes that MemberAuthenticator is present and the default
-        $this->priorAuthenticators = Authenticator::get_authenticators();
-        $this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+        // $this->priorAuthenticators = Authenticator::get_authenticators();
+        // $this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
 
         // Set to an empty array of authenticators to enable the default
         Config::modify()->set(Authenticator::class, 'authenticators', []);
@@ -74,8 +74,8 @@ class SecurityTest extends FunctionalTest
         // Restore selected authenticator
 
         // MemberAuthenticator might not actually be present
-        Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
-        Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
+        // Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
+        // Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
 
         // Restore unique identifier field
         Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;

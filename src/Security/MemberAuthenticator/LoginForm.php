@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
@@ -14,6 +14,10 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\LoginForm as BaseLoginForm;
 use SilverStripe\View\Requirements;
 
 /**
@@ -26,7 +30,7 @@ use SilverStripe\View\Requirements;
  *    allowing extensions to "veto" execution by returning FALSE.
  *    Arguments: $member containing the detected Member record
  */
-class MemberLoginForm extends LoginForm
+class LoginForm extends BaseLoginForm
 {
 
     /**
@@ -161,7 +165,7 @@ class MemberLoginForm extends LoginForm
     protected function getFormActions()
     {
         $actions = FieldList::create(
-            FormAction::create('dologin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
+            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
             LiteralField::create(
                 'forgotPassword',
                 '<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
@@ -192,14 +196,6 @@ class MemberLoginForm extends LoginForm
         }
 
         return $this;
-    }
-
-    /**
-     * @return MemberLoginHandler
-     */
-    protected function buildRequestHandler()
-    {
-        return MemberLoginHandler::create($this);
     }
 
     /**

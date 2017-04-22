@@ -1,4 +1,9 @@
-SilverStripe\Security\MemberLoginForm:
+SilverStripe\Security\MemberAuthenticator\LoginForm:
   required_fields:
     - Email
     - Password
+
+SilverStripe\Security\Security:
+  default_authenticator: SilverStripe\Security\MemberAuthenticator\Authenticator
+  authenticators:
+    - SilverStripe\Security\MemberAuthenticator\Authenticator

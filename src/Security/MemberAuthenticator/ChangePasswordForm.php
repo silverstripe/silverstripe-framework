@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
@@ -10,6 +10,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Form;
+use SilverStripe\Security\Member;
 
 /**
  * Standard Change Password Form

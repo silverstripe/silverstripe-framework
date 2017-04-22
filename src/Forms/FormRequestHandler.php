@@ -228,7 +228,7 @@ class FormRequestHandler extends RequestHandler
             // First, try a handler method on the controller (has been checked for allowed_actions above already)
             $controller = $this->form->getController();
             if ($controller && $controller->hasMethod($funcName)) {
-                return $controller->$funcName($vars, $this->form, $request);
+                return $controller->$funcName($vars, $this->form, $request, $this);
             }
 
             // Otherwise, try a handler method on the form request handler.

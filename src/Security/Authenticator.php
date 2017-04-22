@@ -16,125 +16,74 @@ use SilverStripe\Forms\Form;
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-abstract class Authenticator
+interface Authenticator
 {
-    use Injectable;
-    use Configurable;
-    use Extensible;
 
-    public function __construct()
-    {
-        $this->constructExtensions();
-    }
+    const LOGIN = 1;
+    const LOGOUT = 2;
+    const CHANGE_PASSWORD = 4;
+    const RESET_PASSWORD = 8;
+    const CMS_LOGIN = 16;
 
     /**
-     * This variable holds all authenticators that should be used
+     * Returns the services supported by this authenticator
      *
-     * @var array
-     */
-    private static $authenticators = [];
-
-    /**
-     * Used to influence the order of authenticators on the login-screen
-     * (default shows first).
+     * The number should be a bitwise-OR of 1 or more of the following constants:
+     * Authenticator::LOGIN, Authenticator::LOGOUT, Authenticator::CHANGE_PASSWORD,
+     * Authenticator::RESET_PASSWORD, or Authenticator::CMS_LOGIN
      *
-     * @var string
+     * @return int
      */
-    private static $default_authenticator = MemberAuthenticator::class;
-
+    public function supportedServices();
 
     /**
-     * Method to authenticate an user
+     * Return RequestHandler to manage the log-in process.
      *
-     * @param array $RAW_data Raw data to authenticate the user
-     * @param Form $form Optional: If passed, better error messages can be
-     *                             produced by using
-     *                             {@link Form::sessionMessage()}
-     * @return bool|Member Returns FALSE if authentication fails, otherwise
-     *                     the member object
-     */
-    public static function authenticate($RAW_data, Form $form = null)
-    {
-    }
-
-    /**
-     * Method that creates the login form for this authentication method
+     * The default URL of the RequetHandler should return the initial log-in form, any other
+     * URL may be added for other steps & processing.
      *
-     * @param Controller $controller The parent controller, necessary to create the
-     *                   appropriate form action tag
-     * @return Form Returns the login form to use with this authentication
-     *              method
-     */
-    public static function get_login_form(Controller $controller)
-    {
-    }
-
-    /**
-     * Method that creates the re-authentication form for the in-CMS view
+     * URL-handling methods may return an array [ "Form" => (form-object) ] which can then
+     * be merged into a default controller.
      *
-     * @param Controller $controller
+     * @param $link The base link to use for this RequestHnadler
      */
-    public static function get_cms_login_form(Controller $controller)
-    {
-    }
+    public function getLoginHandler($link);
 
     /**
-     * Determine if this authenticator supports in-cms reauthentication
+     * @todo
+     */
+    public function getCMSLoginHandler($link);
+
+    /**
+     * Return RequestHandler to manage the change-password process.
      *
-     * @return bool
-     */
-    public static function supports_cms()
-    {
-        return false;
-    }
-
-    /**
-     * Check if a given authenticator is registered
+     * The default URL of the RequetHandler should return the initial change-password form,
+     * any other URL may be added for other steps & processing.
      *
-     * @param string $authenticator Name of the authenticator class to check
-     * @return bool Returns TRUE if the authenticator is registered, FALSE
-     *              otherwise.
-     */
-    public static function is_registered($authenticator)
-    {
-        $authenticators = self::config()->get('authenticators');
-        if (count($authenticators) === 0) {
-            $authenticators = [self::config()->get('default_authenticator')];
-        }
-
-        return in_array($authenticator, $authenticators, true);
-    }
-
-
-    /**
-     * Get all registered authenticators
+     * URL-handling methods may return an array [ "Form" => (form-object) ] which can then
+     * be merged into a default controller.
      *
-     * @return array Returns an array with the class names of all registered
-     *               authenticators.
+     * @param $link The base link to use for this RequestHnadler
      */
-    public static function get_authenticators()
-    {
-        $authenticators = self::config()->get('authenticators');
-        $default = self::config()->get('default_authenticator');
-
-        if (count($authenticators) === 0) {
-            $authenticators = [$default];
-        }
-        // put default authenticator first (mainly for tab-order on loginform)
-        // But only if there's no other authenticator
-        if (($key = array_search($default, $authenticators, true)) && count($authenticators) > 1) {
-            unset($authenticators[$key]);
-            array_unshift($authenticators, $default);
-        }
-
-        return $authenticators;
-    }
+    public function getChangePasswordHandler($link);
 
     /**
-     * @return string
+     * @todo
      */
-    public static function get_default_authenticator()
-    {
-        return self::config()->get('default_authenticator');
-    }
+    public function getLostPasswordHandler($link);
+
+    /**
+     * Method to authenticate an user.
+     *
+     * @param array $data Raw data to authenticate the user.
+     * @param string $message A variable to return an error message if authentication fails
+     * @return Member The matched member, or null if the authentication fails
+     */
+    public function authenticate($data, &$message);
+
+    /**
+     * Return the keys that should be passed to authenticate()
+     * @return array
+     */
+//    public function getAuthenticateFields();
 }

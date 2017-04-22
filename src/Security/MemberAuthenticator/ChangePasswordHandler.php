@@ -1,11 +1,14 @@
 <?php
 
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\FormRequestHandler;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+
 
 class ChangePasswordHandler extends FormRequestHandler
 {

@@ -1,32 +1,50 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ValidationResult;
 use InvalidArgumentException;
+use SilverStripe\Security\Authenticator as BaseAuthenticator;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Member;
 
 /**
  * Authenticator for the default "member" method
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-class MemberAuthenticator extends Authenticator
+class Authenticator implements BaseAuthenticator
 {
 
+    public function supportedServices()
+    {
+        // Bitwise-OR of all the supported services, to make a bitmask
+        return BaseAuthenticator::LOGIN | BaseAuthenticator::LOGOUT | BaseAuthenticator::CHANGE_PASSWORD
+            | BaseAuthenticator::RESET_PASSWORD | BaseAuthenticator::CMS_LOGIN;
+    }
+
     /**
-     * Contains encryption algorithm identifiers.
-     * If set, will migrate to new precision-safe password hashing
-     * upon login. See http://open.silverstripe.org/ticket/3004
-     *
-     * @var array
+     * @inherit
      */
-    private static $migrate_legacy_hashes = array(
-        'md5' => 'md5_v2.4',
-        'sha1' => 'sha1_v2.4'
-    );
+    public function authenticate($data, &$message)
+    {
+        $success = null;
+
+        // Find authenticated member
+        $member = $this->authenticateMember($data, $message, $success);
+
+        // Optionally record every login attempt as a {@link LoginAttempt} object
+        $this->recordLoginAttempt($data, $member, $success);
+
+        if ($member) {
+            Session::clear('BackURL');
+        }
+
+        return $success ? $member : null;
+    }
 
     /**
      * Attempt to find and authenticate member if possible from the given data
@@ -36,7 +54,7 @@ class MemberAuthenticator extends Authenticator
      * @param bool &$success Success flag
      * @return Member Found member, regardless of successful login
      */
-    protected static function authenticate_member($data, $form, &$success)
+    protected function authenticateMember($data, &$message, &$success)
     {
         // Default success to false
         $success = false;
@@ -94,9 +112,12 @@ class MemberAuthenticator extends Authenticator
             if ($member) {
                 $member->registerFailedLogin();
             }
-            if ($form) {
-                $form->setSessionValidationResult($result, true);
-            }
+            $message = implode("; ", array_map(
+                function ($message) {
+                    return $message['message'];
+                },
+                $result->getMessages()
+            ));
         } else {
             if ($member) {
                 $member->registerSuccessfulLogin();
@@ -112,9 +133,8 @@ class MemberAuthenticator extends Authenticator
      *
      * @param array $data
      * @param Member $member
-     * @param bool $success
      */
-    protected static function record_login_attempt($data, $member, $success)
+    protected function recordLoginAttempt($data, $member)
     {
         if (!Security::config()->login_recording) {
             return;
@@ -154,66 +174,31 @@ class MemberAuthenticator extends Authenticator
     }
 
     /**
-     * Method to authenticate an user
-     *
-     * @param array $data Raw data to authenticate the user
-     * @param Form $form Optional: If passed, better error messages can be
-     *                             produced by using
-     *                             {@link Form::sessionMessage()}
-     * @return bool|Member Returns FALSE if authentication fails, otherwise
-     *                     the member object
-     * @see Security::setDefaultAdmin()
+     * @inherit
      */
-    public static function authenticate($data, Form $form = null)
+    public function getLostPasswordHandler($link)
     {
-        // Find authenticated member
-        $member = static::authenticate_member($data, $form, $success);
-
-        // Optionally record every login attempt as a {@link LoginAttempt} object
-        static::record_login_attempt($data, $member, $success);
-
-        // Legacy migration to precision-safe password hashes.
-        // A login-event with cleartext passwords is the only time
-        // when we can rehash passwords to a different hashing algorithm,
-        // bulk-migration doesn't work due to the nature of hashing.
-        // See PasswordEncryptor_LegacyPHPHash class.
-        if ($success && $member && isset(self::$migrate_legacy_hashes[$member->PasswordEncryption])) {
-            $member->Password = $data['Password'];
-            $member->PasswordEncryption = self::$migrate_legacy_hashes[$member->PasswordEncryption];
-            $member->write();
-        }
-
-        if ($success) {
-            Session::clear('BackURL');
-        }
-
-        return $success ? $member : null;
+        return LostPasswordHandler::create($link, $this);
     }
-
 
     /**
-     * Method that creates the login form for this authentication method
-     *
-     * @param Controller $controller The parent controller, necessary to create the
-     *                   appropriate form action tag
-     * @return Form Returns the login form to use with this authentication
-     *              method
+     * @inherit
      */
-    public static function get_login_form(Controller $controller)
+    public function getChangePasswordHandler($link)
     {
-        /** @skipUpgrade */
-        return MemberLoginForm::create($controller, self::class, "LoginForm");
+        return ChangePasswordHandler::create($link, $this);
     }
 
-    public static function get_cms_login_form(Controller $controller)
+    /**
+     * @inherit
+     */
+    public function getLoginHandler($link)
     {
-        /** @skipUpgrade */
-        return CMSMemberLoginForm::create($controller, self::class, "LoginForm");
+        return LoginHandler::create($link, $this);
     }
 
-    public static function supports_cms()
+    public function getCMSLoginHandler($link)
     {
-        // Don't automatically support subclasses of MemberAuthenticator
-        return get_called_class() === __CLASS__;
+        return CMSMemberLoginHandler::create($controller, self::class, "LoginForm");
     }
 }

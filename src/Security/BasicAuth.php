@@ -8,6 +8,9 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Injector\Injector;
+
+use SilverStripe\Security\MemberAuthenticator\Authenticator;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -82,10 +85,12 @@ class BasicAuth
 
         $member = null;
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $member = MemberAuthenticator::authenticate(array(
+            $authenticator = Injector::inst()->get(Authenticator::class);
+
+            $member = $authenticator->authenticate([
                 'Email' => $_SERVER['PHP_AUTH_USER'],
                 'Password' => $_SERVER['PHP_AUTH_PW'],
-            ), null);
+            ], $dummy);
         }
 
         if (!$member && $tryUsingSessionLogin) {

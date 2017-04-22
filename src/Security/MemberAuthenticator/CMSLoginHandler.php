@@ -1,11 +1,11 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 
-class CMSMemberLoginHandler extends MemberLoginHandler
+class CMSLoginHandler extends LoginHandler
 {
     /**
      * Login form handler method
@@ -15,7 +15,7 @@ class CMSMemberLoginHandler extends MemberLoginHandler
      * @param array $data Submitted data
      * @return HTTPResponse
      */
-    public function dologin($data)
+    public function dologin($data, $formHandler)
     {
         if ($this->performLogin($data)) {
             return $this->logInUserAndRedirect($data);
@@ -78,7 +78,7 @@ PHP
      * @param array $data
      * @return HTTPResponse
      */
-    protected function logInUserAndRedirect($data)
+    protected function logInUserAndRedirect($data, $formHandler)
     {
         // Check password expiry
         if (Member::currentUser()->isPasswordExpired()) {

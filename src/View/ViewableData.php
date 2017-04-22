@@ -329,7 +329,7 @@ class ViewableData implements IteratorAggregate
         }
 
         // Fall back to default_cast
-        $default = $this->config()->get('default_cast');
+        $default = self::config()->get('default_cast');
         if (empty($default)) {
             throw new Exception("No default_cast");
         }

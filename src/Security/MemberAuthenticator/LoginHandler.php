@@ -1,20 +1,26 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
-use SilverStripe\Forms\FormRequestHandler;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\MemberAuthenticator\Authenticator;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Member;
 
 /**
  * Handle login requests from MemberLoginForm
  */
-class MemberLoginHandler extends FormRequestHandler
+class LoginHandler extends RequestHandler
 {
-    protected $authenticator_class = MemberAuthenticator::class;
+    protected $authenticator;
+
+    private static $url_handlers = [
+        '' => 'login',
+    ];
 
     /**
      * Since the logout and dologin actions may be conditionally removed, it's necessary to ensure these
@@ -24,9 +30,60 @@ class MemberLoginHandler extends FormRequestHandler
      * @config
      */
     private static $allowed_actions = [
+        'login',
+        'LoginForm',
         'dologin',
         'logout',
     ];
+
+    private $link = null;
+
+    /**
+     * @param string $link The URL to recreate this request handler
+     * @param Authenticator $authenticator The
+     */
+    public function __construct($link, Authenticator $authenticator)
+    {
+        $this->link = $link;
+        $this->authenticator = $authenticator;
+        parent::__construct($link, $this);
+    }
+
+    /**
+     * Return a link to this request handler.
+     * The link returned is supplied in the constructor
+     * @return string
+     */
+    public function link($action = null)
+    {
+        if ($action) {
+            return Controller::join_links($this->link, $action);
+        } else {
+            return $this->link;
+        }
+    }
+
+    /**
+     * URL handler for the log-in screen
+     */
+    public function login()
+    {
+        return [
+            'Form' => $this->loginForm(),
+        ];
+    }
+
+    /**
+     * Return the MemberLoginForm form
+     */
+    public function loginForm()
+    {
+        return LoginForm::create(
+            $this,
+            get_class($this->authenticator),
+            'LoginForm'
+        );
+    }
 
     /**
      * Login form handler method
@@ -34,12 +91,13 @@ class MemberLoginHandler extends FormRequestHandler
      * This method is called when the user clicks on "Log in"
      *
      * @param array $data Submitted data
+     * @param LoginHandler $formHandler
      * @return HTTPResponse
      */
-    public function dologin($data)
+    public function doLogin($data, $formHandler)
     {
         if ($this->performLogin($data)) {
-            return $this->logInUserAndRedirect($data);
+            return $this->logInUserAndRedirect($data, $formHandler);
         }
 
         /** @skipUpgrade */
@@ -48,25 +106,15 @@ class MemberLoginHandler extends FormRequestHandler
             Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
         }
 
+        return $this->redirectBack();
         // Fail to login redirects back to form
-        return $this->redirectBackToForm();
+        return $formHandler->redirectBackToForm();
     }
 
-    /**
-     * Redirect to password recovery form
-     *
-     * @return HTTPResponse
-     */
-    public function redirectToLostPassword()
-    {
-        $lostPasswordLink = Security::singleton()->Link('lostpassword');
-        return $this->redirect($this->addBackURLParam($lostPasswordLink));
-    }
 
     public function getReturnReferer()
     {
-        // Home of login form is always this url
-        return Security::singleton()->Link('login');
+        return $this->link();
     }
 
     /**
@@ -84,7 +132,7 @@ class MemberLoginHandler extends FormRequestHandler
      * @param array $data
      * @return HTTPResponse
      */
-    protected function logInUserAndRedirect($data)
+    protected function logInUserAndRedirect($data, $formHandler)
     {
         Session::clear('SessionForms.MemberLoginForm.Email');
         Session::clear('SessionForms.MemberLoginForm.Remember');
@@ -152,73 +200,18 @@ class MemberLoginHandler extends FormRequestHandler
      */
     public function performLogin($data)
     {
-        $member = call_user_func_array(
-            [$this->authenticator_class, 'authenticate'],
-            [$data, $this->form]
-        );
+        $message = null;
+        $member = $this->authenticator->authenticate($data, $message);
         if ($member) {
             $member->LogIn(isset($data['Remember']));
             return $member;
+        } else {
+            Security::setLoginMessage($message, ValidationResult::TYPE_ERROR);
         }
 
         // No member, can't login
         $this->extend('authenticationFailed', $data);
         return null;
-    }
-
-    /**
-     * Forgot password form handler method.
-     * Called when the user clicks on "I've lost my password".
-     * Extensions can use the 'forgotPassword' method to veto executing
-     * the logic, by returning FALSE. In this case, the user will be redirected back
-     * to the form without further action. It is recommended to set a message
-     * in the form detailing why the action was denied.
-     *
-     * @skipUpgrade
-     * @param array $data Submitted data
-     * @return HTTPResponse
-     */
-    public function forgotPassword($data)
-    {
-        // Ensure password is given
-        if (empty($data['Email'])) {
-            $this->form->sessionMessage(
-                _t('SilverStripe\\Security\\Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
-                'bad'
-            );
-            return $this->redirectToLostPassword();
-        }
-
-        // Find existing member
-        /** @var Member $member */
-        $member = Member::get()->filter("Email", $data['Email'])->first();
-
-        // Allow vetoing forgot password requests
-        $results = $this->extend('forgotPassword', $member);
-        if ($results && is_array($results) && in_array(false, $results, true)) {
-            return $this->redirectToLostPassword();
-        }
-
-        if ($member) {
-            $token = $member->generateAutologinTokenAndStoreHash();
-
-            Email::create()
-                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
-                ->setData($member)
-                ->setSubject(_t('SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
-                ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
-                ->setTo($member->Email)
-                ->send();
-        }
-
-        // Avoid information disclosure by displaying the same status,
-        // regardless wether the email address actually exists
-        $link = Controller::join_links(
-            Security::singleton()->Link('passwordsent'),
-            rawurlencode($data['Email']),
-            '/'
-        );
-        return $this->redirect($this->addBackURLParam($link));
     }
 
     /**
@@ -229,12 +222,26 @@ class MemberLoginHandler extends FormRequestHandler
      */
     protected function redirectToChangePassword()
     {
-        $cp = ChangePasswordForm::create($this->form->getController(), 'ChangePasswordForm');
+        $cp = ChangePasswordForm::create($this, 'ChangePasswordForm');
         $cp->sessionMessage(
             _t('SilverStripe\\Security\\Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');
         return $this->redirect($this->addBackURLParam($changedPasswordLink));
+    }
+
+
+
+    /**
+     * @todo copypaste from FormRequestHandler - refactor
+     */
+    protected function addBackURLParam($link)
+    {
+        $backURL = $this->getBackURL();
+        if ($backURL) {
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+        }
+        return $link;
     }
 }
