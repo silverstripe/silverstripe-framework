@@ -102,7 +102,7 @@ class MemberLoginForm extends LoginForm {
 					new FormAction('dologin', _t('Member.BUTTONLOGIN', "Log in")),
 					new LiteralField(
 						'forgotPassword',
-						'<p id="ForgotPassword"><a href="Security/lostpassword">'
+						'<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
 						. _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
 					)
 				);
