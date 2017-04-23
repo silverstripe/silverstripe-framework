@@ -129,18 +129,20 @@ Since SilverStripe modules are installed into their own folder, you have to mana
 
 Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
 
-	```assets/*
-	.env
-	tools/phing-metadata
-	silverstripe-cache
-	.buildpath
-	.project
-	.settings
-	.idea
-	.DS_Store
-	vendor/
-	# Don't include the forum module, as this will be installed with composer
-	forum```
+```
+assets/*
+.env
+tools/phing-metadata
+silverstripe-cache
+.buildpath
+.project
+.settings
+.idea
+.DS_Store
+vendor/
+# Don't include the forum module, as this will be installed with composer
+forum
+```
 
 In large projects it can get difficult to manage your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it contains all composer managed modules and themes.
 
@@ -234,19 +236,19 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 
 ```json
 {
-	"name": "silverstripe/installer",
-	"description": "The SilverStripe Framework Installer",
-	"require": {
-		"php": ">=5.5.0",
-		"silverstripe/cms": "^4.0",
-		"silverstripe/framework": "^4.0",
-		"silverstripe-themes/simple": "~3.2.0"
-	},
-	"require-dev": {
-		"silverstripe/docsviewer": "^3.0"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true
+    "name": "silverstripe/installer",
+    "description": "The SilverStripe Framework Installer",
+    "require": {
+        "php": ">=5.5.0",
+        "silverstripe/cms": "^4.0",
+        "silverstripe/framework": "^4.0",
+        "silverstripe-themes/simple": "~3.2.0"
+    },
+    "require-dev": {
+        "silverstripe/docsviewer": "^3.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
 ```
 
@@ -297,15 +299,14 @@ This is how you do it:
 
 ```json
 {
-	"name": "silverstripe/installer",
-	"description": "The SilverStripe Framework Installer",
-
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "git@github.com:sminnee/silverstripe-cms.git"
-		}
-	]
+    "name": "silverstripe/installer",
+    "description": "The SilverStripe Framework Installer",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:sminnee/silverstripe-cms.git"
+        }
+    ]
 }
 ```
 
@@ -338,12 +339,12 @@ Open `composer.json`, and find the module's `require`. Then put `as (core versio
 
 ```json
 {
-	"require": {
-		"php": ">=5.5.0",
-		"silverstripe/cms": "3.5.1.2",
-		"silverstripe/framework": "dev-myproj as 4.0.x-dev",
-		"silverstripe-themes/simple": "~3.2.0"
-	}
+    "require": {
+        "php": ">=5.5.0",
+        "silverstripe/cms": "3.5.1.2",
+        "silverstripe/framework": "dev-myproj as 4.0.x-dev",
+        "silverstripe-themes/simple": "~3.2.0"
+    }
 }
 ```
 
