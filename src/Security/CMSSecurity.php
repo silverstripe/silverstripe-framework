@@ -180,7 +180,7 @@ PHP
 
     public function LoginForm()
     {
-        $authenticator = $this->getAuthenticator();
+        $authenticator = $this->getAuthenticator('default');
         if ($authenticator && $authenticator::supports_cms()) {
             return $authenticator::get_cms_login_form($this);
         }

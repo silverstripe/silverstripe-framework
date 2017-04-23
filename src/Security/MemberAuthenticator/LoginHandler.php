@@ -94,11 +94,19 @@ class LoginHandler extends RequestHandler
      * @param LoginHandler $formHandler
      * @return HTTPResponse
      */
-    public function doLogin($data, $formHandler)
+    public function doLogin($data, $form)
     {
-        if ($this->performLogin($data)) {
-            return $this->logInUserAndRedirect($data, $formHandler);
+        $failureMessage = null;
+
+        // Successful login
+        if ($member = $this->checkLogin($data, $failureMessage)) {
+            $this->performLogin($member, $data);
+            return $this->redirectAfterSuccessfulLogin();
         }
+
+        $form->sessionMessage($failureMessage, 'bad');
+
+        // Failed login
 
         /** @skipUpgrade */
         if (array_key_exists('Email', $data)) {
@@ -106,9 +114,8 @@ class LoginHandler extends RequestHandler
             Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
         }
 
-        return $this->redirectBack();
         // Fail to login redirects back to form
-        return $formHandler->redirectBackToForm();
+        return $form->getRequestHandler()->redirectBackToForm();
     }
 
 
@@ -132,7 +139,7 @@ class LoginHandler extends RequestHandler
      * @param array $data
      * @return HTTPResponse
      */
-    protected function logInUserAndRedirect($data, $formHandler)
+    protected function redirectAfterSuccessfulLogin()
     {
         Session::clear('SessionForms.MemberLoginForm.Email');
         Session::clear('SessionForms.MemberLoginForm.Remember');
@@ -156,13 +163,6 @@ class LoginHandler extends RequestHandler
 
         // Redirect the user to the page where they came from
         if ($member) {
-            if (!empty($data['Remember'])) {
-                Session::set('SessionForms.MemberLoginForm.Remember', '1');
-                $member->logIn(true);
-            } else {
-                $member->logIn();
-            }
-
             // Welcome message
             $message = _t(
                 'SilverStripe\\Security\\Member.WELCOMEBACK',
@@ -188,7 +188,8 @@ class LoginHandler extends RequestHandler
      */
     public function logout()
     {
-        return Security::singleton()->logout();
+        Security::singleton()->logout();
+        return $this->redirectBack();
     }
 
     /**
@@ -198,22 +199,33 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function performLogin($data)
+    public function checkLogin($data, &$message)
     {
         $message = null;
         $member = $this->authenticator->authenticate($data, $message);
         if ($member) {
-            $member->LogIn(isset($data['Remember']));
             return $member;
-        } else {
-            Security::setLoginMessage($message, ValidationResult::TYPE_ERROR);
-        }
 
-        // No member, can't login
-        $this->extend('authenticationFailed', $data);
-        return null;
+        } else {
+            // No member, can't login
+            $this->extend('authenticationFailed', $data);
+            return null;
+
+        }
     }
 
+    /**
+     * Try to authenticate the user
+     *
+     * @param array $data Submitted data
+     * @return Member Returns the member object on successful authentication
+     *                or NULL on failure.
+     */
+    public function performLogin($member, $data)
+    {
+        $member->LogIn(isset($data['Remember']));
+        return $member;
+    }
     /**
      * Invoked if password is expired and must be changed
      *

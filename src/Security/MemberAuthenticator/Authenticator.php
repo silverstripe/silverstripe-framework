@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\LoginAttempt;
 
 /**
  * Authenticator for the default "member" method
@@ -134,7 +135,7 @@ class Authenticator implements BaseAuthenticator
      * @param array $data
      * @param Member $member
      */
-    protected function recordLoginAttempt($data, $member)
+    protected function recordLoginAttempt($data, $member, $success)
     {
         if (!Security::config()->login_recording) {
             return;

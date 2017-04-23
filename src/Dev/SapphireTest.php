@@ -276,7 +276,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         if (Controller::has_curr()) {
             Controller::curr()->setSession(Session::create(array()));
         }
-        Security::$database_is_ready = null;
+        Security::clear_database_is_ready();
 
         // Set up test routes
         $this->setUpRoutes();

@@ -187,14 +187,14 @@ class SecurityTest extends FunctionalTest
         }
         $response = $this->getRecursive('SecurityTest_SecuredController');
         $this->assertContains(Convert::raw2xml("That page is secured."), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // Non-logged in user should not be redirected, but instead shown the login form
         // No message/context is available as the user has not attempted to view the secured controller
         $response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
         $this->assertNotContains(Convert::raw2xml("That page is secured."), $response->getBody());
         $this->assertNotContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // BackURL with permission error (wrong permissions) should not redirect
         $this->logInAs('grouplessmember');
@@ -233,7 +233,7 @@ class SecurityTest extends FunctionalTest
         /* View the Security/login page */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
 
-        $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
+        $items = $this->cssParser()->getBySelector('#LoginForm_LoginForm input.action');
 
         /* We have only 1 input, one to allow the user to log in as someone else */
         $this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
@@ -242,11 +242,10 @@ class SecurityTest extends FunctionalTest
 
         /* Submit the form, using only the logout action and a hidden field for the authenticator */
         $response = $this->submitForm(
-            'MemberLoginForm_LoginForm',
+            'LoginForm_LoginForm',
             null,
             array(
-                'AuthenticationMethod' => MemberAuthenticator::class,
-                'action_dologout' => 1,
+                'action_logout' => 1,
             )
         );
 
@@ -268,7 +267,7 @@ class SecurityTest extends FunctionalTest
         /* Attempt to get into the admin section */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
 
-        $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
+        $items = $this->cssParser()->getBySelector('#LoginForm_LoginForm input.text');
 
         /* We have 2 text inputs - one for email, and another for the password */
         $this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
@@ -287,11 +286,11 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
-            ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
+            ->getBySelector('#LoginForm_LoginForm #LoginForm_LoginForm_Email');
         $this->assertEquals(1, count($items));
         $this->assertEmpty((string)$items[0]->attributes()->value);
         $this->assertEquals('off', (string)$items[0]->attributes()->autocomplete);
-        $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
+        $form = $this->cssParser()->getBySelector('#LoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertEquals('off', (string)$form[0]->attributes()->autocomplete);
 
@@ -301,11 +300,11 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
-            ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
+            ->getBySelector('#LoginForm_LoginForm #LoginForm_LoginForm_Email');
         $this->assertEquals(1, count($items));
         $this->assertEquals('myuser@silverstripe.com', (string)$items[0]->attributes()->value);
         $this->assertNotEquals('off', (string)$items[0]->attributes()->autocomplete);
-        $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
+        $form = $this->cssParser()->getBySelector('#LoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
     }
@@ -436,7 +435,7 @@ class SecurityTest extends FunctionalTest
 
         // Request new password by email
         $response = $this->get('Security/lostpassword');
-        $response = $this->post('Security/LostPasswordForm', array('Email' => 'testuser@example.com'));
+        $response = $this->post('Security/lostpassword/LostPasswordForm', array('Email' => 'testuser@example.com'));
 
         $this->assertEmailSent('testuser@example.com');
 
@@ -648,9 +647,7 @@ class SecurityTest extends FunctionalTest
 
     public function testDatabaseIsReadyWithInsufficientMemberColumns()
     {
-        $old = Security::$force_database_is_ready;
-        Security::$force_database_is_ready = null;
-        Security::$database_is_ready = false;
+        Security::clear_database_is_ready();
         DBClassName::clear_classname_cache();
 
         // Assumption: The database has been built correctly by the test runner,
@@ -666,8 +663,6 @@ class SecurityTest extends FunctionalTest
         // Rebuild the database (which re-adds the Email column), and try again
         static::resetDBSchema(true);
         $this->assertTrue(Security::database_is_ready());
-
-        Security::$force_database_is_ready = $old;
     }
 
     public function testSecurityControllerSendsRobotsTagHeader()
@@ -697,13 +692,13 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
 
         return $this->submitForm(
-            "MemberLoginForm_LoginForm",
+            "LoginForm_LoginForm",
             null,
             array(
                 'Email' => $email,
                 'Password' => $password,
                 'AuthenticationMethod' => MemberAuthenticator::class,
-                'action_dologin' => 1,
+                'action_doLogin' => 1,
             )
         );
     }
@@ -751,7 +746,7 @@ class SecurityTest extends FunctionalTest
      */
     protected function getValidationResult()
     {
-        $result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
+        $result = $this->session()->inst_get('FormInfo.LoginForm_LoginForm.result');
         if ($result) {
             return unserialize($result);
         }

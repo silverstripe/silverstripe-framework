@@ -9,13 +9,14 @@ use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator;
-use SilverStripe\Security\MemberLoginForm;
+use SilverStripe\Security\MemberAuthenticator\Authenticator;
+use SilverStripe\Security\MemberAuthenticator\LoginForm;
 use SilverStripe\Security\CMSMemberLoginForm;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use SilverStripe\Control\HTTPRequest;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -41,59 +42,6 @@ class MemberAuthenticatorTest extends SapphireTest
         parent::tearDown();
     }
 
-    public function testLegacyPasswordHashMigrationUponLogin()
-    {
-        $member = new Member();
-
-        $field=Member::config()->unique_identifier_field;
-
-        $member->$field = 'test1@test.com';
-        $member->PasswordEncryption = "sha1";
-        $member->Password = "mypassword";
-        $member->write();
-
-        $data = array(
-            'Email' => $member->$field,
-            'Password' => 'mypassword'
-        );
-        MemberAuthenticator::authenticate($data);
-
-        /**
- * @var Member $member
-*/
-        $member = DataObject::get_by_id(Member::class, $member->ID);
-        $this->assertEquals($member->PasswordEncryption, "sha1_v2.4");
-        $result = $member->checkPassword('mypassword');
-        $this->assertTrue($result->isValid());
-    }
-
-    public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm()
-    {
-        Config::inst()->update(
-            PasswordEncryptor::class,
-            'encryptors',
-            array('crc32' => array(PasswordEncryptor_PHPHash::class => 'crc32'))
-        );
-        $field=Member::config()->unique_identifier_field;
-
-        $member = new Member();
-        $member->$field = 'test2@test.com';
-        $member->PasswordEncryption = "crc32";
-        $member->Password = "mypassword";
-        $member->write();
-
-        $data = array(
-            'Email' => $member->$field,
-            'Password' => 'mypassword'
-        );
-        MemberAuthenticator::authenticate($data);
-
-        $member = DataObject::get_by_id(Member::class, $member->ID);
-        $this->assertEquals($member->PasswordEncryption, "crc32");
-        $result = $member->checkPassword('mypassword');
-        $this->assertTrue($result->isValid());
-    }
-
     public function testCustomIdentifierField()
     {
 
@@ -109,35 +57,45 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testGenerateLoginForm()
     {
+        $authenticator = new Authenticator();
+
         $controller = new Security();
 
         // Create basic login form
-        $frontendForm = MemberAuthenticator::get_login_form($controller);
-        $this->assertTrue($frontendForm instanceof MemberLoginForm);
+        $frontendResponse = $authenticator
+            ->getLoginHandler($controller->link())
+            ->handleRequest(new HTTPRequest('get', '/'), \SilverStripe\ORM\DataModel::inst());
+
+        $this->assertTrue(is_array($frontendResponse));
+        $this->assertTrue(isset($frontendResponse['Form']));
+        $this->assertTrue($frontendResponse['Form'] instanceof LoginForm);
+    }
+
+    /* TO DO - reenable
+    public function testGenerateCMSLoginForm()
+    {
+        $authenticator = new Authenticator();
 
         // Supports cms login form
         $this->assertTrue(MemberAuthenticator::supports_cms());
         $cmsForm = MemberAuthenticator::get_cms_login_form($controller);
         $this->assertTrue($cmsForm instanceof CMSMemberLoginForm);
     }
+    */
+
 
     /**
      * Test that a member can be authenticated via their temp id
      */
     public function testAuthenticateByTempID()
     {
+        $authenticator = new Authenticator();
+
         $member = new Member();
         $member->Email = 'test1@test.com';
         $member->PasswordEncryption = "sha1";
         $member->Password = "mypassword";
         $member->write();
-
-        // Make form
-        $controller = new Security();
-        /**
- * @skipUpgrade
-*/
-        $form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
         // If the user has never logged in, then the tempid should be empty
         $tempID = $member->TempIDHash;
@@ -149,35 +107,32 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNotEmpty($tempID);
 
         // Test correct login
-        $result = MemberAuthenticator::authenticate(
+        $result = $authenticator->authenticate(
             array(
             'tempid' => $tempID,
             'Password' => 'mypassword'
             ),
-            $form
+            $message
         );
-        $form->restoreFormState();
+
         $this->assertNotEmpty($result);
         $this->assertEquals($result->ID, $member->ID);
-        $this->assertEmpty($form->getMessage());
+        $this->assertEmpty($message);
 
         // Test incorrect login
-        $form->clearMessage();
-        $result = MemberAuthenticator::authenticate(
+        $result = $authenticator->authenticate(
             array(
             'tempid' => $tempID,
             'Password' => 'notmypassword'
             ),
-            $form
+            $message
         );
-        $form->restoreFormState();
+
         $this->assertEmpty($result);
         $this->assertEquals(
             _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
-            $form->getMessage()
+            $message
         );
-        $this->assertEquals(ValidationResult::TYPE_ERROR, $form->getMessageType());
-        $this->assertEquals(ValidationResult::CAST_TEXT, $form->getMessageCast());
     }
 
     /**
@@ -185,61 +140,50 @@ class MemberAuthenticatorTest extends SapphireTest
      */
     public function testDefaultAdmin()
     {
-        // Make form
-        $controller = new Security();
-        /**
- * @skipUpgrade
-*/
-        $form = new Form($controller, 'Form', new FieldList(), new FieldList());
+        $authenticator = new Authenticator();
 
         // Test correct login
-        $result = MemberAuthenticator::authenticate(
+        $result = $authenticator->authenticate(
             array(
             'Email' => 'admin',
             'Password' => 'password'
             ),
-            $form
+            $message
         );
-        $form->restoreFormState();
         $this->assertNotEmpty($result);
         $this->assertEquals($result->Email, Security::default_admin_username());
-        $this->assertEmpty($form->getMessage());
+        $this->assertEmpty($message);
 
         // Test incorrect login
-        $form->clearMessage();
-        $result = MemberAuthenticator::authenticate(
+        $result = $authenticator->authenticate(
             array(
             'Email' => 'admin',
             'Password' => 'notmypassword'
             ),
-            $form
+            $message
         );
-        $form->restoreFormState();
         $this->assertEmpty($result);
         $this->assertEquals(
             'The provided details don\'t seem to be correct. Please try again.',
-            $form->getMessage()
+            $message
         );
-        $this->assertEquals(ValidationResult::TYPE_ERROR, $form->getMessageType());
-        $this->assertEquals(ValidationResult::CAST_TEXT, $form->getMessageCast());
     }
 
     public function testDefaultAdminLockOut()
     {
+        $authenticator = new Authenticator();
+
         Config::inst()->update(Member::class, 'lock_out_after_incorrect_logins', 1);
         Config::inst()->update(Member::class, 'lock_out_delay_mins', 10);
         DBDatetime::set_mock_now('2016-04-18 00:00:00');
-        $controller = new Security();
-        /** @skipUpgrade */
-        $form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
         // Test correct login
-        MemberAuthenticator::authenticate(
+        $authenticator->authenticate(
             [
                 'Email' => 'admin',
                 'Password' => 'wrongpassword'
             ],
-            $form
+            $dummy
         );
 
         $this->assertTrue(Member::default_admin()->isLockedOut());

@@ -30,7 +30,7 @@ class BasicAuthTest extends FunctionalTest
 
         // Fixtures assume Email is the field used to identify the log in identity
         Member::config()->unique_identifier_field = 'Email';
-        Security::$force_database_is_ready = true; // Prevents Member test subclasses breaking ready test
+        Security::force_database_is_ready(true); // Prevents Member test subclasses breaking ready test
         Member::config()->lock_out_after_incorrect_logins = 10;
     }
 

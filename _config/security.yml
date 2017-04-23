@@ -4,6 +4,5 @@ SilverStripe\Security\MemberAuthenticator\LoginForm:
     - Password
 
 SilverStripe\Security\Security:
-  default_authenticator: SilverStripe\Security\MemberAuthenticator\Authenticator
   authenticators:
-    - SilverStripe\Security\MemberAuthenticator\Authenticator
+    default: SilverStripe\Security\MemberAuthenticator\Authenticator

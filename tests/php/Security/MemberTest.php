@@ -237,13 +237,13 @@ class MemberTest extends FunctionalTest
         $this->assertNotNull($member);
 
         // Initiate a password-reset
-        $response = $this->post('Security/LostPasswordForm', array('Email' => $member->Email));
+        $response = $this->post('Security/lostpassword/LostPasswordForm', array('Email' => $member->Email));
 
         $this->assertEquals($response->getStatusCode(), 302);
 
         // We should get redirected to Security/passwordsent
         $this->assertContains(
-            'Security/passwordsent/testuser@example.com',
+            'Security/lostpassword/passwordsent/testuser@example.com',
             urldecode($response->getHeader('Location'))
         );
 
@@ -942,12 +942,11 @@ class MemberTest extends FunctionalTest
         // Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option
         // should remove all previous hashes for this device
         $response = $this->post(
-            'Security/LoginForm',
+            'Security/login/default/LoginForm',
             array(
                 'Email' => $m1->Email,
                 'Password' => '1nitialPassword',
-                'AuthenticationMethod' => MemberAuthenticator::class,
-                'action_dologin' => 'action_dologin'
+                'action_doLogin' => 'action_doLogin'
             ),
             null,
             $this->session(),
