@@ -74,7 +74,10 @@
       "SilverStripe\\View\\": "src/View/",
       "SilverStripe\\View\\Tests\\": "tests/php/View/"
     },
-    "files": ["src/Core/Constants.php"],
+    "files": [
+      "src/Core/Constants.php",
+      "src/Dev/PhpUnitShim.php"
+    ],
     "classmap": ["tests/behat/features/bootstrap"]
   },
   "include-path": [
