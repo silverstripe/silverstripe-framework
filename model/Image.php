@@ -730,7 +730,7 @@ class Image extends File implements Flushable {
 				call_user_func_array(array($this, "generateFormattedImage"), $args);
 			}
 
-			$cached = new Image_Cached($cacheFile, false, $this);
+			$cached = Injector::inst()->createWithArgs('Image_Cached', array($cacheFile, false, $this));
 			return $cached;
 		}
 	}
