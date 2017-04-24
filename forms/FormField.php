@@ -557,6 +557,10 @@ class FormField extends RequestHandler {
 			$classes[] = 'nolabel';
 		}
 
+		if($this->Required()) {
+			$classes[] = 'requiredField';
+		}
+
 		// Allow custom styling of any element in the container based on validation errors,
 		// e.g. red borders on input tags.
 		//
