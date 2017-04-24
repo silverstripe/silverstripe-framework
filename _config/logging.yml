@@ -37,8 +37,9 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "error"
     properties:
-      Formatter: %$FriendlyErrorFormatter
-  FriendlyErrorFormatter:
+      Formatter: %$SilverStripe\Logging\DebugViewFriendlyErrorFormatter
+      CLIFormatter: %$SilverStripe\Logging\DetailedErrorFormatter
+  SilverStripe\Logging\DebugViewFriendlyErrorFormatter:
     class: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
     properties:
       Title: "There has been an error"
