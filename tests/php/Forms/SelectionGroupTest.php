@@ -31,11 +31,11 @@ class SelectionGroupTest extends SapphireTest
         $listElOne = $listEls[0];
         $listElTwo = $listEls[1];
 
-        $this->assertEquals('one', (string)$listElOne->input[0]['value']);
-        $this->assertEquals('two', (string)$listElTwo->input[0]['value']);
+        $this->assertEquals('one', (string)$listElOne->label[0]->input[0]['value']);
+        $this->assertEquals('two', (string)$listElTwo->label[0]->input[0]['value']);
 
-        $this->assertEquals('one title', (string)$listElOne->label[0]);
-        $this->assertEquals('two title', (string)$listElTwo->label[0]);
+        $this->assertEquals(' one title', (string)$listElOne->label[0]);
+        $this->assertEquals(' two title', (string)$listElTwo->label[0]);
 
         $this->assertContains('one view', (string)$listElOne->div);
         $this->assertContains('two view', (string)$listElTwo->div);
@@ -53,11 +53,11 @@ class SelectionGroupTest extends SapphireTest
         $listElOne = $listEls[0];
         $listElTwo = $listEls[1];
 
-        $this->assertEquals('one', (string)$listElOne->input[0]['value']);
-        $this->assertEquals('two', (string)$listElTwo->input[0]['value']);
+        $this->assertEquals('one', (string)$listElOne->label[0]->input[0]['value']);
+        $this->assertEquals('two', (string)$listElTwo->label[0]->input[0]['value']);
 
-        $this->assertEquals('one', (string)$listElOne->label[0]);
-        $this->assertEquals('two', (string)$listElTwo->label[0]);
+        $this->assertEquals(' one', (string)$listElOne->label[0]);
+        $this->assertEquals(' two', (string)$listElTwo->label[0]);
     }
 
     function testLegacyItemsFieldHolderWithTitle()
@@ -72,10 +72,10 @@ class SelectionGroupTest extends SapphireTest
         $listElOne = $listEls[0];
         $listElTwo = $listEls[1];
 
-        $this->assertEquals('one', (string)$listElOne->input[0]['value']);
-        $this->assertEquals('two', (string)$listElTwo->input[0]['value']);
+        $this->assertEquals('one', (string)$listElOne->label[0]->input[0]['value']);
+        $this->assertEquals('two', (string)$listElTwo->label[0]->input[0]['value']);
 
-        $this->assertEquals('one title', (string)$listElOne->label[0]);
-        $this->assertEquals('two title', (string)$listElTwo->label[0]);
+        $this->assertEquals(' one title', (string)$listElOne->label[0]);
+        $this->assertEquals(' two title', (string)$listElTwo->label[0]);
     }
 }
