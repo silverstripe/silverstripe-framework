@@ -153,6 +153,30 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertFalse($f->validate(new RequiredFields()));
     }
 
+    public function testSetMinDate()
+    {
+        $f = (new DatetimeField('Datetime'))->setMinDatetime('2009-03-31T23:00:00');
+        $this->assertEquals($f->getMinDatetime(), '2009-03-31T23:00:00', 'Retains normalised ISO');
+
+        $f = (new DatetimeField('Datetime'))->setMinDatetime('2009-03-31 23:00:00');
+        $this->assertEquals($f->getMinDatetime(), '2009-03-31T23:00:00', 'Converts ISO to normalised ISO');
+
+        $f = (new DatetimeField('Datetime'))->setMinDatetime('invalid');
+        $this->assertNull($f->getMinDatetime(), 'Ignores invalid values');
+    }
+
+    public function testSetMaxDate()
+    {
+        $f = (new DatetimeField('Datetime'))->setMaxDatetime('2009-03-31T23:00:00');
+        $this->assertEquals($f->getMaxDatetime(), '2009-03-31T23:00:00', 'Retains normalised ISO');
+
+        $f = (new DatetimeField('Datetime'))->setMaxDatetime('2009-03-31 23:00:00');
+        $this->assertEquals($f->getMaxDatetime(), '2009-03-31T23:00:00', 'Converts ISO to normalised ISO');
+
+        $f = (new DatetimeField('Datetime'))->setMaxDatetime('invalid');
+        $this->assertNull($f->getMaxDatetime(), 'Ignores invalid values');
+    }
+
     public function testValidateMinDate()
     {
         $dateField = new DatetimeField('Datetime');
