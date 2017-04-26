@@ -13,6 +13,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\Form;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 class DatetimeFieldTest extends SapphireTest
 {
@@ -142,6 +143,78 @@ class DatetimeFieldTest extends SapphireTest
 
         $f = new DatetimeField('Datetime', 'Datetime', 'wrong');
         $this->assertFalse($f->validate(new RequiredFields()));
+    }
+
+    public function testValidateMinDate()
+    {
+        $dateField = new DatetimeField('Datetime');
+        $dateField->setMinDatetime('2009-03-31 23:00:00');
+        $dateField->setValue('2009-03-31 23:00:01');
+        $this->assertTrue($dateField->validate(new RequiredFields()), 'Time above min datetime');
+
+        $dateField = new DatetimeField('Datetime');
+        $dateField->setMinDatetime('2009-03-31 23:00:00');
+        $dateField->setValue('2009-03-31 22:00:00');
+        $this->assertFalse($dateField->validate(new RequiredFields()), 'Time below min datetime');
+
+        $dateField = new DatetimeField('Datetime');
+        $dateField->setMinDatetime('2009-03-31 23:00:00');
+        $dateField->setValue('2009-03-31 23:00:00');
+        $this->assertTrue($dateField->validate(new RequiredFields()), 'Date and time matching min datetime');
+
+        $dateField = new DatetimeField('Datetime');
+        $dateField->setMinDatetime('2009-03-31 23:00:00');
+        $dateField->setValue('2008-03-31 23:00:00');
+        $this->assertFalse($dateField->validate(new RequiredFields()), 'Date below min datetime');
+    }
+
+    public function testValidateMinDateStrtotime()
+    {
+        $f = new DatetimeField('Datetime');
+        $f->setMinDatetime('-7 days');
+        $f->setValue(strftime('%Y-%m-%d %T', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
+        $this->assertFalse($f->validate(new RequiredFields()), 'Date below min datetime, with strtotime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMinDatetime('-7 days');
+        $f->setValue(strftime('%Y-%m-%d %T', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
+        $this->assertTrue($f->validate(new RequiredFields()), 'Date matching min datetime, with strtotime');
+    }
+
+    public function testValidateMaxDateStrtotime()
+    {
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('7 days');
+        $f->setValue(strftime('%Y-%m-%d %T', strtotime('8 days', DBDatetime::now()->getTimestamp())));
+        $this->assertFalse($f->validate(new RequiredFields()), 'Date above max date, with strtotime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('7 days');
+        $f->setValue(strftime('%Y-%m-%d %T', strtotime('7 days', DBDatetime::now()->getTimestamp())));
+        $this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
+    }
+
+    public function testValidateMaxDate()
+    {
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('2009-03-31 23:00:00');
+        $f->setValue('2009-03-31 22:00:00');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Time below max datetime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('2009-03-31 23:00:00');
+        $f->setValue('2010-03-31 23:00:01');
+        $this->assertFalse($f->validate(new RequiredFields()), 'Time above max datetime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('2009-03-31 23:00:00');
+        $f->setValue('2009-03-31 23:00:00');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Date and time matching max datetime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('2009-03-31 23:00:00');
+        $f->setValue('2010-03-31 23:00:00');
+        $this->assertFalse($f->validate(new RequiredFields()), 'Date above max datetime');
     }
 
     public function testTimezoneSetLocalised()
