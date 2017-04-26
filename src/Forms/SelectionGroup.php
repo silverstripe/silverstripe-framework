@@ -101,17 +101,9 @@ class SelectionGroup extends CompositeField
                         'name' => $this->name,
                         'value' => $item->getValue(),
                         'checked' => $checked,
-                        'aria-labelledby' => "title-{$itemID}",
                     )
                 )),
-                "RadioLabel" => DBField::create_field('HTMLFragment', FormField::create_tag(
-                    'label',
-                    array(
-                        'id' => "title-{$itemID}",
-                        'for' => $itemID
-                    ),
-                    $item->getTitle()
-                )),
+                "RadioLabel" => $item->getTitle(),
                 "Selected" => $firstSelected,
             );
             $newItems[] = $item->customise($extra);
