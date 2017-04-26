@@ -338,10 +338,6 @@ class DateField extends TextField
             return $this;
         }
 
-        if (is_array($value)) {
-            throw new InvalidArgumentException("Use setSubmittedValue to assign by array");
-        }
-
         // Re-run through formatter to tidy up (e.g. remove time component)
         $this->value = $this->tidyISO8601($value);
         return $this;

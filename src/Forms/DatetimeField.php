@@ -349,9 +349,6 @@ class DatetimeField extends TextField
             $this->value = null;
             return $this;
         }
-        if (is_array($value)) {
-            throw new InvalidArgumentException("Use setSubmittedValue to assign by array");
-        };
 
         // Validate iso 8601 date
         // If invalid, assign for later validation failure
