@@ -92,18 +92,6 @@ class DatetimeField extends TextField
      */
     protected $timezone = null;
 
-    public function setForm($form)
-    {
-        parent::setForm($form);
-        return $this;
-    }
-
-    public function setName($name)
-    {
-        parent::setName($name);
-        return $this;
-    }
-
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
