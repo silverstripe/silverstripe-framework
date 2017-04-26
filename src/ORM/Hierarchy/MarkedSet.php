@@ -361,17 +361,26 @@ class MarkedSet
         $output = $data;
 
         // Serialise node
-        $output['node'] = $serialiseEval($data['node']);
+        $serialised = $serialiseEval($data['node']);
 
         // Force serialisation of DBField instances
-        if (is_array($output['node'])) {
-            foreach ($output['node'] as $key => $value) {
+        if (is_array($serialised)) {
+            foreach ($serialised as $key => $value) {
                 if ($value instanceof DBField) {
-                    $output['node'][$key] = $value->getSchemaValue();
+                    $serialised[$key] = $value->getSchemaValue();
                 }
             }
-        } elseif ($output['node'] instanceof DBField) {
-            $output['node'] = $output['node']->getSchemaValue();
+
+            // Merge with top level array
+            unset($output['node']);
+            $output = array_merge($output, $serialised);
+        } else {
+            if ($serialised instanceof DBField) {
+                $serialised = $serialised->getSchemaValue();
+            }
+
+            // Replace node with serialised value
+            $output['node'] = $serialised;
         }
 
         // Replace children with serialised elements

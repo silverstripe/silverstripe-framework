@@ -55,6 +55,10 @@ use InvalidArgumentException;
  */
 class TreeDropdownField extends FormField
 {
+    protected $schemaDataType = self::SCHEMA_DATA_TYPE_SINGLESELECT;
+
+    protected $schemaComponent = 'TreeDropdownField';
+
     private static $url_handlers = array(
         '$Action!/$ID' => '$Action'
     );
@@ -317,20 +321,13 @@ class TreeDropdownField extends FormField
      */
     public function Field($properties = array())
     {
-        $item = DataObject::singleton($this->sourceObject);
-        $emptyTitle = _t(
-            'DropdownField.CHOOSE_MODEL',
-            '(Choose {name})',
-            ['name' => $item->i18n_singular_name()]
-        );
-
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
         if ($record instanceof ViewableData) {
             $title = $record->obj($this->labelField)->forTemplate();
         } elseif ($record) {
             $title = Convert::raw2xml($record->{$this->labelField});
         } else {
-            $title = $emptyTitle;
+            $title = $this->getEmptyTitle();
         }
 
         // TODO Implement for TreeMultiSelectField
@@ -343,7 +340,7 @@ class TreeDropdownField extends FormField
             $properties,
             array(
                 'Title' => $title,
-                'EmptyTitle' => $emptyTitle,
+                'EmptyTitle' => $this->getEmptyTitle(),
                 'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
             )
         );
@@ -430,7 +427,8 @@ class TreeDropdownField extends FormField
             return [
                 'name' => $this->getName(),
                 'id' => $child->obj($this->keyField),
-                'title' => $child->obj($this->labelField),
+                'title' => $child->getTitle(),
+                'treetitle' => $child->obj($this->labelField),
                 'disabled' => $this->nodeIsDisabled($child),
                 'isSubTree' => $isSubTree
             ];
@@ -626,5 +624,45 @@ class TreeDropdownField extends FormField
         $copy->setLabelField($this->labelField);
         $copy->setSourceObject($this->sourceObject);
         return $copy;
+    }
+
+    public function getSchemaStateDefaults()
+    {
+        // Check label for field
+        $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
+        $selectedlabel = null;
+
+        $data = parent::getSchemaStateDefaults();
+        $data['data']['emptyTitle'] = $this->getEmptyTitle();
+        if ($record) {
+            $data['data']['valueObject'] = [
+                'id' => $record->getField($this->keyField),
+                'title' => $record->getTitle(),
+                'treetitle' => $record->obj($this->labelField)->getSchemaValue(),
+            ];
+        }
+
+        return $data;
+    }
+
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
+        $data['data']['urlTree'] = $this->Link('tree');
+        return $data;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEmptyTitle()
+    {
+        $item = DataObject::singleton($this->sourceObject);
+        $emptyTitle = _t(
+            'DropdownField.CHOOSE_MODEL',
+            '(Choose {name})',
+            ['name' => $item->i18n_singular_name()]
+        );
+        return $emptyTitle;
     }
 }
