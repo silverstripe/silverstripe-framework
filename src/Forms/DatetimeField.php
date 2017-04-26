@@ -244,11 +244,6 @@ class DatetimeField extends TextField
      */
     public function getDatetimeFormat()
     {
-        if ($this->getHTML5()) {
-            // Browsers expect ISO 8601 dates, localisation is handled on the client
-            $this->setDatetimeFormat(DBDatetime::ISO_DATETIME_NORMALISED);
-        }
-
         if ($this->datetimeFormat) {
             return $this->datetimeFormat;
         }
