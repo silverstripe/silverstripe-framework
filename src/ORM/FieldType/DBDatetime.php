@@ -35,9 +35,16 @@ use InvalidArgumentException;
 class DBDatetime extends DBDate implements TemplateGlobalProvider
 {
     /**
-     * Standard ISO format string for date and time in CLDR standard format
+     * Standard ISO format string for date and time in CLDR standard format,
+     * with a whitespace separating date and time (common database representation, e.g. in MySQL).
      */
-    const ISO_DATETIME = 'y-MM-dd\'T\'HH:mm:ss';
+    const ISO_DATETIME = 'y-MM-dd HH:mm:ss';
+
+    /**
+     * Standard ISO format string for date and time in CLDR standard format,
+     * with a "T" separator between date and time (W3C standard, e.g. for HTML5 datetime-local fields).
+     */
+    const ISO_DATETIME_NORMALISED = 'y-MM-dd\'T\'HH:mm:ss';
 
     /**
      * Returns the standard localised date

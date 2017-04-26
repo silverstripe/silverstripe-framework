@@ -43,7 +43,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertTrue($dateTimeField->validate($validator));
         $m = new Model();
         $form->saveInto($m);
-        $this->assertEquals('2003-03-29T23:59:38', $m->MyDatetime);
+        $this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
     }
 
     public function testFormSaveIntoLocalised()
@@ -62,7 +62,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertTrue($dateTimeField->validate($validator));
         $m = new Model();
         $form->saveInto($m);
-        $this->assertEquals('2003-03-29T23:59:38', $m->MyDatetime);
+        $this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
     }
 
     public function testDataValue()
@@ -107,13 +107,21 @@ class DatetimeFieldTest extends SapphireTest
         $f = new DatetimeField('Datetime', 'Datetime');
         $f->setValue('2003-03-29 23:59:38');
         $this->assertEquals($f->dataValue(), '2003-03-29 23:59:38');
+
+        $f = new DatetimeField('Datetime', 'Datetime');
+        $f->setValue('2003-03-29T23:59:38');
+        $this->assertEquals($f->dataValue(), '2003-03-29 23:59:38', 'Normalised ISO');
     }
 
-    public function testSetValue()
+    public function testSubmittedValue()
     {
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
         $datetimeField->setSubmittedValue('2003-03-29 23:00:00');
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
+
+        $datetimeField = new DatetimeField('Datetime', 'Datetime');
+        $datetimeField->setSubmittedValue('2003-03-29T23:00:00');
+        $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00', 'Normalised ISO');
     }
 
     public function testSetValueWithLocalised()
@@ -133,6 +141,9 @@ class DatetimeFieldTest extends SapphireTest
     {
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
         $this->assertTrue($f->validate(new RequiredFields()));
+
+        $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29T23:59:38');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Normalised ISO');
 
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 00:00:00');
         $this->assertTrue($f->validate(new RequiredFields()));
@@ -166,6 +177,11 @@ class DatetimeFieldTest extends SapphireTest
         $dateField->setMinDatetime('2009-03-31 23:00:00');
         $dateField->setValue('2008-03-31 23:00:00');
         $this->assertFalse($dateField->validate(new RequiredFields()), 'Date below min datetime');
+
+        $dateField = new DatetimeField('Datetime');
+        $dateField->setMinDatetime('2009-03-31T23:00:00');
+        $dateField->setValue('2009-03-31T23:00:01');
+        $this->assertTrue($dateField->validate(new RequiredFields()), 'Time above min datetime with normalised ISO');
     }
 
     public function testValidateMinDateStrtotime()
@@ -215,9 +231,14 @@ class DatetimeFieldTest extends SapphireTest
         $f->setMaxDatetime('2009-03-31 23:00:00');
         $f->setValue('2010-03-31 23:00:00');
         $this->assertFalse($f->validate(new RequiredFields()), 'Date above max datetime');
+
+        $f = new DatetimeField('Datetime');
+        $f->setMaxDatetime('2009-03-31T23:00:00');
+        $f->setValue('2009-03-31T22:00:00');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Time below max datetime with normalised ISO');
     }
 
-    public function testTimezoneSetLocalised()
+    public function testTimezoneSetValueLocalised()
     {
         date_default_timezone_set('Europe/Berlin');
         // Berlin and Auckland have 12h time difference in northern hemisphere winter
@@ -230,7 +251,7 @@ class DatetimeFieldTest extends SapphireTest
         $datetimeField->setTimezone('Pacific/Auckland');
         $datetimeField->setValue('2003-12-24 23:59:59');
         $this->assertEquals(
-            '25/12/2003 11:59:59 AM',
+            '25/12/2003, 11:59:59 AM',
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
         );
@@ -238,11 +259,32 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertEquals(
             '2003-12-24 23:59:59',
             $datetimeField->dataValue(),
-            'Data value is unformatted, and in server timezone'
+            'Data value is in ISO format, and in server timezone'
         );
     }
 
-    public function testTimezoneFromConfigLocalised()
+    public function testTimezoneSetValueWithHtml5()
+    {
+        date_default_timezone_set('Europe/Berlin');
+        // Berlin and Auckland have 12h time difference in northern hemisphere winter
+        $datetimeField = new DatetimeField('Datetime', 'Datetime');
+
+        $datetimeField->setTimezone('Pacific/Auckland');
+        $datetimeField->setValue('2003-12-24 23:59:59');
+        $this->assertEquals(
+            '2003-12-25T11:59:59',
+            $datetimeField->Value(),
+            'User value is in normalised ISO format and in user timezone'
+        );
+
+        $this->assertEquals(
+            '2003-12-24 23:59:59',
+            $datetimeField->dataValue(),
+            'Data value is in ISO format, and in server timezone'
+        );
+    }
+
+    public function testTimezoneSetSubmittedValueLocalised()
     {
         date_default_timezone_set('Europe/Berlin');
         // Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
@@ -285,4 +327,5 @@ class DatetimeFieldTest extends SapphireTest
             )
         );
     }
+
 }
