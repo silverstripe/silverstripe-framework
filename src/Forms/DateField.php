@@ -295,7 +295,11 @@ class DateField extends TextField
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
             'lang' => i18n::convert_rfc1766($this->getLocale()),
-            'html5' => $this->getHTML5()
+            'data' => array_merge($defaults['data'], [
+                'html5' => $this->getHTML5(),
+                'min' => $this->getMinDate(),
+                'max' => $this->getMaxDate()
+            ])
         ]);
     }
 

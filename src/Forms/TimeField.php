@@ -235,7 +235,10 @@ class TimeField extends TextField
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
-            'html5' => $this->getHTML5()
+            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'data' => array_merge($defaults['data'], [
+                'html5' => $this->getHTML5(),
+            ])
         ]);
     }
 
