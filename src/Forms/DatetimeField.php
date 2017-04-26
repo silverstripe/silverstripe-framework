@@ -9,8 +9,8 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * Form field used for editing date time strings.
- * By default, the field handles strings in normalised ISO 8601 format,
- * for example 2017-04-26T23:59:59. The "T" separator can be replaced with a whitespace for value setting.
+ * In the default HTML5 mode, the field expects form submissions
+ * in normalised ISO 8601 format, for example 2017-04-26T23:59:59 (with a "T" separator).
  * Data is passed on via {@link dataValue()} with whitespace separators.
  */
 class DatetimeField extends TextField
@@ -144,7 +144,8 @@ class DatetimeField extends TextField
     }
 
     /**
-     * Assign value posted from form submission
+     * Assign value posted from form submission, based on {@link $datetimeFormat}.
+     * When $html5=true, this needs to be normalised ISO format (with "T" separator).
      *
      * @param mixed $value
      * @param mixed $data
@@ -168,7 +169,8 @@ class DatetimeField extends TextField
     }
 
     /**
-     * Convert date localised in the current locale to ISO 8601 date
+     * Convert date localised in the current locale to ISO 8601 date.
+     * Note that "localised" could also mean ISO format when $html5=true.
      *
      * @param string $datetime
      * @return string The formatted date, or null if not a valid date
@@ -180,11 +182,6 @@ class DatetimeField extends TextField
         }
         $fromFormatter = $this->getFormatter();
         $toFormatter = $this->getISO8601Formatter();
-
-        // Remove 'T' date and time separator before parsing (required by W3C HTML5 fields)
-        if ($this->getHTML5()) {
-            $datetime = str_replace('T', ' ', $datetime);
-        }
 
         // Try to parse time with seconds
         $timestamp = $fromFormatter->parse($datetime);
@@ -333,7 +330,10 @@ class DatetimeField extends TextField
     }
 
     /**
-     * Assign value from iso8601 string
+     * Assign value based on {@link $datetimeFormat}.
+     *
+     * When $html5=true, assign value from ISO 8601 normalised string (with a "T" separator).
+     * Falls back to an ISO 8601 string (with a whitespace separator).
      *
      * @param mixed $value
      * @param mixed $data
