@@ -94,15 +94,22 @@ class DateFieldTest extends SapphireTest
         $this->assertEquals('2003-03-29', $f->dataValue());
     }
 
-    public function testTidyISO8601()
+    public function testSetValue()
     {
-        $f = new DateField('Date', 'Date');
-        $this->assertEquals(null, $f->tidyISO8601('notadate'));
-        $this->assertEquals('2011-01-31', $f->tidyISO8601('-1 day'));
-        $this->assertEquals(null, $f->tidyISO8601('29/03/2003'));
+        $f = (new DateField('Date', 'Date'))->setValue('notadate');
+        $this->assertNull($f->Value(), 'Invalid input ignored');
+
+        $f = (new DateField('Date', 'Date'))->setValue('-1 day');
+        $this->assertEquals($f->Value(), '2011-01-31', 'Relative dates accepted');
+
+        $f = (new DateField('Date', 'Date'))->setValue('2011-01-31');
+        $this->assertEquals($f->Value(), '2011-01-31', 'ISO format accepted');
+
+        $f = (new DateField('Date', 'Date'))->setValue('2011-01-31 23:59:59');
+        $this->assertEquals($f->Value(), '2011-01-31', 'ISO format with time accepted');
     }
 
-    public function testSetValueWithDateString()
+    public function testSetValueWithLocalisedDateString()
     {
         $f = new DateField('Date', 'Date');
         $f->setHTML5(false);

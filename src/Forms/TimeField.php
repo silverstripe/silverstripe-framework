@@ -103,7 +103,7 @@ class TimeField extends TextField
         }
 
         // Get from locale
-        return $this->getFormatter()->getPattern();
+        return $this->getFrontendFormatter()->getPattern();
     }
 
     /**
@@ -159,7 +159,7 @@ class TimeField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getFormatter()
+    protected function getFrontendFormatter()
     {
         if ($this->getHTML5() && $this->timeFormat && $this->timeFormat !== DBTime::ISO_TIME) {
             throw new \LogicException(
@@ -204,7 +204,7 @@ class TimeField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getISO8601Formatter()
+    protected function getInternalFormatter()
     {
         $formatter = IntlDateFormatter::create(
             i18n::config()->uninherited('default_locale'),
@@ -260,7 +260,7 @@ class TimeField extends TextField
         $this->rawValue = $value;
 
         // Parse from submitted value
-        $this->value = $this->localisedToISO8601($value);
+        $this->value = $this->frontendToInternal($value);
         return $this;
     }
 
@@ -283,13 +283,13 @@ class TimeField extends TextField
         }
 
         // Re-run through formatter to tidy up (e.g. remove date component)
-        $this->value = $this->tidyISO8601($value);
+        $this->value = $this->tidyInternal($value);
         return $this;
     }
 
     public function Value()
     {
-        $localised = $this->iso8601ToLocalised($this->value);
+        $localised = $this->internalToFrontend($this->value);
         if ($localised) {
             return $localised;
         }
@@ -305,7 +305,7 @@ class TimeField extends TextField
      */
     public function getMidnight()
     {
-        $formatter = $this->getFormatter();
+        $formatter = $this->getFrontendFormatter();
         $timestamp = $this->withTimezone($this->getTimezone(), function () {
             return strtotime('midnight');
         });
@@ -375,18 +375,19 @@ class TimeField extends TextField
     }
 
     /**
-     * Convert time localised in the current locale to ISO 8601 time
+     * Convert frontend time to the internal representation (ISO 8601).
+     * The frontend time is also in ISO 8601 when $html5=true.
      *
      * @param string $time
      * @return string The formatted time, or null if not a valid time
      */
-    public function localisedToISO8601($time)
+    protected function frontendToInternal($time)
     {
         if (!$time) {
             return null;
         }
-        $fromFormatter = $this->getFormatter();
-        $toFormatter = $this->getISO8601Formatter();
+        $fromFormatter = $this->getFrontendFormatter();
+        $toFormatter = $this->getInternalFormatter();
         $timestamp = $fromFormatter->parse($time);
 
         // Try to parse time without seconds, since that's a valid HTML5 submission format
@@ -405,19 +406,21 @@ class TimeField extends TextField
     }
 
     /**
-     * Format iso time to localised form
+     * Convert the internal time representation (ISO 8601) to a format used by the frontend,
+     * as defined by {@link $timeFormat}. With $html5=true, the frontend time will also be
+     * in ISO 8601.
      *
      * @param string $time
      * @return string
      */
-    public function iso8601ToLocalised($time)
+    protected function internalToFrontend($time)
     {
-        $time = $this->tidyISO8601($time);
+        $time = $this->tidyInternal($time);
         if (!$time) {
             return null;
         }
-        $fromFormatter = $this->getISO8601Formatter();
-        $toFormatter = $this->getFormatter();
+        $fromFormatter = $this->getInternalFormatter();
+        $toFormatter = $this->getFrontendFormatter();
         $timestamp = $fromFormatter->parse($time);
         if ($timestamp === false) {
             return null;
@@ -428,18 +431,19 @@ class TimeField extends TextField
 
 
     /**
-     * Tidy up iso8601-ish time, or approximation
+     * Tidy up the internal time representation (ISO 8601),
+     * and fall back to strtotime() if there's parsing errors.
      *
-     * @param string $time Time in iso8601 or approximate form
-     * @return string iso8601 time, or null if not valid
+     * @param string $time Time in ISO 8601 or approximate form
+     * @return string ISO 8601 time, or null if not valid
      */
-    public function tidyISO8601($time)
+    protected function tidyInternal($time)
     {
         if (!$time) {
             return null;
         }
         // Re-run through formatter to tidy up (e.g. remove date component)
-        $formatter = $this->getISO8601Formatter();
+        $formatter = $this->getInternalFormatter();
         $timestamp = $formatter->parse($time);
         if ($timestamp === false) {
             // Fallback to strtotime
