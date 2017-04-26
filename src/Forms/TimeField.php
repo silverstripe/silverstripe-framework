@@ -389,7 +389,7 @@ class TimeField extends TextField
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
-            $fromFormatter->setPattern('HH:mm');
+            $fromFormatter->setPattern(str_replace(':ss', '', DBTime::ISO_TIME));
             $timestamp = $fromFormatter->parse($time);
         }
 

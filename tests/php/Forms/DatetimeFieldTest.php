@@ -136,6 +136,10 @@ class DatetimeFieldTest extends SapphireTest
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 00:00:00');
         $this->assertTrue($f->validate(new RequiredFields()));
 
+        $f = (new DatetimeField('Datetime', 'Datetime'))
+            ->setSubmittedValue('2003-03-29 00:00');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Leaving out seconds (like many browsers)');
+
         $f = new DatetimeField('Datetime', 'Datetime', 'wrong');
         $this->assertFalse($f->validate(new RequiredFields()));
     }

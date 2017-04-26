@@ -182,6 +182,14 @@ class DatetimeField extends TextField
         $fromFormatter = $this->getFormatter();
         $toFormatter = $this->getISO8601Formatter();
         $timestamp = $fromFormatter->parse($datetime);
+
+        // Try to parse time without seconds, since that's a valid HTML5 submission format
+        // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
+        if ($timestamp === false && $this->getHTML5()) {
+            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern()));
+            $timestamp = $fromFormatter->parse($datetime);
+        }
+
         if ($timestamp === false) {
             return null;
         }
