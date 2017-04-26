@@ -311,7 +311,13 @@ class DatetimeField extends TextField
         $formatter->setLenient(false);
 
         // Note we omit timezone from this format, and we always assume server TZ
-        $formatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
+        if ($this->getHTML5()) {
+            // ISO8601 date with a standard "T" separator (W3C standard).
+            $formatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
+        } else {
+            // ISO8601 date with a whitespace separator
+            $formatter->setPattern(DBDatetime::ISO_DATETIME);
+        }
 
         return $formatter;
     }
