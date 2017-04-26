@@ -405,25 +405,19 @@ trait Extensible
      * all results into an array
      *
      * @param string $method the method name to call
-     * @param mixed $a1
-     * @param mixed $a2
-     * @param mixed $a3
-     * @param mixed $a4
-     * @param mixed $a5
-     * @param mixed $a6
-     * @param mixed $a7
+     * @param mixed ...$a
      * @return array List of results with nulls filtered out
      */
-    public function invokeWithExtensions($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
+    public function invokeWithExtensions($method, &...$a)
     {
         $result = array();
         if (method_exists($this, $method)) {
-            $thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+            $thisResult = $this->$method(...$a);
             if ($thisResult !== null) {
                 $result[] = $thisResult;
             }
         }
-        $extras = $this->extend($method, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+        $extras = $this->extend($method, ...$a);
 
         return $extras ? array_merge($result, $extras) : $result;
     }
@@ -440,22 +434,16 @@ trait Extensible
      * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
      *
      * @param string $method the name of the method to call on each extension
-     * @param mixed $a1
-     * @param mixed $a2
-     * @param mixed $a3
-     * @param mixed $a4
-     * @param mixed $a5
-     * @param mixed $a6
-     * @param mixed $a7
+     * @param mixed $a
      * @return array
      */
-    public function extend($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
+    public function extend($method, &...$a)
     {
         $values = array();
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
             foreach (array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, $a);
                 if ($value !== null) {
                     $values[] = $value;
                 }
@@ -467,7 +455,7 @@ trait Extensible
             if (method_exists($instance, $method)) {
                 $instance->setOwner($this);
                 try {
-                    $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                    $value = $instance->$method(...$a);
                 } finally {
                     $instance->clearOwner();
                 }
@@ -479,7 +467,7 @@ trait Extensible
 
         if (!empty($this->afterExtendCallbacks[$method])) {
             foreach (array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, $a);
                 if ($value !== null) {
                     $values[] = $value;
                 }
