@@ -107,6 +107,9 @@ class DatetimeField extends TextField
         return $attributes;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getSchemaDataDefaults()
     {
         $defaults = parent::getSchemaDataDefaults();
@@ -120,16 +123,26 @@ class DatetimeField extends TextField
         ]);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function Type()
     {
         return 'text datetime';
     }
 
+    /**
+     * @return bool
+     */
     public function getHTML5()
     {
         return $this->html5;
     }
 
+    /**
+     * @param $bool
+     * @return $this
+     */
     public function setHTML5($bool)
     {
         $this->html5 = $bool;
