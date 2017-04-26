@@ -80,12 +80,11 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertEquals($f->dataValue(), null);
     }
 
-    // /**
-    //  * @expectedException InvalidArgumentException
-    //  */
-    // public function testConstructorWithLocalizedDateString() {
-    // 	$f = new DatetimeField('Datetime', 'Datetime', '29/03/2003 23:59:38');
-    // }
+    public function testConstructorWithLocalizedDateSetsNullValue()
+    {
+        $f = new DatetimeField('Datetime', 'Datetime', '29/03/2003 23:59:38');
+        $this->assertNull($f->Value());
+    }
 
     public function testConstructorWithIsoDate()
     {
@@ -93,14 +92,6 @@ class DatetimeFieldTest extends SapphireTest
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
         $this->assertEquals($f->dataValue(), '2003-03-29 23:59:38');
     }
-
-    // /**
-    //  * @expectedException InvalidArgumentException
-    //  */
-    // public function testSetValueWithDateString() {
-    // 	$f = new DatetimeField('Datetime', 'Datetime');
-    // 	$f->setValue('29/03/2003');
-    // }
 
     public function testSetValueWithDateTimeString()
     {
@@ -132,9 +123,15 @@ class DatetimeFieldTest extends SapphireTest
             ->setHTML5(false)
             ->setLocale('en_NZ');
 
-        // Values can only be localized (= non-ISO) in array notation
         $datetimeField->setSubmittedValue('29/03/2003 11:00:00 pm');
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
+
+        // Some localisation packages exclude the ',' in default medium format
+        $this->assertRegExp(
+            '#29/03/2003(,)? 11:00:00 (AM|am)#',
+            $datetimeField->Value(),
+            'User value is formatted, and in user timezone'
+        );
     }
 
     public function testValidate()
@@ -246,12 +243,12 @@ class DatetimeFieldTest extends SapphireTest
 
         $datetimeField
             ->setHTML5(false)
-            ->setLocale('en_NZ');
+            ->setDatetimeFormat('dd/MM/y HH:mm:ss');
 
         $datetimeField->setTimezone('Pacific/Auckland');
         $datetimeField->setValue('2003-12-24 23:59:59');
         $this->assertEquals(
-            '25/12/2003, 11:59:59 AM',
+            '25/12/2003 11:59:59',
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
         );
