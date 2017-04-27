@@ -80,13 +80,6 @@ class DatetimeField extends TextField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
 
     /**
-     * Date time order
-     *
-     * @var string
-     */
-    protected $dateTimeOrder = '{date} {time}';
-
-    /**
      * Custom timezone
      *
      * @var string
