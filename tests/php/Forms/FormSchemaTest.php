@@ -475,6 +475,8 @@ class FormSchemaTest extends SapphireTest
                             [],
                         'data' => [
                             'html5' => true,
+                            'min' => null,
+                            'max' => null
                         ],
                     ],
                     [
