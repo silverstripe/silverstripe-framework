@@ -462,7 +462,6 @@ class FormSchemaTest extends SapphireTest
                         'extraClass' => 'date text',
                         'description' => null,
                         'rightTitle' => null,
-                        'html5' => true,
                         'lang' => 'en-US',
                         'leftTitle' => null,
                         'readOnly' => false,
@@ -474,8 +473,9 @@ class FormSchemaTest extends SapphireTest
                             ],
                         'attributes' =>
                             [],
-                        'data' =>
-                            [],
+                        'data' => [
+                            'html5' => true,
+                        ],
                     ],
                     [
                         'name' => 'Number',
