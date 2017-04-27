@@ -7,6 +7,7 @@ use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Form used for editing a date stirng
@@ -403,8 +404,16 @@ class DateField extends TextField
                     _t(
                         'DateField.VALIDDATEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date ({date})",
-                        ['date' => $this->internalToFrontend($min)]
-                    )
+                        [
+                            'date' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $min,
+                                $this->internalToFrontend($min)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
                 );
                 return false;
             }
@@ -420,8 +429,16 @@ class DateField extends TextField
                     _t(
                         'DateField.VALIDDATEMAXDATE',
                         "Your date has to be older or matching the maximum allowed date ({date})",
-                        ['date' => $this->internalToFrontend($max)]
-                    )
+                        [
+                            'date' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $max,
+                                $this->internalToFrontend($max)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
                 );
                 return false;
             }
