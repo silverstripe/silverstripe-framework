@@ -35,9 +35,16 @@ use InvalidArgumentException;
 class DBDatetime extends DBDate implements TemplateGlobalProvider
 {
     /**
-     * Standard ISO format string for date and time in CLDR standard format
+     * Standard ISO format string for date and time in CLDR standard format,
+     * with a whitespace separating date and time (common database representation, e.g. in MySQL).
      */
     const ISO_DATETIME = 'y-MM-dd HH:mm:ss';
+
+    /**
+     * Standard ISO format string for date and time in CLDR standard format,
+     * with a "T" separator between date and time (W3C standard, e.g. for HTML5 datetime-local fields).
+     */
+    const ISO_DATETIME_NORMALISED = 'y-MM-dd\'T\'HH:mm:ss';
 
     /**
      * Returns the standard localised date
@@ -132,32 +139,18 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
-        $dateFormat = $field->getDateField()->getDateFormat();
-        $timeFormat = $field->getTimeField()->getTimeFormat();
+        $dateTimeFormat = $field->getDatetimeFormat();
 
         // Set date formatting hints and example
-        $date = static::now()->Format($dateFormat);
+        $date = static::now()->Format($dateTimeFormat);
         $field
-            ->getDateField()
             ->setDescription(_t(
                 'FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
                 [ 'format' => $date ]
             ))
-            ->setAttribute('placeholder', $dateFormat);
-
-        // Set time formatting hints and example
-        $time = static::now()->Format($timeFormat);
-        $field
-            ->getTimeField()
-            ->setDescription(_t(
-                'FormField.EXAMPLE',
-                'e.g. {format}',
-                'Example format',
-                [ 'format' => $time ]
-            ))
-            ->setAttribute('placeholder', $timeFormat);
+            ->setAttribute('placeholder', $dateTimeFormat);
 
         return $field;
     }

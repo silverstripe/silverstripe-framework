@@ -7,6 +7,7 @@ use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Form used for editing a date stirng
@@ -194,7 +195,7 @@ class DateField extends TextField
         }
 
         // Get from locale
-        return $this->getFormatter()->getPattern();
+        return $this->getFrontendFormatter()->getPattern();
     }
 
     /**
@@ -217,7 +218,7 @@ class DateField extends TextField
      * @throws \LogicException
      * @return IntlDateFormatter
      */
-    protected function getFormatter()
+    protected function getFrontendFormatter()
     {
         if ($this->getHTML5() && $this->dateFormat && $this->dateFormat !== DBDate::ISO_DATE) {
             throw new \LogicException(
@@ -261,7 +262,7 @@ class DateField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getISO8601Formatter()
+    protected function getInternalFormatter()
     {
         $locale = i18n::config()->uninherited('default_locale');
         $formatter = IntlDateFormatter::create(
@@ -290,6 +291,19 @@ class DateField extends TextField
         return $attributes;
     }
 
+    public function getSchemaDataDefaults()
+    {
+        $defaults = parent::getSchemaDataDefaults();
+        return array_merge($defaults, [
+            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'data' => array_merge($defaults['data'], [
+                'html5' => $this->getHTML5(),
+                'min' => $this->getMinDate(),
+                'max' => $this->getMaxDate()
+            ])
+        ]);
+    }
+
     public function Type()
     {
         return 'date text';
@@ -314,10 +328,19 @@ class DateField extends TextField
         }
 
         // Parse from submitted value
-        $this->value = $this->localisedToISO8601($value);
+        $this->value = $this->frontendToInternal($value);
         return $this;
     }
 
+    /**
+     * Assign value based on {@link $datetimeFormat}, which might be localised.
+     *
+     * When $html5=true, assign value from ISO 8601 string.
+     *
+     * @param mixed $value
+     * @param mixed $data
+     * @return $this
+     */
     public function setValue($value, $data = null)
     {
         // Save raw value for later validation
@@ -329,18 +352,14 @@ class DateField extends TextField
             return $this;
         }
 
-        if (is_array($value)) {
-            throw new InvalidArgumentException("Use setSubmittedValue to assign by array");
-        }
-
         // Re-run through formatter to tidy up (e.g. remove time component)
-        $this->value = $this->tidyISO8601($value);
+        $this->value = $this->tidyInternal($value);
         return $this;
     }
 
     public function Value()
     {
-        return $this->iso8601ToLocalised($this->value);
+        return $this->internalToFrontend($this->value);
     }
 
     public function performReadonlyTransformation()
@@ -385,8 +404,16 @@ class DateField extends TextField
                     _t(
                         'DateField.VALIDDATEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date ({date})",
-                        ['date' => $this->iso8601ToLocalised($min)]
-                    )
+                        [
+                            'date' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $min,
+                                $this->internalToFrontend($min)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
                 );
                 return false;
             }
@@ -402,8 +429,16 @@ class DateField extends TextField
                     _t(
                         'DateField.VALIDDATEMAXDATE',
                         "Your date has to be older or matching the maximum allowed date ({date})",
-                        ['date' => $this->iso8601ToLocalised($max)]
-                    )
+                        [
+                            'date' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $max,
+                                $this->internalToFrontend($max)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
                 );
                 return false;
             }
@@ -457,7 +492,7 @@ class DateField extends TextField
      */
     public function setMinDate($minDate)
     {
-        $this->minDate = $this->tidyISO8601($minDate);
+        $this->minDate = $this->tidyInternal($minDate);
         return $this;
     }
 
@@ -475,23 +510,24 @@ class DateField extends TextField
      */
     public function setMaxDate($maxDate)
     {
-        $this->maxDate = $this->tidyISO8601($maxDate);
+        $this->maxDate = $this->tidyInternal($maxDate);
         return $this;
     }
 
     /**
-     * Convert date localised in the current locale to ISO 8601 date
+     * Convert frontend date to the internal representation (ISO 8601).
+     * The frontend date is also in ISO 8601 when $html5=true.
      *
      * @param string $date
      * @return string The formatted date, or null if not a valid date
      */
-    public function localisedToISO8601($date)
+    protected function frontendToInternal($date)
     {
         if (!$date) {
             return null;
         }
-        $fromFormatter = $this->getFormatter();
-        $toFormatter = $this->getISO8601Formatter();
+        $fromFormatter = $this->getFrontendFormatter();
+        $toFormatter = $this->getInternalFormatter();
         $timestamp = $fromFormatter->parse($date);
         if ($timestamp === false) {
             return null;
@@ -500,20 +536,21 @@ class DateField extends TextField
     }
 
     /**
-     * Convert an ISO 8601 localised date into the format specified by the
-     * current date format.
+     * Convert the internal date representation (ISO 8601) to a format used by the frontend,
+     * as defined by {@link $dateFormat}. With $html5=true, the frontend date will also be
+     * in ISO 8601.
      *
      * @param string $date
      * @return string The formatted date, or null if not a valid date
      */
-    public function iso8601ToLocalised($date)
+    protected function internalToFrontend($date)
     {
-        $date = $this->tidyISO8601($date);
+        $date = $this->tidyInternal($date);
         if (!$date) {
             return null;
         }
-        $fromFormatter = $this->getISO8601Formatter();
-        $toFormatter = $this->getFormatter();
+        $fromFormatter = $this->getInternalFormatter();
+        $toFormatter = $this->getFrontendFormatter();
         $timestamp = $fromFormatter->parse($date);
         if ($timestamp === false) {
             return null;
@@ -522,18 +559,19 @@ class DateField extends TextField
     }
 
     /**
-     * Tidy up iso8601-ish date, or approximation
+     * Tidy up the internal date representation (ISO 8601),
+     * and fall back to strtotime() if there's parsing errors.
      *
-     * @param string $date Date in iso8601 or approximate form
-     * @return string iso8601 date, or null if not valid
+     * @param string $date Date in ISO 8601 or approximate form
+     * @return string ISO 8601 date, or null if not valid
      */
-    public function tidyISO8601($date)
+    protected function tidyInternal($date)
     {
         if (!$date) {
             return null;
         }
         // Re-run through formatter to tidy up (e.g. remove time component)
-        $formatter = $this->getISO8601Formatter();
+        $formatter = $this->getInternalFormatter();
         $timestamp = $formatter->parse($date);
         if ($timestamp === false) {
             // Fallback to strtotime

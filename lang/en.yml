@@ -57,6 +57,10 @@ en:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+      VALIDDATETIMEFORMAT: 'Please enter a valid date and time format ({format})'
+      VALIDDATEMAXDATETIME: 'Your date has to be older or matching the maximum allowed date and time ({datetime})'
+      VALIDDATEMINDATETIME: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:

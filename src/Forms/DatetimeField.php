@@ -5,156 +5,314 @@ namespace SilverStripe\Forms;
 use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationResult;
 
 /**
- * A composite field for date and time entry,
- * based on {@link DateField} and {@link TimeField}.
- * Usually saves into a single {@link DBDateTime} database column.
- * If you want to save into {@link Date} or {@link Time} columns,
- * please instanciate the fields separately.
- *
- * This field does not implement the <input type="datetime-local"> HTML5 field,
- * but can use date and time HTML5 inputs separately (through {@link DateField->setHTML5()}
- * and {@link TimeField->setHTML5()}.
- *
- * # Configuration
- *
- * Individual options are configured either on the DatetimeField, or on individual
- * sub-fields accessed via getDateField() or getTimeField()
- *
- * Example:
- * <code>
- * $field = new DatetimeField('Name', 'Label');
- * $field->getDateField()->setTitle('Select Date');
- * </code>
- *
- * - setLocale(): Sets a custom locale for date / time formatting.
- * - setTimezone(): Set a different timezone for viewing. {@link dataValue()} will still save
- * the time in PHP's default timezone (date_default_timezone_get()), its only a view setting.
- * Note that the sub-fields ({@link getDateField()} and {@link getTimeField()})
- * are not timezone aware, and will have their values set in local time, rather than server time.
- * - setDateTimeOrder(): An sprintf() template to determine in which order the date and time values will
- * be combined. This is necessary as those separate formats are set in their invididual fields.
+ * Form field used for editing date time strings.
+ * In the default HTML5 mode, the field expects form submissions
+ * in normalised ISO 8601 format, for example 2017-04-26T23:59:59 (with a "T" separator).
+ * Data is passed on via {@link dataValue()} with whitespace separators.
+ * The {@link $value} property is always in ISO 8601 format, in the server timezone.
  */
-class DatetimeField extends FormField
+class DatetimeField extends TextField
 {
 
     /**
-     * @var DateField
+     * @var bool
      */
-    protected $dateField = null;
+    protected $html5 = true;
 
     /**
-     * @var TimeField
-     */
-    protected $timeField = null;
-
-    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
-
-    /**
-     * Date time order
+     * Override locale. If empty will default to current locale
      *
      * @var string
      */
-    protected $dateTimeOrder = '{date} {time}';
+    protected $locale = null;
 
-    public function __construct($name, $title = null, $value = "")
+    /**
+     * Min date time
+     *
+     * @var string ISO 8601 date time in server timezone
+     */
+    protected $minDatetime = null;
+
+    /**
+     * Max date time
+     *
+     * @var string ISO 860 date time in server timezone
+     */
+    protected $maxDatetime = null;
+
+    /**
+     * Override date format. If empty will default to that used by the current locale.
+     *
+     * @var null
+     */
+    protected $datetimeFormat = null;
+
+    /**
+     * Length of this date (full, short, etc).
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @var int
+     */
+    protected $dateLength = null;
+
+    /**
+     * Length of this time (full, short, etc).
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @var int
+     */
+    protected $timeLength = null;
+
+    /**
+     * Unparsed value, used exclusively for comparing with internal value
+     * to detect invalid values.
+     *
+     * @var mixed
+     */
+    protected $rawValue = null;
+
+    /**
+     * @inheritDoc
+     */
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
+
+    /**
+     * Custom timezone
+     *
+     * @var string
+     */
+    protected $timezone = null;
+
+    public function getAttributes()
     {
-        $this->timeField = TimeField::create($name . '[time]', false);
-        $this->dateField = DateField::create($name . '[date]', false);
-        parent::__construct($name, $title, $value);
+        $attributes = parent::getAttributes();
+
+        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'datetime-local';
+            $attributes['min'] = $this->internalToFrontend($this->getMinDatetime());
+            $attributes['max'] = $this->internalToFrontend($this->getMaxDatetime());
+        }
+
+        return $attributes;
     }
 
-    public function setForm($form)
+    /**
+     * @inheritDoc
+     */
+    public function getSchemaDataDefaults()
     {
-        parent::setForm($form);
-        $this->dateField->setForm($form);
-        $this->timeField->setForm($form);
-        return $this;
+        $defaults = parent::getSchemaDataDefaults();
+        return array_merge($defaults, [
+            'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'data' => array_merge($defaults['data'], [
+                'html5' => $this->getHTML5(),
+                'min' => $this->internalToFrontend($this->getMinDatetime()),
+                'max' => $this->internalToFrontend($this->getMaxDatetime())
+            ])
+        ]);
     }
 
-    public function setName($name)
+    /**
+     * @inheritDoc
+     */
+    public function Type()
     {
-        parent::setName($name);
-        $this->dateField->setName($name . '[date]');
-        $this->timeField->setName($name . '[time]');
+        return 'text datetime';
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHTML5()
+    {
+        return $this->html5;
+    }
+
+    /**
+     * @param $bool
+     * @return $this
+     */
+    public function setHTML5($bool)
+    {
+        $this->html5 = $bool;
         return $this;
     }
 
     /**
-     * Sets value from a submitted form array
+     * Assign value posted from form submission, based on {@link $datetimeFormat}.
+     * When $html5=true, this needs to be normalised ISO format (with "T" separator).
      *
-     * @param array $value Expected submission value is either an empty value,
-     * or an array with the necessary components keyed against 'date' and 'time', each value
-     * localised according to each's localisation setting.
+     * @param mixed $value
      * @param mixed $data
      * @return $this
      */
     public function setSubmittedValue($value, $data = null)
     {
-        // Empty value
-        if (empty($value)) {
+        // Save raw value for later validation
+        $this->rawValue = $value;
+
+        // Null case
+        if (!$value) {
             $this->value = null;
-            $this->dateField->setValue(null);
-            $this->timeField->setValue(null);
             return $this;
         }
 
-        // Validate value is submitted in array format
-        if (!is_array($value)) {
-            throw new InvalidArgumentException("Value is not submitted array");
-        }
+        // Parse from submitted value
+        $this->value = $this->frontendToInternal($value);
 
-        // Save each field, and convert from array to iso8601 string
-        $this->dateField->setSubmittedValue($value['date'], $value);
-        $this->timeField->setSubmittedValue($value['time'], $value);
-
-        // Combine date components back into iso8601 string for the root value
-        $this->value = $this->dataValue();
         return $this;
     }
 
     /**
-     * Get formatter for converting to the target timezone, if timezone is set
-     * Can return null if no timezone set
+     * Convert frontend date to the internal representation (ISO 8601).
+     * The frontend date is also in ISO 8601 when $html5=true.
+     * Assumes the value is in the defined {@link $timezone} (if one is set),
+     * and adjusts for server timezone.
      *
-     * @return IntlDateFormatter|null
+     * @param string $datetime
+     * @return string The formatted date, or null if not a valid date
      */
-    protected function getTimezoneFormatter()
+    public function frontendToInternal($datetime)
     {
-        $timezone = $this->getTimezone();
-        if (!$timezone) {
+        if (!$datetime) {
             return null;
         }
+        $fromFormatter = $this->getFrontendFormatter();
+        $toFormatter = $this->getInternalFormatter();
 
-        // Build new formatter with the altered timezone
-        $formatter = clone $this->getISO8601Formatter();
-        $formatter->setTimeZone($timezone);
+        // Try to parse time with seconds
+        $timestamp = $fromFormatter->parse($datetime);
+
+        // Try to parse time without seconds, since that's a valid HTML5 submission format
+        // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
+        if ($timestamp === false && $this->getHTML5()) {
+            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern()));
+            $timestamp = $fromFormatter->parse($datetime);
+        }
+
+        if ($timestamp === false) {
+            return null;
+        }
+        return $toFormatter->format($timestamp) ?: null;
+    }
+
+    /**
+     * Get date formatter with the standard locale / date format
+     *
+     * @throws \LogicException
+     * @return IntlDateFormatter
+     */
+    protected function getFrontendFormatter()
+    {
+        if ($this->getHTML5() && $this->datetimeFormat && $this->datetimeFormat !== DBDatetime::ISO_DATETIME_NORMALISED) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDatetimeFormat()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->dateLength) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateLength()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->locale) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
+            );
+        }
+
+        $formatter = IntlDateFormatter::create(
+            $this->getLocale(),
+            $this->getDateLength(),
+            $this->getTimeLength(),
+            $this->getTimezone()
+        );
+
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 dates, localisation is handled on the client.
+            // Add 'T' date and time separator to create W3C compliant format
+            $formatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
+        } elseif ($this->datetimeFormat) {
+            // Don't invoke getDatetimeFormat() directly to avoid infinite loop
+            $ok = $formatter->setPattern($this->datetimeFormat);
+            if (!$ok) {
+                throw new InvalidArgumentException("Invalid date format {$this->datetimeFormat}");
+            }
+        }
         return $formatter;
+    }
+
+    /**
+     * Get date format in CLDR standard format
+     *
+     * This can be set explicitly. If not, this will be generated from the current locale
+     * with the current date length.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     */
+    public function getDatetimeFormat()
+    {
+        if ($this->datetimeFormat) {
+            return $this->datetimeFormat;
+        }
+
+        // Get from locale
+        return $this->getFrontendFormatter()->getPattern();
+    }
+
+    /**
+     * Set date format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @param string $format
+     * @return $this
+     */
+    public function setDatetimeFormat($format)
+    {
+        $this->datetimeFormat = $format;
+        return $this;
     }
 
     /**
      * Get a date formatter for the ISO 8601 format
      *
+     * @param String $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
-    protected function getISO8601Formatter()
+    protected function getInternalFormatter($timezone = null)
     {
+        if (!$timezone) {
+            $timezone = date_default_timezone_get(); // Default to server timezone
+        }
+
         $formatter = IntlDateFormatter::create(
             i18n::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::MEDIUM,
-            date_default_timezone_get() // Default to server timezone
+            $timezone
         );
         $formatter->setLenient(false);
-        // CLDR iso8601 date.
-        // Note we omit timezone from this format, and we assume server TZ always.
-        $formatter->setPattern('y-MM-dd HH:mm:ss');
+
+        // Note we omit timezone from this format, and we always assume server TZ
+        $formatter->setPattern(DBDatetime::ISO_DATETIME);
+
         return $formatter;
     }
 
     /**
-     * Assign value from iso8601 string
+     * Assign value based on {@link $datetimeFormat}, which might be localised.
+     * The value needs to be in the server timezone.
+     *
+     * When $html5=true, assign value from ISO 8601 normalised string (with a "T" separator).
+     * Falls back to an ISO 8601 string (with a whitespace separator).
      *
      * @param mixed $value
      * @param mixed $data
@@ -162,168 +320,179 @@ class DatetimeField extends FormField
      */
     public function setValue($value, $data = null)
     {
+        // Save raw value for later validation
+        $this->rawValue = $value;
+
         // Empty value
         if (empty($value)) {
             $this->value = null;
-            $this->dateField->setValue(null);
-            $this->timeField->setValue(null);
             return $this;
         }
-        if (is_array($value)) {
-            throw new InvalidArgumentException("Use setSubmittedValue to assign by array");
-        };
 
         // Validate iso 8601 date
         // If invalid, assign for later validation failure
-        $isoFormatter = $this->getISO8601Formatter();
-        $timestamp = $isoFormatter->parse($value);
+        $internalFormatter = $this->getInternalFormatter();
+        $timestamp = $internalFormatter->parse($value);
+
+        // Retry without "T" separator
+        if (!$timestamp) {
+            $fallbackFormatter = $this->getInternalFormatter();
+            $fallbackFormatter->setPattern(DBDatetime::ISO_DATETIME);
+            $timestamp = $fallbackFormatter->parse($value);
+        }
+
         if ($timestamp === false) {
-            $this->dateField->setSubmittedValue($value);
-            $this->timeField->setValue(null);
             return $this;
         }
 
         // Cleanup date
-        $value = $isoFormatter->format($timestamp);
+        $value = $internalFormatter->format($timestamp);
 
         // Save value
         $this->value = $value;
 
-        // Shift iso date into timezone before assignment to subfields
-        $timezoneFormatter = $this->getTimezoneFormatter();
-        if ($timezoneFormatter) {
-            $value = $timezoneFormatter->format($timestamp);
-        }
-
-        // Set date / time components, which are unaware of their timezone
-        list($date, $time) = explode(' ', $value);
-        $this->dateField->setValue($date, $data);
-        $this->timeField->setValue($time, $data);
         return $this;
     }
 
     /**
-     * localised time value
+     * Returns the frontend representation of the field value,
+     * according to the defined {@link dateFormat}.
+     * With $html5=true, this will be in ISO 8601 format.
      *
      * @return string
      */
     public function Value()
     {
-        $date = $this->dateField->Value();
-        $time = $this->timeField->Value();
-        return $this->joinDateTime($date, $time);
+        return $this->internalToFrontend($this->value);
     }
 
     /**
-     * @param string $date
-     * @param string $time
-     * @return string
-     */
-    protected function joinDateTime($date, $time)
-    {
-        $format = $this->getDateTimeOrder();
-        return strtr($format, [
-            '{date}' => $date,
-            '{time}' => $time
-        ]);
-    }
-
-    /**
-     * Get ISO8601 formatted string in the local server timezone
+     * Convert the internal date representation (ISO 8601) to a format used by the frontend,
+     * as defined by {@link $dateFormat}. With $html5=true, the frontend date will also be
+     * in ISO 8601.
      *
-     * @return string|null
+     * @param string $datetime
+     * @return string The formatted date and time, or null if not a valid date and time
      */
-    public function dataValue()
+    public function internalToFrontend($datetime)
     {
-        // No date means no value (even if time is specified)
-        $dateDataValue = $this->getDateField()->dataValue();
-        if (empty($dateDataValue)) {
+        $datetime = $this->tidyInternal($datetime);
+        if (!$datetime) {
+            return null;
+        }
+        $fromFormatter = $this->getInternalFormatter();
+        $toFormatter = $this->getFrontendFormatter();
+        $timestamp = $fromFormatter->parse($datetime);
+        if ($timestamp === false) {
             return null;
         }
 
-        // Build iso8601 timestamp from combined date and time
-        $timeDataValue = $this->getTimeField()->dataValue() ?: '00:00:00';
-        $value = $dateDataValue . ' ' . $timeDataValue;
+        return $toFormatter->format($timestamp) ?: null;
+    }
 
-        // If necessary, convert timezone
-        $timezoneFormatter = $this->getTimezoneFormatter();
-        if ($timezoneFormatter) {
-            $timestamp = $timezoneFormatter->parse($value);
-            $isoFormatter = $this->getISO8601Formatter();
-            $value = $isoFormatter->format($timestamp);
+    /**
+     * Tidy up the internal date representation (ISO 8601),
+     * and fall back to strtotime() if there's parsing errors.
+     *
+     * @param string $date Date in ISO 8601 or approximate form
+     * @return string ISO 8601 date, or null if not valid
+     */
+    public function tidyInternal($datetime)
+    {
+        if (!$datetime) {
+            return null;
         }
+        // Re-run through formatter to tidy up (e.g. remove time component)
+        $formatter = $this->getInternalFormatter();
+        $timestamp = $formatter->parse($datetime);
+        if ($timestamp === false) {
+            // Fallback to strtotime
+            $timestamp = strtotime($datetime, DBDatetime::now()->getTimestamp());
+            if ($timestamp === false) {
+                return null;
+            }
+        }
+        return $formatter->format($timestamp);
+    }
 
-        return $value;
+    /**
+     * Get length of the date format to use. One of:
+     *
+     *  - IntlDateFormatter::SHORT
+     *  - IntlDateFormatter::MEDIUM
+     *  - IntlDateFormatter::LONG
+     *  - IntlDateFormatter::FULL
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @return int
+     */
+    public function getDateLength()
+    {
+        if ($this->dateLength) {
+            return $this->dateLength;
+        }
+        return IntlDateFormatter::MEDIUM;
+    }
+
+    /**
+     * Get length of the date format to use.
+     * Only applicable with {@link setHTML5(false)}.
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     *
+     * @param int $length
+     * @return $this
+     */
+    public function setDateLength($length)
+    {
+        $this->dateLength = $length;
+        return $this;
+    }
+
+    /**
+     * Get length of the date format to use. One of:
+     *
+     *  - IntlDateFormatter::SHORT
+     *  - IntlDateFormatter::MEDIUM
+     *  - IntlDateFormatter::LONG
+     *  - IntlDateFormatter::FULL
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @return int
+     */
+    public function getTimeLength()
+    {
+        if ($this->timeLength) {
+            return $this->timeLength;
+        }
+        return IntlDateFormatter::MEDIUM;
+    }
+
+    /**
+     * Get length of the date format to use.
+     * Only applicable with {@link setHTML5(false)}.
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     *
+     * @param int $length
+     * @return $this
+     */
+    public function setTimeLength($length)
+    {
+        $this->timeLength = $length;
+        return $this;
     }
 
     public function setDisabled($bool)
     {
         parent::setDisabled($bool);
-        $this->dateField->setDisabled($bool);
-        $this->timeField->setDisabled($bool);
         return $this;
     }
 
     public function setReadonly($bool)
     {
         parent::setReadonly($bool);
-        $this->dateField->setReadonly($bool);
-        $this->timeField->setReadonly($bool);
         return $this;
-    }
-
-    /**
-     * @return DateField
-     */
-    public function getDateField()
-    {
-        return $this->dateField;
-    }
-
-    /**
-     * @param FormField $field
-     */
-    public function setDateField($field)
-    {
-        $expected = $this->getName() . '[date]';
-        if ($field->getName() != $expected) {
-            throw new InvalidArgumentException(sprintf(
-                'Wrong name format for date field: "%s" (expected "%s")',
-                $field->getName(),
-                $expected
-            ));
-        }
-
-        $field->setForm($this->getForm());
-        $field->setValue($this->dateField->dataValue());
-        $this->dateField = $field;
-    }
-
-    /**
-     * @return TimeField
-     */
-    public function getTimeField()
-    {
-        return $this->timeField;
-    }
-
-    /**
-     * @param FormField $field
-     */
-    public function setTimeField($field)
-    {
-        $expected = $this->getName() . '[time]';
-        if ($field->getName() != $expected) {
-            throw new InvalidArgumentException(sprintf(
-                'Wrong name format for time field: "%s" (expected "%s")',
-                $field->getName(),
-                $expected
-            ));
-        }
-
-        $field->setForm($this->getForm());
-        $field->setValue($this->timeField->dataValue());
-        $this->timeField = $field;
     }
 
     /**
@@ -334,8 +503,7 @@ class DatetimeField extends FormField
      */
     public function setLocale($locale)
     {
-        $this->dateField->setLocale($locale);
-        $this->timeField->setLocale($locale);
+        $this->locale = $locale;
         return $this;
     }
 
@@ -346,16 +514,120 @@ class DatetimeField extends FormField
      */
     public function getLocale()
     {
-        return $this->dateField->getLocale();
+        return $this->locale ?: i18n::get_locale();
     }
 
+    /**
+     * @return string Date in ISO 8601 format, in server timezone.
+     */
+    public function getMinDatetime()
+    {
+        return $this->minDatetime;
+    }
+
+    /**
+     * @param string $minDatetime A string in ISO 8601 format, in server timezone.
+     * @return $this
+     */
+    public function setMinDatetime($minDatetime)
+    {
+        $this->minDatetime = $this->tidyInternal($minDatetime);
+        return $this;
+    }
+
+    /**
+     * @return string Date in ISO 8601 format, in server timezone.
+     */
+    public function getMaxDatetime()
+    {
+        return $this->maxDatetime;
+    }
+
+    /**
+     * @param string $maxDatetime A string in ISO 8601 format, in server timezone.
+     * @return $this
+     */
+    public function setMaxDatetime($maxDatetime)
+    {
+        $this->maxDatetime = $this->tidyInternal($maxDatetime);
+        return $this;
+    }
+
+    /**
+     * @param Validator $validator
+     * @return bool
+     */
     public function validate($validator)
     {
-        $dateValid = $this->dateField->validate($validator);
-        $timeValid = $this->timeField->validate($validator);
+        // Don't validate empty fields
+        if (empty($this->rawValue)) {
+            return true;
+        }
 
-        // Validate if both subfields are valid
-        return $dateValid && $timeValid;
+        // We submitted a value, but it couldn't be parsed
+        if (empty($this->value)) {
+            $validator->validationError(
+                $this->name,
+                _t(
+                    'DatetimeField.VALIDDATETIMEFORMAT',
+                    "Please enter a valid date and time format ({format})",
+                    ['format' => $this->getDatetimeFormat()]
+                )
+            );
+            return false;
+        }
+
+        // Check min date (in server timezone)
+        $min = $this->getMinDatetime();
+        if ($min) {
+            $oops = strtotime($this->value) < strtotime($min);
+            if ($oops) {
+                $validator->validationError(
+                    $this->name,
+                    _t(
+                        'DatetimeField.VALIDDATETIMEMINDATE',
+                        "Your date has to be newer or matching the minimum allowed date and time ({datetime})",
+                        [
+                            'datetime' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $min,
+                                $this->internalToFrontend($min)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
+                );
+                return false;
+            }
+        }
+
+        // Check max date (in server timezone)
+        $max = $this->getMaxDatetime();
+        if ($max) {
+            $oops = strtotime($this->value) > strtotime($max);
+            if ($oops) {
+                $validator->validationError(
+                    $this->name,
+                    _t(
+                        'DatetimeField.VALIDDATEMAXDATETIME',
+                        "Your date has to be older or matching the maximum allowed date and time ({datetime})",
+                        [
+                            'datetime' => sprintf(
+                                '<time datetime="%s">%s</time>',
+                                $max,
+                                $this->internalToFrontend($max)
+                            )
+                        ]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    ValidationResult::CAST_HTML
+                );
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function performReadonlyTransformation()
@@ -363,12 +635,6 @@ class DatetimeField extends FormField
         $field = clone $this;
         $field->setReadonly(true);
         return $field;
-    }
-
-    public function __clone()
-    {
-        $this->dateField = clone $this->dateField;
-        $this->timeField = clone $this->timeField;
     }
 
     /**
@@ -380,13 +646,6 @@ class DatetimeField extends FormField
     }
 
     /**
-     * Custom timezone
-     *
-     * @var string
-     */
-    protected $timezone = null;
-
-    /**
      * @param string $timezone
      * @return $this
      */
@@ -395,29 +654,9 @@ class DatetimeField extends FormField
         if ($this->value && $timezone !== $this->timezone) {
             throw new \BadMethodCallException("Can't change timezone after setting a value");
         }
-        // Note: DateField has no timezone option, and TimeField::setTimezone
-        // should be ignored
+
         $this->timezone = $timezone;
-        return $this;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDateTimeOrder()
-    {
-        return $this->dateTimeOrder;
-    }
-
-    /**
-     * Set date time order format string. Use {date} and {time} as placeholders.
-     *
-     * @param string $dateTimeOrder
-     * @return $this
-     */
-    public function setDateTimeOrder($dateTimeOrder)
-    {
-        $this->dateTimeOrder = $dateTimeOrder;
         return $this;
     }
 }
