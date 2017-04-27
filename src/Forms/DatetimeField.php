@@ -12,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  * In the default HTML5 mode, the field expects form submissions
  * in normalised ISO 8601 format, for example 2017-04-26T23:59:59 (with a "T" separator).
  * Data is passed on via {@link dataValue()} with whitespace separators.
+ * The {@link $value} property is always in ISO 8601 format, in the server timezone.
  */
 class DatetimeField extends TextField
 {
@@ -31,14 +32,14 @@ class DatetimeField extends TextField
     /**
      * Min date time
      *
-     * @var string ISO 8601 date time for min date time
+     * @var string ISO 8601 date time in server timezone
      */
     protected $minDatetime = null;
 
     /**
      * Max date time
      *
-     * @var string ISO 860 date time for max date time
+     * @var string ISO 860 date time in server timezone
      */
     protected $maxDatetime = null;
 
@@ -100,8 +101,8 @@ class DatetimeField extends TextField
 
         if ($this->getHTML5()) {
             $attributes['type'] = 'datetime-local';
-            $attributes['min'] = $this->getMinDatetime();
-            $attributes['max'] = $this->getMaxDatetime();
+            $attributes['min'] = $this->internalToFrontend($this->getMinDatetime());
+            $attributes['max'] = $this->internalToFrontend($this->getMaxDatetime());
         }
 
         return $attributes;
@@ -117,8 +118,8 @@ class DatetimeField extends TextField
             'lang' => i18n::convert_rfc1766($this->getLocale()),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
-                'min' => $this->getMinDate(),
-                'max' => $this->getMaxDate()
+                'min' => $this->internalToFrontend($this->getMinDatetime()),
+                'max' => $this->internalToFrontend($this->getMaxDatetime())
             ])
         ]);
     }
@@ -177,6 +178,8 @@ class DatetimeField extends TextField
     /**
      * Convert frontend date to the internal representation (ISO 8601).
      * The frontend date is also in ISO 8601 when $html5=true.
+     * Assumes the value is in the defined {@link $timezone} (if one is set),
+     * and adjusts for server timezone.
      *
      * @param string $datetime
      * @return string The formatted date, or null if not a valid date
@@ -285,58 +288,34 @@ class DatetimeField extends TextField
     }
 
     /**
-     * Get formatter for converting to the target timezone, if timezone is set
-     * Can return null if no timezone set
-     *
-     * @return IntlDateFormatter|null
-     */
-    protected function getTimezoneFormatter()
-    {
-        $timezone = $this->getTimezone();
-        if (!$timezone) {
-            return null;
-        }
-
-        // Build new formatter with the altered timezone
-        $formatter = clone $this->getInternalFormatter();
-        $formatter->setTimeZone($timezone);
-
-        // ISO8601 date with a standard "T" separator (W3C standard).
-        // Note we omit timezone from this format, and we assume server TZ always.
-        $formatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
-
-        return $formatter;
-    }
-
-    /**
      * Get a date formatter for the ISO 8601 format
      *
+     * @param String $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter()
+    protected function getInternalFormatter($timezone = null)
     {
+        if (!$timezone) {
+            $timezone = date_default_timezone_get(); // Default to server timezone
+        }
+
         $formatter = IntlDateFormatter::create(
             i18n::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::MEDIUM,
-            date_default_timezone_get() // Default to server timezone
+            $timezone
         );
         $formatter->setLenient(false);
 
         // Note we omit timezone from this format, and we always assume server TZ
-        if ($this->getHTML5()) {
-            // ISO8601 date with a standard "T" separator (W3C standard).
-            $formatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
-        } else {
-            // ISO8601 date with a whitespace separator
-            $formatter->setPattern(DBDatetime::ISO_DATETIME);
-        }
+        $formatter->setPattern(DBDatetime::ISO_DATETIME);
 
         return $formatter;
     }
 
     /**
      * Assign value based on {@link $datetimeFormat}, which might be localised.
+     * The value needs to be in the server timezone.
      *
      * When $html5=true, assign value from ISO 8601 normalised string (with a "T" separator).
      * Falls back to an ISO 8601 string (with a whitespace separator).
@@ -391,41 +370,6 @@ class DatetimeField extends TextField
     public function Value()
     {
         return $this->internalToFrontend($this->value);
-    }
-
-    /**
-     * Returns the field value in the internal representation (ISO 8601),
-     * suitable for insertion into the data object.
-     *
-     * @return string
-     */
-    public function dataValue()
-    {
-        return $this->internalToDataValue($this->value);
-    }
-
-    /**
-     * Convert an ISO 8601 localised datetime into a saveable representation.
-     *
-     * @param string $datetime
-     * @return string The formatted date and time, or null if not a valid date and time
-     */
-    public function internalToDataValue($datetime)
-    {
-        $fromFormatter = $this->getInternalFormatter();
-        $toFormatter = $this->getFrontendFormatter();
-
-        // Set default timezone (avoid shifting data values into user timezone)
-        $toFormatter->setTimezone(date_default_timezone_get());
-
-        // Send to data object without "T" separator
-        $toFormatter->setPattern(DBDatetime::ISO_DATETIME);
-
-        $timestamp = $fromFormatter->parse($datetime);
-        if ($timestamp === false) {
-            return null;
-        }
-        return $toFormatter->format($timestamp) ?: null;
     }
 
     /**
@@ -580,7 +524,7 @@ class DatetimeField extends TextField
     }
 
     /**
-     * @return string
+     * @return string Date in ISO 8601 format, in server timezone.
      */
     public function getMinDatetime()
     {
@@ -588,7 +532,7 @@ class DatetimeField extends TextField
     }
 
     /**
-     * @param string $minDatetime A string in ISO 8601 format
+     * @param string $minDatetime A string in ISO 8601 format, in server timezone.
      * @return $this
      */
     public function setMinDatetime($minDatetime)
@@ -598,7 +542,7 @@ class DatetimeField extends TextField
     }
 
     /**
-     * @return string
+     * @return string Date in ISO 8601 format, in server timezone.
      */
     public function getMaxDatetime()
     {
@@ -606,7 +550,7 @@ class DatetimeField extends TextField
     }
 
     /**
-     * @param string $maxDatetime
+     * @param string $maxDatetime A string in ISO 8601 format, in server timezone.
      * @return $this
      */
     public function setMaxDatetime($maxDatetime)
@@ -639,7 +583,7 @@ class DatetimeField extends TextField
             return false;
         }
 
-        // Check min date
+        // Check min date (in server timezone)
         $min = $this->getMinDatetime();
         if ($min) {
             $oops = strtotime($this->value) < strtotime($min);
@@ -656,7 +600,7 @@ class DatetimeField extends TextField
             }
         }
 
-        // Check max date
+        // Check max date (in server timezone)
         $max = $this->getMaxDatetime();
         if ($max) {
             $oops = strtotime($this->value) > strtotime($max);
@@ -700,9 +644,9 @@ class DatetimeField extends TextField
         if ($this->value && $timezone !== $this->timezone) {
             throw new \BadMethodCallException("Can't change timezone after setting a value");
         }
-        // Note: DateField has no timezone option, and TimeField::setTimezone
-        // should be ignored
+
         $this->timezone = $timezone;
+
         return $this;
     }
 }
