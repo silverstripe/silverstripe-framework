@@ -218,6 +218,9 @@ en:
         TOOSHORT: 'Password is too short, it must be %s or more characters long'
     SilverStripe\Security\Permission:
         UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+        AdminGroup: 'Administrator'
+        FULLADMINRIGHTS: 'Full administrative rights'
+        FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     SilverStripe\Security\PermissionCheckboxSetField:
         AssignedTo: 'assigned to "{title}"'
         FromGroup: 'inherited from group "{title}"'
