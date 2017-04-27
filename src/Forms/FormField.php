@@ -70,7 +70,7 @@ class FormField extends RequestHandler
     const SCHEMA_DATA_TYPE_DATE = 'Date';
 
     /** @see $schemaDataType */
-    const SCHEMA_DATA_TYPE_DATETIME = 'DateTime';
+    const SCHEMA_DATA_TYPE_DATETIME = 'Datetime';
 
     /** @see $schemaDataType */
     const SCHEMA_DATA_TYPE_TIME = 'Time';
