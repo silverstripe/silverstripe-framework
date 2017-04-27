@@ -16,6 +16,7 @@ use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\DefaultConfig;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;
@@ -376,7 +377,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             }
             self::$extensions_to_remove[$class] = array();
             foreach ($extensions as $extension) {
-                if (!class_exists($extension)) {
+                $extensionClass = Extension::get_classname_without_arguments($extension);
+                if (!class_exists($extensionClass)) {
                     $self = static::class;
                     throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
                 }
