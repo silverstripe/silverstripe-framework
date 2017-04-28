@@ -1,86 +1,126 @@
 sl:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Ime skupine'
+    MEMBERS: Člani
+    NEWGROUP: 'Nova Skupina'
+    PERMISSIONS: Dovoljenja
+    ROLES: Vloge
+    ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Naloženo na začetku'
     LASTEDIT: 'Zadnje naloženo'
     SIZE: 'Velikost datoteke'
-    TYPE: 'Tip'
+    TYPE: Tip
     URL: URL
-  BasicAuth:
-    ENTERINFO: 'Vpišite uporabniško ime in geslo.'
-    ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
-    ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
-  Boolean:
-    ANY: Katerikoli
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimenzije
+    EDIT: Uredi
+    EDITINFO: 'Uredi datoteko'
+    FIELDNOTSET: 'Pred uvozom počisti bazo podatkov'
+    REMOVE: Odstrani
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Domov
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Napačna zahteva'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
-    HELLO: Pozdravljeni,
-  ConfirmedPasswordField:
+    HELLO: 'Pozdravljeni,'
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za ponastavitev gesla'
+    TEXT3: za
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
-  Date:
-    LessThanMinuteAgo: 'manj kot minuta'
-    TIMEDIFFAGO: 'pred {difference}'
-    TIMEDIFFIN: 'v {difference}'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'ni nastavljeno'
     TODAY: danes
     VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
     VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
     VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
-  Director:
-    INVALID_REQUEST: 'Napačna zahteva'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Izberi)
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
-  Enum:
-    ANY: Katerikoli
-  ForgotPasswordEmail_ss:
-    HELLO: Pozdravljeni,
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za ponastavitev gesla'
-    TEXT3: za
-  Form:
+  SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
     VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
     VALIDATIONPASSWORDSNOTEMPTY: 'Vpišite geslo (dvakrat) v za to predvideni polji'
     VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: brez
-  GridAction:
-    DELETE_DESCRIPTION: Izbriši
-    Delete: Izbriši
-    UnlinkRelation: Odstrani povezavo
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
+    CSVEXPORT: 'Izvozi kot CSV-datoteko'
     Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
     NewRecord: 'Novih %s'
     NoItemsFound: 'Ni rezultatov'
+    OF: od
     PRINTEDAT: 'Tiskano pri'
-    PRINTEDBY: 'Natisnil'
+    PRINTEDBY: Natisnil
     PlaceHolder: 'Poišči {type} '
     PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
+    Print: Natisni
     RelationSearch: 'Povezano iskanje'
     ResetFilter: Ponastavi
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Izbriši
+    Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-  GridFieldDetailForm:
+    UnlinkRelation: 'Odstrani povezavo'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Deleted: 'Izbrisanih %s %s'
     Save: Shrani
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Uredi
-  Group:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Stran
+    View: Poglej
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Prilagojeno
+    DATEFORMATBAD: 'Zapis datuma je napačen'
+    DAYNOLEADING: 'Dan v mesecu brez zapisa sprednje ničle'
+    DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
+    FOURDIGITYEAR: 'Štirimesten zapis letnice'
+    MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
+    MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
+    Preview: Predogled
+    TWODIGITDAY: 'Dvomestno število za mesec'
+    TWODIGITYEAR: 'Dvomestno število za letnico'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Znesek
+    FIELDLABELCURRENCY: Valuta
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Prazno polje'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Vpišite veljavno telefonsko številko'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Katerikoli
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'manj kot minuta'
+    TIMEDIFFAGO: 'pred {difference}'
+    TIMEDIFFIN: 'v {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Katerikoli
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vpišite uporabniško ime in geslo.'
+    ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
+    ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
+  SilverStripe\Security\Group:
     AddRole: 'Skupinam pripiši vloge'
     Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
@@ -94,14 +134,14 @@ sl:
     Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
-  LoginAttempt:
-    Email: 'E-naslov'
-    IP: 'IP-naslov'
+  SilverStripe\Security\LoginAttempt:
+    Email: E-naslov
+    IP: IP-naslov
     Status: Stanje
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
@@ -113,8 +153,8 @@ sl:
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
-    FIRSTNAME: 'Ime'
-    INTERFACELANG: 'Jezik'
+    FIRSTNAME: Ime
+    INTERFACELANG: Jezik
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     NoPassword: 'Za tega člana ni gesla'
@@ -129,73 +169,28 @@ sl:
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Uporabniški račun'
-  MemberDatetimeOptionsetField:
-    Custom: Prilagojeno
-    DATEFORMATBAD: 'Zapis datuma je napačen'
-    DAYNOLEADING: 'Dan v mesecu brez zapisa sprednje ničle'
-    DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
-    FOURDIGITYEAR: 'Štirimesten zapis letnice'
-    MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
-    MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
-    Preview: Predogled
-    TWODIGITDAY: 'Dvomestno število za mesec'
-    TWODIGITYEAR: 'Dvomestno število za letnico'
-  MoneyField:
-    FIELDLABELAMOUNT: Znesek
-    FIELDLABELCURRENCY: Valuta
-  NullableField:
-    IsNullLabel: 'Prazno polje'
-  NumericField:
-    VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
-  Pagination:
-    Page: Stran
-    View: Poglej
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromGroup: 'Privzeto iz skupine "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     Title: Naslov
-  PhoneNumberField:
-    VALIDATION: 'Vpišite veljavno telefonsko številko'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
     BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'
     CHANGEPASSWORDBELOW: 'Spodaj lahko spremenite svoje geslo.'
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
     PASSWORDSENTHEADER: 'Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}''.'
     PASSWORDSENTTEXT: 'Hvala! Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}'', ki je naveden kot e-naslov vašega računa. '
-  SecurityAdmin:
-    GROUPNAME: 'Ime skupine'
-    MEMBERS: Člani
-    NEWGROUP: 'Nova Skupina'
-    PERMISSIONS: Dovoljenja
-    ROLES: Vloge
-    ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
-  SiteTree:
-    TABMAIN: Domov
-  TableListField:
-    CSVEXPORT: 'Izvozi kot CSV-datoteko'
-    Print: Natisni
-  TableListField_PageControls_ss:
-    OF: od
-  TimeField:
-    VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
-  UploadField:
-    Dimensions: Dimenzije
-    EDIT: Uredi
-    EDITINFO: 'Uredi datoteko'
-    FIELDNOTSET: 'Pred uvozom počisti bazo podatkov'
-    REMOVE: Odstrani

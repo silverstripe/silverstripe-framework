@@ -1,50 +1,64 @@
 is:
-  BasicAuth:
-    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
-    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
-    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
-  Boolean:
-    ANY: Einhver
-  ChangePasswordEmail_ss:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Nafn hóps'
+    MEMBERS: Félagar
+    PERMISSIONS: Leyfi
+    ROLES: Hlutverk
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Aðal
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
-    HELLO: Hæ
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Breyta lykliorði'
-  CurrencyField:
-    CURRENCYSYMBOL: kr
-  DateField:
-    NOTSET: 'ekki valið'
-    TODAY: í dag
-  DropdownField:
-    CHOOSE: (Veldu)
-  Enum:
-    ANY: Einhver
-  ForgotPasswordEmail_ss:
     HELLO: Hæ
     TEXT1: 'Hérna er þitt'
     TEXT2: 'endursetja lykilorð'
     TEXT3: fyrir
-  Form:
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Breyta lykliorði'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: kr
+  SilverStripe\Forms\DateField:
+    NOTSET: 'ekki valið'
+    TODAY: 'í dag'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Veldu)
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
     VALIDATOR: Staðfesta
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: ekkert
-  Group:
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Flytja út í CSV'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Reikningur
+    FIELDLABELCURRENCY: Gjaldmiðill
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Er Null'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Einhver
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Einhver
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
+    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
+    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
+  SilverStripe\Security\Group:
     Code: 'Hóp kóði'
     Description: Lýsing
     Locked: 'Læst?'
     Parent: 'Yfir hópur'
-    Sort: 'Röðun'
+    Sort: Röðun
     has_many_Permissions: Leyfi
     many_many_Members: Félagar
-  LoginAttempt:
-    Email: 'Tölvupóstfang'
+  SilverStripe\Security\LoginAttempt:
+    Email: Tölvupóstfang
     IP: 'IP tala'
     Status: Staða
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
-    BUTTONLOGIN: 'Innskrá'
+    BUTTONLOGIN: Innskrá
     BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
     BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
     CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
@@ -54,7 +68,7 @@ is:
     ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
     ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
     ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
-    FIRSTNAME: 'Fornafn'
+    FIRSTNAME: Fornafn
     INTERFACELANG: 'Tungumál viðmóts'
     NEWPASSWORD: 'Nýtt lykilorð'
     PASSWORD: Lykilorð
@@ -66,33 +80,17 @@ is:
     db_LockedOutUntil: 'Læst úti þar til'
     db_Password: Lykilorð
     db_PasswordExpiry: 'Lykilorð rennur út'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Tölvupóstur &amp; Lykilorð'
-  MoneyField:
-    FIELDLABELAMOUNT: Reikningur
-    FIELDLABELCURRENCY: Gjaldmiðill
-  NullableField:
-    IsNullLabel: 'Er Null'
-  Permission:
+  SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
-  PhoneNumberField:
-    VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
     BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
     CHANGEPASSWORDBELOW: 'Þú getur breytt lykilorðinu þínu fyrir neðan.'
     CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
     ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
     ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
-    LOGIN: 'Innskrá'
+    LOGIN: Innskrá
     NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
     NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'
-  SecurityAdmin:
-    GROUPNAME: 'Nafn hóps'
-    MEMBERS: Félagar
-    PERMISSIONS: Leyfi
-    ROLES: Hlutverk
-  SiteTree:
-    TABMAIN: Aðal
-  TableListField:
-    CSVEXPORT: 'Flytja út í CSV'

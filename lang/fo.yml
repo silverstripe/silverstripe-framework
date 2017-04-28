@@ -1,52 +1,61 @@
 fo:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: Bólkaheiti
+    MEMBERS: Limir
+    NEWGROUP: 'Nýggjur bólkur'
+    PERMISSIONS: Rættindi
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     LASTEDIT: 'Seinast broyting'
-    SIZE: 'Stødd'
-    TYPE: 'Slag'
-  BasicAuth:
+    SIZE: Stødd
+    TYPE: Slag
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Alment
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
+    HELLO: Hey
+    TEXT1: 'Her er títt'
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Broyt loyniorð'
+  SilverStripe\Forms\DateField:
+    NOTSET: 'ikki ásett'
+    TODAY: 'í dag'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Áset)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
+  SilverStripe\Forms\FormField:
+    NONE: einki
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Útles til CSV'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
     ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
     ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
-    HELLO: Hey
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Broyt loyniorð'
-  DateField:
-    NOTSET: 'ikki ásett'
-    TODAY: í dag
-  DropdownField:
-    CHOOSE: (Áset)
-  ForgotPasswordEmail_ss:
-    HELLO: Hey
-    TEXT1: 'Her er títt'
-  Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
-  FormField:
-    NONE: einki
-  Group:
+  SilverStripe\Security\Group:
     Code: 'Bólka kota'
     Description: Frágreiðing
     Locked: 'Læst?'
-    Parent: 'Yvirbólkur'
+    Parent: Yvirbólkur
     Sort: 'Raða eftir'
     has_many_Permissions: Loyvir
     many_many_Members: Limir
-  LoginAttempt:
-    Email: 'Teldupostur'
+  SilverStripe\Security\LoginAttempt:
+    Email: Teldupostur
     IP: 'IP adressa'
     Status: Støða
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
-    BUTTONLOGIN: 'Innrita'
+    BUTTONLOGIN: Innrita
     BUTTONLOGINOTHER: 'Innrita sum onkur annar'
     BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
     CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
     CONFIRMPASSWORD: 'Váttað loyniorð'
     EMAIL: Teldupostur
     ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
-    FIRSTNAME: 'Fornavn'
+    FIRSTNAME: Fornavn
     INTERFACELANG: 'Mál á markamóti'
     NEWPASSWORD: 'Nýtt loyniorð'
     PASSWORD: Loyniorð
@@ -58,23 +67,12 @@ fo:
     db_LockedOutUntil: 'Útihýstur inn til'
     db_Password: Loyniorð
     db_PasswordExpiry: 'Loyniorð gongur út'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Teldupostadressa &amp; Loyniorð'
-  PhoneNumberField:
-    VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
-  Security:
+  SilverStripe\Security\Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
     CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
     ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
     ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
-    LOGIN: 'Innrita'
-  SecurityAdmin:
-    GROUPNAME: 'Bólkaheiti'
-    MEMBERS: Limir
-    NEWGROUP: 'Nýggjur bólkur'
-    PERMISSIONS: Rættindi
-  SiteTree:
-    TABMAIN: Alment
-  TableListField:
-    CSVEXPORT: 'Útles til CSV'
+    LOGIN: Innrita

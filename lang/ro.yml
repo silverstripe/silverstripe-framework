@@ -1,48 +1,53 @@
 ro:
-  BasicAuth:
-    ENTERINFO: 'Vă rugăm introduceţi un utilizator și o parolă.'
-    ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
-    ERRORNOTREC: 'Numele utilizator sau parola este nerecunoscută'
-  ChangePasswordEmail_ss:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Numele grupului'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDITINFO: 'Editeaza acest fisier'
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Pincipal
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     HELLO: Salut
-  ConfirmedPasswordField:
+    TEXT2: 'link de resetare a parolei'
+    TEXT3: pentru
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parola trebuie să conțină cel puțin {min} caractere.'
     BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
     MAXIMUM: 'Parola trebuie să conțină cel mult {max} caractere.'
     SHOWONCLICKTITLE: 'Schimbare Parola'
-  DateField:
+  SilverStripe\Forms\DateField:
     TODAY: astăzi
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Alege)
-  Enum:
-    ANY: Oricare
-  ForgotPasswordEmail_ss:
-    HELLO: Salut
-    TEXT2: 'link de resetare a parolei'
-    TEXT3: pentru
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportati ca CSV'
     Filter: Filtru
     Find: Gaseste
     PRINTEDAT: 'Imprimat la'
     PRINTEDBY: 'Imprimat de'
     ResetFilter: Reseteaza
-  Group:
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Oricare
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vă rugăm introduceţi un utilizator și o parolă.'
+    ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
+    ERRORNOTREC: 'Numele utilizator sau parola este nerecunoscută'
+  SilverStripe\Security\Group:
     Code: 'Cod Grup'
     Locked: 'Blocat?'
     Parent: 'Grup de Baza'
     has_many_Permissions: Permisiuni
     many_many_Members: Membri
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
-  Member:
-    BUTTONLOGIN: 'Autentificare'
+  SilverStripe\Security\Member:
+    BUTTONLOGIN: Autentificare
     BUTTONLOSTPASSWORD: 'Am uitat parola'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
     DefaultAdminFirstname: 'Administrator implicit'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
-    FIRSTNAME: 'Prenume'
+    FIRSTNAME: Prenume
     INTERFACELANG: 'Limba interfetei'
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
@@ -54,15 +59,7 @@ ro:
     db_LockedOutUntil: 'Blocat pana la'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-mail si Parolă'
-  Security:
+  SilverStripe\Security\Security:
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'
-  SecurityAdmin:
-    GROUPNAME: 'Numele grupului'
-  SiteTree:
-    TABMAIN: Pincipal
-  TableListField:
-    CSVEXPORT: 'Exportati ca CSV'
-  UploadField:
-    EDITINFO: 'Editeaza acest fisier'

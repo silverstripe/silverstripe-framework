@@ -1,27 +1,31 @@
 ms:
-  BasicAuth:
-    ENTERINFO: 'Maukkan ID pengguna dan katalaluan'
-    ERRORNOTADMIN: 'Pengguna ini bukan pentadbir.'
-    ERRORNOTREC: 'ID pengguna dan katalaluan tidak dikenali'
-  ChangePasswordEmail_ss:
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Utama
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Anda telah mengubah kata lalaun untuk'
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Tukar Kata Aluan'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Pilih)
-  Form:
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Kata-kata laluan tidak sepadan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Kata laluan tidak boleh dibiarkan kosong'
     VALIDATOR: Pengesah
-  Group:
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Sila isikan nombor telefon yang sah'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Maukkan ID pengguna dan katalaluan'
+    ERRORNOTADMIN: 'Pengguna ini bukan pentadbir.'
+    ERRORNOTREC: 'ID pengguna dan katalaluan tidak dikenali'
+  SilverStripe\Security\Group:
     Code: 'Kod Kumpulan'
     Locked: 'Dikuncikan?'
     Parent: 'Kumpulan Induk'
     has_many_Permissions: Keizinan
     many_many_Members: Ahli-ahli
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Alamat Emel'
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Ubah Kata Lalaun'
     BUTTONLOGIN: 'Daftar masuk'
     BUTTONLOGINOTHER: 'Daftar masuk mengunakan id pengguna yang lain'
@@ -32,25 +36,23 @@ ms:
     ENTEREMAIL: 'Sila masukkan alamat emel untuk mendapatkan pautan menganjak kata lalaun'
     ERRORNEWPASSWORD: 'Kata Lalaun baru yang dimasukkan tidak sepadan, sila cuba semula'
     ERRORPASSWORDNOTMATCH: 'Kata lalaun semasa tidak sepadan, sila cuba semula'
-    FIRSTNAME: 'Nama'
+    FIRSTNAME: Nama
     INTERFACELANG: 'Bahasa antaramuka'
     NEWPASSWORD: 'Katalaluan Baru'
-    PASSWORD: Kata Lalaun
+    PASSWORD: 'Kata Lalaun'
     SUBJECTPASSWORDCHANGED: 'Kata lalaun anda telah ditukar'
     SUBJECTPASSWORDRESET: 'Pautan penukaran kata lalaun anda'
-    SURNAME: Nama keluarga
+    SURNAME: 'Nama keluarga'
     YOUROLDPASSWORD: 'Kata lalaun lama anda'
     belongs_many_many_Groups: Kumpulan-kumpulan
     db_LockedOutUntil: 'Dikuncikan keluar sehingga'
-    db_Password: Kata Laluan
+    db_Password: 'Kata Laluan'
     db_PasswordExpiry: 'Tempoh Tamat Kata Lalaun'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Email &amp; katalaluan'
-  Permission:
+  SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
-  PhoneNumberField:
-    VALIDATION: 'Sila isikan nombor telefon yang sah'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah.'
     BUTTONSEND: 'Hantar pautan penukaran katalaluan kepada saya'
     CHANGEPASSWORDBELOW: 'Anda boleh menukar kata laluan di bawah.'
@@ -59,5 +61,3 @@ ms:
     ERRORPASSWORDPERMISSION: 'Anda perlu didaftarkan masuk untuk menukar katalaluan.'
     NOTEPAGESECURED: 'Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. '
     NOTERESETPASSWORD: 'Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda.'
-  SiteTree:
-    TABMAIN: Utama

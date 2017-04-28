@@ -1,13 +1,13 @@
 vi_VN:
-  ChangePasswordEmail_ss:
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: 'Nội dung'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
-  DateField:
-    TODAY: hôm nay
-  DropdownField:
+  SilverStripe\Forms\DateField:
+    TODAY: 'hôm nay'
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (chọn)
-  Member:
+  SilverStripe\Security\Member:
     INTERFACELANG: 'Ngôn ngữ'
     SUBJECTPASSWORDCHANGED: 'Thay đổi mật khẩu'
     SUBJECTPASSWORDRESET: 'Quên mật khẩu'
-  SiteTree:
-    TABMAIN: Nội dung

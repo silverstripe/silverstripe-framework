@@ -1,75 +1,113 @@
 af:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Groep naam'
+    MEMBERS: Lede
+    PERMISSIONS: Toegangsregte
+    ROLES: Rolle
+    ROLESDESCRIPTION: ' '
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Eerste opgelaai'
     LASTEDIT: 'Laaste verander'
     SIZE: 'Lêer grootte'
     TYPE: 'Lêer tipe'
-  BasicAuth:
-    ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
-    ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
-    ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
-  Boolean:
-    ANY: Enige
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Afmetings
+    EDIT: Verander
+    EDITINFO: 'Verander die lêer'
+    FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
+    REMOVE: Verwyder
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Hoof
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Ongeldige versoek'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
-  ConfirmedPasswordField:
+    TEXT1: 'Hier is u'
+    TEXT2: 'wagwoord herstel skakel'
+    TEXT3: vir
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: R
-  Date:
-    TIMEDIFFAGO: '{difference} terug'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'Nie gestel nie'
     TODAY: vandag
     VALIDDATEFORMAT2: 'Sleutel asseblief ''n geldige datum formaat in ({format})'
     VALIDDATEMAXDATE: 'Jou datum moet gelykstaande of ouer wees as die maksimum toelaatbare datum ({date})'
     VALIDDATEMINDATE: 'Jou datum moet net so out of nuwer wees as die minimum toelaatbare datum ({date})'
-  Director:
-    INVALID_REQUEST: 'Ongeldige versoek'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Kies)
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Verskaf asseblief  ''n epos adres '
-  Enum:
-    ANY: Enige
-  ForgotPasswordEmail_ss:
-    TEXT1: 'Hier is u'
-    TEXT2: 'wagwoord herstel skakel'
-    TEXT3: vir
-  Form:
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Wagwoorde pas nie'
     VALIDATIONPASSWORDSNOTEMPTY: 'Wagwoorde kan nie leeg wees nie'
     VALIDATIONSTRONGPASSWORD: 'Wagwoorde moet minstens een nommer en een alfa-numeriese karaketer bevat'
     VALIDATOR: Vergeldiger
     VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: geen
-  GridAction:
-    DELETE_DESCRIPTION: Verwyder
-    Delete: Verwyder
-    UnlinkRelation: Ontkoppel
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Voeg {name}'
+    CSVEXPORT: 'Voer uit na CSV lêer'
     Find: Vind
     LinkExisting: 'Koppel bestaande'
     NewRecord: 'Nuwe %s'
     NoItemsFound: 'Geen items gevind nie'
+    OF: van
     PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
     PlaceHolder: 'Vind {type}'
     PlaceHolderWithLabels: 'Vind {type} by {name}'
+    Print: Druk
     RelationSearch: 'Soek vir verwantskap'
     ResetFilter: Herstel
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Verwyder
+    Delete: Verwyder
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
-  GridFieldDetailForm:
+    UnlinkRelation: Ontkoppel
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: 'Kanselleer '
     Create: Skep
     Delete: Verwyder
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     Deleted: 'Verwyderde %s %s'
     Save: Stoor
-  Group:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Bladsy
+    View: Wys
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: 'Maak pas'
+    DATEFORMATBAD: 'Die datum formaat is ongeldig'
+    DAYNOLEADING: 'Dag van die maand sonder ''n zero vooraan'
+    DIGITSDECFRACTIONSECOND: 'Een of meer syfers wat ''n desimale fraksie van ''n sekonde aan dui'
+    FOURDIGITYEAR: 'View syfer jaar'
+    MINUTENOLEADING: 'Minuut sonder die aanvangs nul'
+    MONTHNOLEADING: 'Maand syfers sonder aanvangs-zero'
+    Preview: Voorskou
+    TWODIGITDAY: 'Twee syfer dag van die maand'
+    TWODIGITYEAR: 'Twee syfer jaar'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Bedrag
+    FIELDLABELCURRENCY: 'Geld eenheid'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Enige
+  SilverStripe\ORM\FieldType\DBDate:
+    TIMEDIFFAGO: '{difference} terug'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Enige
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
+    ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
+    ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
+  SilverStripe\Security\Group:
     Code: 'Groep Kode'
     DefaultGroupTitleAdministrators: Administrateurs
     DefaultGroupTitleContentAuthors: 'Inhouds Outeurs'
@@ -81,11 +119,11 @@ af:
     Sort: 'Sorteerings orde'
     has_many_Permissions: Toestemmings
     many_many_Members: Lidde
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Epos Adres'
     IP: 'IP Adres'
     Status: Posisie
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Voeg groep by'
     BUTTONCHANGEPASSWORD: 'Verander Wagwoord'
     BUTTONLOGIN: 'Teken in'
@@ -99,7 +137,7 @@ af:
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
     ERRORNEWPASSWORD: 'Jy het jou nuwe wagwoord anders ingetik. Probeer weer'
     ERRORPASSWORDNOTMATCH: 'U huidige wagwoord pas nie, probeer asseblief weer'
-    FIRSTNAME: 'Voornaam'
+    FIRSTNAME: Voornaam
     INTERFACELANG: 'Koppelvlak Taal'
     LOGGEDINAS: 'Jy is ingeteken as {name}'
     NEWPASSWORD: 'Nuwe wagwoord'
@@ -115,42 +153,21 @@ af:
     db_LockedOutUntil: 'Utgesluit tot en met'
     db_Password: Wagwoord
     db_PasswordExpiry: 'Wagwoord Vervaldatum'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Epos &amp; Wagwoord'
-  MemberDatetimeOptionsetField:
-    Custom: Maak pas
-    DATEFORMATBAD: 'Die datum formaat is ongeldig'
-    DAYNOLEADING: 'Dag van die maand sonder ''n zero vooraan'
-    DIGITSDECFRACTIONSECOND: 'Een of meer syfers wat ''n desimale fraksie van ''n sekonde aan dui'
-    FOURDIGITYEAR: 'View syfer jaar'
-    MINUTENOLEADING: 'Minuut sonder die aanvangs nul'
-    MONTHNOLEADING: 'Maand syfers sonder aanvangs-zero'
-    Preview: Voorskou
-    TWODIGITDAY: 'Twee syfer dag van die maand'
-    TWODIGITYEAR: 'Twee syfer jaar'
-  MoneyField:
-    FIELDLABELAMOUNT: Bedrag
-    FIELDLABELCURRENCY: Geld eenheid
-  NumericField:
-    VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
-  Pagination:
-    Page: Bladsy
-    View: Wys
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrateur
     FULLADMINRIGHTS: 'Volle administratiewe regte '
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'toegeken aan "{title}"'
     FromGroup: 'geërf van groep "{title}"'
     FromRole: 'geërf van rol"{title}"'
     FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'
     Title: Tietel
-  PhoneNumberField:
-    VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer inteken.'
     BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
     CHANGEPASSWORDBELOW: 'Jy kan jou wagwoord onder verander'
@@ -160,24 +177,3 @@ af:
     LOGIN: 'Teken in'
     NOTEPAGESECURED: 'Daai bladsy is beveilig. Sleutel jou informasie onder in sodat ons jou op jou pad kan stuur'
     NOTERESETPASSWORD: 'Sleutel you epos adres in sodat ons vir jou ''n herstel skakel kan epos'
-  SecurityAdmin:
-    GROUPNAME: 'Groep naam'
-    MEMBERS: Lede
-    PERMISSIONS: Toegangsregte
-    ROLES: Rolle
-    ROLESDESCRIPTION: ' '
-  SiteTree:
-    TABMAIN: Hoof
-  TableListField:
-    CSVEXPORT: 'Voer uit na CSV lêer'
-    Print: Druk
-  TableListField_PageControls_ss:
-    OF: van
-  TimeField:
-    VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
-  UploadField:
-    Dimensions: Afmetings
-    EDIT: Verander
-    EDITINFO: 'Verander die lêer'
-    FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
-    REMOVE: Verwyder

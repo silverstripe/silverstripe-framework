@@ -1,42 +1,42 @@
 gl_ES:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Nome do grupo'
+    MEMBERS: Membros
+    NEWGROUP: 'Novo grupo'
+    PERMISSIONS: Permisos
+    ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Primeiro subido'
     LASTEDIT: 'Último cambio'
     SIZE: 'Tamaño ficheiro'
     TYPE: 'Tipo ficheiro'
-  BasicAuth:
-    ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
-    ERRORNOTADMIN: 'Ese usuario non é un administrador.'
-    ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
-  Boolean:
-    ANY: Ningún
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDITINFO: 'Editar este ficheiro'
+    FIELDNOTSET: 'Ficheiro de información non atopado'
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Principal
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Mudar Contrasinal'
-  CurrencyField:
-    CURRENCYSYMBOL: €
-  DateField:
-    NOTSET: 'sen establecer'
-  DropdownField:
-    CHOOSE: (Escoller)
-  Enum:
-    ANY: Ningún
-  ForgotPasswordEmail_ss:
     HELLO: Ola
     TEXT1: 'Estás aquí'
     TEXT2: 'ligazón de reinicio do contrasinal'
     TEXT3: para
-  Form:
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Mudar Contrasinal'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: €
+  SilverStripe\Forms\DateField:
+    NOTSET: 'sen establecer'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Escoller)
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Os contrasinais non pode ser baleiro'
     VALIDATOR: Validador
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: ningún
-  GridAction:
-    Delete: Eliminar
-    UnlinkRelation: Desligar
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportar a CSV'
     Filter: Filtro
     Find: Atopar
     LinkExisting: 'Ligazón existente'
@@ -46,9 +46,37 @@ gl_ES:
     PRINTEDBY: 'Impreso por'
     RelationSearch: 'Busca relacionada'
     ResetFilter: Reiniciar
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Eliminar
     DeletePermissionsFailure: 'Non eliminar permisos'
-  Group:
+    UnlinkRelation: Desligar
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Personalizado
+    DATEFORMATBAD: 'O formato da data é inválida'
+    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
+    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
+    FOURDIGITYEAR: 'Catro díxitos ano'
+    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
+    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
+    Preview: Previsualizar
+    TWODIGITDAY: 'Dous díxitos día do mes'
+    TWODIGITYEAR: 'Dous díxitos ano'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Cantidade
+    FIELDLABELCURRENCY: Moeda
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'É Nulo'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Por favor insire un número de teléfono válido'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Ningún
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Ningún
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
+    ERRORNOTADMIN: 'Ese usuario non é un administrador.'
+    ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
+  SilverStripe\Security\Group:
     AddRole: 'Engadir un role para este grupo'
     Code: 'Código de Grupo'
     DefaultGroupTitleAdministrators: Administradores
@@ -59,11 +87,11 @@ gl_ES:
     RolesAddEditLink: 'Xestionar roles'
     Sort: 'Modo de ordenación'
     has_many_Permissions: Permisos
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Enderezo Correo-e'
     IP: 'Enderezo IP'
     Status: Estado
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mudar Contrasinal'
     BUTTONLOGIN: 'Iniciar sesión'
     BUTTONLOGINOTHER: 'Iniciar sesión como'
@@ -76,7 +104,7 @@ gl_ES:
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
     ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
     ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
-    FIRSTNAME: 'Nome'
+    FIRSTNAME: Nome
     INTERFACELANG: 'Idioma da Interface'
     NEWPASSWORD: 'Novo Contrasinal'
     PASSWORD: Contrasinal
@@ -89,33 +117,15 @@ gl_ES:
     db_LockedOutUntil: 'Bloqueado ata que'
     db_Password: Contrasinal
     db_PasswordExpiry: 'Data de expiración do contrasinal'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Correo-e e Contrasinal'
-  MemberDatetimeOptionsetField:
-    Custom: Personalizado
-    DATEFORMATBAD: 'O formato da data é inválida'
-    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
-    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
-    FOURDIGITYEAR: 'Catro díxitos ano'
-    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
-    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
-    Preview: Previsualizar
-    TWODIGITDAY: 'Dous díxitos día do mes'
-    TWODIGITYEAR: 'Dous díxitos ano'
-  MoneyField:
-    FIELDLABELAMOUNT: Cantidade
-    FIELDLABELCURRENCY: Moeda
-  NullableField:
-    IsNullLabel: 'É Nulo'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
-  PhoneNumberField:
-    VALIDATION: 'Por favor insire un número de teléfono válido'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
     BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
     CHANGEPASSWORDBELOW: 'Podes mudar o contrasinal abaixo.'
@@ -125,16 +135,3 @@ gl_ES:
     LOGIN: 'Iniciar sesión'
     NOTEPAGESECURED: 'Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela.'
     NOTERESETPASSWORD: 'Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal'
-  SecurityAdmin:
-    GROUPNAME: 'Nome do grupo'
-    MEMBERS: Membros
-    NEWGROUP: 'Novo grupo'
-    PERMISSIONS: Permisos
-    ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
-  SiteTree:
-    TABMAIN: Principal
-  TableListField:
-    CSVEXPORT: 'Exportar a CSV'
-  UploadField:
-    EDITINFO: 'Editar este ficheiro'
-    FIELDNOTSET: 'Ficheiro de información non atopado'

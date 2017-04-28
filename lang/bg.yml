@@ -1,76 +1,63 @@
 bg:
-  AssetTableField:
-    CREATED: 'Създаден'
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Име на група'
+    MEMBERS: Потребители
+    NEWGROUP: 'Нова група'
+    PERMISSIONS: 'Разрешения'
+    ROLES: 'Роли'
+    ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+    CREATED: Създаден
     HEIGHT: Височина
     LASTEDIT: 'Последна промяна'
     SIZE: 'Големина на файла'
     TYPE: 'Тип на файла'
     URL: URL
     WIDTH: Широчина
-  BasicAuth:
-    ENTERINFO: 'Моля, въведете потребителско име и парола.'
-    ERRORNOTADMIN: 'Този потребител не е администратор.'
-    ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
-  Boolean:
-    ANY: Всички
-    NOANSWER: 'Не'
-    YESANSWER: 'Да'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Забравена парола?'
-    BUTTONLOGIN: 'Влез обратно'
-    BUTTONLOGOUT: 'Изход'
-  CMSSecurity:
-    SUCCESS: Успешно
-    TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
-    TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 'Размери'
+    EDITINFO: 'Редактирай този файл'
+    FIELDNOTSET: 'Информация за файла не беше намерена'
+    REMOVE: 'Премахни'
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Главно
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Грешна заявка'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     HELLO: Здравей!
-  CheckboxField:
-    NOANSWER: 'Не'
-    YESANSWER: 'Да'
-  ConfirmedPasswordField:
+    TEXT1: 'Това е Вашият'
+    TEXT2: 'адрес за рестартирване на парола'
+    TEXT3: за
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Не
+    YESANSWER: Да
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  Date:
-    LessThanMinuteAgo: 'по-малко от минута'
-    TIMEDIFFAGO: 'преди {difference}'
-    TIMEDIFFIN: 'за {difference}'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'не е зададена'
     TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
-  Director:
-    INVALID_REQUEST: 'Грешна заявка'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Избери)
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
-  Enum:
-    ANY: Някой
-  ForgotPasswordEmail_ss:
-    HELLO: Здравей!
-    TEXT1: 'Това е Вашият'
-    TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
-  Form:
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
     VALIDATIONSTRONGPASSWORD: 'Паролите трябва да съдържат поне една цифра и една буква.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Моля, въведете коректна валута.'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: нищо
-  GridAction:
-    DELETE_DESCRIPTION: Изтриване
-    Delete: Изтрий
-    UnlinkRelation: Откачане
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Добави {name}'
+    CSVEXPORT: 'Експортирай на CSV'
     Filter: Филтър
     FilterBy: 'Филтриране по'
     Find: Търси
@@ -83,15 +70,60 @@ bg:
     PlaceHolderWithLabels: 'Намери {type} по {name}'
     RelationSearch: 'Търсене на връзка'
     ResetFilter: Изчистване
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Изтриване
+    Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
-  GridFieldDetailForm:
+    UnlinkRelation: Откачане
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Създай
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити %s %s'
     Save: Запис
-  Group:
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Произволно
+    DATEFORMATBAD: 'Невалиден формат на датата'
+    DAYNOLEADING: 'Ден от месеца без водеща нула'
+    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
+    FOURDIGITYEAR: 'Четирицифрена година'
+    MINUTENOLEADING: 'Минути без водеща нула'
+    MONTHNOLEADING: 'Месец без водеща нула'
+    Preview: Преглед
+    TWODIGITDAY: 'Двуцифрен ден от месеца'
+    TWODIGITYEAR: 'Двуцифрена година'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Сума
+    FIELDLABELCURRENCY: Валута
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Моля, въведете валиден телефонен номер'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Всички
+    NOANSWER: Не
+    YESANSWER: Да
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'по-малко от минута'
+    TIMEDIFFAGO: 'преди {difference}'
+    TIMEDIFFIN: 'за {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Някой
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Моля, въведете потребителско име и парола.'
+    ERRORNOTADMIN: 'Този потребител не е администратор.'
+    ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
+  SilverStripe\Security\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Забравена парола?'
+    BUTTONLOGIN: 'Влез обратно'
+    BUTTONLOGOUT: 'Изход'
+  SilverStripe\Security\CMSSecurity:
+    SUCCESS: Успешно
+    TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
+    TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
+  SilverStripe\Security\Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
     GroupReminder: 'Ако изберете родителска група, тази група ще наследи всички нейни роли'
@@ -99,16 +131,16 @@ bg:
     NoRoles: 'Няма намерени роли'
     Parent: 'Група източник'
     RolesAddEditLink: 'Управление на ролите'
-    has_many_Permissions: Разрешения
+    has_many_Permissions: 'Разрешения'
     many_many_Members: Потребители
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Email адрес'
     IP: 'IP адрес'
     Status: Статус
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
-    BUTTONLOGIN: 'Влез'
+    BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
@@ -118,8 +150,8 @@ bg:
     ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
-    FIRSTNAME: 'Име'
-    INTERFACELANG: 'Език'
+    FIRSTNAME: Име
+    INTERFACELANG: Език
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -133,35 +165,17 @@ bg:
     db_LockedOutUntil: 'Заключен до'
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'email и парола'
-  MemberDatetimeOptionsetField:
-    Custom: Произволно
-    DATEFORMATBAD: 'Невалиден формат на датата'
-    DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
-    FOURDIGITYEAR: 'Четирицифрена година'
-    MINUTENOLEADING: 'Минути без водеща нула'
-    MONTHNOLEADING: 'Месец без водеща нула'
-    Preview: Преглед
-    TWODIGITDAY: 'Двуцифрен ден от месеца'
-    TWODIGITYEAR: 'Двуцифрена година'
-  MoneyField:
-    FIELDLABELAMOUNT: Сума
-    FIELDLABELCURRENCY: Валута
-  NumericField:
-    VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Администратор
     FULLADMINRIGHTS: 'Пълни административни права'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
     FromRole: 'унаследена от роля "{title}"'
     FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
-  PhoneNumberField:
-    VALIDATION: 'Моля, въведете валиден телефонен номер'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'
     CHANGEPASSWORDBELOW: 'Можете да смените вашата парола по-долу.'
@@ -174,21 +188,3 @@ bg:
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
     PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
     PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'
-  SecurityAdmin:
-    GROUPNAME: 'Име на група'
-    MEMBERS: Потребители
-    NEWGROUP: 'Нова група'
-    PERMISSIONS: Разрешения
-    ROLES: Роли
-    ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-  SiteTree:
-    TABMAIN: Главно
-  TableListField:
-    CSVEXPORT: 'Експортирай на CSV'
-  TimeField:
-    VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
-  UploadField:
-    Dimensions: Размери
-    EDITINFO: 'Редактирай този файл'
-    FIELDNOTSET: 'Информация за файла не беше намерена'
-    REMOVE: Премахни

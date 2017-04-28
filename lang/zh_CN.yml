@@ -1,34 +1,38 @@
 zh_CN:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    NEWGROUP: 新建会员组
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: '第一次被上传'
-    LASTEDIT: '上一次被更改'
-    SIZE: '大小'
-    TYPE: '类型'
-  BasicAuth:
-    ENTERINFO: '请输入用户名和密码'
-    ERRORNOTADMIN: '此用户没有管理员权限。'
-    ERRORNOTREC: '没有找到此用户名/密码'
-  ChangePasswordEmail_ss:
+    LASTEDIT: 上一次被更改
+    SIZE: 大小
+    TYPE: 类型
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: 主要部分
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
     HELLO: 嗨
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: '更改密码'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: （选择）
-  ForgotPasswordEmail_ss:
-    HELLO: 嗨
-  Form:
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: '（密码相互不匹配）'
     VALIDATIONPASSWORDSNOTEMPTY: '密码不能空白'
-  Group:
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: '请输入有效电话号码'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: '请输入用户名和密码'
+    ERRORNOTADMIN: 此用户没有管理员权限。
+    ERRORNOTREC: '没有找到此用户名/密码'
+  SilverStripe\Security\Group:
     Code: '团队代码'
-    Locked: '锁定？'
-    Parent: '主团队'
+    Locked: 锁定？
+    Parent: 主团队
     has_many_Permissions: 权限
     many_many_Members: 成员
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: '更改密码'
-    BUTTONLOGIN: '登录'
+    BUTTONLOGIN: 登录
     BUTTONLOGINOTHER: '使用其他帐户登录'
     BUTTONLOSTPASSWORD: '忘记密码'
     CONFIRMNEWPASSWORD: '确认新密码'
@@ -36,22 +40,20 @@ zh_CN:
     EMAIL: 电子邮件
     ERRORNEWPASSWORD: '您输入了一个不同的新密码，请重新输入'
     ERRORPASSWORDNOTMATCH: '您当前的密码不正确，请再次输入'
-    FIRSTNAME: '名'
-    INTERFACELANG: '界面语言'
+    FIRSTNAME: 名
+    INTERFACELANG: 界面语言
     NEWPASSWORD: '新密码'
-    PASSWORD: 密码
+    PASSWORD: '密码'
     SUBJECTPASSWORDCHANGED: '您的密码已更改'
     SUBJECTPASSWORDRESET: '重设您的密码链接'
     SURNAME: 姓
     YOUROLDPASSWORD: '您的旧密码'
     belongs_many_many_Groups: 团队
-    db_LockedOutUntil: '禁止直至'
+    db_LockedOutUntil: 禁止直至
     db_PasswordExpiry: '密码过期日期'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: '电邮地址和密码'
-  PhoneNumberField:
-    VALIDATION: '请输入有效电话号码'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。'
     BUTTONSEND: '给我发送密码重设链接'
     CHANGEPASSWORDBELOW: '您可在下面更改您的密码'
@@ -60,7 +62,3 @@ zh_CN:
     ERRORPASSWORDPERMISSION: '您必需登录以更改您的密码'
     NOTEPAGESECURED: '此页是受安全保护的。输入您的登录信息，我们会将您送达。'
     NOTERESETPASSWORD: '输入您的电邮地址，我们会给您发送一个您可重设密码的链接'
-  SecurityAdmin:
-    NEWGROUP: '新建会员组'
-  SiteTree:
-    TABMAIN: 主要部分

@@ -1,70 +1,57 @@
 lt:
-  AssetTableField:
-    CREATED: 'Įkelta'
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Grupės pavadinimas'
+    MEMBERS: Vartotojai
+    NEWGROUP: 'Nauja grupė'
+    PERMISSIONS: Leidimai
+    ROLES: Rolės
+    ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+    CREATED: Įkelta
     HEIGHT: Aukštis
-    LASTEDIT: 'Redaguota'
+    LASTEDIT: Redaguota
     SIZE: 'Bylos dydis'
     TYPE: 'Bylos tipas'
-    URL: URL adresas
+    URL: 'URL adresas'
     WIDTH: Plotis
-  BasicAuth:
-    ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
-    ERRORNOTADMIN: 'Vartotojas nėra administratorius'
-    ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
-  Boolean:
-    ANY: Bet koks
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
-    BUTTONLOGIN: 'Prisijungti'
-    BUTTONLOGOUT: 'Atsijungti'
-    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
-    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
-    SUCCESS: Sėkmingai
-    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
-    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
-    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Matmenys
+    EDIT: Redaguoti
+    EDITINFO: 'Redaguoti šią bylą'
+    FIELDNOTSET: 'Informacija apie bylą nerasta'
+    REMOVE: Pašalinti
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Pagrindinis
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Klaidinga užklausa'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     HELLO: Sveiki
-  CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
-  ConfirmedPasswordField:
+    TEXT1: Jūsų
+    TEXT2: 'slaptažodžio atstatymo nuoroda'
+    TEXT3: svetainei
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Ne
+    YESANSWER: Taip
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Slaptažodžiai privalo būti bent {min} simbolių ilgio.'
     BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
     MAXIMUM: 'Slaptažodžiai privalo būti ne ilgesni nei {max} simbolių ilgio.'
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
-  Date:
-    LessThanMinuteAgo: 'mažiau nei min.'
-    TIMEDIFFAGO: 'prieš {difference}'
-    TIMEDIFFIN: 'po {difference}'
-  DateField:
-    NOTSET: 'nenustatyta'
+  SilverStripe\Forms\DateField:
+    NOTSET: nenustatyta
     TODAY: šiandien
     VALIDDATEFORMAT2: 'Prašome suvesti datą reikiamu formatu ({format})'
     VALIDDATEMAXDATE: 'Data privalo būti senesnė arba lygi vėliausiai galimai datai ({date})'
     VALIDDATEMINDATE: 'Data privalo būti naujesnė arba lygi anksčiausiai galimai datai ({date})'
-  Director:
-    INVALID_REQUEST: 'Klaidinga užklausa'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Pasirinkti)
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
-  Enum:
-    ANY: Bet koks
-  ForgotPasswordEmail_ss:
-    HELLO: Sveiki
-    TEXT1: 'Jūsų'
-    TEXT2: 'slaptažodžio atstatymo nuoroda'
-    TEXT3: svetainei
-  Form:
+  SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
     CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl.'
     VALIDATIONPASSWORDSDONTMATCH: 'Nesutampa slaptažodžiai'
@@ -72,39 +59,95 @@ lt:
     VALIDATIONSTRONGPASSWORD: 'Slaptažodžiai privalo būti sudaryti panaudojant bent vieną skaitmenį ir bent vieną raidę'
     VALIDATOR: Tikrintojas
     VALIDCURRENCY: 'Prašome suvesti teisingą valiutą'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: nėra
-  GridAction:
-    DELETE_DESCRIPTION: Ištrinti
-    Delete: Ištrinti
-    UnlinkRelation: Atkabinti
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Sukurti {name}'
+    CSVEXPORT: 'Ekportuoti į CSV'
     Filter: Filtruoti
     FilterBy: 'Filtruoti pagal '
     Find: Rasti
     LinkExisting: 'Pasirinkti esamą'
     NewRecord: 'Naujas %s'
     NoItemsFound: 'Įrašų nerasta'
-    PRINTEDAT: 'Atspausdinta'
-    PRINTEDBY: 'Atspausdino'
+    OF: iš
+    PRINTEDAT: Atspausdinta
+    PRINTEDBY: Atspausdino
     PlaceHolder: 'Rasti {type}'
     PlaceHolderWithLabels: 'Rasti {type} pagal {name}'
+    Print: Spausdinti
     RelationSearch: 'Sąryšių paieška'
     ResetFilter: Atstatyti
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Ištrinti
+    Delete: Ištrinti
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     EditPermissionsFailure: 'Nėra leidimų atjungti įrašą'
-  GridFieldDetailForm:
+    UnlinkRelation: Atkabinti
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Atšaukti
     Create: Sukurti
     Delete: Ištrinti
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     Deleted: 'Ištrinta %s %s'
     Save: Išsaugoti
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Redaguoti
-  Group:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Puslapis
+    View: Rodoma
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Pasirinktinas
+    DATEFORMATBAD: 'Neteisingas datos formatas'
+    DAYNOLEADING: 'Mėnesio diena be nulio pradžioje'
+    DIGITSDECFRACTIONSECOND: 'Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį'
+    FOURDIGITYEAR: 'Metai iš keturių skaitmenų'
+    MINUTENOLEADING: 'Minutė be nulio pradžioje'
+    MONTHNOLEADING: 'Mėnesis be nulio pradžioje'
+    Preview: Peržiūra
+    TWODIGITDAY: 'Mėnesis iš dviejų skaitmenų'
+    TWODIGITYEAR: 'Metai iš dviejų skaitmenų'
+    Toggle: 'Rodyti formatavimo aprašymą'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Kiekis
+    FIELDLABELCURRENCY: Valiuta
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: Tuščias
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Įveskite teisingą telefono numerį'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: 'Bet koks'
+    NOANSWER: Ne
+    YESANSWER: Taip
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'mažiau nei min.'
+    TIMEDIFFAGO: 'prieš {difference}'
+    TIMEDIFFIN: 'po {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: 'Bet koks'
+  SilverStripe\ORM\Hierarchy\Hierarchy:
+    InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
+    ERRORNOTADMIN: 'Vartotojas nėra administratorius'
+    ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
+  SilverStripe\Security\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
+    BUTTONLOGIN: Prisijungti
+    BUTTONLOGOUT: Atsijungti
+    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
+    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
+    SUCCESS: Sėkmingai
+    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
+    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
+    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
+  SilverStripe\Security\Group:
     AddRole: 'Pridėti rolę šiai grupei'
     Code: 'Grupės kodas'
     DefaultGroupTitleAdministrators: Administratoriai
@@ -119,30 +162,28 @@ lt:
     Sort: 'Rūšiavimo tvarka'
     has_many_Permissions: Leidimai
     many_many_Members: Vartotojai
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'E. pašto adresas'
     IP: 'IP adresas'
     Status: Būsena
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Pridėti grupę'
     BUTTONCHANGEPASSWORD: 'Pakeisti slaptažodį'
-    BUTTONLOGIN: 'Prisijungti'
+    BUTTONLOGIN: Prisijungti
     BUTTONLOGINOTHER: 'Prisijungti kitu vardu'
     BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
     CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
     DefaultAdminFirstname: 'Pagrindinis administratorius'
-    EMAIL: E. paštas
+    EMAIL: 'E. paštas'
     EMPTYNEWPASSWORD: 'Naujas slaptažodis negali būti tuščias, bandykite iš naujo'
     ENTEREMAIL: 'Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą.'
     ERRORLOCKEDOUT2: 'Jūsų paskyra laikinai sustabdyta dėl per didelio klaidingų bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau {count} min. laikotarpyje.'
     ERRORNEWPASSWORD: 'Nesutampa naujas slaptažodis, bandykite dar kartą'
     ERRORPASSWORDNOTMATCH: 'Blogas senas slaptažodis, bandykite dar kartą'
     ERRORWRONGCRED: 'Pateikti duomenys blogi, bandykite dar kartą.'
-    FIRSTNAME: 'Vardas'
-    INTERFACELANG: 'Kalba'
+    FIRSTNAME: Vardas
+    INTERFACELANG: Kalba
     LOGGEDINAS: 'Prisijungėte kaip {name}.'
     NEWPASSWORD: 'Naujas slaptažodis'
     NoPassword: 'Šis vartotojas neturi slaptažodžio.'
@@ -159,85 +200,38 @@ lt:
     db_LockedOutUntil: 'Užrakinta iki '
     db_Password: Slaptažodis
     db_PasswordExpiry: 'Slaptažodžio pabaigos data'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-paštas ir slaptažodis'
-  MemberDatetimeOptionsetField:
-    Custom: Pasirinktinas
-    DATEFORMATBAD: 'Neteisingas datos formatas'
-    DAYNOLEADING: 'Mėnesio diena be nulio pradžioje'
-    DIGITSDECFRACTIONSECOND: 'Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį'
-    FOURDIGITYEAR: 'Metai iš keturių skaitmenų'
-    MINUTENOLEADING: 'Minutė be nulio pradžioje'
-    MONTHNOLEADING: 'Mėnesis be nulio pradžioje'
-    Preview: Peržiūra
-    TWODIGITDAY: 'Mėnesis iš dviejų skaitmenų'
-    TWODIGITYEAR: 'Metai iš dviejų skaitmenų'
-    Toggle: 'Rodyti formatavimo aprašymą'
-  MoneyField:
-    FIELDLABELAMOUNT: Kiekis
-    FIELDLABELCURRENCY: Valiuta
-  NullableField:
-    IsNullLabel: 'Tuščias'
-  NumericField:
-    VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
-  Pagination:
-    Page: Puslapis
-    View: Rodoma
-  PasswordValidator:
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s'
     PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
     TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administratorius
     FULLADMINRIGHTS: 'Pilnos administravimo teisės'
     FULLADMINRIGHTS_HELP: 'Turi ir viršija visus kitus leidimus.'
-  PermissionCheckboxSetField:
+    UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'priskirta "{title}"'
     FromGroup: 'paveldėta iš grupės "{title}"'
     FromRole: 'paveldėta iš rolės "{title}"'
     FromRoleOnGroup: 'paveldėta iš rolės "%s" grupėje "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Gali priskirti tik administratorius'
     Title: Pavadinimas
-  PermissionRoleCode:
+  SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
-  Permissions:
-    UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
-  PhoneNumberField:
-    VALIDATION: 'Įveskite teisingą telefono numerį'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'
     CHANGEPASSWORDBELOW: 'Žemiau galite pasikeisti savo slaptažodį.'
     CHANGEPASSWORDHEADER: 'Pasikeiskite savo slaptažodį'
     ENTERNEWPASSWORD: 'Įveskite naują slaptažodį.'
     ERRORPASSWORDPERMISSION: 'Norėdami pakeisti savo slaptažodį, turite būti prisijungęs!'
-    LOGIN: 'Prisijungti'
+    LOGIN: Prisijungti
     LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
     NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
     NOTERESETLINKINVALID: '<p>Neteisinga arba negaliojanti slaptažodžio atstatymo nuoroda.</p><p>Galite atsisiųsti naują <a href="{link1}">čia</a> arba pasikeisti slaptažodį po to, kai <a href="{link2}">prisijungsite</a>.</p>'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'
     PASSWORDSENTHEADER: 'Slaptažodžio atstatymo nuoroda nusiųsta į ''{email}'''
     PASSWORDSENTTEXT: 'Atstatymo nuoroda nusiųsta į ''{email}'''
-  SecurityAdmin:
-    GROUPNAME: 'Grupės pavadinimas'
-    MEMBERS: Vartotojai
-    NEWGROUP: 'Nauja grupė'
-    PERMISSIONS: Leidimai
-    ROLES: Rolės
-    ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
-  SiteTree:
-    TABMAIN: Pagrindinis
-  TableListField:
-    CSVEXPORT: 'Ekportuoti į CSV'
-    Print: Spausdinti
-  TableListField_PageControls_ss:
-    OF: iš
-  TimeField:
-    VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
-  UploadField:
-    Dimensions: Matmenys
-    EDIT: Redaguoti
-    EDITINFO: 'Redaguoti šią bylą'
-    FIELDNOTSET: 'Informacija apie bylą nerasta'
-    REMOVE: Pašalinti

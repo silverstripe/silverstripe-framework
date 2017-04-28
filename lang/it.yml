@@ -1,40 +1,40 @@
 it:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Nome del gruppo'
+    MEMBERS: Utenti
+    NEWGROUP: 'Nuovo gruppo'
+    PERMISSIONS: Permessi
+    ROLES: Ruoli
+    ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto, questi possono essere ereditati dai gruppi padre.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Inizialmente caricato'
     HEIGHT: Altezza
     LASTEDIT: 'Ultima modifica'
-    SIZE: 'Dimensione'
+    SIZE: Dimensione
     TYPE: 'Tipo di file'
     URL: URL
     WIDTH: Larghezza
-  BasicAuth:
-    ENTERINFO: 'Per favore inserisci un nome utente e la password.'
-    ERRORNOTADMIN: 'Questo utente non è amministratore.'
-    ERRORNOTREC: 'Nome utente / password non riconosciuti'
-  Boolean:
-    ANY: Qualsiasi
-    NOANSWER: 'No'
-    YESANSWER: 'Sì'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
-    BUTTONLOGIN: 'Accedi nuovamente'
-    BUTTONLOGOUT: 'Scollegati'
-    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
-    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
-    SUCCESS: Successo
-    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
-    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
-    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensioni
+    EDIT: Modifica
+    EDITINFO: 'Modifica questo file'
+    FIELDNOTSET: 'Informazioni file non trovate'
+    REMOVE: Rimuovi
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Principale
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Richiesta non valida'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT3: 'Cambia password'
     HELLO: Ciao
-  CheckboxField:
+    TEXT1: 'Questa è la tua'
+    TEXT2: 'Link per l''azzeramento della password'
+    TEXT3: per
+  SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
-    YESANSWER: 'Sì'
-  ConfirmedPasswordField:
+    YESANSWER: Sì
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
     CURRENT_PASSWORD_ERROR: 'La password che hai inserito non è corretta.'
@@ -42,34 +42,21 @@ it:
     LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
-    LessThanMinuteAgo: 'meno di un minuto'
-    TIMEDIFFAGO: '{difference} fa'
-    TIMEDIFFIN: 'in {difference}'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
     VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
     VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
     VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
-  Director:
-    INVALID_REQUEST: 'Richiesta non valida'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Scegli)
     CHOOSE_MODEL: '(Scegliere {name})'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
-  Enum:
-    ANY: Qualsiasi
-  ForgotPasswordEmail_ss:
-    HELLO: Ciao
-    TEXT1: 'Questa è la tua'
-    TEXT2: 'Link per l''azzeramento della password'
-    TEXT3: per
-  Form:
+  SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
     CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
     VALIDATIONCREDIT: 'Assicurati che il numero di carta di credito sia inserito correttamente'
@@ -78,54 +65,44 @@ it:
     VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: nessuno
-  GridAction:
-    DELETE_DESCRIPTION: Elimina
-    Delete: Elimina
-    UnlinkRelation: Scollega
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Aggiungi {name}'
+    CSVEXPORT: 'Esporta come CSV'
     Filter: Filtra
     FilterBy: 'Filtra per'
     Find: Trova
     LinkExisting: 'Collega esistente'
     NewRecord: 'Nuovo %s'
     NoItemsFound: 'Nessun elemento trovato'
+    OF: di
     PRINTEDAT: 'Stampato alle'
     PRINTEDBY: 'Stampato da'
     PlaceHolder: 'Trova {type}'
     PlaceHolderWithLabels: 'Trova {type} per {name}'
+    Print: Stampa
     RelationSearch: 'Cerca relazione'
     ResetFilter: Azzera
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Elimina
+    Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     EditPermissionsFailure: 'Non hai i permessi per modificare'
-  GridFieldDetailForm:
+    UnlinkRelation: Scollega
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Annulla
     Create: Crea
     Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato %s %s'
     Save: Salva
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Modifica
-  Group:
-    AddRole: 'Aggiungi un ruolo per questo gruppo'
-    Code: 'Codice gruppo'
-    DefaultGroupTitleAdministrators: Amministratori
-    DefaultGroupTitleContentAuthors: 'Autori di contenuto'
-    Description: Descrizione
-    GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
-    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "%s" (richiede accesso ADMIN)'
-    Locked: 'Bloccato?'
-    NoRoles: 'Nessun ruolo trovato'
-    Parent: 'Gruppo padre'
-    RolesAddEditLink: 'Gestisci ruoli'
-    Sort: 'Tipo ordinamento'
-    has_many_Permissions: Permessi
-    many_many_Members: Membri
-  HTMLEditorField:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Pagina
+    View: Visualizza
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
     ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
     ANCHORVALUE: Ancora
@@ -159,23 +136,97 @@ it:
     SUBJECT: 'Oggetto email'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
-  HTMLEditorField_Toolbar:
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Possono essere incorporati solo URL assoluti'
     ERROR_HOSTNAME: 'L''hostname di questo file non è incluso nella whitelist'
     ERROR_ID: 'Sono necessari entrambi i parametri "ID" e "FileURL" per identificare il file'
     ERROR_NOTFOUND: 'Impossibile trovare il file da visualizzare'
     ERROR_OEMBED_REMOTE: 'L''incorporamento è consentito solo con file remoti'
     ERROR_SCHEME: 'Lo schema di questo file non è incluso nella whitelist'
-  Hierarchy:
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Personalizza
+    DATEFORMATBAD: 'Il formato della data non è valido'
+    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
+    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
+    FOURDIGITYEAR: 'Anno a quattro cifre'
+    HOURNOLEADING24: 'Ore senza zero iniziale, formato 24 ore'
+    MINUTENOLEADING: 'Minuti senza zero iniziale'
+    MONTHNOLEADING: 'Mese senza zero iniziale'
+    Preview: Anteprima
+    TWODIGITDAY: 'Giorno del mese a due cifre'
+    TWODIGITYEAR: 'Anno a due cifre'
+    Toggle: 'Mostra aiuto per la formattazione'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Importo
+    FIELDLABELCURRENCY: Valuta
+  SilverStripe\Forms\MultiSelectField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. È stata fornita l''opzione non valida {value}'
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'è nullo.'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Per favore inserisci un numero di telefono valido'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Object'
+    SINGULARNAME: 'Data Object'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Qualsiasi
+    NOANSWER: 'No'
+    YESANSWER: Sì
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'meno di un minuto'
+    TIMEDIFFAGO: '{difference} fa'
+    TIMEDIFFIN: 'in {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Qualsiasi
+  SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
-  LoginAttempt:
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Per favore inserisci un nome utente e la password.'
+    ERRORNOTADMIN: 'Questo utente non è amministratore.'
+    ERRORNOTREC: 'Nome utente / password non riconosciuti'
+  SilverStripe\Security\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
+    BUTTONLOGIN: 'Accedi nuovamente'
+    BUTTONLOGOUT: Scollegati
+    PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
+    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
+    SUCCESS: Successo
+    SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
+    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
+    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
+  SilverStripe\Security\Group:
+    AddRole: 'Aggiungi un ruolo per questo gruppo'
+    Code: 'Codice gruppo'
+    DefaultGroupTitleAdministrators: Amministratori
+    DefaultGroupTitleContentAuthors: 'Autori di contenuto'
+    Description: Descrizione
+    GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
+    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "%s" (richiede accesso ADMIN)'
+    Locked: 'Bloccato?'
+    NoRoles: 'Nessun ruolo trovato'
+    PLURALNAME: Gruppi
+    Parent: 'Gruppo padre'
+    RolesAddEditLink: 'Gestisci ruoli'
+    SINGULARNAME: Gruppo
+    Sort: 'Tipo ordinamento'
+    has_many_Permissions: Permessi
+    many_many_Members: Membri
+  SilverStripe\Security\LoginAttempt:
     Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
+    PLURALNAME: 'Tentativi d''accesso'
+    SINGULARNAME: 'Tentativo d''accesso'
     Status: Stato
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Aggiungi gruppo'
     BUTTONCHANGEPASSWORD: 'Cambia password'
-    BUTTONLOGIN: 'Accedi'
+    BUTTONLOGIN: Accedi
     BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
@@ -190,7 +241,7 @@ it:
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
-    FIRSTNAME: 'Nome'
+    FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
     KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
@@ -198,6 +249,8 @@ it:
     NoPassword: 'Manca la password per questo utente.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
+    PLURALNAME: Utenti
+    SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
@@ -209,112 +262,47 @@ it:
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
-  MemberDatetimeOptionsetField:
-    Custom: Personalizza
-    DATEFORMATBAD: 'Il formato della data non è valido'
-    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
-    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
-    FOURDIGITYEAR: 'Anno a quattro cifre'
-    HOURNOLEADING24: 'Ore senza zero iniziale, formato 24 ore'
-    MINUTENOLEADING: 'Minuti senza zero iniziale'
-    MONTHNOLEADING: 'Mese senza zero iniziale'
-    Preview: Anteprima
-    TWODIGITDAY: 'Giorno del mese a due cifre'
-    TWODIGITYEAR: 'Anno a due cifre'
-    Toggle: 'Mostra aiuto per la formattazione'
-  MoneyField:
-    FIELDLABELAMOUNT: Importo
-    FIELDLABELCURRENCY: Valuta
-  MultiSelectField:
-    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. È stata fornita l''opzione non valida {value}'
-  NullableField:
-    IsNullLabel: 'è nullo.'
-  NumericField:
-    VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
-  Pagination:
-    Page: Pagina
-    View: Visualizza
-  PasswordValidator:
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Password utenti'
+    SINGULARNAME: 'Password utente'
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
     PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
     TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Amministratore
     FULLADMINRIGHTS: 'Diritti di amministrazione'
     FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
-  PermissionCheckboxSetField:
+    PLURALNAME: Permessi
+    SINGULARNAME: Permesso
+    UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
     FromRole: 'ereditato dal ruolo "{title}"'
     FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Solo l''amministratore può applicare'
+    PLURALNAME: Ruoli
+    SINGULARNAME: Ruolo
     Title: Titolo
-  PermissionRoleCode:
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Codici di ruolo'
     PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
-  Permissions:
-    UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
-  PhoneNumberField:
-    VALIDATION: 'Per favore inserisci un numero di telefono valido'
-  Security:
+    SINGULARNAME: 'Codice di ruolo'
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
     BUTTONSEND: 'Inviami il link per azzerare la password'
     CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
     ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
-    LOGIN: 'Entra'
+    LOGIN: Entra
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
     PASSWORDSENTHEADER: 'Link per azzeramento della password inviato a ''{email}'''
     PASSWORDSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato a ''{email}'', fornito un account esistente per questo indirizzo e-mail.'
-  SecurityAdmin:
-    GROUPNAME: 'Nome del gruppo'
-    MEMBERS: Utenti
-    NEWGROUP: 'Nuovo gruppo'
-    PERMISSIONS: Permessi
-    ROLES: Ruoli
-    ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto, questi possono essere ereditati dai gruppi padre.'
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Data Object'
-    SINGULARNAME: 'Data Object'
-  SilverStripe\Security\Group:
-    PLURALNAME: Gruppi
-    SINGULARNAME: Gruppo
-  SilverStripe\Security\LoginAttempt:
-    PLURALNAME: 'Tentativi d''accesso'
-    SINGULARNAME: 'Tentativo d''accesso'
-  SilverStripe\Security\Member:
-    PLURALNAME: Utenti
-    SINGULARNAME: Utente
-  SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Password utenti'
-    SINGULARNAME: 'Password utente'
-  SilverStripe\Security\Permission:
-    PLURALNAME: Permessi
-    SINGULARNAME: Permesso
-  SilverStripe\Security\PermissionRole:
-    PLURALNAME: Ruoli
-    SINGULARNAME: Ruolo
-  SilverStripe\Security\PermissionRoleCode:
-    PLURALNAME: 'Codici di ruolo'
-    SINGULARNAME: 'Codice di ruolo'
-  SiteTree:
-    TABMAIN: Principale
-  TableListField:
-    CSVEXPORT: 'Esporta come CSV'
-    Print: Stampa
-  TableListField_PageControls_ss:
-    OF: di
-  TimeField:
-    VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
-  UploadField:
-    Dimensions: Dimensioni
-    EDIT: Modifica
-    EDITINFO: 'Modifica questo file'
-    FIELDNOTSET: 'Informazioni file non trovate'
-    REMOVE: Rimuovi

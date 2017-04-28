@@ -1,92 +1,135 @@
 nb:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: Gruppenavn
+    MEMBERS: Medlemmer
+    NEWGROUP: 'Ny gruppe'
+    PERMISSIONS: Tilganger
+    ROLES: Roller
+    ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Først opplastet'
     LASTEDIT: 'Sist endret'
-    SIZE: 'Filstørrelse'
-    TYPE: 'Filtype'
+    SIZE: Filstørrelse
+    TYPE: Filtype
     URL: Nettadresse
-  BasicAuth:
-    ENTERINFO: 'Vennligst skriv inn et brukernavn og passord'
-    ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
-    ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
-  Boolean:
-    ANY: Sann eller usann
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
-    HELLO: Hei
-  ConfirmedPasswordField:
-    ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
-    BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
-    MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
-    SHOWONCLICKTITLE: 'Endre passord'
-  CurrencyField:
-    CURRENCYSYMBOL: $
-  Date:
-    LessThanMinuteAgo: 'mindre enn ett minutt'
-    TIMEDIFFAGO: '{difference} siden'
-    TIMEDIFFIN: 'i {difference}'
-  DateField:
-    NOTSET: 'Ikke satt'
-    TODAY: i dag
-    VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
-    VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
-    VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
-  Director:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensjoner
+    EDIT: Rediger
+    EDITINFO: 'Rediger denne filen'
+    FIELDNOTSET: 'Filinformasjon ikke funnet'
+    REMOVE: Fjern
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Hovedinnstillinger
+  SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ugyldig forespørsel'
-  DropdownField:
-    CHOOSE: (Velg)
-  EmailField:
-    VALIDATION: 'Vennligst skriv inn en epostadresse'
-  Enum:
-    ANY: Noen
-  ForgotPasswordEmail_ss:
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
     HELLO: Hei
     TEXT1: 'Her er din'
     TEXT2: 'lenke for nullstilling av passord'
     TEXT3: for
-  Form:
+  SilverStripe\Forms\ConfirmedPasswordField:
+    ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
+    BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
+    MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
+    SHOWONCLICKTITLE: 'Endre passord'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: $
+  SilverStripe\Forms\DateField:
+    NOTSET: 'Ikke satt'
+    TODAY: 'i dag'
+    VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
+    VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
+    VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Velg)
+  SilverStripe\Forms\EmailField:
+    VALIDATION: 'Vennligst skriv inn en epostadresse'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene stemmer ikke overens'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
     VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: ingen
-  GridAction:
-    DELETE_DESCRIPTION: Slett
-    Delete: Slett
-    UnlinkRelation: Koble fra
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Legg til {name}'
+    CSVEXPORT: 'Eksporter til CSV'
     Filter: Filtrer
     FilterBy: 'Filtrer på '
     Find: Finn
     LinkExisting: 'Knytt til eksisterende'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Ingen elementer ble funnet'
+    OF: av
     PRINTEDAT: 'Skrevet ut ved'
     PRINTEDBY: 'Skrevet ut av'
     PlaceHolder: 'Finn {type}'
     PlaceHolderWithLabels: 'Finn {type} ved {name}'
-    RelationSearch: 'Relasjonssøk'
+    Print: 'Skriv ut'
+    RelationSearch: Relasjonssøk
     ResetFilter: Tilbakestille
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Slett
+    Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     EditPermissionsFailure: 'Ikke tilgang til å fjerne oppføringer'
-  GridFieldDetailForm:
+    UnlinkRelation: 'Koble fra'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Opprett
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     Deleted: 'Slettet %s %s'
     Save: Lagre
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Rediger
-  Group:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Side
+    View: Viser
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Egendefinert
+    DATEFORMATBAD: 'Datoformat er ugyldig'
+    DAYNOLEADING: 'Dag i måneden uten ledende null'
+    DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
+    FOURDIGITYEAR: 'Firesifret årstall'
+    MINUTENOLEADING: 'Minutt uten ledende null'
+    MONTHNOLEADING: 'Månedssiffer uten ledende null'
+    Preview: Forhåndsvisning
+    TWODIGITDAY: 'Tosifret månedstall'
+    TWODIGITYEAR: 'Tosifret årstall'
+    Toggle: 'Vis formateringshjelp'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Mengde
+    FIELDLABELCURRENCY: Valuta
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Er tom'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Vennligst skriv inn et gyldig telefonnummer'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: 'Sann eller usann'
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'mindre enn ett minutt'
+    TIMEDIFFAGO: '{difference} siden'
+    TIMEDIFFIN: 'i {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Noen
+  SilverStripe\ORM\Hierarchy\Hierarchy:
+    InfiniteLoopNotAllowed: 'Uendelig løkke ble funnet i hierarkiet til "{type}". Vennligst skift ut overordnet type for å løse dette.'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vennligst skriv inn et brukernavn og passord'
+    ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
+    ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
+  SilverStripe\Security\Group:
     AddRole: 'Legg til en rolle for denne gruppen'
-    Code: 'Gruppekode'
+    Code: Gruppekode
     DefaultGroupTitleAdministrators: Administratorer
-    DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
+    DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     HierarchyPermsError: 'Kan ikke angi overordnet gruppe "%s" med administratorrettigheter (krever ADMIN-tilgang)'
@@ -94,16 +137,14 @@ nb:
     NoRoles: 'Ingen roller funnet'
     Parent: 'Overordnet gruppe'
     RolesAddEditLink: 'Administrer roller'
-    Sort: 'Sorteringsrekkefølge'
+    Sort: Sorteringsrekkefølge
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Uendelig løkke ble funnet i hierarkiet til "{type}". Vennligst skift ut overordnet type for å løse dette.'
-  LoginAttempt:
-    Email: 'Epostadresse'
-    IP: 'IP-adresse'
+  SilverStripe\Security\LoginAttempt:
+    Email: Epostadresse
+    IP: IP-adresse
     Status: Status
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Legg til en gruppe'
     BUTTONCHANGEPASSWORD: 'Bytt passord'
     BUTTONLOGIN: 'Logg inn'
@@ -119,7 +160,7 @@ nb:
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
     ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
-    FIRSTNAME: 'Fornavn'
+    FIRSTNAME: Fornavn
     INTERFACELANG: 'Språk på grensesnitt'
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
@@ -136,53 +177,28 @@ nb:
     db_LockedOutUntil: 'Stengt ute inntil'
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-post og passord'
-  MemberDatetimeOptionsetField:
-    Custom: Egendefinert
-    DATEFORMATBAD: 'Datoformat er ugyldig'
-    DAYNOLEADING: 'Dag i måneden uten ledende null'
-    DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
-    FOURDIGITYEAR: 'Firesifret årstall'
-    MINUTENOLEADING: 'Minutt uten ledende null'
-    MONTHNOLEADING: 'Månedssiffer uten ledende null'
-    Preview: Forhåndsvisning
-    TWODIGITDAY: 'Tosifret månedstall'
-    TWODIGITYEAR: 'Tosifret årstall'
-    Toggle: 'Vis formateringshjelp'
-  MoneyField:
-    FIELDLABELAMOUNT: Mengde
-    FIELDLABELCURRENCY: Valuta
-  NullableField:
-    IsNullLabel: 'Er tom'
-  NumericField:
-    VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
-  Pagination:
-    Page: Side
-    View: Viser
-  PasswordValidator:
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
     PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
     TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administratorer
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
-  PermissionCheckboxSetField:
+    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
     FromRole: 'arvet fra rolle "{title}"'
     FromRoleOnGroup: 'arvet fra rollen "%s" i gruppen "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Bare administratorer kan søke'
     Title: Tittel
-  PermissionRoleCode:
+  SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
-  Permissions:
-    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
-  PhoneNumberField:
-    VALIDATION: 'Vennligst skriv inn et gyldig telefonnummer'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
     BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
     CHANGEPASSWORDBELOW: 'Du kan bytte passord under her.'
@@ -196,25 +212,3 @@ nb:
     NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'
     PASSWORDSENTHEADER: 'Lenke for nullstilling av passord ble sendt til ''{email}'''
     PASSWORDSENTTEXT: 'Takk! En lenke for å lage nytt passord er sendt til ''{email}'', forutsatt at det eksisterer en konto for denne epostadressen.'
-  SecurityAdmin:
-    GROUPNAME: 'Gruppenavn'
-    MEMBERS: Medlemmer
-    NEWGROUP: 'Ny gruppe'
-    PERMISSIONS: Tilganger
-    ROLES: Roller
-    ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
-  SiteTree:
-    TABMAIN: Hovedinnstillinger
-  TableListField:
-    CSVEXPORT: 'Eksporter til CSV'
-    Print: Skriv ut
-  TableListField_PageControls_ss:
-    OF: av
-  TimeField:
-    VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
-  UploadField:
-    Dimensions: Dimensjoner
-    EDIT: Rediger
-    EDITINFO: 'Rediger denne filen'
-    FIELDNOTSET: 'Filinformasjon ikke funnet'
-    REMOVE: Fjern

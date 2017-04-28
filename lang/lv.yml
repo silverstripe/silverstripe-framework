@@ -1,36 +1,51 @@
 lv:
-  BasicAuth:
-    ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
-    ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
-    ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
-  Boolean:
-    ANY: Jebkurš
-  ChangePasswordEmail_ss:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Grupas nosaukums'
+    MEMBERS: Lietotāji
+    PERMISSIONS: Atļaujas
+    ROLES: Lomas
+    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Sākums
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
-    HELLO: Sveiki
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Mainīt paroli'
-  CurrencyField:
-    CURRENCYSYMBOL: Ls
-  DateField:
-    NOTSET: 'nav uzstādīts'
-    TODAY: šodien
-  DropdownField:
-    CHOOSE: (Izvēlieties)
-  Enum:
-    ANY: Jebkuru
-  ForgotPasswordEmail_ss:
     HELLO: Sveiki
     TEXT1: 'Šeit ir Jūsu'
     TEXT2: 'paroles atiestatīšanas saite'
     TEXT3: ' '
-  Form:
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Mainīt paroli'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: Ls
+  SilverStripe\Forms\DateField:
+    NOTSET: 'nav uzstādīts'
+    TODAY: šodien
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Izvēlieties)
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
     VALIDATIONPASSWORDSNOTEMPTY: 'Paroles nedrīkst būt tukšas'
     VALIDATOR: Validators
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: neviens
-  Group:
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Eksportēt uz CSV'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Skaits
+    FIELDLABELCURRENCY: Valūta
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Ir Null'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Jebkurš
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Jebkuru
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
+    ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
+    ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
+  SilverStripe\Security\Group:
     Code: 'Grupas kods'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Satura autori'
@@ -40,13 +55,13 @@ lv:
     Sort: 'Kārtošanas secība'
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'E-pasta adrese'
     IP: 'IP Adrese'
     Status: Statuss
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mainīt paroli'
-    BUTTONLOGIN: 'PIeslēgties'
+    BUTTONLOGIN: PIeslēgties
     BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
@@ -57,7 +72,7 @@ lv:
     ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
     ERRORNEWPASSWORD: 'Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz'
     ERRORPASSWORDNOTMATCH: 'Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz'
-    FIRSTNAME: 'Vārds'
+    FIRSTNAME: Vārds
     INTERFACELANG: 'Saskarnes Valoda'
     NEWPASSWORD: 'Jaunā parole'
     PASSWORD: Parole
@@ -70,38 +85,21 @@ lv:
     db_LockedOutUntil: 'Izslēgts līdz'
     db_Password: Parole
     db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-pasts un Parole'
-  MoneyField:
-    FIELDLABELAMOUNT: Skaits
-    FIELDLABELCURRENCY: Valūta
-  NullableField:
-    IsNullLabel: 'Ir Null'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrators
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'mantots no lomas "%s" grupā "%s"'
-  PhoneNumberField:
-    VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat atkārtoti pieslēgties. '
     BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
     CHANGEPASSWORDBELOW: 'Jūs varat nomainīt savu paroli zemāk.'
     CHANGEPASSWORDHEADER: 'Mainīt paroli'
     ENTERNEWPASSWORD: 'Lūdzu ievadiet jaunu paroli.'
     ERRORPASSWORDPERMISSION: 'Lai mainītu paroli, Jums ir jāpieslēdzas!'
-    LOGIN: 'Pieslēgties'
+    LOGIN: Pieslēgties
     NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
     NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'
-  SecurityAdmin:
-    GROUPNAME: 'Grupas nosaukums'
-    MEMBERS: Lietotāji
-    PERMISSIONS: Atļaujas
-    ROLES: Lomas
-    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
-  SiteTree:
-    TABMAIN: Sākums
-  TableListField:
-    CSVEXPORT: 'Eksportēt uz CSV'

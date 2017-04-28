@@ -1,11 +1,11 @@
 da:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    NEWGROUP: 'Ny gruppe'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Først uploadet'
     LASTEDIT: 'Sidst ændret'
-    SIZE: 'Størrelse'
-    TYPE: 'Type'
-    URL: URL Adresse
-  GridField:
+    SIZE: Størrelse
+    TYPE: Type
+    URL: 'URL Adresse'
+  SilverStripe\Forms\GridField\GridField:
     Filter: Filter
-  SecurityAdmin:
-    NEWGROUP: 'Ny gruppe'

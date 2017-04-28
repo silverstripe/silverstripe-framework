@@ -1,81 +1,110 @@
 hr:
-  AssetTableField:
-    CREATED: 'Uploadano'
+  SilverStripe\Admin\SecurityAdmin:
+    MEMBERS: Članovi
+    NEWGROUP: 'Nova Grupa'
+    PERMISSIONS: Dozvole
+    ROLES: Uloge
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+    CREATED: Uploadano
     HEIGHT: Visina
     LASTEDIT: 'Zadnja promjena'
     SIZE: 'Veličina datoteke'
     TYPE: 'Tip datoteke'
     URL: Link
-    WIDTH: Širina
-  BasicAuth:
-    ENTERINFO: 'Unesite korisničko ime i lozinu'
-    ERRORNOTADMIN: 'Korisnik nije administrator'
-    ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
-  Boolean:
-    ANY: Bilo koji
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Zaboravljena lozinka?'
-  CMSSecurity:
-    SUCCESS: Uspjeh
-    TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
-    TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
-  ChangePasswordEmail_ss:
+    WIDTH: 'Širina'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Uredi
+    EDITINFO: 'Uredi ovu datoteku'
+    REMOVE: Ukloni
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Osnovno
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Neispravan zahtjev'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
     CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
-    HELLO: Pozdrav
-  CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Promjenite lozinku'
-  CurrencyField:
-    CURRENCYSYMBOL: $
-  Date:
-    LessThanMinuteAgo: 'manje od minute'
-    TIMEDIFFAGO: 'prije {difference}'
-    TIMEDIFFIN: 'za {difference}'
-  DateField:
-    NOTSET: 'nije postavljeno'
-    TODAY: danas
-    VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
-  Director:
-    INVALID_REQUEST: 'Neispravan zahtjev'
-  DropdownField:
-    CHOOSE: (Odaberite)
-  EmailField:
-    VALIDATION: 'Molimo unesite email adresu'
-  Enum:
-    ANY: bilo koji
-  ForgotPasswordEmail_ss:
     HELLO: Pozdrav
     TEXT1: 'Ovdje je Vaš'
     TEXT2: 'link za resetiranje lozinke'
     TEXT3: za
-  Form:
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Ne
+    YESANSWER: Da
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Promjenite lozinku'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: $
+  SilverStripe\Forms\DateField:
+    NOTSET: 'nije postavljeno'
+    TODAY: danas
+    VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Odaberite)
+  SilverStripe\Forms\EmailField:
+    VALIDATION: 'Molimo unesite email adresu'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: nijedan
-  GridAction:
-    DELETE_DESCRIPTION: Obriši
-    Delete: Obriši
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Pronađi
-  GridFieldDetailForm:
+    OF: od
+    Print: Ispiši
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Obriši
+    Delete: Obriši
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Odustani
     Create: Kreiraj
     Delete: Obriši
     DeletePermissionsFailure: 'Nema dozvole brisanja'
     Deleted: 'Obrisano %s %s'
     Save: Spremi
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Uredi
-  Group:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Stranica
+    View: Pregled
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
+    ANCHORVALUE: Sidro
+    IMAGEDIMENSIONS: Dimenzije
+    IMAGEHEIGHTPX: Visina
+    IMAGEWIDTHPX: 'Širina'
+    LINK: 'Ubaci vezu'
+    LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
+    PAGE: Stranica
+    URL: Link
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Preview: Pregled
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELCURRENCY: Valuta
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Molim unesite ispravan telefonski broj'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: 'Bilo koji'
+    NOANSWER: Ne
+    YESANSWER: Da
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 'manje od minute'
+    TIMEDIFFAGO: 'prije {difference}'
+    TIMEDIFFIN: 'za {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: 'bilo koji'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Unesite korisničko ime i lozinu'
+    ERRORNOTADMIN: 'Korisnik nije administrator'
+    ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
+  SilverStripe\Security\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Zaboravljena lozinka?'
+  SilverStripe\Security\CMSSecurity:
+    SUCCESS: Uspjeh
+    TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
+    TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
+  SilverStripe\Security\Group:
     Code: 'Krupni kod'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori sadržaja'
@@ -84,23 +113,14 @@ hr:
     Parent: 'Roditeljska grupa'
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
-  HTMLEditorField:
-    ANCHORVALUE: Sidro
-    IMAGEDIMENSIONS: Dimenzije
-    IMAGEHEIGHTPX: Visina
-    IMAGEWIDTHPX: Širina
-    LINK: 'Ubaci vezu'
-    LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
-    PAGE: Stranica
-    URL: Link
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Email adresa'
     IP: 'IP adresa'
     Status: Status
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
     BUTTONLOSTPASSWORD: 'Zaboravljena lozinka?'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
@@ -111,7 +131,7 @@ hr:
     EMAIL: Email
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova lozinka'
     PASSWORD: Lozinka
@@ -123,23 +143,14 @@ hr:
     db_LockedOutUntil: 'Zaključano do'
     db_Password: Lozinka
     db_PasswordExpiry: 'Lozinka ističe'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-mail &amp; Lozinka'
-  MemberDatetimeOptionsetField:
-    Preview: Pregled
-  MoneyField:
-    FIELDLABELCURRENCY: Valuta
-  Pagination:
-    Page: Stranica
-    View: Pregled
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Puna administrativna prava'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     Title: Naslov
-  PhoneNumberField:
-    VALIDATION: 'Molim unesite ispravan telefonski broj'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nije Vam dozvoljen pristup ovoj stranici. Imate li drugi korisnički račun koji ima prava pristupa ovoj stranici možete se koristiti njime.'
     BUTTONSEND: 'Pošalji mi link za reset lozinke'
     CHANGEPASSWORDBELOW: 'Svoju lozinku možete promjeniti ovdje'
@@ -149,18 +160,3 @@ hr:
     LOGIN: 'Logiraj se'
     NOTEPAGESECURED: 'Ova stranica je zaštićena. Prijavite se na sustav sa svojim pristupnim podatcima i odmah ćemo vas preusmjeriti.'
     NOTERESETPASSWORD: 'Unesite svoju e-mail adresu, a mi ćemo Vam poslati link putem kojega možete resetirati Vašu lozinku.'
-  SecurityAdmin:
-    MEMBERS: Članovi
-    NEWGROUP: 'Nova Grupa'
-    PERMISSIONS: Dozvole
-    ROLES: Uloge
-  SiteTree:
-    TABMAIN: Osnovno
-  TableListField:
-    Print: Ispiši
-  TableListField_PageControls_ss:
-    OF: od
-  UploadField:
-    EDIT: Uredi
-    EDITINFO: 'Uredi ovu datoteku'
-    REMOVE: Ukloni

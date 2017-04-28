@@ -1,36 +1,40 @@
 si:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    NEWGROUP: 'අලුත් කන්ඩාමක්'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'
     LASTEDIT: 'අවසාන ලිපිය වෙනස්  කරන ලදී'
-    SIZE: 'තරම'
-    TYPE: 'වර්ගය'
-  BasicAuth:
-    ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
-    ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
-    ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
-  ChangePasswordEmail_ss:
+    SIZE: තරම
+    TYPE: වර්ගය
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: ප්‍රදාන
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
-    HELLO: කොහොමද
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
-  DropdownField:
-    CHOOSE: (තොරන්න)
-  ForgotPasswordEmail_ss:
     HELLO: කොහොමද
     TEXT1: 'මෙය ඔබගේ'
     TEXT3: සඳහා
-  Form:
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (තොරන්න)
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'මුර පද අසමානය'
     VALIDATIONPASSWORDSNOTEMPTY: 'මුර පදය විය නොහැක'
-  Group:
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
+    ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
+    ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
+  SilverStripe\Security\Group:
     Code: 'කාන්ඩ සංකේතය'
     Locked: 'අගුලුලාද?'
     Parent: 'මවු කාන්ඩය'
-    has_many_Permissions: අවසර
+    has_many_Permissions: 'අවසර'
     many_many_Members: සාමාජිකයින්
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
-    BUTTONLOGIN: 'ඇතුල්වන්න'
+    BUTTONLOGIN: ඇතුල්වන්න
     BUTTONLOGINOTHER: 'වෙනත් නමකින් ඇතුල්වන්න'
     BUTTONLOSTPASSWORD: 'මුර පදය නැති වී ඇත'
     CONFIRMNEWPASSWORD: 'අලුත් මුර පදය හරිද'
@@ -39,9 +43,9 @@ si:
     ERRORNEWPASSWORD: 'අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න'
     ERRORPASSWORDNOTMATCH: 'ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න'
     FIRSTNAME: 'මුල් නම'
-    INTERFACELANG: 'භාෂා'
+    INTERFACELANG: භාෂා
     NEWPASSWORD: 'අලුත් මුර පදයක්'
-    PASSWORD: මුර පදය
+    PASSWORD: 'මුර පදය'
     SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'
     SUBJECTPASSWORDRESET: 'මුර පදය අලුත් කරන ලිපිනය'
     SURNAME: වාසගම
@@ -49,11 +53,9 @@ si:
     belongs_many_many_Groups: කාන්ඩ
     db_LockedOutUntil: 'අගුලුලා ඇත්තේ'
     db_PasswordExpiry: 'මුර පදය කල් ඉකුත් වීමේ දිනය'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'ඊමේල් හා මුර පදය'
-  PhoneNumberField:
-    VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
     BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
     CHANGEPASSWORDBELOW: 'පහතින් මුර පදය වෙනස්  කල හැක'
@@ -61,7 +63,3 @@ si:
     ENTERNEWPASSWORD: 'අලුත් මුර පදය ඇතුල් කරන්න'
     ERRORPASSWORDPERMISSION: 'ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න'
     NOTERESETPASSWORD: 'ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න'
-  SecurityAdmin:
-    NEWGROUP: 'අලුත් කන්ඩාමක්'
-  SiteTree:
-    TABMAIN: ප්‍රදාන

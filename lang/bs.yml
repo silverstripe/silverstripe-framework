@@ -1,45 +1,54 @@
 bs:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Ime grupe'
+    MEMBERS: Članovi
+    NEWGROUP: 'Nova grupa'
+    PERMISSIONS: Ovlaštenja
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: 'Prvo postavljeno'
     LASTEDIT: 'Zadnja promjena'
-    SIZE: 'Veličina'
-    TYPE: 'Tip'
-  BasicAuth:
-    ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
-    ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
-    ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
-  Boolean:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
-  ChangePasswordEmail_ss:
+    SIZE: Veličina
+    TYPE: Tip
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Glavno
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
-    HELLO: Pozdrav
-  CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
-  CurrencyField:
-    CURRENCYSYMBOL: KM
-  DateField:
-    NOTSET: 'nije postavljeno'
-    TODAY: danas
-  DropdownField:
-    CHOOSE: (Izaberite)
-  ForgotPasswordEmail_ss:
     HELLO: Pozdrav
     TEXT1: 'Ovo je Vaš'
     TEXT2: 'link za ponovno podešavanje šifre'
     TEXT3: za
-  Form:
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Ne
+    YESANSWER: Da
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: KM
+  SilverStripe\Forms\DateField:
+    NOTSET: 'nije postavljeno'
+    TODAY: danas
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Izaberite)
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Šifre se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Polja za unos šifre ne smiju ostati prazna'
-    VALIDATOR: Provjera ispravnosti
-  FormField:
+    VALIDATOR: 'Provjera ispravnosti'
+  SilverStripe\Forms\FormField:
     NONE: ništa
-  GridFieldDetailForm:
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Izvezi u CSV'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Kreiraj
-  Member:
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Molimo, unesite ispravan broj telefona'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    NOANSWER: Ne
+    YESANSWER: Da
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
+    ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
+    ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Promijeni šifru'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se sa drugim korisnikom'
     BUTTONLOSTPASSWORD: 'Zaboravio sam šifru'
     CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
@@ -47,36 +56,25 @@ bs:
     EMAIL: E-mail
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu šifru, pokušajte ponovo'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna šifra se ne slaže, molimo pokušajte ponovo'
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
-    PASSWORD: Šifra
+    PASSWORD: 'Šifra'
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
     YOUROLDPASSWORD: 'Vaša stara šifra'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-mail i šifra'
-  Permission:
+  SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
-  PhoneNumberField:
-    VALIDATION: 'Molimo, unesite ispravan broj telefona'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod.'
     BUTTONSEND: 'Pošalji mi link za ponovno podešavanje šifre'
     CHANGEPASSWORDBELOW: 'Vašu šifru možete promijeniti ispod.'
     CHANGEPASSWORDHEADER: 'Promijenite Vašu šifru'
     ENTERNEWPASSWORD: 'Molimo, unesite novu šifru.'
     ERRORPASSWORDPERMISSION: 'Morate se prijaviti kako bi promijenili Vašu šifru.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     NOTEPAGESECURED: 'Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj.'
     NOTERESETPASSWORD: 'Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre.'
-  SecurityAdmin:
-    GROUPNAME: 'Ime grupe'
-    MEMBERS: Članovi
-    NEWGROUP: 'Nova grupa'
-    PERMISSIONS: Ovlaštenja
-  SiteTree:
-    TABMAIN: Glavno
-  TableListField:
-    CSVEXPORT: 'Izvezi u CSV'

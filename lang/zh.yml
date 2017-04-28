@@ -1,107 +1,150 @@
 zh:
-  AssetTableField:
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 小组名称
+    MEMBERS: 成员
+    NEWGROUP: 新的小组
+    PERMISSIONS: 权限
+    ROLES: 角色
+    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     CREATED: '首先上传的'
-    LASTEDIT: '最近更改的'
-    SIZE: '文件尺寸'
-    TYPE: '文件类型'
+    LASTEDIT: 最近更改的
+    SIZE: 文件尺寸
+    TYPE: 文件类型
     URL: 网址
-  BasicAuth:
-    ENTERINFO: '请输入一个用户名和密码。'
-    ERRORNOTADMIN: '那个用户不是一名管理员。'
-    ERRORNOTREC: '那个用户名 / 密码无法被辨认'
-  Boolean:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 尺寸
+    EDIT: 编辑
+    EDITINFO: 编辑该文件
+    FIELDNOTSET: 没有找到文件信息
+    REMOVE: 移除
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: 主要的
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: '无效请求'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: '您的密码已更改为：'
+    HELLO: 您好
+    TEXT1: 这是您的
+    TEXT2: '密码重设链接'
+    TEXT3: 为
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: 不是
+    YESANSWER: 是
+  SilverStripe\Forms\ConfirmedPasswordField:
+    ATLEAST: '密码长度必须至少 {min} 个字符。'
+    BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
+    MAXIMUM: '密码长度必须至多 {max} 个字符。'
+    SHOWONCLICKTITLE: '更改密码'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: 货币字符
+  SilverStripe\Forms\DateField:
+    NOTSET: 未设置
+    TODAY: 今天
+    VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
+    VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
+    VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: （选择）
+    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
+  SilverStripe\Forms\EmailField:
+    VALIDATION: '请输入一个电子邮件地址'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。
+    VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
+    VALIDATIONPASSWORDSNOTEMPTY: '密码不得为空'
+    VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
+    VALIDATOR: 验证器
+    VALIDCURRENCY: '请输入一个有效的货币'
+  SilverStripe\Forms\FormField:
+    NONE: '无'
+  SilverStripe\Forms\GridField\GridField:
+    Add: '添加 {name}'
+    CSVEXPORT: '导出到 CSV'
+    Filter: 过滤器
+    FilterBy: 过滤条件
+    Find: 查找
+    LinkExisting: 链接已存在
+    NewRecord: '新 %s'
+    NoItemsFound: 没有找到任何项目
+    OF: 的
+    PRINTEDAT: 印刷地
+    PRINTEDBY: 印刷人
+    PlaceHolder: '查找 {type}'
+    PlaceHolderWithLabels: '通过 {name} 查找 {type}'
+    Print: 打印
+    RelationSearch: '关系搜索'
+    ResetFilter: 重设
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: '删除'
+    Delete: '删除'
+    DeletePermissionsFailure: '没有删除权限'
+    EditPermissionsFailure: 没有解除记录链接的权限
+    UnlinkRelation: 解除链接
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: 取消
+    Create: 创建
+    Delete: '删除'
+    DeletePermissionsFailure: '没有删除权限'
+    Deleted: '已删除的 %s %s'
+    Save: 保存
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+    EDIT: 编辑
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: 页面
+    View: 查看
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: 自定义
+    DATEFORMATBAD: '日期格式无效'
+    DAYNOLEADING: 起首不为零的月份日期
+    DIGITSDECFRACTIONSECOND: 一个或多个代表秒的小数数字
+    FOURDIGITYEAR: 四位数年份
+    MINUTENOLEADING: 起首不为零的分钟
+    MONTHNOLEADING: 起首不为零的月份数字
+    Preview: 预览
+    TWODIGITDAY: 两位数表示的月份日期
+    TWODIGITYEAR: 两位数表示的年份
+    Toggle: '显示格式帮助'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: 金额
+    FIELDLABELCURRENCY: 货币
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 为空
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: '请输入一个有效的电话号码'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
+  SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 任何
-    NOANSWER: '不是'
-    YESANSWER: '是'
-  CMSMemberLoginForm:
+    NOANSWER: 不是
+    YESANSWER: 是
+  SilverStripe\ORM\FieldType\DBDate:
+    LessThanMinuteAgo: 少于一分钟
+    TIMEDIFFAGO: '{difference} 以前'
+    TIMEDIFFIN: '在 {difference} 中'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: 任何
+  SilverStripe\ORM\Hierarchy\Hierarchy:
+    InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: '请输入一个用户名和密码。'
+    ERRORNOTADMIN: 那个用户不是一名管理员。
+    ERRORNOTREC: '那个用户名 / 密码无法被辨认'
+  SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: '忘记密码？'
-    BUTTONLOGIN: '重新登录'
-    BUTTONLOGOUT: '登出'
+    BUTTONLOGIN: 重新登录
+    BUTTONLOGOUT: 登出
     PASSWORDEXPIRED: '<p>您的密码已过期。 <a target="_top" href="{link}">请选择一个新的。</a></ P>'
-  CMSSecurity:
+  SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>用户已无效。 <a target="_top" href="{link}">请在此继续重新进行身份验证</a>。</ p>'
     LoginMessage: '<p>如果您有任何未保存的工作，你可以重新登录以回到你未保存的地方。</p>'
     SUCCESS: 成功
     SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
     TimedOutTitleAnonymous: '你的登陆超时已过期。'
     TimedOutTitleMember: '你好{name}!<br />你的登陆超时已过期。'
-  ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: '您的密码已更改为：'
-    HELLO: 您好
-  CheckboxField:
-    NOANSWER: '不是'
-    YESANSWER: '是'
-  ConfirmedPasswordField:
-    ATLEAST: '密码长度必须至少 {min} 个字符。'
-    BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
-    MAXIMUM: '密码长度必须至多 {max} 个字符。'
-    SHOWONCLICKTITLE: '更改密码'
-  CurrencyField:
-    CURRENCYSYMBOL: 货币字符
-  Date:
-    LessThanMinuteAgo: '少于一分钟'
-    TIMEDIFFAGO: '{difference} 以前'
-    TIMEDIFFIN: '在 {difference} 中'
-  DateField:
-    NOTSET: '未设置'
-    TODAY: 今天
-    VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
-    VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
-    VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
-  Director:
-    INVALID_REQUEST: '无效请求'
-  DropdownField:
-    CHOOSE: （选择）
-    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
-  EmailField:
-    VALIDATION: '请输入一个电子邮件地址'
-  Enum:
-    ANY: 任何
-  ForgotPasswordEmail_ss:
-    HELLO: 您好
-    TEXT1: '这是您的'
-    TEXT2: '密码重设链接'
-    TEXT3: 为
-  Form:
-    CSRF_FAILED_MESSAGE: '似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。'
-    VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
-    VALIDATIONPASSWORDSNOTEMPTY: '密码不得为空'
-    VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
-    VALIDATOR: 验证器
-    VALIDCURRENCY: '请输入一个有效的货币'
-  FormField:
-    NONE: 无
-  GridAction:
-    DELETE_DESCRIPTION: 删除
-    Delete: 删除
-    UnlinkRelation: 解除链接
-  GridField:
-    Add: '添加 {name}'
-    Filter: 过滤器
-    FilterBy: '过滤条件'
-    Find: 查找
-    LinkExisting: '链接已存在'
-    NewRecord: '新 %s'
-    NoItemsFound: '没有找到任何项目'
-    PRINTEDAT: '印刷地'
-    PRINTEDBY: '印刷人'
-    PlaceHolder: '查找 {type}'
-    PlaceHolderWithLabels: '通过 {name} 查找 {type}'
-    RelationSearch: '关系搜索'
-    ResetFilter: 重设
-  GridFieldAction_Delete:
-    DeletePermissionsFailure: '没有删除权限'
-    EditPermissionsFailure: '没有解除记录链接的权限'
-  GridFieldDetailForm:
-    CancelBtn: 取消
-    Create: 创建
-    Delete: 删除
-    DeletePermissionsFailure: '没有删除权限'
-    Deleted: '已删除的 %s %s'
-    Save: 保存
-  GridFieldEditButton_ss:
-    EDIT: 编辑
-  Group:
+  SilverStripe\Security\Group:
     AddRole: '在这个小组中添加一个角色'
     Code: '小组代码'
     DefaultGroupTitleAdministrators: 管理员
@@ -109,41 +152,39 @@ zh:
     Description: 描述
     GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
     HierarchyPermsError: '无法为父组 "%s" 分配特权权限（要求具备 ADMIN 访问）'
-    Locked: '锁定？'
-    NoRoles: '没有找到角色'
-    Parent: '父组'
-    RolesAddEditLink: '管理角色'
-    Sort: '排序'
+    Locked: 锁定？
+    NoRoles: 没有找到角色
+    Parent: 父组
+    RolesAddEditLink: 管理角色
+    Sort: 排序
     has_many_Permissions: 权限
     many_many_Members: 成员
-  Hierarchy:
-    InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
-  LoginAttempt:
-    Email: '电子邮件地址'
+  SilverStripe\Security\LoginAttempt:
+    Email: 电子邮件地址
     IP: 'IP 地址'
     Status: 状态
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: '添加组别'
     BUTTONCHANGEPASSWORD: '更改密码'
-    BUTTONLOGIN: '登录'
-    BUTTONLOGINOTHER: '以不同身份登录'
+    BUTTONLOGIN: 登录
+    BUTTONLOGINOTHER: 以不同身份登录
     BUTTONLOSTPASSWORD: '我丢失了密码'
     CONFIRMNEWPASSWORD: '确认新密码'
     CONFIRMPASSWORD: '确认密码'
-    DefaultAdminFirstname: '默认管理员'
+    DefaultAdminFirstname: 默认管理员
     EMAIL: 电子邮件
     EMPTYNEWPASSWORD: '新密码不能为空，请重试'
     ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
     ERRORLOCKEDOUT2: '由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。'
     ERRORNEWPASSWORD: '您输入的新密码不同，请重试'
     ERRORPASSWORDNOTMATCH: '您的现有密码不匹配，请重试'
-    ERRORWRONGCRED: '所提供的资料似乎是不正确的。请再试一次。'
-    FIRSTNAME: '名字'
-    INTERFACELANG: '界面语言'
+    ERRORWRONGCRED: 所提供的资料似乎是不正确的。请再试一次。
+    FIRSTNAME: 名字
+    INTERFACELANG: 界面语言
     LOGGEDINAS: '您以 {name} 身份登录。'
     NEWPASSWORD: '新密码'
     NoPassword: '该成员无密码'
-    PASSWORD: 密码
+    PASSWORD: '密码'
     PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
     SUBJECTPASSWORDCHANGED: '您的密码已更改'
     SUBJECTPASSWORDRESET: '您的密码重设链接'
@@ -152,89 +193,42 @@ zh:
     WELCOMEBACK: '欢迎回来， {firstname}'
     YOUROLDPASSWORD: '您的旧密码'
     belongs_many_many_Groups: 群组
-    db_Locale: '界面区域设置'
-    db_LockedOutUntil: '保持锁定直到'
-    db_Password: 密码
+    db_Locale: 界面区域设置
+    db_LockedOutUntil: 保持锁定直到
+    db_Password: '密码'
     db_PasswordExpiry: '密码失效日期'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: '电子邮件和密码'
-  MemberDatetimeOptionsetField:
-    Custom: 自定义
-    DATEFORMATBAD: '日期格式无效'
-    DAYNOLEADING: '起首不为零的月份日期'
-    DIGITSDECFRACTIONSECOND: '一个或多个代表秒的小数数字'
-    FOURDIGITYEAR: '四位数年份'
-    MINUTENOLEADING: '起首不为零的分钟'
-    MONTHNOLEADING: '起首不为零的月份数字'
-    Preview: 预览
-    TWODIGITDAY: '两位数表示的月份日期'
-    TWODIGITYEAR: '两位数表示的年份'
-    Toggle: '显示格式帮助'
-  MoneyField:
-    FIELDLABELAMOUNT: 金额
-    FIELDLABELCURRENCY: 货币
-  NullableField:
-    IsNullLabel: '为空'
-  NumericField:
-    VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
-  Pagination:
-    Page: 页面
-    View: 查看
-  PasswordValidator:
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
     PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
     TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: 管理员
     FULLADMINRIGHTS: '完全管理权'
     FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
-  PermissionCheckboxSetField:
+    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
     FromRole: '从角色 "{title}"继承'
     FromRoleOnGroup: '从 "%s" 小组的 "%s" 角色继承'
-  PermissionRole:
-    OnlyAdminCanApply: '只有管理员可以应用'
-    Title: 标题
-  PermissionRoleCode:
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 只有管理员可以应用
+    Title: '标题'
+  SilverStripe\Security\PermissionRoleCode:
     PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
-  Permissions:
-    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
-  PhoneNumberField:
-    VALIDATION: '请输入一个有效的电话号码'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
     BUTTONSEND: '将密码重设链接发送给我'
     CHANGEPASSWORDBELOW: '您可以在下面更改您的密码。'
     CHANGEPASSWORDHEADER: '更改您的密码'
     ENTERNEWPASSWORD: '请输入一个新密码。'
     ERRORPASSWORDPERMISSION: '您必须登录才能更改您的密码！'
-    LOGIN: '登录'
+    LOGIN: 登录
     LOSTPASSWORDHEADER: '忘记密码'
     NOTEPAGESECURED: '该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。'
     NOTERESETLINKINVALID: '<p>密码重设链接无效或已过期。</p><p>您可以在<a href="{link1}">这里</a> 要求一个新的或在<a href="{link2}">登录</a>后更改您的密码。</p>'
     NOTERESETPASSWORD: '请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码'
     PASSWORDSENTHEADER: '密码重设链接已发送至''{email}'''
     PASSWORDSENTTEXT: '谢谢！复位链接已发送到 ''{email}''，假定此电子邮件地址存在一个帐户。'
-  SecurityAdmin:
-    GROUPNAME: '小组名称'
-    MEMBERS: 成员
-    NEWGROUP: '新的小组'
-    PERMISSIONS: 权限
-    ROLES: 角色
-    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
-  SiteTree:
-    TABMAIN: 主要的
-  TableListField:
-    CSVEXPORT: '导出到 CSV'
-    Print: 打印
-  TableListField_PageControls_ss:
-    OF: 的
-  TimeField:
-    VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
-  UploadField:
-    Dimensions: 尺寸
-    EDIT: 编辑
-    EDITINFO: '编辑该文件'
-    FIELDNOTSET: '没有找到文件信息'
-    REMOVE: 移除
