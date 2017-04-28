@@ -45,7 +45,7 @@ else
 fi
 
 # Find the PHP binary
-for candidatephp in php php5; do
+for candidatephp in php5.6 php php5; do
 	if [ `which $candidatephp 2>/dev/null` -a -f `which $candidatephp 2>/dev/null` ]; then
 		php=`which $candidatephp 2>/dev/null`
 		break
