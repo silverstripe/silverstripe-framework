@@ -1,15 +1,18 @@
 pa:
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ'
     ERRORNOTADMIN: 'ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
     HELLO: ਹਾਏ
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: '( ਚੁਣੋ )'
-  SilverStripe\Forms\Form:
+  DropdownField:
+    CHOOSE: ( ਚੁਣੋ )
+  ForgotPasswordEmail_ss:
+    HELLO: ਹਾਏ
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
-  SilverStripe\Security\Member:
+  Member:
     BUTTONCHANGEPASSWORD: 'ਤਬਦੀਲ Password'
     BUTTONLOGIN: 'ਲੋਗ ਇਨ'
     BUTTONLOSTPASSWORD: 'ਮੈਂ ਆਪਣਾ password ਗੁਆ ਿਲਆ ਹੈ।'
@@ -22,14 +25,14 @@ pa:
     SUBJECTPASSWORDRESET: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲਣ ਦਾ ਜੋੜ'
     SURNAME: ਗੋਤ
     YOUROLDPASSWORD: 'ਤੁਹਾਡਾ ਪੁਰਾਣਾ password'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'ਈਮੇਲ &amp; '
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ਫ਼ੋਨ ਨੰਬਰ ਪਾਉ'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
     CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'
     CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
     ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: "ਮੁੱਖ\t"

@@ -1,66 +1,69 @@
 id_ID:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'Pertama diunggah'
     LASTEDIT: 'Terakhir diubah'
     SIZE: 'Ukuran berkas'
     TYPE: 'Jenis berkas'
     URL: URL
     WIDTH: Lebar
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Mohon isikan nama pengguna dan kata kunci.'
     ERRORNOTADMIN: 'Pengguna tersebut bukan pengelola.'
     ERRORNOTREC: 'Nama pengguna dan kata kunci tidak dikenal'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Semua
-    NOANSWER: Tidak
-    YESANSWER: Ya
-  SilverStripe\Security\CMSMemberLoginForm:
+    NOANSWER: 'Tidak'
+    YESANSWER: 'Ya'
+  CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
     BUTTONLOGIN: 'Masuk kembali'
-    BUTTONLOGOUT: Keluar
+    BUTTONLOGOUT: 'Keluar'
     PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
-  SilverStripe\Security\CMSSecurity:
+  CMSSecurity:
     INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
     LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
     SUCCESS: Berhasil
     SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
     TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
     TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
     HELLO: Hai
-    TEXT1: 'Berikut ini '
-    TEXT2: 'tautan ganti kata kunci'
-    TEXT3: untuk
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Tidak
-    YESANSWER: Ya
-  SilverStripe\Forms\ConfirmedPasswordField:
+  CheckboxField:
+    NOANSWER: 'Tidak'
+    YESANSWER: 'Ya'
+  ConfirmedPasswordField:
     ATLEAST: 'Kata kunci harus setidaknya terdiri dari {min} karakter.'
     BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
     MAXIMUM: 'Kata kunci tidak boleh lebih dari {max} karakter.'
     SHOWONCLICKTITLE: 'Ganti Kata Kunci'
-  SilverStripe\Forms\CurrencyField:
+  CurrencyField:
     CURRENCYSYMBOL: $
-  SilverStripe\ORM\FieldType\DBDate:
+  Date:
     LessThanMinuteAgo: 'kurang dari semenit'
     TIMEDIFFAGO: '{difference} yang lalu'
     TIMEDIFFIN: 'pada {difference}'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'tidak diatur'
-    TODAY: 'hari ini'
+    TODAY: hari ini
     VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
     VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
-  SilverStripe\Control\Director:
+  Director:
     INVALID_REQUEST: 'Permintaan tidak valid'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Pilih)
     SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'Mohon isikan alamat email'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Semua
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Hai
+    TEXT1: 'Berikut ini '
+    TEXT2: 'tautan ganti kata kunci'
+    TEXT3: untuk
+  Form:
     CSRF_EXPIRED_MESSAGE: 'Sesi Anda sudah habis. Mohon kirim ulang formulir.'
     CSRF_FAILED_MESSAGE: 'Kemungkinan ada masalah teknis. Mohon klik tombol kembali, muat ulang browser, dan coba lagi.'
     VALIDATIONPASSWORDSDONTMATCH: 'Kata kunci tidak sesuai'
@@ -68,23 +71,39 @@ id_ID:
     VALIDATIONSTRONGPASSWORD: 'Kata kunci harus setidaknya terdiri dari satu angka dan satu karakter alfanumerik'
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
-  SilverStripe\Forms\FormField:
-    NONE: 'tidak ada'
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  FormField:
+    NONE: tidak ada
+  GridAction:
+    DELETE_DESCRIPTION: Hapus
+    Delete: Hapus
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Tambah {name}'
+    Filter: Saring
+    FilterBy: 'Saring menurut '
+    Find: Cari
+    LinkExisting: 'Tautan yang Ada'
+    NewRecord: '%s baru'
+    NoItemsFound: 'Tidak ada data'
+    PRINTEDAT: 'Dicetak pada'
+    PRINTEDBY: 'Dicetak oleh'
+    PlaceHolder: 'Cari {type}'
+    PlaceHolderWithLabels: 'Cari {type} menurut {name}'
+    RelationSearch: 'Cari yang terkait'
+    ResetFilter: Reset
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     EditPermissionsFailure: 'Tidak ada ijin membuka tautan'
-  SilverStripe\Forms\GridField\GridField:
-    OF: dari
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     CancelBtn: Batal
     Create: Buat
     Delete: Hapus
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     Deleted: '%s %s dihapus'
     Save: Simpan
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Edit
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Tambahkan peran untuk kelompok ini'
     Code: 'Kode Kelompok'
     DefaultGroupTitleAdministrators: Pengelola
@@ -96,19 +115,19 @@ id_ID:
     NoRoles: 'Tidak ada peran'
     Parent: 'Kelompok Induk'
     RolesAddEditLink: 'Kelola peran'
-    Sort: Urutkan
+    Sort: 'Urutkan'
     has_many_Permissions: Perijinan
     many_many_Members: Pengguna
-  SilverStripe\ORM\Hierarchy\Hierarchy:
+  Hierarchy:
     InfiniteLoopNotAllowed: 'Putaran berulang ditemukan pada hirarki "{type}". Mohon ganti induk untuk mengatasi masalah ini'
-  SilverStripe\Security\LoginAttempt:
+  LoginAttempt:
     Email: 'Alamat Email'
     IP: 'Alamat IP'
     Status: Status
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'Tambah kelompok'
     BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
-    BUTTONLOGIN: Masuk
+    BUTTONLOGIN: 'Masuk'
     BUTTONLOGINOTHER: 'Masuk dengan akun lain'
     BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
@@ -126,22 +145,22 @@ id_ID:
     LOGGEDINAS: 'Anda masuk sebagai {name}.'
     NEWPASSWORD: 'Kata Kunci Baru'
     NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
-    PASSWORD: 'Kata kunci'
+    PASSWORD: Kata kunci
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
     SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
-    SURNAME: 'Nama Belakang'
+    SURNAME: Nama Belakang
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
     WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
     YOUROLDPASSWORD: 'Kata kunci lama'
     belongs_many_many_Groups: Kelompok
     db_Locale: 'Lokal Antarmuka'
     db_LockedOutUntil: 'Kunci sampai'
-    db_Password: 'Kata kunci'
+    db_Password: Kata kunci
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'E-mail &amp; Kata Kunci'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Custom: Custom
     DATEFORMATBAD: 'Format tanggal tidak benar'
     DAYNOLEADING: 'Angka tanggal tanpa nol di depan'
@@ -153,60 +172,69 @@ id_ID:
     TWODIGITDAY: 'Tanggal dua angka'
     TWODIGITYEAR: 'Tahun dua angka'
     Toggle: 'Tampilkan bantuan pemformatan'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Jumlah
-    FIELDLABELCURRENCY: 'Mata Uang'
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: N/A
-  SilverStripe\Forms\NumericField:
+    FIELDLABELCURRENCY: Mata Uang
+  NullableField:
+    IsNullLabel: 'N/A'
+  NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: Laman
     View: Tampilkan
-  SilverStripe\Security\PasswordValidator:
+  PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
     TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari %s karakter atau lebih'
-  SilverStripe\Security\Permission:
-    UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  Permission:
+    AdminGroup: Pengelola
+    FULLADMINRIGHTS: 'Hak pengelolaan penuh'
+    FULLADMINRIGHTS_HELP: 'Abaikan dan kesampingkan semua perijinan yang terhubung lainnya.'
+  PermissionCheckboxSetField:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
     FromRole: 'diwarisi dari peran "{title}"'
     FromRoleOnGroup: 'diwarisi dari peran "%s" pada kelompok "%s"'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     OnlyAdminCanApply: 'Hanya untuk pengelola'
     Title: Judul
-  SilverStripe\Security\PermissionRoleCode:
+  PermissionRoleCode:
     PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
-  SilverStripe\Forms\PhoneNumberField:
+  Permissions:
+    UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
+  PhoneNumberField:
     VALIDATION: 'Mohon isikan nomer telpon yang benar'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
     BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'
     CHANGEPASSWORDBELOW: 'Anda dapat mengganti kata kunci di bawah ini.'
     CHANGEPASSWORDHEADER: 'Ganti kata kunci'
     ENTERNEWPASSWORD: 'Mohon isikan kata kunci yang baru.'
     ERRORPASSWORDPERMISSION: 'Anda harus masuk untuk bisa mengganti kata kunci!'
-    LOGIN: Masuk
+    LOGIN: 'Masuk'
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
     NOTERESETLINKINVALID: '<p>Tautan penggantian kata kunci tidak valid atau sudah kadaluarsa.</p><p>Anda dapat meminta yang baru <a href="{link1}">di sini</a> atau mengganti kata kunci setelah Anda <a href="{link2}">masuk</a>.</p>'
     NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'
     PASSWORDSENTHEADER: 'Tautan penggantian kata kunci dikirimkan ke ''{email}'''
     PASSWORDSENTTEXT: 'Terimakasih! Tautan reset telah dikirim ke ''{email}'', berisi informasi akun untuk alamat email ini.'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Nama kelompok'
     MEMBERS: Pengguna
     NEWGROUP: 'Kelompok Baru'
     PERMISSIONS: Perijinan
     ROLES: Peran
     ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Utama
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'Ekspor ke CSV'
+    Print: Cetak
+  TableListField_PageControls_ss:
+    OF: dari
+  TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  UploadField:
     Dimensions: Dimensi
     EDIT: Edit
     EDITINFO: 'Edit berkas ini'

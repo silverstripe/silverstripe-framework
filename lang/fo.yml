@@ -1,49 +1,52 @@
 fo:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     LASTEDIT: 'Seinast broyting'
-    SIZE: Stødd
-    TYPE: Slag
-  SilverStripe\Security\BasicAuth:
+    SIZE: 'Stødd'
+    TYPE: 'Slag'
+  BasicAuth:
     ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
     ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
     ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
+    HELLO: Hey
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Broyt loyniorð'
+  DateField:
+    NOTSET: 'ikki ásett'
+    TODAY: í dag
+  DropdownField:
+    CHOOSE: (Áset)
+  ForgotPasswordEmail_ss:
     HELLO: Hey
     TEXT1: 'Her er títt'
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Broyt loyniorð'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'ikki ásett'
-    TODAY: 'í dag'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Áset)
-  SilverStripe\Forms\Form:
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
     VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: einki
-  SilverStripe\Security\Group:
+  Group:
     Code: 'Bólka kota'
     Description: Frágreiðing
     Locked: 'Læst?'
-    Parent: Yvirbólkur
+    Parent: 'Yvirbólkur'
     Sort: 'Raða eftir'
     has_many_Permissions: Loyvir
     many_many_Members: Limir
-  SilverStripe\Security\LoginAttempt:
-    Email: Teldupostur
+  LoginAttempt:
+    Email: 'Teldupostur'
     IP: 'IP adressa'
     Status: Støða
-  SilverStripe\Security\Member:
+  Member:
     BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
-    BUTTONLOGIN: Innrita
+    BUTTONLOGIN: 'Innrita'
     BUTTONLOGINOTHER: 'Innrita sum onkur annar'
     BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
     CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
     CONFIRMPASSWORD: 'Váttað loyniorð'
     EMAIL: Teldupostur
     ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
-    FIRSTNAME: Fornavn
+    FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Mál á markamóti'
     NEWPASSWORD: 'Nýtt loyniorð'
     PASSWORD: Loyniorð
@@ -55,23 +58,23 @@ fo:
     db_LockedOutUntil: 'Útihýstur inn til'
     db_Password: Loyniorð
     db_PasswordExpiry: 'Loyniorð gongur út'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'Teldupostadressa &amp; Loyniorð'
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
-  SilverStripe\Security\Security:
+  Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
     CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
     ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
     ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
-    LOGIN: Innrita
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Bólkaheiti
+    LOGIN: 'Innrita'
+  SecurityAdmin:
+    GROUPNAME: 'Bólkaheiti'
     MEMBERS: Limir
     NEWGROUP: 'Nýggjur bólkur'
     PERMISSIONS: Rættindi
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Alment
-  SilverStripe\Forms\GridField\GridField:
+  TableListField:
     CSVEXPORT: 'Útles til CSV'

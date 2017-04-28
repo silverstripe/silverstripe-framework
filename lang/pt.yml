@@ -1,36 +1,49 @@
 pt:
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Por favor insira um nome de utilizador e password.'
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Qualquer
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
+    HELLO: Olá
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Mudar password'
+  DateField:
+    NOTSET: 'Não inserido'
+    TODAY: Hoje
+  DropdownField:
+    CHOOSE: (Escolha)
+  Enum:
+    ANY: Qualquer
+  ForgotPasswordEmail_ss:
     HELLO: Olá
     TEXT1: 'Este é o seu'
     TEXT2: 'link para alterar password'
     TEXT3: para
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Mudar password'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'Não inserido'
-    TODAY: Hoje
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Escolha)
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Qualquer
-  SilverStripe\Forms\Form:
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords não coincidem'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords não podem estar em branco'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: nenhum
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
+    Delete: Apagar
+  GridField:
+    Filter: Filtrar
+    Find: Procurar
+    LinkExisting: 'Link existente'
+    NewRecord: 'Novo %s'
+    NoItemsFound: 'Não foram encontrados elementos'
+    PRINTEDAT: 'Impresso em'
+    PRINTEDBY: 'Impresso por'
+    RelationSearch: 'Pesquisa relacionada'
+    ResetFilter: Redefinir
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Não tem permissões para apagar'
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Exportar para CSV'
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     CancelBtn: Cancelar
-  SilverStripe\Security\Group:
+  Group:
     Code: 'Grupo de código'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores de Conteúdo'
@@ -41,13 +54,13 @@ pt:
     Sort: 'Ordem de ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
-  SilverStripe\Security\LoginAttempt:
+  LoginAttempt:
     Email: 'Endereço de Email'
     IP: 'Endereço IP'
     Status: Estado
-  SilverStripe\Security\Member:
+  Member:
     BUTTONCHANGEPASSWORD: 'Alterar Password'
-    BUTTONLOGIN: Entrar
+    BUTTONLOGIN: 'Entrar'
     BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
     BUTTONLOSTPASSWORD: 'Recuperar Password'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
@@ -68,23 +81,23 @@ pt:
     db_LockedOutUntil: 'Bloqueado até'
     db_Password: Palavra-chave
     db_PasswordExpiry: 'Data de expiração da password'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'Email e Password'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Quantidade
     FIELDLABELCURRENCY: Moeda
-  SilverStripe\Forms\NullableField:
+  NullableField:
     IsNullLabel: 'é Vazio'
-  SilverStripe\Security\Permission:
+  Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Direitos de Administrador'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     Title: Título
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Por favor insira um número de telefone válido'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
     BUTTONSEND: 'Enviar o link para recuperar a password'
     CHANGEPASSWORDBELOW: 'Pode modificar a sua password abaixo.'
@@ -93,14 +106,16 @@ pt:
     ERRORPASSWORDPERMISSION: 'Tem de estar autenticado para poder alterar a sua password!'
     NOTEPAGESECURED: 'Esta página é privada. Insira as suas credenciais abaixo para a visualizar.'
     NOTERESETPASSWORD: 'Insira o seu endereço de email, e será enviado um link que poderá utilizar para recuperar a sua password'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Nome do Grupo'
     MEMBERS: Membros
     NEWGROUP: 'Novo grupo'
     PERMISSIONS: Permissões
     ROLES: Regras
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Principal
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  TableListField:
+    CSVEXPORT: 'Exportar para CSV'
+  UploadField:
     EDITINFO: 'Editar este ficheiro'
     FIELDNOTSET: 'Informação do ficheiro não encontrada'

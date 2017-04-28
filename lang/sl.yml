@@ -1,67 +1,86 @@
 sl:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'Naloženo na začetku'
     LASTEDIT: 'Zadnje naloženo'
     SIZE: 'Velikost datoteke'
-    TYPE: Tip
+    TYPE: 'Tip'
     URL: URL
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Katerikoli
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
-    HELLO: 'Pozdravljeni,'
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za ponastavitev gesla'
-    TEXT3: za
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
+    HELLO: Pozdravljeni,
+  ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
-  SilverStripe\ORM\FieldType\DBDate:
+  Date:
     LessThanMinuteAgo: 'manj kot minuta'
     TIMEDIFFAGO: 'pred {difference}'
     TIMEDIFFIN: 'v {difference}'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'ni nastavljeno'
     TODAY: danes
     VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
     VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
     VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
-  SilverStripe\Control\Director:
+  Director:
     INVALID_REQUEST: 'Napačna zahteva'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Izberi)
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Katerikoli
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Pozdravljeni,
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za ponastavitev gesla'
+    TEXT3: za
+  Form:
     CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
     VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
     VALIDATIONPASSWORDSNOTEMPTY: 'Vpišite geslo (dvakrat) v za to predvideni polji'
     VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: brez
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
+    DELETE_DESCRIPTION: Izbriši
+    Delete: Izbriši
+    UnlinkRelation: Odstrani povezavo
+  GridField:
+    Add: 'Dodaj {name}'
+    Filter: Filter
+    FilterBy: 'Filtriraj po'
+    Find: Poišči
+    LinkExisting: 'Poveži na'
+    NewRecord: 'Novih %s'
+    NoItemsFound: 'Ni rezultatov'
+    PRINTEDAT: 'Tiskano pri'
+    PRINTEDBY: 'Natisnil'
+    PlaceHolder: 'Poišči {type} '
+    PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
+    RelationSearch: 'Povezano iskanje'
+    ResetFilter: Ponastavi
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-  SilverStripe\Forms\GridField\GridField:
-    OF: od
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Deleted: 'Izbrisanih %s %s'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Skupinam pripiši vloge'
     Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
@@ -75,14 +94,14 @@ sl:
     Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
-  SilverStripe\Security\LoginAttempt:
-    Email: E-naslov
-    IP: IP-naslov
+  LoginAttempt:
+    Email: 'E-naslov'
+    IP: 'IP-naslov'
     Status: Stanje
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
-    BUTTONLOGIN: Prijava
+    BUTTONLOGIN: 'Prijava'
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
@@ -94,8 +113,8 @@ sl:
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
-    FIRSTNAME: Ime
-    INTERFACELANG: Jezik
+    FIRSTNAME: 'Ime'
+    INTERFACELANG: 'Jezik'
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     NoPassword: 'Za tega člana ni gesla'
@@ -110,9 +129,9 @@ sl:
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'Uporabniški račun'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Custom: Prilagojeno
     DATEFORMATBAD: 'Zapis datuma je napačen'
     DAYNOLEADING: 'Dan v mesecu brez zapisa sprednje ničle'
@@ -123,53 +142,58 @@ sl:
     Preview: Predogled
     TWODIGITDAY: 'Dvomestno število za mesec'
     TWODIGITYEAR: 'Dvomestno število za letnico'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Znesek
     FIELDLABELCURRENCY: Valuta
-  SilverStripe\Forms\NullableField:
+  NullableField:
     IsNullLabel: 'Prazno polje'
-  SilverStripe\Forms\NumericField:
+  NumericField:
     VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: Stran
     View: Poglej
-  SilverStripe\Security\Permission:
+  Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  PermissionCheckboxSetField:
     FromGroup: 'Privzeto iz skupine "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     Title: Naslov
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Vpišite veljavno telefonsko številko'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
     BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'
     CHANGEPASSWORDBELOW: 'Spodaj lahko spremenite svoje geslo.'
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
-    LOGIN: Prijava
+    LOGIN: 'Prijava'
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
     PASSWORDSENTHEADER: 'Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}''.'
     PASSWORDSENTTEXT: 'Hvala! Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}'', ki je naveden kot e-naslov vašega računa. '
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Ime skupine'
     MEMBERS: Člani
     NEWGROUP: 'Nova Skupina'
     PERMISSIONS: Dovoljenja
     ROLES: Vloge
     ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Domov
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'Izvozi kot CSV-datoteko'
+    Print: Natisni
+  TableListField_PageControls_ss:
+    OF: od
+  TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  UploadField:
     Dimensions: Dimenzije
     EDIT: Uredi
     EDITINFO: 'Uredi datoteko'

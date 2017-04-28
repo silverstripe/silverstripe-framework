@@ -1,69 +1,87 @@
 et_EE:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'
     LASTEDIT: 'Viimati muudetud'
-    SIZE: Failisuurus
-    TYPE: Failitüüp
+    SIZE: 'Failisuurus'
+    TYPE: 'Failitüüp'
     URL: URL
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Palun sisesta kasutajanimi ja parool.'
     ERRORNOTADMIN: 'Antud kasutaja ei ole administraator.'
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Kõik
-    NOANSWER: Ei
-    YESANSWER: Jah
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
     HELLO: Tere
-    TEXT1: 'Siin on sinu'
-    TEXT2: 'Parooli tühistus link'
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ei
-    YESANSWER: Jah
-  SilverStripe\Forms\ConfirmedPasswordField:
+  CheckboxField:
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
+  ConfirmedPasswordField:
     ATLEAST: 'Parool peab olema vähemalt {min} märki pikk.'
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
     MAXIMUM: 'Parool võib olla kuni {max} märki pikk.'
     SHOWONCLICKTITLE: 'Muuda parool'
-  SilverStripe\ORM\FieldType\DBDate:
+  Date:
     LessThanMinuteAgo: 'vähem kui minut'
-    TIMEDIFFAGO: tagasi
-  SilverStripe\Forms\DateField:
+    TIMEDIFFAGO: 'tagasi'
+  DateField:
     NOTSET: 'Pole seadistatud'
     TODAY: Täna
     VALIDDATEFORMAT2: 'Sisestage sobivas vormingus kuupäev ({format})'
     VALIDDATEMAXDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) varasem või ühtima sellega.'
     VALIDDATEMINDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) hilisem või ühtima sellega.'
-  SilverStripe\Control\Director:
+  Director:
     INVALID_REQUEST: 'Sobimatu taotlus'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Vali)
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'Sisestage e-posti aadress'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Kõik
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Tere
+    TEXT1: 'Siin on sinu'
+    TEXT2: 'Parooli tühistus link'
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Paroolid ei katu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Paroolid ei saa olla tühjad'
     VALIDATIONSTRONGPASSWORD: 'Paroolis peab olema vähemalt üks number ja üks tähestikutäht'
     VALIDATOR: Kinnitaja
     VALIDCURRENCY: 'Sisestage kehtiv valuuta'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: puudub
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
+    DELETE_DESCRIPTION: Kustuta
+    Delete: Kustuta
+    UnlinkRelation: Tühista linkimine
+  GridField:
+    Add: 'Lisa {name}'
+    Filter: Filtreeri
+    FilterBy: 'Filtreerimisalus'
+    Find: Otsi
+    LinkExisting: 'Lingi olemasolev'
+    NewRecord: 'Uus %s'
+    NoItemsFound: 'Üksusi ei leitud'
+    PRINTEDAT: 'Printimiskoht:'
+    PRINTEDBY: 'Printis'
+    PlaceHolder: 'Leia {type}'
+    RelationSearch: 'Seose otsing'
+    ResetFilter: Lähtesta
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
-  SilverStripe\Forms\GridField\GridField:
-    OF: /
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     CancelBtn: Loobu
     Create: Loo
     Delete: Kustuta
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Redigeeri
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Lisa selle grupi jaoks rolle'
     Code: 'Grupi kood'
     DefaultGroupTitleAdministrators: Administraatorid
@@ -74,14 +92,14 @@ et_EE:
     NoRoles: 'Ühtegi rolli ei leitud'
     Parent: 'Vanem grupp'
     RolesAddEditLink: 'Halda rolle'
-    Sort: Järjesta
+    Sort: 'Järjesta'
     has_many_Permissions: Õigused
     many_many_Members: Liikmed
-  SilverStripe\Security\LoginAttempt:
+  LoginAttempt:
     Email: 'E-posti aadress'
     IP: 'IP Aadress'
     Status: Staatus
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'Lisa grupp'
     BUTTONCHANGEPASSWORD: 'Muuda parool'
     BUTTONLOGIN: 'Logi sisse'
@@ -89,13 +107,13 @@ et_EE:
     BUTTONLOSTPASSWORD: 'Kaotasin oma parooli'
     CONFIRMNEWPASSWORD: 'Kinnita uus parool'
     CONFIRMPASSWORD: 'Kinnita parool'
-    DefaultAdminFirstname: Vaikeadministraator
+    DefaultAdminFirstname: 'Vaikeadministraator'
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Uue parooli väli ei saa olla tühi. Proovige uuesti'
     ENTEREMAIL: 'Palun sisesta email, et saada paooli tühistamise link'
     ERRORNEWPASSWORD: 'Te sisestasite oma parooli erinevalt, proovige uuesti'
     ERRORPASSWORDNOTMATCH: 'Sisestatud paroolid ei kattu, palun proovi uuesti'
-    FIRSTNAME: Eesnimi
+    FIRSTNAME: 'Eesnimi'
     INTERFACELANG: 'Kasutajaliidese keel'
     LOGGEDINAS: 'Olete logitud sisse kui {name}.'
     NEWPASSWORD: 'Uus parool'
@@ -111,9 +129,9 @@ et_EE:
     db_LockedOutUntil: 'Suletud kuni'
     db_Password: Parool
     db_PasswordExpiry: 'Parool aegumise kuupäev'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'E-post ja parool'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Custom: Kohandatud
     DATEFORMATBAD: 'Kuupäevavorming on sobimatu'
     DAYNOLEADING: 'Kuupäev ilma nullita'
@@ -123,29 +141,32 @@ et_EE:
     Preview: Eelvaade
     TWODIGITDAY: 'Kuupäev kahe numbrina'
     TWODIGITYEAR: 'Aasta kahe numbrina'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Hulk
     FIELDLABELCURRENCY: Valuuta
-  SilverStripe\Forms\NullableField:
+  NullableField:
     IsNullLabel: 'On tühi'
-  SilverStripe\Forms\NumericField:
+  NumericField:
     VALIDATION: '''{value}'' ei ole number, sellele väljale võib sisestada ainult numbreid'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: Leht
     View: Kuva
-  SilverStripe\Security\Permission:
-    UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  Permission:
+    AdminGroup: Administraator
+    FULLADMINRIGHTS: 'Täielikud administraatoriõigused'
+  PermissionCheckboxSetField:
     AssignedTo: 'määratud grupile "{title}"'
     FromGroup: 'päritud grupilt "{title}"'
     FromRole: 'päritud rollilt "{title}"'
     FromRoleOnGroup: 'päritud rollist "%s" grupis "%s"'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     OnlyAdminCanApply: 'Ainult administraator saab rakendada'
     Title: Pealkiri
-  SilverStripe\Forms\PhoneNumberField:
+  Permissions:
+    UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
+  PhoneNumberField:
     VALIDATION: 'Sisestage kehtiv telefoninumber'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Sul puudub õigus sellele lehele pääsemiseks. Kui sul on teine konto, millega siia sisse logida, võid uuesti sisse logida.'
     BUTTONSEND: 'Saada parooli tühistamise link'
     CHANGEPASSWORDBELOW: 'Saad muuta oma parooli allpool.'
@@ -158,18 +179,23 @@ et_EE:
     NOTERESETPASSWORD: 'Sisesta oma email ja me saadame sulle lingi kus saad oma parooli tühistada.'
     PASSWORDSENTHEADER: 'Parooli lähtestamise link saadeti aadressile ''{email}'''
     PASSWORDSENTTEXT: 'Aitäh! Lähtestamislink saadeti aadressile ''{email}'' eeldusel, et selle e-posti aadressiga seotud konto on olemas.'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Rühma nimi'
     MEMBERS: Kasutajad
     NEWGROUP: 'Uus rühm'
     PERMISSIONS: Õigused
     ROLES: Rollid
     ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Avaleht
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'Ekspordi CSV-vormingusse'
+    Print: Prindi
+  TableListField_PageControls_ss:
+    OF: /
+  TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  UploadField:
     Dimensions: Mõõtmed
     EDIT: Muuda
     EDITINFO: 'Muuda seda faili'

@@ -1,70 +1,75 @@
 nl:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'Eerste upload'
     HEIGHT: Hoogte
     LASTEDIT: 'Laatste wijziging'
-    SIZE: Grootte
-    TYPE: Type
+    SIZE: 'Grootte'
+    TYPE: 'Type'
     URL: URL
     WIDTH: Breedte
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Voer een gebruikersnaam en wachtwoord in.'
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
     ERRORNOTREC: 'De gebruikersnaam en/of het wachtwoord wordt niet herkend'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Elke
-    NOANSWER: Nee
-    YESANSWER: Ja
-  SilverStripe\Security\CMSMemberLoginForm:
+    NOANSWER: 'Nee'
+    YESANSWER: 'Ja'
+  CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten?'
     BUTTONLOGIN: 'Opnieuw inloggen'
-    BUTTONLOGOUT: Uitloggen
+    BUTTONLOGOUT: 'Uitloggen'
     PASSWORDEXPIRED: '<p>Uw wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
-  SilverStripe\Security\CMSSecurity:
+  CMSSecurity:
     INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
     LoginMessage: '<p>U kunt verder met wat u aan het doen was, door opnieuw in te loggen.</p>'
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>U bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als u niet automatisch wordt doorgestuurd.</p>'
     TimedOutTitleAnonymous: 'Sessie is verlopen'
     TimedOutTitleMember: 'Hallo {name}!<br />Uw sessie is verlopen.'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Het wachtwoord voor het account met e-mailadres {email} is aangepast. Indien u uw wachtwoord niet heeft aangepast kunt u dat doen met onderstaande link.'
+    CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
+    CHANGEPASSWORDTEXT3: 'Wachtwoord veranderen'
     HELLO: Hallo
-    TEXT1: 'Hier is uw'
-    TEXT2: 'wachtwoord reset link'
-    TEXT3: voor
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Nee
-    YESANSWER: Ja
-  SilverStripe\Forms\CheckboxSetField.ss:
+  CheckboxField:
+    NOANSWER: 'Nee'
+    YESANSWER: 'Ja'
+  CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Geen keuze mogelijk'
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
     BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
     CURRENT_PASSWORD_ERROR: 'Het wachtwoord dat u heeft ingevoerd is niet juist.'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
-  SilverStripe\Forms\CurrencyField:
+  CurrencyField:
     CURRENCYSYMBOL: $
-  SilverStripe\ORM\FieldType\DBDate:
+  Date:
     LessThanMinuteAgo: 'minder dan één minuut'
     TIMEDIFFAGO: '{difference} geleden'
     TIMEDIFFIN: 'in {difference}'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
     VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
     VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
     VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
-  SilverStripe\Control\Director:
+  Director:
     INVALID_REQUEST: 'Fout bij verwerken'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Kies)
     SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Elke
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Hallo
+    TEXT1: 'Hier is uw'
+    TEXT2: 'wachtwoord reset link'
+    TEXT3: voor
+  Form:
     CSRF_EXPIRED_MESSAGE: 'Uw sessie is verlopen. Verzend het formulier opnieuw.'
     CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klik op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
     VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
@@ -72,23 +77,39 @@ nl:
     VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vul een geldige munteenheid in'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: geen
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
+    DELETE_DESCRIPTION: Verwijderen
+    Delete: Verwijder
+    UnlinkRelation: Ontkoppelen
+  GridField:
+    Add: '{name} toevoegen'
+    Filter: Filter
+    FilterBy: 'Filteren'
+    Find: Zoeken
+    LinkExisting: 'Koppel een bestaand item'
+    NewRecord: 'Nieuw %s'
+    NoItemsFound: 'Geen items gevonden.'
+    PRINTEDAT: 'Geprint op'
+    PRINTEDBY: 'Geprint door'
+    PlaceHolder: 'Zoek {type}'
+    PlaceHolderWithLabels: 'Zoek {type} op {name}'
+    RelationSearch: 'Zoek relatie'
+    ResetFilter: Resetten
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     EditPermissionsFailure: 'Geen toelating om te ontkoppelen'
-  SilverStripe\Forms\GridField\GridField:
-    OF: van
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     CancelBtn: Annuleren
     Create: Aanmaken
     Delete: Verwijderen
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '%s %s verwijderd'
     Save: Opslaan
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Bewerken
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Voeg een rol toe aan deze groep'
     Code: 'Groep code'
     DefaultGroupTitleAdministrators: Beheerders
@@ -100,23 +121,23 @@ nl:
     NoRoles: 'Geen rollen gevonden'
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Rollen beheren'
-    Sort: Sorteer-richting
+    Sort: 'Sorteer-richting'
     has_many_Permissions: Rechten
     many_many_Members: Leden
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    EMAIL: E-mailadres
+  HTMLEditorField:
+    EMAIL: 'E-mailadres'
     LINKEMAIL: 'Link naar een e-mailadres'
-    SUBJECT: E-mailonderwerp
-  SilverStripe\ORM\Hierarchy\Hierarchy:
+    SUBJECT: 'E-mailonderwerp'
+  Hierarchy:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
-  SilverStripe\Security\LoginAttempt:
+  LoginAttempt:
     Email: 'E-mailadres '
     IP: 'IP adres'
     Status: Status
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
-    BUTTONLOGIN: Inloggen
+    BUTTONLOGIN: 'Inloggen'
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
@@ -129,7 +150,7 @@ nl:
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord kom niet overeen, probeer het nogmaals'
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
-    FIRSTNAME: Voornaam
+    FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Interface taal'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
@@ -147,9 +168,9 @@ nl:
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'Email &amp; Wachtwoord'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Custom: Aangepast
     DATEFORMATBAD: 'Datum is niet correct opgegeven'
     DAYNOLEADING: 'Dag van de maand zonder voorloopnul'
@@ -161,35 +182,39 @@ nl:
     TWODIGITDAY: 'Dag van de maand (met voorloopnul)'
     TWODIGITYEAR: '2-cijfers jaar'
     Toggle: 'Toon opmaak hulp'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
-  SilverStripe\Forms\NullableField:
+  NullableField:
     IsNullLabel: 'Is null'
-  SilverStripe\Forms\NumericField:
+  NumericField:
     VALIDATION: '''{value}'' is geen getal, enkel getallen worden door dit veld geaccepteerd'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: Pagina
     View: Bekijk
-  SilverStripe\Security\PasswordValidator:
+  PasswordValidator:
     LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s'
     PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
     TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
-  SilverStripe\Security\Permission:
-    UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  Permission:
+    AdminGroup: Beheerder
+    FULLADMINRIGHTS: 'Volledige admin rechten'
+    FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
+  PermissionCheckboxSetField:
     AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
     FromRole: 'geërfd van de rol "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
-  SilverStripe\Security\PermissionRole:
-    PLURALNAME: Rollen
-    SINGULARNAME: Rol
-  SilverStripe\Security\PermissionRoleCode:
+  PermissionRole:
+    OnlyAdminCanApply: 'Alleen admin kan doorvoeren'
+    Title: Titel
+  PermissionRoleCode:
     PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
-  SilverStripe\Forms\PhoneNumberField:
+  Permissions:
+    UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
+  PhoneNumberField:
     VALIDATION: 'Voer een geldig telefoonnummer in'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'
     CHANGEPASSWORDBELOW: 'U kunt uw wachtwoord hieronder veranderen.'
@@ -203,22 +228,31 @@ nl:
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
     PASSWORDSENTHEADER: 'Wachtwoord herstel link verzonden naar {email}'
     PASSWORDSENTTEXT: 'Bedankt! Er is een link verstuurd naar {email} om uw wachtwoord opnieuw in te stellen, in de veronderstelling dat er een account bestaat voor dit e-mailadres.'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Groep naam'
     MEMBERS: Leden
     NEWGROUP: 'Nieuwe Groep'
     PERMISSIONS: Rechten
     ROLES: Rollen
     ROLESDESCRIPTION: 'In deze sectie kunt u rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.'
-  SilverStripe\CMS\Model\SiteTree:
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Rollen
+    SINGULARNAME: Rol
+  SiteTree:
     TABMAIN: Hoofdgedeelte
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'Exporteer naar CSV'
+    CSVIMPORT: 'CSV importeren'
+    Print: Afdrukken
+  TableListField_PageControls_ss:
+    OF: van
+  TimeField:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  UploadField:
     Dimensions: Afmetingen
     EDIT: Bewerken
     EDITINFO: 'Bewerk dit bestand'
     FIELDNOTSET: 'Bestandsinformatie niet gevonden'
     REMOVE: Verwijder
-  SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: Validatiefout
+  ValidationException:
+    DEFAULT_ERROR: 'Validatiefout'

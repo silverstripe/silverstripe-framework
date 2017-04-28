@@ -1,43 +1,46 @@
 az:
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Zəhmət olmasa istifadəçi adı və ya parolu yazın.'
     ERRORNOTADMIN: 'İstifadəçi administrator deyil'
     ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: İstənilən
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
+    HELLO: Salam
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Parolu dəyiş'
+  DateField:
+    NOTSET: 'təyin edilməyib'
+    TODAY: bu gün
+  DropdownField:
+    CHOOSE: (Seçin)
+  Enum:
+    ANY: İxtiyari
+  ForgotPasswordEmail_ss:
     HELLO: Salam
     TEXT1: 'Burada sizin'
     TEXT2: 'parolu sıfırlma linki'
     TEXT3: üçün
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Parolu dəyiş'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'təyin edilməyib'
-    TODAY: 'bu gün'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Seçin)
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: İxtiyari
-  SilverStripe\Forms\Form:
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Parollar uyğun gəlmir'
     VALIDATIONPASSWORDSNOTEMPTY: 'Parollar boş ola bilməz'
-  SilverStripe\Forms\FormField:
-    NONE: 'heç bir'
-  SilverStripe\Security\Group:
+  FormField:
+    NONE: heç bir
+  Group:
     Code: 'Qrup kodu'
     DefaultGroupTitleAdministrators: Administratorlar
     DefaultGroupTitleContentAuthors: 'Məzmun müəllifləri'
-    Description: 'Qısa təsvir'
+    Description: Qısa təsvir
     Locked: 'Bloklanıb?'
     Parent: 'Valideyn qrupu'
-    Sort: Sıralama
+    Sort: 'Sıralama'
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
-  SilverStripe\Security\LoginAttempt:
-    Email: E-poçt
+  LoginAttempt:
+    Email: 'E-poçt'
     IP: 'İP ünvan'
-  SilverStripe\Security\Member:
+  Member:
     BUTTONCHANGEPASSWORD: 'Parolu dəyiş'
     BUTTONLOGIN: 'Daxil ol'
     BUTTONLOGINOTHER: 'Başqa adla daxil ol'
@@ -50,7 +53,7 @@ az:
     ENTEREMAIL: 'Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin.'
     ERRORNEWPASSWORD: 'Yeni parolunuzu başqa cür daxil etdiniz, bir daha cəhd edin'
     ERRORPASSWORDNOTMATCH: 'Parol uyğun gəlmir, yenidən cəhd edin'
-    FIRSTNAME: Ad
+    FIRSTNAME: 'Ad'
     INTERFACELANG: 'İnterfeys dili'
     NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol
@@ -63,21 +66,21 @@ az:
     db_LockedOutUntil: 'Bloklanıb, açılma vaxtı'
     db_Password: Parol
     db_PasswordExpiry: 'Parolun etibarlılığının bitmə vaxtı'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'E-poçt &amp; Parol'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: Boşdur
-  SilverStripe\Security\Permission:
+  NullableField:
+    IsNullLabel: 'Boşdur'
+  Permission:
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  PermissionCheckboxSetField:
     FromRoleOnGroup: '"%s" rolundan "%s" qrupunda törəyib'
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza daxil olun'
     BUTTONSEND: 'Parolu sıfırlama linkini göndər'
     CHANGEPASSWORDBELOW: 'Şifrəni burda deyişə bilərsiniz. '
@@ -87,12 +90,12 @@ az:
     LOGIN: 'Daxil ol'
     NOTEPAGESECURED: 'Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. '
     NOTERESETPASSWORD: 'E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Qrupun adı'
     MEMBERS: Üzvlər
     PERMISSIONS: Səlahiyyətlər
     ROLES: Rollar
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Əsas
-  SilverStripe\Forms\GridField\GridField:
+  TableListField:
     CSVEXPORT: 'CSV-yə ixrac et'

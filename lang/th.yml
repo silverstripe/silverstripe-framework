@@ -1,127 +1,149 @@
 th:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: อัพโหลดครั้งแรก
-    LASTEDIT: เปลี่ยนแปลงล่าสุด
-    SIZE: ขนาด
-    TYPE: ชนิด
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
-    ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
-  SilverStripe\ORM\FieldType\DBBoolean:
+  AssetTableField:
+    CREATED: 'อัพโหลดครั้งแรก'
+    LASTEDIT: 'เปลี่ยนแปลงล่าสุด'
+    SIZE: 'ขนาด'
+    TYPE: 'ชนิด'
+  BasicAuth:
+    ENTERINFO: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'
+    ERRORNOTADMIN: 'ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ'
+  Boolean:
     ANY: ใดๆ
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'คุณได้เปลี่ยนรหัสผ่านสำหรับ'
     HELLO: สวัสดี
-    TEXT1: นี่คือ
-    TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
-    TEXT3: สำหรับ
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
-    SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
-  SilverStripe\Forms\DateField:
-    NOTSET: ไม่ต้องตั้งค่า
+    SHOWONCLICKTITLE: 'เปลี่ยนรหัสผ่าน'
+  DateField:
+    NOTSET: 'ไม่ต้องตั้งค่า'
     TODAY: วันนี้
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: การร้องขอไม่ถูกต้อง
-  SilverStripe\Forms\DropdownField:
+  Director:
+    INVALID_REQUEST: 'การร้องขอไม่ถูกต้อง'
+  DropdownField:
     CHOOSE: (เลือก)
-  SilverStripe\Forms\EmailField:
-    VALIDATION: กรุณากรอกที่อยู่อีเมล
-  SilverStripe\ORM\FieldType\DBEnum:
+  EmailField:
+    VALIDATION: 'กรุณากรอกที่อยู่อีเมล'
+  Enum:
     ANY: ใดๆ
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
-    VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
-    VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
-  SilverStripe\Forms\FormField:
+  ForgotPasswordEmail_ss:
+    HELLO: สวัสดี
+    TEXT1: 'นี่คือ'
+    TEXT2: 'ลิงค์รีเซ็ตรหัสผ่าน'
+    TEXT3: สำหรับ
+  Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'รหัสผ่านไม่ตรงกัน'
+    VALIDATIONPASSWORDSNOTEMPTY: 'รหัสผ่านไม่สามารถเว้นว่างได้'
+    VALIDCURRENCY: 'กรุณากรอกสกุลเงินที่ถูกต้อง'
+  FormField:
     NONE: ไม่มี
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
-  SilverStripe\Forms\GridField\GridField:
-    OF: จาก
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridAction:
+    DELETE_DESCRIPTION: ลบ
+    Delete: ลบ
+    UnlinkRelation: ยกเลิกการลิงก์
+  GridField:
+    Add: 'เพิ่ม {name}'
+    Filter: ตัวกรองข้อมูล
+    FilterBy: 'กรองข้อมูลจาก'
+    Find: ค้นหา
+    LinkExisting: 'ลิงก์ที่มีอยู่'
+    NewRecord: 'ใหม่ %s'
+    NoItemsFound: 'ไม่พบรายการที่ต้องการ'
+    PRINTEDAT: 'ถูกสั่งพิมพ์ที่'
+    PRINTEDBY: 'พิมพ์โดย'
+    PlaceHolder: 'ค้นหา {type}'
+    ResetFilter: รีเซ็ต
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'ไม่ได้รับสิทธิ์ให้ลบได้'
+  GridFieldDetailForm:
     CancelBtn: ยกเลิก
     Create: สร้าง
     Delete: ลบ
     Deleted: 'ลบ %s %s แล้ว'
     Save: บันทึก
-  SilverStripe\Security\Group:
-    AddRole: เพิ่มบทบาทให้กับกลุ่มนี้
-    Code: รหัสกลุ่ม
+  Group:
+    AddRole: 'เพิ่มบทบาทให้กับกลุ่มนี้'
+    Code: 'รหัสกลุ่ม'
     DefaultGroupTitleAdministrators: ผู้ดูและระบบ
-    DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
+    DefaultGroupTitleContentAuthors: 'ผู้แต่งเนื้อหา'
     Description: คำอธิบาย
     GroupReminder: 'หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา'
     Locked: 'ล็อค?'
-    NoRoles: ไม่พบบทบาทที่ต้องการ
-    Parent: กลุ่มหลักต้นทาง
-    RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
-    Sort: จัดลำดับ
+    NoRoles: 'ไม่พบบทบาทที่ต้องการ'
+    Parent: 'กลุ่มหลักต้นทาง'
+    RolesAddEditLink: 'เพิ่ม/แก้ไขบทบาท'
+    Sort: 'จัดลำดับ'
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
-  SilverStripe\Security\LoginAttempt:
-    Email: ที่อยู่อีเมล
-    IP: ไอพีเครื่อง
+  LoginAttempt:
+    Email: 'ที่อยู่อีเมล'
+    IP: 'ไอพีเครื่อง'
     Status: สถานะ
-  SilverStripe\Security\Member:
-    ADDGROUP: เพิ่มกลุ่ม
-    BUTTONCHANGEPASSWORD: เปลี่ยนรหัสผ่าน
-    BUTTONLOGIN: เข้าสู่ระบบ
-    BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
-    CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
-    CONFIRMPASSWORD: ยืนยันรหัสผ่าน
-    DefaultAdminFirstname: ผู้ดูแลที่กำหนดไว้เริ่มต้น
+  Member:
+    ADDGROUP: 'เพิ่มกลุ่ม'
+    BUTTONCHANGEPASSWORD: 'เปลี่ยนรหัสผ่าน'
+    BUTTONLOGIN: 'เข้าสู่ระบบ'
+    BUTTONLOSTPASSWORD: 'ฉันลืมรหัสผ่านของฉัน'
+    CONFIRMNEWPASSWORD: 'ยืนยันรหัสผ่านใหม่'
+    CONFIRMPASSWORD: 'ยืนยันรหัสผ่าน'
+    DefaultAdminFirstname: 'ผู้ดูแลที่กำหนดไว้เริ่มต้น'
     EMAIL: อีเมล
-    ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
+    ENTEREMAIL: 'กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่'
     ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
-    FIRSTNAME: ชื่อจริง
+    FIRSTNAME: 'ชื่อจริง'
     INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
-    NEWPASSWORD: รหัสผ่านใหม่
+    NEWPASSWORD: 'รหัสผ่านใหม่'
     PASSWORD: รหัสผ่าน
-    SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
-    SUBJECTPASSWORDRESET: ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ
+    SUBJECTPASSWORDCHANGED: 'รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว'
+    SUBJECTPASSWORDRESET: 'ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ'
     SURNAME: นามสกุล
-    YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
+    YOUROLDPASSWORD: 'รหัสผ่านเก่าของคุณ'
     belongs_many_many_Groups: กลุ่ม
     db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
-    db_LockedOutUntil: ออกจากระบบจนกว่า
+    db_LockedOutUntil: 'ออกจากระบบจนกว่า'
     db_Password: รหัสผ่าน
-    db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
-  SilverStripe\Security\MemberAuthenticator:
+    db_PasswordExpiry: 'วันที่รหัสผ่านหมดอายุ'
+  MemberAuthenticator:
     TITLE: 'อีเมล &amp; รหัสผ่าน'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
+  MemberDatetimeOptionsetField:
+    DATEFORMATBAD: 'รูปแบบวันที่ไม่ถูกต้อง'
     Preview: ดูตัวอย่าง
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: จำนวน
     FIELDLABELCURRENCY: สกุลเงิน
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: หน้า
     View: เปิดดู
-  SilverStripe\Security\Permission:
+  Permission:
     AdminGroup: ผู้ดูแลระบบ
-  SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
+  PermissionRole:
+    OnlyAdminCanApply: 'เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้'
     Title: หัวเรื่อง
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง
-  SilverStripe\Security\Security:
+  PhoneNumberField:
+    VALIDATION: 'กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง'
+  Security:
     ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
-    BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
-    CHANGEPASSWORDBELOW: คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง
-    ENTERNEWPASSWORD: กรุณากรอกรหัสผ่านใหม่ของคุณ
+    BUTTONSEND: 'ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน'
+    CHANGEPASSWORDBELOW: 'คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง'
+    ENTERNEWPASSWORD: 'กรุณากรอกรหัสผ่านใหม่ของคุณ'
     ERRORPASSWORDPERMISSION: 'คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้'
-    LOGIN: เข้าสู่ระบบ
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: ชื่อกลุ่มสมาชิก
+    LOGIN: 'เข้าสู่ระบบ'
+  SecurityAdmin:
+    GROUPNAME: 'ชื่อกลุ่มสมาชิก'
     MEMBERS: สมาชิก
-    NEWGROUP: สร้างกลุ่มใหม่
+    NEWGROUP: 'สร้างกลุ่มใหม่'
     PERMISSIONS: สิทธิ์อนุญาต
     ROLES: บทบาท
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: หลัก
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  TableListField:
+    CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
+    Print: พิมพ์
+  TableListField_PageControls_ss:
+    OF: จาก
+  UploadField:
     Dimensions: ขนาดสัดส่วน
     EDIT: แก้ไข
-    EDITINFO: แก้ไขไฟล์นี้
-    FIELDNOTSET: ไม่พบข้อมูลเกี่ยวกับไฟล์
+    EDITINFO: 'แก้ไขไฟล์นี้'
+    FIELDNOTSET: 'ไม่พบข้อมูลเกี่ยวกับไฟล์'
     REMOVE: ลบออก

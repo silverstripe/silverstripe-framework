@@ -1,17 +1,17 @@
 hi:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     HEIGHT: लंबाई
     WIDTH: चौड़ाई
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'कृपया उपयोगकर्ता का नाम और पासवर्ड दर्ज करें'
     ERRORNOTADMIN: 'वह उपयोगकर्ता एक व्यवस्थापक नहीं है.'
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     ATLEAST: 'पासवर्डों को कम से कम {min} अक्षर लंबा होना चाहिए.'
     SHOWONCLICKTITLE: 'पासवर्ड बदलें'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'सेट नहीं'
     TODAY: आज
     VALIDDATEFORMAT2: 'कृपया एक मान्य दिनांक स्वरूप दर्ज करें ({format})'
-  SilverStripe\Security\Group:
+  Group:
     RolesAddEditLink: 'भूमिकाओं का प्रबंधन करे '
-    has_many_Permissions: 'अनुमतियाँ'
+    has_many_Permissions: अनुमतियाँ

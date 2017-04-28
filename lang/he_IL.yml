@@ -1,37 +1,40 @@
 he_IL:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'הועלה לראשונה'
     LASTEDIT: 'שונה לאחרונה'
-    SIZE: גודל
-    TYPE: סוג
-    URL: 'כתובת הדף'
-  SilverStripe\Security\BasicAuth:
+    SIZE: 'גודל'
+    TYPE: 'סוג'
+    URL: כתובת הדף
+  BasicAuth:
     ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
     ERRORNOTADMIN: 'משתמש זה אינו מנהל'
     ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
     HELLO: היי
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'שינוי סיסמה'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (בחר)
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: היי
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
     VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
-  SilverStripe\Security\Group:
+  Group:
     Code: 'קוד קבוצה'
     Locked: 'נעול?'
     Parent: 'קבוצת אב'
     has_many_Permissions: הרשאות
-    many_many_Members: 'חברים רשומים'
-  SilverStripe\Security\Member:
+    many_many_Members: חברים רשומים
+  Member:
     BUTTONCHANGEPASSWORD: 'שנה סיסמא'
-    BUTTONLOGIN: התחבר
+    BUTTONLOGIN: 'התחבר'
     BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
     BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
     CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
     CONFIRMPASSWORD: 'אשר סיסמא'
-    EMAIL: 'דואר אלקטרוני'
+    EMAIL: דואר אלקטרוני
     ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
     ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
     FIRSTNAME: 'שם פרטי'
@@ -40,16 +43,16 @@ he_IL:
     PASSWORD: סיסמא
     SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
     SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
-    SURNAME: 'שם משפחה'
+    SURNAME: שם משפחה
     YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '
     db_PasswordExpiry: 'תאריך תפוגת סיסמא'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'דואר אלקטרוני וסיסמא'
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'יש להכניס מספר טלפון תקין'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
     BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
     CHANGEPASSWORDBELOW: 'אתה יכול לשנות את סיסמתך להלן.'
@@ -58,5 +61,5 @@ he_IL:
     ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
     NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
     NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     NEWGROUP: 'קבוצה חדשה'

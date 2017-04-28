@@ -1,94 +1,113 @@
 ja:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 初回アップロード日時
-    LASTEDIT: 最終更新日
-    SIZE: ファイルサイズ
-    TYPE: ファイルの種類
+  AssetTableField:
+    CREATED: '初回アップロード日時'
+    LASTEDIT: '最終更新日'
+    SIZE: 'ファイルサイズ'
+    TYPE: 'ファイルの種類'
     URL: URL
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'ユーザー名とパスワードを入力してください'
     ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: 何でも
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'このサイトのパスワードが変更されました。'
     HELLO: こんにちわ！
-    TEXT1: 'ここ''貴方の'
-    TEXT2: パスワードリセットのリンク
-    TEXT3: は
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     ATLEAST: 'パスワードは少なくとも {min} 文字の長さが必要です。'
     BETWEEN: 'パスワードは {min} から {max} までの長さでなければならない。'
     MAXIMUM: 'パスワードは{max} 文字以内でなければなりません。'
-    SHOWONCLICKTITLE: パスワード変更
-  SilverStripe\ORM\FieldType\DBDate:
-    LessThanMinuteAgo: １分以下
+    SHOWONCLICKTITLE: 'パスワード変更'
+  Date:
+    LessThanMinuteAgo: '１分以下'
     TIMEDIFFAGO: '{difference}前'
     TIMEDIFFIN: '{difference}以内'
-  SilverStripe\Forms\DateField:
-    NOTSET: セットされていません
+  DateField:
+    NOTSET: 'セットされていません'
     TODAY: 今日
     VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 不正なリクエスト
-  SilverStripe\Forms\DropdownField:
+  Director:
+    INVALID_REQUEST: '不正なリクエスト'
+  DropdownField:
     CHOOSE: (選択)
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'メールアドレスを入力してください'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: 何でも
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
-    VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
+  ForgotPasswordEmail_ss:
+    HELLO: こんにちわ！
+    TEXT1: 'ここ''貴方の'
+    TEXT2: 'パスワードリセットのリンク'
+    TEXT3: は
+  Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'パスワードが一致しません'
+    VALIDATIONPASSWORDSNOTEMPTY: 'パスワードが空欄です'
     VALIDATIONSTRONGPASSWORD: 'パスワードは少なくとも1桁の数字と1つの英字を含んでいる必要があります'
     VALIDATOR: 検証
     VALIDCURRENCY: '有効な通貨を入力してください'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: 何もありません
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DeletePermissionsFailure: 削除権限がありません
-    EditPermissionsFailure: レコードのリンクを解除するための権限がありません
-  SilverStripe\Forms\GridField\GridField:
-    OF: の
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridAction:
+    DELETE_DESCRIPTION: 削除
+    Delete: 削除
+    UnlinkRelation: リンク解除
+  GridField:
+    Add: '{name}を追加'
+    Filter: フィルタ
+    FilterBy: 'によってフィルター'
+    Find: 探す
+    LinkExisting: '既存のリンク'
+    NewRecord: '新しい%s'
+    NoItemsFound: '項目が見つかりませんでした'
+    PRINTEDAT: 'で印刷'
+    PRINTEDBY: 'によって印刷'
+    PlaceHolder: '{type}を探す'
+    PlaceHolderWithLabels: '{name} によって{type} を検索する'
+    RelationSearch: '関連検索'
+    ResetFilter: リセット
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: '削除権限がありません'
+    EditPermissionsFailure: 'レコードのリンクを解除するための権限がありません'
+  GridFieldDetailForm:
     CancelBtn: キャンセル
     Create: 作成
     Delete: 削除
-    DeletePermissionsFailure: 削除権限がありません
+    DeletePermissionsFailure: '削除権限がありません'
     Deleted: '削除済み %s %s'
     Save: 保存
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: 編集
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'このグループに役割を追加'
-    Code: グループコード
-    DefaultGroupTitleAdministrators: '管理者'
+    Code: 'グループコード'
+    DefaultGroupTitleAdministrators: 管理者
     DefaultGroupTitleContentAuthors: 'コンテンツの作成者'
     Description: 説明文
     GroupReminder: 'あなたが親グループを選択した場合、このグループはそのすべての役割を選択します'
-    Locked: ロックしますか？
-    NoRoles: 役割が見つかりませんでした
+    Locked: 'ロックしますか？'
+    NoRoles: '役割が見つかりませんでした'
     Parent: '元グループ'
-    RolesAddEditLink: 役割の管理
+    RolesAddEditLink: '役割の管理'
     Sort: '並び順'
     has_many_Permissions: 承認
     many_many_Members: メンバー
-  SilverStripe\ORM\Hierarchy\Hierarchy:
+  Hierarchy:
     InfiniteLoopNotAllowed: '無限ループが"{型}"階層内で見つかりました。　これを解決するために親を変更してください。'
-  SilverStripe\Security\LoginAttempt:
-    Email: メールアドレス
-    IP: IPアドレス
+  LoginAttempt:
+    Email: 'メールアドレス'
+    IP: 'IPアドレス'
     Status: ステータス
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'グループを追加'
-    BUTTONCHANGEPASSWORD: パスワードの変更
-    BUTTONLOGIN: ログイン
-    BUTTONLOGINOTHER: 他の誰かとしてログイン
-    BUTTONLOSTPASSWORD: パスワードを紛失
-    CONFIRMNEWPASSWORD: 新しいパスワードを確認します
-    CONFIRMPASSWORD: パスワード（確認のためもう一度）
+    BUTTONCHANGEPASSWORD: 'パスワードの変更'
+    BUTTONLOGIN: 'ログイン'
+    BUTTONLOGINOTHER: '他の誰かとしてログイン'
+    BUTTONLOSTPASSWORD: 'パスワードを紛失'
+    CONFIRMNEWPASSWORD: '新しいパスワードを確認します'
+    CONFIRMPASSWORD: 'パスワード（確認のためもう一度）'
     DefaultAdminFirstname: '初期管理者'
     EMAIL: メールアドレス
     EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
@@ -97,90 +116,99 @@ ja:
     ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
     ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
     ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
-    FIRSTNAME: 名
-    INTERFACELANG: 画面言語
+    FIRSTNAME: '名'
+    INTERFACELANG: '画面言語'
     LOGGEDINAS: '{name}としてログインしています。'
-    NEWPASSWORD: 新しいパスワード
-    NoPassword: このメンバーにはパスワードはありません。
+    NEWPASSWORD: '新しいパスワード'
+    NoPassword: 'このメンバーにはパスワードはありません。'
     PASSWORD: パスワード
-    SUBJECTPASSWORDCHANGED: パスワードが変わりました。
-    SUBJECTPASSWORDRESET: パスワード再発行
+    SUBJECTPASSWORDCHANGED: 'パスワードが変わりました。'
+    SUBJECTPASSWORDRESET: 'パスワード再発行'
     SURNAME: 姓
     ValidationIdentifierFailed: '同一の識別名 ({name} = {value})) を持つ既存のメンバー #{id} を上書きすることはできません'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
-    YOUROLDPASSWORD: 古いパスワード
+    YOUROLDPASSWORD: '古いパスワード'
     belongs_many_many_Groups: グループ
-    db_Locale: インターフェースの言語地域
-    db_LockedOutUntil: DBロックがされています。
+    db_Locale: 'インターフェースの言語地域'
+    db_LockedOutUntil: 'DBロックがされています。'
     db_Password: パスワード
-    db_PasswordExpiry: パスワードの有効期限
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: メールアドレスとパスワード
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: 'カスタム'
-    DATEFORMATBAD: 日付フォーマットが不正です
+    db_PasswordExpiry: 'パスワードの有効期限'
+  MemberAuthenticator:
+    TITLE: 'メールアドレスとパスワード'
+  MemberDatetimeOptionsetField:
+    Custom: カスタム
+    DATEFORMATBAD: '日付フォーマットが不正です'
     DAYNOLEADING: '先行ゼロなしの月の日'
-    DIGITSDECFRACTIONSECOND: 秒の小数を表す1つ以上の数字
-    FOURDIGITYEAR: 四桁の年
+    DIGITSDECFRACTIONSECOND: '秒の小数を表す1つ以上の数字'
+    FOURDIGITYEAR: '四桁の年'
     MINUTENOLEADING: '先行ゼロなしの分'
     MONTHNOLEADING: '先行ゼロなしの月の桁'
     Preview: プレビュー
-    TWODIGITDAY: 月の2桁の日
-    TWODIGITYEAR: 二桁の年
-    Toggle: 設定のヘルプを表示
-  SilverStripe\Forms\MoneyField:
+    TWODIGITDAY: '月の2桁の日'
+    TWODIGITYEAR: '二桁の年'
+    Toggle: '設定のヘルプを表示'
+  MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: NULLである
-  SilverStripe\Forms\NumericField:
+  NullableField:
+    IsNullLabel: 'NULLである'
+  NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: ページ
     View: 閲覧
-  SilverStripe\Security\PasswordValidator:
+  PasswordValidator:
     LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: %s'
     PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
-    TOOSHORT: パスワードが短すぎます、%文字以上でなければなりません
-  SilverStripe\Security\Permission:
-    UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
-  SilverStripe\Security\PermissionCheckboxSetField:
+    TOOSHORT: 'パスワードが短すぎます、%文字以上でなければなりません'
+  Permission:
+    AdminGroup: 管理者
+    FULLADMINRIGHTS: '完全な管理権'
+    FULLADMINRIGHTS_HELP: '暗黙的に定義または他のすべての割り当てられた権限を無効にする。'
+  PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     OnlyAdminCanApply: '管理者のみ適用可能'
     Title: タイトル
-  SilverStripe\Forms\PhoneNumberField:
+  Permissions:
+    UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
+  PhoneNumberField:
     VALIDATION: '電話番号を入力してください'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら 再ログインを行ってください。'
     BUTTONSEND: 'パスワードリセットのリンクを送信してください'
-    CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
-    CHANGEPASSWORDHEADER: パスワードを変更しました
+    CHANGEPASSWORDBELOW: '以下のパスワードを変更できます'
+    CHANGEPASSWORDHEADER: 'パスワードを変更しました'
     ENTERNEWPASSWORD: '新しいパスワードを入力してください'
-    ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
-    LOGIN: ログイン
+    ERRORPASSWORDPERMISSION: 'パスワードを変更する為に、ログインしなければなりません！'
+    LOGIN: 'ログイン'
     NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
     NOTERESETLINKINVALID: '<p>パスワードのリセットリンクは有効でないか期限切れです。</p><p> 新しいパスワードを要求することができます <a href="{link1}"> ここ </a> もしくはパスワードを変更することができます <a href="{link2}"> ログインした後 </a>.</p>'
     NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
     PASSWORDSENTHEADER: 'パスワードリセットリンクは ''{email}'' に送信されました'
     PASSWORDSENTTEXT: 'ありがとうございました！　リセットリンクは、''{email}'' に、このアカウントが存在することを前提として送信されました。'
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: グループ名
+  SecurityAdmin:
+    GROUPNAME: 'グループ名'
     MEMBERS: メンバー
-    NEWGROUP: 新しいグループ
+    NEWGROUP: '新しいグループ'
     PERMISSIONS: 承認
     ROLES: 役割
     ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: メイン
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'CSVにエクスポート'
+    Print: 印刷
+  TableListField_PageControls_ss:
+    OF: の
+  TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  UploadField:
     Dimensions: 大きさ
     EDIT: 編集
-    EDITINFO: このファイルを編集
+    EDITINFO: 'このファイルを編集'
     FIELDNOTSET: 'ファイル情報が見つかりませんでした'
     REMOVE: 削除

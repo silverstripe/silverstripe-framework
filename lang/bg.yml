@@ -1,78 +1,97 @@
 bg:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: Създаден
+  AssetTableField:
+    CREATED: 'Създаден'
     HEIGHT: Височина
     LASTEDIT: 'Последна промяна'
     SIZE: 'Големина на файла'
     TYPE: 'Тип на файла'
     URL: URL
     WIDTH: Широчина
-  SilverStripe\Security\BasicAuth:
+  BasicAuth:
     ENTERINFO: 'Моля, въведете потребителско име и парола.'
     ERRORNOTADMIN: 'Този потребител не е администратор.'
     ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
-  SilverStripe\ORM\FieldType\DBBoolean:
+  Boolean:
     ANY: Всички
-    NOANSWER: Не
-    YESANSWER: Да
-  SilverStripe\Security\CMSMemberLoginForm:
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
+  CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Забравена парола?'
     BUTTONLOGIN: 'Влез обратно'
     BUTTONLOGOUT: 'Изход'
-  SilverStripe\Security\CMSSecurity:
+  CMSSecurity:
     SUCCESS: Успешно
     TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
     TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     HELLO: Здравей!
-    TEXT1: 'Това е Вашият'
-    TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Не
-    YESANSWER: Да
-  SilverStripe\Forms\ConfirmedPasswordField:
+  CheckboxField:
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
+  ConfirmedPasswordField:
     ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  SilverStripe\ORM\FieldType\DBDate:
+  Date:
     LessThanMinuteAgo: 'по-малко от минута'
     TIMEDIFFAGO: 'преди {difference}'
     TIMEDIFFIN: 'за {difference}'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'не е зададена'
     TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
-  SilverStripe\Control\Director:
+  Director:
     INVALID_REQUEST: 'Грешна заявка'
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Избери)
-  SilverStripe\Forms\EmailField:
+  EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Някой
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Здравей!
+    TEXT1: 'Това е Вашият'
+    TEXT2: 'адрес за рестартирване на парола'
+    TEXT3: за
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
     VALIDATIONSTRONGPASSWORD: 'Паролите трябва да съдържат поне една цифра и една буква.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Моля, въведете коректна валута.'
-  SilverStripe\Forms\FormField:
+  FormField:
     NONE: нищо
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
+    DELETE_DESCRIPTION: Изтриване
+    Delete: Изтрий
+    UnlinkRelation: Откачане
+  GridField:
+    Add: 'Добави {name}'
+    Filter: Филтър
+    FilterBy: 'Филтриране по'
+    Find: Търси
+    LinkExisting: 'Свържи към съществуващ'
+    NewRecord: 'Нов %s'
+    NoItemsFound: 'Няма намерени елементи'
+    PRINTEDAT: 'Отпечатано на'
+    PRINTEDBY: 'Отпечатано от'
+    PlaceHolder: 'Намери {type}'
+    PlaceHolderWithLabels: 'Намери {type} по {name}'
+    RelationSearch: 'Търсене на връзка'
+    ResetFilter: Изчистване
+  GridFieldAction_Delete:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Експортирай на CSV'
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridFieldDetailForm:
     Create: Създай
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити %s %s'
     Save: Запис
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
     GroupReminder: 'Ако изберете родителска група, тази група ще наследи всички нейни роли'
@@ -80,16 +99,16 @@ bg:
     NoRoles: 'Няма намерени роли'
     Parent: 'Група източник'
     RolesAddEditLink: 'Управление на ролите'
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
-  SilverStripe\Security\LoginAttempt:
+  LoginAttempt:
     Email: 'Email адрес'
     IP: 'IP адрес'
     Status: Статус
-  SilverStripe\Security\Member:
+  Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
-    BUTTONLOGIN: Влез
+    BUTTONLOGIN: 'Влез'
     BUTTONLOGINOTHER: 'Влез като някой друг'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
@@ -99,8 +118,8 @@ bg:
     ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
-    FIRSTNAME: Име
-    INTERFACELANG: Език
+    FIRSTNAME: 'Име'
+    INTERFACELANG: 'Език'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -114,9 +133,9 @@ bg:
     db_LockedOutUntil: 'Заключен до'
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'email и парола'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Custom: Произволно
     DATEFORMATBAD: 'Невалиден формат на датата'
     DAYNOLEADING: 'Ден от месеца без водеща нула'
@@ -127,22 +146,22 @@ bg:
     Preview: Преглед
     TWODIGITDAY: 'Двуцифрен ден от месеца'
     TWODIGITYEAR: 'Двуцифрена година'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
-  SilverStripe\Forms\NumericField:
+  NumericField:
     VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
-  SilverStripe\Security\Permission:
+  Permission:
     AdminGroup: Администратор
     FULLADMINRIGHTS: 'Пълни административни права'
-  SilverStripe\Security\PermissionCheckboxSetField:
+  PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
     FromRole: 'унаследена от роля "{title}"'
     FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Моля, въведете валиден телефонен номер'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'
     CHANGEPASSWORDBELOW: 'Можете да смените вашата парола по-долу.'
@@ -155,19 +174,21 @@ bg:
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
     PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
     PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     GROUPNAME: 'Име на група'
     MEMBERS: Потребители
     NEWGROUP: 'Нова група'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
+    PERMISSIONS: Разрешения
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Главно
-  SilverStripe\Forms\TimeField:
+  TableListField:
+    CSVEXPORT: 'Експортирай на CSV'
+  TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размери'
+  UploadField:
+    Dimensions: Размери
     EDITINFO: 'Редактирай този файл'
     FIELDNOTSET: 'Информация за файла не беше намерена'
-    REMOVE: 'Премахни'
+    REMOVE: Премахни

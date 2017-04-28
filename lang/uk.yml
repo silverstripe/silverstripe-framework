@@ -1,38 +1,44 @@
 uk:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     CREATED: 'Вперше завантажено'
     LASTEDIT: 'Востаннє змінено'
     SIZE: 'Розмір'
-    TYPE: Тип
-  SilverStripe\Security\BasicAuth:
+    TYPE: 'Тип'
+  BasicAuth:
     ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
     ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     HELLO: Привіт
-  SilverStripe\Forms\ConfirmedPasswordField:
+  ConfirmedPasswordField:
     ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
     BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
     MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
     SHOWONCLICKTITLE: 'Змінити пароль'
-  SilverStripe\Forms\DateField:
+  DateField:
     NOTSET: 'не встановлено'
     TODAY: сьогодні
-  SilverStripe\Forms\DropdownField:
+  DropdownField:
     CHOOSE: (Оберіть)
-  SilverStripe\ORM\FieldType\DBEnum:
+  Enum:
     ANY: Будь-який
-  SilverStripe\Forms\Form:
+  ForgotPasswordEmail_ss:
+    HELLO: Привіт
+  Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Експортувати в CSV'
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+  GridField:
+    Add: 'Додати {name}'
+    Filter: Фільтр
+    FilterBy: 'Фільтр по'
+    Find: Пошук
+  GridFieldDetailForm:
     CancelBtn: Відмінити
     Create: Створити
     Delete: Видалити
     Save: Зберегти
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Додати роль до цієї групи'
     Code: 'Код групи'
     Locked: 'Заблокувати?'
@@ -40,9 +46,9 @@ uk:
     RolesAddEditLink: 'Керувати ролями'
     has_many_Permissions: Права
     many_many_Members: Члени
-  SilverStripe\Security\Member:
+  Member:
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
-    BUTTONLOGIN: Увійти
+    BUTTONLOGIN: 'Увійти'
     BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
@@ -64,34 +70,36 @@ uk:
     db_LockedOutUntil: 'Заблоковано поки'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'Е-пошта та Пароль'
-  SilverStripe\Forms\MoneyField:
+  MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  Pagination:
     Page: Сторінка
-  SilverStripe\Security\PermissionCheckboxSetField:
+  PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     Title: Назва
-  SilverStripe\Forms\PhoneNumberField:
+  PhoneNumberField:
     VALIDATION: 'Будь ласка, введіть дійсний номер телефону'
-  SilverStripe\Security\Security:
+  Security:
     ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
     BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
     CHANGEPASSWORDBELOW: 'Ви можете змінити пароль нижче.'
     CHANGEPASSWORDHEADER: 'Змінити свій пароль'
     ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
     ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
-    LOGIN: Увійти
+    LOGIN: 'Увійти'
     NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
     NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     MEMBERS: Члени
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
-  SilverStripe\CMS\Model\SiteTree:
+  SiteTree:
     TABMAIN: Головна
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  TableListField:
+    CSVEXPORT: 'Експортувати в CSV'
+  UploadField:
     EDITINFO: 'Редагувати цей файл'

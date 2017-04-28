@@ -1,4 +1,4 @@
 el:
-  SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: Όχι
-    YESANSWER: Ναί
+  Boolean:
+    NOANSWER: 'Όχι'
+    YESANSWER: 'Ναί'

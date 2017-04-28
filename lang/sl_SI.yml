@@ -1,65 +1,74 @@
 sl_SI:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  AssetTableField:
     HEIGHT: Višina
     LASTEDIT: 'Nazadnje spremenjeno'
     SIZE: 'Velikost datoteke'
     TYPE: 'Tip datoteke'
     URL: URL
-    WIDTH: 'Širina'
-  SilverStripe\Security\BasicAuth:
+    WIDTH: Širina
+  BasicAuth:
     ENTERINFO: 'Prosimo vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Ta uporabnik ni administrator.'
     ERRORNOTREC: 'Uporabniško ime ali geslo je neveljavno'
-  SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: Ne
-    YESANSWER: Da
-  SilverStripe\Security\CMSMemberLoginForm:
+  Boolean:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
+  CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Pozabljeno geslo?'
     BUTTONLOGIN: 'Ponovna prijava'
-    BUTTONLOGOUT: Odjava
-  SilverStripe\Security\CMSSecurity:
+    BUTTONLOGOUT: 'Odjava'
+  CMSSecurity:
     TimedOutTitleAnonymous: 'Vaša seja je potekla.'
     TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
+    CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
+    HELLO: Živjo
+  CheckboxField:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Zamenjaj geslo'
+  CurrencyField:
+    CURRENCYSYMBOL: €
+  Date:
+    LessThanMinuteAgo: 'manj kot minuto'
+  DateField:
+    NOTSET: 'ni nastavljeno'
+    TODAY: danes
+    VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
+  Director:
+    INVALID_REQUEST: 'Neveljavna zahteva'
+  DropdownField:
+    CHOOSE: (Izberi)
+  EmailField:
+    VALIDATION: 'Prosimo vtipkajte e-poštni naslov'
+  ForgotPasswordEmail_ss:
     HELLO: Živjo
     TEXT1: 'Tukaj je vaša'
     TEXT2: 'povezava za resetiranje gesla'
     TEXT3: za
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ne
-    YESANSWER: Da
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Zamenjaj geslo'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
-  SilverStripe\ORM\FieldType\DBDate:
-    LessThanMinuteAgo: 'manj kot minuto'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'ni nastavljeno'
-    TODAY: danes
-    VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Neveljavna zahteva'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Izberi)
-  SilverStripe\Forms\EmailField:
-    VALIDATION: 'Prosimo vtipkajte e-poštni naslov'
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+  GridAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    UnlinkRelation: 'Odstrani povezavo'
-  SilverStripe\Forms\GridField\GridField:
-    OF: od
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    UnlinkRelation: Odstrani povezavo
+  GridField:
+    Add: 'Dodaj {name}'
+    Filter: Filter
+    FilterBy: 'Filtriraj po'
+    Find: Najdi
+    NewRecord: 'Nov %s'
+    ResetFilter: Resetiraj
+  GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Nimate pravic za brisanje'
     Deleted: 'Izbrisano %s %s'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Security\Group:
+  Group:
     AddRole: 'Dodaj vlogo za to skupino'
     DefaultGroupTitleAdministrators: Administratorji
     DefaultGroupTitleContentAuthors: 'Avtorji vsebine'
@@ -70,11 +79,11 @@ sl_SI:
     Sort: 'Vrstni red sortiranja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Člani
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
+  HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
     ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
     ANCHORVALUE: Sidro
-    CAPTIONTEXT: Napis
+    CAPTIONTEXT: 'Napis'
     CSSCLASS: 'Poravnava / stil'
     EMAIL: 'E-poštni naslov'
     IMAGEALT: 'Alternativni tekst (alt)'
@@ -82,7 +91,7 @@ sl_SI:
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Višina
     IMAGETITLETEXT: 'Naslov (namig)'
-    IMAGEWIDTHPX: 'Širina'
+    IMAGEWIDTHPX: Širina
     LINKDESCR: 'Opis povezave'
     LINKDETAILS: 'Podrobnosti povezave'
     LINKEMAIL: 'Povezava na e-poštni naslov'
@@ -94,10 +103,10 @@ sl_SI:
     PAGE: Stran
     SUBJECT: 'Predmet e-pošte'
     URL: URL
-  SilverStripe\Security\Member:
+  Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
-    FIRSTNAME: Ime
+    FIRSTNAME: 'Ime'
     KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
@@ -110,25 +119,30 @@ sl_SI:
     belongs_many_many_Groups: Grupe
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka gesla'
-  SilverStripe\Security\MemberAuthenticator:
+  MemberAuthenticator:
     TITLE: 'E-pošta in geslo'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
+  MemberDatetimeOptionsetField:
     Preview: Predogled
-  SilverStripe\Security\Permission:
+  Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Polne administratorske pravice'
-  SilverStripe\Security\PermissionRole:
+  PermissionRole:
     Title: Naslov
-  SilverStripe\Security\Security:
+  Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
-    LOGIN: Prijava
+    LOGIN: 'Prijava'
     LOSTPASSWORDHEADER: 'Pozabljeno geslo'
-  SilverStripe\Admin\SecurityAdmin:
+  SecurityAdmin:
     MEMBERS: Uporabniki
     PERMISSIONS: Dovoljenja
     ROLES: Vloge
-  SilverStripe\AssetAdmin\Forms\UploadField:
+  TableListField:
+    CSVEXPORT: 'Izvozi v CSV'
+    Print: Natisni
+  TableListField_PageControls_ss:
+    OF: od
+  UploadField:
     Dimensions: Dimenzije
     EDIT: Uredi
     EDITINFO: 'Uredi datoteko'
