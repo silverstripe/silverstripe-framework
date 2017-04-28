@@ -2,6 +2,7 @@
 
 namespace SilverStripe\i18n\TextCollection;
 
+use LogicException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
@@ -618,14 +619,24 @@ class i18nTextCollector
                 // Check text
                 if ($id == T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
-                    if (preg_match('/^\'/', $text)) {
-                        $text = str_replace("\\'", "'", $text);
-                        $text = preg_replace('/^\'/', '', $text);
-                        $text = preg_replace('/\'$/', '', $text);
+                    if (preg_match('/^\'(?<text>.*)\'$/s', $text, $matches)) {
+                        $text = preg_replace_callback(
+                            '/\\\\([\\\\\'])/s', // only \ and '
+                            function ($input) {
+                                return stripcslashes($input[0]);
+                            },
+                            $matches['text']
+                        );
+                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text, $matches)) {
+                        $text = preg_replace_callback(
+                            '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
+                            function ($input) {
+                                return stripcslashes($input[0]);
+                            },
+                            $matches['text']
+                        );
                     } else {
-                        $text = str_replace('\"', '"', $text);
-                        $text = preg_replace('/^"/', '', $text);
-                        $text = preg_replace('/"$/', '', $text);
+                        throw new LogicException("Invalid string escape: " .$text);
                     }
                 } elseif ($id === T_CLASS_C) {
                     // Evaluate __CLASS__ . '.KEY' concatenation
