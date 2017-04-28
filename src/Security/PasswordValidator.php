@@ -83,7 +83,7 @@ class PasswordValidator extends Object
                 $valid->addError(
                     sprintf(
                         _t(
-                            'PasswordValidator.TOOSHORT',
+                            'SilverStripe\\Security\\PasswordValidator.TOOSHORT',
                             'Password is too short, it must be %s or more characters long'
                         ),
                         $this->minLength
@@ -102,7 +102,7 @@ class PasswordValidator extends Object
                     $score++;
                 } else {
                     $missedTests[] = _t(
-                        'PasswordValidator.STRENGTHTEST' . strtoupper($name),
+                        'SilverStripe\\Security\\PasswordValidator.STRENGTHTEST' . strtoupper($name),
                         $name,
                         'The user needs to add this to their password for more complexity'
                     );
@@ -113,7 +113,7 @@ class PasswordValidator extends Object
                 $valid->addError(
                     sprintf(
                         _t(
-                            'PasswordValidator.LOWCHARSTRENGTH',
+                            'SilverStripe\\Security\\PasswordValidator.LOWCHARSTRENGTH',
                             'Please increase password strength by adding some of the following characters: %s'
                         ),
                         implode(', ', $missedTests)
@@ -134,7 +134,7 @@ class PasswordValidator extends Object
                 if ($previousPassword->checkPassword($password)) {
                     $valid->addError(
                         _t(
-                            'PasswordValidator.PREVPASSWORD',
+                            'SilverStripe\\Security\\PasswordValidator.PREVPASSWORD',
                             'You\'ve already used that password in the past, please choose a new password'
                         ),
                         'bad',

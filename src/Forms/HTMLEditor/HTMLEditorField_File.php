@@ -108,28 +108,28 @@ abstract class HTMLEditorField_File extends ViewableData
             )
                 ->setName("FilePreview")
                 ->addExtraClass('cms-file-info'),
-            TextField::create('CaptionText', _t('HTMLEditorField.CAPTIONTEXT', 'Caption text')),
+            TextField::create('CaptionText', _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CAPTIONTEXT', 'Caption text')),
             DropdownField::create(
                 'CSSClass',
-                _t('HTMLEditorField.CSSCLASS', 'Alignment / style'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASS', 'Alignment / style'),
                 array(
-                    'leftAlone' => _t('HTMLEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-                    'center' => _t('HTMLEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-                    'left' => _t('HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-                    'right' => _t('HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
+                    'leftAlone' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+                    'center' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+                    'left' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+                    'right' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
                 ),
                 HtmlEditorField::config()->uninherited('media_alignment')
             ),
             FieldGroup::create(
-                _t('HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
                 TextField::create(
                     'Width',
-                    _t('HTMLEditorField.IMAGEWIDTHPX', 'Width'),
+                    _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEWIDTHPX', 'Width'),
                     $this->getInsertWidth()
                 )->setMaxLength(5),
                 TextField::create(
                     'Height',
-                    " x " . _t('HTMLEditorField.IMAGEHEIGHTPX', 'Height'),
+                    " x " . _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEHEIGHTPX', 'Height'),
                     $this->getInsertHeight()
                 )->setMaxLength(5)
             )->addExtraClass('dimensions last'),
@@ -147,10 +147,10 @@ abstract class HTMLEditorField_File extends ViewableData
     protected function getDetailFields()
     {
         $fields = new FieldList(
-            ReadonlyField::create("FileType", _t('AssetTableField.TYPE', 'File type'), $this->getFileType()),
+            ReadonlyField::create("FileType", _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.TYPE', 'File type'), $this->getFileType()),
             HTMLReadonlyField::create(
                 'ClickableURL',
-                _t('AssetTableField.URL', 'URL'),
+                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.URL', 'URL'),
                 $this->getExternalLink()
             )
         );
@@ -158,19 +158,19 @@ abstract class HTMLEditorField_File extends ViewableData
         if ($this->getSize()) {
             $fields->insertAfter(
                 'FileType',
-                ReadonlyField::create("Size", _t('AssetTableField.SIZE', 'File size'), $this->getSize())
+                ReadonlyField::create("Size", _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.SIZE', 'File size'), $this->getSize())
             );
         }
         // Get modified details of local record
         if ($this->getFile()) {
             $fields->push(new DateField_Disabled(
                 "Created",
-                _t('AssetTableField.CREATED', 'First uploaded'),
+                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.CREATED', 'First uploaded'),
                 $this->getFile()->Created
             ));
             $fields->push(new DateField_Disabled(
                 "LastEdited",
-                _t('AssetTableField.LASTEDIT', 'Last changed'),
+                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.LASTEDIT', 'Last changed'),
                 $this->getFile()->LastEdited
             ));
         }

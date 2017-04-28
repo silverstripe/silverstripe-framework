@@ -116,7 +116,7 @@ class FormRequestHandler extends RequestHandler
                 $response = Controller::curr()->getResponse();
                 $response->addHeader('Allow', $allowedMethod);
                 $this->httpError(405, _t(
-                    "Form.BAD_METHOD",
+                    "SilverStripe\\Forms\\Form.BAD_METHOD",
                     "This form requires a {method} submission",
                     ['method' => $allowedMethod]
                 ));
@@ -143,7 +143,7 @@ class FormRequestHandler extends RequestHandler
             $securityID = $token->getName();
             if (empty($vars[$securityID])) {
                 $this->httpError(400, _t(
-                    "Form.CSRF_FAILED_MESSAGE",
+                    "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
                     "There seems to have been a technical problem. Please click the back button, ".
                     "refresh your browser, and try again."
                 ));
@@ -155,7 +155,7 @@ class FormRequestHandler extends RequestHandler
                 $this->form
                     ->setSessionData($data)
                     ->sessionError(_t(
-                        "Form.CSRF_EXPIRED_MESSAGE",
+                        "SilverStripe\\Forms\\Form.CSRF_EXPIRED_MESSAGE",
                         "Your session has expired. Please re-submit the form."
                     ));
 

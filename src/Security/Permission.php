@@ -531,11 +531,11 @@ class Permission extends DataObject implements TemplateGlobalProvider
         $classes = ClassInfo::implementorsOf('SilverStripe\\Security\\PermissionProvider');
 
         $allCodes = array();
-        $adminCategory = _t('Permission.AdminGroup', 'Administrator');
+        $adminCategory = _t('SilverStripe\\Security\\Permission.AdminGroup', 'Administrator');
         $allCodes[$adminCategory]['ADMIN'] = array(
-            'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
+            'name' => _t('SilverStripe\\Security\\Permission.FULLADMINRIGHTS', 'Full administrative rights'),
             'help' => _t(
-                'Permission.FULLADMINRIGHTS_HELP',
+                'SilverStripe\\Security\\Permission.FULLADMINRIGHTS_HELP',
                 'Implies and overrules all other assigned permissions.'
             ),
             'sort' => 100000

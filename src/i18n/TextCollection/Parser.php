@@ -60,7 +60,8 @@ class Parser extends SSTemplateParser
 
     public function Translate_Entity(&$res, $sub)
     {
-        $this->currentEntityKey = $sub['text']; // key
+        // Collapse escaped slashes
+        $this->currentEntityKey = str_replace('\\\\', '\\', $sub['text']); // key
     }
 
     public function Translate_Default(&$res, $sub)

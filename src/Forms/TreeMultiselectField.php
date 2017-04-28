@@ -116,7 +116,7 @@ class TreeMultiselectField extends TreeDropdownField
         $titleArray = array();
         $idArray = array();
         $items = $this->getItems();
-        $emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+        $emptyTitle = _t('SilverStripe\\Forms\\DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 
         if ($items && count($items)) {
             foreach ($items as $item) {

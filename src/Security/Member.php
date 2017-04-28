@@ -284,7 +284,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             // persistent logins in the database. See Security::setDefaultAdmin().
             // Set 'Email' to identify this as the default admin
             $admin = Member::create();
-            $admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
+            $admin->FirstName = _t('SilverStripe\\Security\\Member.DefaultAdminFirstname', 'Default Admin');
             $admin->Email = Security::default_admin_username();
             $admin->write();
         }
@@ -323,14 +323,14 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // Check a password is set on this member
         if (empty($this->Password) && $this->exists()) {
-            $result->addError(_t('Member.NoPassword', 'There is no password on this member.'));
+            $result->addError(_t('SilverStripe\\Security\\Member.NoPassword', 'There is no password on this member.'));
             return $result;
         }
 
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
         if (!$e->check($this->Password, $password, $this->Salt, $this)) {
             $result->addError(_t(
-                'Member.ERRORWRONGCRED',
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
             ));
         }
@@ -364,7 +364,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($this->isLockedOut()) {
             $result->addError(
                 _t(
-                    'Member.ERRORLOCKEDOUT2',
+                    'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
                     'Your account has been temporarily disabled because of too many failed attempts at ' .
                     'logging in. Please try again in {count} minutes.',
                     null,
@@ -805,7 +805,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         $editingPassword = $this->isInDB();
         $label = $editingPassword
-            ? _t('Member.EDIT_PASSWORD', 'New Password')
+            ? _t('SilverStripe\\Security\\Member.EDIT_PASSWORD', 'New Password')
             : $this->fieldLabel('Password');
         /** @var ConfirmedPasswordField $password */
         $password = ConfirmedPasswordField::create(
@@ -971,7 +971,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
             if ($existingRecord) {
                 throw new ValidationException(_t(
-                    'Member.ValidationIdentifierFailed',
+                    'SilverStripe\\Security\\Member.ValidationIdentifierFailed',
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
                     array(
@@ -994,7 +994,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
-                ->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
+                ->setSubject(_t('SilverStripe\\Security\\Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
                 ->send();
         }
 
@@ -1539,7 +1539,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
             $mainFields->replaceField('Locale', new DropdownField(
                 "Locale",
-                _t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
+                _t('SilverStripe\\Security\\Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
                 i18n::getSources()->getKnownLocales()
             ));
             $mainFields->removeByName($this->config()->hidden_fields);
@@ -1570,7 +1570,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                         ->setSource($groupsMap)
                         ->setAttribute(
                             'data-placeholder',
-                            _t('Member.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
+                            _t('SilverStripe\\Security\\Member.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
                         )
                 );
 
@@ -1609,17 +1609,17 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         $labels = parent::fieldLabels($includerelations);
 
-        $labels['FirstName'] = _t('Member.FIRSTNAME', 'First Name');
-        $labels['Surname'] = _t('Member.SURNAME', 'Surname');
+        $labels['FirstName'] = _t('SilverStripe\\Security\\Member.FIRSTNAME', 'First Name');
+        $labels['Surname'] = _t('SilverStripe\\Security\\Member.SURNAME', 'Surname');
         /** @skipUpgrade */
         $labels['Email'] = _t('Member.EMAIL', 'Email');
-        $labels['Password'] = _t('Member.db_Password', 'Password');
-        $labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
-        $labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
-        $labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
+        $labels['Password'] = _t('SilverStripe\\Security\\Member.db_Password', 'Password');
+        $labels['PasswordExpiry'] = _t('SilverStripe\\Security\\Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
+        $labels['LockedOutUntil'] = _t('SilverStripe\\Security\\Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
+        $labels['Locale'] = _t('SilverStripe\\Security\\Member.db_Locale', 'Interface Locale');
         if ($includerelations) {
             $labels['Groups'] = _t(
-                'Member.belongs_many_many_Groups',
+                'SilverStripe\\Security\\Member.belongs_many_many_Groups',
                 'Groups',
                 'Security Groups this member belongs to'
             );

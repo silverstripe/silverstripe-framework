@@ -72,7 +72,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
         $button = new GridField_FormAction(
             $gridField,
             'import',
-            _t('TableListField.CSVIMPORT', 'Import CSV'),
+            _t('SilverStripe\\Forms\\GridField\\GridField.CSVIMPORT', 'Import CSV'),
             'import',
             null
         );

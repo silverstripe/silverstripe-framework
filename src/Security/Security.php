@@ -253,8 +253,8 @@ class Security extends Controller implements TemplateGlobalProvider
             $response = ($controller) ? $controller->getResponse() : new HTTPResponse();
             $response->setStatusCode(403);
             if (!Member::currentUser()) {
-                $response->setBody(_t('ContentController.NOTLOGGEDIN', 'Not logged in'));
-                $response->setStatusDescription(_t('ContentController.NOTLOGGEDIN', 'Not logged in'));
+                $response->setBody(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
+                $response->setStatusDescription(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
                 // Tell the CMS to allow re-aunthentication
                 if (CMSSecurity::enabled()) {
                     $response->addHeader('X-Reauthenticate', '1');
@@ -270,12 +270,12 @@ class Security extends Controller implements TemplateGlobalProvider
             } else {
                 $messageSet = array(
                     'default' => _t(
-                        'Security.NOTEPAGESECURED',
+                        'SilverStripe\\Security\\Security.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
                             . "you right along."
                     ),
                     'alreadyLoggedIn' => _t(
-                        'Security.ALREADYLOGGEDIN',
+                        'SilverStripe\\Security\\Security.ALREADYLOGGEDIN',
                         "You don't have access to this page.  If you have another account that "
                             . "can access that page, you can log in again below.",
                         "%s will be replaced with a link to log in."
@@ -606,7 +606,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         // Get response handler
-        $controller = $this->getResponseController(_t('Security.LOGIN', 'Log in'));
+        $controller = $this->getResponseController(_t('SilverStripe\\Security\\Security.LOGIN', 'Log in'));
 
         // if the controller calls Director::redirect(), this will break early
         if (($response = $controller->getResponse()) && $response->isFinished()) {
@@ -663,7 +663,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function lostpassword()
     {
-        $controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
+        $controller = $this->getResponseController(_t('SilverStripe\\Security\\Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
         // if the controller calls Director::redirect(), this will break early
         if (($response = $controller->getResponse()) && $response->isFinished()) {
@@ -671,7 +671,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         $message = _t(
-            'Security.NOTERESETPASSWORD',
+            'SilverStripe\\Security\\Security.NOTERESETPASSWORD',
             'Enter your e-mail address and we will send you a link with which you can reset your password'
         );
         /** @var ViewableData_Customised $customisedController */
@@ -722,7 +722,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function passwordsent($request)
     {
-        $controller = $this->getResponseController(_t('Security.LOSTPASSWORDHEADER', 'Lost Password'));
+        $controller = $this->getResponseController(_t('SilverStripe\\Security\\Security.LOSTPASSWORDHEADER', 'Lost Password'));
 
         // if the controller calls Director::redirect(), this will break early
         if (($response = $controller->getResponse()) && $response->isFinished()) {
@@ -732,14 +732,14 @@ class Security extends Controller implements TemplateGlobalProvider
         $email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
         $message = _t(
-            'Security.PASSWORDSENTTEXT',
+            'SilverStripe\\Security\\Security.PASSWORDSENTTEXT',
             "Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
             . " address.",
             array('email' => Convert::raw2xml($email))
         );
         $customisedController = $controller->customise(array(
             'Title' => _t(
-                'Security.PASSWORDSENTHEADER',
+                'SilverStripe\\Security\\Security.PASSWORDSENTHEADER',
                 "Password reset link sent to '{email}'",
                 array('email' => $email)
             ),
@@ -786,7 +786,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function changepassword()
     {
-        $controller = $this->getResponseController(_t('Security.CHANGEPASSWORDHEADER', 'Change your password'));
+        $controller = $this->getResponseController(_t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'));
 
         // if the controller calls Director::redirect(), this will break early
         if (($response = $controller->getResponse()) && $response->isFinished()) {
@@ -818,7 +818,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $customisedController = $controller->customise(array(
                 'Content' => DBField::create_field(
                     'HTMLFragment',
-                    '<p>' . _t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') . '</p>'
+                    '<p>' . _t('SilverStripe\\Security\\Security.ENTERNEWPASSWORD', 'Please enter a new password.') . '</p>'
                 ),
                 'Form' => $this->ChangePasswordForm(),
             ));
@@ -827,7 +827,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $customisedController = $controller->customise(array(
                 'Content' => DBField::create_field(
                     'HTMLFragment',
-                    '<p>' . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>'
+                    '<p>' . _t('SilverStripe\\Security\\Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>'
                 ),
                 'Form' => $this->ChangePasswordForm()));
         } else {
@@ -837,7 +837,7 @@ class Security extends Controller implements TemplateGlobalProvider
                     array('Content' => DBField::create_field(
                         'HTMLFragment',
                         _t(
-                            'Security.NOTERESETLINKINVALID',
+                            'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
                             '<p>The password reset link is invalid or expired.</p>'
                             . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
                             . ' you <a href="{link2}">logged in</a>.</p>',
@@ -851,7 +851,7 @@ class Security extends Controller implements TemplateGlobalProvider
             } else {
                 return self::permissionFailure(
                     $this,
-                    _t('Security.ERRORPASSWORDPERMISSION', 'You must be logged in in order to change your password!')
+                    _t('SilverStripe\\Security\\Security.ERRORPASSWORDPERMISSION', 'You must be logged in in order to change your password!')
                 );
             }
         }
@@ -944,7 +944,7 @@ class Security extends Controller implements TemplateGlobalProvider
         if (!$member) {
             // Failover to a blank admin
             $member = Member::create();
-            $member->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
+            $member->FirstName = _t('SilverStripe\\Security\\Member.DefaultAdminFirstname', 'Default Admin');
             $member->write();
             // Add member to group instead of adding group to member
             // This bypasses the privilege escallation code in Member_GroupSet

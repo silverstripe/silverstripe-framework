@@ -81,29 +81,29 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTest_DataObject.MyProperty' => 'MyProperty' ],
+            [ i18nTest\TestDataObject::class.'.MyProperty' => 'MyProperty' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTest_DataObject.MyProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class.'.MyProperty' => 'Mein Attribut' ],
             'de_DE'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTest_DataObject.MyUntranslatedProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class.'.MyUntranslatedProperty' => 'Mein Attribut' ],
             'en_US'
         );
 
         // Test field labels
         $obj = new i18nTest\TestDataObject();
         $this->assertEquals(
-            $obj->fieldLabel('MyProperty'),
-            'Mein Attribut'
+            'Mein Attribut',
+            $obj->fieldLabel('MyProperty')
         );
         $this->assertEquals(
-            $obj->fieldLabel('MyUntranslatedProperty'),
-            'My Untranslated Property'
+            'My Untranslated Property',
+            $obj->fieldLabel('MyUntranslatedProperty')
         );
     }
 
@@ -113,12 +113,12 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTest_Object.MyProperty' => 'Untranslated' ],
+            [ i18nTest\TestObject::class.'.MyProperty' => 'Untranslated' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ 'i18nTest_Object.my_translatable_property' => 'Übersetzt' ],
+            [ i18nTest\TestObject::class.'.my_translatable_property' => 'Übersetzt' ],
             'de_DE'
         );
 

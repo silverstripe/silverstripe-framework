@@ -86,7 +86,8 @@ PHP;
 <%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
 <%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
 <%t i18nTestModule.INJECTIONS_9 "An item|{count} items" is "Test Pluralisation" count=4 %>
-<%t SilverStripe\TestModule\i18nTestModule.INJECTIONS_10 "This string is namespaced" %>
+<%t SilverStripe\\TestModule\\i18nTestModule.INJECTIONS_10 "This string is namespaced" %>
+<%t SilverStripe\\\\TestModule\\\\i18nTestModule.INJECTIONS_11 "Escaped namespaced string" %>
 SS;
         $c->collectFromTemplate($html, null, $mymodule);
 
@@ -105,7 +106,8 @@ SS;
                     'other' => '{count} items',
                     'comment' => 'Test Pluralisation'
                 ],
-                'SilverStripe\\TestModule\\i18nTestModule.INJECTIONS_10' => 'This string is namespaced'
+                'SilverStripe\\TestModule\\i18nTestModule.INJECTIONS_10' => 'This string is namespaced',
+                'SilverStripe\\TestModule\\i18nTestModule.INJECTIONS_11' => 'Escaped namespaced string'
             ],
             $c->collectFromTemplate($html, null, $mymodule)
         );
@@ -328,10 +330,26 @@ class MyClass extends Base implements SomeService {
             'New Lines'
         );
     }
+    public function getAnotherString() {
+        return _t(
+            'SilverStripe\\\\Framework\\\\MyClass.ANOTHER_STRING',
+            'Slash=\\\\, Quote=\\''
+        );
+    }
+    public function getDoubleQuotedString() {
+        return _t(
+            "SilverStripe\\\\Framework\\\\MyClass.DOUBLE_STRING",
+            "Slash=\\\\, Quote=\\""
+        );
+    }
 }
 PHP;
         $this->assertEquals(
-            [ 'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines" ],
+            [
+                'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines",
+                'SilverStripe\\Framework\\MyClass.ANOTHER_STRING' => 'Slash=\\, Quote=\'',
+                'SilverStripe\\Framework\\MyClass.DOUBLE_STRING' => 'Slash=\\, Quote="'
+            ],
             $c->collectFromCode($php, null, $mymodule)
         );
     }

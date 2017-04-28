@@ -98,9 +98,9 @@ class BasicAuth
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
             if (isset($_SERVER['PHP_AUTH_USER'])) {
-                $response->setBody(_t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
+                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
             } else {
-                $response->setBody(_t('BasicAuth.ENTERINFO', "Please enter a username and password."));
+                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ENTERINFO', "Please enter a username and password."));
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution
@@ -114,7 +114,7 @@ class BasicAuth
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
             if (isset($_SERVER['PHP_AUTH_USER'])) {
-                $response->setBody(_t('BasicAuth.ERRORNOTADMIN', "That user is not an administrator."));
+                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTADMIN', "That user is not an administrator."));
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution

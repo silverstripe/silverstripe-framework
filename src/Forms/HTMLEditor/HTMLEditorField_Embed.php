@@ -41,7 +41,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
             $response->addHeader(
                 'X-Status',
                 rawurlencode(_t(
-                    'HTMLEditorField.URLNOTANOEMBEDRESOURCE',
+                    'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.URLNOTANOEMBEDRESOURCE',
                     "The URL '{url}' could not be turned into a media resource.",
                     "The given URL is not a valid Oembed resource; the embed element couldn't be created.",
                     array('url' => $url)
@@ -64,13 +64,13 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
         if ($this->getType() === 'photo') {
             $fields->insertBefore('CaptionText', new TextField(
                 'AltText',
-                _t('HTMLEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
                 $this->Title,
                 80
             ));
             $fields->insertBefore('CaptionText', new TextField(
                 'Title',
-                _t('HTMLEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
             ));
         }
         return $fields;

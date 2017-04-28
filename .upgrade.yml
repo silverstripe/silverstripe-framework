@@ -1000,6 +1000,19 @@ mappings:
   ConfigTest: SilverStripe\Core\Tests\Config\ConfigTest
   ConfigTest_Config_MemCache: SilverStripe\Core\Tests\Config\ConfigTest\ConfigTestMemCache
   Page_Controller: PageController
+  Boolean: SilverStripe\ORM\FieldType\DBBoolean
+  ChangePasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail.ss
+  CheckboxSetField_ss: SilverStripe\Forms\CheckboxSetField.ss
+  Date: SilverStripe\ORM\FieldType\DBDate
+  Enum: SilverStripe\ORM\FieldType\DBEnum
+  ForgotPasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail.ss
+  GridAction: SilverStripe\Forms\GridField\GridFieldDeleteAction
+  GridFieldAction_Delete: SilverStripe\Forms\GridField\GridFieldDeleteAction
+  GridFieldEditButton_ss: SilverStripe\Forms\GridField\GridFieldEditButton.ss
+  Pagination: SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss
+  TableListField: SilverStripe\Forms\GridField\GridField
+  TableListField_PageControls_ss: SilverStripe\Forms\GridField\GridField
+  UploadField: SilverStripe\AssetAdmin\Forms\UploadField
 skipConfigs:
   - db
   - casting

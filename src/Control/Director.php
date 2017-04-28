@@ -178,7 +178,7 @@ class Director implements TemplateGlobalProvider
 
         if ($output === false) {
             // @TODO Need to NOT proceed with the request in an elegant manner
-            throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+            throw new HTTPResponse_Exception(_t('SilverStripe\\Control\\Director.INVALID_REQUEST', 'Invalid request'), 400);
         }
 
         $result = Director::handleRequest($req, $session, $model);
@@ -344,7 +344,7 @@ class Director implements TemplateGlobalProvider
             $requestProcessor = Injector::inst()->get(RequestProcessor::class);
             $output = $requestProcessor->preRequest($request, $session, $model);
             if ($output === false) {
-                throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+                throw new HTTPResponse_Exception(_t('SilverStripe\\Control\\Director.INVALID_REQUEST', 'Invalid request'), 400);
             }
 
             // Process request

@@ -1,43 +1,43 @@
 en:
-  AssetTableField:
-    CREATED: 'First uploaded'
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: unknown
+  SilverStripe\Admin\SecurityAdmin:
+    GROUPNAME: 'Group name'
+    MEMBERS: Members
+    NEWGROUP: 'New Group'
+    PERMISSIONS: Permissions
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+  SilverStripe\AssetAdmin\Controller\AssetAdmin:
     HEIGHT: Height
-    LASTEDIT: 'Last changed'
     SIZE: 'File size'
     TYPE: 'File type'
     URL: URL
     WIDTH: Width
-  BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
-  Boolean:
-    ANY: Any
-    NOANSWER: 'No'
-    YESANSWER: 'Yes'
-  CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Forgot password?'
-    BUTTONLOGIN: 'Log back in'
-    BUTTONLOGOUT: 'Log out'
-    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
-  CMSSecurity:
-    INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
-    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
-    SUCCESS: Success
-    SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
-    TimedOutTitleAnonymous: 'Your session has timed out.'
-    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
-  ChangePasswordEmail_ss:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensions
+    EDIT: Edit
+    EDITINFO: 'Edit this file'
+    FIELDNOTSET: 'File information not found'
+    REMOVE: Remove
+  SilverStripe\CMS\Model\SiteTree:
+    TABMAIN: Main
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Invalid request'
+  SilverStripe\Control\Email\ChangePasswordEmail.ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT3: 'Change password'
     HELLO: Hi
-  CheckboxField:
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
+  SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
-  CheckboxSetField_ss:
+  SilverStripe\Forms\CheckboxSetField.ss:
     NOOPTIONSAVAILABLE: 'No options available'
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     CURRENT_PASSWORD_ERROR: 'The current password you have entered is not correct.'
@@ -45,38 +45,21 @@ en:
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
-  Date:
-    LessThanMinuteAgo: 'less than a minute'
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'not set'
     TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
-  DatetimeField:
-      VALIDDATETIMEFORMAT: 'Please enter a valid date and time format ({format})'
-      VALIDDATEMAXDATETIME: 'Your date has to be older or matching the maximum allowed date and time ({datetime})'
-      VALIDDATEMINDATETIME: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Choose)
     CHOOSE_MODEL: '(Choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
-  Enum:
-    ANY: Any
-  ForgotPasswordEmail_ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
-  Form:
+  SilverStripe\Forms\Form:
     BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
@@ -86,55 +69,46 @@ en:
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
-  FormField:
+  SilverStripe\Forms\FormField:
     EXAMPLE: 'e.g. {format}'
     NONE: none
-  GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Add {name}'
+    CSVEXPORT: 'Export to CSV'
+    CSVIMPORT: 'Import CSV'
     Filter: Filter
     FilterBy: 'Filter by '
     Find: Find
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
+    OF: of
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
+    Print: Print
     RelationSearch: 'Relation search'
     ResetFilter: Reset
-  GridFieldAction_Delete:
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
-  GridFieldDetailForm:
+    UnlinkRelation: Unlink
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-  GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
     EDIT: Edit
-  Group:
-    AddRole: 'Add a role for this group'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HierarchyPermsError: 'Can''t assign parent group "%s" with privileged permissions (requires ADMIN access)'
-    Locked: 'Locked?'
-    NoRoles: 'No roles found'
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Manage roles'
-    Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
-  HTMLEditorField:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+    Page: Page
+    View: View
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
     ANCHORSPAGENOTFOUND: 'Target page not found.'
     ANCHORVALUE: Anchor
@@ -169,20 +143,127 @@ en:
     SUBJECT: 'Email subject'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-  HTMLEditorField_Toolbar:
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
     ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
     ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
     ERROR_NOTFOUND: 'Unable to find file to view'
     ERROR_OEMBED_REMOTE: 'Embed is only compatible with remote files'
     ERROR_SCHEME: 'This file scheme is not included in the whitelist'
-  Hierarchy:
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    HOURNOLEADING: 'Hour without leading zero, 12 hour format'
+    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Amount
+    FIELDLABELCURRENCY: Currency
+    INVALID_CURRENCY: 'Currency {currency} is not in the list of allowed currencies'
+  SilverStripe\Forms\MultiSelectField:
+    SOURCE_VALIDATION: 'Please select values within the list provided. Invalid option(s) {value} given'
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Is Null'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  SilverStripe\Forms\PhoneNumberField:
+    VALIDATION: 'Please enter a valid phone number'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Objects'
+    PLURALS:
+      one: 'A Data Object'
+      other: '{count} Data Objects'
+    SINGULARNAME: 'Data Object'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Any
+    NOANSWER: 'No'
+    YESANSWER: 'Yes'
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} day'
+      other: '{count} days'
+    HOURS_SHORT_PLURALS:
+      one: '{count} hour'
+      other: '{count} hours'
+    LessThanMinuteAgo: 'less than a minute'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} min'
+      other: '{count} mins'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} month'
+      other: '{count} months'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sec'
+      other: '{count} secs'
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEARS_SHORT_PLURALS:
+      one: '{count} year'
+      other: '{count} years'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Any
+  SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
-  LoginAttempt:
+    LIMITED_TITLE: 'Too many children ({count}}'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Validation error'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
+  SilverStripe\Security\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'CMS Member Login Form'
+    BUTTONFORGOTPASSWORD: 'Forgot password?'
+    BUTTONLOGIN: 'Log back in'
+    BUTTONLOGOUT: 'Log out'
+    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
+    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
+    SUCCESS: Success
+    SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
+    TimedOutTitleAnonymous: 'Your session has timed out.'
+    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
+  SilverStripe\Security\Group:
+    AddRole: 'Add a role for this group'
+    Code: 'Group Code'
+    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleContentAuthors: 'Content Authors'
+    Description: Description
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    HierarchyPermsError: 'Can''t assign parent group "%s" with privileged permissions (requires ADMIN access)'
+    Locked: 'Locked?'
+    NoRoles: 'No roles found'
+    PLURALNAME: Groups
+    PLURALS:
+      one: 'A Group'
+      other: '{count} Groups'
+    Parent: 'Parent Group'
+    RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
+    Sort: 'Sort Order'
+    has_many_Permissions: Permissions
+    many_many_Members: Members
+  SilverStripe\Security\LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    PLURALS:
+      one: 'A Login Attempt'
+      other: '{count} Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
@@ -208,7 +289,12 @@ en:
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
+    PLURALNAME: Members
+    PLURALS:
+      one: 'A Member'
+      other: '{count} Members'
     REMEMBERME: 'Remember me next time? (for %d days on this device)'
+    SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
@@ -220,57 +306,55 @@ en:
     db_LockedOutUntil: 'Locked out until'
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
-  MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
-  MemberDatetimeOptionsetField:
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    HOURNOLEADING: 'Hour without leading zero, 12 hour format'
-    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITYEAR: 'Two-digit year'
-    Toggle: 'Show formatting help'
-  MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
-  MultiSelectField:
-    SOURCE_VALIDATION: 'Please select values within the list provided. Invalid option(s) {value} given'
-  NullableField:
-    IsNullLabel: 'Is Null'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Pagination:
-    Page: Page
-    View: View
-  PasswordValidator:
+  SilverStripe\Security\MemberLoginForm:
+    AUTHENTICATORNAME: 'E-mail &amp; Password'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    PLURALS:
+      one: 'A Member Password'
+      other: '{count} Member Passwords'
+    SINGULARNAME: 'Member Password'
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Please increase password strength by adding some of the following characters: %s'
     PREVPASSWORD: 'You''ve already used that password in the past, please choose a new password'
     TOOSHORT: 'Password is too short, it must be %s or more characters long'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-  PermissionCheckboxSetField:
+    PLURALNAME: Permissions
+    PLURALS:
+      one: 'A Permission'
+      other: '{count} Permissions'
+    SINGULARNAME: Permission
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
-  PermissionRole:
+  SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
+    PLURALNAME: Roles
+    PLURALS:
+      one: 'A Role'
+      other: '{count} Roles'
+    SINGULARNAME: Role
     Title: Title
-  PermissionRoleCode:
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Permission Role Codes'
+    PLURALS:
+      one: 'A Permission Role Code'
+      other: '{count} Permission Role Codes'
     PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
-  Permissions:
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
-  PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
-  Security:
+    SINGULARNAME: 'Permission Role Code'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Login Hashes'
+    PLURALS:
+      one: 'A Login Hash'
+      other: '{count} Login Hashes'
+    SINGULARNAME: 'Login Hash'
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
@@ -284,103 +368,3 @@ en:
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
-  SecurityAdmin:
-    GROUPNAME: 'Group name'
-    MEMBERS: Members
-    NEWGROUP: 'New Group'
-    PERMISSIONS: Permissions
-    ROLES: Roles
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-  SilverStripe\Forms\MoneyField:
-    INVALID_CURRENCY: 'Currency {currency} is not in the list of allowed currencies'
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Data Objects'
-    PLURALS:
-      one: 'A Data Object'
-      other: '{count} Data Objects'
-    SINGULARNAME: 'Data Object'
-  SilverStripe\ORM\FieldType\DBDate:
-    DAYS_SHORT_PLURALS:
-      one: '{count} day'
-      other: '{count} days'
-    HOURS_SHORT_PLURALS:
-      one: '{count} hour'
-      other: '{count} hours'
-    MINUTES_SHORT_PLURALS:
-      one: '{count} min'
-      other: '{count} mins'
-    MONTHS_SHORT_PLURALS:
-      one: '{count} month'
-      other: '{count} months'
-    SECONDS_SHORT_PLURALS:
-      one: '{count} sec'
-      other: '{count} secs'
-    YEARS_SHORT_PLURALS:
-      one: '{count} year'
-      other: '{count} years'
-  SilverStripe\Security\Group:
-    PLURALNAME: Groups
-    PLURALS:
-      one: 'A Group'
-      other: '{count} Groups'
-    SINGULARNAME: Group
-  SilverStripe\Security\LoginAttempt:
-    PLURALNAME: 'Login Attempts'
-    PLURALS:
-      one: 'A Login Attempt'
-      other: '{count} Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-  SilverStripe\Security\Member:
-    PLURALNAME: Members
-    PLURALS:
-      one: 'A Member'
-      other: '{count} Members'
-    SINGULARNAME: Member
-  SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    PLURALS:
-      one: 'A Member Password'
-      other: '{count} Member Passwords'
-    SINGULARNAME: 'Member Password'
-  SilverStripe\Security\Permission:
-    PLURALNAME: Permissions
-    PLURALS:
-      one: 'A Permission'
-      other: '{count} Permissions'
-    SINGULARNAME: Permission
-  SilverStripe\Security\PermissionRole:
-    PLURALNAME: Roles
-    PLURALS:
-      one: 'A Role'
-      other: '{count} Roles'
-    SINGULARNAME: Role
-  SilverStripe\Security\PermissionRoleCode:
-    PLURALNAME: 'Permission Role Codes'
-    PLURALS:
-      one: 'A Permission Role Code'
-      other: '{count} Permission Role Codes'
-    SINGULARNAME: 'Permission Role Code'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Login Hashes'
-    PLURALS:
-      one: 'A Login Hash'
-      other: '{count} Login Hashes'
-    SINGULARNAME: 'Login Hash'
-  SiteTree:
-    TABMAIN: Main
-  TableListField:
-    CSVEXPORT: 'Export to CSV'
-    CSVIMPORT: 'Import CSV'
-    Print: Print
-  TableListField_PageControls_ss:
-    OF: of
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
-  UploadField:
-    Dimensions: Dimensions
-    EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    REMOVE: Remove
-  ValidationException:
-    DEFAULT_ERROR: 'Validation error'

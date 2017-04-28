@@ -43,7 +43,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
         if (!$this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
             $objectName = $singleton->i18n_singular_name();
-            $this->buttonName = _t('GridField.Add', 'Add {name}', array('name' => $objectName));
+            $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', array('name' => $objectName));
         }
 
         $data = new ArrayData(array(

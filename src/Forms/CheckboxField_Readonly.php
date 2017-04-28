@@ -16,8 +16,8 @@ class CheckboxField_Readonly extends ReadonlyField
     public function Value()
     {
         return $this->value ?
-            _t('CheckboxField.YESANSWER', 'Yes') :
-            _t('CheckboxField.NOANSWER', 'No');
+            _t('SilverStripe\\Forms\\CheckboxField.YESANSWER', 'Yes') :
+            _t('SilverStripe\\Forms\\CheckboxField.NOANSWER', 'No');
     }
 
     public function getValueCast()

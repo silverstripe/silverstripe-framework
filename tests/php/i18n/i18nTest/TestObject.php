@@ -11,13 +11,13 @@ class TestObject implements TestOnly, i18nEntityProvider
 
     public static function my_translatable_property()
     {
-        return _t("i18nTest_Object.my_translatable_property", self::$my_translatable_property);
+        return _t(__CLASS__.".my_translatable_property", self::$my_translatable_property);
     }
 
     public function provideI18nEntities()
     {
         return [
-            "i18nTest_Object.my_translatable_property" => self::$my_translatable_property,
+            __CLASS__.".my_translatable_property" => self::$my_translatable_property,
         ];
     }
 }

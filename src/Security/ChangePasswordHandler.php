@@ -24,7 +24,7 @@ class ChangePasswordHandler extends FormRequestHandler
             !$member->checkPassword($data['OldPassword'])->isValid()
         )) {
             $this->form->sessionMessage(
-                _t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"),
+                _t('SilverStripe\\Security\\Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"),
                 "bad"
             );
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
@@ -46,7 +46,7 @@ class ChangePasswordHandler extends FormRequestHandler
         // Check the new password
         if (empty($data['NewPassword1'])) {
             $this->form->sessionMessage(
-                _t('Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
+                _t('SilverStripe\\Security\\Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
                 "bad"
             );
 
@@ -57,7 +57,7 @@ class ChangePasswordHandler extends FormRequestHandler
         // Fail if passwords do not match
         if ($data['NewPassword1'] !== $data['NewPassword2']) {
             $this->form->sessionMessage(
-                _t('Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
+                _t('SilverStripe\\Security\\Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
                 "bad"
             );
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.

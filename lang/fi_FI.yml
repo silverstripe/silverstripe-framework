@@ -1,0 +1,9 @@
+fi_FI:
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Ei
+    YESANSWER: Kyllä
+  SilverStripe\ORM\FieldType\DBBoolean:
+    NOANSWER: Ei
+    YESANSWER: Kyllä
+  SilverStripe\Security\PermissionRole:
+    Title: Otsikko

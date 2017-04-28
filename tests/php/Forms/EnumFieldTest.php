@@ -17,7 +17,7 @@ class EnumFieldTest extends SapphireTest
 
         $searchField = $enumField->scaffoldSearchField();
 
-        $anyText = "(" . _t('Enum.ANY', 'Any') . ")";
+        $anyText = "(" . _t('SilverStripe\\ORM\\FieldType\\DBEnum.ANY', 'Any') . ")";
         $this->assertEquals(true, $searchField->getHasEmptyDefault());
         $this->assertEquals($anyText, $searchField->getEmptyString());
     }

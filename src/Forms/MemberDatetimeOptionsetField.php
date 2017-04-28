@@ -73,7 +73,7 @@ class MemberDatetimeOptionsetField extends OptionsetField
         // Add "custom" input field
         $option = $this->getFieldOption(
             self::CUSTOM_OPTION,
-            _t('MemberDatetimeOptionsetField.Custom', 'Custom'),
+            _t('SilverStripe\\Forms\\MemberDatetimeOptionsetField.Custom', 'Custom'),
             $odd
         );
         $option->setField('isChecked', $isChecked);
@@ -82,7 +82,7 @@ class MemberDatetimeOptionsetField extends OptionsetField
         if ($this->Value()) {
             $preview = Convert::raw2xml($this->previewFormat($this->Value()));
             $option->setField('CustomPreview', $preview);
-            $option->setField('CustomPreviewLabel', _t('MemberDatetimeOptionsetField.Preview', 'Preview'));
+            $option->setField('CustomPreviewLabel', _t('SilverStripe\\Forms\\MemberDatetimeOptionsetField.Preview', 'Preview'));
         }
         return $option;
     }
@@ -188,7 +188,7 @@ class MemberDatetimeOptionsetField extends OptionsetField
         $validator->validationError(
             $this->getName(),
             _t(
-                'MemberDatetimeOptionsetField.DATEFORMATBAD',
+                'SilverStripe\\Forms\\MemberDatetimeOptionsetField.DATEFORMATBAD',
                 "Date format is invalid"
             ),
             "validation"

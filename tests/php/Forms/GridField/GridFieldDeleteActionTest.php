@@ -95,7 +95,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->setExpectedException(
             HTTPResponse_Exception::class,
             _t(
-                "Form.CSRF_FAILED_MESSAGE",
+                "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
                 "There seems to have been a technical problem. Please click the back button, ".
                 "refresh your browser, and try again."
             ),

@@ -76,7 +76,7 @@ class FormScaffolder extends Object
         // tabbed or untabbed
         if ($this->tabbed) {
             $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
-            $mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
+            $mainTab->setTitle(_t('SilverStripe\\CMS\\Model\\SiteTree.TABMAIN', "Main"));
         }
 
         // Add logical fields directly specified in db config

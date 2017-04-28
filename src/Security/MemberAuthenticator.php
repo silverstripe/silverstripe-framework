@@ -84,7 +84,7 @@ class MemberAuthenticator extends Authenticator
             $success = $result->isValid();
         } else {
             $result = ValidationResult::create()->addError(_t(
-                'Member.ERRORWRONGCRED',
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
             ));
         }

@@ -192,7 +192,7 @@ class NumericField extends TextField
         $validator->validationError(
             $this->name,
             _t(
-                'NumericField.VALIDATION',
+                'SilverStripe\\Forms\\NumericField.VALIDATION',
                 "'{value}' is not a number, only numbers can be accepted for this field",
                 ['value' => $this->originalValue]
             )

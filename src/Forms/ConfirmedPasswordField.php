@@ -136,7 +136,7 @@ class ConfirmedPasswordField extends FormField
     ) {
 
         // Set field title
-        $title = isset($title) ? $title : _t('Member.PASSWORD', 'Password');
+        $title = isset($title) ? $title : _t('SilverStripe\\Security\\Member.PASSWORD', 'Password');
 
         // naming with underscores to prevent values from actually being saved somewhere
         $this->children = new FieldList(
@@ -146,7 +146,7 @@ class ConfirmedPasswordField extends FormField
             ),
             $this->confirmPasswordfield = new PasswordField(
                 "{$name}[_ConfirmPassword]",
-                (isset($titleConfirmField)) ? $titleConfirmField : _t('Member.CONFIRMPASSWORD', 'Confirm Password')
+                (isset($titleConfirmField)) ? $titleConfirmField : _t('SilverStripe\\Security\\Member.CONFIRMPASSWORD', 'Confirm Password')
             )
         );
 
@@ -193,7 +193,7 @@ class ConfirmedPasswordField extends FormField
                 $title = $this->showOnClickTitle;
             } else {
                 $title = _t(
-                    'ConfirmedPasswordField.SHOWONCLICKTITLE',
+                    'SilverStripe\\Forms\\ConfirmedPasswordField.SHOWONCLICKTITLE',
                     'Change Password',
                     'Label of the link which triggers display of the "change password" formfields'
                 );
@@ -418,7 +418,7 @@ class ConfirmedPasswordField extends FormField
         if ($value != $this->confirmPasswordfield->Value()) {
             $validator->validationError(
                 $name,
-                _t('Form.VALIDATIONPASSWORDSDONTMATCH', "Passwords don't match"),
+                _t('SilverStripe\\Forms\\Form.VALIDATIONPASSWORDSDONTMATCH', "Passwords don't match"),
                 "validation"
             );
 
@@ -430,7 +430,7 @@ class ConfirmedPasswordField extends FormField
             if (!$value || !$this->confirmPasswordfield->Value()) {
                 $validator->validationError(
                     $name,
-                    _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
+                    _t('SilverStripe\\Forms\\Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
                     "validation"
                 );
 
@@ -445,21 +445,21 @@ class ConfirmedPasswordField extends FormField
             if ($this->minLength && $this->maxLength) {
                 $limit = "{{$this->minLength},{$this->maxLength}}";
                 $errorMsg = _t(
-                    'ConfirmedPasswordField.BETWEEN',
+                    'SilverStripe\\Forms\\ConfirmedPasswordField.BETWEEN',
                     'Passwords must be {min} to {max} characters long.',
                     array('min' => $this->minLength, 'max' => $this->maxLength)
                 );
             } elseif ($this->minLength) {
                 $limit = "{{$this->minLength}}.*";
                 $errorMsg = _t(
-                    'ConfirmedPasswordField.ATLEAST',
+                    'SilverStripe\\Forms\\ConfirmedPasswordField.ATLEAST',
                     'Passwords must be at least {min} characters long.',
                     array('min' => $this->minLength)
                 );
             } elseif ($this->maxLength) {
                 $limit = "{0,{$this->maxLength}}";
                 $errorMsg = _t(
-                    'ConfirmedPasswordField.MAXIMUM',
+                    'SilverStripe\\Forms\\ConfirmedPasswordField.MAXIMUM',
                     'Passwords must be at most {max} characters long.',
                     array('max' => $this->maxLength)
                 );
@@ -479,7 +479,7 @@ class ConfirmedPasswordField extends FormField
                 $validator->validationError(
                     $name,
                     _t(
-                        'Form.VALIDATIONSTRONGPASSWORD',
+                        'SilverStripe\\Forms\\Form.VALIDATIONSTRONGPASSWORD',
                         "Passwords must have at least one digit and one alphanumeric character"
                     ),
                     "validation"
@@ -495,7 +495,7 @@ class ConfirmedPasswordField extends FormField
                 $validator->validationError(
                     $name,
                     _t(
-                        'ConfirmedPasswordField.CURRENT_PASSWORD_MISSING',
+                        'SilverStripe\\Forms\\ConfirmedPasswordField.CURRENT_PASSWORD_MISSING',
                         "You must enter your current password."
                     ),
                     "validation"
@@ -509,7 +509,7 @@ class ConfirmedPasswordField extends FormField
                 $validator->validationError(
                     $name,
                     _t(
-                        'ConfirmedPasswordField.LOGGED_IN_ERROR',
+                        'SilverStripe\\Forms\\ConfirmedPasswordField.LOGGED_IN_ERROR',
                         "You must be logged in to change your password."
                     ),
                     "validation"
@@ -523,7 +523,7 @@ class ConfirmedPasswordField extends FormField
                 $validator->validationError(
                     $name,
                     _t(
-                        'ConfirmedPasswordField.CURRENT_PASSWORD_ERROR',
+                        'SilverStripe\\Forms\\ConfirmedPasswordField.CURRENT_PASSWORD_ERROR',
                         "The current password you have entered is not correct."
                     ),
                     "validation"
@@ -560,7 +560,7 @@ class ConfirmedPasswordField extends FormField
     {
         /** @var ReadonlyField $field */
         $field = $this->castedCopy('SilverStripe\\Forms\\ReadonlyField')
-            ->setTitle($this->title ? $this->title : _t('Member.PASSWORD', 'Password'))
+            ->setTitle($this->title ? $this->title : _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
             ->setValue('*****');
 
         return $field;
@@ -597,7 +597,7 @@ class ConfirmedPasswordField extends FormField
         $name = $this->getName();
         $currentName = "{$name}[_CurrentPassword]";
         if ($show) {
-            $confirmField = PasswordField::create($currentName, _t('Member.CURRENT_PASSWORD', 'Current Password'));
+            $confirmField = PasswordField::create($currentName, _t('SilverStripe\\Security\\Member.CURRENT_PASSWORD', 'Current Password'));
             $this->children->unshift($confirmField);
         } else {
             $this->children->removeByName($currentName, true);

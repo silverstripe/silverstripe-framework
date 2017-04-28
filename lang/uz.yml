@@ -1,8 +1,0 @@
-uz:
-  CMSMain:
-    SAVE: Saqlash
-  LeftAndMain:
-    HELP: Yordam
-    PAGETYPE: 'Sahifa turi:'
-    PERMAGAIN: 'Siz saytdan chiqdingiz.'
-    PERMALREADY: 'Bu erdan saytga kirishingiz mumkin'

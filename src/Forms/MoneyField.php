@@ -62,7 +62,7 @@ class MoneyField extends FormField
         $this->setName($name);
         $this->fieldAmount = NumericField::create(
             "{$name}[Amount]",
-            _t('MoneyField.FIELDLABELAMOUNT', 'Amount')
+            _t('SilverStripe\\Forms\\MoneyField.FIELDLABELAMOUNT', 'Amount')
         )
             ->setScale(2);
         $this->buildCurrencyField();
@@ -97,14 +97,14 @@ class MoneyField extends FormField
             // Dropdown field for multiple currencies
             $field = DropdownField::create(
                 "{$name}[Currency]",
-                _t('MoneyField.FIELDLABELCURRENCY', 'Currency'),
+                _t('SilverStripe\\Forms\\MoneyField.FIELDLABELCURRENCY', 'Currency'),
                 $allowedCurrencies
             );
         } else {
             // Free-text entry for currency value
             $field = TextField::create(
                 "{$name}[Currency]",
-                _t('MoneyField.FIELDLABELCURRENCY', 'Currency')
+                _t('SilverStripe\\Forms\\MoneyField.FIELDLABELCURRENCY', 'Currency')
             );
         }
 

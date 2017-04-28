@@ -349,14 +349,14 @@ class DBDate extends DBField
         $now = DBDatetime::now()->getTimestamp();
         if ($timestamp <= $now) {
             return _t(
-                'Date.TIMEDIFFAGO',
+                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFAGO',
                 "{difference} ago",
                 'Natural language time difference, e.g. 2 hours ago',
                 array('difference' => $this->TimeDiff($includeSeconds, $significance))
             );
         } else {
             return _t(
-                'Date.TIMEDIFFIN',
+                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
                 "in {difference}",
                 'Natural language time difference, e.g. in 2 hours',
                 array('difference' => $this->TimeDiff($includeSeconds, $significance))
@@ -379,7 +379,7 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         if ($ago < 60 && !$includeSeconds) {
-            return _t('Date.LessThanMinuteAgo', 'less than a minute');
+            return _t('SilverStripe\\ORM\\FieldType\\DBDate.LessThanMinuteAgo', 'less than a minute');
         } elseif ($ago < $significance * 60 && $includeSeconds) {
             return $this->TimeDiffIn('seconds');
         } elseif ($ago < $significance * 3600) {

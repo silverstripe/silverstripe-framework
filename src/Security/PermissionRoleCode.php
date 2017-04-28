@@ -35,7 +35,7 @@ class PermissionRoleCode extends DataObject
         ) {
             $result->addError(sprintf(
                 _t(
-                    'PermissionRoleCode.PermsError',
+                    'SilverStripe\\Security\\PermissionRoleCode.PermsError',
                     'Can\'t assign code "%s" with privileged permissions (requires ADMIN access)'
                 ),
                 $this->Code

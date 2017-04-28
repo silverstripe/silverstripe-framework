@@ -22,7 +22,7 @@ class CurrencyField_Disabled extends CurrencyField
     {
         if ($this->value) {
             $val = Convert::raw2xml($this->value);
-            $val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/', "", $val), 2);
+            $val = _t('SilverStripe\\Forms\\CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/', "", $val), 2);
             $valforInput = Convert::raw2att($val);
         } else {
             $valforInput = '';
