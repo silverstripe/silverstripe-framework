@@ -10,7 +10,7 @@ fo:
     TYPE: Slag
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Alment
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
     HELLO: Hey
     TEXT1: 'Her er títt'

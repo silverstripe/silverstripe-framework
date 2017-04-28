@@ -23,7 +23,7 @@ bg:
     TABMAIN: Главно
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Грешна заявка'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     HELLO: Здравей!
     TEXT1: 'Това е Вашият'

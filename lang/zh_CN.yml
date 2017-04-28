@@ -8,7 +8,7 @@ zh_CN:
     TYPE: 类型
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 主要部分
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
     HELLO: 嗨
   SilverStripe\Forms\ConfirmedPasswordField:

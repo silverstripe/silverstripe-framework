@@ -22,7 +22,7 @@ sr@latin:
     TABMAIN: Glavno
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Pogrešan zahtev'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promenili ste svoju lozinku za '
     HELLO: Zdravo
     TEXT1: 'Evo ga Vaš'
@@ -83,9 +83,9 @@ sr@latin:
     DeletePermissionsFailure: 'Nemate pravo brisanja'
     Deleted: 'Izbrisano %s %s'
     Save: Sačuvaj
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Izmeni
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Stranica
     View: Pregled
   SilverStripe\Forms\MemberDatetimeOptionsetField:

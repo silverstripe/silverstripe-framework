@@ -24,7 +24,7 @@ nl:
     TABMAIN: Hoofdgedeelte
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Fout bij verwerken'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Het wachtwoord voor het account met e-mailadres {email} is aangepast. Indien u uw wachtwoord niet heeft aangepast kunt u dat doen met onderstaande link.'
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT3: 'Wachtwoord veranderen'
@@ -35,7 +35,7 @@ nl:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nee
     YESANSWER: Ja
-  SilverStripe\Forms\CheckboxSetField.ss:
+  SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Geen keuze mogelijk'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
@@ -97,9 +97,9 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '%s %s verwijderd'
     Save: Opslaan
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Bewerken
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Pagina
     View: Bekijk
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

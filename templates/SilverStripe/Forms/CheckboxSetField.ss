@@ -7,6 +7,6 @@
 			</li>
 		<% end_loop %>
 	<% else %>
-		<li><%t CheckboxSetField_ss.NOOPTIONSAVAILABLE 'No options available' %></li>
+		<li><%t SilverStripe\\Forms\\CheckboxSetField_ss.NOOPTIONSAVAILABLE 'No options available' %></li>
 	<% end_if %>
 </ul>

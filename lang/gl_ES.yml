@@ -15,7 +15,7 @@ gl_ES:
     FIELDNOTSET: 'Ficheiro de información non atopado'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
     HELLO: Ola
     TEXT1: 'Estás aquí'

@@ -22,7 +22,7 @@ nb:
     TABMAIN: Hovedinnstillinger
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ugyldig forespørsel'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
     HELLO: Hei
     TEXT1: 'Her er din'
@@ -83,9 +83,9 @@ nb:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     Deleted: 'Slettet %s %s'
     Save: Lagre
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Rediger
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Side
     View: Viser
   SilverStripe\Forms\MemberDatetimeOptionsetField:

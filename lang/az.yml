@@ -6,7 +6,7 @@ az:
     ROLES: Rollar
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Əsas
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
     HELLO: Salam
     TEXT1: 'Burada sizin'

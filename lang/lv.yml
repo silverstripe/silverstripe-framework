@@ -7,7 +7,7 @@ lv:
     ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Sākums
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
     HELLO: Sveiki
     TEXT1: 'Šeit ir Jūsu'

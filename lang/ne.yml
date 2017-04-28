@@ -1,7 +1,7 @@
 ne:
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: मुख्य
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
     HELLO: हाई
   SilverStripe\Forms\DropdownField:

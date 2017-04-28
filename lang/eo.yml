@@ -24,7 +24,7 @@ eo:
     TABMAIN: Ĉefaj
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Malvalida peto'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton bonvolu ŝanĝi vian pasvorton per la suba ligilo.'
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT3: 'Ŝangi pasvorton'
@@ -35,7 +35,7 @@ eo:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Jes
-  SilverStripe\Forms\CheckboxSetField.ss:
+  SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Mankas ebloj'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Pasvorto devas esti almenaŭ {min} signojn longa.'
@@ -103,9 +103,9 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita %s %s'
     Save: Konservi
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redakti
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Paĝo
     View: Vido
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

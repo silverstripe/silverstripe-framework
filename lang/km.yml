@@ -1,5 +1,5 @@
 km:
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: ផ្លាស់ប្តូរពាក្យសំងាត់

@@ -6,7 +6,7 @@ is:
     ROLES: Hlutverk
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Aðal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
     HELLO: Hæ
     TEXT1: 'Hérna er þitt'

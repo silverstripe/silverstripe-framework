@@ -11,7 +11,7 @@ bs:
     TYPE: Tip
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Glavno
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
     HELLO: Pozdrav
     TEXT1: 'Ovo je Vaš'

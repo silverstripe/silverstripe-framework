@@ -8,7 +8,7 @@ si:
     TYPE: වර්ගය
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: ප්‍රදාන
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
     HELLO: කොහොමද
     TEXT1: 'මෙය ඔබගේ'

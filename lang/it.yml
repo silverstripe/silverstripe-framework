@@ -24,7 +24,7 @@ it:
     TABMAIN: Principale
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Richiesta non valida'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT3: 'Cambia password'
     HELLO: Ciao
@@ -97,9 +97,9 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato %s %s'
     Save: Salva
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Modifica
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Pagina
     View: Visualizza
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

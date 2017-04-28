@@ -18,7 +18,7 @@ es_MX:
     TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
     HELLO: Hey
     TEXT1: 'Estás aquí'

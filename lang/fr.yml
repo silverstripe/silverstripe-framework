@@ -23,7 +23,7 @@ fr:
     TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Requête non valide'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
     HELLO: Salut
     TEXT1: 'Voici votre'
@@ -85,9 +85,9 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '%s %s supprimés'
     Save: Enregistrer
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editer
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Page
     View: Afficher
   SilverStripe\Forms\MemberDatetimeOptionsetField:

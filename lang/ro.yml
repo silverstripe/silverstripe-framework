@@ -5,7 +5,7 @@ ro:
     EDITINFO: 'Editeaza acest fisier'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Pincipal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     HELLO: Salut
     TEXT2: 'link de resetare a parolei'
