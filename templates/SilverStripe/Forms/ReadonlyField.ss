@@ -1,4 +1,4 @@
-<span id="$ID" <% if $extraClass %>class="$extraClass<% end_if %>">
+<span id="$ID" <% if $extraClass %>class="$extraClass"<% end_if %>>
 	$Value
 </span>
 <% if $IncludeHiddenField %>
