@@ -5,6 +5,7 @@ namespace SilverStripe\Security\Tests;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\MemberAuthenticator\CMSAuthenticator;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Security;
@@ -89,7 +90,7 @@ class MemberAuthenticatorTest extends SapphireTest
      */
     public function testAuthenticateByTempID()
     {
-        $authenticator = new Authenticator();
+        $authenticator = new CMSAuthenticator();
 
         $member = new Member();
         $member->Email = 'test1@test.com';
@@ -186,7 +187,7 @@ class MemberAuthenticatorTest extends SapphireTest
             $dummy
         );
 
-        $this->assertTrue(Member::default_admin()->isLockedOut());
+        $this->assertFalse(Member::default_admin()->canLogin()->isValid());
         $this->assertEquals('2016-04-18 00:10:00', Member::default_admin()->LockedOutUntil);
     }
 }

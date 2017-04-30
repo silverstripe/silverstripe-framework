@@ -238,13 +238,13 @@ class Security extends Controller implements TemplateGlobalProvider
         parent::init();
 
         // Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-        $frameOptions = $this->config()->get('frame_options');
+        $frameOptions = static::config()->get('frame_options');
         if ($frameOptions) {
             $this->getResponse()->addHeader('X-Frame-Options', $frameOptions);
         }
 
         // Prevent search engines from indexing the login page
-        $robotsTag = $this->config()->get('robots_tag');
+        $robotsTag = static::config()->get('robots_tag');
         if ($robotsTag) {
             $this->getResponse()->addHeader('X-Robots-Tag', $robotsTag);
         }
@@ -267,9 +267,9 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function getAuthenticator($name)
     {
-        $authenticators = self::config()->authenticators;
+        $authenticators = self::config()->get('authenticators');
 
-        if (!$name) $name = 'default';
+        $name = $name ?: 'default';
 
         if (isset($authenticators[$name])) {
             return Injector::inst()->get($authenticators[$name]);
@@ -283,13 +283,20 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return array Return an array of Authenticator objects
      */
-    public static function getAuthenticators()
+    public static function getAuthenticators($service = Authenticator::LOGIN)
     {
-        $authenticators = self::config()->authenticators;
+        $authenticators = self::config()->get('authenticators');
 
-        return array_map(function ($class) {
-            return Injector::inst()->get($class);
-        }, $authenticators);
+        foreach($authenticators as $name => &$class) {
+            /** @var Authenticator $authenticator */
+            $authenticator = Injector::inst()->get($class);
+            if($authenticator->supportedServices() & $service) {
+                $class = $authenticator;
+            } else {
+                unset($authenticators[$name]);
+            }
+        }
+        return $authenticators;
     }
 
     /**
@@ -422,22 +429,6 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
-     * Get the login form to process according to the submitted data
-     *
-     * @return Form
-     * @throws Exception
-     */
-    public function LoginForm()
-    {
-        $authenticator = $this->getAuthenticator('default');
-        if ($authenticator) {
-            $handler = $authenticator->getLoginHandler($this->Link());
-            return $handler->handleRequest($this->request, DataModel::inst());
-        }
-        throw new Exception('Passed invalid authentication method');
-    }
-
-    /**
      * Get the login forms for all available authentication methods
      *
      * @return array Returns an array of available login forms (array of Form
@@ -480,6 +471,12 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Log the currently logged in user out
      *
+     * Logging out without ID-parameter in the URL, will log the user out of all applicable Authenticators.
+     *
+     * Adding an ID will only log the user out of that Authentication method.
+     *
+     * Logging out of Default will <i>always</i> completely log out the user.
+     *
      * @param bool $redirect Redirect the user back to where they came.
      *                       - If it's false, the code calling logout() is
      *                         responsible for sending the user where-ever
@@ -488,14 +485,43 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function logout($redirect = true)
     {
+        $this->extend('beforeMemberLoggedOut');
+        $request = $this->getRequest();
         $member = Member::currentUser();
-        if ($member) {
-            $member->logOut();
+        // Reasoning for (now) to not go with a full LoginHandler call, is to not make it circular
+        // re-sending the request forward to the authenticator. In the case of logout, I think it would be
+        // overkill.
+        if (($name = $request->param('ID')) && self::hasAuthenticator($request->param('ID'))){
+            /** @var Authenticator $authenticator */
+            $authenticator = $this->getAuthenticator($request->param('ID'));
+            if($authenticator->doLogOut($member) !== true) {
+                $this->extend('failureMemberLoggedOut', $authenticator);
+                return $this->redirectBack();
+            }
+            $this->extend('successMemberLoggedOut', $authenticator);
+        } else {
+            $authenticators = static::getAuthenticators(Authenticator::LOGOUT);
+            /**
+             * @var string $name
+             * @var Authenticator $authenticator
+             */
+            foreach ($authenticators as $name => $authenticator) {
+                if ($authenticator->logOut($member) !== true) {
+                    $this->extend('failureMemberLoggedOut', $authenticator);
+                    // Break on first log out failure(?)
+                    return $this->redirectBack();
+                }
+                $this->extend('successMemberLoggedOut', $authenticator);
+            }
         }
+        // Member is successfully logged out. Write possible changes to the database.
+        $member->write();
+        $this->extend('afterMemberLoggedOut');
 
         if ($redirect && (!$this->getResponse()->isFinished())) {
             return $this->redirectBack();
         }
+
         return null;
     }
 
@@ -644,7 +670,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return HTTPResponse|string Returns the "login" page as HTML code.
      * @throws HTTPResponse_Exception
      */
-    public function login($request)
+    public function login($request, $service = Authenticator::LOGIN)
     {
         // Check pre-login process
         if ($response = $this->preLogin()) {
@@ -654,19 +680,20 @@ class Security extends Controller implements TemplateGlobalProvider
         $link = $this->link("login");
 
         // Delegate to a single handler - Security/login/<authname>/...
-        if ($name = $request->param('ID')) {
+        if (($name = $request->param('ID')) && self::hasAuthenticator($request->param('ID'))) {
             $request->shift();
 
             $authenticator = $this->getAuthenticator($name);
-            if (!$authenticator) {
-                throw new HTTPResponse_Exception(404, 'No authenticator "' . $name . '"');
+            // @todo handle different Authenticator situations
+            if (!$authenticator->supportedServices() & $service) {
+                throw new HTTPResponse_Exception('Invalid Authenticator "' . $name . '" for login action', 418);
             }
 
             $authenticators = [ $name => $authenticator ];
 
         // Delegate to all of them, building a tabbed view - Security/login
         } else {
-            $authenticators = $this->getAuthenticators();
+            $authenticators = static::getAuthenticators($service);
         }
 
         $handlers = $authenticators;
@@ -746,7 +773,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function delegateToHandler(RequestHandler $handler, $title, array $templates)
     {
-        $result = $handler->handleRequest($this->getRequest(), \SilverStripe\ORM\DataModel::inst());
+        $result = $handler->handleRequest($this->getRequest(), DataModel::inst());
 
         // Return the customised controller - used to render in a Form
         // Post requests are expected to be login posts, so they'll be handled downstairs
@@ -927,7 +954,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * Factory method for the lost password form
      *
      * @skipUpgrade
-     * @return ChangePasswordForm Returns the lost password form
+     * @return MemberAuthenticator\ChangePasswordForm
      */
     public function ChangePasswordForm()
     {
@@ -1076,7 +1103,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function has_default_admin()
     {
-        return !empty(self::$default_username) && !empty(self::$default_password);
+        return !empty(self::$default_username) && !empty(self::$default_password) && (Director::get_environment_type() === 'dev');
     }
 
     /**

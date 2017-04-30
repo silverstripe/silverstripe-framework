@@ -4,11 +4,13 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\MemberAuthenticator\CMSAuthenticator;
 use SilverStripe\View\Requirements;
 
 /**
@@ -22,6 +24,7 @@ class CMSSecurity extends Security
     );
 
     private static $allowed_actions = array(
+        'login',
         'LoginForm',
         'success'
     );
@@ -41,10 +44,25 @@ class CMSSecurity extends Security
         Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
     }
 
+    public function login($request, $service = Authenticator::CMS_LOGIN)
+    {
+        return parent::login($request, Authenticator::CMS_LOGIN);
+    }
+
     public function Link($action = null)
     {
         /** @skipUpgrade */
         return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
+    }
+
+    protected function getAuthenticator($name = 'cms')
+    {
+        return parent::getAuthenticator($name);
+    }
+
+    public static function getAuthenticators($service = Authenticator::CMS_LOGIN)
+    {
+        return parent::getAuthenticators($service);
     }
 
     /**
@@ -57,6 +75,7 @@ class CMSSecurity extends Security
         if ($tempid = $this->getRequest()->requestVar('tempid')) {
             return Member::member_from_tempid($tempid);
         }
+
         return null;
     }
 
@@ -129,6 +148,7 @@ setTimeout(function(){top.location.href = "$loginURLJS";}, 0);
 PHP
         );
         $this->setResponse($response);
+
         return $response;
     }
 
@@ -142,19 +162,6 @@ PHP
         return parent::preLogin();
     }
 
-    public function GetLoginForms()
-    {
-        $forms = array();
-        $authenticators = Authenticator::get_authenticators();
-        foreach ($authenticators as $authenticator) {
-            // Get only CMS-supporting authenticators
-            if ($authenticator::supports_cms()) {
-                $forms[] = $authenticator::get_cms_login_form($this);
-            }
-        }
-        return $forms;
-    }
-
     /**
      * Determine if CMSSecurity is enabled
      *
@@ -163,28 +170,23 @@ PHP
     public static function enabled()
     {
         // Disable shortcut
-        if (!static::config()->reauth_enabled) {
+        if (!static::config()->get('reauth_enabled')) {
             return false;
         }
 
-        // Count all cms-supported methods
-        $authenticators = Authenticator::get_authenticators();
-        foreach ($authenticators as $authenticator) {
+        /** @var [] $authenticators */
+        $authenticators = Security::config()->get('authenticators');
+        foreach ($authenticators as $name => $authenticator) {
             // Supported if at least one authenticator is supported
-            if ($authenticator::supports_cms()) {
+            $authenticator = Injector::inst()->get($authenticator);
+            if (($authenticator->supportedServices() & Authenticator::CMS_LOGIN)
+                && Security::hasAuthenticator($name)
+            ) {
                 return true;
             }
         }
-        return false;
-    }
 
-    public function LoginForm()
-    {
-        $authenticator = $this->getAuthenticator('default');
-        if ($authenticator && $authenticator::supports_cms()) {
-            return $authenticator::get_cms_login_form($this);
-        }
-        user_error('Passed invalid authentication method', E_USER_ERROR);
+        return false;
     }
 
     /**
@@ -217,7 +219,7 @@ PHP
         $controller = $controller->customise(array(
             'Content' => _t(
                 'SilverStripe\\Security\\CMSSecurity.SUCCESSCONTENT',
-                '<p>Login success. If you are not automatically redirected '.
+                '<p>Login success. If you are not automatically redirected ' .
                 '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',
                 array('link' => Convert::raw2att($backURL))

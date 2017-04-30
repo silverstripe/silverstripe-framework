@@ -45,14 +45,9 @@ interface Authenticator
      * URL-handling methods may return an array [ "Form" => (form-object) ] which can then
      * be merged into a default controller.
      *
-     * @param $link The base link to use for this RequestHnadler
+     * @param string $link The base link to use for this RequestHnadler
      */
     public function getLoginHandler($link);
-
-    /**
-     * @todo
-     */
-    public function getCMSLoginHandler($link);
 
     /**
      * Return RequestHandler to manage the change-password process.
@@ -63,7 +58,7 @@ interface Authenticator
      * URL-handling methods may return an array [ "Form" => (form-object) ] which can then
      * be merged into a default controller.
      *
-     * @param $link The base link to use for this RequestHnadler
+     * @param string $link The base link to use for this RequestHnadler
      */
     public function getChangePasswordHandler($link);
 
@@ -86,4 +81,13 @@ interface Authenticator
      * @return array
      */
 //    public function getAuthenticateFields();
+
+    /**
+     * Log the member out of this Authentication method.
+     *
+     * @param Member $member by reference, to allow for multiple actions on the member with a single write
+     * @return boolean|Member if logout was unsuccessfull, return true, otherwise, the member is returned
+     */
+    public function doLogOut(&$member);
+
 }

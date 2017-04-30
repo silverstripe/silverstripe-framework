@@ -6,3 +6,7 @@ SilverStripe\Security\MemberAuthenticator\LoginForm:
 SilverStripe\Security\Security:
   authenticators:
     default: SilverStripe\Security\MemberAuthenticator\Authenticator
+    cms: SilverStripe\Security\MemberAuthenticator\CMSAuthenticator
+
+SilverStripe\Security\MemberAuthenticator\CMSSecurity:
+  reauth_enabled: true

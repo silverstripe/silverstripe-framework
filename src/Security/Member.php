@@ -368,7 +368,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                     'Your account has been temporarily disabled because of too many failed attempts at ' .
                     'logging in. Please try again in {count} minutes.',
                     null,
-                    array('count' => $this->config()->lock_out_delay_mins)
+                    array('count' => static::config()->get('lock_out_delay_mins'))
                 )
             );
         }
@@ -382,7 +382,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public function isLockedOut()
+    protected function isLockedOut()
     {
         if (!$this->LockedOutUntil) {
             return false;
@@ -499,7 +499,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $this->write();
 
         // Audit logging hook
-        $this->extend('memberLoggedIn');
+        $this->extend('afterMemberLoggedIn');
     }
 
     /**
@@ -627,40 +627,6 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Logs this member out.
-     */
-    public function logOut()
-    {
-        $this->extend('beforeMemberLoggedOut');
-
-        Session::clear("loggedInAs");
-        if (Member::config()->login_marker_cookie) {
-            Cookie::set(Member::config()->login_marker_cookie, null, 0);
-        }
-
-        Session::destroy();
-
-        $this->extend('memberLoggedOut');
-
-        // Clears any potential previous hashes for this member
-        RememberLoginHash::clear($this, Cookie::get('alc_device'));
-
-        Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
-        Cookie::force_expiry('alc_enc');
-        Cookie::set('alc_device', null);
-        Cookie::force_expiry('alc_device');
-
-        // Switch back to live in order to avoid infinite loops when
-        // redirecting to the login screen (if this login screen is versioned)
-        Session::clear('readingMode');
-
-        $this->write();
-
-        // Audit logging hook
-        $this->extend('memberLoggedOut');
-    }
-
-    /**
      * Utility for generating secure password hashes for this member.
      *
      * @param string $string
@@ -762,7 +728,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             ->filter('TempIDHash', $tempid);
 
         // Exclude expired
-        if (static::config()->temp_id_lifetime) {
+        if (static::config()->get('temp_id_lifetime')) {
             $members = $members->filter('TempIDExpired:GreaterThan', DBDatetime::now()->getValue());
         }
 
@@ -788,7 +754,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             i18n::getSources()->getKnownLocales()
         ));
 
-        $fields->removeByName(static::config()->hidden_fields);
+        $fields->removeByName(static::config()->get('hidden_fields'));
         $fields->removeByName('FailedLoginCount');
 
 
@@ -988,7 +954,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
-            && $this->config()->notify_password_change
+            && static::config()->get('notify_password_change')
         ) {
             Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
@@ -1219,7 +1185,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getTitle()
     {
-        $format = $this->config()->title_format;
+        $format = static::config()->get('title_format');
         if ($format) {
             $values = array();
             foreach ($format['columns'] as $col) {
@@ -1254,7 +1220,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $op = (DB::get_conn() instanceof MSSQLDatabase) ? " + " : " || ";
 
         // Get title_format with fallback to default
-        $format = static::config()->title_format;
+        $format = static::config()->get('title_format');
         if (!$format) {
             $format = [
                 'columns' => ['Surname', 'FirstName'],
@@ -1542,9 +1508,9 @@ class Member extends DataObject implements TemplateGlobalProvider
                 _t(__CLASS__.'.INTERFACELANG', "Interface Language", 'Language of the CMS'),
                 i18n::getSources()->getKnownLocales()
             ));
-            $mainFields->removeByName($this->config()->hidden_fields);
+            $mainFields->removeByName(static::config()->get('hidden_fields'));
 
-            if (! $this->config()->lock_out_after_incorrect_logins) {
+            if (! static::config()->get('lock_out_after_incorrect_logins')) {
                 $mainFields->removeByName('FailedLoginCount');
             }
 

@@ -1,38 +1,30 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Security\Security;
 
 /**
  * Provides the in-cms session re-authentication form for the "member" authenticator
  */
 class CMSMemberLoginForm extends LoginForm
 {
-    /**
-     * Get link to use for external security actions
-     *
-     * @param string $action Action
-     * @return string
-     */
-    public function getExternalLink($action = null)
-    {
-        return Security::singleton()->Link($action);
-    }
 
     /**
      * CMSMemberLoginForm constructor.
-     * @param Controller $controller
+     * @param RequestHandler $controller
      * @param string $authenticatorClass
      * @param FieldList $name
      */
-    public function __construct(Controller $controller, $authenticatorClass, $name)
+    public function __construct(RequestHandler $controller, $authenticatorClass, $name)
     {
         $this->controller = $controller;
 
@@ -42,7 +34,7 @@ class CMSMemberLoginForm extends LoginForm
 
         $actions = $this->getFormActions();
 
-        parent::__construct($controller, $name, $fields, $actions);
+        parent::__construct($controller, $authenticatorClass, $name, $fields, $actions);
     }
 
     /**
@@ -51,7 +43,7 @@ class CMSMemberLoginForm extends LoginForm
     public function getFormFields()
     {
         // Set default fields
-        $fields = new FieldList(
+        $fields = FieldList::create([
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password')),
@@ -63,9 +55,9 @@ class CMSMemberLoginForm extends LoginForm
                     _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONFORGOTPASSWORD', "Forgot password?")
                 )
             )
-        );
+        ]);
 
-        if (Security::config()->autologin_enabled) {
+        if (Security::config()->get('autologin_enabled')) {
             $fields->push(CheckboxField::create(
                 "Remember",
                 _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time?")
@@ -88,8 +80,8 @@ class CMSMemberLoginForm extends LoginForm
         }
 
         // Make actions
-        $actions = new FieldList(
-            FormAction::create('dologin', _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGIN', "Log back in")),
+        $actions = FieldList::create([
+            FormAction::create('doLogin', _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGIN', "Log back in")),
             LiteralField::create(
                 'doLogout',
                 sprintf(
@@ -98,14 +90,20 @@ class CMSMemberLoginForm extends LoginForm
                     _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGOUT', "Log out")
                 )
             )
-        );
+        ]);
 
         return $actions;
     }
 
-    protected function buildRequestHandler()
+    /**
+     * Get link to use for external security actions
+     *
+     * @param string $action Action
+     * @return string
+     */
+    public function getExternalLink($action = null)
     {
-        return CMSMemberLoginHandler::create($this);
+        return Security::singleton()->Link($action);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\HiddenField;
@@ -49,7 +50,7 @@ class LoginForm extends BaseLoginForm
      * Constructor
      *
      * @skipUpgrade
-     * @param Controller $controller The parent controller, necessary to
+     * @param RequestHandler $controller The parent controller, necessary to
      *                               create the appropriate form action tag.
      * @param string $authenticatorClass Authenticator for this LoginForm
      * @param string $name The method on the controller that will return this

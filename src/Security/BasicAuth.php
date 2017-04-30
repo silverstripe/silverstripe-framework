@@ -85,6 +85,7 @@ class BasicAuth
 
         $member = null;
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            /** @var Authenticator $authenticator */
             $authenticator = Injector::inst()->get(Authenticator::class);
 
             $member = $authenticator->authenticate([
@@ -151,9 +152,9 @@ class BasicAuth
      */
     public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
     {
-        Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected', $protect);
-        Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected_code', $code);
-        Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected_message', $message);
+        Config::inst()->update(self::class, 'entire_site_protected', $protect);
+        Config::inst()->update(self::class, 'entire_site_protected_code', $code);
+        Config::inst()->update(self::class, 'entire_site_protected_message', $message);
     }
 
     /**
@@ -165,7 +166,7 @@ class BasicAuth
      */
     public static function protect_site_if_necessary()
     {
-        $config = Config::forClass('SilverStripe\\Security\\BasicAuth');
+        $config = Config::forClass(BasicAuth::class);
         if ($config->entire_site_protected) {
             self::requireLogin($config->entire_site_protected_message, $config->entire_site_protected_code, false);
         }

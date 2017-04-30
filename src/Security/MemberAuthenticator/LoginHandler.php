@@ -7,7 +7,6 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\MemberAuthenticator\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 
@@ -91,7 +90,7 @@ class LoginHandler extends RequestHandler
      * This method is called when the user clicks on "Log in"
      *
      * @param array $data Submitted data
-     * @param LoginHandler $formHandler
+     * @param LoginForm $form
      * @return HTTPResponse
      */
     public function doLogin($data, $form)
@@ -223,7 +222,7 @@ class LoginHandler extends RequestHandler
      */
     public function performLogin($member, $data)
     {
-        $member->LogIn(isset($data['Remember']));
+        $member->logIn(isset($data['Remember']));
         return $member;
     }
     /**
