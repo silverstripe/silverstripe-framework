@@ -1605,6 +1605,18 @@ class IntlLocales implements Locales, Resettable
         if (!$lang || !$region) {
             return false;
         }
+
+        // Check the configurable whitelist
+        $localeCode = strtolower($lang) . '_' . strtoupper($region);
+        $locales = $this->getLocales();
+
+        if (array_key_exists($localeCode, $locales)
+            || array_key_exists(strtolower($localeCode), $locales)
+        ) {
+            return true;
+        }
+
+        // Fallback
         return strcasecmp($lang, $region)
             && strcasecmp($lang, $locale)
             && strcasecmp($region, $locale);

@@ -376,6 +376,9 @@ class i18nTest extends SapphireTest
         $this->assertFalse(i18n::getData()->validate('en'), 'Short lang format is not valid');
         $this->assertFalse(i18n::getData()->validate('xx_XX'), 'Unknown locale in correct format is not valid');
         $this->assertFalse(i18n::getData()->validate(''), 'Empty string is not valid');
+        $this->assertTrue(i18n::getData()->validate('de_DE'), 'Known locale where language is same as region');
+        $this->assertTrue(i18n::getData()->validate('fr-FR'), 'Known locale where language is same as region');
+        $this->assertTrue(i18n::getData()->validate('zh_cmn'), 'Known locale with all lowercase letters');
     }
 
     public function testTranslate()
