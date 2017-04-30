@@ -10,7 +10,7 @@ pt:
     FIELDNOTSET: 'Informação do ficheiro não encontrada'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
     HELLO: Olá
     TEXT1: 'Este é o seu'

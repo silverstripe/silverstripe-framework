@@ -13,7 +13,7 @@ es_AR:
     TYPE: Tipo
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
     HELLO: Hola
     TEXT1: 'Aquí esta tu'

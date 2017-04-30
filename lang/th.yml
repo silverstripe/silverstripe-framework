@@ -20,7 +20,7 @@ th:
     TABMAIN: หลัก
   SilverStripe\Control\Director:
     INVALID_REQUEST: การร้องขอไม่ถูกต้อง
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
     HELLO: สวัสดี
     TEXT1: นี่คือ
@@ -68,7 +68,7 @@ th:
     Delete: ลบ
     Deleted: 'ลบ %s %s แล้ว'
     Save: บันทึก
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: หน้า
     View: เปิดดู
   SilverStripe\Forms\MemberDatetimeOptionsetField:

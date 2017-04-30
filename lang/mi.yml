@@ -22,7 +22,7 @@ mi:
     TABMAIN: Matua
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Tono muhu'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
     HELLO: 'Kia ora'
     TEXT1: 'Anei tō'
@@ -83,9 +83,9 @@ mi:
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Kua mukua %s %s'
     Save: Tiaki
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Whakatika
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Whārangi
     View: Tiro
   SilverStripe\Forms\MemberDatetimeOptionsetField:

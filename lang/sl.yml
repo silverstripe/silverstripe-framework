@@ -22,7 +22,7 @@ sl:
     TABMAIN: Domov
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Napačna zahteva'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
     HELLO: 'Pozdravljeni,'
     TEXT1: 'Tukaj je vaša'
@@ -81,9 +81,9 @@ sl:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Deleted: 'Izbrisanih %s %s'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Stran
     View: Poglej
   SilverStripe\Forms\MemberDatetimeOptionsetField:

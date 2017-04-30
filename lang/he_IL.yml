@@ -7,7 +7,7 @@ he_IL:
     SIZE: גודל
     TYPE: סוג
     URL: 'כתובת הדף'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
     HELLO: היי
   SilverStripe\Forms\ConfirmedPasswordField:

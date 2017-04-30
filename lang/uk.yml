@@ -12,7 +12,7 @@ uk:
     EDITINFO: 'Редагувати цей файл'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Головна
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     HELLO: Привіт
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -39,7 +39,7 @@ uk:
     Create: Створити
     Delete: Видалити
     Save: Зберегти
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Сторінка
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Кількість

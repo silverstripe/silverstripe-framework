@@ -24,7 +24,7 @@ en:
     TABMAIN: Main
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Invalid request'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT3: 'Change password'
@@ -35,7 +35,7 @@ en:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
-  SilverStripe\Forms\CheckboxSetField.ss:
+  SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'No options available'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
@@ -103,9 +103,9 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Page
     View: View
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

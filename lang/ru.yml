@@ -24,7 +24,7 @@ ru:
     TABMAIN: Основное
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Неверный запрос'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT3: 'Изменить пароль'
     HELLO: Здравствуйте
@@ -97,9 +97,9 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
     Save: 'Сохранить'
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 'Редактировать'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Страница
     View: Просмотр
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

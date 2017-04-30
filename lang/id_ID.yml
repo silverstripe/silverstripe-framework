@@ -23,7 +23,7 @@ id_ID:
     TABMAIN: Utama
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Permintaan tidak valid'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
     HELLO: Hai
     TEXT1: 'Berikut ini '
@@ -90,9 +90,9 @@ id_ID:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     Deleted: '%s %s dihapus'
     Save: Simpan
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Laman
     View: Tampilkan
   SilverStripe\Forms\MemberDatetimeOptionsetField:

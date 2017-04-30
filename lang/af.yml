@@ -20,7 +20,7 @@ af:
     TABMAIN: Hoof
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ongeldige versoek'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
     TEXT1: 'Hier is u'
     TEXT2: 'wagwoord herstel skakel'
@@ -74,7 +74,7 @@ af:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     Deleted: 'Verwyderde %s %s'
     Save: Stoor
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Bladsy
     View: Wys
   SilverStripe\Forms\MemberDatetimeOptionsetField:

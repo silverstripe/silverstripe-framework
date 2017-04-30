@@ -8,7 +8,7 @@ zh_TW:
     TYPE: 類型
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 主要
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
     HELLO: 您好
   SilverStripe\Forms\DropdownField:

@@ -22,7 +22,7 @@ et_EE:
     TABMAIN: Avaleht
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Sobimatu taotlus'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
     HELLO: Tere
     TEXT1: 'Siin on sinu'
@@ -81,9 +81,9 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigeeri
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Leht
     View: Kuva
   SilverStripe\Forms\MemberDatetimeOptionsetField:

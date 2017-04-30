@@ -22,7 +22,7 @@ sr_RS:
     TABMAIN: Главно
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Погрешан захтев'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Променили сте своју лозинку за '
     HELLO: Здраво
     TEXT1: 'Ево га Ваш'
@@ -83,9 +83,9 @@ sr_RS:
     DeletePermissionsFailure: 'Немате право брисања'
     Deleted: 'Избрисано %s %s'
     Save: Сачувај
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Измени
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Страница
     View: Преглед
   SilverStripe\Forms\MemberDatetimeOptionsetField:

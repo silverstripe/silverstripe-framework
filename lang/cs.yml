@@ -24,7 +24,7 @@ cs:
     TABMAIN: Hlavní
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatný požadavek'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
     CHANGEPASSWORDTEXT3: 'Změnit heslo'
     HELLO: 'Dobrý den'
@@ -97,9 +97,9 @@ cs:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
     Deleted: 'Smazáno %s %s'
     Save: Uložit
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editovat
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Stránka
     View: Zobrazit
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

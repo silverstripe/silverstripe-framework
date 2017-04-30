@@ -8,7 +8,7 @@ hu:
     TYPE: Típus
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Fő
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
     HELLO: Szia
   SilverStripe\Forms\ConfirmedPasswordField:

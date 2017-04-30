@@ -18,7 +18,7 @@ sl_SI:
     REMOVE: Odstrani
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neveljavna zahteva'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
     CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
     HELLO: Živjo
@@ -61,7 +61,7 @@ sl_SI:
     DeletePermissionsFailure: 'Nimate pravic za brisanje'
     Deleted: 'Izbrisano %s %s'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'

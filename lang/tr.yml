@@ -14,7 +14,7 @@ tr:
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 'Ana (Esas)'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
     HELLO: Merhaba
     TEXT1: 'Profilinize ait'

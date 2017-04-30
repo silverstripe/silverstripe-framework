@@ -24,7 +24,7 @@ lt:
     TABMAIN: Pagrindinis
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Klaidinga užklausa'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     HELLO: Sveiki
     TEXT1: Jūsų
@@ -91,9 +91,9 @@ lt:
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     Deleted: 'Ištrinta %s %s'
     Save: Išsaugoti
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redaguoti
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Puslapis
     View: Rodoma
   SilverStripe\Forms\MemberDatetimeOptionsetField:

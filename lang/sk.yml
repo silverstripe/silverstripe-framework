@@ -24,7 +24,7 @@ sk:
     TABMAIN: Hlavné
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Heslo pre účet s e-mailovou adresou {email} bol zmenené. Ak ste nechceli zmeniť vaše heslo, prosím zmeňte ho pomocou odkazu uvedeného nižšie.'
     CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
     CHANGEPASSWORDTEXT3: 'Zmeniť heslo'
@@ -99,9 +99,9 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané %s %s'
     Save: Uložiť
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editovať
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Stránka
     View: Zobraziť
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

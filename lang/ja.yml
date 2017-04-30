@@ -22,7 +22,7 @@ ja:
     TABMAIN: メイン
   SilverStripe\Control\Director:
     INVALID_REQUEST: 不正なリクエスト
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
     HELLO: こんにちわ！
     TEXT1: 'ここ''貴方の'
@@ -81,9 +81,9 @@ ja:
     DeletePermissionsFailure: 削除権限がありません
     Deleted: '削除済み %s %s'
     Save: 保存
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 編集
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: ページ
     View: 閲覧
   SilverStripe\Forms\MemberDatetimeOptionsetField:

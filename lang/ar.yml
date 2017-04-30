@@ -22,7 +22,7 @@ ar:
     TABMAIN: الرئيسة
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'طلب غير صحيح'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
     HELLO: أهلاً
     TEXT1: هنا
@@ -81,9 +81,9 @@ ar:
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
     Deleted: '%s %s تم حذفه'
     Save: حفظ
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: تعديل
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: صفحة
     View: عرض
   SilverStripe\Forms\MemberDatetimeOptionsetField:

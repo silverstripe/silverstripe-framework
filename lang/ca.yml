@@ -11,7 +11,7 @@ ca:
     TYPE: Tipus
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
     HELLO: Hola
     TEXT1: 'Aquí teniu el vostre'

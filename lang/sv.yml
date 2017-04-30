@@ -69,7 +69,7 @@ sv:
     TABMAIN: Allmän
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ogiltig förfrågan'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT3: 'Ändra lösenord'
     HELLO: Hej
@@ -139,9 +139,9 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
     Save: Spara
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigera
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Sida
     View: Visa
   SilverStripe\Forms\MemberDatetimeOptionsetField:

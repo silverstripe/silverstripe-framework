@@ -20,7 +20,7 @@ hr:
     TABMAIN: Osnovno
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neispravan zahtjev'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
     CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
     HELLO: Pozdrav
@@ -64,9 +64,9 @@ hr:
     DeletePermissionsFailure: 'Nema dozvole brisanja'
     Deleted: 'Obrisano %s %s'
     Save: Spremi
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Stranica
     View: Pregled
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

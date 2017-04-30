@@ -23,7 +23,7 @@ fa_IR:
     TABMAIN: اصلی
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'درخواست نامعتبر'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'شما گذرواژه‌تان را تغییر دادید برای'
     CHANGEPASSWORDTEXT3: 'تغییر گذرواژه'
     HELLO: درود
@@ -94,9 +94,9 @@ fa_IR:
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     Deleted: 'حذف شده %s %s'
     Save: ذخیره
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: ویرایش
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: صفحه
     View: 'نمایش'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:

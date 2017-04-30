@@ -158,7 +158,7 @@ fi:
     TABMAIN: Yleiset
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
-  SilverStripe\Control\Email\ChangePasswordEmail.ss:
+  SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Tilin salasana on vaihdettu. Sähköpostiosoite on {email}. Mikäli et pyytänyt salasanan vaihtoa, vaihda salasanasi alla olevasta linkistä'
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -174,7 +174,7 @@ fi:
     YESANSWER: Kyllä
   SilverStripe\Forms\CheckboxSetField:
     SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. ''{value}'' ei kelpaa'
-  SilverStripe\Forms\CheckboxSetField.ss:
+  SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Ei vaihtoehtoja tarjolla'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
@@ -250,9 +250,9 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin %s %s'
     Save: Tallenna
-  SilverStripe\Forms\GridField\GridFieldEditButton.ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Muokkaa
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row.ss:
+  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
     Page: Sivu
     View: Näytä
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
