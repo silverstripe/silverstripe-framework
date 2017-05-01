@@ -97,8 +97,6 @@ pt:
     db_LockedOutUntil: 'Bloqueado até'
     db_Password: Palavra-chave
     db_PasswordExpiry: 'Data de expiração da password'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Email e Password'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Direitos de Administrador'

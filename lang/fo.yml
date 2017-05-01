@@ -5,7 +5,6 @@ fo:
     NEWGROUP: 'Nýggjur bólkur'
     PERMISSIONS: Rættindi
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    LASTEDIT: 'Seinast broyting'
     SIZE: Stødd
     TYPE: Slag
   SilverStripe\CMS\Model\SiteTree:
@@ -67,8 +66,6 @@ fo:
     db_LockedOutUntil: 'Útihýstur inn til'
     db_Password: Loyniorð
     db_PasswordExpiry: 'Loyniorð gongur út'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Teldupostadressa &amp; Loyniorð'
   SilverStripe\Security\Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'

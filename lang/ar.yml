@@ -7,8 +7,6 @@ ar:
     ROLES: قواعد
     ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'أول المرفوعات'
-    LASTEDIT: 'آخر التعديلات'
     SIZE: 'الحجم'
     TYPE: النوع
     URL: الرابط
@@ -175,8 +173,6 @@ ar:
     db_LockedOutUntil: 'مغلق حتى تاريخ'
     db_Password: 'الرقم السري'
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'البريد الإلكتروني &amp; كلمة المرور'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
     PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'

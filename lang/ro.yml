@@ -59,7 +59,5 @@ ro:
     db_LockedOutUntil: 'Blocat pana la'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail si Parolă'
   SilverStripe\Security\Security:
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'

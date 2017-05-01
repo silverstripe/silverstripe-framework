@@ -7,9 +7,7 @@ es:
     ROLES: Roles
     ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Agregado por primera vez'
     HEIGHT: Alto
-    LASTEDIT: 'Modificado por última vez'
     SIZE: Tamaño
     TYPE: 'Tipo de archivo'
     URL: URL
@@ -301,8 +299,6 @@ es:
     db_LockedOutUntil: 'Cerrado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail &amp; Contraseña'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Contraseñas de los Miembros'
     PLURALS:

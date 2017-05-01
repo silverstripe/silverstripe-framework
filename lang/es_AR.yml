@@ -7,8 +7,6 @@ es_AR:
     ROLES: roles
     ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Agregado por primera vez'
-    LASTEDIT: 'Modificado por última vez'
     SIZE: Tamaño
     TYPE: Tipo
   SilverStripe\CMS\Model\SiteTree:
@@ -90,8 +88,6 @@ es_AR:
     db_LockedOutUntil: 'Bloqueado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha Vencimiento de Contraseña'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Email  &amp; Contraseña'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Privilegios administrativos completos'

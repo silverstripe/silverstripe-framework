@@ -7,8 +7,6 @@ sl:
     ROLES: Vloge
     ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Naloženo na začetku'
-    LASTEDIT: 'Zadnje naloženo'
     SIZE: 'Velikost datoteke'
     TYPE: Tip
     URL: URL
@@ -169,8 +167,6 @@ sl:
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Uporabniški račun'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Popolne administratorske pravice'

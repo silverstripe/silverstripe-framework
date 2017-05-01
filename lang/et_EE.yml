@@ -7,8 +7,6 @@ et_EE:
     ROLES: Rollid
     ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Esmakordselt üles laaditud'
-    LASTEDIT: 'Viimati muudetud'
     SIZE: Failisuurus
     TYPE: Failitüüp
     URL: URL
@@ -168,8 +166,6 @@ et_EE:
     db_LockedOutUntil: 'Suletud kuni'
     db_Password: Parool
     db_PasswordExpiry: 'Parool aegumise kuupäev'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-post ja parool'
   SilverStripe\Security\Permission:
     AdminGroup: Administraator
     FULLADMINRIGHTS: 'Täielikud administraatoriõigused'

@@ -5,9 +5,7 @@ hr:
     PERMISSIONS: Dozvole
     ROLES: Uloge
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: Uploadano
     HEIGHT: Visina
-    LASTEDIT: 'Zadnja promjena'
     SIZE: 'Veličina datoteke'
     TYPE: 'Tip datoteke'
     URL: Link
@@ -143,8 +141,6 @@ hr:
     db_LockedOutUntil: 'Zaključano do'
     db_Password: Lozinka
     db_PasswordExpiry: 'Lozinka ističe'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail &amp; Lozinka'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Puna administrativna prava'

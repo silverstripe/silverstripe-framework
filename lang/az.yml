@@ -80,8 +80,6 @@ az:
     db_LockedOutUntil: 'Bloklanıb, açılma vaxtı'
     db_Password: Parol
     db_PasswordExpiry: 'Parolun etibarlılığının bitmə vaxtı'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-poçt &amp; Parol'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'

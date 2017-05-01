@@ -7,9 +7,7 @@ it:
     ROLES: Ruoli
     ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto, questi possono essere ereditati dai gruppi padre.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Inizialmente caricato'
     HEIGHT: Altezza
-    LASTEDIT: 'Ultima modifica'
     SIZE: Dimensione
     TYPE: 'Tipo di file'
     URL: URL
@@ -262,8 +260,6 @@ it:
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     SINGULARNAME: 'Password utente'

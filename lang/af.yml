@@ -6,8 +6,6 @@ af:
     ROLES: Rolle
     ROLESDESCRIPTION: ' '
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Eerste opgelaai'
-    LASTEDIT: 'Laaste verander'
     SIZE: 'Lêer grootte'
     TYPE: 'Lêer tipe'
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -153,8 +151,6 @@ af:
     db_LockedOutUntil: 'Utgesluit tot en met'
     db_Password: Wagwoord
     db_PasswordExpiry: 'Wagwoord Vervaldatum'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Epos &amp; Wagwoord'
   SilverStripe\Security\Permission:
     AdminGroup: Administrateur
     FULLADMINRIGHTS: 'Volle administratiewe regte '

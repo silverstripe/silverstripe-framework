@@ -85,8 +85,6 @@ lv:
     db_LockedOutUntil: 'Izslēgts līdz'
     db_Password: Parole
     db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-pasts un Parole'
   SilverStripe\Security\Permission:
     AdminGroup: Administrators
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'

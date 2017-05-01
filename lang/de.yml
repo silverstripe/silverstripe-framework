@@ -7,9 +7,7 @@ de:
     ROLES: Rollen
     ROLESDESCRIPTION: 'Hier können Sie der Gruppe Rollen zuweisen. Rollen sind logische Gruppierungen von Berechtigungen.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Erstmalig hochgeladen'
     HEIGHT: Höhe
-    LASTEDIT: 'Letzte Änderung'
     SIZE: Größe
     TYPE: Typ
     URL: URL
@@ -253,8 +251,6 @@ de:
     db_LockedOutUntil: 'Gesperrt bis'
     db_Password: Passwort
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-Mail &amp; Passwort'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: Benutzerpasswörter
     SINGULARNAME: Benutzerpasswort

@@ -33,8 +33,6 @@ ne:
     SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
     SURNAME: थर
     YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'ईमेल &amp; पासओड'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
     BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'

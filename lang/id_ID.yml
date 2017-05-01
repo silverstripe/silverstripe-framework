@@ -7,8 +7,6 @@ id_ID:
     ROLES: Peran
     ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Pertama diunggah'
-    LASTEDIT: 'Terakhir diubah'
     SIZE: 'Ukuran berkas'
     TYPE: 'Jenis berkas'
     URL: URL
@@ -199,8 +197,6 @@ id_ID:
     db_LockedOutUntil: 'Kunci sampai'
     db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail &amp; Kata Kunci'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'

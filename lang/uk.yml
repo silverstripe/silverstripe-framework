@@ -4,8 +4,6 @@ uk:
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Вперше завантажено'
-    LASTEDIT: 'Востаннє змінено'
     SIZE: 'Розмір'
     TYPE: Тип
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -84,8 +82,6 @@ uk:
     db_LockedOutUntil: 'Заблоковано поки'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Е-пошта та Пароль'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
   SilverStripe\Security\PermissionRole:

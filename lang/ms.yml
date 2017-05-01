@@ -48,8 +48,6 @@ ms:
     db_LockedOutUntil: 'Dikuncikan keluar sehingga'
     db_Password: 'Kata Laluan'
     db_PasswordExpiry: 'Tempoh Tamat Kata Lalaun'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Email &amp; katalaluan'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
   SilverStripe\Security\Security:

@@ -2,8 +2,6 @@ zh_TW:
   SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 新增群組
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 第一次上傳
-    LASTEDIT: 最後一次更新
     SIZE: 大小
     TYPE: 類型
   SilverStripe\CMS\Model\SiteTree:
@@ -40,8 +38,6 @@ zh_TW:
     SUBJECTPASSWORDRESET: 密碼重設
     SURNAME: 姓
     YOUROLDPASSWORD: 舊密碼
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: '電子郵件 &amp; 密碼'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
     BUTTONSEND: 寄給我密碼重設網址。

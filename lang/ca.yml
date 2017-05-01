@@ -5,8 +5,6 @@ ca:
     NEWGROUP: 'Nou grup'
     PERMISSIONS: Permisos
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Carregat per primer cop'
-    LASTEDIT: 'Darrer canvi'
     SIZE: Mida
     TYPE: Tipus
   SilverStripe\CMS\Model\SiteTree:
@@ -76,8 +74,6 @@ ca:
     db_LockedOutUntil: 'Bloquejat fins a'
     db_Password: Contrasenya
     db_PasswordExpiry: 'Data d''expiració de la contrasenya'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Correu electrònic i contrasenya'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Drets administratius totals'
   SilverStripe\Security\Security:

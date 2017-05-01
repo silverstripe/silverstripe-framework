@@ -6,8 +6,6 @@ th:
     PERMISSIONS: สิทธิ์อนุญาต
     ROLES: บทบาท
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: อัพโหลดครั้งแรก
-    LASTEDIT: เปลี่ยนแปลงล่าสุด
     SIZE: ขนาด
     TYPE: ชนิด
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -128,8 +126,6 @@ th:
     db_LockedOutUntil: ออกจากระบบจนกว่า
     db_Password: รหัสผ่าน
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'อีเมล &amp; รหัสผ่าน'
   SilverStripe\Security\Permission:
     AdminGroup: ผู้ดูแลระบบ
   SilverStripe\Security\PermissionRole:

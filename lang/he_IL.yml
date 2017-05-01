@@ -2,8 +2,6 @@ he_IL:
   SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 'קבוצה חדשה'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'הועלה לראשונה'
-    LASTEDIT: 'שונה לאחרונה'
     SIZE: גודל
     TYPE: סוג
     URL: 'כתובת הדף'
@@ -50,8 +48,6 @@ he_IL:
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '
     db_PasswordExpiry: 'תאריך תפוגת סיסמא'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'דואר אלקטרוני וסיסמא'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
     BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'

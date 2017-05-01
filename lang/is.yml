@@ -80,8 +80,6 @@ is:
     db_LockedOutUntil: 'Læst úti þar til'
     db_Password: Lykilorð
     db_PasswordExpiry: 'Lykilorð rennur út'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Tölvupóstur &amp; Lykilorð'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
   SilverStripe\Security\Security:

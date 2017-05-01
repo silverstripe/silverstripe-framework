@@ -7,9 +7,7 @@ nl:
     ROLES: Rollen
     ROLESDESCRIPTION: 'In deze sectie kunt u rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Eerste upload'
     HEIGHT: Hoogte
-    LASTEDIT: 'Laatste wijziging'
     SIZE: Grootte
     TYPE: Type
     URL: URL
@@ -212,8 +210,6 @@ nl:
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Email &amp; Wachtwoord'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s'
     PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'

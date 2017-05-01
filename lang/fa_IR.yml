@@ -6,9 +6,7 @@ fa_IR:
     PERMISSIONS: دسترسی‌ها
     ROLES: وظایف
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'نخستین بارگذاری'
     HEIGHT: ارتفاع
-    LASTEDIT: 'آخرین تغییرات'
     SIZE: 'حجم فایل'
     TYPE: 'نوع فایل'
     URL: 'نشانی اینترنتی'
@@ -228,8 +226,6 @@ fa_IR:
     db_LockedOutUntil: 'بسته شده تا '
     db_Password: گذرواژه
     db_PasswordExpiry: 'تاریخ انقضاء گذرواژه'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'ایمیل و گذرواژه'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'گذرواژه‌های کاربر'
     SINGULARNAME: 'گذرواژه کاربر'

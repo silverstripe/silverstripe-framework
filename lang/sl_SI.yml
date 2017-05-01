@@ -5,7 +5,6 @@ sl_SI:
     ROLES: Vloge
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
     HEIGHT: Višina
-    LASTEDIT: 'Nazadnje spremenjeno'
     SIZE: 'Velikost datoteke'
     TYPE: 'Tip datoteke'
     URL: URL
@@ -132,8 +131,6 @@ sl_SI:
     belongs_many_many_Groups: Grupe
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka gesla'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-pošta in geslo'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Polne administratorske pravice'

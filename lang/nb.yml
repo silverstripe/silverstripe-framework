@@ -7,8 +7,6 @@ nb:
     ROLES: Roller
     ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Først opplastet'
-    LASTEDIT: 'Sist endret'
     SIZE: Filstørrelse
     TYPE: Filtype
     URL: Nettadresse
@@ -177,8 +175,6 @@ nb:
     db_LockedOutUntil: 'Stengt ute inntil'
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-post og passord'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
     PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'

@@ -7,8 +7,6 @@ sr:
     ROLES: Улоге
     ROLESDESCRIPTION: 'Улоге су предефинисани скупови овлашћења и могу бити додељене групама.<br />Наслеђују се од родитељских група ако је потребно.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Прво достављено'
-    LASTEDIT: 'Последње промењено'
     SIZE: Величина
     TYPE: Тип
     URL: URL
@@ -177,8 +175,6 @@ sr:
     db_LockedOutUntil: 'Zaključan do'
     db_Password: Лозинка
     db_PasswordExpiry: 'Датум истека лозинке'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Пошаљи лозинку'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Појачајте лозинку додавањем неких од следећих знакова: %s'
     PREVPASSWORD: 'Већ сте користили наведену лозинку у прошлости. Стога, изаберите другу лозинку'

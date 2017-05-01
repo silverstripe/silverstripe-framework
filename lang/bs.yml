@@ -5,8 +5,6 @@ bs:
     NEWGROUP: 'Nova grupa'
     PERMISSIONS: Ovlaštenja
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Prvo postavljeno'
-    LASTEDIT: 'Zadnja promjena'
     SIZE: Veličina
     TYPE: Tip
   SilverStripe\CMS\Model\SiteTree:
@@ -64,8 +62,6 @@ bs:
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
     YOUROLDPASSWORD: 'Vaša stara šifra'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail i šifra'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
   SilverStripe\Security\Security:

@@ -5,8 +5,6 @@ tr:
     NEWGROUP: 'Yeni Grup'
     PERMISSIONS: İzinler
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Yüklenme tarihi'
-    LASTEDIT: 'Güncellenme tarihi'
     SIZE: Boyutu
     TYPE: Türü
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -93,8 +91,6 @@ tr:
     db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
     db_Password: Parola
     db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-posta & Şifre'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
   SilverStripe\Security\Security:

@@ -1,4 +1,62 @@
 en:
+  CMSMemberLoginForm:
+    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
+  DatetimeField:
+    VALIDDATEMAXDATETIME: 'Your date has to be older or matching the maximum allowed date and time ({datetime})'
+    VALIDDATETIMEFORMAT: 'Please enter a valid date and time format ({format})'
+    VALIDDATETIMEMINDATE: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
+  ForgotPasswordEmail_ss:
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
+  Form:
+    VALIDATOR: Validator
+  GridField:
+    NoItemsFound: 'No items found'
+    PRINTEDAT: 'Printed at'
+    PRINTEDBY: 'Printed by'
+  HTMLEditorField:
+    ANCHORVALUE: Anchor
+    EMAIL: 'Email address'
+    FILE: File
+    LINK: 'Insert Link'
+    LINKANCHOR: 'Link to an anchor on this page'
+    LINKDESCR: 'Link description'
+    LINKDETAILS: 'Link details'
+    LINKEMAIL: 'Link to an email address'
+    LINKEXTERNAL: 'Link to another website'
+    LINKFILE: 'Link to download a file'
+    LINKINTERNAL: 'Link to a page on this site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link type'
+    PAGE: Page
+    SUBJECT: 'Email subject'
+    URL: URL
+  LoginAttempt:
+    Email: 'Email Address'
+  Member:
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    EMAIL: Email
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+  MemberDatetimeOptionsetField:
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    HOURNOLEADING: 'Hour without leading zero, 12 hour format'
+    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
+  Pagination:
+    Page: Page
+    View: View
+  Security:
+    BUTTONSEND: 'Send me the password reset link'
   SilverStripe\Admin\LeftAndMain:
     VersionUnknown: unknown
   SilverStripe\Admin\SecurityAdmin:
@@ -15,23 +73,16 @@ en:
     URL: URL
     WIDTH: Width
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensions
-    EDIT: Edit
-    EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
-    REMOVE: Remove
   SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Main
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Invalid request'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
+  SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT3: 'Change password'
     HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+  SilverStripe\Control\Director:
+    INVALID_REQUEST: 'Invalid request'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -67,7 +118,6 @@ en:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'e.g. {format}'
@@ -82,9 +132,6 @@ en:
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
-    OF: of
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     Print: Print
@@ -105,21 +152,15 @@ en:
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Page
-    View: View
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
     ANCHORSPAGENOTFOUND: 'Target page not found.'
-    ANCHORVALUE: Anchor
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    EMAIL: 'Email address'
-    FILE: File
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
@@ -129,19 +170,6 @@ en:
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
-    LINK: 'Insert Link'
-    LINKANCHOR: 'Link to an anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKDETAILS: 'Link details'
-    LINKEMAIL: 'Link to an email address'
-    LINKEXTERNAL: 'Link to another website'
-    LINKFILE: 'Link to download a file'
-    LINKINTERNAL: 'Link to a page on this site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link type'
-    PAGE: Page
-    SUBJECT: 'Email subject'
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
@@ -153,17 +181,7 @@ en:
   SilverStripe\Forms\MemberDatetimeOptionsetField:
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    HOURNOLEADING: 'Hour without leading zero, 12 hour format'
-    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
     Preview: Preview
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITYEAR: 'Two-digit year'
-    Toggle: 'Show formatting help'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -212,6 +230,8 @@ en:
       other: '{count} years'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Any
+  SilverStripe\ORM\Hierarchy:
+    LIMITED_TITLE: 'Too many children ({count}}'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
     LIMITED_TITLE: 'Too many children ({count}}'
@@ -226,7 +246,6 @@ en:
     BUTTONFORGOTPASSWORD: 'Forgot password?'
     BUTTONLOGIN: 'Log back in'
     BUTTONLOGOUT: 'Log out'
-    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
     LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
@@ -255,7 +274,6 @@ en:
     has_many_Permissions: Permissions
     many_many_Members: Members
   SilverStripe\Security\LoginAttempt:
-    Email: 'Email Address'
     IP: 'IP Address'
     PLURALNAME: 'Login Attempts'
     PLURALS:
@@ -267,16 +285,13 @@ en:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
-    BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     CURRENT_PASSWORD: 'Current Password'
     DefaultAdminFirstname: 'Default Admin'
     EDIT_PASSWORD: 'New Password'
-    EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
@@ -288,7 +303,6 @@ en:
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
-    PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
     PLURALS:
       one: 'A Member'
@@ -296,7 +310,6 @@ en:
     REMEMBERME: 'Remember me next time? (for %d days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -356,7 +369,6 @@ en:
     SINGULARNAME: 'Login Hash'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
     ENTERNEWPASSWORD: 'Please enter a new password.'
@@ -368,3 +380,10 @@ en:
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+  TableListField_PageControls_ss:
+    OF: of
+  UploadField:
+    Dimensions: Dimensions
+    EDIT: Edit
+    EDITINFO: 'Edit this file'
+    REMOVE: Remove

@@ -7,8 +7,6 @@ zh:
     ROLES: 角色
     ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: '首先上传的'
-    LASTEDIT: 最近更改的
     SIZE: 文件尺寸
     TYPE: 文件类型
     URL: 网址
@@ -197,8 +195,6 @@ zh:
     db_LockedOutUntil: 保持锁定直到
     db_Password: '密码'
     db_PasswordExpiry: '密码失效日期'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: '电子邮件和密码'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
     PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'

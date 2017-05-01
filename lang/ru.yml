@@ -7,9 +7,7 @@ ru:
     ROLES: 'Роли'
     ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Первая загрузка'
     HEIGHT: Высота
-    LASTEDIT: 'Последнее изменение'
     SIZE: 'Размер'
     TYPE: Тип
     URL: URL
@@ -262,8 +260,6 @@ ru:
     db_LockedOutUntil: 'Заблокировано до'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата устаревания пароля'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Email и Пароль'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: Пароли
     SINGULARNAME: Пароль

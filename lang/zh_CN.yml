@@ -2,8 +2,6 @@ zh_CN:
   SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 新建会员组
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: '第一次被上传'
-    LASTEDIT: 上一次被更改
     SIZE: 大小
     TYPE: 类型
   SilverStripe\CMS\Model\SiteTree:
@@ -51,8 +49,6 @@ zh_CN:
     belongs_many_many_Groups: 团队
     db_LockedOutUntil: 禁止直至
     db_PasswordExpiry: '密码过期日期'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: '电邮地址和密码'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。'
     BUTTONSEND: '给我发送密码重设链接'

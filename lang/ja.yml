@@ -7,8 +7,6 @@ ja:
     ROLES: 役割
     ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 初回アップロード日時
-    LASTEDIT: 最終更新日
     SIZE: ファイルサイズ
     TYPE: ファイルの種類
     URL: URL
@@ -174,8 +172,6 @@ ja:
     db_LockedOutUntil: DBロックがされています。
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: メールアドレスとパスワード
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: %s'
     PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'

@@ -1,43 +1,4 @@
 sv:
-  AssetUploadField:
-    ChooseFiles: 'Välj filer'
-    DRAGFILESHERE: 'Dra filer hit'
-    DROPAREA: 'Släpp här'
-    EDITALL: 'Redigera alla'
-    EDITANDORGANIZE: 'Redigera och organisera'
-    EDITINFO: 'Redigera filer'
-    FILES: Filer
-    FROMCOMPUTER: 'Välj filer från din dator'
-    FROMCOMPUTERINFO: 'Ladda upp från din dator'
-    TOTAL: Totalt
-    TOUPLOAD: 'Välj filer att ladda upp...'
-    UPLOADINPROGRESS: 'Uppladdning pågår...'
-    UPLOADOR: ELLER
-  BBCodeParser:
-    ALIGNEMENT: Placering
-    ALIGNEMENTEXAMPLE: högerjusterad
-    BOLD: 'Fet text'
-    BOLDEXAMPLE: 'Fet stil'
-    CODE: Kodblock
-    CODEDESCRIPTION: 'Oformaterat kodblock'
-    CODEEXAMPLE: Kodblock
-    COLORED: 'Färgad text'
-    COLOREDEXAMPLE: 'blå text'
-    EMAILLINK: E-postlänk
-    EMAILLINKDESCRIPTION: 'Skapa länk till en e-postadress'
-    IMAGE: Bild
-    IMAGEDESCRIPTION: 'Visa en bild i ditt inlägg'
-    ITALIC: 'Kursiv text'
-    ITALICEXAMPLE: Kursiv
-    LINK: Webblänk
-    LINKDESCRIPTION: 'Länk till en annan sajt eller URL'
-    STRUCK: 'Genomstruken text'
-    STRUCKEXAMPLE: Genomstruken
-    UNDERLINE: 'Understruken text'
-    UNDERLINEEXAMPLE: Understruken
-    UNORDERED: Punktlista
-    UNORDEREDDESCRIPTION: Punktlista
-    UNORDEREDEXAMPLE1: 'exempel på punktlista'
   SilverStripe\Admin\SecurityAdmin:
     GROUPNAME: Gruppnamn
     MEMBERS: Medlemmar
@@ -46,16 +7,8 @@ sv:
     ROLES: Roller
     ROLESDESCRIPTION: 'Roller är fördefinierade uppsättningar av tillstånd, och kan tilldelas grupper. <br/> De ärvs från föräldragrupper om det krävs.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Först uppladdad'
-    DIM: Dimensioner
-    FILENAME: Filnamn
-    FOLDER: Mapp
     HEIGHT: Höjd
-    LASTEDIT: 'Senast ändrad'
-    OWNER: Ägare
-    SHOWALLOWEDEXTS: 'Visa tillåtna filtyper'
     SIZE: Filstorlek
-    TITLE: Titel
     TYPE: Filtyp
     URL: URL
     WIDTH: Bredd
@@ -248,8 +201,6 @@ sv:
     db_LockedOutUntil: 'Utelåst till'
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-post &amp; Lösenord'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Var god och stärk ditt lösenord genom att lägga till något av följande tecken: %s'
     PREVPASSWORD: 'Du har redan använt samma lösenord tidigare, var god och välj ett nytt lösenord'

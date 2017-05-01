@@ -7,8 +7,6 @@ mi:
     ROLES: 'Ngā Tūnga'
     ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Tukuatu tuatahi'
-    LASTEDIT: 'Hurihanga tōmuri'
     SIZE: 'Rahi kōnae'
     TYPE: 'Momo kōnae'
     URL: PRO
@@ -176,8 +174,6 @@ mi:
     db_LockedOutUntil: 'Ka maukatia tae atu ki te'
     db_Password: Kupuhipa
     db_PasswordExpiry: 'Rā Mōnehu Kupuhipa'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Īmērā &amp; Kupuhipa'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: %s'
     PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'

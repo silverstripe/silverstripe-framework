@@ -6,8 +6,6 @@ gl_ES:
     PERMISSIONS: Permisos
     ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Primeiro subido'
-    LASTEDIT: 'Último cambio'
     SIZE: 'Tamaño ficheiro'
     TYPE: 'Tipo ficheiro'
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -117,8 +115,6 @@ gl_ES:
     db_LockedOutUntil: 'Bloqueado ata que'
     db_Password: Contrasinal
     db_PasswordExpiry: 'Data de expiración do contrasinal'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Correo-e e Contrasinal'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'

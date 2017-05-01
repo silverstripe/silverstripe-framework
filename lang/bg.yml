@@ -7,9 +7,7 @@ bg:
     ROLES: 'Роли'
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: Създаден
     HEIGHT: Височина
-    LASTEDIT: 'Последна промяна'
     SIZE: 'Големина на файла'
     TYPE: 'Тип на файла'
     URL: URL
@@ -165,8 +163,6 @@ bg:
     db_LockedOutUntil: 'Заключен до'
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'email и парола'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     FULLADMINRIGHTS: 'Пълни административни права'

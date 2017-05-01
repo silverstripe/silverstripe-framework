@@ -7,9 +7,7 @@ cs:
     ROLES: Role
     ROLESDESCRIPTION: 'Role jsou předdefinované seskupení oprávnění, které mohou být přidělené k skupinám. Jsou dědené z nadřazených skupin, když je požadováno.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Poprvé nahráno'
     HEIGHT: Výška
-    LASTEDIT: 'Naposledy změněno'
     SIZE: Velikost
     TYPE: Typ
     URL: URL
@@ -262,8 +260,6 @@ cs:
     db_LockedOutUntil: 'Zamčeno dokud'
     db_Password: Heslo
     db_PasswordExpiry: 'Datum vypršení hesla'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail a Heslo'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Členská hesla'
     SINGULARNAME: 'Členské heslo'

@@ -7,9 +7,7 @@ sk:
     ROLES: Úlohy
     ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Prvýkrát nahrané'
     HEIGHT: Výška
-    LASTEDIT: 'Posledne zmenené'
     SIZE: Veľkosť
     TYPE: Typ
     URL: URL
@@ -266,8 +264,6 @@ sk:
     db_LockedOutUntil: 'Zamknutý až do'
     db_Password: Heslo
     db_PasswordExpiry: 'Dátum expirácie hesla'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail &amp; Heslo'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'

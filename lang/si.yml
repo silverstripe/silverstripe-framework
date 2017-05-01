@@ -2,8 +2,6 @@ si:
   SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 'අලුත් කන්ඩාමක්'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'
-    LASTEDIT: 'අවසාන ලිපිය වෙනස්  කරන ලදී'
     SIZE: තරම
     TYPE: වර්ගය
   SilverStripe\CMS\Model\SiteTree:
@@ -53,8 +51,6 @@ si:
     belongs_many_many_Groups: කාන්ඩ
     db_LockedOutUntil: 'අගුලුලා ඇත්තේ'
     db_PasswordExpiry: 'මුර පදය කල් ඉකුත් වීමේ දිනය'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'ඊමේල් හා මුර පදය'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
     BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'

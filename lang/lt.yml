@@ -7,9 +7,7 @@ lt:
     ROLES: Rolės
     ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: Įkelta
     HEIGHT: Aukštis
-    LASTEDIT: Redaguota
     SIZE: 'Bylos dydis'
     TYPE: 'Bylos tipas'
     URL: 'URL adresas'
@@ -200,8 +198,6 @@ lt:
     db_LockedOutUntil: 'Užrakinta iki '
     db_Password: Slaptažodis
     db_PasswordExpiry: 'Slaptažodžio pabaigos data'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-paštas ir slaptažodis'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s'
     PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'

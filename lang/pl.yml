@@ -7,8 +7,6 @@ pl:
     ROLES: Role
     ROLESDESCRIPTION: 'Sekcja umożliwia dodanie ról do grupy. Role są logicznie uporządkowanymi uprawnieniami, które można edytować w zakładce Role'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Po raz pierwszy wgrany'
-    LASTEDIT: 'Ostatnio zmieniony'
     SIZE: 'Rozmiar pliku'
     TYPE: 'Typ pliku'
     URL: 'Adres URL'
@@ -177,8 +175,6 @@ pl:
     db_LockedOutUntil: 'Zablokowany do'
     db_Password: Hasło
     db_PasswordExpiry: 'Data wygaśnięcia hasła'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail i Hasło'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'

@@ -2,8 +2,6 @@ hu:
   SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 'Új csoport'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Először feltöltve'
-    LASTEDIT: 'Utoljára változott'
     SIZE: Méret
     TYPE: Típus
   SilverStripe\CMS\Model\SiteTree:
@@ -50,8 +48,6 @@ hu:
     belongs_many_many_Groups: Csoportok
     db_LockedOutUntil: 'Kizárva eddig'
     db_PasswordExpiry: 'Jelszó érvényességi idejének lejárta'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'E-mail és jelszó'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nincs hozzáférésed ehhez az oldalhoz. Ha van egy másik azonosítód, mellyel hozzá tudsz férni ehhez az oldalhoz, alább bejelentkezhetsz.'
     BUTTONSEND: 'Új jelszót kérő link elküldése'

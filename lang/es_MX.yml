@@ -5,8 +5,6 @@ es_MX:
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Agregado por primera vez'
-    LASTEDIT: 'Modificado por última vez'
     SIZE: Tamaño
     TYPE: Tipo
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -138,8 +136,6 @@ es_MX:
     db_LockedOutUntil: 'Bloqueado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha en que expira la contraseña'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Correo-e y Contraseña'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Privilegios administrativos completos'

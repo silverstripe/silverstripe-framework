@@ -7,9 +7,7 @@ eo:
     ROLES: Roloj
     ROLESDESCRIPTION: 'Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj'
   SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    CREATED: 'Unue alŝutita'
     HEIGHT: Alto
-    LASTEDIT: 'Laste ŝanĝita'
     SIZE: Grando
     TYPE: Tipo
     URL: URL
@@ -272,8 +270,6 @@ eo:
     db_LockedOutUntil: 'Elŝlosita ĝis'
     db_Password: Pasvorto
     db_PasswordExpiry: 'Pasvorta Limdato'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'Retpoŝto &amp; Pasvorto'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Membraj pasvortoj'
     SINGULARNAME: 'Membra pasvorto'
