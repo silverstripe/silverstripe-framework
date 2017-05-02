@@ -27,9 +27,13 @@ class ApcuCacheFactory implements CacheFactory
      */
     public function create($service, array $params = array())
     {
-        return Injector::inst()->create(ApcuCache::class, false, [
-            (isset($args['namespace'])) ? $args['namespace'] : '',
-            (isset($args['defaultLifetime'])) ? $args['defaultLifetime'] : 0,
+        $namespace = isset($params['namespace'])
+            ? $params['namespace'] . '_' . md5(BASE_PATH)
+            : md5(BASE_PATH);
+        $defaultLifetime = isset($params['defaultLifetime']) ? $params['defaultLifetime'] : 0;
+        return Injector::inst()->createWithArgs(ApcuCache::class, [
+            $namespace,
+            $defaultLifetime,
             $this->version
         ]);
     }
