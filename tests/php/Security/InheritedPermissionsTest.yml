@@ -1,0 +1,102 @@
+SilverStripe\Security\Group:
+  editors:
+    Title: Editors
+  admins:
+    Title: Administrators
+  allsections:
+    Title: All Section Editors
+  securityadmins:
+    Title: Security Admins
+
+SilverStripe\Security\Permission:
+  admins:
+    Code: ADMIN
+    Group: =>SilverStripe\Security\Group.admins
+  editors:
+    Code: CMS_ACCESS_CMSMain
+    Group: =>SilverStripe\Security\Group.editors
+  testpermission:
+    Code: TEST_NODE_ACCESS
+    Group: =>SilverStripe\Security\Group.editors
+
+
+SilverStripe\Security\Member:
+  editor:
+    FirstName: Test
+    Surname: Editor
+    Groups: =>SilverStripe\Security\Group.editors
+  admin:
+    FirstName: Test
+    Surname: Administrator
+    Groups: =>SilverStripe\Security\Group.admins
+  allsections:
+    Groups: =>SilverStripe\Security\Group.allsections
+  securityadmin:
+    Groups: =>SilverStripe\Security\Group.securityadmins
+
+SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode:
+  about:
+    Title: About Us
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.admins
+  about-staff:
+    Title: Staff
+    CanEditType: Inherit
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about
+  about-staff-ceo:
+    Title: CEO
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about-staff
+  about-staffduplicate:
+    Title: Staff
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about
+  products:
+    Title: Products
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.editors
+  products-product1:
+    Title: 1.1 Test Product
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    CanEditType: Inherit
+  products-product2:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    CanEditType: Inherit
+  products-product3:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    CanEditType: Inherit
+  products-product4:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.admins
+  history:
+    Title: History
+    CanViewType: Inherit
+    CanEditType: Inherit
+  history-gallery:
+    Title: Gallery
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.history
+  contact:
+    Title: Contact Us
+    CanViewType: Anyone
+  contact-form:
+    Title: Send us a message
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.contact
+  secret:
+    Title: Secret
+    CanViewType: LoggedInUsers
+  secret-nested:
+    Title: Nested
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.secret
+  protected:
+    Title: Protected
+    CanViewType: OnlyTheseUsers
+    ViewerGroups: =>SilverStripe\Security\Group.admins
+  protected-child:
+    Title: Child
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.protected

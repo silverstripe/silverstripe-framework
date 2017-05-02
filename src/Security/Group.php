@@ -3,7 +3,6 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Admin\SecurityAdmin;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -63,21 +62,21 @@ class Group extends DataObject
     );
 
     private static $has_one = array(
-        "Parent" => "SilverStripe\\Security\\Group",
+        "Parent" => Group::class,
     );
 
     private static $has_many = array(
-        "Permissions" => "SilverStripe\\Security\\Permission",
-        "Groups" => "SilverStripe\\Security\\Group"
+        "Permissions" => Permission::class,
+        "Groups" => Group::class,
     );
 
     private static $many_many = array(
-        "Members" => "SilverStripe\\Security\\Member",
-        "Roles" => "SilverStripe\\Security\\PermissionRole",
+        "Members" => Member::class,
+        "Roles" => PermissionRole::class,
     );
 
     private static $extensions = array(
-        "SilverStripe\\ORM\\Hierarchy\\Hierarchy",
+        Hierarchy::class,
     );
 
     private static $table_name = "Group";
@@ -132,7 +131,7 @@ class Group extends DataObject
                     $permissionsField = new PermissionCheckboxSetField(
                         'Permissions',
                         false,
-                        'SilverStripe\\Security\\Permission',
+                        Permission::class,
                         'GroupID',
                         $this
                     )
@@ -157,7 +156,7 @@ class Group extends DataObject
                 ->setResultsFormat('$Title ($Email)')
                 ->setSearchFields(array('FirstName', 'Surname', 'Email'));
             /** @var GridFieldDetailForm $detailForm */
-            $detailForm = $config->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+            $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
                 ->setValidator(Member_Validator::create())
                 ->setItemEditFormCallback(function ($form, $component) use ($group) {
@@ -425,7 +424,7 @@ class Group extends DataObject
             $inheritedCodes = Permission::get()
                 ->filter('GroupID', $this->Parent()->collateAncestorIDs())
                 ->column('Code');
-            $privilegedCodes = Config::inst()->get('SilverStripe\\Security\\Permission', 'privileged_permissions');
+            $privilegedCodes = Permission::config()->get('privileged_permissions');
             if (array_intersect($inheritedCodes, $privilegedCodes)) {
                 $result->addError(sprintf(
                     _t(
@@ -471,12 +470,12 @@ class Group extends DataObject
      * Checks for permission-code CMS_ACCESS_SecurityAdmin.
      * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
      *
-     * @param $member Member
+     * @param Member $member Member
      * @return boolean
      */
     public function canEdit($member = null)
     {
-        if (!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
 
@@ -507,12 +506,12 @@ class Group extends DataObject
     /**
      * Checks for permission-code CMS_ACCESS_SecurityAdmin.
      *
-     * @param $member Member
+     * @param Member $member
      * @return boolean
      */
     public function canView($member = null)
     {
-        if (!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
 
@@ -534,7 +533,7 @@ class Group extends DataObject
 
     public function canDelete($member = null)
     {
-        if (!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
 
@@ -556,7 +555,7 @@ class Group extends DataObject
     public function AllChildrenIncludingDeleted()
     {
         /** @var Hierarchy $extInstance */
-        $extInstance = $this->getExtensionInstance('SilverStripe\\ORM\\Hierarchy\\Hierarchy');
+        $extInstance = $this->getExtensionInstance(Hierarchy::class);
         $extInstance->setOwner($this);
         $children = $extInstance->AllChildrenIncludingDeleted();
         $extInstance->clearOwner();
@@ -585,7 +584,7 @@ class Group extends DataObject
         parent::requireDefaultRecords();
 
         // Add default author group if no other group exists
-        $allGroups = DataObject::get('SilverStripe\\Security\\Group');
+        $allGroups = Group::get();
         if (!$allGroups->count()) {
             $authorGroup = new Group();
             $authorGroup->Code = 'content-authors';

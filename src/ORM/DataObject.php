@@ -2525,8 +2525,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function can($perm, $member = null, $context = array())
     {
-        if (!$member || !($member instanceof Member) || is_numeric($member)) {
-            $member = Member::currentUserID();
+        if (!$member) {
+            $member = Member::currentUser();
         }
 
         if ($member && Permission::checkMember($member, "ADMIN")) {

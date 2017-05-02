@@ -33,7 +33,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     );
 
     private static $has_one = array(
-        "Group" => "SilverStripe\\Security\\Group"
+        "Group" => Group::class,
     );
 
     private static $indexes = array(

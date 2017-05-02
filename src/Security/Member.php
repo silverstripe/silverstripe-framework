@@ -1638,7 +1638,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function canView($member = null)
     {
         //get member
-        if (!($member instanceof Member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
         //check for extensions, we do this first as they can overrule everything
@@ -1669,7 +1669,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function canEdit($member = null)
     {
         //get member
-        if (!($member instanceof Member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
         //check for extensions, we do this first as they can overrule everything
@@ -1703,7 +1703,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function canDelete($member = null)
     {
-        if (!($member instanceof Member)) {
+        if (!$member) {
             $member = Member::currentUser();
         }
         //check for extensions, we do this first as they can overrule everything
