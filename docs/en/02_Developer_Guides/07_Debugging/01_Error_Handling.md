@@ -107,7 +107,7 @@ To send emails, you can use Monolog's [NativeMailerHandler](https://github.com/S
 	        - error
 	      properties:
 	        ContentType: text/html
-	        Formatter: %$SilverStripe\Framework\Logging\DetailedErrorFormatter
+	        Formatter: %$SilverStripe\Logging\DetailedErrorFormatter
 
 The first section 4 lines passes a new handler to `Logger::pushHandler()` from the named service `MailHandler`. The
 next 10 lines define what the service is.
@@ -157,11 +157,12 @@ non-dev.
 	    calls:
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
 	  DisplayErrorHandler:
-	    class: SilverStripe\Framework\Logging\HTTPOutputHandler
+	    class: SilverStripe\Logging\HTTPOutputHandler
 	    constructor:
 	      - "notice"
 	    properties:
-	      Formatter: %$SilverStripe\Framework\Logging\DetailedErrorFormatter
+	      Formatter: %$SilverStripe\Logging\DetailedErrorFormatter
+          CLIFormatter: %$SilverStripe\Logging\DetailedErrorFormatter
 	---
 	Name: live-errors
 	Except:
@@ -181,13 +182,13 @@ non-dev.
 	      Formatter: %$Monolog\Formatter\HtmlFormatter
 	      ContentType: text/html
 	  DisplayErrorHandler:
-	    class: SilverStripe\Framework\Logging\HTTPOutputHandler
+	    class: SilverStripe\Logging\HTTPOutputHandler
 	    constructor:
 	      - "error"
 	    properties:
-	      Formatter: %$FriendlyErrorFormatter
-	  FriendlyErrorFormatter:
-	    class: SilverStripe\Framework\Logging\DebugViewFriendlyErrorFormatter
+	      Formatter: %$SilverStripe\Logging\DebugViewFriendlyErrorFormatter
+	  SilverStripe\Logging\DebugViewFriendlyErrorFormatter:
+	    class: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
 	    properties:
 	      Title: "There has been an error"
 	      Body: "The website server has not been able to respond to your request"
@@ -236,21 +237,21 @@ be ignored.
 
 ### Replacing the error handler
 
-The class `SilverStripe\Framework\Logging\MonologLoader` is responsible for loading performing Monolog-specific
-configuration. It does a number of things:
+The Injector service `ErrorHandler` is responsible for initialising the error handler. By default it 
 
- * Create a `Monolog\ErrorHandler` object.
- * Register the registered service `Logger` against it, to start the error handler.
- * If `Logger` has a `pushHandler()` method, pass every object defined by `ErrorHandler.handlers` into it, one at a time.
+ * Create a `SilverStripe\Logging\MonologErrorHandler` object.
+ * Attach the registered service `Psr\Log\LoggerInterface` to it, to start the error handler.
+ 
+Core.php will call `start()` on this method, to start the error handler.
 
 This error handler is flexible enough to work with any PSR-3 logging implementation, but sometimes you will want to use
 another. To replace this, you should registered a new service, `ErrorHandlerLoader`.  For example:
 
 	SilverStripe\Core\Injector\Injector:
-	  ErrorHandlerLoader: 
+	  ErrorHandler: 
 	    class: MyApp\CustomErrorHandlerLoader
 
-You should register something `Callable`, for example a class with an `__invoke()` method.
+You should register something with a `start()` method.
 
 ## Differences from SilverStripe 3
 

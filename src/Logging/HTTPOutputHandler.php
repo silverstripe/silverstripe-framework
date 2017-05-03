@@ -3,8 +3,10 @@
 namespace SilverStripe\Logging;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Output the error to the browser, with the given HTTP status code.
@@ -24,6 +26,11 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     private $statusCode = 500;
 
     /**
+     * @var FormatterInterface
+     */
+    private $cliFormatter = null;
+
+    /**
      * Get the mime type to use when displaying this error.
      *
      * @return string
@@ -38,7 +45,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * Default text/html
      *
      * @param string $contentType
-     * @return $this
+     * @return HTTPOutputHandler Return $this to allow chainable calls
      */
     public function setContentType($contentType)
     {
@@ -67,6 +74,45 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     {
         $this->statusCode = $statusCode;
         return $this;
+    }
+
+    /**
+     * Set a formatter to use if Director::is_cli() is true
+     *
+     * @param $cliFormatter
+     * @return HTTPOutputHandler Return $this to allow chainable calls
+     */
+    public function setCLIFormatter(FormatterInterface $cliFormatter)
+    {
+        $this->cliFormatter = $cliFormatter;
+
+        return $this;
+    }
+
+    /**
+     * Return the formatter use if Director::is_cli() is true
+     * If none has been set, null is returned, and the getFormatter() result will be used instead
+     *
+     * @return FormatterInterface
+     */
+    public function getCLIFormatter()
+    {
+        return $this->cliFormatter;
+    }
+
+    /**
+     * Return the formatter to use in this case.
+     * May be the getCliFormatter() value if one is provided and Director::is_cli() is true.
+     *
+     * @return FormatterInterface
+     */
+    public function getFormatter()
+    {
+        if (Director::is_cli() && ($cliFormatter = $this->getCLIFormatter())) {
+            return $cliFormatter;
+        }
+
+        return parent::getFormatter();
     }
 
     /**
