@@ -324,7 +324,10 @@ PHP;
 namespace SilverStripe\Framework\Core;
 
 class MyClass extends Base implements SomeService {
-    public function getNewLines() {
+    public function getNewLines(\$class) {
+        if (!is_subclass_of(\$class, DataObject::class) || !Object::has_extension(\$class, Versioned::class)) {
+            return null;
+        }
         return _t(
             __CLASS__.'.NEWLINES',
             'New Lines'
@@ -455,7 +458,6 @@ PHP;
         $php = <<<PHP
 _t(static::class.'.KEY1', 'Default');
 _t(self::class.'.KEY2', 'Default');
-_t(__CLASS__.'.KEY3', 'Default');
 _t('Collectable.KEY4', 'Default');
 PHP;
 
