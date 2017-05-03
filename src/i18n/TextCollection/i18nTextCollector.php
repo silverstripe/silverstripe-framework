@@ -556,11 +556,16 @@ class i18nTextCollector
         $inTransFn = false;
         $inConcat = false;
         $inNamespace = false;
-        $inClass = false;
+        $inClass = false; // after `class` but before `{`
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
         $currentEntity = array();
         $currentClass = []; // Class components
+        $previousToken = null;
+        $thisToken = null; // used to populate $previousToken on next iteration
         foreach ($tokens as $token) {
+            // Shuffle last token to $lastToken
+            $previousToken = $thisToken;
+            $thisToken = $token;
             if (is_array($token)) {
                 list($id, $text) = $token;
 
@@ -577,6 +582,10 @@ class i18nTextCollector
 
                 // Check class
                 if ($id === T_CLASS) {
+                    // Skip if previous token was '::'. E.g. 'Object::class'
+                    if (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
+                        continue;
+                    }
                     $inClass = true;
                     continue;
                 }
