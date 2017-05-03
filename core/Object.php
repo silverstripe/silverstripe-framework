@@ -726,16 +726,17 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public function __call($method, $arguments) {
+		$class = get_class($this);
 		// If the method cache was cleared by an an Object::add_extension() / Object::remove_extension()
 		// call, then we should rebuild it.
-		if(empty(self::$extra_methods[get_class($this)])) {
+		if(empty(self::$extra_methods[$class])) {
 			$this->defineMethods();
 		}
 
 		$method = strtolower($method);
 
-		if(isset(self::$extra_methods[$this->class][$method])) {
-			$config = self::$extra_methods[$this->class][$method];
+		if(isset(self::$extra_methods[$class][$method])) {
+			$config = self::$extra_methods[$class][$method];
 
 			switch(true) {
 				case isset($config['property']) :
@@ -752,11 +753,11 @@ abstract class Object {
 
 					if($this->destroyed) {
 						throw new Exception (
-							"Object->__call(): attempt to call $method on a destroyed $this->class object"
+							"Object->__call(): attempt to call $method on a destroyed $class object"
 						);
 					} else {
 						throw new Exception (
-							"Object->__call(): $this->class cannot pass control to $config[property]($config[index])."
+							"Object->__call(): $class cannot pass control to $config[property]($config[index])."
 								. ' Perhaps this object was mistakenly destroyed?'
 						);
 					}
@@ -770,13 +771,12 @@ abstract class Object {
 
 				default :
 					throw new Exception (
-						"Object->__call(): extra method $method is invalid on $this->class:"
+						"Object->__call(): extra method $method is invalid on $class:"
 							. var_export($config, true)
 					);
 			}
 		} else {
 			// Please do not change the exception code number below.
-			$class = get_class($this);
 			throw new Exception("Object->__call(): the method '$method' does not exist on '$class', or the method is not public.", 2175);
 		}
 	}
@@ -793,7 +793,7 @@ abstract class Object {
 	 * @return bool
 	 */
 	public function hasMethod($method) {
-		return method_exists($this, $method) || isset(self::$extra_methods[$this->class][strtolower($method)]);
+		return method_exists($this, $method) || isset(self::$extra_methods[get_class($this)][strtolower($method)]);
 	}
 
 	/**
@@ -803,14 +803,15 @@ abstract class Object {
 	 * @return array
 	 */
 	public function allMethodNames($custom = false) {
-		if(!isset(self::$built_in_methods[$this->class])) {
-			self::$built_in_methods[$this->class] = array_map('strtolower', get_class_methods($this));
+		$class = get_class($this);
+		if(!isset(self::$built_in_methods[$class])) {
+			self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($this));
 		}
 
-		if($custom && isset(self::$extra_methods[$this->class])) {
-			return array_merge(self::$built_in_methods[$this->class], array_keys(self::$extra_methods[$this->class]));
+		if($custom && isset(self::$extra_methods[$class])) {
+			return array_merge(self::$built_in_methods[$class], array_keys(self::$extra_methods[$class]));
 		} else {
-			return self::$built_in_methods[$this->class];
+			return self::$built_in_methods[$class];
 		}
 	}
 
@@ -826,11 +827,12 @@ abstract class Object {
 			$this->addMethodsFrom('extension_instances', $key);
 		}
 
-		if(isset($_REQUEST['debugmethods']) && isset(self::$built_in_methods[$this->class])) {
+		$class = get_class($this);
+		if(isset($_REQUEST['debugmethods']) && isset(self::$built_in_methods[$class])) {
 			Debug::require_developer_login();
 
-			echo '<h2>Methods defined on ' . $this->class . '</h2><ul>';
-			foreach(self::$built_in_methods[$this->class] as $method) {
+			echo "<h2>Methods defined on $class</h2><ul>";
+			foreach(self::$built_in_methods[$class] as $method) {
 				echo "<li>$method</li>";
 			}
 			echo '</ul>';
@@ -844,11 +846,12 @@ abstract class Object {
 	 * @param string|int $index an index to use if the property is an array
 	 */
 	protected function addMethodsFrom($property, $index = null) {
+		$class = get_class($this);
 		$extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
 
 		if(!$extension) {
 			throw new InvalidArgumentException (
-				"Object->addMethodsFrom(): could not add methods from {$this->class}->{$property}[$index]"
+				"Object->addMethodsFrom(): could not add methods from {$class}->{$property}[$index]"
 			);
 		}
 
@@ -873,11 +876,11 @@ abstract class Object {
 
 			$newMethods = array_fill_keys($methods, $methodInfo);
 
-			if(isset(self::$extra_methods[$this->class])) {
-				self::$extra_methods[$this->class] =
-					array_merge(self::$extra_methods[$this->class], $newMethods);
+			if(isset(self::$extra_methods[$class])) {
+				self::$extra_methods[$class] =
+					array_merge(self::$extra_methods[$class], $newMethods);
 			} else {
-				self::$extra_methods[$this->class] = $newMethods;
+				self::$extra_methods[$class] = $newMethods;
 			}
 		}
 	}
@@ -890,7 +893,7 @@ abstract class Object {
 	 * @param string $wrap the method name to wrap to
 	 */
 	protected function addWrapperMethod($method, $wrap) {
-		self::$extra_methods[$this->class][strtolower($method)] = array (
+		self::$extra_methods[get_class($this)][strtolower($method)] = array (
 			'wrap'   => $wrap,
 			'method' => $method
 		);
@@ -905,7 +908,7 @@ abstract class Object {
 	 *        function
 	 */
 	protected function createMethod($method, $code) {
-		self::$extra_methods[$this->class][strtolower($method)] = array (
+		self::$extra_methods[get_class($this)][strtolower($method)] = array (
 			'function' => create_function('$obj, $args', $code)
 		);
 	}
