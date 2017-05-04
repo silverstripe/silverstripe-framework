@@ -71,7 +71,8 @@ class DefaultCacheFactory implements CacheFactory
         }
 
         // Chain this cache with ApcuCache
-        $apcu = $this->createCache(ApcuCache::class, [$namespace, (int) $defaultLifetime / 5, $version]);
+        $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
+        $apcu = $this->createCache(ApcuCache::class, [$apcuNamespace, (int) $defaultLifetime / 5, $version]);
         return $this->createCache(ChainCache::class, [[$apcu, $fs]]);
     }
 

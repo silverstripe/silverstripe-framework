@@ -1,0 +1,37 @@
+{
+    "name": "TestForm",
+    "id": "Form_TestForm",
+    "action": null,
+    "method": "POST",
+    "attributes": {
+        "id": "Form_TestForm",
+        "action": null,
+        "method": "POST",
+        "enctype": "application\/x-www-form-urlencoded",
+        "target": null,
+        "class": ""
+    },
+    "data": [],
+    "fields": [
+        {
+            "id": "Form_TestForm_SecurityID",
+            "name": "SecurityID",
+            "type": "Hidden",
+            "component": null,
+            "holderId": "Form_TestForm_SecurityID_Holder",
+            "title": "Security ID",
+            "source": null,
+            "extraClass": "hidden",
+            "description": null,
+            "rightTitle": null,
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "attributes": [],
+            "data": [],
+            "validation": []
+        }
+    ],
+    "actions": []
+}

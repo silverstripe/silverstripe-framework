@@ -1,0 +1,129 @@
+{
+    "name": "TestForm",
+    "id": "Form_TestForm",
+    "action": null,
+    "method": "POST",
+    "attributes": {
+        "id": "Form_TestForm",
+        "action": null,
+        "method": "POST",
+        "enctype": "application\/x-www-form-urlencoded",
+        "target": null,
+        "class": ""
+    },
+    "data": [],
+    "fields": [
+        {
+            "name": "Name",
+            "id": "Form_TestForm_Name",
+            "type": "Text",
+            "component": null,
+            "holderId": "Form_TestForm_Name_Holder",
+            "title": "Name",
+            "source": null,
+            "extraClass": "text",
+            "description": null,
+            "rightTitle": null,
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "validation": {
+                "required": true,
+                "max": {
+                    "length": 40
+                }
+            },
+            "attributes": [],
+            "data": []
+        },
+        {
+            "name": "Date",
+            "id": "Form_TestForm_Date",
+            "type": "Date",
+            "component": null,
+            "holderId": "Form_TestForm_Date_Holder",
+            "title": "Date",
+            "source": null,
+            "extraClass": "date text",
+            "description": null,
+            "rightTitle": null,
+            "lang": "en-US",
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "validation": {
+                "date": true
+            },
+            "attributes": [],
+            "data": {
+                "html5": true,
+                "min": null,
+                "max": null
+            }
+        },
+        {
+            "name": "Number",
+            "id": "Form_TestForm_Number",
+            "type": "Decimal",
+            "component": null,
+            "holderId": "Form_TestForm_Number_Holder",
+            "title": "Number",
+            "source": null,
+            "extraClass": "numeric text",
+            "description": null,
+            "rightTitle": null,
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "validation": {
+                "numeric": true
+            },
+            "attributes": [],
+            "data": []
+        },
+        {
+            "name": "Money",
+            "id": "Form_TestForm_Money",
+            "type": "Text",
+            "component": null,
+            "holderId": "Form_TestForm_Money_Holder",
+            "title": "Money",
+            "source": null,
+            "extraClass": "currency text",
+            "description": null,
+            "rightTitle": null,
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "validation": {
+                "currency": true
+            },
+            "attributes": [],
+            "data": []
+        },
+        {
+            "name": "SecurityID",
+            "id": "Form_TestForm_SecurityID",
+            "type": "Hidden",
+            "component": null,
+            "holderId": "Form_TestForm_SecurityID_Holder",
+            "title": "Security ID",
+            "source": null,
+            "extraClass": "hidden",
+            "description": null,
+            "rightTitle": null,
+            "leftTitle": null,
+            "readOnly": false,
+            "disabled": false,
+            "customValidationMessage": "",
+            "validation": [],
+            "attributes": [],
+            "data": []
+        }
+    ],
+    "actions": []
+}
