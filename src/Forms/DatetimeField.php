@@ -569,7 +569,7 @@ class DatetimeField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    'DatetimeField.VALIDDATETIMEFORMAT',
+                    'SilverStripe\\Forms\\DatetimeField.VALIDDATETIMEFORMAT',
                     "Please enter a valid date and time format ({format})",
                     ['format' => $this->getDatetimeFormat()]
                 )
@@ -585,7 +585,7 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'DatetimeField.VALIDDATETIMEMINDATE',
+                        'SilverStripe\\Forms\\DatetimeField.VALIDDATETIMEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(
@@ -610,7 +610,7 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'DatetimeField.VALIDDATEMAXDATETIME',
+                        'SilverStripe\\Forms\\DatetimeField.VALIDDATEMAXDATETIME',
                         "Your date has to be older or matching the maximum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(
