@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
@@ -95,7 +96,6 @@ class HTMLEditorConfigTest extends SapphireTest
 
         // Check that internal plugins are extractable separately
         $this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
-
     }
 
     public function testPluginCompression()
@@ -127,14 +127,14 @@ class HTMLEditorConfigTest extends SapphireTest
         // Test plugins included via gzip compresser
         HTMLEditorField::config()->update('use_gzip', true);
         $this->assertEquals(
-            'test/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
+            'silverstripe-admin/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
             $c->getScriptURL()
         );
 
         // If gzip is disabled only the core plugin is loaded
         HTMLEditorField::config()->remove('use_gzip');
         $this->assertEquals(
-            'test/thirdparty/tinymce/tinymce.min.js',
+            'silverstripe-admin/thirdparty/tinymce/tinymce.min.js',
             $c->getScriptURL()
         );
     }
@@ -185,5 +185,24 @@ class HTMLEditorConfigTest extends SapphireTest
 
         $this->assertNotEmpty($aAttributes['data-config']);
         $this->assertNotEmpty($cAttributes['data-config']);
+    }
+
+    public function testExceptionThrownWhenTinyMCEPathCannotBeComputed()
+    {
+        TinyMCEConfig::config()->remove('base_dir');
+        ModuleLoader::instance()->pushManifest(new ModuleManifest(
+            dirname(__FILE__),
+            false
+        ));
+        $c = new TinyMCEConfig();
+        $exception = null;
+        try {
+            $c->getScriptURL();
+        } catch (\Exception $e) {
+            $exception = $e->getMessage();
+        }
+
+        $this->assertNotNull($exception);
+        ModuleLoader::instance()->popManifest();
     }
 }

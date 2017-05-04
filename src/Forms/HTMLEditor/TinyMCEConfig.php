@@ -11,6 +11,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use TinyMCE_Compressor;
+use Exception;
 
 /**
  * Default configuration for HtmlEditor specific to tinymce
@@ -697,7 +698,19 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     public function getTinyMCEPath()
     {
-        return static::config()->get('base_dir') ?:
-            ltrim($this->getAdminPath() . '/thirdparty/tinymce', '/');
+        $configDir = static::config()->get('base_dir');
+        if ($configDir) {
+            return $configDir;
+        }
+
+        if ($this->getAdminPath()) {
+            return ltrim($this->getAdminPath() . '/thirdparty/tinymce', '/');
+        }
+
+        throw new Exception(sprintf(
+            'If the silverstripe/admin module is not installed, 
+            you must set the TinyMCE path in %s.base_dir',
+            __CLASS__
+        ));
     }
 }
