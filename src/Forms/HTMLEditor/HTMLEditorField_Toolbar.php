@@ -189,7 +189,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
      *
      * @return null|Form
      */
-    public function EditorExternalLink()
+    public function EditorExternalLink($id = null)
     {
         /** @var EditorExternalLinkFormFactory $factory */
         $factory = Injector::inst()->get(EditorExternalLinkFormFactory::class);
