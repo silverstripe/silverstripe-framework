@@ -1,21 +1,4 @@
 hr:
-  SilverStripe\Admin\SecurityAdmin:
-    MEMBERS: Članovi
-    NEWGROUP: 'Nova Grupa'
-    PERMISSIONS: Dozvole
-    ROLES: Uloge
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Visina
-    SIZE: 'Veličina datoteke'
-    TYPE: 'Tip datoteke'
-    URL: Link
-    WIDTH: 'Širina'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDIT: Uredi
-    EDITINFO: 'Uredi ovu datoteku'
-    REMOVE: Ukloni
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Osnovno
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neispravan zahtjev'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -144,6 +127,7 @@ hr:
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Puna administrativna prava'
+    CONTENT_CATEGORY: 'Sadržajne dozvole'
   SilverStripe\Security\PermissionRole:
     Title: Naslov
   SilverStripe\Security\Security:

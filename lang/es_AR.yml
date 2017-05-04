@@ -1,16 +1,4 @@
 es_AR:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nombre de grupo'
-    MEMBERS: Miembros
-    NEWGROUP: 'Nuevo Grupo'
-    PERMISSIONS: Permisos
-    ROLES: roles
-    ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Tamaño
-    TYPE: Tipo
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
     HELLO: Hola
@@ -91,6 +79,7 @@ es_AR:
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
+    CONTENT_CATEGORY: 'Permisos de contenido'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado desde el rol "%s" en el grupo "%s"'
   SilverStripe\Security\Security:

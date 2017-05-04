@@ -1,25 +1,4 @@
 eo:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Grupa Nomo'
-    MEMBERS: Membroj
-    NEWGROUP: 'Nova Grupo'
-    PERMISSIONS: Permesoj
-    ROLES: Roloj
-    ROLESDESCRIPTION: 'Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Alto
-    SIZE: Grando
-    TYPE: Tipo
-    URL: URL
-    WIDTH: Larĝo
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensioj
-    EDIT: Redakti
-    EDITINFO: 'Redakti ĉi tiun dosieron'
-    FIELDNOTSET: 'Ne trovis informon'
-    REMOVE: Forigi
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Ĉefaj
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Malvalida peto'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -284,6 +263,7 @@ eo:
     PLURALNAME: Permesoj
     SINGULARNAME: Permeso
     UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
+    CONTENT_CATEGORY: Enhavopermesoj
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'agordita al "{title}"'
     FromGroup: 'heredita el grupo "{title}"'

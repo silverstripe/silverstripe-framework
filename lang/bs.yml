@@ -1,14 +1,4 @@
 bs:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Ime grupe'
-    MEMBERS: Članovi
-    NEWGROUP: 'Nova grupa'
-    PERMISSIONS: Ovlaštenja
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Veličina
-    TYPE: Tip
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Glavno
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
     HELLO: Pozdrav

@@ -1,23 +1,4 @@
 ar:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'اسم المجموعة'
-    MEMBERS: الأعضاء
-    NEWGROUP: 'مجموعة جديدة'
-    PERMISSIONS: الصلاحيات
-    ROLES: قواعد
-    ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'الحجم'
-    TYPE: النوع
-    URL: الرابط
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: الأبعاد
-    EDIT: تعديل
-    EDITINFO: 'قم بتعديل هذا الملف'
-    FIELDNOTSET: 'لا يوجد معلومات عن الملف'
-    REMOVE: حذف
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: الرئيسة
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'طلب غير صحيح'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -182,6 +163,7 @@ ar:
     FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
     FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
     UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
+    CONTENT_CATEGORY: 'تصاريح المحتوى'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'تم تعيينها إلى "{عنوان}"'
     FromGroup: 'موروثة من المجموعة "{عنوان}"'

@@ -1,18 +1,4 @@
 gl_ES:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nome do grupo'
-    MEMBERS: Membros
-    NEWGROUP: 'Novo grupo'
-    PERMISSIONS: Permisos
-    ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Tamaño ficheiro'
-    TYPE: 'Tipo ficheiro'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Editar este ficheiro'
-    FIELDNOTSET: 'Ficheiro de información non atopado'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
     HELLO: Ola
@@ -119,6 +105,7 @@ gl_ES:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
+    CONTENT_CATEGORY: 'Permisos do Contido'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
   SilverStripe\Security\Security:

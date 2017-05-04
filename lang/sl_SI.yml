@@ -1,20 +1,4 @@
 sl_SI:
-  SilverStripe\Admin\SecurityAdmin:
-    MEMBERS: Uporabniki
-    PERMISSIONS: Dovoljenja
-    ROLES: Vloge
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Višina
-    SIZE: 'Velikost datoteke'
-    TYPE: 'Tip datoteke'
-    URL: URL
-    WIDTH: 'Širina'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimenzije
-    EDIT: Uredi
-    EDITINFO: 'Uredi datoteko'
-    FIELDNOTSET: 'Ni informacij o datoteki'
-    REMOVE: Odstrani
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neveljavna zahteva'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:

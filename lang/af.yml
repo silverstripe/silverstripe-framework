@@ -1,21 +1,4 @@
 af:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Groep naam'
-    MEMBERS: Lede
-    PERMISSIONS: Toegangsregte
-    ROLES: Rolle
-    ROLESDESCRIPTION: ' '
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Lêer grootte'
-    TYPE: 'Lêer tipe'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Afmetings
-    EDIT: Verander
-    EDITINFO: 'Verander die lêer'
-    FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
-    REMOVE: Verwyder
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hoof
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ongeldige versoek'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -155,6 +138,7 @@ af:
     AdminGroup: Administrateur
     FULLADMINRIGHTS: 'Volle administratiewe regte '
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
+    CONTENT_CATEGORY: 'Inhoud permissies'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'toegeken aan "{title}"'
     FromGroup: 'geërf van groep "{title}"'

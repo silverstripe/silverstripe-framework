@@ -1,0 +1,3 @@
+ko:
+  SilverStripe\Security\Permission:
+    CONTENT_CATEGORY: '콘텐츠에 관한 권한'

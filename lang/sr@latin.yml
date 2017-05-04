@@ -1,23 +1,4 @@
 sr@latin:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Ime grupe'
-    MEMBERS: Članovi
-    NEWGROUP: 'Nova grupa'
-    PERMISSIONS: Dozvole
-    ROLES: Uloge
-    ROLESDESCRIPTION: 'Uloge su predefinisani skupovi ovlašćenja i mogu biti dodeljene grupama.<br />Nasleđuju se od roditeljskih grupa ako je potrebno.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Veličina
-    TYPE: Tip
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimenzije
-    EDIT: Izmeni
-    EDITINFO: 'Izmeni ovu datoteku'
-    FIELDNOTSET: 'Informacije o datoteci nisu pronađene'
-    REMOVE: Ukloni
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Glavno
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Pogrešan zahtev'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:

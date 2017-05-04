@@ -1,14 +1,4 @@
 pt_BR:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nome do grupo'
-    MEMBERS: Membros
-    NEWGROUP: 'Novo Grupo'
-    PERMISSIONS: Permissões
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Tamanho
-    TYPE: Tipo
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
     HELLO: Olá

@@ -1,23 +1,4 @@
 mi:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Ingoa rōpū'
-    MEMBERS: 'Ngā Mema'
-    NEWGROUP: 'Rōpū Hōu'
-    PERMISSIONS: 'Ngā Whakaaetanga'
-    ROLES: 'Ngā Tūnga'
-    ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Rahi kōnae'
-    TYPE: 'Momo kōnae'
-    URL: PRO
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Ngā Rahinga'
-    EDIT: Whakatika
-    EDITINFO: 'Whakatikatia tēnei kōnae'
-    FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
-    REMOVE: Tango
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Matua
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Tono muhu'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -183,6 +164,7 @@ mi:
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
     UserPermissionsIntro: 'Mā te tautapa rōpū ki tēnei kaiwhakamahi e whakarite āna whakaaetanga. Tirohia te wāhanga rōpū mō ngā taipitopito o ngā whakaaetanga o ngā rōpū takitahi.'
+    CONTENT_CATEGORY: 'Whakaaetanga ihirangi'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'

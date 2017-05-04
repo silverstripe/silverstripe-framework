@@ -1,24 +1,4 @@
 fa_IR:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'نام گروه'
-    MEMBERS: کاربران
-    NEWGROUP: 'گروه تازه'
-    PERMISSIONS: دسترسی‌ها
-    ROLES: وظایف
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: ارتفاع
-    SIZE: 'حجم فایل'
-    TYPE: 'نوع فایل'
-    URL: 'نشانی اینترنتی'
-    WIDTH: پهنا
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: ابعاد
-    EDIT: ویرایش
-    EDITINFO: 'ویرایش این فایل'
-    FIELDNOTSET: 'اطلاعات فایل پیدا نشد'
-    REMOVE: حذف
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: اصلی
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'درخواست نامعتبر'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -236,6 +216,7 @@ fa_IR:
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     PLURALNAME: 'مجوز‌ها'
     SINGULARNAME: 'مجوز'
+    CONTENT_CATEGORY: 'دسترسی محتوا'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'اختصاص داده‌شده به "{title}"'
     FromGroup: 'از گروه "{title}" ارث برده است'

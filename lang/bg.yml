@@ -1,24 +1,4 @@
 bg:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Име на група'
-    MEMBERS: Потребители
-    NEWGROUP: 'Нова група'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
-    ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Височина
-    SIZE: 'Големина на файла'
-    TYPE: 'Тип на файла'
-    URL: URL
-    WIDTH: Широчина
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размери'
-    EDITINFO: 'Редактирай този файл'
-    FIELDNOTSET: 'Информация за файла не беше намерена'
-    REMOVE: 'Премахни'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Главно
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Грешна заявка'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -166,6 +146,7 @@ bg:
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     FULLADMINRIGHTS: 'Пълни административни права'
+    CONTENT_CATEGORY: 'Права по съдържанието'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'

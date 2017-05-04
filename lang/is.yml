@@ -1,11 +1,4 @@
 is:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nafn hóps'
-    MEMBERS: Félagar
-    PERMISSIONS: Leyfi
-    ROLES: Hlutverk
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Aðal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
     HELLO: Hæ

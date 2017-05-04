@@ -1,21 +1,4 @@
 th:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: ชื่อกลุ่มสมาชิก
-    MEMBERS: สมาชิก
-    NEWGROUP: สร้างกลุ่มใหม่
-    PERMISSIONS: สิทธิ์อนุญาต
-    ROLES: บทบาท
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: ขนาด
-    TYPE: ชนิด
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: ขนาดสัดส่วน
-    EDIT: แก้ไข
-    EDITINFO: แก้ไขไฟล์นี้
-    FIELDNOTSET: ไม่พบข้อมูลเกี่ยวกับไฟล์
-    REMOVE: ลบออก
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: หลัก
   SilverStripe\Control\Director:
     INVALID_REQUEST: การร้องขอไม่ถูกต้อง
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -128,6 +111,7 @@ th:
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
   SilverStripe\Security\Permission:
     AdminGroup: ผู้ดูแลระบบ
+    CONTENT_CATEGORY: สิทธิ์อนุญาตของเนื้อหา
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
     Title: หัวเรื่อง

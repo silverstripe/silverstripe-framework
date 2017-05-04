@@ -1,6 +1,4 @@
 pa:
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: "ਮੁੱਖ\t"
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
     HELLO: ਹਾਏ

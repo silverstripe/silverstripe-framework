@@ -1,11 +1,4 @@
 zh_CN:
-  SilverStripe\Admin\SecurityAdmin:
-    NEWGROUP: 新建会员组
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 大小
-    TYPE: 类型
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: 主要部分
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
     HELLO: 嗨

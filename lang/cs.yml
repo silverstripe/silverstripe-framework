@@ -1,25 +1,4 @@
 cs:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Jméno skupiny'
-    MEMBERS: Členové
-    NEWGROUP: 'Nová skupina'
-    PERMISSIONS: Práva
-    ROLES: Role
-    ROLESDESCRIPTION: 'Role jsou předdefinované seskupení oprávnění, které mohou být přidělené k skupinám. Jsou dědené z nadřazených skupin, když je požadováno.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Výška
-    SIZE: Velikost
-    TYPE: Typ
-    URL: URL
-    WIDTH: 'Šířka'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozměry
-    EDIT: Editovat
-    EDITINFO: 'Editovat tento soubor'
-    FIELDNOTSET: 'Žádná informace o souboru'
-    REMOVE: Odstranit
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hlavní
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -274,6 +253,7 @@ cs:
     PLURALNAME: Oprávnění
     SINGULARNAME: Oprávnění
     UserPermissionsIntro: 'Přiřazení skupin tomuto uživatelovi upraví oprávnění, které má. Podívejte se sekcie skupiny pro podrobnosti o oprávněních k jednotlivým skupinám.'
+    CONTENT_CATEGORY: 'Oprávnění obsahu'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'přiděleno k "{title}"'
     FromGroup: 'zdědeno ze skupiny "{title}"'

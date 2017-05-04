@@ -1,25 +1,4 @@
 lt:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Grupės pavadinimas'
-    MEMBERS: Vartotojai
-    NEWGROUP: 'Nauja grupė'
-    PERMISSIONS: Leidimai
-    ROLES: Rolės
-    ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Aukštis
-    SIZE: 'Bylos dydis'
-    TYPE: 'Bylos tipas'
-    URL: 'URL adresas'
-    WIDTH: Plotis
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Matmenys
-    EDIT: Redaguoti
-    EDITINFO: 'Redaguoti šią bylą'
-    FIELDNOTSET: 'Informacija apie bylą nerasta'
-    REMOVE: Pašalinti
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Pagrindinis
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Klaidinga užklausa'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -207,6 +186,7 @@ lt:
     FULLADMINRIGHTS: 'Pilnos administravimo teisės'
     FULLADMINRIGHTS_HELP: 'Turi ir viršija visus kitus leidimus.'
     UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
+    CONTENT_CATEGORY: 'Turinio teisės'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'priskirta "{title}"'
     FromGroup: 'paveldėta iš grupės "{title}"'

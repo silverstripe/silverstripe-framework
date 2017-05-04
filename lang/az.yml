@@ -1,11 +1,4 @@
 az:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Qrupun adı'
-    MEMBERS: Üzvlər
-    PERMISSIONS: Səlahiyyətlər
-    ROLES: Rollar
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Əsas
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
     HELLO: Salam
@@ -83,6 +76,7 @@ az:
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
+    CONTENT_CATEGORY: 'Məzmun səlahiyyətləri'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: '"%s" rolundan "%s" qrupunda törəyib'
   SilverStripe\Security\Security:

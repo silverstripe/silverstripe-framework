@@ -1,25 +1,4 @@
 de:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Gruppenname
-    MEMBERS: Mitglieder
-    NEWGROUP: 'Neue Gruppe'
-    PERMISSIONS: Berechtigungen
-    ROLES: Rollen
-    ROLESDESCRIPTION: 'Hier können Sie der Gruppe Rollen zuweisen. Rollen sind logische Gruppierungen von Berechtigungen.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Höhe
-    SIZE: Größe
-    TYPE: Typ
-    URL: URL
-    WIDTH: Breite
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensionen
-    EDIT: Bearbeiten
-    EDITINFO: 'Diese Datei bearbeiten'
-    FIELDNOTSET: 'Dateiinformationen nicht gefunden'
-    REMOVE: Entfernen
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hauptteil
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ungültige Anfrage'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -265,6 +244,7 @@ de:
     PLURALNAME: Berechtigungen
     SINGULARNAME: Zugriffsberechtigung
     UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
+    CONTENT_CATEGORY: Inhaltsberechtigungen
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'

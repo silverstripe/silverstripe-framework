@@ -1,23 +1,4 @@
 nb:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Gruppenavn
-    MEMBERS: Medlemmer
-    NEWGROUP: 'Ny gruppe'
-    PERMISSIONS: Tilganger
-    ROLES: Roller
-    ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Filstørrelse
-    TYPE: Filtype
-    URL: Nettadresse
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensjoner
-    EDIT: Rediger
-    EDITINFO: 'Rediger denne filen'
-    FIELDNOTSET: 'Filinformasjon ikke funnet'
-    REMOVE: Fjern
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hovedinnstillinger
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ugyldig forespørsel'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -184,6 +165,7 @@ nb:
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
     UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
+    CONTENT_CATEGORY: Innholdstillatelser
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'

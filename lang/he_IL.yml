@@ -1,10 +1,4 @@
 he_IL:
-  SilverStripe\Admin\SecurityAdmin:
-    NEWGROUP: 'קבוצה חדשה'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: גודל
-    TYPE: סוג
-    URL: 'כתובת הדף'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
     HELLO: היי
@@ -48,6 +42,8 @@ he_IL:
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '
     db_PasswordExpiry: 'תאריך תפוגת סיסמא'
+  SilverStripe\Security\Permission:
+    CONTENT_CATEGORY: 'הרשאות התוכן'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
     BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'

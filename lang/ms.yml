@@ -1,6 +1,4 @@
 ms:
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Utama
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Anda telah mengubah kata lalaun untuk'
   SilverStripe\Forms\ConfirmedPasswordField:

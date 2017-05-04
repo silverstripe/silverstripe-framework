@@ -1,23 +1,4 @@
 sr:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Име групе'
-    MEMBERS: Чланови
-    NEWGROUP: 'Нова група'
-    PERMISSIONS: Дозволе
-    ROLES: Улоге
-    ROLESDESCRIPTION: 'Улоге су предефинисани скупови овлашћења и могу бити додељене групама.<br />Наслеђују се од родитељских група ако је потребно.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Величина
-    TYPE: Тип
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Димензије
-    EDIT: Измени
-    EDITINFO: 'Измени ову датотеку'
-    FIELDNOTSET: 'Информације о датотеци нису пронађене'
-    REMOVE: Уклони
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Главно
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Погрешан захтев'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -184,6 +165,7 @@ sr:
     FULLADMINRIGHTS: 'Пуна административна права'
     FULLADMINRIGHTS_HELP: 'Надјачава све друге додељене дозволе.'
     UserPermissionsIntro: 'Додавањем овог корисника у групу биће прилагођена и његова права приступа. Подробнија објашњења о правима приступа за појединачне групе можете пронаћи у секцији "Групе".'
+    CONTENT_CATEGORY: 'Дозволе за садржај'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'додељено "{title}"'
     FromGroup: 'наслеђено од групе "{title}"'

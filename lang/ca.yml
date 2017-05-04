@@ -1,14 +1,4 @@
 ca:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nom de grup'
-    MEMBERS: Membres
-    NEWGROUP: 'Nou grup'
-    PERMISSIONS: Permisos
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Mida
-    TYPE: Tipus
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
     HELLO: Hola

@@ -1,15 +1,4 @@
 pt:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nome do Grupo'
-    MEMBERS: Membros
-    NEWGROUP: 'Novo grupo'
-    PERMISSIONS: Permissões
-    ROLES: Regras
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Editar este ficheiro'
-    FIELDNOTSET: 'Informação do ficheiro não encontrada'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
     HELLO: Olá
@@ -100,6 +89,7 @@ pt:
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Direitos de Administrador'
+    CONTENT_CATEGORY: 'Permissões de conteúdo'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
   SilverStripe\Security\PermissionRole:

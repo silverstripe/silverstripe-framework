@@ -1,23 +1,4 @@
 ja:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: グループ名
-    MEMBERS: メンバー
-    NEWGROUP: 新しいグループ
-    PERMISSIONS: 承認
-    ROLES: 役割
-    ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: ファイルサイズ
-    TYPE: ファイルの種類
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 大きさ
-    EDIT: 編集
-    EDITINFO: このファイルを編集
-    FIELDNOTSET: 'ファイル情報が見つかりませんでした'
-    REMOVE: 削除
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: メイン
   SilverStripe\Control\Director:
     INVALID_REQUEST: 不正なリクエスト
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -181,6 +162,7 @@ ja:
     FULLADMINRIGHTS: '完全な管理権'
     FULLADMINRIGHTS_HELP: 暗黙的に定義または他のすべての割り当てられた権限を無効にする。
     UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
+    CONTENT_CATEGORY: コンテンツに関する権限
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'

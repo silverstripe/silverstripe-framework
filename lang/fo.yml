@@ -1,14 +1,4 @@
 fo:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Bólkaheiti
-    MEMBERS: Limir
-    NEWGROUP: 'Nýggjur bólkur'
-    PERMISSIONS: Rættindi
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Stødd
-    TYPE: Slag
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Alment
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
     HELLO: Hey

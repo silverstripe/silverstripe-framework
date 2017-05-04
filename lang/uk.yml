@@ -1,15 +1,4 @@
 uk:
-  SilverStripe\Admin\SecurityAdmin:
-    MEMBERS: Члени
-    NEWGROUP: 'Нова Група'
-    PERMISSIONS: Дозволи
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Розмір'
-    TYPE: Тип
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Редагувати цей файл'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Головна
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     HELLO: Привіт
@@ -82,6 +71,8 @@ uk:
     db_LockedOutUntil: 'Заблоковано поки'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
+  SilverStripe\Security\Permission:
+    CONTENT_CATEGORY: 'Дозволи вмісту'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
   SilverStripe\Security\PermissionRole:

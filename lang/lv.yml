@@ -1,12 +1,4 @@
 lv:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Grupas nosaukums'
-    MEMBERS: Lietotāji
-    PERMISSIONS: Atļaujas
-    ROLES: Lomas
-    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Sākums
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
     HELLO: Sveiki
@@ -89,6 +81,7 @@ lv:
     AdminGroup: Administrators
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
+    CONTENT_CATEGORY: 'Satura atļaujas'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'mantots no lomas "%s" grupā "%s"'
   SilverStripe\Security\Security:

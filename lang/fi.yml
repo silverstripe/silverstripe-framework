@@ -1,25 +1,4 @@
 fi:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Ryhmän nimi'
-    MEMBERS: Jäsenet
-    NEWGROUP: 'Uusi ryhmä'
-    PERMISSIONS: Oikeudet
-    ROLES: Roolit
-    ROLESDESCRIPTION: 'Tässä osiossa voit lisätä rooleja tähän ryhmään. Roolit ovat käyttöoikeuksien loogisia ryhmittymiä, joita voidaan muokata Roolit-välilehdellä'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Korkeus
-    SIZE: Koko
-    TYPE: Tyyppi
-    URL: URL
-    WIDTH: Leveys
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Mitat
-    EDIT: Muokkaa
-    EDITINFO: 'Muokkaa tätä tiedostoa'
-    FIELDNOTSET: 'Tietoja tiedostosta ei löytynyt'
-    REMOVE: Poista
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Yleiset
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -281,6 +260,7 @@ fi:
     PLURALNAME: Oikeudet
     SINGULARNAME: Oikeus
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
+    CONTENT_CATEGORY: 'Sisällön käyttöoikeudet'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'

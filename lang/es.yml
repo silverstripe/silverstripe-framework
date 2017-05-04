@@ -1,25 +1,4 @@
 es:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nombre del grupo'
-    MEMBERS: Miembros
-    NEWGROUP: 'Nuevo grupo'
-    PERMISSIONS: Permisos
-    ROLES: Roles
-    ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Alto
-    SIZE: Tamaño
-    TYPE: 'Tipo de archivo'
-    URL: URL
-    WIDTH: Ancho
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensiones
-    EDIT: Editar
-    EDITINFO: 'Editar este archivo'
-    FIELDNOTSET: 'No ha sido encontrada la información del archivo'
-    REMOVE: Eliminar
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -319,6 +298,7 @@ es:
       other: '{count} Permisos'
     SINGULARNAME: Permiso
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
+    CONTENT_CATEGORY: 'Permisos de contenido'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'

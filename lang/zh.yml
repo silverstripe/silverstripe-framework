@@ -1,23 +1,4 @@
 zh:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 小组名称
-    MEMBERS: 成员
-    NEWGROUP: 新的小组
-    PERMISSIONS: 权限
-    ROLES: 角色
-    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 文件尺寸
-    TYPE: 文件类型
-    URL: 网址
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 尺寸
-    EDIT: 编辑
-    EDITINFO: 编辑该文件
-    FIELDNOTSET: 没有找到文件信息
-    REMOVE: 移除
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: 主要的
   SilverStripe\Control\Director:
     INVALID_REQUEST: '无效请求'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -204,6 +185,7 @@ zh:
     FULLADMINRIGHTS: '完全管理权'
     FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
     UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
+    CONTENT_CATEGORY: '内容权限'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'

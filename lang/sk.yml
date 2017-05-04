@@ -1,25 +1,4 @@
 sk:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Názov skupiny'
-    MEMBERS: Členovia
-    NEWGROUP: 'Nová skupina'
-    PERMISSIONS: Právomoci
-    ROLES: Úlohy
-    ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Výška
-    SIZE: Veľkosť
-    TYPE: Typ
-    URL: URL
-    WIDTH: 'Šírka'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozmery
-    EDIT: Editovať
-    EDITINFO: 'Editovať súbor'
-    FIELDNOTSET: 'Žiadna informácia o súbore'
-    REMOVE: Odstrániť
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hlavné
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -278,6 +257,7 @@ sk:
     PLURALNAME: Oprávnenia
     SINGULARNAME: Oprávnenie
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
+    CONTENT_CATEGORY: 'Práva k obsahu'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'

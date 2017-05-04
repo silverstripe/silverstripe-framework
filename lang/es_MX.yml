@@ -1,19 +1,4 @@
 es_MX:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nombre de grupo'
-    MEMBERS: Miembros
-    NEWGROUP: 'Nuevo grupo'
-    PERMISSIONS: Permisos
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Tamaño
-    TYPE: Tipo
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensiones
-    EDITINFO: 'Editar este archivo'
-    FIELDNOTSET: 'Información acerca del archivo no encontrada'
-    REMOVE: Remover
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -140,6 +125,7 @@ es_MX:
     AdminGroup: Administrador
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
+    CONTENT_CATEGORY: 'Permisos de contenido'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado del rol "%s" en el grupo "%s"'
   SilverStripe\Security\Security:

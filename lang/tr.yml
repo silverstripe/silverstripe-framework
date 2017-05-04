@@ -1,17 +1,4 @@
 tr:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Grup adı'
-    MEMBERS: Üyeler
-    NEWGROUP: 'Yeni Grup'
-    PERMISSIONS: İzinler
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Boyutu
-    TYPE: Türü
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Dosyayı düzenle'
-    FIELDNOTSET: 'Dosya bilgisi bulunamadı'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: 'Ana (Esas)'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
     HELLO: Merhaba

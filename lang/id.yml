@@ -1,23 +1,4 @@
 id:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nama kelompok'
-    MEMBERS: Pengguna
-    NEWGROUP: 'Kelompok Baru'
-    PERMISSIONS: Perijinan
-    ROLES: Peran
-    ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Ukuran berkas'
-    TYPE: 'Jenis berkas'
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensi
-    EDIT: Edit
-    EDITINFO: 'Edit berkas ini'
-    FIELDNOTSET: 'Informasi berkas tidak ada'
-    REMOVE: Buang
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Utama
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Permintaan tidak valid'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -205,6 +186,7 @@ id:
     FULLADMINRIGHTS: 'Hak pengelolaan penuh'
     FULLADMINRIGHTS_HELP: 'Abaikan dan kesampingkan semua perijinan yang terhubung lainnya.'
     UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
+    CONTENT_CATEGORY: 'Perijinan konten'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'

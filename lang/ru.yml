@@ -1,25 +1,4 @@
 ru:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Имя группы'
-    MEMBERS: Участники
-    NEWGROUP: 'Новая группа'
-    PERMISSIONS: 'Права доступа'
-    ROLES: 'Роли'
-    ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Высота
-    SIZE: 'Размер'
-    TYPE: Тип
-    URL: URL
-    WIDTH: Ширина
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размеры'
-    EDIT: 'Редактировать'
-    EDITINFO: 'Редактировать этот файл'
-    FIELDNOTSET: 'Информация о файле не найдена'
-    REMOVE: Удалить
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Основное
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Неверный запрос'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -274,6 +253,7 @@ ru:
     PLURALNAME: 'Права доступа'
     SINGULARNAME: 'Право доступа'
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
+    CONTENT_CATEGORY: 'Права доступа к содержимому'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'

@@ -1,24 +1,4 @@
 id_ID:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nama kelompok'
-    MEMBERS: Pengguna
-    NEWGROUP: 'Kelompok Baru'
-    PERMISSIONS: Perijinan
-    ROLES: Peran
-    ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Ukuran berkas'
-    TYPE: 'Jenis berkas'
-    URL: URL
-    WIDTH: Lebar
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensi
-    EDIT: Edit
-    EDITINFO: 'Edit berkas ini'
-    FIELDNOTSET: 'Informasi berkas tidak ada'
-    REMOVE: Buang
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Utama
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Permintaan tidak valid'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:

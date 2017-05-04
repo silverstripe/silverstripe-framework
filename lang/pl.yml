@@ -1,23 +1,4 @@
 pl:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nazwa Grupy'
-    MEMBERS: Użytkownicy
-    NEWGROUP: 'Nowa grupa'
-    PERMISSIONS: Zezwolenia
-    ROLES: Role
-    ROLESDESCRIPTION: 'Sekcja umożliwia dodanie ról do grupy. Role są logicznie uporządkowanymi uprawnieniami, które można edytować w zakładce Role'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Rozmiar pliku'
-    TYPE: 'Typ pliku'
-    URL: 'Adres URL'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozmiar
-    EDIT: Edytuj
-    EDITINFO: 'Edytuj plik'
-    FIELDNOTSET: 'Nie znaleziono informacji o pliku'
-    REMOVE: Usuń
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Główny
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -184,6 +165,7 @@ pl:
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
     UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
+    CONTENT_CATEGORY: 'Uprawnienie edycji treści'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'

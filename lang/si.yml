@@ -1,11 +1,4 @@
 si:
-  SilverStripe\Admin\SecurityAdmin:
-    NEWGROUP: 'අලුත් කන්ඩාමක්'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: තරම
-    TYPE: වර්ගය
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: ප්‍රදාන
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
     HELLO: කොහොමද

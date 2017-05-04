@@ -1,24 +1,4 @@
 fr:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nom du group'
-    MEMBERS: Membres
-    NEWGROUP: 'Nouveau groupe'
-    PERMISSIONS: Autorisations
-    ROLES: Rôles
-    ROLESDESCRIPTION: 'Les rôles sont des regroupements logiques d’autorisations qui peuvent être assignés à des groupes.<br />Ils peuvent être hérités de groupes parents, si nécessaire.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Hauteur
-    SIZE: Taille
-    TYPE: Type
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensions
-    EDIT: Modifier
-    EDITINFO: 'Modifier ce fichier'
-    FIELDNOTSET: 'Informations concernant le fichiers non-trouvées'
-    REMOVE: Supprimer
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Requête non valide'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -185,6 +165,7 @@ fr:
     FULLADMINRIGHTS: 'Droits d''administration complets'
     FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
     UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
+    CONTENT_CATEGORY: 'Permissions du contenu'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: "hérité du groupe «\_{title}\_»"

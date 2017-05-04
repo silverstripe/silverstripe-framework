@@ -1,23 +1,4 @@
 sl:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Ime skupine'
-    MEMBERS: Člani
-    NEWGROUP: 'Nova Skupina'
-    PERMISSIONS: Dovoljenja
-    ROLES: Vloge
-    ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Velikost datoteke'
-    TYPE: Tip
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimenzije
-    EDIT: Uredi
-    EDITINFO: 'Uredi datoteko'
-    FIELDNOTSET: 'Pred uvozom počisti bazo podatkov'
-    REMOVE: Odstrani
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Domov
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Napačna zahteva'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -171,6 +152,7 @@ sl:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
+    CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromGroup: 'Privzeto iz skupine "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'

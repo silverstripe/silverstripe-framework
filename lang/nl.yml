@@ -1,25 +1,4 @@
 nl:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Groep naam'
-    MEMBERS: Leden
-    NEWGROUP: 'Nieuwe Groep'
-    PERMISSIONS: Rechten
-    ROLES: Rollen
-    ROLESDESCRIPTION: 'In deze sectie kunt u rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Hoogte
-    SIZE: Grootte
-    TYPE: Type
-    URL: URL
-    WIDTH: Breedte
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Afmetingen
-    EDIT: Bewerken
-    EDITINFO: 'Bewerk dit bestand'
-    FIELDNOTSET: 'Bestandsinformatie niet gevonden'
-    REMOVE: Verwijder
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hoofdgedeelte
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Fout bij verwerken'
   SilverStripe\Control\Email\ChangePasswordEmail_ss:
@@ -219,6 +198,7 @@ nl:
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
+    CONTENT_CATEGORY: Inhoudsrechten
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
