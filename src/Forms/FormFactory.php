@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
 
 /**
  * A service which can generate a form
@@ -18,14 +18,14 @@ interface FormFactory
     /**
      * Generates the form
      *
-     * @param Controller $controller Parent controller
+     * @param RequestHandler $controller Parent controller
      * @param string $name
      * @param array $context List of properties which may influence form scaffolding.
      * E.g. 'Record' if building a form for a record.
      * Custom factories may support more advanced parameters.
      * @return Form
      */
-    public function getForm(Controller $controller, $name = self::DEFAULT_NAME, $context = []);
+    public function getForm(RequestHandler $controller = null, $name = self::DEFAULT_NAME, $context = []);
 
     /**
      * Return list of mandatory context keys

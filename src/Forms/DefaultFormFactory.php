@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Extensible;
 
 /**
@@ -26,7 +26,7 @@ class DefaultFormFactory implements FormFactory
         $this->constructExtensions();
     }
 
-    public function getForm(Controller $controller, $name = FormFactory::DEFAULT_NAME, $context = [])
+    public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
     {
         // Validate context
         foreach ($this->getRequiredContext() as $required) {
@@ -52,12 +52,12 @@ class DefaultFormFactory implements FormFactory
     /**
      * Build field list for this form
      *
-     * @param Controller $controller
+     * @param RequestHandler $controller
      * @param string $name
      * @param array $context
      * @return FieldList
      */
-    protected function getFormFields(Controller $controller, $name, $context = [])
+    protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
     {
         // Fall back to standard "getCMSFields" which itself uses the FormScaffolder as a fallback
         // @todo Deprecate or formalise support for getCMSFields()
@@ -69,12 +69,12 @@ class DefaultFormFactory implements FormFactory
     /**
      * Build list of actions for this form
      *
-     * @param Controller $controller
+     * @param RequestHandler $controller
      * @param string $name
      * @param array $context
      * @return FieldList
      */
-    protected function getFormActions(Controller $controller, $name, $context = [])
+    protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
     {
         // @todo Deprecate or formalise support for getCMSActions()
         $actions = $context['Record']->getCMSActions();
@@ -83,12 +83,12 @@ class DefaultFormFactory implements FormFactory
     }
 
     /**
-     * @param Controller $controller
+     * @param RequestHandler $controller
      * @param string $name
      * @param array $context
      * @return null|Validator
      */
-    protected function getFormValidator(Controller $controller, $name, $context = [])
+    protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
     {
         $validator = null;
         if ($context['Record']->hasMethod('getCMSValidator')) {
