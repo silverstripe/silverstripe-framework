@@ -9,8 +9,8 @@ use SilverStripe\Core\Object;
  * Interface for a generic build task. Does not support dependencies. This will simply
  * run a chunk of code when called.
  *
- * To disable the task (in the case of potentially destructive updates or deletes), declare
- * the $Disabled property on the subclass.
+ * To disable the task (in the case of potentially destructive updates or deletes), change the
+ * `enabled` property on the subclass to true.
  */
 abstract class BuildTask extends Object
 {
@@ -27,7 +27,7 @@ abstract class BuildTask extends Object
      * @var bool $enabled If set to FALSE, keep it from showing in the list
      * and from being executable through URL or CLI.
      */
-    protected $enabled = true;
+    private static $enabled = true;
 
     /**
      * @var string $title Shown in the overview on the {@link TaskRunner}
@@ -55,7 +55,7 @@ abstract class BuildTask extends Object
      */
     public function isEnabled()
     {
-        return $this->enabled;
+        return static::config()->enabled;
     }
 
     /**
