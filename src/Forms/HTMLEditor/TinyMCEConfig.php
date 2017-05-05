@@ -645,18 +645,22 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
 
         // tinyMCE JS requirement
-        if (file_exists($this->getTinyMCEPath() . '/tiny_mce_gzip.php')) {
-            require_once $this->getTinyMCEPath() . '/tiny_mce_gzip.php';
-            $tag = TinyMCE_Compressor::renderTag(array(
-                'url' => $this->getTinyMCEPath() . '/tiny_mce_gzip.php',
-                'plugins' => implode(',', $this->getInternalPlugins()),
-                'themes' => $this->getTheme(),
-                'languages' => $this->getOption('language')
-            ), true);
-            preg_match('/src="([^"]*)"/', $tag, $matches);
-
-            return html_entity_decode($matches[1]);
+        $gzipPath = BASE_PATH . '/' . $this->getTinyMCEPath() . '/tiny_mce_gzip.php';
+        if (!file_exists($gzipPath)) {
+            throw new Exception("HTMLEditorField.use_gzip enabled, but file $gzipPath does not exist!");
         }
+
+        require_once $gzipPath;
+
+        $tag = TinyMCE_Compressor::renderTag(array(
+            'url' => $this->getTinyMCEPath() . '/tiny_mce_gzip.php',
+            'plugins' => implode(',', $this->getInternalPlugins()),
+            'themes' => $this->getTheme(),
+            'languages' => $this->getOption('language')
+        ), true);
+        preg_match('/src="([^"]*)"/', $tag, $matches);
+
+        return html_entity_decode($matches[1]);
     }
 
     public function init()
@@ -686,7 +690,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     public function getAdminPath()
     {
-        $module = ModuleLoader::instance()->getManifest()->getModule('silverstripe/admin');
+        $module = $this->getAdminModule();
         if ($module) {
             return $module->getRelativePath();
         }
@@ -703,8 +707,8 @@ class TinyMCEConfig extends HTMLEditorConfig
             return $configDir;
         }
 
-        if ($this->getAdminPath()) {
-            return ltrim($this->getAdminPath() . '/thirdparty/tinymce', '/');
+        if ($admin = $this->getAdminModule()) {
+            return $admin->getResourcePath('thirdparty/tinymce');
         }
 
         throw new Exception(sprintf(
@@ -712,5 +716,13 @@ class TinyMCEConfig extends HTMLEditorConfig
             you must set the TinyMCE path in %s.base_dir',
             __CLASS__
         ));
+    }
+
+    /**
+     * @return \SilverStripe\Core\Manifest\Module
+     */
+    protected function getAdminModule()
+    {
+        return ModuleLoader::instance()->getManifest()->getModule('silverstripe/admin');
     }
 }

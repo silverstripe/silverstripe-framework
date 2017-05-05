@@ -21,6 +21,7 @@ use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\DummyMediaFormFieldExtension;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class HTMLEditorFieldTest extends FunctionalTest
 {
@@ -77,6 +78,10 @@ class HTMLEditorFieldTest extends FunctionalTest
 
     public function testCasting()
     {
+        // Shim TinyMCE so silverstripe/admin doesn't have to be installed
+        TinyMCEConfig::config()->set('base_dir', 'test');
+        HtmlEditorField::config()->set('use_gzip', false);
+
         // Test special characters
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new HTMLEditorField("Test", "Test");

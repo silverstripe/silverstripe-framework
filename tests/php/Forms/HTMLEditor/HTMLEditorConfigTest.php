@@ -11,6 +11,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use \Exception;
 
 class HTMLEditorConfigTest extends SapphireTest
 {
@@ -195,14 +196,31 @@ class HTMLEditorConfigTest extends SapphireTest
             false
         ));
         $c = new TinyMCEConfig();
-        $exception = null;
-        try {
-            $c->getScriptURL();
-        } catch (\Exception $e) {
-            $exception = $e->getMessage();
-        }
 
-        $this->assertNotNull($exception);
+        $this->setExpectedExceptionRegExp(
+            Exception::class,
+            '/module is not installed/'
+        );
+
+        $c->getScriptURL();
+
         ModuleLoader::instance()->popManifest();
+    }
+
+    public function testExceptionThrownWhenTinyMCEGZipPathDoesntExist()
+    {
+        HTMLEditorField::config()->set('use_gzip', true);
+        $stub = $this->getMockBuilder(TinyMCEConfig::class)
+            ->setMethods(['getTinyMCEPath'])
+            ->getMock();
+        $stub->method('getTinyMCEPath')
+            ->willReturn('fail');
+
+        $this->setExpectedExceptionRegExp(
+            Exception::class,
+            '/does not exist/'
+        );
+
+        $stub->getScriptURL();
     }
 }
