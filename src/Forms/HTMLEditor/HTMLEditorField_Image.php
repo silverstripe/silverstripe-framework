@@ -94,7 +94,7 @@ class HTMLEditorField_Image extends HTMLEditorField_File
                 'ClickableURL',
                 ReadonlyField::create(
                     "OriginalWidth",
-                    _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.WIDTH', 'Width'),
+                    _t(__CLASS__.'.WIDTH', 'Width'),
                     $width
                 )
             );
@@ -102,7 +102,7 @@ class HTMLEditorField_Image extends HTMLEditorField_File
                 'OriginalWidth',
                 ReadonlyField::create(
                     "OriginalHeight",
-                    _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.HEIGHT', 'Height'),
+                    _t(__CLASS__.'.HEIGHT', 'Height'),
                     $height
                 )
             );

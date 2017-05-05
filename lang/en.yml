@@ -1,4 +1,9 @@
 en:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensions
+    EDIT: Edit
+    EDITINFO: 'Edit this file'
+    REMOVE: Remove
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
@@ -6,7 +11,7 @@ en:
     HELLO: Hi
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Invalid request'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
@@ -42,6 +47,8 @@ en:
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'File information not found'
   SilverStripe\Forms\Form:
     BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
@@ -50,11 +57,13 @@ en:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
-    SubmitBtnLabel: Go
   SilverStripe\Forms\FormField:
     EXAMPLE: 'e.g. {format}'
     NONE: none
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Main
   SilverStripe\Forms\GridField\GridField:
     Add: 'Add {name}'
     CSVEXPORT: 'Export to CSV'
@@ -65,16 +74,13 @@ en:
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
-    OF: of
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    Page: Page
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     Print: Print
     RelationSearch: 'Relation search'
     ResetFilter: Reset
-    View: View
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -90,6 +96,10 @@ en:
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: of
+    Page: Page
+    View: View
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
     ANCHORSPAGENOTFOUND: 'Target page not found.'
@@ -109,27 +119,38 @@ en:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_File:
+    CREATED: 'First uploaded'
+    LASTEDIT: 'Last changed'
+    SIZE: 'File size'
+    TYPE: 'File type'
+    URL: URL
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image:
+    HEIGHT: Height
+    WIDTH: Width
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
+    ANCHORVALUE: Anchor
+    EMAIL: 'Email address'
     ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
     ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
     ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
     ERROR_NOTFOUND: 'Unable to find file to view'
     ERROR_OEMBED_REMOTE: 'Embed is only compatible with remote files'
     ERROR_SCHEME: 'This file scheme is not included in the whitelist'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    HOURNOLEADING: 'Hour without leading zero, 12 hour format'
-    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITYEAR: 'Two-digit year'
-    Toggle: 'Show formatting help'
+    FILE: File
+    LINK: 'Insert Link'
+    LINKANCHOR: 'Link to an anchor on this page'
+    LINKDESCR: 'Link description'
+    LINKDETAILS: 'Link details'
+    LINKEMAIL: 'Link to an email address'
+    LINKEXTERNAL: 'Link to another website'
+    LINKFILE: 'Link to download a file'
+    LINKINTERNAL: 'Link to a page on this site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link type'
+    PAGE: Page
+    SUBJECT: 'Email subject'
+    URL: URL
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -194,6 +215,7 @@ en:
     BUTTONFORGOTPASSWORD: 'Forgot password?'
     BUTTONLOGIN: 'Log back in'
     BUTTONLOGOUT: 'Log out'
+    PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
     LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
@@ -207,15 +229,21 @@ en:
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
+    GROUPNAME: 'Group name'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     HierarchyPermsError: 'Can''t assign parent group "%s" with privileged permissions (requires ADMIN access)'
     Locked: 'Locked?'
+    MEMBERS: Members
+    NEWGROUP: 'New Group'
     NoRoles: 'No roles found'
+    PERMISSIONS: Permissions
     PLURALNAME: Groups
     PLURALS:
       one: 'A Group'
       other: '{count} Groups'
     Parent: 'Parent Group'
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     RolesAddEditLink: 'Manage roles'
     SINGULARNAME: Group
     Sort: 'Sort Order'
@@ -223,6 +251,7 @@ en:
     many_many_Members: Members
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Address'
+    LoginAttempt.Email: 'Email Address'
     PLURALNAME: 'Login Attempts'
     PLURALS:
       one: 'A Login Attempt'
@@ -233,13 +262,16 @@ en:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
+    BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     CURRENT_PASSWORD: 'Current Password'
     DefaultAdminFirstname: 'Default Admin'
     EDIT_PASSWORD: 'New Password'
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
@@ -251,6 +283,7 @@ en:
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
+    PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
     PLURALS:
       one: 'A Member'
@@ -258,6 +291,7 @@ en:
     REMEMBERME: 'Remember me next time? (for %d days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -267,7 +301,6 @@ en:
     db_LockedOutUntil: 'Locked out until'
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
-    CANTEDIT: 'You don''t have permission to do that'
   SilverStripe\Security\MemberLoginForm:
     AUTHENTICATORNAME: 'E-mail &amp; Password'
   SilverStripe\Security\MemberPassword:
@@ -282,15 +315,17 @@ en:
     TOOSHORT: 'Password is too short, it must be %s or more characters long'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    CONTENT_CATEGORY: 'Content permissions'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
     PLURALNAME: Permissions
     PLURALS:
       one: 'A Permission'
       other: '{count} Permissions'
     SINGULARNAME: Permission
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
-    CONTENT_CATEGORY: 'Content permissions'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -319,6 +354,7 @@ en:
     SINGULARNAME: 'Login Hash'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
     ENTERNEWPASSWORD: 'Please enter a new password.'

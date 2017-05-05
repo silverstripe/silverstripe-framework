@@ -5,18 +5,18 @@
 			<div class="grid-field__paginator__controls datagrid-pagination">
 				$FirstPage $PreviousPage
 				<span class="pagination-page-number">
-					<%t SilverStripe\Forms\GridField\GridField.Page 'Page' %>
+					<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.Page 'Page' %>
 					<input class="text" title="Current page" value="$CurrentPageNum" data-skip-autofocus="true" />
-					<%t SilverStripe\Forms\GridField\GridField.OF 'of' is 'Example: View 1 of 2' %>
+					<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.OF 'of' is 'Example: View 1 of 2' %>
 					$NumPages
 				</span>
 				$NextPage $LastPage
 			</div>
 		<% end_if %>
 		<span class="grid-field__paginator_numbers pagination-records-number">
-			<%t SilverStripe\Forms\GridField\GridField.View 'View' is 'Verb. Example: View 1 of 2' %>
+			<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.View 'View' is 'Verb. Example: View 1 of 2' %>
 			{$FirstShownRecord}&ndash;{$LastShownRecord}
-			<%t SilverStripe\Forms\GridField\GridField.OF 'of' is 'Example: View 1 of 2' %>
+			<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.OF 'of' is 'Example: View 1 of 2' %>
 			$NumRecords
 		</span>
 	</td>

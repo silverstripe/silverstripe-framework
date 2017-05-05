@@ -16,15 +16,15 @@
 				<% end_loop %>
 				<% else %>
 					<tr>
-						<td colspan="$Header.Count"><p><%t SilverStripe\Forms\GridField\GridField.NoItemsFound 'No items found' %></p></td>
+						<td colspan="$Header.Count"><p><%t SilverStripe\\Forms\\GridField\\GridField.NoItemsFound 'No items found' %></p></td>
 					</tr>
 				<% end_if %>
 			</tbody>
 		</table>
 		<p>
-			<%t SilverStripe\Forms\GridField\GridField.PRINTEDAT 'Printed at' %> $Datetime.Time, $Datetime.Date
+			<%t SilverStripe\\Forms\\GridField\\GridField.PRINTEDAT 'Printed at' %> $Datetime.Time, $Datetime.Date
 			<br />
-			<%t SilverStripe\Forms\GridField\GridField.PRINTEDBY 'Printed by' %> $Member.Name
+			<%t SilverStripe\\Forms\\GridField\\GridField.PRINTEDBY 'Printed by' %> $Member.Name
 		</p>
 	</body>
 

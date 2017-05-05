@@ -98,7 +98,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
     {
         $siteTree = TreeDropdownField::create(
             'internal',
-            _t('HTMLEditorField.PAGE', "Page"),
+            _t(__CLASS__.'.PAGE', "Page"),
             SiteTree::class,
             'ID',
             'MenuTitle',
@@ -119,7 +119,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
                         'Heading',
                         sprintf(
                             '<h3 class="htmleditorfield-linkform-heading insert">%s</h3>',
-                            _t('HTMLEditorField.LINK', 'Insert Link')
+                            _t(__CLASS__.'.LINK', 'Insert Link')
                         )
                     )
                 ),
@@ -128,38 +128,38 @@ class HTMLEditorField_Toolbar extends RequestHandler
                         'LinkType',
                         DBField::create_field(
                             'HTMLFragment',
-                            sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTO', 'Link type'))
+                            sprintf($numericLabelTmpl, '1', _t(__CLASS__.'.LINKTO', 'Link type'))
                         ),
                         array(
-                            'internal' => _t('HTMLEditorField.LINKINTERNAL', 'Link to a page on this site'),
-                            'external' => _t('HTMLEditorField.LINKEXTERNAL', 'Link to another website'),
-                            'anchor' => _t('HTMLEditorField.LINKANCHOR', 'Link to an anchor on this page'),
-                            'email' => _t('HTMLEditorField.LINKEMAIL', 'Link to an email address'),
-                            'file' => _t('HTMLEditorField.LINKFILE', 'Link to download a file'),
+                            'internal' => _t(__CLASS__.'.LINKINTERNAL', 'Link to a page on this site'),
+                            'external' => _t(__CLASS__.'.LINKEXTERNAL', 'Link to another website'),
+                            'anchor' => _t(__CLASS__.'.LINKANCHOR', 'Link to an anchor on this page'),
+                            'email' => _t(__CLASS__.'.LINKEMAIL', 'Link to an email address'),
+                            'file' => _t(__CLASS__.'.LINKFILE', 'Link to download a file'),
                         ),
                         'internal'
                     ),
                     LiteralField::create(
                         'Step2',
                         '<div class="step2">'
-                        . sprintf($numericLabelTmpl, '2', _t('HTMLEditorField.LINKDETAILS', 'Link details')) . '</div>'
+                        . sprintf($numericLabelTmpl, '2', _t(__CLASS__.'.LINKDETAILS', 'Link details')) . '</div>'
                     ),
                     $siteTree,
-                    TextField::create('external', _t('HTMLEditorField.URL', 'URL'), 'http://'),
-                    EmailField::create('email', _t('HTMLEditorField.EMAIL', 'Email address')),
+                    TextField::create('external', _t(__CLASS__.'.URL', 'URL'), 'http://'),
+                    EmailField::create('email', _t(__CLASS__.'.EMAIL', 'Email address')),
                     $fileField = TreeDropdownField::create(
                         'file',
-                        _t('HTMLEditorField.FILE', 'File'),
+                        _t(__CLASS__.'.FILE', 'File'),
                         File::class,
                         'ID',
                         'Name'
                     ),
-                    TextField::create('Anchor', _t('HTMLEditorField.ANCHORVALUE', 'Anchor')),
-                    TextField::create('Subject', _t('HTMLEditorField.SUBJECT', 'Email subject')),
-                    TextField::create('Description', _t('HTMLEditorField.LINKDESCR', 'Link description')),
+                    TextField::create('Anchor', _t(__CLASS__.'.ANCHORVALUE', 'Anchor')),
+                    TextField::create('Subject', _t(__CLASS__.'.SUBJECT', 'Email subject')),
+                    TextField::create('Description', _t(__CLASS__.'.LINKDESCR', 'Link description')),
                     CheckboxField::create(
                         'TargetBlank',
-                        _t('HTMLEditorField.LINKOPENNEWWIN', 'Open link in a new window?')
+                        _t(__CLASS__.'.LINKOPENNEWWIN', 'Open link in a new window?')
                     ),
                     HiddenField::create('Locale', null, $this->controller->Locale)
                 )

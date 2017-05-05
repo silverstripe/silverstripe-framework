@@ -700,12 +700,12 @@ class Security extends Controller implements TemplateGlobalProvider
             Config::inst()->get('Authenticator', 'default_authenticator'),
             'LostPasswordForm',
             new FieldList(
-                new EmailField('Email', _t('Member.EMAIL', 'Email'))
+                new EmailField('Email', _t('SilverStripe\\Security\\Member.EMAIL', 'Email'))
             ),
             new FieldList(
                 new FormAction(
                     'forgotPassword',
-                    _t('Security.BUTTONSEND', 'Send me the password reset link')
+                    _t(__CLASS__.'.BUTTONSEND', 'Send me the password reset link')
                 )
             ),
             false

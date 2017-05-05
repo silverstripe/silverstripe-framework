@@ -394,7 +394,7 @@ class DatetimeField extends TextField
      * Tidy up the internal date representation (ISO 8601),
      * and fall back to strtotime() if there's parsing errors.
      *
-     * @param string $date Date in ISO 8601 or approximate form
+     * @param string $datetime Date in ISO 8601 or approximate form
      * @return string ISO 8601 date, or null if not valid
      */
     public function tidyInternal($datetime)
@@ -569,7 +569,7 @@ class DatetimeField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    'SilverStripe\\Forms\\DatetimeField.VALIDDATETIMEFORMAT',
+                    __CLASS__.'.VALIDDATETIMEFORMAT',
                     "Please enter a valid date and time format ({format})",
                     ['format' => $this->getDatetimeFormat()]
                 )
@@ -585,7 +585,7 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'SilverStripe\\Forms\\DatetimeField.VALIDDATETIMEMINDATE',
+                        __CLASS__.'.VALIDDATETIMEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(
@@ -610,7 +610,7 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'SilverStripe\\Forms\\DatetimeField.VALIDDATEMAXDATETIME',
+                        __CLASS__.'.VALIDDATEMAXDATETIME',
                         "Your date has to be older or matching the maximum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(
