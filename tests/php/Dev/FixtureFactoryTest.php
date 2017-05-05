@@ -172,4 +172,19 @@ class FixtureFactoryTest extends SapphireTest
             DataObjectRelation::get()->byID($relation1->ID)
         );
     }
+
+    public function testGetByClassOrTable()
+    {
+        $factory = new FixtureFactory();
+        $obj1 = $factory->createObject(TestDataObject::class, 'object-one', [ 'Name' => 'test one' ]);
+        $this->assertInstanceOf(TestDataObject::class, $factory->get(TestDataObject::class, 'object-one'));
+        $this->assertEquals('test one', $factory->get(TestDataObject::class, 'object-one')->Name);
+
+        $obj2 = $factory->createRaw('FixtureFactoryTest_TestDataObject', 'object-two', [ 'Name' => 'test two' ]);
+        $this->assertInstanceOf(
+            TestDataObject::class,
+            $factory->get('FixtureFactoryTest_TestDataObject', 'object-two')
+        );
+        $this->assertEquals('test two', $factory->get('FixtureFactoryTest_TestDataObject', 'object-two')->Name);
+    }
 }

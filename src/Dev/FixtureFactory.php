@@ -135,7 +135,7 @@ class FixtureFactory
     /**
      * Return all of the IDs in the fixture of a particular class name.
      *
-     * @param string $class
+     * @param string $class The data class or table name
      * @return array|false A map of fixture-identifier => object-id
      */
     public function getIds($class)
@@ -162,7 +162,7 @@ class FixtureFactory
     /**
      * Get an object from the fixture.
      *
-     * @param string $class The data class, as specified in your fixture file.  Parent classes won't work
+     * @param string $class The data class or table name, as specified in your fixture file.  Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return DataObject
      */
@@ -172,6 +172,17 @@ class FixtureFactory
         if (!$id) {
             return null;
         }
+
+        // If the class doesn't exist, look for a table instead
+        if (!class_exists($class)) {
+            $tableNames = DataObject::getSchema()->getTableNames();
+            $potential = array_search($class, $tableNames);
+            if (!$potential) {
+                throw new \LogicException("'$class' is neither a class nor a table name");
+            }
+            $class = $potential;
+        }
+
         return DataObject::get_by_id($class, $id);
     }
 
@@ -240,7 +251,11 @@ class FixtureFactory
     {
         if (substr($value, 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
-            list($class, $identifier) = explode('.', substr($value, 2), 2);
+            if (strpos($value, '.') !== false) {
+                list($class, $identifier) = explode('.', substr($value, 2), 2);
+            } else {
+                throw new \LogicException("Bad fixture lookup identifier: " . $value);
+            }
 
             if ($this->fixtures && !isset($this->fixtures[$class][$identifier])) {
                 throw new InvalidArgumentException(sprintf(
