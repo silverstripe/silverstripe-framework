@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Admin\Forms\EditorExternalLinkFormFactory;
+use SilverStripe\Admin\Forms\EditorEmailLinkFormFactory;
 use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -36,6 +37,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
     private static $allowed_actions = array(
         'LinkForm',
         'EditorExternalLink',
+        'EditorEmailLink',
         'viewfile',
         'getanchors'
     );
@@ -195,6 +197,22 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $factory = Injector::inst()->get(EditorExternalLinkFormFactory::class);
         if ($factory) {
             return $factory->getForm($this->controller, "{$this->name}/EditorExternalLink");
+        }
+        return null;
+    }
+    
+    /**
+     * Builds and returns the external link form
+     *
+     * @return null|Form
+     */
+    public function EditorEmailLink($id = null)
+    {
+        /** @var EditorEmailLinkFormFactory $factory */
+        $factory = Injector::inst()->get(EditorEmailLinkFormFactory::class);
+        
+        if ($factory) {
+            return $factory->getForm($this->controller, "{$this->name}/EditorEmailLink");
         }
         return null;
     }
