@@ -428,6 +428,18 @@ class Security extends Controller implements TemplateGlobalProvider
         ));
     }
 
+    private static $currentUser;
+
+    public static function setCurrentUser($currentUser)
+    {
+        self::$currentUser = $currentUser;
+    }
+
+    public static function getCurrentUser()
+    {
+        return self::$currentUser;
+    }
+
     /**
      * Get the login forms for all available authentication methods
      *

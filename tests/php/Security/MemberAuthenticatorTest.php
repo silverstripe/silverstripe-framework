@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
@@ -13,6 +14,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\Authenticator;
 use SilverStripe\Security\MemberAuthenticator\LoginForm;
 use SilverStripe\Security\CMSMemberLoginForm;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -103,7 +105,7 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertEmpty($tempID);
 
         // If the user logs in then they have a temp id
-        $member->logIn(true);
+        Injector::inst()->get(IdentityStore::class)->logIn($member, true, new HTTPRequest('GET', '/'));
         $tempID = $member->TempIDHash;
         $this->assertNotEmpty($tempID);
 

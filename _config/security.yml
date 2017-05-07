@@ -8,5 +8,26 @@ SilverStripe\Security\Security:
     default: SilverStripe\Security\MemberAuthenticator\Authenticator
     cms: SilverStripe\Security\MemberAuthenticator\CMSAuthenticator
 
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\RequestProcessor:
+    properties:
+      filters:
+        - '%$SilverStripe\Security\AuthenticationRequestFilter'
+  SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
+    properties:
+      SessionVariable: loggedInAs
+  SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler:
+    properties:
+      TokenCookieName: alc_enc
+      DeviceCookieName: alc_device
+      CascadeLogInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+  SilverStripe\Security\IdentityStore:
+    class: SilverStripe\Security\AuthenticationRequestFilter
+
+SilverStripe\Security\AuthenticationRequestFilter:
+  handlers:
+    session: SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+    alc: SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
+
 SilverStripe\Security\MemberAuthenticator\CMSSecurity:
   reauth_enabled: true

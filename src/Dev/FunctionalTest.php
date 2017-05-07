@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use PHPUnit_Framework_AssertionFailedError;
@@ -103,6 +104,9 @@ class FunctionalTest extends SapphireTest
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
         BasicAuth::protect_entire_site(false);
+
+        $this->session()->inst_clear('loggedInAs');
+        Security::setCurrentUser(null);
 
         SecurityToken::disable();
     }
@@ -401,15 +405,26 @@ class FunctionalTest extends SapphireTest
      */
     public function logInAs($member)
     {
-        if (is_object($member)) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = $this->idFromFixture('SilverStripe\\Security\\Member', $member);
+        if (is_numeric($member)) {
+            $member = DataObject::get_by_id(Member::class, $member);
+        } elseif (!is_object($member)) {
+            $member = $this->objFromFixture('SilverStripe\\Security\\Member', $member);
         }
 
-        $this->session()->inst_set('loggedInAs', $memberID);
+        $this->session()->inst_set('loggedInAs', $member->ID);
+        Security::setCurrentUser($member);
+    }
+
+
+    /**
+     * Log in as the given member
+     *
+     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
+     */
+    public function logOut()
+    {
+        $this->session()->inst_set('loggedInAs', null);
+        Security::setCurrentUser(null);
     }
 
     /**

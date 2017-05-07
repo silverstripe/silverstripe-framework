@@ -3,12 +3,13 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\FormRequestHandler;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-
+use SilverStripe\Security\IdentityStore;
 
 class ChangePasswordHandler extends FormRequestHandler
 {
@@ -18,7 +19,7 @@ class ChangePasswordHandler extends FormRequestHandler
      * @param array $data The user submitted data
      * @return HTTPResponse
      */
-    public function doChangePassword(array $data)
+    public function doChangePassword(array $data, $form)
     {
         $member = Member::currentUser();
         // The user was logged in, check the current password
@@ -80,7 +81,8 @@ class ChangePasswordHandler extends FormRequestHandler
         $member->write();
 
         if ($member->canLogIn()->isValid()) {
-            $member->logIn();
+            Injector::inst()->get(IdentityStore::class)
+                ->logIn($member, false, $form->getRequestHandler()->getRequest());
         }
 
         // TODO Add confirmation message to login redirect

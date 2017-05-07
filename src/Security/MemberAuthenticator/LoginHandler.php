@@ -9,6 +9,8 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 
 /**
  * Handle login requests from MemberLoginForm
@@ -99,7 +101,7 @@ class LoginHandler extends RequestHandler
 
         // Successful login
         if ($member = $this->checkLogin($data, $failureMessage)) {
-            $this->performLogin($member, $data);
+            $this->performLogin($member, $data, $form->getRequestHandler()->getRequest());
             return $this->redirectAfterSuccessfulLogin();
         }
 
@@ -220,9 +222,10 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function performLogin($member, $data)
+    public function performLogin($member, $data, $request)
     {
-        $member->logIn(isset($data['Remember']));
+        // @todo pass request/response
+        Injector::inst()->get(IdentityStore::class)->logIn($member, !empty($data['Remember']), $request);
         return $member;
     }
     /**

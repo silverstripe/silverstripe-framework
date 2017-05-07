@@ -391,33 +391,6 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Regenerate the session_id.
-     * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.
-     * They have caused problems in certain
-     * quirky problems (such as using the Windmill 0.3.6 proxy).
-     */
-    public static function session_regenerate_id()
-    {
-        if (!self::config()->session_regenerate_id) {
-            return;
-        }
-
-        // This can be called via CLI during testing.
-        if (Director::is_cli()) {
-            return;
-        }
-
-        $file = '';
-        $line = '';
-
-        // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-        // There's nothing we can do about this, because it's an operating system function!
-        if (!headers_sent($file, $line)) {
-            @session_regenerate_id(true);
-        }
-    }
-
-    /**
      * Set a {@link PasswordValidator} object to use to validate member's passwords.
      *
      * @param PasswordValidator $pv
@@ -447,52 +420,34 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Logs this member in
+     * @deprecated Use Security::setCurrentUser() or IdentityStore::logIn()
      *
      * @param bool $remember If set to TRUE, the member will be logged in automatically the next time.
      */
-    public function logIn($remember = false)
+    public function logIn()
     {
+        user_error("This method is deprecated and now only logs in for the current request", E_USER_WARNING);
+        Security::setCurrentUser($this);
+    }
+
+    /**
+     * Called before a member is logged in via session/cookie/etc
+     */
+    public function beforeMemberLoggedIn()
+    {
+        // @todo Move to middleware on the AuthenticationRequestFilter IdentityStore
         $this->extend('beforeMemberLoggedIn');
+    }
 
-        self::session_regenerate_id();
-
-        Session::set("loggedInAs", $this->ID);
-        // This lets apache rules detect whether the user has logged in
-        if (Member::config()->login_marker_cookie) {
-            Cookie::set(Member::config()->login_marker_cookie, 1, 0);
-        }
-
-        if (Security::config()->autologin_enabled) {
-        // Cleans up any potential previous hash for this member on this device
-            if ($alcDevice = Cookie::get('alc_device')) {
-                RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
-            }
-            if ($remember) {
-                $rememberLoginHash = RememberLoginHash::generate($this);
-                $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-                $deviceExpiryDays = RememberLoginHash::config()->uninherited('device_expiry_days');
-                Cookie::set(
-                    'alc_enc',
-                    $this->ID . ':' . $rememberLoginHash->getToken(),
-                    $tokenExpiryDays,
-                    null,
-                    null,
-                    null,
-                    true
-                );
-                Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
-            } else {
-                Cookie::set('alc_enc', null);
-                Cookie::set('alc_device', null);
-                Cookie::force_expiry('alc_enc');
-                Cookie::force_expiry('alc_device');
-            }
-        }
+    /**
+     * Called after a member is logged in via session/cookie/etc
+     */
+    public function afterMemberLoggedIn()
+    {
         // Clear the incorrect log-in count
         $this->registerSuccessfulLogin();
 
-            $this->LockedOutUntil = null;
+        $this->LockedOutUntil = null;
 
         $this->regenerateTempID();
 
@@ -539,91 +494,37 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Log the user in if the "remember login" cookie is set
-     *
-     * The <i>remember login token</i> will be changed on every successful
-     * auto-login.
+     * Logs this member out.
      */
-    public static function autoLogin()
+    public function logOut()
     {
-        // Don't bother trying this multiple times
-        if (!class_exists(SapphireTest::class, false) || !SapphireTest::is_running_test()) {
-            self::$_already_tried_to_auto_log_in = true;
+        $this->extend('beforeMemberLoggedOut');
+
+        Session::clear("loggedInAs");
+        if (Member::config()->login_marker_cookie) {
+            Cookie::set(Member::config()->login_marker_cookie, null, 0);
         }
 
-        if (!Security::config()->autologin_enabled
-            || strpos(Cookie::get('alc_enc'), ':') === false
-            || Session::get("loggedInAs")
-            || !Security::database_is_ready()
-        ) {
-            return;
-        }
+        Session::destroy();
 
-        if (strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
-            list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+        $this->extend('memberLoggedOut');
 
-            if (!$uid || !$token) {
-                return;
-            }
+        // Clears any potential previous hashes for this member
+        RememberLoginHash::clear($this, Cookie::get('alc_device'));
 
-            $deviceID = Cookie::get('alc_device');
+        Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
+        Cookie::force_expiry('alc_enc');
+        Cookie::set('alc_device', null);
+        Cookie::force_expiry('alc_device');
 
-            /** @var Member $member */
-            $member = Member::get()->byID($uid);
+        // Switch back to live in order to avoid infinite loops when
+        // redirecting to the login screen (if this login screen is versioned)
+        Session::clear('readingMode');
 
-            /** @var RememberLoginHash $rememberLoginHash */
-            $rememberLoginHash = null;
+        $this->write();
 
-            // check if autologin token matches
-            if ($member) {
-                $hash = $member->encryptWithUserSettings($token);
-                $rememberLoginHash = RememberLoginHash::get()
-                    ->filter(array(
-                        'MemberID' => $member->ID,
-                        'DeviceID' => $deviceID,
-                        'Hash' => $hash
-                    ))->first();
-                if (!$rememberLoginHash) {
-                    $member = null;
-                } else {
-                    // Check for expired token
-                    $expiryDate = new DateTime($rememberLoginHash->ExpiryDate);
-                    $now = DBDatetime::now();
-                    $now = new DateTime($now->Rfc2822());
-                    if ($now > $expiryDate) {
-                        $member = null;
-                    }
-                }
-            }
-
-            if ($member) {
-                self::session_regenerate_id();
-                Session::set("loggedInAs", $member->ID);
-                // This lets apache rules detect whether the user has logged in
-                if (Member::config()->login_marker_cookie) {
-                    Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
-                }
-
-                if ($rememberLoginHash) {
-                    $rememberLoginHash->renew();
-                    $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-                    Cookie::set(
-                        'alc_enc',
-                        $member->ID . ':' . $rememberLoginHash->getToken(),
-                        $tokenExpiryDays,
-                        null,
-                        null,
-                        false,
-                        true
-                    );
-                }
-
-                $member->write();
-
-                // Audit logging hook
-                $member->extend('memberAutoLoggedIn');
-            }
-        }
+        // Audit logging hook
+        $this->extend('memberLoggedOut');
     }
 
     /**
@@ -820,19 +721,8 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function currentUser()
     {
-        $id = Member::currentUserID();
-
-        if ($id) {
-            return DataObject::get_by_id(Member::class, $id);
-        }
+        return Security::getCurrentUser();
     }
-
-    /**
-     * Allow override of the current user ID
-     *
-     * @var int|null Set to null to fallback to session, or an explicit ID
-     */
-    protected static $overrideID = null;
 
     /**
      * Temporarily act as the specified user, limited to a $callback, but
@@ -851,13 +741,18 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function actAs($member, $callback)
     {
-        $id = ($member instanceof Member ? $member->ID : $member) ?: 0;
-        $previousID = static::$overrideID;
-        static::$overrideID = $id;
+        $previousUser = Security::getCurrentUser();
+
+        // Transform ID to member
+        if (is_numeric($member)) {
+            $member = DataObject::get_by_id(Member::class, $member);
+        }
+        Security::setCurrentUser($member);
+
         try {
             return $callback();
         } finally {
-            static::$overrideID = $previousID;
+            Security::setCurrentUser($previousUser);
         }
     }
 
@@ -868,21 +763,12 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function currentUserID()
     {
-        if (isset(static::$overrideID)) {
-            return static::$overrideID;
+        if ($member = Security::getCurrentUser()) {
+            return $member->ID;
+        } else {
+            return 0;
         }
-
-        $id = Session::get("loggedInAs");
-        if (!$id && !self::$_already_tried_to_auto_log_in) {
-            self::autoLogin();
-            $id = Session::get("loggedInAs");
-        }
-
-        return is_numeric($id) ? $id : 0;
     }
-
-    private static $_already_tried_to_auto_log_in = false;
-
 
     /*
 	 * Generate a random password, with randomiser to kick in if there's no words file on the

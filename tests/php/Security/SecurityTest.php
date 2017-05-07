@@ -378,6 +378,8 @@ class SecurityTest extends FunctionalTest
         );
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
+        $this->logOut();
+
         /* EXPIRED PASSWORDS ARE SENT TO THE CHANGE PASSWORD FORM */
         $expiredResponse = $this->doTestLoginForm('expired@silverstripe.com', '1nitialPassword');
         $this->assertEquals(302, $expiredResponse->getStatusCode());
@@ -415,6 +417,7 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
         // Check if we can login with the new password
+        $this->logOut();
         $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals(
@@ -460,6 +463,7 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
         // Check if we can login with the new password
+        $this->logOut();
         $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
@@ -532,7 +536,7 @@ class SecurityTest extends FunctionalTest
         );
 
         // Log the user out
-        $this->session()->inst_set('loggedInAs', null);
+        $this->logOut();
 
         // Login again with wrong password, but less attempts than threshold
         for ($i = 1; $i < Member::config()->lock_out_after_incorrect_logins; $i++) {
