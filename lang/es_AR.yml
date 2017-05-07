@@ -1,10 +1,4 @@
 es_AR:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
-    HELLO: Hola
-    TEXT1: 'Aquí esta tu'
-    TEXT2: 'vínculo para restablecer la contraseña'
-    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar Contraseña'
   SilverStripe\Forms\DateField:
@@ -43,22 +37,21 @@ es_AR:
     Locked: '¿Bloqueado?'
     Parent: 'Grupo Superior'
     RolesAddEditLink: 'Agregar/Editar roles'
-    Sort: Ordenar
+    Sort: 'Ordenar'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   SilverStripe\Security\LoginAttempt:
-    Email: 'Dirección Email'
     IP: 'Dirección IP'
     Status: Estado
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: Acceder
+    BUTTONLOGIN: 'Acceder'
     BUTTONLOGINOTHER: 'Ingresar como otra persona'
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
     DefaultAdminFirstname: 'Administrador por defecto'
-    EMAIL: 'Dirección Email'
+    EMAIL: Dirección Email
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtelo nuevamente'
     ENTEREMAIL: 'Por favor ingrese una dirección email para obtener un enlace de renovación de la contraseña'
     ERRORNEWPASSWORD: 'Ingresó su nueva contraseña en forma diferente, inténtelo otra vez'
@@ -78,8 +71,8 @@ es_AR:
     db_PasswordExpiry: 'Fecha Vencimiento de Contraseña'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
-    FULLADMINRIGHTS: 'Privilegios administrativos completos'
     CONTENT_CATEGORY: 'Permisos de contenido'
+    FULLADMINRIGHTS: 'Privilegios administrativos completos'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado desde el rol "%s" en el grupo "%s"'
   SilverStripe\Security\Security:
@@ -89,6 +82,6 @@ es_AR:
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber ingresado al sitio para cambiar la contraseña!'
-    LOGIN: Acceso
+    LOGIN: 'Acceso'
     NOTEPAGESECURED: 'Esta página está protegida. Ingresa tus credenciales abajo y en seguida te enviaremos una autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección email y te enviaremos un enlace con el cual podrás restablecer la contraseña'

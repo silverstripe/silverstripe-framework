@@ -1,9 +1,4 @@
 ro:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
-    HELLO: Salut
-    TEXT2: 'link de resetare a parolei'
-    TEXT3: pentru
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parola trebuie să conțină cel puțin {min} caractere.'
     BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
@@ -35,13 +30,13 @@ ro:
   SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
   SilverStripe\Security\Member:
-    BUTTONLOGIN: Autentificare
+    BUTTONLOGIN: 'Autentificare'
     BUTTONLOSTPASSWORD: 'Am uitat parola'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
     DefaultAdminFirstname: 'Administrator implicit'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
-    FIRSTNAME: Prenume
+    FIRSTNAME: 'Prenume'
     INTERFACELANG: 'Limba interfetei'
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola

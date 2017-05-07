@@ -1,12 +1,6 @@
 sl:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Napačna zahteva'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
-    HELLO: 'Pozdravljeni,'
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za ponastavitev gesla'
-    TEXT3: za
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
@@ -40,9 +34,8 @@ sl:
     LinkExisting: 'Poveži na'
     NewRecord: 'Novih %s'
     NoItemsFound: 'Ni rezultatov'
-    OF: od
     PRINTEDAT: 'Tiskano pri'
-    PRINTEDBY: Natisnil
+    PRINTEDBY: 'Natisnil'
     PlaceHolder: 'Poišči {type} '
     PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
     Print: Natisni
@@ -52,7 +45,7 @@ sl:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-    UnlinkRelation: 'Odstrani povezavo'
+    UnlinkRelation: Odstrani povezavo
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -62,20 +55,6 @@ sl:
     Save: Shrani
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Stran
-    View: Poglej
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Prilagojeno
-    DATEFORMATBAD: 'Zapis datuma je napačen'
-    DAYNOLEADING: 'Dan v mesecu brez zapisa sprednje ničle'
-    DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
-    FOURDIGITYEAR: 'Štirimesten zapis letnice'
-    MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
-    MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
-    Preview: Predogled
-    TWODIGITDAY: 'Dvomestno število za mesec'
-    TWODIGITYEAR: 'Dvomestno število za letnico'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Znesek
     FIELDLABELCURRENCY: Valuta
@@ -114,13 +93,12 @@ sl:
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
   SilverStripe\Security\LoginAttempt:
-    Email: E-naslov
-    IP: IP-naslov
+    IP: 'IP-naslov'
     Status: Stanje
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
-    BUTTONLOGIN: Prijava
+    BUTTONLOGIN: 'Prijava'
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
@@ -132,8 +110,8 @@ sl:
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
-    FIRSTNAME: Ime
-    INTERFACELANG: Jezik
+    FIRSTNAME: 'Ime'
+    INTERFACELANG: 'Jezik'
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     NoPassword: 'Za tega člana ni gesla'
@@ -150,9 +128,9 @@ sl:
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
-    CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromGroup: 'Privzeto iz skupine "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
@@ -165,7 +143,7 @@ sl:
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
-    LOGIN: Prijava
+    LOGIN: 'Prijava'
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'

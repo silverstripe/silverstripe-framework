@@ -1,10 +1,4 @@
 gl_ES:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
-    HELLO: Ola
-    TEXT1: 'Estás aquí'
-    TEXT2: 'ligazón de reinicio do contrasinal'
-    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar Contrasinal'
   SilverStripe\Forms\CurrencyField:
@@ -34,17 +28,6 @@ gl_ES:
     Delete: Eliminar
     DeletePermissionsFailure: 'Non eliminar permisos'
     UnlinkRelation: Desligar
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Personalizado
-    DATEFORMATBAD: 'O formato da data é inválida'
-    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
-    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
-    FOURDIGITYEAR: 'Catro díxitos ano'
-    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
-    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
-    Preview: Previsualizar
-    TWODIGITDAY: 'Dous díxitos día do mes'
-    TWODIGITYEAR: 'Dous díxitos ano'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidade
     FIELDLABELCURRENCY: Moeda
@@ -72,7 +55,6 @@ gl_ES:
     Sort: 'Modo de ordenación'
     has_many_Permissions: Permisos
   SilverStripe\Security\LoginAttempt:
-    Email: 'Enderezo Correo-e'
     IP: 'Enderezo IP'
     Status: Estado
   SilverStripe\Security\Member:
@@ -88,7 +70,7 @@ gl_ES:
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
     ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
     ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
-    FIRSTNAME: Nome
+    FIRSTNAME: 'Nome'
     INTERFACELANG: 'Idioma da Interface'
     NEWPASSWORD: 'Novo Contrasinal'
     PASSWORD: Contrasinal
@@ -103,9 +85,9 @@ gl_ES:
     db_PasswordExpiry: 'Data de expiración do contrasinal'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
+    CONTENT_CATEGORY: 'Permisos do Contido'
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
-    CONTENT_CATEGORY: 'Permisos do Contido'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
   SilverStripe\Security\Security:

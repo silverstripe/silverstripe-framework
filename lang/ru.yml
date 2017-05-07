@@ -1,16 +1,9 @@
 ru:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Неверный запрос'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
-    CHANGEPASSWORDTEXT3: 'Изменить пароль'
-    HELLO: Здравствуйте
-    TEXT1: 'Это ваша'
-    TEXT2: 'ссылка переустановки пароля'
-    TEXT3: для
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Нет
-    YESANSWER: Да
+    NOANSWER: 'Нет'
+    YESANSWER: 'Да'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Пароль должен быть не короче {min} символов.'
     BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
@@ -43,17 +36,16 @@ ru:
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   SilverStripe\Forms\FormField:
-    NONE: 'не выбрано'
+    NONE: не выбрано
   SilverStripe\Forms\GridField\GridField:
     Add: 'Добавить {name}'
     CSVEXPORT: 'Экспорт в CSV'
     Filter: Фильтр
     FilterBy: 'Фильтр по'
     Find: Найти
-    LinkExisting: Связать
+    LinkExisting: 'Связать'
     NewRecord: 'Новый(-ая) %s'
     NoItemsFound: 'Элементов не найдено'
-    OF: из
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
     PlaceHolder: 'Найти {type}'
@@ -66,52 +58,34 @@ ru:
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
-    UnlinkRelation: 'Отменить связь'
+    UnlinkRelation: Отменить связь
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Отмена
     Create: Создать
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
-    Save: 'Сохранить'
+    Save: Сохранить
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 'Редактировать'
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Страница
-    View: Просмотр
+    EDIT: Редактировать
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'У Вас недостаточно прав для доступа к содержимому данной страницы.'
     ANCHORSPAGENOTFOUND: 'Страница не найдена.'
-    ANCHORVALUE: Якорь
     CAPTIONTEXT: 'Текст подписи'
-    CSSCLASS: Выравнивание/Стиль
+    CSSCLASS: 'Выравнивание/Стиль'
     CSSCLASSCENTER: 'По центру без текста по бокам'
     CSSCLASSLEFT: 'Слева с обтеканием текста'
     CSSCLASSLEFTALONE: 'Независимо слева.'
     CSSCLASSRIGHT: 'Справа с обтеканием текста'
-    EMAIL: Email
     IMAGEALT: 'Альтернативный текст (alt)'
     IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
     IMAGEALTTEXTDESC: 'Отображается если в браузере отключены изображения или если изображение недоступно'
-    IMAGEDIMENSIONS: 'Размеры'
+    IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
     IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
     IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
     IMAGEWIDTHPX: Ширина
-    LINK: 'Вставить ссылку'
-    LINKANCHOR: 'Ссылка на область этой страницы'
-    LINKDESCR: 'Описание ссылки'
-    LINKDETAILS: 'Дополнения к ссылке'
-    LINKEMAIL: 'Ссылка на email'
-    LINKEXTERNAL: 'Ссылка на другой сайт или URL'
-    LINKFILE: 'Ссылка на скачивание файла'
-    LINKINTERNAL: 'Ссылка на страницу этого сайта'
-    LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
-    LINKTO: 'Тип ссылки'
-    PAGE: Страница
-    SUBJECT: 'Тема Email письма'
-    URL: Ссылка
     URLNOTANOEMBEDRESOURCE: 'Данная ссылка ''{url}'' не может быть использована для добавления медиа.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Только абсолютные (http://,https://) ссылки могут быть использованы'
@@ -120,26 +94,13 @@ ru:
     ERROR_NOTFOUND: 'Файл не обнаружен'
     ERROR_OEMBED_REMOTE: 'Встраивание доступно только для удалённых файлов'
     ERROR_SCHEME: 'Данный тип файла не поддерживается'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Пользовательский
-    DATEFORMATBAD: 'Неверный формат даты'
-    DAYNOLEADING: 'Число месяца без ведущего нуля'
-    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
-    FOURDIGITYEAR: 'Год: четырьмя цифрами'
-    HOURNOLEADING24: 'Час без предшествующего нуля в 24 часовом формате'
-    MINUTENOLEADING: 'Минуты без ведущего нуля'
-    MONTHNOLEADING: 'Месяц без ведущего нуля'
-    Preview: Просмотр
-    TWODIGITDAY: 'Число месяца: двумя цифрами'
-    TWODIGITYEAR: 'Год: двумя цифрами'
-    Toggle: 'Отобразить справку по форматированию'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Сумма
     FIELDLABELCURRENCY: Валюта
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение(я): {value}'
   SilverStripe\Forms\NullableField:
-    IsNullLabel: Недействительно
+    IsNullLabel: 'Недействительно'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   SilverStripe\Forms\PhoneNumberField:
@@ -147,12 +108,12 @@ ru:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: Объекты
-    SINGULARNAME: Объект
+    PLURALNAME: 'Объекты'
+    SINGULARNAME: 'Объект'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Все
-    NOANSWER: Нет
-    YESANSWER: Да
+    NOANSWER: 'Нет'
+    YESANSWER: 'Да'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'меньше минуты'
     TIMEDIFFAGO: '{difference} назад'
@@ -192,18 +153,17 @@ ru:
     RolesAddEditLink: 'Добавить/редактировать роли'
     SINGULARNAME: Группа
     Sort: 'Порядок сортировки'
-    has_many_Permissions: 'Права групп пользователей'
-    many_many_Members: 'Члены группы'
+    has_many_Permissions: Права групп пользователей
+    many_many_Members: Члены группы
   SilverStripe\Security\LoginAttempt:
-    Email: Email
-    IP: IP-адрес
+    IP: 'IP-адрес'
     PLURALNAME: 'Попыток входа в систему'
     SINGULARNAME: 'Попытка входа в систему'
     Status: Статус
   SilverStripe\Security\Member:
     ADDGROUP: 'Добавить группу'
     BUTTONCHANGEPASSWORD: 'Изменить пароль'
-    BUTTONLOGIN: Войти
+    BUTTONLOGIN: 'Войти'
     BUTTONLOGINOTHER: 'Войти под другим именем'
     BUTTONLOSTPASSWORD: 'Я забыл пароль'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
@@ -218,7 +178,7 @@ ru:
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
     ERRORPASSWORDNOTMATCH: 'Введенный пароль неверен, попробуйте снова'
     ERRORWRONGCRED: 'Похоже, что указанные данные не верны. Пожалуйста, повторите попытку позже.'
-    FIRSTNAME: Имя
+    FIRSTNAME: 'Имя'
     INTERFACELANG: 'Язык интерфейса'
     KEEPMESIGNEDIN: 'Запомните меня'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
@@ -240,20 +200,20 @@ ru:
     db_Password: Пароль
     db_PasswordExpiry: 'Дата устаревания пароля'
   SilverStripe\Security\MemberPassword:
-    PLURALNAME: Пароли
-    SINGULARNAME: Пароль
+    PLURALNAME: 'Пароли'
+    SINGULARNAME: 'Пароль'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: %s'
     PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
     TOOSHORT: 'Слишком короткий пароль, минимальная длина - %s символов'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
+    CONTENT_CATEGORY: 'Права доступа к содержимому'
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Отменяет все другие предоставленные права доступа.'
-    PLURALNAME: 'Права доступа'
-    SINGULARNAME: 'Право доступа'
+    PLURALNAME: Права доступа
+    SINGULARNAME: Право доступа
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
-    CONTENT_CATEGORY: 'Права доступа к содержимому'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'
@@ -261,8 +221,8 @@ ru:
     FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Может применяться только администратором'
-    PLURALNAME: 'Роли'
-    SINGULARNAME: 'Роль'
+    PLURALNAME: Роли
+    SINGULARNAME: Роль
     Title: Название
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'

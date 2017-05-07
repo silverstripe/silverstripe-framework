@@ -1,13 +1,9 @@
 fo:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
-    HELLO: Hey
-    TEXT1: 'Her er títt'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Broyt loyniorð'
   SilverStripe\Forms\DateField:
     NOTSET: 'ikki ásett'
-    TODAY: 'í dag'
+    TODAY: í dag
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Áset)
   SilverStripe\Forms\Form:
@@ -27,24 +23,23 @@ fo:
     Code: 'Bólka kota'
     Description: Frágreiðing
     Locked: 'Læst?'
-    Parent: Yvirbólkur
+    Parent: 'Yvirbólkur'
     Sort: 'Raða eftir'
     has_many_Permissions: Loyvir
     many_many_Members: Limir
   SilverStripe\Security\LoginAttempt:
-    Email: Teldupostur
     IP: 'IP adressa'
     Status: Støða
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
-    BUTTONLOGIN: Innrita
+    BUTTONLOGIN: 'Innrita'
     BUTTONLOGINOTHER: 'Innrita sum onkur annar'
     BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
     CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
     CONFIRMPASSWORD: 'Váttað loyniorð'
     EMAIL: Teldupostur
     ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
-    FIRSTNAME: Fornavn
+    FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Mál á markamóti'
     NEWPASSWORD: 'Nýtt loyniorð'
     PASSWORD: Loyniorð
@@ -62,4 +57,4 @@ fo:
     CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
     ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
     ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
-    LOGIN: Innrita
+    LOGIN: 'Innrita'

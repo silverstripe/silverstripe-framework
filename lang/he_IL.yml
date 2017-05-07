@@ -1,7 +1,4 @@
 he_IL:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
-    HELLO: היי
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'שינוי סיסמה'
   SilverStripe\Forms\DropdownField:
@@ -20,15 +17,15 @@ he_IL:
     Locked: 'נעול?'
     Parent: 'קבוצת אב'
     has_many_Permissions: הרשאות
-    many_many_Members: 'חברים רשומים'
+    many_many_Members: חברים רשומים
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'שנה סיסמא'
-    BUTTONLOGIN: התחבר
+    BUTTONLOGIN: 'התחבר'
     BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
     BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
     CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
     CONFIRMPASSWORD: 'אשר סיסמא'
-    EMAIL: 'דואר אלקטרוני'
+    EMAIL: דואר אלקטרוני
     ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
     ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
     FIRSTNAME: 'שם פרטי'
@@ -37,7 +34,7 @@ he_IL:
     PASSWORD: סיסמא
     SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
     SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
-    SURNAME: 'שם משפחה'
+    SURNAME: שם משפחה
     YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '

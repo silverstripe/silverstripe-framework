@@ -1,10 +1,4 @@
 pt:
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
-    HELLO: Olá
-    TEXT1: 'Este é o seu'
-    TEXT2: 'link para alterar password'
-    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar password'
   SilverStripe\Forms\DateField:
@@ -60,12 +54,11 @@ pt:
     has_many_Permissions: Permissões
     many_many_Members: Membros
   SilverStripe\Security\LoginAttempt:
-    Email: 'Endereço de Email'
     IP: 'Endereço IP'
     Status: Estado
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Password'
-    BUTTONLOGIN: Entrar
+    BUTTONLOGIN: 'Entrar'
     BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
     BUTTONLOSTPASSWORD: 'Recuperar Password'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
@@ -88,8 +81,8 @@ pt:
     db_PasswordExpiry: 'Data de expiração da password'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
-    FULLADMINRIGHTS: 'Direitos de Administrador'
     CONTENT_CATEGORY: 'Permissões de conteúdo'
+    FULLADMINRIGHTS: 'Direitos de Administrador'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
   SilverStripe\Security\PermissionRole:

@@ -1,16 +1,9 @@
 sl_SI:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neveljavna zahteva'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
-    CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
-    HELLO: Živjo
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za resetiranje gesla'
-    TEXT3: za
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ne
-    YESANSWER: Da
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
   SilverStripe\Forms\CurrencyField:
@@ -30,13 +23,12 @@ sl_SI:
     FilterBy: 'Filtriraj po'
     Find: Najdi
     NewRecord: 'Nov %s'
-    OF: od
     Print: Natisni
     ResetFilter: Resetiraj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    UnlinkRelation: 'Odstrani povezavo'
+    UnlinkRelation: Odstrani povezavo
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -49,32 +41,17 @@ sl_SI:
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
     ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
-    ANCHORVALUE: Sidro
-    CAPTIONTEXT: Napis
+    CAPTIONTEXT: 'Napis'
     CSSCLASS: 'Poravnava / stil'
-    EMAIL: 'E-poštni naslov'
     IMAGEALT: 'Alternativni tekst (alt)'
     IMAGEALTTEXT: 'Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati'
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Višina
     IMAGETITLETEXT: 'Naslov (namig)'
-    IMAGEWIDTHPX: 'Širina'
-    LINKDESCR: 'Opis povezave'
-    LINKDETAILS: 'Podrobnosti povezave'
-    LINKEMAIL: 'Povezava na e-poštni naslov'
-    LINKEXTERNAL: 'Povezava na drugo spletno stran'
-    LINKFILE: 'Povezava za prenos datoteke'
-    LINKINTERNAL: 'Povezava na stran znotraj tega spletnega mesta'
-    LINKOPENNEWWIN: 'Odpri povezavo v novem oknu?'
-    LINKTO: 'Tip povezave'
-    PAGE: Stran
-    SUBJECT: 'Predmet e-pošte'
-    URL: URL
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Preview: Predogled
+    IMAGEWIDTHPX: Širina
   SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: Ne
-    YESANSWER: Da
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manj kot minuto'
   SilverStripe\Security\BasicAuth:
@@ -84,7 +61,7 @@ sl_SI:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Pozabljeno geslo?'
     BUTTONLOGIN: 'Ponovna prijava'
-    BUTTONLOGOUT: Odjava
+    BUTTONLOGOUT: 'Odjava'
   SilverStripe\Security\CMSSecurity:
     TimedOutTitleAnonymous: 'Vaša seja je potekla.'
     TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
@@ -102,7 +79,7 @@ sl_SI:
   SilverStripe\Security\Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
-    FIRSTNAME: Ime
+    FIRSTNAME: 'Ime'
     KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
@@ -123,5 +100,5 @@ sl_SI:
   SilverStripe\Security\Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
-    LOGIN: Prijava
+    LOGIN: 'Prijava'
     LOSTPASSWORDHEADER: 'Pozabljeno geslo'

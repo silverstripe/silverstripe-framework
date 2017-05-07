@@ -1,17 +1,9 @@
 eo:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Malvalida peto'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton bonvolu ŝanĝi vian pasvorton per la suba ligilo.'
-    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
-    CHANGEPASSWORDTEXT3: 'Ŝangi pasvorton'
-    HELLO: Saluton
-    TEXT1: 'Jen via'
-    TEXT2: 'pasvorta reagorda ligilo'
-    TEXT3: por
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ne
-    YESANSWER: Jes
+    NOANSWER: 'Ne'
+    YESANSWER: 'Jes'
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Mankas ebloj'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -59,7 +51,6 @@ eo:
     LinkExisting: 'Ligi ekzistantajn'
     NewRecord: 'Novaj %s'
     NoItemsFound: 'Neniu elemento troviĝis'
-    OF: de
     PRINTEDAT: 'Presita ĉe'
     PRINTEDBY: 'Presita de'
     PlaceHolder: 'Serĉi je {type}'
@@ -82,21 +73,15 @@ eo:
     Save: Konservi
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redakti
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Paĝo
-    View: Vido
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Vi ne rajtas aliri la enhavon de la cela paĝo.'
     ANCHORSPAGENOTFOUND: 'Ne trovis la celan paĝon.'
-    ANCHORVALUE: Ankri
     CAPTIONTEXT: 'Teksto de apudskribo'
     CSSCLASS: 'Ĝisrandigo / stilo'
     CSSCLASSCENTER: 'Centrita, sola.'
     CSSCLASSLEFT: 'Maldekstre, kaj teksto ĉirkaŭfluas.'
     CSSCLASSLEFTALONE: 'Maldekstre sola.'
     CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
-    EMAIL: 'Retpoŝta adreso'
-    FILE: Dosiero
     IMAGEALT: 'Alternativa teksto (alt)'
     IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
     IMAGEALTTEXTDESC: 'Vidigita al ekranlegiloj aŭ se ne eblas vidigi bildon'
@@ -106,19 +91,6 @@ eo:
     IMAGETITLETEXT: 'Teksto de titolo (ŝpruchelpilo)'
     IMAGETITLETEXTDESC: 'Por plua informo pri la bildo'
     IMAGEWIDTHPX: Larĝo
-    LINK: 'Almeti ligilon'
-    LINKANCHOR: 'Ligi al ankro en ĉi tiu paĝo'
-    LINKDESCR: 'Ligila priskribo'
-    LINKDETAILS: 'Ligaj detaloj'
-    LINKEMAIL: 'Ligilo al retpoŝta adreso'
-    LINKEXTERNAL: 'Ligilo al alia retejo'
-    LINKFILE: 'Ligilo al elŝuti dosieron'
-    LINKINTERNAL: 'Ligilo al paĝo en ĉi tiu retejo'
-    LINKOPENNEWWIN: 'Ĉu malfermi ligilon en nova fenestro?'
-    LINKTO: 'Ligila tipo'
-    PAGE: Paĝo
-    SUBJECT: 'Temo de retpoŝto'
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al registraĵo.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Eblas enkorpigi nur absolutajn URL-ojn'
@@ -127,19 +99,6 @@ eo:
     ERROR_NOTFOUND: 'Ne eblas trovi vidigotan dosieron'
     ERROR_OEMBED_REMOTE: 'Enkorpigi kongruas nur kun foraj dosieroj'
     ERROR_SCHEME: 'Ĉi tiu dosiera skemo ne troviĝas en la blanka listo'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Propra
-    DATEFORMATBAD: 'Ne validas la formato de dato'
-    DAYNOLEADING: 'Tago de monato sen antaŭira nulo'
-    DIGITSDECFRACTIONSECOND: 'Almenaŭ unu cifero indikanta dekuman frakcion de sekundo'
-    FOURDIGITYEAR: 'Kvarcifera jaro'
-    HOURNOLEADING24: 'Horo sen antaŭira nulo, 24-hora formato'
-    MINUTENOLEADING: 'Minuto sen antaŭira nulo'
-    MONTHNOLEADING: 'Monato sen antaŭira nulo'
-    Preview: Antaŭvido
-    TWODIGITDAY: 'Ducifera tago de monato'
-    TWODIGITYEAR: 'Ducifera jaro'
-    Toggle: 'Vidigi aranĝa helpo'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
@@ -159,8 +118,8 @@ eo:
     SINGULARNAME: 'Datuma Objekto'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ajna
-    NOANSWER: Ne
-    YESANSWER: Jes
+    NOANSWER: 'Ne'
+    YESANSWER: 'Jes'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'malpli ol minuto'
     TIMEDIFFAGO: 'antaŭ {difference}'
@@ -178,7 +137,7 @@ eo:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Ĉu forgesis pasvorton?'
     BUTTONLOGIN: 'Ree ensaluti'
-    BUTTONLOGOUT: Adiaŭi
+    BUTTONLOGOUT: 'Adiaŭi'
     PASSWORDEXPIRED: '<p>Via pasvorto finiĝis. <a target="_top" href="{link}">Bonvolu elekti novan.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Nevalida uzanto. <a target="_top" href="{link}">Bonvolu aŭtentigi ĉi tie</a> por daŭrigi.</p>'
@@ -191,7 +150,7 @@ eo:
     AddRole: 'Aldoni rolon por ĉi tiu grupo'
     Code: 'Grupa Kodo'
     DefaultGroupTitleAdministrators: Administrantoj
-    DefaultGroupTitleContentAuthors: Enhavaŭtoroj
+    DefaultGroupTitleContentAuthors: 'Enhavaŭtoroj'
     Description: Priskribo
     GroupReminder: 'Se vi elektas patran grupon, ĉi tiu grupo prenos ĉiujn ĝiajn rolojn'
     HierarchyPermsError: 'Ne povas agordi patran grupon "%s" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
@@ -205,15 +164,14 @@ eo:
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
   SilverStripe\Security\LoginAttempt:
-    Email: Retadreso
-    IP: IP-Adreso
+    IP: 'IP-Adreso'
     PLURALNAME: 'Provoj ensaluti'
     SINGULARNAME: 'Provo ensaluti'
     Status: Stato
   SilverStripe\Security\Member:
     ADDGROUP: 'Aldoni grupon'
     BUTTONCHANGEPASSWORD: 'Ŝanĝi pasvorton'
-    BUTTONLOGIN: Ensaluti
+    BUTTONLOGIN: 'Ensaluti'
     BUTTONLOGINOTHER: 'Ensaluti kiel alia homo'
     BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
@@ -228,7 +186,7 @@ eo:
     ERRORNEWPASSWORD: 'Via ricev enirita vian novan pasvorton malsame, prov denove'
     ERRORPASSWORDNOTMATCH: 'Via aktuala pasvorto ne matĉo, bonvolu prov denove'
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
-    FIRSTNAME: Antaŭnomo
+    FIRSTNAME: 'Antaŭnomo'
     INTERFACELANG: 'Interfaca Lingvo'
     KEEPMESIGNEDIN: 'Konservi mian ensaluton'
     LOGGEDINAS: 'Vi ensalutis kiel {name}.'
@@ -240,7 +198,7 @@ eo:
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
-    SURNAME: 'Familia nomo'
+    SURNAME: Familia nomo
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
@@ -258,12 +216,12 @@ eo:
     TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ %s signojn longa'
   SilverStripe\Security\Permission:
     AdminGroup: Administranto
+    CONTENT_CATEGORY: 'Enhavopermesoj'
     FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
     FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
     PLURALNAME: Permesoj
     SINGULARNAME: Permeso
     UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
-    CONTENT_CATEGORY: Enhavopermesoj
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'agordita al "{title}"'
     FromGroup: 'heredita el grupo "{title}"'
@@ -285,7 +243,7 @@ eo:
     CHANGEPASSWORDHEADER: 'Ŝanĝi vian pasvorton'
     ENTERNEWPASSWORD: 'Bonvolu enigi novan pasvorton.'
     ERRORPASSWORDPERMISSION: 'Vi devas ensaluti por ŝanĝi vian pasvorton!'
-    LOGIN: Ensaluti
+    LOGIN: 'Ensaluti'
     LOSTPASSWORDHEADER: 'Perdis pasvorton'
     NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
     NOTERESETLINKINVALID: '<p>La pasvorta reagorda ligilo estas malvalida aŭ finiĝis.</p><p>Vi povas peti novan <a href="{link1}">ĉi tie</a> aŭ ŝanĝi vian pasvorton post <a href="{link2}">vi ensalutis</a>.</p>'
