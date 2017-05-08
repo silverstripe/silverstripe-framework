@@ -75,7 +75,7 @@ Formats can be set globally in the i18n class.
 You can use these settings for your own view logic.
 
 	:::php
-	Config::inst()->update('i18n', 'date_format', 'dd.MM.YYYY');
+	Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 
 Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
