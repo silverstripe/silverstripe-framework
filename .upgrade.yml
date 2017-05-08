@@ -1012,6 +1012,7 @@ mappings:
   TableListField: SilverStripe\Forms\GridField\GridField
   TableListField_PageControls_ss: SilverStripe\Forms\GridField\GridField
   UploadField: SilverStripe\AssetAdmin\Forms\UploadField
+  Pagination: SilverStripe\Forms\GridField\GridField
 skipConfigs:
   - db
   - casting

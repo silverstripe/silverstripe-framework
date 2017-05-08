@@ -1,15 +1,4 @@
 ro:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Numele grupului'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Editeaza acest fisier'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Pincipal
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
-    HELLO: Salut
-    TEXT2: 'link de resetare a parolei'
-    TEXT3: pentru
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parola trebuie să conțină cel puțin {min} caractere.'
     BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
@@ -41,13 +30,13 @@ ro:
   SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
   SilverStripe\Security\Member:
-    BUTTONLOGIN: Autentificare
+    BUTTONLOGIN: 'Autentificare'
     BUTTONLOSTPASSWORD: 'Am uitat parola'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
     DefaultAdminFirstname: 'Administrator implicit'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
-    FIRSTNAME: Prenume
+    FIRSTNAME: 'Prenume'
     INTERFACELANG: 'Limba interfetei'
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
@@ -59,5 +48,7 @@ ro:
     db_LockedOutUntil: 'Blocat pana la'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
+  SilverStripe\Security\Permission:
+    CONTENT_CATEGORY: 'Permisiuni de conținut'
   SilverStripe\Security\Security:
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'

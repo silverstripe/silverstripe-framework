@@ -1,37 +1,9 @@
 it:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nome del gruppo'
-    MEMBERS: Utenti
-    NEWGROUP: 'Nuovo gruppo'
-    PERMISSIONS: Permessi
-    ROLES: Ruoli
-    ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto, questi possono essere ereditati dai gruppi padre.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Altezza
-    SIZE: Dimensione
-    TYPE: 'Tipo di file'
-    URL: URL
-    WIDTH: Larghezza
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensioni
-    EDIT: Modifica
-    EDITINFO: 'Modifica questo file'
-    FIELDNOTSET: 'Informazioni file non trovate'
-    REMOVE: Rimuovi
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principale
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Richiesta non valida'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
-    CHANGEPASSWORDTEXT3: 'Cambia password'
-    HELLO: Ciao
-    TEXT1: 'Questa è la tua'
-    TEXT2: 'Link per l''azzeramento della password'
-    TEXT3: per
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
-    YESANSWER: Sì
+    YESANSWER: 'Sì'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
@@ -74,7 +46,6 @@ it:
     LinkExisting: 'Collega esistente'
     NewRecord: 'Nuovo %s'
     NoItemsFound: 'Nessun elemento trovato'
-    OF: di
     PRINTEDAT: 'Stampato alle'
     PRINTEDBY: 'Stampato da'
     PlaceHolder: 'Trova {type}'
@@ -97,20 +68,15 @@ it:
     Save: Salva
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Modifica
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Pagina
-    View: Visualizza
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
     ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
-    ANCHORVALUE: Ancora
     CAPTIONTEXT: 'Didascalia di testo'
     CSSCLASS: 'Allineamento / stile'
     CSSCLASSCENTER: 'Centrato, su se stesso.'
     CSSCLASSLEFT: 'Sulla sinistra, con il testo attorno.'
     CSSCLASSLEFTALONE: 'Sulla sinistra, da sola.'
     CSSCLASSRIGHT: 'Sulla destra, con il testo attorno.'
-    EMAIL: 'Indirizzo email'
     IMAGEALT: 'Testo alternativo (alt)'
     IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato nel caso l''immagine non possa essere visualizzata'
     IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
@@ -120,19 +86,6 @@ it:
     IMAGETITLETEXT: 'Titolo (tooltip)'
     IMAGETITLETEXTDESC: 'Per informazioni aggiuntive sull''immagine'
     IMAGEWIDTHPX: Larghezza
-    LINK: 'Inserisci Link'
-    LINKANCHOR: 'Link ad un''ancora su questa pagina'
-    LINKDESCR: 'Descrizione del link'
-    LINKDETAILS: 'Dettagli link'
-    LINKEMAIL: 'Link ad un indirizzo email'
-    LINKEXTERNAL: 'Link a un altro sito'
-    LINKFILE: 'Link per scaricare un file'
-    LINKINTERNAL: 'Link ad una pagina di questo sito'
-    LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
-    LINKTO: 'Tipo di link'
-    PAGE: Pagina
-    SUBJECT: 'Oggetto email'
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Possono essere incorporati solo URL assoluti'
@@ -141,19 +94,6 @@ it:
     ERROR_NOTFOUND: 'Impossibile trovare il file da visualizzare'
     ERROR_OEMBED_REMOTE: 'L''incorporamento è consentito solo con file remoti'
     ERROR_SCHEME: 'Lo schema di questo file non è incluso nella whitelist'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Personalizza
-    DATEFORMATBAD: 'Il formato della data non è valido'
-    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
-    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
-    FOURDIGITYEAR: 'Anno a quattro cifre'
-    HOURNOLEADING24: 'Ore senza zero iniziale, formato 24 ore'
-    MINUTENOLEADING: 'Minuti senza zero iniziale'
-    MONTHNOLEADING: 'Mese senza zero iniziale'
-    Preview: Anteprima
-    TWODIGITDAY: 'Giorno del mese a due cifre'
-    TWODIGITYEAR: 'Anno a due cifre'
-    Toggle: 'Mostra aiuto per la formattazione'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
@@ -173,7 +113,7 @@ it:
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualsiasi
     NOANSWER: 'No'
-    YESANSWER: Sì
+    YESANSWER: 'Sì'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'meno di un minuto'
     TIMEDIFFAGO: '{difference} fa'
@@ -189,7 +129,7 @@ it:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Password dimenticata?'
     BUTTONLOGIN: 'Accedi nuovamente'
-    BUTTONLOGOUT: Scollegati
+    BUTTONLOGOUT: 'Scollegati'
     PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
@@ -216,7 +156,6 @@ it:
     has_many_Permissions: Permessi
     many_many_Members: Membri
   SilverStripe\Security\LoginAttempt:
-    Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
     PLURALNAME: 'Tentativi d''accesso'
     SINGULARNAME: 'Tentativo d''accesso'
@@ -224,7 +163,7 @@ it:
   SilverStripe\Security\Member:
     ADDGROUP: 'Aggiungi gruppo'
     BUTTONCHANGEPASSWORD: 'Cambia password'
-    BUTTONLOGIN: Accedi
+    BUTTONLOGIN: 'Accedi'
     BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
@@ -239,7 +178,7 @@ it:
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
-    FIRSTNAME: Nome
+    FIRSTNAME: 'Nome'
     INTERFACELANG: 'Lingua dell''interfaccia'
     KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
@@ -269,6 +208,7 @@ it:
     TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
   SilverStripe\Security\Permission:
     AdminGroup: Amministratore
+    CONTENT_CATEGORY: 'Permessi sui contenuti'
     FULLADMINRIGHTS: 'Diritti di amministrazione'
     FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
     PLURALNAME: Permessi
@@ -295,7 +235,7 @@ it:
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
     ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
-    LOGIN: Entra
+    LOGIN: 'Entra'
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'

@@ -1,35 +1,9 @@
 bg:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Име на група'
-    MEMBERS: Потребители
-    NEWGROUP: 'Нова група'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
-    ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Височина
-    SIZE: 'Големина на файла'
-    TYPE: 'Тип на файла'
-    URL: URL
-    WIDTH: Широчина
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размери'
-    EDITINFO: 'Редактирай този файл'
-    FIELDNOTSET: 'Информация за файла не беше намерена'
-    REMOVE: 'Премахни'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Главно
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Грешна заявка'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
-    HELLO: Здравей!
-    TEXT1: 'Това е Вашият'
-    TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Не
-    YESANSWER: Да
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
@@ -79,17 +53,6 @@ bg:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити %s %s'
     Save: Запис
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Произволно
-    DATEFORMATBAD: 'Невалиден формат на датата'
-    DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
-    FOURDIGITYEAR: 'Четирицифрена година'
-    MINUTENOLEADING: 'Минути без водеща нула'
-    MONTHNOLEADING: 'Месец без водеща нула'
-    Preview: Преглед
-    TWODIGITDAY: 'Двуцифрен ден от месеца'
-    TWODIGITYEAR: 'Двуцифрена година'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
@@ -101,8 +64,8 @@ bg:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Всички
-    NOANSWER: Не
-    YESANSWER: Да
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'по-малко от минута'
     TIMEDIFFAGO: 'преди {difference}'
@@ -129,16 +92,15 @@ bg:
     NoRoles: 'Няма намерени роли'
     Parent: 'Група източник'
     RolesAddEditLink: 'Управление на ролите'
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
   SilverStripe\Security\LoginAttempt:
-    Email: 'Email адрес'
     IP: 'IP адрес'
     Status: Статус
   SilverStripe\Security\Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
-    BUTTONLOGIN: Влез
+    BUTTONLOGIN: 'Влез'
     BUTTONLOGINOTHER: 'Влез като някой друг'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
@@ -148,8 +110,8 @@ bg:
     ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
-    FIRSTNAME: Име
-    INTERFACELANG: Език
+    FIRSTNAME: 'Име'
+    INTERFACELANG: 'Език'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -165,6 +127,7 @@ bg:
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
+    CONTENT_CATEGORY: 'Права по съдържанието'
     FULLADMINRIGHTS: 'Пълни административни права'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'

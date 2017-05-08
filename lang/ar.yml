@@ -1,31 +1,6 @@
 ar:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'اسم المجموعة'
-    MEMBERS: الأعضاء
-    NEWGROUP: 'مجموعة جديدة'
-    PERMISSIONS: الصلاحيات
-    ROLES: قواعد
-    ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'الحجم'
-    TYPE: النوع
-    URL: الرابط
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: الأبعاد
-    EDIT: تعديل
-    EDITINFO: 'قم بتعديل هذا الملف'
-    FIELDNOTSET: 'لا يوجد معلومات عن الملف'
-    REMOVE: حذف
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: الرئيسة
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'طلب غير صحيح'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
-    HELLO: أهلاً
-    TEXT1: هنا
-    TEXT2: 'رابط إعادة تعيين كلمة المرور'
-    TEXT3: لـ
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
@@ -33,7 +8,7 @@ ar:
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
   SilverStripe\Forms\DateField:
     NOTSET: 'غير محدد'
-    TODAY: 'اليوم'
+    TODAY: اليوم
     VALIDDATEFORMAT2: 'الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})'
     VALIDDATEMAXDATE: 'التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})'
     VALIDDATEMINDATE: 'التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})'
@@ -45,33 +20,32 @@ ar:
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'كلمات المرور يجب أن تحتوي على رقم و حرف على الأقل'
-    VALIDATOR: 'المحقق'
+    VALIDATOR: المحقق
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
   SilverStripe\Forms\FormField:
     NONE: لايوجد
   SilverStripe\Forms\GridField\GridField:
     Add: 'إضافة {اسم}'
     CSVEXPORT: 'تصدير إلى CSV'
-    Filter: 'مرشح'
+    Filter: مرشح
     FilterBy: 'ترشيح باستخدام'
     Find: ابحث
     LinkExisting: 'الرابط موجود'
     NewRecord: 'جديد %s'
     NoItemsFound: 'لا يوجد عناصر'
-    OF: 'من'
     PRINTEDAT: 'تم الطباعة في'
     PRINTEDBY: 'تم الطباعة بواسطة'
     PlaceHolder: 'البحث {النوع}'
     PlaceHolderWithLabels: 'البحث {نوع} بواسطة {اسم}'
     Print: طباعة
     RelationSearch: 'ابحث عن علاقة'
-    ResetFilter: 'إعادة تعيين'
+    ResetFilter: إعادة تعيين
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: حذف
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد أية تصريحات حذف'
     EditPermissionsFailure: 'لا يوجد تصريح لإلغاء الربط بين السجلات'
-    UnlinkRelation: 'إلغاء الربط'
+    UnlinkRelation: إلغاء الربط
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: إلغاء
     Create: إنشاء
@@ -81,26 +55,11 @@ ar:
     Save: حفظ
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: تعديل
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: صفحة
-    View: عرض
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: 'مخصص'
-    DATEFORMATBAD: 'صيغة التاريخ غير صحيحة'
-    DAYNOLEADING: 'يوم من شهر دون أن يصبح بقيمة صفر'
-    DIGITSDECFRACTIONSECOND: 'واحد أو أكثر من الأرقام تمثل جزء عشري من الثانية'
-    FOURDIGITYEAR: 'سنة بأربع - أرقام'
-    MINUTENOLEADING: 'دقيقة دون أن تصبح صفراً'
-    MONTHNOLEADING: 'أرقام شهر دون أن تصبح بقيمة صفر'
-    Preview: 'معاينة'
-    TWODIGITDAY: 'رقمين ليوم الشهر'
-    TWODIGITYEAR: 'سنة من رقمين'
-    Toggle: 'إظهار تعليمات التنسيق'
   SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: 'الكمية'
-    FIELDLABELCURRENCY: 'العملة'
+    FIELDLABELAMOUNT: الكمية
+    FIELDLABELCURRENCY: العملة
   SilverStripe\Forms\NullableField:
-    IsNullLabel: باطل
+    IsNullLabel: 'باطل'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
   SilverStripe\Forms\PhoneNumberField:
@@ -133,23 +92,22 @@ ar:
     NoRoles: 'لا يوجد أدوار'
     Parent: 'المجموعة الرئيسة'
     RolesAddEditLink: 'قوانين التعديل/الإضافة'
-    Sort: ترتيب
+    Sort: 'ترتيب'
     has_many_Permissions: الصلاحيات
     many_many_Members: الأعضاء
   SilverStripe\Security\LoginAttempt:
-    Email: 'عنوان البريد الإلكتروني'
     IP: 'عنوان IP'
     Status: الحالة
   SilverStripe\Security\Member:
     ADDGROUP: 'إضافة مجموعة'
     BUTTONCHANGEPASSWORD: 'تغيير رقم المرور'
-    BUTTONLOGIN: دخول
+    BUTTONLOGIN: 'دخول'
     BUTTONLOGINOTHER: 'الدخول بحساب آخر'
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
     DefaultAdminFirstname: 'المدير الافتراضي'
-    EMAIL: 'البريد الإلكتروني'
+    EMAIL: البريد الإلكتروني
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
     ERRORLOCKEDOUT2: 'حسابك قد تم تعطيله مؤقتاً بسبب الكثير من المحاولات الفاشلة في تسجيل الدخول. يرجى المحاولة مرة أخرى في  {عدد} دقيقة.'
@@ -161,17 +119,17 @@ ar:
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
     NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
-    PASSWORD: 'رقم المرور'
+    PASSWORD: رقم المرور
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
-    SURNAME: 'اسم العائلة'
+    SURNAME: اسم العائلة
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     WELCOMEBACK: 'مرحبا بك مرة أخرى، {الاسم الأول}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
-    belongs_many_many_Groups: 'المجموعات'
+    belongs_many_many_Groups: المجموعات
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
-    db_Password: 'الرقم السري'
+    db_Password: الرقم السري
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
@@ -179,6 +137,7 @@ ar:
     TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'
   SilverStripe\Security\Permission:
     AdminGroup: الإدارة
+    CONTENT_CATEGORY: 'تصاريح المحتوى'
     FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
     FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
     UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
@@ -199,7 +158,7 @@ ar:
     CHANGEPASSWORDHEADER: 'تغيير كلمة المرور'
     ENTERNEWPASSWORD: 'فضلاً أدخل كلمة المرور الجديدة'
     ERRORPASSWORDPERMISSION: 'يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور'
-    LOGIN: دخول
+    LOGIN: 'دخول'
     LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
     NOTERESETLINKINVALID: "<p> رابط إعادة تعيين كلمة المرور غير صحيح أو نفذت صلاحيته.</p>\n<p> \nيمكنك طلب رابط جديد <\"{a href=\"{link1\"> هنا </a>\n أو تغيير كلمة المرور الخاصة بك بعد <\"{a href=\"{link2\"> تسجيل دخولك</a>.\n</p>"

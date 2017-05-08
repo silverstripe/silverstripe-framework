@@ -1,14 +1,4 @@
 hu:
-  SilverStripe\Admin\SecurityAdmin:
-    NEWGROUP: 'Új csoport'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Méret
-    TYPE: Típus
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Fő
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
-    HELLO: Szia
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Jelszó Megváltoztatása'
   SilverStripe\Forms\DropdownField:
@@ -29,7 +19,7 @@ hu:
     many_many_Members: Tagok
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Jelszó megváltoztatása'
-    BUTTONLOGIN: Bejelentkezés
+    BUTTONLOGIN: 'Bejelentkezés'
     BUTTONLOGINOTHER: 'Jelentkezzen be másként'
     BUTTONLOSTPASSWORD: 'Elvesztettem a jelszavam'
     CONFIRMNEWPASSWORD: 'Új jelszó megerősítése'
@@ -37,17 +27,19 @@ hu:
     EMAIL: E-mail
     ERRORNEWPASSWORD: 'Rosszul írtad be az új jelszót, próbáld újra'
     ERRORPASSWORDNOTMATCH: 'A jelenlegi jelszó nem jó, próbálja újra'
-    FIRSTNAME: Keresztnév
+    FIRSTNAME: 'Keresztnév'
     INTERFACELANG: 'Felület nyelve'
     NEWPASSWORD: 'Új jelszó'
     PASSWORD: Jelszó
     SUBJECTPASSWORDCHANGED: 'A jelszó megváltozott'
     SUBJECTPASSWORDRESET: 'A jelszó alapállapotba hozásához használható link'
-    SURNAME: 'Családi név'
+    SURNAME: Családi név
     YOUROLDPASSWORD: 'Régi jelszó'
     belongs_many_many_Groups: Csoportok
     db_LockedOutUntil: 'Kizárva eddig'
     db_PasswordExpiry: 'Jelszó érvényességi idejének lejárta'
+  SilverStripe\Security\Permission:
+    CONTENT_CATEGORY: 'Tartalommal kapcsolatos jogosultságok'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nincs hozzáférésed ehhez az oldalhoz. Ha van egy másik azonosítód, mellyel hozzá tudsz férni ehhez az oldalhoz, alább bejelentkezhetsz.'
     BUTTONSEND: 'Új jelszót kérő link elküldése'

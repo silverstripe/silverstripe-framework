@@ -1,11 +1,6 @@
 pa:
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: "ਮੁੱਖ\t"
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
-    HELLO: ਹਾਏ
   SilverStripe\Forms\DropdownField:
-    CHOOSE: '( ਚੁਣੋ )'
+    CHOOSE: ( ਚੁਣੋ )
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
@@ -27,8 +22,6 @@ pa:
     SUBJECTPASSWORDRESET: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲਣ ਦਾ ਜੋੜ'
     SURNAME: ਗੋਤ
     YOUROLDPASSWORD: 'ਤੁਹਾਡਾ ਪੁਰਾਣਾ password'
-  SilverStripe\Security\MemberAuthenticator:
-    TITLE: 'ਈਮੇਲ &amp; '
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
     CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'

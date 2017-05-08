@@ -1,55 +1,34 @@
 tr:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Grup adı'
-    MEMBERS: Üyeler
-    NEWGROUP: 'Yeni Grup'
-    PERMISSIONS: İzinler
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Boyutu
-    TYPE: Türü
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDITINFO: 'Dosyayı düzenle'
-    FIELDNOTSET: 'Dosya bilgisi bulunamadı'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: 'Ana (Esas)'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
-    HELLO: Merhaba
-    TEXT1: 'Profilinize ait'
-    TEXT2: 'şifre sıfırlama linki'
-    TEXT3: için
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Hayır
-    YESANSWER: Evet
+    NOANSWER: 'Hayır'
+    YESANSWER: 'Evet'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parola Değiştir'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: USD
   SilverStripe\Forms\DateField:
-    NOTSET: ayarlanmamış
+    NOTSET: 'ayarlanmamış'
     TODAY: bugün
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçiniz)
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
     VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
-    VALIDATOR: 'Geçerlilik tespiti'
+    VALIDATOR: Geçerlilik tespiti
   SilverStripe\Forms\FormField:
     NONE: hiç
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV olarak kaydet'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Sil
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    DATEFORMATBAD: 'Tarih biçimi geçersiz'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Boş değer'
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Herhangi
-    NOANSWER: Hayır
-    YESANSWER: Evet
+    NOANSWER: 'Hayır'
+    YESANSWER: 'Evet'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
@@ -59,16 +38,15 @@ tr:
     Description: Açıklama
     Locked: 'Kilitli?'
     Parent: 'Ana Grup'
-    Sort: Sırala
+    Sort: 'Sırala'
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
   SilverStripe\Security\LoginAttempt:
-    Email: 'E-posta Adresi'
     IP: 'IP Adresi'
     Status: Durum
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
-    BUTTONLOGIN: Giriş
+    BUTTONLOGIN: 'Giriş'
     BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
     BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
@@ -78,7 +56,7 @@ tr:
     ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
     ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
     ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
-    FIRSTNAME: Ad
+    FIRSTNAME: 'Ad'
     INTERFACELANG: 'Arayüz Dili'
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
@@ -95,7 +73,7 @@ tr:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
-    BUTTONSEND: Gönder
+    BUTTONSEND: 'Gönder'
     CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
     CHANGEPASSWORDHEADER: 'Şifre değiştir'
     ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'

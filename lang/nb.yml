@@ -1,31 +1,6 @@
 nb:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Gruppenavn
-    MEMBERS: Medlemmer
-    NEWGROUP: 'Ny gruppe'
-    PERMISSIONS: Tilganger
-    ROLES: Roller
-    ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Filstørrelse
-    TYPE: Filtype
-    URL: Nettadresse
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensjoner
-    EDIT: Rediger
-    EDITINFO: 'Rediger denne filen'
-    FIELDNOTSET: 'Filinformasjon ikke funnet'
-    REMOVE: Fjern
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hovedinnstillinger
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ugyldig forespørsel'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
-    HELLO: Hei
-    TEXT1: 'Her er din'
-    TEXT2: 'lenke for nullstilling av passord'
-    TEXT3: for
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
@@ -35,7 +10,7 @@ nb:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'Ikke satt'
-    TODAY: 'i dag'
+    TODAY: i dag
     VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
     VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
@@ -60,20 +35,19 @@ nb:
     LinkExisting: 'Knytt til eksisterende'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Ingen elementer ble funnet'
-    OF: av
     PRINTEDAT: 'Skrevet ut ved'
     PRINTEDBY: 'Skrevet ut av'
     PlaceHolder: 'Finn {type}'
     PlaceHolderWithLabels: 'Finn {type} ved {name}'
-    Print: 'Skriv ut'
-    RelationSearch: Relasjonssøk
+    Print: Skriv ut
+    RelationSearch: 'Relasjonssøk'
     ResetFilter: Tilbakestille
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Slett
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     EditPermissionsFailure: 'Ikke tilgang til å fjerne oppføringer'
-    UnlinkRelation: 'Koble fra'
+    UnlinkRelation: Koble fra
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Opprett
@@ -83,21 +57,6 @@ nb:
     Save: Lagre
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Rediger
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Side
-    View: Viser
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Egendefinert
-    DATEFORMATBAD: 'Datoformat er ugyldig'
-    DAYNOLEADING: 'Dag i måneden uten ledende null'
-    DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
-    FOURDIGITYEAR: 'Firesifret årstall'
-    MINUTENOLEADING: 'Minutt uten ledende null'
-    MONTHNOLEADING: 'Månedssiffer uten ledende null'
-    Preview: Forhåndsvisning
-    TWODIGITDAY: 'Tosifret månedstall'
-    TWODIGITYEAR: 'Tosifret årstall'
-    Toggle: 'Vis formateringshjelp'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Valuta
@@ -110,7 +69,7 @@ nb:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: 'Sann eller usann'
+    ANY: Sann eller usann
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mindre enn ett minutt'
     TIMEDIFFAGO: '{difference} siden'
@@ -125,9 +84,9 @@ nb:
     ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
   SilverStripe\Security\Group:
     AddRole: 'Legg til en rolle for denne gruppen'
-    Code: Gruppekode
+    Code: 'Gruppekode'
     DefaultGroupTitleAdministrators: Administratorer
-    DefaultGroupTitleContentAuthors: Innholdsforfattere
+    DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     HierarchyPermsError: 'Kan ikke angi overordnet gruppe "%s" med administratorrettigheter (krever ADMIN-tilgang)'
@@ -135,12 +94,11 @@ nb:
     NoRoles: 'Ingen roller funnet'
     Parent: 'Overordnet gruppe'
     RolesAddEditLink: 'Administrer roller'
-    Sort: Sorteringsrekkefølge
+    Sort: 'Sorteringsrekkefølge'
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
   SilverStripe\Security\LoginAttempt:
-    Email: Epostadresse
-    IP: IP-adresse
+    IP: 'IP-adresse'
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Legg til en gruppe'
@@ -158,7 +116,7 @@ nb:
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
     ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
-    FIRSTNAME: Fornavn
+    FIRSTNAME: 'Fornavn'
     INTERFACELANG: 'Språk på grensesnitt'
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
@@ -181,6 +139,7 @@ nb:
     TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'
   SilverStripe\Security\Permission:
     AdminGroup: Administratorer
+    CONTENT_CATEGORY: 'Innholdstillatelser'
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
     UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'

@@ -1708,7 +1708,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         if ($this->validator) {
             /** @skipUpgrade */
-            $result .= '<h3>'._t('Form.VALIDATOR', 'Validator').'</h3>' . $this->validator->debug();
+            $result .= '<h3>'._t(__CLASS__.'.VALIDATOR', 'Validator').'</h3>' . $this->validator->debug();
         }
 
         return $result;

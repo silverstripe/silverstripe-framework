@@ -1,28 +1,6 @@
 af:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Groep naam'
-    MEMBERS: Lede
-    PERMISSIONS: Toegangsregte
-    ROLES: Rolle
-    ROLESDESCRIPTION: ' '
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Lêer grootte'
-    TYPE: 'Lêer tipe'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Afmetings
-    EDIT: Verander
-    EDITINFO: 'Verander die lêer'
-    FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
-    REMOVE: Verwyder
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hoof
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ongeldige versoek'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
-    TEXT1: 'Hier is u'
-    TEXT2: 'wagwoord herstel skakel'
-    TEXT3: vir
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
   SilverStripe\Forms\CurrencyField:
@@ -52,7 +30,6 @@ af:
     LinkExisting: 'Koppel bestaande'
     NewRecord: 'Nuwe %s'
     NoItemsFound: 'Geen items gevind nie'
-    OF: van
     PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
     PlaceHolder: 'Vind {type}'
@@ -72,23 +49,9 @@ af:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     Deleted: 'Verwyderde %s %s'
     Save: Stoor
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Bladsy
-    View: Wys
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: 'Maak pas'
-    DATEFORMATBAD: 'Die datum formaat is ongeldig'
-    DAYNOLEADING: 'Dag van die maand sonder ''n zero vooraan'
-    DIGITSDECFRACTIONSECOND: 'Een of meer syfers wat ''n desimale fraksie van ''n sekonde aan dui'
-    FOURDIGITYEAR: 'View syfer jaar'
-    MINUTENOLEADING: 'Minuut sonder die aanvangs nul'
-    MONTHNOLEADING: 'Maand syfers sonder aanvangs-zero'
-    Preview: Voorskou
-    TWODIGITDAY: 'Twee syfer dag van die maand'
-    TWODIGITYEAR: 'Twee syfer jaar'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Bedrag
-    FIELDLABELCURRENCY: 'Geld eenheid'
+    FIELDLABELCURRENCY: Geld eenheid
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
   SilverStripe\Forms\PhoneNumberField:
@@ -118,7 +81,6 @@ af:
     has_many_Permissions: Toestemmings
     many_many_Members: Lidde
   SilverStripe\Security\LoginAttempt:
-    Email: 'Epos Adres'
     IP: 'IP Adres'
     Status: Posisie
   SilverStripe\Security\Member:
@@ -135,7 +97,7 @@ af:
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
     ERRORNEWPASSWORD: 'Jy het jou nuwe wagwoord anders ingetik. Probeer weer'
     ERRORPASSWORDNOTMATCH: 'U huidige wagwoord pas nie, probeer asseblief weer'
-    FIRSTNAME: Voornaam
+    FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Koppelvlak Taal'
     LOGGEDINAS: 'Jy is ingeteken as {name}'
     NEWPASSWORD: 'Nuwe wagwoord'
@@ -153,6 +115,7 @@ af:
     db_PasswordExpiry: 'Wagwoord Vervaldatum'
   SilverStripe\Security\Permission:
     AdminGroup: Administrateur
+    CONTENT_CATEGORY: 'Inhoud permissies'
     FULLADMINRIGHTS: 'Volle administratiewe regte '
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
   SilverStripe\Security\PermissionCheckboxSetField:

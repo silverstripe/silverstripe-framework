@@ -1,7 +1,4 @@
 hi:
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: लंबाई
-    WIDTH: चौड़ाई
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'पासवर्डों को कम से कम {min} अक्षर लंबा होना चाहिए.'
     SHOWONCLICKTITLE: 'पासवर्ड बदलें'
@@ -14,4 +11,4 @@ hi:
     ERRORNOTADMIN: 'वह उपयोगकर्ता एक व्यवस्थापक नहीं है.'
   SilverStripe\Security\Group:
     RolesAddEditLink: 'भूमिकाओं का प्रबंधन करे '
-    has_many_Permissions: 'अनुमतियाँ'
+    has_many_Permissions: अनुमतियाँ

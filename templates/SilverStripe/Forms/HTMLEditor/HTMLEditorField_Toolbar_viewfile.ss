@@ -15,7 +15,7 @@
 				$Name
 			</span>
 			<% if $Width %>
-			<div class="ss-uploadfield-item-status ui-state-success-text" title="<%t UploadField.Dimensions 'Dimensions' %>">
+			<div class="ss-uploadfield-item-status ui-state-success-text" title="<%t SilverStripe\AssetAdmin\Forms\UploadField.Dimensions 'Dimensions' %>">
 				{$Width} x {$Height} (px)
 			</div>
 			<% end_if %>
@@ -23,13 +23,13 @@
 			<div class="clear"><!-- --></div>
 		</label>
 		<div class="ss-uploadfield-item-actions">
-			<button type="button" data-icon="deleteLight" class="btn ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<%t UploadField.REMOVE 'Remove' %>">
-				<%t UploadField.REMOVE 'Remove' %>
+			<button type="button" data-icon="deleteLight" class="btn ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<%t SilverStripe\AssetAdmin\Forms\UploadField.REMOVE 'Remove' %>">
+				<%t SilverStripe\AssetAdmin\Forms\UploadField.REMOVE 'Remove' %>
 			</button>
 
 			<div class="ss-uploadfield-item-edit edit">
-				<button type="button" class="btn ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<%t UploadField.EDITINFO 'Edit this file' %>" data-icon="pencil">
-					<%t UploadField.EDIT 'Edit' %>
+				<button type="button" class="btn ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<%t SilverStripe\AssetAdmin\Forms\UploadField.EDITINFO 'Edit this file' %>" data-icon="pencil">
+					<%t SilverStripe\AssetAdmin\Forms\UploadField.EDIT 'Edit' %>
 					<span class="toggle-details">
 						<span class="toggle-details-icon"></span>
 					</span>

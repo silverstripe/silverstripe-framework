@@ -1,33 +1,9 @@
 et_EE:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Rühma nimi'
-    MEMBERS: Kasutajad
-    NEWGROUP: 'Uus rühm'
-    PERMISSIONS: Õigused
-    ROLES: Rollid
-    ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Failisuurus
-    TYPE: Failitüüp
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Mõõtmed
-    EDIT: Muuda
-    EDITINFO: 'Muuda seda faili'
-    FIELDNOTSET: 'Failiteavet ei leitud'
-    REMOVE: Eemalda
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Avaleht
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Sobimatu taotlus'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
-    HELLO: Tere
-    TEXT1: 'Siin on sinu'
-    TEXT2: 'Parooli tühistus link'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ei
-    YESANSWER: Jah
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parool peab olema vähemalt {min} märki pikk.'
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
@@ -55,14 +31,13 @@ et_EE:
     Add: 'Lisa {name}'
     CSVEXPORT: 'Ekspordi CSV-vormingusse'
     Filter: Filtreeri
-    FilterBy: Filtreerimisalus
+    FilterBy: 'Filtreerimisalus'
     Find: Otsi
     LinkExisting: 'Lingi olemasolev'
     NewRecord: 'Uus %s'
     NoItemsFound: 'Üksusi ei leitud'
-    OF: /
     PRINTEDAT: 'Printimiskoht:'
-    PRINTEDBY: Printis
+    PRINTEDBY: 'Printis'
     PlaceHolder: 'Leia {type}'
     Print: Prindi
     RelationSearch: 'Seose otsing'
@@ -71,7 +46,7 @@ et_EE:
     DELETE_DESCRIPTION: Kustuta
     Delete: Kustuta
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
-    UnlinkRelation: 'Tühista linkimine'
+    UnlinkRelation: Tühista linkimine
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Loobu
     Create: Loo
@@ -81,19 +56,6 @@ et_EE:
     Save: Salvesta
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigeeri
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Leht
-    View: Kuva
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Kohandatud
-    DATEFORMATBAD: 'Kuupäevavorming on sobimatu'
-    DAYNOLEADING: 'Kuupäev ilma nullita'
-    FOURDIGITYEAR: 'Aasta nelja numbrina'
-    MINUTENOLEADING: 'Minutid ilma nullita'
-    MONTHNOLEADING: 'Kuu ilma nullita'
-    Preview: Eelvaade
-    TWODIGITDAY: 'Kuupäev kahe numbrina'
-    TWODIGITYEAR: 'Aasta kahe numbrina'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Hulk
     FIELDLABELCURRENCY: Valuuta
@@ -107,11 +69,11 @@ et_EE:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Kõik
-    NOANSWER: Ei
-    YESANSWER: Jah
+    NOANSWER: 'Ei'
+    YESANSWER: 'Jah'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'vähem kui minut'
-    TIMEDIFFAGO: tagasi
+    TIMEDIFFAGO: 'tagasi'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Kõik
   SilverStripe\Security\BasicAuth:
@@ -129,11 +91,10 @@ et_EE:
     NoRoles: 'Ühtegi rolli ei leitud'
     Parent: 'Vanem grupp'
     RolesAddEditLink: 'Halda rolle'
-    Sort: Järjesta
+    Sort: 'Järjesta'
     has_many_Permissions: Õigused
     many_many_Members: Liikmed
   SilverStripe\Security\LoginAttempt:
-    Email: 'E-posti aadress'
     IP: 'IP Aadress'
     Status: Staatus
   SilverStripe\Security\Member:
@@ -144,13 +105,13 @@ et_EE:
     BUTTONLOSTPASSWORD: 'Kaotasin oma parooli'
     CONFIRMNEWPASSWORD: 'Kinnita uus parool'
     CONFIRMPASSWORD: 'Kinnita parool'
-    DefaultAdminFirstname: Vaikeadministraator
+    DefaultAdminFirstname: 'Vaikeadministraator'
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Uue parooli väli ei saa olla tühi. Proovige uuesti'
     ENTEREMAIL: 'Palun sisesta email, et saada paooli tühistamise link'
     ERRORNEWPASSWORD: 'Te sisestasite oma parooli erinevalt, proovige uuesti'
     ERRORPASSWORDNOTMATCH: 'Sisestatud paroolid ei kattu, palun proovi uuesti'
-    FIRSTNAME: Eesnimi
+    FIRSTNAME: 'Eesnimi'
     INTERFACELANG: 'Kasutajaliidese keel'
     LOGGEDINAS: 'Olete logitud sisse kui {name}.'
     NEWPASSWORD: 'Uus parool'
@@ -168,6 +129,7 @@ et_EE:
     db_PasswordExpiry: 'Parool aegumise kuupäev'
   SilverStripe\Security\Permission:
     AdminGroup: Administraator
+    CONTENT_CATEGORY: 'Sisu õigused'
     FULLADMINRIGHTS: 'Täielikud administraatoriõigused'
     UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
   SilverStripe\Security\PermissionCheckboxSetField:

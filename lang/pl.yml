@@ -1,31 +1,6 @@
 pl:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nazwa Grupy'
-    MEMBERS: Użytkownicy
-    NEWGROUP: 'Nowa grupa'
-    PERMISSIONS: Zezwolenia
-    ROLES: Role
-    ROLESDESCRIPTION: 'Sekcja umożliwia dodanie ról do grupy. Role są logicznie uporządkowanymi uprawnieniami, które można edytować w zakładce Role'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: 'Rozmiar pliku'
-    TYPE: 'Typ pliku'
-    URL: 'Adres URL'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozmiar
-    EDIT: Edytuj
-    EDITINFO: 'Edytuj plik'
-    FIELDNOTSET: 'Nie znaleziono informacji o pliku'
-    REMOVE: Usuń
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Główny
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
-    HELLO: Cześć
-    TEXT1: 'Oto twój'
-    TEXT2: 'link zmiany hasła'
-    TEXT3: dla
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hasła muszą mieć przynajmniej {min} znaków.'
     BETWEEN: 'Hasła muszą mieć długość pomiędzy {min} a {max} znaków.'
@@ -60,7 +35,6 @@ pl:
     LinkExisting: 'Linkuj istniejący'
     NewRecord: 'Nowy %s'
     NoItemsFound: 'Nie znaleziono elementów'
-    OF: z
     PRINTEDAT: 'Wydrukowane na'
     PRINTEDBY: 'Wydrukowane przez'
     PlaceHolder: 'Znajdź {type}'
@@ -73,7 +47,7 @@ pl:
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
-    UnlinkRelation: 'Usuń łącze'
+    UnlinkRelation: Usuń łącze
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Anuluj
     Create: Stwórz
@@ -83,21 +57,6 @@ pl:
     Save: Zapisz
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edytuj
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Strona
-    View: Widok
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Własny
-    DATEFORMATBAD: 'Nieprawidłowy format daty'
-    DAYNOLEADING: 'Dzień miesiąca bez wiodącego zera'
-    DIGITSDECFRACTIONSECOND: 'Jedna lub więcej cyfr reprezentujących ułamek sekundy'
-    FOURDIGITYEAR: 'Czterocyfrowy rok'
-    MINUTENOLEADING: 'Minuta bez wiodącego zera'
-    MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: 'Podgląd'
-    TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
-    TWODIGITYEAR: 'Dwucyfrowy rok'
-    Toggle: 'Pokaż pomoc formatowania'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Ilość
     FIELDLABELCURRENCY: waluta
@@ -139,13 +98,12 @@ pl:
     has_many_Permissions: Zezwolenia
     many_many_Members: Użytkownicy
   SilverStripe\Security\LoginAttempt:
-    Email: 'Adres E-mail'
     IP: 'Adres IP'
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
-    BUTTONLOGIN: Zaloguj
+    BUTTONLOGIN: 'Zaloguj'
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
@@ -158,7 +116,7 @@ pl:
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
     ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
-    FIRSTNAME: Imię
+    FIRSTNAME: 'Imię'
     INTERFACELANG: 'Język interfejsu'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
@@ -181,6 +139,7 @@ pl:
     TOOSHORT: 'Hasło jest za krótkie, proszę podać %s znaków lub więcej'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    CONTENT_CATEGORY: 'Uprawnienie edycji treści'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
     UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
@@ -201,7 +160,7 @@ pl:
     CHANGEPASSWORDHEADER: 'Zmień swoje hasło'
     ENTERNEWPASSWORD: 'Proszę wprowadż nowe hasło'
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
-    LOGIN: Logowanie
+    LOGIN: 'Logowanie'
     LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
     NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'

@@ -1,38 +1,9 @@
 sk:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Názov skupiny'
-    MEMBERS: Členovia
-    NEWGROUP: 'Nová skupina'
-    PERMISSIONS: Právomoci
-    ROLES: Úlohy
-    ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Výška
-    SIZE: Veľkosť
-    TYPE: Typ
-    URL: URL
-    WIDTH: 'Šírka'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozmery
-    EDIT: Editovať
-    EDITINFO: 'Editovať súbor'
-    FIELDNOTSET: 'Žiadna informácia o súbore'
-    REMOVE: Odstrániť
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Hlavné
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Heslo pre účet s e-mailovou adresou {email} bol zmenené. Ak ste nechceli zmeniť vaše heslo, prosím zmeňte ho pomocou odkazu uvedeného nižšie.'
-    CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
-    CHANGEPASSWORDTEXT3: 'Zmeniť heslo'
-    HELLO: 'Dobrý deň'
-    TEXT1: 'Tu je váš'
-    TEXT2: 'odkaz na resetovanie hesla'
-    TEXT3: pre
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Nie
-    YESANSWER: Áno
+    NOANSWER: 'Nie'
+    YESANSWER: 'Áno'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Heslá musia byť nejmenej {min} znakov dlhé.'
     BETWEEN: 'Heslá musia byť {min} až {max} znakov dlhé.'
@@ -44,13 +15,13 @@ sk:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: nezadané
+    NOTSET: 'nezadané'
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
   SilverStripe\Forms\DropdownField:
-    CHOOSE: '(Vyberte si)'
+    CHOOSE: (Vyberte si)
     CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
@@ -76,9 +47,8 @@ sk:
     LinkExisting: 'Prepojenie existujúcich'
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žiadne položky'
-    OF: z
     PRINTEDAT: 'Vytlačené v'
-    PRINTEDBY: Vytlačené
+    PRINTEDBY: 'Vytlačené'
     PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     Print: Tlačiť
@@ -99,20 +69,15 @@ sk:
     Save: Uložiť
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editovať
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Stránka
-    View: Zobraziť
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Nemáte povolený prístup k obsahu cieľovej stránky.'
     ANCHORSPAGENOTFOUND: 'Cieľová stránka nebola nájdená.'
-    ANCHORVALUE: Kotva
     CAPTIONTEXT: 'Text nadpisu'
     CSSCLASS: 'Zarovnanie / štýl'
     CSSCLASSCENTER: 'Centrované samotné.'
     CSSCLASSLEFT: 'Vľavo, s obtekajúcim textom.'
     CSSCLASSLEFTALONE: 'Vľavo, samostatne.'
     CSSCLASSRIGHT: 'Vpravo, s obtekajúcim textom.'
-    EMAIL: 'Emailová adresa'
     IMAGEALT: 'Atlernatívny text (alt)'
     IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa ak obrázok nemože byť zobrazený '
     IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, ak obrázok nemôže byť zobrazený'
@@ -121,20 +86,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: 'Šírka'
-    LINK: 'Vložiť odkaz'
-    LINKANCHOR: 'Odkaz na kotvu na tejto stránke'
-    LINKDESCR: 'Popis odkazu'
-    LINKDETAILS: 'Popis odkazu'
-    LINKEMAIL: 'Odkaz na emailovú adresu'
-    LINKEXTERNAL: 'Odkaz na inú stránku'
-    LINKFILE: 'Odkaz na stiahnutie súboru'
-    LINKINTERNAL: 'Odkaz na stránku tohto webu'
-    LINKOPENNEWWIN: 'Otvoriť odkaz v novom okne?'
-    LINKTO: 'Typ odkazu'
-    PAGE: Stránka
-    SUBJECT: 'Predmet emailu'
-    URL: URL
+    IMAGEWIDTHPX: Šírka
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Iba absolutné url môžu byť zabudované'
@@ -143,19 +95,6 @@ sk:
     ERROR_NOTFOUND: 'Nie je možné nájsť súbor pre náhľad'
     ERROR_OEMBED_REMOTE: 'Vstavané je kompatibilné so vzdialenými súbormi'
     ERROR_SCHEME: 'Táto schéma súboru nie je obsiahnutá v whitelist'
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Vlastné
-    DATEFORMATBAD: 'Formát dátumu je neplatný'
-    DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
-    DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
-    FOURDIGITYEAR: 'Štvorčíslie roka'
-    HOURNOLEADING24: 'Hodina bez úvodnej nuly, 24 hodinový formát'
-    MINUTENOLEADING: 'Minúta bez úvodnej nuly'
-    MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
-    Preview: Náhľad
-    TWODIGITDAY: 'Dvojčíslie dňa mesiaca'
-    TWODIGITYEAR: 'Dvojčíslie roka'
-    Toggle: 'Ukázať nápovedu formátovania'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -174,8 +113,8 @@ sk:
     SINGULARNAME: 'Dátový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ktorýkoľvek
-    NOANSWER: Nie
-    YESANSWER: Áno
+    NOANSWER: 'Nie'
+    YESANSWER: 'Áno'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'menej ako minúta'
     TIMEDIFFAGO: '{difference} pred'
@@ -220,7 +159,6 @@ sk:
     has_many_Permissions: Právomoci
     many_many_Members: Členovia
   SilverStripe\Security\LoginAttempt:
-    Email: 'Emailová adresa'
     IP: 'IP adreasa'
     PLURALNAME: 'Pokusy o prihlásenie'
     SINGULARNAME: 'Pokus o prihlásenie'
@@ -243,7 +181,7 @@ sk:
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
-    FIRSTNAME: Meno
+    FIRSTNAME: 'Meno'
     INTERFACELANG: 'Jazyk rozhrania'
     KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
@@ -273,6 +211,7 @@ sk:
     TOOSHORT: 'Heslo je príliš krátke, musí byť %s alebo viacej znakov dlhé'
   SilverStripe\Security\Permission:
     AdminGroup: Administrátor
+    CONTENT_CATEGORY: 'Práva k obsahu'
     FULLADMINRIGHTS: 'Plné administrátorské práva'
     FULLADMINRIGHTS_HELP: 'Ma prednosť pred všetkými ostatnými prideleniami a právomocami.'
     PLURALNAME: Oprávnenia
@@ -299,7 +238,7 @@ sk:
     CHANGEPASSWORDHEADER: 'Zmeniť heslo'
     ENTERNEWPASSWORD: 'Prosím zadajte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
-    LOGIN: Prihlásiť
+    LOGIN: 'Prihlásiť'
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je vypršala jeho platnosť.</p><p>Môžete požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo po <a href="{link2}">prihlásení</a>.</p>'

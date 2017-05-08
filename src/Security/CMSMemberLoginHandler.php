@@ -42,7 +42,7 @@ class CMSMemberLoginHandler extends MemberLoginHandler
         // Since this form is loaded via an iframe, this redirect must be performed via javascript
         $changePasswordForm = ChangePasswordForm::create($this->form->getController(), 'ChangePasswordForm');
         $changePasswordForm->sessionMessage(
-            _t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
+            _t('SilverStripe\\Security\\Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
             'good'
         );
 
@@ -51,7 +51,7 @@ class CMSMemberLoginHandler extends MemberLoginHandler
         $changePasswordURLATT = Convert::raw2att($changePasswordURL);
         $changePasswordURLJS = Convert::raw2js($changePasswordURL);
         $message = _t(
-            'CMSMemberLoginForm.PASSWORDEXPIRED',
+            'SilverStripe\\Security\\CMSMemberLoginForm.PASSWORDEXPIRED',
             '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>',
             'Message displayed to user if their session cannot be restored',
             array('link' => $changePasswordURLATT)

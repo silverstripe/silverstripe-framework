@@ -147,10 +147,10 @@ abstract class HTMLEditorField_File extends ViewableData
     protected function getDetailFields()
     {
         $fields = new FieldList(
-            ReadonlyField::create("FileType", _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.TYPE', 'File type'), $this->getFileType()),
+            ReadonlyField::create("FileType", _t(__CLASS__.'.TYPE', 'File type'), $this->getFileType()),
             HTMLReadonlyField::create(
                 'ClickableURL',
-                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.URL', 'URL'),
+                _t(__CLASS__.'.URL', 'URL'),
                 $this->getExternalLink()
             )
         );
@@ -158,19 +158,19 @@ abstract class HTMLEditorField_File extends ViewableData
         if ($this->getSize()) {
             $fields->insertAfter(
                 'FileType',
-                ReadonlyField::create("Size", _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.SIZE', 'File size'), $this->getSize())
+                ReadonlyField::create("Size", _t(__CLASS__.'.SIZE', 'File size'), $this->getSize())
             );
         }
         // Get modified details of local record
         if ($this->getFile()) {
             $fields->push(new DateField_Disabled(
                 "Created",
-                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.CREATED', 'First uploaded'),
+                _t(__CLASS__.'.CREATED', 'First uploaded'),
                 $this->getFile()->Created
             ));
             $fields->push(new DateField_Disabled(
                 "LastEdited",
-                _t('SilverStripe\\AssetAdmin\\Controller\\AssetAdmin.LASTEDIT', 'Last changed'),
+                _t(__CLASS__.'.LASTEDIT', 'Last changed'),
                 $this->getFile()->LastEdited
             ));
         }

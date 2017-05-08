@@ -1,32 +1,6 @@
 fr:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nom du group'
-    MEMBERS: Membres
-    NEWGROUP: 'Nouveau groupe'
-    PERMISSIONS: Autorisations
-    ROLES: Rôles
-    ROLESDESCRIPTION: 'Les rôles sont des regroupements logiques d’autorisations qui peuvent être assignés à des groupes.<br />Ils peuvent être hérités de groupes parents, si nécessaire.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Hauteur
-    SIZE: Taille
-    TYPE: Type
-    URL: URL
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensions
-    EDIT: Modifier
-    EDITINFO: 'Modifier ce fichier'
-    FIELDNOTSET: 'Informations concernant le fichiers non-trouvées'
-    REMOVE: Supprimer
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Requête non valide'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
-    HELLO: Salut
-    TEXT1: 'Voici votre'
-    TEXT2: 'lien de réinitialisation de mot de passe'
-    TEXT3: pour
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
     BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
@@ -37,7 +11,7 @@ fr:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'non renseigné'
-    TODAY: 'aujourd''hui'
+    TODAY: aujourd'hui
     VALIDDATEFORMAT2: 'Saisissez la date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle qui a été autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être plus récente ou égale à celle qui a été autorisée ({date})'
@@ -62,7 +36,6 @@ fr:
     LinkExisting: 'Lien existant'
     NewRecord: 'Nouveau %s'
     NoItemsFound: 'Aucun élément n’a été trouvé.'
-    OF: de
     PRINTEDAT: 'Imprimé le'
     PRINTEDBY: 'Imprimé par'
     PlaceHolder: 'Rechercher {type}'
@@ -85,28 +58,13 @@ fr:
     Save: Enregistrer
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editer
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Page
-    View: Afficher
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Personnalisé
-    DATEFORMATBAD: 'Format de date incorrect'
-    DAYNOLEADING: 'Le jour du mois sans zéro initial'
-    DIGITSDECFRACTIONSECOND: 'Un ou plusieurs chiffres représentant la fraction décimale d’une seconde'
-    FOURDIGITYEAR: 'L’année sur 4 chiffres'
-    MINUTENOLEADING: 'La minute sans zéro initial'
-    MONTHNOLEADING: 'Le chiffre du mois sans zéro initial'
-    Preview: Aperçu
-    TWODIGITDAY: 'Le jour du mois sur deux chiffres'
-    TWODIGITYEAR: 'L’année sur deux chiffres'
-    Toggle: 'Afficher l’aide de mise en forme'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Quantité
     FIELDLABELCURRENCY: Devise
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Est Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: "«\_{value}\_» n’est pas un chiffre, seule donnée acceptée dans ce champ "
+    VALIDATION: '« {value} » n’est pas un chiffre, seule donnée acceptée dans ce champ '
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Entrer un numéro de téléphone valide'
   SilverStripe\Forms\TimeField:
@@ -120,7 +78,7 @@ fr:
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Tous
   SilverStripe\ORM\Hierarchy\Hierarchy:
-    InfiniteLoopNotAllowed: "Une boucle infinie s’est produite dans la hiérarchie «\_{type}\_». Modifiez le parent pour le résoudre."
+    InfiniteLoopNotAllowed: 'Une boucle infinie s’est produite dans la hiérarchie « {type} ». Modifiez le parent pour le résoudre.'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Entrer un identifiant et un mot de passe s''il vous plaît.'
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
@@ -140,7 +98,6 @@ fr:
     has_many_Permissions: Autorisations
     many_many_Members: Membres
   SilverStripe\Security\LoginAttempt:
-    Email: 'Adresse Email'
     IP: 'Adresse IP'
     Status: Statut
   SilverStripe\Security\Member:
@@ -159,22 +116,22 @@ fr:
     ERRORNEWPASSWORD: 'Vous avez entré votre nouveau mot de passe différemment, réessayez'
     ERRORPASSWORDNOTMATCH: 'Votre actuel mot de passe ne correspond pas, essayez encore s''il vous plaît'
     ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Essayez encore s''il vous plaît.'
-    FIRSTNAME: Prénom
+    FIRSTNAME: 'Prénom'
     INTERFACELANG: 'Langue de l''interface'
     LOGGEDINAS: 'Vous êtes connecté comme {name}.'
     NEWPASSWORD: 'Nouveau mot de passe'
     NoPassword: 'Ce membre n''a pas de mot de passe'
-    PASSWORD: 'Mot de passe'
+    PASSWORD: Mot de passe
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
-    SURNAME: 'Nom de famille'
+    SURNAME: Nom de famille
     ValidationIdentifierFailed: 'On ne peut pas réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     WELCOMEBACK: 'Bienvenue {firstname}'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
     db_Locale: 'Langue de l''Interface'
     db_LockedOutUntil: 'Verrouillé jusqu''à'
-    db_Password: 'Mot de passe'
+    db_Password: Mot de passe
     db_PasswordExpiry: 'Date d''expiration du mot de passe'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Veuillez augmenter la force de votre mot de passe en ajoutant certains caractères suivants : %s'
@@ -182,14 +139,15 @@ fr:
     TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins %s caractères'
   SilverStripe\Security\Permission:
     AdminGroup: Administrateur
+    CONTENT_CATEGORY: 'Permissions du contenu'
     FULLADMINRIGHTS: 'Droits d''administration complets'
     FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
-    UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
+    UserPermissionsIntro: 'Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section « Groupes » pour plus de détails sur les autorisations associées à chaque groupe.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
-    FromGroup: "hérité du groupe «\_{title}\_»"
-    FromRole: "héritée du rôle «\_{title}\_»"
-    FromRoleOnGroup: "hérité du rôle «\_%s\_» du groupe «\_%s\_»"
+    FromGroup: 'hérité du groupe « {title} »'
+    FromRole: 'héritée du rôle « {title} »'
+    FromRoleOnGroup: 'hérité du rôle « %s » du groupe « %s »'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Limité aux administrateurs'
     Title: Titre
@@ -200,9 +158,9 @@ fr:
     CHANGEPASSWORDHEADER: 'Modifier votre mot de passe'
     ENTERNEWPASSWORD: 'Entrer un nouveau mot de passe s''il vous plaît.'
     ERRORPASSWORDPERMISSION: 'Vous devez être connecté pour modifier votre mot de passe !'
-    LOGIN: Connectez-vous
+    LOGIN: 'Connectez-vous'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrer vos détails ci-dessous et nous vous enverrons directement.'
     NOTERESETLINKINVALID: '<p>Le lien de réinitialisation du mot de passe n’est pas valide ou a expiré.</p><p>Vous pouvez en demander un nouveau <a href="{link1}">en suivant ce lien</a> ou changer de mot de passe après <a href="{link2}">connexion</a>.</p>'
     NOTERESETPASSWORD: 'Entrer votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-    PASSWORDSENTHEADER: "Lien de réinitialisation de mot de passe envoyé  à «\_{email}\_»"
-    PASSWORDSENTTEXT: "Merci\_! Un lien de réinitialisation vient d’être envoyé à «\_{email}\_», à condition que cette adresse existe."
+    PASSWORDSENTHEADER: 'Lien de réinitialisation de mot de passe envoyé  à « {email} »'
+    PASSWORDSENTTEXT: 'Merci ! Un lien de réinitialisation vient d’être envoyé à « {email} », à condition que cette adresse existe.'

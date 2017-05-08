@@ -1,27 +1,6 @@
 es_MX:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: 'Nombre de grupo'
-    MEMBERS: Miembros
-    NEWGROUP: 'Nuevo grupo'
-    PERMISSIONS: Permisos
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    SIZE: Tamaño
-    TYPE: Tipo
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensiones
-    EDITINFO: 'Editar este archivo'
-    FIELDNOTSET: 'Información acerca del archivo no encontrada'
-    REMOVE: Remover
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Principal
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
-    HELLO: Hey
-    TEXT1: 'Estás aquí'
-    TEXT2: 'vínculo para restablecer la contraseña'
-    TEXT3: para
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   SilverStripe\Forms\DateField:
@@ -57,17 +36,6 @@ es_MX:
     Delete: Eliminar
     DeletePermissionsFailure: 'No borrar permisos'
     UnlinkRelation: Desvincular
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: 'A medida'
-    DATEFORMATBAD: 'El formato de fecha es invalido'
-    DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
-    DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
-    FOURDIGITYEAR: 'Año de 4 dígitos'
-    MINUTENOLEADING: 'Minuto sin cero a la izquierda'
-    MONTHNOLEADING: 'Dígito del mes  sin cero'
-    Preview: Previo
-    TWODIGITDAY: 'Dia del mes de dos dígitos'
-    TWODIGITYEAR: 'Año en 2 dígitos'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importe
     FIELDLABELCURRENCY: Moneda
@@ -103,19 +71,18 @@ es_MX:
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   SilverStripe\Security\LoginAttempt:
-    Email: 'Dirección de Correo Electrónico'
     IP: 'Dirección IP'
     Status: Estado
   SilverStripe\Security\Member:
     ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: Ingresar
+    BUTTONLOGIN: 'Ingresar'
     BUTTONLOGINOTHER: 'Ingresar como alguien más'
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
     DefaultAdminFirstname: 'Administrador Predeterminado'
-    EMAIL: 'Correo electrónico'
+    EMAIL: Correo electrónico
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
     ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
     ERRORNEWPASSWORD: 'Usted ha ingresado su nueva contraseña diferentemente, intenta de nuevo'
@@ -138,6 +105,7 @@ es_MX:
     db_PasswordExpiry: 'Fecha en que expira la contraseña'
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
+    CONTENT_CATEGORY: 'Permisos de contenido'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -149,6 +117,6 @@ es_MX:
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber firmado para cambiar la contraseña!'
-    LOGIN: Ingresar
+    LOGIN: 'Ingresar'
     NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'

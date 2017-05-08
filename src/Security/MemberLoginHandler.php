@@ -183,7 +183,7 @@ class MemberLoginHandler extends FormRequestHandler
         // Ensure password is given
         if (empty($data['Email'])) {
             $this->form->sessionMessage(
-                _t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
+                _t('SilverStripe\\Security\\Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
                 'bad'
             );
             return $this->redirectToLostPassword();
@@ -205,7 +205,7 @@ class MemberLoginHandler extends FormRequestHandler
             Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
                 ->setData($member)
-                ->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
+                ->setSubject(_t('SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
                 ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
                 ->setTo($member->Email)
                 ->send();
@@ -231,7 +231,7 @@ class MemberLoginHandler extends FormRequestHandler
     {
         $cp = ChangePasswordForm::create($this->form->getController(), 'ChangePasswordForm');
         $cp->sessionMessage(
-            _t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
+            _t('SilverStripe\\Security\\Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');

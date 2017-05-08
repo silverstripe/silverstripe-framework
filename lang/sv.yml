@@ -1,37 +1,9 @@
 sv:
-  SilverStripe\Admin\SecurityAdmin:
-    GROUPNAME: Gruppnamn
-    MEMBERS: Medlemmar
-    NEWGROUP: 'Ny grupp'
-    PERMISSIONS: Tillstånd
-    ROLES: Roller
-    ROLESDESCRIPTION: 'Roller är fördefinierade uppsättningar av tillstånd, och kan tilldelas grupper. <br/> De ärvs från föräldragrupper om det krävs.'
-  SilverStripe\AssetAdmin\Controller\AssetAdmin:
-    HEIGHT: Höjd
-    SIZE: Filstorlek
-    TYPE: Filtyp
-    URL: URL
-    WIDTH: Bredd
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensioner
-    EDIT: Ändra
-    EDITINFO: 'Redigera filen'
-    FIELDNOTSET: 'Hittade ingen filinformation'
-    REMOVE: 'Ta bort'
-  SilverStripe\CMS\Model\SiteTree:
-    TABMAIN: Allmän
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Ogiltig förfrågan'
-  SilverStripe\Control\Email\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
-    CHANGEPASSWORDTEXT3: 'Ändra lösenord'
-    HELLO: Hej
-    TEXT1: 'Här är din'
-    TEXT2: 'Återställningslänk för lösenord'
-    TEXT3: för
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Nej
-    YESANSWER: Ja
+    NOANSWER: 'Nej'
+    YESANSWER: 'Ja'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Lösenord måste vara minst {min} tecken långa.'
     BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
@@ -43,7 +15,7 @@ sv:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'inte angivet'
-    TODAY: 'i dag'
+    TODAY: i dag
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
@@ -71,13 +43,12 @@ sv:
     LinkExisting: 'Länk finns'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Inget hittades'
-    OF: av
-    PRINTEDAT: Utskrivet
+    PRINTEDAT: 'Utskrivet'
     PRINTEDBY: 'Utskrivet av'
     PlaceHolder: 'Hitta {type}'
     PlaceHolderWithLabels: 'Hitta {type} efter {name}'
-    Print: 'Skriv ut'
-    RelationSearch: Relationssökning
+    Print: Skriv ut
+    RelationSearch: 'Relationssökning'
     ResetFilter: Rensa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Radera
@@ -94,21 +65,6 @@ sv:
     Save: Spara
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigera
-  SilverStripe\Forms\GridField\GridFieldPaginator_Row_ss:
-    Page: Sida
-    View: Visa
-  SilverStripe\Forms\MemberDatetimeOptionsetField:
-    Custom: Anpassad
-    DATEFORMATBAD: 'Datumformatet är ogiltigt'
-    DAYNOLEADING: 'Dag i månad utan inledande nolla'
-    DIGITSDECFRACTIONSECOND: 'En eller fler delar som representerar en decimaldel av en sekund.'
-    FOURDIGITYEAR: 'Fyrsiffrigt år'
-    MINUTENOLEADING: 'Minut utan inledande nolla'
-    MONTHNOLEADING: 'Dag i månad utan inledande nolla'
-    Preview: Förhandsgranska
-    TWODIGITDAY: 'Två siffror för dag i månad'
-    TWODIGITYEAR: 'Två siffror för år'
-    Toggle: 'Visa fomateringshjälp'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Belopp
     FIELDLABELCURRENCY: Valuta
@@ -121,15 +77,15 @@ sv:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: 'Vilken som helst'
-    NOANSWER: Nej
-    YESANSWER: Ja
+    ANY: Vilken som helst
+    NOANSWER: 'Nej'
+    YESANSWER: 'Ja'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mindre än en minut'
     TIMEDIFFAGO: '{difference} sen'
     TIMEDIFFIN: 'om {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: 'Vilken som helst'
+    ANY: Vilken som helst
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Oändlig loop hittades i hierarkin "{type}". Var vänlig ändra föräldern för att lösa detta'
   SilverStripe\Security\BasicAuth:
@@ -150,9 +106,9 @@ sv:
     TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
   SilverStripe\Security\Group:
     AddRole: 'Lägg till roll för den här gruppen'
-    Code: Gruppkod
+    Code: 'Gruppkod'
     DefaultGroupTitleAdministrators: Administratörer
-    DefaultGroupTitleContentAuthors: Författare
+    DefaultGroupTitleContentAuthors: 'Författare'
     Description: Beskrivning
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
     HierarchyPermsError: 'Den överordnade gruppen "%s" kan inte ges priviligerad tillgång (adminrättigheter krävs)'
@@ -160,12 +116,11 @@ sv:
     NoRoles: 'Inga roller fun'
     Parent: 'Överordnad grupp'
     RolesAddEditLink: 'Hantera roller'
-    Sort: Sorteringsordning
+    Sort: 'Sorteringsordning'
     has_many_Permissions: Behörigheter
     many_many_Members: Medlemmar
   SilverStripe\Security\LoginAttempt:
-    Email: E-postadress
-    IP: IP-adress
+    IP: 'IP-adress'
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Lägg till grupp'
@@ -175,7 +130,7 @@ sv:
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
-    DefaultAdminFirstname: standard
+    DefaultAdminFirstname: 'standard'
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Det nya lösenordet kan inte vara tomt, vänligen försök igen'
     ENTEREMAIL: 'Ange en e-postadress för att få en återställningslänk för lösenordet.'
@@ -183,8 +138,8 @@ sv:
     ERRORNEWPASSWORD: 'Du har angett ditt nya lösenord annorlunda, försök igen'
     ERRORPASSWORDNOTMATCH: 'Ditt nuvarande lösenord matchar inte, var god försök igen'
     ERRORWRONGCRED: 'Antingen e-postadressen eller lösenordet är fel. Försök igen.'
-    FIRSTNAME: Förnamn
-    INTERFACELANG: Gränssnittsspråk
+    FIRSTNAME: 'Förnamn'
+    INTERFACELANG: 'Gränssnittsspråk'
     LOGGEDINAS: 'Du är inloggad som {name}.'
     NEWPASSWORD: 'Nytt lösenord'
     NoPassword: 'Det finns inget lösenord för den här medlemmen'
@@ -197,7 +152,7 @@ sv:
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'
     belongs_many_many_Groups: Grupper
-    db_Locale: Gränssnittsspråk
+    db_Locale: 'Gränssnittsspråk'
     db_LockedOutUntil: 'Utelåst till'
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
@@ -207,6 +162,7 @@ sv:
     TOOSHORT: 'Lösenordet är för kort, det måste innehålla %s eller fler tecken.'
   SilverStripe\Security\Permission:
     AdminGroup: Administratör
+    CONTENT_CATEGORY: 'Innehållsåtkomst'
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
     UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'

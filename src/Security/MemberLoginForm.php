@@ -87,7 +87,7 @@ class MemberLoginForm extends LoginForm
                 HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this)
             );
             $actions = FieldList::create(
-                FormAction::create("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else"))
+                FormAction::create("logout", _t('SilverStripe\\Security\\Member.BUTTONLOGINOTHER', "Log in as someone else"))
             );
         } else {
             if (!$fields) {

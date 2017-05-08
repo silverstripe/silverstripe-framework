@@ -44,10 +44,9 @@ class LoginAttempt extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        /** @skipUpgrade */
-        $labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
-        $labels['Status'] = _t('SilverStripe\\Security\\LoginAttempt.Status', 'Status');
-        $labels['IP'] = _t('SilverStripe\\Security\\LoginAttempt.IP', 'IP Address');
+        $labels['Email'] = _t(__CLASS__.'.LoginAttempt.Email', 'Email Address');
+        $labels['Status'] = _t(__CLASS__.'.Status', 'Status');
+        $labels['IP'] = _t(__CLASS__.'.IP', 'IP Address');
 
         return $labels;
     }
