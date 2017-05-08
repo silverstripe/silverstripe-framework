@@ -53,7 +53,6 @@ en:
     BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    VALIDATIONCREDIT: 'Please ensure you have entered the credit card number correctly'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -161,8 +160,6 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   SilverStripe\ORM\DataObject:
