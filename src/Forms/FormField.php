@@ -90,6 +90,13 @@ class FormField extends RequestHandler
     protected $form;
 
     /**
+     * This is INPUT's type attribute value.
+     *
+     * @var string
+     */
+    protected $inputType = 'text';
+
+    /**
      * @var string
      */
     protected $name;
@@ -447,6 +454,16 @@ class FormField extends RequestHandler
     }
 
     /**
+     * Returns the field input name.
+     *
+     * @return string
+     */
+    public function getInputType()
+    {
+        return $this->inputType;
+    }
+
+    /**
      * Returns the field value.
      *
      * @see FormField::setSubmittedValue()
@@ -678,7 +695,7 @@ class FormField extends RequestHandler
     public function getAttributes()
     {
         $attributes = array(
-            'type' => 'text',
+            'type' => $this->getInputType(),
             'name' => $this->getName(),
             'value' => $this->Value(),
             'class' => $this->extraClass(),
@@ -807,6 +824,20 @@ class FormField extends RequestHandler
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Set the field input type.
+     *
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setInputType($type)
+    {
+        $this->inputType = $type;
 
         return $this;
     }
@@ -1499,7 +1530,8 @@ class FormField extends RequestHandler
         return [
             'name' => $this->getName(),
             'id' => $this->ID(),
-            'type' => $this->getSchemaDataType(),
+            'type' => $this->getInputType(),
+            'schemaType' => $this->getSchemaDataType(),
             'component' => $this->getSchemaComponent(),
             'holderId' => $this->HolderID(),
             'title' => $this->Title(),

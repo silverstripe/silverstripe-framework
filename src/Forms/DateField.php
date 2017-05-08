@@ -94,6 +94,8 @@ class DateField extends TextField
      */
     protected $clientLocale = null;
 
+    protected $inputType = 'date';
+
     /**
      * Min date
      *
@@ -283,9 +285,10 @@ class DateField extends TextField
         $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
 
         if ($this->getHTML5()) {
-            $attributes['type'] = 'date';
             $attributes['min'] = $this->getMinDate();
             $attributes['max'] = $this->getMaxDate();
+        } else {
+            $attributes['type'] = 'text';
         }
 
         return $attributes;

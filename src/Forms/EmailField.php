@@ -7,25 +7,14 @@ namespace SilverStripe\Forms;
  */
 class EmailField extends TextField
 {
+
+    protected $inputType = 'email';
     /**
      * {@inheritdoc}
      */
     public function Type()
     {
         return 'email text';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAttributes()
-    {
-        return array_merge(
-            parent::getAttributes(),
-            array(
-                'type' => 'email',
-            )
-        );
     }
 
     /**
