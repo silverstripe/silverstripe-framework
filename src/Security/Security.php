@@ -1138,29 +1138,6 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
-     * Enable or disable recording of login attempts
-     * through the {@link LoginRecord} object.
-     *
-     * @deprecated 4.0 Use the "Security.login_recording" config setting instead
-     * @param boolean $bool
-     */
-    public static function set_login_recording($bool)
-    {
-        Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
-        self::$login_recording = (bool)$bool;
-    }
-
-    /**
-     * @deprecated 4.0 Use the "Security.login_recording" config setting instead
-     * @return boolean
-     */
-    public static function login_recording()
-    {
-        Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
-        return self::$login_recording;
-    }
-
-    /**
      * @config
      * @var string Set the default login dest
      * This is the URL that users will be redirected to after they log in,
