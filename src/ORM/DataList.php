@@ -380,6 +380,17 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * Return a copy of this list with the applied GROUP BY data
+     *
+     * @param String $groupby Escaped SQL statement
+     */
+    public function groupby($groupby) {
+        return $this->alterDataQuery(function($query) use ($groupby){
+            $query->addGroupBy($groupby);
+        });
+    }
+
+    /**
      * Return a copy of this list which only includes items with these charactaristics
      *
      * @see SS_List::filter()
