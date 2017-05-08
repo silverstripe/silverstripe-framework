@@ -869,10 +869,10 @@ class Requirements_Backend {
 
 				// Forcefully put the scripts at the bottom of the body instead of before the first
 				// script tag.
-				$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
+				$replacements["/(<\/body[^>]*>)/i"] = $this->escapeReplacement($jsRequirements) . "\\1";
 
 				// Put CSS at the bottom of the head
-				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
+				$replacements["/(<\/head>)/i"] = $this->escapeReplacement($requirements) . "\\1";
 			} elseif ($this->write_js_to_body) {
 				$jsRequirements = $this->removeNewlinesFromCode($jsRequirements);
 
@@ -894,14 +894,14 @@ class Requirements_Backend {
 				if ($canWriteToBody) {
 					$content = substr($content, 0, $p1) . $jsRequirements . substr($content, $p1);
 				} else {
-					$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
+					$replacements["/(<\/body[^>]*>)/i"] = $this->escapeReplacement($jsRequirements) . "\\1";
 				}
 
 				// Put CSS at the bottom of the head
-				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
+				$replacements["/(<\/head>)/i"] = $this->escapeReplacement($requirements) . "\\1";
 			} else {
 				// Put CSS and Javascript together before the closing head tag
-				$replacements["/(<\/head>)/i"] = $requirements . $jsRequirements. "\\1";
+				$replacements["/(<\/head>)/i"] = $this->escapeReplacement($requirements . $jsRequirements) . "\\1";
 			}
 
 			if (!empty($replacements)) {
@@ -921,6 +921,16 @@ class Requirements_Backend {
 	 */
 	protected function removeNewlinesFromCode($code) {
 		return preg_replace('/>\n*/', '>', $code);
+	}
+
+	/**
+	 * Safely escape a literal string for use in preg_replace replacement
+	 *
+	 * @param string $replacement
+	 * @return string
+	 */
+	protected function escapeReplacement($replacement) {
+		return addcslashes($replacement, '\\$');
 	}
 
 	/**
