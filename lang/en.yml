@@ -231,10 +231,10 @@ en:
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Any
   SilverStripe\ORM\Hierarchy:
-    LIMITED_TITLE: 'Too many children ({count}}'
+    LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
-    LIMITED_TITLE: 'Too many children ({count}}'
+    LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Validation error'
   SilverStripe\Security\BasicAuth:

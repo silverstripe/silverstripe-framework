@@ -7,7 +7,7 @@
 <% end_if %>
 
 <% if $limited %>
-    <li><%t SilverStripe\\ORM\\Hierarchy.LIMITED_TITLE 'Too many children ({count}}' count=$count %></li>
+    <li><%t SilverStripe\\ORM\\Hierarchy.LIMITED_TITLE 'Too many children ({count})' count=$count %></li>
 <% else_if $children %>
     <% loop $children %>
         <li id="selector-{$name}-{$id}" data-id="{$id}"
