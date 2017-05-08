@@ -156,10 +156,6 @@ class DBMoneyTest extends SapphireTest
         // USD in de locale
         $USD->setLocale('de_DE');
         $this->assertSame($this->clean('53.292,18 $'), $this->clean($USD->Nice()));
-
-        // USD in swedish locale is fun
-        $USD->setLocale('sv');
-        $this->assertSame($this->clean('53 292,18 US$'), $this->clean($USD->Nice()));
     }
 
     public function testGetSymbol()
