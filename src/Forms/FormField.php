@@ -1261,22 +1261,6 @@ class FormField extends RequestHandler
     }
 
     /**
-     * @deprecated 4.0 Use FormField::create_tag()
-     *
-     * @param string $tag
-     * @param array $attributes
-     * @param null|string $content
-     *
-     * @return string
-     */
-    public function createTag($tag, $attributes, $content = null)
-    {
-        Deprecation::notice('4.0', 'Use FormField::create_tag()');
-
-        return self::create_tag($tag, $attributes, $content);
-    }
-
-    /**
      * Abstract method each {@link FormField} subclass must implement, determines whether the field
      * is valid or not based on the value.
      *
