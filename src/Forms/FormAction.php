@@ -175,7 +175,11 @@ class FormAction extends FormField
 
     public function getAttributes()
     {
-        $type = (isset($this->attributes['src'])) ? 'image' : 'submit';
+        if (isset($this->attributes['type'])) {
+            $type = $this->attributes['type'];
+        } else {
+            $type = (isset($this->attributes['src'])) ? 'image' : 'submit';
+        }
 
         return array_merge(
             parent::getAttributes(),
