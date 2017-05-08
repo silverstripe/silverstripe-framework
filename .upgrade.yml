@@ -290,8 +290,6 @@ mappings:
   CheckboxSetField: SilverStripe\Forms\CheckboxSetField
   CompositeField: SilverStripe\Forms\CompositeField
   ConfirmedPasswordField: SilverStripe\Forms\ConfirmedPasswordField
-  CountryDropdownField: SilverStripe\Forms\CountryDropdownField
-  CreditCardField: SilverStripe\Forms\CreditCardField
   CurrencyField: SilverStripe\Forms\CurrencyField
   CurrencyField_Readonly: SilverStripe\Forms\CurrencyField_Readonly
   CurrencyField_Disabled: SilverStripe\Forms\CurrencyField_Disabled
@@ -317,13 +315,10 @@ mappings:
   GroupedDropdownField: SilverStripe\Forms\GroupedDropdownField
   HeaderField: SilverStripe\Forms\HeaderField
   HiddenField: SilverStripe\Forms\HiddenField
-  InlineFormAction: SilverStripe\Forms\InlineFormAction
-  InlineFormAction_ReadOnly: SilverStripe\Forms\InlineFormAction_ReadOnly
   LabelField: SilverStripe\Forms\LabelField
   ListboxField: SilverStripe\Forms\ListboxField
   LiteralField: SilverStripe\Forms\LiteralField
   LookupField: SilverStripe\Forms\LookupField
-  MemberDatetimeOptionsetField: SilverStripe\Forms\MemberDatetimeOptionsetField
   MoneyField: SilverStripe\Forms\MoneyField
   MultiSelectField: SilverStripe\Forms\MultiSelectField
   NullableField: SilverStripe\Forms\NullableField
@@ -331,7 +326,6 @@ mappings:
   NumericField_Readonly: SilverStripe\Forms\NumericField_Readonly
   OptionsetField: SilverStripe\Forms\OptionsetField
   PasswordField: SilverStripe\Forms\PasswordField
-  PhoneNumberField: SilverStripe\Forms\PhoneNumberField
   PopoverField: SilverStripe\Forms\PopoverField
   PrintableTransformation: SilverStripe\Forms\PrintableTransformation
   PrintableTransformation_TabSet: SilverStripe\Forms\PrintableTransformation_TabSet
@@ -636,7 +630,6 @@ mappings:
   GridFieldTest_HTMLFragments: SilverStripe\Forms\Tests\GridField\GridFieldTest\HTMLFragments
   GridFieldTest_Permissions: SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions
   GroupedDropdownFieldTest: SilverStripe\Forms\Tests\GroupedDropdownFieldTest
-  InlineFormActionTest: SilverStripe\Forms\Tests\InlineFormActionTest
   ListboxFieldTest: SilverStripe\Forms\Tests\ListboxFieldTest
   ListboxFieldTest_DataObject: SilverStripe\Forms\Tests\ListboxFieldTest\TestObject
   ListboxFieldTest_Article: SilverStripe\Forms\Tests\ListboxFieldTest\Article

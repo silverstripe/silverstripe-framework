@@ -22,10 +22,7 @@ on the SilverStripe API documentation.
 
 ## Formatted input
 
- * [api:AjaxUniqueTextField]: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables.
  * [api:ConfirmedPasswordField]: Two masked input fields, checks for matching passwords.
- * [api:CountryDropdownField]: A simple extension to dropdown field, pre-configured to list countries.
- * [api:CreditCardField]: Allows input of credit card numbers via four separate form fields, including generic validation of its numeric values.
  * [api:CurrencyField]: Text field, validating its input as a currency. Limited to US-centric formats, including a hardcoded currency symbol and decimal separators. 
  See [api:MoneyField] for a more flexible implementation.
  * [api:DateField]: Represents a date in a single input field, or separated into day, month, and year. Can optionally use a calendar popup.
@@ -36,7 +33,6 @@ on the SilverStripe API documentation.
  * [api:MoneyField]: A form field that can save into a [api:Money] database field.
  * [api:NumericField]: Text input field with validation for numeric values.
  * [api:OptionsetField]: Set of radio buttons designed to emulate a dropdown.
- * [api:PhoneNumberField]: Field for displaying phone numbers. It separates the number, the area code and optionally the country code and extension.
  * [api:SelectionGroup]: SelectionGroup represents a number of fields which are selectable by a radio button that appears at the beginning of each item.
  * [api:TimeField]: Input field with time-specific, localised validation.
 
