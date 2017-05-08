@@ -3,6 +3,8 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\RelationList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -35,9 +37,16 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
     public function getHTMLFragments($gridField)
     {
         $singleton = singleton($gridField->getModelClass());
+        $context = [];
+        if ($gridField->getList() instanceof RelationList) {
+            $record = $gridField->getForm()->getRecord();
+            if ($record && $record instanceof DataObject) {
+                $context['Parent'] = $record;
+            }
+        }
 
-        if (!$singleton->canCreate()) {
-            return array();
+        if (!$singleton->canCreate(null, $context)) {
+            return [];
         }
 
         if (!$this->buttonName) {
@@ -46,14 +55,14 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
             $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', array('name' => $objectName));
         }
 
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             'NewLink' => Controller::join_links($gridField->Link('item'), 'new'),
             'ButtonName' => $this->buttonName,
-        ));
+        ]);
 
         $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
-        return array(
+        return [
             $this->targetFragment => $data->renderWith($templates),
-        );
+        ];
     }
 }

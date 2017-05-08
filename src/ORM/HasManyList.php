@@ -80,11 +80,11 @@ class HasManyList extends RelationList
 
         // Validate foreignID
         if (!$foreignID) {
-            user_error("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
+            user_error("HasManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
             return;
         }
         if (is_array($foreignID)) {
-            user_error("ManyManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
+            user_error("HasManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
             return;
         }
 
