@@ -350,13 +350,44 @@ class Member extends DataObject
      */
     public function isLockedOut()
     {
-        if (!$this->LockedOutUntil) {
+        /** @var DBDatetime $lockedOutUntilObj */
+        $lockedOutUntilObj = $this->dbObject('LockedOutUntil');
+        if ($lockedOutUntilObj->InFuture()) {
+            return true;
+        }
+
+        $maxAttempts = $this->config()->get('lock_out_after_incorrect_logins');
+        if ($maxAttempts <= 0) {
             return false;
         }
 
-        /** @var DBDatetime $lockedOutUntil */
-        $lockedOutUntil = $this->dbObject('LockedOutUntil');
-        return DBDatetime::now()->getTimestamp() < $lockedOutUntil->getTimestamp();
+        $idField = static::config()->get('unique_identifier_field');
+        $attempts = LoginAttempt::get()
+            ->filter('Email', $this->{$idField})
+            ->sort('Created', 'DESC')
+            ->limit($maxAttempts);
+
+        if ($attempts->count() < $maxAttempts) {
+            return false;
+        }
+
+        foreach ($attempts as $attempt) {
+            if ($attempt->Status === 'Success') {
+                return false;
+            }
+        }
+
+        // Calculate effective LockedOutUntil
+        /** @var DBDatetime $firstFailureDate */
+        $firstFailureDate = $attempts->first()->dbObject('Created');
+        $maxAgeSeconds = $this->config()->get('lock_out_delay_mins') * 60;
+        $lockedOutUntil = $firstFailureDate->getTimestamp() + $maxAgeSeconds;
+        $now = DBDatetime::now()->getTimestamp();
+        if ($now < $lockedOutUntil) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1652,7 +1683,7 @@ class Member extends DataObject
         $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
         if ($lockOutAfterCount) {
             // Keep a tally of the number of failed log-ins so that we can lock people out
-            $this->FailedLoginCount = $this->FailedLoginCount + 1;
+            ++$this->FailedLoginCount;
 
             if ($this->FailedLoginCount >= $lockOutAfterCount) {
                 $lockoutMins = self::config()->get('lock_out_delay_mins');
@@ -1672,6 +1703,7 @@ class Member extends DataObject
         if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
+            $this->LockedOutUntil = null;
             $this->write();
         }
     }
