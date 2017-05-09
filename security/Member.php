@@ -398,7 +398,35 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Returns true if this user is locked out
 	 */
 	public function isLockedOut() {
-		return $this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil);
+		global $debug;
+		if ($this->LockedOutUntil && $this->dbObject('LockedOutUntil')->InFuture()) {
+			return true;
+		}
+
+		if ($this->config()->lock_out_after_incorrect_logins <= 0) {
+			return false;
+		}
+
+		$attempts = LoginAttempt::get()->filter($filter = array(
+				'Email' => $this->{static::config()->unique_identifier_field},
+		))->sort('Created', 'DESC')->limit($this->config()->lock_out_after_incorrect_logins);
+
+		if ($attempts->count() < $this->config()->lock_out_after_incorrect_logins) {
+			return false;
+		}
+
+		foreach ($attempts as $attempt) {
+			if ($attempt->Status === 'Success') {
+				return false;
+			}
+		}
+
+		$lockedOutUntil = $attempts->first()->dbObject('Created')->Format('U') + ($this->config()->lock_out_delay_mins * 60);
+		if (SS_Datetime::now()->Format('U') < $lockedOutUntil) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -1660,7 +1688,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function registerFailedLogin() {
 		if(self::config()->lock_out_after_incorrect_logins) {
 			// Keep a tally of the number of failed log-ins so that we can lock people out
-			$this->FailedLoginCount = $this->FailedLoginCount + 1;
+			++$this->FailedLoginCount;
 
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
@@ -1679,6 +1707,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(self::config()->lock_out_after_incorrect_logins) {
 			// Forgive all past login failures
 			$this->FailedLoginCount = 0;
+			$this->LockedOutUntil = null;
 			$this->write();
 		}
 	}
