@@ -387,7 +387,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function groupby($groupby)
     {
         return $this->alterDataQuery(function ($query) use ($groupby) {
-            $query->addGroupBy($groupby);
+            $query->groupby($groupby);
         });
     }
 
