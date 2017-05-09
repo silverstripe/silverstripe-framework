@@ -1061,8 +1061,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         $dbConn = DB::get_conn();
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        return $dbConn && (substr($dbConn->getSelectedDatabase(), 0, strlen($prefix) + 5)
-            == strtolower(sprintf('%stmpdb', $prefix)));
+        return 1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbConn->getSelectedDatabase());
     }
 
     public static function kill_temp_db()
@@ -1118,10 +1117,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         DB::connect($databaseConfig);
         $dbConn = DB::get_conn();
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        $dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000, 9999999);
-        while (!$dbname || $dbConn->databaseExists($dbname)) {
-            $dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000, 9999999);
-        }
+        do {
+            $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
+        } while ($dbConn->databaseExists($dbname));
 
         $dbConn->selectDatabase($dbname, true);
 
@@ -1142,7 +1140,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
         foreach (DB::get_schema()->databaseList() as $dbName) {
-            if (preg_match(sprintf('/^%stmpdb[0-9]+$/', $prefix), $dbName)) {
+            if (1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbName)) {
                 DB::get_schema()->dropDatabase($dbName);
                 if (Director::is_cli()) {
                     echo "Dropped database \"$dbName\"" . PHP_EOL;
