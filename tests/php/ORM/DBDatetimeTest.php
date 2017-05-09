@@ -86,7 +86,8 @@ class DBDatetimeTest extends SapphireTest
     public function testTime()
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
-        $this->assertEquals('10:10:59 PM', $date->Time());
+        // casing depends on system ICU library
+        $this->assertRegexp('#10:10:59 (PM|pm)#', $date->Time());
     }
 
     public function testTime24()
