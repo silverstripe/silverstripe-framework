@@ -362,17 +362,6 @@ class DatabaseAdmin extends Controller
     }
 
     /**
-     * Clear all data out of the database
-     *
-     * @deprecated since version 4.0
-     */
-    public function clearAllData()
-    {
-        Deprecation::notice('4.0', 'Use DB::get_conn()->clearAllData() instead');
-        DB::get_conn()->clearAllData();
-    }
-
-    /**
      * Remove invalid records from tables - that is, records that don't have
      * corresponding records in their parent class tables.
      */

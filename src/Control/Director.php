@@ -575,17 +575,6 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Legacy ss4-alpha environment var
-        /**
-         * @todo remove at 4.0.0-beta1
-         * @deprecated 4.0.0-beta1
-         */
-        $legacyHostname = getenv('SS_HOST');
-        if ($legacyHostname) {
-            Deprecation::notice('4.0', 'SS_HOST will be removed in ss 4.0.0-beta1');
-            return $legacyHostname;
-        }
-
         // Fail over to server_name (least reliable)
         return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : gethostname();
     }

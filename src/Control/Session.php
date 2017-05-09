@@ -544,26 +544,4 @@ class Session
     {
         self::current_session()->inst_destroy($removeCookie);
     }
-
-    /**
-     * Set the timeout of a Session value
-     *
-     * @deprecated 4.0 Use the "Session.timeout" config setting instead
-     *
-     * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
-     */
-    public static function set_timeout($timeout)
-    {
-        Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
-        Config::inst()->update('SilverStripe\\Control\\Session', 'timeout', (int) $timeout);
-    }
-
-    /**
-     * @deprecated 4.0 Use the "Session.timeout" config setting instead
-     */
-    public static function get_timeout()
-    {
-        Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
-        return Config::inst()->get('SilverStripe\\Control\\Session', 'timeout');
-    }
 }
