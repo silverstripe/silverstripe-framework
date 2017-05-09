@@ -384,8 +384,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param String $groupby Escaped SQL statement
      */
-    public function groupby($groupby) {
-        return $this->alterDataQuery(function($query) use ($groupby){
+    public function groupby($groupby)
+    {
+        return $this->alterDataQuery(function ($query) use ($groupby) {
             $query->addGroupBy($groupby);
         });
     }

@@ -619,6 +619,14 @@ class DataListTest extends SapphireTest
         );
     }
 
+    public function testGroupBy()
+    {
+        $list = TeamComment::get();
+        $list = $list->groupby('Name')
+        $groupby = $list->dataQuery()->query()->getGroupBy();
+        $this->assertEquals(DataObjectTest\TeamComment::class, $list->dataClass());
+    }
+
     /**
      * Test DataList->canFilterBy()
      */
