@@ -1110,7 +1110,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     public static function create_temp_db()
     {
         // Disable PHPUnit error handling
-        restore_error_handler();
+        $oldErrorHandler = set_error_handler(null);
 
         // Create a temporary database, and force the connection to use UTC for time
         global $databaseConfig;
@@ -1127,7 +1127,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         static::resetDBSchema();
 
         // Reinstate PHPUnit error handling
-        set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
+        set_error_handler($oldErrorHandler);
 
         // Ensure test db is killed on exit
         register_shutdown_function(function () {
