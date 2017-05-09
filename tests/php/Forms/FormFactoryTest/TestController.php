@@ -29,7 +29,7 @@ class TestController extends Controller
     {
         // Simple example; Just get the first draft record
         $record = $this->getRecord();
-        $factory = new EditFactory();
+        $factory = new EditFormFactory();
         return $factory->getForm($this, 'Form', ['Record' => $record]);
     }
 

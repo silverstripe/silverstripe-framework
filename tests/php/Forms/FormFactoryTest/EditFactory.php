@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\FormFactoryTest;
 
-use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\DefaultFormFactory;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -12,13 +12,13 @@ use SilverStripe\Forms\TextField;
 /**
  * Test factory
  */
-class EditFactory extends DefaultFormFactory
+class EditFormFactory extends DefaultFormFactory
 {
     private static $extensions = [
         ControllerExtension::class
     ];
 
-    protected function getFormFields(Controller $controller, $name, $context = [])
+    protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
     {
         $fields = new FieldList(
             new HiddenField('ID'),
@@ -28,7 +28,7 @@ class EditFactory extends DefaultFormFactory
         return $fields;
     }
 
-    protected function getFormActions(Controller $controller, $name, $context = [])
+    protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
     {
         $actions = new FieldList(
             new FormAction('save', 'Save')
