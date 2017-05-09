@@ -1231,9 +1231,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
                 $group->Permissions()->add($permission);
             }
 
-            $member = DataObject::get_one('SilverStripe\\Security\\Member', array(
-                '"Member"."Email"' => "$permCode@example.org"
-            ));
+            $member = Member::get()->filter([
+                'Email' => "$permCode@example.org",
+            ])->first();
             if (!$member) {
                 $member = Member::create();
             }
