@@ -16,7 +16,8 @@
         {
             "id": "Form_TestForm_SecurityID",
             "name": "SecurityID",
-            "type": "Hidden",
+            "type": "hidden",
+            "schemaType": "Hidden",
             "component": null,
             "holderId": "Form_TestForm_SecurityID_Holder",
             "title": "Security ID",

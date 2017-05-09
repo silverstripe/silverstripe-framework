@@ -30,6 +30,8 @@ class PopoverField extends FieldGroup
      */
     protected $popoverTitle = null;
 
+    protected $inputType = null;
+
     /**
      * Placement of the popup box, relative to the element triggering it.
      * Valid values: bottom, top, left, right.

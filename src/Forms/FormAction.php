@@ -173,20 +173,23 @@ class FormAction extends FormField
         return 'action';
     }
 
-    public function getAttributes()
+    public function getInputType()
     {
         if (isset($this->attributes['type'])) {
-            $type = $this->attributes['type'];
+            return $this->attributes['type'];
         } else {
-            $type = (isset($this->attributes['src'])) ? 'image' : 'submit';
+            return (isset($this->attributes['src'])) ? 'image' : 'submit';
         }
+    }
 
+    public function getAttributes()
+    {
         return array_merge(
             parent::getAttributes(),
             array(
                 'disabled' => ($this->isReadonly() || $this->isDisabled()),
                 'value' => $this->Title(),
-                'type' => $type,
+                'type' => $this->getInputType(),
                 'title' => ($this->useButtonTag) ? $this->description : null,
             )
         );
