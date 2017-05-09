@@ -29,7 +29,7 @@ class TaskRunner extends Controller
     {
         parent::init();
 
-        $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+        $isRunningTests = Director::is_system_under_test();
         $canAccess = (
             Director::isDev()
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running

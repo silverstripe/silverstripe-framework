@@ -13,7 +13,6 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 
 class Requirements_Backend
@@ -1343,7 +1342,7 @@ class Requirements_Backend
         }
 
         // Tests should be combined
-        if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
+        if (Director::is_system_under_test()) {
             return true;
         }
 

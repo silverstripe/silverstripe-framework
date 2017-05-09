@@ -94,11 +94,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected static $regular_manifest;
 
     /**
-     * @var boolean
-     */
-    protected static $is_running_test = false;
-
-    /**
      * @var ClassManifest
      */
     protected static $test_class_manifest;
@@ -182,12 +177,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public static function is_running_test()
     {
-        return self::$is_running_test;
+        Deprecation::notice(4.0, 'SapphireTest::is_running_test is deprecated, please use Director::is_system_under_test');
+        return Director::is_system_under_test();
     }
 
     public static function set_is_running_test($bool)
     {
-        self::$is_running_test = $bool;
+        Deprecation::notice(4.0, 'SapphireTest::set_is_running_test is deprecated, please use Director::set_is_system_under_test');
+        Director::set_is_system_under_test($bool);
     }
 
     /**
@@ -247,8 +244,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // Mark test as being run
-        $this->originalIsRunningTest = self::$is_running_test;
-        self::$is_running_test = true;
+        $this->originalIsRunningTest = Director::is_system_under_test();
+        Director::set_is_system_under_test(true);
 
         // i18n needs to be set to the defaults or tests fail
         i18n::set_locale(i18n::config()->uninherited('default_locale'));
@@ -597,7 +594,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
-        self::$is_running_test = $this->originalIsRunningTest;
+        Director::set_is_system_under_test($this->originalIsRunningTest);
         $this->originalIsRunningTest = null;
 
         // Reset mocked datetime
@@ -1015,10 +1012,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public static function start()
     {
-        if (!static::is_running_test()) {
+        if (!Director::is_system_under_test()) {
             new FakeController();
             static::use_test_manifest();
-            static::set_is_running_test(true);
+            Director::set_is_system_under_test(true);
         }
     }
 
