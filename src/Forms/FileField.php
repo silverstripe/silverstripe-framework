@@ -47,6 +47,8 @@ class FileField extends FormField implements FileHandleField
 {
     use UploadReceiver;
 
+    protected $inputType = 'file';
+
     /**
      * Flag to automatically determine and save a has_one-relationship
      * on the saved record (e.g. a "Player" has_one "PlayerImage" would
@@ -81,14 +83,6 @@ class FileField extends FormField implements FileHandleField
         ));
 
         return parent::Field($properties);
-    }
-
-    public function getAttributes()
-    {
-        return array_merge(
-            parent::getAttributes(),
-            array('type' => 'file')
-        );
     }
 
     /**

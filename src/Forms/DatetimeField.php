@@ -30,6 +30,8 @@ class DatetimeField extends TextField
      */
     protected $locale = null;
 
+    protected $inputType = 'datetime-local';
+
     /**
      * Min date time
      *
@@ -94,9 +96,10 @@ class DatetimeField extends TextField
         $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
 
         if ($this->getHTML5()) {
-            $attributes['type'] = 'datetime-local';
             $attributes['min'] = $this->internalToFrontend($this->getMinDatetime());
             $attributes['max'] = $this->internalToFrontend($this->getMaxDatetime());
+        } else {
+            $attributes['type'] = 'text';
         }
 
         return $attributes;

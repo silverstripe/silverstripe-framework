@@ -17,6 +17,8 @@ class PasswordField extends TextField
      */
     private static $autocomplete;
 
+    protected $inputType = 'password';
+
     /**
      * Returns an input field.
      *
@@ -42,9 +44,7 @@ class PasswordField extends TextField
      */
     public function getAttributes()
     {
-        $attributes = array(
-            'type' => 'password',
-        );
+        $attributes = array();
 
         $autocomplete = $this->config()->get('autocomplete');
 

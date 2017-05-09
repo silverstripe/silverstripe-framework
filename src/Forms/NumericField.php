@@ -15,6 +15,8 @@ class NumericField extends TextField
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DECIMAL;
 
+    protected $inputType = 'number';
+
     /**
      * Used to determine if the number given is in the correct format when validating
      *
@@ -170,9 +172,11 @@ class NumericField extends TextField
     {
         $attributes = parent::getAttributes();
         if ($this->getHTML5()) {
-            $attributes['type'] = 'number';
             $attributes['step'] = $this->getStep();
+        } else {
+            $attributes['type'] = 'text';
         }
+
         return $attributes;
     }
 

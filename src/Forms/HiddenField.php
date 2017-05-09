@@ -10,6 +10,8 @@ class HiddenField extends FormField
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
 
+    protected $inputType = 'hidden';
+
     /**
      * @param array $properties
      * @return string
@@ -37,19 +39,6 @@ class HiddenField extends FormField
     public function IsHidden()
     {
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAttributes()
-    {
-        return array_merge(
-            parent::getAttributes(),
-            array(
-                'type' => 'hidden',
-            )
-        );
     }
 
     function SmallFieldHolder($properties = array())

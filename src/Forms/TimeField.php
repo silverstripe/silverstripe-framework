@@ -28,6 +28,8 @@ class TimeField extends TextField
      */
     protected $locale = null;
 
+    protected $inputType = 'time';
+
     /**
      * Override time format. If empty will default to that used by the current locale.
      *
@@ -224,8 +226,8 @@ class TimeField extends TextField
     {
         $attributes = parent::getAttributes();
 
-        if ($this->getHTML5()) {
-            $attributes['type'] = 'time';
+        if (!$this->getHTML5()) {
+            $attributes['type'] = 'text';
         }
 
         return $attributes;
