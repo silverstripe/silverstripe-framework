@@ -23,6 +23,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
@@ -461,7 +462,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     public function getFixtureFactory()
     {
         if (!$this->fixtureFactory) {
-            $this->fixtureFactory = Injector::inst()->create('SilverStripe\\Dev\\FixtureFactory');
+            $this->fixtureFactory = Injector::inst()->create(FixtureFactory::class);
         }
         return $this->fixtureFactory;
     }
@@ -538,7 +539,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public function loadFixture($fixtureFile)
     {
-        $fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $fixtureFile);
+        $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory());
     }
 
@@ -1073,7 +1074,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             if ($dbName && DB::get_conn()->databaseExists($dbName)) {
                 // Some DataExtensions keep a static cache of information that needs to
                 // be reset whenever the database is killed
-                foreach (ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension') as $class) {
+                foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
                     $toCall = array($class, 'on_db_reset');
                     if (is_callable($toCall)) {
                         call_user_func($toCall);
@@ -1096,7 +1097,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
             // Some DataExtensions keep a static cache of information that needs to
             // be reset whenever the database is cleaned out
-            $classes = array_merge(ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension'), ClassInfo::subclassesFor('SilverStripe\\ORM\\DataObject'));
+            $classes = array_merge(ClassInfo::subclassesFor(DataExtension::class), ClassInfo::subclassesFor(DataObject::class));
             foreach ($classes as $class) {
                 $toCall = array($class, 'on_db_reset');
                 if (is_callable($toCall)) {
