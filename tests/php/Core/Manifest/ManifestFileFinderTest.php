@@ -15,16 +15,20 @@ class ManifestFileFinderTest extends SapphireTest
 
     public function __construct()
     {
-        $this->base = dirname(__FILE__) . '/fixtures/manifestfilefinder';
+        $this->defaultBase = dirname(__FILE__) . '/fixtures/manifestfilefinder';
         parent::__construct();
     }
 
-    public function assertFinderFinds($finder, $expect, $message = null)
+    public function assertFinderFinds($finder, $base, $expect, $message = null)
     {
-        $found = $finder->find($this->base);
+        if (!$base) {
+            $base = $this->defaultBase;
+        }
+
+        $found = $finder->find($base);
 
         foreach ($expect as $k => $file) {
-            $expect[$k] = "{$this->base}/$file";
+            $expect[$k] = "{$base}/$file";
         }
 
         sort($expect);
@@ -40,6 +44,7 @@ class ManifestFileFinderTest extends SapphireTest
 
         $this->assertFinderFinds(
             $finder,
+            null,
             array(
             'module/module.txt'
             )
@@ -54,6 +59,7 @@ class ManifestFileFinderTest extends SapphireTest
 
         $this->assertFinderFinds(
             $finder,
+            null,
             array(
             'module/module.txt',
             'module/tests/tests.txt',
@@ -70,9 +76,36 @@ class ManifestFileFinderTest extends SapphireTest
 
         $this->assertFinderFinds(
             $finder,
+            null,
             array(
             'module/module.txt',
             'themes/themes.txt'
+            )
+        );
+    }
+
+    public function testIncludeWithRootConfigFile()
+    {
+        $finder = new ManifestFileFinder();
+
+        $this->assertFinderFinds(
+            $finder,
+            dirname(__FILE__) . '/fixtures/manifestfilefinder_rootconfigfile',
+            array(
+                'code/code.txt',
+            )
+        );
+    }
+
+    public function testIncludeWithRootConfigFolder()
+    {
+        $finder = new ManifestFileFinder();
+
+        $this->assertFinderFinds(
+            $finder,
+            dirname(__FILE__) . '/fixtures/manifestfilefinder_rootconfigfolder',
+            array(
+                'code/code.txt',
             )
         );
     }
