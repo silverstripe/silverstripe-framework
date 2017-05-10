@@ -219,6 +219,7 @@ class Requirements_Backend
     /**
      * Gets the minification service for this backend
      *
+     * @deprecated 4.0..5.0
      * @return Requirements_Minifier
      */
     public function getMinifier()
