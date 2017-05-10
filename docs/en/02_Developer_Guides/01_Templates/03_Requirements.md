@@ -169,13 +169,13 @@ replaced. For instance, the below will set a new set of dependencies to write to
     ---
     Name: myrequirements
     ---
-    Requirements:
+    SilverStripe\View\Requirements:
       disable_flush_combined: true
-    Requirements_Backend:
+    SilverStripe\View\Requirements_Backend:
       combine_in_dev: true
       combine_hash_querystring: true
       default_combined_files_folder: 'combined'
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       MySiteAdapter:
         class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
         constructor:
@@ -192,7 +192,7 @@ replaced. For instance, the below will set a new set of dependencies to write to
         class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
         properties:
           Filesystem: '%$MySiteBackend'
-      Requirements_Backend:
+      SilverStripe\View\Requirements_Backend:
         properties:
           AssetHandler: '%$MySiteAssetHandler'
 
@@ -247,6 +247,49 @@ $scripts = array(
 
 Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
 ```
+
+### Minification of CSS and JS files
+
+You can minify combined Javascript and CSS files at runtime using an implementation of the
+`SilverStripe\View\Requirements_Minifier` interface.
+
+```php
+namespace MyProject;
+
+use SilverStripe\View\Requirements_Minifier;
+
+class MyMinifier implements Requirements_Minifier
+{
+    /**
+     * Minify the given content
+     *
+     * @param string $content
+     * @param string $type Either js or css
+     * @param string $filename Name of file to display in case of error
+     * @return string minified content
+     */	
+	public function minify ($content, $type, $fileName)
+	{
+		// Minify $content;
+
+		return $minifiedContent;
+	}
+}
+```
+
+Then, inject this service in `Requirements_Backend`.
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\View\Requirements_Backend:
+    properties:
+      Minifier: %$MyProject\MyMinifier
+```
+
+<div class="alert" markdown='1'>
+While the framework does afford you the option of minification at runtime, we recommend using one of many frontend build
+tools to do this for you, e.g. [Webpack](https://webpack.github.io/), [Gulp](http://gulpjs.com/), or [Grunt](https://gruntjs.com/).
+</div>
 
 
 ## Clearing assets

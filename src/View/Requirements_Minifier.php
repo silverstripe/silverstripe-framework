@@ -4,6 +4,8 @@ namespace SilverStripe\View;
 
 /**
  * Provides an abstract interface for minifying content
+ *
+ * @deprecated 4.0..5.0
  */
 interface Requirements_Minifier
 {
