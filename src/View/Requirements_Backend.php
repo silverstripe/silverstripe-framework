@@ -3,6 +3,7 @@
 namespace SilverStripe\View;
 
 use InvalidArgumentException;
+use Exception;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -10,7 +11,6 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
@@ -121,11 +121,11 @@ class Requirements_Backend
     protected $combinedFiles = array();
 
     /**
-     * Use the JSMin library to minify any javascript file passed to {@link combine_files()}.
+     * Use the injected minification service to minify any javascript file passed to {@link combine_files()}.
      *
      * @var bool
      */
-    protected $minifyCombinedJSFiles = true;
+    protected $minifyCombinedFiles = false;
 
     /**
      * Whether or not file headers should be written when combining files
@@ -192,6 +192,11 @@ class Requirements_Backend
     protected $assetHandler = null;
 
     /**
+     * @var Requirements_Minifier
+     */
+    protected $minifier = null;
+
+    /**
      * Gets the backend storage for generated files
      *
      * @return GeneratedAssetHandler
@@ -209,6 +214,26 @@ class Requirements_Backend
     public function setAssetHandler(GeneratedAssetHandler $handler)
     {
         $this->assetHandler = $handler;
+    }
+
+    /**
+     * Gets the minification service for this backend
+     *
+     * @return Requirements_Minifier
+     */
+    public function getMinifier()
+    {
+        return $this->minifier;
+    }
+
+    /**
+     * Set a new minification service for this backend
+     *
+     * @param Requirements_Minifier $minifier
+     */
+    public function setMinifier(Requirements_Minifier $minifier = null)
+    {
+        $this->minifier = $minifier;
     }
 
     /**
@@ -340,24 +365,24 @@ class Requirements_Backend
     }
 
     /**
-     * Check if minify js files should be combined
+     * Check if minify files should be combined
      *
      * @return bool
      */
-    public function getMinifyCombinedJSFiles()
+    public function getMinifyCombinedFiles()
     {
-        return $this->minifyCombinedJSFiles;
+        return $this->minifyCombinedFiles;
     }
 
     /**
-     * Set if combined js files should be minified
+     * Set if combined files should be minified
      *
      * @param bool $minify
      * @return $this
      */
-    public function setMinifyCombinedJSFiles($minify)
+    public function setMinifyCombinedFiles($minify)
     {
-        $this->minifyCombinedJSFiles = $minify;
+        $this->minifyCombinedFiles = $minify;
         return $this;
     }
 
@@ -1278,7 +1303,20 @@ class Requirements_Backend
         $combinedFileID = File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
 
         // Send file combination request to the backend, with an optional callback to perform regeneration
-        $minify = $this->getMinifyCombinedJSFiles();
+        $minify = $this->getMinifyCombinedFiles();
+        if ($minify && !$this->minifier) {
+            throw new Exception(
+                sprintf(
+                    'Cannot minify files without a minification service defined.
+        			Set %s::minifyCombinedFiles to false, or inject a %s service on 
+        			%s.properties.minifier',
+                    __CLASS__,
+                    Requirements_Minifier::class,
+                    __CLASS__
+                )
+            );
+        }
+
         $combinedURL = $this
             ->getAssetHandler()
             ->getContentURL(
@@ -1287,12 +1325,11 @@ class Requirements_Backend
                     // Physically combine all file content
                     $combinedData = '';
                     $base = Director::baseFolder() . '/';
-                    $minifier = Injector::inst()->get('SilverStripe\\View\\Requirements_Minifier');
                     foreach ($fileList as $file) {
                         $fileContent = file_get_contents($base . $file);
                         // Use configured minifier
                         if ($minify) {
-                            $fileContent = $minifier->minify($fileContent, $type, $file);
+                            $fileContent = $this->minifier->minify($fileContent, $type, $file);
                         }
 
                         if ($this->writeHeaderComment) {
