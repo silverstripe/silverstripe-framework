@@ -5,11 +5,13 @@ namespace SilverStripe\Forms\HTMLEditor;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use TinyMCE_Compressor;
+use Exception;
 
 /**
  * Default configuration for HtmlEditor specific to tinymce
@@ -189,7 +191,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      * - themes
      * - skins
      *
-     * If left blank defaults to ADMIN_THIRDPARTY_DIR . '/tinymce'
+     * If left blank defaults to [admin dir]/tinyme
      *
      * @config
      * @var string
@@ -555,8 +557,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
         $tinyMCEBaseURL = Controller::join_links(
             Director::absoluteBaseURL(),
-            TinyMCEConfig::config()->get('base_dir')
-                ?: ADMIN_THIRDPARTY_DIR . '/tinymce'
+            $this->getTinyMCEPath()
         );
         $settings['baseURL'] = $tinyMCEBaseURL;
 
@@ -617,7 +618,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        $editor[] = Director::absoluteURL(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css');
+        $editor[] = Director::absoluteURL(ltrim($this->getAdminPath() . '/client/dist/styles/editor.css', '/'));
 
         // Themed editor.css
         $themedEditor = ThemeResourceLoader::instance()->findThemedCSS('editor', SSViewer::get_themes());
@@ -640,18 +641,25 @@ class TinyMCEConfig extends HTMLEditorConfig
         // If gzip is disabled just return core script url
         $useGzip = HTMLEditorField::config()->get('use_gzip');
         if (!$useGzip) {
-            return ADMIN_THIRDPARTY_DIR . '/tinymce/tinymce.min.js';
+            return $this->getTinyMCEPath() . '/tinymce.min.js';
         }
 
         // tinyMCE JS requirement
-        require_once ADMIN_THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
+        $gzipPath = BASE_PATH . '/' . $this->getTinyMCEPath() . '/tiny_mce_gzip.php';
+        if (!file_exists($gzipPath)) {
+            throw new Exception("HTMLEditorField.use_gzip enabled, but file $gzipPath does not exist!");
+        }
+
+        require_once $gzipPath;
+
         $tag = TinyMCE_Compressor::renderTag(array(
-            'url' => ADMIN_THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+            'url' => $this->getTinyMCEPath() . '/tiny_mce_gzip.php',
             'plugins' => implode(',', $this->getInternalPlugins()),
             'themes' => $this->getTheme(),
             'languages' => $this->getOption('language')
         ), true);
         preg_match('/src="([^"]*)"/', $tag, $matches);
+
         return html_entity_decode($matches[1]);
     }
 
@@ -675,5 +683,46 @@ class TinyMCEConfig extends HTMLEditorConfig
             return $lang[$locale];
         }
         return 'en';
+    }
+
+    /**
+     * @return string|false
+     */
+    public function getAdminPath()
+    {
+        $module = $this->getAdminModule();
+        if ($module) {
+            return $module->getRelativePath();
+        }
+        return false;
+    }
+
+    /**
+     * @return string|false
+     */
+    public function getTinyMCEPath()
+    {
+        $configDir = static::config()->get('base_dir');
+        if ($configDir) {
+            return $configDir;
+        }
+
+        if ($admin = $this->getAdminModule()) {
+            return $admin->getResourcePath('thirdparty/tinymce');
+        }
+
+        throw new Exception(sprintf(
+            'If the silverstripe/admin module is not installed, 
+            you must set the TinyMCE path in %s.base_dir',
+            __CLASS__
+        ));
+    }
+
+    /**
+     * @return \SilverStripe\Core\Manifest\Module
+     */
+    protected function getAdminModule()
+    {
+        return ModuleLoader::instance()->getManifest()->getModule('silverstripe/admin');
     }
 }
