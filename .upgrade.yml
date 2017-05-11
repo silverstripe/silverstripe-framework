@@ -409,6 +409,10 @@ mappings:
   SilverStripe\Framework\Logging\DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter
   SilverStripe\Framework\Logging\HTTPOutputHandler: SilverStripe\Logging\HTTPOutputHandler
   SilverStripe\Framework\Logging\MonologErrorHandler: SilverStripe\Logging\MonologErrorHandler
+  DebugViewFriendlyErrorFormatter: Monolog\Formatter\FormatterInterface.friendly
+  DetailedErrorFormatter: Monolog\Formatter\FormatterInterface.detailed
+  DisplayErrorHandler: Monolog\Handler\HandlerInterface
+  ErrorHandler: SilverStripe\Logging\ErrorHandler;
   SS_Log: SilverStripe\Logging\Log
   SilverStripe\Logging\SS_Log: SilverStripe\Logging\Log
   ComparisonFilter: SilverStripe\ORM\Filters\ComparisonFilter

@@ -12,6 +12,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\i18n\i18n;
+use SilverStripe\Logging\ErrorHandler;
 
 /**
  * This file is the Framework bootstrap.  It will get your environment ready to call Director::direct().
@@ -116,7 +117,7 @@ if (Director::isLive()) {
 /**
  * Load error handlers
  */
-$errorHandler = Injector::inst()->get('ErrorHandler');
+$errorHandler = Injector::inst()->get(ErrorHandler::class);
 $errorHandler->start();
 
 ///////////////////////////////////////////////////////////////////////////////

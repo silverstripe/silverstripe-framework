@@ -3,6 +3,8 @@
 namespace SilverStripe\Control;
 
 use InvalidArgumentException;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Handler\HandlerInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -306,11 +308,12 @@ EOT
                 }
             }
 
-            // Only show error pages or generic "friendly" errors if the status code signifies
-            // an error, and the response doesn't have any body yet that might contain
-            // a more specific error description.
-            if (Director::isLive() && $this->isError() && !$this->body) {
-                $formatter = Injector::inst()->get('FriendlyErrorFormatter');
+            // If this is an error but no error body has yet been generated,
+            // delegate formatting to current error handler.
+            if ($this->isError() && !$this->body) {
+                /** @var HandlerInterface $handler */
+                $handler = Injector::inst()->get(HandlerInterface::class);
+                $formatter = $handler->getFormatter();
                 echo $formatter->format(array(
                     'code' => $this->statusCode
                 ));

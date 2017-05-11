@@ -176,25 +176,25 @@ replaced. For instance, the below will set a new set of dependencies to write to
       combine_hash_querystring: true
       default_combined_files_folder: 'combined'
     SilverStripe\Core\Injector\Injector:
-      MySiteAdapter:
-        class: 'SilverStripe\Filesystem\Flysystem\AssetAdapter'
+      # Create adapter that points to the custom directory root
+      SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter:
+        class: SilverStripe\Assets\Flysystem\PublicAssetAdapter
         constructor:
-          Root: ./mysite/javascript 
-      # Define the default filesystem
-      MySiteBackend:
+          Root: ./mysite/javascript
+      # Set flysystem filesystem that uses this adapter
+      League\Flysystem\Filesystem.custom-filesystem:
         class: 'League\Flysystem\Filesystem'
         constructor:
-          Adapter: '%$MySiteAdapter'
-        calls:
-          PublicURLPlugin: [ addPlugin, [ %$FlysystemUrlPlugin ] ]
-      # Requirements config
-      MySiteAssetHandler:
-        class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
+          Adapter: '%$SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter'
+      # Create handler to generate assets using this filesystem
+      SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets:
+        class: SilverStripe\Assets\Flysystem\GeneratedAssets
         properties:
-          Filesystem: '%$MySiteBackend'
+          Filesystem: %$League\Flysystem\Filesystem.custom-filesystem
+      # Assign this generator to the requirements builder
       SilverStripe\View\Requirements_Backend:
         properties:
-          AssetHandler: '%$MySiteAssetHandler'
+          AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets'
 
 In the above configuration, automatic expiry of generated files has been disabled, and it is necessary for
 the developer to maintain these files manually. This may be useful in environments where assets must

@@ -183,7 +183,7 @@ class Session
      * Set a key/value pair in the session
      *
      * @param string $name Key
-     * @param string $val Value
+     * @param string|array $val Value
      */
     public static function set($name, $val)
     {

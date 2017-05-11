@@ -5,7 +5,6 @@ namespace SilverStripe\Core\Tests\Cache;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\ApcuCacheFactory;
 use SilverStripe\Core\Cache\MemcachedCacheFactory;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Test\Cache\CacheTest\MockCache;
 use SilverStripe\Dev\SapphireTest;
@@ -18,38 +17,29 @@ class CacheTest extends SapphireTest
     {
         parent::setUp();
 
-        Config::modify()
-            ->set(
-                Injector::class,
-                ApcuCacheFactory::class,
-                [
-                    'constructor' => [ 'version' => 4400 ]
-                ]
-            )
-            ->set(
-                Injector::class,
-                CacheInterface::class . '.TestApcuCache',
-                [
+        Injector::inst()
+            ->load([
+                ApcuCacheFactory::class => [
+                    'constructor' => [ 'version' => 'ss40test' ]
+                ],
+                MemcachedCacheFactory::class => MemcachedCacheFactory::class,
+                CacheInterface::class . '.TestApcuCache' =>  [
                     'factory' => ApcuCacheFactory::class,
                     'constructor' => [
                         'namespace' => 'TestApcuCache',
                         'defaultLifetime' => 2600,
                     ],
-                ]
-            )
-            ->set(
-                Injector::class,
-                CacheInterface::class . '.TestMemcache',
-                [
+                ],
+                CacheInterface::class . '.TestMemcache' => [
                     'factory' => MemcachedCacheFactory::class,
                     'constructor' => [
                         'namespace' => 'TestMemCache',
                         'defaultLifetime' => 5600,
                     ],
-                ]
-            )
-            ->set(Injector::class, ApcuCache::class, MockCache::class)
-            ->set(Injector::class, MemcachedCache::class, MockCache::class);
+                ],
+                ApcuCache::class => MockCache::class,
+                MemcachedCache::class => MockCache::class,
+            ]);
     }
 
     public function testApcuCacheFactory()
@@ -63,7 +53,7 @@ class CacheTest extends SapphireTest
             [
                 'TestApcuCache_'.md5(BASE_PATH),
                 2600,
-                4400
+                'ss40test'
             ],
             $cache->getArgs()
         );

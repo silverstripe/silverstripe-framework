@@ -66,6 +66,7 @@
       "SilverStripe\\i18n\\": "src/i18n/",
       "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
       "SilverStripe\\Logging\\": "src/Logging/",
+      "SilverStripe\\Logging\\Tests\\": "tests/php/Logging/",
       "SilverStripe\\ORM\\": "src/ORM/",
       "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
       "SilverStripe\\Security\\": "src/Security/",

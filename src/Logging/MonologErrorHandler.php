@@ -3,12 +3,9 @@
 namespace SilverStripe\Logging;
 
 use Psr\Log\LoggerInterface;
-use Monolog\ErrorHandler;
+use Monolog\ErrorHandler as MonologHandler;
 
-/**
- * Simple adaptor to start Monolog\ErrorHandler
- */
-class MonologErrorHandler
+class MonologErrorHandler implements ErrorHandler
 {
     /**
      * @var LoggerInterface
@@ -32,6 +29,6 @@ class MonologErrorHandler
                 . "Is your Injector config correct?");
         }
 
-        ErrorHandler::register($this->logger);
+        MonologHandler::register($this->logger);
     }
 }
