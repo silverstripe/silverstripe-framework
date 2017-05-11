@@ -161,15 +161,20 @@ class Diff extends \Diff
     }
 
     /**
-     * @param string|array $content If passed as an array, values will be concatenated with a comma.
+     * @param string|bool|array $content If passed as an array, values will be concatenated with a comma.
      * @return array
      */
     public static function getHTMLChunks($content)
     {
-        if ($content && !is_string($content) && !is_array($content) && !is_numeric($content)) {
+        if ($content && !is_string($content) && !is_array($content) && !is_numeric($content) && !is_bool($content)) {
             throw new InvalidArgumentException('$content parameter needs to be a string or array');
         }
+        if (is_bool($content)) {
+            // Convert boolean to strings
+            $content = $content ? "true" : "false";
+        }
         if (is_array($content)) {
+            // Convert array to CSV
             $content = implode(',', $content);
         }
 
