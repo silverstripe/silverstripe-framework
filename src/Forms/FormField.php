@@ -333,7 +333,13 @@ class FormField extends RequestHandler
             }
         }
 
-        if ($content || $tag != 'input') {
+        if (
+            $content ||
+            !in_array($tag, array(
+                'area', 'base', 'br', 'col', 'embed', 'hr', 'img',
+                'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'
+            ))
+        ) {
             return sprintf(
                 '<%s%s>%s</%s>',
                 $tag,
