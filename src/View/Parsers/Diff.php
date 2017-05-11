@@ -187,6 +187,9 @@ class Diff extends \Diff
                 $newChunk = $item;
                 while ($item[strlen($item)-1] != ">") {
                     $chunk = each($candidateChunks);
+                    if ($chunk === false) {
+                        break;
+                    }
                     $item = $chunk['value'];
                     $newChunk .= ' ' . $item;
                 }
