@@ -66,6 +66,21 @@ class TreeDropdownField extends FormField
     private static $allowed_actions = array(
         'tree'
     );
+    
+    /**
+     * Title to display when the value is empty
+     *
+     * @var string
+     */
+    protected $emptyTitle = null;
+    
+    /**
+     * Show the Empty title as the option for "root" when TreeDropdown is on the root,
+     * that way the root option is explicitly selectable.
+     *
+     * @var bool
+     */
+    protected $showRootOption = false;
 
     /**
      * Class name for underlying object
@@ -633,7 +648,6 @@ class TreeDropdownField extends FormField
         $selectedlabel = null;
 
         $data = parent::getSchemaStateDefaults();
-        $data['data']['emptyTitle'] = $this->getEmptyTitle();
         if ($record) {
             $data['data']['valueObject'] = [
                 'id' => $record->getField($this->keyField),
@@ -649,14 +663,64 @@ class TreeDropdownField extends FormField
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['urlTree'] = $this->Link('tree');
+        $data['data']['emptyTitle'] = $this->getEmptyTitle();
+        $data['data']['showRootOption'] = $this->getShowRootOption();
+        
         return $data;
     }
-
+    
     /**
+     * Sets whether to show the Empty title as the option for root
+     *
+     * @param $emptyOption
+     * @return $this
+     */
+    public function setShowRootOption($showRoot)
+    {
+        $this->showRootOption = $showRoot;
+        
+        return $this;
+    }
+    
+    /**
+     * Get whether to show the Empty title as the option for root
+     *
+     * @return bool
+     */
+    public function getShowRootOption()
+    {
+        // don't show empty option if no empty title is set
+        if ($this->emptyTitle === null) {
+            return false;
+        }
+    
+        return $this->showRootOption;
+    }
+    
+    /**
+     * Sets the empty title displayed
+     *
+     * @param string $title
+     * @return $this
+     */
+    public function setEmptyTitle($title)
+    {
+        $this->emptyTitle = $title;
+        
+        return $this;
+    }
+    
+    /**
+     * Gets the empty title displayed
+     *
      * @return string
      */
-    protected function getEmptyTitle()
+    public function getEmptyTitle()
     {
+        if ($this->emptyTitle !== null) {
+            return $this->emptyTitle;
+        }
+    
         $item = DataObject::singleton($this->sourceObject);
         $emptyTitle = _t(
             'SilverStripe\\Forms\\DropdownField.CHOOSE_MODEL',
