@@ -3,9 +3,12 @@
 namespace SilverStripe\Security;
 
 /**
- * For root objects that have permission type "Inherit" determine the result of certain permission checks
+ * Allows objects to enforce permissions for the "root" level,
+ * where permissions can not be tied to a particular database record.
+ * Objects below the "root" level should use their own can*()
+ * implementations instead of this interface.
  */
-interface RootPermissions
+interface DefaultPermissionChecker
 {
     /**
      * Can root be edited?

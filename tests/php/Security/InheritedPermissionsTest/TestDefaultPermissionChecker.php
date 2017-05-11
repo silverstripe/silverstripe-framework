@@ -3,9 +3,9 @@
 namespace SilverStripe\Security\Test\InheritedPermissionsTest;
 
 use SilverStripe\Security\Member;
-use SilverStripe\Security\RootPermissions;
+use SilverStripe\Security\DefaultPermissionChecker;
 
-class TestRootPermissions implements RootPermissions
+class TestDefaultPermissionChecker implements DefaultPermissionChecker
 {
     protected $canEdit = true;
 

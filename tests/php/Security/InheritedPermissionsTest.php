@@ -7,8 +7,9 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\InheritedPermissions;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PermissionChecker;
 use SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode;
-use SilverStripe\Security\Test\InheritedPermissionsTest\TestRootPermissions;
+use SilverStripe\Security\Test\InheritedPermissionsTest\TestDefaultPermissionChecker;
 use SilverStripe\Versioned\Versioned;
 
 class InheritedPermissionsTest extends SapphireTest
@@ -20,7 +21,7 @@ class InheritedPermissionsTest extends SapphireTest
     ];
 
     /**
-     * @var TestRootPermissions
+     * @var TestDefaultPermissionChecker
      */
     protected $rootPermissions = null;
 
@@ -29,13 +30,12 @@ class InheritedPermissionsTest extends SapphireTest
         parent::setUp();
 
         // Register root permissions
-        $permission = InheritedPermissions::create()
-            ->setBaseClass(TestPermissionNode::class)
+        $permission = InheritedPermissions::create(TestPermissionNode::class)
             ->setGlobalEditPermissions(['TEST_NODE_ACCESS'])
-            ->setRootPermissions($this->rootPermissions = new TestRootPermissions());
+            ->setDefaultPermissions($this->rootPermissions = new TestDefaultPermissionChecker());
         Injector::inst()->registerService(
             $permission,
-            InheritedPermissions::class.'.testpermissions'
+            PermissionChecker::class.'.testpermissions'
         );
 
         // Reset root permission

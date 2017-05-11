@@ -16,12 +16,23 @@ use SilverStripe\Versioned\Versioned;
  *  - canDelete: Includes special logic for ensuring parent objects can only be deleted if their children can
  *    be deleted also.
  */
-class InheritedPermissions
+class InheritedPermissions implements PermissionChecker
 {
     use Injectable;
 
+    /**
+     * Delete permission
+     */
     const DELETE = 'delete';
+
+    /**
+     * View permission
+     */
     const VIEW = 'view';
+
+    /**
+     * Edit permission
+     */
     const EDIT = 'edit';
 
     /**
@@ -54,9 +65,9 @@ class InheritedPermissions
     /**
      * Object for evaluating top level permissions designed as "Inherit"
      *
-     * @var RootPermissions
+     * @var DefaultPermissionChecker
      */
-    protected $rootPermissions = null;
+    protected $defaultPermissions = null;
 
     /**
      * Global permissions required to edit.
@@ -74,12 +85,26 @@ class InheritedPermissions
     protected $cachePermissions = [];
 
     /**
-     * @param RootPermissions $callback
+     * Construct new permissions object
+     *
+     * @param string $baseClass Base class
+     */
+    public function __construct($baseClass)
+    {
+        if (!is_a($baseClass, DataObject::class, true)) {
+            throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
+        }
+        $this->baseClass = $baseClass;
+        return $this;
+    }
+
+    /**
+     * @param DefaultPermissionChecker $callback
      * @return $this
      */
-    public function setRootPermissions(RootPermissions $callback)
+    public function setDefaultPermissions(DefaultPermissionChecker $callback)
     {
-        $this->rootPermissions = $callback;
+        $this->defaultPermissions = $callback;
         return $this;
     }
 
@@ -106,11 +131,11 @@ class InheritedPermissions
     /**
      * Get root permissions handler, or null if no handler
      *
-     * @return RootPermissions|null
+     * @return DefaultPermissionChecker|null
      */
-    public function getRootPermissions()
+    public function getDefaultPermissions()
     {
-        return $this->rootPermissions;
+        return $this->defaultPermissions;
     }
 
     /**
@@ -124,26 +149,10 @@ class InheritedPermissions
     }
 
     /**
-     * Set base class
+     * Force pre-calculation of a list of permissions for optimisation
      *
-     * @param string $baseClass
-     * @return $this
-     */
-    public function setBaseClass($baseClass)
-    {
-        if (!is_a($baseClass, DataObject::class, true)) {
-            throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
-        }
-        $this->baseClass = $baseClass;
-        return $this;
-    }
-
-    /**
-     * Pre-populate the cache of canEdit, canView, canDelete, canPublish permissions. This method will use the static
-     * can_(perm)_multiple method for efficiency.
-     *
-     * @param string $permission    The permission: edit, view, publish, approve, etc.
-     * @param array $ids           An array of page IDs
+     * @param string $permission
+     * @param array $ids
      */
     public function prePopulatePermissionCache($permission = 'edit', $ids = [])
     {
@@ -176,7 +185,7 @@ class InheritedPermissions
      * @param Member $member Member
      * @param array $globalPermission If the member doesn't have this permission code, don't bother iterating deeper
      * @param bool $useCached Enables use of cache. Cache will be populated even if this is false.
-     * @return array An map of <a href='psi_element://SiteTree'>SiteTree</a> ID keys to boolean values
+     * @return array A map of permissions, keys are ID numbers, and values are boolean permission checks
      * ID keys to boolean values
      */
     protected function batchPermissionCheck(
@@ -334,8 +343,8 @@ class InheritedPermissions
                 }
                 $groupedByParent[$item->ParentID][] = $item->ID;
             } else {
-                // Fail over to root permission check for Inherit and ParentID = 0
-                $result[$item->ID] = $this->checkRootPermission($type, $member);
+                // Fail over to default permission check for Inherit and ParentID = 0
+                $result[$item->ID] = $this->checkDefaultPermissions($type, $member);
             }
         }
 
@@ -358,15 +367,6 @@ class InheritedPermissions
         return $result;
     }
 
-    /**
-     * Get the 'can edit' information for a number of SiteTree pages.
-     *
-     * @param array $ids An array of IDs of the objects to look up
-     * @param Member $member Member object
-     * @param bool $useCached Return values from the permission cache if they exist
-     * @return array A map where the IDs are keys and the values are
-     * booleans stating whether the given object can be edited
-     */
     public function canEditMultiple($ids, Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(
@@ -378,27 +378,11 @@ class InheritedPermissions
         );
     }
 
-    /**
-     * Get the canView information for a number of objects
-     *
-     * @param array $ids
-     * @param Member $member
-     * @param bool $useCached
-     * @return mixed
-     */
     public function canViewMultiple($ids, Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(self::VIEW, $ids, $member, [], $useCached);
     }
 
-    /**
-     * Get the 'can edit' information for a number of SiteTree pages.
-     *
-     * @param array $ids An array of IDs of the objects pages to look up
-     * @param Member $member Member object
-     * @param bool $useCached Return values from the permission cache if they exist
-     * @return array
-     */
     public function canDeleteMultiple($ids, Member $member = null, $useCached = true)
     {
         // Validate ids
@@ -467,18 +451,11 @@ class InheritedPermissions
         return array_fill_keys($deletable, true) + array_fill_keys($ids, false);
     }
 
-    /**
-     * Check delete permission for a single record ID
-     *
-     * @param int $id
-     * @param Member $member
-     * @return bool
-     */
     public function canDelete($id, Member $member = null)
     {
-        // No ID: Check root permission
+        // No ID: Check default permission
         if (!$id) {
-            return $this->checkRootPermission(self::DELETE, $member);
+            return $this->checkDefaultPermissions(self::DELETE, $member);
         }
 
         // Regular canEdit logic is handled by canEditMultiple
@@ -491,18 +468,11 @@ class InheritedPermissions
         return isset($results[$id]) ? $results[$id] : false;
     }
 
-    /**
-     * Check edit permission for a single record ID
-     *
-     * @param int $id
-     * @param Member $member
-     * @return bool
-     */
     public function canEdit($id, Member $member = null)
     {
-        // No ID: Check root permission
+        // No ID: Check default permission
         if (!$id) {
-            return $this->checkRootPermission(self::EDIT, $member);
+            return $this->checkDefaultPermissions(self::EDIT, $member);
         }
 
         // Regular canEdit logic is handled by canEditMultiple
@@ -515,18 +485,11 @@ class InheritedPermissions
         return isset($results[$id]) ? $results[$id] : false;
     }
 
-    /**
-     * Check view permission for a single record ID
-     *
-     * @param int $id
-     * @param Member $member
-     * @return bool
-     */
     public function canView($id, Member $member = null)
     {
-        // No ID: Check root permission
+        // No ID: Check default permission
         if (!$id) {
-            return $this->checkRootPermission(self::VIEW, $member);
+            return $this->checkDefaultPermissions(self::VIEW, $member);
         }
 
         // Regular canView logic is handled by canViewMultiple
@@ -540,7 +503,8 @@ class InheritedPermissions
     }
 
     /**
-     * Get field to check for permission type for the given check
+     * Get field to check for permission type for the given check.
+     * Defaults to those provided by {@see InheritedPermissionsExtension)
      *
      * @param string $type
      * @return string
@@ -561,45 +525,45 @@ class InheritedPermissions
 
     /**
      * Get join table for type
+     * Defaults to those provided by {@see InheritedPermissionsExtension)
      *
      * @param string $type
      * @return string
      */
     protected function getJoinTable($type)
     {
-        $table = DataObject::getSchema()->tableName($this->baseClass);
         switch ($type) {
             case self::DELETE:
                 // Delete uses edit type - Drop through
             case self::EDIT:
-                return "{$table}_EditorGroups";
+                return $this->getEditorGroupsTable();
             case self::VIEW:
-                return "{$table}_ViewerGroups";
+                return $this->getViewerGroupsTable();
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
         }
     }
 
     /**
-     * Determine root permission for a givion check
+     * Determine default permission for a givion check
      *
      * @param string $type Method to check
      * @param Member $member
      * @return bool
      */
-    protected function checkRootPermission($type, Member $member = null)
+    protected function checkDefaultPermissions($type, Member $member = null)
     {
-        $rootPermissionHandler = $this->getRootPermissions();
-        if (!$rootPermissionHandler) {
+        $defaultPermissions = $this->getDefaultPermissions();
+        if (!$defaultPermissions) {
             return false;
         }
         switch ($type) {
             case self::VIEW:
-                return $rootPermissionHandler->canView($member);
+                return $defaultPermissions->canView($member);
             case self::EDIT:
-                return $rootPermissionHandler->canEdit($member);
+                return $defaultPermissions->canEdit($member);
             case self::DELETE:
-                return $rootPermissionHandler->canDelete($member);
+                return $defaultPermissions->canDelete($member);
             default:
                 return false;
         }
@@ -619,14 +583,31 @@ class InheritedPermissions
         return $singleton->hasExtension(Versioned::class);
     }
 
-    /**
-     * Clear cache
-     *
-     * @return $this
-     */
     public function clearCache()
     {
         $this->cachePermissions = [];
         return $this;
+    }
+
+    /**
+     * Get table to use for editor groups relation
+     *
+     * @return string
+     */
+    protected function getEditorGroupsTable()
+    {
+        $table = DataObject::getSchema()->tableName($this->baseClass);
+        return "{$table}_EditorGroups";
+    }
+
+    /**
+     * Get table to use for viewer groups relation
+     *
+     * @return string
+     */
+    protected function getViewerGroupsTable()
+    {
+        $table = DataObject::getSchema()->tableName($this->baseClass);
+        return "{$table}_ViewerGroups";
     }
 }
