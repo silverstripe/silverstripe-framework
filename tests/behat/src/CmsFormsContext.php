@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Framework\Tests\Behaviour;
 
+use BadMethodCallException;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Gherkin\Node\TableNode;
@@ -266,5 +267,30 @@ JS;
         $element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
         assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
+    }
+
+    /**
+     * @Given /^the "([^"]*)" field ((?:does not have)|(?:has)) property "([^"]*)"$/
+     */
+    public function assertTheFieldHasProperty($name, $cond, $property)
+    {
+        $name = $this->fixStepArgument($name);
+        $property = $this->fixStepArgument($property);
+
+        $context = $this->getMainContext();
+        $fieldObj = $context->assertSession()->fieldExists($name);
+
+        // Check property
+        $hasProperty = $fieldObj->hasAttribute($property);
+        switch ($cond) {
+            case 'has':
+                assert($hasProperty, "Field $name does not have property $property");
+                break;
+            case 'does not have':
+                assert(!$hasProperty, "Field $name should not have property $property");
+                break;
+            default:
+                throw new BadMethodCallException("Invalid condition");
+        }
     }
 }
