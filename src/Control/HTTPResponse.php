@@ -3,7 +3,6 @@
 namespace SilverStripe\Control;
 
 use InvalidArgumentException;
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\HandlerInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
@@ -176,7 +175,8 @@ class HTTPResponse
      */
     public function isError()
     {
-        return $this->statusCode && ($this->statusCode < 200 || $this->statusCode > 399);
+        $statusCode = $this->getStatusCode();
+        return $statusCode && ($statusCode < 200 || $statusCode > 399);
     }
 
     /**
@@ -257,12 +257,12 @@ class HTTPResponse
             $code = 302;
         }
         $this->setStatusCode($code);
-        $this->headers['Location'] = $dest;
+        $this->addHeader('Location', $dest);
         return $this;
     }
 
     /**
-     * Send this HTTPReponse to the browser
+     * Send this HTTPResponse to the browser
      */
     public function output()
     {
@@ -271,55 +271,86 @@ class HTTPResponse
             Requirements::include_in_response($this);
         }
 
-        if (in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
-            $url = Director::absoluteURL($this->headers['Location'], true);
-            $urlATT = Convert::raw2htmlatt($url);
-            $urlJS = Convert::raw2js($url);
-            $title = Director::isDev()
-                ? "{$urlATT}... (output started on {$file}, line {$line})"
-                : "{$urlATT}...";
-            echo <<<EOT
+        if ($this->isRedirect() && headers_sent()) {
+            $this->htmlRedirect();
+        } else {
+            $this->outputHeaders();
+            $this->outputBody();
+        }
+    }
+
+    /**
+     * Generate a browser redirect without setting headers
+     */
+    protected function htmlRedirect()
+    {
+        $headersSent = headers_sent($file, $line);
+        $location = $this->getHeader('Location');
+        $url = Director::absoluteURL($location);
+        $urlATT = Convert::raw2htmlatt($url);
+        $urlJS = Convert::raw2js($url);
+        $title = (Director::isDev() && $headersSent)
+            ? "{$urlATT}... (output started on {$file}, line {$line})"
+            : "{$urlATT}...";
+        echo <<<EOT
 <p>Redirecting to <a href="{$urlATT}" title="Click this link if your browser does not redirect you">{$title}</a></p>
 <meta http-equiv="refresh" content="1; url={$urlATT}" />
 <script type="application/javascript">setTimeout(function(){
 	window.location.href = "{$urlJS}";
 }, 50);</script>
 EOT
-            ;
-        } else {
-            $line = $file = null;
-            if (!headers_sent($file, $line)) {
-                header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
-                foreach ($this->headers as $header => $value) {
-                    //etags need to be quoted
-                    if (strcasecmp('etag', $header) === 0 && 0 !== strpos($value, '"')) {
-                        $value = sprintf('"%s"', $value);
-                    }
-                    header("$header: $value", true, $this->statusCode);
-                }
-            } else {
-                // It's critical that these status codes are sent; we need to report a failure if not.
-                if ($this->statusCode >= 300) {
-                    user_error(
-                        "Couldn't set response type to $this->statusCode because " .
-                        "of output on line $line of $file",
-                        E_USER_WARNING
-                    );
-                }
-            }
+        ;
+    }
 
-            // If this is an error but no error body has yet been generated,
-            // delegate formatting to current error handler.
-            if ($this->isError() && !$this->body) {
-                /** @var HandlerInterface $handler */
-                $handler = Injector::inst()->get(HandlerInterface::class);
-                $formatter = $handler->getFormatter();
-                echo $formatter->format(array(
-                    'code' => $this->statusCode
-                ));
-            } else {
-                echo $this->body;
+    /**
+     * Output HTTP headers to the browser
+     */
+    protected function outputHeaders()
+    {
+        $headersSent = headers_sent($file, $line);
+        if (!$headersSent) {
+            $method = sprintf(
+                "%s %d %s",
+                $_SERVER['SERVER_PROTOCOL'],
+                $this->getStatusCode(),
+                $this->getStatusDescription()
+            );
+            header($method);
+            foreach ($this->getHeaders() as $header => $value) {
+                    header("{$header}: {$value}", true, $this->getStatusCode());
             }
+        } elseif ($this->getStatusCode() >= 300) {
+            // It's critical that these status codes are sent; we need to report a failure if not.
+            user_error(
+                sprintf(
+                    "Couldn't set response type to %d because of output on line %s of %s",
+                    $this->getStatusCode(),
+                    $line,
+                    $file
+                ),
+                E_USER_WARNING
+            );
+        }
+    }
+
+    /**
+     * Output body of this response to the browser
+     */
+    protected function outputBody()
+    {
+        // Only show error pages or generic "friendly" errors if the status code signifies
+        // an error, and the response doesn't have any body yet that might contain
+        // a more specific error description.
+        $body = $this->getBody();
+        if ($this->isError() && empty($body)) {
+            /** @var HandlerInterface $handler */
+            $handler = Injector::inst()->get(HandlerInterface::class);
+            $formatter = $handler->getFormatter();
+            echo $formatter->format(array(
+                'code' => $this->statusCode
+            ));
+        } else {
+            echo $this->body;
         }
     }
 
@@ -331,6 +362,16 @@ EOT
      */
     public function isFinished()
     {
-        return in_array($this->statusCode, array(301, 302, 303, 304, 305, 307, 401, 403));
+        return $this->isRedirect() || $this->isError();
+    }
+
+    /**
+     * Determine if this response is a redirect
+     *
+     * @return bool
+     */
+    public function isRedirect()
+    {
+        return in_array($this->getStatusCode(), self::$redirect_codes);
     }
 }
