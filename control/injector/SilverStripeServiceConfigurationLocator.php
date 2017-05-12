@@ -33,6 +33,12 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 				// have we already got for this?
 				$config = $this->configFor($parent);
 				if($config !== null) {
+					// Class name should not be inherited: attempting to instantiate a child class
+					// should never result in the parent class being created
+					if (isset($config['class'])) {
+						$config['class'] = $name;
+					}
+
 					// Cache this result
 					$this->configs[$name] = $config;
 					return $config;
