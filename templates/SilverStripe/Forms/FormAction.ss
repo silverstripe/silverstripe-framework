@@ -1,6 +1,6 @@
 <% if $UseButtonTag %>
 	<button $AttributesHTML>
-		<% if $ButtonContent %>$ButtonContent<% else %>$Title.XML<% end_if %>
+		<% if $ButtonContent %>$ButtonContent<% else %><span>$Title.XML</span><% end_if %>
 	</button>
 <% else %>
 	<input $AttributesHTML />
