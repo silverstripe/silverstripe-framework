@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Tests;
 
+use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\ContentNegotiator;
@@ -69,9 +70,9 @@ class SSViewerTest extends SapphireTest
     {
         SSViewer::config()->update('theme', 'mytheme');
         $this->assertEquals(
-        'mytheme',
-        SSViewer::config()->uninherited('theme'),
-        'Current theme is the default - user has not defined one'
+            'mytheme',
+            SSViewer::config()->uninherited('theme'),
+            'Current theme is the default - user has not defined one'
         );
     }
 
@@ -80,12 +81,7 @@ class SSViewerTest extends SapphireTest
      */
     public function testTemplateWithoutHeadRenders()
     {
-        $data = new ArrayData(
-        array(
-        'Var' => 'var value'
-        )
-        );
-
+        $data = new ArrayData([ 'Var' => 'var value' ]);
         $result = $data->renderWith("SSViewerTestPartialTemplate");
         $this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U", '', $result)));
     }
@@ -121,62 +117,54 @@ class SSViewerTest extends SapphireTest
 
     public function testIncludeTruthyness()
     {
-        $data = new ArrayData(
-        array(
-        'Title' => 'TruthyTest',
-        'Items' => new ArrayList(
-            array(
-            new ArrayData(array('Title' => 'Item 1')),
-            new ArrayData(array('Title' => '')),
-            new ArrayData(array('Title' => true)),
-            new ArrayData(array('Title' => false)),
-            new ArrayData(array('Title' => null)),
-            new ArrayData(array('Title' => 0)),
-            new ArrayData(array('Title' => 7))
-            )
-        )
-        )
-        );
+        $data = new ArrayData([
+            'Title' => 'TruthyTest',
+            'Items' => new ArrayList([
+                new ArrayData(['Title' => 'Item 1']),
+                new ArrayData(['Title' => '']),
+                new ArrayData(['Title' => true]),
+                new ArrayData(['Title' => false]),
+                new ArrayData(['Title' => null]),
+                new ArrayData(['Title' => 0]),
+                new ArrayData(['Title' => 7])
+            ])
+        ]);
         $result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
 
         // We should not end up with empty values appearing as empty
-        $expected = array(
-        'Item 1 _ Item 1 - First-ODD top:Item 1',
-        'Untitled - EVEN top:',
-        '1 _ 1 - ODD top:1',
-        'Untitled - EVEN top:',
-        'Untitled - ODD top:',
-        'Untitled - EVEN top:0',
-        '7 _ 7 - Last-ODD top:7'
-        );
+        $expected = [
+            'Item 1 _ Item 1 - First-ODD top:Item 1',
+            'Untitled - EVEN top:',
+            '1 _ 1 - ODD top:1',
+            'Untitled - EVEN top:',
+            'Untitled - ODD top:',
+            'Untitled - EVEN top:0',
+            '7 _ 7 - Last-ODD top:7',
+        ];
         $this->assertExpectedStrings($result, $expected);
     }
 
     private function getScopeInheritanceTestData()
     {
-        return new ArrayData(
-        array(
-        'Title' => 'TopTitleValue',
-        'Items' => new ArrayList(
-            array(
-            new ArrayData(array('Title' => 'Item 1')),
-            new ArrayData(array('Title' => 'Item 2')),
-            new ArrayData(array('Title' => 'Item 3')),
-            new ArrayData(array('Title' => 'Item 4')),
-            new ArrayData(array('Title' => 'Item 5')),
-            new ArrayData(array('Title' => 'Item 6'))
-            )
-        )
-        )
-        );
+        return new ArrayData([
+            'Title' => 'TopTitleValue',
+            'Items' => new ArrayList([
+                new ArrayData(['Title' => 'Item 1']),
+                new ArrayData(['Title' => 'Item 2']),
+                new ArrayData(['Title' => 'Item 3']),
+                new ArrayData(['Title' => 'Item 4']),
+                new ArrayData(['Title' => 'Item 5']),
+                new ArrayData(['Title' => 'Item 6'])
+            ])
+        ]);
     }
 
     private function assertExpectedStrings($result, $expected)
     {
         foreach ($expected as $expectedStr) {
             $this->assertTrue(
-            (boolean) preg_match("/{$expectedStr}/", $result),
-            "Didn't find '{$expectedStr}' in:\n{$result}"
+                (boolean) preg_match("/{$expectedStr}/", $result),
+                "Didn't find '{$expectedStr}' in:\n{$result}"
             );
         }
     }
@@ -200,8 +188,11 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirements()
     {
-        $requirements = $this->getMockBuilder(Requirements_Backend::class)->setMethods(array("javascript", "css"))
-        ->getMock();
+        /** @var Requirements_Backend|PHPUnit_Framework_MockObject_MockObject $requirements */
+        $requirements = $this
+            ->getMockBuilder(Requirements_Backend::class)
+            ->setMethods(array("javascript", "css"))
+            ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
         $cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 
@@ -211,7 +202,7 @@ class SSViewerTest extends SapphireTest
         $origReq = Requirements::backend();
         Requirements::set_backend($requirements);
         $template = $this->render(
-        "<% require javascript($jsFile) %>
+            "<% require javascript($jsFile) %>
 		<% require css($cssFile) %>"
         );
         Requirements::set_backend($origReq);
@@ -272,8 +263,8 @@ class SSViewerTest extends SapphireTest
         $testBackend->processCombinedFiles();
 
         $this->setExpectedExceptionRegExp(
-        Exception::class,
-        '/minification service/'
+            Exception::class,
+            '/minification service/'
         );
 
         $testBackend->setMinifyCombinedFiles(true);
@@ -285,8 +276,7 @@ class SSViewerTest extends SapphireTest
 
     public function testComments()
     {
-        $output = $this->render(
-        <<<SS
+        $input = <<<SS
 This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>Final content
 <%-- Alone multi
 	line comment --%>
@@ -294,8 +284,8 @@ Some more content
 Mixing content and <%-- multi
 	line comment --%> Final final
 content
-SS
-        );
+SS;
+        $output = $this->render($input);
         $shouldbe = <<<SS
 This is my templateThis is some contentFinal content
 
@@ -303,7 +293,6 @@ Some more content
 Mixing content and  Final final
 content
 SS;
-
         $this->assertEquals($shouldbe, $output);
     }
 
@@ -328,9 +317,9 @@ SS;
 
         $this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
         $this->assertEquals(
-        '{\\[out:Test]}',
-        $this->render('{\\\\$Test}'),
-        'Escapes before injections are correctly unescaped'
+            '{\\[out:Test]}',
+            $this->render('{\\\\$Test}'),
+            'Escapes before injections are correctly unescaped'
         );
     }
 
@@ -347,12 +336,12 @@ SS;
         $this->assertEquals('zz', $this->render('$SSViewerTest_GlobalThatTakesArguments'));
         $this->assertEquals('zFooz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo")'));
         $this->assertEquals(
-        'zFoo:Bar:Bazz',
-        $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")')
+            'zFoo:Bar:Bazz',
+            $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")')
         );
         $this->assertEquals(
-        'zreferencez',
-        $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)')
+            'zreferencez',
+            $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)')
         );
     }
 
@@ -362,101 +351,101 @@ SS;
         $this->assertEquals('&lt;div&gt;&lt;/div&gt;', $this->render('$SSViewerTest_GlobalHTMLEscaped'));
 
         $this->assertEquals(
-        'z<div></div>z',
-        $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)')
+            'z<div></div>z',
+            $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)')
         );
         $this->assertEquals(
-        'z&lt;div&gt;&lt;/div&gt;z',
-        $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)')
+            'z&lt;div&gt;&lt;/div&gt;z',
+            $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)')
         );
     }
 
     public function testCoreGlobalVariableCalls()
     {
         $this->assertEquals(
-        Director::absoluteBaseURL(),
-        $this->render('{$absoluteBaseURL}'),
-        'Director::absoluteBaseURL can be called from within template'
+            Director::absoluteBaseURL(),
+            $this->render('{$absoluteBaseURL}'),
+            'Director::absoluteBaseURL can be called from within template'
         );
         $this->assertEquals(
-        Director::absoluteBaseURL(),
-        $this->render('{$AbsoluteBaseURL}'),
-        'Upper-case %AbsoluteBaseURL can be called from within template'
-        );
-
-        $this->assertEquals(
-        Director::is_ajax(),
-        $this->render('{$isAjax}'),
-        'All variations of is_ajax result in the correct call'
-        );
-        $this->assertEquals(
-        Director::is_ajax(),
-        $this->render('{$IsAjax}'),
-        'All variations of is_ajax result in the correct call'
-        );
-        $this->assertEquals(
-        Director::is_ajax(),
-        $this->render('{$is_ajax}'),
-        'All variations of is_ajax result in the correct call'
-        );
-        $this->assertEquals(
-        Director::is_ajax(),
-        $this->render('{$Is_ajax}'),
-        'All variations of is_ajax result in the correct call'
+            Director::absoluteBaseURL(),
+            $this->render('{$AbsoluteBaseURL}'),
+            'Upper-case %AbsoluteBaseURL can be called from within template'
         );
 
         $this->assertEquals(
-        i18n::get_locale(),
-        $this->render('{$i18nLocale}'),
-        'i18n template functions result correct result'
+            Director::is_ajax(),
+            $this->render('{$isAjax}'),
+            'All variations of is_ajax result in the correct call'
         );
         $this->assertEquals(
-        i18n::get_locale(),
-        $this->render('{$get_locale}'),
-        'i18n template functions result correct result'
-        );
-
-        $this->assertEquals(
-        (string)Member::currentUser(),
-        $this->render('{$CurrentMember}'),
-        'Member template functions result correct result'
+            Director::is_ajax(),
+            $this->render('{$IsAjax}'),
+            'All variations of is_ajax result in the correct call'
         );
         $this->assertEquals(
-        (string)Member::currentUser(),
-        $this->render('{$CurrentUser}'),
-        'Member template functions result correct result'
+            Director::is_ajax(),
+            $this->render('{$is_ajax}'),
+            'All variations of is_ajax result in the correct call'
         );
         $this->assertEquals(
-        (string)Member::currentUser(),
-        $this->render('{$currentMember}'),
-        'Member template functions result correct result'
-        );
-        $this->assertEquals(
-        (string)Member::currentUser(),
-        $this->render('{$currentUser}'),
-        'Member template functions result correct result'
+            Director::is_ajax(),
+            $this->render('{$Is_ajax}'),
+            'All variations of is_ajax result in the correct call'
         );
 
         $this->assertEquals(
-        SecurityToken::getSecurityID(),
-        $this->render('{$getSecurityID}'),
-        'SecurityToken template functions result correct result'
+            i18n::get_locale(),
+            $this->render('{$i18nLocale}'),
+            'i18n template functions result correct result'
         );
         $this->assertEquals(
-        SecurityToken::getSecurityID(),
-        $this->render('{$SecurityID}'),
-        'SecurityToken template functions result correct result'
+            i18n::get_locale(),
+            $this->render('{$get_locale}'),
+            'i18n template functions result correct result'
         );
 
         $this->assertEquals(
-        Permission::check("ADMIN"),
-        (bool)$this->render('{$HasPerm(\'ADMIN\')}'),
-        'Permissions template functions result correct result'
+            (string)Member::currentUser(),
+            $this->render('{$CurrentMember}'),
+            'Member template functions result correct result'
         );
         $this->assertEquals(
-        Permission::check("ADMIN"),
-        (bool)$this->render('{$hasPerm(\'ADMIN\')}'),
-        'Permissions template functions result correct result'
+            (string)Member::currentUser(),
+            $this->render('{$CurrentUser}'),
+            'Member template functions result correct result'
+        );
+        $this->assertEquals(
+            (string)Member::currentUser(),
+            $this->render('{$currentMember}'),
+            'Member template functions result correct result'
+        );
+        $this->assertEquals(
+            (string)Member::currentUser(),
+            $this->render('{$currentUser}'),
+            'Member template functions result correct result'
+        );
+
+        $this->assertEquals(
+            SecurityToken::getSecurityID(),
+            $this->render('{$getSecurityID}'),
+            'SecurityToken template functions result correct result'
+        );
+        $this->assertEquals(
+            SecurityToken::getSecurityID(),
+            $this->render('{$SecurityID}'),
+            'SecurityToken template functions result correct result'
+        );
+
+        $this->assertEquals(
+            Permission::check("ADMIN"),
+            (bool)$this->render('{$HasPerm(\'ADMIN\')}'),
+            'Permissions template functions result correct result'
+        );
+        $this->assertEquals(
+            Permission::check("ADMIN"),
+            (bool)$this->render('{$hasPerm(\'ADMIN\')}'),
+            'Permissions template functions result correct result'
         );
     }
 
@@ -464,31 +453,29 @@ SS;
     {
         // check if Link without $ in front of variable
         $result = $this->render(
-        'A<% if Link %>$Link<% end_if %>B',
-        new SSViewerTest\TestObject()
+            'A<% if Link %>$Link<% end_if %>B',
+            new SSViewerTest\TestObject()
         );
         $this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if Link %>');
 
         // check if Link with $ in front of variable
         $result = $this->render(
-        'A<% if $Link %>$Link<% end_if %>B',
-        new SSViewerTest\TestObject()
+            'A<% if $Link %>$Link<% end_if %>B',
+            new SSViewerTest\TestObject()
         );
         $this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if $Link %>');
     }
 
     public function testLocalFunctionsTakePriorityOverGlobals()
     {
-        $data = new ArrayData(
-        array(
-        'Page' => new SSViewerTest\TestObject()
-        )
-        );
+        $data = new ArrayData([
+            'Page' => new SSViewerTest\TestObject()
+        ]);
 
         //call method with lots of arguments
         $result = $this->render(
-        '<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',
-        $data
+            '<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',
+            $data
         );
         $this->assertEquals("abcdefghijk", $result, "public function can accept up to 11 arguments");
 
@@ -503,57 +490,43 @@ SS;
         //call method with same name as a global method (local call should take priority)
         $result = $this->render('<% with Page %>$absoluteBaseURL<% end_with %>', $data);
         $this->assertEquals(
-        "testLocalFunctionPriorityCalled",
-        $result,
-        "Local Object's public function called. Did not return the actual baseURL of the current site"
+            "testLocalFunctionPriorityCalled",
+            $result,
+            "Local Object's public function called. Did not return the actual baseURL of the current site"
         );
     }
 
     public function testCurrentScopeLoopWith()
     {
         // Data to run the loop tests on - one sequence of three items, each with a subitem
-        $data = new ArrayData(
-        array(
-        'Foo' => new ArrayList(
-            array(
-            'Subocean' => new ArrayData(
-                array(
+        $data = new ArrayData([
+            'Foo' => new ArrayList([
+                'Subocean' => new ArrayData([
                     'Name' => 'Higher'
-                )
-            ),
-            new ArrayData(
-                array(
-                'Sub' => new ArrayData(
-                    array(
-                    'Name' => 'SubKid1'
-                    )
-                )
-                )
-            ),
-            new ArrayData(
-                array(
-                'Sub' => new ArrayData(
-                    array(
-                    'Name' => 'SubKid2'
-                    )
-                )
-                )
-            ),
-            new SSViewerTest\TestObject('Number6')
-            )
-        )
-        )
-        );
+                ]),
+                new ArrayData([
+                    'Sub' => new ArrayData([
+                        'Name' => 'SubKid1'
+                    ])
+                ]),
+                new ArrayData([
+                    'Sub' => new ArrayData([
+                        'Name' => 'SubKid2'
+                    ])
+                ]),
+                new SSViewerTest\TestObject('Number6')
+            ])
+        ]);
 
         $result = $this->render(
-        '<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',
-        $data
+            '<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',
+            $data
         );
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop works");
 
         $result = $this->render(
-        '<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',
-        $data
+            '<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',
+            $data
         );
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop works");
 
@@ -561,16 +534,16 @@ SS;
         $this->assertEquals("4", $result, "4 items in the DataObjectSet");
 
         $result = $this->render(
-        '<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
-        . '<% end_if %><% end_loop %><% end_with %>',
-        $data
+            '<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
+            . '<% end_if %><% end_loop %><% end_with %>',
+            $data
         );
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop in with Up.Foo scope works");
 
         $result = $this->render(
-        '<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
-        . '<% end_if %><% end_loop %><% end_with %>',
-        $data
+            '<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
+            . '<% end_if %><% end_loop %><% end_with %>',
+            $data
         );
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop in current scope works");
     }
@@ -578,7 +551,7 @@ SS;
     public function testObjectDotArguments()
     {
         $this->assertEquals(
-        '[out:TestObject.methodWithOneArgument(one)]
+            '[out:TestObject.methodWithOneArgument(one)]
 				[out:TestObject.methodWithTwoArguments(one,two)]
 				[out:TestMethod(Arg1,Arg2).Bar.Val]
 				[out:TestMethod(Arg1,Arg2).Bar]
@@ -586,8 +559,8 @@ SS;
 				[out:TestMethod(Arg1).Bar.Val]
 				[out:TestMethod(Arg1).Bar]
 				[out:TestMethod(Arg1)]',
-        $this->render(
-            '$TestObject.methodWithOneArgument(one)
+            $this->render(
+                '$TestObject.methodWithOneArgument(one)
 				$TestObject.methodWithTwoArguments(one,two)
 				$TestMethod(Arg1, Arg2).Bar.Val
 				$TestMethod(Arg1, Arg2).Bar
@@ -595,14 +568,14 @@ SS;
 				$TestMethod(Arg1).Bar.Val
 				$TestMethod(Arg1).Bar
 				$TestMethod(Arg1)'
-        )
+            )
         );
     }
 
     public function testEscapedArguments()
     {
         $this->assertEquals(
-        '[out:Foo(Arg1,Arg2).Bar.Val].Suffix
+            '[out:Foo(Arg1,Arg2).Bar.Val].Suffix
 				[out:Foo(Arg1,Arg2).Val]_Suffix
 				[out:Foo(Arg1,Arg2)]/Suffix
 				[out:Foo(Arg1).Bar.Val]textSuffix
@@ -611,8 +584,8 @@ SS;
 				[out:Foo.Bar.Val].Suffix
 				[out:Foo.Bar].Suffix
 				[out:Foo].Suffix',
-        $this->render(
-            '{$Foo(Arg1, Arg2).Bar.Val}.Suffix
+            $this->render(
+                '{$Foo(Arg1, Arg2).Bar.Val}.Suffix
 				{$Foo(Arg1, Arg2).Val}_Suffix
 				{$Foo(Arg1, Arg2)}/Suffix
 				{$Foo(Arg1).Bar.Val}textSuffix
@@ -621,44 +594,44 @@ SS;
 				{$Foo.Bar.Val}.Suffix
 				{$Foo.Bar}.Suffix
 				{$Foo}.Suffix'
-        )
+            )
         );
     }
 
     public function testLoopWhitespace()
     {
         $this->assertEquals(
-        'before[out:SingleItem.Test]after
+            'before[out:SingleItem.Test]after
 				beforeTestafter',
-        $this->render(
-            'before<% loop SingleItem %>$Test<% end_loop %>after
+            $this->render(
+                'before<% loop SingleItem %>$Test<% end_loop %>after
 				before<% loop SingleItem %>Test<% end_loop %>after'
-        )
+            )
         );
 
         // The control tags are removed from the output, but no whitespace
         // This is a quirk that could be changed, but included in the test to make the current
         // behaviour explicit
         $this->assertEquals(
-        'before
+            'before
 
 [out:SingleItem.ItemOnItsOwnLine]
 
 after',
-        $this->render(
-            'before
+            $this->render(
+                'before
 <% loop SingleItem %>
 $ItemOnItsOwnLine
 <% end_loop %>
 after'
-        )
+            )
         );
 
         // The whitespace within the control tags is preserve in a loop
         // This is a quirk that could be changed, but included in the test to make the current
         // behaviour explicit
         $this->assertEquals(
-        'before
+            'before
 
 [out:Loop3.ItemOnItsOwnLine]
 
@@ -667,13 +640,13 @@ after'
 [out:Loop3.ItemOnItsOwnLine]
 
 after',
-        $this->render(
-            'before
+            $this->render(
+                'before
 <% loop Loop3 %>
 $ItemOnItsOwnLine
 <% end_loop %>
 after'
-        )
+            )
         );
     }
 
@@ -681,44 +654,44 @@ after'
     {
         // Single item controls
         $this->assertEquals(
-        'a[out:Foo.Bar.Item]b
+            'a[out:Foo.Bar.Item]b
 				[out:Foo.Bar(Arg1).Item]
 				[out:Foo(Arg1).Item]
 				[out:Foo(Arg1,Arg2).Item]
 				[out:Foo(Arg1,Arg2,Arg3).Item]',
-        $this->render(
-            '<% with Foo.Bar %>a{$Item}b<% end_with %>
+            $this->render(
+                '<% with Foo.Bar %>a{$Item}b<% end_with %>
 				<% with Foo.Bar(Arg1) %>$Item<% end_with %>
 				<% with Foo(Arg1) %>$Item<% end_with %>
 				<% with Foo(Arg1, Arg2) %>$Item<% end_with %>
 				<% with Foo(Arg1, Arg2, Arg3) %>$Item<% end_with %>'
-        )
+            )
         );
 
         // Loop controls
         $this->assertEquals(
-        'a[out:Foo.Loop2.Item]ba[out:Foo.Loop2.Item]b',
-        $this->render('<% loop Foo.Loop2 %>a{$Item}b<% end_loop %>')
+            'a[out:Foo.Loop2.Item]ba[out:Foo.Loop2.Item]b',
+            $this->render('<% loop Foo.Loop2 %>a{$Item}b<% end_loop %>')
         );
 
         $this->assertEquals(
-        '[out:Foo.Loop2(Arg1).Item][out:Foo.Loop2(Arg1).Item]',
-        $this->render('<% loop Foo.Loop2(Arg1) %>$Item<% end_loop %>')
+            '[out:Foo.Loop2(Arg1).Item][out:Foo.Loop2(Arg1).Item]',
+            $this->render('<% loop Foo.Loop2(Arg1) %>$Item<% end_loop %>')
         );
 
         $this->assertEquals(
-        '[out:Loop2(Arg1).Item][out:Loop2(Arg1).Item]',
-        $this->render('<% loop Loop2(Arg1) %>$Item<% end_loop %>')
+            '[out:Loop2(Arg1).Item][out:Loop2(Arg1).Item]',
+            $this->render('<% loop Loop2(Arg1) %>$Item<% end_loop %>')
         );
 
         $this->assertEquals(
-        '[out:Loop2(Arg1,Arg2).Item][out:Loop2(Arg1,Arg2).Item]',
-        $this->render('<% loop Loop2(Arg1, Arg2) %>$Item<% end_loop %>')
+            '[out:Loop2(Arg1,Arg2).Item][out:Loop2(Arg1,Arg2).Item]',
+            $this->render('<% loop Loop2(Arg1, Arg2) %>$Item<% end_loop %>')
         );
 
         $this->assertEquals(
-        '[out:Loop2(Arg1,Arg2,Arg3).Item][out:Loop2(Arg1,Arg2,Arg3).Item]',
-        $this->render('<% loop Loop2(Arg1, Arg2, Arg3) %>$Item<% end_loop %>')
+            '[out:Loop2(Arg1,Arg2,Arg3).Item][out:Loop2(Arg1,Arg2,Arg3).Item]',
+            $this->render('<% loop Loop2(Arg1, Arg2, Arg3) %>$Item<% end_loop %>')
         );
     }
 
@@ -726,139 +699,139 @@ after'
     {
         // Basic test
         $this->assertEquals(
-        'AC',
-        $this->render('A<% if NotSet %>B$NotSet<% end_if %>C')
+            'AC',
+            $this->render('A<% if NotSet %>B$NotSet<% end_if %>C')
         );
 
         // Nested test
         $this->assertEquals(
-        'AB1C',
-        $this->render('A<% if IsSet %>B$NotSet<% if IsSet %>1<% else %>2<% end_if %><% end_if %>C')
+            'AB1C',
+            $this->render('A<% if IsSet %>B$NotSet<% if IsSet %>1<% else %>2<% end_if %><% end_if %>C')
         );
 
         // else_if
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if NotSet %>B<% else_if IsSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if NotSet %>B<% else_if IsSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ADE',
-        $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E')
+            'ADE',
+            $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E')
         );
 
         $this->assertEquals(
-        'ADE',
-        $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E')
+            'ADE',
+            $this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E')
         );
 
         // Dot syntax
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if Foo.NotSet %>B<% else_if Foo.IsSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if Foo.NotSet %>B<% else_if Foo.IsSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D')
         );
 
         // Params
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if NotSet(Param) %>B<% else %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if NotSet(Param) %>B<% else %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ABD',
-        $this->render('A<% if IsSet(Param) %>B<% else %>C<% end_if %>D')
+            'ABD',
+            $this->render('A<% if IsSet(Param) %>B<% else %>C<% end_if %>D')
         );
 
         // Negation
         $this->assertEquals(
-        'AC',
-        $this->render('A<% if not IsSet %>B<% end_if %>C')
+            'AC',
+            $this->render('A<% if not IsSet %>B<% end_if %>C')
         );
         $this->assertEquals(
-        'ABC',
-        $this->render('A<% if not NotSet %>B<% end_if %>C')
+            'ABC',
+            $this->render('A<% if not NotSet %>B<% end_if %>C')
         );
 
         // Or
         $this->assertEquals(
-        'ABD',
-        $this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D')
+            'ABD',
+            $this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet3 %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet3 %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D')
         );
 
         // Negated Or
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if not IsSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if not IsSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ABD',
-        $this->render('A<% if not NotSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
+            'ABD',
+            $this->render('A<% if not NotSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ABD',
-        $this->render('A<% if NotSet || not AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
+            'ABD',
+            $this->render('A<% if NotSet || not AlsoNotSet %>B<% else_if A %>C<% end_if %>D')
         );
 
         // And
         $this->assertEquals(
-        'ABD',
-        $this->render('A<% if IsSet && AlsoSet %>B<% else_if A %>C<% end_if %>D')
+            'ABD',
+            $this->render('A<% if IsSet && AlsoSet %>B<% else_if A %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if IsSet && NotSet %>B<% else_if IsSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if IsSet && NotSet %>B<% else_if IsSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet && NotSet2 %>B<% else_if NotSet3 %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet && NotSet2 %>B<% else_if NotSet3 %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D')
         );
 
         // Equality
         $this->assertEquals(
-        'ABC',
-        $this->render('A<% if RawVal == RawVal %>B<% end_if %>C')
+            'ABC',
+            $this->render('A<% if RawVal == RawVal %>B<% end_if %>C')
         );
         $this->assertEquals(
-        'ACD',
-        $this->render('A<% if Right == Wrong %>B<% else_if RawVal == RawVal %>C<% end_if %>D')
+            'ACD',
+            $this->render('A<% if Right == Wrong %>B<% else_if RawVal == RawVal %>C<% end_if %>D')
         );
         $this->assertEquals(
-        'ABC',
-        $this->render('A<% if Right != Wrong %>B<% end_if %>C')
+            'ABC',
+            $this->render('A<% if Right != Wrong %>B<% end_if %>C')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% end_if %>D')
+            'AD',
+            $this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% end_if %>D')
         );
 
         // test inequalities with simple numbers
@@ -881,30 +854,30 @@ after'
         // the output would stop after A, thereby failing the assert
         $this->assertEquals('AD', $this->render('A<% if IsSet %><% else %><% end_if %>D'));
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet %><% else_if IsSet %><% else %><% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet %><% else_if IsSet %><% else %><% end_if %>D')
         );
         $this->assertEquals(
-        'AD',
-        $this->render('A<% if NotSet %><% else_if AlsoNotSet %><% else %><% end_if %>D')
+            'AD',
+            $this->render('A<% if NotSet %><% else_if AlsoNotSet %><% else %><% end_if %>D')
         );
 
         // Bare words with ending space
         $this->assertEquals(
-        'ABC',
-        $this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C')
+            'ABC',
+            $this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C')
         );
 
         // Else
         $this->assertEquals(
-        'ADE',
-        $this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E')
+            'ADE',
+            $this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E')
         );
 
         // Empty if with else
         $this->assertEquals(
-        'ABC',
-        $this->render('A<% if NotSet %><% else %>B<% end_if %>C')
+            'ABC',
+            $this->render('A<% if NotSet %><% else %>B<% end_if %>C')
         );
     }
 
@@ -927,8 +900,8 @@ after'
 				<body><p>test</p><body>
 			</html>';
         $this->assertRegExp(
-        '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
-        $this->render($tmpl2)
+            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            $this->render($tmpl2)
         );
 
 
@@ -938,8 +911,8 @@ after'
 				<body><p>test</p><body>
 			</html>';
         $this->assertRegExp(
-        '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
-        $this->render($tmpl3)
+            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            $this->render($tmpl3)
         );
 
         // Check that the content negotiator converts to the equally legal formats
@@ -948,8 +921,8 @@ after'
         $response = new HTTPResponse($this->render($tmpl1));
         $negotiator->html($response);
         $this->assertRegExp(
-        '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
-        $response->getBody()
+            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            $response->getBody()
         );
 
         $response = new HTTPResponse($this->render($tmpl1));
@@ -960,103 +933,103 @@ after'
     public function testIncludeWithArguments()
     {
         $this->assertEquals(
-        $this->render('<% include SSViewerTestIncludeWithArguments %>'),
-        '<p>[out:Arg1]</p><p>[out:Arg2]</p>'
+            $this->render('<% include SSViewerTestIncludeWithArguments %>'),
+            '<p>[out:Arg1]</p><p>[out:Arg2]</p>'
         );
 
         $this->assertEquals(
-        $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A %>'),
-        '<p>A</p><p>[out:Arg2]</p>'
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A %>'),
+            '<p>A</p><p>[out:Arg2]</p>'
         );
 
         $this->assertEquals(
-        $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A, Arg2=B %>'),
-        '<p>A</p><p>B</p>'
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A, Arg2=B %>'),
+            '<p>A</p><p>B</p>'
         );
 
         $this->assertEquals(
-        $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
-        '<p>A Bare String</p><p>B Bare String</p>'
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
+            '<p>A Bare String</p><p>B Bare String</p>'
         );
 
         $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
-            new ArrayData(array('B' => 'Bar'))
-        ),
-        '<p>A</p><p>Bar</p>'
+            $this->render(
+                '<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
+                new ArrayData(array('B' => 'Bar'))
+            ),
+            '<p>A</p><p>Bar</p>'
         );
 
         $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
-            new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))
-        ),
-        '<p>A</p><p>Bar</p>'
+            $this->render(
+                '<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
+                new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))
+            ),
+            '<p>A</p><p>Bar</p>'
         );
 
         $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
-            new ArrayData(
-                array('Items' => new ArrayList(
+            $this->render(
+                '<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
+                new ArrayData(
+                    array('Items' => new ArrayList(
+                        array(
+                        new ArrayData(array('Title' => 'Foo')),
+                        new ArrayData(array('Title' => 'Bar'))
+                        )
+                    ))
+                )
+            ),
+            'SomeArg - Foo - Bar - SomeArg'
+        );
+
+        $this->assertEquals(
+            $this->render(
+                '<% include SSViewerTestIncludeScopeInheritanceWithArgsInWith Title="A" %>',
+                new ArrayData(array('Item' => new ArrayData(array('Title' =>'B'))))
+            ),
+            'A - B - A'
+        );
+
+        $this->assertEquals(
+            $this->render(
+                '<% include SSViewerTestIncludeScopeInheritanceWithArgsInNestedWith Title="A" %>',
+                new ArrayData(
                     array(
-                    new ArrayData(array('Title' => 'Foo')),
-                    new ArrayData(array('Title' => 'Bar'))
-                    )
-                ))
-            )
-        ),
-        'SomeArg - Foo - Bar - SomeArg'
+                    'Item' => new ArrayData(
+                        array(
+                        'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
+                        )
+                    ))
+                )
+            ),
+            'A - B - C - B - A'
         );
 
         $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeScopeInheritanceWithArgsInWith Title="A" %>',
-            new ArrayData(array('Item' => new ArrayData(array('Title' =>'B'))))
-        ),
-        'A - B - A'
-        );
-
-        $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeScopeInheritanceWithArgsInNestedWith Title="A" %>',
-            new ArrayData(
-                array(
-                'Item' => new ArrayData(
+            $this->render(
+                '<% include SSViewerTestIncludeScopeInheritanceWithUpAndTop Title="A" %>',
+                new ArrayData(
                     array(
-                    'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
-                    )
-                ))
-            )
-        ),
-        'A - B - C - B - A'
-        );
-
-        $this->assertEquals(
-        $this->render(
-            '<% include SSViewerTestIncludeScopeInheritanceWithUpAndTop Title="A" %>',
-            new ArrayData(
-                array(
-                'Item' => new ArrayData(
-                    array(
-                    'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
-                    )
-                ))
-            )
-        ),
-        'A - A - A'
+                    'Item' => new ArrayData(
+                        array(
+                        'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
+                        )
+                    ))
+                )
+            ),
+            'A - A - A'
         );
 
         $data = new ArrayData(
-        array(
-        'Nested' => new ArrayData(
             array(
-            'Object' => new ArrayData(array('Key' => 'A'))
+            'Nested' => new ArrayData(
+                array(
+                'Object' => new ArrayData(array('Key' => 'A'))
+                )
+            ),
+            'Object' => new ArrayData(array('Key' => 'B'))
             )
-        ),
-        'Object' => new ArrayData(array('Key' => 'B'))
-        )
         );
 
         $tmpl = SSViewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
@@ -1069,15 +1042,15 @@ after'
         $data = new ArrayData([]);
 
         $this->assertEquals(
-        "tests:( NamespaceInclude\n )",
-        $this->render('tests:( <% include Namespace\NamespaceInclude %> )', $data),
-        'Backslashes work for namespace references in includes'
+            "tests:( NamespaceInclude\n )",
+            $this->render('tests:( <% include Namespace\NamespaceInclude %> )', $data),
+            'Backslashes work for namespace references in includes'
         );
 
         $this->assertEquals(
-        "tests:( NamespaceInclude\n )",
-        $this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
-        'Forward slashes work for namespace references in includes'
+            "tests:( NamespaceInclude\n )",
+            $this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
+            'Forward slashes work for namespace references in includes'
         );
     }
 
@@ -1087,26 +1060,26 @@ after'
         $view = new SSViewer(array('Includes/SSViewerTestRecursiveInclude'));
 
         $data = new ArrayData(
-        array(
-        'Title' => 'A',
-        'Children' => new ArrayList(
             array(
-            new ArrayData(
+            'Title' => 'A',
+            'Children' => new ArrayList(
                 array(
-                'Title' => 'A1',
-                'Children' => new ArrayList(
+                new ArrayData(
                     array(
-                    new ArrayData(array( 'Title' => 'A1 i', )),
-                    new ArrayData(array( 'Title' => 'A1 ii', )),
+                    'Title' => 'A1',
+                    'Children' => new ArrayList(
+                        array(
+                        new ArrayData(array( 'Title' => 'A1 i', )),
+                        new ArrayData(array( 'Title' => 'A1 ii', )),
+                        )
+                    ),
                     )
                 ),
+                new ArrayData(array( 'Title' => 'A2', )),
+                new ArrayData(array( 'Title' => 'A3', )),
                 )
             ),
-            new ArrayData(array( 'Title' => 'A2', )),
-            new ArrayData(array( 'Title' => 'A3', )),
             )
-        ),
-        )
         );
 
         $result = $view->process($data);
@@ -1134,68 +1107,68 @@ after'
 
         // Value casted as "Text"
         $this->assertEquals(
-        '&lt;b&gt;html&lt;/b&gt;',
-        $t = SSViewer::fromString('$TextValue')->process($vd)
+            '&lt;b&gt;html&lt;/b&gt;',
+            $t = SSViewer::fromString('$TextValue')->process($vd)
         );
         $this->assertEquals(
-        '<b>html</b>',
-        $t = SSViewer::fromString('$TextValue.RAW')->process($vd)
+            '<b>html</b>',
+            $t = SSViewer::fromString('$TextValue.RAW')->process($vd)
         );
         $this->assertEquals(
-        '&lt;b&gt;html&lt;/b&gt;',
-        $t = SSViewer::fromString('$TextValue.XML')->process($vd)
+            '&lt;b&gt;html&lt;/b&gt;',
+            $t = SSViewer::fromString('$TextValue.XML')->process($vd)
         );
 
         // Value casted as "HTMLText"
         $this->assertEquals(
-        '<b>html</b>',
-        $t = SSViewer::fromString('$HTMLValue')->process($vd)
+            '<b>html</b>',
+            $t = SSViewer::fromString('$HTMLValue')->process($vd)
         );
         $this->assertEquals(
-        '<b>html</b>',
-        $t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
+            '<b>html</b>',
+            $t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
         );
         $this->assertEquals(
-        '&lt;b&gt;html&lt;/b&gt;',
-        $t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
+            '&lt;b&gt;html&lt;/b&gt;',
+            $t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
         );
 
         // Uncasted value (falls back to ViewableData::$default_cast="Text")
         $vd = new SSViewerTest\TestViewableData();
         $vd->UncastedValue = '<b>html</b>';
         $this->assertEquals(
-        '&lt;b&gt;html&lt;/b&gt;',
-        $t = SSViewer::fromString('$UncastedValue')->process($vd)
+            '&lt;b&gt;html&lt;/b&gt;',
+            $t = SSViewer::fromString('$UncastedValue')->process($vd)
         );
         $this->assertEquals(
-        '<b>html</b>',
-        $t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
+            '<b>html</b>',
+            $t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
         );
         $this->assertEquals(
-        '&lt;b&gt;html&lt;/b&gt;',
-        $t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
+            '&lt;b&gt;html&lt;/b&gt;',
+            $t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
         );
     }
 
     public function testSSViewerBasicIteratorSupport()
     {
         $data = new ArrayData(
-        array(
-        'Set' => new ArrayList(
             array(
-            new SSViewerTest\TestObject("1"),
-            new SSViewerTest\TestObject("2"),
-            new SSViewerTest\TestObject("3"),
-            new SSViewerTest\TestObject("4"),
-            new SSViewerTest\TestObject("5"),
-            new SSViewerTest\TestObject("6"),
-            new SSViewerTest\TestObject("7"),
-            new SSViewerTest\TestObject("8"),
-            new SSViewerTest\TestObject("9"),
-            new SSViewerTest\TestObject("10"),
+            'Set' => new ArrayList(
+                array(
+                new SSViewerTest\TestObject("1"),
+                new SSViewerTest\TestObject("2"),
+                new SSViewerTest\TestObject("3"),
+                new SSViewerTest\TestObject("4"),
+                new SSViewerTest\TestObject("5"),
+                new SSViewerTest\TestObject("6"),
+                new SSViewerTest\TestObject("7"),
+                new SSViewerTest\TestObject("8"),
+                new SSViewerTest\TestObject("9"),
+                new SSViewerTest\TestObject("10"),
+                )
             )
-        )
-        )
+            )
         );
 
         //base test
@@ -1240,22 +1213,22 @@ after'
 
         //test MiddleString
         $result = $this->render(
-        '<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %>'
-        . '<% end_loop %>',
-        $data
+            '<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %>'
+            . '<% end_loop %>',
+            $data
         );
         $this->assertEquals(
-        "2middle3middle4middle5middle6middle7middle8middle9middle",
-        $result,
-        "Middle numbers rendered in order"
+            "2middle3middle4middle5middle6middle7middle8middle9middle",
+            $result,
+            "Middle numbers rendered in order"
         );
 
         //test EvenOdd
         $result = $this->render('<% loop Set %>$EvenOdd<% end_loop %>', $data);
         $this->assertEquals(
-        "oddevenoddevenoddevenoddevenoddeven",
-        $result,
-        "Even and Odd is returned in sequence numbers rendered in order"
+            "oddevenoddevenoddevenoddevenoddeven",
+            $result,
+            "Even and Odd is returned in sequence numbers rendered in order"
         );
 
         //test Pos
@@ -1301,9 +1274,9 @@ after'
         //test MultipleOf 9 zero-based
         $result = $this->render('<% loop Set %><% if MultipleOf(9,0) %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals(
-        "110",
-        $result,
-        "Only numbers that are multiples of 9 with zero-based indexing are returned. (The first and last item)"
+            "110",
+            $result,
+            "Only numbers that are multiples of 9 with zero-based indexing are returned. (The first and last item)"
         );
 
         //test MultipleOf 11
@@ -1319,83 +1292,83 @@ after'
 
         // Data to run the loop tests on - three levels deep
         $data = new ArrayData(
-        array(
-        'Name' => 'Top',
-        'Foo' => new ArrayData(
             array(
-            'Name' => 'Foo',
-            'Bar' => new ArrayData(
+            'Name' => 'Top',
+            'Foo' => new ArrayData(
                 array(
-                'Name' => 'Bar',
-                'Baz' => new ArrayData(
+                'Name' => 'Foo',
+                'Bar' => new ArrayData(
                     array(
-                    'Name' => 'Baz'
+                    'Name' => 'Bar',
+                    'Baz' => new ArrayData(
+                        array(
+                        'Name' => 'Baz'
+                        )
+                    ),
+                    'Qux' => new ArrayData(
+                        array(
+                        'Name' => 'Qux'
+                        )
                     )
-                ),
-                'Qux' => new ArrayData(
-                    array(
-                    'Name' => 'Qux'
                     )
                 )
                 )
             )
             )
-        )
-        )
         );
 
         // Basic functionality
         $this->assertEquals(
-        'BarFoo',
-        $this->render('<% with Foo %><% with Bar %>{$Name}{$Up.Name}<% end_with %><% end_with %>', $data)
+            'BarFoo',
+            $this->render('<% with Foo %><% with Bar %>{$Name}{$Up.Name}<% end_with %><% end_with %>', $data)
         );
 
         // Two level with block, up refers to internally referenced Bar
         $this->assertEquals(
-        'BarFoo',
-        $this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data)
+            'BarFoo',
+            $this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data)
         );
 
         // Stepping up & back down the scope tree
         $this->assertEquals(
-        'BazBarQux',
-        $this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data)
+            'BazBarQux',
+            $this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data)
         );
 
         // Using $Up in a with block
         $this->assertEquals(
-        'BazBarQux',
-        $this->render(
-            '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
-            .'<% end_with %>',
-            $data
-        )
+            'BazBarQux',
+            $this->render(
+                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
+                .'<% end_with %>',
+                $data
+            )
         );
 
         // Stepping up & back down the scope tree with with blocks
         $this->assertEquals(
-        'BazBarQuxBarBaz',
-        $this->render(
-            '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>'
-            . '{$Name}<% end_with %>{$Name}<% end_with %>',
-            $data
-        )
+            'BazBarQuxBarBaz',
+            $this->render(
+                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>'
+                . '{$Name}<% end_with %>{$Name}<% end_with %>',
+                $data
+            )
         );
 
         // Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo
         $this->assertEquals(
-        'Foo',
-        $this->render(
-            '<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %>'
-            . '<% end_with %>',
-            $data
-        )
+            'Foo',
+            $this->render(
+                '<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %>'
+                . '<% end_with %>',
+                $data
+            )
         );
 
         // Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo
         $this->assertEquals(
-        'Foo',
-        $this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data)
+            'Foo',
+            $this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data)
         );
     }
 
@@ -1407,60 +1380,60 @@ after'
 
         // Data to run the loop tests on - one sequence of three items, each with a subitem
         $data = new ArrayData(
-        array(
-        'Name' => 'Top',
-        'Foo' => new ArrayList(
             array(
-            new ArrayData(
+            'Name' => 'Top',
+            'Foo' => new ArrayList(
                 array(
-                'Name' => '1',
-                'Sub' => new ArrayData(
+                new ArrayData(
                     array(
-                    'Name' => 'Bar'
+                    'Name' => '1',
+                    'Sub' => new ArrayData(
+                        array(
+                        'Name' => 'Bar'
+                        )
                     )
-                )
-                )
-            ),
-            new ArrayData(
-                array(
-                'Name' => '2',
-                'Sub' => new ArrayData(
-                    array(
-                    'Name' => 'Baz'
                     )
-                )
-                )
-            ),
-            new ArrayData(
-                array(
-                'Name' => '3',
-                'Sub' => new ArrayData(
+                ),
+                new ArrayData(
                     array(
-                    'Name' => 'Qux'
+                    'Name' => '2',
+                    'Sub' => new ArrayData(
+                        array(
+                        'Name' => 'Baz'
+                        )
+                    )
+                    )
+                ),
+                new ArrayData(
+                    array(
+                    'Name' => '3',
+                    'Sub' => new ArrayData(
+                        array(
+                        'Name' => 'Qux'
+                        )
+                    )
                     )
                 )
                 )
             )
             )
-        )
-        )
         );
 
         // Make sure inside a loop, $Up refers to the current item of the loop
         $this->assertEqualIgnoringWhitespace(
-        '111 222 333',
-        $this->render(
-            '<% loop $Foo %>$Name<% with $Sub %>$Up.Name<% end_with %>$Name<% end_loop %>',
-            $data
-        )
+            '111 222 333',
+            $this->render(
+                '<% loop $Foo %>$Name<% with $Sub %>$Up.Name<% end_with %>$Name<% end_loop %>',
+                $data
+            )
         );
 
         // Make sure inside a loop, looping over $Up uses a separate iterator,
         // and doesn't interfere with the original iterator
         $this->assertEqualIgnoringWhitespace(
-        '1Bar123Bar1 2Baz123Baz2 3Qux123Qux3',
-        $this->render(
-            '<% loop $Foo %>
+            '1Bar123Bar1 2Baz123Baz2 3Qux123Qux3',
+            $this->render(
+                '<% loop $Foo %>
 					$Name
 					<% with $Sub %>
 						$Name
@@ -1469,16 +1442,16 @@ after'
 					<% end_with %>
 					$Name
 				<% end_loop %>',
-            $data
-        )
+                $data
+            )
         );
 
         // Make sure inside a loop, looping over $Up uses a separate iterator,
         // and doesn't interfere with the original iterator or local lookups
         $this->assertEqualIgnoringWhitespace(
-        '1 Bar1 123 1Bar 1   2 Baz2 123 2Baz 2   3 Qux3 123 3Qux 3',
-        $this->render(
-            '<% loop $Foo %>
+            '1 Bar1 123 1Bar 1   2 Baz2 123 2Baz 2   3 Qux3 123 3Qux 3',
+            $this->render(
+                '<% loop $Foo %>
 					$Name
 					<% with $Sub %>
 						{$Name}{$Up.Name}
@@ -1487,8 +1460,8 @@ after'
 					<% end_with %>
 					$Name
 				<% end_loop %>',
-            $data
-        )
+                $data
+            )
         );
     }
 
@@ -1501,69 +1474,69 @@ after'
         // Data to run the loop tests on - one sequence of three items, one with child elements
         // (of a different size to the main sequence)
         $data = new ArrayData(
-        array(
-        'Foo' => new ArrayList(
             array(
-            new ArrayData(
+            'Foo' => new ArrayList(
                 array(
-                'Name' => '1',
-                'Children' => new ArrayList(
+                new ArrayData(
                     array(
-                    new ArrayData(
+                    'Name' => '1',
+                    'Children' => new ArrayList(
                         array(
-                        'Name' => 'a'
-                        )
-                    ),
-                    new ArrayData(
-                        array(
-                        'Name' => 'b'
+                        new ArrayData(
+                            array(
+                            'Name' => 'a'
+                            )
+                        ),
+                        new ArrayData(
+                            array(
+                            'Name' => 'b'
+                            )
+                        ),
                         )
                     ),
                     )
                 ),
-                )
-            ),
-            new ArrayData(
-                array(
-                'Name' => '2',
-                'Children' => new ArrayList(),
-                )
-            ),
-            new ArrayData(
-                array(
-                'Name' => '3',
-                'Children' => new ArrayList(),
+                new ArrayData(
+                    array(
+                    'Name' => '2',
+                    'Children' => new ArrayList(),
+                    )
+                ),
+                new ArrayData(
+                    array(
+                    'Name' => '3',
+                    'Children' => new ArrayList(),
+                    )
+                ),
                 )
             ),
             )
-        ),
-        )
         );
 
         // Make sure that including a loop inside a loop will not destroy the internal count of
         // items, checked by using "Last"
         $this->assertEqualIgnoringWhitespace(
-        '1ab23last',
-        $this->render(
-            '<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %>'
-            . '<% end_loop %>',
-            $data
-        )
+            '1ab23last',
+            $this->render(
+                '<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %>'
+                . '<% end_loop %>',
+                $data
+            )
         );
     }
 
     public function testLayout()
     {
         $this->useTestTheme(
-        __DIR__.'/SSViewerTest',
-        'layouttest',
-        function () {
-            $template = new SSViewer(array('Page'));
-            $this->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
+            __DIR__.'/SSViewerTest',
+            'layouttest',
+            function () {
+                $template = new SSViewer(array('Page'));
+                $this->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
-            $template = new SSViewer(array('Shortcodes', 'Page'));
-            $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
-        }
+                $template = new SSViewer(array('Shortcodes', 'Page'));
+                $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
+            }
         );
     }
 
@@ -1573,17 +1546,17 @@ after'
     public function testGetTemplatesByClass()
     {
         $this->useTestTheme(
-        __DIR__ . '/SSViewerTest',
-        'layouttest',
-        function () {
+            __DIR__ . '/SSViewerTest',
+            'layouttest',
+            function () {
             // Test passing a string
-            $templates = SSViewer::get_templates_by_class(
-                SSViewerTestModelController::class,
-                '',
-                Controller::class
-            );
-            $this->assertEquals(
-                [
+                $templates = SSViewer::get_templates_by_class(
+                    SSViewerTestModelController::class,
+                    '',
+                    Controller::class
+                );
+                $this->assertEquals(
+                    [
                     SSViewerTestModelController::class,
                     [
                         'type' => 'Includes',
@@ -1595,36 +1568,36 @@ after'
                         'type' => 'Includes',
                         Controller::class,
                     ],
-                ],
-                $templates
-            );
+                    ],
+                    $templates
+                );
 
             // Test to ensure we're stopping at the base class.
-            $templates = SSViewer::get_templates_by_class(
-                SSViewerTestModelController::class,
-                '',
-                SSViewerTestModelController::class
-            );
-            $this->assertEquals(
-                [
+                $templates = SSViewer::get_templates_by_class(
+                    SSViewerTestModelController::class,
+                    '',
+                    SSViewerTestModelController::class
+                );
+                $this->assertEquals(
+                    [
                     SSViewerTestModelController::class,
                     [
                         'type' => 'Includes',
                         SSViewerTestModelController::class,
                     ],
                     SSViewerTestModel::class,
-                ],
-                $templates
-            );
+                    ],
+                    $templates
+                );
 
             // Make sure we can search templates by suffix.
-            $templates = SSViewer::get_templates_by_class(
-                SSViewerTestModel::class,
-                'Controller',
-                DataObject::class
-            );
-            $this->assertEquals(
-                [
+                $templates = SSViewer::get_templates_by_class(
+                    SSViewerTestModel::class,
+                    'Controller',
+                    DataObject::class
+                );
+                $this->assertEquals(
+                    [
                     SSViewerTestModelController::class,
                     [
                         'type' => 'Includes',
@@ -1635,14 +1608,14 @@ after'
                         'type' => 'Includes',
                         DataObject::class . 'Controller',
                     ],
-                ],
-                $templates
-            );
+                    ],
+                    $templates
+                );
 
-            // Let's throw something random in there.
-            $this->setExpectedException('InvalidArgumentException');
-            SSViewer::get_templates_by_class(array());
-        }
+                // Let's throw something random in there.
+                $this->setExpectedException('InvalidArgumentException');
+                SSViewer::get_templates_by_class(array());
+            }
         );
     }
 
@@ -1662,8 +1635,8 @@ after'
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
-        $tmplFile,
-        '<!DOCTYPE html>
+            $tmplFile,
+            '<!DOCTYPE html>
 			<html>
 				<head><% base_tag %></head>
 				<body>
@@ -1678,34 +1651,34 @@ after'
         $tmpl = new SSViewer($tmplFile);
         $obj = new ViewableData();
         $obj->InsertedLink = DBField::create_field(
-        'HTMLFragment',
-        '<a class="inserted" href="#anchor">InsertedLink</a>'
+            'HTMLFragment',
+            '<a class="inserted" href="#anchor">InsertedLink</a>'
         );
         $obj->ExternalInsertedLink = DBField::create_field(
-        'HTMLFragment',
-        '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>'
+            'HTMLFragment',
+            '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>'
         );
         $result = $tmpl->process($obj);
         $this->assertContains(
-        '<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
-        $result
+            '<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
+            $result
         );
         $this->assertContains(
-        '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>',
-        $result
+            '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>',
+            $result
         );
         $this->assertContains(
-        '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
-        $result
+            '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
+            $result
         );
         $this->assertContains(
-        '<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
-        $result
+            '<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
+            $result
         );
         $this->assertContains(
-        '<svg><use xlink:href="#sprite"></use></svg>',
-        $result,
-        'SSTemplateParser should only rewrite anchor hrefs'
+            '<svg><use xlink:href="#sprite"></use></svg>',
+            $result,
+            'SSTemplateParser should only rewrite anchor hrefs'
         );
 
         unlink($tmplFile);
@@ -1719,8 +1692,8 @@ after'
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
-        $tmplFile,
-        '<!DOCTYPE html>
+            $tmplFile,
+            '<!DOCTYPE html>
 			<html>
 				<head><% base_tag %></head>
 				<body>
@@ -1733,8 +1706,8 @@ after'
         $tmpl = new SSViewer($tmplFile);
         $obj = new ViewableData();
         $obj->InsertedLink = DBField::create_field(
-        'HTMLFragment',
-        '<a class="inserted" href="#anchor">InsertedLink</a>'
+            'HTMLFragment',
+            '<a class="inserted" href="#anchor">InsertedLink</a>'
         );
         $result = $tmpl->process($obj);
 
@@ -1748,9 +1721,9 @@ EOC;
         // 	$result
         // );
         $this->assertContains(
-        '<svg><use xlink:href="#sprite"></use></svg>',
-        $result,
-        'SSTemplateParser should only rewrite anchor hrefs'
+            '<svg><use xlink:href="#sprite"></use></svg>',
+            $result,
+            'SSTemplateParser should only rewrite anchor hrefs'
         );
 
         unlink($tmplFile);
@@ -1870,11 +1843,11 @@ EOC;
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $backend->setCombinedFilesEnabled(false);
         $backend->combineFiles(
-        'RequirementsTest_ab.css',
-        array(
+            'RequirementsTest_ab.css',
+            array(
             $basePath . '/css/RequirementsTest_a.css',
             $basePath . '/css/RequirementsTest_b.css'
-        )
+            )
         );
 
         Requirements::set_backend($backend);
@@ -1897,16 +1870,16 @@ EOC;
             Requirements::set_suffix_requirements(false);
 
             $this->assertEquals(
-            1,
-            substr_count(
-                $template->process(array()),
-                "tests/php/View/SSViewerTest/javascript/RequirementsTest_a.js"
-            )
+                1,
+                substr_count(
+                    $template->process(array()),
+                    "tests/php/View/SSViewerTest/javascript/RequirementsTest_a.js"
+                )
             );
         } else {
             $this->markTestSkipped(
-            'Requirement will always fail if the framework dir is not '.
-            'named \'framework\', since templates require hard coded paths'
+                'Requirement will always fail if the framework dir is not '.
+                'named \'framework\', since templates require hard coded paths'
             );
         }
     }
@@ -1914,21 +1887,21 @@ EOC;
     public function testCallsWithArguments()
     {
         $data = new ArrayData(
-        array(
-        'Set' => new ArrayList(
             array(
-            new SSViewerTest\TestObject("1"),
-            new SSViewerTest\TestObject("2"),
-            new SSViewerTest\TestObject("3"),
-            new SSViewerTest\TestObject("4"),
-            new SSViewerTest\TestObject("5"),
-            )
-        ),
-        'Level' => new SSViewerTest\LevelTestData(1),
-        'Nest' => array(
+            'Set' => new ArrayList(
+                array(
+                new SSViewerTest\TestObject("1"),
+                new SSViewerTest\TestObject("2"),
+                new SSViewerTest\TestObject("3"),
+                new SSViewerTest\TestObject("4"),
+                new SSViewerTest\TestObject("5"),
+                )
+            ),
+            'Level' => new SSViewerTest\LevelTestData(1),
+            'Nest' => array(
             'Level' => new SSViewerTest\LevelTestData(2),
-        ),
-        )
+            ),
+            )
         );
 
         $tests = array(
@@ -1969,9 +1942,9 @@ EOC;
 
         $this->assertEquals('HiHi', preg_replace('/\s+/', '', $this->render($template, $data)));
         $this->assertEquals(
-        1,
-        $data->testWithCalls,
-        'SSViewerTest_CacheTestData::TestWithCall() should only be called once. Subsequent calls should be cached'
+            1,
+            $data->testWithCalls,
+            'SSViewerTest_CacheTestData::TestWithCall() should only be called once. Subsequent calls should be cached'
         );
 
         $data = new SSViewerTest\CacheTestData();
@@ -1984,9 +1957,9 @@ EOC;
 
         $this->assertEquals('OneTwo', preg_replace('/\s+/', '', $this->render($template, $data)));
         $this->assertEquals(
-        1,
-        $data->testLoopCalls,
-        'SSViewerTest_CacheTestData::TestLoopCall() should only be called once. Subsequent calls should be cached'
+            1,
+            $data->testLoopCalls,
+            'SSViewerTest_CacheTestData::TestLoopCall() should only be called once. Subsequent calls should be cached'
         );
     }
 
@@ -1995,10 +1968,10 @@ EOC;
         $count = 0;
         $parser = new SSTemplateParser();
         $parser->addClosedBlock(
-        'test',
-        function ($res) use (&$count) {
-            $count++;
-        }
+            'test',
+            function ($res) use (&$count) {
+                $count++;
+            }
         );
 
         $template = new SSViewer_FromString("<% test %><% end_test %>", $parser);
@@ -2012,10 +1985,10 @@ EOC;
         $count = 0;
         $parser = new SSTemplateParser();
         $parser->addOpenBlock(
-        'test',
-        function ($res) use (&$count) {
-            $count++;
-        }
+            'test',
+            function ($res) use (&$count) {
+                $count++;
+            }
         );
 
         $template = new SSViewer_FromString("<% test %>", $parser);
