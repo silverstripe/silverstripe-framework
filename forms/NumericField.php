@@ -30,7 +30,7 @@ class NumericField extends TextField {
 		// If passing in a non-string number, or a value
 		// directly from a DataObject then localise this number
 
-		if(is_int($value) || is_float($value) || $data instanceof DataObject) {
+		if(is_numeric($value) || is_int($value) || is_float($value) || $data instanceof DataObject) {
 			$locale = new Zend_Locale($this->getLocale());
 
 			$this->value = Zend_Locale_Format::toNumber(
