@@ -13,15 +13,16 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use ReflectionClass;
+use SilverStripe\ORM\FieldType\DBField;
 
 class FormFieldTest extends SapphireTest
 {
 
-    protected static $required_extensions = array(
-        FormField::class => array(
-            TestExtension::class
-        )
-    );
+    protected static $required_extensions = [
+        FormField::class => [
+            TestExtension::class,
+        ],
+    ];
 
     public function testDefaultClasses()
     {
@@ -29,9 +30,9 @@ class FormFieldTest extends SapphireTest
 
         FormField::config()->update(
             'default_classes',
-            array(
-            'class1',
-            )
+            [
+                'class1',
+            ]
         );
 
         $field = new FormField('MyField');
@@ -40,10 +41,10 @@ class FormFieldTest extends SapphireTest
 
         FormField::config()->update(
             'default_classes',
-            array(
-            'class1',
-            'class2',
-            )
+            [
+                'class1',
+                'class2',
+            ]
         );
 
         $field = new FormField('MyField');
@@ -52,9 +53,9 @@ class FormFieldTest extends SapphireTest
 
         FormField::config()->update(
             'default_classes',
-            array(
-            'class3',
-            )
+            [
+                'class3',
+            ]
         );
 
         $field = new FormField('MyField');
@@ -67,9 +68,9 @@ class FormFieldTest extends SapphireTest
 
         TextField::config()->update(
             'default_classes',
-            array(
-            'textfield-class',
-            )
+            [
+                'textfield-class',
+            ]
         );
 
         $field = new TextField('MyField');
@@ -369,5 +370,15 @@ class FormFieldTest extends SapphireTest
             '"My Field" is required',
             $schema['message']['value']
         );
+    }
+
+    public function testCreateVoidTag()
+    {
+        $tag = FormField::create_tag('meta', [
+            'name' => 'description',
+            'content' => 'test tag',
+        ]);
+        $this->assertNotContains('</meta>', $tag);
+        $this->assertRegexp('#/>$#', $tag);
     }
 }
