@@ -1439,7 +1439,7 @@ class Requirements_Backend
             $this->css($path, $media);
         } else {
             throw new \InvalidArgumentException(
-                "The css file doesn't exists. Please check if the file $name.css exists in any context or search for "
+                "The css file doesn't exist. Please check if the file $name.css exists in any context or search for "
                 . "themedCSS references calling this file in your templates."
             );
         }
@@ -1467,7 +1467,7 @@ class Requirements_Backend
             $this->javascript($path, $opts);
         } else {
             throw new \InvalidArgumentException(
-                "The javascript file doesn't exists. Please check if the file $name.js exists in any "
+                "The javascript file doesn't exist. Please check if the file $name.js exists in any "
                 . "context or search for themedJavascript references calling this file in your templates."
             );
         }
