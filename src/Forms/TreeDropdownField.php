@@ -6,6 +6,7 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\Hierarchy\MarkedSet;
@@ -643,11 +644,13 @@ class TreeDropdownField extends FormField
 
     public function getSchemaStateDefaults()
     {
+        $data = parent::getSchemaStateDefaults();
         // Check label for field
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
         $selectedlabel = null;
 
-        $data = parent::getSchemaStateDefaults();
+        // Ensure cache is keyed by last modified date of the underlying list
+        $data['data']['cacheKey'] = DataList::create($this->sourceObject)->max('LastEdited');
         if ($record) {
             $data['data']['valueObject'] = [
                 'id' => $record->getField($this->keyField),
