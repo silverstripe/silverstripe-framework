@@ -846,9 +846,9 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
     	      /*} catch (e) {
     	        prototypeAjax.dispatchException(e);
     	      }*/
-	
-    	      if (prototypeAjax.header('Content-type') == 'text/javascript')
-    	        prototypeAjax.evalResponse();
+
+              if (prototypeAjax.header('Content-type').indexOf('text/javascript') !== -1)
+                prototypeAjax.evalResponse();
     	    }
 	    }
 	    
