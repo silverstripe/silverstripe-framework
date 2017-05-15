@@ -170,6 +170,11 @@ class FormField extends RequestHandler
     protected $disabled = false;
 
     /**
+     * @var bool
+     */
+    protected $autofocus = false;
+
+    /**
      * Custom validation message for the field.
      *
      * @var string
@@ -716,7 +721,8 @@ class FormField extends RequestHandler
             'class' => $this->extraClass(),
             'id' => $this->ID(),
             'disabled' => $this->isDisabled(),
-            'readonly' => $this->isReadonly()
+            'readonly' => $this->isReadonly(),
+            'autofocus' => $this->isAutofocus()
         );
 
         if ($this->Required()) {
@@ -1223,6 +1229,25 @@ class FormField extends RequestHandler
     }
 
     /**
+     * @return bool
+     */
+    public function isAutofocus() {
+        return $this->autofocus;
+    }
+
+    /**
+     * Sets a autofocus flag on this FormField.
+     *
+     * @param bool $autofocus
+     * @return $this
+     */
+    public function setAutofocus($autofocus)
+    {
+        $this->autofocus = $autofocus;
+        return $this;
+    }
+
+    /**
      * Returns a read-only version of this field.
      *
      * @return FormField
@@ -1560,6 +1585,7 @@ class FormField extends RequestHandler
             'customValidationMessage' => $this->getCustomValidationMessage(),
             'validation' => $this->getSchemaValidation(),
             'attributes' => [],
+            'autoFocus' => $this->isAutofocus(),
             'data' => [],
         ];
     }
