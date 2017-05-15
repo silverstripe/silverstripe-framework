@@ -203,7 +203,10 @@ class Text extends StringField {
 			if(!$data) return "";
 
 			// grab the first paragraph, or, failing that, the whole content
-			$pos = strpos($data, "\n\n");
+			$pos = max(array(
+				strpos($data, "\n\n"),
+				strpos($data, "\r\n"),
+			));
 			if($pos) $data = substr($data, 0, $pos);
 
 			return $data;
