@@ -275,7 +275,14 @@ class Versioned extends DataObjectDecorator {
 					}
 					*/
 				}
-				
+
+				// Remove any UNIQUE indexes from the versioned stage (just index normally) otherwise will fail to ADD
+				foreach ($indexes As $index => $val) {
+					if (is_array($val) && isset($val['type']) && strtolower($val['type']) == 'unique') {
+						$indexes[$index]['type'] = 'btree';
+					}
+				}
+
 				if($isRootClass) {
 					// Create table for all versions
 					$versionFields = array_merge(
