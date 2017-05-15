@@ -1231,7 +1231,8 @@ class FormField extends RequestHandler
     /**
      * @return bool
      */
-    public function isAutofocus() {
+    public function isAutofocus()
+    {
         return $this->autofocus;
     }
 
