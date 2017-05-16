@@ -97,6 +97,6 @@ file_put_contents("{$artifactsPath}index.html", $html);
 
 run("~/bin/artifacts upload --permissions public-read --target-paths $targetPath $artifactsPath");
 
-$fullPath = str_replace('//', '/', "$baseUrl/$targetPath/artifacts/index.html");
+$fullPath = str_replace('//', '/', "$baseUrl/$targetPath/index.html");
 $fullPath = str_replace('https:/s3', 'https://s3', $fullPath);
 echo "Uploaded artifacts to $fullPath\n";
