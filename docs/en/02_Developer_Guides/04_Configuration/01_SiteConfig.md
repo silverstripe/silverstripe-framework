@@ -55,7 +55,7 @@ Then activate the extension.
 **mysite/_config/app.yml**
 
 	:::yml
-	SiteConfig:
+	Silverstripe\SiteConfig\SiteConfig:
 	  extensions:
 	    - CustomSiteConfig
 
