@@ -19,7 +19,7 @@ config option:
 
 
     :::php
-    $store = singleton('AssetStore');
+    $store = singleton(AssetStore::class);
     $store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, array(
         'visibility' => AssetStore::VISIBILITY_PROTECTED
     ));
@@ -182,7 +182,7 @@ the web server, bypassing the need for additional PHP requests.
 
 
     :::php
-    $store = singleton('AssetStore');
+    $store = singleton(AssetStore::class);
     $store->publish('NewCompanyLogo.gif', 'a870de278b475cb75f5d9f451439b2d378e13af1');
 
 

@@ -1288,6 +1288,7 @@ class Requirements_Backend
      * @param array $fileList List of files to combine
      * @param string $type Either 'js' or 'css'
      * @return string|null URL to this resource, if there are files to combine
+     * @throws Exception
      */
     protected function getCombinedFileURL($combinedFile, $fileList, $type)
     {

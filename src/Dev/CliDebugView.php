@@ -88,6 +88,11 @@ class CliDebugView extends DebugView
         return $output;
     }
 
+    public function renderParagraph($text)
+    {
+        return wordwrap($text, self::config()->columns) . "\n\n";
+    }
+
     /**
      * Render the information header for the view
      *

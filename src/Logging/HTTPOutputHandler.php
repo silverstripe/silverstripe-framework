@@ -112,7 +112,29 @@ class HTTPOutputHandler extends AbstractProcessingHandler
             return $cliFormatter;
         }
 
+        return $this->getDefaultFormatter();
+    }
+
+    /**
+     * Check default formatter to use
+     *
+     * @return FormatterInterface
+     */
+    public function getDefaultFormatter()
+    {
         return parent::getFormatter();
+    }
+
+    /**
+     * Set default formatter
+     *
+     * @param FormatterInterface $formatter
+     * @return $this
+     */
+    public function setDefaultFormatter(FormatterInterface $formatter)
+    {
+        parent::setFormatter($formatter);
+        return $this;
     }
 
     /**

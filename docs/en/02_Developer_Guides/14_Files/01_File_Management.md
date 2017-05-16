@@ -35,12 +35,12 @@ Because the filesystem now uses the sha1 of file contents in order to version mu
 filename, the default storage paths in 4.0 will not be the same as in 3.
 
 In order to retain existing file paths in line with framework version 3 you should set the
-`\SilverStripe\Filesystem\Flysystem\FlysystemAssetStore.legacy_paths` config to true.
+`\SilverStripe\Assets\Flysystem\FlysystemAssetStore.legacy_filenames` config to true.
 Note that this will not allow you to utilise certain file versioning features in 4.0.
 
 	:::yaml
-	\SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
-		legacy_paths: true
+	\SilverStripe\Assets\Flysystem\FlysystemAssetStore:
+		legacy_filenames: true
 
 ## Loading content into `DBFile`
 

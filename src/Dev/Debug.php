@@ -186,8 +186,8 @@ class Debug
     public static function create_debug_view()
     {
         $service = Director::is_cli() || Director::is_ajax()
-            ? 'SilverStripe\\Dev\\CliDebugView'
-            : 'SilverStripe\\Dev\\DebugView';
+            ? CliDebugView::class
+            : DebugView::class;
         return Injector::inst()->get($service);
     }
 
