@@ -178,7 +178,7 @@ class Backtrace
                 }
             }
 
-            $funcName .= "(" . implode(",", $args)  .")";
+            $funcName .= "(" . implode(", ", $args)  .")";
         }
 
         return $funcName;
