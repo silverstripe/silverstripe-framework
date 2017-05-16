@@ -69,19 +69,14 @@ class TreeDropdownField extends FormField
     );
     
     /**
-     * Title to display when the value is empty
-     *
      * @var string
      */
-    protected $emptyTitle = null;
+    protected $emptyString = null;
     
     /**
-     * Show the Empty title as the option for "root" when TreeDropdown is on the root,
-     * that way the root option is explicitly selectable.
-     *
      * @var bool
      */
-    protected $showRootOption = false;
+    protected $hasEmptyDefault = false;
 
     /**
      * Class name for underlying object
@@ -343,7 +338,7 @@ class TreeDropdownField extends FormField
         } elseif ($record) {
             $title = Convert::raw2xml($record->{$this->labelField});
         } else {
-            $title = $this->getEmptyTitle();
+            $title = $this->getEmptyString();
         }
 
         // TODO Implement for TreeMultiSelectField
@@ -356,7 +351,7 @@ class TreeDropdownField extends FormField
             $properties,
             array(
                 'Title' => $title,
-                'EmptyTitle' => $this->getEmptyTitle(),
+                'EmptyTitle' => $this->getEmptyString(),
                 'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
             )
         );
@@ -666,70 +661,60 @@ class TreeDropdownField extends FormField
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['urlTree'] = $this->Link('tree');
-        $data['data']['emptyTitle'] = $this->getEmptyTitle();
-        $data['data']['showRootOption'] = $this->getShowRootOption();
+        $data['data']['emptyString'] = $this->getEmptyString();
+        $data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
         
         return $data;
     }
     
     /**
-     * Sets whether to show the Empty title as the option for root
-     *
-     * @param $emptyOption
-     * @return $this
+     * @param boolean $bool
+     * @return self Self reference
      */
-    public function setShowRootOption($showRoot)
+    public function setHasEmptyDefault($bool)
     {
-        $this->showRootOption = $showRoot;
-        
+        $this->hasEmptyDefault = $bool;
         return $this;
     }
     
     /**
-     * Get whether to show the Empty title as the option for root
-     *
      * @return bool
      */
-    public function getShowRootOption()
+    public function getHasEmptyDefault()
     {
-        // don't show empty option if no empty title is set
-        if ($this->emptyTitle === null) {
-            return false;
-        }
-    
-        return $this->showRootOption;
+        return $this->hasEmptyDefault;
     }
     
     /**
-     * Sets the empty title displayed
+     * Set the default selection label, e.g. "select...".
+     * Defaults to an empty string. Automatically sets
+     * {@link $hasEmptyDefault} to true.
      *
-     * @param string $title
+     * @param string $string
      * @return $this
      */
-    public function setEmptyTitle($title)
+    public function setEmptyString($string)
     {
-        $this->emptyTitle = $title;
-        
+        $this->setHasEmptyDefault(true);
+        $this->emptyString = $string;
         return $this;
     }
     
     /**
-     * Gets the empty title displayed
-     *
      * @return string
      */
-    public function getEmptyTitle()
+    public function getEmptyString()
     {
-        if ($this->emptyTitle !== null) {
-            return $this->emptyTitle;
+        if ($this->emptyString !== null) {
+            return $this->emptyString;
         }
-    
+        
         $item = DataObject::singleton($this->sourceObject);
-        $emptyTitle = _t(
+        $emptyString = _t(
             'SilverStripe\\Forms\\DropdownField.CHOOSE_MODEL',
             '(Choose {name})',
             ['name' => $item->i18n_singular_name()]
         );
-        return $emptyTitle;
+        return $emptyString;
     }
 }
