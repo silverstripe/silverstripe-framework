@@ -38,9 +38,19 @@ Append the option and corresponding value to your URL in your browser's address 
 ## Database
 
  | URL Variable | | Values | | Description                                                                                  | 
- | ------------ | | --------- | | -----------                                                                                  | 
- | showqueries  | | 1\|inline | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries          | 
- | previewwrite | | 1      | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
+ | ------------ | | -------------- | | -----------                                                                                  | 
+ | showqueries  | | 1\|inline\|log | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries, log will log the queries to a file, if a logfile location is given and writeable          | 
+ | previewwrite | | 1              | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
+
+To set the logging of the queries to a file, add the following to your `mysite/_config.php`:
+```php
+use SilverStripe\ORM\Connect\Database;
+
+Database::setQueryLog('/my/location/querylogs/queries-'.time().'.log');
+```
+
+Assuming the folder exists. The `time()` parameter is not required but helps making a separate log per request.
+The request URL is at the top of the log.
 
 ## Security Redirects
 

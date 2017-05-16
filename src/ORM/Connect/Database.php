@@ -43,6 +43,13 @@ abstract class Database
     protected $queryCount = 0;
 
     /**
+     * Log the queries to a logfile. If not a valid path, log falls back to {@link Debug::message()}
+     *
+     * @var bool|string
+     */
+    protected static $query_log = false;
+
+    /**
      * Get the current connector
      *
      * @return DBConnector
@@ -207,20 +214,36 @@ abstract class Database
     protected function benchmarkQuery($sql, $callback, $parameters = array())
     {
         if (isset($_REQUEST['showqueries']) && Director::isDev()) {
+            $showQueryType = strtolower(filter_input(INPUT_GET, 'showqueries', FILTER_SANITIZE_STRING));
             $this->queryCount++;
             $starttime = microtime(true);
             $result = $callback($sql);
-            $endtime = round(microtime(true) - $starttime, 4);
+            $endtime = round(microtime(true) - $starttime, 5);
             // replace parameters as closely as possible to what we'd expect the DB to put in
-            if (strtolower($_REQUEST['showqueries']) == 'inline') {
+            if ($showQueryType === 'inline' || $showQueryType === 'log') {
                 $sql = DB::inline_parameters($sql, $parameters);
             }
-            $queryCount = sprintf("%04d", $this->queryCount);
-            Debug::message("\n$queryCount: $sql\n{$endtime}s\n", false);
+            $queryCount = sprintf("%05d", $this->queryCount);
+            $queryString = "\n{$queryCount}: {$sql}\n{$endtime}s\n";
+            if (self::$query_log !== false && $showQueryType === 'log' && $file = fopen(self::$query_log, 'a')) {
+                if ($this->queryCount === 1) { // Write the request URL to the head of the log output
+                    // The filter_input `INPUT_REQUEST` does not work yet in PHP5.6, hence the use of `INPUT_SERVER`
+                    $requestURL = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING);
+                    $requestString = '> Request: ' . $requestURL . "\n";
+                    fwrite($file, $requestString);
+                }
+                // Convert the query to an almost directly copy-pasteable string to SQL Editors
+                $queryString = str_replace('"', '`', $queryString);
+                fwrite($file, $queryString);
+                fclose($file);
+            } else {
+                Debug::message($queryString, false);
+            }
+
             return $result;
-        } else {
-            return $callback($sql);
         }
+
+        return $callback($sql);
     }
 
     /**
@@ -817,6 +840,22 @@ abstract class Database
     public function getSelectedDatabase()
     {
         return $this->connector->getSelectedDatabase();
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getQueryLog()
+    {
+        return self::$query_log;
+    }
+
+    /**
+     * @param mixed $query_log
+     */
+    public static function setQueryLog($query_log)
+    {
+        self::$query_log = $query_log;
     }
 
     /**
