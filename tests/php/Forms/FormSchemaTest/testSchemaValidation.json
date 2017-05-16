@@ -28,6 +28,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "validation": {
                 "required": true,
@@ -54,6 +55,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "validation": {
                 "date": true
@@ -80,6 +82,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "validation": {
                 "numeric": true
@@ -102,6 +105,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "validation": {
                 "currency": true
@@ -124,6 +128,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "validation": [],
             "attributes": [],

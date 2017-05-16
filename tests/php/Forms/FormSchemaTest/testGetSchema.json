@@ -28,6 +28,7 @@
             "leftTitle": null,
             "readOnly": false,
             "disabled": false,
+            "autoFocus": false,
             "customValidationMessage": "",
             "attributes": [],
             "data": [],
