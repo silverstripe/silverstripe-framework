@@ -6,6 +6,7 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\Hierarchy\MarkedSet;
@@ -66,6 +67,16 @@ class TreeDropdownField extends FormField
     private static $allowed_actions = array(
         'tree'
     );
+    
+    /**
+     * @var string
+     */
+    protected $emptyString = null;
+    
+    /**
+     * @var bool
+     */
+    protected $hasEmptyDefault = false;
 
     /**
      * Class name for underlying object
@@ -327,7 +338,7 @@ class TreeDropdownField extends FormField
         } elseif ($record) {
             $title = Convert::raw2xml($record->{$this->labelField});
         } else {
-            $title = $this->getEmptyTitle();
+            $title = $this->getEmptyString();
         }
 
         // TODO Implement for TreeMultiSelectField
@@ -340,7 +351,7 @@ class TreeDropdownField extends FormField
             $properties,
             array(
                 'Title' => $title,
-                'EmptyTitle' => $this->getEmptyTitle(),
+                'EmptyTitle' => $this->getEmptyString(),
                 'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null,
             )
         );
@@ -628,12 +639,13 @@ class TreeDropdownField extends FormField
 
     public function getSchemaStateDefaults()
     {
+        $data = parent::getSchemaStateDefaults();
         // Check label for field
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
         $selectedlabel = null;
 
-        $data = parent::getSchemaStateDefaults();
-        $data['data']['emptyTitle'] = $this->getEmptyTitle();
+        // Ensure cache is keyed by last modified date of the underlying list
+        $data['data']['cacheKey'] = DataList::create($this->sourceObject)->max('LastEdited');
         if ($record) {
             $data['data']['valueObject'] = [
                 'id' => $record->getField($this->keyField),
@@ -649,20 +661,60 @@ class TreeDropdownField extends FormField
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['urlTree'] = $this->Link('tree');
+        $data['data']['emptyString'] = $this->getEmptyString();
+        $data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
+        
         return $data;
     }
-
+    
+    /**
+     * @param boolean $bool
+     * @return self Self reference
+     */
+    public function setHasEmptyDefault($bool)
+    {
+        $this->hasEmptyDefault = $bool;
+        return $this;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getHasEmptyDefault()
+    {
+        return $this->hasEmptyDefault;
+    }
+    
+    /**
+     * Set the default selection label, e.g. "select...".
+     * Defaults to an empty string. Automatically sets
+     * {@link $hasEmptyDefault} to true.
+     *
+     * @param string $string
+     * @return $this
+     */
+    public function setEmptyString($string)
+    {
+        $this->setHasEmptyDefault(true);
+        $this->emptyString = $string;
+        return $this;
+    }
+    
     /**
      * @return string
      */
-    protected function getEmptyTitle()
+    public function getEmptyString()
     {
+        if ($this->emptyString !== null) {
+            return $this->emptyString;
+        }
+        
         $item = DataObject::singleton($this->sourceObject);
-        $emptyTitle = _t(
+        $emptyString = _t(
             'SilverStripe\\Forms\\DropdownField.CHOOSE_MODEL',
             '(Choose {name})',
             ['name' => $item->i18n_singular_name()]
         );
-        return $emptyTitle;
+        return $emptyString;
     }
 }
