@@ -399,14 +399,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Create a duplicate of this node.
-     * Note: now also duplicates relations.
+     * Create a duplicate of this node. Can duplicate many_many relations
      *
      * @param bool $doWrite Perform a write() operation before returning the object.
      * If this is true, it will create the duplicate in the database.
-     * @return DataObject A duplicate of this node. The exact type will be the type of this node.
+     * @param bool|string $manyMany Which many-many to duplicate. Set to true to duplicate all, false to duplicate none.
+     * Alternatively set to the string of the relation config to duplicate
+     * (supports 'many_many', or 'belongs_many_many')
+     * @return static A duplicate of this node. The exact type will be the type of this node.
      */
-    public function duplicate($doWrite = true)
+    public function duplicate($doWrite = true, $manyMany = 'many_many')
     {
         $map = $this->toMap();
         unset($map['Created']);
@@ -414,72 +416,59 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $clone = Injector::inst()->create(static::class, $map, false, $this->model);
         $clone->ID = 0;
 
-        $clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
+        $clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite, $manyMany);
+        if ($manyMany) {
+            $this->duplicateManyManyRelations($this, $clone, $manyMany);
+        }
         if ($doWrite) {
             $clone->write();
-            $this->duplicateManyManyRelations($this, $clone);
         }
-        $clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite);
+        $clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite, $manyMany);
 
         return $clone;
     }
 
     /**
-     * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object
-     * The destinationObject must be written to the database already and have an ID. Writing is performed
-     * automatically when adding the new relations.
+     * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object.
      *
      * @param DataObject $sourceObject the source object to duplicate from
      * @param DataObject $destinationObject the destination object to populate with the duplicated relations
-     * @return DataObject with the new many_many relations copied in
+     * @param bool|string $filter
      */
-    protected function duplicateManyManyRelations($sourceObject, $destinationObject)
+    protected function duplicateManyManyRelations($sourceObject, $destinationObject, $filter)
     {
-        if (!$destinationObject || $destinationObject->ID < 1) {
-            user_error(
-                "Can't duplicate relations for an object that has not been written to the database",
-                E_USER_ERROR
-            );
+        // Get list of relations to duplicate
+        if ($filter === 'many_many' || $filter === 'belongs_many_many') {
+            $relations = $sourceObject->config()->get($filter);
+        } elseif ($filter === true) {
+            $relations = $sourceObject->manyMany();
+        } else {
+            throw new InvalidArgumentException("Invalid many_many duplication filter");
         }
-
-        //duplicate complex relations
-        // DO NOT copy has_many relations, because copying the relation would result in us changing the has_one
-        // relation on the other side of this relation to point at the copy and no longer the original (being a
-        // has_one, it can only point at one thing at a time). So, all relations except has_many can and are copied
-        if ($sourceObject->hasOne()) {
-            foreach ($sourceObject->hasOne() as $name => $type) {
-                $this->duplicateRelations($sourceObject, $destinationObject, $name);
-            }
+        foreach ($relations as $manyManyName => $type) {
+            $this->duplicateManyManyRelation($sourceObject, $destinationObject, $manyManyName);
         }
-        if ($sourceObject->manyMany()) {
-            foreach ($sourceObject->manyMany() as $name => $type) {
-            //many_many include belongs_many_many
-                $this->duplicateRelations($sourceObject, $destinationObject, $name);
-            }
-        }
-
-        return $destinationObject;
     }
 
     /**
-     * Helper function to duplicate relations from one object to another
-     * @param DataObject $sourceObject the source object to duplicate from
-     * @param DataObject $destinationObject the destination object to populate with the duplicated relations
-     * @param string $name the name of the relation to duplicate (e.g. members)
+     * Duplicates a single many_many relation from one object to another
+     *
+     * @param DataObject $sourceObject
+     * @param DataObject $destinationObject
+     * @param string $manyManyName
      */
-    private function duplicateRelations($sourceObject, $destinationObject, $name)
+    protected function duplicateManyManyRelation($sourceObject, $destinationObject, $manyManyName)
     {
-        $relations = $sourceObject->$name();
-        if ($relations) {
-            if ($relations instanceof RelationList) {   //many-to-something relation
-                if ($relations->count() > 0) {  //with more than one thing it is related to
-                    foreach ($relations as $relation) {
-                        $destinationObject->$name()->add($relation);
-                    }
-                }
-            } else {    //one-to-one relation
-                $destinationObject->{"{$name}ID"} = $relations->ID;
-            }
+        // Ensure this component exists on the destination side as well
+        if (!static::getSchema()->manyManyComponent(get_class($destinationObject), $manyManyName)) {
+            return;
+        }
+
+        // Copy all components from source to destination
+        $source = $sourceObject->getManyManyComponents($manyManyName);
+        $dest = $destinationObject->getManyManyComponents($manyManyName);
+        foreach ($source as $item) {
+            $dest->add($item);
         }
     }
 

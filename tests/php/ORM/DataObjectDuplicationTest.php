@@ -14,7 +14,8 @@ class DataObjectDuplicationTest extends SapphireTest
     protected static $extra_dataobjects = array(
         DataObjectDuplicationTest\Class1::class,
         DataObjectDuplicationTest\Class2::class,
-        DataObjectDuplicationTest\Class3::class
+        DataObjectDuplicationTest\Class3::class,
+        DataObjectDuplicationTest\Class4::class,
     );
 
     public function testDuplicate()
@@ -108,9 +109,9 @@ class DataObjectDuplicationTest extends SapphireTest
         $three = DataObject::get_by_id(DataObjectDuplicationTest\Class3::class, $three->ID);
 
         //test duplication
-        $oneCopy = $one->duplicate();
-        $twoCopy = $two->duplicate();
-        $threeCopy = $three->duplicate();
+        $oneCopy = $one->duplicate(true, true);
+        $twoCopy = $two->duplicate(true, true);
+        $threeCopy = $three->duplicate(true, true);
 
         $oneCopy = DataObject::get_by_id(DataObjectDuplicationTest\Class1::class, $oneCopy->ID);
         $twoCopy = DataObject::get_by_id(DataObjectDuplicationTest\Class2::class, $twoCopy->ID);
@@ -159,6 +160,74 @@ class DataObjectDuplicationTest extends SapphireTest
             $one->ID,
             $threeCopy->ones()->First()->ID,
             "Match between relation of copy and the original"
+        );
+    }
+
+    public function testDuplicateManyManyFiltered()
+    {
+        $parent = new DataObjectDuplicationTest\Class4();
+        $parent->Title = 'Parent';
+        $parent->write();
+
+        $child = new DataObjectDuplicationTest\Class4();
+        $child->Title = 'Child';
+        $child->write();
+
+        $grandChild = new DataObjectDuplicationTest\Class4();
+        $grandChild->Title = 'GrandChild';
+        $grandChild->write();
+
+        $parent->Children()->add($child);
+        $child->Children()->add($grandChild);
+
+        // Duplcating $child should only duplicate grandchild
+        $childDuplicate = $child->duplicate(true, 'many_many');
+        $this->assertEquals(0, $childDuplicate->Parents()->count());
+        $this->assertDOSEquals(
+            [['Title' => 'GrandChild']],
+            $childDuplicate->Children()
+        );
+
+        // Duplicate belongs_many_many only
+        $belongsDuplicate = $child->duplicate(true, 'belongs_many_many');
+        $this->assertEquals(0, $belongsDuplicate->Children()->count());
+        $this->assertDOSEquals(
+            [['Title' => 'Parent']],
+            $belongsDuplicate->Parents()
+        );
+
+        // Duplicate all
+        $allDuplicate = $child->duplicate(true, true);
+        $this->assertDOSEquals(
+            [['Title' => 'Parent']],
+            $allDuplicate->Parents()
+        );
+        $this->assertDOSEquals(
+            [['Title' => 'GrandChild']],
+            $allDuplicate->Children()
+        );
+    }
+
+    /**
+     * Test duplication of UnsavedRelations
+     */
+    public function testDuplicateUnsaved()
+    {
+        $one = new DataObjectDuplicationTest\Class1();
+        $one->text = "Test Text 1";
+        $three = new DataObjectDuplicationTest\Class3();
+        $three->text = "Test Text 3";
+        $one->threes()->add($three);
+        $this->assertDOSEquals(
+            [['text' => 'Test Text 3']],
+            $one->threes()
+        );
+        // Test duplicate
+        $dupe = $one->duplicate(false, true);
+        $this->assertEquals('Test Text 1', $dupe->text);
+        $this->assertDOSEquals(
+            [['text' => 'Test Text 3']],
+            $dupe->threes()
         );
     }
 }
