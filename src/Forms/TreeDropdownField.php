@@ -636,6 +636,21 @@ class TreeDropdownField extends FormField
         $copy->setSourceObject($this->sourceObject);
         return $copy;
     }
+    
+    /**
+     * @param string|FormField $classOrCopy
+     * @return FormField
+     */
+    public function castedCopy($classOrCopy)
+    {
+        $field = $classOrCopy;
+        
+        if (!is_object($field)) {
+            $field = new $classOrCopy($this->name, $this->title, $this->sourceObject);
+        }
+    
+        return parent::castedCopy($field);
+    }
 
     public function getSchemaStateDefaults()
     {
