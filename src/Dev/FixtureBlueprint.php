@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Assets\File;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
@@ -85,8 +86,8 @@ class FixtureBlueprint
         // which they are imported doesnt guarantee valid relations until after the import is complete.
         // Also disable filesystem manipulations
         Config::nest();
-        Config::inst()->update('SilverStripe\\ORM\\DataObject', 'validation_enabled', false);
-        Config::inst()->update('SilverStripe\\Assets\\File', 'update_filesystem', false);
+        Config::modify()->set(DataObject::class, 'validation_enabled', false);
+        Config::modify()->set(File::class, 'update_filesystem', false);
 
         $this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
 
@@ -132,10 +133,10 @@ class FixtureBlueprint
             if ($data) {
                 foreach ($data as $fieldName => $fieldVal) {
                     if ($schema->manyManyComponent($class, $fieldName)
-                    || $schema->hasManyComponent($class, $fieldName)
-                    || $schema->hasOneComponent($class, $fieldName)
-                                    ) {
-                                        continue;
+                        || $schema->hasManyComponent($class, $fieldName)
+                        || $schema->hasOneComponent($class, $fieldName)
+                    ) {
+                        continue;
                     }
 
                     $this->setValue($obj, $fieldName, $fieldVal, $fixtures);

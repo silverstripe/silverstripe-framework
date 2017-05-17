@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Forms;
 
+use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Object;
-use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * This class represents "transformations" of a form - such as making it printable or making it readonly.
@@ -18,8 +20,17 @@ use SilverStripe\Dev\Debug;
  *
  * To actually perform the transformation, call $form->transform(new MyTransformation());
  */
-class FormTransformation extends Object
+class FormTransformation
 {
+    use Configurable;
+    use Injectable;
+    use Extensible;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
+
     public function transform(FormField $field)
     {
         // Look for a performXXTransformation() method on the field itself.
@@ -34,13 +45,13 @@ class FormTransformation extends Object
             function ($name) {
                 return ClassInfo::shortName($name);
             },
-            array_values(ClassInfo::ancestry($this->class))
+            array_values(ClassInfo::ancestry($this))
         ));
         $fieldClasses = array_reverse(array_map(
             function ($name) {
                 return ClassInfo::shortName($name);
             },
-            array_values(ClassInfo::ancestry($field->class))
+            array_values(ClassInfo::ancestry($field))
         ));
 
         $len = max(sizeof($transNames), sizeof($fieldClasses));
@@ -64,6 +75,8 @@ class FormTransformation extends Object
             }
         }
 
-        throw new \BadMethodCallException("FormTransformation:: Can't perform '$this->class' on '$field->class'");
+        $class = static::class;
+        $fieldClass = get_class($field);
+        throw new BadMethodCallException("FormTransformation:: Can't perform '{$class}' on '{$fieldClass}'");
     }
 }

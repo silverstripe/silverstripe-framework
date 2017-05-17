@@ -111,13 +111,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected $requireDefaultRecordsFrom = array();
 
-
     /**
      * A list of extensions that can't be applied during the execution of this run.  If they are
      * applied, they will be temporarily removed and a database migration called.
      *
      * The keys of the are the classes that the extensions can't be applied the extensions to, and
      * the values are an array of illegal extensions on that class.
+     *
+     * Set a class to `*` to remove all extensions (unadvised)
      */
     protected static $illegal_extensions = [];
 
@@ -242,7 +243,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // We cannot run the tests on this abstract class.
-        if (get_class($this) == __CLASS__) {
+        if (static::class == __CLASS__) {
             $this->markTestSkipped(sprintf('Skipping %s ', get_class($this)));
             return;
         }
@@ -356,6 +357,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         foreach (static::$illegal_extensions as $class => $extensions) {
             if (!class_exists($class)) {
                 continue;
+            }
+            if ($extensions === '*') {
+                $extensions = $class::get_extensions();
             }
             foreach ($extensions as $extension) {
                 if (!class_exists($extension) || !$class::has_extension($extension)) {

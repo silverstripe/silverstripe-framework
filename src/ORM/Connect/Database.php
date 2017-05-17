@@ -777,7 +777,7 @@ abstract class Database
     public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR)
     {
         // In case our live environment is locked down, we can bypass a SHOW DATABASE check
-        $canConnect = Config::inst()->get(get_class($this), 'optimistic_connect')
+        $canConnect = Config::inst()->get(static::class, 'optimistic_connect')
             || $this->schemaManager->databaseExists($name);
         if ($canConnect) {
             return $this->connector->selectDatabase($name);

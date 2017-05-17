@@ -154,7 +154,7 @@ class ClassManifestTest extends SapphireTest
      */
     public function testManifestWarnsAboutDuplicateClasses()
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         new ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates', false);
     }
 }

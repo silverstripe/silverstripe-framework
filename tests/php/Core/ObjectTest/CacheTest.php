@@ -2,11 +2,8 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-use SilverStripe\Core\Object;
-
-class CacheTest extends Object
+class CacheTest extends BaseObject
 {
-
     public $count = 0;
 
     public function cacheMethod($arg1 = null)

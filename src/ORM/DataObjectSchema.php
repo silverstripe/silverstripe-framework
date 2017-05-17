@@ -5,10 +5,10 @@ namespace SilverStripe\ORM;
 use Exception;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
 use InvalidArgumentException;
 use LogicException;
 
@@ -438,7 +438,7 @@ class DataObjectSchema
 
         // Merge composite fields into DB
         foreach ($compositeFields as $fieldName => $fieldSpec) {
-            $fieldObj = Object::create_from_string($fieldSpec, $fieldName);
+            $fieldObj = Injector::inst()->create($fieldSpec, $fieldName);
             $fieldObj->setTable($class);
             $nestedFields = $fieldObj->compositeDatabaseFields();
             foreach ($nestedFields as $nestedName => $nestedSpec) {
@@ -498,7 +498,7 @@ class DataObjectSchema
         }
 
         // Find regular field
-        while ($candidateClass) {
+        while ($candidateClass && $candidateClass !== DataObject::class) {
             $fields = $this->databaseFields($candidateClass, false);
             if (isset($fields[$fieldName])) {
                 return $candidateClass;
@@ -533,9 +533,9 @@ class DataObjectSchema
         $classes = ClassInfo::ancestry($class);
         foreach ($classes as $parentClass) {
             // Check if the component is defined in many_many on this class
-            $manyMany = Config::inst()->get($parentClass, 'many_many', Config::UNINHERITED);
-            if (isset($manyMany[$component])) {
-                return $this->parseManyManyComponent($parentClass, $component, $manyMany[$component]);
+            $otherManyMany = Config::inst()->get($parentClass, 'many_many', Config::UNINHERITED);
+            if (isset($otherManyMany[$component])) {
+                return $this->parseManyManyComponent($parentClass, $component, $otherManyMany[$component]);
             }
 
             // Check if the component is defined in belongs_many_many on this class
@@ -545,13 +545,22 @@ class DataObjectSchema
             }
 
             // Extract class and relation name from dot-notation
-            list($childClass, $relationName)
-                = $this->parseBelongsManyManyComponent($parentClass, $component, $belongsManyMany[$component]);
+            $belongs = $this->parseBelongsManyManyComponent(
+                $parentClass,
+                $component,
+                $belongsManyMany[$component]
+            );
 
             // Build inverse relationship from other many_many, and swap parent/child
-            list($relationClass, $childClass, $parentClass, $childField, $parentField, $joinTable)
-                = $this->manyManyComponent($childClass, $relationName);
-            return [$relationClass, $parentClass, $childClass, $parentField, $childField, $joinTable];
+            $otherManyMany = $this->manyManyComponent($belongs['childClass'], $belongs['relationName']);
+            return [
+                'relationClass' => $otherManyMany['relationClass'],
+                'parentClass' => $otherManyMany['childClass'],
+                'childClass' => $otherManyMany['parentClass'],
+                'parentField' => $otherManyMany['childField'],
+                'childField' => $otherManyMany['parentField'],
+                'join' => $otherManyMany['join'],
+            ];
         }
         return null;
     }
@@ -596,7 +605,10 @@ class DataObjectSchema
         }
 
         // Return relatios
-        return array($childClass, $relationName);
+        return [
+            'childClass' => $childClass,
+            'relationName' => $relationName
+        ];
     }
 
     /**
@@ -619,12 +631,12 @@ class DataObjectSchema
             $belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
             if (isset($belongsManyMany[$component])) {
                 // Reverse relationship and find extrafields from child class
-                list($childClass, $relationName) = $this->parseBelongsManyManyComponent(
+                $belongs = $this->parseBelongsManyManyComponent(
                     $class,
                     $component,
                     $belongsManyMany[$component]
                 );
-                return $this->manyManyExtraFieldsForComponent($childClass, $relationName);
+                return $this->manyManyExtraFieldsForComponent($belongs['childClass'], $belongs['relationName']);
             }
             $class = get_parent_class($class);
         }
@@ -717,12 +729,12 @@ class DataObjectSchema
             $parentClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'from');
             $joinChildClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'to');
             return [
-                ManyManyThroughList::class,
-                $parentClass,
-                $joinChildClass,
-                $specification['from'] . 'ID',
-                $specification['to'] . 'ID',
-                $joinClass,
+                'relationClass' => ManyManyThroughList::class,
+                'parentClass' => $parentClass,
+                'childClass' => $joinChildClass,
+                'parentField' => $specification['from'] . 'ID',
+                'childField' => $specification['to'] . 'ID',
+                'join' => $joinClass,
             ];
         }
 
@@ -740,12 +752,12 @@ class DataObjectSchema
         }
         $joinTable = "{$classTable}_{$component}";
         return [
-            ManyManyList::class,
-            $parentClass,
-            $specification,
-            $parentField,
-            $childField,
-            $joinTable,
+            'relationClass' => ManyManyList::class,
+            'parentClass' => $parentClass,
+            'childClass' => $specification,
+            'parentField' => $parentField,
+            'childField' => $childField,
+            'join' => $joinTable,
         ];
     }
 

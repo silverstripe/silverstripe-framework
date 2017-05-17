@@ -6,7 +6,7 @@ use Exception;
 use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\AssetContainer;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -308,7 +308,7 @@ trait FileUploadReceiver
                 );
             }
             // Create new object explicitly. Otherwise rely on Upload::load to choose the class.
-            $fileObject = Object::create($relationClass);
+            $fileObject = Injector::inst()->create($relationClass);
             if (! ($fileObject instanceof DataObject) || !($fileObject instanceof AssetContainer)) {
                 throw new InvalidArgumentException("Invalid asset container $relationClass");
             }

@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Assets\File;
-use SilverStripe\Core\Object;
 
 /**
  * Represents a file type which can be added to a form.
@@ -104,15 +104,15 @@ class FileField extends FormField implements FileHandleField
             $objectClass = DataObject::getSchema()->hasOneComponent(get_class($record), $this->name);
             if ($objectClass === File::class || empty($objectClass)) {
                 // Create object of the appropriate file class
-                $file = Object::create($fileClass);
+                $file = Injector::inst()->create($fileClass);
             } else {
                 // try to create a file matching the relation
-                $file = Object::create($objectClass);
+                $file = Injector::inst()->create($objectClass);
             }
         } elseif ($record instanceof File) {
             $file = $record;
         } else {
-            $file = Object::create($fileClass);
+            $file = Injector::inst()->create($fileClass);
         }
 
         $this->upload->loadIntoFile($_FILES[$this->name], $file, $this->getFolderName());

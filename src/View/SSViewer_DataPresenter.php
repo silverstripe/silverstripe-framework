@@ -5,7 +5,6 @@ namespace SilverStripe\View;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Object;
 
 /**
  * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
@@ -304,7 +303,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         if ($val) {
             $obj = $val['obj'];
             if ($name === 'hasValue') {
-                $res = $obj instanceof Object
+                $res = $obj instanceof ViewableData
                     ? $obj->exists()
                     : (bool)$obj;
             } else {

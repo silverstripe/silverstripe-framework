@@ -2,10 +2,11 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DBHTMLTextTest\TestShortcode;
@@ -217,26 +218,24 @@ class DBHTMLTextTest extends SapphireTest
 
     public function testCreate()
     {
-        /**
- * @var DBHTMLText $field
-*/
-        $field = Object::create_from_string("HTMLFragment(['whitelist' => 'link'])", 'MyField');
+        /** @var DBHTMLText $field */
+        $field = Injector::inst()->create("HTMLFragment(['whitelist' => 'link'])", 'MyField');
         $this->assertEquals(['link'], $field->getWhitelist());
-        $field = Object::create_from_string("HTMLFragment(['whitelist' => 'link,a'])", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment(['whitelist' => 'link,a'])", 'MyField');
         $this->assertEquals(['link', 'a'], $field->getWhitelist());
-        $field = Object::create_from_string("HTMLFragment(['whitelist' => ['link', 'a']])", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment(['whitelist' => ['link', 'a']])", 'MyField');
         $this->assertEquals(['link', 'a'], $field->getWhitelist());
-        $field = Object::create_from_string("HTMLFragment", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment", 'MyField');
         $this->assertEmpty($field->getWhitelist());
 
         // Test shortcodes
-        $field = Object::create_from_string("HTMLFragment(['shortcodes' => true])", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment(['shortcodes' => true])", 'MyField');
         $this->assertEquals(true, $field->getProcessShortcodes());
-        $field = Object::create_from_string("HTMLFragment(['shortcodes' => false])", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment(['shortcodes' => false])", 'MyField');
         $this->assertEquals(false, $field->getProcessShortcodes());
 
         // Mix options
-        $field = Object::create_from_string("HTMLFragment(['shortcodes' => true, 'whitelist' => ['a'])", 'MyField');
+        $field = Injector::inst()->create("HTMLFragment(['shortcodes' => true, 'whitelist' => ['a'])", 'MyField');
         $this->assertEquals(true, $field->getProcessShortcodes());
         $this->assertEquals(['a'], $field->getWhitelist());
     }
@@ -553,7 +552,7 @@ class DBHTMLTextTest extends SapphireTest
             $field->Plain()
         );
         Config::nest();
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', 'http://example.com/');
+        Director::config()->set('alternate_base_url', 'http://example.com/');
         $this->assertEquals(
             '<p>Replaced short code with this. <a href="http://example.com/home">home</a></p>',
             $field->AbsoluteLinks()

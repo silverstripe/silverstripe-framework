@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use Symfony\Component\Yaml\Parser;
 use InvalidArgumentException;
 
@@ -68,8 +68,9 @@ use InvalidArgumentException;
  *      ErrorCode: 404
  * </code>
  */
-class YamlFixture extends Object
+class YamlFixture
 {
+    use Injectable;
 
     /**
      * Absolute path to the .yml fixture file
@@ -104,8 +105,6 @@ class YamlFixture extends Object
 
             $this->fixtureFile = $fixture;
         }
-
-        parent::__construct();
     }
 
     /**

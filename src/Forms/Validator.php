@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ValidationResult;
 
 /**
@@ -10,13 +12,16 @@ use SilverStripe\ORM\ValidationResult;
  * fields. It relies on javascript for client-side validation, and marking fields after server-side
  * validation. It acts as a visitor to individual form fields.
  */
-abstract class Validator extends Object
+abstract class Validator
 {
+    use Injectable;
+    use Configurable;
+    use Extensible;
 
     public function __construct()
     {
-        parent::__construct();
         $this->resetResult();
+        $this->constructExtensions();
     }
 
     /**

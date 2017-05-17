@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
-use SilverStripe\Core\Object;
+use ReflectionException;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
@@ -39,8 +39,8 @@ class ClassInfoTest extends SapphireTest
 
     public function testExists()
     {
-        $this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Object'));
-        $this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\object'));
+        $this->assertTrue(ClassInfo::exists(ClassInfo::class));
+        $this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\classinfo'));
         $this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Tests\\ClassInfoTest'));
         $this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Tests\\CLASSINFOTEST'));
         $this->assertTrue(ClassInfo::exists('stdClass'));
@@ -89,7 +89,8 @@ class ClassInfoTest extends SapphireTest
 
     public function testNonClassName()
     {
-        $this->setExpectedException('ReflectionException', 'Class IAmAClassThatDoesNotExist does not exist');
+        $this->expectException(ReflectionException::class);
+        $this->expectExceptionMessage('Class IAmAClassThatDoesNotExist does not exist');
         $this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
     }
 
@@ -117,15 +118,12 @@ class ClassInfoTest extends SapphireTest
     public function testAncestry()
     {
         $ancestry = ClassInfo::ancestry(ChildClass::class);
-        $expect = ArrayLib::valuekey(
-            array(
-            Object::class,
+        $expect = ArrayLib::valuekey([
             ViewableData::class,
             DataObject::class,
             BaseClass::class,
             ChildClass::class,
-            )
-        );
+        ]);
         $this->assertEquals($expect, $ancestry);
 
         ClassInfo::reset_db_cache();

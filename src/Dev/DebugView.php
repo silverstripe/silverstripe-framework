@@ -5,15 +5,18 @@ namespace SilverStripe\Dev;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
  */
-class DebugView extends Object
+class DebugView
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * Column size to wrap long strings to

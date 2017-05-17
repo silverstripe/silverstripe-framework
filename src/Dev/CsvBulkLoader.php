@@ -180,7 +180,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processChunk($filepath, $preview = false)
     {
-        $results = new BulkLoader_Result();
+        $results = BulkLoader_Result::create();
 
         $csv = new CSVParser(
             $filepath,

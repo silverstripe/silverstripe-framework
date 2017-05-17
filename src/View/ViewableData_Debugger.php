@@ -42,15 +42,16 @@ class ViewableData_Debugger extends ViewableData
     public function forTemplate($field = null)
     {
         // debugging info for a specific field
+        $class = get_class($this->object);
         if ($field) {
-            return "<b>Debugging Information for {$this->class}->{$field}</b><br/>" .
-            ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) .
-            ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
+            return "<b>Debugging Information for {$class}->{$field}</b><br/>" .
+                ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) .
+                ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
         }
 
         // debugging information for the entire class
         $reflector = new ReflectionObject($this->object);
-        $debug = "<b>Debugging Information: all methods available in '{$this->object->class}'</b><br/><ul>";
+        $debug = "<b>Debugging Information: all methods available in '{$class}'</b><br/><ul>";
 
         foreach ($this->object->allMethodNames() as $method) {
             // check that the method is public
@@ -74,7 +75,7 @@ class ViewableData_Debugger extends ViewableData
         $debug .= '</ul>';
 
         if ($this->object->hasMethod('toMap')) {
-            $debug .= "<b>Debugging Information: all fields available in '{$this->object->class}'</b><br/><ul>";
+            $debug .= "<b>Debugging Information: all fields available in '{$class}'</b><br/><ul>";
 
             foreach ($this->object->toMap() as $field => $value) {
                 $debug .= "<li>\$$field</li>";

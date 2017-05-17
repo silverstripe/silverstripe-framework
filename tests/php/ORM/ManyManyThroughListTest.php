@@ -160,12 +160,12 @@ class ManyManyThroughListTest extends SapphireTest
         // Parent components
         $this->assertEquals(
             [
-                ManyManyThroughList::class,
-                ManyManyThroughListTest\TestObject::class,
-                ManyManyThroughListTest\Item::class,
-                'ParentID',
-                'ChildID',
-                ManyManyThroughListTest\JoinObject::class
+                'relationClass' => ManyManyThroughList::class,
+                'parentClass' => ManyManyThroughListTest\TestObject::class,
+                'childClass' => ManyManyThroughListTest\Item::class,
+                'parentField' => 'ParentID',
+                'childField' => 'ChildID',
+                'join' => ManyManyThroughListTest\JoinObject::class
             ],
             $schema->manyManyComponent(ManyManyThroughListTest\TestObject::class, 'Items')
         );
@@ -173,12 +173,12 @@ class ManyManyThroughListTest extends SapphireTest
         // Belongs_many_many is the same, but with parent/child substituted
         $this->assertEquals(
             [
-                ManyManyThroughList::class,
-                ManyManyThroughListTest\Item::class,
-                ManyManyThroughListTest\TestObject::class,
-                'ChildID',
-                'ParentID',
-                ManyManyThroughListTest\JoinObject::class
+                'relationClass' => ManyManyThroughList::class,
+                'parentClass' => ManyManyThroughListTest\Item::class,
+                'childClass' => ManyManyThroughListTest\TestObject::class,
+                'parentField' => 'ChildID',
+                'childField' => 'ParentID',
+                'join' => ManyManyThroughListTest\JoinObject::class
             ],
             $schema->manyManyComponent(ManyManyThroughListTest\Item::class, 'Objects')
         );

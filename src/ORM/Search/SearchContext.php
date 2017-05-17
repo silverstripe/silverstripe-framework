@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\Search;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
@@ -34,8 +34,9 @@ use Exception;
 *
 * @see http://doc.silverstripe.com/doku.php?id=searchcontext
 */
-class SearchContext extends Object
+class SearchContext
 {
+    use Injectable;
 
     /**
      * DataObject subclass to which search parameters relate to.
@@ -85,8 +86,6 @@ class SearchContext extends Object
         $this->modelClass = $modelClass;
         $this->fields = ($fields) ? $fields : new FieldList();
         $this->filters = ($filters) ? $filters : array();
-
-        parent::__construct();
     }
 
     /**
@@ -136,6 +135,7 @@ class SearchContext extends Object
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
         /** DataList $query */
+        $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {
                 throw new InvalidArgumentException("existingQuery must be DataList");
@@ -158,6 +158,7 @@ class SearchContext extends Object
             $query = $query->limit($limit);
         }
 
+        /** @var DataList $query */
         $query = $query->sort($sort);
 
         // hack to work with $searchParems when it's an Object

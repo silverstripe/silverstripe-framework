@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\Core\Object;
 
 /**
  * Encapsulates a collection of components following the
@@ -22,22 +24,21 @@ use SilverStripe\Core\Object;
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
  */
-class GridFieldConfig extends Object
+class GridFieldConfig
 {
+    use Injectable;
+    use Extensible;
+    use Configurable;
 
     /**
      * @var ArrayList
      */
     protected $components = null;
 
-
-    /**
-     *
-     */
     public function __construct()
     {
-        parent::__construct();
         $this->components = new ArrayList();
+        $this->constructExtensions();
     }
 
     /**

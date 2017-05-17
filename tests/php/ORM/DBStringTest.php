@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\Dev\SapphireTest;
@@ -24,10 +24,8 @@ class DBStringTest extends SapphireTest
 
     public function testDefault()
     {
-        /**
- * @var DBString $dbField
-*/
-        $dbField = Object::create_from_string(
+        /** @var DBString $dbField */
+        $dbField = Injector::inst()->create(
             DBStringTest\MyStringField::class."(['default' => 'Here is my default text'])",
             'Myfield'
         );
@@ -42,9 +40,11 @@ class DBStringTest extends SapphireTest
      */
     public function testLowerCase()
     {
+        /** @var MyStringField $field */
+        $field = DBField::create_field(MyStringField::class, 'This is a TEST!');
         $this->assertEquals(
             'this is a test!',
-            DBField::create_field(MyStringField::class, 'This is a TEST!')->LowerCase()
+            $field->LowerCase()
         );
     }
 
@@ -53,9 +53,11 @@ class DBStringTest extends SapphireTest
      */
     public function testUpperCase()
     {
+        /** @var MyStringField $field */
+        $field = DBField::create_field(MyStringField::class, 'This is a TEST!');
         $this->assertEquals(
             'THIS IS A TEST!',
-            DBField::create_field(MyStringField::class, 'This is a TEST!')->UpperCase()
+            $field->UpperCase()
         );
     }
 

@@ -2,14 +2,12 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-use SilverStripe\Core\Object;
-
-class MyObject extends Object
+class MyObject extends BaseObject
 {
     public $title = 'my object';
     /**
- * @config
-*/
+     * @config
+     */
     private static $mystaticProperty = "MyObject";
     static $mystaticArray = array('one');
 }

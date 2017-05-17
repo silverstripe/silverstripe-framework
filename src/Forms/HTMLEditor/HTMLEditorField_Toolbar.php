@@ -47,7 +47,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
      */
     public function getTemplateViewFile()
     {
-        return SSViewer::get_templates_by_class(get_class($this), '_viewfile', __CLASS__);
+        return SSViewer::get_templates_by_class(static::class, '_viewfile', __CLASS__);
     }
 
     /**
@@ -185,7 +185,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         return $form;
     }
-    
+
     /**
      * Builds and returns the external link form
      *
@@ -200,7 +200,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         }
         return null;
     }
-    
+
     /**
      * Builds and returns the external link form
      *
@@ -210,13 +210,13 @@ class HTMLEditorField_Toolbar extends RequestHandler
     {
         /** @var EditorEmailLinkFormFactory $factory */
         $factory = Injector::inst()->get(EditorEmailLinkFormFactory::class);
-        
+
         if ($factory) {
             return $factory->getForm($this->controller, "{$this->name}/EditorEmailLink");
         }
         return null;
     }
-    
+
     /**
      * Get the folder ID to filter files by for the "from cms" tab
      *

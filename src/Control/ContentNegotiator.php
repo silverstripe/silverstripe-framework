@@ -3,7 +3,8 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * The content negotiator performs "text/html" or "application/xhtml+xml" switching. It does this through
@@ -31,8 +32,10 @@ use SilverStripe\Core\Object;
  * Some developers might know what they're doing and don't want ContentNegotiator messing with their
  * HTML4 doctypes, but still find it useful to have self-closing tags removed.
  */
-class ContentNegotiator extends Object
+class ContentNegotiator
 {
+    use Injectable;
+    use Configurable;
 
     /**
      * @config

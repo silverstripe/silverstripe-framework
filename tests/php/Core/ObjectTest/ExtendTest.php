@@ -2,9 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-use SilverStripe\Core\Object;
-
-class ExtendTest extends Object
+class ExtendTest extends BaseObject
 {
     private static $extensions = array(
         ExtendTest1::class,

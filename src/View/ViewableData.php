@@ -2,7 +2,10 @@
 
 namespace SilverStripe\View;
 
-use SilverStripe\Core\Object;
+use Exception;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -23,8 +26,13 @@ use ArrayIterator;
  * is provided and automatically escaped by ViewableData. Any class that needs to be available to a view (controllers,
  * {@link DataObject}s, page controls) should inherit from this class.
  */
-class ViewableData extends Object implements IteratorAggregate
+class ViewableData implements IteratorAggregate
 {
+    use Extensible {
+        defineMethods as extensibleDefineMethods;
+    }
+    use Injectable;
+    use Configurable;
 
     /**
      * An array of objects to cast certain fields to. This is set up as an array in the format:
@@ -74,6 +82,11 @@ class ViewableData extends Object implements IteratorAggregate
      * @var array
      */
     private $objCache = array();
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -218,11 +231,12 @@ class ViewableData extends Object implements IteratorAggregate
             $this->addMethodsFrom('failover');
 
             if (isset($_REQUEST['debugfailover'])) {
-                Debug::message("$this->class created with a failover class of {$this->failover->class}");
+                $class = static::class;
+                $failoverClass = get_class($this->failover);
+                Debug::message("$class created with a failover class of {$failoverClass}");
             }
         }
-
-        parent::defineMethods();
+        $this->extensibleDefineMethods();
     }
 
     /**
@@ -250,6 +264,27 @@ class ViewableData extends Object implements IteratorAggregate
     }
 
     /**
+     * Return true if this object "exists" i.e. has a sensible value
+     *
+     * This method should be overriden in subclasses to provide more context about the classes state. For example, a
+     * {@link DataObject} class could return false when it is deleted from the database
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        return true;
+    }
+
+    /**
+     * @return string the class name
+     */
+    public function __toString()
+    {
+        return static::class;
+    }
+
+    /**
      * @return ViewableData
      */
     public function getCustomisedObj()
@@ -273,6 +308,7 @@ class ViewableData extends Object implements IteratorAggregate
      *
      * @param string $field
      * @return string Casting helper As a constructor pattern, and may include arguments.
+     * @throws Exception
      */
     public function castingHelper($field)
     {
@@ -295,7 +331,7 @@ class ViewableData extends Object implements IteratorAggregate
         // Fall back to default_cast
         $default = $this->config()->get('default_cast');
         if (empty($default)) {
-            throw new \Exception("No default_cast");
+            throw new Exception("No default_cast");
         }
         return $default;
     }
@@ -448,7 +484,7 @@ class ViewableData extends Object implements IteratorAggregate
         if (!is_object($value)) {
             // Force cast
             $castingHelper = $this->castingHelper($fieldName);
-            $valueObject = Object::create_from_string($castingHelper, $fieldName);
+            $valueObject = Injector::inst()->create($castingHelper, $fieldName);
             $valueObject->setValue($value, $this);
             $value = $valueObject;
         }
@@ -564,7 +600,7 @@ class ViewableData extends Object implements IteratorAggregate
     public function CSSClasses($stopAtClass = self::class)
     {
         $classes       = array();
-        $classAncestry = array_reverse(ClassInfo::ancestry($this->class));
+        $classAncestry = array_reverse(ClassInfo::ancestry(static::class));
         $stopClasses   = ClassInfo::ancestry($stopAtClass);
 
         foreach ($classAncestry as $class) {

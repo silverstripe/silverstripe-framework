@@ -3,7 +3,8 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
@@ -34,8 +35,10 @@ use SilverStripe\View\TemplateGlobalProvider;
  *
  * @todo Make token name form specific for additional forgery protection.
  */
-class SecurityToken extends Object implements TemplateGlobalProvider
+class SecurityToken implements TemplateGlobalProvider
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * @var string
@@ -63,7 +66,6 @@ class SecurityToken extends Object implements TemplateGlobalProvider
     public function __construct($name = null)
     {
         $this->name = ($name) ? $name : self::get_default_name();
-        parent::__construct();
     }
 
     /**

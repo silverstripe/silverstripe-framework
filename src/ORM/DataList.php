@@ -750,8 +750,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     public function debug()
     {
-        $val = "<h2>" . $this->class . "</h2><ul>";
-
+        $val = "<h2>" . static::class . "</h2><ul>";
         foreach ($this->toNestedArray() as $item) {
             $val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
         }
@@ -1072,7 +1071,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Remove every element in this DataList matching the given $filter.
      *
-     * @param string $filter - a sql type where filter
+     * @param string|array $filter - a sql type where filter
      * @return $this
      */
     public function removeByFilter($filter)

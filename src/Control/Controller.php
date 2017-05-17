@@ -3,7 +3,6 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DataModel;
@@ -122,8 +121,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $this->baseInitCalled = false;
         $this->init();
         if (!$this->baseInitCalled) {
+            $class = static::class;
             user_error(
-                "init() method on class '$this->class' doesn't call Controller::init()."
+                "init() method on class '{$class}' doesn't call Controller::init()."
                 . "Make sure that you have parent::init() included.",
                 E_USER_WARNING
             );
@@ -231,18 +231,22 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     {
         if ($response instanceof HTTPResponse) {
             if (isset($_REQUEST['debug_request'])) {
+                $class = static::class;
                 Debug::message(
-                    "Request handler returned HTTPResponse object to $this->class controller;"
+                    "Request handler returned HTTPResponse object to {$class} controller;"
                     . "returning it without modification."
                 );
             }
             $this->setResponse($response);
         } else {
-            if ($response instanceof Object && $response->hasMethod('getViewer')) {
+            // Could be Controller, or ViewableData_Customised controller wrapper
+            if (ClassInfo::hasMethod($response, 'getViewer')) {
                 if (isset($_REQUEST['debug_request'])) {
+                    $class = static::class;
+                    $responseClass = get_class($response);
                     Debug::message(
-                        "Request handler $response->class object to $this->class controller;"
-                        . "rendering with template returned by $response->class::getViewer()"
+                        "Request handler {$responseClass} object to {$class} controller;"
+                        . "rendering with template returned by {$responseClass}::getViewer()"
                     );
                 }
                 $response = $response->getViewer($this->getAction())->process($response);
@@ -399,14 +403,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             // Add action-specific templates for inheritance chain
             $templates = array();
             if ($action && $action != 'index') {
-                $parentClass = $this->class;
+                $parentClass = static::class;
                 while ($parentClass != __CLASS__) {
                     $templates[] = strtok($parentClass, '_') . '_' . $action;
                     $parentClass = get_parent_class($parentClass);
                 }
             }
             // Add controller templates for inheritance chain
-            $parentClass = $this->class;
+            $parentClass = static::class;
             while ($parentClass != __CLASS__) {
                 $templates[] = strtok($parentClass, '_');
                 $parentClass = get_parent_class($parentClass);
@@ -469,7 +473,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             return $definingClass;
         }
 
-        $class = get_class($this);
+        $class = static::class;
         while ($class != 'SilverStripe\\Control\\RequestHandler') {
             $templateName = strtok($class, '_') . '_' . $action;
             if (SSViewer::hasTemplate($templateName)) {
@@ -496,7 +500,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             return true;
         }
 
-        $parentClass = $this->class;
+        $parentClass = static::class;
         $templates   = array();
 
         while ($parentClass != __CLASS__) {
@@ -614,8 +618,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         if ($this === self::$controller_stack[0]) {
             array_shift(self::$controller_stack);
         } else {
+            $class = static::class;
             user_error(
-                "popCurrent called on $this->class controller, but it wasn't at the top of the stack",
+                "popCurrent called on {$class} controller, but it wasn't at the top of the stack",
                 E_USER_WARNING
             );
         }

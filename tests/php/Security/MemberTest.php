@@ -3,7 +3,6 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Object;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Cookie;
 use SilverStripe\i18n\i18n;
@@ -27,14 +26,9 @@ class MemberTest extends FunctionalTest
 
     protected $orig = array();
 
-    protected static $illegal_extensions = array(
-        Member::class => array(
-            // TODO Coupling with modules, this should be resolved by automatically
-            // removing all applied extensions before a unit test
-            'ForumRole',
-            'OpenIDAuthenticatedRole'
-        )
-    );
+    protected static $illegal_extensions = [
+        Member::class => '*',
+    ];
 
     public function __construct()
     {
@@ -537,7 +531,6 @@ class MemberTest extends FunctionalTest
      */
     public function testCanManipulateOwnRecord()
     {
-        $extensions = $this->removeExtensions(Object::get_extensions(Member::class));
         $member = $this->objFromFixture(Member::class, 'test');
         $member2 = $this->objFromFixture(Member::class, 'staffmember');
 
@@ -560,13 +553,11 @@ class MemberTest extends FunctionalTest
         $this->assertFalse($member->canDelete());
         $this->assertFalse($member->canEdit());
 
-        $this->addExtensions($extensions);
         $this->session()->inst_set('loggedInAs', null);
     }
 
     public function testAuthorisedMembersCanManipulateOthersRecords()
     {
-        $extensions = $this->removeExtensions(Object::get_extensions(Member::class));
         $member = $this->objFromFixture(Member::class, 'test');
         $member2 = $this->objFromFixture(Member::class, 'staffmember');
 
@@ -575,14 +566,10 @@ class MemberTest extends FunctionalTest
         $this->assertTrue($member2->canView());
         $this->assertTrue($member2->canDelete());
         $this->assertTrue($member2->canEdit());
-
-        $this->addExtensions($extensions);
-        $this->session()->inst_set('loggedInAs', null);
     }
 
     public function testExtendedCan()
     {
-        $extensions = $this->removeExtensions(Object::get_extensions(Member::class));
         $member = $this->objFromFixture(Member::class, 'test');
 
         /* Normal behaviour is that you can't view a member unless canView() on an extension returns true */
@@ -617,7 +604,6 @@ class MemberTest extends FunctionalTest
         $this->assertTrue($member4->canEdit());
 
         Member::remove_extension(MemberTest\EditingAllowedDeletingDeniedExtension::class);
-        $this->addExtensions($extensions);
     }
 
     /**

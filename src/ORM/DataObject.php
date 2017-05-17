@@ -4,7 +4,6 @@ namespace SilverStripe\ORM;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Deprecation;
@@ -30,6 +29,7 @@ use LogicException;
 use InvalidArgumentException;
 use BadMethodCallException;
 use Exception;
+use stdClass;
 
 /**
  * A single database record & abstract class for the data-access-model.
@@ -306,7 +306,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             );
         }
 
-        if (!is_array($record) && !is_a($record, "stdClass")) {
+        if ($record instanceof stdClass) {
+            $record = (array)$record;
+        }
+
+        if (!is_array($record)) {
             if (is_object($record)) {
                 $passed = "an object of type '".get_class($record)."'";
             } else {
@@ -319,10 +323,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 E_USER_WARNING
             );
             $record = null;
-        }
-
-        if (is_a($record, "stdClass")) {
-            $record = (array)$record;
         }
 
         // Set $this->record to $record, but ignore NULLs
@@ -517,7 +517,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             return $this;
         }
 
-        $this->class = $className;
         $this->setField("ClassName", $className);
         $this->setField('RecordClassName', $className);
         return $this;
@@ -567,20 +566,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function defineMethods()
     {
         parent::defineMethods();
-
-        // Define the extra db fields - this is only necessary for extensions added in the
-        // class definition.  Object::add_extension() will call this at definition time for
-        // those objects, which is a better mechanism.  Perhaps extensions defined inside the
-        // class def can somehow be applied at definiton time also?
-        if ($this->extension_instances) {
-            foreach ($this->extension_instances as $i => $instance) {
-                if (!$instance->class) {
-                    $class = get_class($instance);
-                    user_error("DataObject::defineMethods(): Please ensure {$class}::__construct() calls"
-                    . " parent::__construct()", E_USER_ERROR);
-                }
-            }
-        }
 
         if (static::class === self::class) {
              return;
@@ -815,11 +800,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function update($data)
     {
-        foreach ($data as $k => $v) {
+        foreach ($data as $key => $value) {
             // Implement dot syntax for updates
-            if (strpos($k, '.') !== false) {
-                $relations = explode('.', $k);
+            if (strpos($key, '.') !== false) {
+                $relations = explode('.', $key);
                 $fieldName = array_pop($relations);
+                /** @var static $relObj */
                 $relObj = $this;
                 $relation = null;
                 foreach ($relations as $i => $relation) {
@@ -829,7 +815,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                         $parentObj = $relObj;
                         $relObj = $relObj->$relation();
                         // If the intermediate relationship objects have been created, then write them
-                        if ($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj != $this)) {
+                        if ($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
                             $relObj->write();
                             $relatedFieldName = $relation."ID";
                             $parentObj->$relatedFieldName = $relObj->ID;
@@ -848,16 +834,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
 
                 if ($relObj) {
-                    $relObj->$fieldName = $v;
+                    $relObj->$fieldName = $value;
                     $relObj->write();
                     $relatedFieldName = $relation."ID";
                     $this->$relatedFieldName = $relObj->ID;
                     $relObj->flushCache();
                 } else {
-                    user_error("Couldn't follow dot syntax '$k' on '$this->class' object", E_USER_WARNING);
+                    $class = static::class;
+                    user_error("Couldn't follow dot syntax '{$key}' on '{$class}' object", E_USER_WARNING);
                 }
             } else {
-                $this->$k = $v;
+                $this->$key = $value;
             }
         }
         return $this;
@@ -949,6 +936,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($includeRelations) {
             if ($manyMany = $this->manyMany()) {
                 foreach ($manyMany as $relationship => $class) {
+                    /** @var DataObject $leftComponents */
                     $leftComponents = $leftObj->getManyManyComponents($relationship);
                     $rightComponents = $rightObj->getManyManyComponents($relationship);
                     if ($rightComponents && $rightComponents->exists()) {
@@ -1110,7 +1098,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             if ($defaults && !is_array($defaults)) {
                 user_error(
-                    "Bad '$this->class' defaults given: " . var_export($defaults, true),
+                    "Bad '" . static::class . "' defaults given: " . var_export($defaults, true),
                     E_USER_WARNING
                 );
                 $defaults = null;
@@ -1181,7 +1169,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->brokenOnWrite = true;
         $this->onBeforeWrite();
         if ($this->brokenOnWrite) {
-            user_error("$this->class has a broken onBeforeWrite() function."
+            user_error(static::class . " has a broken onBeforeWrite() function."
                 . " Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
         }
     }
@@ -1251,7 +1239,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     = empty($this->record['Created'])
                         ? $now
                         : $this->record['Created'];
-                $manipulation[$table]['fields']['ClassName'] = $this->class;
+                $manipulation[$table]['fields']['ClassName'] = static::class;
             }
         }
 
@@ -1434,7 +1422,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->brokenOnDelete = true;
         $this->onBeforeDelete();
         if ($this->brokenOnDelete) {
-            user_error("$this->class has a broken onBeforeDelete() function."
+            user_error(static::class . " has a broken onBeforeDelete() function."
                 . " Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
         }
 
@@ -1447,7 +1435,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         //  - move the details of the delete code in the DataQuery system
         //  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
         //    obviously, that means getting requireTable() to configure cascading deletes ;-)
-        $srcQuery = DataList::create($this->class, $this->model)->where("ID = $this->ID")->dataQuery()->query();
+        $srcQuery = DataList::create(static::class, $this->model)
+            ->filter('ID', $this->ID)
+            ->dataQuery()
+            ->query();
         foreach ($srcQuery->queriedTables() as $table) {
             $delete = new SQLDelete("\"$table\"", array('"ID"' => $this->ID));
             $delete->execute();
@@ -1538,7 +1529,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 if ($polymorphic) {
                     $filter = array(
                         "{$joinField}ID" => $joinID,
-                        "{$joinField}Class" => $this->class
+                        "{$joinField}Class" => static::class,
                     );
                 } else {
                     $filter = array(
@@ -1557,7 +1548,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $component = $this->model->$class->newObject();
                 if ($polymorphic) {
                     $component->{$joinField.'ID'} = $this->ID;
-                    $component->{$joinField.'Class'} = $this->class;
+                    $component->{$joinField.'Class'} = static::class;
                 } else {
                     $component->$joinField = $this->ID;
                 }
@@ -1588,7 +1579,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             throw new InvalidArgumentException(sprintf(
                 "DataObject::getComponents(): Unknown 1-to-many component '%s' on class '%s'",
                 $componentName,
-                $this->class
+                static::class
             ));
         }
 
@@ -1596,7 +1587,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if (!$this->ID) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] =
-                    new UnsavedRelationList($this->class, $componentName, $componentClass);
+                    new UnsavedRelationList(static::class, $componentName, $componentClass);
             }
             return $this->unsavedRelations[$componentName];
         }
@@ -1605,7 +1596,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $joinField = $schema->getRemoteJoinField(static::class, $componentName, 'has_many', $polymorphic);
         /** @var HasManyList $result */
         if ($polymorphic) {
-            $result = PolymorphicHasManyList::create($componentClass, $joinField, $this->class);
+            $result = PolymorphicHasManyList::create($componentClass, $joinField, get_class($this));
         } else {
             $result = HasManyList::create($componentClass, $joinField);
         }
@@ -1630,11 +1621,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Parse many_many
         $manyManyComponent = $this->getSchema()->manyManyComponent(static::class, $relationName);
         if ($manyManyComponent) {
-            list(
-                $relationClass, $parentClass, $componentClass,
-                $parentField, $childField, $tableOrClass
-            ) = $manyManyComponent;
-            return $componentClass;
+            return $manyManyComponent['childClass'];
         }
 
         // Go through all relationship configuration fields.
@@ -1772,18 +1759,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             case 'many_many':
             case 'belongs_many_many': {
                 // Get components and extra fields from parent
-                list($relationClass, $componentClass, $parentClass, $componentField, $parentField, $table)
-                    = $remote->getSchema()->manyManyComponent($remoteClass, $remoteRelation);
+                $manyMany = $remote->getSchema()->manyManyComponent($remoteClass, $remoteRelation);
                 $extraFields = $schema->manyManyExtraFieldsForComponent($remoteClass, $remoteRelation) ?: array();
 
                 // Reverse parent and component fields and create an inverse ManyManyList
                 /** @var RelationList $result */
                 $result = Injector::inst()->create(
-                    $relationClass,
-                    $componentClass,
-                    $table,
-                    $componentField,
-                    $parentField,
+                    $manyMany['relationClass'],
+                    $manyMany['parentClass'], // Substitute parent class for dataClass
+                    $manyMany['join'],
+                    $manyMany['parentField'], // Reversed parent / child field
+                    $manyMany['childField'], // Reversed parent / child field
                     $extraFields
                 );
                 if ($this->model) {
@@ -1816,18 +1802,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             throw new InvalidArgumentException(sprintf(
                 "DataObject::getComponents(): Unknown many-to-many component '%s' on class '%s'",
                 $componentName,
-                $this->class
+                static::class
             ));
         }
-
-        list($relationClass, $parentClass, $componentClass, $parentField, $componentField, $tableOrClass)
-            = $manyManyComponent;
 
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
         if (!$this->ID) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] =
-                    new UnsavedRelationList($parentClass, $componentName, $componentClass);
+                    new UnsavedRelationList($manyManyComponent['parentClass'], $componentName, $manyManyComponent['childClass']);
             }
             return $this->unsavedRelations[$componentName];
         }
@@ -1835,11 +1818,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $extraFields = $schema->manyManyExtraFieldsForComponent(static::class, $componentName) ?: array();
         /** @var RelationList $result */
         $result = Injector::inst()->create(
-            $relationClass,
-            $componentClass,
-            $tableOrClass,
-            $componentField,
-            $parentField,
+            $manyManyComponent['relationClass'],
+            $manyManyComponent['childClass'],
+            $manyManyComponent['join'],
+            $manyManyComponent['childField'],
+            $manyManyComponent['parentField'],
             $extraFields
         );
 
@@ -1968,7 +1951,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function getDefaultSearchContext()
     {
         return new SearchContext(
-            $this->class,
+            static::class,
             $this->scaffoldSearchFields(),
             $this->defaultSearchFilters()
         );
@@ -2069,7 +2052,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             (array)$_params
         );
 
-        $fs = new FormScaffolder($this);
+        $fs = FormScaffolder::create($this);
         $fs->tabbed = $params['tabbed'];
         $fs->includeRelations = $params['includeRelations'];
         $fs->restrictFields = $params['restrictFields'];
@@ -2634,7 +2617,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function debug()
     {
-        $val = "<h3>Database record: $this->class</h3>\n<ul>\n";
+        $class = static::class;
+        $val = "<h3>Database record: {$class}</h3>\n<ul>\n";
         if ($this->record) {
             foreach ($this->record as $fieldName => $fieldVal) {
                 $val .= "\t<li>$fieldName: " . Debug::text($fieldVal) . "</li>\n";
@@ -2680,7 +2664,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         list($class, $spec) = explode('.', $helper);
         /** @var DBField $obj */
         $table = $schema->tableName($class);
-        $obj = Object::create_from_string($spec, $fieldName);
+        $obj = Injector::inst()->create($spec, $fieldName);
         $obj->setTable($table);
         $obj->setValue($value, $this, false);
         return $obj;
@@ -2712,6 +2696,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     if (method_exists($component, $relation)) {
                         $component = $component->$relation();
                     } else {
+                        /** @var DataList $component */
                         $component = $component->relation($relation);
                     }
                 } else {
@@ -2749,6 +2734,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     $component = $component->$relation();
                 } elseif ($component instanceof SS_List) {
                     // Select adjacent relation from DataList
+                    /** @var DataList $component */
                     $component = $component->relation($relation);
                 } elseif ($component instanceof DataObject
                     && ($dbObject = $component->dbObject($relation))
@@ -2914,12 +2900,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function flushCache($persistent = true)
     {
-        if ($this->class == self::class) {
+        if (static::class == self::class) {
             self::$_cache_get_one = array();
             return $this;
         }
 
-        $classes = ClassInfo::ancestry($this->class);
+        $classes = ClassInfo::ancestry(static::class);
         foreach ($classes as $class) {
             if (isset(self::$_cache_get_one[$class])) {
                 unset(self::$_cache_get_one[$class]);
@@ -3139,10 +3125,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             foreach ($manyMany as $component => $spec) {
                 // Get many_many spec
                 $manyManyComponent = $schema->manyManyComponent(static::class, $component);
-                list(
-                    $relationClass, $parentClass, $componentClass,
-                    $parentField, $childField, $tableOrClass
-                ) = $manyManyComponent;
+                $parentField = $manyManyComponent['parentField'];
+                $childField = $manyManyComponent['childField'];
+                $tableOrClass = $manyManyComponent['join'];
 
                 // Skip if backed by actual class
                 if (class_exists($tableOrClass)) {
@@ -3184,9 +3169,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $defaultRecords = $this->config()->uninherited('default_records');
 
         if (!empty($defaultRecords)) {
-            $hasData = DataObject::get_one($this->class);
+            $hasData = DataObject::get_one(static::class);
             if (!$hasData) {
-                $className = $this->class;
+                $className = static::class;
                 foreach ($defaultRecords as $record) {
                     $obj = $this->model->$className->newObject($record);
                     $obj->write();
@@ -3308,14 +3293,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function fieldLabels($includerelations = true)
     {
-        $cacheKey = $this->class . '_' . $includerelations;
+        $cacheKey = static::class . '_' . $includerelations;
 
         if (!isset(self::$_cache_field_labels[$cacheKey])) {
             $customLabels = $this->stat('field_labels');
             $autoLabels = array();
 
             // get all translated static properties as defined in i18nCollectStatics()
-            $ancestry = ClassInfo::ancestry($this->class);
+            $ancestry = ClassInfo::ancestry(static::class);
             $ancestry = array_reverse($ancestry);
             if ($ancestry) {
                 foreach ($ancestry as $ancestorClass) {

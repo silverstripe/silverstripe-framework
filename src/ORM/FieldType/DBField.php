@@ -3,7 +3,6 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
@@ -132,9 +131,8 @@ abstract class DBField extends ViewableData
     public static function create_field($className, $value, $name = null, $object = null)
     {
         /** @var DBField $dbField */
-        $dbField = Object::create($className, $name, $object);
+        $dbField = Injector::inst()->create($className, $name, $object);
         $dbField->setValue($value, null, false);
-
         return $dbField;
     }
 
@@ -449,7 +447,7 @@ abstract class DBField extends ViewableData
         $fieldName = $this->name;
         if (empty($fieldName)) {
             throw new \BadMethodCallException(
-                "DBField::saveInto() Called on a nameless '" . get_class($this) . "' object"
+                "DBField::saveInto() Called on a nameless '" . static::class . "' object"
             );
         }
         $dataObject->$fieldName = $this->value;

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObjectSchema;
@@ -139,7 +139,7 @@ class DataObjectSchemaTest extends SapphireTest
         );
 
         $this->assertNull(
-            $schema->tableForField(Object::class, 'Title')
+            $schema->tableForField(ClassInfo::class, 'Title')
         );
 
         // Test fixed fields

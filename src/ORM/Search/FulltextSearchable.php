@@ -98,8 +98,6 @@ class FulltextSearchable extends DataExtension
         } else {
             $this->searchFields = $searchFields;
         }
-
-        parent::__construct();
     }
 
     public static function get_extra_config($class, $extensionClass, $args)

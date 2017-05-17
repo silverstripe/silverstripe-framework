@@ -72,7 +72,7 @@ class DBDecimal extends DBField
         if ($fieldName) {
             $dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value);
         } else {
-            user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
+            user_error("DBField::saveInto() Called on a nameless '" . static::class . "' object", E_USER_ERROR);
         }
     }
 

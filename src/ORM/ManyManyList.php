@@ -3,7 +3,7 @@
 namespace SilverStripe\ORM;
 
 use BadMethodCallException;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -100,7 +100,7 @@ class ManyManyList extends RelationList
         $finalized = array();
 
         foreach ($this->extraFields as $field => $spec) {
-            $obj = Object::create_from_string($spec);
+            $obj = Injector::inst()->create($spec);
 
             if ($obj instanceof DBComposite) {
                 $this->_compositeExtraFields[$field] = array();
@@ -146,7 +146,7 @@ class ManyManyList extends RelationList
                     }
                 }
 
-                $obj = Object::create_from_string($this->extraFields[$fieldName], $fieldName);
+                $obj = Injector::inst()->create($this->extraFields[$fieldName], $fieldName);
                 $obj->setValue($value, null, false);
                 $add[$fieldName] = $obj;
             }
@@ -281,7 +281,7 @@ class ManyManyList extends RelationList
                 foreach ($this->extraFields as $fieldName => $fieldSpec) {
                     // Skip fields without an assignment
                     if (array_key_exists($fieldName, $extraFields)) {
-                        $fieldObject = Object::create_from_string($fieldSpec, $fieldName);
+                        $fieldObject = Injector::inst()->create($fieldSpec, $fieldName);
                         $fieldObject->setValue($extraFields[$fieldName]);
                         $fieldObject->writeToManipulation($manipulation[$this->joinTable]);
                     }

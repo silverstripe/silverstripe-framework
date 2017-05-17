@@ -573,7 +573,8 @@ class Email extends ViewableData
     {
         $this->render();
 
-        return "<h2>Email template {$this->class}:</h2>\n" . '<pre>' . $this->getSwiftMessage()->toString() . '</pre>';
+        $class = static::class;
+        return "<h2>Email template {$class}:</h2>\n" . '<pre>' . $this->getSwiftMessage()->toString() . '</pre>';
     }
 
     /**

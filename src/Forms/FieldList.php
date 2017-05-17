@@ -347,8 +347,12 @@ class FieldList extends ArrayList
                     $withName = $parentPointer instanceof FormField
                         ? " named '{$parentPointer->getName()}'"
                         : null;
-                    user_error("FieldList::addFieldToTab() Tried to add a tab to object"
-                        . " '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
+                    $parentPointerClass = get_class($parentPointer);
+                    user_error(
+                        "FieldList::addFieldToTab() Tried to add a tab to object"
+                        . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist.",
+                        E_USER_ERROR
+                    );
                 }
             }
         }
@@ -379,8 +383,9 @@ class FieldList extends ArrayList
                     if ($child instanceof CompositeField) {
                         return $child->fieldByName($remainder);
                     } else {
+                        $childClass = get_class($child);
                         user_error(
-                            "Trying to get field '$remainder' from non-composite field $child->class.$name",
+                            "Trying to get field '{$remainder}' from non-composite field {$childClass}.{$name}",
                             E_USER_WARNING
                         );
                         return null;

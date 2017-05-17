@@ -2,7 +2,7 @@
 
 namespace SilverStripe\View\Parsers;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Format a SQL Query for better readable output in HTML or Plaintext.
@@ -12,8 +12,9 @@ use SilverStripe\Core\Object;
  *
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class SQLFormatter extends Object
+class SQLFormatter
 {
+    use Injectable;
 
     protected static $newline_before_tokens = array(
         'SELECT',

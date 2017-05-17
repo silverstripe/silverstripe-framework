@@ -3,7 +3,9 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Interface for a generic build task. Does not support dependencies. This will simply
@@ -12,8 +14,16 @@ use SilverStripe\Core\Object;
  * To disable the task (in the case of potentially destructive updates or deletes), declare
  * the $Disabled property on the subclass.
  */
-abstract class BuildTask extends Object
+abstract class BuildTask
 {
+    use Injectable;
+    use Configurable;
+    use Extensible;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     /**
      * Set a custom url segment (to follow dev/tasks/)
@@ -63,7 +73,7 @@ abstract class BuildTask extends Object
      */
     public function getTitle()
     {
-        return ($this->title) ? $this->title : $this->class;
+        return $this->title ?: static::class;
     }
 
     /**

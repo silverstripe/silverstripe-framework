@@ -51,7 +51,7 @@ class GridFieldPageCount implements GridField_HTMLProvider
 
         if (!$paginator && GridFieldPageCount::config()->uninherited('require_paginator')) {
             throw new LogicException(
-                get_class($this) . " relies on a GridFieldPaginator to be added " .
+                static::class . " relies on a GridFieldPaginator to be added " .
                 "to the same GridField, but none are present."
             );
         }

@@ -2,7 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\ORM\DataObject;
@@ -11,8 +12,9 @@ use SilverStripe\ORM\DataObject;
  * @uses DBField::scaffoldFormField()
  * @uses DataObject::fieldLabels()
  */
-class FormScaffolder extends Object
+class FormScaffolder
 {
+    use Injectable;
 
     /**
      * @var DataObject $obj The object defining the fields to be scaffolded
@@ -58,7 +60,6 @@ class FormScaffolder extends Object
     public function __construct($obj)
     {
         $this->obj = $obj;
-        parent::__construct();
     }
 
     /**
@@ -151,7 +152,7 @@ class FormScaffolder extends Object
                         ? $this->fieldClasses[$relationship]
                         : 'SilverStripe\\Forms\\GridField\\GridField';
                     /** @var GridField $grid */
-                    $grid = Object::create(
+                    $grid = Injector::inst()->create(
                         $fieldClass,
                         $relationship,
                         $this->obj->fieldLabel($relationship),
@@ -181,7 +182,7 @@ class FormScaffolder extends Object
                         : 'SilverStripe\\Forms\\GridField\\GridField';
 
                     /** @var GridField $grid */
-                    $grid = Object::create(
+                    $grid = Injector::inst()->create(
                         $fieldClass,
                         $relationship,
                         $this->obj->fieldLabel($relationship),

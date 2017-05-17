@@ -2,9 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-use SilverStripe\Core\Object;
-
-class T2 extends Object
+class T2 extends BaseObject
 {
     protected $failover;
     protected $failoverArr = array();

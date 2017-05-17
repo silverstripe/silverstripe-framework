@@ -4,7 +4,6 @@ namespace SilverStripe\ORM;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
@@ -452,8 +451,8 @@ class DataQuery
      */
     public function max($field)
     {
-        $table = ClassInfo::table_for_object_field($this->dataClass, $field);
-        if (!$table || $table === 'DataObject') {
+        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
+        if (!$table) {
             return $this->aggregate("MAX(\"$field\")");
         }
         return $this->aggregate("MAX(\"$table\".\"$field\")");
@@ -468,8 +467,8 @@ class DataQuery
      */
     public function min($field)
     {
-        $table = ClassInfo::table_for_object_field($this->dataClass, $field);
-        if (!$table || $table === 'DataObject') {
+        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
+        if (!$table) {
             return $this->aggregate("MIN(\"$field\")");
         }
         return $this->aggregate("MIN(\"$table\".\"$field\")");
@@ -484,8 +483,8 @@ class DataQuery
      */
     public function avg($field)
     {
-        $table = ClassInfo::table_for_object_field($this->dataClass, $field);
-        if (!$table || $table === 'DataObject') {
+        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
+        if (!$table) {
             return $this->aggregate("AVG(\"$field\")");
         }
         return $this->aggregate("AVG(\"$table\".\"$field\")");
@@ -500,8 +499,8 @@ class DataQuery
      */
     public function sum($field)
     {
-        $table = ClassInfo::table_for_object_field($this->dataClass, $field);
-        if (!$table || $table === 'DataObject') {
+        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
+        if (!$table) {
             return $this->aggregate("SUM(\"$field\")");
         }
         return $this->aggregate("SUM(\"$table\".\"$field\")");
@@ -569,7 +568,7 @@ class DataQuery
         foreach ($compositeFields as $k => $v) {
             if ((is_null($columns) || in_array($k, $columns)) && $v) {
                 $tableName = $schema->tableName($tableClass);
-                $dbO = Object::create_from_string($v, $k);
+                $dbO = Injector::inst()->create($v, $k);
                 $dbO->setTable($tableName);
                 $dbO->addToQuery($query);
             }
@@ -799,18 +798,15 @@ class DataQuery
                 if ($linearOnly) {
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
                 }
-                // Join via many_many
-                list($relationClass, $parentClass, $componentClass, $parentField, $componentField, $relationTable)
-                    = $component;
                 $this->joinManyManyRelationship(
-                    $relationClass,
-                    $parentClass,
-                    $componentClass,
-                    $parentField,
-                    $componentField,
-                    $relationTable
+                    $component['relationClass'],
+                    $component['parentClass'],
+                    $component['childClass'],
+                    $component['parentField'],
+                    $component['childField'],
+                    $component['join']
                 );
-                $modelClass = $componentClass;
+                $modelClass = $component['childClass'];
             } else {
                 throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
             }
@@ -1073,7 +1069,7 @@ class DataQuery
      * It's expected that the $key will be namespaced, e.g, 'Versioned.stage' instead of just 'stage'.
      *
      * @param string $key
-     * @param string $value
+     * @param string|array $value
      * @return $this
      */
     public function setQueryParam($key, $value)

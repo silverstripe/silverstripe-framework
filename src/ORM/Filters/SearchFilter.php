@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Filters;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use InvalidArgumentException;
@@ -23,8 +23,9 @@ use SilverStripe\ORM\FieldType\DBField;
  *     class: EndsWithFilter
  * </code>
  */
-abstract class SearchFilter extends Object
+abstract class SearchFilter
 {
+    use Injectable;
 
     /**
      * @var string Classname of the inspected {@link DataObject}
@@ -79,7 +80,6 @@ abstract class SearchFilter extends Object
      */
     public function __construct($fullName = null, $value = false, array $modifiers = array())
     {
-        parent::__construct();
         $this->fullName = $fullName;
 
         // sets $this->name and $this->relation
@@ -178,7 +178,7 @@ abstract class SearchFilter extends Object
         $unsupported = array_diff($modifiers, $allowed);
         if ($unsupported) {
             throw new InvalidArgumentException(
-                get_class($this) . ' does not accept ' . implode(', ', $unsupported) . ' as modifiers'
+                static::class . ' does not accept ' . implode(', ', $unsupported) . ' as modifiers'
             );
         }
 
@@ -258,11 +258,11 @@ abstract class SearchFilter extends Object
         // Ensure that we're dealing with a DataObject.
         if (!is_subclass_of($this->model, DataObject::class)) {
             throw new InvalidArgumentException(
-                "Model supplied to " . get_class($this) . " should be an instance of DataObject."
+                "Model supplied to " . static::class . " should be an instance of DataObject."
             );
         }
         $schema = DataObject::getSchema();
-        
+
         if ($this->aggregate) {
             $column = $this->aggregate['column'];
             $function = $this->aggregate['function'];
@@ -309,7 +309,7 @@ abstract class SearchFilter extends Object
     {
         // SRM: This code finds the table where the field named $this->name lives
         // Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
-        
+
         if ($this->aggregate) {
             return intval($this->value);
         }
@@ -330,7 +330,7 @@ abstract class SearchFilter extends Object
     {
         $schema = DataObject::getSchema();
         $baseTable = $schema->baseDataTable($query->dataClass());
-        
+
         return $query
             ->having($having)
             ->groupby("\"{$baseTable}\".\"ID\"");
@@ -371,7 +371,7 @@ abstract class SearchFilter extends Object
      */
     protected function applyMany(DataQuery $query)
     {
-        throw new InvalidArgumentException(get_class($this) . " can't be used to filter by a list of items.");
+        throw new InvalidArgumentException(static::class . " can't be used to filter by a list of items.");
     }
 
     /**
@@ -409,7 +409,7 @@ abstract class SearchFilter extends Object
      */
     protected function excludeMany(DataQuery $query)
     {
-        throw new InvalidArgumentException(get_class($this) . " can't be used to filter by a list of items.");
+        throw new InvalidArgumentException(static::class . " can't be used to filter by a list of items.");
     }
 
     /**

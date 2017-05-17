@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use Iterator;
 
 use SilverStripe\Control\Director;
@@ -31,8 +31,9 @@ use SilverStripe\Control\Director;
  * }
  * </code>
  */
-class CSVParser extends Object implements Iterator
+class CSVParser implements Iterator
 {
+    use Injectable;
 
     /**
      * @var string $filename
@@ -117,8 +118,6 @@ class CSVParser extends Object implements Iterator
         $this->filename = $filename;
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
-
-        parent::__construct();
     }
 
     /**

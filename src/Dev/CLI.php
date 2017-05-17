@@ -2,13 +2,11 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Object;
-
 /**
  * Class to facilitate command-line output.
  * Support less-trivial output stuff such as colours (on xterm-color)
  */
-class CLI extends Object
+class CLI
 {
     /**
      * Returns true if the current STDOUT supports the use of colour control codes.

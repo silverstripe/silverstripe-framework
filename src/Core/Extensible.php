@@ -3,8 +3,10 @@
 namespace SilverStripe\Core;
 
 use InvalidArgumentException;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\ViewableData;
 
 /**
  * Allows an object to have extensions applied to it.
@@ -46,9 +48,8 @@ trait Extensible
      * @var array
      */
     private static $unextendable_classes = array(
-        'SilverStripe\\Core\\Object',
-        'SilverStripe\\View\\ViewableData',
-        'SilverStripe\\Control\\RequestHandler'
+        ViewableData::class,
+        RequestHandler::class,
     );
 
     /**
@@ -110,7 +111,7 @@ trait Extensible
 
     protected function constructExtensions()
     {
-        $class = get_class($this);
+        $class = static::class;
 
         // Register this trait as a method source
         $this->registerExtraMethodCallback('defineExtensionMethods', function () {
@@ -126,9 +127,9 @@ trait Extensible
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
-                    $instance = Object::create_from_string($extension);
+                    $instance = Injector::inst()->create($extension);
                     $instance->setOwner(null, $class);
-                    $this->extension_instances[$instance->class] = $instance;
+                    $this->extension_instances[get_class($instance)] = $instance;
                 }
             }
         }
@@ -177,7 +178,7 @@ trait Extensible
      */
     public static function add_extension($classOrExtension, $extension = null)
     {
-        if (func_num_args() > 1) {
+        if ($extension) {
             $class = $classOrExtension;
         } else {
             $class = get_called_class();
@@ -285,14 +286,18 @@ trait Extensible
     }
 
     /**
-     * @param string $class
+     * @param string $class If omitted, will get extensions for the current class
      * @param bool $includeArgumentString Include the argument string in the return array,
      *  FALSE would return array("Versioned"), TRUE returns array("Versioned('Stage','Live')").
      * @return array Numeric array of either {@link DataExtension} class names,
      *  or eval'ed class name strings with constructor arguments.
      */
-    public static function get_extensions($class, $includeArgumentString = false)
+    public static function get_extensions($class = null, $includeArgumentString = false)
     {
+        if (!$class) {
+            $class = get_called_class();
+        }
+
         $extensions = Config::forClass($class)->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
         if (empty($extensions)) {
             return array();
@@ -315,9 +320,15 @@ trait Extensible
     }
 
 
+    /**
+     * Get extra config sources for this class
+     *
+     * @param string $class Name of class. If left null will return for the current class
+     * @return array|null
+     */
     public static function get_extra_config_sources($class = null)
     {
-        if ($class === null) {
+        if (!$class) {
             $class = get_called_class();
         }
 
@@ -340,7 +351,7 @@ trait Extensible
         $sources = array();
 
         foreach ($extensions as $extension) {
-            list($extensionClass, $extensionArgs) = Object::parse_class_spec($extension);
+            list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             $sources[] = $extensionClass;
 
             if (!class_exists($extensionClass)) {
@@ -367,16 +378,16 @@ trait Extensible
      * Return TRUE if a class has a specified extension.
      * This supports backwards-compatible format (static Object::has_extension($requiredExtension))
      * and new format ($object->has_extension($class, $requiredExtension))
-     * @param string $classOrExtension if 1 argument supplied, the class name of the extension to
-     *                               check for; if 2 supplied, the class name to test
-     * @param string $requiredExtension used only if 2 arguments supplied
+     * @param string $classOrExtension Class to check extension for, or the extension name to check
+     * if the second argument is null.
+     * @param string $requiredExtension If the first argument is the parent class, this is the extension to check.
+     * If left null, the first parameter will be treated as the extension.
      * @param boolean $strict if the extension has to match the required extension and not be a subclass
      * @return bool Flag if the extension exists
      */
     public static function has_extension($classOrExtension, $requiredExtension = null, $strict = false)
     {
-        //BC support
-        if (func_num_args() > 1) {
+        if ($requiredExtension) {
             $class = $classOrExtension;
         } else {
             $class = get_called_class();
@@ -500,6 +511,7 @@ trait Extensible
         if ($this->hasExtension($extension)) {
             return $this->extension_instances[$extension];
         }
+        return null;
     }
 
     /**

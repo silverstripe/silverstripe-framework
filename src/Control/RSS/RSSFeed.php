@@ -272,7 +272,7 @@ class RSSFeed extends ViewableData
      */
     public function getTemplates()
     {
-        $templates = SSViewer::get_templates_by_class(get_class($this), '', __CLASS__);
+        $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template
         if ($this->getTemplate()) {
             array_unshift($templates, $this->getTemplate());

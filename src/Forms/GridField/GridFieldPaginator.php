@@ -88,7 +88,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         } else {
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
-                    get_class($this) . " expects an SS_Limitable list to be passed to the GridField."
+                    static::class . " expects an SS_Limitable list to be passed to the GridField."
                 );
             }
             return false;

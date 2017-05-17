@@ -118,7 +118,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     public function debug()
     {
-        $val = "<h2>" . $this->class . "</h2><ul>";
+        $val = "<h2>" . static::class . "</h2><ul>";
         foreach ($this->toNestedArray() as $item) {
             $val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
         }

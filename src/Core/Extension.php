@@ -16,7 +16,6 @@ use SilverStripe\ORM\DataObject;
  */
 abstract class Extension
 {
-
     /**
      * This is used by extensions designed to be applied to controllers.
      * It works the same way as {@link Controller::$allowed_actions}.
@@ -45,13 +44,6 @@ abstract class Extension
      */
     private $ownerStack = [];
 
-    public $class;
-
-    public function __construct()
-    {
-        $this->class = get_class($this);
-    }
-
     /**
      * Called when this extension is added to a particular class
      *
@@ -67,7 +59,7 @@ abstract class Extension
     /**
      * Set the owner of this extension.
      *
-     * @param Object $owner The owner object,
+     * @param object $owner The owner object,
      * @param string $ownerBaseClass The base class that the extension is applied to; this may be
      * the class of owner, or it may be a parent.  For example, if Versioned was applied to SiteTree,
      * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
