@@ -48,6 +48,7 @@ class RequiredFields extends Validator
      */
     public function removeValidation()
     {
+        parent::removeValidation();
         $this->required = array();
 
         return $this;
