@@ -13,6 +13,7 @@ class GridFieldFilterHeaderTest extends SapphireTest {
 		$method->setAccessible(true);
 		$this->assertEquals('Title', $method->invoke($header, $class,'Title.ATT'));
 		$this->assertEquals('isTest', $method->invoke($header, $class, 'isTest.Nice'));
+		$this->assertEquals('Self.isTest.Nice', $method->invoke($header, $class, 'Self.isTest.Nice'));
 	}
 
 }
@@ -22,6 +23,10 @@ class GridFieldFilterHeaderTest_DataObject extends DataObject implements TestOnl
 	private static $db = array(
 		'Title' => 'Varchar',
 	    'isTest' => 'Boolean',
+	);
+
+	private static $has_one = array(
+		'Self' => 'GridFieldFilterHeaderTest_DataObject',
 	);
 
 }
