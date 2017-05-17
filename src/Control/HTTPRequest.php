@@ -316,7 +316,7 @@ class HTTPRequest implements ArrayAccess
      * Checks if the {@link HTTPRequest->getExtension()} on this request matches one of the more common media types
      * embedded into a webpage - e.g. css, png.
      *
-     * This is useful for things like determining wether to display a fully rendered error page or not. Note that the
+     * This is useful for things like determining whether to display a fully rendered error page or not. Note that the
      * media file types is not at all comprehensive.
      *
      * @return bool
