@@ -241,7 +241,6 @@ class TinyMCEConfig extends HTMLEditorConfig
         'emoticons' => null,
         'paste' => null,
         'code' => null,
-        'link' => null,
         'importcss' => null,
     );
 

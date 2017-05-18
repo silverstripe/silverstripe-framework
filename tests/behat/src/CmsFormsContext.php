@@ -180,6 +180,7 @@ var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
 	rng = document.createRange(),
 	matched = false;
 
+editor.getInstance().focus();
 jQuery(doc).find('body *').each(function() {
 	if(!matched) {
 		for(var i=0;i<this.childNodes.length;i++) {
