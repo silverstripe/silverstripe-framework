@@ -48,12 +48,12 @@ class DBTimeTest extends SapphireTest
     public function testNice()
     {
         $time = DBTime::create_field('Time', '17:15:55');
-        $this->assertEquals('5:15:55 PM', $time->Nice());
+        $this->assertRegexp('#5:15:55 PM#i', $time->Nice());
     }
 
     public function testShort()
     {
         $time = DBTime::create_field('Time', '17:15:55');
-        $this->assertEquals('5:15 PM', $time->Short());
+        $this->assertRegexp('#5:15 PM#i', $time->Short());
     }
 }

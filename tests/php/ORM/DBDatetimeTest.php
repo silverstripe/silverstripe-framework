@@ -74,7 +74,7 @@ class DBDatetimeTest extends SapphireTest
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
         // note: Some localisation packages exclude the ',' in default medium format
-        $this->assertRegExp('#31/12/2001(,)? 10:10:59 PM#', $date->Nice());
+        $this->assertRegExp('#31/12/2001(,)? 10:10:59 PM#i', $date->Nice());
     }
 
     public function testDate()
@@ -86,8 +86,7 @@ class DBDatetimeTest extends SapphireTest
     public function testTime()
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
-        // casing depends on system ICU library
-        $this->assertRegexp('#10:10:59 (PM|pm)#', $date->Time());
+        $this->assertRegexp('#10:10:59 PM#i', $date->Time());
     }
 
     public function testTime24()

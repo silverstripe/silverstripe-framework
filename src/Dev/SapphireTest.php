@@ -23,6 +23,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
@@ -461,7 +462,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     public function getFixtureFactory()
     {
         if (!$this->fixtureFactory) {
-            $this->fixtureFactory = Injector::inst()->create('SilverStripe\\Dev\\FixtureFactory');
+            $this->fixtureFactory = Injector::inst()->create(FixtureFactory::class);
         }
         return $this->fixtureFactory;
     }
@@ -538,7 +539,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public function loadFixture($fixtureFile)
     {
-        $fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $fixtureFile);
+        $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory());
     }
 
@@ -1061,8 +1062,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         $dbConn = DB::get_conn();
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        return $dbConn && (substr($dbConn->getSelectedDatabase(), 0, strlen($prefix) + 5)
-            == strtolower(sprintf('%stmpdb', $prefix)));
+        return 1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbConn->getSelectedDatabase());
     }
 
     public static function kill_temp_db()
@@ -1074,7 +1074,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             if ($dbName && DB::get_conn()->databaseExists($dbName)) {
                 // Some DataExtensions keep a static cache of information that needs to
                 // be reset whenever the database is killed
-                foreach (ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension') as $class) {
+                foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
                     $toCall = array($class, 'on_db_reset');
                     if (is_callable($toCall)) {
                         call_user_func($toCall);
@@ -1097,7 +1097,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
             // Some DataExtensions keep a static cache of information that needs to
             // be reset whenever the database is cleaned out
-            $classes = array_merge(ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension'), ClassInfo::subclassesFor('SilverStripe\\ORM\\DataObject'));
+            $classes = array_merge(ClassInfo::subclassesFor(DataExtension::class), ClassInfo::subclassesFor(DataObject::class));
             foreach ($classes as $class) {
                 $toCall = array($class, 'on_db_reset');
                 if (is_callable($toCall)) {
@@ -1110,7 +1110,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     public static function create_temp_db()
     {
         // Disable PHPUnit error handling
-        restore_error_handler();
+        $oldErrorHandler = set_error_handler(null);
 
         // Create a temporary database, and force the connection to use UTC for time
         global $databaseConfig;
@@ -1118,17 +1118,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         DB::connect($databaseConfig);
         $dbConn = DB::get_conn();
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        $dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000, 9999999);
-        while (!$dbname || $dbConn->databaseExists($dbname)) {
-            $dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000, 9999999);
-        }
+        do {
+            $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
+        } while ($dbConn->databaseExists($dbname));
 
         $dbConn->selectDatabase($dbname, true);
 
         static::resetDBSchema();
 
         // Reinstate PHPUnit error handling
-        set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
+        set_error_handler($oldErrorHandler);
 
         // Ensure test db is killed on exit
         register_shutdown_function(function () {
@@ -1142,7 +1141,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
         foreach (DB::get_schema()->databaseList() as $dbName) {
-            if (preg_match(sprintf('/^%stmpdb[0-9]+$/', $prefix), $dbName)) {
+            if (1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbName)) {
                 DB::get_schema()->dropDatabase($dbName);
                 if (Director::is_cli()) {
                     echo "Dropped database \"$dbName\"" . PHP_EOL;
@@ -1232,9 +1231,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
                 $group->Permissions()->add($permission);
             }
 
-            $member = DataObject::get_one('SilverStripe\\Security\\Member', array(
-                '"Member"."Email"' => "$permCode@example.org"
-            ));
+            $member = Member::get()->filter([
+                'Email' => "$permCode@example.org",
+            ])->first();
             if (!$member) {
                 $member = Member::create();
             }
