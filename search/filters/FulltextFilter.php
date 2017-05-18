@@ -28,13 +28,13 @@ class FulltextFilter extends SearchFilter {
 
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
+		$predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName($query));
 		return $query->where(array($predicate => $this->getValue()));
 	}
 
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
+		$predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName($query));
 		return $query->where(array($predicate => $this->getValue()));
 	}
 
@@ -53,7 +53,7 @@ class FulltextFilter extends SearchFilter {
 	 *
 	 * @return string
 	*/
-	public function getDbName() {
+	public function getDbName(SS_Query $query) {
 		$indexes = Config::inst()->get($this->model, "indexes");
 		if(is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
 			$index = $indexes[$this->getName()];
@@ -71,7 +71,7 @@ class FulltextFilter extends SearchFilter {
 			}
 		}
 
-		return parent::getDbName();
+		return parent::getDbName($query);
 	}
 
 	/**

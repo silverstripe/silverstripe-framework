@@ -39,7 +39,7 @@ abstract class ComparisonFilter extends SearchFilter {
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 
-		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
+		$predicate = sprintf("%s %s ?", $this->getDbName($query), $this->getOperator());
 		return $query->where(array(
 			$predicate => $this->getDbFormattedValue()
 		));
@@ -55,7 +55,7 @@ abstract class ComparisonFilter extends SearchFilter {
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 
-		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
+		$predicate = sprintf("%s %s ?", $this->getDbName($query), $this->getInverseOperator());
 		return $query->where(array(
 			$predicate => $this->getDbFormattedValue()
 		));
