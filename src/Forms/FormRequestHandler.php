@@ -236,6 +236,11 @@ class FormRequestHandler extends RequestHandler
                 return $this->$funcName($vars, $this->form, $request);
             }
 
+            // Otherwise, try a handler method on the form itself
+            if ($this->form->hasMethod($funcName)) {
+                return $this->form->$funcName($vars, $this->form, $request);
+            }
+
             // Check for inline actions
             $field = $this->checkFieldsForAction($this->form->Fields(), $funcName);
             if ($field) {
