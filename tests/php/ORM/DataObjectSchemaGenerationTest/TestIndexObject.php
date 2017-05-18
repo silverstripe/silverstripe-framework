@@ -7,29 +7,35 @@ use SilverStripe\Dev\TestOnly;
 class TestIndexObject extends TestObject implements TestOnly
 {
     private static $table_name = 'DataObjectSchemaGenerationTest_IndexDO';
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
-        'Content' => 'Text'
-    );
+        'Content' => 'Text',
+    ];
 
-    private static $indexes = array(
-        'NameIndex' => 'unique ("Title")',
-        'SearchFields' => array(
+    private static $indexes = [
+        'NameIndex' => [
+            'type' => 'unique',
+            'columns' => ['Title'],
+        ],
+        'SearchFields' => [
             'type' => 'fulltext',
             'name' => 'SearchFields',
-            'value' => '"Title","Content"'
-        )
-    );
+            'columns' => ['Title', 'Content'],
+        ],
+    ];
 
     /**
- * @config
-*/
-    private static $indexes_alt = array(
-        'NameIndex' => array(
+     * @config
+     */
+    private static $indexes_alt = [
+        'NameIndex' => [
             'type' => 'unique',
             'name' => 'NameIndex',
-            'value' => '"Title"'
-        ),
-        'SearchFields' => 'fulltext ("Title","Content")'
-    );
+            'columns' => ['Title'],
+        ],
+        'SearchFields' => [
+            'type' => 'fulltext',
+            'columns' => ['Title', 'Content'],
+        ],
+    ];
 }

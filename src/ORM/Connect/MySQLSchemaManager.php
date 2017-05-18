@@ -39,6 +39,10 @@ class MySQLSchemaManager extends DBSchemaManager
         }
         if ($indexes) {
             foreach ($indexes as $k => $v) {
+                // force MyISAM if we have a fulltext index
+                if ($v['type'] === 'fulltext') {
+                    $addOptions = 'ENGINE=MyISAM';
+                }
                 $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
             }
         }
@@ -301,19 +305,24 @@ class MySQLSchemaManager extends DBSchemaManager
      */
     protected function getIndexSqlDefinition($indexName, $indexSpec)
     {
-        $indexSpec = $this->parseIndexSpec($indexName, $indexSpec);
         if ($indexSpec['type'] == 'using') {
-            return "index \"$indexName\" using ({$indexSpec['value']})";
+            return sprintf('index "%s" using (%s)', $indexName, $this->implodeColumnList($indexSpec['columns']));
         } else {
-            return "{$indexSpec['type']} \"$indexName\" ({$indexSpec['value']})";
+            return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeColumnList($indexSpec['columns']));
         }
     }
 
     public function alterIndex($tableName, $indexName, $indexSpec)
     {
         $indexSpec = $this->parseIndexSpec($indexName, $indexSpec);
-        $this->query("ALTER TABLE \"$tableName\" DROP INDEX \"$indexName\"");
-        $this->query("ALTER TABLE \"$tableName\" ADD {$indexSpec['type']} \"$indexName\" {$indexSpec['value']}");
+        $this->query(sprintf('ALTER TABLE "%s" DROP INDEX "%s"', $tableName, $indexName));
+        $this->query(sprintf(
+            'ALTER TABLE "%s" ADD %s "%s" %s',
+            $tableName,
+            $indexSpec['type'],
+            $indexName,
+            $this->implodeColumnList($indexSpec['columns'])
+        ));
     }
 
     protected function indexKey($table, $index, $spec)
@@ -347,11 +356,11 @@ class MySQLSchemaManager extends DBSchemaManager
         if ($groupedIndexes) {
             foreach ($groupedIndexes as $index => $details) {
                 ksort($details['fields']);
-                $indexList[$index] = $this->parseIndexSpec($index, array(
+                $indexList[$index] = array(
                     'name' => $index,
-                    'value' => $this->implodeColumnList($details['fields']),
-                    'type' => $details['type']
-                ));
+                    'columns' => $details['fields'],
+                    'type' => $details['type'],
+                );
             }
         }
 

@@ -37,6 +37,13 @@ class DataObjectSchema
     protected $databaseFields = [];
 
     /**
+     * Cache of database indexes
+     *
+     * @var array
+     */
+    protected $databaseIndexes = [];
+
+    /**
      * Cache of composite database field
      *
      * @var array
@@ -57,6 +64,7 @@ class DataObjectSchema
     {
         $this->tableNames = [];
         $this->databaseFields = [];
+        $this->databaseIndexes = [];
         $this->compositeFields = [];
     }
 
@@ -334,6 +342,26 @@ class DataObjectSchema
     }
 
     /**
+     * @param string $class
+     * @param bool $aggregated
+     *
+     * @return array
+     */
+    public function databaseIndexes($class, $aggregated = true)
+    {
+        $class = ClassInfo::class_name($class);
+        if ($class === DataObject::class) {
+            return [];
+        }
+        $this->cacheDatabaseIndexes($class);
+        $indexes = $this->databaseIndexes[$class];
+        if (!$aggregated) {
+            return $indexes;
+        }
+        return array_merge($indexes, $this->databaseIndexes(get_parent_class($class)));
+    }
+
+    /**
      * Check if the given class has a table
      *
      * @param string $class
@@ -454,6 +482,70 @@ class DataObjectSchema
         // Return cached results
         $this->databaseFields[$class] = $dbFields;
         $this->compositeFields[$class] = $compositeFields;
+    }
+
+    /**
+     * Cache all indexes for the given class.
+     * Will do nothing if already cached
+     *
+     * @param $class
+     */
+    protected function cacheDatabaseIndexes($class)
+    {
+        if (array_key_exists($class, $this->databaseIndexes)) {
+            return;
+        }
+        $indexes = [];
+
+        // look for indexable field types
+        foreach ($this->databaseFields($class, false) as $field => $type) {
+            if ($type === 'ForeignKey' || $type === 'DBClassName') {
+                $indexes[$field] = [
+                    'type' => 'index',
+                    'columns' => [$field],
+                ];
+            }
+        }
+
+        // look for custom indexes declared on the class
+        $classIndexes = Config::inst()->get($class, 'indexes', Config::UNINHERITED) ?: [];
+        foreach ($classIndexes as $indexName => $indexSpec) {
+            if (array_key_exists($indexName, $indexes)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Index named "%s" already exists on class %s',
+                    $indexName,
+                    $class
+                ));
+            }
+            if (is_array($indexSpec)) {
+                if (!ArrayLib::is_associative($indexSpec)) {
+                    $indexSpec = [
+                        'columns' => $indexSpec,
+                    ];
+                }
+                if (!isset($indexSpec['type'])) {
+                    $indexSpec['type'] = 'index';
+                }
+                if (!isset($indexSpec['columns'])) {
+                    $indexSpec['columns'] = [$indexName];
+                } elseif (!is_array($indexSpec['columns'])) {
+                    throw new InvalidArgumentException(sprintf(
+                        'Index %s on %s is not valid. columns should be an array %s given',
+                        var_export($indexName, true),
+                        var_export($class, true),
+                        var_export($indexSpec['columns'], true)
+                    ));
+                }
+            } else {
+                $indexSpec = [
+                    'type' => 'index',
+                    'columns' => [$indexName],
+                ];
+            }
+            $indexes[$indexName] = $indexSpec;
+        }
+
+        $this->databaseIndexes[$class] = $indexes;
     }
 
     /**

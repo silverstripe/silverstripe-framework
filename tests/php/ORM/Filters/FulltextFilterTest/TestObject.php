@@ -11,22 +11,28 @@ class TestObject extends DataObject implements TestOnly
 
     private static $table_name = 'FulltextFilterTest_DataObject';
 
-    private static $db = array(
-        "ColumnA" => "Varchar(255)",
-        "ColumnB" => "HTMLText",
-        "ColumnC" => "Varchar(255)",
-        "ColumnD" => "HTMLText",
-        "ColumnE" => 'Varchar(255)'
-    );
+    private static $db = [
+        'ColumnA' => 'Varchar(255)',
+        'ColumnB' => 'HTMLText',
+        'ColumnC' => 'Varchar(255)',
+        'ColumnD' => 'HTMLText',
+        'ColumnE' => 'Varchar(255)',
+    ];
 
     private static $indexes = array(
-        'SearchFields' => array(
+        'SearchFields' => [
             'type' => 'fulltext',
             'name' => 'SearchFields',
-            'value' => '"ColumnA", "ColumnB"',
-        ),
-        'OtherSearchFields' => 'fulltext ("ColumnC", "ColumnD")',
-        'SingleIndex' => 'fulltext ("ColumnE")'
+            'columns' => ['ColumnA', 'ColumnB'],
+        ],
+        'OtherSearchFields' => [
+            'type' => 'fulltext',
+            'columns' => ['ColumnC', 'ColumnD'],
+        ],
+        'SingleIndex' => [
+            'type' => 'fulltext',
+            'columns' => ['ColumnE'],
+        ],
     );
 
     private static $create_table_options = array(

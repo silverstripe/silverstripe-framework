@@ -405,8 +405,8 @@ abstract class DBSchemaManager
 
         // Create custom indexes
         if ($indexSchema) {
-            foreach ($indexSchema as $indexName => $indexDetails) {
-                $this->requireIndex($table, $indexName, $indexDetails);
+            foreach ($indexSchema as $indexName => $indexSpec) {
+                $this->requireIndex($table, $indexName, $indexSpec);
             }
         }
     }
@@ -449,7 +449,6 @@ abstract class DBSchemaManager
         $newTable = !isset($this->tableList[strtolower($table)]);
 
         // Force spec into standard array format
-        $spec = $this->parseIndexSpec($index, $spec);
         $specString = $this->convertIndexSpec($spec);
 
         // Check existing index
@@ -545,40 +544,6 @@ abstract class DBSchemaManager
     }
 
     /**
-     * Converts an array or string index spec into a universally useful array
-     *
-     * @see convertIndexSpec() for approximate inverse
-     * @param string $name Index name
-     * @param string|array $spec
-     * @return array The resulting spec array with the required fields name, type, and value
-     */
-    protected function parseIndexSpec($name, $spec)
-    {
-        // Support $indexes = array('ColumnName' => true) for quick indexes
-        if ($spec === true) {
-            return array(
-                'name' => $name,
-                'value' => $this->quoteColumnSpecString($name),
-                'type' => 'index'
-            );
-        }
-
-        // Do minimal cleanup on any already parsed spec
-        if (is_array($spec)) {
-            $spec['value'] = $this->quoteColumnSpecString($spec['value']);
-            $spec['type'] = empty($spec['type']) ? 'index' : trim($spec['type']);
-            return $spec;
-        }
-
-        // Nicely formatted spec!
-        return array(
-            'name' => $name,
-            'value' => $this->quoteColumnSpecString($spec),
-            'type' => $this->determineIndexType($spec)
-        );
-    }
-
-    /**
      * This takes the index spec which has been provided by a class (ie static $indexes = blah blah)
      * and turns it into a proper string.
      * Some indexes may be arrays, such as fulltext and unique indexes, and this allows database-specific
@@ -593,12 +558,12 @@ abstract class DBSchemaManager
     protected function convertIndexSpec($indexSpec)
     {
         // Return already converted spec
-        if (!is_array($indexSpec)) {
-            return $indexSpec;
+        if (!is_array($indexSpec) || !array_key_exists('type', $indexSpec) || !array_key_exists('columns', $indexSpec) || !is_array($indexSpec['columns'])) {
+            throw new \InvalidArgumentException(sprintf('argument to convertIndexSpec must be correct indexSpec, %s given', var_export($indexSpec, true)));
         }
 
         // Combine elements into standard string format
-        return "{$indexSpec['type']} ({$indexSpec['value']})";
+        return sprintf('%s (%s)', $indexSpec['type'], $this->implodeColumnList($indexSpec['columns']));
     }
 
     /**

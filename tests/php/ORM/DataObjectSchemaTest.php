@@ -6,6 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\AllIndexes;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseDataClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\ChildClass;
@@ -23,7 +24,7 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
  */
 class DataObjectSchemaTest extends SapphireTest
 {
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         // Classes in base namespace
         BaseClass::class,
         BaseDataClass::class,
@@ -33,8 +34,9 @@ class DataObjectSchemaTest extends SapphireTest
         NoFields::class,
         WithCustomTable::class,
         WithRelation::class,
-        DefaultTableName::class
-    );
+        DefaultTableName::class,
+        AllIndexes::class,
+    ];
 
     /**
      * Test table name generation
@@ -233,5 +235,40 @@ class DataObjectSchemaTest extends SapphireTest
 
         $this->setExpectedException('InvalidArgumentException');
         $schema->baseDataClass(DataObject::class);
+    }
+
+    public function testDatabaseIndexes()
+    {
+        $indexes = DataObject::getSchema()->databaseIndexes(AllIndexes::class);
+        $this->assertCount(5, $indexes);
+        $this->assertArrayHasKey('ClassName', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['ClassName'],
+        ], $indexes['ClassName']);
+
+        $this->assertArrayHasKey('Content', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['Content'],
+        ], $indexes['Content']);
+
+        $this->assertArrayHasKey('IndexCols', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['Title', 'Content'],
+        ], $indexes['IndexCols']);
+
+        $this->assertArrayHasKey('IndexUnique', $indexes);
+        $this->assertEquals([
+            'type' => 'unique',
+            'columns' => ['Number'],
+        ], $indexes['IndexUnique']);
+
+        $this->assertArrayHasKey('IndexNormal', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['Title'],
+        ], $indexes['IndexNormal']);
     }
 }

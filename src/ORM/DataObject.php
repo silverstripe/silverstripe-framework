@@ -3053,38 +3053,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     //-------------------------------------------------------------------------------------------//
 
     /**
-     * Return the database indexes on this table.
-     * This array is indexed by the name of the field with the index, and
-     * the value is the type of index.
-     */
-    public function databaseIndexes()
-    {
-        $has_one = $this->uninherited('has_one');
-        $classIndexes = $this->uninherited('indexes');
-        //$fileIndexes = $this->uninherited('fileIndexes', true);
-
-        $indexes = array();
-
-        if ($has_one) {
-            foreach ($has_one as $relationshipName => $fieldType) {
-                $indexes[$relationshipName . 'ID'] = true;
-            }
-        }
-
-        if ($classIndexes) {
-            foreach ($classIndexes as $indexName => $indexType) {
-                $indexes[$indexName] = $indexType;
-            }
-        }
-
-        if (get_parent_class($this) == self::class) {
-            $indexes['ClassName'] = true;
-        }
-
-        return $indexes;
-    }
-
-    /**
      * Check the database schema and update it as necessary.
      *
      * @uses DataExtension->augmentDatabase()
@@ -3093,11 +3061,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         // Only build the table if we've actually got fields
         $schema = static::getSchema();
-        $fields = $schema->databaseFields(static::class, false);
         $table = $schema->tableName(static::class);
+        $fields = $schema->databaseFields(static::class, false);
+        $indexes = $schema->databaseIndexes(static::class, false);
         $extensions = self::database_extensions(static::class);
-
-        $indexes = $this->databaseIndexes();
 
         if (empty($table)) {
             throw new LogicException(
@@ -3144,10 +3111,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
 
                 // Build index list
-                $manymanyIndexes = array(
-                    $parentField => true,
-                    $childField => true,
-                );
+                $manymanyIndexes = [
+                    $parentField => [
+                        'type' => 'index',
+                        'name' => $parentField,
+                        'columns' => [$parentField],
+                    ],
+                    $childField => [
+                        'type' => 'index',
+                        'name' =>$childField,
+                        'columns' => [$childField],
+                    ],
+                ];
                 DB::require_table($tableOrClass, $manymanyFields, $manymanyIndexes, true, null, $extensions);
             }
         }
