@@ -102,6 +102,29 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		return $dataListClone;
 	}
 
+	/**
+	 * @param string $class
+	 * @param string $column
+	 * @return string
+	 */
+	protected function columnToFilterField($class, $column)
+	{
+		if (strpos($column, '.') === false) {
+			return $column;
+		}
+		/** @var DataObject $model */
+		$model = singleton($class);
+		$columnParts = explode('.', $column);
+		if ($model->getRelationClass($columnParts[0])) {
+			return $column;
+		}
+		return $columnParts[0];
+	}
+
+	/**
+	 * @param GridField $gridField
+	 * @return array
+	 */
 	public function getHTMLFragments($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
@@ -110,18 +133,21 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		$columns = $gridField->getColumns();
 		$filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
 		$currentColumn = 0;
+
 		foreach($columns as $columnField) {
-			$currentColumn++;
+			++$currentColumn;
 			$metadata = $gridField->getColumnMetadata($columnField);
 			$title = $metadata['title'];
 			$fields = new FieldGroup();
 
-			if($title && $gridField->getList()->canFilterBy($columnField)) {
+			$filterField = $this->columnToFilterField($gridField->getModelClass(), $columnField);
+
+			if($title && $gridField->getList()->canFilterBy($filterField)) {
 				$value = '';
-				if(isset($filterArguments[$columnField])) {
-					$value = $filterArguments[$columnField];
+				if(isset($filterArguments[$filterField])) {
+					$value = $filterArguments[$filterField];
 				}
-				$field = new TextField('filter[' . $gridField->getName() . '][' . $columnField . ']', '', $value);
+				$field = new TextField('filter[' . $gridField->getName() . '][' . $filterField . ']', '', $value);
 				$field->addExtraClass('ss-gridfield-sort');
 				$field->addExtraClass('no-change-track');
 
@@ -133,7 +159,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 					GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
 						->addExtraClass('ss-gridfield-button-reset')
 						->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
-						->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
+						->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $filterField)
 				);
 			}
 
