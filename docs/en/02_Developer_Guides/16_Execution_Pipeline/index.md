@@ -93,7 +93,7 @@ All requests go through `framework/main.php`, which sets up the execution enviro
  * Optionally regenerates these manifests (if a ["flush" query parameter](flushable) is set)
  * Executes all procedural configuration defined through `_config.php` in all discovered modules
  * Loads the Composer PHP class autoloader
- * Hands control over to [api:Director]
+ * Hands control over to [Director](http://api.silverstripe.org/3.5/class-Director.html)
 
 While you usually don't need to modify the bootstrap on this level, some deeper customizations like
 adding your own manifests or a performance-optimized routing might require it.
