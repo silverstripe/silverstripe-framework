@@ -104,7 +104,7 @@ class ManyManyList extends RelationList {
 			}
 		}
 
-		$this->dataQuery->selectFromTable($this->joinTable, $finalized);
+		$this->dataQuery->addSelectFromTable($this->joinTable, $finalized);
 	}
 
 	/**
@@ -352,7 +352,7 @@ class ManyManyList extends RelationList {
 	 */
 	public function getExtraData($componentName, $itemID) {
 		$result = array();
-		
+
 		// Skip if no extrafields or unsaved record
 		if(empty($this->extraFields) || empty($itemID)) {
 			return $result;

@@ -30,7 +30,6 @@ class SQLQueryTest extends SapphireTest {
 
 		//basic counting
 		$qry = SQLQueryTest_DO::get()->dataQuery()->getFinalisedQuery();
-		$qry->setGroupBy('"Common"');
 		$ids = $this->allFixtureIDs('SQLQueryTest_DO');
 
 		$count = $qry->count('"SQLQueryTest_DO"."ID"');
@@ -39,6 +38,11 @@ class SQLQueryTest extends SapphireTest {
 
 		//test with `having`
 		if (DB::get_conn() instanceof MySQLDatabase) {
+			$qry->setSelect(array(
+				'Date' => 'MAX("Date")',
+				'Common' => '"Common"',
+			));
+			$qry->setGroupBy('"Common"');
 			$qry->setHaving('"Date" > 2012-02-01');
 			$count = $qry->count('"SQLQueryTest_DO"."ID"');
 			$this->assertEquals(1, $count);
@@ -123,6 +127,18 @@ class SQLQueryTest extends SapphireTest {
 		$query->setSelect("Name","Meta")->setFrom("MyTable")->setWhere("Name = 'Name'")->addWhere("Meta = 'Test'");
 		$this->assertTrue($query->canSortBy('Name ASC'));
 		$this->assertTrue($query->canSortBy('Name'));
+	}
+
+    /**
+     * Test multiple order by SQL clauses.
+     */
+	public function testAddOrderBy() {
+		$query = new SQLQuery();
+		$query->setSelect('ID', "Title")->setFrom('Page')->addOrderBy('(ID % 2)  = 0', 'ASC')->addOrderBy('ID > 50', 'ASC');
+		$this->assertSQLEquals(
+			'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1" FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
+			$query->sql($parameters)
+		);
 	}
 
 	public function testSelectWithChainedFilterParameters() {

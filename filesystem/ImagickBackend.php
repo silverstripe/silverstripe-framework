@@ -148,6 +148,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function resizeRatio($maxWidth, $maxHeight, $useAsMinimum = false) {
 		if(!$this->valid()) return;
 
+		$maxWidth = intval($maxWidth);
+		$maxHeight = intval($maxHeight);
+
 		$geometry = $this->getImageGeometry();
 
 		$widthRatio = $maxWidth / $geometry["width"];
@@ -168,6 +171,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function resizeByWidth($width) {
 		if(!$this->valid()) return;
 
+		$width = intval($width);
+
 		$geometry = $this->getImageGeometry();
 
 		$heightScale = $width / $geometry["width"];
@@ -183,6 +188,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function resizeByHeight($height) {
 		if(!$this->valid()) return;
 
+		$height = intval($height);
+
 		$geometry = $this->getImageGeometry();
 
 		$scale = $height / $geometry["height"];
@@ -194,17 +201,47 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 *
 	 * @param int $width
 	 * @param int $height
+	 * @param int $transparencyPercent
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent = 0) {
+		$width = intval($width);
+		$height = intval($height);
+
+		//keep the % within bounds of 0-100
+		$transparencyPercent = min(100, max(0, $transparencyPercent));
 		$new = $this->resizeRatio($width, $height);
-		$new->setImageBackgroundColor("#".$backgroundColor);
+		if($transparencyPercent) {
+			$alphaHex = $this->calculateAlphaHex($transparencyPercent);
+			$new->setImageBackgroundColor("#{$backgroundColor}{$alphaHex}");
+		} else {
+			$new->setImageBackgroundColor("#{$backgroundColor}");
+		}
 		$w = $new->getImageWidth();
 		$h = $new->getImageHeight();
 		$new->extentImage($width,$height,($w-$width)/2,($h-$height)/2);
 
 		return $new;
 	}
+
+	/**
+	 * Convert a percentage (or 'true') to a two char hex code to signifiy the level of an alpha channel
+	 *
+	 * @param $percent
+	 * @return string
+	 */
+	public function calculateAlphaHex($percent) {
+		if($percent > 100) {
+			$percent = 100;
+		}
+		// unlike GD, this uses 255 instead of 127, and is reversed. Lower = more transparent
+		$alphaHex = dechex(255 - floor(255 * bcdiv($percent, 100, 2)));
+		if(strlen($alphaHex) == 1) {
+			$alphaHex =  '0' .$alphaHex;
+		}
+		return $alphaHex;
+	}
+
 
 	/**
 	 * croppedResize
@@ -236,6 +273,26 @@ class ImagickBackend extends Imagick implements Image_Backend {
 				(($geo['width']-($width*$geo['height']/$height))/2), 0);
 		}
 		$new->ThumbnailImage($width,$height,true);
+		return $new;
+	}
+
+	/**
+	 * Crop's part of image.
+	 * @param int $top y position of left upper corner of crop rectangle
+	 * @param int $left x position of left upper corner of crop rectangle
+	 * @param int $width rectangle width
+	 * @param int $height rectangle height
+	 * @return Image_Backend
+	 */
+	public function crop($top, $left, $width, $height) {
+		$top = intval($top);
+		$left = intval($left);
+		$width = intval($width);
+		$height = intval($height);
+
+		$new = clone $this;
+		$new->cropImage($width, $height, $left, $top);
+
 		return $new;
 	}
 

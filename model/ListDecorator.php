@@ -15,8 +15,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	protected $list;
 
 	public function __construct(SS_List $list) {
-		$this->list     = $list;
-		$this->failover = $this->list;
+		$this->setList($list);
 
 		parent::__construct();
 	}
@@ -29,6 +28,21 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	public function getList() {
 		return $this->list;
 	}
+
+    /**
+     * Set the list this decorator wraps around.
+     *
+     * Useful for keeping a decorator/paginated list configuration intact while modifying
+     * the underlying list.
+     *
+     * @return SS_List
+     */
+    public function setList(SS_List $list)
+    {
+        $this->list = $list;
+        $this->failover = $this->list;
+        return $this;
+    }
 
 	// PROXIED METHODS ---------------------------------------------------------
 

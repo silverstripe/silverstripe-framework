@@ -35,6 +35,7 @@ abstract class TextParser extends Object {
 	 */
 	public function __construct($content = "") {
 		$this->content = $content;
+		parent::__construct();
 	}
 
 	/**

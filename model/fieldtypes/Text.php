@@ -265,8 +265,7 @@ class Text extends StringField {
 
 				foreach($stringPieces as $stringPiece) {
 					if(strlen($stringPiece) > 2) {
-						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>",
-							$summary);
+						$summary = preg_replace('/' . preg_quote($stringPiece, '/') . '/i', '<span class="highlight">$0</span>', $summary);
 					}
 				}
 			}

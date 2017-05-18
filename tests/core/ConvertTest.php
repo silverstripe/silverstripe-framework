@@ -304,6 +304,20 @@ PHP
 	}
 
 	/**
+	 * Test that a context bitmask can be passed through to the json_encode method in {@link Convert::raw2json()}
+	 * and in {@link Convert::array2json()}
+	 */
+	public function testRaw2JsonWithContext()
+	{
+	    $data = array('foo' => 'b"ar');
+	    $expected = '{"foo":"b\u0022ar"}';
+	    $result = Convert::raw2json($data, JSON_HEX_QUOT);
+	    $this->assertSame($expected, $result);
+	    $wrapperResult = Convert::array2json($data, JSON_HEX_QUOT);
+	    $this->assertSame($expected, $wrapperResult);
+	}
+
+	/**
 	 * Tests {@link Convert::xml2array()}
 	 */
 	public function testXML2Array() {

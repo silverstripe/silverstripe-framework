@@ -7,7 +7,7 @@ includes common functionality and default behaviors easily complemented with add
 themes. 
 
 SilverStripe includes a myriad of extension API's such as *Extension Hooks* and support for programming patterns 
-such Dependency Injection. Allowing developers to tailor the framework to their needs without modifying the core 
+such as *Dependency Injection*. Allowing developers to tailor the framework to their needs without modifying the core 
 framework.
 
 [CHILDREN Exclude="How_Tos"]

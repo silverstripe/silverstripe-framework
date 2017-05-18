@@ -47,14 +47,23 @@ class FieldList extends ArrayList {
 	/**
 	 * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
 	 * as well as heading / help text fields.
+	 *
+	 * @return array
 	 */
 	public function dataFields() {
-		if(!$this->sequentialSet) $this->collateDataFields($this->sequentialSet);
+		if(!$this->sequentialSet) {
+			$this->collateDataFields($this->sequentialSet);
+		}
 		return $this->sequentialSet;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function saveableFields() {
-		if(!$this->sequentialSaveableSet) $this->collateDataFields($this->sequentialSaveableSet, true);
+		if(!$this->sequentialSaveableSet) {
+			$this->collateDataFields($this->sequentialSaveableSet, true);
+		}
 		return $this->sequentialSaveableSet;
 	}
 
@@ -64,13 +73,20 @@ class FieldList extends ArrayList {
 	}
 
 	protected function collateDataFields(&$list, $saveableOnly = false) {
+		// Initialise list
+		if (!isset($list)) {
+			$list = array();
+		}
+		/** @var FormField $field */
 		foreach($this as $field) {
-			if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
+			if($field->isComposite()) {
+				$field->collateDataFields($list, $saveableOnly);
+			}
 
 			if($saveableOnly) {
-				$isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+				$isIncluded = $field->canSubmitValue();
 			} else {
-				$isIncluded =  ($field->hasData());
+				$isIncluded = $field->hasData();
 			}
 			if($isIncluded) {
 				$name = $field->getName();

@@ -574,6 +574,20 @@ class SecurityTest extends FunctionalTest {
 		Security::$force_database_is_ready = $old;
 	}
 
+	public function testSecurityControllerSendsRobotsTagHeader() {
+		$response = $this->get(Config::inst()->get('Security', 'login_url'));
+		$robotsHeader = $response->getHeader('X-Robots-Tag');
+		$this->assertNotNull($robotsHeader);
+		$this->assertContains('noindex', $robotsHeader);
+	}
+
+	public function testDoNotSendEmptyRobotsHeaderIfNotDefined() {
+		Config::inst()->update('Security', 'robots_tag', null);
+		$response = $this->get(Config::inst()->get('Security', 'login_url'));
+		$robotsHeader = $response->getHeader('X-Robots-Tag');
+		$this->assertNull($robotsHeader);
+	}
+
 	/**
 	 * Execute a log-in form using Director::test().
 	 * Helper method for the tests above

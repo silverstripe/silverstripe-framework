@@ -1,6 +1,6 @@
-# How to extend the CMS interface #
+# How to extend the CMS interface
 
-## Introduction ##
+## Introduction
 
 The CMS interface works just like any other part of your website: It consists of
 PHP controllers, templates, CSS stylesheets and JavaScript. Because it uses the
@@ -13,7 +13,7 @@ simple checkbox.
 For a deeper introduction to the inner workings of the CMS, please refer to our
 guide on [CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture).
 
-## Overload a CMS template ##
+## Overload a CMS template
 
 If you place a template with an identical name into your application template
 directory (usually `mysite/templates/`), it'll take priority over the built-in
@@ -62,7 +62,7 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 	  extra_requirements_css:
 	    - mysite/css/BookmarkedPages.css
 
-## Create a "bookmark" flag on pages ##
+## Create a "bookmark" flag on pages
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in
 the database. For this we need to decorate the page record with a

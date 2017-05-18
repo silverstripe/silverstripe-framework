@@ -5,7 +5,7 @@
  * @package framework
  * @subpackage model
  */
-class Float extends DBField {
+class DBFloat extends DBField {
 
 	public function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;

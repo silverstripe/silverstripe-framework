@@ -282,10 +282,10 @@ class ImageTest extends SapphireTest {
 
 	public function testCacheFilename() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
-		$imageFirst = $image->Pad(200,200,'CCCCCC');
+		$imageFirst = $image->Pad(200,200,'CCCCCC', 0);
 		$imageFilename = $imageFirst->getFullPath();
 			// Encoding of the arguments is duplicated from cacheFilename
-		$neededPart = 'Pad' . Convert::base64url_encode(array(200,200,'CCCCCC'));
+		$neededPart = 'Pad' . Convert::base64url_encode(array(200,200,'CCCCCC', 0));
 		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
 	}
 
@@ -308,7 +308,12 @@ class ImageTest extends SapphireTest {
 
 		$imageThird = $imageSecond->Pad(600,600,'0F0F0F');
 		// Encoding of the arguments is duplicated from cacheFilename
-		$argumentString = Convert::base64url_encode(array(600,600,'0F0F0F'));
+		$argumentString = Convert::base64url_encode(array(
+			600,
+			600,
+			'0F0F0F',
+			0
+		));
 		$this->assertNotNull($imageThird);
 		$this->assertContains($argumentString, $imageThird->getFullPath(),
 			'Image contains background color for padded resizement');

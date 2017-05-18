@@ -578,7 +578,7 @@ abstract class DBSchemaManager {
 			$spec['parts']['name'] = $field;
 			$spec_orig['parts']['name'] = $field;
 			//Convert the $spec array into a database-specific string
-			$spec = $this->$spec['type']($spec['parts'], true);
+			$spec = $this->{$spec['type']}($spec['parts'], true);
 		}
 
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
@@ -615,7 +615,7 @@ abstract class DBSchemaManager {
 		// Get the version of the field as we would create it. This is used for comparison purposes to see if the
 		// existing field is different to what we now want
 		if (is_array($spec_orig)) {
-			$spec_orig = $this->$spec_orig['type']($spec_orig['parts']);
+			$spec_orig = $this->{$spec_orig['type']}($spec_orig['parts']);
 		}
 
 		if ($newTable || $fieldValue == '') {

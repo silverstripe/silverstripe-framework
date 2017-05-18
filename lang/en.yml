@@ -1,14 +1,5 @@
 en:
-  AddToCampaign:
-    ErrorCampaignPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to {CampaignTitle}'
-    ErrorGeneral: 'We apologise, but there was an error'
-    ErrorItemPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to a campaign'
-    ErrorNotFound: 'That {Type} couldn''t be found'
-    Success: 'Successfully added {ObjectTitle} to {CampaignTitle}'
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed file upload extensions'
-    HIDEALLOWEDEXTS: 'Hide allowed extensions'
-    NEWFOLDER: NewFolder
     SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'First uploaded'
@@ -18,7 +9,6 @@ en:
     HEIGHT: Height
     LASTEDIT: 'Last changed'
     OWNER: Owner
-    PATH: Path
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
@@ -34,8 +24,6 @@ en:
     FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    INSERTURL: 'Insert from URL'
-    REMOVEINFO: 'Remove this file from this field'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
@@ -65,9 +53,6 @@ en:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
-  BackLink_Button_ss:
-    Back: Back
-    NavigateUp: 'Navigate up a folder'
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
@@ -76,16 +61,12 @@ en:
     ANY: Any
     NOANSWER: 'No'
     YESANSWER: 'Yes'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Add to Campaign'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
   CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Forgot password?'
     BUTTONLOGIN: 'Log back in'
@@ -104,12 +85,6 @@ en:
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
     TimedOutTitleAnonymous: 'Your session has timed out.'
     TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
-  CampaignAdmin:
-    ACCESS_HELP: 'Allow viewing of the campaign publishing section.'
-    MENUTITLE: Campaigns
-  Campaigns:
-    AddToCampaign: 'Add To Campaign'
-    AddToCampaignFormFieldLabel: 'Select a Campaign'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
@@ -118,29 +93,13 @@ en:
     EMAIL: Email
     HELLO: Hi
     PASSWORD: Password
-  ChangeSet:
-    DESCRIPTION_AND: '{first} and {second}'
-    DESCRIPTION_ITEM: item
-    DESCRIPTION_ITEMS: items
-    DESCRIPTION_LIST_FIRST: '{item}'
-    DESCRIPTION_LIST_LAST: '{list}, and {item}'
-    DESCRIPTION_LIST_MID: '{list}, {item}'
-    DESCRIPTION_OTHER_ITEM: 'other item'
-    DESCRIPTION_OTHER_ITEMS: 'other items'
-    NAME: Name
-    PLURALNAME: Campaigns
-    SINGULARNAME: Campaign
-    STATE: State
-  ChangeSetItem:
-    PLURALNAME: 'Change Set Items'
-    SINGULARNAME: 'Change Set Item'
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
-  CheckboxFieldSetField:
-    SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   CheckboxSetField:
     SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'
+  CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'No options available'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -151,7 +110,6 @@ en:
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
     DRAFT_SITE_ACCESS_RESTRICTION: 'You must log in with your CMS password in order to view the draft or archived content. <a href="%s">Click here to go back to the published site.</a>'
-    NOTLOGGEDIN: 'Not logged in'
   CreditCardField:
     FIRST: first
     FOURTH: fourth
@@ -201,21 +159,17 @@ en:
     AviType: 'AVI video file'
     Content: Content
     CssType: 'CSS file'
-    DRAFT: Draft
     DmgType: 'Apple disk image'
     DocType: 'Word document'
     Filename: Filename
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    INVALIDEXTENSION_SHORT: 'Extension is not allowed'
     IcoType: 'Icon image'
     JpgType: 'JPEG image - good for photos'
     JsType: 'Javascript file'
-    MODIFIED: Modified
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'File size is zero bytes.'
@@ -243,19 +197,20 @@ en:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
+    BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDIT: 'Please ensure you have entered the credit card number correctly'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
+    EXAMPLE: 'e.g. {format}'
     Example: 'e.g. %s'
     NONE: none
   GridAction:
@@ -319,17 +274,14 @@ en:
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
     ANCHORSPAGENOTFOUND: 'Target page not found.'
     ANCHORVALUE: Anchor
-    BUTTONADDURL: 'Add url'
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    DETAILS: Details
     EMAIL: 'Email address'
-    FILE: SilverStripe\Assets\File
-    FOLDER: Folder
+    FILE: File
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
@@ -339,7 +291,6 @@ en:
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
     LINKANCHOR: 'Link to an anchor on this page'
     LINKDESCR: 'Link description'
@@ -353,9 +304,7 @@ en:
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
-    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update media'
   HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
     ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
@@ -412,7 +361,6 @@ en:
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
-    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
@@ -424,15 +372,10 @@ en:
   Image_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    CANCEL: Cancel
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    CollapsePanel: 'Collapse Panel'
     DELETED: Deleted.
     DropdownBatchActionsDefault: 'Choose an action...'
-    ExpandPanel: 'Expand Panel'
     HELP: Help
-    MenuToggleAuto: Auto
-    MenuToggleStickyNav: 'Sticky nav'
     PAGETYPE: 'Page type'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below.'
@@ -603,9 +546,6 @@ en:
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
-  RememberLoginHash:
-    PLURALNAME: 'Remember Login Hashs'
-    SINGULARNAME: 'Remember Login Hash'
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
@@ -613,7 +553,6 @@ en:
     CHANGEPASSWORDHEADER: 'Change your password'
     ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
@@ -657,54 +596,81 @@ en:
     Tablet: Tablet
     ViewDeviceWidth: 'Select a preview width'
     Width: width
-  SilverStripe\Admin\CMSProfileController:
-    MENUTITLE: 'My Profile'
-  SilverStripe\Admin\CampaignAdmin:
-    MENUTITLE: Campaigns
-  SilverStripe\Admin\SecurityAdmin:
-    MENUTITLE: Security
-  SilverStripe\Assets\File:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  SilverStripe\Assets\Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  SilverStripe\Assets\Image:
-    PLURALNAME: Images
-    SINGULARNAME: Image
+  SilverStripe\Forms\MoneyField:
+    INVALID_CURRENCY: 'Currency {currency} is not in the list of allowed currencies'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Objects'
+    PLURALS:
+      one: 'A Data Object'
+      other: '{count} Data Objects'
     SINGULARNAME: 'Data Object'
-  SilverStripe\ORM\Versioning\ChangeSet:
-    PLURALNAME: Campaigns
-    SINGULARNAME: Campaign
-  SilverStripe\ORM\Versioning\ChangeSetItem:
-    PLURALNAME: 'Change Set Items'
-    SINGULARNAME: 'Change Set Item'
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} day'
+      other: '{count} days'
+    HOURS_SHORT_PLURALS:
+      one: '{count} hour'
+      other: '{count} hours'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} min'
+      other: '{count} mins'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} month'
+      other: '{count} months'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sec'
+      other: '{count} secs'
+    YEARS_SHORT_PLURALS:
+      one: '{count} year'
+      other: '{count} years'
   SilverStripe\Security\Group:
     PLURALNAME: Groups
+    PLURALS:
+      one: 'A Group'
+      other: '{count} Groups'
     SINGULARNAME: Group
   SilverStripe\Security\LoginAttempt:
     PLURALNAME: 'Login Attempts'
+    PLURALS:
+      one: 'A Login Attempt'
+      other: '{count} Login Attempts'
     SINGULARNAME: 'Login Attempt'
   SilverStripe\Security\Member:
     PLURALNAME: Members
+    PLURALS:
+      one: 'A Member'
+      other: '{count} Members'
     SINGULARNAME: Member
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Member Passwords'
+    PLURALS:
+      one: 'A Member Password'
+      other: '{count} Member Passwords'
     SINGULARNAME: 'Member Password'
   SilverStripe\Security\Permission:
     PLURALNAME: Permissions
+    PLURALS:
+      one: 'A Permission'
+      other: '{count} Permissions'
     SINGULARNAME: Permission
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Roles
+    PLURALS:
+      one: 'A Role'
+      other: '{count} Roles'
     SINGULARNAME: Role
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permission Role Codes'
+    PLURALS:
+      one: 'A Permission Role Code'
+      other: '{count} Permission Role Codes'
     SINGULARNAME: 'Permission Role Code'
   SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Remember Login Hashs'
-    SINGULARNAME: 'Remember Login Hash'
+    PLURALNAME: 'Login Hashes'
+    PLURALS:
+      one: 'A Login Hash'
+      other: '{count} Login Hashes'
+    SINGULARNAME: 'Login Hash'
   SiteTree:
     TABMAIN: Main
   TableListField:
@@ -751,16 +717,4 @@ en:
   ValidationException:
     DEFAULT_ERROR: 'Validation error'
   Versioned:
-    INFERRED_TITLE: 'Generated by publish of ''{title}'' at {created}'
     has_many_Versions: Versions
-  VersionedGridFieldItemRequest:
-    ARCHIVE: Archive
-    Archived: 'Archived %s %s'
-    BUTTONARCHIVEDESC: 'Unpublish and send to archive'
-    BUTTONPUBLISH: Publish
-    BUTTONUNPUBLISH: Unpublish
-    BUTTONUNPUBLISHDESC: 'Remove this record from the published site'
-    Published: 'Published {name} {link}'
-    Unpublished: 'Unpublished %s %s'
-  i18n:
-    PLURAL: '{number} {form}'

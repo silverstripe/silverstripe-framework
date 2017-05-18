@@ -123,6 +123,12 @@ class PDOConnector extends DBConnector {
 				$server .= ",{$parameters['port']}";
 			}
 			$dsn[] = "Server=$server";
+		} elseif ($parameters['driver'] === 'dblib') {
+			$server = $parameters['server'];
+			if (!empty($parameters['port'])) {
+				$server .= ":{$parameters['port']}";
+			}
+			$dsn[] = "host={$server}";
 		} else {
 			if (!empty($parameters['server'])) {
 				// Use Server instead of host for sqlsrv
@@ -150,9 +156,10 @@ class PDOConnector extends DBConnector {
 		if(!isset($charset)) {
 			$charset = $connCharset;
 		}
-		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation
-		);
+		$options = array();
+		if($parameters['driver'] == 'mysql') {
+			$options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation;
+		}
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;
 		}
@@ -172,7 +179,7 @@ class PDOConnector extends DBConnector {
 	}
 
 	public function getVersion() {
-		return $this->pdoConnection->getAttribute(PDO::ATTR_SERVER_VERSION);
+		return @$this->pdoConnection->getAttribute(PDO::ATTR_SERVER_VERSION);
 	}
 
 	public function escapeString($value) {
@@ -221,12 +228,12 @@ class PDOConnector extends DBConnector {
 		$result = $this->pdoConnection->exec($sql);
 
 		// Check for errors
-		if ($result !== false) {
-			return $this->rowCount = $result;
+		if($this->hasError($this->pdoConnection)) {
+			$this->databaseError($this->getLastError(), $errorLevel, $sql);
+			return null;
 		}
 
-		$this->databaseError($this->getLastError(), $errorLevel, $sql);
-		return null;
+		return $this->rowCount = $result;
 	}
 
 	public function query($sql, $errorLevel = E_USER_ERROR) {

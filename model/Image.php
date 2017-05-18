@@ -339,12 +339,13 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image|null
 	 */
-	public function Pad($width, $height, $backgroundColor='FFFFFF') {
+	public function Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0) {
 		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this
-			: $this->getFormattedImage('Pad', $width, $height, $backgroundColor);
+			: $this->getFormattedImage('Pad', $width, $height, $backgroundColor, $transparencyPercent);
 	}
 
 	/**
@@ -654,12 +655,13 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image
 	 * @deprecated 4.0 Use Pad instead
 	 */
-	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
+	public function PaddedImage($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0) {
 		Deprecation::notice('4.0', 'Use Pad instead');
-		return $this->Pad($width, $height, $backgroundColor);
+		return $this->Pad($width, $height, $backgroundColor, $transparencyPercent);
 	}
 
 	/**
@@ -668,12 +670,13 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image_Backend
 	 * @deprecated 4.0 Generate methods are no longer applicable
 	 */
-	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
+	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor = 'FFFFFF', $transparencyPercent = 0) {
 		Deprecation::notice('4.0', 'Generate methods are no longer applicable');
-		return $backend->paddedResize($width, $height, $backgroundColor);
+		return $backend->paddedResize($width, $height, $backgroundColor, $transparencyPercent);
 	}
 
 	/**
@@ -1045,7 +1048,7 @@ class Image extends File implements Flushable {
 
 	protected function onBeforeDelete() {
 		$backend = Injector::inst()->createWithArgs(self::config()->backend, array(
-			Director::baseFolder()."/" . $this->Filename		
+			Director::baseFolder()."/" . $this->Filename
 		));
 		$backend->onBeforeDelete($this);
 

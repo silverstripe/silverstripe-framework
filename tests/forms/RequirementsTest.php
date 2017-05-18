@@ -452,6 +452,36 @@ class RequirementsTest extends SapphireTest {
 		$this->assertNotRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
 	}
 
+	/**
+	 * Ensure that if a JS snippet somewhere in the page (via requirements) contains </head> that it doesn't
+	 * get injected with requirements
+	 */
+	public function testHeadTagIsNotInjectedTwice() {
+		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
+		$basePath = $this->getCurrentRelativePath();
+
+		$backend = new Requirements_Backend;
+		// The offending snippet that contains a closing head tag
+		$backend->customScript('var myvar="<head></head>";');
+		// Insert a variety of random requirements
+		$backend->css($basePath .'/RequirementsTest_a.css');
+		$backend->javascript($basePath .'/RequirementsTest_a.js');
+		$backend->insertHeadTags('<link rel="alternate" type="application/atom+xml" title="test" href="/" />');
+
+		// Case A: JS forced to bottom
+		$backend->set_force_js_to_bottom(true);
+		$this->assertContains('var myvar="<head></head>";', $backend->includeInHTML(false, $template));
+
+		// Case B: JS written to body
+		$backend->set_force_js_to_bottom(false);
+		$backend->set_write_js_to_body(true);
+		$this->assertContains('var myvar="<head></head>";', $backend->includeInHTML(false, $template));
+
+		// Case C: Neither of the above
+		$backend->set_write_js_to_body(false);
+		$this->assertContains('var myvar="<head></head>";', $backend->includeInHTML(false, $template));
+	}
+
 	public function assertFileIncluded($backend, $type, $files) {
 		$type = strtolower($type);
 		switch (strtolower($type)) {

@@ -55,27 +55,16 @@ class EmailTest extends SapphireTest {
 		$invalidEmails = array('foo.bar@', '@example.com', 'foo@');
 
 		foreach ($validEmails as $email) {
-			$this->assertEquals(
-				$email,
-				Email::validEmailAddress($email),
-				'validEmailAddress() returns a valid email address'
-			);
-			$this->assertEquals(
-				1,
+			$this->assertTrue(
 				Email::is_valid_address($email),
-				'is_valid_address() returns 1 for a valid email address'
+				'is_valid_address() returns true for a valid email address'
 			);
 		}
 
 		foreach ($invalidEmails as $email) {
 			$this->assertFalse(
-				Email::validEmailAddress($email),
-				'validEmailAddress() returns false for an invalid email address'
-			);
-			$this->assertEquals(
-				0,
 				Email::is_valid_address($email),
-				'is_valid_address() returns 0 for an invalid email address'
+				'is_valid_address() returns false for an invalid email address'
 			);
 		}
 	}

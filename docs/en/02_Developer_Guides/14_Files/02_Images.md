@@ -63,6 +63,19 @@ Image methods are chainable. Example:
 
 	:::ss
 	<body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
+	
+### Padded Image Resize
+
+The Pad method allows you to resize an image with existing ratio and will
+pad any surplus space. You can specify the color of the padding using a hex code such as FFFFFF or 000000.
+
+You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
+png images.
+
+	:::php
+	$Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
+	$Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
+	$Image.Pad(80, 80, FFFFFF) // white padding with no transparency
 
 ### Manipulating images in PHP
 

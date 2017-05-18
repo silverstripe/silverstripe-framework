@@ -425,8 +425,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Construct a new DataObject.
 	 *
-	 * @param array|null $record This will be null for a new database record.  Alternatively, you can pass an array of
-	 * field values.  Normally this contructor is only used by the internal systems that get objects from the database.
+	 * @param array|null $record Used internally for rehydrating an object from database content.
+	 *                           Bypasses setters on this class, and hence should not be used
+	 *                           for populating data on new records.
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
 	 *                             Singletons don't have their defaults set.
 	 */
@@ -3505,7 +3506,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @uses DataExtension->requireDefaultRecords()
 	 */
 	public function requireDefaultRecords() {
-		$defaultRecords = $this->stat('default_records');
+		$defaultRecords = $this->config()->get('default_records', Config::UNINHERITED);
 
 		if(!empty($defaultRecords)) {
 			$hasData = DataObject::get_one($this->class);

@@ -70,7 +70,7 @@ class CsvBulkLoader extends BulkLoader {
 			foreach ($files as $file) {
 				$last = $file;
 
-				$next = $this->processChunk($file, false);
+				$next = $this->processChunk($file, $preview);
 
 				if ($result instanceof BulkLoader_Result) {
 					$result->merge($next);
