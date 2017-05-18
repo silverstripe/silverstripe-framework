@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
@@ -744,7 +745,7 @@ class DataListTest extends SapphireTest
     public function testSimpleFilterWithNonExistingComparisator()
     {
         $this->setExpectedException(
-            'ReflectionException',
+            InjectorNotFoundException::class,
             'Class DataListFilter.Bogus does not exist'
         );
         $list = TeamComment::get();
@@ -755,7 +756,7 @@ class DataListTest extends SapphireTest
     {
         // Invalid modifiers are treated as failed filter construction
         $this->setExpectedException(
-            'ReflectionException',
+            InjectorNotFoundException::class,
             'Class DataListFilter.invalidmodifier does not exist'
         );
         $list = TeamComment::get();
