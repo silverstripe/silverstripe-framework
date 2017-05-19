@@ -212,7 +212,7 @@ You can also combine CSS files into a media-specific stylesheets as you would wi
 the third paramter of the `combine_files` function:
 
 ```php
-$loader = ThemeResourceLoader::instance();
+$loader = ThemeResourceLoader::inst();
 $themes = SSViewer::get_themes();
 
 $printStylesheets = array(
@@ -237,7 +237,7 @@ You can also add the 'async' and/or 'defer' attributes to combined Javascript fi
 `Requirements::javascript` call - use the third paramter of the `combine_files` function:
 
 ```php
-$loader = ThemeResourceLoader::instance();
+$loader = ThemeResourceLoader::inst();
 $themes = SSViewer::get_themes();
 
 $scripts = array(

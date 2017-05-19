@@ -29,13 +29,13 @@ class NamespacedClassManifestTest extends SapphireTest
 
         $this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
         $this->manifest = new ClassManifest($this->base, false);
-        ClassLoader::instance()->pushManifest($this->manifest, false);
+        ClassLoader::inst()->pushManifest($this->manifest, false);
     }
 
     protected function tearDown()
     {
         parent::tearDown();
-        ClassLoader::instance()->popManifest();
+        ClassLoader::inst()->popManifest();
     }
 
     public function testClassInfoIsCorrect()

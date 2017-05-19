@@ -23,7 +23,7 @@ class ConfigLoader
     /**
      * @return self
      */
-    public static function instance()
+    public static function inst()
     {
         return self::$instance ? self::$instance : self::$instance = new self();
     }

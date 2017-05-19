@@ -37,7 +37,7 @@ It finds the following information:
  * All implementors of an interface
  * All module configuration files
 
-The gathered information can be accessed through [api:ClassLoader::instance()],
+The gathered information can be accessed through [api:ClassLoader::inst()],
 as well as [api:ClassInfo]. Some useful commands of the `ClassInfo` API:
 
  * `ClassInfo::subclassesFor($class)`: Returns a list of classes that inherit from the given class

@@ -621,7 +621,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor[] = Director::absoluteURL(ltrim($this->getAdminPath() . '/client/dist/styles/editor.css', '/'));
 
         // Themed editor.css
-        $themedEditor = ThemeResourceLoader::instance()->findThemedCSS('editor', SSViewer::get_themes());
+        $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', SSViewer::get_themes());
         if ($themedEditor) {
             $editor[] = Director::absoluteURL($themedEditor, Director::BASE);
         }
@@ -712,7 +712,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
 
         throw new Exception(sprintf(
-            'If the silverstripe/admin module is not installed, 
+            'If the silverstripe/admin module is not installed,
             you must set the TinyMCE path in %s.base_dir',
             __CLASS__
         ));
@@ -723,6 +723,6 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     protected function getAdminModule()
     {
-        return ModuleLoader::instance()->getManifest()->getModule('silverstripe/admin');
+        return ModuleLoader::inst()->getManifest()->getModule('silverstripe/admin');
     }
 }

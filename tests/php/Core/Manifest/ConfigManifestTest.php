@@ -17,12 +17,12 @@ class ConfigManifestTest extends SapphireTest
         parent::setUp();
 
         $moduleManifest = new ModuleManifest(dirname(__FILE__) . '/fixtures/configmanifest');
-        ModuleLoader::instance()->pushManifest($moduleManifest);
+        ModuleLoader::inst()->pushManifest($moduleManifest);
     }
 
     protected function tearDown()
     {
-        ModuleLoader::instance()->popManifest();
+        ModuleLoader::inst()->popManifest();
         parent::tearDown();
     }
 

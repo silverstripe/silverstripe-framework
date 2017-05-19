@@ -86,7 +86,7 @@ trait i18nTestManifest
         $this->pushModuleManifest($moduleManifest);
 
         // Replace old template loader with new one with alternate base path
-        $this->oldThemeResourceLoader = ThemeResourceLoader::instance();
+        $this->oldThemeResourceLoader = ThemeResourceLoader::inst();
         ThemeResourceLoader::set_instance($loader = new ThemeResourceLoader($this->alternateBasePath));
         $loader->addSet(
             '$default',
@@ -136,13 +136,13 @@ trait i18nTestManifest
     protected function pushManifest(ClassManifest $manifest)
     {
         $this->manifests++;
-        ClassLoader::instance()->pushManifest($manifest);
+        ClassLoader::inst()->pushManifest($manifest);
     }
 
     protected function pushModuleManifest(ModuleManifest $manifest)
     {
         $this->moduleManifests++;
-        ModuleLoader::instance()->pushManifest($manifest);
+        ModuleLoader::inst()->pushManifest($manifest);
     }
 
     /**
@@ -152,11 +152,11 @@ trait i18nTestManifest
     {
         // Reset any manifests pushed during this test
         while ($this->manifests > 0) {
-            ClassLoader::instance()->popManifest();
+            ClassLoader::inst()->popManifest();
             $this->manifests--;
         }
         while ($this->moduleManifests > 0) {
-            ModuleLoader::instance()->popManifest();
+            ModuleLoader::inst()->popManifest();
             $this->moduleManifests--;
         }
     }

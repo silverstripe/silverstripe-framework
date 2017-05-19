@@ -1036,10 +1036,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $flush
         );
 
-        ClassLoader::instance()->pushManifest($classManifest, false);
+        ClassLoader::inst()->pushManifest($classManifest, false);
         static::set_test_class_manifest($classManifest);
 
-        ThemeResourceLoader::instance()->addSet('$default', new ThemeManifest(
+        ThemeResourceLoader::inst()->addSet('$default', new ThemeManifest(
             BASE_PATH,
             project(),
             true,
@@ -1048,7 +1048,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Once new class loader is registered, push a new uncached config
         $config = CoreConfigFactory::inst()->createCore();
-        ConfigLoader::instance()->pushManifest($config);
+        ConfigLoader::inst()->pushManifest($config);
 
         // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
         // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)

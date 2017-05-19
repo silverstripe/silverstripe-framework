@@ -27,7 +27,7 @@ class ClassInfo
      */
     public static function allClasses()
     {
-        return ClassLoader::instance()->getManifest()->getClasses();
+        return ClassLoader::inst()->getManifest()->getClasses();
     }
 
     /**
@@ -38,7 +38,7 @@ class ClassInfo
      */
     public static function exists($class)
     {
-        return class_exists($class, false) || interface_exists($class, false) || ClassLoader::instance()->getItemPath($class);
+        return class_exists($class, false) || interface_exists($class, false) || ClassLoader::inst()->getItemPath($class);
     }
 
     /**
@@ -164,7 +164,7 @@ class ClassInfo
 
         //normalise class case
         $className = self::class_name($nameOrObject);
-        $descendants = ClassLoader::instance()->getManifest()->getDescendantsOf($className);
+        $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
         $result      = array($className => $className);
 
         if ($descendants) {
@@ -231,7 +231,7 @@ class ClassInfo
      */
     public static function implementorsOf($interfaceName)
     {
-        return ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
+        return ClassLoader::inst()->getManifest()->getImplementorsOf($interfaceName);
     }
 
     /**
@@ -260,7 +260,7 @@ class ClassInfo
     {
         $absFilePath    = Director::getAbsFile($filePath);
         $matchedClasses = array();
-        $manifest       = ClassLoader::instance()->getManifest()->getClasses();
+        $manifest       = ClassLoader::inst()->getManifest()->getClasses();
 
         foreach ($manifest as $class => $compareFilePath) {
             if ($absFilePath == $compareFilePath) {
@@ -284,7 +284,7 @@ class ClassInfo
     {
         $absFolderPath  = Director::getAbsFile($folderPath);
         $matchedClasses = array();
-        $manifest       = ClassLoader::instance()->getManifest()->getClasses();
+        $manifest       = ClassLoader::inst()->getManifest()->getClasses();
 
         foreach ($manifest as $class => $compareFilePath) {
             if (stripos($compareFilePath, $absFolderPath) === 0) {

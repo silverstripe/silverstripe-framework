@@ -99,7 +99,7 @@ class CoreConfigFactory
     protected function buildYamlTransformer()
     {
         // Get all module dirs
-        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         $dirs = [];
         foreach ($modules as $module) {
             // Load from _config dirs
@@ -118,7 +118,7 @@ class CoreConfigFactory
     public function buildStaticTransformer()
     {
         return new PrivateStaticTransformer(function () {
-            $classes = ClassLoader::instance()->getManifest()->getClasses();
+            $classes = ClassLoader::inst()->getManifest()->getClasses();
             return array_keys($classes);
         });
     }
@@ -175,7 +175,7 @@ class CoreConfigFactory
                 return strtolower($current) === strtolower($env);
             })
             ->addRule('moduleexists', function ($module) {
-                return ModuleLoader::instance()->getManifest()->moduleExists($module);
+                return ModuleLoader::inst()->getManifest()->moduleExists($module);
             });
     }
 }

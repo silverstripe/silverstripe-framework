@@ -42,7 +42,7 @@ class i18nTextCollectorTest extends SapphireTest
     public function testConcatenationInEntityValues()
     {
         $c = i18nTextCollector::create();
-        $module = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $module = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t(
@@ -75,7 +75,7 @@ PHP;
     {
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false);
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
         <% _t('Test.SINGLEQUOTE','Single Quote'); %>
@@ -124,7 +124,7 @@ SS;
     public function testCollectFromTemplateSimple()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
 <% _t('Test.SINGLEQUOTE','Single Quote'); %>
@@ -155,7 +155,7 @@ SS;
     {
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false);
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
 <% _t(
@@ -221,7 +221,7 @@ SS;
     public function testCollectFromCodeSimple()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t('Test.SINGLEQUOTE','Single Quote');
@@ -243,7 +243,7 @@ PHP;
     public function testCollectFromCodeAdvanced()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t(
@@ -305,8 +305,8 @@ PHP;
 _t(
 	'Test.PRIOANDCOMMENT',
 	"Doublequoted Value with 'Unescaped Single Quotes'"
-	
-	
+
+
 );
 PHP;
         $this->assertEquals(
@@ -318,7 +318,7 @@ PHP;
     public function testCollectFromCodeNamespace()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
         $php = <<<PHP
 <?php
 namespace SilverStripe\Framework\Core;
@@ -361,7 +361,7 @@ PHP;
     public function testNewlinesInEntityValues()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t(
@@ -397,7 +397,7 @@ PHP;
     {
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
@@ -453,7 +453,7 @@ PHP;
     public function testUncollectableCode()
     {
         $c = i18nTextCollector::create();
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<PHP
 _t(static::class.'.KEY1', 'Default');
@@ -472,7 +472,7 @@ PHP;
     {
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
-        $mymodule = ModuleLoader::instance()->getManifest()->getModule('i18ntestmodule');
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
         $html = file_get_contents($templateFilePath);
@@ -730,7 +730,7 @@ PHP;
     public function testModuleDetection()
     {
         $collector = new Collector();
-        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         $this->assertEquals(
             array(
                 'i18nnonstandardmodule',

@@ -26,7 +26,7 @@ class ClassLoader
     /**
      * @return ClassLoader
      */
-    public static function instance()
+    public static function inst()
     {
         return self::$instance ? self::$instance : self::$instance = new self();
     }

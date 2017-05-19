@@ -330,7 +330,7 @@ class ClassManifest
         $rootModule = null;
 
         // Find based on loaded modules
-        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // Leave root module as fallback
             if (empty($module->getRelativePath())) {

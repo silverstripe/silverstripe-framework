@@ -20,21 +20,21 @@ class ModuleLoader
     /**
      * @return self
      */
-    public static function instance()
+    public static function inst()
     {
         return self::$instance ? self::$instance : self::$instance = new self();
     }
 
     /**
      * Get module by name from the current manifest.
-     * Alias for ::instance()->getManifest()->getModule()
+     * Alias for ::inst()->getManifest()->getModule()
      *
      * @param string $module
      * @return Module
      */
     public static function getModule($module)
     {
-        return static::instance()->getManifest()->getModule($module);
+        return static::inst()->getManifest()->getModule($module);
     }
 
     /**

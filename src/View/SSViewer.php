@@ -284,7 +284,7 @@ class SSViewer implements Flushable
      */
     public static function chooseTemplate($templates)
     {
-        return ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
+        return ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
 
     /**
@@ -319,7 +319,7 @@ class SSViewer implements Flushable
      */
     public static function hasTemplate($templates)
     {
-        return (bool)ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
+        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
 
     /**
@@ -362,7 +362,7 @@ class SSViewer implements Flushable
      */
     public static function getTemplateFileByType($identifier, $type = null)
     {
-        return ThemeResourceLoader::instance()->findTemplate(['type' => $type, $identifier], self::get_themes());
+        return ThemeResourceLoader::inst()->findTemplate(['type' => $type, $identifier], self::get_themes());
     }
 
     /**
