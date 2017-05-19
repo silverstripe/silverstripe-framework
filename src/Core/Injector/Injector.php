@@ -2,11 +2,14 @@
 
 namespace SilverStripe\Core\Injector;
 
+use Psr\Container\NotFoundExceptionInterface;
 use SilverStripe\Core\Config\Config;
 use ReflectionProperty;
 use ArrayObject;
 use ReflectionObject;
 use ReflectionMethod;
+use Psr\Container\ContainerInterface;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A simple injection manager that manages creating objects and injecting
@@ -122,7 +125,7 @@ use ReflectionMethod;
  * @author marcus@silverstripe.com.au
  * @license BSD License http://silverstripe.org/bsd-license/
  */
-class Injector
+class Injector implements ContainerInterface
 {
 
     /**
@@ -233,7 +236,7 @@ class Injector
      * If a user wants to use the injector as a static reference
      *
      * @param array $config
-     * @return Injector
+     * @return ContainerInterface
      */
     public static function inst($config = null)
     {
@@ -246,10 +249,10 @@ class Injector
     /**
      * Sets the default global injector instance.
      *
-     * @param Injector $instance
+     * @param ContainerInterface $instance
      * @return Injector Reference to new active Injector instance
      */
-    public static function set_inst(Injector $instance)
+    public static function set_inst(ContainerInterface $instance)
     {
         return self::$instance = $instance;
     }
@@ -693,7 +696,7 @@ class Injector
                     if ($propertyObject->isPublic() && !$propertyObject->getValue($object)) {
                         $origName = $propertyObject->getName();
                         $name = ucfirst($origName);
-                        if ($this->hasService($name)) {
+                        if ($this->has($name)) {
                             // Pull the name out of the registry
                             $value = $this->get($name);
                             $propertyObject->setValue($object, $value);
@@ -710,7 +713,7 @@ class Injector
                     $methName = $methodObj->getName();
                     if (strpos($methName, 'set') === 0) {
                         $pname = substr($methName, 3);
-                        if ($this->hasService($pname)) {
+                        if ($this->has($pname)) {
                             // Pull the name out of the registry
                             $value = $this->get($pname);
                             $methodObj->invoke($object, $value);
@@ -783,21 +786,49 @@ class Injector
     }
 
     /**
+     * @deprecated 4.0.0:5.0.0 Use Injector::has() instead
+     * @param $name
+     * @return string
+     */
+    public function hasService($name)
+    {
+        Deprecation::notice('5.0', 'Use Injector::has() instead');
+
+        return $this->has($name);
+    }
+
+    /**
+     * Does the given service exist?
+     *
+     * We do a special check here for services that are using compound names. For example,
+     * we might want to say that a property should be injected with Log.File or Log.Memory,
+     * but have only registered a 'Log' service, we'll instead return that.
+     *
+     * Will recursively call itself for each depth of dotting.
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function has($name)
+    {
+        return (bool)$this->getServiceName($name);
+    }
+
+    /**
      * Does the given service exist, and if so, what's the stored name for it?
      *
      * We do a special check here for services that are using compound names. For example,
      * we might want to say that a property should be injected with Log.File or Log.Memory,
      * but have only registered a 'Log' service, we'll instead return that.
      *
-     * Will recursively call hasService for each depth of dotting
+     * Will recursively call itself for each depth of dotting.
      *
      * @param string $name
-     * @return string The name of the service (as it might be different from the one passed in)
-     * The name of the service (as it might be different from the one passed in)
+     * @return string|null The name of the service (as it might be different from the one passed in)
      */
-    public function hasService($name)
+    public function getServiceName($name)
     {
-        // common case, get it overwith first
+        // common case, get it over with first
         if (isset($this->specs[$name])) {
             return $name;
         }
@@ -808,7 +839,7 @@ class Injector
             return null;
         }
 
-        return $this->hasService(substr($name, 0, strrpos($name, '.')));
+        return $this->getServiceName(substr($name, 0, strrpos($name, '.')));
     }
 
     /**
@@ -859,30 +890,45 @@ class Injector
      * Next, will check to see if there's any registered configuration for the given type
      * and will then try and load that
      *
-     * Failing all of that, will just return a new instance of the
-     * specificied object.
+     * Failing all of that, will just return a new instance of the specified object.
      *
-     * @param string $name
-     *              the name of the service to retrieve. If not a registered
-     *              service, then a class of the given name is instantiated
-     * @param boolean $asSingleton
-     *              Whether to register the created object as a singleton
-     *              if no other configuration is found
-     * @param array $constructorArgs
-     *              Optional set of arguments to pass as constructor arguments
-     *              if this object is to be created from scratch
-     *              (ie asSingleton = false)
-     * @return mixed the instance of the specified object
+     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+     *
+     * @param string $name The name of the service to retrieve. If not a registered
+     * service, then a class of the given name is instantiated
+     * @param boolean $asSingleton Whether to register the created object as a singleton
+     * if no other configuration is found
+     * @param array $constructorArgs Optional set of arguments to pass as constructor arguments
+     * if this object is to be created from scratch (with $asSingleton = false)
+     * @return mixed Instance of the specified object
      */
     public function get($name, $asSingleton = true, $constructorArgs = null)
     {
+        $object = $this->getNamedService($name, $asSingleton, $constructorArgs);
+
+        if (!$object) {
+            throw new InjectorNotFoundException("The '{$name}' service could not be found");
+        }
+
+        return $object;
+    }
+
+    /**
+     * Returns the service, or `null` if it doesnt' exist. See {@link get()} for main usage.
+     *
+     * @param string $name
+     * @param boolean $asSingleton
+     * @param array $constructorArgs
+     * @return mixed|null Instance of the specified object (if it exists)
+     */
+    protected function getNamedService($name, $asSingleton = true, $constructorArgs = null)
+    {
         // reassign the name as it might actually be a compound name
-        if ($serviceName = $this->hasService($name)) {
+        if ($serviceName = $this->getServiceName($name)) {
             // check to see what the type of bean is. If it's a prototype,
             // we don't want to return the singleton version of it.
             $spec = $this->specs[$serviceName];
             $type = isset($spec['type']) ? $spec['type'] : null;
-
             // if we're explicitly a prototype OR we're not wanting a singleton
             if (($type && $type == 'prototype') || !$asSingleton) {
                 if ($spec && $constructorArgs) {
@@ -903,7 +949,6 @@ class Injector
                 return $this->serviceCache[$serviceName];
             }
         }
-
         $config = $this->configLocator->locateConfigFor($name);
         if ($config) {
             $this->load(array($name => $config));
@@ -916,7 +961,6 @@ class Injector
                 return $this->instantiate($spec, $name);
             }
         }
-
         // If we've got this far, we're dealing with a case of a user wanting
         // to create an object based on its name. So, we need to fake its config
         // if the user wants it managed as a singleton service style object

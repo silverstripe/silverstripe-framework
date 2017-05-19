@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\SampleService;
@@ -80,9 +81,15 @@ class InjectorTest extends SapphireTest
         );
 
         $injector->load($config);
+
+
+        $this->assertFalse($injector->has('UnknownService'));
+        $this->assertNull($injector->getServiceName('UnknownService'));
+
+        $this->assertTrue($injector->has('SampleService'));
         $this->assertEquals(
             'SampleService',
-            $injector->hasService('SampleService')
+            $injector->getServiceName('SampleService')
         );
 
         $myObject = new TestObject();
@@ -110,15 +117,17 @@ class InjectorTest extends SapphireTest
         );
 
         $injector->load($services);
+        $this->assertTrue($injector->has('SampleService'));
         $this->assertEquals(
             'SampleService',
-            $injector->hasService('SampleService')
+            $injector->getServiceName('SampleService')
         );
         // We expect a false because the AnotherService::class is actually
         // just a replacement of the SilverStripe\Core\Tests\Injector\AopProxyServiceTest\SampleService
+        $this->assertTrue($injector->has('SampleService'));
         $this->assertEquals(
             'AnotherService',
-            $injector->hasService('AnotherService')
+            $injector->getServiceName('AnotherService')
         );
 
         $item = $injector->get('AnotherService');
@@ -136,8 +145,11 @@ class InjectorTest extends SapphireTest
 
         $injector->load($services);
 
-        $this->assertTrue($injector->hasService('FirstId') == 'FirstId');
-        $this->assertTrue($injector->hasService('SecondId') == 'SecondId');
+        $this->assertTrue($injector->has('FirstId'));
+        $this->assertEquals($injector->getServiceName('FirstId'), 'FirstId');
+
+        $this->assertTrue($injector->has('SecondId'));
+        $this->assertEquals($injector->getServiceName('SecondId'), 'SecondId');
 
         $this->assertTrue($injector->get('FirstId') instanceof AnotherService);
         $this->assertTrue($injector->get('SecondId') instanceof SampleService);
@@ -251,9 +263,10 @@ class InjectorTest extends SapphireTest
         );
         $injector->load($config);
 
+        $this->assertTrue($injector->has('SampleService'));
         $this->assertEquals(
             'SampleService',
-            $injector->hasService('SampleService')
+            $injector->getServiceName('SampleService')
         );
         // We expect a false because the AnotherService::class is actually
         // just a replacement of the SilverStripe\Core\Tests\Injector\AopProxyServiceTest\SampleService
@@ -419,7 +432,8 @@ class InjectorTest extends SapphireTest
         );
 
         $injector->load($config);
-        $this->assertEquals('SampleService', $injector->hasService('SampleService'));
+        $this->assertTrue($injector->has('SampleService'));
+        $this->assertEquals('SampleService', $injector->getServiceName('SampleService'));
 
         $myObject = new InjectorTest\OtherTestObject();
         $injector->inject($myObject);
@@ -453,7 +467,8 @@ class InjectorTest extends SapphireTest
         );
 
         $injector->load($config);
-        $this->assertEquals('SampleService', $injector->hasService('SampleService'));
+        $this->assertTrue($injector->has('SampleService'));
+        $this->assertEquals('SampleService', $injector->getServiceName('SampleService'));
 
         $myObject = $injector->get(OtherTestObject::class);
         $this->assertInstanceOf(
@@ -919,7 +934,14 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-
+    /**
+     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
+     */
+    public function testGetThrowsOnNotFound()
+    {
+        $injector = new Injector();
+        $injector->get('UnknownService');
+    }
 
     /**
      * Test nesting of injector
