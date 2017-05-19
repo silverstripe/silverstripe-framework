@@ -260,6 +260,9 @@ class DatabaseAdmin extends Controller
         // Initiate schema update
         $dbSchema = DB::get_schema();
         $dbSchema->schemaUpdate(function () use ($dataClasses, $testMode, $quiet) {
+            /** @var SilverStripe\ORM\DataObjectSchema $dataObjectSchema */
+            $dataObjectSchema = DataObject::getSchema();
+
             foreach ($dataClasses as $dataClass) {
                 // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
                 if (!class_exists($dataClass)) {
@@ -271,13 +274,14 @@ class DatabaseAdmin extends Controller
                 if (!$testMode && $SNG instanceof TestOnly) {
                     continue;
                 }
+                $tableName = $dataObjectSchema->tableName($dataClass);
 
                 // Log data
                 if (!$quiet) {
                     if (Director::is_cli()) {
-                        echo " * $dataClass\n";
+                        echo " * $tableName\n";
                     } else {
-                        echo "<li>$dataClass</li>\n";
+                        echo "<li>$tableName</li>\n";
                     }
                 }
 
