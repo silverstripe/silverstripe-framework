@@ -292,20 +292,4 @@ trait CustomMethods
             'method' => $method
         );
     }
-
-    /**
-     * Add an extra method using raw PHP code passed as a string
-     *
-     * @param string $method the method name
-     * @param string $code the PHP code - arguments will be in an array called $args, while you can access this object
-     *        by using $obj. Note that you cannot call protected methods, as the method is actually an external
-     *        function
-     */
-    protected function createMethod($method, $code)
-    {
-        $class = get_class($this);
-        self::$extra_methods[$class][strtolower($method)] = array (
-            'function' => create_function('$obj, $args', $code)
-        );
-    }
 }

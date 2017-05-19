@@ -826,7 +826,9 @@ class Form extends ViewableData implements HasRequestHandler
         $attrs = $this->getAttributes();
 
         // Remove empty
-        $attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);'));
+        $attrs = array_filter((array)$attrs, function ($value) {
+            return ($value || $value === 0);
+        });
 
         // Remove excluded
         if ($exclude) {
