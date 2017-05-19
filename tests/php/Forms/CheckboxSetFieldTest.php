@@ -370,4 +370,23 @@ class CheckboxSetFieldTest extends SapphireTest
         $this->assertContains('&lt;firstname&gt;', $fieldHTML);
         $this->assertNotContains('<firstname>', $fieldHTML);
     }
+
+    /**
+     * #2939 CheckboxSetField creates invalid HTML when required
+     */
+    public function testNoAriaRequired()
+    {
+        $field = new CheckboxSetField('RequiredField', 'myRequiredField');
+
+        $form = new Form(
+            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            new RequiredFields(["RequiredField"])
+        );
+        $this->assertTrue($field->Required());
+
+        $attributes = $field->getAttributes();
+        $this->assertFalse(array_key_exists("aria-required", $attributes));
+        $this->assertFalse(array_key_exists("name", $attributes));
+        $this->assertFalse(array_key_exists("required", $attributes));
+    }
 }

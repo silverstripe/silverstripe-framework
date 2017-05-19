@@ -28,10 +28,16 @@ class CheckboxField extends FormField
 
     public function getAttributes()
     {
-        $attrs = parent::getAttributes();
-        $attrs['value'] = 1;
+        $attributes = parent::getAttributes();
+        $attributes['value'] = 1;
+        if ($this->Required()) {
+            // Semantically, it doesn't make sense to have a required attribute
+            // on a field in which both checked and unchecked are allowable.
+            unset($attributes['aria-required']);
+        }
+
         return array_merge(
-            $attrs,
+            $attributes,
             array(
                 'checked' => ($this->Value()) ? 'checked' : null,
                 'type' => 'checkbox',
