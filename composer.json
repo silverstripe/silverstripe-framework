@@ -21,6 +21,7 @@
     "league/flysystem": "~1.0.12",
     "monolog/monolog": "~1.11",
     "nikic/php-parser": "^2 || ^3",
+    "paragonie/random_compat": "^2.0",
     "silverstripe/config": "^1@dev",
     "silverstripe/assets": "^1@dev",
     "swiftmailer/swiftmailer": "~5.4",
