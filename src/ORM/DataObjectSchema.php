@@ -88,15 +88,16 @@ class DataObjectSchema
      *
      * @param string $class Class name (not a table).
      * @param string $field Name of field that belongs to this class (or a parent class)
+     * @param string $tablePrefix Optional prefix for table (alias)
      * @return string The SQL identifier string for the corresponding column for this field
      */
-    public function sqlColumnForField($class, $field)
+    public function sqlColumnForField($class, $field, $tablePrefix = null)
     {
         $table = $this->tableForField($class, $field);
         if (!$table) {
             throw new InvalidArgumentException("\"{$field}\" is not a field on class \"{$class}\"");
         }
-        return "\"{$table}\".\"{$field}\"";
+        return "\"{$tablePrefix}{$table}\".\"{$field}\"";
     }
 
     /**

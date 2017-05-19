@@ -91,9 +91,11 @@ class FulltextFilter extends SearchFilter
      */
     protected function prepareColumns($columns)
     {
+        $prefix = DataQuery::applyRelationPrefix($this->relation);
         $table = DataObject::getSchema()->tableForField($this->model, current($columns));
-        $columns = array_map(function ($column) use ($table) {
-            return Convert::symbol2sql("$table.$column");
+        $fullTable = $prefix . $table;
+        $columns = array_map(function ($col) use ($fullTable) {
+            return "\"{$fullTable}\".\"{$col}\"";
         }, $columns);
         return implode(',', $columns);
     }

@@ -145,3 +145,37 @@ SilverStripe\ORM\Tests\DataObjectTest\Company:
   company1:
     Name: 'Team co.'
     Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player2
+SilverStripe\ORM\Tests\DataObjectTest\Bracket:
+  final:
+    Title: 'Final'
+    Winner: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+  prefinal1:
+    Title: 'Prelim final 1'
+    Next: =>SilverStripe\ORM\Tests\DataObjectTest\Bracket.final
+    Winner: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+  prefinal2:
+    Title: 'Prelim final 2'
+    Next: =>SilverStripe\ORM\Tests\DataObjectTest\Bracket.final
+    Winner: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  semifinal1:
+    Title: 'Semi final 1'
+    Next: =>SilverStripe\ORM\Tests\DataObjectTest\Bracket.prefinal1
+    Winner: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond:
+  test1:
+    Title: 'Test 1'
+  test2:
+    Title: 'Test 2'
+  test3:
+    Title: 'Test 3'
+SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst:
+  test1:
+    Title: 'Test1'
+    ManyNext:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test2
+  test2:
+    Title: 'Test2'
+    ManyNext:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test3

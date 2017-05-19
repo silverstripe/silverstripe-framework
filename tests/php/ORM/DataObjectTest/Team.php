@@ -39,8 +39,8 @@ class Team extends DataObject implements TestOnly
     private static $has_many = array(
         'SubTeams' => SubTeam::class,
         'Comments' => TeamComment::class,
-        'Fans' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\Fan.Favourite', // Polymorphic - Team fans
-        'PlayerFans' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\Player.FavouriteTeam'
+        'Fans' => Fan::class.'.Favourite', // Polymorphic - Team fans
+        'PlayerFans' => Player::class.'.FavouriteTeam'
     );
 
     private static $many_many = array(
@@ -54,8 +54,8 @@ class Team extends DataObject implements TestOnly
     );
 
     private static $belongs_many_many = array(
-        'Sponsors' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\EquipmentCompany.SponsoredTeams',
-        'EquipmentSuppliers' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\EquipmentCompany.EquipmentCustomers'
+        'Sponsors' => EquipmentCompany::class.'.SponsoredTeams',
+        'EquipmentSuppliers' => EquipmentCompany::class.'.EquipmentCustomers'
     );
 
     private static $summary_fields = array(

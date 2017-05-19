@@ -20,7 +20,7 @@ class Company extends DataObject implements TestOnly
     ];
 
     private static $has_many = array(
-        'CurrentStaff' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\Staff.CurrentCompany',
-        'PreviousStaff' => 'SilverStripe\\ORM\\Tests\\DataObjectTest\\Staff.PreviousCompany'
+        'CurrentStaff' => Staff::class.'.CurrentCompany',
+        'PreviousStaff' => Staff::class.'.PreviousCompany'
     );
 }

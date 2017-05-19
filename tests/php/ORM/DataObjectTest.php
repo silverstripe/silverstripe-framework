@@ -51,6 +51,10 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\Ploy::class,
         DataObjectTest\Bogey::class,
         DataObjectTest\Sortable::class,
+        DataObjectTest\Bracket::class,
+        DataObjectTest\RelationParent::class,
+        DataObjectTest\RelationChildFirst::class,
+        DataObjectTest\RelationChildSecond::class,
     );
 
     protected static function getExtraDataObjects()

@@ -346,17 +346,11 @@ class ManyManyListTest extends SapphireTest
 
     public function testFilteringOnPreviouslyJoinedTable()
     {
-
-        /**
- * @var ManyManyListTest\Category $category
-*/
+        /** @var ManyManyListTest\Category $category */
         $category = $this->objFromFixture(ManyManyListTest\Category::class, 'categorya');
 
-        /**
- * @var ManyManyList $productsRelatedToProductB
-*/
-        $productsRelatedToProductB = $category->Products()->filter('RelatedProducts.Title', 'Product B');
-
+        /** @var ManyManyList $productsRelatedToProductB */
+        $productsRelatedToProductB = $category->Products()->filter('RelatedProducts.Title', 'Product A');
         $this->assertEquals(1, $productsRelatedToProductB->count());
     }
 }
