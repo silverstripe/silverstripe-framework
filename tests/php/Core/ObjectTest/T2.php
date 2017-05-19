@@ -25,8 +25,6 @@ class T2 extends Object
         $this->addMethodsFrom('failover');
         $this->addMethodsFrom('failoverArr', 0);
         $this->addMethodsFrom('failoverArr', 1);
-
-        $this->createMethod('testCreateMethod', 'return "created";');
     }
 
     public function wrappedMethod($val)
