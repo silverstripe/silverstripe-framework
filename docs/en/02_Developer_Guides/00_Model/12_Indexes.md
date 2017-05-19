@@ -29,14 +29,14 @@ descriptor. There are several supported notations:
 
 	class MyObject extends DataObject {
 
-		private static $indexes = array(
+		private static $indexes = [
 			'<column-name>' => true,
-			'<index-name>' => 'unique("<column-name>")'
-			'<index-name>' => array(
+			'<index-name>' => [
 				'type' => '<type>', 
-				'value' => '"<column-name>"'
-			),
-		);
+				'columns' => ['<column-name>', '<other-column-name>'],
+			],
+			'<index-name>' => ['<column-name>', '<other-column-name>'],
+		];
 	}
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
@@ -57,17 +57,14 @@ support the following:
 
 	class MyTestObject extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'MyField' => 'Varchar',
 			'MyOtherField' => 'Varchar',
-		);
+		];
 
-		private static $indexes = array(
-			'MyIndexName' => array(
-				'type' => 'index', 
-				'value' => '"MyField","MyOtherField"'
-			)
-		);
+		private static $indexes = [
+			'MyIndexName' => ['MyField', 'MyOtherField'],
+		];
 	}
 
 ## Complex/Composite Indexes

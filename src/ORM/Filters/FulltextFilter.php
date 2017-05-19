@@ -20,9 +20,11 @@ use Exception;
  * database table, using the {$indexes} hash in your DataObject subclass:
  *
  * <code>
- *   private static $indexes = array(
- *      'SearchFields' => 'fulltext(Name, Title, Description)'
- *   );
+ *   private static $indexes = [
+ *      'SearchFields' => [
+ *          'type' => 'fulltext',
+ *          'columns' => ['Name', 'Title', 'Description'],
+ *   ];
  * </code>
  *
  * @todo Add support for databases besides MySQL
