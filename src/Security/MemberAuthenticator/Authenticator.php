@@ -3,12 +3,10 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\ORM\ValidationResult;
 use InvalidArgumentException;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
-use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\LoginAttempt;
@@ -186,38 +184,10 @@ class Authenticator implements BaseAuthenticator
     }
 
     /**
-     *
-     * @param Member $member
-     * @return bool|Member
+     * @inherit
      */
-    public function doLogOut(&$member)
+    public function getLogoutHandler($link)
     {
-        if($member instanceof Member) {
-            Session::clear("loggedInAs");
-            if (Member::config()->login_marker_cookie) {
-                Cookie::set(Member::config()->login_marker_cookie, null, 0);
-            }
-
-            Session::destroy();
-
-            // Clears any potential previous hashes for this member
-            RememberLoginHash::clear($member, Cookie::get('alc_device'));
-
-            Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
-            Cookie::force_expiry('alc_enc');
-            Cookie::set('alc_device', null);
-            Cookie::force_expiry('alc_device');
-
-            // Switch back to live in order to avoid infinite loops when
-            // redirecting to the login screen (if this login screen is versioned)
-            Session::clear('readingMode');
-
-            // Log out unsuccessful. Useful for 3rd-party logins that return failure. Shouldn't happen
-            // on the default authenticator though.
-            if(Member::currentUserID()) {
-                return Member::currentUser();
-            }
-        }
-        return true;
+        return LogoutHandler::create($link, $this);
     }
 }

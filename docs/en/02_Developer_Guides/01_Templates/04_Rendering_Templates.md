@@ -40,7 +40,7 @@ includes [api:Controller], [api:FormField] and [api:DataObject] instances.
 ```php
 $controller->renderWith(array('MyController', 'MyBaseController'));
 
-Member::currentUser()->renderWith('Member_Profile');
+Security::getCurrentUser()->renderWith('Member_Profile');
 ```
 
 `renderWith` can be used to override the default template process. For instance, to provide an ajax version of a 

@@ -158,13 +158,13 @@ class InheritedPermissions implements PermissionChecker
     {
         switch ($permission) {
             case self::EDIT:
-                $this->canEditMultiple($ids, Member::currentUser(), false);
+                $this->canEditMultiple($ids, Security::getCurrentUser(), false);
                 break;
             case self::VIEW:
-                $this->canViewMultiple($ids, Member::currentUser(), false);
+                $this->canViewMultiple($ids, Security::getCurrentUser(), false);
                 break;
             case self::DELETE:
-                $this->canDeleteMultiple($ids, Member::currentUser(), false);
+                $this->canDeleteMultiple($ids, Security::getCurrentUser(), false);
                 break;
             default:
                 throw new InvalidArgumentException("Invalid permission type $permission");

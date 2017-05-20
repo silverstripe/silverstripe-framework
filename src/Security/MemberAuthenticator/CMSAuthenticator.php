@@ -37,5 +37,4 @@ class CMSAuthenticator extends Authenticator
     {
         return CMSLoginHandler::create($link, $this);
     }
-
 }

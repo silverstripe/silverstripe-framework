@@ -9,6 +9,7 @@ use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
 
@@ -575,7 +576,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function can($perm, $member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if (is_array($perm)) {
             $perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));

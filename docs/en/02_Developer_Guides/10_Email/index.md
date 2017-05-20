@@ -60,7 +60,7 @@ The PHP Logic..
 $email = SilverStripe\Control\Email\Email::create()
     ->setHTMLTemplate('Email\\MyCustomEmail') 
     ->setData(array(
-        'Member' => Member::currentUser(),
+        'Member' => Security::getCurrentUser(),
         'Link'=> $link,
     ))
     ->setFrom($from)

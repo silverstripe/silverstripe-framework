@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Cookie;
 use SilverStripe\i18n\i18n;
@@ -553,7 +554,6 @@ class MemberTest extends FunctionalTest
         $this->assertFalse($member->canDelete());
         $this->assertFalse($member->canEdit());
 
-        $this->addExtensions($extensions);
         $this->logOut();
     }
 
@@ -568,14 +568,11 @@ class MemberTest extends FunctionalTest
         $this->assertTrue($member2->canDelete());
         $this->assertTrue($member2->canEdit());
 
-        $this->addExtensions($extensions);
         $this->logOut();
     }
 
     public function testExtendedCan()
     {
-
-        $extensions = $this->removeExtensions(Object::get_extensions(Member::class));
         $member = $this->objFromFixture(Member::class, 'test');
 
         /* Normal behaviour is that you can't view a member unless canView() on an extension returns true */
@@ -1369,12 +1366,12 @@ class MemberTest extends FunctionalTest
 
     public function testCurrentUser()
     {
-        $this->assertNull(Member::currentUser());
+        $this->assertNull(Security::getCurrentUser());
 
         $adminMember = $this->objFromFixture(Member::class, 'admin');
         $this->logInAs($adminMember);
 
-        $userFromSession = Member::currentUser();
+        $userFromSession = Security::getCurrentUser();
         $this->assertEquals($adminMember->ID, $userFromSession->ID);
     }
 
@@ -1383,7 +1380,7 @@ class MemberTest extends FunctionalTest
      */
     public function testActAsUserPermissions()
     {
-        $this->assertNull(Member::currentUser());
+        $this->assertNull(Security::getCurrentUser());
 
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
@@ -1422,7 +1419,7 @@ class MemberTest extends FunctionalTest
      */
     public function testActAsUser()
     {
-        $this->assertNull(Member::currentUser());
+        $this->assertNull(Security::getCurrentUser());
 
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');

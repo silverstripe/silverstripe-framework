@@ -9,7 +9,7 @@ checks. Often it makes sense to centralize those checks on the model, regardless
 The API provides four methods for this purpose: `canEdit()`, `canCreate()`, `canView()` and `canDelete()`.
 
 Since they're PHP methods, they can contain arbitrary logic matching your own requirements. They can optionally receive 
-a `$member` argument, and default to the currently logged in member (through `Member::currentUser()`).
+a `$member` argument, and default to the currently logged in member (through `Security::getCurrentUser()`).
 
 <div class="notice" markdown="1">
 By default, all `DataObject` subclasses can only be edited, created and viewed by users with the 'ADMIN' permission 

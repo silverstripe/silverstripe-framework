@@ -5,6 +5,7 @@ namespace SilverStripe\Dev;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -415,11 +416,9 @@ class FunctionalTest extends SapphireTest
         Security::setCurrentUser($member);
     }
 
-
     /**
-     * Log in as the given member
+     * Log out the member
      *
-     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
      */
     public function logOut()
     {

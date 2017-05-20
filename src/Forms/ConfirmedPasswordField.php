@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
 /**
@@ -504,7 +505,7 @@ class ConfirmedPasswordField extends FormField
             }
 
             // Check this password is valid for the current user
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
             if (!$member) {
                 $validator->validationError(
                     $name,

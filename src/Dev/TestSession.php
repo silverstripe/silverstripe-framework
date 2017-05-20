@@ -38,7 +38,7 @@ class TestSession
     /**
      * Necessary to use the mock session
      * created in {@link session} in the normal controller stack,
-     * e.g. to overwrite Member::currentUser() with custom login data.
+     * e.g. to overwrite Security::getCurrentUser() with custom login data.
      *
      * @var Controller
      */

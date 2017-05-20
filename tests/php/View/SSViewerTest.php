@@ -16,6 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
@@ -406,22 +407,22 @@ SS;
         );
 
         $this->assertEquals(
-            (string)Member::currentUser(),
+            (string)Security::getCurrentUser(),
             $this->render('{$CurrentMember}'),
             'Member template functions result correct result'
         );
         $this->assertEquals(
-            (string)Member::currentUser(),
+            (string)Security::getCurrentUser(),
             $this->render('{$CurrentUser}'),
             'Member template functions result correct result'
         );
         $this->assertEquals(
-            (string)Member::currentUser(),
+            (string)Security::getCurrentUser(),
             $this->render('{$currentMember}'),
             'Member template functions result correct result'
         );
         $this->assertEquals(
-            (string)Member::currentUser(),
+            (string)Security::getCurrentUser(),
             $this->render('{$currentUser}'),
             'Member template functions result correct result'
         );

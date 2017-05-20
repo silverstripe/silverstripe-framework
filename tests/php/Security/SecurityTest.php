@@ -182,8 +182,8 @@ class SecurityTest extends FunctionalTest
     public function testAutomaticRedirectionOnLogin()
     {
         // BackURL with permission error (not authenticated) should not redirect
-        if ($member = Member::currentUser()) {
-            $member->logOut();
+        if ($member = Security::getCurrentUser()) {
+            Security::setCurrentUser(null);
         }
         $response = $this->getRecursive('SecurityTest_SecuredController');
         $this->assertContains(Convert::raw2xml("That page is secured."), $response->getBody());
@@ -228,7 +228,7 @@ class SecurityTest extends FunctionalTest
         $member = DataObject::get_one(Member::class);
 
         /* Log in with any user that we can find */
-        $this->session()->inst_set('loggedInAs', $member->ID);
+        Security::setCurrentUser($member);
 
         /* View the Security/login page */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
@@ -254,7 +254,7 @@ class SecurityTest extends FunctionalTest
         $this->assertNotNull($response->getBody(), 'There is body content on the page');
 
         /* Log the user out */
-        $this->session()->inst_set('loggedInAs', null);
+        Security::setCurrentUser(null);
     }
 
     public function testMemberIDInSessionDoesntExistInDatabaseHasToLogin()

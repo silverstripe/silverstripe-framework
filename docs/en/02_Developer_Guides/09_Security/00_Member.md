@@ -24,12 +24,12 @@ next method for testing if you just need to test.
 	}
 
 
-**Member::currentUser()**
+**Security::getCurrentUser()**
 
 Returns the full *Member* Object for the current user, returns *null* if user is not logged in.
 
 	:::php
-	if( $member = Member::currentUser() ) {
+	if( $member = Security::getCurrentUser() ) {
 		// Work with $member
 	} else {
 		// Do non-member stuff

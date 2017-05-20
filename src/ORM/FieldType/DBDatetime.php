@@ -7,6 +7,7 @@ use SilverStripe\Forms\DatetimeField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
 use Exception;
 use InvalidArgumentException;
@@ -97,7 +98,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     public function FormatFromSettings($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // Fall back to nice

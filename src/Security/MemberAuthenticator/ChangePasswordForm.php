@@ -10,7 +10,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Form;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Standard Change Password Form
@@ -36,7 +36,7 @@ class ChangePasswordForm extends Form
             // Security/changepassword?h=XXX redirects to Security/changepassword
             // without GET parameter to avoid potential HTTP referer leakage.
             // In this case, a user is not logged in, and no 'old password' should be necessary.
-            if (Member::currentUser()) {
+            if (Security::getCurrentUser()) {
                 $fields->push(new PasswordField("OldPassword", _t('SilverStripe\\Security\\Member.YOUROLDPASSWORD', "Your old password")));
             }
 

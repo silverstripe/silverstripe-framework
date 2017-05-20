@@ -39,15 +39,25 @@ interface Authenticator
     /**
      * Return RequestHandler to manage the log-in process.
      *
-     * The default URL of the RequetHandler should return the initial log-in form, any other
+     * The default URL of the RequestHandler should return the initial log-in form, any other
      * URL may be added for other steps & processing.
      *
      * URL-handling methods may return an array [ "Form" => (form-object) ] which can then
      * be merged into a default controller.
      *
-     * @param string $link The base link to use for this RequestHnadler
+     * @param string $link The base link to use for this RequestHandler
      */
     public function getLoginHandler($link);
+
+    /**
+     * Return the RequestHandler to manage the log-out process.
+     *
+     * The default URL of the RequestHandler should log the user out immediately and destroy the session.
+     *
+     * @param string $link The base link to use for this RequestHandler
+     * @return mixed
+     */
+    public function getLogOutHandler($link);
 
     /**
      * Return RequestHandler to manage the change-password process.
@@ -61,6 +71,7 @@ interface Authenticator
      * @param string $link The base link to use for this RequestHnadler
      */
     public function getChangePasswordHandler($link);
+
 
     /**
      * @todo
@@ -81,13 +92,4 @@ interface Authenticator
      * @return array
      */
 //    public function getAuthenticateFields();
-
-    /**
-     * Log the member out of this Authentication method.
-     *
-     * @param Member $member by reference, to allow for multiple actions on the member with a single write
-     * @return boolean|Member if logout was unsuccessfull, return true, otherwise, the member is returned
-     */
-    public function doLogOut(&$member);
-
 }

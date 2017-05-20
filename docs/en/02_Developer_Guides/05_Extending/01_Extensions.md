@@ -109,7 +109,7 @@ we added a `SayHi` method which is unique to our extension.
 
 **mysite/code/Page.php**
 	:::php
-	$member = Member::currentUser();
+	$member = Security::getCurrentUser();
 	echo $member->SayHi;
 
 	// "Hi Sam"
@@ -220,7 +220,7 @@ To see what extensions are currently enabled on an object, use [api:Object::getE
 
 
 	:::php
-	$member = Member::currentUser();
+	$member = Security::getCurrentUser();
 
 	print_r($member->getExtensionInstances());
 	

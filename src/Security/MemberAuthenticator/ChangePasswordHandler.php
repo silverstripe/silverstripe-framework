@@ -21,7 +21,7 @@ class ChangePasswordHandler extends FormRequestHandler
      */
     public function doChangePassword(array $data, $form)
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         // The user was logged in, check the current password
         if ($member && (
             empty($data['OldPassword']) ||

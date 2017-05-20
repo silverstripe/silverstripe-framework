@@ -17,6 +17,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Security\Security;
 
 class GridFieldEditButtonTest extends SapphireTest
 {
@@ -62,8 +63,8 @@ class GridFieldEditButtonTest extends SapphireTest
 
     public function testShowEditLinks()
     {
-        if (Member::currentUser()) {
-            Member::currentUser()->logOut();
+        if (Security::getCurrentUser()) {
+            Security::getCurrentUser()->logOut();
         }
 
         $content = new CSSContentParser($this->gridField->FieldHolder());

@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Security;
 
+use Exception;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -15,13 +17,16 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
 
     use Configurable;
 
+    /**
+     * @return array|IdentityStore[]
+     */
     protected function getHandlers()
     {
         return array_map(
             function ($identifier) {
                 return Injector::inst()->get($identifier);
             },
-            $this->config()->get('handlers')
+            static::config()->get('handlers')
         );
     }
 
@@ -31,6 +36,7 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
     {
         try {
+            /** @var AuthenticationHandler $handler */
             foreach ($this->getHandlers() as $handler) {
                 // @todo Update requestfilter logic to allow modification of initial response
                 // in order to add cookies, etc
@@ -41,7 +47,7 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
                     break;
                 }
             }
-        } catch (ValidationException $e) {
+        } catch (Exception $e) { // There's no valid exception currently. I would say AuthenticationException?
             throw new HTTPResponse_Exception(
                 "Bad log-in details: " . $e->getMessage(),
                 400

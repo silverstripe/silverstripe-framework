@@ -9,6 +9,7 @@ use SilverStripe\Security\InheritedPermissions;
 use SilverStripe\Security\InheritedPermissionsExtension;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PermissionChecker;
+use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 
 /**
@@ -45,7 +46,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     public function canEdit($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         return static::getInheritedPermissions()->canEdit($this->ID, $member);
     }
@@ -53,7 +54,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     public function canView($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         return static::getInheritedPermissions()->canView($this->ID, $member);
     }
@@ -61,7 +62,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     public function canDelete($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         return static::getInheritedPermissions()->canDelete($this->ID, $member);
     }

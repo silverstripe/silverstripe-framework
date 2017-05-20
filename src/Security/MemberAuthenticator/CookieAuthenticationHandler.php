@@ -2,10 +2,8 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Security\AuthenticationHandler as AuthenticationHandlerInterface;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\RememberLoginHash;
@@ -19,8 +17,19 @@ use SilverStripe\Control\Cookie;
 class CookieAuthenticationHandler implements AuthenticationHandlerInterface, IdentityStore
 {
 
+    /**
+     * @var string
+     */
     private $deviceCookieName;
+
+    /**
+     * @var string
+     */
     private $tokenCookieName;
+
+    /**
+     * @var IdentityStore
+     */
     private $cascadeLogInTo;
 
     /**
@@ -36,7 +45,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     /**
      * Set the name of the cookie used to track this device
      *
-     * @param string $cookieName
+     * @param $deviceCookieName
      * @return null
      */
     public function setDeviceCookieName($deviceCookieName)
@@ -57,7 +66,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     /**
      * Set the name of the cookie used to store an login token
      *
-     * @param string $cookieName
+     * @param $tokenCookieName
      * @return null
      */
     public function setTokenCookieName($tokenCookieName)
@@ -213,11 +222,17 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
      */
     public function logOut(HTTPRequest $request)
     {
+        $member = Security::getCurrentUser();
+        if ($member) {
+            RememberLoginHash::clear($member, Cookie::get('alc_device'));
+        }
         // @todo couple the cookies to the response object
 
         Cookie::set($this->getTokenCookieName(), null);
         Cookie::set($this->getDeviceCookieName(), null);
         Cookie::force_expiry($this->getTokenCookieName());
         Cookie::force_expiry($this->getDeviceCookieName());
+
+        Security::setCurrentUser(null);
     }
 }

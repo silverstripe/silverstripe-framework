@@ -8,6 +8,7 @@ use SilverStripe\Forms\TimeField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -153,7 +154,7 @@ class DBTime extends DBField
     public function FormatFromSettings($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // Fall back to nice

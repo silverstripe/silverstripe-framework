@@ -476,7 +476,7 @@ class Group extends DataObject
     public function canEdit($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // extended access checks
@@ -512,7 +512,7 @@ class Group extends DataObject
     public function canView($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // extended access checks
@@ -534,7 +534,7 @@ class Group extends DataObject
     public function canDelete($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // extended access checks

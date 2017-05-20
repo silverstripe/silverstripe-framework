@@ -10,11 +10,10 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationException;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\FieldList;
@@ -67,8 +66,8 @@ class GridFieldDeleteActionTest extends SapphireTest
 
     public function testDontShowDeleteButtons()
     {
-        if (Member::currentUser()) {
-            Member::currentUser()->logOut();
+        if (Security::getCurrentUser()) {
+            Security::setCurrentUser(null);
         }
         $content = new CSSContentParser($this->gridField->FieldHolder());
         // Check that there are content
@@ -116,8 +115,8 @@ class GridFieldDeleteActionTest extends SapphireTest
 
     public function testDeleteActionWithoutCorrectPermission()
     {
-        if (Member::currentUser()) {
-            Member::currentUser()->logOut();
+        if (Security::getCurrentUser()) {
+            Security::setCurrentUser(null);
         }
         $this->setExpectedException(ValidationException::class);
 

@@ -82,7 +82,7 @@ PHP
     protected function redirectAfterSuccessfulLogin()
     {
         // Check password expiry
-        if (Member::currentUser()->isPasswordExpired()) {
+        if (Security::getCurrentUser()->isPasswordExpired()) {
             // Redirect the user to the external password change form if necessary
             return $this->redirectToChangePassword();
         }

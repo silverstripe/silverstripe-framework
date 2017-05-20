@@ -2,11 +2,14 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Core\Injector\Injector;
 
@@ -51,15 +54,16 @@ class BasicAuth
      *
      * Used by {@link Controller::init()}.
      *
-     * @throws HTTPResponse_Exception
      *
+     * @param HTTPRequest $request
      * @param string $realm
      * @param string|array $permissionCode Optional
      * @param boolean $tryUsingSessionLogin If true, then the method with authenticate against the
      *  session log-in if those credentials are disabled.
-     * @return Member|bool $member
+     * @return bool|Member
+     * @throws HTTPResponse_Exception
      */
-    public static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true)
+    public static function requireLogin(HTTPRequest $request, $realm, $permissionCode = null, $tryUsingSessionLogin = true)
     {
         $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
         if (!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
@@ -74,28 +78,32 @@ class BasicAuth
 		 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
 		 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 		 */
-        $authHeader = (isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] :
-                  (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : null));
+        $authHeader = $request->getHeader('Authorization');
         $matches = array();
         if ($authHeader && preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
             list($name, $password) = explode(':', base64_decode($matches[1]));
-            $_SERVER['PHP_AUTH_USER'] = strip_tags($name);
-            $_SERVER['PHP_AUTH_PW'] = strip_tags($password);
+            $request->addHeader('PHP_AUTH_USER', strip_tags($name));
+            $request->addHeader('PHP_AUTH_PW', strip_tags($password));
         }
 
         $member = null;
-        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+
+        if ($request->getHeader('PHP_AUTH_USER') && $request->getHeader('PHP_AUTH_PW')) {
             /** @var Authenticator $authenticator */
             $authenticator = Injector::inst()->get(Authenticator::class);
 
             $member = $authenticator->authenticate([
-                'Email' => $_SERVER['PHP_AUTH_USER'],
-                'Password' => $_SERVER['PHP_AUTH_PW'],
+                'Email' => $request->getHeader('PHP_AUTH_USER'),
+                'Password' => $request->getHeader('PHP_AUTH_PW'),
             ], $dummy);
         }
 
+        if($member) {
+            Security::setCurrentUser($member);
+        }
+
         if (!$member && $tryUsingSessionLogin) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // If we've failed the authentication mechanism, then show the login form
@@ -103,7 +111,7 @@ class BasicAuth
             $response = new HTTPResponse(null, 401);
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
-            if (isset($_SERVER['PHP_AUTH_USER'])) {
+            if ($request->getHeader('PHP_AUTH_USER')) {
                 $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
             } else {
                 $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ENTERINFO', "Please enter a username and password."));
@@ -119,7 +127,7 @@ class BasicAuth
             $response = new HTTPResponse(null, 401);
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
-            if (isset($_SERVER['PHP_AUTH_USER'])) {
+            if ($request->getHeader('PHP_AUTH_USER')) {
                 $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTADMIN', "That user is not an administrator."));
             }
 
@@ -152,9 +160,9 @@ class BasicAuth
      */
     public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
     {
-        Config::inst()->update(self::class, 'entire_site_protected', $protect);
-        Config::inst()->update(self::class, 'entire_site_protected_code', $code);
-        Config::inst()->update(self::class, 'entire_site_protected_message', $message);
+        Config::modify()->set(self::class, 'entire_site_protected', $protect);
+        Config::modify()->set(self::class, 'entire_site_protected_code', $code);
+        Config::modify()->set(self::class, 'entire_site_protected_message', $message);
     }
 
     /**
@@ -167,8 +175,14 @@ class BasicAuth
     public static function protect_site_if_necessary()
     {
         $config = Config::forClass(BasicAuth::class);
-        if ($config->entire_site_protected) {
-            self::requireLogin($config->entire_site_protected_message, $config->entire_site_protected_code, false);
+        $request = Controller::curr()->getRequest();
+        if ($config->get('entire_site_protected')) {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            static::requireLogin(
+                $request,
+                $config->get('entire_site_protected_message'),
+                $config->get('entire_site_protected_code'),
+                false);
         }
     }
 }

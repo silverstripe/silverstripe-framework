@@ -22,11 +22,13 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Connect\Database;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -231,6 +233,11 @@ class Security extends Controller implements TemplateGlobalProvider
     protected static $default_authenticator = MemberAuthenticator\Authenticator::class;
 
     /**
+     * @var Member Currently logged in user (if available)
+     */
+    private static $currentUser;
+
+    /**
      * @inheritdoc
      */
     protected function init()
@@ -262,7 +269,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * Get the selected authenticator for this request
      *
      * @param $name string The identifier of the authenticator in your config
-     * @return string Class name of Authenticator
+     * @return Authenticator Class name of Authenticator
      * @throws LogicException
      */
     protected function getAuthenticator($name)
@@ -287,15 +294,16 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         $authenticators = self::config()->get('authenticators');
 
-        foreach($authenticators as $name => &$class) {
+        foreach ($authenticators as $name => &$class) {
             /** @var Authenticator $authenticator */
             $authenticator = Injector::inst()->get($class);
-            if($authenticator->supportedServices() & $service) {
+            if ($authenticator->supportedServices() & $service) {
                 $class = $authenticator;
             } else {
                 unset($authenticators[$name]);
             }
         }
+
         return $authenticators;
     }
 
@@ -348,7 +356,7 @@ class Security extends Controller implements TemplateGlobalProvider
         if (Director::is_ajax()) {
             $response = ($controller) ? $controller->getResponse() : new HTTPResponse();
             $response->setStatusCode(403);
-            if (!Member::currentUser()) {
+            if (!static::getCurrentUser()) {
                 $response->setBody(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
                 $response->setStatusDescription(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
                 // Tell the CMS to allow re-aunthentication
@@ -384,7 +392,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $messageSet = array('default' => $messageSet);
         }
 
-        $member = Member::currentUser();
+        $member = static::getCurrentUser();
 
         // Work out the right message to show
         if ($member && $member->exists()) {
@@ -427,8 +435,6 @@ class Security extends Controller implements TemplateGlobalProvider
             "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
         ));
     }
-
-    private static $currentUser;
 
     public static function setCurrentUser($currentUser)
     {
@@ -498,36 +504,22 @@ class Security extends Controller implements TemplateGlobalProvider
     public function logout($redirect = true)
     {
         $this->extend('beforeMemberLoggedOut');
-        $request = $this->getRequest();
-        $member = Member::currentUser();
-        // Reasoning for (now) to not go with a full LoginHandler call, is to not make it circular
-        // re-sending the request forward to the authenticator. In the case of logout, I think it would be
-        // overkill.
-        if (($name = $request->param('ID')) && self::hasAuthenticator($request->param('ID'))){
+        $member = static::getCurrentUser();
+
+        if ($member) { // If we don't have a member, there's not much to log out.
             /** @var Authenticator $authenticator */
-            $authenticator = $this->getAuthenticator($request->param('ID'));
-            if($authenticator->doLogOut($member) !== true) {
+            $authenticator = $this->getAuthenticator('default'); // Always use the default authenticator to log out
+            $handler = $authenticator->getLogOutHandler(Controller::join_links($this->Link(), 'logout'));
+            $result = $this->delegateToHandler($handler, 'default', []);
+            if ($result !== true) {
                 $this->extend('failureMemberLoggedOut', $authenticator);
+
                 return $this->redirectBack();
             }
             $this->extend('successMemberLoggedOut', $authenticator);
-        } else {
-            $authenticators = static::getAuthenticators(Authenticator::LOGOUT);
-            /**
-             * @var string $name
-             * @var Authenticator $authenticator
-             */
-            foreach ($authenticators as $name => $authenticator) {
-                if ($authenticator->logOut($member) !== true) {
-                    $this->extend('failureMemberLoggedOut', $authenticator);
-                    // Break on first log out failure(?)
-                    return $this->redirectBack();
-                }
-                $this->extend('successMemberLoggedOut', $authenticator);
-            }
+            // Member is successfully logged out. Write possible changes to the database.
+            $member->write();
         }
-        // Member is successfully logged out. Write possible changes to the database.
-        $member->write();
         $this->extend('afterMemberLoggedOut');
 
         if ($redirect && (!$this->getResponse()->isFinished())) {
@@ -568,7 +560,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // where the user has permissions to continue but is not given the option.
         if ($this->getRequest()->requestVar('BackURL')
             && !$this->getLoginMessage()
-            && ($member = Member::currentUser())
+            && ($member = static::getCurrentUser())
             && $member->exists()
         ) {
             return $this->redirectBack();
@@ -611,7 +603,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Combine the given forms into a formset with a tabbed interface
      *
-     * @param array $authenticators List of Authenticator instances
+     * @param $forms
      * @return string
      */
     protected function generateLoginFormSet($forms)
@@ -772,7 +764,6 @@ class Security extends Controller implements TemplateGlobalProvider
             ],
             $templates
         );
-
     }
 
     /**
@@ -833,8 +824,8 @@ class Security extends Controller implements TemplateGlobalProvider
 
     public function basicauthlogin()
     {
-        $member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
-        $member->logIn();
+        $member = BasicAuth::requireLogin($this->getRequest(), "SilverStripe login", 'ADMIN');
+        static::setCurrentUser($member);
     }
 
     /**
@@ -888,8 +879,10 @@ class Security extends Controller implements TemplateGlobalProvider
             // On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
 
             // if there is a current member, they should be logged out
-            if ($curMember = Member::currentUser()) {
-                $curMember->logOut();
+            if ($curMember = static::getCurrentUser()) {
+                /** @var LogoutHandler $handler */
+                $handler = $this->getAuthenticator('default')->getLogoutHandler($this->Link('logout'));
+                $handler->doLogOut($curMember);
             }
 
             // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
@@ -905,7 +898,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 ),
                 'Form' => $this->ChangePasswordForm(),
             ));
-        } elseif (Member::currentUser()) {
+        } elseif (static::getCurrentUser()) {
             // Logged in user requested a password change form.
             $customisedController = $controller->customise(array(
                 'Content' => DBField::create_field(
@@ -1112,6 +1105,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Check that the default admin account has been set.
+     * @todo Check if we _actually_ only want this to work on dev
      */
     public static function has_default_admin()
     {
@@ -1354,6 +1348,8 @@ class Security extends Controller implements TemplateGlobalProvider
             "LoginURL" => "login_url",
             "LogoutURL" => "logout_url",
             "LostPasswordURL" => "lost_password_url",
+            "CurrentMember" => "getCurrentUser",
+            "currentUser" => "getCurrentUser"
         );
     }
 }

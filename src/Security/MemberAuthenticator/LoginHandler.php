@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
@@ -17,6 +18,9 @@ use SilverStripe\Security\IdentityStore;
  */
 class LoginHandler extends RequestHandler
 {
+    /**
+     * @var Authenticator
+     */
     protected $authenticator;
 
     private static $url_handlers = [
@@ -33,11 +37,10 @@ class LoginHandler extends RequestHandler
     private static $allowed_actions = [
         'login',
         'LoginForm',
-        'dologin',
         'logout',
     ];
 
-    private $link = null;
+    private $link;
 
     /**
      * @param string $link The URL to recreate this request handler
@@ -53,15 +56,16 @@ class LoginHandler extends RequestHandler
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
+     * @param null $action
      * @return string
      */
     public function link($action = null)
     {
         if ($action) {
             return Controller::join_links($this->link, $action);
-        } else {
-            return $this->link;
         }
+
+        return $this->link;
     }
 
     /**
@@ -89,7 +93,7 @@ class LoginHandler extends RequestHandler
     /**
      * Login form handler method
      *
-     * This method is called when the user clicks on "Log in"
+     * This method is called when the user finishes the login flow
      *
      * @param array $data Submitted data
      * @param LoginForm $form
@@ -102,6 +106,7 @@ class LoginHandler extends RequestHandler
         // Successful login
         if ($member = $this->checkLogin($data, $failureMessage)) {
             $this->performLogin($member, $data, $form->getRequestHandler()->getRequest());
+
             return $this->redirectAfterSuccessfulLogin();
         }
 
@@ -118,7 +123,6 @@ class LoginHandler extends RequestHandler
         // Fail to login redirects back to form
         return $form->getRequestHandler()->redirectBackToForm();
     }
-
 
     public function getReturnReferer()
     {
@@ -137,7 +141,6 @@ class LoginHandler extends RequestHandler
      *   [Optional: 'Remember' => 1 ]
      * )
      *
-     * @param array $data
      * @return HTTPResponse
      */
     protected function redirectAfterSuccessfulLogin()
@@ -145,7 +148,7 @@ class LoginHandler extends RequestHandler
         Session::clear('SessionForms.MemberLoginForm.Email');
         Session::clear('SessionForms.MemberLoginForm.Remember');
 
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         if ($member->isPasswordExpired()) {
             return $this->redirectToChangePassword();
         }
@@ -167,7 +170,7 @@ class LoginHandler extends RequestHandler
             // Welcome message
             $message = _t(
                 'SilverStripe\\Security\\Member.WELCOMEBACK',
-                "Welcome Back, {firstname}",
+                'Welcome Back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
             Security::setLoginMessage($message, ValidationResult::TYPE_GOOD);
@@ -178,25 +181,10 @@ class LoginHandler extends RequestHandler
     }
 
     /**
-     * Log out form handler method
-     *
-     * This method is called when the user clicks on "logout" on the form
-     * created when the parameter <i>$checkCurrentUser</i> of the
-     * {@link __construct constructor} was set to TRUE and the user was
-     * currently logged in.
-     *
-     * @return HTTPResponse
-     */
-    public function logout()
-    {
-        Security::singleton()->logout();
-        return $this->redirectBack();
-    }
-
-    /**
      * Try to authenticate the user
      *
      * @param array $data Submitted data
+     * @param string $message
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
@@ -206,19 +194,19 @@ class LoginHandler extends RequestHandler
         $member = $this->authenticator->authenticate($data, $message);
         if ($member) {
             return $member;
-
-        } else {
-            // No member, can't login
-            $this->extend('authenticationFailed', $data);
-            return null;
-
         }
+        // No member, can't login
+        $this->extend('authenticationFailed', $data);
+
+        return null;
     }
 
     /**
      * Try to authenticate the user
      *
+     * @param Member $member
      * @param array $data Submitted data
+     * @param HTTPRequest $request
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
@@ -226,8 +214,10 @@ class LoginHandler extends RequestHandler
     {
         // @todo pass request/response
         Injector::inst()->get(IdentityStore::class)->logIn($member, !empty($data['Remember']), $request);
+
         return $member;
     }
+
     /**
      * Invoked if password is expired and must be changed
      *
@@ -242,13 +232,15 @@ class LoginHandler extends RequestHandler
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');
+
         return $this->redirect($this->addBackURLParam($changedPasswordLink));
     }
 
 
-
     /**
      * @todo copypaste from FormRequestHandler - refactor
+     * @param string $link
+     * @return string
      */
     protected function addBackURLParam($link)
     {
@@ -256,6 +248,7 @@ class LoginHandler extends RequestHandler
         if ($backURL) {
             return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
         }
+
         return $link;
     }
 }

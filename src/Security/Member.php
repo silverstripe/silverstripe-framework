@@ -57,7 +57,7 @@ use DateTime;
  * @property string $DateFormat
  * @property string $TimeFormat
  */
-class Member extends DataObject implements TemplateGlobalProvider
+class Member extends DataObject
 {
 
     private static $db = array(
@@ -717,6 +717,8 @@ class Member extends DataObject implements TemplateGlobalProvider
     /**
      * Returns the current logged in user
      *
+     * @deprecated use Security::getCurrentUser()
+     *
      * @return Member
      */
     public static function currentUser()
@@ -758,6 +760,8 @@ class Member extends DataObject implements TemplateGlobalProvider
 
     /**
      * Get the ID of the current logged in user
+     *
+     * @deprecated use Security::getCurrentUser()
      *
      * @return int Returns the ID of the current logged in user or 0.
      */
@@ -1077,7 +1081,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             foreach ($format['columns'] as $col) {
                 $values[] = $this->getField($col);
             }
-            return join($format['sep'], $values);
+            return implode($format['sep'], $values);
         }
         if ($this->getField('ID') === 0) {
             return $this->getField('Surname');
@@ -1491,7 +1495,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         //get member
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1522,7 +1526,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         //get member
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1556,7 +1560,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function canDelete($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1685,13 +1689,5 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // If can't find a suitable editor, just default to cms
         return $currentName ? $currentName : 'cms';
-    }
-
-    public static function get_template_global_variables()
-    {
-        return array(
-            'CurrentMember' => 'currentUser',
-            'currentUser',
-        );
     }
 }
