@@ -67,12 +67,12 @@ class TreeDropdownField extends FormField
     private static $allowed_actions = array(
         'tree'
     );
-    
+
     /**
      * @var string
      */
     protected $emptyString = null;
-    
+
     /**
      * @var bool
      */
@@ -429,7 +429,11 @@ class TreeDropdownField extends FormField
                     continue;
                 }
 
-                $markingSet->markToExpose($this->objectForKey($value));
+                $object = $this->objectForKey($value);
+                if (!$object) {
+                    continue;
+                }
+                $markingSet->markToExpose($object);
             }
         }
 
@@ -636,7 +640,7 @@ class TreeDropdownField extends FormField
         $copy->setSourceObject($this->sourceObject);
         return $copy;
     }
-    
+
     /**
      * @param string|FormField $classOrCopy
      * @return FormField
@@ -644,11 +648,11 @@ class TreeDropdownField extends FormField
     public function castedCopy($classOrCopy)
     {
         $field = $classOrCopy;
-        
+
         if (!is_object($field)) {
             $field = new $classOrCopy($this->name, $this->title, $this->sourceObject);
         }
-    
+
         return parent::castedCopy($field);
     }
 
@@ -678,10 +682,10 @@ class TreeDropdownField extends FormField
         $data['data']['urlTree'] = $this->Link('tree');
         $data['data']['emptyString'] = $this->getEmptyString();
         $data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
-        
+
         return $data;
     }
-    
+
     /**
      * @param boolean $bool
      * @return self Self reference
@@ -691,7 +695,7 @@ class TreeDropdownField extends FormField
         $this->hasEmptyDefault = $bool;
         return $this;
     }
-    
+
     /**
      * @return bool
      */
@@ -699,7 +703,7 @@ class TreeDropdownField extends FormField
     {
         return $this->hasEmptyDefault;
     }
-    
+
     /**
      * Set the default selection label, e.g. "select...".
      * Defaults to an empty string. Automatically sets
@@ -714,7 +718,7 @@ class TreeDropdownField extends FormField
         $this->emptyString = $string;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -723,7 +727,7 @@ class TreeDropdownField extends FormField
         if ($this->emptyString !== null) {
             return $this->emptyString;
         }
-        
+
         $item = DataObject::singleton($this->sourceObject);
         $emptyString = _t(
             'SilverStripe\\Forms\\DropdownField.CHOOSE_MODEL',
