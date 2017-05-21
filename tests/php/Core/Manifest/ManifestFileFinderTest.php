@@ -105,6 +105,7 @@ class ManifestFileFinderTest extends SapphireTest
             $finder,
             dirname(__FILE__) . '/fixtures/manifestfilefinder_rootconfigfolder',
             array(
+                '_config/config.yml',
                 'code/code.txt',
             )
         );
