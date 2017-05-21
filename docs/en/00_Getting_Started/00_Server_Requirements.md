@@ -13,6 +13,17 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
    we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 5.6 support may be dropped in a 4.x minor release after December 2018.
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
+ * PHP requires a suitable CSPRNG (random number generator) source for generating random tokens, password salts etc. This can be any of the following, and most operating systems will have at least one source available:
+   * PHP 7 `random_bytes()`:
+     * `CryptGenRandom` (Windows only)
+     * `arc4random_buf` (OpenBSD & NetBSD only)
+     * `getrandom(2)` (Linux only)
+     * `/dev/urandom`
+   * PHP 5 [`random_compat`](https://github.com/paragonie/random_compat) polyfill:
+     * libsodium
+     * `/dev/urandom`
+     * [`mcrypt_create_iv()`](http://php.net/manual/en/function.mcrypt-create-iv.php)
+     * CAPICOM Utilities (`CAPICOM.Utilities.1`, Windows only)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
  * Recommended configuration
 
