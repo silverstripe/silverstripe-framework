@@ -19,7 +19,7 @@ class Collector extends i18nTextCollector implements TestOnly
 
     public function getFileListForModule_Test($modulename)
     {
-        $module = ModuleLoader::instance()->getManifest()->getModule($modulename);
+        $module = ModuleLoader::inst()->getManifest()->getModule($modulename);
         if (!$module) {
             throw new \BadMethodCallException("No module named {$modulename}");
         }

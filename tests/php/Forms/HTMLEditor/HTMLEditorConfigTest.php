@@ -101,7 +101,7 @@ class HTMLEditorConfigTest extends SapphireTest
 
     public function testPluginCompression()
     {
-        $module = ModuleLoader::instance()->getManifest()->getModule('silverstripe/admin');
+        $module = ModuleLoader::inst()->getManifest()->getModule('silverstripe/admin');
         if (!$module) {
             $this->markTestSkipped('No silverstripe/admin module loaded');
         }
@@ -191,7 +191,7 @@ class HTMLEditorConfigTest extends SapphireTest
     public function testExceptionThrownWhenTinyMCEPathCannotBeComputed()
     {
         TinyMCEConfig::config()->remove('base_dir');
-        ModuleLoader::instance()->pushManifest(new ModuleManifest(
+        ModuleLoader::inst()->pushManifest(new ModuleManifest(
             dirname(__FILE__),
             false
         ));
@@ -204,7 +204,7 @@ class HTMLEditorConfigTest extends SapphireTest
 
         $c->getScriptURL();
 
-        ModuleLoader::instance()->popManifest();
+        ModuleLoader::inst()->popManifest();
     }
 
     public function testExceptionThrownWhenTinyMCEGZipPathDoesntExist()

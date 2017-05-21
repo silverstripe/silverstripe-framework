@@ -1310,7 +1310,7 @@ class Requirements_Backend
             throw new Exception(
                 sprintf(
                     'Cannot minify files without a minification service defined.
-        			Set %s::minifyCombinedFiles to false, or inject a %s service on 
+        			Set %s::minifyCombinedFiles to false, or inject a %s service on
         			%s.properties.minifier',
                     __CLASS__,
                     Requirements_Minifier::class,
@@ -1435,7 +1435,7 @@ class Requirements_Backend
      */
     public function themedCSS($name, $media = null)
     {
-        $path = ThemeResourceLoader::instance()->findThemedCSS($name, SSViewer::get_themes());
+        $path = ThemeResourceLoader::inst()->findThemedCSS($name, SSViewer::get_themes());
         if ($path) {
             $this->css($path, $media);
         } else {
@@ -1459,7 +1459,7 @@ class Requirements_Backend
      */
     public function themedJavascript($name, $type = null)
     {
-        $path = ThemeResourceLoader::instance()->findThemedJavascript($name, SSViewer::get_themes());
+        $path = ThemeResourceLoader::inst()->findThemedJavascript($name, SSViewer::get_themes());
         if ($path) {
             $opts = [];
             if ($type) {

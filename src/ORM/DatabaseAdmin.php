@@ -125,7 +125,7 @@ class DatabaseAdmin extends Controller
         increase_time_limit_to(600);
 
         // Get all our classes
-        ClassLoader::instance()->getManifest()->regenerate();
+        ClassLoader::inst()->getManifest()->regenerate();
 
         $url = $this->getReturnURL();
         if ($url) {

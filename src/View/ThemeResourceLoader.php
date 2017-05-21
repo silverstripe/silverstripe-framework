@@ -29,7 +29,7 @@ class ThemeResourceLoader
     /**
      * @return ThemeResourceLoader
      */
-    public static function instance()
+    public static function inst()
     {
         return self::$instance ? self::$instance : self::$instance = new self();
     }
@@ -123,7 +123,7 @@ class ThemeResourceLoader
             $package = $parts[0];
 
             // Find matching module for this package
-            $module = ModuleLoader::instance()->getManifest()->getModule($package);
+            $module = ModuleLoader::inst()->getManifest()->getModule($package);
             if ($module) {
                 $modulePath = $module->getRelativePath();
             } else {

@@ -35,7 +35,7 @@ abstract class Config
      */
     public static function inst()
     {
-        return ConfigLoader::instance()->getManifest();
+        return ConfigLoader::inst()->getManifest();
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class Config
     {
         // Clone current config and nest
         $new = self::inst()->nest();
-        ConfigLoader::instance()->pushManifest($new);
+        ConfigLoader::inst()->pushManifest($new);
         return $new;
     }
 
@@ -86,7 +86,7 @@ abstract class Config
     public static function unnest()
     {
         // Unnest unless we would be left at 0 manifests
-        $loader = ConfigLoader::instance();
+        $loader = ConfigLoader::inst();
         if ($loader->countManifests() < 2) {
             user_error(
                 "Unable to unnest root Config, please make sure you don't have mis-matched nest/unnest",

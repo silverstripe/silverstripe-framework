@@ -183,7 +183,7 @@ class i18nTextCollector
 
             // Clean sorting prior to writing
             ksort($entities);
-            $module = ModuleLoader::instance()->getManifest()->getModule($moduleName);
+            $module = ModuleLoader::inst()->getManifest()->getModule($moduleName);
             $this->write($module, $entities);
         }
     }
@@ -211,7 +211,7 @@ class i18nTextCollector
         if (!empty($restrictToModules)) {
             // Normalise module names
             $modules = array_filter(array_map(function ($name) {
-                $module = ModuleLoader::instance()->getManifest()->getModule($name);
+                $module = ModuleLoader::inst()->getManifest()->getModule($name);
                 return $module ? $module->getName() : null;
             }, $restrictToModules));
             // Remove modules
@@ -328,7 +328,7 @@ class i18nTextCollector
     protected function findModuleForClass($class)
     {
         if (ClassInfo::exists($class)) {
-            $module = ClassLoader::instance()
+            $module = ClassLoader::inst()
                 ->getManifest()
                 ->getOwnerModule($class);
             if ($module) {
@@ -344,12 +344,12 @@ class i18nTextCollector
         // Find FQN that ends with $class
         $classes = preg_grep(
             '/'.preg_quote("\\{$class}", '\/').'$/i',
-            ClassLoader::instance()->getManifest()->getClassNames()
+            ClassLoader::inst()->getManifest()->getClassNames()
         );
 
         // Find all modules for candidate classes
         $modules = array_unique(array_map(function ($class) {
-            $module = ClassLoader::instance()->getManifest()->getOwnerModule($class);
+            $module = ClassLoader::inst()->getManifest()->getOwnerModule($class);
             return $module ? $module->getName() : null;
         }, $classes));
 
@@ -395,7 +395,7 @@ class i18nTextCollector
     {
         // A master string tables array (one mst per module)
         $entitiesByModule = array();
-        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // we store the master string tables
             $processedEntities = $this->processModule($module);
@@ -417,7 +417,7 @@ class i18nTextCollector
                 // Rewrite spec if module is specified
                 if (is_array($spec) && isset($spec['module'])) {
                     // Normalise name (in case non-composer name is specified)
-                    $specModule = ModuleLoader::instance()->getManifest()->getModule($spec['module']);
+                    $specModule = ModuleLoader::inst()->getManifest()->getModule($spec['module']);
                     if ($specModule) {
                         $specModuleName = $specModule->getName();
                     }

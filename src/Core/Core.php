@@ -82,23 +82,23 @@ $manifestCacheFactory = new ManifestCacheFactory([
 $manifest = new ClassManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
 
 // Register SilverStripe's class map autoload
-$loader = ClassLoader::instance();
+$loader = ClassLoader::inst();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
 // Init module manifest
 $moduleManifest = new ModuleManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
-ModuleLoader::instance()->pushManifest($moduleManifest);
+ModuleLoader::inst()->pushManifest($moduleManifest);
 
 // Build config manifest
 $configManifest = CoreConfigFactory::inst()->createRoot($flush, $manifestCacheFactory);
-ConfigLoader::instance()->pushManifest($configManifest);
+ConfigLoader::inst()->pushManifest($configManifest);
 
 // After loading config, boot _config.php files
-ModuleLoader::instance()->getManifest()->activateConfig();
+ModuleLoader::inst()->getManifest()->activateConfig();
 
 // Load template manifest
-SilverStripe\View\ThemeResourceLoader::instance()->addSet('$default', new SilverStripe\View\ThemeManifest(
+SilverStripe\View\ThemeResourceLoader::inst()->addSet('$default', new SilverStripe\View\ThemeManifest(
     BASE_PATH,
     project(),
     false,

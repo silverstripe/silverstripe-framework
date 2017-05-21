@@ -35,7 +35,7 @@ class Sources implements Resettable
     public function getSortedModules()
     {
         // Get list of module => path pairs, and then just the names
-        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         $moduleNames = array_keys($modules);
 
         // Remove the "project" module from the list - we'll add it back specially later if needed
@@ -100,7 +100,7 @@ class Sources implements Resettable
         }
 
         // Search theme dirs (receives relative paths)
-        $locator = ThemeResourceLoader::instance();
+        $locator = ThemeResourceLoader::inst();
         foreach (SSViewer::get_themes() as $theme) {
             if ($locator->getSet($theme)) {
                 continue;

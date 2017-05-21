@@ -49,7 +49,7 @@ class ErrorControlChainTest_Chain extends ErrorControlChain
     {
         // Get the path to the ErrorControlChain class
         $erroControlClass = 'SilverStripe\\Core\\Startup\\ErrorControlChain';
-        $classpath = ClassLoader::instance()->getItemPath($erroControlClass);
+        $classpath = ClassLoader::inst()->getItemPath($erroControlClass);
         $suppression = $this->suppression ? 'true' : 'false';
 
         // Start building a PHP file that will execute the chain
