@@ -66,6 +66,7 @@ class ManifestFileFinder extends FileFinder
             && !file_exists($pathname . '/' . self::CONFIG_DIR)
             && $basename !== self::CONFIG_DIR // include a root config dir
             && !file_exists("$pathname/../" . self::CONFIG_DIR) // include all paths if a root config dir exists
+            && !file_exists("$pathname/../" . self::CONFIG_FILE)// include all paths if a root config file exists
         );
 
         if ($lackingConfig) {
