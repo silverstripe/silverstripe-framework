@@ -114,6 +114,17 @@ class DropdownField extends SingleSelectField
     }
 
     /**
+     * A required DropdownField must have a user selected attribute,
+     * so require an empty default for a required field
+     *
+     * @return bool
+     */
+    public function getHasEmptyDefault()
+    {
+        return parent::getHasEmptyDefault() || $this->Required();
+    }
+
+    /**
      * @param array $properties
      * @return string
      */

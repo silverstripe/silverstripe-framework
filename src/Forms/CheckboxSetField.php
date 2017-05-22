@@ -104,4 +104,18 @@ class CheckboxSetField extends MultiSelectField
     {
         return 'optionset checkboxset';
     }
+
+    public function getAttributes()
+    {
+        $attributes = array_merge(
+            parent::getAttributes(),
+            array('role' => 'listbox')
+        );
+
+        // Remove invalid attributes from wrapper.
+        unset($attributes['name']);
+        unset($attributes['required']);
+        unset($attributes['aria-required']);
+        return $attributes;
+    }
 }

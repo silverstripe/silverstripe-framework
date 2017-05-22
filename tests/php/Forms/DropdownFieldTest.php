@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
@@ -497,5 +498,20 @@ class DropdownFieldTest extends SapphireTest
         $field->setDisabledItems(array('Five'));
         $field->setValue('Five');
         $this->assertFalse($field->validate($validator));
+    }
+
+    /**
+     * #2939 DropdownField creates invalid HTML when required
+     */
+    public function testRequiredDropdownHasEmptyDefault()
+    {
+        $field = new \SilverStripe\Forms\DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
+
+        $form = new Form(
+            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            new RequiredFields(["RequiredField"])
+        );
+
+        $this->assertTrue($field->getHasEmptyDefault());
     }
 }

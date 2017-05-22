@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
@@ -99,5 +100,24 @@ class OptionsetFieldTest extends SapphireTest
         $this->assertNotContains('Two & Three', $fieldHTML);
         $this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
         $this->assertNotContains('Four & Five & Six', $fieldHTML);
+    }
+
+    /**
+     * #2939 OptionSetField creates invalid HTML when required
+     */
+    public function testNoAriaRequired()
+    {
+        $field = new OptionsetField('RequiredField', 'myRequiredField');
+
+        $form = new Form(
+            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            new RequiredFields(["RequiredField"])
+        );
+        $this->assertTrue($field->Required());
+
+        $attributes = $field->getAttributes();
+        $this->assertFalse(array_key_exists("name", $attributes));
+        $this->assertFalse(array_key_exists("required", $attributes));
+        $this->assertTrue(array_key_exists("role", $attributes));
     }
 }

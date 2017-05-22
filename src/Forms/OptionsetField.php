@@ -148,11 +148,13 @@ class OptionsetField extends SingleSelectField
 
     public function getAttributes()
     {
-        $attributes = parent::getAttributes();
+        $attributes = array_merge(
+            parent::getAttributes(),
+            array('role' => 'listbox')
+        );
+
         unset($attributes['name']);
         unset($attributes['required']);
-        unset($attributes['role']);
-
         return $attributes;
     }
 }

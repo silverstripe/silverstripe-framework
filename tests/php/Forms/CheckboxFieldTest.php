@@ -2,6 +2,9 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Tests\CheckboxFieldtest\Article;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
@@ -184,5 +187,22 @@ class CheckboxFieldTest extends SapphireTest
             $field->validate($validator),
             'Field correct validates null as allowed'
         );
+    }
+
+    /**
+     * #2939 CheckboxField creates invalid HTML when required
+     */
+    public function testNoAriaRequired()
+    {
+        $field = new CheckboxField('RequiredField', 'myRequiredField');
+
+        $form = new Form(
+            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            new RequiredFields(["RequiredField"])
+        );
+        $this->assertTrue($field->Required());
+
+        $attributes = $field->getAttributes();
+        $this->assertFalse(array_key_exists("aria-required", $attributes));
     }
 }
