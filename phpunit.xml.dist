@@ -3,9 +3,7 @@
 Standard module phpunit configuration.
 Requires PHPUnit ^5.7
 -->
-<phpunit printerClass="ScriptFUSION\PHPUnitImmediateExceptionPrinter\ImmediateExceptionPrinter"
-             bootstrap="tests/bootstrap.php"
-             colors="true">
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
 	<testsuite name="Default">
 		<directory>tests/php</directory>
     </testsuite>
