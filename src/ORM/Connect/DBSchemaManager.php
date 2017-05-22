@@ -356,7 +356,7 @@ abstract class DBSchemaManager
             // Check if options changed
             $tableOptionsChanged = false;
             // Check for DB constant on the schema class
-            $dbIDName = sprintf('%s::ID', get_class($this));
+            $dbIDName = sprintf('%s::ID', static::class);
             $dbID = defined($dbIDName) ? constant($dbIDName) : null;
             if ($dbID && isset($options[$dbID])) {
                 if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {

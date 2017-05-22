@@ -244,7 +244,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // We cannot run the tests on this abstract class.
         if (static::class == __CLASS__) {
-            $this->markTestSkipped(sprintf('Skipping %s ', get_class($this)));
+            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
             return;
         }
 
@@ -563,9 +563,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected function getCurrentAbsolutePath()
     {
-        $filename = self::$test_class_manifest->getItemPath(get_class($this));
+        $filename = self::$test_class_manifest->getItemPath(static::class);
         if (!$filename) {
-            throw new LogicException("getItemPath returned null for " . get_class($this));
+            throw new LogicException("getItemPath returned null for " . static::class);
         }
         return dirname($filename);
     }

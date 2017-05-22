@@ -1596,7 +1596,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $joinField = $schema->getRemoteJoinField(static::class, $componentName, 'has_many', $polymorphic);
         /** @var HasManyList $result */
         if ($polymorphic) {
-            $result = PolymorphicHasManyList::create($componentClass, $joinField, get_class($this));
+            $result = PolymorphicHasManyList::create($componentClass, $joinField, static::class);
         } else {
             $result = HasManyList::create($componentClass, $joinField);
         }

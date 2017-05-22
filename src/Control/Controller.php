@@ -400,26 +400,22 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         } elseif ($this->template) {
             $templates = $this->template;
         } else {
-            // Add action-specific templates for inheritance chain
-            $templates = array();
-            if ($action && $action != 'index') {
-                $parentClass = static::class;
-                while ($parentClass != __CLASS__) {
-                    $templates[] = strtok($parentClass, '_') . '_' . $action;
-                    $parentClass = get_parent_class($parentClass);
-                }
-            }
-            // Add controller templates for inheritance chain
+            // Build templates based on class hierarchy
+            $actionTemplates = [];
+            $classTemplates = [];
             $parentClass = static::class;
-            while ($parentClass != __CLASS__) {
-                $templates[] = strtok($parentClass, '_');
+            while ($parentClass !== parent::class) {
+                // _action templates have higher priority
+                if ($action && $action != 'index') {
+                    $actionTemplates[] = strtok($parentClass, '_') . '_' . $action;
+                }
+                // class templates have lower priority
+                $classTemplates[] = strtok($parentClass, '_');
                 $parentClass = get_parent_class($parentClass);
             }
 
-            $templates[] = __CLASS__;
-
-            // remove duplicates
-            $templates = array_unique($templates);
+            // Add controller templates for inheritance chain
+            $templates = array_unique(array_merge($actionTemplates, $classTemplates));
         }
 
         return new SSViewer($templates);
