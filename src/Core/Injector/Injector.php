@@ -237,7 +237,7 @@ class Injector implements ContainerInterface
      * If a user wants to use the injector as a static reference
      *
      * @param array $config
-     * @return ContainerInterface
+     * @return Injector
      */
     public static function inst($config = null)
     {
@@ -250,10 +250,10 @@ class Injector implements ContainerInterface
     /**
      * Sets the default global injector instance.
      *
-     * @param ContainerInterface $instance
+     * @param Injector $instance
      * @return Injector Reference to new active Injector instance
      */
-    public static function set_inst(ContainerInterface $instance)
+    public static function set_inst(Injector $instance)
     {
         return self::$instance = $instance;
     }
