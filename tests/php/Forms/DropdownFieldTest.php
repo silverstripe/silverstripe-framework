@@ -508,7 +508,10 @@ class DropdownFieldTest extends SapphireTest
         $field = new \SilverStripe\Forms\DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
 
         $form = new Form(
-            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            Controller::curr(),
+            "form",
+            new FieldList($field),
+            new FieldList(),
             new RequiredFields(["RequiredField"])
         );
 

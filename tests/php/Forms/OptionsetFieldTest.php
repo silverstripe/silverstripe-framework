@@ -110,7 +110,10 @@ class OptionsetFieldTest extends SapphireTest
         $field = new OptionsetField('RequiredField', 'myRequiredField');
 
         $form = new Form(
-            Controller::curr(), "form", new FieldList($field), new FieldList(),
+            Controller::curr(),
+            "form",
+            new FieldList($field),
+            new FieldList(),
             new RequiredFields(["RequiredField"])
         );
         $this->assertTrue($field->Required());
