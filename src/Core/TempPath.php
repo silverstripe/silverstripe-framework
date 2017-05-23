@@ -34,7 +34,7 @@ function getTempFolderUsername()
     if (!$user) {
         $user = getenv('USERNAME');
     }
-    if (!$user && function_exists('posix_getuid')) {
+    if (!$user && function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
         $userDetails = posix_getpwuid(posix_getuid());
         $user = $userDetails['name'];
     }
