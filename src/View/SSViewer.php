@@ -313,7 +313,7 @@ class SSViewer implements Flushable
     /**
      * Returns true if at least one of the listed templates exists.
      *
-     * @param array $templates
+     * @param array|string $templates
      *
      * @return boolean
      */

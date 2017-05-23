@@ -2,13 +2,16 @@
 
 namespace SilverStripe\View\Parsers;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Base class for HTML cleaning implementations.
  */
-abstract class HTMLCleaner extends Object
+abstract class HTMLCleaner
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * @var array
@@ -27,7 +30,6 @@ abstract class HTMLCleaner extends Object
      */
     public function __construct($config = null)
     {
-        parent::__construct();
         if ($config) {
             $config = array_merge($this->defaultConfig, $config);
         } else {

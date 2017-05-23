@@ -3,7 +3,9 @@
 namespace SilverStripe\View\Parsers;
 
 use DOMNodeList;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use InvalidArgumentException;
 use DOMElement;
@@ -16,8 +18,16 @@ use DOMElement;
  *
  * @see http://doc.silverstripe.org/framework/en/reference/shortcodes
  */
-class ShortcodeParser extends Object
+class ShortcodeParser
 {
+    use Injectable;
+    use Configurable;
+    use Extensible;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     public function img_shortcode($attrs)
     {

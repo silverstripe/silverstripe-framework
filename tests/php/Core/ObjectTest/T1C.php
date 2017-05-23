@@ -2,9 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-use SilverStripe\Core\Object;
-
-class T1C extends Object
+class T1C extends BaseObject
 {
     public function t1cMethod()
     {

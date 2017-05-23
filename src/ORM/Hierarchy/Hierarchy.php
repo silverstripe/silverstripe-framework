@@ -122,10 +122,10 @@ class Hierarchy extends DataExtension
                 // Hierarchy is looping.
                 $validationResult->addError(
                     _t(
-                        'SilverStripe\\ORM\\Hierarchy\\Hierarchy.InfiniteLoopNotAllowed',
+                        __CLASS__ . '.InfiniteLoopNotAllowed',
                         'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
                         'First argument is the class that makes up the hierarchy.',
-                        array('type' => $owner->class)
+                        array('type' => get_class($owner))
                     ),
                     'bad',
                     'INFINITE_LOOP'

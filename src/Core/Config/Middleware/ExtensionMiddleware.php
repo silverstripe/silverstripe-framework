@@ -8,7 +8,6 @@ use SilverStripe\Config\MergeStrategy\Priority;
 use SilverStripe\Config\Middleware\Middleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
 
 class ExtensionMiddleware implements Middleware
 {
@@ -52,7 +51,7 @@ class ExtensionMiddleware implements Middleware
 
         $extensions = $classConfig['extensions'];
         foreach ($extensions as $extension) {
-            list($extensionClass, $extensionArgs) = Object::parse_class_spec($extension);
+            list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             if (!class_exists($extensionClass)) {
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in 'extensions'");
             }

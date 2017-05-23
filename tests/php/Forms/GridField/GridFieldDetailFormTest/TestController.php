@@ -37,14 +37,10 @@ class TestController extends Controller implements TestOnly
         $field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
         $field->getConfig()->addComponent(new GridFieldViewButton());
         $field->getConfig()->addComponent(new GridFieldEditButton());
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         $field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
         $field->getConfig()->addComponent(new GridFieldEditButton());
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         return new Form($this, 'Form', new FieldList($field), new FieldList());
     }
 }

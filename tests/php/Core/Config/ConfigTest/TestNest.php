@@ -2,10 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Config\ConfigTest;
 
-use SilverStripe\Core\Object;
-use SilverStripe\Dev\TestOnly;
-
-class TestNest extends Object implements TestOnly
+class TestNest extends BaseObject
 {
     /**
      * @config

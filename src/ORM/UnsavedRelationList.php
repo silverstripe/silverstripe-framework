@@ -51,7 +51,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Create a new UnsavedRelationList
      *
-     * @param array $baseClass
+     * @param string $baseClass
      * @param string $relationName
      * @param string $dataClass The DataObject class used in the relation
      */

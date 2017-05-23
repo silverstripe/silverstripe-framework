@@ -2,7 +2,8 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ValidationResult;
 
 /**
@@ -17,9 +18,15 @@ use SilverStripe\ORM\ValidationResult;
  * Member::set_password_validator($pwdValidator);
  * </code>
  */
-class PasswordValidator extends Object
+class PasswordValidator
 {
+    use Injectable;
+    use Configurable;
 
+    /**
+     * @config
+     * @var array
+     */
     private static $character_strength_tests = array(
         'lowercase' => '/[a-z]/',
         'uppercase' => '/[A-Z]/',

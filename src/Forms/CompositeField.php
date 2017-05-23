@@ -246,9 +246,14 @@ class CompositeField extends FormField
                 if ($name) {
                     $formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
                     if (isset($list[$name])) {
-                        user_error("collateDataFields() I noticed that a field called '$name' appears twice in"
-                            . " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
-                            . " '{$list[$name]->class}'", E_USER_ERROR);
+                        $fieldClass = get_class($field);
+                        $otherFieldClass = get_class($list[$name]);
+                        user_error(
+                            "collateDataFields() I noticed that a field called '$name' appears twice in"
+                             . " your form: '{$formName}'.  One is a '{$fieldClass}' and the other is a"
+                             . " '{$otherFieldClass}'",
+                            E_USER_ERROR
+                        );
                     }
                     $list[$name] = $field;
                 }
@@ -509,7 +514,8 @@ class CompositeField extends FormField
 
     public function debug()
     {
-        $result = "$this->class ($this->name) <ul>";
+        $class = static::class;
+        $result = "$class ($this->name) <ul>";
         foreach ($this->children as $child) {
             $result .= "<li>" . Debug::text($child) . "&nbsp;</li>";
         }

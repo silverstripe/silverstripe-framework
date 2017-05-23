@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
@@ -145,6 +145,7 @@ abstract class DBComposite extends DBField
      * @param mixed $value
      * @param mixed $record Parent object to this field, which could be a DataObject, record array, or other
      * @param bool $markChanged
+     * @return $this
      */
     public function setValue($value, $record = null, $markChanged = true)
     {
@@ -172,6 +173,7 @@ abstract class DBComposite extends DBField
                 $this->setField($field, $record[$key]);
             }
         }
+        return $this;
     }
 
     /**
@@ -277,7 +279,7 @@ abstract class DBComposite extends DBField
         $key = $this->getName() . $field;
         $spec = $fields[$field];
         /** @var DBField $fieldObject */
-        $fieldObject = Object::create_from_string($spec, $key);
+        $fieldObject = Injector::inst()->create($spec, $key);
         $fieldObject->setValue($this->getField($field), null, false);
         return $fieldObject;
     }

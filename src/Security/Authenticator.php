@@ -2,9 +2,10 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Controller;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\Form;
 
 /**
@@ -15,8 +16,16 @@ use SilverStripe\Forms\Form;
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-abstract class Authenticator extends Object
+abstract class Authenticator
 {
+    use Injectable;
+    use Configurable;
+    use Extensible;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     /**
      * This variable holds all authenticators that should be used
@@ -78,7 +87,7 @@ abstract class Authenticator extends Object
     {
         return false;
     }
-    
+
     /**
      * Check if a given authenticator is registered
      *

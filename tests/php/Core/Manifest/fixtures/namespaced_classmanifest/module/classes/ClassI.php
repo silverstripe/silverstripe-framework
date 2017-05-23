@@ -12,7 +12,7 @@ use SilverStripe\Control\HTTPRequest as Request, SilverStripe\Control\HTTPRespon
 /** @skipUpgrade */
 use silverstripe\test\ClassA;
 /** @skipUpgrade */
-use \SilverStripe\Core\Object;
+use \SilverStripe\Core\ClassInfo;
 
 /** @skipUpgrade */
 class ClassI extends ModelAdmin implements P {

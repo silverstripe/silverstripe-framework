@@ -619,17 +619,17 @@ class DataObjectTest extends SapphireTest
 
         // Set the favourite team for fan1
         $fan1->setField('FavouriteID', $team1->ID);
-        $fan1->setField('FavouriteClass', $team1->class);
+        $fan1->setField('FavouriteClass', get_class($team1));
 
         $this->assertEquals($team1->ID, $fan1->Favourite()->ID, 'The team is assigned to fan 1');
-        $this->assertInstanceOf($team1->class, $fan1->Favourite(), 'The team is assigned to fan 1');
+        $this->assertInstanceOf(get_class($team1), $fan1->Favourite(), 'The team is assigned to fan 1');
         $this->assertEquals(
             $team1->ID,
             $fan1->getComponent('Favourite')->ID,
             'The team exists through the component getter'
         );
         $this->assertInstanceOf(
-            $team1->class,
+            get_class($team1),
             $fan1->getComponent('Favourite'),
             'The team exists through the component getter'
         );
@@ -847,10 +847,10 @@ class DataObjectTest extends SapphireTest
         // Test for polymorphic has_one relations
         $fan = $this->objFromFixture(DataObjectTest\Fan::class, 'fan1');
         $fan->FavouriteID = $team->ID;
-        $fan->FavouriteClass = $team->class;
+        $fan->FavouriteClass = DataObjectTest\Team::class;
         $this->assertNotNull($fan->Favourite());
         $this->assertEquals($team->ID, $fan->Favourite()->ID);
-        $this->assertInstanceOf($team->class, $fan->Favourite());
+        $this->assertInstanceOf(DataObjectTest\Team::class, $fan->Favourite());
     }
 
     public function testFieldNamesThatMatchMethodNamesWork()
@@ -1434,26 +1434,25 @@ class DataObjectTest extends SapphireTest
         $equipmentSuppliers = $team->EquipmentSuppliers();
 
         // Check that DataObject::many_many() works as expected
-        list($relationClass, $class, $targetClass, $parentField, $childField, $joinTable)
-            = DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Sponsors');
-        $this->assertEquals(ManyManyList::class, $relationClass);
+        $manyManyComponent = DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Sponsors');
+        $this->assertEquals(ManyManyList::class, $manyManyComponent['relationClass']);
         $this->assertEquals(
             DataObjectTest\Team::class,
-            $class,
+            $manyManyComponent['parentClass'],
             'DataObject::many_many() didn\'t find the correct base class'
         );
         $this->assertEquals(
             DataObjectTest\EquipmentCompany::class,
-            $targetClass,
+            $manyManyComponent['childClass'],
             'DataObject::many_many() didn\'t find the correct target class for the relation'
         );
         $this->assertEquals(
             'DataObjectTest_EquipmentCompany_SponsoredTeams',
-            $joinTable,
+            $manyManyComponent['join'],
             'DataObject::many_many() didn\'t find the correct relation table'
         );
-        $this->assertEquals('DataObjectTest_TeamID', $parentField);
-        $this->assertEquals('DataObjectTest_EquipmentCompanyID', $childField);
+        $this->assertEquals('DataObjectTest_TeamID', $manyManyComponent['parentField']);
+        $this->assertEquals('DataObjectTest_EquipmentCompanyID', $manyManyComponent['childField']);
 
         // Check that ManyManyList still works
         $this->assertEquals(2, $sponsors->count(), 'Rows are missing from relation');
@@ -1918,11 +1917,15 @@ class DataObjectTest extends SapphireTest
 
         // Test belongs_to assignment
         $company->OwnerID = $ceo->ID;
-        $company->OwnerClass = $ceo->class;
+        $company->OwnerClass = DataObjectTest\CEO::class;
         $company->write();
 
         $this->assertEquals($company->ID, $ceo->CompanyOwned()->ID, 'belongs_to returns the right results.');
-        $this->assertEquals($company->class, $ceo->CompanyOwned()->class, 'belongs_to returns the right results.');
+        $this->assertInstanceOf(
+            DataObjectTest\Company::class,
+            $ceo->CompanyOwned(),
+            'belongs_to returns the right results.'
+        );
 
         // Test automatic creation of class where no assigment exists
         $ceo = new DataObjectTest\CEO();

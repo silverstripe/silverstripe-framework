@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Injector;
 
 use Psr\Container\NotFoundExceptionInterface;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use ReflectionProperty;
 use ArrayObject;
@@ -828,7 +829,7 @@ class Injector implements ContainerInterface
      */
     public function getServiceName($name)
     {
-        // common case, get it over with first
+        // common case, get it overwith first
         if (isset($this->specs[$name])) {
             return $name;
         }
@@ -902,7 +903,7 @@ class Injector implements ContainerInterface
      * if this object is to be created from scratch (with $asSingleton = false)
      * @return mixed Instance of the specified object
      */
-    public function get($name, $asSingleton = true, $constructorArgs = null)
+    public function get($name, $asSingleton = true, $constructorArgs = [])
     {
         $object = $this->getNamedService($name, $asSingleton, $constructorArgs);
 
@@ -921,8 +922,11 @@ class Injector implements ContainerInterface
      * @param array $constructorArgs
      * @return mixed|null Instance of the specified object (if it exists)
      */
-    protected function getNamedService($name, $asSingleton = true, $constructorArgs = null)
+    protected function getNamedService($name, $asSingleton = true, $constructorArgs = [])
     {
+        // Normalise service / args
+        list($name, $constructorArgs) = $this->normaliseArguments($name, $constructorArgs);
+
         // reassign the name as it might actually be a compound name
         if ($serviceName = $this->getServiceName($name)) {
             // check to see what the type of bean is. If it's a prototype,
@@ -975,6 +979,28 @@ class Injector implements ContainerInterface
     }
 
     /**
+     * Detect service references with constructor arguments included.
+     * These will be split out of the service name reference and appended
+     * to the $args
+     *
+     * @param string $name
+     * @param array $args
+     * @return array Two items with name and new args
+     */
+    protected function normaliseArguments($name, $args = [])
+    {
+        if (strstr($name, '(')) {
+            list($name, $extraArgs) = ClassInfo::parse_class_spec($name);
+            if ($args) {
+                $args = array_merge($args, $extraArgs);
+            } else {
+                $args = $extraArgs;
+            }
+        }
+        return [ $name, $args ];
+    }
+
+    /**
      * Magic method to return an item directly
      *
      * @param string $name
@@ -999,7 +1025,7 @@ class Injector implements ContainerInterface
     {
         $constructorArgs = func_get_args();
         array_shift($constructorArgs);
-        return $this->get($name, false, count($constructorArgs) ? $constructorArgs : null);
+        return $this->createWithArgs($name, $constructorArgs);
     }
 
     /**

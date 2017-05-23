@@ -65,7 +65,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
         } else {
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
-                    get_class($this) . " expects an SS_Filterable list to be passed to the GridField."
+                    static::class . " expects an SS_Filterable list to be passed to the GridField."
                 );
             }
             return false;

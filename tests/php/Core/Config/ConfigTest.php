@@ -3,7 +3,6 @@
 namespace SilverStripe\Core\Tests\Config;
 
 use SilverStripe\Config\MergeStrategy\Priority;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
@@ -258,21 +257,6 @@ class ConfigTest extends SapphireTest
             ['A' => 1, 'B' => 2, 'C' => ['Foo' => 1, 'Bar' => 3, 'Baz' => 4], 'D' => 3],
             $result
         );
-    }
-
-    public function testStaticLookup()
-    {
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFoo::class, 'foo'), 1);
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFoo::class, 'bar'), null);
-
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesBar::class, 'foo'), null);
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesBar::class, 'bar'), 2);
-
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFooAndBar::class, 'foo'), 3);
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFooAndBar::class, 'bar'), 3);
-
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFooDoesntExtendObject::class, 'foo'), 4);
-        $this->assertEquals(Object::static_lookup(ConfigTest\DefinesFooDoesntExtendObject::class, 'bar'), null);
     }
 
     public function testForClass()

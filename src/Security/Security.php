@@ -879,7 +879,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getTemplatesFor($action)
     {
-        $templates = SSViewer::get_templates_by_class(get_class($this), "_{$action}", __CLASS__);
+        $templates = SSViewer::get_templates_by_class(static::class, "_{$action}", __CLASS__);
         return array_merge(
             $templates,
             [

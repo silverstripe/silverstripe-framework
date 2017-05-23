@@ -1,7 +1,6 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Object;
 use SilverStripe\Dev\TestOnly;
 
 class i18nTestModule extends DataObject implements TestOnly
@@ -20,7 +19,7 @@ class i18nTestModule extends DataObject implements TestOnly
         );
     }
 }
-class i18nTestModule_Addition extends Object
+class i18nTestModule_Addition
 {
     public function myAdditionalMethod()
     {

@@ -213,7 +213,7 @@ class FormRequestHandler extends RequestHandler
         ) {
             return $this->httpError(
                 403,
-                sprintf('Action "%s" not allowed on form request handler (Class: "%s")', $funcName, get_class($this))
+                sprintf('Action "%s" not allowed on form request handler (Class: "%s")', $funcName, static::class)
             );
         }
 
@@ -258,7 +258,7 @@ class FormRequestHandler extends RequestHandler
         if ($legacyActions) {
             throw new BadMethodCallException(
                 "allowed_actions are not valid on Form class " . get_class($this->form) .
-                ". Implement these in subclasses of " . get_class($this) . " instead"
+                ". Implement these in subclasses of " . static::class . " instead"
             );
         }
 

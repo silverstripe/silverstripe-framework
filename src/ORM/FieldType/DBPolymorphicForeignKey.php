@@ -71,7 +71,7 @@ class DBPolymorphicForeignKey extends DBComposite
         if ($value instanceof DataObject) {
             $value = array(
                 'ID' => $value->ID,
-                'Class' => $value->class
+                'Class' => get_class($value),
             );
         }
 

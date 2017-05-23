@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core;
 
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
@@ -43,13 +44,25 @@ class ClassInfo
 
     /**
      * Cache for {@link hasTable()}
+     *
+     * @internal
+     * @var array
      */
     private static $_cache_all_tables = array();
 
     /**
+     * @internal
      * @var array Cache for {@link ancestry()}.
      */
     private static $_cache_ancestry = array();
+
+    /**
+     * Cache for parse_class_spec
+     *
+     * @internal
+     * @var array
+     */
+    private static $_cache_parse = [];
 
     /**
      * @todo Move this to SS_Database or DB
@@ -357,5 +370,149 @@ class ClassInfo
             return true;
         }
         return method_exists($object, 'hasMethod') && $object->hasMethod($method);
+    }
+
+    /**
+     * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
+     * Returns a 2-element array, with classname and arguments
+     *
+     * @param string $classSpec
+     * @return array
+     * @throws Exception
+     */
+    public static function parse_class_spec($classSpec)
+    {
+        if (isset(static::$_cache_parse[$classSpec])) {
+            return static::$_cache_parse[$classSpec];
+        }
+
+        $tokens = token_get_all("<?php $classSpec");
+        $class = null;
+        $args = array();
+
+        // Keep track of the current bucket that we're putting data into
+        $bucket = &$args;
+        $bucketStack = array();
+        $hadNamespace = false;
+        $currentKey = null;
+
+        foreach ($tokens as $token) {
+            // $forceResult used to allow null result to be detected
+            $result = $forceResult = null;
+            $tokenName = is_array($token) ? $token[0] : $token;
+
+            // Get the class name
+            if ($class === null && is_array($token) && $token[0] === T_STRING) {
+                $class = $token[1];
+            } elseif (is_array($token) && $token[0] === T_NS_SEPARATOR) {
+                $class .= $token[1];
+                $hadNamespace = true;
+            } elseif ($hadNamespace && is_array($token) && $token[0] === T_STRING) {
+                $class .= $token[1];
+                $hadNamespace = false;
+            // Get arguments
+            } elseif (is_array($token)) {
+                switch ($token[0]) {
+                    case T_CONSTANT_ENCAPSED_STRING:
+                        $argString = $token[1];
+                        switch ($argString[0]) {
+                            case '"':
+                                $result = stripcslashes(substr($argString, 1, -1));
+                                break;
+                            case "'":
+                                $result = str_replace(array("\\\\", "\\'"), array("\\", "'"), substr($argString, 1, -1));
+                                break;
+                            default:
+                                throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
+                        }
+
+                        break;
+
+                    case T_DNUMBER:
+                        $result = (double)$token[1];
+                        break;
+
+                    case T_LNUMBER:
+                        $result = (int)$token[1];
+                        break;
+
+                    case T_DOUBLE_ARROW:
+                        // We've encountered an associative array (the array itself has already been
+                        // added to the bucket), so the previous item added to the bucket is the key
+                        end($bucket);
+                        $currentKey = current($bucket);
+                        array_pop($bucket);
+                        break;
+
+                    case T_STRING:
+                        switch ($token[1]) {
+                            case 'true':
+                                $result = true;
+
+                                break;
+                            case 'false':
+                                $result = false;
+
+                                break;
+                            case 'null':
+                                $result = null;
+                                $forceResult = true;
+
+                                break;
+                            default:
+                                throw new Exception("Bad T_STRING arg '{$token[1]}'");
+                        }
+
+                        break;
+
+                    case T_ARRAY:
+                        $result = array();
+                        break;
+                }
+            } else {
+                if ($tokenName === '[') {
+                    $result = array();
+                } elseif (($tokenName === ')' || $tokenName === ']') && ! empty($bucketStack)) {
+                    // Store the bucket we're currently working on
+                    $oldBucket = $bucket;
+                    // Fetch the key for the bucket at the top of the stack
+                    end($bucketStack);
+                    $key = key($bucketStack);
+                    reset($bucketStack);
+                    // Re-instate the bucket from the top of the stack
+                    $bucket = &$bucketStack[$key];
+                    // Add our saved, "nested" bucket to the bucket we just popped off the stack
+                    $bucket[$key] = $oldBucket;
+                    // Remove the bucket we just popped off the stack
+                    array_pop($bucketStack);
+                }
+            }
+
+            // If we've got something to add to the bucket, add it
+            if ($result !== null || $forceResult) {
+                if ($currentKey) {
+                    $bucket[$currentKey] = $result;
+                    $currentKey = null;
+                } else {
+                    $bucket[] = $result;
+                }
+
+                // If we've just pushed an array, that becomes our new bucket
+                if ($result === array()) {
+                    // Fetch the key that the array was pushed to
+                    end($bucket);
+                    $key = key($bucket);
+                    reset($bucket);
+                    // Store reference to "old" bucket in the stack
+                    $bucketStack[$key] = &$bucket;
+                    // Set the active bucket to be our newly-pushed, empty array
+                    $bucket = &$bucket[$key];
+                }
+            }
+        }
+
+        $result = [$class, $args];
+        static::$_cache_parse[$classSpec] = $result;
+        return $result;
     }
 }

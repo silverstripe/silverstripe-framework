@@ -2,10 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Config\ConfigTest;
 
-use SilverStripe\Core\Object;
-use SilverStripe\Dev\TestOnly;
-
-class DefinesFoo extends Object implements TestOnly
+class DefinesFoo extends BaseObject
 {
     protected static $foo = 1;
 

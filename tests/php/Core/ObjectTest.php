@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;
@@ -52,7 +52,7 @@ class ObjectTest extends SapphireTest
             foreach ($trueMethods as $method) {
                 $methodU = strtoupper($method);
                 $methodL = strtoupper($method);
-                $this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method ($obj->class)");
+                $this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method");
                 $this->assertTrue($obj->hasMethod($methodU), "Test that obj#$i has method $methodU");
                 $this->assertTrue($obj->hasMethod($methodL), "Test that obj#$i has method $methodL");
 
@@ -73,32 +73,21 @@ class ObjectTest extends SapphireTest
 
     public function testSingletonCreation()
     {
-        $myObject = singleton(MyObject::class);
-        $this->assertEquals(
-            $myObject->class,
+        $myObject = MyObject::singleton();
+        $this->assertInstanceOf(
             MyObject::class,
+            $myObject,
             'singletons are creating a correct class instance'
         );
-        $this->assertEquals(
-            get_class($myObject),
-            MyObject::class,
-            'singletons are creating a correct class instance'
-        );
-
-        $mySubObject = singleton(MySubObject::class);
-        $this->assertEquals(
-            $mySubObject->class,
+        $mySubObject = MySubObject::singleton();
+        $this->assertInstanceOf(
             MySubObject::class,
-            'singletons are creating a correct subclass instance'
-        );
-        $this->assertEquals(
-            get_class($mySubObject),
-            MySubObject::class,
+            $mySubObject,
             'singletons are creating a correct subclass instance'
         );
 
-        $myFirstObject = singleton(MyObject::class);
-        $mySecondObject = singleton(MyObject::class);
+        $myFirstObject = MyObject::singleton();
+        $mySecondObject = MyObject::singleton();
         $this->assertTrue(
             $myFirstObject === $mySecondObject,
             'singletons are using the same object on subsequent calls'
@@ -182,14 +171,14 @@ class ObjectTest extends SapphireTest
                 'SilverStripe\\Core\\Tests\\oBjEcTTEST\\EXTENDTest1',
                 "SilverStripe\\Core\\Tests\\ObjectTest\\ExtendTest2",
             ),
-            Object::get_extensions(ExtensionTest::class)
+            ExtensionTest::get_extensions()
         );
         $this->assertEquals(
             array(
                 'SilverStripe\\Core\\Tests\\oBjEcTTEST\\EXTENDTest1',
                 "SilverStripe\\Core\\Tests\\ObjectTest\\ExtendTest2('FOO', 'BAR')",
             ),
-            Object::get_extensions(ExtensionTest::class, true)
+            ExtensionTest::get_extensions(null, true)
         );
         $inst = new ExtensionTest();
         $extensions = $inst->getExtensionInstances();
@@ -336,7 +325,7 @@ class ObjectTest extends SapphireTest
 
         ObjectTest\ExtensionRemoveTest::remove_extension(ExtendTest2::class);
         $this->assertFalse(
-            Object::has_extension(ExtensionRemoveTest::class, ExtendTest2::class),
+            ExtensionRemoveTest::has_extension(ExtendTest2::class),
             "Extension added through \$add_extension() are detected as removed in has_extension()"
         );
 
@@ -347,14 +336,9 @@ class ObjectTest extends SapphireTest
         );
     }
 
-    public function testParentClass()
-    {
-        $this->assertEquals(ObjectTest\MyObject::create()->parentClass(), 'SilverStripe\\Core\\Object');
-    }
-
     public function testIsA()
     {
-        $this->assertTrue(ObjectTest\MyObject::create() instanceof Object);
+        $this->assertTrue(ObjectTest\MyObject::create() instanceof ObjectTest\BaseObject);
         $this->assertTrue(ObjectTest\MyObject::create() instanceof ObjectTest\MyObject);
     }
 
@@ -367,30 +351,6 @@ class ObjectTest extends SapphireTest
 
         $this->assertTrue($obj->hasExtension(TestExtension::class));
         $this->assertTrue($obj->getExtensionInstance(TestExtension::class) instanceof ObjectTest\TestExtension);
-    }
-
-    public function testCacheToFile()
-    {
-        $this->markTestIncomplete();
-        /*
-        // This doesn't run properly on our build slave.
-        $obj = new ObjectTest_CacheTest();
-
-        $obj->clearCache('cacheMethod');
-        $obj->clearCache('cacheMethod', null, array(true));
-        $obj->clearCache('incNumber');
-
-        $this->assertEquals('noarg', $obj->cacheToFile('cacheMethod', -1));
-        $this->assertEquals('hasarg', $obj->cacheToFile('cacheMethod', -1, null, array(true)));
-        $this->assertEquals('hasarg', $obj->cacheToFile('cacheMethod', 3600, null, array(true)));
-
-        // -1 lifetime will ensure that the cache isn't read - number incremented
-        $this->assertEquals(1, $obj->cacheToFile('incNumber', -1));
-        // -1 lifetime will ensure that the cache isn't read - number incremented
-        $this->assertEquals(2, $obj->cacheToFile('incNumber', -1));
-        // Number shouldn't be incremented now because we're using the cached version
-        $this->assertEquals(2, $obj->cacheToFile('incNumber'));
-        */
     }
 
     public function testExtend()
@@ -434,52 +394,52 @@ class ObjectTest extends SapphireTest
         // Simple case
         $this->assertEquals(
             array(Versioned::class,array('Stage', 'Live')),
-            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage','Live')")
+            ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage','Live')")
         );
         // String with commas
         $this->assertEquals(
             array(Versioned::class,array('Stage,Live', 'Stage')),
-            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage,Live','Stage')")
+            ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage,Live','Stage')")
         );
         // String with quotes
         $this->assertEquals(
             array(Versioned::class,array('Stage\'Stage,Live\'Live', 'Live')),
-            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage\\'Stage,Live\\'Live','Live')")
+            ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage\\'Stage,Live\\'Live','Live')")
         );
 
         // True, false and null values
         $this->assertEquals(
             array('ClassName', array('string', true, array('string', false))),
-            Object::parse_class_spec('ClassName("string", true, array("string", false))')
+            ClassInfo::parse_class_spec('ClassName("string", true, array("string", false))')
         );
         $this->assertEquals(
             array('ClassName', array(true, false, null)),
-            Object::parse_class_spec('ClassName(true, false, null)')
+            ClassInfo::parse_class_spec('ClassName(true, false, null)')
         );
 
         // Array
         $this->assertEquals(
             array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
-            Object::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
+            ClassInfo::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
         );
         // Nested array
         $this->assertEquals(
             array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
                 'Unsubmitted')),
-            Object::parse_class_spec(
+            ClassInfo::parse_class_spec(
                 "Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')"
             )
         );
         // 5.4 Shorthand Array
         $this->assertEquals(
             array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
-            Object::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
+            ClassInfo::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
         );
         // 5.4 Nested shorthand array
         $this->assertEquals(
             array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
                 'Unsubmitted')),
-            Object::parse_class_spec(
+            ClassInfo::parse_class_spec(
                 "Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')"
             )
         );
@@ -487,33 +447,33 @@ class ObjectTest extends SapphireTest
         // Associative array
         $this->assertEquals(
             array('Varchar', array(255, array('nullifyEmpty' => false))),
-            Object::parse_class_spec("Varchar(255, array('nullifyEmpty' => false))")
+            ClassInfo::parse_class_spec("Varchar(255, array('nullifyEmpty' => false))")
         );
         // Nested associative array
         $this->assertEquals(
             array('Test', array('string', array('nested' => array('foo' => 'bar')))),
-            Object::parse_class_spec("Test('string', array('nested' => array('foo' => 'bar')))")
+            ClassInfo::parse_class_spec("Test('string', array('nested' => array('foo' => 'bar')))")
         );
         // 5.4 shorthand associative array
         $this->assertEquals(
             array('Varchar', array(255, array('nullifyEmpty' => false))),
-            Object::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
+            ClassInfo::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
         );
         // 5.4 shorthand nested associative array
         $this->assertEquals(
             array('Test', array('string', array('nested' => array('foo' => 'bar')))),
-            Object::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
+            ClassInfo::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
         );
 
         // Namespaced class
         $this->assertEquals(
             array('Test\MyClass', array()),
-            Object::parse_class_spec('Test\MyClass')
+            ClassInfo::parse_class_spec('Test\MyClass')
         );
         // Fully qualified namespaced class
         $this->assertEquals(
             array('\Test\MyClass', array()),
-            Object::parse_class_spec('\Test\MyClass')
+            ClassInfo::parse_class_spec('\Test\MyClass')
         );
     }
 }

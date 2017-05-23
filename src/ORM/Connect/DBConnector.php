@@ -73,8 +73,8 @@ abstract class DBConnector
     public function isQueryMutable($sql)
     {
         $operations = array_merge(
-            Config::inst()->get(get_class($this), 'write_operations'),
-            Config::inst()->get(get_class($this), 'ddl_operations')
+            Config::inst()->get(static::class, 'write_operations'),
+            Config::inst()->get(static::class, 'ddl_operations')
         );
         return $this->isQueryType($sql, $operations);
     }
@@ -87,7 +87,7 @@ abstract class DBConnector
      */
     public function isQueryDDL($sql)
     {
-        $operations = Config::inst()->get(get_class($this), 'ddl_operations');
+        $operations = Config::inst()->get(static::class, 'ddl_operations');
         return $this->isQueryType($sql, $operations);
     }
 
@@ -100,7 +100,7 @@ abstract class DBConnector
      */
     public function isQueryWrite($sql)
     {
-        $operations = Config::inst()->get(get_class($this), 'write_operations');
+        $operations = Config::inst()->get(static::class, 'write_operations');
         return $this->isQueryType($sql, $operations);
     }
 

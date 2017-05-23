@@ -942,7 +942,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getTemplates()
     {
-        $templates = SSViewer::get_templates_by_class(get_class($this), '', __CLASS__);
+        $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template
         if ($this->getTemplate()) {
             array_unshift($templates, $this->getTemplate());
@@ -1702,7 +1702,8 @@ class Form extends ViewableData implements HasRequestHandler
 
     public function debug()
     {
-        $result = "<h3>$this->class</h3><ul>";
+        $class = static::class;
+        $result = "<h3>$class</h3><ul>";
         foreach ($this->fields as $field) {
             $result .= "<li>$field" . $field->debug() . "</li>";
         }

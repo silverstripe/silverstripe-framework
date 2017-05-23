@@ -20,22 +20,13 @@ trait Injectable
      *    $list = DataList::create('SiteTree');
      *    $list = SiteTree::get();
      *
-     * @param string $classOrArgument The first argument, or class name (if called directly
-     * on Object).
-     * @param mixed $argument,... arguments to pass to the constructor
+     * @param array $args
      * @return static
      */
-    public static function create($classOrArgument = null, $argument = null)
+    public static function create(...$args)
     {
-        $args = func_get_args();
-
-        // Class to create should be the calling class if not Object,
-        // otherwise the first parameter
+        // Class to create should be the calling class
         $class = get_called_class();
-        if ($class == 'SilverStripe\\Core\\Object') {
-            $class = array_shift($args);
-        }
-
         return Injector::inst()->createWithArgs($class, $args);
     }
 

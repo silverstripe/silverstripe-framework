@@ -3,16 +3,17 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Validator;
 use SilverStripe\Forms\FieldList;
 use Closure;
+use SilverStripe\ORM\Filterable;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -91,7 +92,7 @@ class GridFieldDetailForm implements GridField_URLHandler
      *
      * @param GridField $gridField
      * @param HTTPRequest $request
-     * @return GridFieldDetailForm_ItemRequest
+     * @return HTTPResponse
      */
     public function handleItem($gridField, $request)
     {
@@ -102,21 +103,18 @@ class GridFieldDetailForm implements GridField_URLHandler
 
         /** @var DataObject $record */
         if (is_numeric($request->param('ID'))) {
-            $record = $gridField->getList()->byID($request->param("ID"));
+            /** @var Filterable $dataList */
+            $dataList = $gridField->getList();
+            $record = $dataList->byID($request->param("ID"));
         } else {
-            $record = Object::create($gridField->getModelClass());
+            $record = Injector::inst()->create($gridField->getModelClass());
         }
 
         $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
 
         // if no validator has been set on the GridField and the record has a
         // CMS validator, use that.
-        if (!$this->getValidator()
-            && (
-                method_exists($record, 'getCMSValidator')
-                || $record instanceof Object && $record->hasMethod('getCMSValidator')
-            )
-        ) {
+        if (!$this->getValidator() && ClassInfo::hasMethod($record, 'getCMSValidator')) {
             $this->setValidator($record->getCMSValidator());
         }
 
@@ -236,8 +234,8 @@ class GridFieldDetailForm implements GridField_URLHandler
     {
         if ($this->itemRequestClass) {
             return $this->itemRequestClass;
-        } elseif (ClassInfo::exists(get_class($this) . "_ItemRequest")) {
-            return get_class($this) . "_ItemRequest";
+        } elseif (ClassInfo::exists(static::class . "_ItemRequest")) {
+            return static::class . "_ItemRequest";
         } else {
             return __CLASS__ . '_ItemRequest';
         }

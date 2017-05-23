@@ -32,7 +32,7 @@ abstract class CliController extends Controller
 
     public function index()
     {
-        foreach (ClassInfo::subclassesFor($this->class) as $subclass) {
+        foreach (ClassInfo::subclassesFor(static::class) as $subclass) {
             echo $subclass . "\n";
             /** @var CliController $task */
             $task = Injector::inst()->create($subclass);

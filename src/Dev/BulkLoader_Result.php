@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
@@ -15,8 +15,9 @@ use SilverStripe\View\ArrayData;
  *
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class BulkLoader_Result extends Object
+class BulkLoader_Result
 {
+    use Injectable;
 
     /**
      * Stores a map of ID and ClassNames
@@ -139,7 +140,7 @@ class BulkLoader_Result extends Object
     {
         $this->created[] = $this->lastChange = array(
             'ID' => $obj->ID,
-            'ClassName' => $obj->class,
+            'ClassName' => get_class($obj),
             'Message' => $message
         );
         $this->lastChange['ChangeType'] = 'created';
@@ -153,7 +154,7 @@ class BulkLoader_Result extends Object
     {
         $this->updated[] = $this->lastChange = array(
             'ID' => $obj->ID,
-            'ClassName' => $obj->class,
+            'ClassName' => get_class($obj),
             'Message' => $message
         );
         $this->lastChange['ChangeType'] = 'updated';

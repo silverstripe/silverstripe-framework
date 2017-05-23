@@ -2,7 +2,8 @@
 
 namespace SilverStripe\View\Parsers;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Filter certain characters from "URL segments" (also called "slugs"), for nicer (more SEO-friendly) URLs.
@@ -14,8 +15,10 @@ use SilverStripe\Core\Object;
  *
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
-class URLSegmentFilter extends Object
+class URLSegmentFilter
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * @config

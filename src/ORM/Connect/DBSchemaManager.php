@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBField;
 use Exception;
@@ -356,7 +356,7 @@ abstract class DBSchemaManager
             // Check if options changed
             $tableOptionsChanged = false;
             // Check for DB constant on the schema class
-            $dbIDName = sprintf('%s::ID', get_class($this));
+            $dbIDName = sprintf('%s::ID', static::class);
             $dbID = defined($dbIDName) ? constant($dbIDName) : null;
             if ($dbID && isset($options[$dbID])) {
                 if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
@@ -389,7 +389,7 @@ abstract class DBSchemaManager
                 }
 
                 /** @var DBField $fieldObj */
-                $fieldObj = Object::create_from_string($fieldSpec, $fieldName);
+                $fieldObj = Injector::inst()->create($fieldSpec, $fieldName);
                 $fieldObj->setArrayValue($arrayValue);
 
                 $fieldObj->setTable($table);

@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -14,8 +15,9 @@ use SilverStripe\View\SSViewer;
  * hierarchical data. Requires the managed record to have a "getParent()"
  * method or has_one relationship called "Parent".
  */
-class GridFieldLevelup extends Object implements GridField_HTMLProvider
+class GridFieldLevelup implements GridField_HTMLProvider
 {
+    use Injectable;
 
     /**
      * @var integer - the record id of the level up to
@@ -40,12 +42,15 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider
      */
     public function __construct($currentID)
     {
-        parent::__construct();
         if ($currentID && is_numeric($currentID)) {
             $this->currentID = $currentID;
         }
     }
 
+    /**
+     * @param GridField $gridField
+     * @return array|null
+     */
     public function getHTMLFragments($gridField)
     {
         $modelClass = $gridField->getModelClass();
@@ -55,6 +60,7 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider
             return null;
         }
 
+        /** @var DataObject|Hierarchy $modelObj */
         $modelObj = DataObject::get_by_id($modelClass, $this->currentID);
 
         $parent = null;

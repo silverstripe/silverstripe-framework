@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injectable;
 use SimpleXMLElement;
 use tidy;
 use Exception;
@@ -22,8 +22,10 @@ use Exception;
  * Caution: Doesn't fully support HTML elements like <header>
  * due to them being declared illegal by the "tidy" preprocessing step.
  */
-class CSSContentParser extends Object
+class CSSContentParser
 {
+    use Injectable;
+
     protected $simpleXML = null;
 
     public function __construct($content)
@@ -59,8 +61,6 @@ class CSSContentParser extends Object
             throw new Exception('CSSContentParser::__construct(): Could not parse content.'
                 . ' Please check the PHP extension tidy is installed.');
         }
-
-        parent::__construct();
     }
 
     /**
