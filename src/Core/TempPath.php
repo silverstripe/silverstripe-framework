@@ -60,8 +60,6 @@ function getTempParentFolder($base = null)
         $base = BASE_PATH;
     }
 
-    $worked = true;
-
     // first, try finding a silverstripe-cache dir built off the base path
     $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
     if (@file_exists($tempPath)) {
@@ -77,7 +75,7 @@ function getTempParentFolder($base = null)
         str_replace(array(' ', '/', ':', '\\'), '-', $base);
     if (!@file_exists($tempPath)) {
         $oldUMask = umask(0);
-        $worked = @mkdir($tempPath, 0777);
+        @mkdir($tempPath, 0777);
         umask($oldUMask);
 
     // if the folder already exists, correct perms
@@ -87,15 +85,18 @@ function getTempParentFolder($base = null)
         }
     }
 
+    $worked = @file_exists($tempPath) && @is_writable($tempPath);
+
     // failing to use the system path, attempt to create a local silverstripe-cache dir
     if (!$worked) {
-        $worked = true;
         $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
         if (!@file_exists($tempPath)) {
             $oldUMask = umask(0);
-            $worked = @mkdir($tempPath, 0777);
+            @mkdir($tempPath, 0777);
             umask($oldUMask);
         }
+
+        $worked = @file_exists($tempPath) && @is_writable($tempPath);
     }
 
     if (!$worked) {
