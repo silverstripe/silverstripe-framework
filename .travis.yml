@@ -56,6 +56,9 @@ before_script:
   - phpenv config-rm xdebug.ini
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
+# Temporarily update to 1.5.x-dev of composer
+  - composer self-update --snapshot
+
 # Install composer dependencies
   - composer validate
   - composer install --prefer-dist
