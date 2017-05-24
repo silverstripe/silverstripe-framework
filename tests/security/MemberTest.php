@@ -846,7 +846,6 @@ class MemberTest extends FunctionalTest {
 	public function testFailedLoginCount() {
 		$maxFailedLoginsAllowed = 3;
 		//set up the config variables to enable login lockouts
-		Config::nest();
 		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
 
 		$member = $this->objFromFixture('Member', 'test');

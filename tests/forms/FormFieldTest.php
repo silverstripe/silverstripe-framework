@@ -10,8 +10,6 @@ class FormFieldTest extends SapphireTest {
 	);
 
 	public function testDefaultClasses() {
-		Config::nest();
-
 		Config::inst()->update('FormField', 'default_classes', array(
 			'class1',
 		));
@@ -50,8 +48,6 @@ class FormFieldTest extends SapphireTest {
 		//check default classes inherit
 		$this->assertContains('class3', $field->extraClass(), 'Class list does not contain inherited class');
 		$this->assertContains('textfield-class', $field->extraClass(), 'Class list does not contain expected class');
-
-		Config::unnest();
 	}
 
 	public function testAddExtraClass() {
