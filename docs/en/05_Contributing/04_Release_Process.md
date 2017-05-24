@@ -157,3 +157,18 @@ for the [framework](https://travis-ci.org/silverstripe/silverstripe-framework) a
 In addition, some build configurations (e.g. running on Windows) are tested
 through a [TeamCity](http://www.jetbrains.com/teamcity/) instance hosted at
 [teamcity.silverstripe.com](http://teamcity.silverstripe.com) (click "Login as guest").
+
+## Releasing to modules to NPM
+
+As we're progressing to include NPM modules in our development process, we have created a `@silverstripe` organisation for modules built specifically for SilverStripe.
+
+These are the steps involved to publish a new version to NPM for that module, similar steps apply for creating a new module under the `@silverstripe` organisation.
+ 
+1) Make your changes, pull from upstream if applicable
+2) Change to the relevant container folder with the package.json file.
+3) Run `npm login` and make sure you’re part of the `@silverstripe` organisation
+4) Make sure the `name` property of the package.json file matches to the right module name with organisation name prefix, e.g. `"name": "@silverstripe/webpack-config"`
+5) Update the `version` property of the package.json file with a new version number, following semver where possible.
+6) run `npm publish`
+ 
+_IMPORTANT NOTE_: You cannot publish the same or lower version number.
