@@ -109,7 +109,8 @@ class FieldList extends ArrayList
                 $name = $field->getName();
                 if (isset($list[$name])) {
                     if ($this->form) {
-                        $errSuffix = " in your '{$this->form->class}' form called '" . $this->form->Name() . "'";
+                        $formClass = get_class($this->form);
+                        $errSuffix = " in your '{$formClass}' form called '" . $this->form->Name() . "'";
                     } else {
                         $errSuffix = '';
                     }
