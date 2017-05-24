@@ -75,8 +75,6 @@ class SecurityTest extends FunctionalTest {
 	}
 
 	public function testPermissionFailureSetsCorrectFormMessages() {
-		Config::nest();
-
 		// Controller that doesn't attempt redirections
 		$controller = new SecurityTest_NullController();
 		$controller->setResponse(new SS_HTTPResponse());
@@ -111,8 +109,6 @@ class SecurityTest extends FunctionalTest {
 			array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message'));
 		$this->assertContains('One-off failure message', $controller->getResponse()->getBody(),
 			"Message set passed to Security::permissionFailure() didn't override Config values");
-
-		Config::unnest();
 	}
 
 	/**

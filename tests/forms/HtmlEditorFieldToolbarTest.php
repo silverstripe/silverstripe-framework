@@ -25,15 +25,8 @@ class HtmlEditorFieldToolbarTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
-		Config::nest();
 		Config::inst()->update('HtmlEditorField_Toolbar', 'fileurl_scheme_whitelist', array('http'));
 		Config::inst()->update('HtmlEditorField_Toolbar', 'fileurl_domain_whitelist', array('example.com'));
-	}
-
-	public function tearDown() {
-		Config::unnest();
-
-		parent::tearDown();
 	}
 
 	public function testValidLocalReference() {
