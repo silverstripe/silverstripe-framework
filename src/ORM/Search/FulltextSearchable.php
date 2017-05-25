@@ -56,8 +56,8 @@ class FulltextSearchable extends DataExtension
     public static function enable($searchableClasses = [SiteTree::class, File::class])
     {
         $defaultColumns = array(
-            SiteTree::class => '"Title","MenuTitle","Content","MetaDescription"',
-            File::class => '"Name","Title"'
+            SiteTree::class => ['Title','MenuTitle','Content','MetaDescription'],
+            File::class => ['Name','Title'],
         );
 
         if (!is_array($searchableClasses)) {
@@ -69,12 +69,7 @@ class FulltextSearchable extends DataExtension
             }
 
             if (isset($defaultColumns[$class])) {
-                Config::modify()->set(
-                    $class,
-                    'create_table_options',
-                    array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
-                );
-                $class::add_extension(__CLASS__."('{$defaultColumns[$class]}')");
+                $class::add_extension(sprintf('%s(%s)', static::class, "'" . implode("','", $defaultColumns[$class]) . "''"));
             } else {
                 throw new Exception(
                     "FulltextSearchable::enable() I don't know the default search columns for class '$class'"
@@ -94,9 +89,12 @@ class FulltextSearchable extends DataExtension
     public function __construct($searchFields = array())
     {
         if (is_array($searchFields)) {
-            $this->searchFields = '"'.implode('","', $searchFields).'"';
-        } else {
             $this->searchFields = $searchFields;
+        } else {
+            $this->searchFields = explode(',', $searchFields);
+            foreach ($this->searchFields as &$field) {
+                $field = trim($field);
+            }
         }
     }
 
@@ -107,7 +105,7 @@ class FulltextSearchable extends DataExtension
                 'SearchFields' => array(
                     'type' => 'fulltext',
                     'name' => 'SearchFields',
-                    'value' => $args[0]
+                    'columns' => $args,
                 )
             )
         );

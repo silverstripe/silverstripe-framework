@@ -6,6 +6,7 @@ use SilverStripe\Assets\File;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Search\FulltextSearchable;
 
 class FulltextSearchableTest extends SapphireTest
@@ -48,5 +49,14 @@ class FulltextSearchableTest extends SapphireTest
 
         File::remove_extension(FulltextSearchable::class);
         $this->assertFalse(File::has_extension(FulltextSearchable::class));
+    }
+
+    public function testIndexesAdded()
+    {
+        $indexes = DataObject::getSchema()->databaseIndexes(File::class);
+        $this->assertArrayHasKey('SearchFields', $indexes);
+        $this->assertCount(2, $indexes['SearchFields']['columns']);
+        $this->assertContains('Name', $indexes['SearchFields']['columns']);
+        $this->assertContains('Title', $indexes['SearchFields']['columns']);
     }
 }

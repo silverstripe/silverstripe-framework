@@ -57,8 +57,7 @@ Example DataObject:
 		private static $indexes = array(
 			'SearchFields' => array(
 				'type' => 'fulltext',
-				'name' => 'SearchFields',
-				'value' => '"Title", "Content"',
+				'columns' => ['Title', 'Content'],
 			)
 		);
 

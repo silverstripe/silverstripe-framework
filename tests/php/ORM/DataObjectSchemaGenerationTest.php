@@ -175,11 +175,11 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Update the SearchFields index here
         TestIndexObject::config()->update(
             'indexes',
-            array(
-            'SearchFields' => array(
-                'value' => 'Title'
-            )
-            )
+            [
+                'SearchFields' => [
+                    'columns' => ['Title'],
+                ],
+            ]
         );
 
         // Verify that the above index change triggered a schema update

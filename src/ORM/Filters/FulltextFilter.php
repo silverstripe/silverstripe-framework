@@ -2,9 +2,9 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
 use Exception;
 
 /**
@@ -20,9 +20,11 @@ use Exception;
  * database table, using the {$indexes} hash in your DataObject subclass:
  *
  * <code>
- *   private static $indexes = array(
- *      'SearchFields' => 'fulltext(Name, Title, Description)'
- *   );
+ *   private static $indexes = [
+ *      'SearchFields' => [
+ *          'type' => 'fulltext',
+ *          'columns' => ['Name', 'Title', 'Description'],
+ *   ];
  * </code>
  *
  * @todo Add support for databases besides MySQL
@@ -63,27 +65,21 @@ class FulltextFilter extends SearchFilter
     */
     public function getDbName()
     {
-        $indexes = Config::inst()->get($this->model, "indexes");
-        if (is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
+        $indexes = DataObject::getSchema()->databaseIndexes($this->model);
+        if (array_key_exists($this->getName(), $indexes)) {
             $index = $indexes[$this->getName()];
-            if (is_array($index) && array_key_exists("value", $index)) {
-                return $this->prepareColumns($index['value']);
-            } else {
-                // Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
-                // we need to search.
-                if (preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
-                    return $this->prepareColumns($matches[1]);
-                } else {
-                    throw new Exception(sprintf(
-                        "Invalid fulltext index format for '%s' on '%s'",
-                        $this->getName(),
-                        $this->model
-                    ));
-                }
-            }
+        } else {
+            return parent::getDbName();
         }
-
-        return parent::getDbName();
+        if (is_array($index) && array_key_exists('columns', $index)) {
+            return $this->prepareColumns($index['columns']);
+        } else {
+            throw new Exception(sprintf(
+                "Invalid fulltext index format for '%s' on '%s'",
+                var_export($this->getName(), true),
+                var_export($this->model, true)
+            ));
+        }
     }
 
     /**
@@ -95,11 +91,10 @@ class FulltextFilter extends SearchFilter
      */
     protected function prepareColumns($columns)
     {
-        $cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
-        $table = DataObject::getSchema()->tableForField($this->model, current($cols));
-        $cols = array_map(function ($col) use ($table) {
-            return sprintf('"%s"."%s"', $table, $col);
-        }, $cols);
-        return implode(',', $cols);
+        $table = DataObject::getSchema()->tableForField($this->model, current($columns));
+        $columns = array_map(function ($column) use ($table) {
+            return Convert::symbol2sql("$table.$column");
+        }, $columns);
+        return implode(',', $columns);
     }
 }
