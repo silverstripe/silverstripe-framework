@@ -204,26 +204,443 @@ To make the actions more user-friendly you can also use alternating buttons as
 detailed in the [CMS Alternating Button](cms_alternating_button)
 how-to.
 
-## ReactJS in SilverStripe
+## React components
 
-### SilverStripeComponent
+Some admin modules render their UI with React, a popular Javascript library created by Facebook. 
+For these sections, rendering happens via client side scripts that create and inject HTML 
+declaratively using data structures. These UI elements are known as "components" and 
+represent the fundamental building block of a React-rendered interface.
 
-The base class for SilverStripe React components. If you're building React components for the CMS, this is the class you want to extend. `SilverStripeComponent` extends `React.Component` and adds some handy CMS specific behaviour.
-
-### Creating a component
-
-__my-component.js__
-```javascript
-import SilverStripeComponent from 'silverstripe-component';
-
-class MyComponent extends SilverStripeComponent {
-
-}
-
-export default MyComponent;
+For example, a component expressed like this:
+```js
+<PhotoItem size={200} caption={'Angkor Wat'} onSelect={openLightbox}>
+	<img src="path/to/image.jpg" />
+</PhotoItem>
 ```
 
-That's how you create a SilverStripe React component!
+Might actually render HTML that looks like this:
+```html
+<div class="photo-item">
+	<div class="photo" style="width:200px;height:200px;">
+		<img src="path/to/image.jpg">
+	</div>
+	<div class="photo-caption">
+		<h3><a>Angkor Wat/a></h3>
+	</div> 
+</div>
+```
+
+This syntax is known as JSX. It is transpiled at build time into native Javascript calls
+to the React API. While optional, it is recommended to express components this way.
+
+This documentation will stop short of explaining React in-depth, as there is much better
+documentation available all over the web. We recommend:
+* [The Official React Tutorial](https://facebook.github.io/react/tutorial/tutorial.html)
+* [Build With React](http://buildwithreact.com/tutorial)
+
+#### A few words about ES6
+The remainder of this tutorial is written in [ECMAScript 6](http://es6-features.org/#Constants), or _ES6_
+for short. This is the new spec for Javascript (currently ES5) that is as of this writing
+only partially implmented in modern browsers. Because it doesn't yet enjoy vast native support,
+it has to be [transpiled](https://www.stevefenton.co.uk/2012/11/compiling-vs-transpiling/) in order to work
+in a browser. This transpiling can be done using a variety of toolchains, but the basic
+ principle is that a browser-ready, ES5 version of your code is generated in your dev
+ environment as part of your workflow.
+   
+   As stated above, there are many ways to solve the problem of transpiling. The toolchain
+   we use in core SilverStripe modules includes:
+   * [Babel](http://babeljs.io) (ES6 transpiler)
+   * [Webpack](http://webpack.js.org) (Module bundler)
+
+### Using dependencies within your component
+
+If your component has dependencies, you can add them via the injector using the `inject()`
+higher order component. The function accepts the following arguments:
+
+```js
+inject(Component, [dependencies], mapDependenciesToProps)
+```
+* **Component** The component definition to inject into
+* **[dependencies]**: An array of dependencies (or a string, if just one)
+* **mapDependenciesToProps**: (optional) All depdencies are passed into this function as params. The function
+is expected to return a map of props to dependencies. If this parameter is not specified,
+the prop names and the service names will mirror each other.
+
+__my-module/js/components/Gallery.js__
+```js
+import React from 'react';
+import { inject } from 'lib/Injector';
+
+class Gallery extends React.Component {
+  render() {
+    const { SearchComponent, ItemComponent } = this.props;
+    return (
+      <div>  
+         <SearchComponent />
+        {this.props.items.map(item => (
+          <ItemComponent title={item.title} image={item.image} />
+        ))}
+      </div>
+    );
+  }
+}
+
+export default inject(
+  Gallery, 
+  ['GalleryItem', 'SearchBar'], 
+  (GalleryItem, SearchBar) => ({
+    ItemComponent: GalleryItem,
+    SearchComponent: SearchBar
+  })
+ );
+```
+
+### Customising React components
+
+React components can be customised in a similar way to PHP classes, using a dependency
+injection API. The key difference is that components are not overriden the way backend
+services are. Rather, new components are composed using [higher order components](https://facebook.github.io/react/docs/higher-order-components.html).
+This has the inherent advantage of allowing all thidparty code to have an influence
+over the behaviour, state, and UI of a component.
+
+#### A simple higher order component
+
+Using our example above, let's create a customised `PhotoItem` that allows a badge,
+perhaps indicating that it is new to the gallery.
+
+```js
+const enhancedPhoto = (PhotoItem) => (props) => {
+	const badge = props.isNew ? 
+	  <div className="badge">New!</div> : 
+	  null;
+
+	return (
+		<div>
+			{badge}
+			<PhotoItem {...props} />
+		</div>
+	);
+}
+
+const EnhancedPhotoItem = enhancedPhoto(PhotoItem);
+
+<EnhancedPhotoItem isNew={true} size={300} />
+```
+
+Alternatively, this component could be expressed with an ES6 class, rather than a simple
+function.
+
+```js
+const enhancedPhoto = (PhotoItem) => {
+	return class EnhancedPhotoItem extends React.Component {
+		render() {
+			const badge = this.props.isNew ? 
+			  <div className="badge">New!</div> : 
+			  null;
+
+			return (
+				<div>
+					{badge}
+					<PhotoItem {...this.props} />
+				</div>
+			);
+
+		}
+	}
+}
+```
+
+When components are stateless, using a simple function in lieu of a class is recommended.
+
+#### Using the injector to customise a core component
+
+Let's make a more awesome text field. Because the `TextField` component is fetched 
+through the injector, we can override it and augment it with our own functionality.
+
+In this example, we'll add a simple character count below the text field.
+
+First, let's create our higher order component.
+__my-module/js/components/CharacterCounter.js__
+```js
+import React from 'react';
+
+const CharacterCounter = (TextField) => (props) => {
+    return (
+        <div>
+            <TextField {...props} />
+            <small>Character count: {props.value.length}</small>
+        </div>
+    );
+}
+
+export default CharacterCounter;
+```
+
+Now let's add this higher order component to the injector. 
+
+__my-module/js/main.js__
+```js
+import Injector from 'lib/Injector';
+import CharacterCounter from './components/CharacterCounter';
+
+Injector.transform('my-transformation', (update) => {
+  update('TextField', CharacterCounter);
+});
+```
+
+Much like the configuration layer, we need to specify a name for this transformation. This
+will help other modules negotiate their priority over the injector in relation to yours.
+
+The second parameter of the `transform` argument is a callback which receives a `update()` function
+that allows you to mutate the DI container with a wrapper for the component. Remember, this function does not _replace_
+the component -- it enhances it with new functionality.
+
+The last thing we'll have to do is transpile our code and load the resulting bundle file
+into the admin page.
+
+__my-module/\_config/config.yml__
+
+```yaml
+    ---
+    Name: my-module
+    ---
+    SilverStripe\Admin\LeftAndMain:
+      extra_requirements_javascript:
+        # The name of this file will depend on how you've configured your build process
+        - 'my-module/js/dist/main.bundle.js'
+```
+Now that the customisation is applied, our text fields look like this:
+
+![](../../../_images/react-di-1.png)
+
+Let's add another customisation to TextField. If the text goes beyond a specified
+length, let's throw a warning in the UI.
+
+__my-module/js/components/TextLengthChecker.js__
+```js
+const TextLengthCheker = (TextField) => (props) => {  
+  const {limit, value } = props;
+  const invalid = limit !== undefined && value.length > limit;
+
+  return (
+    <div>
+      <TextField {...props} />
+      {invalid &&
+        <span style={{color: 'red'}}>
+          {`Text is too long! Must be ${limit} characters`}
+        </span>
+      }
+    </div>
+  );
+}
+
+export default TextLengthChecker;
+```
+
+We'll apply this one to the injector as well, but let's do it under a different name.
+For the purposes of demonstration, let's imagine this customisation comes from another
+module.
+
+__my-module/js/main.js__
+```js
+import Injector from 'lib/Injector';
+import TextLengthChecker from './components/TextLengthChecker';
+
+Injector.transform('my-other-transformation', (update) => {
+  update('TextField', TextLengthChecker);
+});
+```
+
+Now, both components have applied themselves to the textfield.
+
+![](../../../_images/react-di-2.png)
+
+##### Getting multiple customisations to work together
+
+Both these enhancements are nice, but what would be even better is if they could
+work together collaboratively so that the character count only appeared when the user
+input got within a certain range of the limit. In order to do that, we'll need to be
+sure that the `TextLengthChecker` customisation is loaded ahead of the `CharacterCounter` 
+customisation. 
+
+First let's update the character counter to show characters _remaining_, which is
+much more useful. We'll also update the API to allow a `warningBuffer` prop. This is
+the amount of characters the input can be within the `limit` before the warning shows.
+
+__my-module/js/components/CharacterCounter.js__
+```js
+import React from 'react';
+
+const CharacterCounter = (TextField) => (props) => {
+    const { warningBuffer, limit, value: { length } } = props;
+    const remainingChars = limit - length;
+    const showWarning = length + warningBuffer >= limit;
+    return (
+        <div>
+            <TextField {...props} />
+            {showWarning &&
+            	<small>Characters remaining: {remainingChars}</small>
+            }
+        </div>
+    );
+}
+
+export default CharacterCounter;
+```
+
+Now, when we apply this customisation, we need to be sure it loads _after_ the length
+checker in the middleware chain, as it relies on the prop `limit`. We can do that by specifying priority using `before` and `after`
+metadata to the customisation.
+
+For this example, we'll imagine these two enhancements come from different modules.
+
+__module-a/js/main.js__
+```js
+import Injector from 'lib/Injector';
+import CharacterCounter from './components/CharacterCounter';
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', CharacterCounter),
+  { after: 'my-other-transformation' }
+);
+```
+
+__module-b/js/main.js__
+```js
+import Injector from 'lib/Injector';
+import TextLengthChecker from './components/TextLengthChecker';
+
+Injector.transform(
+  'my-other-transformation', 
+  (update) => update('TextField', TextLengthChecker),
+  { before: 'my-transformation' }
+);
+```
+
+Now, both components, coming from different modules, play together nicely, in the correct
+order.
+
+![](../../../_images/react-di-3.png)
+
+`before` and `after` also accept arrays of constraints.
+
+```js
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', TextLengthChecker),
+  { before: ['my-transformation', 'some-other-transformation'] }
+);
+```
+
+#### Using the * flag
+
+If you really want to be sure your customisation gets loaded first or last, you can use 
+`*` as your `before` or `after` reference. 
+
+```js
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', FinalTransform),
+  { after: '*' }
+);
+```
+**Note**: This flag can only be used once per transformation.
+The following are not allowed:
+* `{ before: ['*', 'something-else'] }`
+* `{ after: '*', before: 'something-else' }`
+
+### Helpful tip: Name your higher order components
+
+Now that we have multiple enhancements happening to the same component, it will be really
+useful for debugging purposes to reveal the names of each enhancement on the `displayName` of
+ the component. This will really help you when viewing the rendered component tree in 
+ [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en).
+ 
+ For this, you can use the third parameter of the `update()` function. It takes an arbitrary
+ name for the enhancement you're applying.
+ 
+ __module-a/js/main.js__
+ ```js
+ (update) => update('TextField', CharacterCounter, 'CharacterCounter')
+ ```
+ __module-b/js/main.js__
+ ```js
+ (update) => update('TextField', TextLengthChecker, 'TextLengthChecker')
+ ```
+### Dealing with events
+Let's make a new customisation that customises the behaviour of a button. We'll have
+all form actions throw a `window.confirm()` message before executing their action. Further,
+we'll apply some new style to the button if it is in a loading state.
+
+__my-module/js/components/ConfirmingFormButton.js__
+```js
+import React from 'react';
+
+export default (FormAction) => (props) => {
+  const newProps = {
+    ...props,
+    data: {
+      ...props.data,
+      buttonStyle: props.loading ? 'danger' : props.data.buttonStyle
+    },
+    handleClick(e) {
+      if(window.confirm('Did you really mean to click this?')) {
+        props.handleClick(e);
+      }
+    }
+  }
+
+  return <FormAction {...newProps} />
+}
+```
+
+__my-module/js/main.js__
+```js
+import ConfirmingFormButton from './components/ConfirmingFormButton';
+
+Injector.transform('my-transformation', (update) => {
+  update('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
+});
+```
+### Registering new React components
+
+If you've created a module using React, it's a good idea to afford other developers an 
+API to enhance those components. To do that, simply register them with `Injector`.
+
+__my-public-module/js/main.js__
+```js
+import Injector from 'lib/Injector';
+
+Injector.register('MyComponent', MyComponent);
+```
+
+Now other developers can customise your components with `Injector.update()`.
+
+Note: Overwriting components by calling `register()` multiple times for the same
+service name is discouraged, and will throw an error. Should you really need to do this,
+you can pass `{ force: true }` as the third argument to the `register()` function.
+
+### Using the injector directly within your component
+
+On rare occasions, you may just want direct access to the injector in your component. If
+your dependency requirements are dynamic, for example, you won't be able to explicitly
+declare them in `inject()`. In cases like this, use `withInjector()`. This higher order
+component puts the `Injector` instance in `context`.
+
+```js
+class MyGallery extends React.Component {
+  render () {
+    <div>
+      {this.props.items.map(item => {
+        const Component = this.context.injector.get(item.type);
+        return <Component title={item.title} image={item.image} />
+      })}
+    </div>
+  }
+}
+
+export default withInjector(MyGallery);
+```
 
 ### Interfacing with legacy CMS JavaScript
 
