@@ -261,18 +261,10 @@ of the CMS you have to take care of instantiate yourself:
 	:::php
 	// File: mysite/code/MyController.php
 	class MyObjectController extends Controller {
-		public function EditorToolbar() {
-			return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
+		public function Modals() {
+			return ModalController::create($this, "Modals");
 		}
 	}
-
-	:::ss
-	// File: mysite/templates/MyController.ss
-	$Form
-	<% with $EditorToolbar %>
-		$MediaForm
-		$LinkForm
-	<% end_with %>
 
 Note: The dialogs rely on CMS-access, e.g. for uploading and browsing files,
 so this is considered advanced usage of the field.
