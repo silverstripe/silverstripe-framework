@@ -245,18 +245,56 @@ only partially implmented in modern browsers. Because it doesn't yet enjoy vast 
 it has to be [transpiled](https://www.stevefenton.co.uk/2012/11/compiling-vs-transpiling/) in order to work
 in a browser. This transpiling can be done using a variety of toolchains, but the basic
  principle is that a browser-ready, ES5 version of your code is generated in your dev
- environment as part of your workflow. Often called a "bundle," you should rarely have 
- to see this file. It is effectively an invisible layer that translates modern ES6
- code into something a browser can parse. As browsers evolve, this step will become less
- necessary. (Although, it is worth noting that because transpiling comes at such a low cost,
-  and browsers are relatively slow to catch up, we'll probably be using it for the 
-  foreseeable future in order to adopt new features beyond ES6).
+ environment as part of your workflow.
    
    As stated above, there are many ways to solve the problem of transpiling. The toolchain
    we use in core SilverStripe modules includes:
    * [Babel](http://babeljs.io) (ES6 transpiler)
    * [Webpack](http://webpack.js.org) (Module bundler)
- 
+
+### Using dependencies within your component
+
+If your component has dependencies, you can add them via the injector using the `inject()`
+higher order component. The function accepts the following arguments:
+
+```js
+inject(Component, [dependencies], mapDependenciesToProps)
+```
+* **Component** The component definition to inject into
+* **[dependencies]**: An array of dependencies (or a string, if just one)
+* **mapDependenciesToProps**: (optional) All depdencies are passed into this function as params. The function
+is expected to return a map of props to dependencies. If this parameter is not specified,
+the prop names and the service names will mirror each other.
+
+__my-module/js/components/Gallery.js__
+```js
+import React from 'react';
+import { inject } from 'lib/Injector';
+
+class Gallery extends React.Component {
+  render() {
+    const { SearchComponent, ItemComponent } = this.props;
+    return (
+      <div>  
+         <SearchComponent />
+        {this.props.items.map(item => (
+          <ItemComponent title={item.title} image={item.image} />
+        ))}
+      </div>
+    );
+  }
+}
+
+export default inject(
+  Gallery, 
+  ['GalleryItem', 'SearchBar'], 
+  (GalleryItem, SearchBar) => ({
+    ItemComponent: GalleryItem,
+    SearchComponent: SearchBar
+  })
+ );
+```
+
 ### Customising React components
 
 React components can be customised in a similar way to PHP classes, using a dependency
@@ -271,7 +309,7 @@ Using our example above, let's create a customised `PhotoItem` that allows a bad
 perhaps indicating that it is new to the gallery.
 
 ```js
-const enhancePhoto = (PhotoItem) => (props) {
+const enhancedPhoto = (PhotoItem) => (props) => {
 	const badge = props.isNew ? 
 	  <div className="badge">New!</div> : 
 	  null;
@@ -293,7 +331,7 @@ Alternatively, this component could be expressed with an ES6 class, rather than 
 function.
 
 ```js
-const enhancePhoto = (PhotoItem) => {
+const enhancedPhoto = (PhotoItem) => {
 	return class EnhancedPhotoItem extends React.Component {
 		render() {
 			const badge = this.props.isNew ? 
@@ -345,25 +383,20 @@ __my-module/js/main.js__
 import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 
-Injector.update(
-	{
-		name: 'my-module',
-	},
-	wrap => {
-		wrap('TextField', CharacterCounter);
-	}
-);
+Injector.transform('my-transformation', (update) => {
+  update('TextField', CharacterCounter);
+});
 ```
 
-Much like the configuration layer, we need to specify a name for this mutation. This
+Much like the configuration layer, we need to specify a name for this transformation. This
 will help other modules negotiate their priority over the injector in relation to yours.
 
-The second parameter of the `update` argument is a callback which receives a `wrap()` function
+The second parameter of the `transform` argument is a callback which receives a `update()` function
 that allows you to mutate the DI container with a wrapper for the component. Remember, this function does not _replace_
 the component -- it enhances it with new functionality.
 
-The last thing we'll have to do is make sure this script gets loaded into the admin
-page.
+The last thing we'll have to do is transpile our code and load the resulting bundle file
+into the admin page.
 
 __my-module/\_config/config.yml__
 
@@ -413,20 +446,14 @@ __my-module/js/main.js__
 import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';
 
-Injector.update(
-	{
-		name: 'my-other-module',
-	},
-	wrap => {
-		wrap('TextField', TextLengthChecker);
-	}
-);
+Injector.transform('my-other-transformation', (update) => {
+  update('TextField', TextLengthChecker);
+});
 ```
 
 Now, both components have applied themselves to the textfield.
 
 ![](../../../_images/react-di-2.png)
-
 
 ##### Getting multiple customisations to work together
 
@@ -465,35 +492,116 @@ Now, when we apply this customisation, we need to be sure it loads _after_ the l
 checker in the middleware chain, as it relies on the prop `limit`. We can do that by specifying priority using `before` and `after`
 metadata to the customisation.
 
-__my-module/js/main.js__
+For this example, we'll imagine these two enhancements come from different modules.
+
+__module-a/js/main.js__
 ```js
 import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
-import TextLengthChecker from './components/TextLengthChecker';
-Injector.update(
-	{
-		name: 'my-module',
-		after: 'my-other-module',
-	},
-	wrap => {
-		wrap('TextField', CharacterCounter);
-	}
-);
-Injector.update(
-	{
-		name: 'my-other-module',
-	    before: 'my-module',
-	},
-	wrap => {
-		wrap('TextField', TextLengthChecker);
-	}
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', CharacterCounter),
+  { after: 'my-other-transformation' }
 );
 ```
 
-Now, both components play together nicely.
+__module-b/js/main.js__
+```js
+import Injector from 'lib/Injector';
+import TextLengthChecker from './components/TextLengthChecker';
+
+Injector.transform(
+  'my-other-transformation', 
+  (update) => update('TextField', TextLengthChecker),
+  { before: 'my-transformation' }
+);
+```
+
+Now, both components, coming from different modules, play together nicely, in the correct
+order.
 
 ![](../../../_images/react-di-3.png)
 
+`before` and `after` also accept arrays of constraints.
+
+```js
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', TextLengthChecker),
+  { before: ['my-transformation', 'some-other-transformation'] }
+);
+```
+
+#### Using the * flag
+
+If you really want to be sure your customisation gets loaded first or last, you can use 
+`*` as your `before` or `after` reference. 
+
+```js
+Injector.transform(
+  'my-transformation', 
+  (update) => update('TextField', FinalTransform),
+  { after: '*' }
+);
+```
+**Note**: This flag can only be used once per transformation.
+The following are not allowed:
+* `{ before: ['*', 'something-else'] }`
+* `{ after: '*', before: 'something-else' }`
+
+### Helpful tip: Name your higher order components
+
+Now that we have multiple enhancements happening to the same component, it will be really
+useful for debugging purposes to reveal the names of each enhancement on the `displayName` of
+ the component. This will really help you when viewing the rendered component tree in 
+ [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en).
+ 
+ For this, you can use the third parameter of the `update()` function. It takes an arbitrary
+ name for the enhancement you're applying.
+ 
+ __module-a/js/main.js__
+ ```js
+ (update) => update('TextField', CharacterCounter, 'CharacterCounter')
+ ```
+ __module-b/js/main.js__
+ ```js
+ (update) => update('TextField', TextLengthChecker, 'TextLengthChecker')
+ ```
+### Dealing with events
+Let's make a new customisation that customises the behaviour of a button. We'll have
+all form actions throw a `window.confirm()` message before executing their action. Further,
+we'll apply some new style to the button if it is in a loading state.
+
+__my-module/js/components/ConfirmingFormButton.js__
+```js
+import React from 'react';
+
+export default (FormAction) => (props) => {
+  const newProps = {
+    ...props,
+    data: {
+      ...props.data,
+      buttonStyle: props.loading ? 'danger' : props.data.buttonStyle
+    },
+    handleClick(e) {
+      if(window.confirm('Did you really mean to click this?')) {
+        props.handleClick(e);
+      }
+    }
+  }
+
+  return <FormAction {...newProps} />
+}
+```
+
+__my-module/js/main.js__
+```js
+import ConfirmingFormButton from './components/ConfirmingFormButton';
+
+Injector.transform('my-transformation', (update) => {
+  update('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
+});
+```
 ### Registering new React components
 
 If you've created a module using React, it's a good idea to afford other developers an 
@@ -512,32 +620,27 @@ Note: Overwriting components by calling `register()` multiple times for the same
 service name is discouraged, and will throw an error. Should you really need to do this,
 you can pass `{ force: true }` as the third argument to the `register()` function.
 
-### Using the injector within your component
+### Using the injector directly within your component
 
-If your component has dependencies, you can add the injector via context using the `withInjector`
-higher order component.
+On rare occasions, you may just want direct access to the injector in your component. If
+your dependency requirements are dynamic, for example, you won't be able to explicitly
+declare them in `inject()`. In cases like this, use `withInjector()`. This higher order
+component puts the `Injector` instance in `context`.
 
-__my-module/js/components/Gallery.js__
 ```js
-import React from 'react';
-import { withInjector } from 'lib/Injector';
-
-class Gallery extends React.Component {
-  render() {
-    const GalleryItem = this.context.injector.get('GalleryItem');
-    return (
-      <div>      
-      {this.props.items.map(item => (
-        <GalleryItem title={item.title} image={item.image} />
-      ))}
-      </div>
-    );
+class MyGallery extends React.Component {
+  render () {
+    <div>
+      {this.props.items.map(item => {
+        const Component = this.context.injector.get(item.type);
+        return <Component title={item.title} image={item.image} />
+      })}
+    </div>
   }
 }
 
-export default withInjector(Gallery);
+export default withInjector(MyGallery);
 ```
-
 
 ### Interfacing with legacy CMS JavaScript
 
