@@ -22,6 +22,12 @@ class HtmlEditorField extends TextareaField {
 
 	/**
 	 * @config
+	 * @var string Default alignment for Images and Media. Options: leftAlone|center|left|right
+	 */
+	private static $media_alignment = 'leftAlone';
+
+	/**
+	 * @config
 	 * @var bool Should we check the valid_elements (& extended_valid_elements) rules from HtmlEditorConfig server side?
 	 */
 	private static $sanitise_server_side = false;
@@ -674,7 +680,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				),
+				HtmlEditorField::config()->get('media_alignment')
+
 			)->addExtraClass('last')
 		);
 
@@ -808,7 +816,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				),
+				HtmlEditorField::config()->get('media_alignment')
 			)->addExtraClass('last')
 		);
 

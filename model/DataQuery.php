@@ -763,17 +763,33 @@ class DataQuery {
 	}
 
 	/**
-	 * Select the given fields from the given table.
+	 * Select only the given fields from the given table.
 	 *
 	 * @param String $table Unquoted table name (will be escaped automatically)
 	 * @param Array $fields Database column names (will be escaped automatically)
 	 */
 	public function selectFromTable($table, $fields) {
 		$fieldExpressions = array_map(function($item) use($table) {
-			return "\"$table\".\"$item\"";
+			return Convert::symbol2sql("{$table}.{$item}");
 		}, $fields);
 
 		$this->query->setSelect($fieldExpressions);
+
+		return $this;
+	}
+
+	/**
+	 * Add the given fields from the given table to the select statement.
+	 *
+	 * @param String $table Unquoted table name (will be escaped automatically)
+	 * @param Array $fields Database column names (will be escaped automatically)
+	 */
+	public function addSelectFromTable($table, $fields) {
+		$fieldExpressions = array_map(function($item) use($table) {
+			return Convert::symbol2sql("{$table}.{$item}");
+		}, $fields);
+
+		$this->query->addSelect($fieldExpressions);
 
 		return $this;
 	}

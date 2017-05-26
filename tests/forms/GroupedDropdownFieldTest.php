@@ -51,4 +51,22 @@ class GroupedDropdownFieldTest extends SapphireTest {
 		$this->assertFalse($field->validate($validator));
 	}
 
+	public function testRendering() {
+		$field = GroupedDropdownField::create('Test', 'Testing', array(
+			"1" => "One",
+			"Group One" => array(
+				"2" => "Two",
+				"3" => "Three"
+			),
+			"Group Two" => array(
+				"4" => "Four"
+			)
+		));
+		$body= $field->Field()->forTemplate();
+		$this->assertContains('<option value="1"', $body);
+		$this->assertContains('<optgroup label="Group One">', $body);
+		$this->assertContains('<option value="3"', $body);
+		$this->assertContains('>Three</option>', $body);
+	}
+
 }

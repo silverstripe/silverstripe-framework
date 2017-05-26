@@ -769,7 +769,8 @@ class Spyc {
 
       $_arr = array_merge ($_arr, $value);
     } else if ($key || $key === '') {
-      $_arr[$key] = $value;
+      if (!is_array ($_arr)) { $_arr = array ($key=>$value); }
+      else { $_arr[$key] = $value; }
     } else {
       if (!is_array ($_arr)) { $_arr = array ($value); $key = 0; }
       else { $_arr[] = $value; end ($_arr); $key = key ($_arr); }

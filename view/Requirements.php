@@ -190,6 +190,23 @@ class Requirements implements Flushable {
 	}
 
 	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/javascript/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public static function themedJavascript($name, $module = null, $type = null) {
+		return self::backend()->themedJavascript($name, $module, $type);
+	}
+
+	/**
 	 * Clear either a single or all requirements
 	 *
 	 * Caution: Clearing single rules added via customCSS and customScript only works if you
@@ -846,19 +863,18 @@ class Requirements_Backend {
 				$requirements .= "$customHeadTag\n";
 			}
 
+			$replacements = array();
 			if ($this->force_js_to_bottom) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+				$jsRequirements = $this->removeNewlinesFromCode($jsRequirements);
 
 				// Forcefully put the scripts at the bottom of the body instead of before the first
 				// script tag.
-				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+				$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
 
 				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} elseif($this->write_js_to_body) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
+			} elseif ($this->write_js_to_body) {
+				$jsRequirements = $this->removeNewlinesFromCode($jsRequirements);
 
 				// If your template already has script tags in the body, then we try to put our script
 				// tags just before those. Otherwise, we put it at the bottom.
@@ -875,21 +891,36 @@ class Requirements_Backend {
 						$commentTags[1] == '-->'
 					);
 
-				if($canWriteToBody) {
-					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
+				if ($canWriteToBody) {
+					$content = substr($content, 0, $p1) . $jsRequirements . substr($content, $p1);
 				} else {
-					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+					$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
 				}
 
 				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
 			} else {
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
+				// Put CSS and Javascript together before the closing head tag
+				$replacements["/(<\/head>)/i"] = $requirements . $jsRequirements. "\\1";
+			}
+
+			if (!empty($replacements)) {
+				// Replace everything at once (only once)
+				$content = preg_replace(array_keys($replacements), array_values($replacements), $content, 1);
 			}
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Remove all newlines from code to preserve layout
+	 *
+	 * @param  string $code
+	 * @return string
+	 */
+	protected function removeNewlinesFromCode($code) {
+		return preg_replace('/>\n*/', '>', $code);
 	}
 
 	/**
@@ -1342,6 +1373,38 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
+		}
+	}
+
+	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/js/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public function themedJavascript($name, $module = null, $type = null) {
+		$theme = SSViewer::get_theme_folder();
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$abstheme = $absbase . $theme;
+		$absproject = $absbase . $project;
+		$js = "/javascript/$name.js";
+
+		if(file_exists($absproject . $js)) {
+			$this->javascript($project . $js);
+		} elseif($module && file_exists($abstheme . '_' . $module.$js)) {
+			$this->javascript($theme . '_' . $module . $js);
+		} elseif(file_exists($abstheme . $js)) {
+			$this->javascript($theme . $js);
+		} elseif($module) {
+			$this->javascript($module . $js);
 		}
 	}
 

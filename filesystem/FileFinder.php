@@ -33,7 +33,7 @@ class SS_FileFinder {
 	 * @var array
 	 */
 	protected static $vcs_dirs = array(
-		'.git', '.svn', '.hg', '.bzr'
+		'.git', '.svn', '.hg', '.bzr', 'node_modules',
 	);
 
 	/**

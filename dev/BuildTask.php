@@ -13,6 +13,14 @@
 abstract class BuildTask extends Object {
 
 	/**
+	 * Set a custom url segment (to follow dev/tasks/)
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $segment = null;
+
+	/**
 	 * @var bool $enabled If set to FALSE, keep it from showing in the list
 	 * and from being executable through URL or CLI.
 	 */
@@ -33,9 +41,14 @@ abstract class BuildTask extends Object {
 	/**
  	 * Implement this method in the task subclass to
 	 * execute via the TaskRunner
+	 *
+	 * @param SS_HTTPRequest $request
 	 */
 	abstract public function run($request);
 
+	/**
+	 * @return bool
+	 */
 	public function isEnabled() {
 		return $this->enabled;
 	}
@@ -55,5 +68,3 @@ abstract class BuildTask extends Object {
 	}
 
 }
-
-

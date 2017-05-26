@@ -73,7 +73,7 @@ jQuery.noConflict();
 		$(window).on("message", function(e) {
 			var target,
 				event = e.originalEvent,
-				data = JSON.parse(event.data);
+				data = typeof event.data === 'object' ? event.data : JSON.parse(event.data);
 
 			// Reject messages outside of the same origin
 			if($.path.parseUrl(window.location.href).domain !== $.path.parseUrl(event.origin).domain) return;

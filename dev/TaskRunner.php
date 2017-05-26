@@ -59,6 +59,10 @@ class TaskRunner extends Controller {
 		}
 	}
 
+	/**
+	 * Runs a BuildTask
+	 * @param SS_HTTPRequest $request
+	 */
 	public function runTask($request) {
 		$name = $request->param('TaskName');
 		$tasks = $this->getTasks();
@@ -73,7 +77,7 @@ class TaskRunner extends Controller {
 
 		foreach ($tasks as $task) {
 			if ($task['segment'] == $name) {
-				$inst = Injector::inst()->create($task['class']);
+				$inst = Injector::inst()->create($task['class']); /** @var BuildTask $inst */
 				$title(sprintf('Running Task %s', $inst->getTitle()));
 
 				if (!$inst->isEnabled()) {
@@ -99,17 +103,18 @@ class TaskRunner extends Controller {
 		// remove the base class
 		array_shift($taskClasses);
 
-		if($taskClasses) foreach($taskClasses as $class) {
+		foreach($taskClasses as $class) {
 			if (!$this->taskEnabled($class)) continue;
+			$singleton = singleton($class);
 
 			$desc = (Director::is_cli())
-				? Convert::html2raw(singleton($class)->getDescription())
-				: singleton($class)->getDescription();
+				? Convert::html2raw($singleton->getDescription())
+				: $singleton->getDescription();
 
 			$availableTasks[] = array(
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),
-				'segment' => str_replace('\\', '-', $class),
+				'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class),
 				'description' => $desc,
 			);
 		}

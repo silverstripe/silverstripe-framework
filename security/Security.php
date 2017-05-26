@@ -130,6 +130,31 @@ class Security extends Controller implements TemplateGlobalProvider {
 	private static $logout_url = "Security/logout";
 
 	/**
+	 * The default lost password URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $lost_password_url = "Security/lostpassword";
+
+	/**
+	 * Value of X-Frame-Options header
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $frame_options = 'SAMEORIGIN';
+
+	/**
+	 * Value of the X-Robots-Tag header (for the Security section)
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $robots_tag = 'noindex, nofollow';
+
+	/**
 	 * Get location of word list file
 	 *
 	 * @deprecated 4.0 Use the "Security.word_list" config setting instead
@@ -308,7 +333,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 		parent::init();
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-		$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		$this->getResponse()->addHeader('X-Frame-Options', $this->config()->frame_options);
+
+		// Prevent search engines from indexing the login page
+		if ($this->config()->robots_tag) {
+			$this->getResponse()->addHeader('X-Robots-Tag', $this->config()->robots_tag);
+		}
 	}
 
 	public function index() {
@@ -649,9 +679,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @param string $autoLoginHash The auto login token.
 	 */
 	public static function getPasswordResetLink($member, $autologinToken) {
-		$autologinToken = urldecode($autologinToken);
+		$autologinToken      = urldecode($autologinToken);
 		$selfControllerClass = __CLASS__;
-		$selfController = new $selfControllerClass();
+		$selfController      = new $selfControllerClass();
 		return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
 
@@ -1106,7 +1136,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function login_url() {
-		return self::config()->login_url;
+		return Controller::join_links(Director::baseURL(), self::config()->login_url);
 	}
 
 
@@ -1118,9 +1148,19 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function logout_url() {
-		return self::config()->logout_url;
+		return Controller::join_links(Director::baseURL(), self::config()->logout_url);
 	}
 
+	/**
+	 * Get the URL of the logout page.
+	 *
+	 * To update the logout url use the "Security.logout_url" config setting.
+	 *
+	 * @return string
+	 */
+	public static function lost_password_url() {
+		return Controller::join_links(Director::baseURL(), self::config()->lost_password_url);
+	}
 
 	/**
 	 * Defines global accessible templates variables.
@@ -1131,6 +1171,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		return array(
 			"LoginURL" => "login_url",
 			"LogoutURL" => "logout_url",
+			"LostPasswordURL" => "lost_password_url",
 		);
 	}
 

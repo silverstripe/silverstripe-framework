@@ -194,9 +194,10 @@ class TextTest extends SapphireTest {
 
 		$textObj->setValue($testString2);
 
+		// test that it preserves case
 		$this->assertEquals(
 			'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
-				. ' <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
+				. ' <span class="highlight">Test</span> <span class="highlight">test</span> what if you have...',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
 

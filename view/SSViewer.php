@@ -536,7 +536,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 					// If not provided, use default
 					if (!$casting) $casting = Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET);
 
-					$obj = new $casting($property);
+					$obj = Injector::inst()->create($casting, false, array($property));
 					$obj->setValue($res['value']);
 
 					$res['obj'] = $obj;

@@ -34,6 +34,26 @@ class HTMLText extends Text {
 
 	protected $processShortcodes = true;
 
+	/**
+	 * Check if shortcodes are enabled
+	 *
+	 * @return bool
+	 */
+	public function getProcessShortcodes() {
+		return $this->processShortcodes;
+	}
+
+	/**
+	 * Set shortcodes on or off by default
+	 *
+	 * @param bool $process
+	 * @return $this
+	 */
+	public function setProcessShortcodes($process) {
+		$this->processShortcodes = (bool)$process;
+		return $this;
+	}
+
 	protected $whitelist = false;
 
 	public function __construct($name = null, $options = array()) {

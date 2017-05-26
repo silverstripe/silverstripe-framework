@@ -1,121 +1,34 @@
 ar:
-  AssetAdmin:
-    NEWFOLDER: "مجلد جديد"
-    SHOWALLOWEDEXTS: "عرض الامتدادات المسموح بها"
   AssetTableField:
     CREATED: "أول المرفوعات"
-    DIM: الأبعاد
-    FILENAME: "اسم الملف"
-    FOLDER: المجلد
     LASTEDIT: "آخر التعديلات"
-    OWNER: المالك
     SIZE: الحجم
-    TITLE: العنوان
     TYPE: النوع
     URL: الرابط
-  AssetUploadField:
-    ChooseFiles: "اختر الملفات"
-    DRAGFILESHERE: "اسحب الملفات هنا"
-    DROPAREA: "منطقة الإسقاط"
-    EDITALL: "تعديل الكل"
-    EDITANDORGANIZE: "تعديل & تنظيم"
-    EDITINFO: "تعديل الملفات"
-    FILES: الملفات
-    FROMCOMPUTER: "اختر ملفات من جهاز الكمبيوتر الخاص بك"
-    FROMCOMPUTERINFO: "حمل من جهاز الكمبيوتر الخاص بك"
-    TOTAL: الكلي
-    UPLOADINPROGRESS: "يرجى الانتظار ...جار التحميل"
-    UPLOADOR: أو
-  BBCodeParser:
-    ALIGNEMENT: المحاذاة
-    ALIGNEMENTEXAMPLE: "محاذاة إلى اليمين"
-    BOLD: "خط عريض"
-    BOLDEXAMPLE: عريض
-    CODE: "الشفرة البرمجية"
-    CODEDESCRIPTION: "الشفرة البرمجية بلا تنسيق"
-    CODEEXAMPLE: "الشفرة البرمجية"
-    COLORED: "خط ملون"
-    COLOREDEXAMPLE: "خط أزرق"
-    EMAILLINK: "رابط البريد الإلكتروني"
-    EMAILLINKDESCRIPTION: "إنشاء رابط إلى عنوان بريد إلكتروني"
-    IMAGE: الصورة
-    IMAGEDESCRIPTION: "عرض الصورة في الموضوع"
-    ITALIC: "خط مائل"
-    ITALICEXAMPLE: مائل
-    LINK: "رابط الموقع"
-    LINKDESCRIPTION: "رابط إلى موقع آخر"
-    STRUCK: "خط في المنتصف"
-    STRUCKEXAMPLE: "خط في المنتصف"
-    UNDERLINE: "تحته خط"
-    UNDERLINEEXAMPLE: "تحته خط"
-    UNORDERED: "قائمة غير مرتبة"
-    UNORDEREDDESCRIPTION: "قائمة غير مرتبة"
-    UNORDEREDEXAMPLE1: "العنصر 1 غير مرتب"
-  BackLink_Button_ss:
-    Back: عودة
   BasicAuth:
     ENTERINFO: "فضلاً أدخل اسم المستخدم و كلمة المرور"
     ERRORNOTADMIN: "هذا المستخدم لا يملك صلاحيات الإدارة"
     ERRORNOTREC: "اسم المستخدم أو الرقم السري غير صحيح"
   Boolean:
     ANY: أي
-  CMSLoadingScreen_ss:
-    LOADING: "جار التحميل..."
-    REQUIREJS: "يتطلب الـCMS أن يكون لديك جافا سكريبت مفعلة"
-  CMSMain:
-    ACCESS: "الوصول إلى '{عنوان}' القسم"
-    ACCESSALLINTERFACES: "الدخول إلى جميع واجهات إدارة المحتوى"
-    ACCESSALLINTERFACESHELP: "ينقض أكثر من توصيف الوصول المحدد"
-    SAVE: حفظ
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: "استعراض موقع الويب"
-  CMSProfileController:
-    MENUTITLE: "ملفي الشخصي"
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: "تم تغيير كلمة المرور لـ"
-    CHANGEPASSWORDTEXT2: "يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك"
-    EMAIL: "البريد الإلكتروني"
     HELLO: أهلاً
-    PASSWORD: "الرقم السري"
   ConfirmedPasswordField:
     ATLEAST: "يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً."
     BETWEEN: "يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً."
     MAXIMUM: "يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً."
     SHOWONCLICKTITLE: "تغيير كلمة المرور"
-  ContentController:
-    NOTLOGGEDIN: "لم تقم بتسجيل الدخول"
-  CreditCardField:
-    FIRST: الأول
-    FOURTH: الرابع
-    SECOND: الثاني
-    THIRD: الثالث
-  DataObject:
-    PLURALNAME: "بيانات كائن"
-    SINGULARNAME: "بيانات كائن"
   Date:
-    DAY: يوم
-    DAYS: أيام
-    HOUR: ساعة
-    HOURS: ساعات
     LessThanMinuteAgo: "أقل من دقيقة"
-    MIN: دقيقة
-    MINS: دقائق
-    MONTH: شهر
-    MONTHS: شهور
-    SEC: ثانية
-    SECS: ثواني
     TIMEDIFFAGO: "{الفرق} منذ"
     TIMEDIFFIN: "في {الفرق}"
-    YEAR: سنة
-    YEARS: سنوات
   DateField:
     NOTSET: "غير محدد"
     TODAY: اليوم
     VALIDDATEFORMAT2: "الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})"
     VALIDDATEMAXDATE: "التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})"
     VALIDDATEMINDATE: "التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})"
-  DatetimeField:
-    NOTSET: "لم يتم التعيين"
   Director:
     INVALID_REQUEST: "طلب غير صحيح"
   DropdownField:
@@ -124,57 +37,18 @@ ar:
     VALIDATION: "يرجى إدخال عنوان بريد إلكتروني"
   Enum:
     ANY: أي
-  File:
-    AviType: "ملف مقطع فيديو بصيغة AVI"
-    Content: المحتوى
-    CssType: "ملف بصيغة CSS"
-    DmgType: "صورة قرص آبل"
-    DocType: "مستند بصيغة word"
-    Filename: "اسم الملف"
-    GifType: "صورة بصيغة GIF- جيدة للرسوم البيانية"
-    GzType: "ملف مضغوط بصيغة GZIP"
-    HtlType: "ملف بصيغة HTML"
-    HtmlType: "ملف بصيغة HTML"
-    INVALIDEXTENSION: "لا يسمح بهذا الإمتداد (صالحة: {الإمتدادات})"
-    INVALIDEXTENSIONSHORT: "غير مسموح بهذا الإمتداد"
-    IcoType: "صورة الأيقونة"
-    JpgType: "صورة بصيغة JPEG و هي صيغة جيدة للصور الفوتوغرافية"
-    JsType: "ملف جافا سكريبت"
-    Mp3Type: "ملف صوتي بصيغة MP3"
-    MpgType: "مقطع ملف فيديو بصيغة MPEG"
-    NOVALIDUPLOAD: "نوع الملف غير قابل للرفع"
-    Name: الاسم
-    PLURALNAME: الملفات
-    PdfType: "ملف بصيغة أدوب أكروبات بي دي إف"
-    PngType: "الصورة بصيغة PNG - و هي صيغة جيدة للأغراض العامة"
-    SINGULARNAME: الملف
-    TiffType: "تنسيق الصورة ذات الكلمات الدلالية"
-    Title: العنوان
-    WavType: "ملف صوتي بصيغة WAV"
-    XlsType: "ملف جداول اكسل"
-    ZipType: "ملف مضغوط بصيغة ZIP"
-  Filesystem:
-    SYNCRESULTS: "اكتملت المزامنة : {العدد المتكون} العناصر التي تم إنشاؤها، {العدد المحذوف}  العناصر المحذوفة"
-  Folder:
-    PLURALNAME: مجلد
-    SINGULARNAME: مجلد
   ForgotPasswordEmail_ss:
     HELLO: أهلاً
     TEXT1: هنا
     TEXT2: "رابط إعادة تعيين كلمة المرور"
     TEXT3: لـ
   Form:
-    FIELDISREQUIRED: "{الاسم} مطلوب"
-    SubmitBtnLabel: اذهب
-    VALIDATIONCREDITNUMBER: "يرجى التأكد من أنك قد قمت بإدخال {رقم} رقم بطاقة الائتمان بشكل صحيح"
-    VALIDATIONNOTUNIQUE: "القيمة المدخلة غير فريدة و قابلة للتكرار "
     VALIDATIONPASSWORDSDONTMATCH: "رقم المرور غير صحيح"
     VALIDATIONPASSWORDSNOTEMPTY: "أرقام المرور لا يمكن أن تكون فارغة"
     VALIDATIONSTRONGPASSWORD: "كلمات المرور يجب أن تحتوي على رقم و حرف على الأقل"
     VALIDATOR: المحقق
     VALIDCURRENCY: "يرجى إدخال عملة صحيحة"
   FormField:
-    Example: "على سبيل المثال %s."
     NONE: لايوجد
   GridAction:
     DELETE_DESCRIPTION: حذف
@@ -185,7 +59,6 @@ ar:
     Filter: مرشح
     FilterBy: "ترشيح باستخدام"
     Find: ابحث
-    LEVELUP: "الصعود لمستوي أعلي"
     LinkExisting: "الرابط موجود"
     NewRecord: "جديد %s"
     NoItemsFound: "لا يوجد عناصر"
@@ -205,11 +78,8 @@ ar:
     DeletePermissionsFailure: "لا يوجد تصريحات بالحذف"
     Deleted: "%s %s تم حذفه"
     Save: حفظ
-    Saved: "المحفوظ {اسم} {رابط}"
   GridFieldEditButton_ss:
     EDIT: تعديل
-  GridFieldItemEditView:
-    Go_back: العودة
   Group:
     AddRole: "إضافة دور لهذه المجموعة"
     Code: "شفرة المجموعة"
@@ -220,89 +90,16 @@ ar:
     HierarchyPermsError: "لا يمكن تعيين المجموعة الرئيسية \"s%\" مع سماحيات مميزة (يتطلب دخول عن طريق المشرف)"
     Locked: "مغلق ؟"
     NoRoles: "لا يوجد أدوار"
-    PLURALNAME: مجموعات
     Parent: "المجموعة الرئيسة"
     RolesAddEditLink: "قوانين التعديل/الإضافة"
-    SINGULARNAME: مجموعة
     Sort: ترتيب
     has_many_Permissions: الصلاحيات
     many_many_Members: الأعضاء
-  GroupImportForm:
-    Help1: "<p>استيراد واحد أو أكثر من المجموعات في <em>CSV</em>تهيئة (قيم مفصولة بفواصل) <small><ahref=\"#\" class=\"toggle-advanced\">إظهار استخدام المتقدم</a></small></p>"
-    ResultCreated: "تم إنشاء {عدد} مجموعات"
-    ResultDeleted: "حذف مجموعات %d"
-    ResultUpdated: "تحديث مجموعات %d "
   Hierarchy:
     InfiniteLoopNotAllowed: "العثور على حلقة لا نهائية ضمن \"{نوع}\" التسلسل الهرمي . الرجاء تغيير الأصل لحل هذه"
-  HtmlEditorField:
-    ADDURL: "أضف رابط الموقع URL"
-    ADJUSTDETAILSDIMENSIONS: "التفاصيل &amp; و الأبعاد"
-    ANCHORVALUE: رابط
-    BUTTONADDURL: "قم بإضافة رابط الموقع url"
-    BUTTONINSERT: إدخال
-    BUTTONINSERTLINK: "أدخل رابط"
-    BUTTONREMOVELINK: "إزالة رابط"
-    BUTTONUpdate: تحديث
-    CAPTIONTEXT: النص
-    CSSCLASS: "المحاذاة / تنسيق"
-    CSSCLASSCENTER: "في المنتصف"
-    CSSCLASSLEFT: "إلى اليسار، مع التفاف النص"
-    CSSCLASSLEFTALONE: "إلى اليسار"
-    CSSCLASSRIGHT: "إلى اليمين ، مع التفاف النص"
-    DETAILS: تفاصيل
-    EMAIL: "بريد إلكتروني"
-    FILE: ملف
-    FOLDER: المجلد
-    FROMCMS: "من الـ CMS"
-    FROMCOMPUTER: "من جهاز الكمبيوتر الخاص بك"
-    FROMWEB: "من الإنترنت"
-    FindInFolder: "ابحث في المجلد"
-    IMAGEALT: "النص البديل (بديل)"
-    IMAGEDIMENSIONS: الأبعاد
-    IMAGEHEIGHTPX: الطول
-    IMAGETITLE: "العنوان - لإضافة معلومات إلى الصورة"
-    IMAGETITLETEXT: "عنوان النص (أداة التلميح)"
-    IMAGETITLETEXTDESC: "للمزيد من المعلومات حول الصورة"
-    IMAGEWIDTHPX: العرض
-    LINK: رابط
-    LINKANCHOR: "ربط على هذه الصفحة"
-    LINKDESCR: "وصف الرابط"
-    LINKEMAIL: "بريد إلكتروني"
-    LINKEXTERNAL: "موقع آخر"
-    LINKFILE: "تنزيل ملف"
-    LINKINTERNAL: "صفحة في الموقع"
-    LINKOPENNEWWIN: "فتح الرابط في نافذة جديدة ؟"
-    LINKTO: "رابط إلى"
-    PAGE: صفحة
-    URL: رابط
-    URLNOTANOEMBEDRESOURCE: "عنوان الموقع لا يمكن أن يتحول إلى مصدر وسائط. '{URL}'"
-  Image:
-    PLURALNAME: الملفات
-    SINGULARNAME: الملف
-  Image_Cached:
-    PLURALNAME: ملفات
-    SINGULARNAME: ملف
-  Image_iframe_ss:
-    TITLE: "إطار تحميل الصور"
-  LeftAndMain:
-    CANT_REORGANISE: "ليس لديك تصريح لتغيير صفحات المستوى الأعلى. لم يتم حفظ التغيير."
-    DELETED: "تم الحذف."
-    HELP: مساعدة
-    PERMAGAIN: "تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل"
-    PreviewButton: استعراض
-    REORGANISATIONSUCCESSFUL: "تم إعادة تنظيم خريطة الموقع بنجاح"
-    SAVEDUP: "تم الحفظ."
-    ShowAsList: "عرض كقائمة"
-    TooManyPages: "صفحات كثيرة جداً"
-    ValidationError: "خطأ في عملية التحقق"
-  LeftAndMain_Menu_ss:
-    Hello: مرحباً
-    LOGOUT: "تسجيل الخروج"
   LoginAttempt:
     Email: "عنوان البريد الإلكتروني"
     IP: "عنوان IP"
-    PLURALNAME: "محاولات تسجيل الدخول"
-    SINGULARNAME: "محاولة تسجيل الدخول"
     Status: الحالة
   Member:
     ADDGROUP: "إضافة مجموعة"
@@ -310,12 +107,9 @@ ar:
     BUTTONLOGIN: دخول
     BUTTONLOGINOTHER: "الدخول بحساب آخر"
     BUTTONLOSTPASSWORD: "فقدت كلمة المرور"
-    CANTEDIT: "ليس لديك إذن للقيام بذلك"
     CONFIRMNEWPASSWORD: "تأكيد رقم المرور الجديد"
     CONFIRMPASSWORD: "تأكيد رقم المرور"
-    DATEFORMAT: "صيغة التاريخ"
     DefaultAdminFirstname: "المدير الافتراضي"
-    DefaultDateTime: "الوضع الافتراضي"
     EMAIL: "البريد الإلكتروني"
     EMPTYNEWPASSWORD: "كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة "
     ENTEREMAIL: "فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور"
@@ -325,81 +119,35 @@ ar:
     ERRORWRONGCRED: "التفاصيل الموجودة لا تبدو صحيحة. من فضلك أعد المحاولة."
     FIRSTNAME: "الاسم الأول"
     INTERFACELANG: "لغة الواجهة"
-    INVALIDNEWPASSWORD: "لا يمكننا قبول كلمة المرور هذه : {كلمة المرور}"
     LOGGEDINAS: "أنت مسجل دخولك كـ {اسم}."
     NEWPASSWORD: "رقم المرور الجديد"
     NoPassword: "لا توجد كلمة مرور بشأن هذا العضو."
     PASSWORD: "رقم المرور"
-    PLURALNAME: الأعضاء
-    SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: "تم تغيير كلمة المرور"
     SUBJECTPASSWORDRESET: "رابط إعادة تكوين كلمة المرور"
     SURNAME: "اسم العائلة"
-    TIMEFORMAT: "صيغة الوقت"
     ValidationIdentifierFailed: "لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))"
     WELCOMEBACK: "مرحبا بك مرة أخرى، {الاسم الأول}"
     YOUROLDPASSWORD: "رقم المرور السابق"
     belongs_many_many_Groups: المجموعات
-    db_LastVisited: "تاريخ آخر زيارة"
     db_Locale: "واجهة الموقع"
     db_LockedOutUntil: "مغلق حتى تاريخ"
-    db_NumVisit: "عدد الزيارات"
     db_Password: "الرقم السري"
     db_PasswordExpiry: "تاريخ انتهاء صلاحية كلمة المرور"
   MemberAuthenticator:
     TITLE: "البريد الإلكتروني &amp; كلمة المرور"
   MemberDatetimeOptionsetField:
-    AMORPM: "صباحاً (قبل الظهر) أو مساءً (بعد الظهر)"
     Custom: مخصص
     DATEFORMATBAD: "صيغة التاريخ غير صحيحة"
     DAYNOLEADING: "يوم من شهر دون أن يصبح بقيمة صفر"
     DIGITSDECFRACTIONSECOND: "واحد أو أكثر من الأرقام تمثل جزء عشري من الثانية"
     FOURDIGITYEAR: "سنة بأربع - أرقام"
-    FULLNAMEMONTH: "الاسم الكامل للشهر (على سبيل المثال يونيو)"
     MINUTENOLEADING: "دقيقة دون أن تصبح صفراً"
     MONTHNOLEADING: "أرقام شهر دون أن تصبح بقيمة صفر"
     Preview: معاينة
-    SHORTMONTH: "اسم قصير من الشهر (على سبيل المثال يونيو)"
     TWODIGITDAY: "رقمين ليوم الشهر"
-    TWODIGITHOUR: "خانتين لأرقام الساعة (00 إلى 23)"
-    TWODIGITMINUTE: "خانتين من الأرقام للدقيقة (00 إلى 59)"
-    TWODIGITMONTH: "خانتين لأرقام الشهر (01 = يناير، الخ)"
-    TWODIGITSECOND: "خانتين لأرقام الثواني (00 إلى 59)"
     TWODIGITYEAR: "سنة من رقمين"
     Toggle: "إظهار تعليمات التنسيق"
-  MemberImportForm:
-    Help1: "<p> استيراد مستخدمين بالداخل <em> ملف بصيغة CSV</em> (قيم مفصولة بفواصل).<small><a href=\"#\" class=\"toggle-advanced\">عرض الاستخدام المتقدم </a></small></p>"
-    ResultCreated: "{عدد} الأعضاء الذين تم إنشاؤهم"
-    ResultDeleted: "حذف %d أعضاء"
-    ResultNone: "بدون تغيير"
-    ResultUpdated: "{عدد} الأعضاء المحدثين"
-  MemberPassword:
-    PLURALNAME: "كلمات مرور الأعضاء"
-    SINGULARNAME: "كلمة مرور العضو"
-  MemberTableField:
-    APPLY_FILTER: "تطبيق المرشح"
-  ModelAdmin:
-    DELETE: حذف
-    DELETEDRECORDS: "{عدد} السجلات المحذوفة"
-    EMPTYBEFOREIMPORT: "استبدال البيانات"
-    IMPORT: "استيراد من CSV"
-    IMPORTEDRECORDS: "{عدد} السجلات التي تم استيرادها."
-    NOCSVFILE: "فضلاً استعرض ملف CSV للاستيراد"
-    NOIMPORT: "لايوجد شيء للاستيراد"
-    RESET: "إعادة تعيين"
-    Title: "نماذج البيانات"
-    UPDATEDRECORDS: "{عدد} السجلات التي تم تحديثها"
-  ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: "أعمدة قاعدة البيانات"
-    IMPORTSPECLINK: "عرض مواصفات لـ%s"
-    IMPORTSPECRELATIONS: علاقات
-    IMPORTSPECTITLE: "مواصفات لـ%s"
-  ModelAdmin_Tools_ss:
-    FILTER: مرشح
-    IMPORT: استيراد
-  ModelSidebar_ss:
-    IMPORT_TAB_HEADER: استيراد
-    SEARCHLISTINGS: بحث
   MoneyField:
     FIELDLABELAMOUNT: الكمية
     FIELDLABELCURRENCY: العملة
@@ -416,11 +164,8 @@ ar:
     TOOSHORT: "إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف"
   Permission:
     AdminGroup: الإدارة
-    CMS_ACCESS_CATEGORY: "الوصل لنظام إدارة المحتوى"
     FULLADMINRIGHTS: "جميع صلاحيات الإدارة"
     FULLADMINRIGHTS_HELP: "يتضمن وينقض جميع الأذونات الأخرىالمساندة."
-    PLURALNAME: تصريحات
-    SINGULARNAME: تصريحات
   PermissionCheckboxSetField:
     AssignedTo: "تم تعيينها إلى \"{عنوان}\""
     FromGroup: "موروثة من المجموعة \"{عنوان}\""
@@ -428,14 +173,10 @@ ar:
     FromRoleOnGroup: "توريث من القاعدة \"%s\"  على المجموعة \"%s\""
   PermissionRole:
     OnlyAdminCanApply: "المدير فقط هو الذي يمكنه تطبيق"
-    PLURALNAME: أدوار
-    SINGULARNAME: دور
     Title: عنوان
   PermissionRoleCode:
     PermsError: "لا يمكن تعيين كود \"s%\" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)"
-    SINGULARNAME: "رمز دور الأذن"
   Permissions:
-    PERMISSIONS_CATEGORY: "تصاريح القاعدة والوصول"
     UserPermissionsIntro: "سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية."
   PhoneNumberField:
     VALIDATION: "فضلاً أدخل رقم هاتف صحيح"
@@ -446,7 +187,6 @@ ar:
     CHANGEPASSWORDHEADER: "تغيير كلمة المرور"
     ENTERNEWPASSWORD: "فضلاً أدخل كلمة المرور الجديدة"
     ERRORPASSWORDPERMISSION: "يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور"
-    LOGGEDOUT: "تم تسجيل خروجك بنجاح ، إذا كنت ترغب بالدخول مرة أخرى فتفضل بتعبئة بياناتك بالأسفل"
     LOGIN: دخول
     LOSTPASSWORDHEADER: "كلمة مرور مفقودة"
     NOTEPAGESECURED: "هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة"
@@ -460,41 +200,12 @@ ar:
     PASSWORDSENTHEADER: "رابط استعادة كلمة المرور تم إرساله إلى '{بريدك}'"
     PASSWORDSENTTEXT: "شكرا لك! تم إرسال رابط إعادة تعيين إلى '{بريدك}'، بشرط وجود حساب قائم بالنسبة لعنوان هذا البريد الإلكتروني ."
   SecurityAdmin:
-    ACCESS_HELP: "السماح بعرض واضافة وتعديلات المستخدمين ، فضلا عن تعيين أذونات والقواعد لهم."
-    APPLY_ROLES: "تطبيق القواعد على المجموعات"
-    APPLY_ROLES_HELP: "القدرة على تحرير الأدوار المسندة إلى مجموعة. يتطلب \"الحصول على إذن 'قسم الأمن'."
-    EDITPERMISSIONS: "تعديل الصلاحيات و رقم الآي بي لكل مجموعة"
-    EDITPERMISSIONS_HELP: "القدرة على تحرير أذونات وعناوين بروتوكول الإنترنت لمجموعة. يتطلب \"الحصول على إذن 'قسم  الأمن'"
     GROUPNAME: "اسم المجموعة"
-    IMPORTGROUPS: "استيراد مجوعات"
-    IMPORTUSERS: "استيراد مستخدمين"
     MEMBERS: الأعضاء
-    MENUTITLE: الحماية
-    MemberListCaution: "تحذير : إزالة أعضاء من هذه القائمة إزالتها من جميع الفئات وقاعدة البيانات"
     NEWGROUP: "مجموعة جديدة"
     PERMISSIONS: الصلاحيات
     ROLES: قواعد
     ROLESDESCRIPTION: "هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد"
-    TABROLES: قواعد
-    Users: مستخدمون
-  SecurityAdmin_MemberImportForm:
-    BtnImport: استيراد
-    FileFieldLabel: " CSV ملف <small>(الامتداد المسموح :*.csv )</small>"
-  SilverStripeNavigator:
-    Auto: تلقائي
-    ChangeViewMode: "قم بتغيير نظام العرض"
-    Desktop: "سطح المكتب"
-    DualWindowView: "نافذة مزدوجة"
-    Edit: تعديل
-    EditView: "وضع التعديل"
-    Mobile: الجوال
-    PreviewState: "معاينة الحالة"
-    PreviewView: "وضع الاستعراض"
-    Responsive: متجاوب
-    SplitView: "وضع التقسيم"
-    Tablet: لوحة
-    ViewDeviceWidth: "اختر عرض المعاينة"
-    Width: عرض
   SiteTree:
     TABMAIN: الرئيسة
   TableListField:
@@ -504,36 +215,9 @@ ar:
     OF: من
   TimeField:
     VALIDATEFORMAT: "الرجاء إدخال صيغة وقت صحيحة ({صيغة})"
-  ToggleField:
-    LESS: أقل
-    MORE: أكثر
   UploadField:
-    ATTACHFILE: "إرفاق ملف"
-    ATTACHFILES: "إرفاق ملفات"
-    AttachFile: "إرفاق ملف (أو أكثر)"
-    CHOOSEANOTHERFILE: "اختر ملف آخر"
-    CHOOSEANOTHERINFO: "استبدل هذا الملف بآخر من المخزون"
-    DELETE: "قم بالحذف من الملفات"
-    DELETEINFO: "حذف هذا الملف بشكل دائم من مخزن الملفات"
-    DOEDIT: حفظ
-    DROPFILE: "قم بإسقاط ملف"
-    DROPFILES: "قم بإسقاط ملفات"
     Dimensions: الأبعاد
     EDIT: تعديل
     EDITINFO: "قم بتعديل هذا الملف"
     FIELDNOTSET: "لا يوجد معلومات عن الملف"
-    FROMCOMPUTER: "من جهاز الكمبيوتر الخاص بك"
-    FROMCOMPUTERINFO: "اختر من الملفات"
-    FROMFILES: "من الملفات"
-    HOTLINKINFO: "معلومات: سيتم نشر هذه الصورة. يرجى التأكد من أن يكون لديك التصاريح من منشئ الموقع الأصلي للقيام بذلك."
-    MAXNUMBEROFFILES: "الحد الأقصى من {عدد} الملفات قد تم تجاوزه"
-    MAXNUMBEROFFILESONE: "يمكن فقط تحميل ملف واحد"
-    MAXNUMBEROFFILESSHORT: "يمكن تحميل {عدد} الملفات فقط"
-    OVERWRITEWARNING: "يوجد ملف بنفس الاسم"
     REMOVE: حذف
-    REMOVEINFO: "قم بحذف هذا الملف من هنا و لكن لا تقم بحذفه من مخزن الملفات"
-    STARTALL: "ابدأ الكل"
-    Saved: "تم الحفظ"
-    UPLOADSINTO: "يحفظ في /{path}"
-  Versioned:
-    has_many_Versions: الإصدارات

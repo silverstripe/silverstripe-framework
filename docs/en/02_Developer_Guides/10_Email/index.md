@@ -121,7 +121,7 @@ You can set the default sender address of emails through the `Email.admin_email`
 
 <div class="alert" markdown="1">
 Remember, setting a `from` address that doesn't come from your domain (such as the users email) will likely see your
-email marked as spam. If you want to send from another address think about using the `replyTo` method.
+email marked as spam. If you want to send from another address think about using the `setReplyTo` method.
 </div>
 
 ## Redirecting Emails
@@ -144,11 +144,13 @@ Configuration of those properties looks like the following:
 		Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com");
 	}
 
-### Setting custom replyTo
+### Setting custom "Reply To" email address.
+
+For email messages that should have an email address which is replied to that actually differs from the original "from" email, do the following. This is encouraged especially when the domain responsible for sending the message isn't necessarily the same which should be used for return correspondence and should help prevent your message from being marked as spam. 
 
 	:::php
 	$email = new Email(..);
-	$email->replyTo('me@address.com');
+	$email->setReplyTo('me@address.com');
 
 ### Setting Custom Headers
 

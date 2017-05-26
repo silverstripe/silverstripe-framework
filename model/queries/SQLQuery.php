@@ -160,35 +160,7 @@ class SQLQuery_ParameterInjector {
 	 * @return string
 	 */
 	protected function injectValues($sql, $parameters) {
-		$segments = preg_split('/\?/', $sql);
-		$joined = '';
-		$inString = false;
-		for($i = 0; $i < count($segments); $i++) {
-			// Append next segment
-			$joined .= $segments[$i];
-			// Don't add placeholder after last segment
-			if($i === count($segments) - 1) {
-				break;
-			}
-			// check string escape on previous fragment
-			if($this->checkStringTogglesLiteral($segments[$i])) {
-				$inString = !$inString;
-			}
-			// Append placeholder replacement
-			if($inString) {
-				// Literal questionmark
-				$joined .= '?';
-				continue;
-			}
-
-			// Encode and insert next parameter
-			$next = array_shift($parameters);
-			if(is_array($next) && isset($next['value'])) {
-				$next = $next['value'];
-			}
-			$joined .= "'".Convert::raw2sql($next)."'";
-		}
-		return $joined;
+		return DB::inline_parameters($sql, $parameters);
 	}
 
 	/**

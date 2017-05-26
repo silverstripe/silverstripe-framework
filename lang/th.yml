@@ -1,71 +1,23 @@
 th:
-  AssetAdmin:
-    NEWFOLDER: สร้างโฟลเดอร์ใหม่
   AssetTableField:
     CREATED: อัพโหลดครั้งแรก
-    DIM: สัดส่วนกว้างยาว
-    FILENAME: ชื่อไฟล์
-    FOLDER: โฟลเดอร์
     LASTEDIT: เปลี่ยนแปลงล่าสุด
-    OWNER: เจ้าของ
     SIZE: ขนาด
-    TITLE: ชื่อ
     TYPE: ชนิด
-  AssetUploadField:
-    ChooseFiles: เลือกไฟล์
-    DRAGFILESHERE: ลากไฟล์มาไว้ที่นี่
-    DROPAREA: พื้นที่วางข้อมูล
-    EDITALL: แก้ไขทั้งหมด
-    EDITANDORGANIZE: "แก้ไข & จัดระเบียบ"
-    EDITINFO: แก้ไขไฟล์
-    FILES: ไฟล์
-    FROMCOMPUTER: เลือกไฟล์จากคอมพิวเตอร์ของคุณ
-    FROMCOMPUTERINFO: อัพโหลดจากเครื่องคอมพิวเตอร์ของคุณ
-    TOTAL: รวมทั้งหมด
-    UPLOADOR: หรือ
-  BBCodeParser:
-    BOLD: ข้อความตัวหนา
-    BOLDEXAMPLE: ตัวหนา
-    EMAILLINK: ลิงก์อีเมล
-    EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: รูปภาพ
-    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
-    ITALIC: ข้อความตัวเอียง
-    ITALICEXAMPLE: ตัวเอียง
-    LINK: ลิงก์เว็บไซต์
-    LINKDESCRIPTION: "ลิงก์ไปที่เว็บไซต์อื่นๆ หรือ URL อื่นๆ"
-    STRUCK: ข้อความแบบขีดเส้นใต้
-    UNDERLINEEXAMPLE: ยังไม่ได้กำหนด
   BasicAuth:
     ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
   Boolean:
     ANY: ใดๆ
-  CMSLoadingScreen_ss:
-    LOADING: กำลังโหลด...
-    REQUIREJS: "CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์"
-  CMSMain:
-    ACCESSALLINTERFACES: "เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด"
-    SAVE: บันทึก
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
-    CHANGEPASSWORDTEXT2: "คุณสามารถใช้ข้อมูลส่วนตัวต่อไปนี้เพื่อเข้าสู่ระบบ:"
-    EMAIL: อีเมล
     HELLO: สวัสดี
-    PASSWORD: รหัสผ่าน
   ConfirmedPasswordField:
     BETWEEN: "รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร"
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
-  CreditCardField:
-    FIRST: แรก
-    FOURTH: ที่สี่
-    SECOND: วินาที
-    THIRD: ที่สาม
   DateField:
     NOTSET: ไม่ต้องตั้งค่า
     TODAY: วันนี้
-  DatetimeField:
-    NOTSET: ไม่ต้องกำหนด
   Director:
     INVALID_REQUEST: การร้องขอไม่ถูกต้อง
   DropdownField:
@@ -74,42 +26,12 @@ th:
     VALIDATION: กรุณากรอกที่อยู่อีเมล
   Enum:
     ANY: ใดๆ
-  File:
-    AviType: "ไฟล์วีดีโอ AVI"
-    Content: เนื้อหา
-    CssType: "ไฟล์ CSS"
-    DocType: "เอกสาร Word"
-    Filename: ชื่อไฟล์
-    GifType: "รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม"
-    GzType: "ไฟล์บีบอัดข้อมูล GZIP"
-    HtlType: "ไฟล์ HTML"
-    HtmlType: "ไฟล์ HTML"
-    INVALIDEXTENSIONSHORT: ส่วนเสริมไม่ได้รับอนุญาตให้ใช้งาน
-    IcoType: รูปไอคอน
-    JpgType: "รูปภาพ JPEG - ดีสำหรับภาพถ่าย"
-    JsType: ไฟล์จาวาสคริปต์
-    Mp3Type: "ไฟล์เสียง MP3"
-    MpgType: "ไฟล์วีดีโอ MPEG"
-    Name: ชื่อ
-    PLURALNAME: ไฟล์
-    PdfType: "ไฟล์ Adobe Acrobat PDF"
-    PngType: "รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป"
-    SINGULARNAME: ไฟล์
-    TiffType: "ไฟล์รูปภาพ TIF"
-    Title: ชื่อ
-    WavType: "ไฟล์เสียง WAV"
-    XlsType: "สเปรดชีท Excel"
-    ZipType: "ไฟล์บีบอัดข้อมูล ZIP"
-  Folder:
-    PLURALNAME: โฟลเดอร์
-    SINGULARNAME: โฟลเดอร์
   ForgotPasswordEmail_ss:
     HELLO: สวัสดี
     TEXT1: นี่คือ
     TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
     TEXT3: สำหรับ
   Form:
-    SubmitBtnLabel: ไป
     VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
     VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
     VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
@@ -148,66 +70,14 @@ th:
     GroupReminder: "หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา"
     Locked: ล็อค?
     NoRoles: ไม่พบบทบาทที่ต้องการ
-    PLURALNAME: กลุ่ม
     Parent: กลุ่มหลักต้นทาง
     RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
-    SINGULARNAME: กลุ่ม
     Sort: จัดลำดับ
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
-  GroupImportForm:
-    ResultCreated: "สร้างกลุ่มแล้ว {count} กลุ่ม"
-    ResultDeleted: "ลบกลุ่มแล้ว %d กลุ่ม"
-    ResultUpdated: "อัพเดทแล้ว %d กลุ่ม"
-  HtmlEditorField:
-    ADDURL: "เพิ่ม URL"
-    ADJUSTDETAILSDIMENSIONS: "รายละเอียด &amp; ขนาดสัดส่วน"
-    BUTTONINSERT: แทรก
-    BUTTONINSERTLINK: แทรกลิงค์
-    BUTTONREMOVELINK: ลบลิงค์
-    BUTTONUpdate: อัพเดท
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
-    CSSCLASS: "การจัดวาง / รูปแบบ"
-    DETAILS: รายละเอียด
-    EMAIL: ที่อยู่อีเมล
-    FILE: ไฟล์
-    FOLDER: โฟลเดอร์
-    FROMCMS: "จาก CMS"
-    FROMCOMPUTER: จากคอมพิวเตอร์ของคุณ
-    FROMWEB: จากเว็บไซต์
-    FindInFolder: ค้นหาในโฟลเดอร์
-    IMAGEDIMENSIONS: ขนาดสัดส่วน
-    IMAGEHEIGHTPX: ส่วนสูง
-    IMAGETITLETEXT: "ข้อความหัวเรื่อง (tooltip)"
-    IMAGEWIDTHPX: ความกว้าง
-    LINK: ลิงก์
-    LINKDESCR: คำอธิบายลิงค์
-    LINKEMAIL: ที่อยู่อีเมล
-    LINKEXTERNAL: เว็บไซต์อื่นๆ
-    LINKFILE: ดาวน์โหลดไฟล์
-    LINKINTERNAL: หน้าเว็บบนเว็บไซต์
-    LINKOPENNEWWIN: เปิดลิงค์ในหน้าต่างใหม่
-    LINKTO: ลิงค์ไปที่
-    PAGE: หน้าเว็บ
-  Image:
-    PLURALNAME: ไฟล์
-    SINGULARNAME: ไฟล์
-  Image_Cached:
-    PLURALNAME: ไฟล์
-    SINGULARNAME: ไฟล์
-  Image_iframe_ss:
-    TITLE: "หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ"
-  LeftAndMain:
-    HELP: ช่วยเหลือ
-    PERMAGAIN: "คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง"
-  LeftAndMain_Menu_ss:
-    Hello: สวัสดีค่ะ
-    LOGOUT: ออกจากระบบ
   LoginAttempt:
     Email: ที่อยู่อีเมล
     IP: ไอพีเครื่อง
-    PLURALNAME: จำนวนครั้งการเข้าสู่ระบบ
-    SINGULARNAME: จำนวนครั้งการเข้าสู่ระบบ
     Status: สถานะ
   Member:
     ADDGROUP: เพิ่มกลุ่ม
@@ -216,7 +86,6 @@ th:
     BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
     CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
     CONFIRMPASSWORD: ยืนยันรหัสผ่าน
-    DATEFORMAT: รูปแบบวันที่
     DefaultAdminFirstname: ผู้ดูแลที่กำหนดไว้เริ่มต้น
     EMAIL: อีเมล
     ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
@@ -225,18 +94,13 @@ th:
     INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
     NEWPASSWORD: รหัสผ่านใหม่
     PASSWORD: รหัสผ่าน
-    PLURALNAME: สมาชิก
-    SINGULARNAME: สมาชิก
     SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
     SUBJECTPASSWORDRESET: ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ
     SURNAME: นามสกุล
-    TIMEFORMAT: รูปแบบเวลา
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
-    db_LastVisited: วันที่เยี่ยมชมล่าสุด
     db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
     db_LockedOutUntil: ออกจากระบบจนกว่า
-    db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
   MemberAuthenticator:
@@ -244,29 +108,6 @@ th:
   MemberDatetimeOptionsetField:
     DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
     Preview: ดูตัวอย่าง
-  MemberImportForm:
-    ResultDeleted: "ลบสมาชิกแล้ว %d สมาชิก"
-    ResultNone: ยังไม่มีการเปลี่ยนแปลง
-  MemberPassword:
-    PLURALNAME: รหัสผ่านสมาชิก
-    SINGULARNAME: รหัสผ่านสมาชิก
-  MemberTableField:
-    APPLY_FILTER: ประยุกต์ใช้ตัวกรองข้อมูล
-  ModelAdmin:
-    DELETE: ลบ
-    DELETEDRECORDS: "ลบแล้ว {count} รายการ"
-    IMPORT: "นำเข้าจากไฟล์ CSV"
-    IMPORTEDRECORDS: "นำเข้าแล้ว {count} รายการ"
-    NOCSVFILE: "กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล"
-    NOIMPORT: ไม่มีข้อมูลให้นำเข้า
-    RESET: รีเซ็ต
-    UPDATEDRECORDS: "อัพเดทแล้ว {count} รายการ"
-  ModelAdmin_Tools_ss:
-    FILTER: กรองข้อมูล
-    IMPORT: นำเข้า
-  ModelSidebar_ss:
-    IMPORT_TAB_HEADER: นำเข้า
-    SEARCHLISTINGS: ค้นหา
   MoneyField:
     FIELDLABELAMOUNT: จำนวน
     FIELDLABELCURRENCY: สกุลเงิน
@@ -275,13 +116,8 @@ th:
     View: เปิดดู
   Permission:
     AdminGroup: ผู้ดูแลระบบ
-    CMS_ACCESS_CATEGORY: "การเข้าถึง CMS"
-    PLURALNAME: สิทธิ์อนุญาต
-    SINGULARNAME: สิทธิ์อนุญาต
   PermissionRole:
     OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
-    PLURALNAME: บทบาท
-    SINGULARNAME: บทบาท
     Title: หัวเรื่อง
   PhoneNumberField:
     VALIDATION: กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง
@@ -293,22 +129,11 @@ th:
     ERRORPASSWORDPERMISSION: "คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้"
     LOGIN: เข้าสู่ระบบ
   SecurityAdmin:
-    APPLY_ROLES: กำหนดบทบาทให้กลุ่ม
-    EDITPERMISSIONS: บริหารการสิทธิ์การเข้าใช้งานสำหรับกลุ่ม
     GROUPNAME: ชื่อกลุ่มสมาชิก
-    IMPORTGROUPS: นำเข้ากลุ่ม
-    IMPORTUSERS: นำเข้าผู้ใช้งาน
     MEMBERS: สมาชิก
-    MENUTITLE: ความปลอดภัย
     NEWGROUP: สร้างกลุ่มใหม่
     PERMISSIONS: สิทธิ์อนุญาต
     ROLES: บทบาท
-    TABROLES: บทบาท
-    Users: ผู้ใช้งาน
-  SecurityAdmin_MemberImportForm:
-    BtnImport: นำเข้า
-  SilverStripeNavigator:
-    Edit: แก้ไข
   SiteTree:
     TABMAIN: หลัก
   TableListField:
@@ -316,27 +141,9 @@ th:
     Print: พิมพ์
   TableListField_PageControls_ss:
     OF: จาก
-  ToggleField:
-    MORE: เพิ่มเติม
   UploadField:
-    ATTACHFILE: แนบไฟล์
-    ATTACHFILES: แนบไฟล์
-    AttachFile: แนบไฟล์
-    DELETE: ลบจากไฟล์
-    DELETEINFO: ลบไฟล์นี้ออกจากพื้นที่จัดเก็บไฟล์อย่างถาวร
-    DOEDIT: บันทึก
-    DROPFILE: ลบไฟล์
-    DROPFILES: ลบไฟล์
     Dimensions: ขนาดสัดส่วน
     EDIT: แก้ไข
     EDITINFO: แก้ไขไฟล์นี้
     FIELDNOTSET: ไม่พบข้อมูลเกี่ยวกับไฟล์
-    FROMCOMPUTER: จากคอมพิวเตอร์ของคุณ
-    FROMCOMPUTERINFO: เลือกจากไฟล์
-    FROMFILES: จากไฟล์
     REMOVE: ลบออก
-    REMOVEINFO: "ลบไฟล์นี้จากที่นี่ แต่ไม่ต้องลบไฟล์ดังกล่าวจากพื้นที่จัดเก็บไฟล์"
-    STARTALL: เริ่มทั้งหมด
-    Saved: บันทึกแล้ว
-  Versioned:
-    has_many_Versions: เวอร์ชั่น

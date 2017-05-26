@@ -56,32 +56,52 @@
 class GroupedDropdownField extends DropdownField {
 
 	public function Field($properties = array()) {
-		$options = '';
-		foreach($this->getSource() as $value => $title) {
-			if(is_array($title)) {
-				$options .= "<optgroup label=\"$value\">";
-				foreach($title as $value2 => $title2) {
-					$disabled = '';
-					if( array_key_exists($value, $this->disabledItems)
-							&& is_array($this->disabledItems[$value])
-							&& in_array($value2, $this->disabledItems[$value]) ){
-						$disabled = 'disabled="disabled"';
+		$options = array();
+		foreach($this->getSource() as $valueOrGroupTitle => $titleOrGroup) {
+			// Option group
+			if(is_array($titleOrGroup)) {
+				$groupOptions = array();
+				foreach($titleOrGroup as $optionValue => $optionTitle) {
+					// Check sub-option disabled status
+					$disabled = false;
+					if( array_key_exists($valueOrGroupTitle, $this->disabledItems)
+							&& is_array($this->disabledItems[$valueOrGroupTitle])
+							&& in_array($optionValue, $this->disabledItems[$valueOrGroupTitle]) ){
+						$disabled = true;
 					}
-					$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
-					$options .= "<option$selected value=\"$value2\" $disabled>$title2</option>";
+					$groupOptions[] = array(
+						'Value' => $optionValue,
+						'Disabled' => $disabled,
+						'Title' => $optionTitle,
+						'Selected' => $optionValue == $this->value
+					);
 				}
-				$options .= "</optgroup>";
-			} else { // Fall back to the standard dropdown field
-				$disabled = '';
-				if( in_array($value, $this->disabledItems) ){
-					$disabled = 'disabled="disabled"';
-				}
-				$selected = $value == $this->value ? " selected=\"selected\"" : "";
-				$options .= "<option$selected value=\"$value\" $disabled>$title</option>";
+
+				$options[] = array(
+					'Title' => $valueOrGroupTitle,
+					'Options' => new ArrayList($groupOptions),
+				);
+			} else {
+				// Single option
+				$disabled = in_array($valueOrGroupTitle, $this->disabledItems);
+
+				$options[] = array(
+					'Value' => $valueOrGroupTitle,
+					'Disabled' => $disabled,
+					'Title' => $titleOrGroup,
+					'Selected' => $valueOrGroupTitle == $this->value
+				);
 			}
 		}
 
-		return FormField::create_tag('select', $this->getAttributes(), $options);
+		// Render
+		$this->extend('onBeforeRender', $this);
+		$properties = array_merge($properties, array(
+			'Options' => new ArrayList($options)
+		));
+		return $this
+			->customise($properties)
+			->renderWith($this->getTemplates());
 	}
 
 	public function Type() {

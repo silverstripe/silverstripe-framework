@@ -14,12 +14,7 @@
 // You may copy this code freely under the conditions of the GPL.
 //
 
-// FIXME: possibly remove assert()'s for production version?
-
-// PHP3 does not have assert()
-/**
- */
-define('USE_ASSERTS', function_exists('assert'));
+define('USE_ASSERTS', true);
 
 /**
  * @package framework
@@ -52,7 +47,7 @@ class _DiffOp {
 class _DiffOp_Copy extends _DiffOp {
 	var $type = 'copy';
 
-	public function _DiffOp_Copy ($orig, $final = false) {
+	public function __construct ($orig, $final = false) {
 		if (!is_array($final))
 			$final = $orig;
 		$this->orig = $orig;
@@ -72,7 +67,7 @@ class _DiffOp_Copy extends _DiffOp {
 class _DiffOp_Delete extends _DiffOp {
 	var $type = 'delete';
 
-	public function _DiffOp_Delete ($lines) {
+	public function __construct ($lines) {
 		$this->orig = $lines;
 		$this->final = false;
 	}
@@ -90,7 +85,7 @@ class _DiffOp_Delete extends _DiffOp {
 class _DiffOp_Add extends _DiffOp {
 	var $type = 'add';
 
-	public function _DiffOp_Add ($lines) {
+	public function __construct ($lines) {
 		$this->final = $lines;
 		$this->orig = false;
 	}
@@ -108,7 +103,7 @@ class _DiffOp_Add extends _DiffOp {
 class _DiffOp_Change extends _DiffOp {
 	var $type = 'change';
 
-	public function _DiffOp_Change ($orig, $final) {
+	public function __construct ($orig, $final) {
 		$this->orig = $orig;
 		$this->final = $final;
 	}
@@ -541,7 +536,7 @@ class Diff
 	 *        (Typically these are lines from a file.)
 	 * @param $to_lines array An array of strings.
 	 */
-	public function Diff($from_lines, $to_lines) {
+	public function __construct($from_lines, $to_lines) {
 		$eng = new _DiffEngine;
 		$this->edits = $eng->diff($from_lines, $to_lines);
 		//$this->_check($from_lines, $to_lines);
@@ -853,13 +848,13 @@ extends Diff
 	 * @param $mapped_to_lines array This array should
 	 *  have the same number of elements as $to_lines.
 	 */
-	public function MappedDiff($from_lines, $to_lines,
+	public function __construct($from_lines, $to_lines,
 						$mapped_from_lines, $mapped_to_lines) {
 
 		assert(sizeof($from_lines) == sizeof($mapped_from_lines));
 		assert(sizeof($to_lines) == sizeof($mapped_to_lines));
 
-		$this->Diff($mapped_from_lines, $mapped_to_lines);
+		parent::__construct($mapped_from_lines, $mapped_to_lines);
 
 		$xi = $yi = 0;
 		// Optimizing loop invariants:

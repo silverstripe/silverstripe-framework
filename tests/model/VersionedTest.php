@@ -180,11 +180,11 @@ class VersionedTest extends SapphireTest {
 	public function testVersionedFieldsAdded() {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj->dbObject('Version'));
+		$this->assertInstanceOf('DBInt', $obj->dbObject('Version'));
 
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj2->dbObject('Version'));
+		$this->assertInstanceOf('DBInt', $obj2->dbObject('Version'));
 	}
 
 	public function testVersionedFieldsNotInCMS() {

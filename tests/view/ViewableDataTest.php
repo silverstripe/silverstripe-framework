@@ -187,6 +187,11 @@ class ViewableDataTest extends SapphireTest {
 		// Ensure that defined methods detected from the failover aren't cached when setting a new failover
 		$container->setFailover(new ViewableDataTest_Failover);
 		$this->assertTrue($container->hasMethod('testMethod'));
+
+		// Test the reverse - that defined methods previously detected in a failover are removed if they no longer exist
+		$container->setFailover($failover);
+		$this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
+		$this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
 	}
 
 }

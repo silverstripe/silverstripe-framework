@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('fi', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti arkistoida nämä sivut?\n\nValitut sivut ja kaikki niiden alasivut poistetaan julkaisusta sekä siirretään arkistoon.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti poistaa nämä sivut näkyvistä?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti poistaa ne?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti julkaista?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti palauttaa sivut?\n\nArkistoitujen sivujen alasivut palautetaan juuritasolle, jos niitä sivuja ei palauteta.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Sinulla on {num} sivu(a) valittuna.\n\nHaluatko varmasti poistaa julkaisusta?",

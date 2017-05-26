@@ -252,7 +252,7 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('<script>[2]</script>')
 		);
 
-		$this->parser->register('2', function($attributes, $content, $this, $tag, $extra) {
+		$this->parser->register('2', function($attributes, $content, $parser, $tag, $extra) {
 			return 'this is 2';
 		});
 

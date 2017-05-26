@@ -1491,7 +1491,7 @@ EOC;
 		$parser = new SSTemplateParser();
 		$parser->addClosedBlock(
 			'test',
-			function (&$res) use (&$count) {
+			function ($res) use (&$count) {
 				$count++;
 			}
 		);
@@ -1507,7 +1507,7 @@ EOC;
 		$parser = new SSTemplateParser();
 		$parser->addOpenBlock(
 			'test',
-			function (&$res) use (&$count) {
+			function ($res) use (&$count) {
 				$count++;
 			}
 		);
