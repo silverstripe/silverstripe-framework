@@ -37,6 +37,13 @@ class VersionableExtensionsTest extends SapphireTest
 		parent::setUpOnce();
 	}
 
+	public function tearDownOnce()
+	{
+		parent::tearDownOnce();
+
+		Config::unnest();
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
