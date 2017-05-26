@@ -549,8 +549,6 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testDefaultClasses() {
-		Config::nest();
-
 		Config::inst()->update('Form', 'default_classes', array(
 			'class1',
 		));
@@ -579,8 +577,6 @@ class FormTest extends FunctionalTest {
 		$form->removeExtraClass('class3');
 
 		$this->assertNotContains('class3', $form->extraClass(), 'Class list contains unexpected class');
-
-		Config::unnest();
 	}
 
 	public function testAttributes() {
