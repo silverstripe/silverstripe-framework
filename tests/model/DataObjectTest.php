@@ -1126,7 +1126,6 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	public function testValidateModelDefinitionsFailsWithArray() {
-		Config::nest();
 
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
@@ -1134,54 +1133,33 @@ class DataObjectTest extends SapphireTest {
 		Config::inst()->update('DataObjectTest_Team', 'has_one', array('NotValid' => array('NoArraysAllowed')));
 		$this->setExpectedException('LogicException');
 
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$method->invoke($object);
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntKey() {
-		Config::nest();
-
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
 		Config::inst()->update('DataObjectTest_Team', 'has_many', array(12 => 'DataObjectTest_Player'));
 		$this->setExpectedException('LogicException');
 
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$method->invoke($object);
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntValue() {
-		Config::nest();
-
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
 		Config::inst()->update('DataObjectTest_Team', 'many_many', array('Players' => 12));
 		$this->setExpectedException('LogicException');
 
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$method->invoke($object);
 	}
 
 	/**
 	 * many_many_extraFields is allowed to have an array value, so shouldn't throw an exception
 	 */
 	public function testValidateModelDefinitionsPassesWithExtraFields() {
-		Config::nest();
-
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1191,12 +1169,9 @@ class DataObjectTest extends SapphireTest {
 		try {
 			$method->invoke($object);
 		} catch(Exception $e) {
-			Config::unnest();
 			$this->fail('Exception should not be thrown');
 			throw $e;
 		}
-
-		Config::unnest();
 	}
 
 	public function testNewClassInstance() {
