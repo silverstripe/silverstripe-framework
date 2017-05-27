@@ -21,9 +21,7 @@ class CoreTest extends SapphireTest {
 		if(file_exists($this->tempPath)) {
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user . $phpversion);
 		} else {
-			$user = getTempFolderUsername();
-			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-				preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache';
 
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(
@@ -45,9 +43,9 @@ class CoreTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown();
 		$user = getTempFolderUsername();
-		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-			preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache' . $phpversion;
+		
 		foreach(array(
 			'C--inetpub-wwwroot-silverstripe-test-project',
 			'-Users-joebloggs-Sites-silverstripe-test-project',
@@ -60,5 +58,4 @@ class CoreTest extends SapphireTest {
 			}
 		}
 	}
-
 }
