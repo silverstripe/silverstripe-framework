@@ -398,6 +398,7 @@ class SecurityTest extends FunctionalTest {
 	public function testRepeatedLoginAttemptsLockingPeopleOut() {
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');
+		SS_Datetime::set_mock_now(DBField::create_field('SS_Datetime', '2017-05-22 00:00:00'));
 
 		Member::config()->lock_out_after_incorrect_logins = 5;
 		Member::config()->lock_out_delay_mins = 15;
@@ -414,10 +415,9 @@ class SecurityTest extends FunctionalTest {
 				);
 				$this->assertContains($this->loginErrorMessage(), Convert::raw2xml(_t('Member.ERRORWRONGCRED')));
 			} else {
-				// Fuzzy matching for time to avoid side effects from slow running tests
-				$this->assertGreaterThan(
-					time() + 14*60,
-					strtotime($member->LockedOutUntil),
+				$this->assertEquals(
+					SS_Datetime::now()->Format('U') + (15 * 60),
+					$member->dbObject('LockedOutUntil')->Format('U'),
 					'User has a lockout time set after too many failed attempts'
 				);
 			}
@@ -440,14 +440,12 @@ class SecurityTest extends FunctionalTest {
 			'The user can\'t log in after being locked out, even with the right password'
 		);
 
-		// (We fake this by re-setting LockedOutUntil)
-		$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
-		$member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
-		$member->write();
+		// Move into the future so we can login again
+		SS_Datetime::set_mock_now(DBField::create_field('SS_Datetime', '2017-06-22 00:00:00'));
 		$this->doTestLoginForm('testuser@example.com' , '1nitialPassword');
 		$this->assertEquals(
-			$this->session()->inst_get('loggedInAs'),
 			$member->ID,
+			$this->session()->inst_get('loggedInAs'),
 			'After lockout expires, the user can login again'
 		);
 
@@ -467,8 +465,8 @@ class SecurityTest extends FunctionalTest {
 
 		$this->doTestLoginForm('testuser@example.com' , '1nitialPassword');
 		$this->assertEquals(
-			$this->session()->inst_get('loggedInAs'),
 			$member->ID,
+			$this->session()->inst_get('loggedInAs'),
 			'The user can login successfully after lockout expires, if staying below the threshold'
 		);
 
