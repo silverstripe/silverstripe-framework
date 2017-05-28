@@ -757,9 +757,36 @@ class DataQuery
     }
 
     /**
+     * Prefix of all joined table aliases. E.g. ->filter('Banner.Image.Title)'
+     * Will join the Banner, and then Image relations
+     * `$relationPrefx` will be `banner_image_`
+     * Each table in the Image chain will be suffixed to this prefix. E.g.
+     * `banner_image_File` and `banner_image_Image`
+     *
+     * This will be null if no relation is joined.
+     * E.g. `->filter('Title')`
+     *
+     * @param string|array $relation Relation in '.' delimited string, or array of parts
+     * @return string Table prefix
+     */
+    public static function applyRelationPrefix($relation)
+    {
+        if (!$relation) {
+            return null;
+        }
+        if (is_string($relation)) {
+            $relation = explode(".", $relation);
+        }
+        return strtolower(implode('_', $relation)) . '_';
+    }
+
+    /**
      * Traverse the relationship fields, and add the table
      * mappings to the query object state. This has to be called
      * in any overloaded {@link SearchFilter->apply()} methods manually.
+     *
+     * Note, that in order to filter against the joined relation user code must
+     * use {@see tablePrefix()} to get the table alias used for this relation.
      *
      * @param string|array $relation The array/dot-syntax relation to follow
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
@@ -780,20 +807,43 @@ class DataQuery
         $modelClass = $this->dataClass;
 
         $schema = DataObject::getSchema();
+        $currentRelation = [];
         foreach ($relation as $rel) {
+            // Get prefix for join for this table (and parent to join on)
+            $parentPrefix = $this->applyRelationPrefix($currentRelation);
+            $currentRelation[] = $rel;
+            $tablePrefix = $this->applyRelationPrefix($currentRelation);
+
+            // Check has_one
             if ($component = $schema->hasOneComponent($modelClass, $rel)) {
                 // Join via has_one
-                $this->joinHasOneRelation($modelClass, $rel, $component);
+                $this->joinHasOneRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix);
                 $modelClass = $component;
-            } elseif ($component = $schema->hasManyComponent($modelClass, $rel)) {
+                continue;
+            }
+
+            // Check has_many
+            if ($component = $schema->hasManyComponent($modelClass, $rel)) {
                 // Fail on non-linear relations
                 if ($linearOnly) {
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
                 }
                 // Join via has_many
-                $this->joinHasManyRelation($modelClass, $rel, $component);
+                $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'has_many');
                 $modelClass = $component;
-            } elseif ($component = $schema->manyManyComponent($modelClass, $rel)) {
+                continue;
+            }
+
+            // check belongs_to (like has_many but linear safe)
+            if ($component = $schema->belongsToComponent($modelClass, $rel)) {
+                // Piggy back off has_many logic
+                $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'belongs_to');
+                $modelClass = $component;
+                continue;
+            }
+
+            // Check many_many
+            if ($component = $schema->manyManyComponent($modelClass, $rel)) {
                 // Fail on non-linear relations
                 if ($linearOnly) {
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
@@ -804,15 +854,90 @@ class DataQuery
                     $component['childClass'],
                     $component['parentField'],
                     $component['childField'],
-                    $component['join']
+                    $component['join'],
+                    $parentPrefix,
+                    $tablePrefix
                 );
                 $modelClass = $component['childClass'];
-            } else {
-                throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
+                continue;
             }
+
+            // no relation
+            throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
         }
 
         return $modelClass;
+    }
+
+    /**
+     * Join the given has_many relation to this query.
+     * Also works with belongs_to
+     *
+     * Doesn't work with polymorphic relationships
+     *
+     * @param string $localClass Name of class that has the has_many to the joined class
+     * @param string $localField Name of the has_many relationship to join
+     * @param string $foreignClass Class to join
+     * @param string $localPrefix Table prefix for parent class
+     * @param string $foreignPrefix Table prefix to use
+     * @param string $type 'has_many' or 'belongs_to'
+     */
+    protected function joinHasManyRelation(
+        $localClass,
+        $localField,
+        $foreignClass,
+        $localPrefix = null,
+        $foreignPrefix = null,
+        $type = 'has_many'
+    ) {
+        if (!$foreignClass || $foreignClass === DataObject::class) {
+            throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
+        }
+        $schema = DataObject::getSchema();
+
+        // Skip if already joined
+        // Note: don't just check base class, since we need to join on the table with the actual relation key
+        $foreignTable = $schema->tableName($foreignClass);
+        $foreignTableAliased = $foreignPrefix . $foreignTable;
+        if ($this->query->isJoinedTo($foreignTableAliased)) {
+            return;
+        }
+
+        // Join table with associated has_one
+        /** @var DataObject $model */
+        $foreignKey = $schema->getRemoteJoinField($localClass, $localField, $type, $polymorphic);
+        $localIDColumn = $schema->sqlColumnForField($localClass, 'ID', $localPrefix);
+        if ($polymorphic) {
+            $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}ID", $foreignPrefix);
+            $foreignKeyClassColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}Class", $foreignPrefix);
+            $localClassColumn = $schema->sqlColumnForField($localClass, 'ClassName', $localPrefix);
+            $joinExpression =
+                "{$foreignKeyIDColumn} = {$localIDColumn} AND {$foreignKeyClassColumn} = {$localClassColumn}";
+        } else {
+            $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, $foreignKey, $foreignPrefix);
+            $joinExpression = "{$foreignKeyIDColumn} = {$localIDColumn}";
+        }
+        $this->query->addLeftJoin(
+            $foreignTable,
+            $joinExpression,
+            $foreignTableAliased
+        );
+
+        // Add join clause to the component's ancestry classes so that the search filter could search on
+        // its ancestor fields.
+        $ancestry = ClassInfo::ancestry($foreignClass, true);
+        $ancestry = array_reverse($ancestry);
+        foreach ($ancestry as $ancestor) {
+            $ancestorTable = $schema->tableName($ancestor);
+            if ($ancestorTable !== $foreignTable) {
+                $ancestorTableAliased = $foreignPrefix.$ancestorTable;
+                $this->query->addLeftJoin(
+                    $ancestorTable,
+                    "\"{$foreignTableAliased}\".\"ID\" = \"{$ancestorTableAliased}\".\"ID\"",
+                    $ancestorTableAliased
+                );
+            }
+        }
     }
 
     /**
@@ -821,14 +946,21 @@ class DataQuery
      * @param string $localClass Name of class that has the has_one to the joined class
      * @param string $localField Name of the has_one relationship to joi
      * @param string $foreignClass Class to join
+     * @param string $localPrefix Table prefix to use for local class
+     * @param string $foreignPrefix Table prefix to use for joined table
      */
-    protected function joinHasOneRelation($localClass, $localField, $foreignClass)
-    {
+    protected function joinHasOneRelation(
+        $localClass,
+        $localField,
+        $foreignClass,
+        $localPrefix = null,
+        $foreignPrefix = null
+    ) {
         if (!$foreignClass) {
             throw new InvalidArgumentException("Could not find a has_one relationship {$localField} on {$localClass}");
         }
 
-        if ($foreignClass === 'SilverStripe\ORM\DataObject') {
+        if ($foreignClass === DataObject::class) {
             throw new InvalidArgumentException(
                 "Could not join polymorphic has_one relationship {$localField} on {$localClass}"
             );
@@ -838,14 +970,18 @@ class DataQuery
         // Skip if already joined
         $foreignBaseClass = $schema->baseDataClass($foreignClass);
         $foreignBaseTable = $schema->tableName($foreignBaseClass);
-        if ($this->query->isJoinedTo($foreignBaseTable)) {
+        if ($this->query->isJoinedTo($foreignPrefix.$foreignBaseTable)) {
             return;
         }
 
         // Join base table
-        $foreignIDColumn = $schema->sqlColumnForField($foreignBaseClass, 'ID');
-        $localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID");
-        $this->query->addLeftJoin($foreignBaseTable, "{$foreignIDColumn} = {$localColumn}");
+        $foreignIDColumn = $schema->sqlColumnForField($foreignBaseClass, 'ID', $foreignPrefix);
+        $localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID", $localPrefix);
+        $this->query->addLeftJoin(
+            $foreignBaseTable,
+            "{$foreignIDColumn} = {$localColumn}",
+            $foreignPrefix.$foreignBaseTable
+        );
 
         // Add join clause to the component's ancestry classes so that the search filter could search on
         // its ancestor fields.
@@ -855,59 +991,13 @@ class DataQuery
             foreach ($ancestry as $ancestor) {
                 $ancestorTable = $schema->tableName($ancestor);
                 if ($ancestorTable !== $foreignBaseTable) {
-                    $this->query->addLeftJoin($ancestorTable, "{$foreignIDColumn} = \"{$ancestorTable}\".\"ID\"");
+                    $ancestorTableAliased = $foreignPrefix.$ancestorTable;
+                    $this->query->addLeftJoin(
+                        $ancestorTable,
+                        "{$foreignIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
+                        $ancestorTableAliased
+                    );
                 }
-            }
-        }
-    }
-
-    /**
-     * Join the given has_many relation to this query.
-     *
-     * Doesn't work with polymorphic relationships
-     *
-     * @param string $localClass Name of class that has the has_many to the joined class
-     * @param string $localField Name of the has_many relationship to join
-     * @param string $foreignClass Class to join
-     */
-    protected function joinHasManyRelation($localClass, $localField, $foreignClass)
-    {
-        if (!$foreignClass || $foreignClass === 'SilverStripe\ORM\DataObject') {
-            throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
-        }
-        $schema = DataObject::getSchema();
-
-        // Skip if already joined
-        $foreignTable = $schema->tableName($foreignClass);
-        if ($this->query->isJoinedTo($foreignTable)) {
-            return;
-        }
-
-        // Join table with associated has_one
-        /** @var DataObject $model */
-        $foreignKey = $schema->getRemoteJoinField($localClass, $localField, 'has_many', $polymorphic);
-        $localIDColumn = $schema->sqlColumnForField($localClass, 'ID');
-        if ($polymorphic) {
-            $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}ID");
-            $foreignKeyClassColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}Class");
-            $localClassColumn = $schema->sqlColumnForField($localClass, 'ClassName');
-            $this->query->addLeftJoin(
-                $foreignTable,
-                "{$foreignKeyIDColumn} = {$localIDColumn} AND {$foreignKeyClassColumn} = {$localClassColumn}"
-            );
-        } else {
-            $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, $foreignKey);
-            $this->query->addLeftJoin($foreignTable, "{$foreignKeyIDColumn} = {$localIDColumn}");
-        }
-
-        // Add join clause to the component's ancestry classes so that the search filter could search on
-        // its ancestor fields.
-        $ancestry = ClassInfo::ancestry($foreignClass, true);
-        $ancestry = array_reverse($ancestry);
-        foreach ($ancestry as $ancestor) {
-            $ancestorTable = $schema->tableName($ancestor);
-            if ($ancestorTable !== $foreignTable) {
-                $this->query->addInnerJoin($ancestorTable, "\"{$foreignTable}\".\"ID\" = \"{$ancestorTable}\".\"ID\"");
             }
         }
     }
@@ -921,6 +1011,8 @@ class DataQuery
      * @param string $parentField
      * @param string $componentField
      * @param string $relationClassOrTable Name of relation table
+     * @param string $parentPrefix Table prefix for parent class
+     * @param string $componentPrefix Table prefix to use for both joined and mapping table
      */
     protected function joinManyManyRelationship(
         $relationClass,
@@ -928,7 +1020,9 @@ class DataQuery
         $componentClass,
         $parentField,
         $componentField,
-        $relationClassOrTable
+        $relationClassOrTable,
+        $parentPrefix = null,
+        $componentPrefix = null
     ) {
         $schema = DataObject::getSchema();
 
@@ -936,23 +1030,30 @@ class DataQuery
             $relationClassOrTable = $schema->tableName($relationClassOrTable);
         }
 
-        // Join on parent table
-        $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID');
+        // Check if already joined to component alias (skip join table for the check)
+        $componentBaseClass = $schema->baseDataClass($componentClass);
+        $componentBaseTable = $schema->tableName($componentBaseClass);
+        $componentAliasedTable = $componentPrefix . $componentBaseTable;
+        if ($this->query->isJoinedTo($componentAliasedTable)) {
+            return;
+        }
+
+        // Join parent class to join table
+        $relationAliasedTable = $componentPrefix.$relationClassOrTable;
+        $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID', $parentPrefix);
         $this->query->addLeftJoin(
             $relationClassOrTable,
-            "\"$relationClassOrTable\".\"$parentField\" = {$parentIDColumn}"
+            "\"{$relationAliasedTable}\".\"{$parentField}\" = {$parentIDColumn}",
+            $relationAliasedTable
         );
 
         // Join on base table of component class
-        $componentBaseClass = $schema->baseDataClass($componentClass);
-        $componentBaseTable = $schema->tableName($componentBaseClass);
-        $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID');
-        if (!$this->query->isJoinedTo($componentBaseTable)) {
+        $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID', $componentPrefix);
             $this->query->addLeftJoin(
                 $componentBaseTable,
-                "\"$relationClassOrTable\".\"$componentField\" = {$componentIDColumn}"
+                "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
+                $componentAliasedTable
             );
-        }
 
         // Add join clause to the component's ancestry classes so that the search filter could search on
         // its ancestor fields.
@@ -960,8 +1061,13 @@ class DataQuery
         $ancestry = array_reverse($ancestry);
         foreach ($ancestry as $ancestor) {
             $ancestorTable = $schema->tableName($ancestor);
-            if ($ancestorTable != $componentBaseTable && !$this->query->isJoinedTo($ancestorTable)) {
-                $this->query->addLeftJoin($ancestorTable, "{$componentIDColumn} = \"{$ancestorTable}\".\"ID\"");
+            if ($ancestorTable !== $componentBaseTable) {
+                $ancestorTableAliased = $componentPrefix.$ancestorTable;
+                $this->query->addLeftJoin(
+                    $ancestorTable,
+                    "{$componentIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
+                    $ancestorTableAliased
+                );
             }
         }
     }
@@ -1060,7 +1166,6 @@ class DataQuery
 
     /**
      * An arbitrary store of query parameters that can be used by decorators.
-     * @todo This will probably be made obsolete if we have subclasses of DataList and/or DataQuery.
      */
     private $queryParams;
 

@@ -13,6 +13,8 @@ use SilverStripe\ORM\ManyManyList;
  */
 class Class4 extends DataObject implements TestOnly
 {
+    private static $table_name = 'DataObjectDuplicateTest_Class4';
+
     private static $db = [
         'Title' => 'Varchar',
     ];

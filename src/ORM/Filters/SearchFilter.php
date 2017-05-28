@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
@@ -28,7 +29,11 @@ abstract class SearchFilter
     use Injectable;
 
     /**
-     * @var string Classname of the inspected {@link DataObject}
+     * Classname of the inspected {@link DataObject}.
+     * If pointing to a relation, this will be the classname of the leaf
+     * class in the relation
+     *
+     * @var string
      */
     protected $model;
 
@@ -53,11 +58,13 @@ abstract class SearchFilter
     protected $modifiers;
 
     /**
-     * @var string Name of a has-one, has-many or many-many relation (not the classname).
+     * @var array Parts of a has-one, has-many or many-many relation (not the classname).
      * Set in the constructor as part of the name in dot-notation, and used in
      * {@link applyRelation()}.
+     *
+     * Also used to build table prefix (see getRelationTablePrefix)
      */
-    protected $relation;
+    protected $relation = [];
 
     /**
      * An array of data about an aggregate column being used
@@ -137,11 +144,11 @@ abstract class SearchFilter
      * Set the root model class to be selected by this
      * search query.
      *
-     * @param string $className
+     * @param string|DataObject $className
      */
     public function setModel($className)
     {
-        $this->model = $className;
+        $this->model = ClassInfo::class_name($className);
     }
 
     /**
@@ -261,6 +268,7 @@ abstract class SearchFilter
                 "Model supplied to " . static::class . " should be an instance of DataObject."
             );
         }
+        $tablePrefix = DataQuery::applyRelationPrefix($this->relation);
         $schema = DataObject::getSchema();
 
         if ($this->aggregate) {
@@ -280,24 +288,25 @@ abstract class SearchFilter
                 ));
             }
             return sprintf(
-                '%s("%s".%s)',
+                '%s("%s%s".%s)',
                 $function,
+                $tablePrefix,
                 $table,
                 $column ? "\"$column\"" : '"ID"'
             );
         }
 
 
-        // Find table this field belongs to
+        // Check if this column is a table on the current model
         $table = $schema->tableForField($this->model, $this->name);
-        if (!$table) {
-            // fallback to the provided name in the event of a joined column
-            // name (as the candidate class doesn't check joined records)
-            $parts = explode('.', $this->fullName);
-            return '"' . implode('"."', $parts) . '"';
+        if ($table) {
+            return $schema->sqlColumnForField($this->model, $this->name, $tablePrefix);
         }
 
-        return sprintf('"%s"."%s"', $table, $this->name);
+        // fallback to the provided name in the event of a joined column
+        // name (as the candidate class doesn't check joined records)
+        $parts = explode('.', $this->fullName);
+        return '"' . implode('"."', $parts) . '"';
     }
 
     /**

@@ -75,13 +75,13 @@ class DataQueryTest extends SapphireTest
         // Test applyRelation with two has_ones pointing to the same class
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestC');
-        $this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+        $this->assertTrue($dq->query()->isJoinedTo('testc_DataQueryTest_C'));
+        $this->assertContains('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
 
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestCTwo');
-        $this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+        $this->assertTrue($dq->query()->isJoinedTo('testctwo_DataQueryTest_C'));
+        $this->assertContains('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
     }
 
     public function testApplyReplationDeepInheretence()
@@ -91,7 +91,7 @@ class DataQueryTest extends SapphireTest
         //apply a relation to a relation from an ancestor class
         $newDQ->applyRelation('TestA');
         $this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
+        $this->assertContains('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 
         //test many_many relation
 

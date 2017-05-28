@@ -136,12 +136,12 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $config = new GridFieldConfig_RecordEditor();
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $state = $gridField->State->GridFieldSortableHeader;
-        $compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
+        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 
         // Test that inherited dataobjects will work correctly
         $state->SortColumn = 'Cheerleader.Hat.Colour';
         $state->SortDirection = 'asc';
-        $relationListA = $compontent->getManipulatedData($gridField, $list);
+        $relationListA = $component->getManipulatedData($gridField, $list);
         $relationListAsql = Convert::nl2os($relationListA->sql(), ' ');
 
         // Assert that all tables are joined properly
@@ -153,12 +153,16 @@ class GridFieldSortableHeaderTest extends SapphireTest
         );
         $this->assertContains(
             'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
-            . 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleaderID"',
+            . 'AS "cheerleader_GridFieldSortableHeaderTest_Cheerleader" '
+            . 'ON "cheerleader_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
+            . '"GridFieldSortableHeaderTest_Team"."CheerleaderID"',
             $relationListAsql
         );
         $this->assertContains(
             'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'ON "GridFieldSortableHeaderTest_CheerleaderHat"."ID" = "GridFieldSortableHeaderTest_Cheerleader"."HatID"',
+            . 'AS "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
+            . 'ON "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '
+            . '"cheerleader_GridFieldSortableHeaderTest_Cheerleader"."HatID"',
             $relationListAsql
         );
 
@@ -168,7 +172,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
             $relationListA->column('City')
         );
         $state->SortDirection = 'desc';
-        $relationListAdesc = $compontent->getManipulatedData($gridField, $list);
+        $relationListAdesc = $component->getManipulatedData($gridField, $list);
         $this->assertEquals(
             array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
             $relationListAdesc->column('City')
@@ -177,7 +181,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         // Test subclasses of tables
         $state->SortColumn = 'CheerleadersMom.Hat.Colour';
         $state->SortDirection = 'asc';
-        $relationListB = $compontent->getManipulatedData($gridField, $list);
+        $relationListB = $component->getManipulatedData($gridField, $list);
         $relationListBsql = $relationListB->sql();
 
         // Assert that subclasses are included in the query
@@ -188,20 +192,27 @@ class GridFieldSortableHeaderTest extends SapphireTest
             $relationListBsql
         );
         // Joined tables are joined basetable first
+        // Note: CheerLeader is base of Mom table, hence the alias
         $this->assertContains(
             'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
-                . 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
+            . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader" '
+            . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
+            . '"GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
             $relationListBsql
         );
         // Then the basetable of the joined record is joined to the specific subtable
         $this->assertContains(
             'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
-            . 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Mom"."ID"',
+            . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Mom" '
+            . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
+            . '"cheerleadersmom_GridFieldSortableHeaderTest_Mom"."ID"',
             $relationListBsql
         );
         $this->assertContains(
             'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'ON "GridFieldSortableHeaderTest_CheerleaderHat"."ID" = "GridFieldSortableHeaderTest_Cheerleader"."HatID"',
+            . 'AS "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
+            . 'ON "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '
+            . '"cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."HatID"',
             $relationListBsql
         );
 
@@ -212,7 +223,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
             $relationListB->column('City')
         );
         $state->SortDirection = 'desc';
-        $relationListBdesc = $compontent->getManipulatedData($gridField, $list);
+        $relationListBdesc = $component->getManipulatedData($gridField, $list);
         $this->assertEquals(
             array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
             $relationListBdesc->column('City')

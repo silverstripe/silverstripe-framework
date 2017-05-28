@@ -5,10 +5,12 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
@@ -851,6 +853,69 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, $gtList->count());
     }
 
+    /**
+     * Test that a filter correctly aliases relationships that share common classes
+     */
+    public function testFilterSharedRelationalClasses()
+    {
+        /** @var Bracket $final1 */
+        $final1 = $this->objFromFixture(Bracket::class, 'final');
+        $prefinal1 = $this->objFromFixture(Bracket::class, 'prefinal1');
+        $prefinal2 = $this->objFromFixture(Bracket::class, 'prefinal2');
+        $semifinal1 = $this->objFromFixture(Bracket::class, 'semifinal1');
+        $team2 = $this->objFromFixture(Team::class, 'team2');
+
+        // grand child can be found from parent
+        $found = Bracket::get()->filter('Next.Next.Title', $final1->Title);
+        $this->assertDOSEquals(
+            [['Title' => $semifinal1->Title]],
+            $found
+        );
+
+        // grand child can be found from child
+        $found = Bracket::get()->filter('Next.Title', $prefinal1->Title);
+        $this->assertDOSEquals(
+            [['Title' => $semifinal1->Title]],
+            $found
+        );
+
+        // child can be found from parent
+        $found = Bracket::get()->filter('Next.Title', $final1->Title);
+        $this->assertDOSEquals(
+            [
+                ['Title' => $prefinal1->Title],
+                ['Title' => $prefinal2->Title]
+            ],
+            $found
+        );
+
+        // Complex filter, get brackets where the following bracket was won by team 1
+        // Note: Includes results from multiple levels
+        $found = Bracket::get()->filter('Next.Winner.Title', $team2->Title);
+        $this->assertDOSEquals(
+            [
+                ['Title' => $prefinal1->Title],
+                ['Title' => $prefinal2->Title],
+                ['Title' => $semifinal1->Title]
+            ],
+            $found
+        );
+    }
+
+    public function testFilterOnImplicitJoinWithSharedInheritance()
+    {
+        $list = DataObjectTest\RelationChildFirst::get()->filter(array(
+            'ManyNext.ID' => array(
+                $this->idFromFixture(DataObjectTest\RelationChildSecond::class, 'test1'),
+                $this->idFromFixture(DataObjectTest\RelationChildSecond::class, 'test2'),
+            ),
+        ));
+        $this->assertEquals(2, $list->count());
+        $ids = $list->column('ID');
+        $this->assertContains($this->idFromFixture(DataObjectTest\RelationChildFirst::class, 'test1'), $ids);
+        $this->assertContains($this->idFromFixture(DataObjectTest\RelationChildFirst::class, 'test2'), $ids);
+    }
+
     public function testFilterAny()
     {
         $list = TeamComment::get();
@@ -1229,13 +1294,13 @@ class DataListTest extends SapphireTest
         $filter = new ExactMatchFilter(
             'Comments.Count()'
         );
-        $filter->setModel(new DataObjectTest\Team());
-        $this->assertEquals('COUNT("DataObjectTest_Team"."ID")', $filter->getDBName());
+        $filter->apply(new DataQuery(DataObjectTest\Team::class));
+        $this->assertEquals('COUNT("comments_DataObjectTest_TeamComment"."ID")', $filter->getDBName());
 
         foreach (['Comments.Max(ID)', 'Comments.Max( ID )', 'Comments.Max(  ID)'] as $name) {
             $filter = new ExactMatchFilter($name);
-            $filter->setModel(new DataObjectTest\Team());
-            $this->assertEquals('MAX("DataObjectTest_Team"."ID")', $filter->getDBName());
+            $filter->apply(new DataQuery(DataObjectTest\Team::class));
+            $this->assertEquals('MAX("comments_DataObjectTest_TeamComment"."ID")', $filter->getDBName());
         }
     }
 
