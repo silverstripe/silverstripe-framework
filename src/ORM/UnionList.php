@@ -146,8 +146,12 @@ class UnionList extends ViewableData implements SS_List
      */
     public function first()
     {
-        $list = reset($this->lists);
-        return $list ? $list->first() : null;
+        foreach ($this->lists as $list) {
+            foreach ($list as $record) {
+                return $record;
+            }
+        }
+        return null;
     }
 
     /**
@@ -157,8 +161,12 @@ class UnionList extends ViewableData implements SS_List
      */
     public function last()
     {
-        $list = end($this->lists);
-        return $list ? $list->last() : null;
+        foreach (array_reverse($this->lists) as $list) {
+            foreach ($list->reverse() as $record) {
+                return $record;
+            }
+        }
+        return null;
     }
 
      /**
