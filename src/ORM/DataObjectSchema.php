@@ -922,9 +922,9 @@ class DataObjectSchema
         if (empty($remoteField)) {
             // look for remote has_one joins on this class or any parent classes
             $remoteRelationsMap = array_flip($remoteRelations);
-            foreach (array_reverse(ClassInfo::ancestry($class)) as $class) {
-                if (array_key_exists($class, $remoteRelationsMap)) {
-                    $remoteField = $remoteRelationsMap[$class];
+            foreach (array_reverse(ClassInfo::ancestry($class)) as $ancestryClass) {
+                if (array_key_exists($ancestryClass, $remoteRelationsMap)) {
+                    $remoteField = $remoteRelationsMap[$ancestryClass];
                     break;
                 }
             }
