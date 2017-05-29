@@ -352,7 +352,7 @@ mappings:
   HTMLEditorConfig: SilverStripe\Forms\HTMLEditor\HTMLEditorConfig
   HTMLEditorField: SilverStripe\Forms\HTMLEditor\HTMLEditorField
   HTMLEditorField_Readonly: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
-  HTMLEditorField_Toolbar: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar
+  HTMLEditorField_Toolbar: SilverStripe\Admin\ModalController\HTMLEditorField_Toolbar
   HTMLEditorField_Embed: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Embed
   HTMLEditorField_File: SilverStripe\Forms\HTMLEditor\HTMLEditorField_File
   HTMLEditorField_Flash: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Flash

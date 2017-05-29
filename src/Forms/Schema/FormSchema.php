@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Schema;
 
 use InvalidArgumentException;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -16,6 +17,8 @@ use SilverStripe\ORM\ValidationResult;
  */
 class FormSchema
 {
+    use Injectable;
+
     /**
      * Request the schema part
      */

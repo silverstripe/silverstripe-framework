@@ -2,39 +2,26 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
-use Page;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image;
 use SilverStripe\Forms\HTMLReadonlyField;
-use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\DummyMediaFormFieldExtension;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class HTMLEditorFieldTest extends FunctionalTest
 {
-
     protected static $fixture_file = 'HTMLEditorFieldTest.yml';
 
     protected static $use_draft_site = true;
-
-    protected static $required_extensions= array(
-        HTMLEditorField_Toolbar::class => array(
-            DummyMediaFormFieldExtension::class,
-        ),
-    );
 
     protected static $extra_dataobjects = [
         TestObject::class,
@@ -48,16 +35,16 @@ class HTMLEditorFieldTest extends FunctionalTest
         TestAssetStore::activate('HTMLEditorFieldTest');
 
         // Set the File Name Filter replacements so files have the expected names
-        Config::inst()->update(
+        Config::modify()->set(
             FileNameFilter::class,
             'default_replacements',
-            array(
-            '/\s/' => '-', // remove whitespace
-            '/_/' => '-', // underscores to dashes
-            '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
-            '/[\-]{2,}/' => '-', // remove duplicate dashes
-            '/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
-            )
+            [
+                '/\s/' => '-', // remove whitespace
+                '/_/' => '-', // underscores to dashes
+                '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+                '/[\-]{2,}/' => '-', // remove duplicate dashes
+                '/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
+            ]
         );
 
         // Create a test files for each of the fixture references
@@ -175,73 +162,6 @@ class HTMLEditorFieldTest extends FunctionalTest
         );
     }
 
-    public function testGetAnchors()
-    {
-        if (!class_exists('Page')) {
-            $this->markTestSkipped();
-        }
-        $linkedPage = new Page();
-        $linkedPage->Title = 'Dummy';
-        $linkedPage->write();
-
-        $html = <<<EOS
-<div name="foo"></div>
-<div name='bar'></div>
-<div id="baz"></div>
-[sitetree_link id="{$linkedPage->ID}"]
-<div id='bam'></div>
-<div id = "baz"></div>
-<div id = ""></div>
-<div id="some'id"></div>
-<div id=bar></div>
-EOS
-        ;
-        $expected = array(
-            'foo',
-            'bar',
-            'baz',
-            'bam',
-            "some&#039;id",
-        );
-        $page = new Page();
-        $page->Title = 'Test';
-        $page->Content = $html;
-        $page->write();
-        $this->useDraftSite(true);
-
-        $request = new HTTPRequest(
-            'GET',
-            '/',
-            array(
-            'PageID' => $page->ID,
-            )
-        );
-
-        $toolBar = new HTMLEditorField_Toolbar(new Controller(), 'test');
-        $toolBar->setRequest($request);
-
-        $results = json_decode($toolBar->getanchors(), true);
-        $this->assertEquals($expected, $results);
-    }
-
-    public function testHTMLEditorFieldFileLocal()
-    {
-        $file = new HTMLEditorField_Image('http://domain.com/folder/my_image.jpg?foo=bar');
-        $this->assertEquals('http://domain.com/folder/my_image.jpg?foo=bar', $file->URL);
-        $this->assertEquals('my_image.jpg', $file->Name);
-        $this->assertEquals('jpg', $file->Extension);
-        // TODO Can't easily test remote file dimensions
-    }
-
-    public function testHTMLEditorFieldFileRemote()
-    {
-        $fileFixture = new File(array('Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg'));
-        $file = new HTMLEditorField_Image('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
-        $this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
-        $this->assertEquals('my_local_image.jpg', $file->Name);
-        $this->assertEquals('jpg', $file->Extension);
-    }
-
     public function testReadonlyField()
     {
         $editor = new HTMLEditorField('Content');
@@ -252,13 +172,9 @@ EOS
                 $fileID
             )
         );
-        /**
- * @var HTMLReadonlyField $readonly
-*/
+        /** @var HTMLReadonlyField $readonly */
         $readonly = $editor->performReadonlyTransformation();
-        /**
- * @var DBHTMLText $readonlyContent
-*/
+        /** @var DBHTMLText $readonlyContent */
         $readonlyContent = $readonly->Field();
 
         $this->assertEquals(
@@ -276,9 +192,7 @@ EOS
         // Test with include input tag
         $readonly = $editor->performReadonlyTransformation()
             ->setIncludeHiddenField(true);
-        /**
- * @var DBHTMLText $readonlyContent
-*/
+        /** @var DBHTMLText $readonlyContent */
         $readonlyContent = $readonly->Field();
         $this->assertEquals(
             <<<EOS
