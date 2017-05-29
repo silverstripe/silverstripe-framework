@@ -21,8 +21,7 @@ class CoreTest extends SapphireTest {
 		if(file_exists($this->tempPath)) {
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user . $phpversion);
 		} else {
-			$user = getTempFolderUsername();
-			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache';
+			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache' . $phpversion;
 
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(
@@ -59,5 +58,4 @@ class CoreTest extends SapphireTest {
 			}
 		}
 	}
-
 }
