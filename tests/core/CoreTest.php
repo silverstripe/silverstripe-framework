@@ -45,7 +45,7 @@ class CoreTest extends SapphireTest {
 		parent::tearDown();
 		$user = getTempFolderUsername();
 		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache' .
-			preg_replace('/[^\w-\.+]+/', '-');
+			preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		foreach(array(
 			'C--inetpub-wwwroot-silverstripe-test-project',
