@@ -25,17 +25,17 @@ class CoreTest extends SapphireTest {
 
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(
-				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
+				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
 
 			// A typical Mac OS X location for where sites are stored
 			$this->assertEquals(
-				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
+				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'));
 
 			// A typical Linux location for where sites are stored
 			$this->assertEquals(
-				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
+				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
 				getTempFolder('/var/www/silverstripe-test-project'));
 		}
 	}
