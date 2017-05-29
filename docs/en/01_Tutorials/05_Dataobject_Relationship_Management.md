@@ -115,7 +115,7 @@ The restriction is enforced through the `$allowed_children` directive.
 
 **mysite/code/ProjectsHolder.php**
 
-:::php
+```php
 <?php
 
 use Page;
@@ -299,6 +299,7 @@ class Project extends Page
     // ...
     public function getCMSFields()
     {
+        $fields = parent::getCMSFields();
         // ...
         // Same setup, but for mentors
         $mentorsField = new GridField(
@@ -396,7 +397,7 @@ or the "Preview" feature in the CMS. You should see a list of all projects now.
 Add `?flush=1` to the page URL to force a refresh of the template cache.
 
 To get a list of all projects, we've looped through the "Children" list,
-which is a relationship we didn't define explictly.
+which is a relationship we didn't define explicitly.
 It is provided to us by the parent implementation,
 since projects are nothing other than children pages in the standard page hierarchy.
 
