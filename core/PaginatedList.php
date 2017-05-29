@@ -270,7 +270,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * </code>
 	 *
 	 * @param  int $context The number of pages to display around the current
-	 *         page. The number should be event, as half the number of each pages
+	 *         page. The number should be even, as half the number of each pages
 	 *         are displayed on either side of the current one.
 	 * @return SS_List
 	 */

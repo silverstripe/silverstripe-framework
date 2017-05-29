@@ -180,6 +180,45 @@ class MemberAuthenticatorTest extends SapphireTest {
 		), $form);
 
 		$this->assertTrue(Member::default_admin()->isLockedOut());
-		$this->assertEquals(Member::default_admin()->LockedOutUntil, '2016-04-18 00:10:00');
+		$this->assertEquals('2016-04-18 00:10:00', Member::default_admin()->LockedOutUntil);
+	}
+
+	public function testNonExistantMemberGetsLoginAttemptRecorded()
+	{
+		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', 1);
+		$email = 'notreal@example.com';
+		$this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+		$this->assertCount(0, LoginAttempt::get());
+		$response = MemberAuthenticator::authenticate(array(
+			'Email' => $email,
+			'Password' => 'password',
+		));
+		$this->assertNull($response);
+		$this->assertCount(1, LoginAttempt::get());
+		$attempt = LoginAttempt::get()->first();
+		$this->assertEquals($email, $attempt->Email);
+		$this->assertEquals('Failure', $attempt->Status);
+
+	}
+
+	public function testNonExistantMemberGetsLockedOut()
+	{
+		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', 1);
+		Config::inst()->update('Member', 'lock_out_delay_mins', 10);
+		$email = 'notreal@example.com';
+
+		$this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+
+		$response = MemberAuthenticator::authenticate(array(
+			'Email' => $email,
+			'Password' => 'password'
+		));
+
+		$this->assertNull($response);
+		$member = new Member();
+		$member->Email = $email;
+
+		$this->assertTrue($member->isLockedOut());
+		$this->assertFalse($member->canLogIn()->valid());
 	}
 }

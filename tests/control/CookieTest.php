@@ -6,14 +6,7 @@ class CookieTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		Injector::nest();
 		Injector::inst()->registerService(new CookieJar($_COOKIE), 'Cookie_Backend');
-	}
-
-	public function tearDown() {
-		//restore the cookie_backend
-		Injector::unnest();
-		parent::tearDown();
 	}
 
 	/**
