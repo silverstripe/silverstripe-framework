@@ -398,9 +398,44 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Returns true if this user is locked out
 	 */
 	public function isLockedOut() {
-        $state = ($this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil));
-        $this->extend('updateIsLockedOut', $state);
-        return $state;
+		$state = true;
+		if ($this->LockedOutUntil && $this->dbObject('LockedOutUntil')->InFuture()) {
+			$state = true;
+		} elseif ($this->config()->lock_out_after_incorrect_logins <= 0) {
+			$state = false;
+		} else {
+
+			$attempts = LoginAttempt::get()->filter($filter = array(
+				'Email' => $this->{static::config()->unique_identifier_field},
+			))->sort('Created', 'DESC')->limit($this->config()->lock_out_after_incorrect_logins);
+
+			if ($attempts->count() < $this->config()->lock_out_after_incorrect_logins) {
+				$state = false;
+			} else {
+
+				$success = false;
+				foreach ($attempts as $attempt) {
+					if ($attempt->Status === 'Success') {
+						$success = true;
+						$state = false;
+						break;
+					}
+				}
+
+				if (!$success) {
+					$lockedOutUntil = $attempts->first()->dbObject('Created')->Format('U')
+					                  + ($this->config()->lock_out_delay_mins * 60);
+					if (SS_Datetime::now()->Format('U') < $lockedOutUntil) {
+						$state = true;
+					} else {
+						$state = false;
+					}
+				}
+			}
+		}
+
+		$this->extend('updateIsLockedOut', $state);
+		return $state;
 	}
 
 	/**
@@ -1668,7 +1703,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function registerFailedLogin() {
 		if(self::config()->lock_out_after_incorrect_logins) {
 			// Keep a tally of the number of failed log-ins so that we can lock people out
-			$this->FailedLoginCount = $this->FailedLoginCount + 1;
+			++$this->FailedLoginCount;
 
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
@@ -1687,6 +1722,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(self::config()->lock_out_after_incorrect_logins) {
 			// Forgive all past login failures
 			$this->FailedLoginCount = 0;
+			$this->LockedOutUntil = null;
 			$this->write();
 		}
         $this->extend('onAfterRegisterSuccessfulLogin');
