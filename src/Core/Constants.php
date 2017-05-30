@@ -31,28 +31,6 @@ use SilverStripe\Control\Util\IPUtils;
 // ENVIRONMENT CONFIG
 
 /**
- * Validate whether the request comes directly from a trusted server or not
- * This is necessary to validate whether or not the values of X-Forwarded-
- * or Client-IP HTTP headers can be trusted
- */
-if (!defined('TRUSTED_PROXY')) {
-    define('TRUSTED_PROXY', call_user_func(function () {
-        $trustedIPs = getenv('SS_TRUSTED_PROXY_IPS');
-        if (empty($trustedIPs) || $trustedIPs === 'none') {
-            return false;
-        }
-        if ($trustedIPs === '*') {
-            return true;
-        }
-        // Validate IP address
-        if (isset($_SERVER['REMOTE_ADDR'])) {
-            return IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', $trustedIPs));
-        }
-        return false;
-    }));
-}
-
-/**
  * Define system paths
  */
 if (!defined('BASE_PATH')) {
@@ -88,6 +66,28 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
         }
         break;
     }
+}
+
+/**
+ * Validate whether the request comes directly from a trusted server or not
+ * This is necessary to validate whether or not the values of X-Forwarded-
+ * or Client-IP HTTP headers can be trusted
+ */
+if (!defined('TRUSTED_PROXY')) {
+    define('TRUSTED_PROXY', call_user_func(function () {
+        $trustedIPs = getenv('SS_TRUSTED_PROXY_IPS');
+        if (empty($trustedIPs) || $trustedIPs === 'none') {
+            return false;
+        }
+        if ($trustedIPs === '*') {
+            return true;
+        }
+        // Validate IP address
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            return IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', $trustedIPs));
+        }
+        return false;
+    }));
 }
 
 if (!defined('BASE_URL')) {
