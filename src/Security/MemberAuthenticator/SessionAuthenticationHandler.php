@@ -3,22 +3,24 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Director;
-use SilverStripe\Security\AuthenticationHandler as AuthenticationHandlerInterface;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\IdentityStore;
 
 /**
  * Authenticate a member pased on a session cookie
  */
-class SessionAuthenticationHandler implements AuthenticationHandlerInterface, IdentityStore
+class SessionAuthenticationHandler implements AuthenticationHandler, IdentityStore
 {
 
+    /**
+     * @var string
+     */
     private $sessionVariable;
 
     /**
@@ -35,7 +37,6 @@ class SessionAuthenticationHandler implements AuthenticationHandlerInterface, Id
      * Set the session variable name used to track member ID
      *
      * @param string $sessionVariable
-     * @return null
      */
     public function setSessionVariable($sessionVariable)
     {
@@ -44,12 +45,11 @@ class SessionAuthenticationHandler implements AuthenticationHandlerInterface, Id
 
     /**
      * @inherit
+     * @param HTTPRequest $request
+     * @return null|DataObject|Member
      */
     public function authenticateRequest(HTTPRequest $request)
     {
-        // @todo couple the session to a request object
-        // $session = $request->getSession();
-
         if ($id = Session::get($this->getSessionVariable())) {
             // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
             // ValidationException
@@ -61,17 +61,18 @@ class SessionAuthenticationHandler implements AuthenticationHandlerInterface, Id
 
     /**
      * @inherit
+     * @param Member $member
+     * @param bool $persistent
+     * @param HTTPRequest|null $request
+     * @return HTTPResponse|void
      */
-    public function logIn(Member $member, $persistent, HTTPRequest $request)
+    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
-        // @todo couple the session to a request object
-        // $session = $request->getSession();
-
         static::regenerateSessionId();
         Session::set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
-        // @todo make this a settign on the authentication handler
+        // @todo make this a setting on the authentication handler
         if (Member::config()->get('login_marker_cookie')) {
             Cookie::set(Member::config()->get('login_marker_cookie'), 1, 0);
         }
@@ -82,7 +83,7 @@ class SessionAuthenticationHandler implements AuthenticationHandlerInterface, Id
      */
     protected static function regenerateSessionId()
     {
-        if (!Member::config()->session_regenerate_id) {
+        if (!Member::config()->get('session_regenerate_id')) {
             return;
         }
 
@@ -100,14 +101,13 @@ class SessionAuthenticationHandler implements AuthenticationHandlerInterface, Id
             @session_regenerate_id(true);
         }
     }
-    /**
-     * @inherit
-     */
-    public function logOut(HTTPRequest $request)
-    {
-        // @todo couple the session to a request object
-        // $session = $request->getSession();
 
+    /**
+     * @param HTTPRequest|null $request
+     * @return HTTPResponse|void
+     */
+    public function logOut(HTTPRequest $request = null)
+    {
         Session::clear($this->getSessionVariable());
     }
 }

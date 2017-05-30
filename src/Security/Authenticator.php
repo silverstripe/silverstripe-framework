@@ -7,6 +7,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Abstract base class for an authentication method
@@ -74,7 +75,8 @@ interface Authenticator
 
 
     /**
-     * @todo
+     * @param $link
+     * @return mixed
      */
     public function getLostPasswordHandler($link);
 
@@ -82,14 +84,8 @@ interface Authenticator
      * Method to authenticate an user.
      *
      * @param array $data Raw data to authenticate the user.
-     * @param string $message A variable to return an error message if authentication fails
+     * @param ValidationResult $result A validationresult which is either valid or contains the error message(s)
      * @return Member The matched member, or null if the authentication fails
      */
-    public function authenticate($data, &$message);
-
-    /**
-     * Return the keys that should be passed to authenticate()
-     * @return array
-     */
-//    public function getAuthenticateFields();
+    public function authenticate($data, &$result);
 }

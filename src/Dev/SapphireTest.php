@@ -25,6 +25,7 @@ use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataModel;
@@ -1250,7 +1251,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
             $this->cache_generatedMembers[$permCode] = $member;
         }
-        Security::setCurrentUser($member);
+        Injector::inst()->get(IdentityStore::class)->logIn($member);
         return $member->ID;
     }
 

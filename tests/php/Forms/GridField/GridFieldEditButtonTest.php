@@ -64,7 +64,7 @@ class GridFieldEditButtonTest extends SapphireTest
     public function testShowEditLinks()
     {
         if (Security::getCurrentUser()) {
-            Security::getCurrentUser()->logOut();
+            Security::setCurrentUser(null);
         }
 
         $content = new CSSContentParser($this->gridField->FieldHolder());

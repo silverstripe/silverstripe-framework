@@ -11,7 +11,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\Group;
@@ -875,7 +874,7 @@ class MemberTest extends FunctionalTest
     {
         $m1 = $this->objFromFixture(Member::class, 'grouplessmember');
 
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
         $hashes = RememberLoginHash::get()->filter('MemberID', $m1->ID);
         $this->assertEquals($hashes->count(), 1);
@@ -891,7 +890,7 @@ class MemberTest extends FunctionalTest
 */
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
 
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
         $this->assertNotNull($firstHash);
@@ -970,7 +969,7 @@ class MemberTest extends FunctionalTest
  * @var Member $m1
 */
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
         $this->assertNotNull($firstHash);
 
@@ -1029,10 +1028,10 @@ class MemberTest extends FunctionalTest
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
 
         // First device
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
         Cookie::set('alc_device', null);
         // Second device
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
         // Hash of first device
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
@@ -1105,7 +1104,7 @@ class MemberTest extends FunctionalTest
 
         // Logging out from any device when all login hashes should be removed
         RememberLoginHash::config()->update('logout_across_devices', true);
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
         $response = $this->get('Security/logout', $this->session());
         $this->assertEquals(
             RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(),
@@ -1423,17 +1422,17 @@ class MemberTest extends FunctionalTest
 
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
-        $memberID = Member::actAs($adminMember, function () {
-            return Member::currentUserID();
+        $member = Member::actAs($adminMember, function () {
+            return Security::getCurrentUser();
         });
-        $this->assertEquals($adminMember->ID, $memberID);
+        $this->assertEquals($adminMember->ID, $member->ID);
 
         // Check nesting
-        $memberID = Member::actAs($adminMember, function () {
+        $member = Member::actAs($adminMember, function () {
             return Member::actAs(null, function () {
-                return Member::currentUserID();
+                return Security::getCurrentUser();
             });
         });
-        $this->assertEmpty($memberID);
+        $this->assertEmpty($member);
     }
 }

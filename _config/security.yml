@@ -1,18 +1,16 @@
-SilverStripe\Security\MemberAuthenticator\LoginForm:
+---
+Name: coresecurity
+---
+SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
   required_fields:
     - Email
     - Password
-
-SilverStripe\Security\Security:
-  authenticators:
-    default: SilverStripe\Security\MemberAuthenticator\Authenticator
-    cms: SilverStripe\Security\MemberAuthenticator\CMSAuthenticator
 
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\RequestProcessor:
     properties:
       filters:
-        - '%$SilverStripe\Security\AuthenticationRequestFilter'
+        - %$SilverStripe\Security\AuthenticationRequestFilter
   SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
     properties:
       SessionVariable: loggedInAs
@@ -20,14 +18,15 @@ SilverStripe\Core\Injector\Injector:
     properties:
       TokenCookieName: alc_enc
       DeviceCookieName: alc_device
-      CascadeLogInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+      CascadeInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
   SilverStripe\Security\IdentityStore:
     class: SilverStripe\Security\AuthenticationRequestFilter
-
+  SilverStripe\Security\Security:
+    properties:
+      authenticators:
+        default: %$SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
+        cms: %$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator
 SilverStripe\Security\AuthenticationRequestFilter:
   handlers:
     session: SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
     alc: SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
-
-SilverStripe\Security\MemberAuthenticator\CMSSecurity:
-  reauth_enabled: true

@@ -10,7 +10,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\MemberAuthenticator\CMSAuthenticator;
+use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\View\Requirements;
 
 /**
@@ -44,7 +44,7 @@ class CMSSecurity extends Security
         Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
     }
 
-    public function login($request, $service = Authenticator::CMS_LOGIN)
+    public function login($request = null, $service = Authenticator::CMS_LOGIN)
     {
         return parent::login($request, Authenticator::CMS_LOGIN);
     }
@@ -60,9 +60,9 @@ class CMSSecurity extends Security
         return parent::getAuthenticator($name);
     }
 
-    public static function getAuthenticators($service = Authenticator::CMS_LOGIN)
+    public function getApplicableAuthenticators($service = Authenticator::CMS_LOGIN)
     {
-        return parent::getAuthenticators($service);
+        return parent::getApplicableAuthenticators($service);
     }
 
     /**
@@ -97,7 +97,7 @@ class CMSSecurity extends Security
     public function getTitle()
     {
         // Check if logged in already
-        if (Member::currentUserID()) {
+        if (Security::getCurrentUser()) {
             return _t('SilverStripe\\Security\\CMSSecurity.SUCCESS', 'Success');
         }
 
@@ -174,19 +174,7 @@ PHP
             return false;
         }
 
-        /** @var [] $authenticators */
-        $authenticators = Security::config()->get('authenticators');
-        foreach ($authenticators as $name => $authenticator) {
-            // Supported if at least one authenticator is supported
-            $authenticator = Injector::inst()->get($authenticator);
-            if (($authenticator->supportedServices() & Authenticator::CMS_LOGIN)
-                && Security::hasAuthenticator($name)
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return count(Security::singleton()->getApplicableAuthenticators(Authenticator::CMS_LOGIN)) > 0;
     }
 
     /**
@@ -197,7 +185,7 @@ PHP
     public function success()
     {
         // Ensure member is properly logged in
-        if (!Member::currentUserID() || !class_exists(AdminRootController::class)) {
+        if (!Security::getCurrentUser() || !class_exists(AdminRootController::class)) {
             return $this->redirectToExternalLogin();
         }
 

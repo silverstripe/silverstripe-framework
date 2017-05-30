@@ -2,15 +2,16 @@
 
 namespace SilverStripe\Security;
 
-use Exception;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\ValidationException;
 
 class AuthenticationRequestFilter implements RequestFilter, IdentityStore
 {
@@ -18,10 +19,21 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     use Configurable;
 
     /**
-     * @return array|IdentityStore[]
+     * @var array|AuthenticationHandler[]
+     */
+    protected $handlers;
+
+    /**
+     * This method currently uses a fallback as loading the handlers via YML has proven unstable
+     *
+     * @return array|AuthenticationHandler[]
      */
     protected function getHandlers()
     {
+        if (is_array($this->handlers)) {
+            return $this->handlers;
+        }
+
         return array_map(
             function ($identifier) {
                 return Injector::inst()->get($identifier);
@@ -31,23 +43,38 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     }
 
     /**
+     * Set an associative array of handlers
+     *
+     * @param array|AuthenticationHandler[] $handlers
+     */
+    public function setHandlers($handlers)
+    {
+        $this->handlers = $handlers;
+    }
+
+    /**
      * Identify the current user from the request
+     *
+     * @param HTTPRequest $request
+     * @param Session $session
+     * @param DataModel $model
+     * @return bool|void
+     * @throws HTTPResponse_Exception
      */
     public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
     {
         try {
             /** @var AuthenticationHandler $handler */
-            foreach ($this->getHandlers() as $handler) {
+            foreach ($this->getHandlers() as $name => $handler) {
                 // @todo Update requestfilter logic to allow modification of initial response
                 // in order to add cookies, etc
-                $member = $handler->authenticateRequest($request, new HTTPResponse());
+                $member = $handler->authenticateRequest($request);
                 if ($member) {
-                    // @todo Remove the static coupling here
                     Security::setCurrentUser($member);
                     break;
                 }
             }
-        } catch (Exception $e) { // There's no valid exception currently. I would say AuthenticationException?
+        } catch (ValidationException $e) {
             throw new HTTPResponse_Exception(
                 "Bad log-in details: " . $e->getMessage(),
                 400
@@ -57,6 +84,11 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
 
     /**
      * No-op
+     *
+     * @param HTTPRequest $request
+     * @param HTTPResponse $response
+     * @param DataModel $model
+     * @return bool|void
      */
     public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
     {
@@ -65,11 +97,13 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     /**
      * Log into the identity-store handlers attached to this request filter
      *
-     * @inherit
+     * @param Member $member
+     * @param bool $persistent
+     * @param HTTPRequest $request
+     * @return HTTPResponse|void
      */
-    public function logIn(Member $member, $persistent, HTTPRequest $request)
+    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
-        // @todo Coupling here isn't ideal.
         $member->beforeMemberLoggedIn();
 
         foreach ($this->getHandlers() as $handler) {
@@ -78,7 +112,6 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
             }
         }
 
-        // @todo Coupling here isn't ideal.
         Security::setCurrentUser($member);
         $member->afterMemberLoggedIn();
     }
@@ -86,9 +119,10 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     /**
      * Log out of all the identity-store handlers attached to this request filter
      *
-     * @inherit
+     * @param HTTPRequest $request
+     * @return HTTPResponse|void
      */
-    public function logOut(HTTPRequest $request)
+    public function logOut(HTTPRequest $request = null)
     {
         foreach ($this->getHandlers() as $handler) {
             if ($handler instanceof IdentityStore) {
@@ -96,7 +130,6 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
             }
         }
 
-        // @todo Coupling here isn't ideal.
         Security::setCurrentUser(null);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
 use SilverStripe\Security\Member;
 
-class CMSAuthenticator extends Authenticator
+class CMSMemberAuthenticator extends MemberAuthenticator
 {
 
     public function supportedServices()
@@ -15,11 +16,11 @@ class CMSAuthenticator extends Authenticator
 
     /**
      * @param array $data
-     * @param $message
-     * @param bool $success
+     * @param ValidationResult|null $result
+     * @param Member|null $member
      * @return Member
      */
-    protected function authenticateMember($data, &$message, &$success, $member = null)
+    protected function authenticateMember($data, &$result = null, $member = null)
     {
         // Attempt to identify by temporary ID
         if (!empty($data['tempid'])) {
@@ -30,9 +31,13 @@ class CMSAuthenticator extends Authenticator
             }
         }
 
-        return parent::authenticateMember($data, $message, $success, $member);
+        return parent::authenticateMember($data, $result, $member);
     }
 
+    /**
+     * @param string $link
+     * @return CMSLoginHandler
+     */
     public function getLoginHandler($link)
     {
         return CMSLoginHandler::create($link, $this);

@@ -2,18 +2,16 @@
 
 namespace SilverStripe\Security\Tests;
 
-use PhpConsole\Auth;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Permission;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
@@ -48,13 +46,9 @@ class SecurityTest extends FunctionalTest
 
     protected function setUp()
     {
-        // This test assumes that MemberAuthenticator is present and the default
-        // $this->priorAuthenticators = Authenticator::get_authenticators();
-        // $this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
-
         // Set to an empty array of authenticators to enable the default
-        Config::modify()->set(Authenticator::class, 'authenticators', []);
-        Config::modify()->set(Authenticator::class, 'default_authenticator', MemberAuthenticator::class);
+        Config::modify()->set(MemberAuthenticator::class, 'authenticators', []);
+        Config::modify()->set(MemberAuthenticator::class, 'default_authenticator', MemberAuthenticator::class);
 
         // And that the unique identified field is 'Email'
         $this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
@@ -233,7 +227,7 @@ class SecurityTest extends FunctionalTest
         /* View the Security/login page */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
 
-        $items = $this->cssParser()->getBySelector('#LoginForm_LoginForm input.action');
+        $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 
         /* We have only 1 input, one to allow the user to log in as someone else */
         $this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
@@ -242,7 +236,7 @@ class SecurityTest extends FunctionalTest
 
         /* Submit the form, using only the logout action and a hidden field for the authenticator */
         $response = $this->submitForm(
-            'LoginForm_LoginForm',
+            'MemberLoginForm_LoginForm',
             null,
             array(
                 'action_logout' => 1,
@@ -267,7 +261,7 @@ class SecurityTest extends FunctionalTest
         /* Attempt to get into the admin section */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
 
-        $items = $this->cssParser()->getBySelector('#LoginForm_LoginForm input.text');
+        $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
         /* We have 2 text inputs - one for email, and another for the password */
         $this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
@@ -286,11 +280,11 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
-            ->getBySelector('#LoginForm_LoginForm #LoginForm_LoginForm_Email');
+            ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
         $this->assertEquals(1, count($items));
         $this->assertEmpty((string)$items[0]->attributes()->value);
         $this->assertEquals('off', (string)$items[0]->attributes()->autocomplete);
-        $form = $this->cssParser()->getBySelector('#LoginForm_LoginForm');
+        $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertEquals('off', (string)$form[0]->attributes()->autocomplete);
 
@@ -300,11 +294,11 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
-            ->getBySelector('#LoginForm_LoginForm #LoginForm_LoginForm_Email');
+            ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
         $this->assertEquals(1, count($items));
         $this->assertEquals('myuser@silverstripe.com', (string)$items[0]->attributes()->value);
         $this->assertNotEquals('off', (string)$items[0]->attributes()->autocomplete);
-        $form = $this->cssParser()->getBySelector('#LoginForm_LoginForm');
+        $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
     }
@@ -482,11 +476,11 @@ class SecurityTest extends FunctionalTest
         Member::config()->lock_out_delay_mins = 15;
 
         // Login with a wrong password for more than the defined threshold
-        for ($i = 1; $i <= Member::config()->lock_out_after_incorrect_logins+1; $i++) {
+        for ($i = 1; $i <= (Member::config()->lock_out_after_incorrect_logins+1); $i++) {
             $this->doTestLoginForm('testuser@example.com', 'incorrectpassword');
             $member = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
 
-            if ($i < Member::config()->lock_out_after_incorrect_logins) {
+            if ($i < Member::config()->get('lock_out_after_incorrect_logins')) {
                 $this->assertNull(
                     $member->LockedOutUntil,
                     'User does not have a lockout time set if under threshold for failed attempts'
@@ -505,18 +499,16 @@ class SecurityTest extends FunctionalTest
                     'User has a lockout time set after too many failed attempts'
                 );
             }
-
-            $msg = _t(
-                'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
-                'Your account has been temporarily disabled because of too many failed attempts at ' .
-                'logging in. Please try again in {count} minutes.',
-                null,
-                array('count' => Member::config()->lock_out_delay_mins)
-            );
-            if ($i > Member::config()->lock_out_after_incorrect_logins) {
-                $this->assertHasMessage($msg);
-            }
         }
+        $msg = _t(
+            'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
+            'Your account has been temporarily disabled because of too many failed attempts at ' .
+            'logging in. Please try again in {count} minutes.',
+            null,
+            array('count' => Member::config()->lock_out_delay_mins)
+        );
+        $this->assertHasMessage($msg);
+
 
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertNull(
@@ -597,14 +589,14 @@ class SecurityTest extends FunctionalTest
         $attempt = DataObject::get_one(
             LoginAttempt::class,
             array(
-            '"LoginAttempt"."Email"' => 'testuser@example.com'
+                '"LoginAttempt"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertTrue(is_object($attempt));
         $member = DataObject::get_one(
             Member::class,
             array(
-            '"Member"."Email"' => 'testuser@example.com'
+                '"Member"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertEquals($attempt->Status, 'Failure');
@@ -696,7 +688,7 @@ class SecurityTest extends FunctionalTest
         $this->get(Config::inst()->get(Security::class, 'login_url'));
 
         return $this->submitForm(
-            "LoginForm_LoginForm",
+            "MemberLoginForm_LoginForm",
             null,
             array(
                 'Email' => $email,
@@ -750,7 +742,7 @@ class SecurityTest extends FunctionalTest
      */
     protected function getValidationResult()
     {
-        $result = $this->session()->inst_get('FormInfo.LoginForm_LoginForm.result');
+        $result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
         if ($result) {
             return unserialize($result);
         }

@@ -9,7 +9,7 @@ class Config_ForClass
     /**
      * @var string $class
      */
-    public $class;
+    protected $class;
 
     /**
      * @param string|object $class

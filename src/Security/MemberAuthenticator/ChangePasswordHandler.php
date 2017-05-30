@@ -3,34 +3,226 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
-use SilverStripe\Forms\FormRequestHandler;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\CMSSecurity;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\IdentityStore;
 
-class ChangePasswordHandler extends FormRequestHandler
+class ChangePasswordHandler extends RequestHandler
 {
+    /**
+     * @var Authenticator
+     */
+    protected $authenticator;
+
+    /**
+     * @var string
+     */
+    protected $link;
+
+    /**
+     * @var array Allowed Actions
+     */
+    private static $allowed_actions = [
+        'changepassword',
+        'changePasswordForm',
+    ];
+
+    /**
+     * @var array URL Handlers. All should point to changepassword
+     */
+    private static $url_handlers = [
+        '' => 'changepassword',
+    ];
+
+    /**
+     * @param string $link The URL to recreate this request handler
+     * @param MemberAuthenticator $authenticator
+     */
+    public function __construct($link, MemberAuthenticator $authenticator)
+    {
+        $this->link = $link;
+        $this->authenticator = $authenticator;
+        parent::__construct();
+    }
+
+    /**
+     * Handle the change password request
+     * @todo this could use some spring cleaning
+     *
+     * @return HTTPResponse|DBHTMLText
+     */
+    public function changepassword()
+    {
+        $request = $this->getRequest();
+
+        // Extract the member from the URL.
+        /** @var Member $member */
+        $member = null;
+        if ($request->getVar('m') !== null) {
+            $member = Member::get()->filter(['ID' => (int)$request->getVar('m')])->first();
+        }
+        $token = $request->getVar('t');
+
+        // Check whether we are merely changin password, or resetting.
+        if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
+            $this->setSessionToken($member, $token);
+
+            // Redirect to myself, but without the hash in the URL
+            return $this->redirect($this->link);
+        }
+
+        if (Session::get('AutoLoginHash')) {
+            $message = DBField::create_field(
+                'HTMLFragment',
+                '<p>' . _t(
+                    'SilverStripe\\Security\\Security.ENTERNEWPASSWORD',
+                    'Please enter a new password.'
+                ) . '</p>'
+            );
+
+            // Subsequent request after the "first load with hash" (see previous if clause).
+            return $this->buildResponse($message);
+        }
+
+        if (Security::getCurrentUser()) {
+            // Logged in user requested a password change form.
+            $message = DBField::create_field(
+                'HTMLFragment',
+                '<p>' . _t(
+                    'SilverStripe\\Security\\Security.CHANGEPASSWORDBELOW',
+                    'You can change your password below.'
+                ) . '</p>'
+            );
+
+            return $this->buildResponse($message);
+        }
+        // Show a friendly message saying the login token has expired
+        if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
+            $customisedController = Controller::curr()->customise(
+                array(
+                    'Content' => DBField::create_field(
+                        'HTMLFragment',
+                        _t(
+                            'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
+                            '<p>The password reset link is invalid or expired.</p>'
+                            . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                            . ' you <a href="{link2}">logged in</a>.</p>',
+                            [
+                                'link1' => $this->Link('lostpassword'),
+                                'link2' => $this->Link('login')
+                            ]
+                        )
+                    )
+                )
+            );
+
+            return $customisedController->renderWith('changepassword');
+        }
+
+        // Someone attempted to go to changepassword without token or being logged in
+        return Security::permissionFailure(
+            Controller::curr(),
+            _t(
+                'SilverStripe\\Security\\Security.ERRORPASSWORDPERMISSION',
+                'You must be logged in in order to change your password!'
+            )
+        );
+    }
+
+    /**
+     * @param DBField $message
+     * @return DBHTMLText
+     */
+    protected function buildResponse($message)
+    {
+        $customisedController = Controller::curr()->customise(
+            [
+                'Content' => $message,
+                'Form'    => $this->changePasswordForm()
+            ]
+        );
+
+        return $customisedController->renderWith(Security::singleton()->getTemplatesFor('changepassword'));
+    }
+
+    /**
+     * @param Member $member
+     * @param string $token
+     */
+    protected function setSessionToken($member, $token)
+    {
+        // if there is a current member, they should be logged out
+        if ($curMember = Security::getCurrentUser()) {
+            /** @var LogoutHandler $handler */
+            Injector::inst()->get(IdentityStore::class)->logOut();
+        }
+
+        // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
+        Session::set('AutoLoginHash', $member->encryptWithUserSettings($token));
+    }
+
+    /**
+     * Return a link to this request handler.
+     * The link returned is supplied in the constructor
+     * @param null $action
+     * @return string
+     */
+    public function link($action = null)
+    {
+        if ($action) {
+            return Controller::join_links($this->link, $action);
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Factory method for the lost password form
+     *
+     * @skipUpgrade
+     * @return ChangePasswordForm Returns the lost password form
+     */
+    public function changePasswordForm()
+    {
+        return ChangePasswordForm::create(
+            $this,
+            'ChangePasswordForm'
+        );
+    }
+
     /**
      * Change the password
      *
      * @param array $data The user submitted data
      * @return HTTPResponse
      */
-    public function doChangePassword(array $data, $form)
+    public function doChangePassword(array $data)
     {
         $member = Security::getCurrentUser();
         // The user was logged in, check the current password
         if ($member && (
-            empty($data['OldPassword']) ||
-            !$member->checkPassword($data['OldPassword'])->isValid()
-        )) {
+                empty($data['OldPassword']) ||
+                !$member->checkPassword($data['OldPassword'])->isValid()
+            )
+        ) {
             $this->form->sessionMessage(
-                _t('SilverStripe\\Security\\Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"),
+                _t(
+                    'SilverStripe\\Security\\Member.ERRORPASSWORDNOTMATCH',
+                    "Your current password does not match, please try again"
+                ),
                 "bad"
             );
+
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
             return $this->redirectBackToForm();
         }
@@ -43,6 +235,7 @@ class ChangePasswordHandler extends FormRequestHandler
             // The user is not logged in and no valid auto login hash is available
             if (!$member) {
                 Session::clear('AutoLoginHash');
+
                 return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
         }
@@ -50,7 +243,10 @@ class ChangePasswordHandler extends FormRequestHandler
         // Check the new password
         if (empty($data['NewPassword1'])) {
             $this->form->sessionMessage(
-                _t('SilverStripe\\Security\\Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
+                _t(
+                    'SilverStripe\\Security\\Member.EMPTYNEWPASSWORD',
+                    "The new password can't be empty, please try again"
+                ),
                 "bad"
             );
 
@@ -61,9 +257,13 @@ class ChangePasswordHandler extends FormRequestHandler
         // Fail if passwords do not match
         if ($data['NewPassword1'] !== $data['NewPassword2']) {
             $this->form->sessionMessage(
-                _t('SilverStripe\\Security\\Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
+                _t(
+                    'SilverStripe\\Security\\Member.ERRORNEWPASSWORD',
+                    "You have entered your new password differently, try again"
+                ),
                 "bad"
             );
+
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
             return $this->redirectBackToForm();
         }
@@ -72,17 +272,20 @@ class ChangePasswordHandler extends FormRequestHandler
         $validationResult = $member->changePassword($data['NewPassword1']);
         if (!$validationResult->isValid()) {
             $this->form->setSessionValidationResult($validationResult);
+
             return $this->redirectBackToForm();
         }
 
         // Clear locked out status
         $member->LockedOutUntil = null;
         $member->FailedLoginCount = null;
+        // Clear the members login hashes
+        $member->AutoLoginHash = null;
+        $member->AutoLoginExpired = DBDatetime::create()->now();
         $member->write();
 
         if ($member->canLogIn()->isValid()) {
-            Injector::inst()->get(IdentityStore::class)
-                ->logIn($member, false, $form->getRequestHandler()->getRequest());
+            Injector::inst()->get(IdentityStore::class)->logIn($member, false, $this->getRequest());
         }
 
         // TODO Add confirmation message to login redirect
@@ -96,6 +299,7 @@ class ChangePasswordHandler extends FormRequestHandler
 
         // Redirect to default location - the login form saying "You are logged in as..."
         $url = Security::singleton()->Link('login');
+
         return $this->redirect($url);
     }
 
@@ -103,6 +307,7 @@ class ChangePasswordHandler extends FormRequestHandler
     {
         // Redirect back to form
         $url = $this->addBackURLParam(CMSSecurity::singleton()->Link('changepassword'));
+
         return $this->redirect($url);
     }
 }

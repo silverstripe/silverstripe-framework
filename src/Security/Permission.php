@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\DB;
@@ -131,10 +132,10 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function check($code, $arg = "any", $member = null, $strict = true)
     {
         if (!$member) {
-            if (!Member::currentUserID()) {
+            if (!Security::getCurrentUser()) {
                 return false;
             }
-            $member = Member::currentUserID();
+            $member = Security::getCurrentUser();
         }
 
         return self::checkMember($member, $code, $arg, $strict);
@@ -171,10 +172,9 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function checkMember($member, $code, $arg = "any", $strict = true)
     {
         if (!$member) {
-            $memberID = $member = Member::currentUserID();
-        } else {
-            $memberID = (is_object($member)) ? $member->ID : $member;
+            $member = Security::getCurrentUser();
         }
+        $memberID = ($member instanceof Member) ? $member->ID : $member;
 
         if (!$memberID) {
             return false;

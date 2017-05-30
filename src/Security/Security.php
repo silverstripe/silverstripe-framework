@@ -13,29 +13,21 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\Connect\Database;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
-use Exception;
-use SilverStripe\View\ViewableData_Customised;
 use Subsite;
-use SilverStripe\Core\Injector\Injector;
 
 /**
  * Implements a basic security model
@@ -52,13 +44,10 @@ class Security extends Controller implements TemplateGlobalProvider
         'passwordsent',
         'changepassword',
         'ping',
-        'LoginForm',
-        'ChangePasswordForm',
-        'LostPasswordForm',
     );
 
     /**
-     * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
+     * Default user name. {@link setDefaultAdmin()}
      *
      * @var string
      * @see setDefaultAdmin()
@@ -66,7 +55,7 @@ class Security extends Controller implements TemplateGlobalProvider
     protected static $default_username;
 
     /**
-     * Default password. Only used in dev-mode by {@link setDefaultAdmin()}
+     * Default password. {@link setDefaultAdmin()}
      *
      * @var string
      * @see setDefaultAdmin()
@@ -80,7 +69,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @config
      * @var bool
      */
-    protected static $strict_path_checking = false;
+    private static $strict_path_checking = false;
 
     /**
      * The password encryption algorithm to use by default.
@@ -102,7 +91,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Determine if login username may be remembered between login sessions
-     * If set to false this will disable autocomplete and prevent username persisting in the session
+     * If set to false this will disable auto-complete and prevent username persisting in the session
      *
      * @config
      * @var bool
@@ -124,7 +113,7 @@ class Security extends Controller implements TemplateGlobalProvider
     private static $template = 'BlankPage';
 
     /**
-     * Template thats used to render the pages.
+     * Template that is used to render the pages.
      *
      * @var string
      * @config
@@ -163,7 +152,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @var string
      */
-    private static $login_url = "Security/login";
+    private static $login_url = 'Security/login';
 
     /**
      * The default logout URL
@@ -172,7 +161,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @var string
      */
-    private static $logout_url = "Security/logout";
+    private static $logout_url = 'Security/logout';
 
     /**
      * The default lost password URL
@@ -181,7 +170,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @var string
      */
-    private static $lost_password_url = "Security/lostpassword";
+    private static $lost_password_url = 'Security/lostpassword';
 
     /**
      * Value of X-Frame-Options header
@@ -212,7 +201,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @var boolean If set to TRUE or FALSE, {@link database_is_ready()}
      * will always return FALSE. Used for unit testing.
      */
-    protected static $force_database_is_ready = null;
+    protected static $force_database_is_ready;
 
     /**
      * When the database has once been verified as ready, it will not do the
@@ -223,19 +212,30 @@ class Security extends Controller implements TemplateGlobalProvider
     protected static $database_is_ready = false;
 
     /**
-     * @var array available authenticators
+     * @var Authenticator[] available authenticators
      */
-    protected static $authenticators = [];
-
-    /**
-     * @var string Default authenticator
-     */
-    protected static $default_authenticator = MemberAuthenticator\Authenticator::class;
+    private static $authenticators = [];
 
     /**
      * @var Member Currently logged in user (if available)
      */
-    private static $currentUser;
+    protected static $currentUser;
+
+    /**
+     * @return array
+     */
+    public static function getAuthenticators()
+    {
+        return self::$authenticators;
+    }
+
+    /**
+     * @param array|Authenticator $authenticators
+     */
+    public static function setAuthenticators(array $authenticators)
+    {
+        self::$authenticators = $authenticators;
+    }
 
     /**
      * @inheritdoc
@@ -268,18 +268,16 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the selected authenticator for this request
      *
-     * @param $name string The identifier of the authenticator in your config
+     * @param string $name The identifier of the authenticator in your config
      * @return Authenticator Class name of Authenticator
      * @throws LogicException
      */
-    protected function getAuthenticator($name)
+    protected function getAuthenticator($name = 'default')
     {
-        $authenticators = self::config()->get('authenticators');
-
-        $name = $name ?: 'default';
+        $authenticators = static::$authenticators;
 
         if (isset($authenticators[$name])) {
-            return Injector::inst()->get($authenticators[$name]);
+            return $authenticators[$name];
         }
 
         throw new LogicException('No valid authenticator found');
@@ -288,18 +286,16 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get all registered authenticators
      *
+     * @param int $service The type of service that is requested
      * @return array Return an array of Authenticator objects
      */
-    public static function getAuthenticators($service = Authenticator::LOGIN)
+    public function getApplicableAuthenticators($service = Authenticator::LOGIN)
     {
-        $authenticators = self::config()->get('authenticators');
+        $authenticators = static::$authenticators;
 
-        foreach ($authenticators as $name => &$class) {
-            /** @var Authenticator $authenticator */
-            $authenticator = Injector::inst()->get($class);
-            if ($authenticator->supportedServices() & $service) {
-                $class = $authenticator;
-            } else {
+        /** @var Authenticator $class */
+        foreach ($authenticators as $name => $class) {
+            if (!($class->supportedServices() & $service)) {
                 unset($authenticators[$name]);
             }
         }
@@ -314,9 +310,10 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return bool Returns TRUE if the authenticator is registered, FALSE
      *              otherwise.
      */
-    public static function hasAuthenticator($authenticator)
+    public function hasAuthenticator($authenticator)
     {
-        $authenticators = self::config()->get('authenticators');
+        $authenticators = static::$authenticators;
+
         return !empty($authenticators[$authenticator]);
     }
 
@@ -357,13 +354,18 @@ class Security extends Controller implements TemplateGlobalProvider
             $response = ($controller) ? $controller->getResponse() : new HTTPResponse();
             $response->setStatusCode(403);
             if (!static::getCurrentUser()) {
-                $response->setBody(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
-                $response->setStatusDescription(_t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in'));
-                // Tell the CMS to allow re-aunthentication
+                $response->setBody(
+                    _t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in')
+                );
+                $response->setStatusDescription(
+                    _t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in')
+                );
+                // Tell the CMS to allow re-authentication
                 if (CMSSecurity::enabled()) {
                     $response->addHeader('X-Reauthenticate', '1');
                 }
             }
+
             return $response;
         }
 
@@ -373,15 +375,15 @@ class Security extends Controller implements TemplateGlobalProvider
                 $messageSet = $configMessageSet;
             } else {
                 $messageSet = array(
-                    'default' => _t(
+                    'default'         => _t(
                         'SilverStripe\\Security\\Security.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
-                            . "you right along."
+                        . "you right along."
                     ),
                     'alreadyLoggedIn' => _t(
                         'SilverStripe\\Security\\Security.ALREADYLOGGEDIN',
                         "You don't have access to this page.  If you have another account that "
-                            . "can access that page, you can log in again below.",
+                        . "can access that page, you can log in again below.",
                         "%s will be replaced with a link to log in."
                     )
                 );
@@ -407,8 +409,8 @@ class Security extends Controller implements TemplateGlobalProvider
                 $message = $messageSet['default'];
             }
 
-            Security::setLoginMessage($message, ValidationResult::TYPE_WARNING);
-            $loginResponse = (new Security())->login(new HTTPRequest('GET', '/'));
+            static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
+            $loginResponse = static::singleton()->login();
             if ($loginResponse instanceof HTTPResponse) {
                 return $loginResponse;
             }
@@ -422,7 +424,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        static::setLoginMessage($message, ValidationResult::TYPE_WARNING);
+        static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
 
         Session::set("BackURL", $_SERVER['REQUEST_URI']);
 
@@ -436,11 +438,17 @@ class Security extends Controller implements TemplateGlobalProvider
         ));
     }
 
-    public static function setCurrentUser($currentUser)
+    /**
+     * @param null|Member $currentUser
+     */
+    public static function setCurrentUser($currentUser = null)
     {
         self::$currentUser = $currentUser;
     }
 
+    /**
+     * @return null|Member
+     */
     public static function getCurrentUser()
     {
         return self::$currentUser;
@@ -449,18 +457,21 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the login forms for all available authentication methods
      *
+     * @deprecated 5.0.0 Now handled by {@link static::delegateToMultipleHandlers}
+     *
      * @return array Returns an array of available login forms (array of Form
      *               objects).
      *
-     * @todo Check how to activate/deactivate authentication methods
      */
     public function getLoginForms()
     {
+        Deprecation::notice('5.0.0', 'Now handled by delegateToMultipleHandlers');
+
         return array_map(
             function ($authenticator) {
-                return $authenticator->getLoginHandler($this->Link())->handleRequest($this->getRequest(), DataModel::inst());
+                return [$authenticator->getLoginHandler($this->Link())->loginForm()];
             },
-            Security::getAuthenticators()
+            $this->getApplicableAuthenticators()
         );
     }
 
@@ -507,11 +518,16 @@ class Security extends Controller implements TemplateGlobalProvider
         $member = static::getCurrentUser();
 
         if ($member) { // If we don't have a member, there's not much to log out.
-            /** @var Authenticator $authenticator */
-            $authenticator = $this->getAuthenticator('default'); // Always use the default authenticator to log out
-            $handler = $authenticator->getLogOutHandler(Controller::join_links($this->Link(), 'logout'));
-            $result = $this->delegateToHandler($handler, 'default', []);
-            if ($result !== true) {
+            /** @var array|Authenticator[] $authenticators */
+            $authenticators = $this->getApplicableAuthenticators(Authenticator::LOGOUT);
+
+            /** @var Authenticator[] $authenticator */
+            foreach ($authenticators as $name => $authenticator) {
+                $handler = $authenticator->getLogOutHandler(Controller::join_links($this->Link(), 'logout'));
+                $this->delegateToHandler($handler, $name);
+            }
+            // In the rare case, but plausible with e.g. an external IdentityStore, the user is not logged out.
+            if (static::getCurrentUser() !== null) {
                 $this->extend('failureMemberLoggedOut', $authenticator);
 
                 return $this->redirectBack();
@@ -558,10 +574,10 @@ class Security extends Controller implements TemplateGlobalProvider
         // This step is necessary in cases such as automatic redirection where a user is authenticated
         // upon landing on an SSL secured site and is automatically logged in, or some other case
         // where the user has permissions to continue but is not given the option.
-        if ($this->getRequest()->requestVar('BackURL')
-            && !$this->getLoginMessage()
+        if (!$this->getLoginMessage()
             && ($member = static::getCurrentUser())
             && $member->exists()
+            && $this->getRequest()->requestVar('BackURL')
         ) {
             return $this->redirectBack();
         }
@@ -590,20 +606,21 @@ class Security extends Controller implements TemplateGlobalProvider
         /** @skipUpgrade */
         $holderPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
-        $holderPage->ID = -1 * rand(1, 10000000);
+        $holderPage->ID = -1 * random_int(1, 10000000);
 
         $controllerClass = $holderPage->getControllerName();
         /** @var ContentController $controller */
         $controller = $controllerClass::create($holderPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
+
         return $controller;
     }
 
     /**
      * Combine the given forms into a formset with a tabbed interface
      *
-     * @param $forms
+     * @param array|Form[] $forms
      * @return string
      */
     protected function generateLoginFormSet($forms)
@@ -611,6 +628,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $viewData = new ArrayData(array(
             'Forms' => new ArrayList($forms),
         ));
+
         return $viewData->renderWith(
             $this->getTemplatesFor('MultiAuthenticatorLogin')
         );
@@ -635,6 +653,7 @@ class Security extends Controller implements TemplateGlobalProvider
         if ($messageCast !== ValidationResult::CAST_HTML) {
             $message = Convert::raw2xml($message);
         }
+
         return sprintf('<p class="message %s">%s</p>', Convert::raw2att($messageType), $message);
     }
 
@@ -645,14 +664,14 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $messageType Message type. One of ValidationResult::TYPE_*
      * @param string $messageCast Message cast. One of ValidationResult::CAST_*
      */
-    public static function setLoginMessage(
+    public function setLoginMessage(
         $message,
         $messageType = ValidationResult::TYPE_WARNING,
         $messageCast = ValidationResult::CAST_TEXT
     ) {
-        Session::set("Security.Message.message", $message);
-        Session::set("Security.Message.type", $messageType);
-        Session::set("Security.Message.cast", $messageCast);
+        Session::set('Security.Message.message', $message);
+        Session::set('Security.Message.type', $messageType);
+        Session::set('Security.Message.cast', $messageCast);
     }
 
     /**
@@ -660,7 +679,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function clearLoginMessage()
     {
-        Session::clear("Security.Message");
+        Session::clear('Security.Message');
     }
 
 
@@ -670,37 +689,48 @@ class Security extends Controller implements TemplateGlobalProvider
      * For multiple authenticators, Security_MultiAuthenticatorLogin is used.
      * See getTemplatesFor and getIncludeTemplate for how to override template logic
      *
-     * @param $request
+     * @param null|HTTPRequest $request
+     * @param int $service
      * @return HTTPResponse|string Returns the "login" page as HTML code.
      * @throws HTTPResponse_Exception
      */
-    public function login($request, $service = Authenticator::LOGIN)
+    public function login($request = null, $service = Authenticator::LOGIN)
     {
         // Check pre-login process
         if ($response = $this->preLogin()) {
             return $response;
         }
+        $authName = null;
 
-        $link = $this->link("login");
-
-        // Delegate to a single handler - Security/login/<authname>/...
-        if (($name = $request->param('ID')) && self::hasAuthenticator($request->param('ID'))) {
-            $request->shift();
-
-            $authenticator = $this->getAuthenticator($name);
-            // @todo handle different Authenticator situations
-            if (!$authenticator->supportedServices() & $service) {
-                throw new HTTPResponse_Exception('Invalid Authenticator "' . $name . '" for login action', 418);
-            }
-
-            $authenticators = [ $name => $authenticator ];
-
-        // Delegate to all of them, building a tabbed view - Security/login
-        } else {
-            $authenticators = static::getAuthenticators($service);
+        if (!$request) {
+            $request = $this->getRequest();
         }
 
-        $handlers = $authenticators;
+        if ($request && $request->param('ID')) {
+            $authName = $request->param('ID');
+        }
+
+        $link = $this->Link('login');
+
+        // Delegate to a single handler - Security/login/<authname>/...
+        if ($authName && $this->hasAuthenticator($authName)
+        ) {
+            if ($request) {
+                $request->shift();
+            }
+
+            $authenticator = $this->getAuthenticator($authName);
+
+            if (!$authenticator->supportedServices() & $service) {
+                throw new HTTPResponse_Exception('Invalid Authenticator "' . $authName . '" for login action', 418);
+            }
+
+            $handlers = [$authName => $authenticator];
+        } else {
+            // Delegate to all of them, building a tabbed view - Security/login
+            $handlers = $this->getApplicableAuthenticators($service);
+        }
+
         array_walk(
             $handlers,
             function (&$auth, $name) use ($link) {
@@ -721,9 +751,10 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * If a single handler is passed, delegateToHandler() will be called instead
      *
+     * @param array|RequestHandler[] $handlers
      * @param string $title The title of the form
      * @param array $templates
-     * @return array|HTTPResponse|RequestHandler|\SilverStripe\ORM\FieldType\DBHTMLText|string
+     * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
      */
     protected function delegateToMultipleHandlers(array $handlers, $title, array $templates)
     {
@@ -736,7 +767,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // Process each of the handlers
         $results = array_map(
             function ($handler) {
-                return $handler->handleRequest($this->getRequest(), \SilverStripe\ORM\DataModel::inst());
+                return $handler->handleRequest($this->getRequest(), DataModel::inst());
             },
             $handlers
         );
@@ -754,7 +785,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         if (!$forms) {
-            throw new \LogicException("No authenticators found compatible with a tabbed login");
+            throw new \LogicException('No authenticators found compatible with a tabbed login');
         }
 
         return $this->renderWrappedController(
@@ -770,11 +801,12 @@ class Security extends Controller implements TemplateGlobalProvider
      * Delegate to another RequestHandler, rendering any fragment arrays into an appropriate.
      * controller.
      *
+     * @param RequestHandler $handler
      * @param string $title The title of the form
      * @param array $templates
-     * @return array|HTTPResponse|RequestHandler|\SilverStripe\ORM\FieldType\DBHTMLText|string
+     * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
      */
-    protected function delegateToHandler(RequestHandler $handler, $title, array $templates)
+    protected function delegateToHandler(RequestHandler $handler, $title, array $templates = [])
     {
         $result = $handler->handleRequest($this->getRequest(), DataModel::inst());
 
@@ -792,7 +824,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $title string The title to give the security page
      * @param array $fragments A map of objects to render into the page, e.g. "Form"
      * @param array $templates An array of templates to use for the render
-     * @return HTTPResponse|\SilverStripe\ORM\FieldType\DBHTMLText
+     * @return HTTPResponse|DBHTMLText
      */
     protected function renderWrappedController($title, array $fragments, array $templates)
     {
@@ -824,7 +856,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     public function basicauthlogin()
     {
-        $member = BasicAuth::requireLogin($this->getRequest(), "SilverStripe login", 'ADMIN');
+        $member = BasicAuth::requireLogin($this->getRequest(), 'SilverStripe login', 'ADMIN');
         static::setCurrentUser($member);
     }
 
@@ -835,12 +867,17 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function lostpassword()
     {
-        $handler = $this->getAuthenticator('default')->getLostPasswordHandler(
-            Controller::join_links($this->link(), 'lostpassword')
-        );
+        $handlers = [];
+        $authenticators = $this->getApplicableAuthenticators(Authenticator::RESET_PASSWORD);
+        /** @var Authenticator $authenticator */
+        foreach ($authenticators as $authenticator) {
+            $handlers[] = $authenticator->getLostPasswordHandler(
+                Controller::join_links($this->Link(), 'lostpassword')
+            );
+        }
 
-        return $this->delegateToHandler(
-            $handler,
+        return $this->delegateToMultipleHandlers(
+            $handlers,
             _t('SilverStripe\\Security\\Security.LOSTPASSWORDHEADER', 'Lost Password'),
             $this->getTemplatesFor('lostpassword')
         );
@@ -860,79 +897,18 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function changepassword()
     {
-        $controller = $this->getResponseController(_t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'));
-
-        // if the controller calls Director::redirect(), this will break early
-        if (($response = $controller->getResponse()) && $response->isFinished()) {
-            return $response;
+        /** @var array|Authenticator[] $authenticators */
+        $authenticators = $this->getApplicableAuthenticators(Authenticator::CHANGE_PASSWORD);
+        $handlers = [];
+        foreach ($authenticators as $authenticator) {
+            $handlers[] = $authenticator->getChangePasswordHandler($this->Link('changepassword'));
         }
 
-        // Extract the member from the URL.
-        /** @var Member $member */
-        $member = null;
-        if (isset($_REQUEST['m'])) {
-            $member = Member::get()->filter('ID', (int)$_REQUEST['m'])->first();
-        }
-
-        // Check whether we are merely changin password, or resetting.
-        if (isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
-            // On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
-
-            // if there is a current member, they should be logged out
-            if ($curMember = static::getCurrentUser()) {
-                /** @var LogoutHandler $handler */
-                $handler = $this->getAuthenticator('default')->getLogoutHandler($this->Link('logout'));
-                $handler->doLogOut($curMember);
-            }
-
-            // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
-            Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
-
-            return $this->redirect($this->Link('changepassword'));
-        } elseif (Session::get('AutoLoginHash')) {
-            // Subsequent request after the "first load with hash" (see previous if clause).
-            $customisedController = $controller->customise(array(
-                'Content' => DBField::create_field(
-                    'HTMLFragment',
-                    '<p>' . _t('SilverStripe\\Security\\Security.ENTERNEWPASSWORD', 'Please enter a new password.') . '</p>'
-                ),
-                'Form' => $this->ChangePasswordForm(),
-            ));
-        } elseif (static::getCurrentUser()) {
-            // Logged in user requested a password change form.
-            $customisedController = $controller->customise(array(
-                'Content' => DBField::create_field(
-                    'HTMLFragment',
-                    '<p>' . _t('SilverStripe\\Security\\Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>'
-                ),
-                'Form' => $this->ChangePasswordForm()));
-        } else {
-            // Show friendly message if it seems like the user arrived here via password reset feature.
-            if (isset($_REQUEST['m']) || isset($_REQUEST['t'])) {
-                $customisedController = $controller->customise(
-                    array('Content' => DBField::create_field(
-                        'HTMLFragment',
-                        _t(
-                            'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                            '<p>The password reset link is invalid or expired.</p>'
-                            . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                            . ' you <a href="{link2}">logged in</a>.</p>',
-                            [
-                                'link1' => $this->Link('lostpassword'),
-                                'link2' => $this->Link('login')
-                            ]
-                        )
-                    ))
-                );
-            } else {
-                return self::permissionFailure(
-                    $this,
-                    _t('SilverStripe\\Security\\Security.ERRORPASSWORDPERMISSION', 'You must be logged in in order to change your password!')
-                );
-            }
-        }
-
-        return $customisedController->renderWith($this->getTemplatesFor('changepassword'));
+        return $this->delegateToMultipleHandlers(
+            $handlers,
+            _t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'),
+            $this->getTemplatesFor('changepassword')
+        );
     }
 
     /**
@@ -949,21 +925,8 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function getPasswordResetLink($member, $autologinToken)
     {
         $autologinToken = urldecode($autologinToken);
-        $selfControllerClass = __CLASS__;
-        /** @var static $selfController */
-        $selfController = new $selfControllerClass();
-        return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
-    }
 
-    /**
-     * Factory method for the lost password form
-     *
-     * @skipUpgrade
-     * @return MemberAuthenticator\ChangePasswordForm
-     */
-    public function ChangePasswordForm()
-    {
-        return MemberAuthenticator\ChangePasswordForm::create($this, 'ChangePasswordForm');
+        return static::singleton()->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
     }
 
     /**
@@ -976,6 +939,7 @@ class Security extends Controller implements TemplateGlobalProvider
     public function getTemplatesFor($action)
     {
         $templates = SSViewer::get_templates_by_class(static::class, "_{$action}", __CLASS__);
+
         return array_merge(
             $templates,
             [
@@ -1002,12 +966,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function findAnAdministrator()
     {
-        // coupling to subsites module
-        $origSubsite = null;
-        if (is_callable('Subsite::changeSubsite')) {
-            $origSubsite = Subsite::currentSubsiteID();
-            Subsite::changeSubsite(0);
-        }
+        static::singleton()->extend('beforeFindAdministrator');
 
         /** @var Member $member */
         $member = null;
@@ -1015,18 +974,12 @@ class Security extends Controller implements TemplateGlobalProvider
         // find a group with ADMIN permission
         $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
 
-        if (is_callable('Subsite::changeSubsite')) {
-            Subsite::changeSubsite($origSubsite);
-        }
-
-        if ($adminGroup) {
-            $member = $adminGroup->Members()->First();
-        }
-
         if (!$adminGroup) {
             Group::singleton()->requireDefaultRecords();
             $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
         }
+
+        $member = $adminGroup->Members()->First();
 
         if (!$member) {
             Member::singleton()->requireDefaultRecords();
@@ -1048,6 +1001,8 @@ class Security extends Controller implements TemplateGlobalProvider
                 ->DirectMembers()
                 ->add($member);
         }
+
+        static::singleton()->extend('afterFindAdministrator');
 
         return $member;
     }
@@ -1083,6 +1038,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         self::$default_username = $username;
         self::$default_password = $password;
+
         return true;
     }
 
@@ -1105,11 +1061,10 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Check that the default admin account has been set.
-     * @todo Check if we _actually_ only want this to work on dev
      */
     public static function has_default_admin()
     {
-        return !empty(self::$default_username) && !empty(self::$default_password) && (Director::get_environment_type() === 'dev');
+        return !empty(self::$default_username) && !empty(self::$default_password);
     }
 
     /**
@@ -1172,8 +1127,8 @@ class Security extends Controller implements TemplateGlobalProvider
         $salt = ($salt) ? $salt : $e->salt($password);
 
         return array(
-            'password' => $e->encrypt($password, $salt, $member),
-            'salt' => $salt,
+            'password'  => $e->encrypt($password, $salt, $member),
+            'salt'      => $salt,
             'algorithm' => $algorithm,
             'encryptor' => $e
         );
@@ -1252,29 +1207,6 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
-     * Enable or disable recording of login attempts
-     * through the {@link LoginRecord} object.
-     *
-     * @deprecated 4.0 Use the "Security.login_recording" config setting instead
-     * @param boolean $bool
-     */
-    public static function set_login_recording($bool)
-    {
-        Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
-        self::$login_recording = (bool)$bool;
-    }
-
-    /**
-     * @deprecated 4.0 Use the "Security.login_recording" config setting instead
-     * @return boolean
-     */
-    public static function login_recording()
-    {
-        Deprecation::notice('4.0', 'Use the "Security.login_recording" config setting instead');
-        return self::$login_recording;
-    }
-
-    /**
      * @config
      * @var string Set the default login dest
      * This is the URL that users will be redirected to after they log in,
@@ -1345,11 +1277,11 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function get_template_global_variables()
     {
         return array(
-            "LoginURL" => "login_url",
-            "LogoutURL" => "logout_url",
+            "LoginURL"        => "login_url",
+            "LogoutURL"       => "logout_url",
             "LostPasswordURL" => "lost_password_url",
-            "CurrentMember" => "getCurrentUser",
-            "currentUser" => "getCurrentUser"
+            "CurrentMember"   => "getCurrentUser",
+            "currentUser"     => "getCurrentUser"
         );
     }
 }

@@ -7,13 +7,10 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Core\Injector\Injector;
 
-use SilverStripe\Security\MemberAuthenticator\Authenticator;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -47,7 +44,7 @@ class BasicAuth
      * @var String Message that shows in the authentication box.
      * Set this value through {@link protect_entire_site()}.
      */
-    private static $entire_site_protected_message = "SilverStripe test website. Use your CMS login.";
+    private static $entire_site_protected_message = 'SilverStripe test website. Use your CMS login.';
 
     /**
      * Require basic authentication.  Will request a username and password if none is given.
@@ -63,9 +60,13 @@ class BasicAuth
      * @return bool|Member
      * @throws HTTPResponse_Exception
      */
-    public static function requireLogin(HTTPRequest $request, $realm, $permissionCode = null, $tryUsingSessionLogin = true)
-    {
-        $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+    public static function requireLogin(
+        HTTPRequest $request,
+        $realm,
+        $permissionCode = null,
+        $tryUsingSessionLogin = true
+    ) {
+        $isRunningTests = (class_exists(SapphireTest::class, false) && SapphireTest::is_running_test());
         if (!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
             return true;
         }
@@ -89,16 +90,21 @@ class BasicAuth
         $member = null;
 
         if ($request->getHeader('PHP_AUTH_USER') && $request->getHeader('PHP_AUTH_PW')) {
-            /** @var Authenticator $authenticator */
-            $authenticator = Injector::inst()->get(Authenticator::class);
+            /** @var MemberAuthenticator $authenticator */
+            $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::LOGIN);
 
-            $member = $authenticator->authenticate([
-                'Email' => $request->getHeader('PHP_AUTH_USER'),
-                'Password' => $request->getHeader('PHP_AUTH_PW'),
-            ], $dummy);
+            foreach ($authenticators as $name => $authenticator) {
+                $member = $authenticator->authenticate([
+                    'Email' => $request->getHeader('PHP_AUTH_USER'),
+                    'Password' => $request->getHeader('PHP_AUTH_PW'),
+                ]);
+                if ($member instanceof Member) {
+                    break;
+                }
+            }
         }
 
-        if($member) {
+        if ($member instanceof Member) {
             Security::setCurrentUser($member);
         }
 
@@ -112,9 +118,19 @@ class BasicAuth
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
             if ($request->getHeader('PHP_AUTH_USER')) {
-                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
+                $response->setBody(
+                    _t(
+                        'SilverStripe\\Security\\BasicAuth.ERRORNOTREC',
+                        "That username / password isn't recognised"
+                    )
+                );
             } else {
-                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ENTERINFO', "Please enter a username and password."));
+                $response->setBody(
+                    _t(
+                        'SilverStripe\\Security\\BasicAuth.ENTERINFO',
+                        'Please enter a username and password.'
+                    )
+                );
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution
@@ -128,7 +144,12 @@ class BasicAuth
             $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
             if ($request->getHeader('PHP_AUTH_USER')) {
-                $response->setBody(_t('SilverStripe\\Security\\BasicAuth.ERRORNOTADMIN', "That user is not an administrator."));
+                $response->setBody(
+                    _t(
+                        'SilverStripe\\Security\\BasicAuth.ERRORNOTADMIN',
+                        'That user is not an administrator.'
+                    )
+                );
             }
 
             // Exception is caught by RequestHandler->handleRequest() and will halt further execution
@@ -160,9 +181,9 @@ class BasicAuth
      */
     public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
     {
-        Config::modify()->set(self::class, 'entire_site_protected', $protect);
-        Config::modify()->set(self::class, 'entire_site_protected_code', $code);
-        Config::modify()->set(self::class, 'entire_site_protected_message', $message);
+        static::config()->set('entire_site_protected', $protect);
+        static::config()->set('entire_site_protected_code', $code);
+        static::config()->set('entire_site_protected_message', $message);
     }
 
     /**
@@ -174,7 +195,7 @@ class BasicAuth
      */
     public static function protect_site_if_necessary()
     {
-        $config = Config::forClass(BasicAuth::class);
+        $config = static::config();
         $request = Controller::curr()->getRequest();
         if ($config->get('entire_site_protected')) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -182,7 +203,8 @@ class BasicAuth
                 $request,
                 $config->get('entire_site_protected_message'),
                 $config->get('entire_site_protected_code'),
-                false);
+                false
+            );
         }
     }
 }

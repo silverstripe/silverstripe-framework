@@ -87,7 +87,7 @@ class BasicAuthTest extends FunctionalTest
 
         $_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);;
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(200, $response->getStatusCode(), 'Valid user with required permission has access');
 
         $_SERVER['PHP_AUTH_USER'] = $origUser;

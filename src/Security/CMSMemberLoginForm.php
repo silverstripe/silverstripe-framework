@@ -15,7 +15,7 @@ use SilverStripe\Security\Security;
 /**
  * Provides the in-cms session re-authentication form for the "member" authenticator
  */
-class CMSMemberLoginForm extends LoginForm
+class CMSMemberLoginForm extends MemberLoginForm
 {
 
     /**

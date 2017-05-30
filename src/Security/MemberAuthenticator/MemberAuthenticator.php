@@ -6,7 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\ORM\ValidationResult;
 use InvalidArgumentException;
-use SilverStripe\Security\Authenticator as BaseAuthenticator;
+use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\LoginAttempt;
@@ -14,62 +14,68 @@ use SilverStripe\Security\LoginAttempt;
 /**
  * Authenticator for the default "member" method
  *
- * @author Markus Lanthaler <markus@silverstripe.com>
+ * @author Sam Minnee <sam@silverstripe.com>
+ * @author Simon Erkelens <simonerkelens@silverstripe.com>
  */
-class Authenticator implements BaseAuthenticator
+class MemberAuthenticator implements Authenticator
 {
 
     public function supportedServices()
     {
-        // Bitwise-OR of all the supported services, to make a bitmask
-        return BaseAuthenticator::LOGIN | BaseAuthenticator::LOGOUT | BaseAuthenticator::CHANGE_PASSWORD
-            | BaseAuthenticator::RESET_PASSWORD;
+        // Bitwise-OR of all the supported services in this Authenticator, to make a bitmask
+        return Authenticator::LOGIN | Authenticator::LOGOUT | Authenticator::CHANGE_PASSWORD
+            | Authenticator::RESET_PASSWORD;
     }
 
     /**
-     * @inherit
+     * @param array $data
+     * @param null|ValidationResult $result
+     * @return null|Member
      */
-    public function authenticate($data, &$message)
+    public function authenticate($data, &$result = null)
     {
-        $success = null;
-
         // Find authenticated member
-        $member = $this->authenticateMember($data, $message, $success);
+        $member = $this->authenticateMember($data, $result);
 
         // Optionally record every login attempt as a {@link LoginAttempt} object
-        $this->recordLoginAttempt($data, $member, $success);
+        $this->recordLoginAttempt($data, $member, $result->isValid());
 
         if ($member) {
             Session::clear('BackURL');
         }
 
-        return $success ? $member : null;
+        return $result->isValid() ? $member : null;
     }
 
     /**
      * Attempt to find and authenticate member if possible from the given data
      *
      * @param array $data Form submitted data
-     * @param $message
-     * @param bool &$success Success flag
-     * @param null|Member $member If the parent method already identified the member, it can be passed in
+     * @param ValidationResult $result
+     * @param Member|null This third parameter is used in the CMSAuthenticator(s)
      * @return Member Found member, regardless of successful login
      */
-    protected function authenticateMember($data, &$message, &$success, $member = null)
+    protected function authenticateMember($data, &$result = null, $member = null)
     {
         // Default success to false
-        $success = false;
-        $email = !empty($data['Email']) ? $data['Email'] : null ;
-        
+        $email = !empty($data['Email']) ? $data['Email'] : null;
+        $result = new ValidationResult();
+
         // Check default login (see Security::setDefaultAdmin())
         $asDefaultAdmin = $email === Security::default_admin_username();
         if ($asDefaultAdmin) {
             // If logging is as default admin, ensure record is setup correctly
             $member = Member::default_admin();
-            $success = $member->canLogin()->isValid() && Security::check_default_admin($email, $data['Password']);
+            $success = Security::check_default_admin($email, $data['Password']);
+            $result = $member->canLogIn();
             //protect against failed login
-            if ($success) {
+            if ($success && $result->isValid()) {
                 return $member;
+            } else {
+                $result->addError(_t(
+                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                    "The provided details don't seem to be correct. Please try again."
+                ));
             }
         }
 
@@ -85,28 +91,23 @@ class Authenticator implements BaseAuthenticator
         // Validate against member if possible
         if ($member && !$asDefaultAdmin) {
             $result = $member->checkPassword($data['Password']);
-            $success = $result->isValid();
-        } else {
-            $result = ValidationResult::create()->addError(_t(
-                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                'The provided details don\'t seem to be correct. Please try again.'
-            ));
         }
 
         // Emit failure to member and form (if available)
-        if (!$success) {
+        if (!$result->isValid()) {
             if ($member) {
                 $member->registerFailedLogin();
             }
-            $message = implode("; ", array_map(
-                function ($message) {
-                    return $message['message'];
-                },
-                $result->getMessages()
-            ));
         } else {
-            if ($member) { // How can success be true and member false?
+            if ($member) {
                 $member->registerSuccessfulLogin();
+            } else {
+                // A non-existing member occurred. This will make the result "valid" so let's invalidate
+                $result->addError(_t(
+                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                    "The provided details don't seem to be correct. Please try again."
+                ));
+                $member = null;
             }
         }
 
@@ -119,6 +120,7 @@ class Authenticator implements BaseAuthenticator
      *
      * @param array $data
      * @param Member $member
+     * @param boolean $success
      */
     protected function recordLoginAttempt($data, $member, $success)
     {
@@ -134,7 +136,7 @@ class Authenticator implements BaseAuthenticator
         }
 
         $attempt = LoginAttempt::create();
-        if ($success) {
+        if ($success && $member) {
             // successful login (member is existing with matching password)
             $attempt->MemberID = $member->ID;
             $attempt->Status = 'Success';
@@ -160,7 +162,8 @@ class Authenticator implements BaseAuthenticator
     }
 
     /**
-     * @inherit
+     * @param $link
+     * @return LostPasswordHandler
      */
     public function getLostPasswordHandler($link)
     {
@@ -168,7 +171,8 @@ class Authenticator implements BaseAuthenticator
     }
 
     /**
-     * @inherit
+     * @param string $link
+     * @return ChangePasswordHandler
      */
     public function getChangePasswordHandler($link)
     {
@@ -176,7 +180,8 @@ class Authenticator implements BaseAuthenticator
     }
 
     /**
-     * @inherit
+     * @param string $link
+     * @return LoginHandler
      */
     public function getLoginHandler($link)
     {
@@ -184,7 +189,8 @@ class Authenticator implements BaseAuthenticator
     }
 
     /**
-     * @inherit
+     * @param string $link
+     * @return LogoutHandler
      */
     public function getLogoutHandler($link)
     {

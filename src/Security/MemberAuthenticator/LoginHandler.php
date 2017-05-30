@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Core\Injector\Injector;
@@ -23,14 +24,14 @@ class LoginHandler extends RequestHandler
      */
     protected $authenticator;
 
+    /**
+     * @var array
+     */
     private static $url_handlers = [
         '' => 'login',
     ];
 
     /**
-     * Since the logout and dologin actions may be conditionally removed, it's necessary to ensure these
-     * remain valid actions regardless of the member login state.
-     *
      * @var array
      * @config
      */
@@ -40,23 +41,26 @@ class LoginHandler extends RequestHandler
         'logout',
     ];
 
+    /**
+     * @var string Called link on this handler
+     */
     private $link;
 
     /**
      * @param string $link The URL to recreate this request handler
-     * @param Authenticator $authenticator The
+     * @param MemberAuthenticator $authenticator The authenticator to use
      */
-    public function __construct($link, Authenticator $authenticator)
+    public function __construct($link, MemberAuthenticator $authenticator)
     {
         $this->link = $link;
         $this->authenticator = $authenticator;
-        parent::__construct($link, $this);
+        parent::__construct();
     }
 
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
-     * @param null $action
+     * @param null|string $action
      * @return string
      */
     public function link($action = null)
@@ -70,6 +74,8 @@ class LoginHandler extends RequestHandler
 
     /**
      * URL handler for the log-in screen
+     *
+     * @return array
      */
     public function login()
     {
@@ -80,10 +86,12 @@ class LoginHandler extends RequestHandler
 
     /**
      * Return the MemberLoginForm form
+     *
+     * @return MemberLoginForm
      */
     public function loginForm()
     {
-        return LoginForm::create(
+        return MemberLoginForm::create(
             $this,
             get_class($this->authenticator),
             'LoginForm'
@@ -96,28 +104,41 @@ class LoginHandler extends RequestHandler
      * This method is called when the user finishes the login flow
      *
      * @param array $data Submitted data
-     * @param LoginForm $form
+     * @param MemberLoginForm $form
      * @return HTTPResponse
      */
     public function doLogin($data, $form)
     {
         $failureMessage = null;
 
+        $this->extend('beforeLogin');
         // Successful login
-        if ($member = $this->checkLogin($data, $failureMessage)) {
+        if ($member = $this->checkLogin($data, $result)) {
             $this->performLogin($member, $data, $form->getRequestHandler()->getRequest());
+            // Allow operations on the member after successful login
+            $this->extend('afterLogin', $member);
 
             return $this->redirectAfterSuccessfulLogin();
         }
 
-        $form->sessionMessage($failureMessage, 'bad');
+        $this->extend('failedLogin');
+
+        $message = implode("; ", array_map(
+            function ($message) {
+                return $message['message'];
+            },
+            $result->getMessages()
+        ));
+
+        $form->sessionMessage($message, 'bad');
 
         // Failed login
 
         /** @skipUpgrade */
         if (array_key_exists('Email', $data)) {
+            $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
             Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
-            Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
+            Session::set('SessionForms.MemberLoginForm.Remember', $rememberMe);
         }
 
         // Fail to login redirects back to form
@@ -173,7 +194,7 @@ class LoginHandler extends RequestHandler
                 'Welcome Back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
-            Security::setLoginMessage($message, ValidationResult::TYPE_GOOD);
+            Security::singleton()->setLoginMessage($message, ValidationResult::TYPE_GOOD);
         }
 
         // Redirect back
@@ -184,19 +205,16 @@ class LoginHandler extends RequestHandler
      * Try to authenticate the user
      *
      * @param array $data Submitted data
-     * @param string $message
+     * @param ValidationResult $result
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function checkLogin($data, &$message)
+    public function checkLogin($data, &$result)
     {
-        $message = null;
-        $member = $this->authenticator->authenticate($data, $message);
-        if ($member) {
+        $member = $this->authenticator->authenticate($data, $result);
+        if ($member instanceof Member) {
             return $member;
         }
-        // No member, can't login
-        $this->extend('authenticationFailed', $data);
 
         return null;
     }
@@ -212,8 +230,9 @@ class LoginHandler extends RequestHandler
      */
     public function performLogin($member, $data, $request)
     {
-        // @todo pass request/response
-        Injector::inst()->get(IdentityStore::class)->logIn($member, !empty($data['Remember']), $request);
+        /** IdentityStore */
+        $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled'));
+        Injector::inst()->get(IdentityStore::class)->logIn($member, $rememberMe, $request);
 
         return $member;
     }
@@ -234,21 +253,5 @@ class LoginHandler extends RequestHandler
         $changedPasswordLink = Security::singleton()->Link('changepassword');
 
         return $this->redirect($this->addBackURLParam($changedPasswordLink));
-    }
-
-
-    /**
-     * @todo copypaste from FormRequestHandler - refactor
-     * @param string $link
-     * @return string
-     */
-    protected function addBackURLParam($link)
-    {
-        $backURL = $this->getBackURL();
-        if ($backURL) {
-            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
-        }
-
-        return $link;
     }
 }

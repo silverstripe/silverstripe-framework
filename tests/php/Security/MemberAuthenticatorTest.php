@@ -3,22 +3,18 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\MemberAuthenticator\CMSAuthenticator;
-use SilverStripe\Security\PasswordEncryptor;
-use SilverStripe\Security\PasswordEncryptor_PHPHash;
+use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
+use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator\Authenticator;
-use SilverStripe\Security\MemberAuthenticator\LoginForm;
-use SilverStripe\Security\CMSMemberLoginForm;
+use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
 use SilverStripe\Control\HTTPRequest;
 
 class MemberAuthenticatorTest extends SapphireTest
@@ -60,31 +56,31 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testGenerateLoginForm()
     {
-        $authenticator = new Authenticator();
+        $authenticator = new MemberAuthenticator();
 
         $controller = new Security();
 
         // Create basic login form
         $frontendResponse = $authenticator
             ->getLoginHandler($controller->link())
-            ->handleRequest(new HTTPRequest('get', '/'), \SilverStripe\ORM\DataModel::inst());
+            ->handleRequest(new HTTPRequest('get', '/'), DataModel::inst());
 
         $this->assertTrue(is_array($frontendResponse));
         $this->assertTrue(isset($frontendResponse['Form']));
-        $this->assertTrue($frontendResponse['Form'] instanceof LoginForm);
+        $this->assertTrue($frontendResponse['Form'] instanceof MemberLoginForm);
     }
 
-    /* TO DO - reenable
     public function testGenerateCMSLoginForm()
     {
-        $authenticator = new Authenticator();
+        /** @var CMSMemberAuthenticator $authenticator */
+        $authenticator = new CMSMemberAuthenticator();
 
         // Supports cms login form
-        $this->assertTrue(MemberAuthenticator::supports_cms());
-        $cmsForm = MemberAuthenticator::get_cms_login_form($controller);
+        $this->assertGreaterThan(0, ($authenticator->supportedServices() & Authenticator::CMS_LOGIN));
+        $cmsHandler = $authenticator->getLoginHandler('/');
+        $cmsForm = $cmsHandler->loginForm();
         $this->assertTrue($cmsForm instanceof CMSMemberLoginForm);
     }
-    */
 
 
     /**
@@ -92,7 +88,7 @@ class MemberAuthenticatorTest extends SapphireTest
      */
     public function testAuthenticateByTempID()
     {
-        $authenticator = new CMSAuthenticator();
+        $authenticator = new CMSMemberAuthenticator();
 
         $member = new Member();
         $member->Email = 'test1@test.com';
@@ -105,7 +101,7 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertEmpty($tempID);
 
         // If the user logs in then they have a temp id
-        Injector::inst()->get(IdentityStore::class)->logIn($member, true, new HTTPRequest('GET', '/'));
+        Injector::inst()->get(IdentityStore::class)->logIn($member, true);
         $tempID = $member->TempIDHash;
         $this->assertNotEmpty($tempID);
 
@@ -120,7 +116,7 @@ class MemberAuthenticatorTest extends SapphireTest
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result->ID, $member->ID);
-        $this->assertEmpty($message);
+        $this->assertTrue($message->isValid());
 
         // Test incorrect login
         $result = $authenticator->authenticate(
@@ -132,9 +128,10 @@ class MemberAuthenticatorTest extends SapphireTest
         );
 
         $this->assertEmpty($result);
+        $messages = $message->getMessages();
         $this->assertEquals(
             _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
-            $message
+            $messages[0]['message']
         );
     }
 
@@ -143,7 +140,7 @@ class MemberAuthenticatorTest extends SapphireTest
      */
     public function testDefaultAdmin()
     {
-        $authenticator = new Authenticator();
+        $authenticator = new MemberAuthenticator();
 
         // Test correct login
         $result = $authenticator->authenticate(
@@ -155,7 +152,7 @@ class MemberAuthenticatorTest extends SapphireTest
         );
         $this->assertNotEmpty($result);
         $this->assertEquals($result->Email, Security::default_admin_username());
-        $this->assertEmpty($message);
+        $this->assertTrue($message->isValid());
 
         // Test incorrect login
         $result = $authenticator->authenticate(
@@ -165,16 +162,17 @@ class MemberAuthenticatorTest extends SapphireTest
             ),
             $message
         );
+        $messages = $message->getMessages();
         $this->assertEmpty($result);
         $this->assertEquals(
             'The provided details don\'t seem to be correct. Please try again.',
-            $message
+            $messages[0]['message']
         );
     }
 
     public function testDefaultAdminLockOut()
     {
-        $authenticator = new Authenticator();
+        $authenticator = new MemberAuthenticator();
 
         Config::inst()->update(Member::class, 'lock_out_after_incorrect_logins', 1);
         Config::inst()->update(Member::class, 'lock_out_delay_mins', 10);
@@ -185,8 +183,7 @@ class MemberAuthenticatorTest extends SapphireTest
             [
                 'Email' => 'admin',
                 'Password' => 'wrongpassword'
-            ],
-            $dummy
+            ]
         );
 
         $this->assertFalse(Member::default_admin()->canLogin()->isValid());

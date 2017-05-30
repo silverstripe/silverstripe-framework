@@ -31,36 +31,51 @@ class ChangePasswordForm extends Form
         $backURL = $controller->getBackURL() ?: Session::get('BackURL');
 
         if (!$fields) {
-            $fields = new FieldList();
-
-            // Security/changepassword?h=XXX redirects to Security/changepassword
-            // without GET parameter to avoid potential HTTP referer leakage.
-            // In this case, a user is not logged in, and no 'old password' should be necessary.
-            if (Security::getCurrentUser()) {
-                $fields->push(new PasswordField("OldPassword", _t('SilverStripe\\Security\\Member.YOUROLDPASSWORD', "Your old password")));
-            }
-
-            $fields->push(new PasswordField("NewPassword1", _t('SilverStripe\\Security\\Member.NEWPASSWORD', "New Password")));
-            $fields->push(new PasswordField("NewPassword2", _t('SilverStripe\\Security\\Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
+            $fields = $this->getFormFields();
         }
         if (!$actions) {
-            $actions = new FieldList(
-                new FormAction("doChangePassword", _t('SilverStripe\\Security\\Member.BUTTONCHANGEPASSWORD', "Change Password"))
-            );
+            $actions = $this->getFormActions();
         }
 
         if ($backURL) {
-            $fields->push(new HiddenField('BackURL', false, $backURL));
+            $fields->push(HiddenField::create('BackURL', false, $backURL));
         }
 
         parent::__construct($controller, $name, $fields, $actions);
     }
 
     /**
-     * @return ChangePasswordHandler
+     * @return FieldList
      */
-    protected function buildRequestHandler()
+    protected function getFormFields()
     {
-        return ChangePasswordHandler::create($this);
+        $fields = FieldList::create();
+
+        // Security/changepassword?h=XXX redirects to Security/changepassword
+        // without GET parameter to avoid potential HTTP referer leakage.
+        // In this case, a user is not logged in, and no 'old password' should be necessary.
+        if (Security::getCurrentUser()) {
+            $fields->push(PasswordField::create('OldPassword', _t('SilverStripe\\Security\\Member.YOUROLDPASSWORD', 'Your old password')));
+        }
+
+        $fields->push(PasswordField::create('NewPassword1', _t('SilverStripe\\Security\\Member.NEWPASSWORD', 'New Password')));
+        $fields->push(PasswordField::create('NewPassword2', _t('SilverStripe\\Security\\Member.CONFIRMNEWPASSWORD', 'Confirm New Password')));
+
+        return $fields;
+    }
+
+    /**
+     * @return FieldList
+     */
+    protected function getFormActions()
+    {
+        $actions = FieldList::create(
+            FormAction::create(
+                'doChangePassword',
+                _t('SilverStripe\\Security\\Member.BUTTONCHANGEPASSWORD', 'Change Password')
+            )
+        );
+
+        return $actions;
     }
 }

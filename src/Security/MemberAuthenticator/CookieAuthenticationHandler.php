@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\AuthenticationHandler as AuthenticationHandlerInterface;
@@ -30,7 +31,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     /**
      * @var IdentityStore
      */
-    private $cascadeLogInTo;
+    private $cascadeInTo;
 
     /**
      * Get the name of the cookie used to track this device
@@ -45,7 +46,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     /**
      * Set the name of the cookie used to track this device
      *
-     * @param $deviceCookieName
+     * @param string $deviceCookieName
      * @return null
      */
     public function setDeviceCookieName($deviceCookieName)
@@ -66,8 +67,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     /**
      * Set the name of the cookie used to store an login token
      *
-     * @param $tokenCookieName
-     * @return null
+     * @param string $tokenCookieName
      */
     public function setTokenCookieName($tokenCookieName)
     {
@@ -81,22 +81,23 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
      */
     public function getCascadeLogInTo()
     {
-        return $this->cascadeLogInTo;
+        return $this->cascadeInTo;
     }
 
     /**
      * Set the name of the cookie used to store an login token
      *
-     * @param $cascadeLogInTo
+     * @param IdentityStore $cascadeInTo
      * @return null
      */
-    public function setCascadeLogInTo(IdentityStore $cascadeLogInTo)
+    public function setCascadeLogInTo(IdentityStore $cascadeInTo)
     {
-        $this->cascadeLogInTo = $cascadeLogInTo;
+        $this->cascadeInTo = $cascadeInTo;
     }
 
     /**
-     * @inherit
+     * @param HTTPRequest $request
+     * @return null|Member
      */
     public function authenticateRequest(HTTPRequest $request)
     {
@@ -104,14 +105,14 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
         $deviceID = Cookie::get($this->getDeviceCookieName());
 
         // @todo Consider better placement of database_is_ready test
-        if (!$deviceID || strpos($uidAndToken, ':') === false || !Security::database_is_ready()) {
-            return;
+        if ($deviceID === null || strpos($uidAndToken, ':') === false || !Security::database_is_ready()) {
+            return null;
         }
 
         list($uid, $token) = explode(':', $uidAndToken, 2);
 
         if (!$uid || !$token) {
-            return;
+            return null;
         }
 
         /** @var Member $member */
@@ -127,7 +128,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
                 ->filter(array(
                     'MemberID' => $member->ID,
                     'DeviceID' => $deviceID,
-                    'Hash' => $hash
+                    'Hash'     => $hash
                 ))->first();
 
             if (!$rememberLoginHash) {
@@ -144,11 +145,10 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
         }
 
         if ($member) {
-            if ($this->cascadeLogInTo) {
+            if ($this->cascadeInTo) {
                 // @todo look at how to block "regular login" triggers from happening here
                 // @todo deal with the fact that the Session::current_session() isn't correct here :-/
-                $this->cascadeLogInTo->logIn($member, false, $request);
-                //\SilverStripe\Dev\Debug::message('here');
+                $this->cascadeInTo->logIn($member, false, $request);
             }
 
             // @todo Consider whether response should be part of logIn() as well
@@ -168,20 +168,21 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
                 );
             }
 
-            return $member;
-
             // Audit logging hook
             $member->extend('memberAutoLoggedIn');
+
+            return $member;
         }
     }
 
     /**
-     * @inherit
+     * @param Member $member
+     * @param bool $persistent
+     * @param HTTPRequest $request
+     * @return HTTPResponse|void
      */
-    public function logIn(Member $member, $persistent, HTTPRequest $request)
+    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
-        // @todo couple the cookies to the response object
-
         // Cleans up any potential previous hash for this member on this device
         if ($alcDevice = Cookie::get($this->getDeviceCookieName())) {
             RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
@@ -210,29 +211,39 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
                 null,
                 true
             );
-
-        // Clear a cookie for non-persistent log-ins
         } else {
-            $this->logOut($request);
+            // Clear a cookie for non-persistent log-ins
+            $this->clearCookies();
         }
     }
 
     /**
-     * @inherit
+     * @param HTTPRequest|null $request
+     * @return HTTPResponse|void
      */
-    public function logOut(HTTPRequest $request)
+    public function logOut(HTTPRequest $request = null)
     {
         $member = Security::getCurrentUser();
         if ($member) {
             RememberLoginHash::clear($member, Cookie::get('alc_device'));
         }
-        // @todo couple the cookies to the response object
+        $this->clearCookies();
 
+        if ($this->cascadeInTo) {
+            $this->cascadeInTo->logOut($request);
+        }
+
+        Security::setCurrentUser(null);
+    }
+
+    /**
+     * Clear the cookies set for the user
+     */
+    protected function clearCookies()
+    {
         Cookie::set($this->getTokenCookieName(), null);
         Cookie::set($this->getDeviceCookieName(), null);
         Cookie::force_expiry($this->getTokenCookieName());
         Cookie::force_expiry($this->getDeviceCookieName());
-
-        Security::setCurrentUser(null);
     }
 }

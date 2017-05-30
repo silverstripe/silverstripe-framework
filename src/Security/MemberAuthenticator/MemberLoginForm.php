@@ -31,7 +31,7 @@ use SilverStripe\View\Requirements;
  *    allowing extensions to "veto" execution by returning FALSE.
  *    Arguments: $member containing the detected Member record
  */
-class LoginForm extends BaseLoginForm
+class MemberLoginForm extends BaseLoginForm
 {
 
     /**
@@ -87,7 +87,7 @@ class LoginForm extends BaseLoginForm
             $backURL = Session::get('BackURL');
         }
 
-        if ($checkCurrentUser && Security::getCurrentUser() && Member::logged_in_session_exists()) {
+        if ($checkCurrentUser && Security::getCurrentUser()) {
             // @todo find a more elegant way to handle this
             $logoutAction = Security::logout_url();
             $fields = FieldList::create(
@@ -145,7 +145,7 @@ class LoginForm extends BaseLoginForm
             $this->setAttribute('autocomplete', 'off');
             $emailField->setAttribute('autocomplete', 'off');
         }
-        if (Security::config()->autologin_enabled) {
+        if (Security::config()->get('autologin_enabled')) {
             $fields->push(
                 CheckboxField::create(
                     "Remember",

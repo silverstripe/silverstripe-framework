@@ -16,7 +16,6 @@ use SilverStripe\Security\Security;
  * The logout process destroys all traces of the member on the server (not the actual computer user
  * at the other end of the line, don't worry)
  *
- * @package SilverStripe\Security\MemberAuthenticator
  */
 class LogoutHandler extends RequestHandler
 {

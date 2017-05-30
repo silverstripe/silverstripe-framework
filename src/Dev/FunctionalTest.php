@@ -106,8 +106,7 @@ class FunctionalTest extends SapphireTest
         // basis.
         BasicAuth::protect_entire_site(false);
 
-        $this->session()->inst_clear('loggedInAs');
-        Security::setCurrentUser(null);
+        $this->logOut();
 
         SecurityToken::disable();
     }
@@ -412,8 +411,7 @@ class FunctionalTest extends SapphireTest
             $member = $this->objFromFixture('SilverStripe\\Security\\Member', $member);
         }
 
-        $this->session()->inst_set('loggedInAs', $member->ID);
-        Security::setCurrentUser($member);
+        $this->logIn($member);
     }
 
     /**
@@ -422,8 +420,13 @@ class FunctionalTest extends SapphireTest
      */
     public function logOut()
     {
-        $this->session()->inst_set('loggedInAs', null);
+        $this->session()->inst_clear('loggedInAs');
         Security::setCurrentUser(null);
+    }
+
+    public function logIn($member)
+    {
+        Security::setCurrentUser($member);
     }
 
     /**
