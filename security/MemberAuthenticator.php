@@ -70,6 +70,14 @@ class MemberAuthenticator extends Authenticator {
 		if($member && !$asDefaultAdmin) {
 			$result = $member->checkPassword($data['Password']);
 			$success = $result->valid();
+		} elseif (!$asDefaultAdmin) {
+			// spoof a login attempt
+			$member = Member::create();
+			$member->Email = $email;
+			$member->{Member::config()->unique_identifier_field} = $data['Password'] . '-wrong';
+			$member->PasswordEncryption = 'none';
+			$result = $member->checkPassword($data['Password']);
+			$member = null;
 		} else {
 			$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
 		}
@@ -94,7 +102,7 @@ class MemberAuthenticator extends Authenticator {
 	 * @param bool $success
 	 */
 	protected static function record_login_attempt($data, $member, $success) {
-		if(!Security::config()->login_recording) return;
+		if(!Security::config()->login_recording && !Member::config()->lock_out_after_incorrect_logins) return;
 
 		// Check email is valid
 		$email = isset($data['Email']) ? $data['Email'] : null;
