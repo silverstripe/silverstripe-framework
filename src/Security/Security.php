@@ -25,7 +25,6 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -241,7 +240,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     public function index()
     {
-        return $this->httpError(404); // no-op
+        $this->httpError(404); // no-op
     }
 
     /**
@@ -358,7 +357,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 $messageSet = $configMessageSet;
             } else {
                 $messageSet = array(
-                    'default'         => _t(
+                    'default' => _t(
                         'SilverStripe\\Security\\Security.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
                         . "you right along."
@@ -608,6 +607,10 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function generateLoginFormSet($forms)
     {
+        if (count($forms) === 1) {
+            return $forms;
+        }
+
         $viewData = new ArrayData(array(
             'Forms' => new ArrayList($forms),
         ));
@@ -773,6 +776,7 @@ class Security extends Controller implements TemplateGlobalProvider
         return $this->renderWrappedController(
             $title,
             [
+                'Forms' => ArrayList::create($forms),
                 'Form' => $this->generateLoginFormSet($forms),
             ],
             $templates
@@ -1086,12 +1090,12 @@ class Security extends Controller implements TemplateGlobalProvider
         // New salts will only need to be generated if the password is hashed for the first time
         $salt = ($salt) ? $salt : $encryptor->salt($password);
 
-        return array(
+        return [
             'password'  => $encryptor->encrypt($password, $salt, $member),
-            'salt'      => $salt,
+            'salt' => $salt,
             'algorithm' => $algorithm,
             'encryptor' => $encryptor
-        );
+        ];
     }
 
     /**
@@ -1238,12 +1242,12 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function get_template_global_variables()
     {
-        return array(
-            "LoginURL"        => "login_url",
-            "LogoutURL"       => "logout_url",
+        return [
+            "LoginURL" => "login_url",
+            "LogoutURL" => "logout_url",
             "LostPasswordURL" => "lost_password_url",
-            "CurrentMember"   => "getCurrentUser",
-            "currentUser"     => "getCurrentUser"
-        );
+            "CurrentMember" => "getCurrentUser",
+            "currentUser" => "getCurrentUser"
+        ];
     }
 }

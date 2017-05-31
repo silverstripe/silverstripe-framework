@@ -234,7 +234,7 @@ fi:
     PLURALS:
       one: 'Käyttäjä'
       other: '{count} Käyttäjää'
-    REMEMBERME: 'Muista minut? (%d päivän ajan tällä koneella)'
+    REMEMBERME: 'Muista minut? ({count} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'

@@ -293,4 +293,31 @@ JS;
                 throw new BadMethodCallException("Invalid condition");
         }
     }
+
+    /**
+     * @When /^I switch to the "([^"]*)" iframe$/
+     * @param string $id iframe id property
+     */
+    public function stepSwitchToTheFrame($id)
+    {
+        $this->getMainContext()->getSession()->getDriver()->switchToIFrame($id);
+    }
+
+    /**
+     * @When /^I am not in an iframe$/
+     */
+    public function stepSwitchToParentFrame()
+    {
+        $this->getMainContext()->getSession()->getDriver()->switchToIFrame(null);
+    }
+
+    /**
+     * @When /^my session expires$/
+     */
+    public function stepMySessionExpires()
+    {
+        // Destroy cookie to detach session
+        $this->getMainContext()->getSession()->setCookie('PHPSESSID', null);
+    }
+
 }

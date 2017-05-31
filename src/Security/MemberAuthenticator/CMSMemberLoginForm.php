@@ -4,12 +4,14 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 
 /**
@@ -35,6 +37,8 @@ class CMSMemberLoginForm extends MemberLoginForm
         $actions = $this->getFormActions();
 
         parent::__construct($controller, $authenticatorClass, $name, $fields, $actions);
+
+        $this->addExtraClass('form--no-dividers');
     }
 
     /**
@@ -46,22 +50,24 @@ class CMSMemberLoginForm extends MemberLoginForm
         $fields = FieldList::create([
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
-            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password')),
-            LiteralField::create(
-                'forgotPassword',
-                sprintf(
-                    '<p id="ForgotPassword"><a href="%s" target="_top">%s</a></p>',
-                    $this->getExternalLink('lostpassword'),
-                    _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONFORGOTPASSWORD', "Forgot password?")
-                )
-            )
+            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         ]);
 
         if (Security::config()->get('autologin_enabled')) {
-            $fields->push(CheckboxField::create(
-                "Remember",
-                _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time?")
-            ));
+            $fields->insertAfter(
+                'Password',
+                CheckboxField::create(
+                    "Remember",
+                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
+                )->setAttribute(
+                    'title',
+                    _t(
+                        'SilverStripe\\Security\\Member.REMEMBERME',
+                        "Remember me next time? (for {count} days on this device)",
+                        [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
+                    )
+                )
+            );
         }
 
         return $fields;
@@ -72,7 +78,6 @@ class CMSMemberLoginForm extends MemberLoginForm
      */
     public function getFormActions()
     {
-
         // Determine returnurl to redirect to parent page
         $logoutLink = $this->getExternalLink('logout');
         if ($returnURL = $this->controller->getRequest()->requestVar('BackURL')) {
@@ -81,13 +86,22 @@ class CMSMemberLoginForm extends MemberLoginForm
 
         // Make actions
         $actions = FieldList::create([
-            FormAction::create('doLogin', _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGIN', "Log back in")),
+            FormAction::create('doLogin', _t(__CLASS__.'.BUTTONLOGIN', "Let me back in"))
+                ->addExtraClass('btn-primary'),
             LiteralField::create(
                 'doLogout',
                 sprintf(
-                    '<p id="doLogout"><a href="%s" target="_top">%s</a></p>',
-                    $logoutLink,
-                    _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGOUT', "Log out")
+                    '<a class="btn btn-secondary" href="%s" target="_top">%s</a>',
+                    Convert::raw2att($logoutLink),
+                    _t(__CLASS__.'.BUTTONLOGOUT', "Log out")
+                )
+            ),
+            LiteralField::create(
+                'forgotPassword',
+                sprintf(
+                    '<p class="cms-security__container__form__forgotPassword"><a href="%s" target="_top">%s</a></p>',
+                    $this->getExternalLink('lostpassword'),
+                    _t(__CLASS__.'.BUTTONFORGOTPASSWORD', "Forgot password")
                 )
             )
         ]);
@@ -111,6 +125,6 @@ class CMSMemberLoginForm extends MemberLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t('SilverStripe\\Security\\CMSMemberLoginForm.AUTHENTICATORNAME', 'CMS Member Login Form');
+        return _t(__CLASS__.'.AUTHENTICATORNAME', 'CMS Member Login Form');
     }
 }
