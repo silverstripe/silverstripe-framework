@@ -943,10 +943,19 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Filter this list to only contain the given Primary IDs
      *
      * @param array $ids Array of integers
+     * @throws InvalidArgumentException
      * @return $this
      */
     public function byIDs($ids)
     {
+        foreach ($ids AS $id) {
+            if (!is_int($id)) {
+                throw new InvalidArgumentException(
+                    'Invalid value passed to byIDs() in param array. All params have to be of type Integer.'
+                );
+            }
+        }
+
         return $this->filter('ID', $ids);
     }
 
@@ -955,10 +964,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param int $id
      * @return DataObject
+     * @throws InvalidArgumentException
      */
     public function byID($id)
     {
-        return $this->filter('ID', $id)->first();
+        if (is_int($id)) {
+            return $this->filter('ID', (int)$id)->first();
+        } else {
+            throw new InvalidArgumentException('Incorrect param type for $id passed to byID(). Integer is expected.');
+        }
     }
 
     /**
