@@ -921,6 +921,7 @@ class UploadField extends FileField {
 			'urlSelectDialog' => $this->Link('select'),
 			'urlAttach' => $this->Link('attach'),
 			'urlFileExists' => $this->link('fileexists'),
+			'folderName' => $this->getFolderName(),
 			'acceptFileTypes' => '.+$',
 			// Fileupload treats maxNumberOfFiles as the max number of _additional_ items allowed
 			'maxNumberOfFiles' => $allowedMaxFileNumber ? ($allowedMaxFileNumber - count($this->getItemIDs())) : null,
@@ -1226,17 +1227,20 @@ class UploadField extends FileField {
 	/**
 	 * Check if file exists, both checking filtered filename and exact filename
 	 *
-	 * @param string $originalFile Filename
+	 * @param string $originalFile Filename, not including path
+	 * @param string $folderName Relative assets path e.g. 'Uploads/' (optional, will try to auto-resolve)
 	 * @return bool
 	 */
-	protected function checkFileExists($originalFile) {
+	protected function checkFileExists($originalFile, $folderName=null) {
 
 		// Check both original and safely filtered filename
 		$nameFilter = FileNameFilter::create();
 		$filteredFile = $nameFilter->filter($originalFile);
 
-		// Resolve expected folder name
-		$folderName = $this->getFolderName();
+		if (!$folderName) {
+			// Resolve expected folder name
+			$folderName = $this->getFolderName();
+		}
 		$folder = Folder::find_or_make($folderName);
 		$parentPath = $folder
 			? BASE_PATH."/".$folder->getFilename()
@@ -1261,7 +1265,7 @@ class UploadField extends FileField {
 			);
 		} else {
 			$return = array(
-				'exists' => $this->checkFileExists($originalFile)
+				'exists' => $this->checkFileExists($originalFile, $request->requestVar('foldername'))
 			);
 		}
 

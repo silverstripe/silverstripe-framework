@@ -63,7 +63,7 @@
 			if (config.overwriteWarning && config.replaceFile) {
 				$.get(
 					config['urlFileExists'],
-					{'filename': data.files[0].name},
+					{'filename': data.files[0].name, 'foldername': config['folderName']},
 					function(response, status, xhr) {
 						if(response.exists) {
 							//display the dialogs with the question to overwrite or not
