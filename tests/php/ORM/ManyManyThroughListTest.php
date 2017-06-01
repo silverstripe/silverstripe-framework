@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
@@ -59,7 +60,9 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
 
         // To filter on join table need to use some raw sql
-        $item2 = $parent->Items()->where(['"ManyManyThroughListTest_JoinObject"."Title"' => 'join 2'])->first();
+        $item2 = $parent->Items()->where(
+            [Convert::symbol2sql('ManyManyThroughListTest_JoinObject.Title') => 'join 2']
+        )->first();
         $this->assertNotNull($item2);
         $this->assertEquals('item 2', $item2->Title);
         $this->assertNotNull($item2->getJoin());
@@ -67,7 +70,7 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
 
         // Test sorting on join table
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
+        $items = $parent->Items()->sort(Convert::symbol2sql('ManyManyThroughListTest_JoinObject.Sort'));
         $this->assertDOSEquals(
             [
                 ['Title' => 'item 2'],
@@ -76,7 +79,9 @@ class ManyManyThroughListTest extends SapphireTest
             $items
         );
 
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort" ASC');
+        $items = $parent->Items()->sort(
+            sprintf('%s ASC', Convert::symbol2sql('ManyManyThroughListTest_JoinObject.Sort'))
+        );
         $this->assertDOSEquals(
             [
                 ['Title' => 'item 1'],
@@ -84,7 +89,9 @@ class ManyManyThroughListTest extends SapphireTest
             ],
             $items
         );
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
+        $items = $parent->Items()->sort(
+            sprintf('%s DESC', Convert::symbol2sql('ManyManyThroughListTest_JoinObject.Title'))
+        );
         $this->assertDOSEquals(
             [
                 ['Title' => 'item 2'],

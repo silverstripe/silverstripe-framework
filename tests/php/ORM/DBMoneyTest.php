@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;

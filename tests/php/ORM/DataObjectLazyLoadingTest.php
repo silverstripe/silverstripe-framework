@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -25,64 +26,104 @@ class DataObjectLazyLoadingTest extends SapphireTest
 
     public function testQueriedColumnsID()
     {
-        $db = DB::get_conn();
         $playerList = new DataList(SubTeam::class);
         $playerList = $playerList->setQueriedColumns(array('ID'));
-        $expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
-            '"DataObjectTest_Team"."Created", "DataObjectTest_Team"."ID", CASE WHEN '.
-            '"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-            $db->quoteString(Team::class).' END AS "RecordClassName", "DataObjectTest_Team"."Title" '.
-            'FROM "DataObjectTest_Team" ' .
-            'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" ' .
-            'WHERE ("DataObjectTest_Team"."ClassName" IN (?))' .
-            ' ORDER BY "DataObjectTest_Team"."Title" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s, %s FROM %s LEFT JOIN %s ON %s = %s WHERE (%s IN (?)) ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_Team.Created'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::raw2sql(Team::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('DataObjectTest_SubTeam'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title')
+        );
         $this->assertSQLEquals($expected, $playerList->sql($parameters));
     }
 
     public function testQueriedColumnsFromBaseTableAndSubTable()
     {
-        $db = DB::get_conn();
         $playerList = new DataList(SubTeam::class);
         $playerList = $playerList->setQueriedColumns(array('Title', 'SubclassDatabaseField'));
-        $expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
-            '"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", ' .
-            '"DataObjectTest_SubTeam"."SubclassDatabaseField", "DataObjectTest_Team"."ID", CASE WHEN ' .
-            '"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-            $db->quoteString(Team::class).' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
-            'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
-            '("DataObjectTest_Team"."ClassName" IN (?)) ' .
-            'ORDER BY "DataObjectTest_Team"."Title" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s LEFT JOIN %s ON %s = %s WHERE (%s IN (?)) ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_Team.Created'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.SubclassDatabaseField'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::raw2sql(Team::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('DataObjectTest_SubTeam'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title')
+        );
         $this->assertSQLEquals($expected, $playerList->sql($parameters));
     }
 
     public function testQueriedColumnsFromBaseTable()
     {
-        $db = DB::get_conn();
         $playerList = new DataList(SubTeam::class);
         $playerList = $playerList->setQueriedColumns(array('Title'));
-        $expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
-            '"DataObjectTest_Team"."Created", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
-            'CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-            $db->quoteString(Team::class).' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
-            'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
-            '("DataObjectTest_Team"."ClassName" IN (?)) ' .
-            'ORDER BY "DataObjectTest_Team"."Title" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s LEFT JOIN %s ON %s = %s WHERE (%s IN (?)) ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_Team.Created'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::raw2sql(Team::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('DataObjectTest_SubTeam'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title')
+        );
         $this->assertSQLEquals($expected, $playerList->sql($parameters));
     }
 
     public function testQueriedColumnsFromSubTable()
     {
-        $db = DB::get_conn();
         $playerList = new DataList(SubTeam::class);
         $playerList = $playerList->setQueriedColumns(array('SubclassDatabaseField'));
-        $expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."LastEdited", ' .
-            '"DataObjectTest_Team"."Created", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
-            '"DataObjectTest_Team"."ID", CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN ' .
-            '"DataObjectTest_Team"."ClassName" ELSE '.$db->quoteString(Team::class).' END ' .
-            'AS "RecordClassName", "DataObjectTest_Team"."Title" ' .
-            'FROM "DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
-            '"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (?)) ' .
-            'ORDER BY "DataObjectTest_Team"."Title" ASC';
+
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s, %s FROM %s LEFT JOIN %s ON %s = %s WHERE (%s IN (?)) ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_Team.Created'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.SubclassDatabaseField'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::raw2sql(Team::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('DataObjectTest_SubTeam'),
+            Convert::symbol2sql('DataObjectTest_SubTeam.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::symbol2sql('DataObjectTest_Team.Title')
+        );
         $this->assertSQLEquals($expected, $playerList->sql($parameters));
     }
 
@@ -95,7 +136,11 @@ class DataObjectLazyLoadingTest extends SapphireTest
             0,
             preg_match(
                 $this->normaliseSQL(
-                    '/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/'
+                    sprintf(
+                        '/SELECT DISTINCT %s.* LEFT JOIN .* FROM %s/',
+                        Convert::symbol2sql('DataObjectTest_Team.ID'),
+                        Convert::symbol2sql('DataObjectTest_Team')
+                    )
                 ),
                 $this->normaliseSQL($playerList->sql($parameters))
             )

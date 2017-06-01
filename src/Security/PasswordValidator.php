@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ValidationResult;
@@ -133,8 +134,8 @@ class PasswordValidator
 
         if ($this->historicalPasswordCount) {
             $previousPasswords = MemberPassword::get()
-                ->where(array('"MemberPassword"."MemberID"' => $member->ID))
-                ->sort('"Created" DESC, "ID" DESC')
+                ->where([Convert::symbol2sql('MemberPassword.MemberID') => $member->ID])
+                ->sort(sprintf('%s DESC, %s DESC', Convert::symbol2sql('Created'), Convert::symbol2sql('ID')))
                 ->limit($this->historicalPasswordCount);
             /** @var MemberPassword $previousPassword */
             foreach ($previousPasswords as $previousPassword) {

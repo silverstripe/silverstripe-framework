@@ -19,7 +19,7 @@ class Category extends DataObject implements TestOnly
         'People' => Person::class
     );
 
-    private static $default_sort = '"Name"';
+    private static $default_sort = 'Name';
 
     public function getCMSFields()
     {

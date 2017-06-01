@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tests\CsvBulkLoaderTest;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
 
@@ -27,7 +28,7 @@ class Player extends DataObject implements TestOnly
         return DataObject::get_one(
             Team::class,
             array(
-            '"CsvBulkLoaderTest_Team"."Title"' => $title
+                Convert::symbol2sql('CsvBulkLoaderTest_Team.Title') => $title
             )
         );
     }

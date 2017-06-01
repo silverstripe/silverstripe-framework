@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObjectSchema;
@@ -247,23 +248,26 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(3, $comments->count());
 
         // Test WHERE clause
-        $comments = DataObject::get(DataObjectTest\TeamComment::class, "\"Name\"='Bob'");
-        $this->assertEquals(1, $comments->count());
+        $comments = DataObject::get(
+            DataObjectTest\TeamComment::class,
+            sprintf('%s = %s', Convert::symbol2sql('Name'), Convert::raw2sql('Bob', true))
+        );
+        $this->assertCount(1, $comments);
         foreach ($comments as $comment) {
             $this->assertEquals('Bob', $comment->Name);
         }
 
         // Test sorting
-        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', "\"Name\" ASC");
-        $this->assertEquals(3, $comments->count());
+        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', sprintf('%s ASC', Convert::symbol2sql('Name')));
+        $this->assertCount(3, $comments);
         $this->assertEquals('Bob', $comments->first()->Name);
-        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', "\"Name\" DESC");
-        $this->assertEquals(3, $comments->count());
+        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', sprintf('%s DESC', Convert::symbol2sql('Name')));
+        $this->assertCount(3, $comments);
         $this->assertEquals('Phil', $comments->first()->Name);
 
         // Test limit
-        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', "\"Name\" ASC", '', '1,2');
-        $this->assertEquals(2, $comments->count());
+        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', sprintf('%s ASC', Convert::symbol2sql('Name')), '', '1,2');
+        $this->assertCount(2, $comments);
         $this->assertEquals('Joe', $comments->first()->Name);
         $this->assertEquals('Phil', $comments->last()->Name);
 
@@ -275,18 +279,18 @@ class DataObjectTest extends SapphireTest
         // Test get_one() without caching
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
-            ),
+            [
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name') => 'Joe',
+            ],
             false
         );
         $comment1->Comment = "Something Else";
 
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
-            ),
+            [
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name') => 'Joe',
+            ],
             false
         );
         $this->assertNotEquals($comment1->Comment, $comment2->Comment);
@@ -294,33 +298,33 @@ class DataObjectTest extends SapphireTest
         // Test get_one() with caching
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
-            ),
+            [
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name') => 'Bob',
+            ],
             true
         );
         $comment1->Comment = "Something Else";
 
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
-            ),
+            [
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name') => 'Bob',
+            ],
             true
         );
         $this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
 
         // Test get_one() with order by without caching
-        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', false, "\"Name\" ASC");
+        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', false, sprintf('%s ASC', Convert::symbol2sql('Name')));
         $this->assertEquals('Bob', $comment->Name);
 
-        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', false, "\"Name\" DESC");
+        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', false, sprintf('%s DESC', Convert::symbol2sql('Name')));
         $this->assertEquals('Phil', $comment->Name);
 
         // Test get_one() with order by with caching
-        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', true, '"Name" ASC');
+        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', true, sprintf('%s ASC', Convert::symbol2sql('Name')));
         $this->assertEquals('Bob', $comment->Name);
-        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', true, '"Name" DESC');
+        $comment = DataObject::get_one(DataObjectTest\TeamComment::class, '', true, sprintf('%s DESC', Convert::symbol2sql('Name')));
         $this->assertEquals('Phil', $comment->Name);
     }
 
@@ -335,9 +339,9 @@ class DataObjectTest extends SapphireTest
 
         $subteam1 = DataObject::get_one(
             strtolower(DataObjectTest\SubTeam::class),
-            array(
-            '"DataObjectTest_Team"."Title"' => 'Subteam 1'
-            ),
+            [
+                Convert::symbol2sql('DataObjectTest_Team.Title') => 'Subteam 1',
+            ],
             true
         );
         $this->assertNotEmpty($subteam1);
@@ -1725,8 +1729,7 @@ class DataObjectTest extends SapphireTest
         // Check that the values of those fields are properly read from the database
         $values = DataObject::get(
             DataObjectTest\Team::class,
-            "\"DataObjectTest_Team\".\"ID\" IN
-			($obj1->ID, $obj2->ID)"
+            sprintf('%s IN (%s, %s)', Convert::symbol2sql('DataObjectTest_Team.ID'), $obj1->ID, $obj2->ID)
         )->column("SubclassDatabaseField");
         $this->assertEquals(array_intersect($values, array('obj1', 'obj2')), $values);
     }

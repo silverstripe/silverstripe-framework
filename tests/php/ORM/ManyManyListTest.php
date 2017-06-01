@@ -330,16 +330,24 @@ class ManyManyListTest extends SapphireTest
 
         // ensure that ManyManyListTest_ExtraFields_Clients.ValueCurrency is
         // selected.
-        $expected = 'SELECT DISTINCT "ManyManyListTest_ExtraFields_Clients"."WorthCurrency",'
-            .' "ManyManyListTest_ExtraFields_Clients"."WorthAmount", "ManyManyListTest_ExtraFields_Clients"."Reference",'
-            .' "ManyManyListTest_ExtraFields"."ClassName", "ManyManyListTest_ExtraFields"."LastEdited",'
-            .' "ManyManyListTest_ExtraFields"."Created", "ManyManyListTest_ExtraFields"."ID",'
-            .' CASE WHEN "ManyManyListTest_ExtraFields"."ClassName" IS NOT NULL THEN'
-            .' "ManyManyListTest_ExtraFields"."ClassName" ELSE '. Convert::raw2sql(ManyManyListTest\ExtraFieldsObject::class, true)
-            .' END AS "RecordClassName" FROM "ManyManyListTest_ExtraFields" INNER JOIN'
-            .' "ManyManyListTest_ExtraFields_Clients" ON'
-            .' "ManyManyListTest_ExtraFields_Clients"."ManyManyListTest_ExtraFieldsID" ='
-            .' "ManyManyListTest_ExtraFields"."ID"';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s INNER JOIN %s ON %s = %s',
+            Convert::symbol2sql('ManyManyListTest_ExtraFields_Clients.WorthCurrency'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields_Clients.WorthAmount'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields_Clients.Reference'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.ClassName'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.LastEdited'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.Created'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.ID'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.ClassName'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.ClassName'),
+            Convert::raw2sql(ManyManyListTest\ExtraFieldsObject::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields_Clients'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields_Clients.ManyManyListTest_ExtraFieldsID'),
+            Convert::symbol2sql('ManyManyListTest_ExtraFields.ID')
+        );
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
     }

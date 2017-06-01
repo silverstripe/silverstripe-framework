@@ -16,5 +16,5 @@ class ObjectE extends ObjectC implements TestOnly
         'ManyTestGs' => ObjectG::class,
     );
 
-    private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
+    private static $default_sort = 'DataQueryTest_E.SortOrder ASC';
 }

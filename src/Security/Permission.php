@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18nEntityProvider;
@@ -482,12 +483,9 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             return new ArrayList();
         }
 
-        $groupClause = DB::placeholders($groupIDs);
         /** @skipUpgrade */
         $members = Member::get()
-            ->where(array("\"Group\".\"ID\" IN ($groupClause)" => $groupIDs))
-            ->leftJoin("Group_Members", '"Member"."ID" = "Group_Members"."MemberID"')
-            ->leftJoin("Group", '"Group_Members"."GroupID" = "Group"."ID"');
+            ->filter(['Groups.ID' => $groupIDs]);
 
         return $members;
     }
@@ -506,13 +504,35 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         /** @skipUpgrade */
         return Group::get()
             ->where(array(
-                "\"PermissionRoleCode\".\"Code\" IN ($codeClause) OR \"Permission\".\"Code\" IN ($codeClause)"
+                sprintf(
+                    '%s IN (%s) OR %s IN (%s)',
+                    Convert::symbol2sql('PermissionRoleCode.Code'),
+                    $codeClause,
+                    Convert::symbol2sql('Permission.Code'),
+                    $codeClause
+                )
                 => array_merge($codeParams, $codeParams)
             ))
-            ->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
-            ->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
-            ->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
-            ->leftJoin('PermissionRoleCode', "\"PermissionRoleCode\".\"RoleID\" = \"PermissionRole\".\"ID\"");
+            ->leftJoin('Permission', sprintf(
+                '%s = %s',
+                Convert::symbol2sql('Permission.GroupID'),
+                Convert::symbol2sql('Group.ID')
+            ))
+            ->leftJoin('Group_Roles', sprintf(
+                '%s = %s',
+                Convert::symbol2sql('Group_Roles.GroupID'),
+                Convert::symbol2sql('Group.ID')
+            ))
+            ->leftJoin('PermissionRole', sprintf(
+                '%s = %s',
+                Convert::symbol2sql('Group_Roles.PermissionRoleID'),
+                Convert::symbol2sql('PermissionRole.ID')
+            ))
+            ->leftJoin('PermissionRoleCode', sprintf(
+                '%s = %s',
+                Convert::symbol2sql('PermissionRoleCode.RoleID'),
+                Convert::symbol2sql('PermissionRole.ID')
+            ));
     }
 
 

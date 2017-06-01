@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
@@ -61,8 +62,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
 
         $this->assertEquals($untouchable->Permissions()->count(), 1, 'The other group has one permission');
         $this->assertEquals(
-            $untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(),
             1,
+            $untouchable->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('ADMIN', true)))->count(),
             'The other group has ADMIN permission'
         );
 
@@ -85,13 +86,13 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'The tested group has two permissions permission'
         );
         $this->assertEquals(
-            $group->Permissions()->where("\"Code\"='ADMIN'")->count(),
             1,
+            $group->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('ADMIN', true)))->count(),
             'The tested group has ADMIN permission'
         );
         $this->assertEquals(
-            $group->Permissions()->where("\"Code\"='NON-ADMIN'")->count(),
             1,
+            $group->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('NON-ADMIN', true)))->count(),
             'The tested group has CMS_ACCESS_AssetAdmin permission'
         );
 
@@ -101,8 +102,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'The other group has one permission'
         );
         $this->assertEquals(
-            $untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(),
             1,
+            $untouchable->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('ADMIN', true)))->count(),
             'The other group has ADMIN permission'
         );
 
@@ -128,8 +129,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'The tested group has 1 permission'
         );
         $this->assertEquals(
-            $group->Permissions()->where("\"Code\"='ADMIN'")->count(),
             1,
+            $group->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('ADMIN', true)))->count(),
             'The tested group has ADMIN permission'
         );
 
@@ -139,8 +140,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'The other group has one permission'
         );
         $this->assertEquals(
-            $untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(),
             1,
+            $untouchable->Permissions()->where(sprintf('%s = %s', Convert::symbol2sql('Code'), Convert::raw2sql('ADMIN', true)))->count(),
             'The other group has ADMIN permission'
         );
 

@@ -24,7 +24,7 @@ class PeopleGroup extends DataObject implements TestOnly
         'FavouritePeople' => Person::class
     );
 
-    private static $default_sort = '"Name"';
+    private static $default_sort = 'Name';
 
     public function getCMSFields()
     {

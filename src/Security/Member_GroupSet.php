@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
@@ -56,7 +57,7 @@ class Member_GroupSet extends ManyManyList
             $allGroupIDsPlaceholders = DB::placeholders($allGroupIDs);
             return array("\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs);
         } else {
-            return array('"Group"."ID"' => 0);
+            return array(Convert::symbol2sql('Group.ID') => 0);
         }
     }
 

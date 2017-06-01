@@ -33,7 +33,7 @@ class Person extends DataObject implements TestOnly
         )
     );
 
-    private static $default_sort = '"FirstName"';
+    private static $default_sort = 'FirstName';
 
     public function getCMSFields()
     {

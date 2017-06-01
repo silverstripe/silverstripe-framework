@@ -363,9 +363,9 @@ class SQLSelect extends SQLConditionalExpression
                     do {
                         $column = "_SortColumn{$i}";
                         ++$i;
-                    } while (array_key_exists('"' . $column . '"', $this->orderby));
+                    } while (array_key_exists($column, $this->orderby));
                     $this->selectField($clause, $column);
-                    $clause = '"' . $column . '"';
+                    $clause = $column;
                 }
                 $orderby[$clause] = $dir;
             }

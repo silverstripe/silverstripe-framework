@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Dev\SapphireTest;
@@ -89,7 +90,7 @@ class HierarchyTest extends SapphireTest
         /** @var HierarchyTest\TestObject $obj3 */
         $obj3 = Versioned::get_including_deleted(
             HierarchyTest\TestObject::class,
-            "\"Title\" = 'Obj 3'"
+            sprintf("%s = 'Obj 3'", Convert::symbol2sql('Title'))
         )->First();
 
         // Check that all obj 3 children are returned

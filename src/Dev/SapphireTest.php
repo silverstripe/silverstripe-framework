@@ -17,6 +17,7 @@ use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\DefaultConfig;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;

@@ -93,7 +93,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
     private static $table_name = "Member";
 
-    private static $default_sort = '"Surname", "FirstName"';
+    private static $default_sort = 'Surname, FirstName';
 
     private static $indexes = array(
         'Email' => true,
@@ -701,7 +701,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $token = $generator->randomToken();
             $hash = $this->encryptWithUserSettings($token);
         } while (DataObject::get_one(Member::class, array(
-            '"Member"."AutoLoginHash"' => $hash
+            Convert::symbol2sql('Member.AutoLoginHash') => $hash,
         )));
 
         $this->AutoLoginHash = $hash;
@@ -962,10 +962,10 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($this->$identifierField) {
             // Note: Same logic as Member_Validator class
             $filter = [
-                "\"Member\".\"$identifierField\"" => $this->$identifierField
+                Convert::symbol2sql("Member.$identifierField") => $this->$identifierField
             ];
             if ($this->ID) {
-                $filter[] = array('"Member"."ID" <> ?' => $this->ID);
+                $filter[] = array(Convert::symbol2sql('Member.ID') . ' <> ?' => $this->ID);
             }
             $existingRecord = DataObject::get_one(Member::class, $filter);
 
@@ -1126,7 +1126,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $groupCheckObj = DataObject::get_by_id(Group::class, $group);
         } elseif (is_string($group)) {
             $groupCheckObj = DataObject::get_one(Group::class, array(
-                '"Group"."Code"' => $group
+                Convert::symbol2sql('Group.Code') => $group
             ));
         } elseif ($group instanceof Group) {
             $groupCheckObj = $group;
@@ -1160,7 +1160,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function addToGroupByCode($groupcode, $title = "")
     {
         $group = DataObject::get_one(Group::class, array(
-            '"Group"."Code"' => $groupcode
+            Convert::symbol2sql('Group.Code') => $groupcode
         ));
 
         if ($group) {

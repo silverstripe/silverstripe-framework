@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Queries;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -297,9 +298,9 @@ abstract class SQLConditionalExpression extends SQLExpression
             // Ensure tables are quoted, unless the table is actually a sub-select
             $table = preg_match('/\bSELECT\b/i', $join['table'])
                 ? $join['table']
-                : "\"{$join['table']}\"";
+                : Convert::symbol2sql($join['table']);
             $aliasClause = ($alias != $join['table'])
-                ? " AS \"{$alias}\""
+                ? sprintf(' AS %s', Convert::symbol2sql($alias))
                 : "";
             $joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
             if (!empty($join['parameters'])) {

@@ -534,7 +534,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         // Simple fields without relations are mapped directly
         if (strpos($field, '.') === false) {
-            $columnName = '"'.$field.'"';
+            $columnName = $field;
             return $this;
         }
 

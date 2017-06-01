@@ -142,27 +142,34 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $state->SortColumn = 'Cheerleader.Hat.Colour';
         $state->SortDirection = 'asc';
         $relationListA = $component->getManipulatedData($gridField, $list);
-        $relationListAsql = Convert::nl2os($relationListA->sql(), ' ');
+        $relationListAsql = $relationListA->sql();
 
         // Assert that all tables are joined properly
-        $this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListAsql);
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
-            . 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
+        $this->assertSQLContains(sprintf('FROM %s', Convert::symbol2sql('GridFieldSortableHeaderTest_Team')), $relationListAsql);
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_TeamGroup'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_TeamGroup.ID'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Team.ID')
+            ),
             $relationListAsql
         );
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
-            . 'AS "cheerleader_GridFieldSortableHeaderTest_Cheerleader" '
-            . 'ON "cheerleader_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
-            . '"GridFieldSortableHeaderTest_Team"."CheerleaderID"',
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s AS %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Cheerleader'),
+                Convert::symbol2sql('cheerleader_GridFieldSortableHeaderTest_Cheerleader'),
+                Convert::symbol2sql('cheerleader_GridFieldSortableHeaderTest_Cheerleader.ID'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Team.CheerleaderID')
+            ),
             $relationListAsql
         );
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'AS "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'ON "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '
-            . '"cheerleader_GridFieldSortableHeaderTest_Cheerleader"."HatID"',
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s AS %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_CheerleaderHat'),
+                Convert::symbol2sql('cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat'),
+                Convert::symbol2sql('cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat.ID'),
+                Convert::symbol2sql('cheerleader_GridFieldSortableHeaderTest_Cheerleader.HatID')
+            ),
             $relationListAsql
         );
 
@@ -185,34 +192,42 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $relationListBsql = $relationListB->sql();
 
         // Assert that subclasses are included in the query
-        $this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListBsql);
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
-            . 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
+        $this->assertSQLContains(sprintf('FROM %s', Convert::symbol2sql('GridFieldSortableHeaderTest_Team')), $relationListBsql);
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_TeamGroup'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_TeamGroup.ID'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Team.ID')
+            ),
             $relationListBsql
         );
         // Joined tables are joined basetable first
-        // Note: CheerLeader is base of Mom table, hence the alias
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
-            . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader" '
-            . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
-            . '"GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s AS %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Cheerleader'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader.ID'),
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Team.CheerleadersMomID')
+            ),
             $relationListBsql
         );
         // Then the basetable of the joined record is joined to the specific subtable
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
-            . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Mom" '
-            . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
-            . '"cheerleadersmom_GridFieldSortableHeaderTest_Mom"."ID"',
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s AS %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_Mom'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Mom'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader.ID'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Mom.ID')
+            ),
             $relationListBsql
         );
-        $this->assertContains(
-            'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'AS "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
-            . 'ON "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '
-            . '"cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."HatID"',
+        $this->assertSQLContains(
+            sprintf('LEFT JOIN %s AS %s ON %s = %s',
+                Convert::symbol2sql('GridFieldSortableHeaderTest_CheerleaderHat'),
+                Convert::symbol2sql('cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat'),
+                Convert::symbol2sql('cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat.ID'),
+                Convert::symbol2sql('cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader.HatID')
+            ),
             $relationListBsql
         );
 

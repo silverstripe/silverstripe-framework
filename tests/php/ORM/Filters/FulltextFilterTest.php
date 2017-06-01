@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests\Filters;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\Dev\SapphireTest;
@@ -56,9 +57,13 @@ class FulltextFilterTest extends SapphireTest
         $filter1->setModel(TestObject::class);
         $query1 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter1->apply($query1);
-        $this->assertNotEquals('"ColumnA","ColumnB"', $filter1->getDbName());
+        $this->assertNotEquals(sprintf('%s,%s', Convert::symbol2sql('ColumnA'),Convert::symbol2sql('ColumnB')), $filter1->getDbName());
         $this->assertNotEquals(
-            array("MATCH (\"ColumnA\",\"ColumnB\") AGAINST ('SilverStripe')"),
+            array(sprintf('MATCH (%s,%s) AGAINST (%s)")',
+                Convert::symbol2sql('ColumnA'),
+                Convert::symbol2sql('ColumnB'),
+                Convert::raw2sql('SilverStripe')
+            )),
             $query1->query()->getWhere()
         );
 
@@ -67,10 +72,19 @@ class FulltextFilterTest extends SapphireTest
         $filter1->setModel(TestObject::class);
         $query1 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter1->apply($query1);
-        $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
+        $this->assertEquals(
+            sprintf('%s,%s',
+                Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnA'),
+                Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnB')
+            ), $filter1->getDbName()
+        );
         $this->assertEquals(
             array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST (?)" => array('SilverStripe')
+                sprintf(
+                    'MATCH (%s,%s) AGAINST (?)',
+                    Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnA'),
+                    Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnB')
+                ) => array('SilverStripe'),
             )),
             $query1->query()->getWhere()
         );
@@ -80,10 +94,18 @@ class FulltextFilterTest extends SapphireTest
         $filter2->setModel(TestObject::class);
         $query2 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter2->apply($query2);
-        $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
+        $this->assertEquals(sprintf(
+            '%s,%s',
+            Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnC'),
+            Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnD')
+        ), $filter2->getDbName());
         $this->assertEquals(
             array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST (?)" => array('SilverStripe')
+                  sprintf(
+                      'MATCH (%s,%s) AGAINST (?)',
+                      Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnC'),
+                      Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnD')
+                  ) => array('SilverStripe')
             )),
             $query2->query()->getWhere()
         );
@@ -93,10 +115,13 @@ class FulltextFilterTest extends SapphireTest
         $filter3->setModel(TestObject::class);
         $query3 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter3->apply($query3);
-        $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA"', $filter3->getDbName());
+        $this->assertEquals(Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnA'), $filter3->getDbName());
         $this->assertEquals(
             array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST (?)" => array('SilverStripe')
+                sprintf(
+                    "MATCH (%s) AGAINST (?)",
+                    Convert::symbol2sql('FulltextFilterTest_DataObject.ColumnA')
+                ) => array('SilverStripe')
             )),
             $query3->query()->getWhere()
         );

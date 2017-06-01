@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Article;
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag;
 use SilverStripe\ORM\ArrayList;

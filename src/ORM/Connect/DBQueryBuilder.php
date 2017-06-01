@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use InvalidArgumentException;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Queries\SQLExpression;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -170,7 +171,7 @@ class DBQueryBuilder
 
         foreach ($select as $alias => $field) {
             // Don't include redundant aliases.
-            $fieldAlias = "\"{$alias}\"";
+            $fieldAlias = Convert::symbol2sql($alias);
             if ($alias === $field || substr($field, -strlen($fieldAlias)) === $fieldAlias) {
                 $clauses[] = $field;
             } else {

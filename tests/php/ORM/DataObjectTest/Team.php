@@ -65,7 +65,7 @@ class Team extends DataObject implements TestOnly
         'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
     );
 
-    private static $default_sort = '"Title"';
+    private static $default_sort = 'Title';
 
     private static $extensions = [
         Team_Extension::class

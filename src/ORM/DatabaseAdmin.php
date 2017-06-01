@@ -8,7 +8,6 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;

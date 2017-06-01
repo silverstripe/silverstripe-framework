@@ -3,8 +3,6 @@
 namespace SilverStripe\Control\Tests;
 
 use InvalidArgumentException;
-use PHPUnit_Framework_Error;
-use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Tests\ControllerTest\AccessBaseController;
 use SilverStripe\Control\Tests\ControllerTest\AccessSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\AccessWildcardSecuredController;
@@ -15,7 +13,6 @@ use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;

@@ -16,5 +16,5 @@ class Data extends DataObject implements TestOnly
         'Sort' => 'Int'
     );
 
-    private static $default_sort = '"Sort" ASC';
+    private static $default_sort = 'Sort ASC';
 }

@@ -2,10 +2,11 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 
 /**
@@ -43,8 +44,8 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectB::class);
         $result = $query->leftJoin(
             'DataQueryTest_C',
-            "\"DataQueryTest_B\".\"TestCID\" = \"DataQueryTest_B\".\"ID\""
-        )->sort('"DataQueryTest_B"."Title"', 'ASC');
+            sprintf('%s = %s', Convert::symbol2sql('DataQueryTest_B.TestCID'), Convert::symbol2sql('DataQueryTest_B.ID'))
+        )->sort('DataQueryTest_B.Title', 'ASC');
 
         $result = $result->execute()->record();
         $this->assertEquals('Foo', $result['Title']);
@@ -56,16 +57,36 @@ class DataQueryTest extends SapphireTest
     public function testJoins()
     {
         $dq = new DataQuery(Member::class);
-        $dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+        $dq->innerJoin(
+            "Group_Members",
+            sprintf('%s = %s',
+                Convert::symbol2sql('Group_Members.MemberID'),
+                Convert::symbol2sql('Member.ID')
+            )
+        );
         $this->assertSQLContains(
-            "INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+            sprintf('INNER JOIN %s ON %s = %s',
+                Convert::symbol2sql('Group_Members'),
+                Convert::symbol2sql('Group_Members.MemberID'),
+                Convert::symbol2sql('Member.ID')
+            ),
             $dq->sql($parameters)
         );
 
         $dq = new DataQuery(Member::class);
-        $dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+        $dq->leftJoin(
+            "Group_Members",
+            sprintf('%s = %s',
+                Convert::symbol2sql('Group_Members.MemberID'),
+                Convert::symbol2sql('Member.ID')
+            )
+        );
         $this->assertSQLContains(
-            "LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+            sprintf('LEFT JOIN %s ON %s = %s',
+                Convert::symbol2sql('Group_Members'),
+                Convert::symbol2sql('Group_Members.MemberID'),
+                Convert::symbol2sql('Member.ID')
+            ),
             $dq->sql($parameters)
         );
     }
@@ -76,12 +97,12 @@ class DataQueryTest extends SapphireTest
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestC');
         $this->assertTrue($dq->query()->isJoinedTo('testc_DataQueryTest_C'));
-        $this->assertContains('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+        $this->assertContains(sprintf('%s = %s', Convert::symbol2sql('testc_DataQueryTest_C.ID'), Convert::symbol2sql('DataQueryTest_B.TestCID')), $dq->sql());
 
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestCTwo');
         $this->assertTrue($dq->query()->isJoinedTo('testctwo_DataQueryTest_C'));
-        $this->assertContains('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+        $this->assertContains(sprintf('%s = %s', Convert::symbol2sql('testctwo_DataQueryTest_C.ID'), Convert::symbol2sql('DataQueryTest_B.TestCTwoID')), $dq->sql());
     }
 
     public function testApplyReplationDeepInheretence()
@@ -91,7 +112,7 @@ class DataQueryTest extends SapphireTest
         //apply a relation to a relation from an ancestor class
         $newDQ->applyRelation('TestA');
         $this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
+        $this->assertContains(sprintf('%s = %s', Convert::symbol2sql('testa_DataQueryTest_A.ID'), Convert::symbol2sql('DataQueryTest_C.TestAID')), $newDQ->sql($params));
 
         //test many_many relation
 
@@ -102,7 +123,7 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql());
+        $this->assertContains(sprintf('FROM %s', Convert::symbol2sql($baseDBTable)), $newDQ->sql());
 
         //test many_many with shared inheritance
         $newDQ = new DataQuery(DataQueryTest\ObjectE::class);
@@ -110,15 +131,15 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
+        $this->assertContains(sprintf('FROM %s', Convert::symbol2sql($baseDBTable)), $newDQ->sql(), 'The FROM clause is missing from the query');
         $newDQ->applyRelation('ManyTestGs');
         //confirm we are still joined to the base table
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //double check it is the "FROM" clause
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
+        $this->assertContains(sprintf('FROM %s', Convert::symbol2sql($baseDBTable)), $newDQ->sql(), 'The FROM clause has been removed from the query');
         //another (potentially less crude check) for checking "FROM" clause
         $fromTables = $newDQ->query()->getFrom();
-        $this->assertEquals('"' . $baseDBTable . '"', $fromTables[$baseDBTable]);
+        $this->assertEquals(Convert::symbol2sql($baseDBTable), $fromTables[$baseDBTable]);
     }
 
     public function testRelationReturn()
@@ -166,7 +187,13 @@ class DataQueryTest extends SapphireTest
     public function testRelationOrderWithCustomJoin()
     {
         $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
-        $dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
+        $dataQuery->innerJoin(
+            'DataQueryTest_D',
+            sprintf('%s = %s',
+                Convert::symbol2sql('DataQueryTest_D.RelationID'),
+                Convert::symbol2sql('DataQueryTest_B.ID')
+            )
+        );
         $dataQuery->execute();
     }
 
@@ -238,8 +265,8 @@ class DataQueryTest extends SapphireTest
 
         $orgDq = clone $dq;
 
-        $subDq->sort('"DataQueryTest_A"."Name"');
-        $orgDq->sort('"DataQueryTest_A"."Name"');
+        $subDq->sort('DataQueryTest_A.Name');
+        $orgDq->sort('DataQueryTest_A.Name');
 
         $this->assertSQLEquals($dq->sql($parameters), $orgDq->sql($parameters));
 
@@ -252,9 +279,9 @@ class DataQueryTest extends SapphireTest
     public function testOrderByMultiple()
     {
         $dq = new DataQuery(SQLSelectTest\TestObject::class);
-        $dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
+        $dq = $dq->sort(sprintf('%s ASC, MID(%s, 8, 1) DESC', Convert::symbol2sql('Name'), Convert::symbol2sql('Name')));
         $this->assertContains(
-            'ORDER BY "SQLSelectTest_DO"."Name" ASC, "_SortColumn0" DESC',
+            sprintf('ORDER BY %s ASC, _SortColumn0 DESC', Convert::symbol2sql('SQLSelectTest_DO.Name')),
             $dq->sql($parameters)
         );
     }
@@ -343,10 +370,10 @@ class DataQueryTest extends SapphireTest
     {
         // Including filter on parent table only doesn't pull in second
         $query = new DataQuery(DataQueryTest\ObjectC::class);
-        $query->sort('"SortOrder"');
+        $query->sort('SortOrder');
         $query->where(
             array(
-            '"DataQueryTest_C"."Title" = ?' => array('First')
+                sprintf('%s = ?', Convert::symbol2sql('DataQueryTest_C.Title')) => array('First')
             )
         );
         $result = $query->getFinalisedQuery(array('Title'));
@@ -356,14 +383,12 @@ class DataQueryTest extends SapphireTest
 
         // Including filter on sub-table requires it
         $query = new DataQuery(DataQueryTest\ObjectC::class);
-        $query->sort('"SortOrder"');
-        $query->where(
-            array(
-            '"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => array(
+        $query->sort('SortOrder');
+        $query->where([
+            sprintf('%s = ? OR %s > ?', Convert::symbol2sql('DataQueryTest_C.Title'), Convert::symbol2sql('DataQueryTest_E.SortOrder')) => [
                 'First', 2
-            )
-            )
-        );
+            ]
+        ]);
         $result = $query->getFinalisedQuery(array('Title'));
         $from = $result->getFrom();
 

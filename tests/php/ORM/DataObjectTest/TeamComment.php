@@ -18,5 +18,5 @@ class TeamComment extends DataObject implements TestOnly
         'Team' => Team::class
     );
 
-    private static $default_sort = '"Name" ASC';
+    private static $default_sort = 'Name ASC';
 }

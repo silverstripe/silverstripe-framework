@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -74,9 +75,9 @@ abstract class DBComposite extends DBField
             $table = $this->getTable();
             $key = $this->getName() . $field;
             if ($table) {
-                $query->selectField("\"{$table}\".\"{$key}\"");
+                $query->selectField(Convert::symbol2sql("{$table}.{$key}"));
             } else {
-                $query->selectField("\"{$key}\"");
+                $query->selectField(Convert::symbol2sql("{$key}"));
             }
         }
     }

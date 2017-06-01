@@ -176,7 +176,9 @@ class DataQuery
         }
 
         $baseTable = DataObject::getSchema()->tableName($baseClass);
-        $this->query->setFrom("\"{$baseTable}\"");
+        $this->query->setFrom(
+            Convert::symbol2sql($baseTable)
+        );
 
         $obj = Injector::inst()->get($baseClass);
         $obj->extend('augmentDataQueryCreation', $this->query, $this);
@@ -268,7 +270,11 @@ class DataQuery
                 $tableName = $schema->tableName($tableClass);
                 $query->addLeftJoin(
                     $tableName,
-                    "\"{$tableName}\".\"ID\" = {$baseIDColumn}",
+                    sprintf('%s.%s = %s',
+                        Convert::symbol2sql($tableName),
+                        Convert::symbol2sql('ID'),
+                        $baseIDColumn
+                    ),
                     $tableName,
                     10
                 );
@@ -359,7 +365,7 @@ class DataQuery
                     continue;
                 }
 
-                $col = str_replace('"', '', trim($k));
+                $col = Convert::sql2symbol(trim($k));
                 $parts = explode('.', $col);
 
                 // Pull through SortColumn references from the originalSelect variables
@@ -370,13 +376,12 @@ class DataQuery
 
                     continue;
                 }
-
                 if (count($parts) == 1) {
                     // Get expression for sort value
-                    $qualCol = "\"{$parts[0]}\"";
+                    $qualCol = Convert::symbol2sql($parts[0]);
                     $table = DataObject::getSchema()->tableForField($this->dataClass(), $parts[0]);
                     if ($table) {
-                        $qualCol = "\"{$table}\".{$qualCol}";
+                        $qualCol = sprintf('%s.%s', Convert::symbol2sql($table), $qualCol);
                     }
 
                     // remove original sort
@@ -392,12 +397,12 @@ class DataQuery
                         $query->selectField($qualCol);
                     }
                 } else {
-                    $qualCol = '"' . implode('"."', $parts) . '"';
+                    $qualCol = Convert::symbol2sql(implode('.', $parts));
 
                     if (!in_array($qualCol, $query->getSelect())) {
                         unset($newOrderby[$k]);
 
-                        $newOrderby["\"_SortColumn$i\""] = $dir;
+                        $newOrderby[Convert::symbol2sql("_SortColumn$i")] = $dir;
                         $query->selectField($qualCol, "_SortColumn$i");
 
                         $i++;
@@ -933,7 +938,7 @@ class DataQuery
                 $ancestorTableAliased = $foreignPrefix.$ancestorTable;
                 $this->query->addLeftJoin(
                     $ancestorTable,
-                    "\"{$foreignTableAliased}\".\"ID\" = \"{$ancestorTableAliased}\".\"ID\"",
+                    sprintf('%s = %s', Convert::symbol2sql("{$foreignTableAliased}.ID"), Convert::symbol2sql("{$ancestorTableAliased}.ID")),
                     $ancestorTableAliased
                 );
             }
@@ -994,7 +999,12 @@ class DataQuery
                     $ancestorTableAliased = $foreignPrefix.$ancestorTable;
                     $this->query->addLeftJoin(
                         $ancestorTable,
-                        "{$foreignIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
+                        sprintf(
+                            '%s = %s.%s',
+                            $foreignIDColumn,
+                            Convert::symbol2sql($ancestorTableAliased),
+                            Convert::symbol2sql('ID')
+                        ),
                         $ancestorTableAliased
                     );
                 }
@@ -1043,7 +1053,7 @@ class DataQuery
         $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID', $parentPrefix);
         $this->query->addLeftJoin(
             $relationClassOrTable,
-            "\"{$relationAliasedTable}\".\"{$parentField}\" = {$parentIDColumn}",
+            sprintf('%s = %s', Convert::symbol2sql("{$relationAliasedTable}.{$parentField}"), $parentIDColumn),
             $relationAliasedTable
         );
 
@@ -1051,7 +1061,7 @@ class DataQuery
         $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID', $componentPrefix);
             $this->query->addLeftJoin(
                 $componentBaseTable,
-                "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
+                sprintf('%s = %s', Convert::symbol2sql("{$relationAliasedTable}.{$componentField}"), $componentIDColumn),
                 $componentAliasedTable
             );
 
@@ -1065,7 +1075,12 @@ class DataQuery
                 $ancestorTableAliased = $componentPrefix.$ancestorTable;
                 $this->query->addLeftJoin(
                     $ancestorTable,
-                    "{$componentIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
+                    sprintf(
+                        '%s = %s.%s',
+                        $componentIDColumn,
+                        Convert::symbol2sql($ancestorTableAliased),
+                        Convert::symbol2sql('ID')
+                    ),
                     $ancestorTableAliased
                 );
             }
@@ -1102,7 +1117,7 @@ class DataQuery
     public function selectFromTable($table, $fields)
     {
         $fieldExpressions = array_map(function ($item) use ($table) {
-            return "\"{$table}\".\"{$item}\"";
+            return Convert::symbol2sql("{$table}.{$item}");
         }, $fields);
 
         $this->query->setSelect($fieldExpressions);

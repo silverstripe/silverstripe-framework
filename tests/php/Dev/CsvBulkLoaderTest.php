@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CustomLoader;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\PlayerContract;
@@ -56,7 +57,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $obj = DataObject::get_one(
             Player::class,
             array(
-            '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+                Convert::symbol2sql('CsvBulkLoaderTest_Player.FirstName') => 'John'
             )
         );
         $this->assertNotNull($obj);
@@ -117,7 +118,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $obj = DataObject::get_one(
             Player::class,
             array(
-            '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+                Convert::symbol2sql('CsvBulkLoaderTest_Player.FirstName') => 'John'
             )
         );
         $this->assertNotNull($obj);
@@ -128,7 +129,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $obj2 = DataObject::get_one(
             Player::class,
             array(
-            '"CsvBulkLoaderTest_Player"."FirstName"' => 'Jane'
+                Convert::symbol2sql('CsvBulkLoaderTest_Player.FirstName') => 'Jane'
             )
         );
         $this->assertNotNull($obj2);
@@ -170,7 +171,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $this->assertEquals(1, $results->Count(), 'Test correct count of imported data');
 
         // Test of augumenting existing relation (created by fixture)
-        $testTeam = DataObject::get_one(Team::class, null, null, '"Created" DESC');
+        $testTeam = DataObject::get_one(Team::class, null, null, 'Created DESC');
         $this->assertEquals('20', $testTeam->TeamSize, 'Augumenting existing has_one relation works');
 
         // Test of creating relation
@@ -178,7 +179,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $testPlayer = DataObject::get_one(
             Player::class,
             array(
-            '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
+                Convert::symbol2sql('CsvBulkLoaderTest_Player.FirstName') => 'John'
             )
         );
         $this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');

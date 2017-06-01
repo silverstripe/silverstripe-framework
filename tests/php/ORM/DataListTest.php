@@ -175,43 +175,54 @@ class DataListTest extends SapphireTest
 
     public function testSql()
     {
-        $db = DB::get_conn();
         $list = TeamComment::get();
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
-            . 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Created'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::raw2sql(DataObjectTest\TeamComment::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+        );
         $this->assertSQLEquals($expected, $list->sql($parameters));
     }
 
     public function testInnerJoin()
     {
-        $db = DB::get_conn();
-
         $list = TeamComment::get();
         $list = $list->innerJoin(
             'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"',
+            sprintf('%s = %s', Convert::symbol2sql('DataObjectTest_Team.ID'), Convert::symbol2sql('DataObjectTest_TeamComment.TeamID')),
             'Team'
         );
-
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-            . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
-            . '"DataObjectTest_TeamComment"."TeamID"'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
-
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s INNER JOIN %s AS %s ON %s = %s ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Created'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::raw2sql(DataObjectTest\TeamComment::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('Team'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+        );
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
         $this->assertEmpty($parameters);
@@ -219,30 +230,41 @@ class DataListTest extends SapphireTest
 
     public function testInnerJoinParameterised()
     {
-        $db = DB::get_conn();
-
         $list = TeamComment::get();
         $list = $list->innerJoin(
             'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?',
+            sprintf(
+                '%s = %s AND %s LIKE ?',
+                Convert::symbol2sql('DataObjectTest_Team.ID'),
+                Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+                Convert::symbol2sql('DataObjectTest_Team.Title')
+            ),
             'Team',
             20,
             array('Team%')
         );
 
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-            . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
-            . '"DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s INNER JOIN %s AS %s ON %s = %s AND %s LIKE ? ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Created'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::raw2sql(DataObjectTest\TeamComment::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('Team'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+        );
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
         $this->assertEquals(array('Team%'), $parameters);
@@ -250,25 +272,32 @@ class DataListTest extends SapphireTest
 
     public function testLeftJoin()
     {
-        $db = DB::get_conn();
-
         $list = TeamComment::get();
         $list = $list->leftJoin(
             'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"',
+            sprintf('%s = %s', Convert::symbol2sql('DataObjectTest_Team.ID'), Convert::symbol2sql('DataObjectTest_TeamComment.TeamID')),
             'Team'
         );
-
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
-            . 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" '
-            . 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s LEFT JOIN %s AS %s ON %s = %s ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Created'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::raw2sql(DataObjectTest\TeamComment::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('Team'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+        );
 
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
@@ -277,30 +306,40 @@ class DataListTest extends SapphireTest
 
     public function testLeftJoinParameterised()
     {
-        $db = DB::get_conn();
-
         $list = TeamComment::get();
         $list = $list->leftJoin(
             'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?',
+            sprintf(
+                '%s = %s AND %s LIKE ?',
+                Convert::symbol2sql('DataObjectTest_Team.ID'),
+                Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+                Convert::symbol2sql('DataObjectTest_Team.Title')
+            ),
             'Team',
             20,
             array('Team%')
         );
-
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-            . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
-            . '"DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
+        $expected = sprintf(
+            'SELECT DISTINCT %s, %s, %s, %s, %s, %s, %s, CASE WHEN %s IS NOT NULL THEN %s ELSE %s END AS %s FROM %s LEFT JOIN %s AS %s ON %s = %s AND %s LIKE ? ORDER BY %s ASC',
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.LastEdited'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Created'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.ClassName'),
+            Convert::raw2sql(DataObjectTest\TeamComment::class, true),
+            Convert::symbol2sql('RecordClassName'),
+            Convert::symbol2sql('DataObjectTest_TeamComment'),
+            Convert::symbol2sql('DataObjectTest_Team'),
+            Convert::symbol2sql('Team'),
+            Convert::symbol2sql('DataObjectTest_Team.ID'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'),
+            Convert::symbol2sql('DataObjectTest_Team.Title'),
+            Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+        );
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
         $this->assertEquals(array('Team%'), $parameters);
@@ -400,11 +439,11 @@ class DataListTest extends SapphireTest
         $list = TeamComment::get();
 
         // where() returns a new DataList, like all the other modifiers, so it can be chained.
-        $list2 = $list->where('"Name" = \'Joe\'');
+        $list2 = $list->where(sprintf('%s = %s', Convert::symbol2sql("Name"), Convert::raw2sql('Joe', true)));
         $this->assertEquals(array('This is a team comment by Joe'), $list2->column('Comment'));
 
         // The where() clauses are chained together with AND
-        $list3 = $list2->where('"Name" = \'Bob\'');
+        $list3 = $list2->where(sprintf('%s = %s', Convert::symbol2sql("Name"), Convert::raw2sql('Bob', true)));
         $this->assertEquals(array(), $list3->column('Comment'));
     }
 
@@ -423,8 +462,8 @@ class DataListTest extends SapphireTest
 
         // Assert that filtering on ID searches by the base table, not the child table field
         $query = SubTeam::get()->filter('ID', 4)->sql($parameters);
-        $this->assertContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
-        $this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
+        $this->assertContains(sprintf('WHERE (%s = ?)', Convert::symbol2sql('DataObjectTest_Team.ID')), $query);
+        $this->assertNotContains(sprintf('WHERE (%s = ?)', Convert::symbol2sql('DataObjectTest_SubTeam.ID')), $query);
     }
 
     public function testByIDs()
@@ -1021,7 +1060,7 @@ class DataListTest extends SapphireTest
         $list = TeamComment::get()
             ->leftJoin(
                 'DataObjectTest_Team',
-                '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
+                sprintf('%s = %s', Convert::symbol2sql('DataObjectTest_Team.ID'), Convert::symbol2sql('DataObjectTest_TeamComment.TeamID'))
             )->filter(
                 array(
                 'Title' => 'Team 1'
@@ -1275,18 +1314,18 @@ class DataListTest extends SapphireTest
 
         // Only an explicit NOT NULL should include null values
         $items6 = $list->filter('Email:not:case', array(null, '', 'damian@thefans.com'));
-        $this->assertSQLContains(' AND "DataObjectTest_Fan"."Email" IS NOT NULL', $items6->sql());
+        $this->assertSQLContains(sprintf(' AND %s IS NOT NULL', Convert::symbol2sql('DataObjectTest_Fan.Email')), $items6->sql());
 
         // These should all include values where Email IS NULL
         $items7 = $list->filter('Email:nocase', array(null, '', 'damian@thefans.com'));
-        $this->assertSQLContains(' OR "DataObjectTest_Fan"."Email" IS NULL', $items7->sql());
+        $this->assertSQLContains(sprintf(' OR %s IS NULL', Convert::symbol2sql('DataObjectTest_Fan.Email')), $items7->sql());
         $items8 = $list->filter('Email:not:case', array('', 'damian@thefans.com'));
-        $this->assertSQLContains(' OR "DataObjectTest_Fan"."Email" IS NULL', $items8->sql());
+        $this->assertSQLContains(sprintf(' OR %s IS NULL', Convert::symbol2sql('DataObjectTest_Fan.Email')), $items8->sql());
 
         // These should not contain any null checks at all
         $items9 = $list->filter('Email:nocase', array('', 'damian@thefans.com'));
-        $this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NULL', $items9->sql());
-        $this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NOT NULL', $items9->sql());
+        $this->assertSQLNotContains(sprintf('%s IS NULL', Convert::symbol2sql('DataObjectTest_Fan.Email')), $items9->sql());
+        $this->assertSQLNotContains(sprintf('%s IS NOT NULL', Convert::symbol2sql('DataObjectTest_Fan.Email')), $items9->sql());
     }
 
     public function testAggregateDBName()
@@ -1295,12 +1334,12 @@ class DataListTest extends SapphireTest
             'Comments.Count()'
         );
         $filter->apply(new DataQuery(DataObjectTest\Team::class));
-        $this->assertEquals('COUNT("comments_DataObjectTest_TeamComment"."ID")', $filter->getDBName());
+        $this->assertEquals(sprintf('COUNT(%s)', Convert::symbol2sql('comments_DataObjectTest_TeamComment.ID')), $filter->getDBName());
 
         foreach (['Comments.Max(ID)', 'Comments.Max( ID )', 'Comments.Max(  ID)'] as $name) {
             $filter = new ExactMatchFilter($name);
             $filter->apply(new DataQuery(DataObjectTest\Team::class));
-            $this->assertEquals('MAX("comments_DataObjectTest_TeamComment"."ID")', $filter->getDBName());
+            $this->assertEquals(sprintf('MAX(%s)', Convert::symbol2sql('comments_DataObjectTest_TeamComment.ID')), $filter->getDBName());
         }
     }
 
@@ -1506,8 +1545,12 @@ class DataListTest extends SapphireTest
 
         $sql = $list->sql($parameters);
         $this->assertSQLContains(
-            'WHERE ("DataObjectTest_TeamComment"."Comment" = ?) AND (("DataObjectTest_TeamComment"."Name" != ? '
-            . 'OR "DataObjectTest_TeamComment"."Name" IS NULL))',
+            sprintf(
+                'WHERE (%s = ?) AND ((%s != ? OR %s IS NULL))',
+                Convert::symbol2sql('DataObjectTest_TeamComment.Comment'),
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name'),
+                Convert::symbol2sql('DataObjectTest_TeamComment.Name')
+            ),
             $sql
         );
         $this->assertEquals(array('Phil is a unique guy, and comments on team2', 'Bob'), $parameters);
@@ -1519,7 +1562,7 @@ class DataListTest extends SapphireTest
         $list = $list->exclude('Name:LessThan', 'Bob');
 
         $sql = $list->sql($parameters);
-        $this->assertSQLContains('WHERE (("DataObjectTest_TeamComment"."Name" >= ?))', $sql);
+        $this->assertSQLContains(sprintf('WHERE ((%s >= ?))', Convert::symbol2sql('DataObjectTest_TeamComment.Name')), $sql);
         $this->assertEquals(array('Bob'), $parameters);
     }
 
@@ -1530,7 +1573,7 @@ class DataListTest extends SapphireTest
     {
         $this->setExpectedException(
             "InvalidArgumentException",
-            'Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set'
+            sprintf('Cannot filter %s against an empty set', Convert::symbol2sql('DataObjectTest_TeamComment.Name'))
         );
         $list = TeamComment::get();
         $list->exclude('Name', array());
@@ -1645,10 +1688,12 @@ class DataListTest extends SapphireTest
     {
         // Test an expression with both spaces and commas. This test also tests that column() can be called
         // with a complex sort expression, so keep using column() below
-        $teamClass = Convert::raw2sql(SubTeam::class);
-        $list = Team::get()->sort(
-            'CASE WHEN "DataObjectTest_Team"."ClassName" = \''.$teamClass.'\' THEN 0 ELSE 1 END, "Title" DESC'
-        );
+        $list = Team::get()->sort(sprintf(
+            'CASE WHEN %s = %s THEN 0 ELSE 1 END, %s DESC',
+            Convert::symbol2sql('DataObjectTest_Team.ClassName'),
+            Convert::raw2sql(SubTeam::class, true),
+            Convert::symbol2sql('Title')
+        ));
         $this->assertEquals(
             array(
             'Subteam 3',

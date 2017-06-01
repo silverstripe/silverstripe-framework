@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use BadMethodCallException;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -80,7 +81,7 @@ class ManyManyList extends RelationList
         $dataClassIDColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
         $this->dataQuery->innerJoin(
             $this->joinTable,
-            "\"{$this->joinTable}\".\"{$this->localKey}\" = {$dataClassIDColumn}"
+            sprintf('%s = %s', Convert::symbol2sql("{$this->joinTable}.{$this->localKey}"), $dataClassIDColumn)
         );
 
         // Add the extra fields to the query
@@ -176,7 +177,7 @@ class ManyManyList extends RelationList
         }
 
         // Apply relation filter
-        $key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
+        $key = Convert::symbol2sql("{$this->joinTable}.{$this->foreignKey}");
         if (is_array($id)) {
             return array("$key IN (".DB::placeholders($id).")"  => $id);
         } elseif ($id !== null) {
@@ -251,10 +252,10 @@ class ManyManyList extends RelationList
                 // With the current query, simply add the foreign and local conditions
                 // The query can be a bit odd, especially if custom relation classes
                 // don't join expected tables (@see Member_GroupSet for example).
-                $query = new SQLSelect("*", "\"{$this->joinTable}\"");
+                $query = new SQLSelect("*", Convert::symbol2sql($this->joinTable));
                 $query->addWhere($foreignFilter);
                 $query->addWhere(array(
-                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+                    Convert::symbol2sql("{$this->joinTable}.{$this->localKey}") => $itemID
                 ));
                 $hasExisting = ($query->count() > 0);
             } else {
@@ -270,8 +271,8 @@ class ManyManyList extends RelationList
             );
             if ($hasExisting) {
                 $manipulation[$this->joinTable]['where'] = array(
-                    "\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
-                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+                    Convert::symbol2sql("{$this->joinTable}.{$this->foreignKey}") => $foreignID,
+                    Convert::symbol2sql("{$this->joinTable}.{$this->localKey}") => $itemID
                 );
             }
 
@@ -368,11 +369,11 @@ class ManyManyList extends RelationList
         // Use a sub-query as SQLite does not support setting delete targets in
         // joined queries.
         $delete = new SQLDelete();
-        $delete->setFrom("\"{$this->joinTable}\"");
+        $delete->setFrom(Convert::symbol2sql($this->joinTable));
         $delete->addWhere($this->foreignIDFilter());
         $subSelect = $selectQuery->sql($parameters);
         $delete->addWhere(array(
-            "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+            sprintf('%s IN (%s)', Convert::symbol2sql("{$this->joinTable}.{$this->localKey}"), $subSelect) => $parameters
         ));
         $delete->execute();
     }
@@ -401,9 +402,9 @@ class ManyManyList extends RelationList
 
         $cleanExtraFields = array();
         foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
-            $cleanExtraFields[] = "\"{$fieldName}\"";
+            $cleanExtraFields[] = Convert::symbol2sql($fieldName);
         }
-        $query = new SQLSelect($cleanExtraFields, "\"{$this->joinTable}\"");
+        $query = new SQLSelect($cleanExtraFields, Convert::symbol2sql($this->joinTable));
         $filter = $this->foreignIDWriteFilter($this->getForeignID());
         if ($filter) {
             $query->setWhere($filter);
@@ -411,7 +412,7 @@ class ManyManyList extends RelationList
             throw new BadMethodCallException("Can't call ManyManyList::getExtraData() until a foreign ID is set");
         }
         $query->addWhere(array(
-            "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+            Convert::symbol2sql("{$this->joinTable}.{$this->localKey}") => $itemID
         ));
         $queryResult = $query->execute()->current();
         if ($queryResult) {

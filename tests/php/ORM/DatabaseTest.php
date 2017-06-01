@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\MSSQL\MSSQLDatabase;
@@ -71,8 +72,9 @@ class DatabaseTest extends SapphireTest
 
         $ret = DB::query(
             sprintf(
-                'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
-                'DatabaseTest_MyObject'
+                'SHOW TABLE STATUS WHERE %s = %s',
+                Convert::symbol2sql('Name'),
+                Convert::raw2sql('DatabaseTest_MyObject', true)
             )
         )->first();
         $this->assertEquals(

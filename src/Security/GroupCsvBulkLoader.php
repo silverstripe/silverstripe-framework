@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\CsvBulkLoader;
 
@@ -40,7 +41,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         // which are imported later on in the CSV file.
         if (isset($record['ParentCode']) && $record['ParentCode']) {
             $parentGroup = DataObject::get_one('SilverStripe\\Security\\Group', array(
-                '"Group"."Code"' => $record['ParentCode']
+                Convert::symbol2sql('Group.Code') => $record['ParentCode']
             ));
             if ($parentGroup) {
                 $group->ParentID = $parentGroup->ID;
@@ -53,8 +54,8 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         if (isset($record['PermissionCodes']) && $record['PermissionCodes']) {
             foreach (explode(',', $record['PermissionCodes']) as $code) {
                 $p = DataObject::get_one('SilverStripe\\Security\\Permission', array(
-                    '"Permission"."Code"' => $code,
-                    '"Permission"."GroupID"' => $group->ID
+                    Convert::symbol2sql('Permission.Code') => $code,
+                    Convert::symbol2sql('Permission.GroupID') => $group->ID
                 ));
                 if (!$p) {
                     $p = new Permission(array('Code' => $code));

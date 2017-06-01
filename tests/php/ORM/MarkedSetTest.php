@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use DOMDocument;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
@@ -58,7 +59,7 @@ class MarkedSetTest extends SapphireTest
         $set->markUnexpanded($this->objFromFixture(HierarchyTest\TestObject::class, 'obj3'));
 
         // Query some objs in a different context and check their m
-        $objs = DataObject::get(HierarchyTest\TestObject::class, '', '"ID" ASC');
+        $objs = DataObject::get(HierarchyTest\TestObject::class, '', Convert::symbol2sql('ID') . ' ASC');
         $marked = $expanded = array();
         foreach ($objs as $obj) {
             if ($set->isMarked($obj)) {

@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use Exception;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
@@ -97,7 +98,11 @@ class DataObjectSchema
         if (!$table) {
             throw new InvalidArgumentException("\"{$field}\" is not a field on class \"{$class}\"");
         }
-        return "\"{$tablePrefix}{$table}\".\"{$field}\"";
+        return sprintf(
+            '%s.%s',
+            Convert::symbol2sql("{$tablePrefix}{$table}"),
+            Convert::symbol2sql($field)
+        );
     }
 
     /**

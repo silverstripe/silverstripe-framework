@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
@@ -67,9 +68,9 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 
         $newgroup = DataObject::get_one(
             Group::class,
-            array(
-            '"Group"."Code"' => 'newgroup'
-            )
+            [
+                Convert::symbol2sql('Group.Code') => 'newgroup',
+            ]
         );
         $this->assertEquals($newgroup->Title, 'newgroup');
 

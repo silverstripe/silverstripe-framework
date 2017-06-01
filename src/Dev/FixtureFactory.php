@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
@@ -106,9 +107,9 @@ class FixtureFactory
     {
         $fields = array();
         foreach ($data as $fieldName => $fieldVal) {
-            $fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
+            $fields[Convert::symbol2sql($fieldName)] = $this->parseValue($fieldVal);
         }
-        $insert = new SQLInsert("\"{$table}\"", $fields);
+        $insert = new SQLInsert(Convert::symbol2sql($table), $fields);
         $insert->execute();
         $id = DB::get_generated_id($table);
         $this->fixtures[$table][$identifier] = $id;
@@ -212,8 +213,8 @@ class FixtureFactory
                     $class::get()->byId($dbId)->delete();
                 } else {
                     $table = $class;
-                    $delete = new SQLDelete("\"$table\"", array(
-                        "\"$table\".\"ID\"" => $dbId
+                    $delete = new SQLDelete(Convert::symbol2sql($table), array(
+                        Convert::symbol2sql("$table.ID") => $dbId
                     ));
                     $delete->execute();
                 }

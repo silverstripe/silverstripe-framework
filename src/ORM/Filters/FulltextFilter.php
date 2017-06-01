@@ -95,7 +95,7 @@ class FulltextFilter extends SearchFilter
         $table = DataObject::getSchema()->tableForField($this->model, current($columns));
         $fullTable = $prefix . $table;
         $columns = array_map(function ($col) use ($fullTable) {
-            return "\"{$fullTable}\".\"{$col}\"";
+            return Convert::symbol2sql("{$fullTable}.{$col}");
         }, $columns);
         return implode(',', $columns);
     }

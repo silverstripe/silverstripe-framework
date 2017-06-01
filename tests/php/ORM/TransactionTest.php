@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
@@ -40,12 +41,22 @@ class TransactionTest extends SapphireTest
             //Revert to a savepoint:
             DB::get_conn()->transactionRollback('rollback');
 
-            DB::get_conn()->transactionEnd();
-
-            $first=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='First page'");
-            $second=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Second page'");
-            $third=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Third page'");
-            $fourth=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Fourth page'");
+            $first = DataObject::get(
+                TransactionTest\TestObject::class,
+                sprintf('%s = %s', Convert::symbol2sql('Title'), Convert::raw2sql('First page', true))
+            );
+            $second = DataObject::get(
+                TransactionTest\TestObject::class,
+                sprintf('%s = %s', Convert::symbol2sql('Title'), Convert::raw2sql('Second page', true))
+            );
+            $third = DataObject::get(
+                TransactionTest\TestObject::class,
+                sprintf('%s = %s', Convert::symbol2sql('Title'), Convert::raw2sql('Third page', true))
+            );
+            $fourth = DataObject::get(
+                TransactionTest\TestObject::class,
+                sprintf('%s = %s', Convert::symbol2sql('Title'), Convert::raw2sql('Fourth page', true))
+            );
 
             //These pages should be in the system
             $this->assertTrue(is_object($first) && $first->exists());
