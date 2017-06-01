@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
 use Exception;
@@ -253,6 +254,14 @@ PHP
         $this->assertEquals('foo-and-bar', Convert::raw2url('foo & bar'));
         $this->assertEquals('foo-and-bar', Convert::raw2url('foo &amp; bar!'));
         $this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
+    }
+
+    public function testsql2symbol()
+    {
+        $q = DB::get_conn()->getIdentifierQuoteCharacter();
+        $this->assertEquals('Field.ID', Convert::sql2symbol(Convert::symbol2sql('Field.ID')));
+        $this->assertEquals('Field', Convert::sql2symbol(Convert::symbol2sql('Field')));
+        $this->assertEquals('Fie"ld', Convert::sql2symbol(Convert::symbol2sql("Fie{$q}ld")));
     }
 
     /**

@@ -214,6 +214,24 @@ class Convert
     }
 
     /**
+     * @param string $identifier
+     * @param string $separator
+     * @return string
+     */
+    public static function sql2symbol($identifier, $separator = '.')
+    {
+        $q = DB::get_conn()->getIdentifierQuoteCharacter();
+        $parts = explode($separator, $identifier);
+        foreach ($parts as &$part) {
+            if (substr($part, 0, 1) === $q && substr($part, -1) === $q) {
+                $part = substr($part, 1, -1);
+            }
+            $part = str_replace($q.$q, $q, $part);
+        }
+        return implode($separator, $parts);
+    }
+
+    /**
      * Convert XML to raw text.
      * @uses html2raw()
      * @todo Currently &#xxx; entries are stripped; they should be converted

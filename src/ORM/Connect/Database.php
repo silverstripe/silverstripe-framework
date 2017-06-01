@@ -246,6 +246,16 @@ abstract class Database
     }
 
     /**
+     * The identifier quote char. For ANSI this is " and usually is ` for others
+     *
+     * @return string
+     */
+    public function getIdentifierQuoteCharacter()
+    {
+        return '"';
+    }
+
+    /**
      * Returns an escaped string. This string won't be quoted, so would be suitable
      * for appending to other quoted strings.
      *
@@ -279,13 +289,18 @@ abstract class Database
      */
     public function escapeIdentifier($value, $separator = '.')
     {
+        $q = $this->getIdentifierQuoteCharacter();
         // Split string into components
         if (!is_array($value)) {
             $value = explode($separator, $value);
         }
 
+        foreach ($value as &$part) {
+            $part = $q . str_replace($q, $q.$q, $part) . $q;
+        }
+
         // Implode quoted column
-        return '"' . implode('"'.$separator.'"', $value) . '"';
+        return implode($separator, $value);
     }
 
     /**
