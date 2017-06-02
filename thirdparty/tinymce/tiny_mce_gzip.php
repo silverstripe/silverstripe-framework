@@ -19,7 +19,7 @@ if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
 	$tinyMCECompressor = new TinyMCE_Compressor(array(
 		// CUSTOM SilverStripe
-		'cache_dir' => TEMP_FOLDER
+		'cache_dir' => TEMP_FOLDER.'/tinymce-cache'
 		// CUSTOM END
 	));
 
