@@ -136,7 +136,7 @@ class SSHTMLBBCodeParser
 	 * @access   public
 	 * @author   Stijn de Reede  <sjr@gmx.co.uk>
 	 */
-	public function SSHTMLBBCodeParser($options = array())
+	public function __construct($options = array())
 	{
 		// set the already set options
 		$baseoptions = &SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
