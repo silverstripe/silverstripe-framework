@@ -302,6 +302,10 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function first()
     {
+        if (empty($this->items)) {
+            return null;
+        }
+
         return reset($this->items);
     }
 
@@ -312,6 +316,10 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function last()
     {
+        if (empty($this->items)) {
+            return null;
+        }
+
         return end($this->items);
     }
 
@@ -514,11 +522,11 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function canFilterBy($by)
     {
-        $firstRecord = $this->first();
-
-        if ($firstRecord === false) {
+        if (empty($this->items)) {
             return false;
         }
+
+        $firstRecord = $this->first();
 
         return array_key_exists($by, $firstRecord);
     }
