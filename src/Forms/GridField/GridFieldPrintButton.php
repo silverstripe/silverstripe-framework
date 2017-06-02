@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -17,6 +18,7 @@ use SilverStripe\View\ArrayData;
  */
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
+    use Extensible;
 
     /**
      * @var array Map of a property name on the printed objects, with values
@@ -46,6 +48,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     {
         $this->targetFragment = $targetFragment;
         $this->printColumns = $printColumns;
+        $this->constructExtensions();
     }
 
     /**
@@ -124,9 +127,12 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     {
         set_time_limit(60);
         Requirements::clear();
-        Requirements::css(ltrim(FRAMEWORK_DIR . '/admin/client/dist/styles/GridField_print.css', '/'));
 
-        if ($data = $this->generatePrintData($gridField)) {
+        $data = $this->generatePrintData($gridField);
+
+        $this->extend('updatePrintData', $data);
+
+        if ($data) {
             return $data->renderWith(get_class($gridField)."_print");
         }
 
