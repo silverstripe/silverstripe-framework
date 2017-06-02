@@ -623,6 +623,18 @@ class DataListTest extends SapphireTest
     }
 
     /**
+     * Test DataList->groupby()
+     */
+    public function testGroupBy()
+    {
+        $list = TeamComment::get();
+        $list = $list->groupby('Name');
+        $this->assertEquals($list->dataQuery()->query()->getGroupBy(), array('Name'));
+        $list = $list->groupby('Team');
+        $this->assertEquals($list->dataQuery()->query()->getGroupBy(), array('Name', 'Team'));
+    }
+
+    /**
      * Test DataList->canFilterBy()
      */
     public function testCanFilterBy()
