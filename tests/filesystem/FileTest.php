@@ -276,6 +276,19 @@ class FileTest extends SapphireTest {
 		$this->assertEquals("93132.3 GB", File::format_size(100000000000000));
 	}
 
+	/**
+	 * @covers File::find()
+	 */
+	public function testFind() {
+		$file1 = $this->objFromFixture('File', 'lowercase');
+		$file2 = $this->objFromFixture('File', 'uppercase');
+		$errorMsg = 'File::find() is not finding files in a case-sensitive manner';
+
+		$this->assertSame($file2->ID, File::find($file2->Filename)->ID, $errorMsg);
+		$this->assertSame($file1->ID, File::find($file1->Filename)->ID, $errorMsg);
+
+	}
+
 	public function testDeleteDatabaseOnly() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$fileID = $file->ID;
