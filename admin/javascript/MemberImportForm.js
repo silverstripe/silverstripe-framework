@@ -26,7 +26,7 @@
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				this.parents('form:eq(0)').find('.advanced').toggle();
+				this.parents('form:eq(0)').find('.advanced').fadeToggle(250);
 				return false;
 			}
 		});
