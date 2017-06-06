@@ -7,7 +7,6 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\SapphireTest;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -58,7 +57,7 @@ class BasicAuth
      */
     public static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true)
     {
-        $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+        $isRunningTests = Director::is_system_under_test();
         if (!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
             return true;
         }

@@ -12,7 +12,6 @@ use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
@@ -547,7 +546,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public static function autoLogin()
     {
         // Don't bother trying this multiple times
-        if (!class_exists(SapphireTest::class, false) || !SapphireTest::is_running_test()) {
+        if (!Director::is_system_under_test()) {
             self::$_already_tried_to_auto_log_in = true;
         }
 

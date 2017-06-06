@@ -8,7 +8,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Versioned\Versioned;
@@ -101,6 +100,13 @@ class Director implements TemplateGlobalProvider
      * @var string
      */
     protected static $environment_type;
+
+    /**
+     * Flag if the system is under test
+     *
+     * @var bool
+     */
+    protected static $system_under_test = false;
 
     /**
      * Process the given URL, creating the appropriate controller and executing it.
@@ -1021,7 +1027,7 @@ class Director implements TemplateGlobalProvider
             $destURL = str_replace('http:', 'https:', Director::absoluteURL($url));
 
             // This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
-            if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
+            if (static::is_system_under_test()) {
                 return $destURL;
             } else {
                 self::force_redirect($destURL);
@@ -1204,6 +1210,25 @@ class Director implements TemplateGlobalProvider
         } else {
             return null;
         }
+    }
+
+    /**
+     * Determines if unit tests are currently run, flag set during test bootstrap.
+     * This is used as a cheap replacement for fully mockable state
+     * in certain contiditions (e.g. access checks).
+     * Caution: When set to FALSE, certain controllers might bypass
+     * access checks, so this is a very security sensitive setting.
+     *
+     * @return boolean
+     */
+    public static function is_system_under_test()
+    {
+        return self::$system_under_test;
+    }
+
+    public static function set_is_system_under_test($state)
+    {
+        self::$system_under_test = $state;
     }
 
     /**

@@ -6,7 +6,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
@@ -58,7 +57,7 @@ class DatabaseAdmin extends Controller
         // if on CLI or with the database not ready. The latter makes it less errorprone to do an
         // initial schema build without requiring a default-admin login.
         // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-        $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+        $isRunningTests = Director::is_system_under_test();
         $canAccess = (
             Director::isDev()
             || !Security::database_is_ready()
