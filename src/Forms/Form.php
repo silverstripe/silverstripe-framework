@@ -128,7 +128,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @var boolean
      */
-    protected $strictFormMethodCheck = false;
+    protected $strictFormMethodCheck = true;
 
     /**
      * Populated by {@link loadDataFrom()}.
@@ -1036,13 +1036,13 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * If set to true, enforce the matching of the form method.
+     * If set to true (the default), enforces the matching of the form method.
      *
      * This will mean two things:
      *  - GET vars will be ignored by a POST form, and vice versa
      *  - A submission where the HTTP method used doesn't match the form will return a 400 error.
      *
-     * If set to false (the default), then the form method is only used to construct the default
+     * If set to false then the form method is only used to construct the default
      * form.
      *
      * @param $bool boolean
