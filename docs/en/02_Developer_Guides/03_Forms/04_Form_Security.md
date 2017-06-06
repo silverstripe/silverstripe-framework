@@ -47,18 +47,18 @@ application up to `CSRF` security holes.
 
 ## Strict Form Submission
 
-Forms should be limited to the intended HTTP verb (mostly `GET` or `POST`) to further reduce attack exposure. Without 
+To reduce attack exposure forms are limited, by default, to the intended HTTP verb (mostly `GET` or `POST`). Without 
 this check, forms that rely on `GET` can be submitted via `POST` or `PUT` or vice-versa potentially leading to 
-application errors or edge cases.
+application errors or edge cases. If you need to disable this setting follow the below example:
 
 	:::php
 	$form = new Form(..);
 
 	$form->setFormMethod('POST');
-	$form->setStrictFormMethodCheck(true);
+	$form->setStrictFormMethodCheck(false);
 
 	// or alternative short notation..
-	$form->setFormMethod('POST', true);
+	$form->setFormMethod('POST', false);
 
 ## Spam and Bot Attacks
 
