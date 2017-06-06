@@ -396,7 +396,7 @@ class Upload_Validator {
 		if (empty($this->allowedMaxFileSize)) {
 			// Set default max file sizes if there isn't
 			$fileSize = Config::inst()->get('Upload_Validator', 'default_max_file_size');
-			if (isset($fileSize)) {
+			if (!empty($fileSize)) {
 				$this->setAllowedMaxFileSize($fileSize);
 			} else {
 				// When no default is present, use maximum set by PHP

@@ -134,6 +134,12 @@ class UploadTest extends SapphireTest {
 	}
 
 	public function testGetAllowedMaxFileSize() {
+		// Check the max file size defaults to PHP settings
+		$maxPhpSize = min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')));
+		$v = new UploadTest_Validator();
+		$retrievedSize = $v->getAllowedMaxFileSize('[image]');
+		$this->assertEquals($maxPhpSize, $retrievedSize, 'Max file size did not default to PHP value');
+
 		// Check the max file size uses the config values
 		$configMaxFileSizes = array(
 			'[image]' => '1k',
