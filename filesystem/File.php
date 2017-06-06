@@ -719,7 +719,9 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getURL() {
-		return Controller::join_links(Director::baseURL(), $this->getFilename());
+		$url = Controller::join_links(Director::baseURL(), $this->getFilename());
+		$this->extend('updateURL', $url);
+		return $url;
 	}
 
 	/**
