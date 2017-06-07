@@ -134,7 +134,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
                     $_SERVER['HTTP_HOST'] = $host;
                     ParameterConfirmationToken::$alternateBaseURL = $base;
 
-                    $this->assertEquals('http://'.implode('/', $urlAnswer) . $urlSlash, $token->currentAbsoluteURL());
+                    $this->assertEquals('http://'.implode('/', $urlAnswer) . $urlSlash, $token->currentURL());
                 }
             }
         }

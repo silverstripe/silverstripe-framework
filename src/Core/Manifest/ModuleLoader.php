@@ -85,4 +85,17 @@ class ModuleLoader
     {
         return count($this->manifests);
     }
+
+    /**
+     * Initialise the module loader
+     *
+     * @param bool $includeTests
+     * @param bool $forceRegen
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
+        foreach ($this->manifests as $manifest) {
+            $manifest->init($includeTests, $forceRegen);
+        }
+    }
 }

@@ -5,7 +5,7 @@
 // Connect to database
 use SilverStripe\ORM\DB;
 
-require_once __DIR__ . '/../../src/Core/Core.php';
+require_once __DIR__ . '/../../src/Core/functions.php';
 require_once __DIR__ . '/../php/Control/FakeController.php';
 
 // Bootstrap a mock project configuration

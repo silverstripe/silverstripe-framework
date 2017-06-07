@@ -97,6 +97,72 @@ class Email extends ViewableData
     }
 
     /**
+     * Get send_all_emails_to
+     *
+     * @return array Keys are addresses, values are names
+     */
+    public static function getSendAllEmailsTo()
+    {
+        return static::mergeConfiguredEmails('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
+    }
+
+    /**
+     * Get cc_all_emails_to
+     *
+     * @return array
+     */
+    public static function getCCAllEmailsTo()
+    {
+        return static::mergeConfiguredEmails('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
+    }
+
+    /**
+     * Get bcc_all_emails_to
+     *
+     * @return array
+     */
+    public static function getBCCAllEmailsTo()
+    {
+        return static::mergeConfiguredEmails('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
+    }
+
+    /**
+     * Get send_all_emails_from
+     *
+     * @return array
+     */
+    public static function getSendAllEmailsFrom()
+    {
+        return static::mergeConfiguredEmails('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
+    }
+
+    /**
+     * Normalise email list from config merged with env vars
+     *
+     * @param string $config Config key
+     * @param string $env Env variable key
+     * @return array Array of email addresses
+     */
+    protected static function mergeConfiguredEmails($config, $env)
+    {
+        // Normalise config list
+        $normalised = [];
+        $source = (array)static::config()->get($config);
+        foreach ($source as $address => $name) {
+            if ($address && !is_numeric($address)) {
+                $normalised[$address] = $name;
+            } elseif ($name) {
+                $normalised[$name] = null;
+            }
+        }
+        $extra = getenv($env);
+        if ($extra) {
+            $normalised[$extra] = null;
+        }
+        return $normalised;
+    }
+
+    /**
      * Encode an email-address to protect it from spambots.
      * At the moment only simple string substitutions,
      * which are not 100% safe from email harvesting.

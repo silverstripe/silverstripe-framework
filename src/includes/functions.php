@@ -1,124 +1,8 @@
 <?php
 
-use SilverStripe\Core\Cache\ManifestCacheFactory;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\CoreConfigFactory;
-use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
-use SilverStripe\Core\Manifest\ClassManifest;
-use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\i18n\i18n;
-use SilverStripe\Logging\ErrorHandler;
-
-/**
- * This file is the Framework bootstrap.  It will get your environment ready to call Director::direct().
- *
- * It takes care of:
- *  - Checking of PHP memory limit
- *  - Including all the files needed to get the manifest built
- *  - Building and including the manifest
- *
- * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
- *       moved into different subsystems.
- * @todo A lot of this stuff is very order-dependent. This could be decoupled.
- */
-
-/**
- * All errors are reported, including E_STRICT by default *unless* the site is in
- * live mode, where reporting is limited to fatal errors and warnings (see later in this file)
- */
-error_reporting(E_ALL | E_STRICT);
-
-global $_increase_time_limit_max;
-$_increase_time_limit_max = -1;
-
-/**
- * Ensure we have enough memory
- */
-increase_memory_limit_to('64M');
-
-/**
- * Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
- */
-increase_xdebug_nesting_level_to(200);
-
-/**
- * Set default encoding
- */
-mb_http_output('UTF-8');
-mb_internal_encoding('UTF-8');
-mb_regex_encoding('UTF-8');
-
-/**
- * Enable better garbage collection
- */
-gc_enable();
-
-// Initialise the dependency injector as soon as possible, as it is
-// subsequently used by some of the following code
-$injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
-Injector::set_inst($injector);
-
-///////////////////////////////////////////////////////////////////////////////
-// MANIFEST
-
-// Regenerate the manifest if ?flush is set, or if the database is being built.
-// The coupling is a hack, but it removes an annoying bug where new classes
-// referenced in _config.php files can be referenced during the build process.
-$requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
-$flush = (isset($_GET['flush']) || $requestURL === trim(BASE_URL . '/dev/build', '/'));
-
-// Manifest cache factory
-$manifestCacheFactory = new ManifestCacheFactory([
-    'namespace' => 'manifestcache',
-    'directory' => getTempFolder(),
-]);
-
-// Build class manifest
-$manifest = new ClassManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
-
-// Register SilverStripe's class map autoload
-$loader = ClassLoader::inst();
-$loader->registerAutoloader();
-$loader->pushManifest($manifest);
-
-// Init module manifest
-$moduleManifest = new ModuleManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
-ModuleLoader::inst()->pushManifest($moduleManifest);
-
-// Build config manifest
-$configManifest = CoreConfigFactory::inst()->createRoot($flush, $manifestCacheFactory);
-ConfigLoader::inst()->pushManifest($configManifest);
-
-// After loading config, boot _config.php files
-ModuleLoader::inst()->getManifest()->activateConfig();
-
-// Load template manifest
-SilverStripe\View\ThemeResourceLoader::inst()->addSet('$default', new SilverStripe\View\ThemeManifest(
-    BASE_PATH,
-    project(),
-    false,
-    $flush,
-    $manifestCacheFactory
-));
-
-// If in live mode, ensure deprecation, strict and notices are not reported
-if (Director::isLive()) {
-    error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// POST-MANIFEST COMMANDS
-
-/**
- * Load error handlers
- */
-$errorHandler = Injector::inst()->get(ErrorHandler::class);
-$errorHandler->start();
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -156,23 +40,23 @@ function project()
 }
 
 /**
-     * This is the main translator function. Returns the string defined by $entity according to the
-     * currently set locale.
-     *
-     * Also supports pluralisation of strings. Pass in a `count` argument, as well as a
-     * default value with `|` pipe-delimited options for each plural form.
-     *
-     * @param string $entity Entity that identifies the string. It must be in the form
-     * "Namespace.Entity" where Namespace will be usually the class name where this
-     * string is used and Entity identifies the string inside the namespace.
-     * @param mixed $arg,... Additional arguments are parsed as such:
-     *  - Next string argument is a default. Pass in a `|` pipe-delimeted value with `{count}`
-     *    to do pluralisation.
-     *  - Any other string argument after default is context for i18nTextCollector
-     *  - Any array argument in any order is an injection parameter list. Pass in a `count`
-     *    injection parameter to pluralise.
-     * @return string
-     */
+ * This is the main translator function. Returns the string defined by $entity according to the
+ * currently set locale.
+ *
+ * Also supports pluralisation of strings. Pass in a `count` argument, as well as a
+ * default value with `|` pipe-delimited options for each plural form.
+ *
+ * @param string $entity Entity that identifies the string. It must be in the form
+ * "Namespace.Entity" where Namespace will be usually the class name where this
+ * string is used and Entity identifies the string inside the namespace.
+ * @param mixed $arg,... Additional arguments are parsed as such:
+ *  - Next string argument is a default. Pass in a `|` pipe-delimeted value with `{count}`
+ *    to do pluralisation.
+ *  - Any other string argument after default is context for i18nTextCollector
+ *  - Any array argument in any order is an injection parameter list. Pass in a `count`
+ *    injection parameter to pluralise.
+ * @return string
+ */
 function _t($entity, $arg = null)
 {
     // Pass args directly to handle deprecation
@@ -261,11 +145,11 @@ function translate_memstring($memString)
 {
     switch (strtolower(substr($memString, -1))) {
         case "k":
-            return round(substr($memString, 0, -1)*1024);
+            return round(substr($memString, 0, -1) * 1024);
         case "m":
-            return round(substr($memString, 0, -1)*1024*1024);
+            return round(substr($memString, 0, -1) * 1024 * 1024);
         case "g":
-            return round(substr($memString, 0, -1)*1024*1024*1024);
+            return round(substr($memString, 0, -1) * 1024 * 1024 * 1024);
         default:
             return round($memString);
     }
@@ -321,4 +205,115 @@ function get_increase_time_limit_max()
 {
     global $_increase_time_limit_max;
     return $_increase_time_limit_max;
+}
+
+
+/**
+ * Returns the temporary folder path that silverstripe should use for its cache files.
+ *
+ * @param string $base The base path to use for determining the temporary path
+ * @return string Path to temp
+ */
+function getTempFolder($base = null)
+{
+    $parent = getTempParentFolder($base);
+
+    // The actual temp folder is a subfolder of getTempParentFolder(), named by username
+    $subfolder = $parent . DIRECTORY_SEPARATOR . getTempFolderUsername();
+
+    if (!@file_exists($subfolder)) {
+        mkdir($subfolder);
+    }
+
+    return $subfolder;
+}
+
+/**
+ * Returns as best a representation of the current username as we can glean.
+ *
+ * @return string
+ */
+function getTempFolderUsername()
+{
+    $user = getenv('APACHE_RUN_USER');
+    if (!$user) {
+        $user = getenv('USER');
+    }
+    if (!$user) {
+        $user = getenv('USERNAME');
+    }
+    if (!$user && function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
+        $userDetails = posix_getpwuid(posix_getuid());
+        $user = $userDetails['name'];
+    }
+    if (!$user) {
+        $user = 'unknown';
+    }
+    $user = preg_replace('/[^A-Za-z0-9_\-]/', '', $user);
+    return $user;
+}
+
+/**
+ * Return the parent folder of the temp folder.
+ * The temp folder will be a subfolder of this, named by username.
+ * This structure prevents permission problems.
+ *
+ * @param string $base
+ * @return string
+ * @throws Exception
+ */
+function getTempParentFolder($base = null)
+{
+    if (!$base && defined('BASE_PATH')) {
+        $base = BASE_PATH;
+    }
+
+    // first, try finding a silverstripe-cache dir built off the base path
+    $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
+    if (@file_exists($tempPath)) {
+        if ((fileperms($tempPath) & 0777) != 0777) {
+            @chmod($tempPath, 0777);
+        }
+        return $tempPath;
+    }
+
+    // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
+    $tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR .
+        'silverstripe-cache-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION) .
+        str_replace(array(' ', '/', ':', '\\'), '-', $base);
+    if (!@file_exists($tempPath)) {
+        $oldUMask = umask(0);
+        @mkdir($tempPath, 0777);
+        umask($oldUMask);
+
+    // if the folder already exists, correct perms
+    } else {
+        if ((fileperms($tempPath) & 0777) != 0777) {
+            @chmod($tempPath, 0777);
+        }
+    }
+
+    $worked = @file_exists($tempPath) && @is_writable($tempPath);
+
+    // failing to use the system path, attempt to create a local silverstripe-cache dir
+    if (!$worked) {
+        $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
+        if (!@file_exists($tempPath)) {
+            $oldUMask = umask(0);
+            @mkdir($tempPath, 0777);
+            umask($oldUMask);
+        }
+
+        $worked = @file_exists($tempPath) && @is_writable($tempPath);
+    }
+
+    if (!$worked) {
+        throw new Exception(
+            'Permission problem gaining access to a temp folder. ' .
+            'Please create a folder named silverstripe-cache in the base folder ' .
+            'of the installation and ensure it has the correct permissions'
+        );
+    }
+
+    return $tempPath;
 }

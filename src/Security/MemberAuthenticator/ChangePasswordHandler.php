@@ -6,7 +6,6 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -79,7 +78,8 @@ class ChangePasswordHandler extends RequestHandler
             return $this->redirect($this->link);
         }
 
-        if (Session::get('AutoLoginHash')) {
+        $session = $this->getRequest()->getSession();
+        if ($session->get('AutoLoginHash')) {
             $message = DBField::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
@@ -157,7 +157,7 @@ class ChangePasswordHandler extends RequestHandler
         }
 
         // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
-        Session::set('AutoLoginHash', $member->encryptWithUserSettings($token));
+        $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
     }
 
     /**
@@ -214,14 +214,15 @@ class ChangePasswordHandler extends RequestHandler
             return $this->redirectBackToForm();
         }
 
+        $session = $this->getRequest()->getSession();
         if (!$member) {
-            if (Session::get('AutoLoginHash')) {
-                $member = Member::member_from_autologinhash(Session::get('AutoLoginHash'));
+            if ($session->get('AutoLoginHash')) {
+                $member = Member::member_from_autologinhash($session->get('AutoLoginHash'));
             }
 
             // The user is not logged in and no valid auto login hash is available
             if (!$member) {
-                Session::clear('AutoLoginHash');
+                $session->clear('AutoLoginHash');
 
                 return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
@@ -278,7 +279,7 @@ class ChangePasswordHandler extends RequestHandler
         }
 
         // TODO Add confirmation message to login redirect
-        Session::clear('AutoLoginHash');
+        $session->clear('AutoLoginHash');
 
         // Redirect to backurl
         $backURL = $this->getBackURL();

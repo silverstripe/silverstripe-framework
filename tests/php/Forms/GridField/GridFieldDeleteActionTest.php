@@ -118,10 +118,10 @@ class GridFieldDeleteActionTest extends SapphireTest
         if (Security::getCurrentUser()) {
             Security::setCurrentUser(null);
         }
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $stateID = 'testGridStateActionField';
-        Session::set(
+        Controller::curr()->getRequest()->getSession()->set(
             $stateID,
             array(
                 'grid' => '',

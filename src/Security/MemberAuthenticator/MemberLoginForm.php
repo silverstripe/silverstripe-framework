@@ -143,7 +143,7 @@ class MemberLoginForm extends BaseLoginForm
         $emailField->setAttribute('autofocus', 'true');
 
         if (Security::config()->get('remember_username')) {
-            $emailField->setValue(Session::get('SessionForms.MemberLoginForm.Email'));
+            $emailField->setValue($this->getSession()->get('SessionForms.MemberLoginForm.Email'));
         } else {
             // Some browsers won't respect this attribute unless it's added to the form
             $this->setAttribute('autocomplete', 'off');
@@ -195,7 +195,8 @@ class MemberLoginForm extends BaseLoginForm
     {
         parent::restoreFormState();
 
-        $forceMessage = Session::get('MemberLoginForm.force_message');
+        $session = Controller::curr()->getRequest()->getSession();
+        $forceMessage = $session->get('MemberLoginForm.force_message');
         if (($member = Security::getCurrentUser()) && !$forceMessage) {
             $message = _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
@@ -207,7 +208,7 @@ class MemberLoginForm extends BaseLoginForm
 
         // Reset forced message
         if ($forceMessage) {
-            Session::set('MemberLoginForm.force_message', false);
+            $session->set('MemberLoginForm.force_message', false);
         }
 
         return $this;

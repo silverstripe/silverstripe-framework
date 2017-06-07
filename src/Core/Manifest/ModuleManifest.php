@@ -26,11 +26,11 @@ class ModuleManifest
     protected $cacheKey;
 
     /**
-     * Whether `test` directories should be searched when searching for configuration
+     * Factory to use to build cache
      *
-     * @var bool
+     * @var CacheFactory
      */
-    protected $includeTests;
+    protected $cacheFactory;
 
     /**
      * @var CacheInterface
@@ -87,19 +87,24 @@ class ModuleManifest
      * from the cache or re-scanning for classes.
      *
      * @param string $base The project base path.
-     * @param bool $includeTests
-     * @param bool $forceRegen Force the manifest to be regenerated.
      * @param CacheFactory $cacheFactory Cache factory to use
      */
-    public function __construct($base, $includeTests = false, $forceRegen = false, CacheFactory $cacheFactory = null)
+    public function __construct($base, CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
-        $this->cacheKey = sha1($base).'_modules';
-        $this->includeTests = $includeTests;
+        $this->cacheKey = sha1($base) . '_modules';
+        $this->cacheFactory = $cacheFactory;
+    }
 
+    /**
+     * @param bool $includeTests
+     * @param bool $forceRegen Force the manifest to be regenerated.
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
         // build cache from factory
-        if ($cacheFactory) {
-            $this->cache = $cacheFactory->create(
+        if ($this->cacheFactory) {
+            $this->cache = $this->cacheFactory->create(
                 CacheInterface::class.'.modulemanifest',
                 [ 'namespace' => 'modulemanifest' . ($includeTests ? '_tests' : '') ]
             );

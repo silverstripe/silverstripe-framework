@@ -29,6 +29,13 @@ class ClassManifest
     protected $base;
 
     /**
+     * Used to build cache during boot
+     *
+     * @var CacheFactory
+     */
+    protected $cacheFactory;
+
+    /**
      * Set if including test classes
      *
      * @see TestOnly
@@ -56,7 +63,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $classes      = array();
+    protected $classes = array();
 
     /**
      * List of root classes with no parent class
@@ -122,27 +129,30 @@ class ClassManifest
      * from the cache or re-scanning for classes.
      *
      * @param string $base The manifest base path.
-     * @param bool $includeTests Include the contents of "tests" directories.
-     * @param bool $forceRegen Force the manifest to be regenerated.
      * @param CacheFactory $cacheFactory Optional cache to use. Set to null to not cache.
      */
-    public function __construct(
-        $base,
-        $includeTests = false,
-        $forceRegen = false,
-        CacheFactory $cacheFactory = null
-    ) {
+    public function __construct($base, CacheFactory $cacheFactory = null)
+    {
         $this->base = $base;
-        $this->tests = $includeTests;
+        $this->cacheFactory = $cacheFactory;
+        $this->cacheKey = 'manifest';
+    }
 
+    /**
+     * Initialise the class manifest
+     *
+     * @param bool $includeTests
+     * @param bool $forceRegen
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
         // build cache from factory
-        if ($cacheFactory) {
-            $this->cache = $cacheFactory->create(
+        if ($this->cacheFactory) {
+            $this->cache = $this->cacheFactory->create(
                 CacheInterface::class.'.classmanifest',
                 [ 'namespace' => 'classmanifest' . ($includeTests ? '_tests' : '') ]
             );
         }
-        $this->cacheKey = 'manifest';
 
         if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
             $this->classes = $data['classes'];

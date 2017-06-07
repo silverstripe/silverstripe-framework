@@ -2,22 +2,16 @@
 
 namespace SilverStripe\Core\Config;
 
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Config\Transformer\PrivateStaticTransformer;
 use SilverStripe\Config\Transformer\YamlTransformer;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Config\Middleware\InheritanceMiddleware;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -26,19 +20,19 @@ use Symfony\Component\Finder\Finder;
 class CoreConfigFactory
 {
     /**
-     * @var static
+     * @var CacheFactory
      */
-    protected static $inst = null;
+    protected $cacheFactory = null;
 
     /**
-     * @return static
+     * @var string
      */
-    public static function inst()
+    protected $environment = null;
+
+    public function __construct(CacheFactory $cacheFactory, $environment)
     {
-        if (!self::$inst) {
-            self::$inst = new static();
-        }
-        return self::$inst;
+        $this->cacheFactory = $cacheFactory;
+        $this->environment = $environment;
     }
 
     /**
@@ -46,20 +40,17 @@ class CoreConfigFactory
      * This will be an immutable cached config,
      * which conditionally generates a nested "core" config.
      *
-     * @param bool $flush
-     * @param CacheFactory $cacheFactory
      * @return CachedConfigCollection
      */
-    public function createRoot($flush, CacheFactory $cacheFactory)
+    public function createRoot()
     {
         $instance = new CachedConfigCollection();
 
         // Create config cache
-        $cache = $cacheFactory->create(CacheInterface::class.'.configcache', [
+        $cache = $this->cacheFactory->create(CacheInterface::class.'.configcache', [
             'namespace' => 'configcache'
         ]);
         $instance->setCache($cache);
-        $instance->setFlush($flush);
 
         // Set collection creator
         $instance->setCollectionCreator(function () {
@@ -171,8 +162,7 @@ class CoreConfigFactory
                 }
             )
             ->addRule('environment', function ($env) {
-                $current = Director::get_environment_type();
-                return strtolower($current) === strtolower($env);
+                return strtolower($this->environment) === strtolower($env);
             })
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::inst()->getManifest()->moduleExists($module);

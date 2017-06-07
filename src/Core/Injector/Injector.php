@@ -202,21 +202,18 @@ class Injector implements ContainerInterface
     {
         $this->injectMap = array();
         $this->serviceCache = array(
-            'Injector'      => $this,
+            'Injector' => $this,
         );
-        $this->specs = array(
-            'Injector'      => array('class' => 'SilverStripe\\Core\\Injector\\Injector')
-        );
-
+        $this->specs = [
+            'Injector' => ['class' => static::class]
+        ];
         $this->autoProperties = array();
-
-
         $creatorClass = isset($config['creator'])
             ? $config['creator']
-            : 'SilverStripe\\Core\\Injector\\InjectionCreator';
+            : InjectionCreator::class;
         $locatorClass = isset($config['locator'])
             ? $config['locator']
-            : 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator';
+            : SilverStripeServiceConfigurationLocator::class;
 
         $this->objectCreator = new $creatorClass;
         $this->configLocator = new $locatorClass;
@@ -860,7 +857,6 @@ class Injector implements ContainerInterface
 
         $this->specs[$registerAt] = array('class' => get_class($service));
         $this->serviceCache[$registerAt] = $service;
-        $this->inject($service);
     }
 
     /**

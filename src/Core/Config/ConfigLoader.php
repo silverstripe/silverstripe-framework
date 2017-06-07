@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Config;
 
+use BadMethodCallException;
 use SilverStripe\Config\Collections\ConfigCollectionInterface;
 
 /**
@@ -36,6 +37,9 @@ class ConfigLoader
      */
     public function getManifest()
     {
+        if (empty($this->manifests)) {
+            throw new BadMethodCallException("No config manifests available");
+        }
         return $this->manifests[count($this->manifests) - 1];
     }
 

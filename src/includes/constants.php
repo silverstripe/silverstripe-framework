@@ -27,6 +27,8 @@ use SilverStripe\Control\Util\IPUtils;
  *   headers from the given client are trustworthy (e.g. from a reverse proxy).
  */
 
+require_once __DIR__ . '/functions.php';
+
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
@@ -57,15 +59,17 @@ if (!defined('BASE_PATH')) {
 
 // Allow a first class env var to be set that disables .env file loading
 if (!getenv('SS_IGNORE_DOT_ENV')) {
-    foreach ([ BASE_PATH, dirname(BASE_PATH) ] as $path) {
-        try {
-            (new Dotenv($path))->load();
-        } catch (InvalidPathException $e) {
-            // no .env found - no big deal
-            continue;
+    call_user_func(function () {
+        foreach ([BASE_PATH, dirname(BASE_PATH)] as $path) {
+            try {
+                (new Dotenv($path))->load();
+            } catch (InvalidPathException $e) {
+                // no .env found - no big deal
+                continue;
+            }
+            break;
         }
-        break;
-    }
+    });
 }
 
 /**
@@ -142,11 +146,7 @@ if (defined('CUSTOM_INCLUDE_PATH')) {
     set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR   . get_include_path());
 }
 
-/**
- * Define the temporary folder if it wasn't defined yet
- */
-require_once __DIR__ . '/TempPath.php';
-
+// Define the temporary folder if it wasn't defined yet
 if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', getTempFolder(BASE_PATH));
 }

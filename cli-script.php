@@ -1,8 +1,7 @@
 <?php
 
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\Control\Director;
+use SilverStripe\ORM\DB;
 
 
 /**
@@ -145,8 +144,6 @@ if(!$url) {
 
 $_SERVER['REQUEST_URI'] = BASE_URL . '/' . $url;
 
-// Direct away - this is the "main" function, that hands control to the apporopriate controller
-DataModel::set_inst(new DataModel());
-Director::direct($url, DataModel::inst());
+Director::direct($url);
 
 

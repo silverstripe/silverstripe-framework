@@ -142,11 +142,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public $destroyed = false;
 
     /**
-     * The DataModel from this this object comes
-     */
-    protected $model;
-
-    /**
      * Data stored in this objects database record. An array indexed by fieldname.
      *
      * Use {@link toMap()} if you want an array representation
@@ -289,10 +284,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *                           for populating data on new records.
      * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
      *                             Singletons don't have their defaults set.
-     * @param DataModel $model
      * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
      */
-    public function __construct($record = null, $isSingleton = false, $model = null, $queryParams = array())
+    public function __construct($record = null, $isSingleton = false, $queryParams = array())
     {
         parent::__construct();
 
@@ -365,10 +359,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             HTTP::register_modification_date($record['LastEdited']);
         }
 
-        // this must be called before populateDefaults(), as field getters on a DataObject
-        // may call getComponent() and others, which rely on $this->model being set.
-        $this->model = $model ? $model : DataModel::inst();
-
         // Must be called after parent constructor
         if (!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
             $this->populateDefaults();
@@ -376,17 +366,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         // prevent populateDefaults() and setField() from marking overwritten defaults as changed
         $this->changed = array();
-    }
-
-    /**
-     * Set the DataModel
-     * @param DataModel $model
-     * @return DataObject $this
-     */
-    public function setDataModel(DataModel $model)
-    {
-        $this->model = $model;
-        return $this;
     }
 
     /**
@@ -415,7 +394,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $map = $this->toMap();
         unset($map['Created']);
         /** @var static $clone */
-        $clone = Injector::inst()->create(static::class, $map, false, $this->model);
+        $clone = Injector::inst()->create(static::class, $map, false, $this->getSourceQueryParams());
         $clone->ID = 0;
 
         $clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite, $manyMany);
@@ -1437,7 +1416,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         //  - move the details of the delete code in the DataQuery system
         //  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
         //    obviously, that means getting requireTable() to configure cascading deletes ;-)
-        $srcQuery = DataList::create(static::class, $this->model)
+        $srcQuery = DataList::create(static::class)
             ->filter('ID', $this->ID)
             ->dataQuery()
             ->query();
@@ -1520,7 +1499,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
 
             if (empty($component)) {
-                $component = $this->model->$class->newObject();
+                $component = Injector::inst()->create($class);
             }
         } elseif ($class = $schema->belongsToComponent(static::class, $componentName)) {
             $joinField = $schema->getRemoteJoinField(static::class, $componentName, 'belongs_to', $polymorphic);
@@ -2827,9 +2806,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     . ' arguments');
             }
 
-            $result = DataList::create(get_called_class());
-            $result->setDataModel(DataModel::inst());
-            return $result;
+            return DataList::create(get_called_class());
         }
 
         if ($join) {
@@ -2847,7 +2824,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $result = $result->limit($limit);
         }
 
-        $result->setDataModel(DataModel::inst());
         return $result;
     }
 

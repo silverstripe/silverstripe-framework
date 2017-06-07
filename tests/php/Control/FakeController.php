@@ -16,14 +16,11 @@ class FakeController extends Controller
     {
         parent::__construct();
 
-        $session = Injector::inst()->create(Session::class, isset($_SESSION) ? $_SESSION : array());
-        $this->setSession($session);
-
         $this->pushCurrent();
-
+        $session = new Session(isset($_SESSION) ? $_SESSION : array());
         $request = new HTTPRequest('GET', '/');
+        $request->setSession($session);
         $this->setRequest($request);
-
         $this->setResponse(new HTTPResponse());
 
         $this->doInit();

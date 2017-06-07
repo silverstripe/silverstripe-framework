@@ -2,25 +2,27 @@
 
 namespace SilverStripe\Dev;
 
+use Exception;
+use LogicException;
+use PHPUnit_Framework_TestCase;
 use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Tests\FakeController;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\DefaultConfig;
-use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataExtension;
@@ -28,22 +30,20 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DB;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Group;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
-use PHPUnit_Framework_TestCase;
+use SilverStripe\View\ThemeResourceLoader;
 use Translatable;
-use LogicException;
-use Exception;
 
 /**
  * Test case class for the Sapphire framework.
@@ -274,18 +274,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $resettable::reset();
         }
 
-        if (Controller::has_curr()) {
-            Controller::curr()->setSession(Session::create(array()));
-        }
         Security::clear_database_is_ready();
 
         // Set up test routes
         $this->setUpRoutes();
 
         $fixtureFiles = $this->getFixturePaths();
-
-        // Todo: this could be a special test model
-        $this->model = DataModel::inst();
 
         // Set up fixture
         if ($fixtureFiles || $this->usesDatabase) {

@@ -79,15 +79,16 @@ class SecurityTest extends FunctionalTest
         $controller = new SecurityTest\NullController();
         $controller->setResponse(new HTTPResponse());
 
+        $session = Controller::curr()->getRequest()->getSession();
         Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
-        $this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
+        $this->assertEquals('Oops, not allowed', $session->get('Security.Message.message'));
 
         // Test that config values are used correctly
         Config::inst()->update(Security::class, 'default_message_set', 'stringvalue');
         Security::permissionFailure($controller);
         $this->assertEquals(
             'stringvalue',
-            Session::get('Security.Message.message'),
+            $session->get('Security.Message.message'),
             'Default permission failure message value was not present'
         );
 
@@ -96,7 +97,7 @@ class SecurityTest extends FunctionalTest
         Security::permissionFailure($controller);
         $this->assertEquals(
             'arrayvalue',
-            Session::get('Security.Message.message'),
+            $session->get('Security.Message.message'),
             'Default permission failure message value was not present'
         );
 
@@ -474,14 +475,14 @@ class SecurityTest extends FunctionalTest
                 );
             }
         }
-        $msg = _t(
-            'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
-            'Your account has been temporarily disabled because of too many failed attempts at ' .
-            'logging in. Please try again in {count} minutes.',
-            null,
-            array('count' => Member::config()->lock_out_delay_mins)
-        );
-        $this->assertHasMessage($msg);
+            $msg = _t(
+                'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
+                'Your account has been temporarily disabled because of too many failed attempts at ' .
+                'logging in. Please try again in {count} minutes.',
+                null,
+                array('count' => Member::config()->lock_out_delay_mins)
+            );
+                $this->assertHasMessage($msg);
 
 
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
@@ -563,14 +564,14 @@ class SecurityTest extends FunctionalTest
         $attempt = DataObject::get_one(
             LoginAttempt::class,
             array(
-                '"LoginAttempt"."Email"' => 'testuser@example.com'
+            '"LoginAttempt"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertTrue(is_object($attempt));
         $member = DataObject::get_one(
             Member::class,
             array(
-                '"Member"."Email"' => 'testuser@example.com'
+            '"Member"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertEquals($attempt->Status, 'Failure');

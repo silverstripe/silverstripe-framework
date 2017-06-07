@@ -2,9 +2,8 @@
 
 namespace SilverStripe\View;
 
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataModel;
 use InvalidArgumentException;
+use SilverStripe\ORM\DataList;
 
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider
 {
@@ -61,8 +60,6 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
      */
     public static function getDataList($className)
     {
-        $list = new DataList($className);
-        $list->setDataModel(DataModel::inst());
-        return $list;
+        return DataList::create($className);
     }
 }

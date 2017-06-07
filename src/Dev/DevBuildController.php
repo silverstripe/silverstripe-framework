@@ -21,7 +21,7 @@ class DevBuildController extends Controller
     {
         if (Director::is_cli()) {
             $da = DatabaseAdmin::create();
-            return $da->handleRequest($request, $this->model);
+            return $da->handleRequest($request);
         } else {
             $renderer = DebugView::create();
             echo $renderer->renderHeader();
@@ -29,7 +29,7 @@ class DevBuildController extends Controller
             echo "<div class=\"build\">";
 
             $da = DatabaseAdmin::create();
-            $response = $da->handleRequest($request, $this->model);
+            $response = $da->handleRequest($request);
 
             echo "</div>";
             echo $renderer->renderFooter();

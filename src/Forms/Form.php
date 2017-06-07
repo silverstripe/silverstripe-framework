@@ -333,9 +333,21 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function clearFormState()
     {
-        Session::clear("FormInfo.{$this->FormName()}.result");
-        Session::clear("FormInfo.{$this->FormName()}.data");
+        $this
+            ->getSession()
+            ->clear("FormInfo.{$this->FormName()}.result")
+            ->clear("FormInfo.{$this->FormName()}.data");
         return $this;
+    }
+
+    /**
+     * Get session for this form
+     *
+     * @return Session
+     */
+    protected function getSession()
+    {
+        return $this->getRequestHandler()->getRequest()->getSession();
     }
 
     /**
@@ -345,7 +357,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getSessionData()
     {
-        return Session::get("FormInfo.{$this->FormName()}.data");
+        return $this->getSession()->get("FormInfo.{$this->FormName()}.data");
     }
 
     /**
@@ -356,7 +368,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setSessionData($data)
     {
-        Session::set("FormInfo.{$this->FormName()}.data", $data);
+        $this->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
         return $this;
     }
 
@@ -367,7 +379,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getSessionValidationResult()
     {
-        $resultData = Session::get("FormInfo.{$this->FormName()}.result");
+        $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
             return unserialize($resultData);
         }
@@ -396,7 +408,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Serialise
         $resultData = $result ? serialize($result) : null;
-        Session::set("FormInfo.{$this->FormName()}.result", $resultData);
+        $this->getSession()->set("FormInfo.{$this->FormName()}.result", $resultData);
         return $this;
     }
 

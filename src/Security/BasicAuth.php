@@ -180,9 +180,12 @@ class BasicAuth
      */
     public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
     {
-        static::config()->set('entire_site_protected', $protect);
-        static::config()->set('entire_site_protected_code', $code);
-        static::config()->set('entire_site_protected_message', $message);
+        static::config()
+            ->set('entire_site_protected', $protect)
+            ->set('entire_site_protected_code', $code);
+        if ($message) {
+            static::config()->set('entire_site_protected_message', $message);
+        }
     }
 
     /**
@@ -197,7 +200,6 @@ class BasicAuth
         $config = static::config();
         $request = Controller::curr()->getRequest();
         if ($config->get('entire_site_protected')) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             static::requireLogin(
                 $request,
                 $config->get('entire_site_protected_message'),

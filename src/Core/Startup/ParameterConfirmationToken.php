@@ -2,7 +2,10 @@
 
 namespace SilverStripe\Core\Startup;
 
-use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Convert;
 use SilverStripe\Security\RandomGenerator;
 
 /**
@@ -24,6 +27,11 @@ class ParameterConfirmationToken
      * @var string
      */
     protected $parameterName = null;
+
+    /**
+     * @var HTTPRequest
+     */
+    protected $request = null;
 
     /**
      * The parameter given
@@ -88,17 +96,19 @@ class ParameterConfirmationToken
      * Create a new ParameterConfirmationToken
      *
      * @param string $parameterName Name of the querystring parameter to check
+     * @param HTTPRequest $request
      */
-    public function __construct($parameterName)
+    public function __construct($parameterName, HTTPRequest $request)
     {
         // Store the parameter name
         $this->parameterName = $parameterName;
+        $this->request = $request;
 
         // Store the parameter value
-        $this->parameter = isset($_GET[$parameterName]) ? $_GET[$parameterName] : null;
+        $this->parameter = $request->getVar($parameterName);
 
         // If the token provided is valid, mark it as such
-        $token = isset($_GET[$parameterName.'token']) ? $_GET[$parameterName.'token'] : null;
+        $token = $request->getVar($parameterName.'token');
         if ($this->checkToken($token)) {
             $this->token = $token;
         }
@@ -151,7 +161,7 @@ class ParameterConfirmationToken
      */
     public function suppress()
     {
-        unset($_GET[$this->parameterName]);
+        $this->request->offsetUnset($this->parameterName);
     }
 
     /**
@@ -167,81 +177,45 @@ class ParameterConfirmationToken
         );
     }
 
-    /** What to use instead of BASE_URL. Must not contain protocol or host. @var string */
-    static public $alternateBaseURL = null;
-
-    protected function currentAbsoluteURL()
+    /**
+     * Get redirect url, excluding querystring
+     *
+     * @return string
+     */
+    protected function currentURL()
     {
-        global $url;
-
-        // Are we http or https? Replicates Director::is_https() without its dependencies/
-        $proto = 'http';
-        // See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-        // See https://support.microsoft.com/en-us/kb/307347
-        $headerOverride = false;
-        if (TRUSTED_PROXY) {
-            $headers = (getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) : null;
-            if (!$headers) {
-                // Backwards compatible defaults
-                $headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
-            }
-            foreach ($headers as $header) {
-                $headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
-                if (!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
-                    $headerOverride = true;
-                    break;
-                }
-            }
-        }
-
-        if ($headerOverride) {
-            $proto = 'https';
-        } elseif ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-            $proto = 'https';
-        } elseif (isset($_SERVER['SSL'])) {
-            $proto = 'https';
-        }
-
-        $parts = array_filter(array(
-            // What's our host
-            Director::host(),
-            // SilverStripe base
-            self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
-            // And URL including base script (eg: if it's index.php/page/url/)
-            (defined('BASE_SCRIPT_URL') ? '/' . BASE_SCRIPT_URL : '') . $url,
-        ));
-
-        // Join together with protocol into our current absolute URL, avoiding duplicated "/" characters
-        return "$proto://" . preg_replace('#/{2,}#', '/', implode('/', $parts));
+        return Controller::join_links(
+            BASE_URL,
+            '/',
+            $this->request->getURL(false)
+        );
     }
 
     /**
      * Forces a reload of the request with the token included
-     * This method will terminate the script with `die`
+     *
+     * @return HTTPResponse
      */
     public function reloadWithToken()
     {
-        $location = $this->currentAbsoluteURL();
+        // Merge get params with current url
+        $params = array_merge($this->request->getVars(), $this->params());
+        $location = Controller::join_links(
+            $this->currentURL(),
+            '?'.http_build_query($params)
+        );
+        $locationJS = Convert::raw2js($location);
+        $locationATT = Convert::raw2att($location);
+        $body = <<<HTML
+<script>location.href='$locationJS';</script>
+<noscript><meta http-equiv="refresh" content="0; url=$locationATT"></noscript>
+You are being redirected. If you are not redirected soon, <a href="$locationATT">click here to continue the flush</a>
+HTML;
 
-        // What's our GET params (ensuring they include the original parameter + a new token)
-        $params = array_merge($_GET, $this->params());
-        unset($params['url']);
-
-        if ($params) {
-            $location .= '?'.http_build_query($params);
-        }
-
-        // And redirect
-        if (headers_sent()) {
-            echo "
-<script>location.href='$location';</script>
-<noscript><meta http-equiv='refresh' content='0; url=$location'></noscript>
-You are being redirected. If you are not redirected soon, <a href='$location'>click here to continue the flush</a>
-";
-        } else {
-            header('location: '.$location, true, 302);
-        }
-        die;
+        // Build response
+        $result = new HTTPResponse($body);
+        $result->redirect($location);
+        return $result;
     }
 
     /**
@@ -249,13 +223,14 @@ You are being redirected. If you are not redirected soon, <a href='$location'>cl
      * return the non-validated token with the highest priority
      *
      * @param array $keys List of token keys in ascending priority (low to high)
+     * @param HTTPRequest $request
      * @return ParameterConfirmationToken The token container for the unvalidated $key given with the highest priority
      */
-    public static function prepare_tokens($keys)
+    public static function prepare_tokens($keys, HTTPRequest $request)
     {
         $target = null;
         foreach ($keys as $key) {
-            $token = new ParameterConfirmationToken($key);
+            $token = new ParameterConfirmationToken($key, $request);
             // Validate this token
             if ($token->reloadRequired()) {
                 $token->suppress();

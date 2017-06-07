@@ -2,15 +2,14 @@
 
 namespace SilverStripe\Control;
 
-use InvalidArgumentException;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -120,112 +119,41 @@ class Director implements TemplateGlobalProvider
      *
      * @uses handleRequest() rule-lookup logic is handled by this.
      * @uses TestController::handleRequest() This handles the page logic for a Director::direct() call.
-     * @param string $url
-     * @param DataModel $model
+     * @param HTTPRequest $request
+     * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public static function direct($url, DataModel $model)
+    public static function direct(HTTPRequest $request)
     {
-        // check allowed hosts
-        if (getenv('SS_ALLOWED_HOSTS') && !Director::is_cli()) {
-            $all_allowed_hosts = explode(',', getenv('SS_ALLOWED_HOSTS'));
-            if (!in_array(static::host(), $all_allowed_hosts)) {
-                throw new HTTPResponse_Exception('Invalid Host', 400);
-            }
-        }
-
-
-        // Validate $_FILES array before merging it with $_POST
-        foreach ($_FILES as $k => $v) {
-            if (is_array($v['tmp_name'])) {
-                $v = ArrayLib::array_values_recursive($v['tmp_name']);
-                foreach ($v as $tmpFile) {
-                    if ($tmpFile && !is_uploaded_file($tmpFile)) {
-                        user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
-                    }
-                }
-            } else {
-                if ($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
-                    user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
-                }
-            }
-        }
-
-        $req = new HTTPRequest(
-            (isset($_SERVER['X-HTTP-Method-Override']))
-                ? $_SERVER['X-HTTP-Method-Override']
-                : $_SERVER['REQUEST_METHOD'],
-            $url,
-            $_GET,
-            ArrayLib::array_merge_recursive((array) $_POST, (array) $_FILES),
-            @file_get_contents('php://input')
-        );
-
-        $headers = self::extract_request_headers($_SERVER);
-        foreach ($headers as $header => $value) {
-            $req->addHeader($header, $value);
-        }
-
-        // Initiate an empty session - doesn't initialize an actual PHP session until saved (see below)
-        $session = Session::create(isset($_SESSION) ? $_SESSION : array());
-
-        // Only resume a session if its not started already, and a session identifier exists
-        if (!isset($_SESSION) && Session::request_contains_session_id()) {
-            $session->inst_start();
-        }
-
-        $output = RequestProcessor::singleton()->preRequest($req, $session, $model);
-
+        // Pre-request
+        $output = RequestProcessor::singleton()->preRequest($request);
         if ($output === false) {
-            // @TODO Need to NOT proceed with the request in an elegant manner
-            throw new HTTPResponse_Exception(_t('SilverStripe\\Control\\Director.INVALID_REQUEST', 'Invalid request'), 400);
+            return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
         }
 
-        $result = Director::handleRequest($req, $session, $model);
+        // Generate output
+        $result = static::handleRequest($request);
 
         // Save session data. Note that inst_save() will start/resume the session if required.
-        $session->inst_save();
+        $request->getSession()->save();
 
         // Return code for a redirection request
-        if (is_string($result) && substr($result, 0, 9) == 'redirect:') {
-            $url = substr($result, 9);
-
-            if (Director::is_cli()) {
-                // on cli, follow SilverStripe redirects automatically
-                Director::direct(
-                    str_replace(Director::absoluteBaseURL(), '', $url),
-                    DataModel::inst()
-                );
-                return;
-            } else {
-                $response = new HTTPResponse();
-                $response->redirect($url);
-                $res = RequestProcessor::singleton()->postRequest($req, $response, $model);
-
-                if ($res !== false) {
-                    $response->output();
-                }
-            }
-            // Handle a controller
-        } elseif ($result) {
-            if ($result instanceof HTTPResponse) {
-                $response = $result;
-            } else {
-                $response = new HTTPResponse();
-                $response->setBody($result);
-            }
-
-            $res = RequestProcessor::singleton()->postRequest($req, $response, $model);
-            if ($res !== false) {
-                $response->output();
-            } else {
-                // @TODO Proper response here.
-                throw new HTTPResponse_Exception("Invalid response");
-            }
-
-
-            //$controllerObj->getSession()->inst_save();
+        // @todo: Refactor into CLIApplication
+        if ($result->isRedirect() && static::is_cli()) {
+            $url = Director::makeRelative($result->getHeader('Location'));
+            $request = clone $request;
+            $request->setUrl($url);
+            return static::direct($request);
         }
+
+        // Post-request handling
+        $postRequest = RequestProcessor::singleton()->postRequest($request, $result);
+        if ($postRequest === false) {
+            return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
+        }
+
+        // Return
+        return $result;
     }
 
     /**
@@ -278,7 +206,7 @@ class Director implements TemplateGlobalProvider
         }
 
         if (!$session) {
-            $session = Session::create([]);
+            $session = new Session([]);
         }
         $cookieJar = $cookies instanceof Cookie_Backend
             ? $cookies
@@ -340,15 +268,14 @@ class Director implements TemplateGlobalProvider
 
         try {
             // Pre-request filtering
-            $model = DataModel::inst();
             $requestProcessor = Injector::inst()->get(RequestProcessor::class);
-            $output = $requestProcessor->preRequest($request, $session, $model);
+            $output = $requestProcessor->preRequest($request);
             if ($output === false) {
                 throw new HTTPResponse_Exception(_t('SilverStripe\\Control\\Director.INVALID_REQUEST', 'Invalid request'), 400);
             }
 
             // Process request
-            $result = Director::handleRequest($request, $session, $model);
+            $result = Director::handleRequest($request);
 
             // Ensure that the result is an HTTPResponse object
             if (is_string($result)) {
@@ -395,15 +322,14 @@ class Director implements TemplateGlobalProvider
      *
      * @skipUpgrade
      * @param HTTPRequest $request
-     * @param Session $session
-     * @param DataModel $model
-     * @return HTTPResponse|string
+     * @return HTTPResponse
      */
-    protected static function handleRequest(HTTPRequest $request, Session $session, DataModel $model)
+    protected static function handleRequest(HTTPRequest $request)
     {
         $rules = Director::config()->uninherited('rules');
 
         foreach ($rules as $pattern => $controllerOptions) {
+            // Normalise route rule
             if (is_string($controllerOptions)) {
                 if (substr($controllerOptions, 0, 2) == '->') {
                     $controllerOptions = array('Redirect' => substr($controllerOptions, 2));
@@ -412,7 +338,9 @@ class Director implements TemplateGlobalProvider
                 }
             }
 
-            if (($arguments = $request->match($pattern, true)) !== false) {
+            // Match pattern
+            $arguments = $request->match($pattern, true);
+            if ($arguments !== false) {
                 $request->setRouteParams($controllerOptions);
                 // controllerOptions provide some default arguments
                 $arguments = array_merge($controllerOptions, $arguments);
@@ -424,24 +352,20 @@ class Director implements TemplateGlobalProvider
 
                 // Handle redirection
                 if (isset($arguments['Redirect'])) {
-                    return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
-                } else {
-                    // Find the controller name
-                    $controller = $arguments['Controller'];
-                    $controllerObj = Injector::inst()->create($controller);
-                    $controllerObj->setSession($session);
+                    // Redirection
+                    $response = new HTTPResponse();
+                    $response->redirect(static::absoluteURL($arguments['Redirect']));
+                    return $response;
+                }
 
-                    try {
-                        $result = $controllerObj->handleRequest($request, $model);
-                    } catch (HTTPResponse_Exception $responseException) {
-                        $result = $responseException->getResponse();
-                    }
-                    if (!is_object($result) || $result instanceof HTTPResponse) {
-                        return $result;
-                    }
+                // Find the controller name
+                $controller = $arguments['Controller'];
+                $controllerObj = Injector::inst()->create($controller);
 
-                    user_error("Bad result from url " . $request->getURL() . " handled by " .
-                        get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);
+                try {
+                    return $controllerObj->handleRequest($request);
+                } catch (HTTPResponse_Exception $responseException) {
+                    return $responseException->getResponse();
                 }
             }
         }
@@ -853,36 +777,6 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Takes a $_SERVER data array and extracts HTTP request headers.
-     *
-     * @param array $server
-     *
-     * @return array
-     */
-    public static function extract_request_headers(array $server)
-    {
-        $headers = array();
-
-        foreach ($server as $key => $value) {
-            if (substr($key, 0, 5) == 'HTTP_') {
-                $key = substr($key, 5);
-                $key = strtolower(str_replace('_', ' ', $key));
-                $key = str_replace(' ', '-', ucwords($key));
-                $headers[$key] = $value;
-            }
-        }
-
-        if (isset($server['CONTENT_TYPE'])) {
-            $headers['Content-Type'] = $server['CONTENT_TYPE'];
-        }
-        if (isset($server['CONTENT_LENGTH'])) {
-            $headers['Content-Length'] = $server['CONTENT_LENGTH'];
-        }
-
-        return $headers;
-    }
-
-    /**
      * Given a filesystem reference relative to the site root, return the full file-system path.
      *
      * @param string $file
@@ -1073,47 +967,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_cli()
     {
-        return (php_sapi_name() == "cli");
-    }
-
-    /**
-     * Set the environment type of the current site.
-     *
-     * Typically, a SilverStripe site have a number of environments:
-     *  - Development environments, such a copy on your local machine.
-     *  - Test sites, such as the one you show the client before going live.
-     *  - The live site itself.
-     *
-     * The behaviour of these environments often varies slightly.  For example, development sites may
-     * have errors dumped to the screen, and order confirmation emails might be sent to the developer
-     * instead of the client.
-     *
-     * To help with this, SilverStripe supports the notion of an environment type.  The environment
-     * type can be dev, test, or live.
-     *
-     * Dev mode can also be forced by putting ?isDev=1 in your URL, which will ask you to log in and
-     * then push the site into dev mode for the remainder of the session. Putting ?isDev=0 onto the URL
-     * can turn it back.
-     *
-     * Test mode can also be forced by putting ?isTest=1 in your URL, which will ask you to log in and
-     * then push the site into test mode for the remainder of the session. Putting ?isTest=0 onto the URL
-     * can turn it back.
-     *
-     * Generally speaking, these methods will be called from your _config.php file.
-     *
-     * Once the environment type is set, it can be checked with {@link Director::isDev()},
-     * {@link Director::isTest()}, and {@link Director::isLive()}.
-     *
-     * @param string $environment
-     */
-    public static function set_environment_type($environment)
-    {
-        if (!in_array($environment, ['dev', 'test', 'live'])) {
-            throw new InvalidArgumentException(
-                "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
-            );
-        }
-        self::$environment_type = $environment;
+        return php_sapi_name() === "cli";
     }
 
     /**
@@ -1124,22 +978,9 @@ class Director implements TemplateGlobalProvider
      */
     public static function get_environment_type()
     {
-        // Check saved session
-        if ($env = self::session_environment()) {
-            return $env;
-        }
-
-        // Check set
-        if (self::$environment_type) {
-            return self::$environment_type;
-        }
-
-        // Check getenv
-        if ($env = getenv('SS_ENVIRONMENT_TYPE')) {
-            return $env;
-        }
-
-        return 'live';
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        return $kernel->getEnvironment();
     }
 
     /**
@@ -1173,37 +1014,6 @@ class Director implements TemplateGlobalProvider
     public static function isTest()
     {
         return self::get_environment_type() === 'test';
-    }
-
-    /**
-     * Check or update any temporary environment specified in the session.
-     *
-     * @return null|string
-     */
-    public static function session_environment()
-    {
-        // Set session from querystring
-        if (isset($_GET['isDev'])) {
-            if (isset($_SESSION)) {
-                unset($_SESSION['isTest']); // In case we are changing from test mode
-                $_SESSION['isDev'] = $_GET['isDev'];
-            }
-            return 'dev';
-        } elseif (isset($_GET['isTest'])) {
-            if (isset($_SESSION)) {
-                unset($_SESSION['isDev']); // In case we are changing from dev mode
-                $_SESSION['isTest'] = $_GET['isTest'];
-            }
-            return 'test';
-        }
-        // Check session
-        if (isset($_SESSION['isDev']) && $_SESSION['isDev']) {
-            return 'dev';
-        } elseif (isset($_SESSION['isTest']) && $_SESSION['isTest']) {
-            return 'test';
-        } else {
-            return null;
-        }
     }
 
     /**
