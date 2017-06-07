@@ -68,6 +68,24 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
     }
 }
 
+// Allow supplementary dotenv files to be specified. Will loop over them in order of declaration, each overloading
+// This means that the last in the list will be the highest priority
+// Should be declared as such: SS_EXTRA_DOT_ENVS='.env2, .env3'
+if (getenv('SS_EXTRA_DOT_ENVS')) {
+    $extraDotenvs = explode(',', getenv('SS_EXTRA_DOT_ENVS'));
+    foreach ($extraDotenvs as $dotenv) {
+        $dotenv = trim(basename($dotenv));
+        foreach ([BASE_PATH, dirname(BASE_PATH)] as $path) {
+            try {
+                (new Dotenv($path, $dotenv))->overload();
+            } catch (Exception $e) {
+                // not found here
+                continue;
+            }
+        }
+    }
+}
+
 /**
  * Validate whether the request comes directly from a trusted server or not
  * This is necessary to validate whether or not the values of X-Forwarded-
