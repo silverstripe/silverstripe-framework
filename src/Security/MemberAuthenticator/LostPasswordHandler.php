@@ -135,19 +135,12 @@ class LostPasswordHandler extends RequestHandler
      */
     public function lostPasswordForm()
     {
-        return MemberLoginForm::create(
+        return LostPasswordForm::create(
             $this,
             $this->authenticatorClass,
             'lostPasswordForm',
-            new FieldList(
-                new EmailField('Email', _t('SilverStripe\\Security\\Member.EMAIL', 'Email'))
-            ),
-            new FieldList(
-                new FormAction(
-                    'forgotPassword',
-                    _t('SilverStripe\\Security\\Security.BUTTONSEND', 'Send me the password reset link')
-                )
-            ),
+            null,
+            null,
             false
         );
     }
@@ -165,21 +158,6 @@ class LostPasswordHandler extends RequestHandler
     }
 
     /**
-     * Log out form handler method
-     *
-     * This method is called when the user clicks on "logout" on the form
-     * created when the parameter <i>$checkCurrentUser</i> of the
-     * {@link __construct constructor} was set to TRUE and the user was
-     * currently logged in.
-     *
-     * @return HTTPResponse
-     */
-    public function logout()
-    {
-        return Security::singleton()->logout();
-    }
-
-    /**
      * Forgot password form handler method.
      * Called when the user clicks on "I've lost my password".
      * Extensions can use the 'forgotPassword' method to veto executing
@@ -189,13 +167,14 @@ class LostPasswordHandler extends RequestHandler
      *
      * @skipUpgrade
      * @param array $data Submitted data
+     * @param LostPasswordForm $form
      * @return HTTPResponse
      */
-    public function forgotPassword($data)
+    public function forgotPassword($data, $form)
     {
         // Ensure password is given
         if (empty($data['Email'])) {
-            $this->form->sessionMessage(
+            $form->sessionMessage(
                 _t(
                     'SilverStripe\\Security\\Member.ENTEREMAIL',
                     'Please enter an email address to get a password reset link.'
@@ -220,17 +199,7 @@ class LostPasswordHandler extends RequestHandler
         if ($member) {
             $token = $member->generateAutologinTokenAndStoreHash();
 
-            Email::create()
-                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
-                ->setData($member)
-                ->setSubject(_t(
-                    'SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET',
-                    "Your password reset link",
-                    'Email subject'
-                ))
-                ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
-                ->setTo($member->Email)
-                ->send();
+            $this->sendEmail($member, $token);
         }
 
         // Avoid information disclosure by displaying the same status,
@@ -242,5 +211,27 @@ class LostPasswordHandler extends RequestHandler
         );
 
         return $this->redirect($this->addBackURLParam($link));
+    }
+
+    /**
+     * Send the email to the member that requested a reset link
+     * @param Member $member
+     * @param string $token
+     * @return bool
+     */
+    protected function sendEmail($member, $token)
+    {
+        /** @var Email $email */
+        $email = Email::create()
+            ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
+            ->setData($member)
+            ->setSubject(_t(
+                'SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET',
+                "Your password reset link",
+                'Email subject'
+            ))
+            ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
+            ->setTo($member->Email);
+        return $email->send();
     }
 }

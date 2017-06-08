@@ -214,7 +214,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @var Authenticator[] available authenticators
      */
-    private static $authenticators = [];
+    private $authenticators = [];
 
     /**
      * @var Member Currently logged in user (if available)
@@ -224,17 +224,17 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @return array
      */
-    public static function getAuthenticators()
+    public function getAuthenticators()
     {
-        return self::$authenticators;
+        return $this->authenticators;
     }
 
     /**
      * @param array|Authenticator $authenticators
      */
-    public static function setAuthenticators(array $authenticators)
+    public function setAuthenticators(array $authenticators)
     {
-        self::$authenticators = $authenticators;
+        $this->authenticators = $authenticators;
     }
 
     /**
@@ -274,7 +274,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function getAuthenticator($name = 'default')
     {
-        $authenticators = static::$authenticators;
+        $authenticators = $this->authenticators;
 
         if (isset($authenticators[$name])) {
             return $authenticators[$name];
@@ -291,7 +291,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getApplicableAuthenticators($service = Authenticator::LOGIN)
     {
-        $authenticators = static::$authenticators;
+        $authenticators = $this->authenticators;
 
         /** @var Authenticator $class */
         foreach ($authenticators as $name => $class) {
@@ -312,7 +312,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function hasAuthenticator($authenticator)
     {
-        $authenticators = static::$authenticators;
+        $authenticators = $this->authenticators;
 
         return !empty($authenticators[$authenticator]);
     }

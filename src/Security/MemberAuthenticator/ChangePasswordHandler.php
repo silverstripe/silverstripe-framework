@@ -59,7 +59,7 @@ class ChangePasswordHandler extends RequestHandler
      * Handle the change password request
      * @todo this could use some spring cleaning
      *
-     * @return HTTPResponse|DBHTMLText
+     * @return array|HTTPResponse
      */
     public function changepassword()
     {
@@ -91,7 +91,10 @@ class ChangePasswordHandler extends RequestHandler
             );
 
             // Subsequent request after the "first load with hash" (see previous if clause).
-            return $this->buildResponse($message);
+            return [
+                'Content' => $message,
+                'Form'    => $this->changePasswordForm()
+            ];
         }
 
         if (Security::getCurrentUser()) {
@@ -104,29 +107,32 @@ class ChangePasswordHandler extends RequestHandler
                 ) . '</p>'
             );
 
-            return $this->buildResponse($message);
+            return [
+                'Content' => $message,
+                'Form'    => $this->changePasswordForm()
+            ];
         }
         // Show a friendly message saying the login token has expired
         if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $customisedController = Controller::curr()->customise(
-                array(
-                    'Content' => DBField::create_field(
-                        'HTMLFragment',
-                        _t(
-                            'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                            '<p>The password reset link is invalid or expired.</p>'
-                            . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                            . ' you <a href="{link2}">logged in</a>.</p>',
-                            [
-                                'link1' => $this->Link('lostpassword'),
-                                'link2' => $this->Link('login')
-                            ]
-                        )
+            $message = [
+                'Content' => DBField::create_field(
+                    'HTMLFragment',
+                    _t(
+                        'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
+                        '<p>The password reset link is invalid or expired.</p>'
+                        . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                        . ' you <a href="{link2}">logged in</a>.</p>',
+                        [
+                            'link1' => $this->link('lostpassword'),
+                            'link2' => $this->link('login')
+                        ]
                     )
                 )
-            );
+            ];
 
-            return $customisedController->renderWith('changepassword');
+            return [
+                'Content' => $message,
+            ];
         }
 
         // Someone attempted to go to changepassword without token or being logged in
@@ -139,21 +145,6 @@ class ChangePasswordHandler extends RequestHandler
         );
     }
 
-    /**
-     * @param DBField $message
-     * @return DBHTMLText
-     */
-    protected function buildResponse($message)
-    {
-        $customisedController = Controller::curr()->customise(
-            [
-                'Content' => $message,
-                'Form'    => $this->changePasswordForm()
-            ]
-        );
-
-        return $customisedController->renderWith(Security::singleton()->getTemplatesFor('changepassword'));
-    }
 
     /**
      * @param Member $member
@@ -204,9 +195,10 @@ class ChangePasswordHandler extends RequestHandler
      * Change the password
      *
      * @param array $data The user submitted data
+     * @param ChangePasswordForm $form
      * @return HTTPResponse
      */
-    public function doChangePassword(array $data)
+    public function doChangePassword(array $data, $form)
     {
         $member = Security::getCurrentUser();
         // The user was logged in, check the current password
@@ -215,12 +207,12 @@ class ChangePasswordHandler extends RequestHandler
                 !$member->checkPassword($data['OldPassword'])->isValid()
             )
         ) {
-            $this->form->sessionMessage(
+            $form->sessionMessage(
                 _t(
                     'SilverStripe\\Security\\Member.ERRORPASSWORDNOTMATCH',
-                    "Your current password does not match, please try again"
+                    'Your current password does not match, please try again'
                 ),
-                "bad"
+                'bad'
             );
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
@@ -242,12 +234,12 @@ class ChangePasswordHandler extends RequestHandler
 
         // Check the new password
         if (empty($data['NewPassword1'])) {
-            $this->form->sessionMessage(
+            $form->sessionMessage(
                 _t(
                     'SilverStripe\\Security\\Member.EMPTYNEWPASSWORD',
                     "The new password can't be empty, please try again"
                 ),
-                "bad"
+                'bad'
             );
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
@@ -256,12 +248,12 @@ class ChangePasswordHandler extends RequestHandler
 
         // Fail if passwords do not match
         if ($data['NewPassword1'] !== $data['NewPassword2']) {
-            $this->form->sessionMessage(
+            $form->sessionMessage(
                 _t(
                     'SilverStripe\\Security\\Member.ERRORNEWPASSWORD',
-                    "You have entered your new password differently, try again"
+                    'You have entered your new password differently, try again'
                 ),
-                "bad"
+                'bad'
             );
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
@@ -271,7 +263,7 @@ class ChangePasswordHandler extends RequestHandler
         // Check if the new password is accepted
         $validationResult = $member->changePassword($data['NewPassword1']);
         if (!$validationResult->isValid()) {
-            $this->form->setSessionValidationResult($validationResult);
+            $form->setSessionValidationResult($validationResult);
 
             return $this->redirectBackToForm();
         }
@@ -303,10 +295,15 @@ class ChangePasswordHandler extends RequestHandler
         return $this->redirect($url);
     }
 
+    /**
+     * Something went wrong, go back to the changepassword
+     *
+     * @return HTTPResponse
+     */
     public function redirectBackToForm()
     {
         // Redirect back to form
-        $url = $this->addBackURLParam(CMSSecurity::singleton()->Link('changepassword'));
+        $url = $this->addBackURLParam(Security::singleton()->Link('changepassword'));
 
         return $this->redirect($url);
     }

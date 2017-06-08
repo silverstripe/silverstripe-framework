@@ -74,6 +74,7 @@ class MemberLoginForm extends BaseLoginForm
         $checkCurrentUser = true
     ) {
 
+        $this->controller = $controller;
         $this->authenticator_class = $authenticatorClass;
 
         $customCSS = project() . '/css/member_login.css';
@@ -81,20 +82,17 @@ class MemberLoginForm extends BaseLoginForm
             Requirements::css($customCSS);
         }
 
-        if ($controller->request->getVar('BackURL')) {
-            $backURL = $controller->request->getVar('BackURL');
-        } else {
-            $backURL = Session::get('BackURL');
-        }
-
         if ($checkCurrentUser && Security::getCurrentUser()) {
             // @todo find a more elegant way to handle this
             $logoutAction = Security::logout_url();
             $fields = FieldList::create(
-                HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this)
+                HiddenField::create('AuthenticationMethod', null, $this->authenticator_class, $this)
             );
             $actions = FieldList::create(
-                FormAction::create("logout", _t('SilverStripe\\Security\\Member.BUTTONLOGINOTHER', "Log in as someone else"))
+                FormAction::create('logout', _t(
+                    'SilverStripe\\Security\\Member.BUTTONLOGINOTHER',
+                    'Log in as someone else'
+                ))
             );
         } else {
             if (!$fields) {
@@ -103,10 +101,6 @@ class MemberLoginForm extends BaseLoginForm
             if (!$actions) {
                 $actions = $this->getFormActions();
             }
-        }
-
-        if (isset($backURL)) {
-            $fields->push(HiddenField::create('BackURL', 'BackURL', $backURL));
         }
 
         // Reduce attack surface by enforcing POST requests
@@ -127,6 +121,12 @@ class MemberLoginForm extends BaseLoginForm
      */
     protected function getFormFields()
     {
+        if ($this->controller->request->getVar('BackURL')) {
+            $backURL = $this->controller->request->getVar('BackURL');
+        } else {
+            $backURL = Session::get('BackURL');
+        }
+
         $label = Member::singleton()->fieldLabel(Member::config()->unique_identifier_field);
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
@@ -138,7 +138,7 @@ class MemberLoginForm extends BaseLoginForm
         );
         $emailField->setAttribute('autofocus', 'true');
 
-        if (Security::config()->remember_username) {
+        if (Security::config()->get('remember_username')) {
             $emailField->setValue(Session::get('SessionForms.MemberLoginForm.Email'));
         } else {
             // Some browsers won't respect this attribute unless it's added to the form
@@ -158,6 +158,10 @@ class MemberLoginForm extends BaseLoginForm
                     )
                 )
             );
+        }
+
+        if (isset($backURL)) {
+            $fields->push(HiddenField::create('BackURL', 'BackURL', $backURL));
         }
 
         return $fields;
