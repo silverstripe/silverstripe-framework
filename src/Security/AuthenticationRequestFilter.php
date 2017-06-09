@@ -2,54 +2,40 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\Session;
-use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\ValidationException;
 
-class AuthenticationRequestFilter implements RequestFilter, IdentityStore
+class AuthenticationRequestFilter implements RequestFilter
 {
-
     use Configurable;
 
     /**
-     * @var array|AuthenticationHandler[]
+     * @var AuthenticationHandler
      */
-    protected $handlers;
+    protected $authenticationHandler;
 
     /**
-     * This method currently uses a fallback as loading the handlers via YML has proven unstable
-     *
-     * @return array|AuthenticationHandler[]
+     * @return AuthenticationHandler
      */
-    protected function getHandlers()
+    public function getAuthenticationHandler()
     {
-        if (is_array($this->handlers)) {
-            return $this->handlers;
-        }
-
-        return array_map(
-            function ($identifier) {
-                return Injector::inst()->get($identifier);
-            },
-            static::config()->get('handlers')
-        );
+        return $this->authenticationHandler;
     }
 
     /**
-     * Set an associative array of handlers
-     *
-     * @param array|AuthenticationHandler[] $handlers
+     * @param AuthenticationHandler $authenticationHandler
+     * @return $this
      */
-    public function setHandlers($handlers)
+    public function setAuthenticationHandler(AuthenticationHandler $authenticationHandler)
     {
-        $this->handlers = $handlers;
+        $this->authenticationHandler = $authenticationHandler;
+        return $this;
     }
 
     /**
@@ -64,16 +50,9 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
     public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
     {
         try {
-            /** @var AuthenticationHandler $handler */
-            foreach ($this->getHandlers() as $name => $handler) {
-                // @todo Update requestfilter logic to allow modification of initial response
-                // in order to add cookies, etc
-                $member = $handler->authenticateRequest($request);
-                if ($member) {
-                    Security::setCurrentUser($member);
-                    break;
-                }
-            }
+            $this
+                ->getAuthenticationHandler()
+                ->authenticateRequest($request);
         } catch (ValidationException $e) {
             throw new HTTPResponse_Exception(
                 "Bad log-in details: " . $e->getMessage(),
@@ -92,44 +71,5 @@ class AuthenticationRequestFilter implements RequestFilter, IdentityStore
      */
     public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
     {
-    }
-
-    /**
-     * Log into the identity-store handlers attached to this request filter
-     *
-     * @param Member $member
-     * @param bool $persistent
-     * @param HTTPRequest $request
-     * @return HTTPResponse|void
-     */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
-    {
-        $member->beforeMemberLoggedIn();
-
-        foreach ($this->getHandlers() as $handler) {
-            if ($handler instanceof IdentityStore) {
-                $handler->logIn($member, $persistent, $request);
-            }
-        }
-
-        Security::setCurrentUser($member);
-        $member->afterMemberLoggedIn();
-    }
-
-    /**
-     * Log out of all the identity-store handlers attached to this request filter
-     *
-     * @param HTTPRequest $request
-     * @return HTTPResponse|void
-     */
-    public function logOut(HTTPRequest $request = null)
-    {
-        foreach ($this->getHandlers() as $handler) {
-            if ($handler instanceof IdentityStore) {
-                $handler->logOut($request);
-            }
-        }
-
-        Security::setCurrentUser(null);
     }
 }

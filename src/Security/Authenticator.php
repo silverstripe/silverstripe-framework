@@ -2,12 +2,9 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\MemberAuthenticator\LoginHandler;
+use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
 
 /**
  * Abstract base class for an authentication method
@@ -47,6 +44,7 @@ interface Authenticator
      * be merged into a default controller.
      *
      * @param string $link The base link to use for this RequestHandler
+     * @return LoginHandler
      */
     public function getLoginHandler($link);
 
@@ -56,7 +54,7 @@ interface Authenticator
      * The default URL of the RequestHandler should log the user out immediately and destroy the session.
      *
      * @param string $link The base link to use for this RequestHandler
-     * @return mixed
+     * @return LogoutHandler
      */
     public function getLogOutHandler($link);
 
@@ -75,7 +73,7 @@ interface Authenticator
 
 
     /**
-     * @param $link
+     * @param string $link
      * @return mixed
      */
     public function getLostPasswordHandler($link);
@@ -87,5 +85,5 @@ interface Authenticator
      * @param ValidationResult $result A validationresult which is either valid or contains the error message(s)
      * @return Member The matched member, or null if the authentication fails
      */
-    public function authenticate($data, &$result);
+    public function authenticate($data, &$result = null);
 }

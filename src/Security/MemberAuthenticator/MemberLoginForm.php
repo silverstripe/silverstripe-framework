@@ -5,20 +5,19 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\LoginForm as BaseLoginForm;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
 /**
@@ -42,9 +41,14 @@ class MemberLoginForm extends BaseLoginForm
 
     /**
      * Required fields for validation
+     *
+     * @config
      * @var array
      */
-    private static $required_fields;
+    private static $required_fields = [
+        'Email',
+        'Password',
+    ];
 
     /**
      * Constructor

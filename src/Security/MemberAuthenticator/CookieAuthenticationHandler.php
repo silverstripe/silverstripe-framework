@@ -2,20 +2,19 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Security\Member;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\AuthenticationHandler as AuthenticationHandlerInterface;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
-use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Control\Cookie;
 
 /**
  * Authenticate a member pased on a session cookie
  */
-class CookieAuthenticationHandler implements AuthenticationHandlerInterface, IdentityStore
+class CookieAuthenticationHandler implements AuthenticationHandler
 {
 
     /**
@@ -47,11 +46,12 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
      * Set the name of the cookie used to track this device
      *
      * @param string $deviceCookieName
-     * @return null
+     * @return $this
      */
     public function setDeviceCookieName($deviceCookieName)
     {
         $this->deviceCookieName = $deviceCookieName;
+        return $this;
     }
 
     /**
@@ -68,10 +68,12 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
      * Set the name of the cookie used to store an login token
      *
      * @param string $tokenCookieName
+     * @return $this
      */
     public function setTokenCookieName($tokenCookieName)
     {
         $this->tokenCookieName = $tokenCookieName;
+        return $this;
     }
 
     /**
@@ -88,16 +90,17 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
      * Set the name of the cookie used to store an login token
      *
      * @param IdentityStore $cascadeInTo
-     * @return null
+     * @return $this
      */
     public function setCascadeLogInTo(IdentityStore $cascadeInTo)
     {
         $this->cascadeInTo = $cascadeInTo;
+        return $this;
     }
 
     /**
      * @param HTTPRequest $request
-     * @return null|Member
+     * @return Member
      */
     public function authenticateRequest(HTTPRequest $request)
     {
@@ -115,71 +118,65 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
             return null;
         }
 
+        // check if autologin token matches
         /** @var Member $member */
         $member = Member::get()->byID($uid);
+        if (!$member) {
+            return null;
+        }
+
+        $hash = $member->encryptWithUserSettings($token);
 
         /** @var RememberLoginHash $rememberLoginHash */
-        $rememberLoginHash = null;
-
-        // check if autologin token matches
-        if ($member) {
-            $hash = $member->encryptWithUserSettings($token);
-            $rememberLoginHash = RememberLoginHash::get()
-                ->filter(array(
-                    'MemberID' => $member->ID,
-                    'DeviceID' => $deviceID,
-                    'Hash'     => $hash
-                ))->first();
-
-            if (!$rememberLoginHash) {
-                $member = null;
-            } else {
-                // Check for expired token
-                $expiryDate = new \DateTime($rememberLoginHash->ExpiryDate);
-                $now = DBDatetime::now();
-                $now = new \DateTime($now->Rfc2822());
-                if ($now > $expiryDate) {
-                    $member = null;
-                }
-            }
+        $rememberLoginHash = RememberLoginHash::get()
+            ->filter(array(
+                'MemberID' => $member->ID,
+                'DeviceID' => $deviceID,
+                'Hash'     => $hash
+            ))->first();
+        if (!$rememberLoginHash) {
+            return null;
         }
 
-        if ($member) {
-            if ($this->cascadeInTo) {
-                // @todo look at how to block "regular login" triggers from happening here
-                // @todo deal with the fact that the Session::current_session() isn't correct here :-/
-                $this->cascadeInTo->logIn($member, false, $request);
-            }
-
-            // @todo Consider whether response should be part of logIn() as well
-
-            // Renew the token
-            if ($rememberLoginHash) {
-                $rememberLoginHash->renew();
-                $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-                Cookie::set(
-                    $this->getTokenCookieName(),
-                    $member->ID . ':' . $rememberLoginHash->getToken(),
-                    $tokenExpiryDays,
-                    null,
-                    null,
-                    false,
-                    true
-                );
-            }
-
-            // Audit logging hook
-            $member->extend('memberAutoLoggedIn');
-
-            return $member;
+        // Check for expired token
+        $expiryDate = new \DateTime($rememberLoginHash->ExpiryDate);
+        $now = DBDatetime::now();
+        $now = new \DateTime($now->Rfc2822());
+        if ($now > $expiryDate) {
+            return null;
         }
+
+        if ($this->cascadeInTo) {
+            // @todo look at how to block "regular login" triggers from happening here
+            // @todo deal with the fact that the Session::current_session() isn't correct here :-/
+            $this->cascadeInTo->logIn($member, false, $request);
+        }
+
+        // @todo Consider whether response should be part of logIn() as well
+
+        // Renew the token
+        $rememberLoginHash->renew();
+        $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
+        Cookie::set(
+            $this->getTokenCookieName(),
+            $member->ID . ':' . $rememberLoginHash->getToken(),
+            $tokenExpiryDays,
+            null,
+            null,
+            false,
+            true
+        );
+
+        // Audit logging hook
+        $member->extend('memberAutoLoggedIn');
+
+        return $member;
     }
 
     /**
      * @param Member $member
      * @param bool $persistent
      * @param HTTPRequest $request
-     * @return HTTPResponse|void
      */
     public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
@@ -218,8 +215,7 @@ class CookieAuthenticationHandler implements AuthenticationHandlerInterface, Ide
     }
 
     /**
-     * @param HTTPRequest|null $request
-     * @return HTTPResponse|void
+     * @param HTTPRequest $request
      */
     public function logOut(HTTPRequest $request = null)
     {

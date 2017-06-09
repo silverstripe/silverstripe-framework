@@ -5,14 +5,14 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Handle login requests from MemberLoginForm

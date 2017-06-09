@@ -109,7 +109,7 @@ class Member_GroupSet extends ManyManyList
     {
         $id = $this->getForeignID();
         if ($id) {
-            return DataObject::get_by_id('SilverStripe\\Security\\Member', $id);
+            return DataObject::get_by_id(Member::class, $id);
         }
     }
 }

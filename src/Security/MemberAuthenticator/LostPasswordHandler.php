@@ -5,19 +5,12 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Security\IdentityStore;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\Core\Convert;
-use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Handle login requests from MemberLoginForm

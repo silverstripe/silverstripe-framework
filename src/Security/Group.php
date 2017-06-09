@@ -4,24 +4,24 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\ListboxField;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
-use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
@@ -29,7 +29,6 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\UnsavedRelationList;
-use SilverStripe\View\Requirements;
 
 /**
  * A security group.
@@ -95,6 +94,7 @@ class Group extends DataObject
         $doSet = new ArrayList();
 
         $children = Group::get()->filter("ParentID", $this->ID);
+        /** @var Group $child */
         foreach ($children as $child) {
             $doSet->push($child);
             $doSet->merge($child->getAllChildren());
@@ -159,7 +159,7 @@ class Group extends DataObject
             $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
                 ->setValidator(Member_Validator::create())
-                ->setItemEditFormCallback(function ($form, $component) use ($group) {
+                ->setItemEditFormCallback(function ($form) use ($group) {
                     /** @var Form $form */
                     $record = $form->getRecord();
                     $groupsField = $form->Fields()->dataFieldByName('DirectGroups');
@@ -369,9 +369,9 @@ class Group extends DataObject
     {
         $parent = $this;
         $items = [];
-        while (isset($parent) && $parent instanceof Group) {
+        while ($parent instanceof Group) {
             $items[] = $parent->ID;
-            $parent = $parent->Parent;
+            $parent = $parent->getParent();
         }
         return $items;
     }
@@ -395,12 +395,14 @@ class Group extends DataObject
             ->sort('"Sort"');
     }
 
+    /**
+     * @return string
+     */
     public function getTreeTitle()
     {
-        if ($this->hasMethod('alternateTreeTitle')) {
-            return $this->alternateTreeTitle();
-        }
-        return htmlspecialchars($this->Title, ENT_QUOTES);
+        $title = htmlspecialchars($this->Title, ENT_QUOTES);
+        $this->extend('updateTreeTitle', $title);
+        return $title;
     }
 
     /**

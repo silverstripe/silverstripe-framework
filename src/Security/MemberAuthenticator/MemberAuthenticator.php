@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\ORM\ValidationResult;
-use InvalidArgumentException;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\LoginAttempt;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Authenticator for the default "member" method
@@ -162,7 +162,7 @@ class MemberAuthenticator implements Authenticator
     }
 
     /**
-     * @param $link
+     * @param string $link
      * @return LostPasswordHandler
      */
     public function getLostPasswordHandler($link)

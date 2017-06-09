@@ -4,18 +4,16 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\CMSSecurity;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\IdentityStore;
 
 class ChangePasswordHandler extends RequestHandler
 {

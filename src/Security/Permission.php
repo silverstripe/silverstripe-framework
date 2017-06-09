@@ -4,12 +4,11 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18nEntityProvider;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\TemplateGlobalProvider;
 
@@ -459,7 +458,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Returns all members for a specific permission.
      *
-     * @param $code String|array Either a single permission code, or a list of permission codes
+     * @param string|array $code Either a single permission code, or a list of permission codes
      * @return SS_List Returns a set of member that have the specified
      *                       permission.
      */

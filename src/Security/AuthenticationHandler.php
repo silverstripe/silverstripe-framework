@@ -3,9 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\ValidationException;
-use SilverStripe\Security\Member;
 
 /**
  * An AuthenticationHandler is responsible for providing an identity (in the form of a Member object) for
@@ -15,7 +13,7 @@ use SilverStripe\Security\Member;
  * request it should *not* attempt to redirect the visitor to a log-in from or 3rd party handler, as that
  * is the responsibiltiy of other systems.
  */
-interface AuthenticationHandler
+interface AuthenticationHandler extends IdentityStore
 {
     /**
      * Given the current request, authenticate the request for non-session authorization (outside the CMS).

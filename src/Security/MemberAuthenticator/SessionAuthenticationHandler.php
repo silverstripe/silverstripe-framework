@@ -3,21 +3,17 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Cookie;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\Director;
 use SilverStripe\Security\AuthenticationHandler;
-use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 
 /**
  * Authenticate a member pased on a session cookie
  */
-class SessionAuthenticationHandler implements AuthenticationHandler, IdentityStore
+class SessionAuthenticationHandler implements AuthenticationHandler
 {
-
     /**
      * @var string
      */
@@ -44,27 +40,26 @@ class SessionAuthenticationHandler implements AuthenticationHandler, IdentitySto
     }
 
     /**
-     * @inherit
      * @param HTTPRequest $request
-     * @return null|DataObject|Member
+     * @return Member
      */
     public function authenticateRequest(HTTPRequest $request)
     {
-        if ($id = Session::get($this->getSessionVariable())) {
-            // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
-            // ValidationException
-            return Member::get()->byID($id);
+        // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
+        // ValidationException
+        $id = Session::get($this->getSessionVariable());
+        if (!$id) {
+            return null;
         }
-
-        return null;
+        /** @var Member $member */
+        $member = Member::get()->byID($id);
+        return $member;
     }
 
     /**
-     * @inherit
      * @param Member $member
      * @param bool $persistent
-     * @param HTTPRequest|null $request
-     * @return HTTPResponse|void
+     * @param HTTPRequest $request
      */
     public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
@@ -103,8 +98,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler, IdentitySto
     }
 
     /**
-     * @param HTTPRequest|null $request
-     * @return HTTPResponse|void
+     * @param HTTPRequest $request
      */
     public function logOut(HTTPRequest $request = null)
     {

@@ -2,13 +2,10 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 
 /**

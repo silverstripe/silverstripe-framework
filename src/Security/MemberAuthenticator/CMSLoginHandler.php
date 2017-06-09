@@ -5,7 +5,6 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\CMSSecurity;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
 class CMSLoginHandler extends LoginHandler

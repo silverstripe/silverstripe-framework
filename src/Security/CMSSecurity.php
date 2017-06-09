@@ -3,14 +3,12 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\View\Requirements;
 
 /**
@@ -194,7 +192,7 @@ PHP
         $backURLs = array(
             $this->getRequest()->requestVar('BackURL'),
             Session::get('BackURL'),
-            Director::absoluteURL(AdminRootController::config()->url_base, true),
+            Director::absoluteURL(AdminRootController::config()->get('url_base'), true),
         );
         $backURL = null;
         foreach ($backURLs as $backURL) {

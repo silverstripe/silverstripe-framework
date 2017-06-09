@@ -2,14 +2,13 @@
 
 namespace SilverStripe\Security;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\View\Requirements;
-use InvalidArgumentException;
+use SilverStripe\ORM\SS_List;
 
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).

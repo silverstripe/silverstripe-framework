@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\CsvBulkLoader;
+use SilverStripe\ORM\DataObject;
 
 /**
  * @todo Migrate Permission->Arg and Permission->Type values
@@ -15,12 +15,8 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         'Code' => 'Code',
     );
 
-    public function __construct($objectClass = null)
+    public function __construct($objectClass = Group::class)
     {
-        if (!$objectClass) {
-            $objectClass = 'SilverStripe\\Security\\Group';
-        }
-
         parent::__construct($objectClass);
     }
 

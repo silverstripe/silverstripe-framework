@@ -2,25 +2,26 @@
 
 namespace SilverStripe\Security;
 
-use Page;
 use LogicException;
-use SilverStripe\CMS\Controllers\ContentController;
+use Page;
+use SilverStripe\CMS\Controllers\ModelAsController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
@@ -222,7 +223,7 @@ class Security extends Controller implements TemplateGlobalProvider
     protected static $currentUser;
 
     /**
-     * @return array
+     * @return Authenticator[]
      */
     public function getAuthenticators()
     {
@@ -230,16 +231,13 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
-     * @param array|Authenticator $authenticators
+     * @param Authenticator[] $authenticators
      */
     public function setAuthenticators(array $authenticators)
     {
         $this->authenticators = $authenticators;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
         parent::init();
@@ -257,9 +255,6 @@ class Security extends Controller implements TemplateGlobalProvider
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function index()
     {
         return $this->httpError(404); // no-op
@@ -287,15 +282,15 @@ class Security extends Controller implements TemplateGlobalProvider
      * Get all registered authenticators
      *
      * @param int $service The type of service that is requested
-     * @return array Return an array of Authenticator objects
+     * @return Authenticator[] Return an array of Authenticator objects
      */
     public function getApplicableAuthenticators($service = Authenticator::LOGIN)
     {
         $authenticators = $this->authenticators;
 
-        /** @var Authenticator $class */
-        foreach ($authenticators as $name => $class) {
-            if (!($class->supportedServices() & $service)) {
+        /** @var Authenticator $authenticator */
+        foreach ($authenticators as $name => $authenticator) {
+            if (!($authenticator->supportedServices() & $service)) {
                 unset($authenticators[$name]);
             }
         }
@@ -468,8 +463,10 @@ class Security extends Controller implements TemplateGlobalProvider
         Deprecation::notice('5.0.0', 'Now handled by delegateToMultipleHandlers');
 
         return array_map(
-            function ($authenticator) {
-                return [$authenticator->getLoginHandler($this->Link())->loginForm()];
+            function (Authenticator $authenticator) {
+                return [
+                    $authenticator->getLoginHandler($this->Link())->loginForm()
+                ];
             },
             $this->getApplicableAuthenticators()
         );
@@ -601,16 +598,14 @@ class Security extends Controller implements TemplateGlobalProvider
 
         // Create new instance of page holder
         /** @var Page $holderPage */
-        $holderPage = new $pageClass;
+        $holderPage = Injector::inst()->create($pageClass);
         $holderPage->Title = $title;
         /** @skipUpgrade */
         $holderPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
         $holderPage->ID = -1 * random_int(1, 10000000);
 
-        $controllerClass = $holderPage->getControllerName();
-        /** @var ContentController $controller */
-        $controller = $controllerClass::create($holderPage);
+        $controller = ModelAsController::controller_for($holderPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
 
@@ -713,8 +708,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $link = $this->Link('login');
 
         // Delegate to a single handler - Security/login/<authname>/...
-        if ($authName && $this->hasAuthenticator($authName)
-        ) {
+        if ($authName && $this->hasAuthenticator($authName)) {
             if ($request) {
                 $request->shift();
             }
@@ -733,7 +727,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         array_walk(
             $handlers,
-            function (&$auth, $name) use ($link) {
+            function (Authenticator &$auth, $name) use ($link) {
                 $auth = $auth->getLoginHandler(Controller::join_links($link, $name));
             }
         );
@@ -766,7 +760,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         // Process each of the handlers
         $results = array_map(
-            function ($handler) {
+            function (RequestHandler $handler) {
                 return $handler->handleRequest($this->getRequest(), DataModel::inst());
             },
             $handlers
@@ -1200,6 +1194,8 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * For the database_is_ready call to return a certain value - used for testing
+     *
+     * @param bool $isReady
      */
     public static function force_database_is_ready($isReady)
     {
@@ -1220,7 +1216,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Set to true to ignore access to disallowed actions, rather than returning permission failure
      * Note that this is just a flag that other code needs to check with Security::ignore_disallowed_actions()
-     * @param $flag True or false
+     * @param bool $flag True or false
      */
     public static function set_ignore_disallowed_actions($flag)
     {

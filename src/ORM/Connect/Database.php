@@ -491,6 +491,17 @@ abstract class Database
     abstract public function datetimeDifferenceClause($date1, $date2);
 
     /**
+     * String operator for concatenation of strings
+     *
+     * @return string
+     */
+    public function concatOperator()
+    {
+        // @todo Make ' + ' in mssql
+        return ' || ';
+    }
+
+    /**
      * Returns true if this database supports collations
      *
      * @return boolean

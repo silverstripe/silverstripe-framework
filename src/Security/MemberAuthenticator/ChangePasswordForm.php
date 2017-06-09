@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\Control\Session;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Session;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\PasswordField;
 use SilverStripe\Security\Security;
 
 /**

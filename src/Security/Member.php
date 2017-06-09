@@ -3,19 +3,16 @@
 namespace SilverStripe\Security;
 
 use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
@@ -23,7 +20,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\i18n\i18n;
-use SilverStripe\MSSQL\MSSQLDatabase;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -31,13 +27,10 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Map;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\TemplateGlobalProvider;
-use DateTime;
 
 /**
  * The member class which represents the users of the system
@@ -60,6 +53,7 @@ use DateTime;
  * @property int $FailedLoginCount
  * @property string $DateFormat
  * @property string $TimeFormat
+ * @property string $SetPassword Pseudo-DB field for temp storage. Not emitted to DB
  */
 class Member extends DataObject
 {
@@ -482,9 +476,10 @@ class Member extends DataObject
     public function regenerateTempID()
     {
         $generator = new RandomGenerator();
+        $lifetime = self::config()->get('temp_id_lifetime');
         $this->TempIDHash = $generator->randomToken('sha1');
-        $this->TempIDExpired = self::config()->temp_id_lifetime
-            ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + self::config()->temp_id_lifetime)
+        $this->TempIDExpired = $lifetime
+            ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + $lifetime)
             : null;
         $this->write();
     }
@@ -756,7 +751,7 @@ class Member extends DataObject
      *
      * @param Member|null|int $member Member or member ID to log in as.
      * Set to null or 0 to act as a logged out user.
-     * @param $callback
+     * @param callable $callback
      */
     public static function actAs($member, $callback)
     {
@@ -837,7 +832,7 @@ class Member extends DataObject
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
-        $identifierField = Member::config()->unique_identifier_field;
+        $identifierField = Member::config()->get('unique_identifier_field');
         if ($this->$identifierField) {
             // Note: Same logic as Member_Validator class
             $filter = [
@@ -890,7 +885,7 @@ class Member extends DataObject
                 $this->Password, // this is assumed to be cleartext
                 $this->Salt,
                 ($this->PasswordEncryption) ?
-                    $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
+                    $this->PasswordEncryption : Security::config()->get('password_encryption_algorithm'),
                 $this
             );
 
@@ -1013,7 +1008,7 @@ class Member extends DataObject
         } elseif ($group instanceof Group) {
             $groupCheckObj = $group;
         } else {
-            user_error('Member::inGroup(): Wrong format for $group parameter', E_USER_ERROR);
+            throw new InvalidArgumentException('Member::inGroup(): Wrong format for $group parameter');
         }
 
         if (!$groupCheckObj) {
@@ -1081,10 +1076,17 @@ class Member extends DataObject
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
+        Deprecation::notice('5.0', 'Use Member.title_format config instead');
         if (!is_array($columns)) {
             $columns = array($columns);
         }
-        self::config()->title_format = array('columns' => $columns, 'sep' => $sep);
+        self::config()->set(
+            'title_format',
+            [
+                'columns' => $columns,
+                'sep' => $sep
+            ]
+        );
     }
 
     //------------------- HELPER METHODS -----------------------------------//
@@ -1133,8 +1135,6 @@ class Member extends DataObject
      */
     public static function get_title_sql()
     {
-        // This should be abstracted to SSDatabase concatOperator or similar.
-        $op = (DB::get_conn() instanceof MSSQLDatabase) ? " + " : " || ";
 
         // Get title_format with fallback to default
         $format = static::config()->get('title_format');
@@ -1151,7 +1151,7 @@ class Member extends DataObject
         }
 
         $sepSQL = Convert::raw2sql($format['sep'], true);
-
+        $op = DB::get_conn()->concatOperator();
         return "(" . join(" $op $sepSQL $op ", $columnsWithTablename) . ")";
     }
 
@@ -1305,6 +1305,7 @@ class Member extends DataObject
 
         $membersList = new ArrayList();
         // This is a bit ineffective, but follow the ORM style
+        /** @var Group $group */
         foreach (Group::get()->byIDs($groupIDList) as $group) {
             $membersList->merge($group->Members());
         }
@@ -1332,7 +1333,7 @@ class Member extends DataObject
             return ArrayList::create()->map();
         }
 
-        if (!$groups || $groups->Count() == 0) {
+        if (count($groups) == 0) {
             $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 
             if (class_exists(CMSMain::class)) {
@@ -1673,12 +1674,13 @@ class Member extends DataObject
      */
     public function registerFailedLogin()
     {
-        if (self::config()->lock_out_after_incorrect_logins) {
+        $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
+        if ($lockOutAfterCount) {
             // Keep a tally of the number of failed log-ins so that we can lock people out
             $this->FailedLoginCount = $this->FailedLoginCount + 1;
 
-            if ($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
-                $lockoutMins = self::config()->lock_out_delay_mins;
+            if ($this->FailedLoginCount >= $lockOutAfterCount) {
+                $lockoutMins = self::config()->get('lock_out_delay_mins');
                 $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() + $lockoutMins * 60);
                 $this->FailedLoginCount = 0;
             }
@@ -1692,7 +1694,7 @@ class Member extends DataObject
      */
     public function registerSuccessfulLogin()
     {
-        if (self::config()->lock_out_after_incorrect_logins) {
+        if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
             $this->write();
