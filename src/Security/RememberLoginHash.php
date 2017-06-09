@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\DataObject;
-use DateTime;
 use DateInterval;
+use DateTime;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * Persists a token associated with a device for users who opted for the "Remember Me"
@@ -16,7 +16,8 @@ use DateInterval;
  * is discarded as well.
  *
  * @property string $DeviceID
- * @property string $RememberLoginHash
+ * @property string $ExpiryDate
+ * @property string $Hash
  * @method Member Member()
  */
 class RememberLoginHash extends DataObject

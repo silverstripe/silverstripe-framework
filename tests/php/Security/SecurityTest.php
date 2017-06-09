@@ -2,18 +2,16 @@
 
 namespace SilverStripe\Security\Tests;
 
-use PhpConsole\Auth;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Permission;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
@@ -48,13 +46,9 @@ class SecurityTest extends FunctionalTest
 
     protected function setUp()
     {
-        // This test assumes that MemberAuthenticator is present and the default
-        $this->priorAuthenticators = Authenticator::get_authenticators();
-        $this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
-
         // Set to an empty array of authenticators to enable the default
-        Config::modify()->set(Authenticator::class, 'authenticators', []);
-        Config::modify()->set(Authenticator::class, 'default_authenticator', MemberAuthenticator::class);
+        Config::modify()->set(MemberAuthenticator::class, 'authenticators', []);
+        Config::modify()->set(MemberAuthenticator::class, 'default_authenticator', MemberAuthenticator::class);
 
         // And that the unique identified field is 'Email'
         $this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
@@ -74,8 +68,8 @@ class SecurityTest extends FunctionalTest
         // Restore selected authenticator
 
         // MemberAuthenticator might not actually be present
-        Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
-        Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
+        // Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
+        // Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
 
         // Restore unique identifier field
         Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;
@@ -182,19 +176,19 @@ class SecurityTest extends FunctionalTest
     public function testAutomaticRedirectionOnLogin()
     {
         // BackURL with permission error (not authenticated) should not redirect
-        if ($member = Member::currentUser()) {
-            $member->logOut();
+        if ($member = Security::getCurrentUser()) {
+            Security::setCurrentUser(null);
         }
         $response = $this->getRecursive('SecurityTest_SecuredController');
         $this->assertContains(Convert::raw2xml("That page is secured."), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // Non-logged in user should not be redirected, but instead shown the login form
         // No message/context is available as the user has not attempted to view the secured controller
         $response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
         $this->assertNotContains(Convert::raw2xml("That page is secured."), $response->getBody());
         $this->assertNotContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_dologin"', $response->getBody());
+        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // BackURL with permission error (wrong permissions) should not redirect
         $this->logInAs('grouplessmember');
@@ -228,7 +222,7 @@ class SecurityTest extends FunctionalTest
         $member = DataObject::get_one(Member::class);
 
         /* Log in with any user that we can find */
-        $this->session()->inst_set('loggedInAs', $member->ID);
+        Security::setCurrentUser($member);
 
         /* View the Security/login page */
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
@@ -245,8 +239,7 @@ class SecurityTest extends FunctionalTest
             'MemberLoginForm_LoginForm',
             null,
             array(
-                'AuthenticationMethod' => MemberAuthenticator::class,
-                'action_dologout' => 1,
+                'action_logout' => 1,
             )
         );
 
@@ -255,7 +248,7 @@ class SecurityTest extends FunctionalTest
         $this->assertNotNull($response->getBody(), 'There is body content on the page');
 
         /* Log the user out */
-        $this->session()->inst_set('loggedInAs', null);
+        Security::setCurrentUser(null);
     }
 
     public function testMemberIDInSessionDoesntExistInDatabaseHasToLogin()
@@ -379,6 +372,8 @@ class SecurityTest extends FunctionalTest
         );
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
+        $this->logOut();
+
         /* EXPIRED PASSWORDS ARE SENT TO THE CHANGE PASSWORD FORM */
         $expiredResponse = $this->doTestLoginForm('expired@silverstripe.com', '1nitialPassword');
         $this->assertEquals(302, $expiredResponse->getStatusCode());
@@ -416,6 +411,7 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
         // Check if we can login with the new password
+        $this->logOut();
         $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals(
@@ -436,7 +432,7 @@ class SecurityTest extends FunctionalTest
 
         // Request new password by email
         $response = $this->get('Security/lostpassword');
-        $response = $this->post('Security/LostPasswordForm', array('Email' => 'testuser@example.com'));
+        $response = $this->post('Security/lostpassword/LostPasswordForm', array('Email' => 'testuser@example.com'));
 
         $this->assertEmailSent('testuser@example.com');
 
@@ -461,6 +457,7 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
 
         // Check if we can login with the new password
+        $this->logOut();
         $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
@@ -479,11 +476,11 @@ class SecurityTest extends FunctionalTest
         Member::config()->lock_out_delay_mins = 15;
 
         // Login with a wrong password for more than the defined threshold
-        for ($i = 1; $i <= Member::config()->lock_out_after_incorrect_logins+1; $i++) {
+        for ($i = 1; $i <= (Member::config()->lock_out_after_incorrect_logins+1); $i++) {
             $this->doTestLoginForm('testuser@example.com', 'incorrectpassword');
             $member = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
 
-            if ($i < Member::config()->lock_out_after_incorrect_logins) {
+            if ($i < Member::config()->get('lock_out_after_incorrect_logins')) {
                 $this->assertNull(
                     $member->LockedOutUntil,
                     'User does not have a lockout time set if under threshold for failed attempts'
@@ -502,18 +499,16 @@ class SecurityTest extends FunctionalTest
                     'User has a lockout time set after too many failed attempts'
                 );
             }
-
-            $msg = _t(
-                'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
-                'Your account has been temporarily disabled because of too many failed attempts at ' .
-                'logging in. Please try again in {count} minutes.',
-                null,
-                array('count' => Member::config()->lock_out_delay_mins)
-            );
-            if ($i > Member::config()->lock_out_after_incorrect_logins) {
-                $this->assertHasMessage($msg);
-            }
         }
+        $msg = _t(
+            'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
+            'Your account has been temporarily disabled because of too many failed attempts at ' .
+            'logging in. Please try again in {count} minutes.',
+            null,
+            array('count' => Member::config()->lock_out_delay_mins)
+        );
+        $this->assertHasMessage($msg);
+
 
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertNull(
@@ -533,7 +528,7 @@ class SecurityTest extends FunctionalTest
         );
 
         // Log the user out
-        $this->session()->inst_set('loggedInAs', null);
+        $this->logOut();
 
         // Login again with wrong password, but less attempts than threshold
         for ($i = 1; $i < Member::config()->lock_out_after_incorrect_logins; $i++) {
@@ -594,14 +589,14 @@ class SecurityTest extends FunctionalTest
         $attempt = DataObject::get_one(
             LoginAttempt::class,
             array(
-            '"LoginAttempt"."Email"' => 'testuser@example.com'
+                '"LoginAttempt"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertTrue(is_object($attempt));
         $member = DataObject::get_one(
             Member::class,
             array(
-            '"Member"."Email"' => 'testuser@example.com'
+                '"Member"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertEquals($attempt->Status, 'Failure');
@@ -648,9 +643,7 @@ class SecurityTest extends FunctionalTest
 
     public function testDatabaseIsReadyWithInsufficientMemberColumns()
     {
-        $old = Security::$force_database_is_ready;
-        Security::$force_database_is_ready = null;
-        Security::$database_is_ready = false;
+        Security::clear_database_is_ready();
         DBClassName::clear_classname_cache();
 
         // Assumption: The database has been built correctly by the test runner,
@@ -666,8 +659,6 @@ class SecurityTest extends FunctionalTest
         // Rebuild the database (which re-adds the Email column), and try again
         static::resetDBSchema(true);
         $this->assertTrue(Security::database_is_ready());
-
-        Security::$force_database_is_ready = $old;
     }
 
     public function testSecurityControllerSendsRobotsTagHeader()
@@ -703,7 +694,7 @@ class SecurityTest extends FunctionalTest
                 'Email' => $email,
                 'Password' => $password,
                 'AuthenticationMethod' => MemberAuthenticator::class,
-                'action_dologin' => 1,
+                'action_doLogin' => 1,
             )
         );
     }

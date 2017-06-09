@@ -25,6 +25,7 @@ use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataModel;
@@ -276,7 +277,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         if (Controller::has_curr()) {
             Controller::curr()->setSession(Session::create(array()));
         }
-        Security::$database_is_ready = null;
+        Security::clear_database_is_ready();
 
         // Set up test routes
         $this->setUpRoutes();
@@ -1250,8 +1251,31 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
             $this->cache_generatedMembers[$permCode] = $member;
         }
-        $member->logIn();
+        $this->logInAs($member);
         return $member->ID;
+    }
+
+    /**
+     * Log in as the given member
+     *
+     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
+     */
+    public function logInAs($member)
+    {
+        if (is_numeric($member)) {
+            $member = DataObject::get_by_id(Member::class, $member);
+        } elseif (!is_object($member)) {
+            $member = $this->objFromFixture(Member::class, $member);
+        }
+        Injector::inst()->get(IdentityStore::class)->logIn($member);
+    }
+
+    /**
+     * Log out the current user
+     */
+    public function logOut()
+    {
+        Injector::inst()->get(IdentityStore::class)->logOut();
     }
 
     /**

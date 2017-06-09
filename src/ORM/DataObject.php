@@ -24,6 +24,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ViewableData;
 use LogicException;
 use InvalidArgumentException;
@@ -76,11 +77,11 @@ use stdClass;
  *   static $api_access = true;
  *
  *   function canView($member = false) {
- *     if(!$member) $member = Member::currentUser();
+ *     if(!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Subscribers');
  *   }
  *   function canEdit($member = false) {
- *     if(!$member) $member = Member::currentUser();
+ *     if(!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Editors');
  *   }
  *
@@ -2498,7 +2499,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function can($perm, $member = null, $context = array())
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member, "ADMIN")) {

@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -61,11 +61,11 @@ class SecurityToken implements TemplateGlobalProvider
     protected $name = null;
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function __construct($name = null)
     {
-        $this->name = ($name) ? $name : self::get_default_name();
+        $this->name = $name ?: self::get_default_name();
     }
 
     /**

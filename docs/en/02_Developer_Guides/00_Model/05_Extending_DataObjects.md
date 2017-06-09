@@ -30,7 +30,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	  public function onBeforeWrite() {
 	    // check on first write action, aka "database row creation" (ID-property is not set)
 	    if(!$this->isInDb()) {
-	      $currentPlayer = Member::currentUser();
+	      $currentPlayer = Security::getCurrentUser();
 
 	      if(!$currentPlayer->IsTeamManager()) {
 	        user_error('Player-creation not allowed', E_USER_ERROR);

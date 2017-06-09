@@ -1,19 +1,23 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\LoginForm as BaseLoginForm;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
 /**
@@ -26,7 +30,7 @@ use SilverStripe\View\Requirements;
  *    allowing extensions to "veto" execution by returning FALSE.
  *    Arguments: $member containing the detected Member record
  */
-class MemberLoginForm extends LoginForm
+class MemberLoginForm extends BaseLoginForm
 {
 
     /**
@@ -37,15 +41,20 @@ class MemberLoginForm extends LoginForm
 
     /**
      * Required fields for validation
+     *
+     * @config
      * @var array
      */
-    private static $required_fields;
+    private static $required_fields = [
+        'Email',
+        'Password',
+    ];
 
     /**
      * Constructor
      *
      * @skipUpgrade
-     * @param Controller $controller The parent controller, necessary to
+     * @param RequestHandler $controller The parent controller, necessary to
      *                               create the appropriate form action tag.
      * @param string $authenticatorClass Authenticator for this LoginForm
      * @param string $name The method on the controller that will return this
@@ -69,6 +78,7 @@ class MemberLoginForm extends LoginForm
         $checkCurrentUser = true
     ) {
 
+        $this->controller = $controller;
         $this->authenticator_class = $authenticatorClass;
 
         $customCSS = project() . '/css/member_login.css';
@@ -76,18 +86,17 @@ class MemberLoginForm extends LoginForm
             Requirements::css($customCSS);
         }
 
-        if ($controller->request->getVar('BackURL')) {
-            $backURL = $controller->request->getVar('BackURL');
-        } else {
-            $backURL = Session::get('BackURL');
-        }
-
-        if ($checkCurrentUser && Member::currentUser() && Member::logged_in_session_exists()) {
+        if ($checkCurrentUser && Security::getCurrentUser()) {
+            // @todo find a more elegant way to handle this
+            $logoutAction = Security::logout_url();
             $fields = FieldList::create(
-                HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this)
+                HiddenField::create('AuthenticationMethod', null, $this->authenticator_class, $this)
             );
             $actions = FieldList::create(
-                FormAction::create("logout", _t('SilverStripe\\Security\\Member.BUTTONLOGINOTHER', "Log in as someone else"))
+                FormAction::create('logout', _t(
+                    'SilverStripe\\Security\\Member.BUTTONLOGINOTHER',
+                    'Log in as someone else'
+                ))
             );
         } else {
             if (!$fields) {
@@ -98,15 +107,14 @@ class MemberLoginForm extends LoginForm
             }
         }
 
-        if (isset($backURL)) {
-            $fields->push(HiddenField::create('BackURL', 'BackURL', $backURL));
-        }
-
         // Reduce attack surface by enforcing POST requests
         $this->setFormMethod('POST', true);
 
         parent::__construct($controller, $name, $fields, $actions);
 
+        if (isset($logoutAction)) {
+            $this->setFormAction($logoutAction);
+        }
         $this->setValidator(RequiredFields::create(self::config()->get('required_fields')));
     }
 
@@ -117,6 +125,12 @@ class MemberLoginForm extends LoginForm
      */
     protected function getFormFields()
     {
+        if ($this->controller->request->getVar('BackURL')) {
+            $backURL = $this->controller->request->getVar('BackURL');
+        } else {
+            $backURL = Session::get('BackURL');
+        }
+
         $label = Member::singleton()->fieldLabel(Member::config()->unique_identifier_field);
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
@@ -128,14 +142,14 @@ class MemberLoginForm extends LoginForm
         );
         $emailField->setAttribute('autofocus', 'true');
 
-        if (Security::config()->remember_username) {
+        if (Security::config()->get('remember_username')) {
             $emailField->setValue(Session::get('SessionForms.MemberLoginForm.Email'));
         } else {
             // Some browsers won't respect this attribute unless it's added to the form
             $this->setAttribute('autocomplete', 'off');
             $emailField->setAttribute('autocomplete', 'off');
         }
-        if (Security::config()->autologin_enabled) {
+        if (Security::config()->get('autologin_enabled')) {
             $fields->push(
                 CheckboxField::create(
                     "Remember",
@@ -150,6 +164,10 @@ class MemberLoginForm extends LoginForm
             );
         }
 
+        if (isset($backURL)) {
+            $fields->push(HiddenField::create('BackURL', 'BackURL', $backURL));
+        }
+
         return $fields;
     }
 
@@ -161,7 +179,7 @@ class MemberLoginForm extends LoginForm
     protected function getFormActions()
     {
         $actions = FieldList::create(
-            FormAction::create('dologin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
+            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
             LiteralField::create(
                 'forgotPassword',
                 '<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
@@ -177,7 +195,7 @@ class MemberLoginForm extends LoginForm
         parent::restoreFormState();
 
         $forceMessage = Session::get('MemberLoginForm.force_message');
-        if (($member = Member::currentUser()) && !$forceMessage) {
+        if (($member = Security::getCurrentUser()) && !$forceMessage) {
             $message = _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
@@ -192,14 +210,6 @@ class MemberLoginForm extends LoginForm
         }
 
         return $this;
-    }
-
-    /**
-     * @return MemberLoginHandler
-     */
-    protected function buildRequestHandler()
-    {
-        return MemberLoginHandler::create($this);
     }
 
     /**

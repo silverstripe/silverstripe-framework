@@ -6,9 +6,9 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18nEntityProvider;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\TemplateGlobalProvider;
 
@@ -131,10 +131,10 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function check($code, $arg = "any", $member = null, $strict = true)
     {
         if (!$member) {
-            if (!Member::currentUserID()) {
+            if (!Security::getCurrentUser()) {
                 return false;
             }
-            $member = Member::currentUserID();
+            $member = Security::getCurrentUser();
         }
 
         return self::checkMember($member, $code, $arg, $strict);
@@ -171,10 +171,9 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function checkMember($member, $code, $arg = "any", $strict = true)
     {
         if (!$member) {
-            $memberID = $member = Member::currentUserID();
-        } else {
-            $memberID = (is_object($member)) ? $member->ID : $member;
+            $member = Security::getCurrentUser();
         }
+        $memberID = ($member instanceof Member) ? $member->ID : $member;
 
         if (!$memberID) {
             return false;
@@ -347,7 +346,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     {
         // Default to current member, with session-caching
         if (!$memberID) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
             if ($member && isset($_SESSION['Permission_groupList'][$member->ID])) {
                 return $_SESSION['Permission_groupList'][$member->ID];
             }
@@ -459,7 +458,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Returns all members for a specific permission.
      *
-     * @param $code String|array Either a single permission code, or a list of permission codes
+     * @param string|array $code Either a single permission code, or a list of permission codes
      * @return SS_List Returns a set of member that have the specified
      *                       permission.
      */

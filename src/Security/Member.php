@@ -3,16 +3,16 @@
 namespace SilverStripe\Security;
 
 use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
-use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
@@ -20,20 +20,17 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\i18n\i18n;
-use SilverStripe\MSSQL\MSSQLDatabase;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Map;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\View\SSViewer;
-use SilverStripe\View\TemplateGlobalProvider;
-use DateTime;
 
 /**
  * The member class which represents the users of the system
@@ -56,30 +53,31 @@ use DateTime;
  * @property int $FailedLoginCount
  * @property string $DateFormat
  * @property string $TimeFormat
+ * @property string $SetPassword Pseudo-DB field for temp storage. Not emitted to DB
  */
-class Member extends DataObject implements TemplateGlobalProvider
+class Member extends DataObject
 {
 
     private static $db = array(
-        'FirstName' => 'Varchar',
-        'Surname' => 'Varchar',
-        'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
-        'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
-        'TempIDExpired' => 'Datetime', // Expiry of temp login
-        'Password' => 'Varchar(160)',
-        'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
-        'AutoLoginExpired' => 'Datetime',
+        'FirstName'          => 'Varchar',
+        'Surname'            => 'Varchar',
+        'Email'              => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
+        'TempIDHash'         => 'Varchar(160)', // Temporary id used for cms re-authentication
+        'TempIDExpired'      => 'Datetime', // Expiry of temp login
+        'Password'           => 'Varchar(160)',
+        'AutoLoginHash'      => 'Varchar(160)', // Used to auto-login the user on password reset
+        'AutoLoginExpired'   => 'Datetime',
         // This is an arbitrary code pointing to a PasswordEncryptor instance,
         // not an actual encryption algorithm.
         // Warning: Never change this field after its the first password hashing without
         // providing a new cleartext password as well.
         'PasswordEncryption' => "Varchar(50)",
-        'Salt' => 'Varchar(50)',
-        'PasswordExpiry' => 'Date',
-        'LockedOutUntil' => 'Datetime',
-        'Locale' => 'Varchar(6)',
+        'Salt'               => 'Varchar(50)',
+        'PasswordExpiry'     => 'Date',
+        'LockedOutUntil'     => 'Datetime',
+        'Locale'             => 'Varchar(6)',
         // handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
-        'FailedLoginCount' => 'Int',
+        'FailedLoginCount'   => 'Int',
     );
 
     private static $belongs_many_many = array(
@@ -87,7 +85,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     );
 
     private static $has_many = array(
-        'LoggedPasswords' => MemberPassword::class,
+        'LoggedPasswords'     => MemberPassword::class,
         'RememberLoginHashes' => RememberLoginHash::class,
     );
 
@@ -193,6 +191,12 @@ class Member extends DataObject implements TemplateGlobalProvider
 
     /**
      * @config
+     * @var bool enable or disable logging of previously used passwords. See {@link onAfterWrite}
+     */
+    private static $password_logging_enabled = true;
+
+    /**
+     * @config
      * @var Int Number of incorrect logins after which
      * the user is blocked from further attempts for the timespan
      * defined in {@link $lock_out_delay_mins}.
@@ -276,7 +280,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // Find member
         /** @skipUpgrade */
-        $admin = Member::get()
+        $admin = static::get()
             ->filter('Email', Security::default_admin_username())
             ->first();
         if (!$admin) {
@@ -284,7 +288,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             // persistent logins in the database. See Security::setDefaultAdmin().
             // Set 'Email' to identify this as the default admin
             $admin = Member::create();
-            $admin->FirstName = _t(__CLASS__.'.DefaultAdminFirstname', 'Default Admin');
+            $admin->FirstName = _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin');
             $admin->Email = Security::default_admin_username();
             $admin->write();
         }
@@ -323,14 +327,15 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // Check a password is set on this member
         if (empty($this->Password) && $this->exists()) {
-            $result->addError(_t(__CLASS__.'.NoPassword', 'There is no password on this member.'));
+            $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
+
             return $result;
         }
 
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
         if (!$e->check($this->Password, $password, $this->Salt, $this)) {
             $result->addError(_t(
-                __CLASS__.'.ERRORWRONGCRED',
+                __CLASS__ . '.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
             ));
         }
@@ -364,16 +369,17 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($this->isLockedOut()) {
             $result->addError(
                 _t(
-                    __CLASS__.'.ERRORLOCKEDOUT2',
+                    __CLASS__ . '.ERRORLOCKEDOUT2',
                     'Your account has been temporarily disabled because of too many failed attempts at ' .
                     'logging in. Please try again in {count} minutes.',
                     null,
-                    array('count' => $this->config()->lock_out_delay_mins)
+                    array('count' => static::config()->get('lock_out_delay_mins'))
                 )
             );
         }
 
         $this->extend('canLogIn', $result);
+
         return $result;
     }
 
@@ -387,34 +393,8 @@ class Member extends DataObject implements TemplateGlobalProvider
         if (!$this->LockedOutUntil) {
             return false;
         }
+
         return DBDatetime::now()->getTimestamp() < $this->dbObject('LockedOutUntil')->getTimestamp();
-    }
-
-    /**
-     * Regenerate the session_id.
-     * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.
-     * They have caused problems in certain
-     * quirky problems (such as using the Windmill 0.3.6 proxy).
-     */
-    public static function session_regenerate_id()
-    {
-        if (!self::config()->session_regenerate_id) {
-            return;
-        }
-
-        // This can be called via CLI during testing.
-        if (Director::is_cli()) {
-            return;
-        }
-
-        $file = '';
-        $line = '';
-
-        // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-        // There's nothing we can do about this, because it's an operating system function!
-        if (!headers_sent($file, $line)) {
-            @session_regenerate_id(true);
-        }
     }
 
     /**
@@ -443,63 +423,48 @@ class Member extends DataObject implements TemplateGlobalProvider
         if (!$this->PasswordExpiry) {
             return false;
         }
+
         return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry);
     }
 
     /**
-     * Logs this member in
+     * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn()
      *
-     * @param bool $remember If set to TRUE, the member will be logged in automatically the next time.
      */
-    public function logIn($remember = false)
+    public function logIn()
     {
+        Deprecation::notice(
+            '5.0.0',
+            'This method is deprecated and only logs in for the current request. Please use Security::setCurrentUser($user) or an IdentityStore'
+        );
+        Security::setCurrentUser($this);
+    }
+
+    /**
+     * Called before a member is logged in via session/cookie/etc
+     */
+    public function beforeMemberLoggedIn()
+    {
+        // @todo Move to middleware on the AuthenticationRequestFilter IdentityStore
         $this->extend('beforeMemberLoggedIn');
+    }
 
-        self::session_regenerate_id();
-
-        Session::set("loggedInAs", $this->ID);
-        // This lets apache rules detect whether the user has logged in
-        if (Member::config()->login_marker_cookie) {
-            Cookie::set(Member::config()->login_marker_cookie, 1, 0);
-        }
-
-        if (Security::config()->autologin_enabled) {
-        // Cleans up any potential previous hash for this member on this device
-            if ($alcDevice = Cookie::get('alc_device')) {
-                RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
-            }
-            if ($remember) {
-                $rememberLoginHash = RememberLoginHash::generate($this);
-                $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-                $deviceExpiryDays = RememberLoginHash::config()->uninherited('device_expiry_days');
-                Cookie::set(
-                    'alc_enc',
-                    $this->ID . ':' . $rememberLoginHash->getToken(),
-                    $tokenExpiryDays,
-                    null,
-                    null,
-                    null,
-                    true
-                );
-                Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
-            } else {
-                Cookie::set('alc_enc', null);
-                Cookie::set('alc_device', null);
-                Cookie::force_expiry('alc_enc');
-                Cookie::force_expiry('alc_device');
-            }
-        }
+    /**
+     * Called after a member is logged in via session/cookie/etc
+     */
+    public function afterMemberLoggedIn()
+    {
         // Clear the incorrect log-in count
         $this->registerSuccessfulLogin();
 
-            $this->LockedOutUntil = null;
+        $this->LockedOutUntil = null;
 
         $this->regenerateTempID();
 
         $this->write();
 
         // Audit logging hook
-        $this->extend('memberLoggedIn');
+        $this->extend('afterMemberLoggedIn');
     }
 
     /**
@@ -511,9 +476,10 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function regenerateTempID()
     {
         $generator = new RandomGenerator();
+        $lifetime = self::config()->get('temp_id_lifetime');
         $this->TempIDHash = $generator->randomToken('sha1');
-        $this->TempIDExpired = self::config()->temp_id_lifetime
-            ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + self::config()->temp_id_lifetime)
+        $this->TempIDExpired = $lifetime
+            ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + $lifetime)
             : null;
         $this->write();
     }
@@ -523,15 +489,20 @@ class Member extends DataObject implements TemplateGlobalProvider
      * has a database record of the same ID. If there is
      * no logged in user, FALSE is returned anyway.
      *
+     * @deprecated Not needed anymore, as it returns Security::getCurrentUser();
+     *
      * @return boolean TRUE record found FALSE no record found
      */
     public static function logged_in_session_exists()
     {
-        if ($id = Member::currentUserID()) {
-            if ($member = DataObject::get_by_id(Member::class, $id)) {
-                if ($member->exists()) {
-                    return true;
-                }
+        Deprecation::notice(
+            '5.0.0',
+            'This method is deprecated and now does not add value. Please use Security::getCurrentUser()'
+        );
+
+        if ($member = Security::getCurrentUser()) {
+            if ($member && $member->exists()) {
+                return true;
             }
         }
 
@@ -539,125 +510,21 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Log the user in if the "remember login" cookie is set
-     *
-     * The <i>remember login token</i> will be changed on every successful
-     * auto-login.
-     */
-    public static function autoLogin()
-    {
-        // Don't bother trying this multiple times
-        if (!class_exists(SapphireTest::class, false) || !SapphireTest::is_running_test()) {
-            self::$_already_tried_to_auto_log_in = true;
-        }
-
-        if (!Security::config()->autologin_enabled
-            || strpos(Cookie::get('alc_enc'), ':') === false
-            || Session::get("loggedInAs")
-            || !Security::database_is_ready()
-        ) {
-            return;
-        }
-
-        if (strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
-            list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
-
-            if (!$uid || !$token) {
-                return;
-            }
-
-            $deviceID = Cookie::get('alc_device');
-
-            /** @var Member $member */
-            $member = Member::get()->byID($uid);
-
-            /** @var RememberLoginHash $rememberLoginHash */
-            $rememberLoginHash = null;
-
-            // check if autologin token matches
-            if ($member) {
-                $hash = $member->encryptWithUserSettings($token);
-                $rememberLoginHash = RememberLoginHash::get()
-                    ->filter(array(
-                        'MemberID' => $member->ID,
-                        'DeviceID' => $deviceID,
-                        'Hash' => $hash
-                    ))->first();
-                if (!$rememberLoginHash) {
-                    $member = null;
-                } else {
-                    // Check for expired token
-                    $expiryDate = new DateTime($rememberLoginHash->ExpiryDate);
-                    $now = DBDatetime::now();
-                    $now = new DateTime($now->Rfc2822());
-                    if ($now > $expiryDate) {
-                        $member = null;
-                    }
-                }
-            }
-
-            if ($member) {
-                self::session_regenerate_id();
-                Session::set("loggedInAs", $member->ID);
-                // This lets apache rules detect whether the user has logged in
-                if (Member::config()->login_marker_cookie) {
-                    Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
-                }
-
-                if ($rememberLoginHash) {
-                    $rememberLoginHash->renew();
-                    $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-                    Cookie::set(
-                        'alc_enc',
-                        $member->ID . ':' . $rememberLoginHash->getToken(),
-                        $tokenExpiryDays,
-                        null,
-                        null,
-                        false,
-                        true
-                    );
-                }
-
-                $member->write();
-
-                // Audit logging hook
-                $member->extend('memberAutoLoggedIn');
-            }
-        }
-    }
-
-    /**
+     * @deprecated Use Security::setCurrentUser(null) or an IdentityStore
      * Logs this member out.
      */
     public function logOut()
     {
+        Deprecation::notice(
+            '5.0.0',
+            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdenityStore'
+        );
+
         $this->extend('beforeMemberLoggedOut');
 
-        Session::clear("loggedInAs");
-        if (Member::config()->login_marker_cookie) {
-            Cookie::set(Member::config()->login_marker_cookie, null, 0);
-        }
-
-        Session::destroy();
-
-        $this->extend('memberLoggedOut');
-
-        // Clears any potential previous hashes for this member
-        RememberLoginHash::clear($this, Cookie::get('alc_device'));
-
-        Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
-        Cookie::force_expiry('alc_enc');
-        Cookie::set('alc_device', null);
-        Cookie::force_expiry('alc_device');
-
-        // Switch back to live in order to avoid infinite loops when
-        // redirecting to the login screen (if this login screen is versioned)
-        Session::clear('readingMode');
-
-        $this->write();
-
+        Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
         // Audit logging hook
-        $this->extend('memberLoggedOut');
+        $this->extend('afterMemberLoggedOut');
     }
 
     /**
@@ -681,6 +548,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // We assume we have PasswordEncryption and Salt available here.
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+
         return $e->encrypt($string, $this->Salt);
     }
 
@@ -723,6 +591,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         $hash = $this->encryptWithUserSettings($autologinToken);
         $member = self::member_from_autologinhash($hash, false);
+
         return (bool)$member;
     }
 
@@ -738,13 +607,13 @@ class Member extends DataObject implements TemplateGlobalProvider
     public static function member_from_autologinhash($hash, $login = false)
     {
         /** @var Member $member */
-        $member = Member::get()->filter([
-            'AutoLoginHash' => $hash,
+        $member = static::get()->filter([
+            'AutoLoginHash'                => $hash,
             'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
         ])->first();
 
         if ($login && $member) {
-            $member->logIn();
+            Injector::inst()->get(IdentityStore::class)->logIn($member);
         }
 
         return $member;
@@ -758,11 +627,12 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function member_from_tempid($tempid)
     {
-        $members = Member::get()
+        $members = static::get()
             ->filter('TempIDHash', $tempid);
 
         // Exclude expired
-        if (static::config()->temp_id_lifetime) {
+        if (static::config()->get('temp_id_lifetime')) {
+            /** @var DataList|Member[] $members */
             $members = $members->filter('TempIDExpired:GreaterThan', DBDatetime::now()->getValue());
         }
 
@@ -772,6 +642,8 @@ class Member extends DataObject implements TemplateGlobalProvider
     /**
      * Returns the fields for the member form - used in the registration/profile module.
      * It should return fields that are editable by the admin and the logged-in user.
+     *
+     * @todo possibly move this to an extension
      *
      * @return FieldList Returns a {@link FieldList} containing the fields for
      *                   the member form.
@@ -788,11 +660,12 @@ class Member extends DataObject implements TemplateGlobalProvider
             i18n::getSources()->getKnownLocales()
         ));
 
-        $fields->removeByName(static::config()->hidden_fields);
+        $fields->removeByName(static::config()->get('hidden_fields'));
         $fields->removeByName('FailedLoginCount');
 
 
         $this->extend('updateMemberFormFields', $fields);
+
         return $fields;
     }
 
@@ -805,7 +678,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         $editingPassword = $this->isInDB();
         $label = $editingPassword
-            ? _t(__CLASS__.'.EDIT_PASSWORD', 'New Password')
+            ? _t(__CLASS__ . '.EDIT_PASSWORD', 'New Password')
             : $this->fieldLabel('Password');
         /** @var ConfirmedPasswordField $password */
         $password = ConfirmedPasswordField::create(
@@ -817,12 +690,13 @@ class Member extends DataObject implements TemplateGlobalProvider
         );
 
         // If editing own password, require confirmation of existing
-        if ($editingPassword && $this->ID == Member::currentUserID()) {
+        if ($editingPassword && $this->ID == Security::getCurrentUser()->ID) {
             $password->setRequireExistingPassword(true);
         }
 
         $password->setCanBeEmpty(true);
         $this->extend('updateMemberPasswordField', $password);
+
         return $password;
     }
 
@@ -850,23 +724,19 @@ class Member extends DataObject implements TemplateGlobalProvider
     /**
      * Returns the current logged in user
      *
+     * @deprecated 5.0.0 use Security::getCurrentUser()
+     *
      * @return Member
      */
     public static function currentUser()
     {
-        $id = Member::currentUserID();
+        Deprecation::notice(
+            '5.0.0',
+            'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
+        );
 
-        if ($id) {
-            return DataObject::get_by_id(Member::class, $id);
-        }
+        return Security::getCurrentUser();
     }
-
-    /**
-     * Allow override of the current user ID
-     *
-     * @var int|null Set to null to fallback to session, or an explicit ID
-     */
-    protected static $overrideID = null;
 
     /**
      * Temporarily act as the specified user, limited to a $callback, but
@@ -881,49 +751,52 @@ class Member extends DataObject implements TemplateGlobalProvider
      *
      * @param Member|null|int $member Member or member ID to log in as.
      * Set to null or 0 to act as a logged out user.
-     * @param $callback
+     * @param callable $callback
      */
     public static function actAs($member, $callback)
     {
-        $id = ($member instanceof Member ? $member->ID : $member) ?: 0;
-        $previousID = static::$overrideID;
-        static::$overrideID = $id;
+        $previousUser = Security::getCurrentUser();
+
+        // Transform ID to member
+        if (is_numeric($member)) {
+            $member = DataObject::get_by_id(Member::class, $member);
+        }
+        Security::setCurrentUser($member);
+
         try {
             return $callback();
         } finally {
-            static::$overrideID = $previousID;
+            Security::setCurrentUser($previousUser);
         }
     }
 
     /**
      * Get the ID of the current logged in user
      *
+     * @deprecated 5.0.0 use Security::getCurrentUser()
+     *
      * @return int Returns the ID of the current logged in user or 0.
      */
     public static function currentUserID()
     {
-        if (isset(static::$overrideID)) {
-            return static::$overrideID;
-        }
+        Deprecation::notice(
+            '5.0.0',
+            'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
+        );
 
-        $id = Session::get("loggedInAs");
-        if (!$id && !self::$_already_tried_to_auto_log_in) {
-            self::autoLogin();
-            $id = Session::get("loggedInAs");
+        if ($member = Security::getCurrentUser()) {
+            return $member->ID;
+        } else {
+            return 0;
         }
-
-        return is_numeric($id) ? $id : 0;
     }
 
-    private static $_already_tried_to_auto_log_in = false;
-
-
-    /*
-	 * Generate a random password, with randomiser to kick in if there's no words file on the
-	 * filesystem.
-	 *
-	 * @return string Returns a random password.
-	 */
+    /**
+     * Generate a random password, with randomiser to kick in if there's no words file on the
+     * filesystem.
+     *
+     * @return string Returns a random password.
+     */
     public static function create_new_password()
     {
         $words = Security::config()->uninherited('word_list');
@@ -932,16 +805,17 @@ class Member extends DataObject implements TemplateGlobalProvider
             $words = file($words);
 
             list($usec, $sec) = explode(' ', microtime());
-            srand($sec + ((float) $usec * 100000));
+            mt_srand($sec + ((float)$usec * 100000));
 
-            $word = trim($words[rand(0, sizeof($words)-1)]);
-            $number = rand(10, 999);
+            $word = trim($words[random_int(0, count($words) - 1)]);
+            $number = random_int(10, 999);
 
             return $word . $number;
         } else {
-            $random = rand();
+            $random = mt_rand();
             $string = md5($random);
             $output = substr($string, 0, 8);
+
             return $output;
         }
     }
@@ -958,7 +832,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
-        $identifierField = Member::config()->unique_identifier_field;
+        $identifierField = Member::config()->get('unique_identifier_field');
         if ($this->$identifierField) {
             // Note: Same logic as Member_Validator class
             $filter = [
@@ -971,12 +845,12 @@ class Member extends DataObject implements TemplateGlobalProvider
 
             if ($existingRecord) {
                 throw new ValidationException(_t(
-                    __CLASS__.'.ValidationIdentifierFailed',
+                    __CLASS__ . '.ValidationIdentifierFailed',
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
                     array(
-                        'id' => $existingRecord->ID,
-                        'name' => $identifierField,
+                        'id'    => $existingRecord->ID,
+                        'name'  => $identifierField,
                         'value' => $this->$identifierField
                     )
                 ));
@@ -985,16 +859,17 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
+        // @todo some developers use external tools, so emailing might be a good idea anyway
         if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
-            && $this->config()->notify_password_change
+            && static::config()->get('notify_password_change')
         ) {
             Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
-                ->setSubject(_t(__CLASS__.'.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
+                ->setSubject(_t(__CLASS__ . '.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
                 ->send();
         }
 
@@ -1002,7 +877,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         // Note that this only works with cleartext passwords, as we can't rehash
         // existing passwords.
         if ((!$this->ID && $this->Password) || $this->isChanged('Password')) {
-            //reset salt so that it gets regenerated - this will invalidate any persistant login cookies
+            //reset salt so that it gets regenerated - this will invalidate any persistent login cookies
             // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
             $this->Salt = '';
             // Password was changed: encrypt the password according the settings
@@ -1010,7 +885,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                 $this->Password, // this is assumed to be cleartext
                 $this->Salt,
                 ($this->PasswordEncryption) ?
-                    $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
+                    $this->PasswordEncryption : Security::config()->get('password_encryption_algorithm'),
                 $this
             );
 
@@ -1022,8 +897,8 @@ class Member extends DataObject implements TemplateGlobalProvider
             // If we haven't manually set a password expiry
             if (!$this->isChanged('PasswordExpiry')) {
                 // then set it for us
-                if (self::config()->password_expiry_days) {
-                    $this->PasswordExpiry = date('Y-m-d', time() + 86400 * self::config()->password_expiry_days);
+                if (static::config()->get('password_expiry_days')) {
+                    $this->PasswordExpiry = date('Y-m-d', time() + 86400 * static::config()->get('password_expiry_days'));
                 } else {
                     $this->PasswordExpiry = null;
                 }
@@ -1044,7 +919,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         Permission::reset();
 
-        if ($this->isChanged('Password')) {
+        if ($this->isChanged('Password') && static::config()->get('password_logging_enabled')) {
             MemberPassword::log($this);
         }
     }
@@ -1068,6 +943,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $password->delete();
             $password->destroy();
         }
+
         return $this;
     }
 
@@ -1086,9 +962,10 @@ class Member extends DataObject implements TemplateGlobalProvider
         }
 
         // If there are no admin groups in this set then it's ok
-            $adminGroups = Permission::get_groups_by_permission('ADMIN');
-            $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-            return count(array_intersect($ids, $adminGroupIDs)) == 0;
+        $adminGroups = Permission::get_groups_by_permission('ADMIN');
+        $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
+
+        return count(array_intersect($ids, $adminGroupIDs)) == 0;
     }
 
 
@@ -1131,7 +1008,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         } elseif ($group instanceof Group) {
             $groupCheckObj = $group;
         } else {
-            user_error('Member::inGroup(): Wrong format for $group parameter', E_USER_ERROR);
+            throw new InvalidArgumentException('Member::inGroup(): Wrong format for $group parameter');
         }
 
         if (!$groupCheckObj) {
@@ -1199,10 +1076,17 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
+        Deprecation::notice('5.0', 'Use Member.title_format config instead');
         if (!is_array($columns)) {
             $columns = array($columns);
         }
-        self::config()->title_format = array('columns' => $columns, 'sep' => $sep);
+        self::config()->set(
+            'title_format',
+            [
+                'columns' => $columns,
+                'sep' => $sep
+            ]
+        );
     }
 
     //------------------- HELPER METHODS -----------------------------------//
@@ -1219,13 +1103,14 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getTitle()
     {
-        $format = $this->config()->title_format;
+        $format = static::config()->get('title_format');
         if ($format) {
             $values = array();
             foreach ($format['columns'] as $col) {
                 $values[] = $this->getField($col);
             }
-            return join($format['sep'], $values);
+
+            return implode($format['sep'], $values);
         }
         if ($this->getField('ID') === 0) {
             return $this->getField('Surname');
@@ -1250,25 +1135,24 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function get_title_sql()
     {
-        // This should be abstracted to SSDatabase concatOperator or similar.
-        $op = (DB::get_conn() instanceof MSSQLDatabase) ? " + " : " || ";
 
         // Get title_format with fallback to default
-        $format = static::config()->title_format;
+        $format = static::config()->get('title_format');
         if (!$format) {
             $format = [
                 'columns' => ['Surname', 'FirstName'],
-                'sep' => ' ',
+                'sep'     => ' ',
             ];
         }
 
-            $columnsWithTablename = array();
+        $columnsWithTablename = array();
         foreach ($format['columns'] as $column) {
             $columnsWithTablename[] = static::getSchema()->sqlColumnForField(__CLASS__, $column);
         }
 
         $sepSQL = Convert::raw2sql($format['sep'], true);
-        return "(".join(" $op $sepSQL $op ", $columnsWithTablename).")";
+        $op = DB::get_conn()->concatOperator();
+        return "(" . join(" $op $sepSQL $op ", $columnsWithTablename) . ")";
     }
 
 
@@ -1339,6 +1223,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($locale) {
             return $locale;
         }
+
         return i18n::get_locale();
     }
 
@@ -1415,16 +1300,18 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // No groups, return all Members
         if (!$groupIDList) {
-            return Member::get()->sort(array('Surname'=>'ASC', 'FirstName'=>'ASC'))->map();
+            return static::get()->sort(array('Surname' => 'ASC', 'FirstName' => 'ASC'))->map();
         }
 
         $membersList = new ArrayList();
         // This is a bit ineffective, but follow the ORM style
+        /** @var Group $group */
         foreach (Group::get()->byIDs($groupIDList) as $group) {
             $membersList->merge($group->Members());
         }
 
         $membersList->removeDuplicates('ID');
+
         return $membersList->map();
     }
 
@@ -1446,7 +1333,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             return ArrayList::create()->map();
         }
 
-        if (!$groups || $groups->Count() == 0) {
+        if (count($groups) == 0) {
             $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 
             if (class_exists(CMSMain::class)) {
@@ -1479,7 +1366,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         }
 
         /** @skipUpgrade */
-        $members = Member::get()
+        $members = static::get()
             ->innerJoin("Group_Members", '"Group_Members"."MemberID" = "Member"."ID"')
             ->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
         if ($groupIDList) {
@@ -1539,12 +1426,12 @@ class Member extends DataObject implements TemplateGlobalProvider
 
             $mainFields->replaceField('Locale', new DropdownField(
                 "Locale",
-                _t(__CLASS__.'.INTERFACELANG', "Interface Language", 'Language of the CMS'),
+                _t(__CLASS__ . '.INTERFACELANG', "Interface Language", 'Language of the CMS'),
                 i18n::getSources()->getKnownLocales()
             ));
-            $mainFields->removeByName($this->config()->hidden_fields);
+            $mainFields->removeByName(static::config()->get('hidden_fields'));
 
-            if (! $this->config()->lock_out_after_incorrect_logins) {
+            if (!static::config()->get('lock_out_after_incorrect_logins')) {
                 $mainFields->removeByName('FailedLoginCount');
             }
 
@@ -1570,7 +1457,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                         ->setSource($groupsMap)
                         ->setAttribute(
                             'data-placeholder',
-                            _t(__CLASS__.'.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
+                            _t(__CLASS__ . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
                         )
                 );
 
@@ -1609,21 +1496,22 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         $labels = parent::fieldLabels($includerelations);
 
-        $labels['FirstName'] = _t(__CLASS__.'.FIRSTNAME', 'First Name');
-        $labels['Surname'] = _t(__CLASS__.'.SURNAME', 'Surname');
+        $labels['FirstName'] = _t(__CLASS__ . '.FIRSTNAME', 'First Name');
+        $labels['Surname'] = _t(__CLASS__ . '.SURNAME', 'Surname');
         /** @skipUpgrade */
-        $labels['Email'] = _t(__CLASS__.'.EMAIL', 'Email');
-        $labels['Password'] = _t(__CLASS__.'.db_Password', 'Password');
-        $labels['PasswordExpiry'] = _t(__CLASS__.'.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
-        $labels['LockedOutUntil'] = _t(__CLASS__.'.db_LockedOutUntil', 'Locked out until', 'Security related date');
-        $labels['Locale'] = _t(__CLASS__.'.db_Locale', 'Interface Locale');
+        $labels['Email'] = _t(__CLASS__ . '.EMAIL', 'Email');
+        $labels['Password'] = _t(__CLASS__ . '.db_Password', 'Password');
+        $labels['PasswordExpiry'] = _t(__CLASS__ . '.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
+        $labels['LockedOutUntil'] = _t(__CLASS__ . '.db_LockedOutUntil', 'Locked out until', 'Security related date');
+        $labels['Locale'] = _t(__CLASS__ . '.db_Locale', 'Interface Locale');
         if ($includerelations) {
             $labels['Groups'] = _t(
-                __CLASS__.'.belongs_many_many_Groups',
+                __CLASS__ . '.belongs_many_many_Groups',
                 'Groups',
                 'Security Groups this member belongs to'
             );
         }
+
         return $labels;
     }
 
@@ -1639,7 +1527,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         //get member
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1655,6 +1543,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($this->ID == $member->ID) {
             return true;
         }
+
         //standard check
         return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
     }
@@ -1670,7 +1559,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         //get member
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1691,9 +1580,11 @@ class Member extends DataObject implements TemplateGlobalProvider
         if ($this->ID == $member->ID) {
             return true;
         }
+
         //standard check
         return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
     }
+
     /**
      * Users can edit their own record.
      * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
@@ -1704,7 +1595,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function canDelete($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         //check for extensions, we do this first as they can overrule everything
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1726,10 +1617,11 @@ class Member extends DataObject implements TemplateGlobalProvider
         // this is a hack because what this should do is to stop a user
         // deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
         if (Permission::checkMember($this, 'ADMIN')) {
-            if (! Permission::checkMember($member, 'ADMIN')) {
+            if (!Permission::checkMember($member, 'ADMIN')) {
                 return false;
             }
         }
+
         //standard check
         return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
     }
@@ -1782,13 +1674,14 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function registerFailedLogin()
     {
-        if (self::config()->lock_out_after_incorrect_logins) {
+        $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
+        if ($lockOutAfterCount) {
             // Keep a tally of the number of failed log-ins so that we can lock people out
             $this->FailedLoginCount = $this->FailedLoginCount + 1;
 
-            if ($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
-                $lockoutMins = self::config()->lock_out_delay_mins;
-                $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() + $lockoutMins*60);
+            if ($this->FailedLoginCount >= $lockOutAfterCount) {
+                $lockoutMins = self::config()->get('lock_out_delay_mins');
+                $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() + $lockoutMins * 60);
                 $this->FailedLoginCount = 0;
             }
         }
@@ -1801,7 +1694,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function registerSuccessfulLogin()
     {
-        if (self::config()->lock_out_after_incorrect_logins) {
+        if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
             $this->write();
@@ -1833,13 +1726,5 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // If can't find a suitable editor, just default to cms
         return $currentName ? $currentName : 'cms';
-    }
-
-    public static function get_template_global_variables()
-    {
-        return array(
-            'CurrentMember' => 'currentUser',
-            'currentUser',
-        );
     }
 }

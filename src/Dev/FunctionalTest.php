@@ -5,8 +5,10 @@ namespace SilverStripe\Dev;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use PHPUnit_Framework_AssertionFailedError;
@@ -103,6 +105,8 @@ class FunctionalTest extends SapphireTest
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
         BasicAuth::protect_entire_site(false);
+
+        $this->logOut();
 
         SecurityToken::disable();
     }
@@ -392,24 +396,6 @@ class FunctionalTest extends SapphireTest
             . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'";
 
         $this->assertTrue($expectedMatches == $actuals, $message);
-    }
-
-    /**
-     * Log in as the given member
-     *
-     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
-     */
-    public function logInAs($member)
-    {
-        if (is_object($member)) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = $this->idFromFixture('SilverStripe\\Security\\Member', $member);
-        }
-
-        $this->session()->inst_set('loggedInAs', $memberID);
     }
 
     /**

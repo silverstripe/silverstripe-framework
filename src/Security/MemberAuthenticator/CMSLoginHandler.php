@@ -1,27 +1,28 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
+use SilverStripe\Security\CMSSecurity;
+use SilverStripe\Security\Security;
 
-class CMSMemberLoginHandler extends MemberLoginHandler
+class CMSLoginHandler extends LoginHandler
 {
-    /**
-     * Login form handler method
-     *
-     * This method is called when the user clicks on "Log in"
-     *
-     * @param array $data Submitted data
-     * @return HTTPResponse
-     */
-    public function dologin($data)
-    {
-        if ($this->performLogin($data)) {
-            return $this->logInUserAndRedirect($data);
-        }
+    private static $allowed_actions = [
+        'LoginForm'
+    ];
 
-        return $this->redirectBackToForm();
+    /**
+     * Return the CMSMemberLoginForm form
+     */
+    public function loginForm()
+    {
+        return CMSMemberLoginForm::create(
+            $this,
+            get_class($this->authenticator),
+            'LoginForm'
+        );
     }
 
     public function redirectBackToForm()
@@ -75,13 +76,12 @@ PHP
     /**
      * Send user to the right location after login
      *
-     * @param array $data
      * @return HTTPResponse
      */
-    protected function logInUserAndRedirect($data)
+    protected function redirectAfterSuccessfulLogin()
     {
         // Check password expiry
-        if (Member::currentUser()->isPasswordExpired()) {
+        if (Security::getCurrentUser()->isPasswordExpired()) {
             // Redirect the user to the external password change form if necessary
             return $this->redirectToChangePassword();
         }

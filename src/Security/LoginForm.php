@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 

@@ -10,6 +10,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 
@@ -249,7 +250,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
             "Header" => $header,
             "ItemRows" => $itemRows,
             "Datetime" => DBDatetime::now(),
-            "Member" => Member::currentUser(),
+            "Member" => Security::getCurrentUser(),
         ));
 
         return $ret;

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\RequiredFields;
 
 /**
  * Member Validator

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Core\Config\Config;
 use ReflectionClass;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Allows pluggable password encryption.

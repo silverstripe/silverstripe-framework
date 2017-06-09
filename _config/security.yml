@@ -1,4 +1,35 @@
-SilverStripe\Security\MemberLoginForm:
-  required_fields:
-    - Email
-    - Password
+---
+Name: coreauthentication
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
+    properties:
+      SessionVariable: loggedInAs
+  SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler:
+    properties:
+      TokenCookieName: alc_enc
+      DeviceCookieName: alc_device
+      CascadeInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+  SilverStripe\Security\AuthenticationHandler:
+    class: SilverStripe\Security\RequestAuthenticationHandler
+    properties:
+      Handlers:
+        session: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+        alc: %$SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
+---
+Name: coresecurity
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\AuthenticationRequestFilter:
+    properties:
+      AuthenticationHandler: %$SilverStripe\Security\AuthenticationHandler
+  SilverStripe\Control\RequestProcessor:
+    properties:
+      filters:
+        - %$SilverStripe\Security\AuthenticationRequestFilter
+  SilverStripe\Security\Security:
+    properties:
+      Authenticators:
+        default: %$SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
+        cms: %$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator
+  SilverStripe\Security\IdentityStore: %$SilverStripe\Security\AuthenticationHandler

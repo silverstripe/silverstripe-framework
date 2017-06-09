@@ -312,7 +312,7 @@ class ViewableData implements IteratorAggregate
      */
     public function castingHelper($field)
     {
-        $specs = $this->config()->get('casting');
+        $specs = static::config()->get('casting');
         if (isset($specs[$field])) {
             return $specs[$field];
         }

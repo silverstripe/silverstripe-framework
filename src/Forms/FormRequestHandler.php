@@ -228,23 +228,23 @@ class FormRequestHandler extends RequestHandler
             // First, try a handler method on the controller (has been checked for allowed_actions above already)
             $controller = $this->form->getController();
             if ($controller && $controller->hasMethod($funcName)) {
-                return $controller->$funcName($vars, $this->form, $request);
+                return $controller->$funcName($vars, $this->form, $request, $this);
             }
 
             // Otherwise, try a handler method on the form request handler.
             if ($this->hasMethod($funcName)) {
-                return $this->$funcName($vars, $this->form, $request);
+                return $this->$funcName($vars, $this->form, $request, $this);
             }
 
             // Otherwise, try a handler method on the form itself
             if ($this->form->hasMethod($funcName)) {
-                return $this->form->$funcName($vars, $this->form, $request);
+                return $this->form->$funcName($vars, $this->form, $request, $this);
             }
 
             // Check for inline actions
             $field = $this->checkFieldsForAction($this->form->Fields(), $funcName);
             if ($field) {
-                return $field->$funcName($vars, $this->form, $request);
+                return $field->$funcName($vars, $this->form, $request, $this);
             }
         } catch (ValidationException $e) {
             // The ValdiationResult contains all the relevant metadata

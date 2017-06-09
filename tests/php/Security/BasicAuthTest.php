@@ -15,7 +15,7 @@ use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission;
 class BasicAuthTest extends FunctionalTest
 {
 
-    static $original_unique_identifier_field;
+    protected static $original_unique_identifier_field;
 
     protected static $fixture_file = 'BasicAuthTest.yml';
 
@@ -30,7 +30,7 @@ class BasicAuthTest extends FunctionalTest
 
         // Fixtures assume Email is the field used to identify the log in identity
         Member::config()->unique_identifier_field = 'Email';
-        Security::$force_database_is_ready = true; // Prevents Member test subclasses breaking ready test
+        Security::force_database_is_ready(true); // Prevents Member test subclasses breaking ready test
         Member::config()->lock_out_after_incorrect_logins = 10;
     }
 
@@ -42,7 +42,7 @@ class BasicAuthTest extends FunctionalTest
         unset($_SERVER['PHP_AUTH_USER']);
         unset($_SERVER['PHP_AUTH_PW']);
 
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(401, $response->getStatusCode());
 
         $_SERVER['PHP_AUTH_USER'] = $origUser;
@@ -56,13 +56,13 @@ class BasicAuthTest extends FunctionalTest
 
         unset($_SERVER['PHP_AUTH_USER']);
         unset($_SERVER['PHP_AUTH_PW']);
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
         $this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
 
         $_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
         $this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
 
@@ -77,17 +77,17 @@ class BasicAuthTest extends FunctionalTest
 
         $_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'wrongpassword';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(401, $response->getStatusCode(), 'Invalid users dont have access');
 
         $_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(401, $response->getStatusCode(), 'Valid user without required permission has no access');
 
         $_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(200, $response->getStatusCode(), 'Valid user with required permission has access');
 
         $_SERVER['PHP_AUTH_USER'] = $origUser;
@@ -101,17 +101,17 @@ class BasicAuthTest extends FunctionalTest
 
         $_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'wrongpassword';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(401, $response->getStatusCode(), 'Invalid users dont have access');
 
         $_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(200, $response->getStatusCode(), 'All valid users have access');
 
         $_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $this->assertEquals(200, $response->getStatusCode(), 'All valid users have access');
 
         $_SERVER['PHP_AUTH_USER'] = $origUser;
@@ -127,19 +127,19 @@ class BasicAuthTest extends FunctionalTest
         // First failed attempt
         $_SERVER['PHP_AUTH_USER'] = 'failedlogin@test.com';
         $_SERVER['PHP_AUTH_PW'] = 'test';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
         $this->assertEquals(1, $check->FailedLoginCount);
 
         // Second failed attempt
         $_SERVER['PHP_AUTH_PW'] = 'testwrong';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
         $this->assertEquals(2, $check->FailedLoginCount);
 
         // successful basic auth should reset failed login count
         $_SERVER['PHP_AUTH_PW'] = 'Password';
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', null, $_SESSION, null, null, $_SERVER);
         $check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
         $this->assertEquals(0, $check->FailedLoginCount);
     }

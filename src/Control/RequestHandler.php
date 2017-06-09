@@ -297,6 +297,20 @@ class RequestHandler extends ViewableData
     }
 
     /**
+     * @param string $link
+     * @return string
+     */
+    protected function addBackURLParam($link)
+    {
+        $backURL = $this->getBackURL();
+        if ($backURL) {
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+        }
+
+        return $link;
+    }
+
+    /**
      * Given a request, and an action name, call that action name on this RequestHandler
      *
      * Must not raise HTTPResponse_Exceptions - instead it should return

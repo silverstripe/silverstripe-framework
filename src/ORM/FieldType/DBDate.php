@@ -9,6 +9,7 @@ use SilverStripe\Forms\DateField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Represents a date field.
@@ -250,7 +251,7 @@ class DBDate extends DBField
     public function FormatFromSettings($member = null)
     {
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // Fall back to nice

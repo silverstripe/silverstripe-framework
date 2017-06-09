@@ -23,6 +23,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
 class ControllerTest extends FunctionalTest
@@ -203,7 +204,7 @@ class ControllerTest extends FunctionalTest
             'if action is not a method but rather a template discovered by naming convention'
         );
 
-        $this->session()->inst_set('loggedInAs', $adminUser->ID);
+        Security::setCurrentUser($adminUser);
         $response = $this->get("AccessSecuredController/templateaction");
         $this->assertEquals(
             200,
@@ -211,8 +212,8 @@ class ControllerTest extends FunctionalTest
             'Access granted for logged in admin on action with $allowed_actions on defining controller, ' .
             'if action is not a method but rather a template discovered by naming convention'
         );
-        $this->session()->inst_set('loggedInAs', null);
 
+        Security::setCurrentUser(null);
         $response = $this->get("AccessSecuredController/adminonly");
         $this->assertEquals(
             403,
@@ -236,15 +237,15 @@ class ControllerTest extends FunctionalTest
             "Access denied to protected method even if its listed in allowed_actions"
         );
 
-        $this->session()->inst_set('loggedInAs', $adminUser->ID);
+        Security::setCurrentUser($adminUser);
         $response = $this->get("AccessSecuredController/adminonly");
         $this->assertEquals(
             200,
             $response->getStatusCode(),
             "Permission codes are respected when set in \$allowed_actions"
         );
-        $this->session()->inst_set('loggedInAs', null);
 
+        Security::setCurrentUser(null);
         $response = $this->get('AccessBaseController/extensionmethod1');
         $this->assertEquals(
             200,
@@ -285,7 +286,7 @@ class ControllerTest extends FunctionalTest
             "and doesn't satisfy checks"
         );
 
-        $this->session()->inst_set('loggedInAs', $adminUser->ID);
+        Security::setCurrentUser($adminUser);
         $response = $this->get('IndexSecuredController/');
         $this->assertEquals(
             200,
@@ -293,7 +294,7 @@ class ControllerTest extends FunctionalTest
             "Access granted when index action is limited through allowed_actions, " .
             "and does satisfy checks"
         );
-        $this->session()->inst_set('loggedInAs', null);
+        Security::setCurrentUser(null);
     }
 
     public function testWildcardAllowedActions()

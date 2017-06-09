@@ -12,12 +12,6 @@ use SilverStripe\View\Parsers\ShortcodeParser;
  * Here you can make different settings for the Framework module (the core
  * module).
  *
- * For example you can register the authentication methods you wish to use
- * on your site, e.g. to register the OpenID authentication method type
- *
- * <code>
- * Authenticator::register_authenticator('OpenIDAuthenticator');
- * </code>
  */
 
 ShortcodeParser::get('default')
