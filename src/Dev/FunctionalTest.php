@@ -399,37 +399,6 @@ class FunctionalTest extends SapphireTest
     }
 
     /**
-     * Log in as the given member
-     *
-     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
-     */
-    public function logInAs($member)
-    {
-        if (is_numeric($member)) {
-            $member = DataObject::get_by_id(Member::class, $member);
-        } elseif (!is_object($member)) {
-            $member = $this->objFromFixture('SilverStripe\\Security\\Member', $member);
-        }
-
-        $this->logIn($member);
-    }
-
-    /**
-     * Log out the member
-     *
-     */
-    public function logOut()
-    {
-        $this->session()->inst_clear('loggedInAs');
-        Security::setCurrentUser(null);
-    }
-
-    public function logIn($member)
-    {
-        Security::setCurrentUser($member);
-    }
-
-    /**
      * Use the draft (stage) site for testing.
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.

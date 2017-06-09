@@ -1251,8 +1251,31 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
             $this->cache_generatedMembers[$permCode] = $member;
         }
-        Injector::inst()->get(IdentityStore::class)->logIn($member);
+        $this->logInAs($member);
         return $member->ID;
+    }
+
+    /**
+     * Log in as the given member
+     *
+     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
+     */
+    public function logInAs($member)
+    {
+        if (is_numeric($member)) {
+            $member = DataObject::get_by_id(Member::class, $member);
+        } elseif (!is_object($member)) {
+            $member = $this->objFromFixture(Member::class, $member);
+        }
+        Injector::inst()->get(IdentityStore::class)->logIn($member);
+    }
+
+    /**
+     * Log out the current user
+     */
+    public function logOut()
+    {
+        Injector::inst()->get(IdentityStore::class)->logOut();
     }
 
     /**

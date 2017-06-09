@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\Group;
@@ -1072,7 +1073,11 @@ class MemberTest extends FunctionalTest
         );
         $this->assertContains($message, $response->getBody());
 
-        $this->logOut();
+        // Test that removing session but not cookie keeps user
+        /** @var SessionAuthenticationHandler $sessionHandler */
+        $sessionHandler = Injector::inst()->get(SessionAuthenticationHandler::class);
+        $sessionHandler->logOut();
+        Security::setCurrentUser(null);
 
         // Accessing the login page from the second device
         $response = $this->get(
