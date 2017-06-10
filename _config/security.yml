@@ -31,5 +31,8 @@ SilverStripe\Core\Injector\Injector:
     properties:
       Authenticators:
         default: %$SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
+  SilverStripe\Security\CMSSecurity:
+    properties:
+      Authenticators:
         cms: %$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator
   SilverStripe\Security\IdentityStore: %$SilverStripe\Security\AuthenticationHandler

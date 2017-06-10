@@ -165,14 +165,14 @@ PHP
      *
      * @return bool
      */
-    public static function enabled()
+    public function enabled()
     {
         // Disable shortcut
         if (!static::config()->get('reauth_enabled')) {
             return false;
         }
 
-        return count(Security::singleton()->getApplicableAuthenticators(Authenticator::CMS_LOGIN)) > 0;
+        return count($this->getApplicableAuthenticators(Authenticator::CMS_LOGIN)) > 0;
     }
 
     /**
