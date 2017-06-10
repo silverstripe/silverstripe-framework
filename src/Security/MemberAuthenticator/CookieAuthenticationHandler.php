@@ -81,7 +81,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      *
      * @return IdentityStore
      */
-    public function getCascadeLogInTo()
+    public function getCascadeInTo()
     {
         return $this->cascadeInTo;
     }
@@ -92,7 +92,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param IdentityStore $cascadeInTo
      * @return $this
      */
-    public function setCascadeLogInTo(IdentityStore $cascadeInTo)
+    public function setCascadeInTo(IdentityStore $cascadeInTo)
     {
         $this->cascadeInTo = $cascadeInTo;
         return $this;
