@@ -470,6 +470,8 @@ class FormField extends RequestHandler {
 		if($this->Message()) {
 			$classes[] .= 'holder-' . $this->MessageType();
 		}
+		
+		$this->extend('updateExtraClass', $classes);
 
 		return implode(' ', $classes);
 	}
