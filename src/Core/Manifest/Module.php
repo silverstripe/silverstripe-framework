@@ -143,7 +143,8 @@ class Module implements Serializable
             $content = file_get_contents($path);
             $result = json_decode($content, true);
             if (json_last_error()) {
-                throw new Exception(json_last_error_msg());
+                $errorMessage = json_last_error_msg();
+                throw new Exception("$path: $errorMessage");
             }
             $this->composerData = $result;
         }
