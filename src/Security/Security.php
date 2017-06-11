@@ -356,7 +356,7 @@ class Security extends Controller implements TemplateGlobalProvider
                     _t('SilverStripe\\CMS\\Controllers\\ContentController.NOTLOGGEDIN', 'Not logged in')
                 );
                 // Tell the CMS to allow re-authentication
-                if (CMSSecurity::enabled()) {
+                if (CMSSecurity::singleton()->enabled()) {
                     $response->addHeader('X-Reauthenticate', '1');
                 }
             }
