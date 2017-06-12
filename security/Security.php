@@ -873,9 +873,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function check_default_admin($username, $password) {
 		return (
-			self::$default_username === $username
+			self::has_default_admin()
+			&& self::$default_username === $username
 			&& self::$default_password === $password
-			&& self::has_default_admin()
 		);
 	}
 
