@@ -51,7 +51,9 @@ class MemberAuthenticator extends Authenticator {
 		if($asDefaultAdmin) {
 			// If logging is as default admin, ensure record is setup correctly
 			$member = Member::default_admin();
-			$success = !$member->isLockedOut() && Security::check_default_admin($email, $data['Password']);
+			if($member && !is_null($member)) {
+				$success = !$member->isLockedOut() && Security::check_default_admin($email, $data['Password']);
+			}
 			//protect against failed login
 			if($success) {
 				return $member;
