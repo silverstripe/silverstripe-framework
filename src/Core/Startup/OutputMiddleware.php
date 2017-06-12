@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Startup;
 
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 
 /**
  * Emits response to the browser
@@ -26,7 +27,11 @@ class OutputMiddleware
     public function __invoke(callable $next)
     {
         /** @var HTTPResponse $response */
-        $response = call_user_func($next);
+        try {
+            $response = call_user_func($next);
+        } catch (HTTPResponse_Exception $exception) {
+            $response = $exception->getResponse();
+        }
         if ($response) {
             $response->output();
         } elseif ($this->defaultResponse) {

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
 use ArrayAccess;
@@ -1053,6 +1054,9 @@ class HTTPRequest implements ArrayAccess
      */
     public function getSession()
     {
+        if (empty($this->session)) {
+            throw new BadMethodCallException("No session available for this HTTPRequest");
+        }
         return $this->session;
     }
 
