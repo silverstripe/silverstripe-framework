@@ -53,6 +53,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected static $controller_stack = array();
 
     /**
+     * Assign templates for this controller.
+     * Map of action => template name
+     *
+     * @var array
+     */
+    protected $templates = [];
+
+    /**
      * @var bool
      */
     protected $basicAuthEnabled = true;
@@ -507,7 +515,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $template = $this->getViewer($this->getAction());
 
         // if the object is already customised (e.g. through Controller->run()), use it
-        $obj = ($this->customisedObj) ? $this->customisedObj : $this;
+        $obj = $this->getCustomisedObj() ?: $this;
 
         if ($params) {
             $obj = $this->customise($params);

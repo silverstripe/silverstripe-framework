@@ -263,7 +263,7 @@ class Email extends ViewableData
     public function setSwiftMessage($swiftMessage)
     {
         $swiftMessage->setDate(DBDatetime::now()->getTimestamp());
-        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->admin_email)) {
+        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
             $swiftMessage->setFrom($defaultFrom);
         }
         $this->swiftMessage = $swiftMessage;
@@ -304,7 +304,7 @@ class Email extends ViewableData
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getSender()
     {

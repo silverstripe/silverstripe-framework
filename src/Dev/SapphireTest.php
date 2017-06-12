@@ -33,12 +33,10 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
@@ -183,12 +181,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      *
      * @return boolean
      */
-    public static function is_running_test()
+    protected static function is_running_test()
     {
         return self::$is_running_test;
     }
 
-    public static function set_is_running_test($bool)
+    protected static function set_is_running_test($bool)
     {
         self::$is_running_test = $bool;
     }

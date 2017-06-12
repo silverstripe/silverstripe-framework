@@ -528,7 +528,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $originalClass = $this->ClassName;
 
         /** @var DataObject $newInstance */
-        $newInstance = Injector::inst()->create($newClassName, $this->record, false, $this->model);
+        $newInstance = Injector::inst()->create($newClassName, $this->record, false);
 
         // Modify ClassName
         if ($newClassName != $originalClass) {
@@ -1526,7 +1526,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
 
             if (empty($component)) {
-                $component = $this->model->$class->newObject();
+                $component = Injector::inst()->create($class);
                 if ($polymorphic) {
                     $component->{$joinField.'ID'} = $this->ID;
                     $component->{$joinField.'Class'} = static::class;
@@ -1580,10 +1580,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $result = PolymorphicHasManyList::create($componentClass, $joinField, static::class);
         } else {
             $result = HasManyList::create($componentClass, $joinField);
-        }
-
-        if ($this->model) {
-            $result->setDataModel($this->model);
         }
 
         return $result
@@ -1707,9 +1703,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $joinField = "{$remoteRelation}ID";
                 $componentClass = $schema->classForField($remoteClass, $joinField);
                 $result = HasManyList::create($componentClass, $joinField);
-                if ($this->model) {
-                    $result->setDataModel($this->model);
-                }
                 return $result
                     ->setDataQueryParam($this->getInheritableQueryParams())
                     ->forForeignID($this->ID);
@@ -1753,9 +1746,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     $manyMany['childField'], // Reversed parent / child field
                     $extraFields
                 );
-                if ($this->model) {
-                    $result->setDataModel($this->model);
-                }
                 $this->extend('updateManyManyComponents', $result);
 
                 // If this is called on a singleton, then we return an 'orphaned relation' that can have the
@@ -1813,10 +1803,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             /** @var DataQuery $query */
             $query->setQueryParam('Component.ExtraFields', $extraFields);
         });
-
-        if ($this->model) {
-            $result->setDataModel($this->model);
-        }
 
         $this->extend('updateManyManyComponents', $result);
 
@@ -3126,7 +3112,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (!$hasData) {
                 $className = static::class;
                 foreach ($defaultRecords as $record) {
-                    $obj = $this->model->$className->newObject($record);
+                    $obj = Injector::inst()->create($className, $record);
                     $obj->write();
                 }
                 DB::alteration_message("Added default records to $className table", "created");

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
@@ -105,10 +106,11 @@ interface Authenticator
      * Method to authenticate an user.
      *
      * @param array $data Raw data to authenticate the user.
+     * @param HTTPRequest $request
      * @param ValidationResult $result A validationresult which is either valid or contains the error message(s)
      * @return Member The matched member, or null if the authentication fails
      */
-    public function authenticate($data, ValidationResult &$result = null);
+    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null);
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
@@ -31,21 +32,16 @@ class MemberAuthenticator implements Authenticator
             | Authenticator::RESET_PASSWORD | Authenticator::CHECK_PASSWORD;
     }
 
-    /**
-     * @param array $data
-     * @param null|ValidationResult $result
-     * @return null|Member
-     */
-    public function authenticate($data, ValidationResult &$result = null)
+    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null)
     {
         // Find authenticated member
         $member = $this->authenticateMember($data, $result);
 
         // Optionally record every login attempt as a {@link LoginAttempt} object
-        $this->recordLoginAttempt($data, $member, $result->isValid());
+        $this->recordLoginAttempt($data, $request, $member, $result->isValid());
 
         if ($member) {
-            Session::clear('BackURL');
+            $request->getSession()->clear('BackURL');
         }
 
         return $result->isValid() ? $member : null;
@@ -73,14 +69,14 @@ class MemberAuthenticator implements Authenticator
             if ($result->isValid()) {
                 // Check if default admin credentials are correct
                 if (DefaultAdminService::isDefaultAdminCredentials($email, $data['Password'])) {
-                    return $member;
-                } else {
-                    $result->addError(_t(
-                        'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                        "The provided details don't seem to be correct. Please try again."
-                    ));
-                }
+                return $member;
+            } else {
+                $result->addError(_t(
+                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                    "The provided details don't seem to be correct. Please try again."
+                ));
             }
+        }
         }
 
         // Attempt to identify user by email
@@ -104,13 +100,13 @@ class MemberAuthenticator implements Authenticator
                 $member->registerFailedLogin();
             }
         } elseif ($member) {
-            $member->registerSuccessfulLogin();
-        } else {
-            // A non-existing member occurred. This will make the result "valid" so let's invalidate
-            $result->addError(_t(
-                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                "The provided details don't seem to be correct. Please try again."
-            ));
+                $member->registerSuccessfulLogin();
+            } else {
+                // A non-existing member occurred. This will make the result "valid" so let's invalidate
+                $result->addError(_t(
+                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                    "The provided details don't seem to be correct. Please try again."
+                ));
             return null;
         }
 
@@ -144,7 +140,7 @@ class MemberAuthenticator implements Authenticator
         // Check a password is set on this member
         if (empty($member->Password) && $member->exists()) {
             $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
-        }
+            }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
         if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {
@@ -163,10 +159,11 @@ class MemberAuthenticator implements Authenticator
      * TODO We could handle this with an extension
      *
      * @param array $data
+     * @param HTTPRequest $request
      * @param Member $member
      * @param boolean $success
      */
-    protected function recordLoginAttempt($data, $member, $success)
+    protected function recordLoginAttempt($data, HTTPRequest $request, $member, $success)
     {
         if (!Security::config()->get('login_recording')) {
             return;
@@ -193,15 +190,16 @@ class MemberAuthenticator implements Authenticator
             if ($member) {
                 // Audit logging hook
                 $attempt->MemberID = $member->ID;
-                $member->extend('authenticationFailed');
+                $member->extend('authenticationFailed', $data, $request);
             } else {
                 // Audit logging hook
-                Member::singleton()->extend('authenticationFailedUnknownUser', $data);
+                Member::singleton()
+                   ->extend('authenticationFailedUnknownUser', $data, $request);
             }
         }
 
         $attempt->Email = $email;
-        $attempt->IP = Controller::curr()->getRequest()->getIP();
+        $attempt->IP = $request->getIP();
         $attempt->write();
     }
 

@@ -385,7 +385,7 @@ class ViewableData implements IteratorAggregate
             $template = new SSViewer($template);
         }
 
-        $data = ($this->customisedObject) ? $this->customisedObject : $this;
+        $data = $this->getCustomisedObj() ?: $this;
 
         if ($customFields instanceof ViewableData) {
             $data = $data->customise($customFields);

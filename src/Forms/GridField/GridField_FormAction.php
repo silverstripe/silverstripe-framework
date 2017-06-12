@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Session;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 

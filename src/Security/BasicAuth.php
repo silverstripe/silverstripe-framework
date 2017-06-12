@@ -31,6 +31,13 @@ class BasicAuth
     private static $entire_site_protected = false;
 
     /**
+     * Set to true to ignore in CLI mode
+     *
+     * @var bool
+     */
+    private static $ignore_cli = true;
+
+    /**
      * @config
      * @var String|array Holds a {@link Permission} code that is required
      * when calling {@link protect_site_if_necessary()}. Set this value through
@@ -65,8 +72,7 @@ class BasicAuth
         $permissionCode = null,
         $tryUsingSessionLogin = true
     ) {
-        $isRunningTests = (class_exists(SapphireTest::class, false) && SapphireTest::is_running_test());
-        if (!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
+        if (!Security::database_is_ready() || (Director::is_cli() && static::config()->get('ignore_cli'))) {
             return true;
         }
 
@@ -96,7 +102,7 @@ class BasicAuth
                 $member = $authenticator->authenticate([
                     'Email' => $request->getHeader('PHP_AUTH_USER'),
                     'Password' => $request->getHeader('PHP_AUTH_PW'),
-                ]);
+                ], $request);
                 if ($member instanceof Member) {
                     break;
                 }

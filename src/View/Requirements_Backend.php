@@ -33,9 +33,9 @@ class Requirements_Backend
     /**
      * Whether to combine CSS and JavaScript files
      *
-     * @var bool
+     * @var bool|null
      */
-    protected $combinedFilesEnabled = true;
+    protected $combinedFilesEnabled = null;
 
     /**
      * Determine if files should be combined automatically on dev mode.
@@ -1394,18 +1394,8 @@ class Requirements_Backend
      */
     public function getCombinedFilesEnabled()
     {
-        if (!$this->combinedFilesEnabled) {
-            return false;
-        }
-
-        // Tests should be combined
-        if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
-            return true;
-        }
-
-        // Check if specified via querystring
-        if (isset($_REQUEST['combine'])) {
-            return true;
+        if (isset($this->combinedFilesEnabled)) {
+            return $this->combinedFilesEnabled;
         }
 
         // Non-dev sites are always combined

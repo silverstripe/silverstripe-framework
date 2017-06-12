@@ -8,7 +8,6 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
@@ -254,7 +253,7 @@ class Director implements TemplateGlobalProvider
         $_REQUEST = ArrayLib::array_merge_recursive((array) $getVars, (array) $postVars);
         $_GET = (array) $getVars;
         $_POST = (array) $postVars;
-        $_SESSION = $session ? $session->inst_getAll() : array();
+        $_SESSION = $session ? $session->getAll() : array();
         $_COOKIE = $cookieJar->getAll(false);
         Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
         $_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
@@ -288,7 +287,7 @@ class Director implements TemplateGlobalProvider
                 }
             }
 
-            $output = $requestProcessor->postRequest($request, $result, $model);
+            $output = $requestProcessor->postRequest($request, $result);
             if ($output === false) {
                 throw new HTTPResponse_Exception("Invalid response");
             }
@@ -836,17 +835,15 @@ class Director implements TemplateGlobalProvider
      * Skip any further processing and immediately respond with a redirect to the passed URL.
      *
      * @param string $destURL
+     * @throws HTTPResponse_Exception
      */
     protected static function force_redirect($destURL)
     {
+        // Redirect to installer
         $response = new HTTPResponse();
         $response->redirect($destURL, 301);
-
         HTTP::add_cache_headers($response);
-
-        // TODO: Use an exception - ATM we can be called from _config.php, before Director#handleRequest's try block
-        $response->output();
-        die;
+        throw new HTTPResponse_Exception($response);
     }
 
     /**
@@ -877,19 +874,23 @@ class Director implements TemplateGlobalProvider
      *
      * @param array $patterns Array of regex patterns to match URLs that should be HTTPS.
      * @param string $secureDomain Secure domain to redirect to. Defaults to the current domain.
-     *
-     * @return bool|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI.
+     * @return bool true if already on SSL, false if doesn't match patterns (or cannot redirect)
+     * @throws HTTPResponse_Exception Throws exception with redirect, if successful
      */
     public static function forceSSL($patterns = null, $secureDomain = null)
     {
-        // Calling from the command-line?
+        // Already on SSL
+        if (static::is_https()) {
+            return true;
+        }
+
+        // Can't redirect without a url
         if (!isset($_SERVER['REQUEST_URI'])) {
             return false;
         }
 
-        $matched = false;
-
         if ($patterns) {
+            $matched = false;
             $relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 
             // protect portions of the site based on the pattern
@@ -899,31 +900,20 @@ class Director implements TemplateGlobalProvider
                     break;
                 }
             }
-        } else {
-            // protect the entire site
-            $matched = true;
+            if (!$matched) {
+                return false;
+            }
         }
 
-        if ($matched && !self::is_https()) {
-            // if an domain is specified, redirect to that instead of the current domain
-            if ($secureDomain) {
-                $url = 'https://' . $secureDomain . $_SERVER['REQUEST_URI'];
-            } else {
-                $url = $_SERVER['REQUEST_URI'];
-            }
-
-            $destURL = str_replace('http:', 'https:', Director::absoluteURL($url));
-
-            // This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
-            if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
-                return $destURL;
-            } else {
-                self::force_redirect($destURL);
-                return true;
-            }
-        } else {
-            return false;
+        // if an domain is specified, redirect to that instead of the current domain
+        if (!$secureDomain) {
+            $secureDomain = static::host();
         }
+        $url = 'https://' . $secureDomain . $_SERVER['REQUEST_URI'];
+
+        // Force redirect
+        self::force_redirect($url);
+        return true;
     }
 
     /**

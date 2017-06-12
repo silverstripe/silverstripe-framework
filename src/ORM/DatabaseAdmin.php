@@ -6,15 +6,12 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
-
-// Include the DB class
-require_once("DB.php");
 
 /**
  * DatabaseAdmin class
@@ -58,13 +55,13 @@ class DatabaseAdmin extends Controller
         // if on CLI or with the database not ready. The latter makes it less errorprone to do an
         // initial schema build without requiring a default-admin login.
         // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-        $isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+        $allowAllCLI = DevelopmentAdmin::config()->get('allow_all_cli');
         $canAccess = (
             Director::isDev()
             || !Security::database_is_ready()
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tests" from CLI.
-            || (Director::is_cli() && !$isRunningTests)
+            || (Director::is_cli() && $allowAllCLI)
             || Permission::check("ADMIN")
         );
         if (!$canAccess) {
@@ -87,14 +84,14 @@ class DatabaseAdmin extends Controller
         $allClasses = get_declared_classes();
         $rootClasses = [];
         foreach ($allClasses as $class) {
-            if (get_parent_class($class) == 'SilverStripe\ORM\DataObject') {
+            if (get_parent_class($class) == DataObject::class) {
                 $rootClasses[$class] = array();
             }
         }
 
         // Assign every other data object one of those
         foreach ($allClasses as $class) {
-            if (!isset($rootClasses[$class]) && is_subclass_of($class, 'SilverStripe\ORM\DataObject')) {
+            if (!isset($rootClasses[$class]) && is_subclass_of($class, DataObject::class)) {
                 foreach ($rootClasses as $rootClass => $dummy) {
                     if (is_subclass_of($class, $rootClass)) {
                         $rootClasses[$rootClass][] = $class;
@@ -260,7 +257,6 @@ class DatabaseAdmin extends Controller
         // Initiate schema update
         $dbSchema = DB::get_schema();
         $dbSchema->schemaUpdate(function () use ($dataClasses, $testMode, $quiet) {
-            /** @var SilverStripe\ORM\DataObjectSchema $dataObjectSchema */
             $dataObjectSchema = DataObject::getSchema();
 
             foreach ($dataClasses as $dataClass) {
