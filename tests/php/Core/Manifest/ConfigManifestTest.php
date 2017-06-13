@@ -4,8 +4,9 @@ namespace SilverStripe\Core\Tests\Manifest;
 
 use Dotenv\Loader;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\CoreConfigFactory;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
@@ -17,6 +18,7 @@ class ConfigManifestTest extends SapphireTest
         parent::setUp();
 
         $moduleManifest = new ModuleManifest(dirname(__FILE__) . '/fixtures/configmanifest');
+        $moduleManifest->init();
         ModuleLoader::inst()->pushManifest($moduleManifest);
     }
 
@@ -45,7 +47,8 @@ class ConfigManifestTest extends SapphireTest
     public function getTestConfig()
     {
         $config = new MemoryConfigCollection();
-        $transformer = CoreConfigFactory::inst()->buildYamlTransformerForPath(dirname(__FILE__) . '/fixtures/configmanifest');
+        $factory = new CoreConfigFactory();
+        $transformer = $factory->buildYamlTransformerForPath(dirname(__FILE__) . '/fixtures/configmanifest');
         $config->transform([$transformer]);
         return $config;
     }
@@ -173,8 +176,10 @@ class ConfigManifestTest extends SapphireTest
 
     public function testEnvironmentRules()
     {
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
         foreach (array('dev', 'test', 'live') as $env) {
-            Director::set_environment_type($env);
+            $kernel->setEnvironment($env);
             $config = $this->getConfigFixtureValue('Environment');
 
             foreach (array('dev', 'test', 'live') as $check) {

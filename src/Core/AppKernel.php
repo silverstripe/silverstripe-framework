@@ -58,7 +58,7 @@ class AppKernel extends CoreKernel
 
         // Config loader
         // @todo refactor CoreConfigFactory
-        $configFactory = new CoreConfigFactory($manifestCacheFactory, $this->getEnvironment());
+        $configFactory = new CoreConfigFactory($manifestCacheFactory);
         $configManifest = $configFactory->createRoot();
         $configLoader = ConfigLoader::inst();
         $configLoader->pushManifest($configManifest);
@@ -76,15 +76,15 @@ class AppKernel extends CoreKernel
 
     public function getEnvironment()
     {
+        // Check set
+        if ($this->enviroment) {
+            return $this->enviroment;
+        }
+
         // Check saved session
         $env = $this->sessionEnvironment();
         if ($env) {
             return $env;
-        }
-
-        // Check set
-        if ($this->enviroment) {
-            return $this->enviroment;
         }
 
         // Check getenv

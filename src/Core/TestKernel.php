@@ -9,8 +9,8 @@ class TestKernel extends AppKernel
 {
     public function __construct($flush = true)
     {
-        parent::__construct($flush);
         $this->setEnvironment(self::DEV);
+        parent::__construct($flush);
     }
 
     /**

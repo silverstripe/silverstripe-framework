@@ -10,6 +10,8 @@ use SilverStripe\Config\Transformer\YamlTransformer;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Config\Middleware\InheritanceMiddleware;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use Symfony\Component\Finder\Finder;
@@ -25,14 +27,13 @@ class CoreConfigFactory
     protected $cacheFactory = null;
 
     /**
-     * @var string
+     * Create factory
+     *
+     * @param CacheFactory $cacheFactory
      */
-    protected $environment = null;
-
-    public function __construct(CacheFactory $cacheFactory, $environment)
+    public function __construct(CacheFactory $cacheFactory = null)
     {
         $this->cacheFactory = $cacheFactory;
-        $this->environment = $environment;
     }
 
     /**
@@ -47,10 +48,12 @@ class CoreConfigFactory
         $instance = new CachedConfigCollection();
 
         // Create config cache
-        $cache = $this->cacheFactory->create(CacheInterface::class.'.configcache', [
-            'namespace' => 'configcache'
-        ]);
-        $instance->setCache($cache);
+        if ($this->cacheFactory) {
+            $cache = $this->cacheFactory->create(CacheInterface::class . '.configcache', [
+                'namespace' => 'configcache'
+            ]);
+            $instance->setCache($cache);
+        }
 
         // Set collection creator
         $instance->setCollectionCreator(function () {
@@ -162,7 +165,11 @@ class CoreConfigFactory
                 }
             )
             ->addRule('environment', function ($env) {
-                return strtolower($this->environment) === strtolower($env);
+                // Note: The below relies on direct assignment of kernel to injector instance,
+                // and will fail if failing back to config service locator
+                /** @var Kernel $kernel */
+                $kernel = Injector::inst()->get(Kernel::class);
+                return strtolower($kernel->getEnvironment()) === strtolower($env);
             })
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::inst()->getManifest()->moduleExists($module);

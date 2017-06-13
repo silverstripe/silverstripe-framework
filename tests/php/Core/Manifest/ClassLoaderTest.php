@@ -36,10 +36,12 @@ class ClassLoaderTest extends SapphireTest
     {
         parent::setUp();
 
-        $this->baseManifest1 = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->baseManifest2 = dirname(__FILE__) . '/fixtures/classmanifest_other';
-        $this->testManifest1 = new ClassManifest($this->baseManifest1, false);
-        $this->testManifest2 = new ClassManifest($this->baseManifest2, false);
+        $this->baseManifest1 = __DIR__ . '/fixtures/classmanifest';
+        $this->baseManifest2 = __DIR__ . '/fixtures/classmanifest_other';
+        $this->testManifest1 = new ClassManifest($this->baseManifest1);
+        $this->testManifest2 = new ClassManifest($this->baseManifest2);
+        $this->testManifest1->init();
+        $this->testManifest2->init();
     }
 
     public function testExclusive()
