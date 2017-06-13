@@ -92,7 +92,10 @@
 			fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
 			fields.each(function() {
 				if($(this).is(':radio,:checkbox')) {
-					origVal = self.find(':input[name=' + $(this).attr('name') + ']:checked').val();
+					origVal = self.find(':input[name="' + $(this).attr('name') + '"]:checked').val();
+					if("undefined" === typeof origVal){
+						origVal = 0;
+					}
 				} else {
 					origVal = $(this).val();
 				}
