@@ -5,11 +5,14 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\Service\DefaultAdminService;
 
 /**
  * Authenticator for the default "member" method
@@ -19,6 +22,7 @@ use SilverStripe\Security\Security;
  */
 class MemberAuthenticator implements Authenticator
 {
+    use Extensible;
 
     public function supportedServices()
     {
@@ -53,23 +57,25 @@ class MemberAuthenticator implements Authenticator
      * @param array $data Form submitted data
      * @param ValidationResult $result
      * @param Member|null This third parameter is used in the CMSAuthenticator(s)
-     * @return Member Found member, regardless of successful login
+     * @return Member|null Found member, regardless of successful login
      */
     protected function authenticateMember($data, &$result = null, $member = null)
     {
-        // Default success to false
         $email = !empty($data['Email']) ? $data['Email'] : null;
+        // Default success to false
         $result = new ValidationResult();
 
         // Check default login (see Security::setDefaultAdmin())
-        $asDefaultAdmin = $email === Security::default_admin_username();
+        $asDefaultAdmin = $email === DefaultAdminService::getDefaultAdminUsername();
         if ($asDefaultAdmin) {
             // If logging is as default admin, ensure record is setup correctly
-            $member = Member::default_admin();
-            $success = Security::check_default_admin($email, $data['Password']);
+            /** @var Member $member */
+            $service = Injector::inst()->get(DefaultAdminService::class);
+            $member = $service->findOrCreateDefaultAdmin();
+            $validAdmin = $service->validateDefaultAdmin($email, $data['Password']);
             $result = $member->canLogIn();
             //protect against failed login
-            if ($success && $result->isValid()) {
+            if ($validAdmin->isValid() && $result->isValid()) {
                 return $member;
             } else {
                 $result->addError(_t(
@@ -82,9 +88,10 @@ class MemberAuthenticator implements Authenticator
         // Attempt to identify user by email
         if (!$member && $email) {
             // Find user by email
+            $identifierField = Member::config()->get('unique_identifier_field');
             /** @var Member $member */
             $member = Member::get()
-                ->filter([Member::config()->get('unique_identifier_field') => $email])
+                ->filter([$identifierField => $email])
                 ->first();
         }
 
@@ -115,6 +122,37 @@ class MemberAuthenticator implements Authenticator
     }
 
     /**
+     * Check if the passed password matches the stored one (if the member is not locked out).
+     *
+     * Note, we don't return early, to prevent differences in timings to give away if a member
+     * password is invalid.
+     *
+     * @param Member $member
+     * @param  string $password
+     * @return ValidationResult
+     */
+    public function checkPassword($member, $password)
+    {
+        $result = $member->canLogIn();
+
+        // Check a password is set on this member
+        if (empty($member->Password) && $member->exists()) {
+            $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
+        }
+
+        $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
+        if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {
+            $result->addError(_t(
+                __CLASS__ . '.ERRORWRONGCRED',
+                'The provided details don\'t seem to be correct. Please try again.'
+            ));
+        }
+
+        return $result;
+    }
+
+
+    /**
      * Log login attempt
      * TODO We could handle this with an extension
      *
@@ -142,7 +180,7 @@ class MemberAuthenticator implements Authenticator
             $attempt->Status = 'Success';
 
             // Audit logging hook
-            $member->extend('authenticated');
+            $member->extend('authenticationSucceeded');
         } else {
             // Failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
             $attempt->Status = 'Failure';

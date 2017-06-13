@@ -27,7 +27,7 @@ class CMSMemberAuthenticator extends MemberAuthenticator
             // Find user by tempid, in case they are re-validating an existing session
             $member = Member::member_from_tempid($data['tempid']);
             if ($member) {
-                $data['email'] = $member->Email;
+                $data['Email'] = $member->Email;
             }
         }
 

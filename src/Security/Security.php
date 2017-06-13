@@ -25,10 +25,10 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Service\DefaultAdminService;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
-use Subsite;
 
 /**
  * Implements a basic security model
@@ -46,22 +46,6 @@ class Security extends Controller implements TemplateGlobalProvider
         'changepassword',
         'ping',
     );
-
-    /**
-     * Default user name. {@link setDefaultAdmin()}
-     *
-     * @var string
-     * @see setDefaultAdmin()
-     */
-    protected static $default_username;
-
-    /**
-     * Default password. {@link setDefaultAdmin()}
-     *
-     * @var string
-     * @see setDefaultAdmin()
-     */
-    protected static $default_password;
 
     /**
      * If set to TRUE to prevent sharing of the session across several sites
@@ -957,57 +941,28 @@ class Security extends Controller implements TemplateGlobalProvider
      * purposes outside of any default credentials set through {@link Security::setDefaultAdmin()}.
      *
      * @return Member
+     *
+     * @deprecated 5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
      */
     public static function findAnAdministrator()
     {
-        static::singleton()->extend('beforeFindAdministrator');
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::findOrCreateDefaultAdmin()');
 
-        /** @var Member $member */
-        $member = null;
+        $service = Injector::inst()->get(DefaultAdminService::class);
 
-        // find a group with ADMIN permission
-        $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
-
-        if (!$adminGroup) {
-            Group::singleton()->requireDefaultRecords();
-            $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
-        }
-
-        $member = $adminGroup->Members()->First();
-
-        if (!$member) {
-            Member::singleton()->requireDefaultRecords();
-            $member = Permission::get_members_by_permission('ADMIN')->first();
-        }
-
-        if (!$member) {
-            $member = Member::default_admin();
-        }
-
-        if (!$member) {
-            // Failover to a blank admin
-            $member = Member::create();
-            $member->FirstName = _t('SilverStripe\\Security\\Member.DefaultAdminFirstname', 'Default Admin');
-            $member->write();
-            // Add member to group instead of adding group to member
-            // This bypasses the privilege escallation code in Member_GroupSet
-            $adminGroup
-                ->DirectMembers()
-                ->add($member);
-        }
-
-        static::singleton()->extend('afterFindAdministrator');
-
-        return $member;
+        return $service->findOrCreateDefaultAdmin();
     }
 
     /**
      * Flush the default admin credentials
+     *
+     * @deprecated 5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
      */
     public static function clear_default_admin()
     {
-        self::$default_username = null;
-        self::$default_password = null;
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::clearDefaultAdmin()');
+
+        DefaultAdminService::clearDefaultAdmin();
     }
 
 
@@ -1022,18 +977,14 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $username The user name
      * @param string $password The password (in cleartext)
      * @return bool True if successfully set
+     *
+     * @deprecated 5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
      */
     public static function setDefaultAdmin($username, $password)
     {
-        // don't overwrite if already set
-        if (self::$default_username || self::$default_password) {
-            return false;
-        }
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::setDefaultAdmin($username, $password)');
 
-        self::$default_username = $username;
-        self::$default_password = $password;
-
-        return true;
+        return DefaultAdminService::setDefaultAdmin($username, $password);
     }
 
     /**
@@ -1043,14 +994,16 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $username
      * @param string $password
      * @return bool
+     *
+     * @deprecated 5.0.0
      */
     public static function check_default_admin($username, $password)
     {
-        return (
-            self::$default_username === $username
-            && self::$default_password === $password
-            && self::has_default_admin()
-        );
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::validateDefaultAdmin($username, $password)');
+
+        $service = Injector::inst()->get(DefaultAdminService::class);
+
+        return $service->validateDefaultAdmin($username, $password)->isValid();
     }
 
     /**
@@ -1058,7 +1011,9 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function has_default_admin()
     {
-        return !empty(self::$default_username) && !empty(self::$default_password);
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::hasDefaultAdmin()');
+
+        return DefaultAdminService::hasDefaultAdmin();
     }
 
     /**
@@ -1068,7 +1023,9 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function default_admin_username()
     {
-        return self::$default_username;
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminUsername()');
+        
+        return DefaultAdminService::getDefaultAdminUsername();
     }
 
     /**
@@ -1078,7 +1035,9 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function default_admin_password()
     {
-        return self::$default_password;
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminPassword()');
+
+        return DefaultAdminService::getDefaultAdminPassword();
     }
 
     /**

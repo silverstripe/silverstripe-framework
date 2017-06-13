@@ -31,6 +31,7 @@ use SilverStripe\ORM\Map;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Service\DefaultAdminService;
 
 /**
  * The member class which represents the users of the system
@@ -259,7 +260,9 @@ class Member extends DataObject
     {
         parent::requireDefaultRecords();
         // Default groups should've been built by Group->requireDefaultRecords() already
-        static::default_admin();
+        $service = Injector::inst()->get(DefaultAdminService::class);
+
+        $service->findOrCreateDefaultAdmin();
     }
 
     /**

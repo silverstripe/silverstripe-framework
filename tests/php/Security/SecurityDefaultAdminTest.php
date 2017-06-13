@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\Service\DefaultAdminService;
 
 class SecurityDefaultAdminTest extends SapphireTest
 {
@@ -35,6 +37,7 @@ class SecurityDefaultAdminTest extends SapphireTest
 
     protected function tearDown()
     {
+        Security::clear_default_admin();
         Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
         Permission::reset();
         parent::tearDown();
@@ -72,15 +75,19 @@ class SecurityDefaultAdminTest extends SapphireTest
 
     public function testFindAnAdministratorWithoutDefaultAdmin()
     {
+        $service = Injector::inst()->get(DefaultAdminService::class);
         // Clear default admin
-        Security::clear_default_admin();
+        DefaultAdminService::clearDefaultAdmin();
 
         $adminMembers = Permission::get_members_by_permission('ADMIN');
         $this->assertEquals(0, $adminMembers->count());
 
-        $admin = Security::findAnAdministrator();
+        $admin = $service->findOrCreateDefaultAdmin();
 
-        $this->assertInstanceOf(Member::class, $admin);
+        $this->assertNull($admin);
+        // When clearing the admin, it will not re-instate it anymore
+        DefaultAdminService::setDefaultAdmin('admin', 'password');
+        $admin = $service->findAnAdministrator();
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 
         // User should be blank

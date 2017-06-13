@@ -16,6 +16,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Security\Service\DefaultAdminService;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -29,15 +30,16 @@ class MemberAuthenticatorTest extends SapphireTest
     {
         parent::setUp();
 
-        $this->defaultUsername = Security::default_admin_username();
-        $this->defaultPassword = Security::default_admin_password();
-        Security::clear_default_admin();
-        Security::setDefaultAdmin('admin', 'password');
+        $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();
+        $this->defaultPassword = DefaultAdminService::getDefaultAdminPassword();
+        DefaultAdminService::clearDefaultAdmin();
+        DefaultAdminService::setDefaultAdmin('admin', 'password');
     }
 
     protected function tearDown()
     {
-        Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        DefaultAdminService::clearDefaultAdmin();
+        DefaultAdminService::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
         parent::tearDown();
     }
 
@@ -151,7 +153,7 @@ class MemberAuthenticatorTest extends SapphireTest
             $message
         );
         $this->assertNotEmpty($result);
-        $this->assertEquals($result->Email, Security::default_admin_username());
+        $this->assertEquals($result->Email, DefaultAdminService::getDefaultAdminUsername());
         $this->assertTrue($message->isValid());
 
         // Test incorrect login
