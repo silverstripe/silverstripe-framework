@@ -35,4 +35,10 @@ class TestKernel extends AppKernel
     {
         return true;
     }
+
+    protected function bootErrorHandling()
+    {
+        // Leave phpunit to capture errors
+        restore_error_handler();
+    }
 }

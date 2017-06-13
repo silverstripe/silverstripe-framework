@@ -53,10 +53,10 @@ class TestSession
 
     public function __construct()
     {
-        $this->session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
-        $this->cookies = Injector::inst()->create('SilverStripe\\Control\\Cookie_Backend');
+        $this->session = Injector::inst()->create(Session::class, array());
+        $this->cookies = Injector::inst()->create(Cookie_Backend::class);
         $this->controller = new Controller();
-        $this->controller->setSession($this->session);
+        // @todo - Ensure $this->session is set on all requests
         $this->controller->pushCurrent();
     }
 

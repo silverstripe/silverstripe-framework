@@ -5,6 +5,7 @@ namespace SilverStripe\Core;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
@@ -14,6 +15,11 @@ use SilverStripe\View\ThemeResourceLoader;
  */
 class CoreKernel implements Kernel
 {
+    /**
+     * @var Kernel
+     */
+    protected $nestedFrom = null;
+
     /**
      * @var Injector
      */
@@ -40,6 +46,11 @@ class CoreKernel implements Kernel
     protected $configLoader = null;
 
     /**
+     * @var InjectorLoader
+     */
+    protected $injectorLoader = null;
+
+    /**
      * @var ThemeResourceLoader
      */
     protected $themeResourceLoader = null;
@@ -54,19 +65,42 @@ class CoreKernel implements Kernel
 
     public function nest()
     {
-        // TODO: Implement nest() method.
+        // Clone this kernel, nesting config / injector manifest containers
+        $kernel = clone $this;
+        $kernel->setConfigLoader($this->configLoader->nest());
+        $kernel->setInjectorLoader($this->injectorLoader->nest());
+        return $kernel;
+    }
+
+    public function activate()
+    {
+        $this->configLoader->activate();
+        $this->injectorLoader->activate();
+        return $this;
+    }
+
+    public function getNestedFrom()
+    {
+        return $this->nestedFrom;
     }
 
     public function getContainer()
     {
-        return $this->container;
+        return $this->getInjectorLoader()->getManifest();
     }
 
-    public function setContainer(Injector $container)
+    public function setInjectorLoader(InjectorLoader $injectorLoader)
     {
-        $this->container = $container;
-        $container->registerService($this, Kernel::class);
+        $this->injectorLoader = $injectorLoader;
+        $injectorLoader
+            ->getManifest()
+            ->registerService($this, Kernel::class);
         return $this;
+    }
+
+    public function getInjectorLoader()
+    {
+        return $this->injectorLoader;
     }
 
     public function getClassLoader()

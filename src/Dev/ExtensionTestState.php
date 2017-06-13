@@ -37,7 +37,9 @@ class ExtensionTestState implements TestState
 
     public function setUpOnce($class)
     {
-        $isAltered = false;
+        // May be altered by another class
+        $isAltered = $this->extensionsToReapply || $this->extensionsToRemove;
+
         /** @var string|SapphireTest $class */
         /** @var string|DataObject $dataClass */
         // Remove any illegal extensions that are present
@@ -84,18 +86,19 @@ class ExtensionTestState implements TestState
             }
         }
 
-        // If we have made changes to the extensions present, then migrate the database schema.
-        if ($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $class::getExtraDataObjects()) {
+        // clear singletons, they're caching old extension info
+        // which is used in DatabaseAdmin->doBuild()
+        Injector::inst()->unregisterObjects(DataObject::class);
+
+        // If we have altered the schema, but SapphireTest::setUpBeforeClass() would not otherwise
+        // reset the schema (if there were extra objects) then force a reset
+        if ($isAltered && empty($class::getExtraDataObjects())) {
             DataObject::reset();
             if (!SapphireTest::using_temp_db()) {
                 SapphireTest::create_temp_db();
             }
-            SapphireTest::resetDBSchema(true);
+            $class::resetDBSchema(true);
         }
-
-        // clear singletons, they're caching old extension info
-        // which is used in DatabaseAdmin->doBuild()
-        Injector::inst()->unregisterObjects(DataObject::class);
     }
 
     public function tearDownOnce($class)

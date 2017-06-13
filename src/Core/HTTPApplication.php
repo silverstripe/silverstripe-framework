@@ -106,10 +106,14 @@ class HTTPApplication implements Application
      */
     public function execute(callable $callback)
     {
-        return $this->callMiddleware(function () use ($callback) {
-            // Pre-request boot
-            $this->getKernel()->boot();
-            return call_user_func($callback);
-        });
+        try {
+            return $this->callMiddleware(function () use ($callback) {
+                // Pre-request boot
+                $this->getKernel()->boot();
+                return call_user_func($callback);
+            });
+        } finally {
+            $this->getKernel()->shutdown();
+        }
     }
 }

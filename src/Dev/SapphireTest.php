@@ -203,11 +203,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        // Reset state
         self::$kernel->reset();
 
-        //nest config and injector for each test so they are effectively sandboxed per test
-        Config::nest();
-        Injector::nest();
+        // Nest
+        self::$kernel->nest();
 
         // Call state helpers
         static::$state->setUp($this);
@@ -299,12 +299,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Reset kernel
         static::$kernel->reset();
 
-        //nest config and injector for each suite so they are effectively sandboxed
-        Config::nest();
-        Injector::nest();
+        // Nest kernel
+        static::$kernel->nest();
 
         // Call state helpers
         static::$state->setUpOnce(static::class);
+
+        // Build DB if we have objects
+        if (static::getExtraDataObjects()) {
+            DataObject::reset();
+            if (!self::using_temp_db()) {
+                self::create_temp_db();
+            }
+            static::resetDBSchema(true);
+        }
     }
 
     /**
@@ -322,14 +330,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Call state helpers
         static::$state->tearDownOnce(static::class);
 
-        //unnest injector / config now that the test suite is over
-        // this will reset all the extensions on the object too (see setUpBeforeClass)
-        Injector::unnest();
-        Config::unnest();
+        // Unnest
+        static::$kernel->activate();
 
-        static::resetDBSchema();
-
+        // Reset PHP state
         static::$kernel->reset();
+
+        // Reset DB schema
+        static::resetDBSchema();
     }
 
     /**
@@ -485,11 +493,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // Call state helpers
-        static::$state->setUp($this);
+        static::$state->tearDown($this);
 
-        //unnest injector / config now that tests are over
-        Injector::unnest();
-        Config::unnest();
+        // Unnest
+        self::$kernel->activate();
 
         // Reset state
         self::$kernel->reset();
@@ -992,6 +999,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Create temp DB without creating extra objects
+     *
+     * @return string
+     */
     public static function create_temp_db()
     {
         // Disable PHPUnit error handling

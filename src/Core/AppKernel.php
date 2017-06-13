@@ -13,6 +13,7 @@ use SilverStripe\Core\Cache\ManifestCacheFactory;
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ClassManifest;
@@ -38,9 +39,10 @@ class AppKernel extends CoreKernel
 
         // Initialise the dependency injector as soon as possible, as it is
         // subsequently used by some of the following code
+        $injectorLoader = InjectorLoader::inst();
         $injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
-        $this->setContainer($injector);
-        Injector::set_inst($injector);
+        $injectorLoader->pushManifest($injector);
+        $this->setInjectorLoader($injectorLoader);
 
         // Manifest cache factory
         $manifestCacheFactory = $this->buildManifestCacheFactory();

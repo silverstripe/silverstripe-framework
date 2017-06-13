@@ -188,7 +188,6 @@ class Director implements TemplateGlobalProvider
         $cookies = array(),
         &$request = null
     ) {
-
         Config::nest();
         Injector::nest();
 

@@ -4,6 +4,7 @@ namespace SilverStripe\Core;
 
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
@@ -42,22 +43,21 @@ interface Kernel
     /**
      * Nests this kernel, all components, and returns the nested value.
      *
-     * @return static
+     * @return Kernel
      */
     public function nest();
+
+    /**
+     * Ensures this kernel is the active kernel after or during nesting
+     *
+     * @return $this
+     */
+    public function activate();
 
     /**
      * @return Injector
      */
     public function getContainer();
-
-    /**
-     * Sets injector
-     *
-     * @param Injector $container
-     * @return $this
-     */
-    public function setContainer(Injector $container);
 
     /**
      * @return ClassLoader
@@ -69,6 +69,19 @@ interface Kernel
      * @return $this
      */
     public function setClassLoader(ClassLoader $classLoader);
+
+    /**
+     * Get loader for injector instance
+     *
+     * @return InjectorLoader
+     */
+    public function getInjectorLoader();
+
+    /**
+     * @param InjectorLoader $injectorLoader
+     * @return $this
+     */
+    public function setInjectorLoader(InjectorLoader $injectorLoader);
 
     /**
      * @return ModuleLoader

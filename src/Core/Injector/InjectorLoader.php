@@ -1,14 +1,13 @@
 <?php
 
-namespace SilverStripe\Core\Config;
+namespace SilverStripe\Core\Injector;
 
 use BadMethodCallException;
-use SilverStripe\Config\Collections\ConfigCollectionInterface;
 
 /**
- * Registers config sources via ConfigCollectionInterface
+ * Registers chained injectors
  */
-class ConfigLoader
+class InjectorLoader
 {
     /**
      * @internal
@@ -17,7 +16,7 @@ class ConfigLoader
     private static $instance;
 
     /**
-     * @var ConfigCollectionInterface[] map of config collections
+     * @var Injector[] map of injector instances
      */
     protected $manifests = array();
 
@@ -33,12 +32,12 @@ class ConfigLoader
      * Returns the currently active class manifest instance that is used for
      * loading classes.
      *
-     * @return ConfigCollectionInterface
+     * @return Injector
      */
     public function getManifest()
     {
         if (empty($this->manifests)) {
-            throw new BadMethodCallException("No config manifests available");
+            throw new BadMethodCallException("No injector manifests available");
         }
         return $this->manifests[count($this->manifests) - 1];
     }
@@ -56,15 +55,15 @@ class ConfigLoader
     /**
      * Pushes a class manifest instance onto the top of the stack.
      *
-     * @param ConfigCollectionInterface $manifest
+     * @param Injector $manifest
      */
-    public function pushManifest(ConfigCollectionInterface $manifest)
+    public function pushManifest(Injector $manifest)
     {
         $this->manifests[] = $manifest;
     }
 
     /**
-     * @return ConfigCollectionInterface
+     * @return Injector
      */
     public function popManifest()
     {
@@ -82,31 +81,29 @@ class ConfigLoader
     }
 
     /**
-     * Nest the config loader and activates it
+     * Nest the config loader
      *
      * @return static
      */
     public function nest()
     {
         // Nest config
-        $manifest = clone $this->getManifest();
+        $manifest = $this->getManifest()->nest();
 
         // Create new blank loader with new stack (top level nesting)
         $newLoader = new self;
         $newLoader->pushManifest($manifest);
 
         // Activate new loader
-        return $newLoader->activate();
+        $newLoader->activate();
+        return $newLoader;
     }
 
     /**
      * Mark this instance as the current instance
-     *
-     * @return $this
      */
     public function activate()
     {
         static::$instance = $this;
-        return $this;
     }
 }

@@ -236,18 +236,7 @@ class Injector implements ContainerInterface
      */
     public static function inst()
     {
-        return self::$instance;
-    }
-
-    /**
-     * Sets the default global injector instance.
-     *
-     * @param Injector $instance
-     * @return Injector Reference to new active Injector instance
-     */
-    public static function set_inst(Injector $instance)
-    {
-        return self::$instance = $instance;
+        return InjectorLoader::inst()->getManifest();
     }
 
     /**
@@ -262,11 +251,10 @@ class Injector implements ContainerInterface
      */
     public static function nest()
     {
-        $current = self::$instance;
-
-        $new = clone $current;
-        $new->nestedFrom = $current;
-        return self::set_inst($new);
+        // Clone current injector and nest
+        $new = clone self::inst();
+        InjectorLoader::inst()->pushManifest($new);
+        return $new;
     }
 
     /**
@@ -277,15 +265,17 @@ class Injector implements ContainerInterface
      */
     public static function unnest()
     {
-        if (self::inst()->nestedFrom) {
-            self::set_inst(self::inst()->nestedFrom);
-        } else {
+        // Unnest unless we would be left at 0 manifests
+        $loader = InjectorLoader::inst();
+        if ($loader->countManifests() <= 1) {
             user_error(
                 "Unable to unnest root Injector, please make sure you don't have mis-matched nest/unnest",
                 E_USER_WARNING
             );
+        } else {
+            $loader->popManifest();
         }
-        return self::inst();
+        return static::inst();
     }
 
     /**
