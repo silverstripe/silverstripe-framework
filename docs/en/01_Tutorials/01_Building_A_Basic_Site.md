@@ -71,7 +71,7 @@ should see the CMS interface with a list of the pages currently on your website 
 
 ### Try it
 
-There are three pages already created for you - "Home", "About Us" and "Contact Us", as well as a 404 error page. Experiment
+There are three pages already created for you - "Home", "About Us" and "Contact Us". Experiment
 with the editor - try different formatting, tables and images. When you are done, click "Save Draft" or "Save
 & Publish" to post the content to the live site. 
 
