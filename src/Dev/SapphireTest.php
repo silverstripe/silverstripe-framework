@@ -17,6 +17,8 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorLoader;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Core\TestKernel;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataExtension;
@@ -128,13 +130,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected $backupGlobals = false;
 
     /**
-     * Test application kernel.
-     * Note: This is always the root kernel. Use Injector to get the current kernel
-     * if nested.
+     * Test application kernel stace.
      *
-     * @var TestKernel
+     * @var TestKernel[]
      */
-    protected static $kernel = null;
+    protected static $kernels = [];
+
+    /**
+     * Get active Kernel instance
+     *
+     * @return TestKernel
+     */
+    protected static function kernel()
+    {
+        return end(static::$kernels);
+    }
 
     /**
      * State management container for SapphireTest
@@ -204,10 +214,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // Reset state
-        self::$kernel->reset();
+        static::kernel()->reset();
 
         // Nest
-        self::$kernel->nest();
+        static::$kernels[] = static::kernel()->nest();
 
         // Call state helpers
         static::$state->setUp($this);
@@ -297,10 +307,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         static::start();
 
         // Reset kernel
-        static::$kernel->reset();
+        static::kernel()->reset();
 
         // Nest kernel
-        static::$kernel->nest();
+        static::$kernels[] = static::kernel()->nest();
 
         // Call state helpers
         static::$state->setUpOnce(static::class);
@@ -331,10 +341,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         static::$state->tearDownOnce(static::class);
 
         // Unnest
-        static::$kernel->activate();
+        array_pop(static::$kernels);
+        static::kernel()->activate();
 
         // Reset PHP state
-        static::$kernel->reset();
+        static::kernel()->reset();
 
         // Reset DB schema
         static::resetDBSchema();
@@ -449,7 +460,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected function getCurrentAbsolutePath()
     {
-        $filename = static::$kernel->getClassLoader()->getItemPath(static::class);
+        $filename = static::kernel()->getClassLoader()->getItemPath(static::class);
         if (!$filename) {
             throw new LogicException("getItemPath returned null for " . static::class);
         }
@@ -496,10 +507,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         static::$state->tearDown($this);
 
         // Unnest
-        self::$kernel->activate();
+        array_pop(static::$kernels);
+        static::kernel()->activate();
 
         // Reset state
-        self::$kernel->reset();
+        static::kernel()->reset();
     }
 
     public static function assertContains(
@@ -911,7 +923,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             return;
         }
         // Health check
-        if (Injector::inst() || static::$kernel) {
+        if (InjectorLoader::inst()->countManifests() || static::kernel()) {
             throw new LogicException("SapphireTest::start() cannot be called within another application");
         }
         static::set_is_running_test(true);
@@ -922,8 +934,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $request->setSession($session);
 
         // Test application
-        static::$kernel = new TestKernel();
-        $app = new HTTPApplication(static::$kernel);
+        static::$kernels[] = new TestKernel();
+        $app = new HTTPApplication(static::kernel());
 
         // Custom application
         $app->execute(function () use ($request) {
