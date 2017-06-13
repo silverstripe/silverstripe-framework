@@ -176,7 +176,7 @@ to the translator.
 	// Simple string translation
 	_t('LeftAndMain.FILESIMAGES','Files & Images');
 
-	// Using the natural languate comment parameter to supply additional context information to translators
+	// Using the natural language comment parameter to supply additional context information to translators
 	_t('LeftAndMain.HELLO','Site content','Menu title');
 
 	// Using injection to add variables into the translated strings.
@@ -203,7 +203,7 @@ the PHP version of the function.
 	// Simple string translation
 	<%t Namespace.Entity "String to translate" %>
 
-	// Using the natural languate comment parameter to supply additional context information to translators
+	// Using the natural language comment parameter to supply additional context information to translators
 	<%t SearchResults.NoResult "There are no results matching your query." is "A message displayed to users when the search produces no results." %>
 
 	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
