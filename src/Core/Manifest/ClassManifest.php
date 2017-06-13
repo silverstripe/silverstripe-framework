@@ -36,14 +36,6 @@ class ClassManifest
     protected $cacheFactory;
 
     /**
-     * Set if including test classes
-     *
-     * @see TestOnly
-     * @var bool
-     */
-    protected $tests;
-
-    /**
      * Cache to use, if caching.
      * Set to null if uncached.
      *
@@ -161,7 +153,7 @@ class ClassManifest
             $this->implementors = $data['implementors'];
             $this->traits = $data['traits'];
         } else {
-            $this->regenerate();
+            $this->regenerate($includeTests);
         }
     }
 
@@ -356,8 +348,10 @@ class ClassManifest
 
     /**
      * Completely regenerates the manifest file.
+     *
+     * @param bool $includeTests
      */
-    public function regenerate()
+    public function regenerate($includeTests)
     {
         $resets = array(
             'classes', 'roots', 'children', 'descendants', 'interfaces',
@@ -373,7 +367,7 @@ class ClassManifest
         $finder->setOptions(array(
             'name_regex'    => '/^[^_].*\\.php$/',
             'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
-            'ignore_tests'  => !$this->tests,
+            'ignore_tests'  => !$includeTests,
             'file_callback' => array($this, 'handleFile'),
         ));
         $finder->find($this->base);

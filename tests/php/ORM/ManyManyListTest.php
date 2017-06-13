@@ -20,7 +20,7 @@ class ManyManyListTest extends SapphireTest
         ManyManyListTest\Product::class,
     ];
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,

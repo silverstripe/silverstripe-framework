@@ -5,5 +5,6 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Dev\SapphireTestState:
     properties:
       States:
+        extensions: %$SilverStripe\Dev\ExtensionTestState
         flushable: %$SilverStripe\Dev\FlushableTestState
         requirements: %$SilverStripe\View\Dev\RequirementsTestState

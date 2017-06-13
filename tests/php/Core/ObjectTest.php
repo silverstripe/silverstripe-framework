@@ -4,8 +4,10 @@ namespace SilverStripe\Core\Tests;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Tests\ObjectTest\BaseObject;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;

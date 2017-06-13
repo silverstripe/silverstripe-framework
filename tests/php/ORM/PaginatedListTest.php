@@ -18,7 +18,7 @@ class PaginatedListTest extends SapphireTest
 
     protected static $fixture_file = 'DataObjectTest.yml';
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,

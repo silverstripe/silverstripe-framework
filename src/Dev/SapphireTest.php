@@ -15,7 +15,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Extension;
 use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\TestKernel;
@@ -129,20 +128,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected $backupGlobals = false;
 
     /**
-     * Helper arrays for illegal_extensions/required_extensions code
-     */
-    private static $extensions_to_reapply = [];
-
-    private static $extensions_to_remove = [];
-
-    /**
-     * Check flushables on setupBeforeClass()
-     *
-     * @var bool
-     */
-    protected static $flushedFlushables = false;
-
-    /**
      * Test application kernel.
      * Note: This is always the root kernel. Use Injector to get the current kernel
      * if nested.
@@ -150,6 +135,33 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * @var TestKernel
      */
     protected static $kernel = null;
+
+    /**
+     * State management container for SapphireTest
+     *
+     * @var TestState
+     */
+    protected static $state = null;
+
+    /**
+     * Gets illegal extensions for this class
+     *
+     * @return array
+     */
+    public static function getIllegalExtensions()
+    {
+        return static::$illegal_extensions;
+    }
+
+    /**
+     * Gets required extensions for this class
+     *
+     * @return array
+     */
+    public static function getRequiredExtensions()
+    {
+        return static::$required_extensions;
+    }
 
     /**
      * Check if test bootstrapping has been performed. Must not be relied on
@@ -179,11 +191,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         return static::$fixture_file;
     }
-
-    /**
-     * @var TestState
-     */
-    protected static $state = null;
 
     /**
      * Setup  the test.
@@ -286,74 +293,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        // Start tests
         static::start();
 
+        // Reset kernel
         static::$kernel->reset();
 
         //nest config and injector for each suite so they are effectively sandboxed
         Config::nest();
         Injector::nest();
-        $isAltered = false;
-
-        // Remove any illegal extensions that are present
-        foreach (static::$illegal_extensions as $class => $extensions) {
-            if (!class_exists($class)) {
-                continue;
-            }
-            if ($extensions === '*') {
-                $extensions = $class::get_extensions();
-            }
-            foreach ($extensions as $extension) {
-                if (!class_exists($extension) || !$class::has_extension($extension)) {
-                    continue;
-                }
-                if (!isset(self::$extensions_to_reapply[$class])) {
-                    self::$extensions_to_reapply[$class] = array();
-                }
-                self::$extensions_to_reapply[$class][] = $extension;
-                $class::remove_extension($extension);
-                $isAltered = true;
-            }
-        }
-
-        // Add any required extensions that aren't present
-        foreach (static::$required_extensions as $class => $extensions) {
-            if (!class_exists($class)) {
-                $self = static::class;
-                throw new LogicException("Test {$self} requires class {$class} which doesn't exist");
-            }
-            self::$extensions_to_remove[$class] = array();
-            foreach ($extensions as $extension) {
-                $extensionClass = Extension::get_classname_without_arguments($extension);
-                if (!class_exists($extensionClass)) {
-                    $self = static::class;
-                    throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
-                }
-                if (!$class::has_extension($extension)) {
-                    if (!isset(self::$extensions_to_remove[$class])) {
-                        self::$extensions_to_reapply[$class] = array();
-                    }
-                    self::$extensions_to_remove[$class][] = $extension;
-                    $class::add_extension($extension);
-                    $isAltered = true;
-                }
-            }
-        }
-
-        // If we have made changes to the extensions present, then migrate the database schema.
-        if ($isAltered || self::$extensions_to_reapply || self::$extensions_to_remove || static::getExtraDataObjects()) {
-            DataObject::reset();
-            if (!self::using_temp_db()) {
-                self::create_temp_db();
-            }
-            static::resetDBSchema(true);
-        }
-        // clear singletons, they're caching old extension info
-        // which is used in DatabaseAdmin->doBuild()
-        Injector::inst()->unregisterObjects(DataObject::class);
-
-        // Set default timezone consistently to avoid NZ-specific dependencies
-        date_default_timezone_set('UTC');
 
         // Call state helpers
         static::$state->setUpOnce(static::class);
@@ -374,36 +322,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Call state helpers
         static::$state->tearDownOnce(static::class);
 
-        // If we have made changes to the extensions present, then migrate the database schema.
-        if (self::$extensions_to_reapply || self::$extensions_to_remove) {
-            // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
-            // Object::$extra_methods is properly flushed. This should be replaced with a simple
-            // flush mechanism for each $class.
-            //
-            // Remove extensions added for testing
-            foreach (self::$extensions_to_remove as $class => $extensions) {
-                foreach ($extensions as $extension) {
-                    $class::remove_extension($extension);
-                }
-            }
-
-            // Reapply ones removed
-            foreach (self::$extensions_to_reapply as $class => $extensions) {
-                foreach ($extensions as $extension) {
-                    $class::add_extension($extension);
-                }
-            }
-        }
-
         //unnest injector / config now that the test suite is over
         // this will reset all the extensions on the object too (see setUpBeforeClass)
         Injector::unnest();
         Config::unnest();
 
-        $extraDataObjects = static::getExtraDataObjects();
-        if (!empty(self::$extensions_to_reapply) || !empty(self::$extensions_to_remove) || !empty($extraDataObjects)) {
-            static::resetDBSchema();
-        }
+        static::resetDBSchema();
 
         static::$kernel->reset();
     }
@@ -1013,6 +937,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
     /**
      * Returns true if we are currently using a temporary database
+     *
+     * @return bool
      */
     public static function using_temp_db()
     {
@@ -1021,6 +947,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         return 1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbConn->getSelectedDatabase());
     }
 
+    /**
+     * Destroy all temp databases
+     */
     public static function kill_temp_db()
     {
         // Delete our temporary database
@@ -1234,7 +1163,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected $cache_generatedMembers = array();
 
-
     /**
      * Test against a theme.
      *
@@ -1291,7 +1219,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * Return all extra objects to scaffold for this test
      * @return array
      */
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return static::$extra_dataobjects;
     }
@@ -1301,7 +1229,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    protected static function getExtraControllers()
+    public static function getExtraControllers()
     {
         return static::$extra_controllers;
     }

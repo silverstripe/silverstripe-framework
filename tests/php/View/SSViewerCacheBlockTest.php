@@ -19,7 +19,7 @@ class SSViewerCacheBlockTest extends SapphireTest
         SSViewerCacheBlockTest\TestModel::class
     );
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         $classes = parent::getExtraDataObjects();
 

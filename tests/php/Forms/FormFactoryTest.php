@@ -19,7 +19,7 @@ class FormFactoryTest extends SapphireTest
 
     protected static $fixture_file = 'FormFactoryTest.yml';
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         // Prevent setup breaking if versioned module absent
         if (class_exists(Versioned::class)) {
