@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core\Tests\Startup;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token;
 use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken;
@@ -9,56 +11,34 @@ use SilverStripe\Dev\SapphireTest;
 
 class ParameterConfirmationTokenTest extends SapphireTest
 {
-
-    private function addPart($answer, $slash, $part)
-    {
-        $bare = str_replace('/', '', $part);
-
-        if ($bare) {
-            $answer = array_merge($answer, array($bare));
-        }
-        if ($part) {
-            $slash = (substr($part, -1) == '/') ? '/' : '';
-        }
-
-        return array($answer, $slash);
-    }
-
-    protected $oldHost = null;
+    /**
+     * @var HTTPRequest
+     */
+    protected $request = null;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oldHost = $_SERVER['HTTP_HOST'];
-        $_GET['parameterconfirmationtokentest_notoken'] = 'value';
-        $_GET['parameterconfirmationtokentest_empty'] = '';
-        $_GET['parameterconfirmationtokentest_withtoken'] = '1';
-        $_GET['parameterconfirmationtokentest_withtokentoken'] = 'dummy';
-        $_GET['parameterconfirmationtokentest_nulltoken'] = '1';
-        $_GET['parameterconfirmationtokentest_nulltokentoken'] = null;
-        $_GET['parameterconfirmationtokentest_emptytoken'] = '1';
-        $_GET['parameterconfirmationtokentest_emptytokentoken'] = '';
-    }
-
-    protected function tearDown()
-    {
-        foreach ($_GET as $param => $value) {
-            if (stripos($param, 'parameterconfirmationtokentest_') === 0) {
-                unset($_GET[$param]);
-            }
-        }
-        $_SERVER['HTTP_HOST'] = $this->oldHost;
-        parent::tearDown();
+        $get = [];
+        $get['parameterconfirmationtokentest_notoken'] = 'value';
+        $get['parameterconfirmationtokentest_empty'] = '';
+        $get['parameterconfirmationtokentest_withtoken'] = '1';
+        $get['parameterconfirmationtokentest_withtokentoken'] = 'dummy';
+        $get['parameterconfirmationtokentest_nulltoken'] = '1';
+        $get['parameterconfirmationtokentest_nulltokentoken'] = null;
+        $get['parameterconfirmationtokentest_emptytoken'] = '1';
+        $get['parameterconfirmationtokentest_emptytokentoken'] = '';
+        $this->request = new HTTPRequest('GET', '/', $get);
     }
 
     public function testParameterDetectsParameters()
     {
-        $withoutToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_notoken');
-        $emptyParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_empty');
-        $withToken = new ParameterConfirmationTokenTest_ValidToken('parameterconfirmationtokentest_withtoken');
-        $withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam');
-        $nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken');
-        $emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken');
+        $withoutToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_notoken', $this->request);
+        $emptyParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_empty', $this->request);
+        $withToken = new ParameterConfirmationTokenTest_ValidToken('parameterconfirmationtokentest_withtoken', $this->request);
+        $withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam', $this->request);
+        $nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken', $this->request);
+        $emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken', $this->request);
 
         // Check parameter
         $this->assertTrue($withoutToken->parameterProvided());
@@ -85,27 +65,27 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $this->assertTrue($emptyToken->reloadRequired());
 
         // Check suppression
-        $this->assertTrue(isset($_GET['parameterconfirmationtokentest_notoken']));
+        $this->assertEquals('value', $this->request->getVar('parameterconfirmationtokentest_notoken'));
         $withoutToken->suppress();
-        $this->assertFalse(isset($_GET['parameterconfirmationtokentest_notoken']));
+        $this->assertNull($this->request->getVar('parameterconfirmationtokentest_notoken'));
     }
 
     public function testPrepareTokens()
     {
         // Test priority ordering
         $token = ParameterConfirmationToken::prepare_tokens(
-            array(
-            'parameterconfirmationtokentest_notoken',
-            'parameterconfirmationtokentest_empty',
-            'parameterconfirmationtokentest_noparam'
-            )
+            [
+                'parameterconfirmationtokentest_notoken',
+                'parameterconfirmationtokentest_empty',
+                'parameterconfirmationtokentest_noparam'
+            ],
+            $this->request
         );
         // Test no invalid tokens
         $this->assertEquals('parameterconfirmationtokentest_empty', $token->getName());
         $token = ParameterConfirmationToken::prepare_tokens(
-            array(
-            'parameterconfirmationtokentest_noparam'
-            )
+            [ 'parameterconfirmationtokentest_noparam' ],
+            $this->request
         );
         $this->assertEmpty($token);
     }
@@ -118,25 +98,15 @@ class ParameterConfirmationTokenTest extends SapphireTest
      */
     public function testCurrentAbsoluteURLHandlesSlashes()
     {
-        global $url;
+        $token = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_parameter',
+            $this->request
+        );
 
-        $token = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_parameter');
-
-        foreach (array('foo','foo/') as $host) {
-            list($hostAnswer, $hostSlash) = $this->addPart(array(), '', $host);
-
-            foreach (array('', '/', 'bar', 'bar/', '/bar', '/bar/') as $base) {
-                list($baseAnswer, $baseSlash) = $this->addPart($hostAnswer, $hostSlash, $base);
-
-                foreach (array('', '/', 'baz', 'baz/', '/baz', '/baz/') as $url) {
-                    list($urlAnswer, $urlSlash) = $this->addPart($baseAnswer, $baseSlash, $url);
-
-                    $_SERVER['HTTP_HOST'] = $host;
-                    ParameterConfirmationToken::$alternateBaseURL = $base;
-
-                    $this->assertEquals('http://'.implode('/', $urlAnswer) . $urlSlash, $token->currentURL());
-                }
-            }
+        foreach (array('', '/', 'bar', 'bar/', '/bar', '/bar/') as $url) {
+            $this->request->setUrl($url);
+            $expected = rtrim(Controller::join_links(BASE_URL, '/', $url), '/') ?: '/';
+            $this->assertEquals($expected, $token->currentURL(), "Invalid redirect for request url $url");
         }
     }
 }
