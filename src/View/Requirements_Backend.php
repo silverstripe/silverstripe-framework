@@ -2,8 +2,8 @@
 
 namespace SilverStripe\View;
 
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -13,7 +13,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 
 class Requirements_Backend

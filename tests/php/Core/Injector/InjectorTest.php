@@ -967,7 +967,10 @@ class InjectorTest extends SapphireTest
         // Test that nested injector values can be overridden
         Injector::nest();
         $this->nestingLevel++;
-        Injector::inst()->unregisterAllObjects();
+        Injector::inst()->unregisterObjects([
+            TestStaticInjections::class,
+            MyParentClass::class,
+        ]);
         $newsi = Injector::inst()->get(TestStaticInjections::class);
         $newsi->backend = new InjectorTest\OriginalRequirementsBackend();
         Injector::inst()->registerService($newsi, TestStaticInjections::class);
@@ -990,7 +993,10 @@ class InjectorTest extends SapphireTest
         $this->assertInstanceOf(MyChildClass::class, Injector::inst()->get(MyChildClass::class));
 
         // Test reset of cache
-        Injector::inst()->unregisterAllObjects();
+        Injector::inst()->unregisterObjects([
+            TestStaticInjections::class,
+            MyParentClass::class,
+        ]);
         $si = Injector::inst()->get(TestStaticInjections::class);
         $this->assertInstanceOf(TestStaticInjections::class, $si);
         $this->assertInstanceOf(NewRequirementsBackend::class, $si->backend);

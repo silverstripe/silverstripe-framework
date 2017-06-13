@@ -27,8 +27,15 @@ use SilverStripe\View\ThemeResourceLoader;
 
 class AppKernel extends CoreKernel
 {
-    public function __construct()
+    /**
+     * @var bool
+     */
+    protected $flush = false;
+
+    public function __construct($flush = false)
     {
+        $this->flush = $flush;
+
         // Initialise the dependency injector as soon as possible, as it is
         // subsequently used by some of the following code
         $injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
@@ -356,27 +363,29 @@ class AppKernel extends CoreKernel
     }
 
     /**
+     * @return bool
+     */
+    protected function getIncludeTests()
+    {
+        return false;
+    }
+
+    /**
      * Boot all manifests
      */
     protected function bootManifests()
     {
-        // Regenerate the manifest if ?flush is set, or if the database is being built.
-        // The coupling is a hack, but it removes an annoying bug where new classes
-        // referenced in _config.php files can be referenced during the build process.
-        $flush = isset($_GET['flush']) ||
-            trim($_GET['url'], '/') === trim(BASE_URL . '/dev/build', '/');
-
         // Setup autoloader
-        $this->getClassLoader()->init(false, $flush);
+        $this->getClassLoader()->init($this->getIncludeTests(), $this->flush);
 
         // Find modules
-        $this->getModuleLoader()->init(false, $flush);
+        $this->getModuleLoader()->init($this->getIncludeTests(), $this->flush);
 
         // Flush config
-        if ($flush) {
+        if ($this->flush) {
             $config = $this->getConfigLoader()->getManifest();
             if ($config instanceof CachedConfigCollection) {
-                $config->setFlush($flush);
+                $config->setFlush(true);
             }
         }
 
@@ -386,7 +395,7 @@ class AppKernel extends CoreKernel
         // Find default templates
         $defaultSet = $this->getThemeResourceLoader()->getSet('$default');
         if ($defaultSet instanceof ThemeManifest) {
-            $defaultSet->init(false, $flush);
+            $defaultSet->init($this->getIncludeTests(), $this->flush);
         }
     }
 

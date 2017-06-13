@@ -1,0 +1,9 @@
+---
+Name: sapphiretest
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Dev\SapphireTestState:
+    properties:
+      States:
+        flushable: %$SilverStripe\Dev\FlushableTestState
+        requirements: %$SilverStripe\View\Dev\RequirementsTestState

@@ -2,14 +2,15 @@
 
 namespace SilverStripe\Core\Injector;
 
+use ArrayObject;
+use InvalidArgumentException;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionMethod;
+use ReflectionObject;
+use ReflectionProperty;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use ReflectionProperty;
-use ArrayObject;
-use ReflectionObject;
-use ReflectionMethod;
-use Psr\Container\ContainerInterface;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -231,16 +232,10 @@ class Injector implements ContainerInterface
     protected $nestedFrom = null;
 
     /**
-     * If a user wants to use the injector as a static reference
-     *
-     * @param array $config
      * @return Injector
      */
-    public static function inst($config = null)
+    public static function inst()
     {
-        if (!self::$instance) {
-            self::$instance = new Injector($config);
-        }
         return self::$instance;
     }
 
@@ -404,7 +399,7 @@ class Injector implements ContainerInterface
 
             // make sure the class is set...
             if (empty($class)) {
-                throw new \InvalidArgumentException('Missing spec class');
+                throw new InvalidArgumentException('Missing spec class');
             }
             $spec['class'] = $class;
 
@@ -651,21 +646,21 @@ class Injector implements ContainerInterface
 
                 // Format validation
                 if (!is_array($method) || !isset($method[0]) || isset($method[2])) {
-                    throw new \InvalidArgumentException(
+                    throw new InvalidArgumentException(
                         "'calls' entries in service definition should be 1 or 2 element arrays."
                     );
                 }
                 if (!is_string($method[0])) {
-                    throw new \InvalidArgumentException("1st element of a 'calls' entry should be a string");
+                    throw new InvalidArgumentException("1st element of a 'calls' entry should be a string");
                 }
                 if (isset($method[1]) && !is_array($method[1])) {
-                    throw new \InvalidArgumentException("2nd element of a 'calls' entry should an arguments array");
+                    throw new InvalidArgumentException("2nd element of a 'calls' entry should an arguments array");
                 }
 
                 // Check that the method exists and is callable
                 $objectMethod = array($object, $method[0]);
                 if (!is_callable($objectMethod)) {
-                    throw new \InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
+                    throw new InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
                 }
 
                 // Call it
@@ -847,16 +842,18 @@ class Injector implements ContainerInterface
      * @param object $service The object to register
      * @param string $replace The name of the object to replace (if different to the
      * class name of the object to register)
+     * @return $this
      */
     public function registerService($service, $replace = null)
     {
         $registerAt = get_class($service);
-        if ($replace != null) {
+        if ($replace !== null) {
             $registerAt = $replace;
         }
 
         $this->specs[$registerAt] = array('class' => get_class($service));
         $this->serviceCache[$registerAt] = $service;
+        return $this;
     }
 
     /**
@@ -864,18 +861,40 @@ class Injector implements ContainerInterface
      * by the inject
      *
      * @param string $name The name to unregister
+     * @return $this
      */
     public function unregisterNamedObject($name)
     {
         unset($this->serviceCache[$name]);
+        return $this;
     }
 
     /**
-     * Clear out all objects that are managed by the injetor.
+     * Clear out objects of one or more types that are managed by the injetor.
+     *
+     * @param array|string $types Base class of object (not service name) to remove
+     * @return $this
      */
-    public function unregisterAllObjects()
+    public function unregisterObjects($types)
     {
-        $this->serviceCache = array('Injector' => $this);
+        if (!is_array($types)) {
+            $types = [ $types ];
+        }
+
+        // Filter all objects
+        foreach ($this->serviceCache as $key => $object) {
+            foreach ($types as $filterClass) {
+                // Prevent destructive flushing
+                if (strcasecmp($filterClass, 'object') === 0) {
+                    throw new InvalidArgumentException("Global unregistration is not allowed");
+                }
+                if ($object instanceof $filterClass) {
+                    unset($this->serviceCache[$key]);
+                    break;
+                }
+            }
+        }
+        return $this;
     }
 
     /**

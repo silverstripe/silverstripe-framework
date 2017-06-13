@@ -7,15 +7,14 @@ use SilverStripe\Core\Startup\OutputMiddleware;
 use SilverStripe\Control\HTTPRequest;
 
 require __DIR__ . '/src/includes/cli.php';
-$_SERVER['SCRIPT_FILENAME'] = __FILE__;
-chdir(__DIR__);
-
-
 require __DIR__ . '/src/includes/autoload.php';
 
-// Default application
+// Build request and detect flush
 $request = HTTPRequest::createFromEnvironment();
-$kernel = new AppKernel();
+$flush = $request->getVar('flush') || strpos($request->getURL(), 'dev/build') === 0;
+
+// Default application
+$kernel = new AppKernel($flush);
 $app = new HTTPApplication($kernel);
 $app->addMiddleware(new OutputMiddleware());
 $app->handle($request);
