@@ -16,11 +16,14 @@ class TestKernel extends AppKernel
     /**
      * Reset kernel between tests.
      * Note: this avoids resetting services (See TestState for service specific reset)
+     *
+     * @return $this
      */
     public function reset()
     {
         $this->setEnvironment(self::DEV);
         $this->bootPHP();
+        return $this;
     }
 
     protected function bootPHP()

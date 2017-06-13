@@ -18,7 +18,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
-use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\TestKernel;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataExtension;
@@ -130,23 +130,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected $backupGlobals = false;
 
     /**
-     * Test application kernel stace.
-     *
-     * @var TestKernel[]
-     */
-    protected static $kernels = [];
-
-    /**
-     * Get active Kernel instance
-     *
-     * @return TestKernel
-     */
-    protected static function kernel()
-    {
-        return end(static::$kernels);
-    }
-
-    /**
      * State management container for SapphireTest
      *
      * @var TestState
@@ -213,12 +196,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        // Reset state
-        static::kernel()->reset();
-
-        // Nest
-        static::$kernels[] = static::kernel()->nest();
-
         // Call state helpers
         static::$state->setUp($this);
 
@@ -306,12 +283,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Start tests
         static::start();
 
-        // Reset kernel
-        static::kernel()->reset();
-
-        // Nest kernel
-        static::$kernels[] = static::kernel()->nest();
-
         // Call state helpers
         static::$state->setUpOnce(static::class);
 
@@ -339,13 +310,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     {
         // Call state helpers
         static::$state->tearDownOnce(static::class);
-
-        // Unnest
-        array_pop(static::$kernels);
-        static::kernel()->activate();
-
-        // Reset PHP state
-        static::kernel()->reset();
 
         // Reset DB schema
         static::resetDBSchema();
@@ -460,7 +424,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected function getCurrentAbsolutePath()
     {
-        $filename = static::kernel()->getClassLoader()->getItemPath(static::class);
+        $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
             throw new LogicException("getItemPath returned null for " . static::class);
         }
@@ -505,13 +469,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Call state helpers
         static::$state->tearDown($this);
-
-        // Unnest
-        array_pop(static::$kernels);
-        static::kernel()->activate();
-
-        // Reset state
-        static::kernel()->reset();
     }
 
     public static function assertContains(
@@ -922,8 +879,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         if (static::is_running_test()) {
             return;
         }
+
         // Health check
-        if (InjectorLoader::inst()->countManifests() || static::kernel()) {
+        if (InjectorLoader::inst()->countManifests()) {
             throw new LogicException("SapphireTest::start() cannot be called within another application");
         }
         static::set_is_running_test(true);
@@ -934,8 +892,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $request->setSession($session);
 
         // Test application
-        static::$kernels[] = new TestKernel();
-        $app = new HTTPApplication(static::kernel());
+        $kernel = new TestKernel();
+        $app = new HTTPApplication($kernel);
 
         // Custom application
         $app->execute(function () use ($request) {
