@@ -591,7 +591,7 @@ abstract class DBSchemaManager {
 		if (!isset($this->tableList[strtolower($table)])) $newTable = true;
 
 		if (is_array($spec)) {
-			$specValue = $this->$spec_orig['type']($spec_orig['parts']);
+			$specValue = $this->{$spec_orig['type']}($spec_orig['parts']);
 		} else {
 			$specValue = $spec;
 		}
