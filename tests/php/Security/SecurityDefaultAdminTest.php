@@ -2,19 +2,17 @@
 
 namespace SilverStripe\Security\Tests;
 
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Permission;
-use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Service\DefaultAdminService;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\DefaultAdminService;
 
 class SecurityDefaultAdminTest extends SapphireTest
 {
-
     protected $usesDatabase = true;
 
     protected $defaultUsername = null;
+
     protected $defaultPassword = null;
 
     protected function setUp()
@@ -28,34 +26,41 @@ class SecurityDefaultAdminTest extends SapphireTest
         }
         self::empty_temp_db();
 
-        $this->defaultUsername = Security::default_admin_username();
-        $this->defaultPassword = Security::default_admin_password();
-        Security::clear_default_admin();
-        Security::setDefaultAdmin('admin', 'password');
+        if (DefaultAdminService::hasDefaultAdmin()) {
+            $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();
+            $this->defaultPassword = DefaultAdminService::getDefaultAdminPassword();
+            DefaultAdminService::clearDefaultAdmin();
+        } else {
+            $this->defaultUsername = null;
+            $this->defaultPassword = null;
+        }
+        DefaultAdminService::setDefaultAdmin('admin', 'password');
         Permission::reset();
     }
 
     protected function tearDown()
     {
-        Security::clear_default_admin();
-        Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        DefaultAdminService::clearDefaultAdmin();
+        if ($this->defaultUsername) {
+            DefaultAdminService::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        }
         Permission::reset();
         parent::tearDown();
     }
 
     public function testCheckDefaultAdmin()
     {
-        $this->assertTrue(Security::has_default_admin());
+        $this->assertTrue(DefaultAdminService::hasDefaultAdmin());
         $this->assertTrue(
-            Security::check_default_admin('admin', 'password'),
+            DefaultAdminService::isDefaultAdminCredentials('admin', 'password'),
             'Succeeds with correct username and password'
         );
         $this->assertFalse(
-            Security::check_default_admin('wronguser', 'password'),
+            DefaultAdminService::isDefaultAdminCredentials('wronguser', 'password'),
             'Fails with incorrect username'
         );
         $this->assertFalse(
-            Security::check_default_admin('admin', 'wrongpassword'),
+            DefaultAdminService::isDefaultAdminCredentials('admin', 'wrongpassword'),
             'Fails with incorrect password'
         );
     }
@@ -65,33 +70,34 @@ class SecurityDefaultAdminTest extends SapphireTest
         $adminMembers = Permission::get_members_by_permission('ADMIN');
         $this->assertEquals(0, $adminMembers->count());
 
-        $admin = Security::findAnAdministrator();
+        $admin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
 
         $this->assertInstanceOf(Member::class, $admin);
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
-        $this->assertEquals($admin->Email, Security::default_admin_username());
+        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
+        $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertNull($admin->Password);
     }
 
     public function testFindAnAdministratorWithoutDefaultAdmin()
     {
-        $service = Injector::inst()->get(DefaultAdminService::class);
         // Clear default admin
+        $service = DefaultAdminService::singleton();
         DefaultAdminService::clearDefaultAdmin();
 
         $adminMembers = Permission::get_members_by_permission('ADMIN');
         $this->assertEquals(0, $adminMembers->count());
 
         $admin = $service->findOrCreateDefaultAdmin();
-
         $this->assertNull($admin);
+
         // When clearing the admin, it will not re-instate it anymore
         DefaultAdminService::setDefaultAdmin('admin', 'password');
-        $admin = $service->findAnAdministrator();
+        $admin = $service->findOrCreateDefaultAdmin();
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 
-        // User should be blank
-        $this->assertEmpty($admin->Email);
+        // User should have Email but no Password
+        $this->assertEquals('admin', $admin->Email);
         $this->assertEmpty($admin->Password);
     }
 
@@ -100,11 +106,11 @@ class SecurityDefaultAdminTest extends SapphireTest
         $adminMembers = Permission::get_members_by_permission('ADMIN');
         $this->assertEquals(0, $adminMembers->count());
 
-        $admin = Member::default_admin();
-
+        $admin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
         $this->assertInstanceOf(Member::class, $admin);
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
-        $this->assertEquals($admin->Email, Security::default_admin_username());
+        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
+        $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertNull($admin->Password);
     }
 }

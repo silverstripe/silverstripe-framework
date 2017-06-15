@@ -1,69 +1,91 @@
 <?php
 
-namespace SilverStripe\Security\Service;
+namespace SilverStripe\Security;
 
+use BadMethodCallException;
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Group;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Permission;
+use SilverStripe\Core\Injector\Injectable;
 
+/**
+ * Provides access to the default admin
+ */
 class DefaultAdminService
 {
-
     use Extensible;
     use Configurable;
+    use Injectable;
 
     /**
      * @var bool
      */
-    protected static $has_default_admin = true;
+    protected static $has_default_admin = false;
 
     /**
      * @var string
      */
-    protected static $default_username;
+    protected static $default_username = null;
 
     /**
      * @var string
      */
-    protected static $default_password;
+    protected static $default_password = null;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     /**
      * Set the default admin credentials
      *
      * @param string $username
      * @param string $password
-     * @return bool
      */
     public static function setDefaultAdmin($username, $password)
     {
         // don't overwrite if already set
-        if (static::$default_username || static::$default_password) {
-            throw new \LogicException('Default admin is already set', 255);
+        if (static::hasDefaultAdmin()) {
+            throw new BadMethodCallException(
+                "Default admin already exists. Use clearDefaultAdmin() first."
+            );
+        }
+
+        if (empty($username) || empty($password)) {
+            throw new InvalidArgumentException("Default admin username / password cannot be empty");
         }
 
         static::$default_username = $username;
         static::$default_password = $password;
-        static::$has_default_admin = !empty($username) && !empty($password);
-
-        return true;
+        static::$has_default_admin = true;
     }
 
     /**
      * @return string The default admin username
+     * @throws BadMethodCallException Throws exception if there is no default admin
      */
     public static function getDefaultAdminUsername()
     {
+        if (!static::hasDefaultAdmin()) {
+            throw new BadMethodCallException(
+                "No default admin configured. Please call hasDefaultAdmin() before getting default admin username"
+            );
+        }
         return static::$default_username;
     }
 
     /**
      * @return string The default admin password
+     * @throws BadMethodCallException Throws exception if there is no default admin
      */
     public static function getDefaultAdminPassword()
     {
+        if (!static::hasDefaultAdmin()) {
+            throw new BadMethodCallException(
+                "No default admin configured. Please call hasDefaultAdmin() before getting default admin password"
+            );
+        }
         return static::$default_password;
     }
 
@@ -82,24 +104,20 @@ class DefaultAdminService
      */
     public static function clearDefaultAdmin()
     {
-        self::$default_username = null;
-        self::$default_password = null;
+        static::$has_default_admin = false;
+        static::$default_username = null;
+        static::$default_password = null;
     }
 
-
     /**
-     * @return null|Member
+     * @return Member|null
      */
     public function findOrCreateDefaultAdmin()
     {
-        $this->extend('beforeFindAdministrator');
+        $this->extend('beforeFindOrCreateDefaultAdmin');
 
         // Check if we have default admins
-        if (
-            !static::$has_default_admin ||
-            empty(static::$default_username) ||
-            empty(static::$default_password)
-        ) {
+        if (!static::hasDefaultAdmin()) {
             return null;
         }
 
@@ -137,29 +155,37 @@ class DefaultAdminService
                 ->add($admin);
         }
 
-        $this->extend('afterFindAnAdministrator');
+        $this->extend('afterFindOrCreateDefaultAdmin', $admin);
 
         return $admin;
     }
 
     /**
+     * Check if the user is a default admin.
+     * Returns false if there is no default admin.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public static function isDefaultAdmin($username)
+    {
+        return static::hasDefaultAdmin()
+            && $username
+            && $username === static::getDefaultAdminUsername();
+    }
+
+    /**
+     * Check if the user credentials match the default admin.
+     * Returns false if there is no default admin.
+     *
      * @param string $username
      * @param string $password
-     * @return ValidationResult
+     * @return bool
      */
-    public function validateDefaultAdmin($username, $password)
+    public static function isDefaultAdminCredentials($username, $password)
     {
-        $result = new ValidationResult();
-        if (
-            static::$default_username === $username
-            && static::$default_password === $password
-            && static::$has_default_admin
-        ) {
-            return $result;
-        }
-
-        $result->addError('No valid default admin found');
-
-        return $result;
+        return static::isDefaultAdmin($username)
+            && $password
+            && $password === static::getDefaultAdminPassword();
     }
 }

@@ -6,13 +6,13 @@ use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Service\DefaultAdminService;
+use SilverStripe\Security\DefaultAdminService;
 
 /**
  * Authenticator for the default "member" method
@@ -28,7 +28,7 @@ class MemberAuthenticator implements Authenticator
     {
         // Bitwise-OR of all the supported services in this Authenticator, to make a bitmask
         return Authenticator::LOGIN | Authenticator::LOGOUT | Authenticator::CHANGE_PASSWORD
-            | Authenticator::RESET_PASSWORD;
+            | Authenticator::RESET_PASSWORD | Authenticator::CHECK_PASSWORD;
     }
 
     /**
@@ -62,26 +62,24 @@ class MemberAuthenticator implements Authenticator
     protected function authenticateMember($data, &$result = null, $member = null)
     {
         $email = !empty($data['Email']) ? $data['Email'] : null;
-        // Default success to false
-        $result = new ValidationResult();
+        $result = $result ?: ValidationResult::create();
 
         // Check default login (see Security::setDefaultAdmin())
-        $asDefaultAdmin = $email === DefaultAdminService::getDefaultAdminUsername();
+        $asDefaultAdmin = DefaultAdminService::isDefaultAdmin($email);
         if ($asDefaultAdmin) {
             // If logging is as default admin, ensure record is setup correctly
-            /** @var Member $member */
-            $service = Injector::inst()->get(DefaultAdminService::class);
-            $member = $service->findOrCreateDefaultAdmin();
-            $validAdmin = $service->validateDefaultAdmin($email, $data['Password']);
-            $result = $member->canLogIn();
-            //protect against failed login
-            if ($validAdmin->isValid() && $result->isValid()) {
-                return $member;
-            } else {
-                $result->addError(_t(
-                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                    "The provided details don't seem to be correct. Please try again."
-                ));
+            $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+            $member->validateCanLogin($result);
+            if ($result->isValid()) {
+                // Check if default admin credentials are correct
+                if (DefaultAdminService::isDefaultAdminCredentials($email, $data['Password'])) {
+                    return $member;
+                } else {
+                    $result->addError(_t(
+                        'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                        "The provided details don't seem to be correct. Please try again."
+                    ));
+                }
             }
         }
 
@@ -97,7 +95,7 @@ class MemberAuthenticator implements Authenticator
 
         // Validate against member if possible
         if ($member && !$asDefaultAdmin) {
-            $result = $member->checkPassword($data['Password']);
+            $this->checkPassword($member, $data['Password'], $result);
         }
 
         // Emit failure to member and form (if available)
@@ -105,17 +103,15 @@ class MemberAuthenticator implements Authenticator
             if ($member) {
                 $member->registerFailedLogin();
             }
+        } elseif ($member) {
+            $member->registerSuccessfulLogin();
         } else {
-            if ($member) {
-                $member->registerSuccessfulLogin();
-            } else {
-                // A non-existing member occurred. This will make the result "valid" so let's invalidate
-                $result->addError(_t(
-                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                    "The provided details don't seem to be correct. Please try again."
-                ));
-                $member = null;
-            }
+            // A non-existing member occurred. This will make the result "valid" so let's invalidate
+            $result->addError(_t(
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                "The provided details don't seem to be correct. Please try again."
+            ));
+            return null;
         }
 
         return $member;
@@ -128,12 +124,22 @@ class MemberAuthenticator implements Authenticator
      * password is invalid.
      *
      * @param Member $member
-     * @param  string $password
+     * @param string $password
+     * @param ValidationResult $result
      * @return ValidationResult
      */
-    public function checkPassword($member, $password)
+    public function checkPassword(Member $member, $password, ValidationResult $result = null)
     {
-        $result = $member->canLogIn();
+        // Check if allowed to login
+        $result = $member->validateCanLogin($result);
+        if (!$result->isValid()) {
+            return $result;
+        }
+
+        // Allow default admin to login as self
+        if (DefaultAdminService::isDefaultAdminCredentials($member->Email, $password)) {
+            return $result;
+        }
 
         // Check a password is set on this member
         if (empty($member->Password) && $member->exists()) {

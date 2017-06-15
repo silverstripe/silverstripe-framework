@@ -31,14 +31,6 @@ class SecurityTest extends FunctionalTest
 
     protected $autoFollowRedirection = false;
 
-    protected $priorAuthenticators = array();
-
-    protected $priorDefaultAuthenticator = null;
-
-    protected $priorUniqueIdentifierField = null;
-
-    protected $priorRememberUsername = null;
-
     protected static $extra_controllers = [
         SecurityTest\NullController::class,
         SecurityTest\SecuredController::class,
@@ -50,9 +42,6 @@ class SecurityTest extends FunctionalTest
         Config::modify()->set(MemberAuthenticator::class, 'authenticators', []);
         Config::modify()->set(MemberAuthenticator::class, 'default_authenticator', MemberAuthenticator::class);
 
-        // And that the unique identified field is 'Email'
-        $this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
-        $this->priorRememberUsername = Security::config()->remember_username;
         /**
          * @skipUpgrade
          */
@@ -61,21 +50,6 @@ class SecurityTest extends FunctionalTest
         parent::setUp();
 
         Config::modify()->merge('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
-    }
-
-    protected function tearDown()
-    {
-        // Restore selected authenticator
-
-        // MemberAuthenticator might not actually be present
-        // Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
-        // Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
-
-        // Restore unique identifier field
-        Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;
-        Security::config()->remember_username = $this->priorRememberUsername;
-
-        parent::tearDown();
     }
 
     public function testAccessingAuthenticatedPageRedirectsToLoginForm()

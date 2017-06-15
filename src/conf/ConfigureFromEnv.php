@@ -46,16 +46,14 @@
  *  - SS_SEND_ALL_EMAILS_FROM: If you set this define, all emails will be send from this address.
  */
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Security\BasicAuth;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Service\DefaultAdminService;
+use SilverStripe\Security\DefaultAdminService;
 
 global $database;
 

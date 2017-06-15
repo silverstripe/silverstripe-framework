@@ -7,10 +7,10 @@ use SilverStripe\ORM\DataObject;
 /**
  * Keep track of users' previous passwords, so that we can check that new passwords aren't changed back to old ones.
  *
- * @property string Password
- * @property string Salt
- * @property string PasswordEncryption
- * @property int MemberID ID of the Member
+ * @property string $Password
+ * @property string $Salt
+ * @property string $PasswordEncryption
+ * @property int $MemberID ID of the Member
  * @method Member Member() Owner of the password
  */
 class MemberPassword extends DataObject
@@ -21,9 +21,9 @@ class MemberPassword extends DataObject
         'PasswordEncryption' => 'Varchar(50)',
     );
 
-    private static $has_one = array(
-        'Member' => 'SilverStripe\\Security\\Member'
-    );
+    private static $has_one = [
+        'Member' => Member::class,
+    ];
 
     private static $table_name = "MemberPassword";
 
@@ -47,12 +47,12 @@ class MemberPassword extends DataObject
      * Check if the given password is the same as the one stored in this record.
      * See {@link Member->checkPassword()}.
      *
-     * @param String $password Cleartext password
-     * @return Boolean
+     * @param string $password Cleartext password
+     * @return bool
      */
     public function checkPassword($password)
     {
-        $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
-        return $e->check($this->Password, $password, $this->Salt, $this->Member());
+        $encryptor = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+        return $encryptor->check($this->Password, $password, $this->Salt, $this->Member());
     }
 }

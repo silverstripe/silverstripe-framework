@@ -5,9 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\Requirements;
 
 /**
  * Two masked input fields, checks for matching passwords.
@@ -520,8 +518,8 @@ class ConfirmedPasswordField extends FormField
             }
 
             // With a valid user and password, check the password is correct
-            $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHANGE_PASSWORD);
-            foreach($authenticators as $authenticator) {
+            $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
+            foreach ($authenticators as $authenticator) {
                 $checkResult = $authenticator->checkPassword($member, $this->currentPasswordValue);
                 if (!$checkResult->isValid()) {
                     $validator->validationError(

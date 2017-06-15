@@ -16,12 +16,35 @@ use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
  */
 interface Authenticator
 {
-
+    /**
+     * Can log a user in
+     */
     const LOGIN = 1;
+
+    /**
+     * Can log user out
+     */
     const LOGOUT = 2;
+
+    /**
+     * Can change password (check + reset)
+     */
     const CHANGE_PASSWORD = 4;
+
+    /**
+     * Can modify password
+     */
     const RESET_PASSWORD = 8;
+
+    /**
+     * In-CMS authentication
+     */
     const CMS_LOGIN = 16;
+
+    /**
+     * Can check password is valid without logging the user in or modifying the password
+     */
+    const CHECK_PASSWORD = 32;
 
     /**
      * Returns the services supported by this authenticator
@@ -86,4 +109,17 @@ interface Authenticator
      * @return Member The matched member, or null if the authentication fails
      */
     public function authenticate($data, &$result = null);
+
+    /**
+     * Check if the passed password matches the stored one (if the member is not locked out).
+     *
+     * Note, we don't return early, to prevent differences in timings to give away if a member
+     * password is invalid.
+     *
+     * @param Member $member
+     * @param string $password
+     * @param ValidationResult $result
+     * @return ValidationResult
+     */
+    public function checkPassword(Member $member, $password, ValidationResult $result = null);
 }

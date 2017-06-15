@@ -2,26 +2,27 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\Cookie;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\MemberPassword;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Group;
-use SilverStripe\Security\Permission;
 use SilverStripe\Security\IdentityStore;
-use SilverStripe\Security\PasswordEncryptor_Blowfish;
-use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Member_Validator;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
+use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
+use SilverStripe\Security\MemberPassword;
+use SilverStripe\Security\PasswordEncryptor_Blowfish;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
-use SilverStripe\Control\HTTPRequest;
 
 class MemberTest extends FunctionalTest
 {
@@ -50,24 +51,13 @@ class MemberTest extends FunctionalTest
     {
         parent::setUp();
 
-        $this->orig['Member_unique_identifier_field'] = Member::config()->unique_identifier_field;
-        Member::config()->unique_identifier_field = 'Email';
+        Member::config()->set('unique_identifier_field', 'Email');
         Member::set_password_validator(null);
     }
 
-    protected function tearDown()
-    {
-        Member::config()->unique_identifier_field = $this->orig['Member_unique_identifier_field'];
-        parent::tearDown();
-    }
-
-
-
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWriteDoesntMergeNewRecordWithExistingMember()
     {
+        $this->expectException(ValidationException::class);
         $m1 = new Member();
         $m1->Email = 'member@test.com';
         $m1->write();
@@ -101,7 +91,7 @@ class MemberTest extends FunctionalTest
         $memberWithPassword->write();
         $this->assertEquals(
             $memberWithPassword->PasswordEncryption,
-            Security::config()->password_encryption_algorithm,
+            Security::config()->get('password_encryption_algorithm'),
             'Password encryption is set for new member records on first write (with setting "Password")'
         );
 
@@ -120,8 +110,7 @@ class MemberTest extends FunctionalTest
         $member->PasswordEncryption = 'sha1_v2.4';
         $member->write();
 
-        $origAlgo = Security::config()->password_encryption_algorithm;
-        Security::config()->password_encryption_algorithm = 'none';
+        Security::config()->set('password_encryption_algorithm', 'none');
 
         $member->Password = 'mynewpassword';
         $member->write();
@@ -130,10 +119,9 @@ class MemberTest extends FunctionalTest
             $member->PasswordEncryption,
             'sha1_v2.4'
         );
-        $result = $member->checkPassword('mynewpassword');
+        $auth = new MemberAuthenticator();
+        $result = $auth->checkPassword($member, 'mynewpassword');
         $this->assertTrue($result->isValid());
-
-        Security::config()->password_encryption_algorithm = $origAlgo;
     }
 
     public function testKeepsEncryptionOnEmptyPasswords()
@@ -150,16 +138,19 @@ class MemberTest extends FunctionalTest
             $member->PasswordEncryption,
             'sha1_v2.4'
         );
-        $result = $member->checkPassword('');
+        $auth = new MemberAuthenticator();
+        $result = $auth->checkPassword($member, '');
         $this->assertTrue($result->isValid());
     }
 
     public function testSetPassword()
     {
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $member->Password = "test1";
         $member->write();
-        $result = $member->checkPassword('test1');
+        $auth = new MemberAuthenticator();
+        $result = $auth->checkPassword($member, 'test1');
         $this->assertTrue($result->isValid());
     }
 
@@ -168,6 +159,7 @@ class MemberTest extends FunctionalTest
      */
     public function testPasswordChangeLogging()
     {
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
         $member->Password = "test1";
@@ -179,7 +171,7 @@ class MemberTest extends FunctionalTest
         $member->Password = "test3";
         $member->write();
 
-        $passwords = DataObject::get("SilverStripe\\Security\\MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
+        $passwords = DataObject::get(MemberPassword::class, "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
             ->getIterator();
         $this->assertNotNull($passwords);
         $passwords->rewind();
@@ -215,6 +207,7 @@ class MemberTest extends FunctionalTest
 
         $this->clearEmails();
 
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
         $valid = $member->changePassword('32asDF##$$%%');
@@ -236,6 +229,7 @@ class MemberTest extends FunctionalTest
         $this->clearEmails();
         $this->autoFollowRedirection = false;
 
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
 
@@ -353,8 +347,9 @@ class MemberTest extends FunctionalTest
      */
     public function testPasswordExpirySetting()
     {
-        Member::config()->password_expiry_days = 90;
+        Member::config()->set('password_expiry_days', 90);
 
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
         $valid = $member->changePassword("Xx?1234234");
@@ -363,7 +358,7 @@ class MemberTest extends FunctionalTest
         $expiryDate = date('Y-m-d', time() + 90*86400);
         $this->assertEquals($expiryDate, $member->PasswordExpiry);
 
-        Member::config()->password_expiry_days = null;
+        Member::config()->set('password_expiry_days', null);
         $valid = $member->changePassword("Xx?1234235");
         $this->assertTrue($valid->isValid());
 
@@ -372,6 +367,7 @@ class MemberTest extends FunctionalTest
 
     public function testIsPasswordExpired()
     {
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
         $this->assertFalse($member->isPasswordExpired());
@@ -394,14 +390,13 @@ class MemberTest extends FunctionalTest
     }
     public function testInGroups()
     {
+        /** @var Member $staffmember */
         $staffmember = $this->objFromFixture(Member::class, 'staffmember');
-        $managementmember = $this->objFromFixture(Member::class, 'managementmember');
-        $accountingmember = $this->objFromFixture(Member::class, 'accountingmember');
+        /** @var Member $ceomember */
         $ceomember = $this->objFromFixture(Member::class, 'ceomember');
 
         $staffgroup = $this->objFromFixture(Group::class, 'staffgroup');
         $managementgroup = $this->objFromFixture(Group::class, 'managementgroup');
-        $accountinggroup = $this->objFromFixture(Group::class, 'accountinggroup');
         $ceogroup = $this->objFromFixture(Group::class, 'ceogroup');
 
         $this->assertTrue(
@@ -420,7 +415,9 @@ class MemberTest extends FunctionalTest
 
     public function testAddToGroupByCode()
     {
+        /** @var Member $grouplessMember */
         $grouplessMember = $this->objFromFixture(Member::class, 'grouplessmember');
+        /** @var Group $memberlessGroup */
         $memberlessGroup = $this->objFromFixture(Group::class, 'memberlessgroup');
 
         $this->assertFalse($grouplessMember->Groups()->exists());
@@ -434,6 +431,7 @@ class MemberTest extends FunctionalTest
         $grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
         $this->assertEquals($grouplessMember->Groups()->count(), 2);
 
+        /** @var Group $group */
         $group = DataObject::get_one(
             Group::class,
             array(
@@ -447,7 +445,9 @@ class MemberTest extends FunctionalTest
 
     public function testRemoveFromGroupByCode()
     {
+        /** @var Member $grouplessMember */
         $grouplessMember = $this->objFromFixture(Member::class, 'grouplessmember');
+        /** @var Group $memberlessGroup */
         $memberlessGroup = $this->objFromFixture(Group::class, 'memberlessgroup');
 
         $this->assertFalse($grouplessMember->Groups()->exists());
@@ -461,6 +461,7 @@ class MemberTest extends FunctionalTest
         $grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
         $this->assertEquals($grouplessMember->Groups()->count(), 2);
 
+        /** @var Group $group */
         $group = DataObject::get_one(Group::class, "\"Code\" = 'somegroupthatwouldneverexist'");
         $this->assertNotNull($group);
         $this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
@@ -476,14 +477,20 @@ class MemberTest extends FunctionalTest
 
     public function testInGroup()
     {
+        /** @var Member $staffmember */
         $staffmember = $this->objFromFixture(Member::class, 'staffmember');
+        /** @var Member $managementmember */
         $managementmember = $this->objFromFixture(Member::class, 'managementmember');
+        /** @var Member $accountingmember */
         $accountingmember = $this->objFromFixture(Member::class, 'accountingmember');
+        /** @var Member $ceomember */
         $ceomember = $this->objFromFixture(Member::class, 'ceomember');
 
+        /** @var Group $staffgroup */
         $staffgroup = $this->objFromFixture(Group::class, 'staffgroup');
+        /** @var Group $managementgroup */
         $managementgroup = $this->objFromFixture(Group::class, 'managementgroup');
-        $accountinggroup = $this->objFromFixture(Group::class, 'accountinggroup');
+        /** @var Group $ceogroup */
         $ceogroup = $this->objFromFixture(Group::class, 'ceogroup');
 
         $this->assertTrue(
@@ -614,6 +621,7 @@ class MemberTest extends FunctionalTest
      */
     public function testName()
     {
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $member->setName('Test Some User');
         $this->assertEquals('Test Some User', $member->getName());
@@ -645,8 +653,11 @@ class MemberTest extends FunctionalTest
 
     public function testOnChangeGroups()
     {
+        /** @var Group $staffGroup */
         $staffGroup = $this->objFromFixture(Group::class, 'staffgroup');
+        /** @var Member $staffMember */
         $staffMember = $this->objFromFixture(Member::class, 'staffmember');
+        /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
         $newAdminGroup = new Group(array('Title' => 'newadmin'));
         $newAdminGroup->write();
@@ -685,7 +696,9 @@ class MemberTest extends FunctionalTest
      */
     public function testOnChangeGroupsByAdd()
     {
+        /** @var Member $staffMember */
         $staffMember = $this->objFromFixture(Member::class, 'staffmember');
+        /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
 
         // Setup new admin group
@@ -736,6 +749,7 @@ class MemberTest extends FunctionalTest
      */
     public function testOnChangeGroupsBySetIDList()
     {
+        /** @var Member $staffMember */
         $staffMember = $this->objFromFixture(Member::class, 'staffmember');
 
         // Setup new admin group
@@ -865,7 +879,7 @@ class MemberTest extends FunctionalTest
         $m2 = new Member();
         $m2->PasswordEncryption = 'blowfish';
         $m2->Salt = $enc->salt('456');
-        $m2Token = $m2->generateAutologinTokenAndStoreHash();
+        $m2->generateAutologinTokenAndStoreHash();
 
         $this->assertTrue($m1->validateAutoLoginToken($m1Token), 'Passes token validity test against matching member.');
         $this->assertFalse($m2->validateAutoLoginToken($m1Token), 'Fails token validity test against other member.');
@@ -873,12 +887,14 @@ class MemberTest extends FunctionalTest
 
     public function testRememberMeHashGeneration()
     {
+        /** @var Member $m1 */
         $m1 = $this->objFromFixture(Member::class, 'grouplessmember');
 
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
         $hashes = RememberLoginHash::get()->filter('MemberID', $m1->ID);
         $this->assertEquals($hashes->count(), 1);
+        /** @var RememberLoginHash $firstHash */
         $firstHash = $hashes->first();
         $this->assertNotNull($firstHash->DeviceID);
         $this->assertNotNull($firstHash->Hash);
@@ -893,6 +909,7 @@ class MemberTest extends FunctionalTest
 
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
+        /** @var RememberLoginHash $firstHash */
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
         $this->assertNotNull($firstHash);
 
@@ -966,11 +983,10 @@ class MemberTest extends FunctionalTest
 
     public function testExpiredRememberMeHashAutologin()
     {
-        /**
- * @var Member $m1
-*/
+        /** @var Member $m1 */
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
+        /** @var RememberLoginHash $firstHash */
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
         $this->assertNotNull($firstHash);
 
@@ -1026,6 +1042,7 @@ class MemberTest extends FunctionalTest
 
     public function testRememberMeMultipleDevices()
     {
+        /** @var Member $m1 */
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
 
         // First device
@@ -1035,10 +1052,12 @@ class MemberTest extends FunctionalTest
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 
         // Hash of first device
+        /** @var RememberLoginHash $firstHash */
         $firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
         $this->assertNotNull($firstHash);
 
         // Hash of second device
+        /** @var RememberLoginHash $secondHash */
         $secondHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->last();
         $this->assertNotNull($secondHash);
 
@@ -1093,7 +1112,7 @@ class MemberTest extends FunctionalTest
 
         // Logging out from the second device - only one device being logged out
         RememberLoginHash::config()->update('logout_across_devices', false);
-        $response = $this->get(
+        $this->get(
             'Security/logout',
             $this->session(),
             null,
@@ -1110,7 +1129,7 @@ class MemberTest extends FunctionalTest
         // Logging out from any device when all login hashes should be removed
         RememberLoginHash::config()->update('logout_across_devices', true);
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
-        $response = $this->get('Security/logout', $this->session());
+        $this->get('Security/logout', $this->session());
         $this->assertEquals(
             RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(),
             0
@@ -1152,6 +1171,7 @@ class MemberTest extends FunctionalTest
         //set up the config variables to enable login lockouts
         Member::config()->update('lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
 
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
         $failedLoginCount = $member->FailedLoginCount;
 
@@ -1165,7 +1185,7 @@ class MemberTest extends FunctionalTest
             );
 
             $this->assertTrue(
-                $member->canLogin()->isValid(),
+                $member->canLogin(),
                 "Member has been locked out too early"
             );
         }
@@ -1175,7 +1195,9 @@ class MemberTest extends FunctionalTest
     {
         // clear custom requirements for this test
         Member_Validator::config()->update('customRequired', null);
+        /** @var Member $memberA */
         $memberA = $this->objFromFixture(Member::class, 'admin');
+        /** @var Member $memberB */
         $memberB = $this->objFromFixture(Member::class, 'test');
 
         // create a blank form

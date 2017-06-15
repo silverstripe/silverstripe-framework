@@ -6,6 +6,9 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
 use SilverStripe\Security\Member;
 
+/**
+ * Provides authentication for the user within the CMS
+ */
 class CMSMemberAuthenticator extends MemberAuthenticator
 {
 

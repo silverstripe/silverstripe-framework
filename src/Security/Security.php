@@ -25,7 +25,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Service\DefaultAdminService;
+use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -270,13 +270,17 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getApplicableAuthenticators($service = Authenticator::LOGIN)
     {
-        $authenticators = $this->authenticators;
+        $authenticators = $this->getAuthenticators();
 
         /** @var Authenticator $authenticator */
         foreach ($authenticators as $name => $authenticator) {
             if (!($authenticator->supportedServices() & $service)) {
                 unset($authenticators[$name]);
             }
+        }
+
+        if (empty($authenticators)) {
+            throw new LogicException('No applicable authenticators found');
         }
 
         return $authenticators;
@@ -942,21 +946,20 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return Member
      *
-     * @deprecated 5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
+     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
      */
     public static function findAnAdministrator()
     {
         Deprecation::notice('5.0.0', 'Please use DefaultAdminService::findOrCreateDefaultAdmin()');
 
-        $service = Injector::inst()->get(DefaultAdminService::class);
-
+        $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
     }
 
     /**
      * Flush the default admin credentials
      *
-     * @deprecated 5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
+     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
      */
     public static function clear_default_admin()
     {
@@ -978,13 +981,14 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password The password (in cleartext)
      * @return bool True if successfully set
      *
-     * @deprecated 5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
+     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
      */
     public static function setDefaultAdmin($username, $password)
     {
         Deprecation::notice('5.0.0', 'Please use DefaultAdminService::setDefaultAdmin($username, $password)');
 
-        return DefaultAdminService::setDefaultAdmin($username, $password);
+        DefaultAdminService::setDefaultAdmin($username, $password);
+        return true;
     }
 
     /**
@@ -995,19 +999,20 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password
      * @return bool
      *
-     * @deprecated 5.0.0
+     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::isDefaultAdminCredentials() instead
      */
     public static function check_default_admin($username, $password)
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::validateDefaultAdmin($username, $password)');
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::isDefaultAdminCredentials($username, $password)');
 
-        $service = Injector::inst()->get(DefaultAdminService::class);
-
-        return $service->validateDefaultAdmin($username, $password)->isValid();
+        /** @var DefaultAdminService $service */
+        return DefaultAdminService::isDefaultAdminCredentials($username, $password);
     }
 
     /**
      * Check that the default admin account has been set.
+     *
+     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::hasDefaultAdmin() instead
      */
     public static function has_default_admin()
     {
@@ -1019,18 +1024,20 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin username
      *
+     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::getDefaultAdminUsername()
      * @return string
      */
     public static function default_admin_username()
     {
         Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminUsername()');
-        
+
         return DefaultAdminService::getDefaultAdminUsername();
     }
 
     /**
      * Get default admin password
      *
+     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::getDefaultAdminPassword()
      * @return string
      */
     public static function default_admin_password()
@@ -1074,16 +1081,16 @@ class Security extends Controller implements TemplateGlobalProvider
             $algorithm = self::config()->get('password_encryption_algorithm');
         }
 
-        $e = PasswordEncryptor::create_for_algorithm($algorithm);
+        $encryptor = PasswordEncryptor::create_for_algorithm($algorithm);
 
         // New salts will only need to be generated if the password is hashed for the first time
-        $salt = ($salt) ? $salt : $e->salt($password);
+        $salt = ($salt) ? $salt : $encryptor->salt($password);
 
         return array(
-            'password'  => $e->encrypt($password, $salt, $member),
+            'password'  => $encryptor->encrypt($password, $salt, $member),
             'salt'      => $salt,
             'algorithm' => $algorithm,
-            'encryptor' => $e
+            'encryptor' => $encryptor
         );
     }
 
