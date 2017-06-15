@@ -17,27 +17,25 @@ class CoreTest extends SapphireTest {
 
 	public function testGetTempPathInProject() {
 		$user = getTempFolderUsername();
-
+		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		if(file_exists($this->tempPath)) {
-			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
+			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user . $phpversion);
 		} else {
-			$user = getTempFolderUsername();
-			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-				preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache';
 
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(
-				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+				$base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
 
 			// A typical Mac OS X location for where sites are stored
 			$this->assertEquals(
-				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+				$base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
 				getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'));
 
 			// A typical Linux location for where sites are stored
 			$this->assertEquals(
-				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
+				$base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user . $phpversion,
 				getTempFolder('/var/www/silverstripe-test-project'));
 		}
 	}
@@ -45,8 +43,9 @@ class CoreTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown();
 		$user = getTempFolderUsername();
-		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-			preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache' . $phpversion;
+		
 		foreach(array(
 			'C--inetpub-wwwroot-silverstripe-test-project',
 			'-Users-joebloggs-Sites-silverstripe-test-project',
@@ -54,10 +53,9 @@ class CoreTest extends SapphireTest {
 		) as $dir) {
 			$path = $base . $dir;
 			if(file_exists($path)) {
-				rmdir($path . DIRECTORY_SEPARATOR . $user);
+				rmdir($path . DIRECTORY_SEPARATOR . $user . $phpversion);
 				rmdir($path);
 			}
 		}
 	}
-
 }
