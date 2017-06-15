@@ -195,7 +195,7 @@ class LoginHandler extends RequestHandler
                 'Welcome Back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
-            Security::singleton()->setLoginMessage($message, ValidationResult::TYPE_GOOD);
+            Security::singleton()->setSessionMessage($message, ValidationResult::TYPE_GOOD);
         }
 
         // Redirect back
