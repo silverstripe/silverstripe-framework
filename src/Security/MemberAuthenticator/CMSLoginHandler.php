@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\CMSSecurity;
@@ -28,8 +29,18 @@ class CMSLoginHandler extends LoginHandler
     public function redirectBackToForm()
     {
         // Redirect back to form
-        $url = $this->addBackURLParam(CMSSecurity::singleton()->Link('login'));
+        $url = $this->addBackURLParam($this->getReturnReferer());
         return $this->redirect($url);
+    }
+
+    public function getReturnReferer()
+    {
+        // Try to retain referer (includes tempid param)
+        $referer = $this->getReferer();
+        if ($referer && Director::is_site_url($referer)) {
+            return $referer;
+        }
+        return CMSSecurity::singleton()->Link('login');
     }
 
     /**

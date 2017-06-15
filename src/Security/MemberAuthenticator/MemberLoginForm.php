@@ -156,9 +156,10 @@ class MemberLoginForm extends BaseLoginForm
                     _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
                 )->setAttribute(
                     'title',
-                    sprintf(
-                        _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
-                        RememberLoginHash::config()->uninherited('token_expiry_days')
+                    _t(
+                        'SilverStripe\\Security\\Member.REMEMBERME',
+                        "Remember me next time? (for {count} days on this device)",
+                        [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
             );
