@@ -36,7 +36,7 @@ class MemberAuthenticator implements Authenticator
      * @param null|ValidationResult $result
      * @return null|Member
      */
-    public function authenticate($data, &$result = null)
+    public function authenticate($data, ValidationResult &$result = null)
     {
         // Find authenticated member
         $member = $this->authenticateMember($data, $result);
@@ -56,10 +56,10 @@ class MemberAuthenticator implements Authenticator
      *
      * @param array $data Form submitted data
      * @param ValidationResult $result
-     * @param Member|null This third parameter is used in the CMSAuthenticator(s)
-     * @return Member|null Found member, regardless of successful login
+     * @param Member $member This third parameter is used in the CMSAuthenticator(s)
+     * @return Member Found member, regardless of successful login
      */
-    protected function authenticateMember($data, &$result = null, $member = null)
+    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
     {
         $email = !empty($data['Email']) ? $data['Email'] : null;
         $result = $result ?: ValidationResult::create();
@@ -128,7 +128,7 @@ class MemberAuthenticator implements Authenticator
      * @param ValidationResult $result
      * @return ValidationResult
      */
-    public function checkPassword(Member $member, $password, ValidationResult $result = null)
+    public function checkPassword(Member $member, $password, ValidationResult &$result = null)
     {
         // Check if allowed to login
         $result = $member->validateCanLogin($result);

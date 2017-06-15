@@ -330,7 +330,7 @@ class Member extends DataObject
      * @param ValidationResult $result Optional result to add errors to
      * @return ValidationResult
      */
-    public function validateCanLogin(ValidationResult $result = null)
+    public function validateCanLogin(ValidationResult &$result = null)
     {
         $result = $result ?: ValidationResult::create();
         if ($this->isLockedOut()) {

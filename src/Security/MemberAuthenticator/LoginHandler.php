@@ -113,6 +113,7 @@ class LoginHandler extends RequestHandler
 
         $this->extend('beforeLogin');
         // Successful login
+        /** @var ValidationResult $result */
         if ($member = $this->checkLogin($data, $result)) {
             $this->performLogin($member, $data, $form->getRequestHandler()->getRequest());
             // Allow operations on the member after successful login
@@ -209,7 +210,7 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function checkLogin($data, &$result)
+    public function checkLogin($data, ValidationResult &$result = null)
     {
         $member = $this->authenticator->authenticate($data, $result);
         if ($member instanceof Member) {
