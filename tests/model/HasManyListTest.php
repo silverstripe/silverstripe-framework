@@ -2,16 +2,26 @@
 
 class HasManyListTest extends SapphireTest {
 
-	// Borrow the model from DataObjectTest
-	protected static $fixture_file = 'DataObjectTest.yml';
+	protected static $fixture_file = array(
+		'DataObjectTest.yml', // Borrow the model from DataObjectTest
+		'HasManyListTest.yml'
+	);
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
+		'DataObjectTest_Sortable',
+		'DataObjectTest_Company',
+		'DataObjectTest_EquipmentCompany',
+		'DataObjectTest_SubEquipmentCompany',
+		'DataObjectTest_Fan',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
+		'HasManyListTest_Company',
+		'HasManyListTest_Employee',
+		'HasManyListTest_CompanyCar',
 	);
 
 	public function testRelationshipEmptyOnNewRecords() {
@@ -58,5 +68,62 @@ class HasManyListTest extends SapphireTest {
 		$this->assertEmpty($team1comment->TeamID);
 		$this->assertEmpty($team2comment->TeamID);
 	}
+
+	/**
+	 * Test that multiple models with the same "has_one" relation name (and therefore the same "<hasone>ID"
+	 * column name) do not trigger a "Column '<hasone>ID' in where clause is ambiguous" error
+	 */
+	public function testAmbiguousRelationshipNames() {
+		$company = $this->objFromFixture('HasManyListTest_Company', 'silverstripe');
+
+		$johnsCars = $company->CompanyCars()->filter(array('User.Name' => 'John Smith'));
+		$this->assertCount(1, $johnsCars, 'John Smith has one company car');
+
+		$jennysCars = $company->CompanyCars()->filter(array('User.Name' => 'Jenny Smith'));
+		$this->assertCount(2, $jennysCars, 'Jenny Smith has two company cars');
+	}
+
+}
+
+class HasManyListTest_Company extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Name' => 'Varchar(100)'
+	);
+
+	private static $has_many = array(
+		'Employees' => 'HasManyListTest_Employee',
+		'CompanyCars' => 'HasManyListTest_CompanyCar'
+	);
+
+}
+
+class HasManyListTest_Employee extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Name' => 'Varchar(100)'
+	);
+
+	private static $has_one = array(
+		'Company' => 'HasManyListTest_Company'
+	);
+
+	private static $has_many = array(
+		'CompanyCars' => 'HasManyListTest_CompanyCar'
+	);
+
+}
+
+class HasManyListTest_CompanyCar extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Make' => 'Varchar(100)',
+		'Model' => 'Varchar(100)'
+	);
+
+	private static $has_one = array(
+		'User' => 'HasManyListTest_Employee',
+		'Company' => 'HasManyListTest_Company'
+	);
 
 }
