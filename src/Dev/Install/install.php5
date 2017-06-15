@@ -15,6 +15,7 @@ use SilverStripe\Dev\Install\DatabaseConfigurationHelper;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\DefaultAdminService;
 
 /**
  * SilverStripe CMS Installer
@@ -1515,7 +1516,7 @@ PHP
 
 		// Create default administrator user and group in database
 		// (not using Security::setDefaultAdmin())
-		$adminMember = Security::findAnAdministrator();
+		$adminMember = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
 		$adminMember->Email = $config['admin']['username'];
 		$adminMember->Password = $config['admin']['password'];
 		$adminMember->PasswordEncryption = Security::config()->encryption_algorithm;

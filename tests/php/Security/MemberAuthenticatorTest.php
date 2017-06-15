@@ -5,6 +5,7 @@ namespace SilverStripe\Security\Tests;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
@@ -16,6 +17,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Security\DefaultAdminService;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -29,29 +31,35 @@ class MemberAuthenticatorTest extends SapphireTest
     {
         parent::setUp();
 
-        $this->defaultUsername = Security::default_admin_username();
-        $this->defaultPassword = Security::default_admin_password();
-        Security::clear_default_admin();
-        Security::setDefaultAdmin('admin', 'password');
+        if (DefaultAdminService::hasDefaultAdmin()) {
+            $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();
+            $this->defaultPassword = DefaultAdminService::getDefaultAdminPassword();
+            DefaultAdminService::clearDefaultAdmin();
+        } else {
+            $this->defaultUsername = null;
+            $this->defaultPassword = null;
+        }
+        DefaultAdminService::clearDefaultAdmin();
+        DefaultAdminService::setDefaultAdmin('admin', 'password');
     }
 
     protected function tearDown()
     {
-        Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        DefaultAdminService::clearDefaultAdmin();
+        if ($this->defaultUsername) {
+            DefaultAdminService::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        }
         parent::tearDown();
     }
 
     public function testCustomIdentifierField()
     {
+        Member::config()->set('unique_identifier_field', 'Username');
 
-        $origField = Member::config()->unique_identifier_field;
-        Member::config()->unique_identifier_field = 'Username';
-
-        $label=singleton(Member::class)->fieldLabel(Member::config()->unique_identifier_field);
+        $label = Member::singleton()
+            ->fieldLabel(Member::config()->get('unique_identifier_field'));
 
         $this->assertEquals($label, 'Username');
-
-        Member::config()->unique_identifier_field = $origField;
     }
 
     public function testGenerateLoginForm()
@@ -106,6 +114,7 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNotEmpty($tempID);
 
         // Test correct login
+        /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
             array(
             'tempid' => $tempID,
@@ -143,6 +152,7 @@ class MemberAuthenticatorTest extends SapphireTest
         $authenticator = new MemberAuthenticator();
 
         // Test correct login
+        /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
             array(
             'Email' => 'admin',
@@ -151,7 +161,7 @@ class MemberAuthenticatorTest extends SapphireTest
             $message
         );
         $this->assertNotEmpty($result);
-        $this->assertEquals($result->Email, Security::default_admin_username());
+        $this->assertEquals($result->Email, DefaultAdminService::getDefaultAdminUsername());
         $this->assertTrue($message->isValid());
 
         // Test incorrect login
@@ -174,8 +184,8 @@ class MemberAuthenticatorTest extends SapphireTest
     {
         $authenticator = new MemberAuthenticator();
 
-        Config::inst()->update(Member::class, 'lock_out_after_incorrect_logins', 1);
-        Config::inst()->update(Member::class, 'lock_out_delay_mins', 10);
+        Config::modify()->set(Member::class, 'lock_out_after_incorrect_logins', 1);
+        Config::modify()->set(Member::class, 'lock_out_delay_mins', 10);
         DBDatetime::set_mock_now('2016-04-18 00:00:00');
 
         // Test correct login
@@ -186,7 +196,9 @@ class MemberAuthenticatorTest extends SapphireTest
             ]
         );
 
-        $this->assertFalse(Member::default_admin()->canLogin()->isValid());
-        $this->assertEquals('2016-04-18 00:10:00', Member::default_admin()->LockedOutUntil);
+        $defaultAdmin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+        $this->assertNotNull($defaultAdmin);
+        $this->assertFalse($defaultAdmin->canLogin());
+        $this->assertEquals('2016-04-18 00:10:00', $defaultAdmin->LockedOutUntil);
     }
 }

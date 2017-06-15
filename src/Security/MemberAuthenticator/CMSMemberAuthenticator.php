@@ -6,6 +6,9 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
 use SilverStripe\Security\Member;
 
+/**
+ * Provides authentication for the user within the CMS
+ */
 class CMSMemberAuthenticator extends MemberAuthenticator
 {
 
@@ -20,14 +23,14 @@ class CMSMemberAuthenticator extends MemberAuthenticator
      * @param Member|null $member
      * @return Member
      */
-    protected function authenticateMember($data, &$result = null, $member = null)
+    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
     {
         // Attempt to identify by temporary ID
         if (!empty($data['tempid'])) {
             // Find user by tempid, in case they are re-validating an existing session
             $member = Member::member_from_tempid($data['tempid']);
             if ($member) {
-                $data['email'] = $member->Email;
+                $data['Email'] = $member->Email;
             }
         }
 

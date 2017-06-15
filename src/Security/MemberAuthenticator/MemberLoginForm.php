@@ -77,8 +77,7 @@ class MemberLoginForm extends BaseLoginForm
         $actions = null,
         $checkCurrentUser = true
     ) {
-
-        $this->controller = $controller;
+        $this->setController($controller);
         $this->authenticator_class = $authenticatorClass;
 
         $customCSS = project() . '/css/member_login.css';
@@ -125,13 +124,14 @@ class MemberLoginForm extends BaseLoginForm
      */
     protected function getFormFields()
     {
-        if ($this->controller->request->getVar('BackURL')) {
-            $backURL = $this->controller->request->getVar('BackURL');
+        $request = $this->getController()->getRequest();
+        if ($request->getVar('BackURL')) {
+            $backURL = $request->getVar('BackURL');
         } else {
             $backURL = Session::get('BackURL');
         }
 
-        $label = Member::singleton()->fieldLabel(Member::config()->unique_identifier_field);
+        $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
             // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the

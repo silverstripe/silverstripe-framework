@@ -41,7 +41,7 @@ class CMSLoginHandler extends LoginHandler
     protected function redirectToChangePassword()
     {
         // Since this form is loaded via an iframe, this redirect must be performed via javascript
-        $changePasswordForm = ChangePasswordForm::create($this->form->getController(), 'ChangePasswordForm');
+        $changePasswordForm = ChangePasswordForm::create($this, 'ChangePasswordForm');
         $changePasswordForm->sessionMessage(
             _t('SilverStripe\\Security\\Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
             'good'

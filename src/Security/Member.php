@@ -19,6 +19,8 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
@@ -259,87 +261,43 @@ class Member extends DataObject
     {
         parent::requireDefaultRecords();
         // Default groups should've been built by Group->requireDefaultRecords() already
-        static::default_admin();
+        $service = DefaultAdminService::singleton();
+        $service->findOrCreateDefaultAdmin();
     }
 
     /**
      * Get the default admin record if it exists, or creates it otherwise if enabled
      *
+     * @deprecated 4.0.0...5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
      * @return Member
      */
     public static function default_admin()
     {
-        // Check if set
-        if (!Security::has_default_admin()) {
-            return null;
-        }
-
-        // Find or create ADMIN group
-        Group::singleton()->requireDefaultRecords();
-        $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
-
-        // Find member
-        /** @skipUpgrade */
-        $admin = static::get()
-            ->filter('Email', Security::default_admin_username())
-            ->first();
-        if (!$admin) {
-            // 'Password' is not set to avoid creating
-            // persistent logins in the database. See Security::setDefaultAdmin().
-            // Set 'Email' to identify this as the default admin
-            $admin = Member::create();
-            $admin->FirstName = _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin');
-            $admin->Email = Security::default_admin_username();
-            $admin->write();
-        }
-
-        // Ensure this user is in the admin group
-        if (!$admin->inGroup($adminGroup)) {
-            // Add member to group instead of adding group to member
-            // This bypasses the privilege escallation code in Member_GroupSet
-            $adminGroup
-                ->DirectMembers()
-                ->add($admin);
-        }
-
-        return $admin;
+        Deprecation::notice('5.0', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
+        return DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
     }
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @param  string $password
+     * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
+     *
+     * @param string $password
      * @return ValidationResult
      */
     public function checkPassword($password)
     {
-        $result = $this->canLogIn();
+        Deprecation::notice('5.0', 'Use Authenticator::checkPassword() instead');
 
-        // Short-circuit the result upon failure, no further checks needed.
-        if (!$result->isValid()) {
-            return $result;
+        // With a valid user and password, check the password is correct
+        $result = ValidationResult::create();
+        $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
+        foreach ($authenticators as $authenticator) {
+            $authenticator->checkPassword($this, $password, $result);
+            if (!$result->isValid()) {
+                break;
+            }
         }
-
-        // Allow default admin to login as self
-        if ($this->isDefaultAdmin() && Security::check_default_admin($this->Email, $password)) {
-            return $result;
-        }
-
-        // Check a password is set on this member
-        if (empty($this->Password) && $this->exists()) {
-            $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
-
-            return $result;
-        }
-
-        $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
-        if (!$e->check($this->Password, $password, $this->Salt, $this)) {
-            $result->addError(_t(
-                __CLASS__ . '.ERRORWRONGCRED',
-                'The provided details don\'t seem to be correct. Please try again.'
-            ));
-        }
-
         return $result;
     }
 
@@ -350,8 +308,17 @@ class Member extends DataObject
      */
     public function isDefaultAdmin()
     {
-        return Security::has_default_admin()
-            && $this->Email === Security::default_admin_username();
+        return DefaultAdminService::isDefaultAdmin($this->Email);
+    }
+
+    /**
+     * Check if this user can login
+     *
+     * @return bool
+     */
+    public function canLogin()
+    {
+        return $this->validateCanLogin()->isValid();
     }
 
     /**
@@ -360,12 +327,12 @@ class Member extends DataObject
      *
      * You can hook into this with a "canLogIn" method on an attached extension.
      *
+     * @param ValidationResult $result Optional result to add errors to
      * @return ValidationResult
      */
-    public function canLogIn()
+    public function validateCanLogin(ValidationResult &$result = null)
     {
-        $result = ValidationResult::create();
-
+        $result = $result ?: ValidationResult::create();
         if ($this->isLockedOut()) {
             $result->addError(
                 _t(
@@ -394,7 +361,9 @@ class Member extends DataObject
             return false;
         }
 
-        return DBDatetime::now()->getTimestamp() < $this->dbObject('LockedOutUntil')->getTimestamp();
+        /** @var DBDatetime $lockedOutUntil */
+        $lockedOutUntil = $this->dbObject('LockedOutUntil');
+        return DBDatetime::now()->getTimestamp() < $lockedOutUntil->getTimestamp();
     }
 
     /**
@@ -1418,8 +1387,12 @@ class Member extends DataObject
     public function getCMSFields()
     {
         $this->beforeUpdateCMSFields(function (FieldList $fields) {
+            /** @var TabSet $rootTabSet */
+            $rootTabSet = $fields->fieldByName("Root");
+            /** @var Tab $mainTab */
+            $mainTab = $rootTabSet->fieldByName("Main");
             /** @var FieldList $mainFields */
-            $mainFields = $fields->fieldByName("Root")->fieldByName("Main")->getChildren();
+            $mainFields = $mainTab->getChildren();
 
             // Build change password field
             $mainFields->replaceField('Password', $this->getMemberPasswordField());
@@ -1479,7 +1452,7 @@ class Member extends DataObject
                 }
             }
 
-            $permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
+            $permissionsTab = $rootTabSet->fieldByName('Permissions');
             if ($permissionsTab) {
                 $permissionsTab->addExtraClass('readonly');
             }

@@ -200,11 +200,8 @@ class ChangePasswordHandler extends RequestHandler
     {
         $member = Security::getCurrentUser();
         // The user was logged in, check the current password
-        if ($member && (
-                empty($data['OldPassword']) ||
-                !$member->checkPassword($data['OldPassword'])->isValid()
-            )
-        ) {
+        $oldPassword = isset($data['OldPassword']) ? $data['OldPassword'] : null;
+        if ($member && !$this->checkPassword($member, $oldPassword)) {
             $form->sessionMessage(
                 _t(
                     'SilverStripe\\Security\\Member.ERRORPASSWORDNOTMATCH',
@@ -274,8 +271,10 @@ class ChangePasswordHandler extends RequestHandler
         $member->AutoLoginExpired = DBDatetime::create()->now();
         $member->write();
 
-        if ($member->canLogIn()->isValid()) {
-            Injector::inst()->get(IdentityStore::class)->logIn($member, false, $this->getRequest());
+        if ($member->canLogIn()) {
+            /** @var IdentityStore $identityStore */
+            $identityStore = Injector::inst()->get(IdentityStore::class);
+            $identityStore->logIn($member, false, $this->getRequest());
         }
 
         // TODO Add confirmation message to login redirect
@@ -304,5 +303,27 @@ class ChangePasswordHandler extends RequestHandler
         $url = $this->addBackURLParam(Security::singleton()->Link('changepassword'));
 
         return $this->redirect($url);
+    }
+
+    /**
+     * Check if password is ok
+     *
+     * @param Member $member
+     * @param string $password
+     * @return bool
+     */
+    protected function checkPassword($member, $password)
+    {
+        if (empty($password)) {
+            return false;
+        }
+        // With a valid user and password, check the password is correct
+        $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
+        foreach ($authenticators as $authenticator) {
+            if (!$authenticator->checkPassword($member, $password)->isValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
