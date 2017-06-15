@@ -90,26 +90,29 @@ class HTTPApplication implements Application
      */
     public function handle(HTTPRequest $request)
     {
+        $flush = $request->getVar('flush') || strpos($request->getURL(), 'dev/build') === 0;
+
         // Ensure boot is invoked
         return $this->execute(function () use ($request) {
             // Start session and execute
             $request->getSession()->init();
             return Director::direct($request);
-        });
+        }, $flush);
     }
 
     /**
      * Safely boot the application and execute the given main action
      *
      * @param callable $callback
+     * @param bool $flush
      * @return HTTPResponse
      */
-    public function execute(callable $callback)
+    public function execute(callable $callback, $flush = false)
     {
         try {
-            return $this->callMiddleware(function () use ($callback) {
+            return $this->callMiddleware(function () use ($callback, $flush) {
                 // Pre-request boot
-                $this->getKernel()->boot();
+                $this->getKernel()->boot($flush);
                 return call_user_func($callback);
             });
         } finally {

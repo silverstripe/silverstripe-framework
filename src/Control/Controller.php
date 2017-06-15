@@ -154,10 +154,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     protected function beforeHandleRequest(HTTPRequest $request)
     {
-        //Push the current controller to protect against weird session issues
-        $this->pushCurrent();
         //Set up the internal dependencies (request, response)
         $this->setRequest($request);
+        //Push the current controller to protect against weird session issues
+        $this->pushCurrent();
         $this->setResponse(new HTTPResponse());
         //kick off the init functionality
         $this->doInit();
@@ -588,9 +588,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Pushes this controller onto the stack of current controllers. This means that any redirection,
      * session setting, or other things that rely on Controller::curr() will now write to this
      * controller object.
+     *
+     * Note: Ensure this controller is assigned a request with a valid session before pushing
+     * it to the stack.
      */
     public function pushCurrent()
     {
+        // Ensure this controller has a valid session
+        $this->getRequest()->getSession();
         array_unshift(self::$controller_stack, $this);
     }
 

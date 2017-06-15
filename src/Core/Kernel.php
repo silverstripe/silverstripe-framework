@@ -32,8 +32,10 @@ interface Kernel
 
     /*
      * Boots the current kernel
+     *
+     * @param bool $flush
      */
-    public function boot();
+    public function boot($flush = false);
 
     /**
      * Shutdowns the kernel.

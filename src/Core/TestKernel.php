@@ -7,10 +7,10 @@ namespace SilverStripe\Core;
  */
 class TestKernel extends AppKernel
 {
-    public function __construct($flush = true)
+    public function __construct()
     {
         $this->setEnvironment(self::DEV);
-        parent::__construct($flush);
+        parent::__construct();
     }
 
     /**

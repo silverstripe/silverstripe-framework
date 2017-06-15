@@ -28,15 +28,8 @@ use SilverStripe\View\ThemeResourceLoader;
 
 class AppKernel extends CoreKernel
 {
-    /**
-     * @var bool
-     */
-    protected $flush = false;
-
-    public function __construct($flush = false)
+    public function __construct()
     {
-        $this->flush = $flush;
-
         // Initialise the dependency injector as soon as possible, as it is
         // subsequently used by some of the following code
         $injectorLoader = InjectorLoader::inst();
@@ -134,13 +127,10 @@ class AppKernel extends CoreKernel
         return null;
     }
 
-    /**
-     * @throws HTTPResponse_Exception
-     */
-    public function boot()
+    public function boot($flush = false)
     {
         $this->bootPHP();
-        $this->bootManifests();
+        $this->bootManifests($flush);
         $this->bootErrorHandling();
         $this->bootDatabase();
     }
@@ -374,17 +364,19 @@ class AppKernel extends CoreKernel
 
     /**
      * Boot all manifests
+     *
+     * @param bool $flush
      */
-    protected function bootManifests()
+    protected function bootManifests($flush)
     {
         // Setup autoloader
-        $this->getClassLoader()->init($this->getIncludeTests(), $this->flush);
+        $this->getClassLoader()->init($this->getIncludeTests(), $flush);
 
         // Find modules
-        $this->getModuleLoader()->init($this->getIncludeTests(), $this->flush);
+        $this->getModuleLoader()->init($this->getIncludeTests(), $flush);
 
         // Flush config
-        if ($this->flush) {
+        if ($flush) {
             $config = $this->getConfigLoader()->getManifest();
             if ($config instanceof CachedConfigCollection) {
                 $config->setFlush(true);
@@ -397,7 +389,7 @@ class AppKernel extends CoreKernel
         // Find default templates
         $defaultSet = $this->getThemeResourceLoader()->getSet('$default');
         if ($defaultSet instanceof ThemeManifest) {
-            $defaultSet->init($this->getIncludeTests(), $this->flush);
+            $defaultSet->init($this->getIncludeTests(), $flush);
         }
     }
 

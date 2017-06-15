@@ -90,7 +90,7 @@ class ErrorControlChainMiddleware
     protected function safeReloadWithToken($reloadToken)
     {
         // Safe reload requires manual boot
-        $this->getApplication()->getKernel()->boot();
+        $this->getApplication()->getKernel()->boot(false);
 
         // Ensure session is started
         $this->getRequest()->getSession()->init();

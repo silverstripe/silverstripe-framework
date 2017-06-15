@@ -3,12 +3,10 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -188,76 +186,82 @@ class Director implements TemplateGlobalProvider
         $cookies = array(),
         &$request = null
     ) {
-        Config::nest();
-        Injector::nest();
+        // Build list of cleanup promises
+        $finally = [];
+
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        $kernel->nest();
+        $finally[] = function () use ($kernel) {
+            $kernel->activate();
+        };
+
+        // backup existing vars, and create new vars
+        $existingVars = static::envToVars();
+        $finally[] = function () use ($existingVars) {
+            static::varsToEnv($existingVars);
+        };
+        $newVars = $existingVars;
 
         // These are needed so that calling Director::test() does not muck with whoever is calling it.
         // Really, it's some inappropriate coupling and should be resolved by making less use of statics.
-        $oldReadingMode = null;
         if (class_exists(Versioned::class)) {
             $oldReadingMode = Versioned::get_reading_mode();
-        }
-        $getVars = array();
-
-        if (!$httpMethod) {
-            $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
+            $finally[] = function () use ($oldReadingMode) {
+                Versioned::set_reading_mode($oldReadingMode);
+            };
         }
 
-        if (!$session) {
-            $session = new Session([]);
-        }
+        // Default httpMethod
+        $newVars['_SERVER']['REQUEST_METHOD'] = $httpMethod
+            ?: (($postVars || is_array($postVars)) ? "POST" : "GET");
+
+        // Setup session
+        $newVars['_SESSION'] = $session instanceof Session
+            ? $session->getAll()
+            : ($session ?: []);
+
+        // Setup cookies
         $cookieJar = $cookies instanceof Cookie_Backend
             ? $cookies
             : Injector::inst()->createWithArgs(Cookie_Backend::class, array($cookies ?: []));
-
-        // Back up the current values of the superglobals
-        $existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
-        $existingGetVars = isset($_GET) ? $_GET : array();
-        $existingPostVars = isset($_POST) ? $_POST : array();
-        $existingSessionVars = isset($_SESSION) ? $_SESSION : array();
-        $existingCookies = isset($_COOKIE) ? $_COOKIE : array();
-        $existingServer = isset($_SERVER) ? $_SERVER : array();
-
-        $existingRequirementsBackend = Requirements::backend();
-
+        $newVars['_COOKIE'] = $cookieJar->getAll(false);
         Cookie::config()->update('report_errors', false);
-        Requirements::set_backend(Requirements_Backend::create());
+        Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
 
-        if (strpos($url, '#') !== false) {
-            $url = substr($url, 0, strpos($url, '#'));
-        }
+        // Backup requirements
+        $existingRequirementsBackend = Requirements::backend();
+        Requirements::set_backend(Requirements_Backend::create());
+        $finally[] = function () use ($existingRequirementsBackend) {
+            Requirements::set_backend($existingRequirementsBackend);
+        };
+
+        // Strip any hash
+        $url = strtok($url, '#');
 
         // Handle absolute URLs
         if (parse_url($url, PHP_URL_HOST)) {
             $bits = parse_url($url);
+
             // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
-            if (isset($bits['port'])) {
-                $_SERVER['HTTP_HOST'] = $bits['host'].':'.$bits['port'];
-            } else {
-                $_SERVER['HTTP_HOST'] = $bits['host'];
-            }
+            $newVars['_SERVER']['HTTP_HOST'] = isset($bits['port'])
+                ? $bits['host'].':'.$bits['port']
+                : $bits['host'];
         }
 
         // Ensure URL is properly made relative.
         // Example: url passed is "/ss31/my-page" (prefixed with BASE_URL), this should be changed to "my-page"
         $url = self::makeRelative($url);
-
-        $urlWithQuerystring = $url;
         if (strpos($url, '?') !== false) {
             list($url, $getVarsEncoded) = explode('?', $url, 2);
-            parse_str($getVarsEncoded, $getVars);
+            parse_str($getVarsEncoded, $newVars['_GET']);
+        } else {
+            $newVars['_GET'] = [];
         }
+        $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . $url;
 
-        // Replace the super globals with appropriate test values
-        $_REQUEST = ArrayLib::array_merge_recursive((array) $getVars, (array) $postVars);
-        $_GET = (array) $getVars;
-        $_POST = (array) $postVars;
-        $_SESSION = $session ? $session->getAll() : array();
-        $_COOKIE = $cookieJar->getAll(false);
-        Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
-        $_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
-
-        $request = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
+        // Create new request
+        $request = HTTPRequest::createFromVariables($newVars, $body);
         if ($headers) {
             foreach ($headers as $k => $v) {
                 $request->addHeader($k, $v);
@@ -265,53 +269,13 @@ class Director implements TemplateGlobalProvider
         }
 
         try {
-            // Pre-request filtering
-            $requestProcessor = Injector::inst()->get(RequestProcessor::class);
-            $output = $requestProcessor->preRequest($request);
-            if ($output === false) {
-                throw new HTTPResponse_Exception(_t('SilverStripe\\Control\\Director.INVALID_REQUEST', 'Invalid request'), 400);
-            }
-
-            // Process request
-            $result = Director::handleRequest($request);
-
-            // Ensure that the result is an HTTPResponse object
-            if (is_string($result)) {
-                if (substr($result, 0, 9) == 'redirect:') {
-                    $response = new HTTPResponse();
-                    $response->redirect(substr($result, 9));
-                    $result = $response;
-                } else {
-                    $result = new HTTPResponse($result);
-                }
-            }
-
-            $output = $requestProcessor->postRequest($request, $result);
-            if ($output === false) {
-                throw new HTTPResponse_Exception("Invalid response");
-            }
-
-            // Return valid response
-            return $result;
+            // Normal request handling
+            return static::direct($request);
         } finally {
-            // Restore the super globals
-            $_REQUEST = $existingRequestVars;
-            $_GET = $existingGetVars;
-            $_POST = $existingPostVars;
-            $_SESSION = $existingSessionVars;
-            $_COOKIE = $existingCookies;
-            $_SERVER = $existingServer;
-
-            Requirements::set_backend($existingRequirementsBackend);
-
-            // These are needed so that calling Director::test() does not muck with whoever is calling it.
-            // Really, it's some inappropriate coupling and should be resolved by making less use of statics
-            if (class_exists(Versioned::class)) {
-                Versioned::set_reading_mode($oldReadingMode);
+            // Restore state in reverse order to assignment
+            foreach (array_reverse($finally) as $callback) {
+                call_user_func($callback);
             }
-
-            Injector::unnest(); // Restore old CookieJar, etc
-            Config::unnest();
         }
     }
 
@@ -370,6 +334,29 @@ class Director implements TemplateGlobalProvider
 
         // No URL rules matched, so return a 404 error.
         return new HTTPResponse('No URL rule was matched', 404);
+    }
+
+    /**
+     * Extract env vars prior to modification
+     *
+     * @return array List of all super globals
+     */
+    public static function envToVars()
+    {
+        // Suppress return by-ref
+        return array_merge($GLOBALS, []);
+    }
+
+    /**
+     * Restore a backed up or modified list of vars to $globals
+     *
+     * @param array $vars
+     */
+    public static function varsToEnv(array $vars)
+    {
+        foreach ($vars as $key => $value) {
+            $GLOBALS[$key] = $value;
+        }
     }
 
     /**

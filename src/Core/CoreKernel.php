@@ -55,7 +55,7 @@ class CoreKernel implements Kernel
      */
     protected $themeResourceLoader = null;
 
-    public function boot()
+    public function boot($flush = false)
     {
     }
 

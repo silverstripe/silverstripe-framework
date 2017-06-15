@@ -9,6 +9,8 @@
  ************************************************************************************
  ************************************************************************************/
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Dev\Install\DatabaseConfigurationHelper;
@@ -1503,7 +1505,10 @@ PHP
 		require_once 'Core/Core.php';
 
 		// Build database
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession(new Session([]));
 		$con = new Controller();
+		$con->setRequest($request);
 		$con->pushCurrent();
 
 		global $databaseConfig;

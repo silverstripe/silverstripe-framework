@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Control;
 
+use ArrayAccess;
 use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
-use ArrayAccess;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
@@ -159,8 +159,8 @@ class HTTPRequest implements ArrayAccess
     public static function createFromEnvironment()
     {
         // Health-check prior to creating environment
-        $variables = static::variablesFromEnvironment();
-        return self::createFromVariables($variables, @file_get_contents('php://input'));
+        static::validateEnvironment();
+        return self::createFromVariables(Director::envToVars(), @file_get_contents('php://input'));
     }
 
     /**
@@ -256,9 +256,8 @@ class HTTPRequest implements ArrayAccess
      * Error conditions will raise HTTPResponse_Exceptions
      *
      * @throws HTTPResponse_Exception
-     * @return array
      */
-    protected static function variablesFromEnvironment()
+    protected static function validateEnvironment()
     {
         // Validate $_FILES array before merging it with $_POST
         foreach ($_FILES as $key => $value) {
@@ -284,15 +283,6 @@ class HTTPRequest implements ArrayAccess
                 throw new HTTPResponse_Exception('Invalid Host', 400);
             }
         }
-
-        return [
-            '_SERVER' => $_SERVER,
-            '_GET' => $_GET,
-            '_POST' => $_POST,
-            '_FILES' => $_FILES,
-            '_SESSION' => isset($_SESSION) ? $_SESSION : null,
-            '_COOKIE' => $_COOKIE
-        ];
     }
 
     /**

@@ -897,6 +897,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Custom application
         $app->execute(function () use ($request) {
+            // Start session and execute
+            $request->getSession()->init();
+
             // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
             // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
             DataObject::reset();
@@ -906,7 +909,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $controller->setRequest($request);
             $controller->pushCurrent();
             $controller->doInit();
-        });
+        }, true);
 
         // Register state
         static::$state = SapphireTestState::singleton();
@@ -1137,7 +1140,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public function logOut()
     {
-        Injector::inst()->get(IdentityStore::class)->logOut();
+        /** @var IdentityStore $store */
+        $store = Injector::inst()->get(IdentityStore::class);
+        $store->logOut();
     }
 
     /**
