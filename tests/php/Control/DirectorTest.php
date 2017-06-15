@@ -518,7 +518,7 @@ class DirectorTest extends SapphireTest
             'Content-Length'  => '10'
         );
 
-        $this->assertEquals($headers, Director::extract_request_headers($request));
+        $this->assertEquals($headers, HTTPRequest::extractRequestHeaders($request));
     }
 
     public function testUnmatchedRequestReturns404()
@@ -622,7 +622,7 @@ class DirectorTest extends SapphireTest
 
         $filter->failPost = true;
 
-        $this->setExpectedException(HTTPResponse_Exception::class);
+        $this->expectException(HTTPResponse_Exception::class);
 
         Director::test('some-dummy-url');
 
