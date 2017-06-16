@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -34,9 +35,7 @@ class RequirementsTest extends SapphireTest
 
     public function testExternalUrls()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $backend->setCombinedFilesEnabled(true);
 
@@ -166,9 +165,7 @@ class RequirementsTest extends SapphireTest
 
     public function testCustomType()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $basePath = $this->getThemeRoot();
         $this->setupRequirements($backend);
@@ -194,9 +191,7 @@ class RequirementsTest extends SapphireTest
 
     public function testCombinedJavascript()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupCombinedRequirements($backend);
 
@@ -249,9 +244,7 @@ class RequirementsTest extends SapphireTest
 
         // Then do it again, this time not requiring the files beforehand
         unlink($combinedFilePath);
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupCombinedNonrequiredRequirements($backend);
         $html = $backend->includeInHTML(self::$html_template);
@@ -294,9 +287,7 @@ class RequirementsTest extends SapphireTest
 
     public function testCombinedJavascriptAsyncDefer()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
 
         $this->setupCombinedRequirementsJavascriptAsyncDefer($backend, true, false);
@@ -371,9 +362,7 @@ class RequirementsTest extends SapphireTest
 
         // setup again for testing defer
         unlink($combinedFilePath);
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
 
         $this->setupCombinedRequirementsJavascriptAsyncDefer($backend, false, true);
@@ -445,9 +434,7 @@ class RequirementsTest extends SapphireTest
 
         // setup again for testing async and defer
         unlink($combinedFilePath);
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
 
         $this->setupCombinedRequirementsJavascriptAsyncDefer($backend, true, true);
@@ -456,7 +443,7 @@ class RequirementsTest extends SapphireTest
 
         /* ASYNC/DEFER IS INCLUDED IN SCRIPT TAG */
         $this->assertRegExp(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '" async defer/',
+            '/src=".*' . preg_quote($combinedFileName, '/') . '" async="async" defer="defer"/',
             $html,
             'async and defer are included in script tag'
         );
@@ -520,9 +507,7 @@ class RequirementsTest extends SapphireTest
     public function testCombinedCss()
     {
         $basePath = $this->getThemeRoot();
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
@@ -551,9 +536,7 @@ class RequirementsTest extends SapphireTest
         );
 
         // Test that combining a file multiple times doesn't trigger an error
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $backend->combineFiles(
@@ -582,9 +565,7 @@ class RequirementsTest extends SapphireTest
     public function testBlockedCombinedJavascript()
     {
         $basePath = $this->getThemeRoot();
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupCombinedRequirements($backend);
         $combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
@@ -622,14 +603,12 @@ class RequirementsTest extends SapphireTest
         clearstatcache(); // needed to get accurate file_exists() results
 
         // Exception generated from including invalid file
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            sprintf(
-                "Requirements_Backend::combine_files(): Already included file(s) %s in combined file '%s'",
-                $basePath . '/javascript/RequirementsTest_c.js',
-                'RequirementsTest_bc.js'
-            )
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            "Requirements_Backend::combine_files(): Already included file(s) %s in combined file '%s'",
+            $basePath . '/javascript/RequirementsTest_c.js',
+            'RequirementsTest_bc.js'
+        ));
         $backend->combineFiles(
             'RequirementsTest_ac.js',
             array(
@@ -643,9 +622,7 @@ class RequirementsTest extends SapphireTest
     {
         $basePath = $this->getThemeRoot();
 
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
@@ -672,9 +649,7 @@ class RequirementsTest extends SapphireTest
     {
         $basePath = $this->getThemeRoot();
 
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $backend->javascript($basePath . '/a.js');
@@ -733,9 +708,7 @@ class RequirementsTest extends SapphireTest
     {
         $testPath = $this->getThemeRoot();
 
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $holder = Requirements::backend();
@@ -796,9 +769,7 @@ class RequirementsTest extends SapphireTest
 
     public function testJsWriteToBody()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $backend->javascript('http://www.mydomain.com/test.js');
@@ -813,15 +784,13 @@ class RequirementsTest extends SapphireTest
         $backend->setWriteJavascriptToBody(true);
         $html = $backend->includeInHTML($template);
         $this->assertNotContains('<head><script', $html);
-        $this->assertContains('</script></body>', $html);
+        $this->assertContains("</script>\n</body>", $html);
     }
 
     public function testIncludedJsIsNotCommentedOut()
     {
         $template = '<html><head></head><body><!--<script>alert("commented out");</script>--></body></html>';
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $backend->javascript($this->getThemeRoot() . '/javascript/RequirementsTest_a.js');
@@ -847,16 +816,15 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML($template);
         $this->assertEquals(
             '<html><head></head><body><!--<script>alert("commented out");</script>-->'
-            . '<h1>more content</h1><script type="application/javascript" src="' . $urlSrc . '"></script></body></html>',
+            . '<h1>more content</h1><script type="application/javascript" src="' . $urlSrc
+            . "\"></script>\n</body></html>",
             $html
         );
     }
 
     public function testForceJsToBottom()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
         $backend->javascript('http://www.mydomain.com/test.js');
@@ -872,10 +840,10 @@ EOS
         $template = '<html><head></head><body><header>My header</header><p>Body<script></script></p></body></html>';
 
         // The expected outputs
-        $expectedScripts = "<script type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\">"
-            . "</script><script type=\"application/javascript\">//<![CDATA[\n"
+        $expectedScripts = "<script type=\"application/javascript\" src=\"http://www.mydomain.com/test.js\"></script>\n"
+            . "<script type=\"application/javascript\">//<![CDATA[\n"
             . "var globalvar = {\n\tpattern: '\\\\\$custom\\\\1'\n};\n"
-            . "//]]></script>";
+            . "//]]></script>\n";
         $JsInHead = "<html><head>$expectedScripts</head><body><header>My header</header><p>Body<script></script></p></body></html>";
         $JsInBody = "<html><head></head><body><header>My header</header><p>Body$expectedScripts<script></script></p></body></html>";
         $JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p>$expectedScripts</body></html>";
@@ -922,9 +890,7 @@ EOS
         $template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
         $basePath = $this->getThemeRoot();
 
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
@@ -954,9 +920,7 @@ EOS
      */
     public function testProvidedFiles()
     {
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
         $basePath = $this->getThemeRoot();
 

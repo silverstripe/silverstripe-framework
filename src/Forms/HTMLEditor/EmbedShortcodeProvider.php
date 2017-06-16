@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\HtmlEditor;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\FormField;
+use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use Embed\Adapters\Adapter;
 use Embed\Embed;
@@ -132,7 +132,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         unset($arguments['height']);
         unset($arguments['url']);
         unset($arguments['caption']);
-        return FormField::create_tag('div', $arguments, $content);
+        return HTML::createTag('div', $arguments, $content);
     }
 
     /**
@@ -151,7 +151,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         unset($arguments['height']);
         unset($arguments['url']);
         $arguments['href'] = $href;
-        return Formfield::create_tag('a', $arguments, Convert::raw2xml($title));
+        return HTML::createTag('a', $arguments, Convert::raw2xml($title));
     }
 
     /**
@@ -165,6 +165,6 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     {
         $arguments['src'] = $src;
         unset($arguments['url']);
-        return FormField::create_tag('img', $arguments);
+        return HTML::createTag('img', $arguments);
     }
 }

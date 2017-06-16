@@ -624,7 +624,7 @@ class ShortcodeParser
 
         if ($content) {
             /** @var HTMLValue $parsed */
-            $parsed = Injector::inst()->create('HTMLValue', $content);
+            $parsed = HTMLValue::create($content);
             $body = $parsed->getBody();
             if ($body) {
                 $this->insertListAfter($body->childNodes, $node);
@@ -669,7 +669,7 @@ class ShortcodeParser
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {
                 if (self::$error_behavior == self::ERROR) {
-                    user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERRROR);
+                    user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERROR);
                 } else {
                     $continue = false;
                 }

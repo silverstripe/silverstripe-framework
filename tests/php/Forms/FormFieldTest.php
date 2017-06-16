@@ -5,7 +5,6 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
 use SilverStripe\Forms\TextField;
@@ -13,7 +12,6 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use ReflectionClass;
-use SilverStripe\ORM\FieldType\DBField;
 
 class FormFieldTest extends SapphireTest
 {
@@ -370,15 +368,5 @@ class FormFieldTest extends SapphireTest
             '"My Field" is required',
             $schema['message']['value']
         );
-    }
-
-    public function testCreateVoidTag()
-    {
-        $tag = FormField::create_tag('meta', [
-            'name' => 'description',
-            'content' => 'test tag',
-        ]);
-        $this->assertNotContains('</meta>', $tag);
-        $this->assertRegexp('#/>$#', $tag);
     }
 }

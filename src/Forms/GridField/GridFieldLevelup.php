@@ -3,11 +3,11 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -79,7 +79,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
             'href' => sprintf($this->linkSpec, $parentID),
             'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
         ));
-        $linkTag = FormField::create_tag('a', $attrs);
+        $linkTag = HTML::createTag('a', $attrs);
 
         $forTemplate = new ArrayData(array(
             'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
