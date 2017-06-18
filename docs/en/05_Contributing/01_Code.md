@@ -178,7 +178,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 * It's better to submit multiple patches with separate bits of functionality than a big patch containing lots of changes
 * Only submit a pull request for work you expect to be ready to merge. Work in progress is best discussed in an issue, or on your own repository fork.
 * Document your code inline through [PHPDoc](https://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
-[API documentation](https://api.silverstripe.org/3.5/) for good examples.
+[API documentation](https://api.silverstripe.org/) for good examples.
 * Check and update documentation on [docs.silverstripe.org](https://docs.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * When introducing something "noteworthy" (new feature, API change), [update the release changelog](/changelogs) for the next release this commit will be included in.
 * If you get stuck, please post to the [forum](https://www.silverstripe.org/community/forums) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
