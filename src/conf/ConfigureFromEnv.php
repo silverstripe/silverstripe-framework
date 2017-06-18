@@ -8,7 +8,7 @@
  *
  * Your database connection will be set up using these defines:
  *  - SS_DATABASE_CLASS:    The database class to use, MySQLDatabase, MSSQLDatabase, etc. defaults to
- *                          MySQLDatabase
+ *                          MySQLPDODatabase
  *  - SS_DATABASE_SERVER:   The database server to use, defaulting to localhost
  *  - SS_DATABASE_USERNAME: The database username (mandatory)
  *  - SS_DATABASE_PASSWORD: The database password (mandatory)
@@ -87,7 +87,7 @@ if ($dbUser = getenv('SS_DATABASE_USERNAME')) {
 
     /** @skipUpgrade */
     $databaseConfig = array(
-        "type" => getenv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
+        "type" => getenv('SS_DATABASE_CLASS') ?: 'MySQLPDODatabase',
         "server" => getenv('SS_DATABASE_SERVER') ?: 'localhost',
         "username" => $dbUser,
         "password" => getenv('SS_DATABASE_PASSWORD'),
