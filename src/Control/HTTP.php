@@ -70,7 +70,7 @@ class HTTP
      */
     public static function absoluteURLs($html)
     {
-        $html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
+        $html = str_replace('$CurrentPageURL', Controller::curr()->getRequest()->getURL(), $html);
         return HTTP::urlRewriter($html, function ($url) {
             //no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
             if (preg_match('/^\w+:/', $url)) {
@@ -170,7 +170,8 @@ class HTTP
      */
     public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;')
     {
-        $uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);
+        $request = Controller::curr()->getRequest();
+        $uri = $currentURL ?: $request->getURL();
 
         $isRelative = false;
         // We need absolute URLs for parse_url()
