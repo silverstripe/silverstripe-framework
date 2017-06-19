@@ -85,12 +85,13 @@ class FunctionalTest extends SapphireTest
 
     protected function setUp()
     {
+        parent::setUp();
+
         // Skip calling FunctionalTest directly.
         if (static::class == __CLASS__) {
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
         }
 
-        parent::setUp();
         $this->mainSession = new TestSession();
 
         // Disable theme, if necessary
@@ -115,9 +116,8 @@ class FunctionalTest extends SapphireTest
     protected function tearDown()
     {
         SecurityToken::enable();
-
-        parent::tearDown();
         unset($this->mainSession);
+        parent::tearDown();
     }
 
     /**

@@ -13,9 +13,7 @@ class FlushRequestFilterTest extends FunctionalTest
     public function testImplementorsAreCalled()
     {
         TestFlushable::$flushed = false;
-
         $this->get('?flush=1');
-
         $this->assertTrue(TestFlushable::$flushed);
     }
 }

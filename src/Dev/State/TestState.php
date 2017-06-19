@@ -1,6 +1,9 @@
 <?php
 
-namespace SilverStripe\Dev;
+namespace SilverStripe\Dev\State;
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 
 /**
  * Helper for resetting, booting, or cleaning up test state.

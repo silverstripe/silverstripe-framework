@@ -2,18 +2,19 @@
 Name: sapphiretest
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Dev\SapphireTestState:
+  SilverStripe\Dev\State\SapphireTestState:
     properties:
       States:
-        extensions: %$SilverStripe\Dev\ExtensionTestState
-        flushable: %$SilverStripe\Dev\FlushableTestState
+        globals: %$SilverStripe\Dev\State\GlobalsTestState
+        extensions: %$SilverStripe\Dev\State\ExtensionTestState
+        flushable: %$SilverStripe\Dev\State\FlushableTestState
         requirements: %$SilverStripe\View\Dev\RequirementsTestState
 ---
 Name: kerneltest
 Before: '*'
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Dev\SapphireTestState:
+  SilverStripe\Dev\State\SapphireTestState:
     properties:
       States:
-        kernel: %$SilverStripe\Dev\KernelTestState
+        kernel: %$SilverStripe\Dev\State\KernelTestState

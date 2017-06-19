@@ -177,6 +177,49 @@ class Director implements TemplateGlobalProvider
         $cookies = array(),
         &$request = null
     ) {
+        return static::mockRequest(
+            function (HTTPRequest $request) {
+                return static::direct($request);
+            },
+            $url,
+            $postVars,
+            $session,
+            $httpMethod,
+            $body,
+            $headers,
+            $cookies,
+            $request
+        );
+    }
+
+    /**
+     * Mock a request, passing this to the given callback, before resetting.
+     *
+     * @param callable $callback Action to pass the HTTPRequst object
+     * @param string $url The URL to build
+     * @param array $postVars The $_POST & $_FILES variables.
+     * @param array|Session $session The {@link Session} object representing the current session.
+     * By passing the same object to multiple  calls of Director::test(), you can simulate a persisted
+     * session.
+     * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if
+     * postVars is set, GET otherwise. Overwritten by $postVars['_method'] if present.
+     * @param string $body The HTTP body.
+     * @param array $headers HTTP headers with key-value pairs.
+     * @param array|Cookie_Backend $cookies to populate $_COOKIE.
+     * @param HTTPRequest $request The {@see SS_HTTP_Request} object generated as a part of this request.
+     * @return mixed Result of callback
+     */
+    public static function mockRequest(
+        $callback,
+        $url,
+        $postVars = [],
+        $session = [],
+        $httpMethod = null,
+        $body = null,
+        $headers = [],
+        $cookies = [],
+        &$request = null
+    ) {
         // Build list of cleanup promises
         $finally = [];
 
@@ -261,6 +304,7 @@ class Director implements TemplateGlobalProvider
             $newVars['_GET'] = [];
         }
         $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . $url;
+        $newVars['_REQUEST'] = array_merge($newVars['_GET'], $newVars['_POST']);
 
         // Create new request
         $request = HTTPRequest::createFromVariables($newVars, $body);
@@ -275,7 +319,7 @@ class Director implements TemplateGlobalProvider
 
         try {
             // Normal request handling
-            return static::direct($request);
+            return call_user_func($callback, $request);
         } finally {
             // Restore state in reverse order to assignment
             foreach (array_reverse($finally) as $callback) {

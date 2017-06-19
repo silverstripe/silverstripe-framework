@@ -3,7 +3,6 @@
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Session;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -105,14 +104,6 @@ class SessionTest extends SapphireTest
         $this->assertEquals(array('something' => array('does' => null)), $result);
     }
 
-    public function testNonStandardPath()
-    {
-        Session::config()->set('store_path', (realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session')));
-        $this->session->start();
-
-        $this->assertEquals(Config::inst()->get('SilverStripe\\Control\\Session', 'store_path'), '');
-    }
-
     public function testUserAgentLockout()
     {
         // Set a user agent
@@ -120,6 +111,7 @@ class SessionTest extends SapphireTest
 
         // Generate our session
         $s = new Session(array());
+        $s->init();
         $s->set('val', 123);
         $s->finalize();
 
@@ -128,6 +120,7 @@ class SessionTest extends SapphireTest
 
         // Verify the new session reset our values
         $s2 = new Session($s);
+        $s2->init();
         $this->assertNotEquals($s2->get('val'), 123);
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace SilverStripe\Dev;
+namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\TestKernel;
+use SilverStripe\Dev\SapphireTest;
 
 /**
  * Handles nesting of kernel before / after tests

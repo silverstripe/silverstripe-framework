@@ -4,7 +4,7 @@
 namespace SilverStripe\View\Dev;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestState;
+use SilverStripe\Dev\State\TestState;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 

@@ -1,10 +1,11 @@
 <?php
 
-namespace SilverStripe\Dev;
+namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Resettable;
+use SilverStripe\Dev\SapphireTest;
 
 /**
  * Clears flushable / resettable objects

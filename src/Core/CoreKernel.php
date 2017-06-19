@@ -132,7 +132,7 @@ class CoreKernel implements Kernel
 
     public function setEnvironment($environment)
     {
-        if (!in_array($environment, [self::DEV, self::TEST, self::LIVE])) {
+        if (!in_array($environment, [self::DEV, self::TEST, self::LIVE, null])) {
             throw new InvalidArgumentException(
                 "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );

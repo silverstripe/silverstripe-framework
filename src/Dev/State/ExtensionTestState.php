@@ -1,10 +1,12 @@
 <?php
 
-namespace SilverStripe\Dev;
+namespace SilverStripe\Dev\State;
 
 use LogicException;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -38,7 +40,9 @@ class ExtensionTestState implements TestState
     public function setUpOnce($class)
     {
         // May be altered by another class
-        $isAltered = $this->extensionsToReapply || $this->extensionsToRemove;
+        $isAltered = false;
+        $this->extensionsToReapply = [];
+        $this->extensionsToRemove = [];
 
         /** @var string|SapphireTest $class */
         /** @var string|DataObject $dataClass */
@@ -68,7 +72,6 @@ class ExtensionTestState implements TestState
             if (!class_exists($dataClass)) {
                 throw new LogicException("Test {$class} requires dataClass {$dataClass} which doesn't exist");
             }
-            $this->extensionsToRemove[$dataClass] = array();
             foreach ($extensions as $extension) {
                 $extension = Extension::get_classname_without_arguments($extension);
                 if (!class_exists($extension)) {
@@ -76,7 +79,7 @@ class ExtensionTestState implements TestState
                 }
                 if (!$dataClass::has_extension($extension)) {
                     if (!isset($this->extensionsToRemove[$dataClass])) {
-                        $this->extensionsToReapply[$dataClass] = [];
+                        $this->extensionsToRemove[$dataClass] = [];
                     }
                     $this->extensionsToRemove[$dataClass][] = $extension;
                     $dataClass::add_extension($extension);

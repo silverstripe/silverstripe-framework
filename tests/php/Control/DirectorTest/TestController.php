@@ -26,21 +26,33 @@ class TestController extends Controller implements TestOnly
 
     public function returnGetValue($request)
     {
-        return $_GET['somekey'];
+        if (isset($_GET['somekey'])) {
+            return $_GET['somekey'];
+        }
+        return null;
     }
 
     public function returnPostValue($request)
     {
-        return $_POST['somekey'];
+        if (isset($_POST['somekey'])) {
+            return $_POST['somekey'];
+        }
+        return null;
     }
 
     public function returnRequestValue($request)
     {
-        return $_REQUEST['somekey'];
+        if (isset($_REQUEST['somekey'])) {
+            return $_REQUEST['somekey'];
+        }
+        return null;
     }
 
     public function returnCookieValue($request)
     {
-        return $_COOKIE['somekey'];
+        if (isset($_COOKIE['somekey'])) {
+            return $_COOKIE['somekey'];
+        }
+        return null;
     }
 }
