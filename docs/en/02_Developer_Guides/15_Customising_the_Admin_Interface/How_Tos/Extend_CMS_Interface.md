@@ -384,7 +384,7 @@ import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 
 Injector.transform('my-transformation', (update) => {
-  update('TextField', CharacterCounter);
+  update.react('TextField', CharacterCounter);
 });
 ```
 
@@ -447,7 +447,7 @@ import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';
 
 Injector.transform('my-other-transformation', (update) => {
-  update('TextField', TextLengthChecker);
+  update.react('TextField', TextLengthChecker);
 });
 ```
 
@@ -500,7 +500,7 @@ import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 Injector.transform(
   'my-transformation', 
-  (update) => update('TextField', CharacterCounter),
+  (update) => update.react('TextField', CharacterCounter),
   { after: 'my-other-transformation' }
 );
 ```
@@ -512,7 +512,7 @@ import TextLengthChecker from './components/TextLengthChecker';
 
 Injector.transform(
   'my-other-transformation', 
-  (update) => update('TextField', TextLengthChecker),
+  (update) => update.react('TextField', TextLengthChecker),
   { before: 'my-transformation' }
 );
 ```
@@ -527,7 +527,7 @@ order.
 ```js
 Injector.transform(
   'my-transformation', 
-  (update) => update('TextField', TextLengthChecker),
+  (update) => update.react('TextField', TextLengthChecker),
   { before: ['my-transformation', 'some-other-transformation'] }
 );
 ```
@@ -540,7 +540,7 @@ If you really want to be sure your customisation gets loaded first or last, you 
 ```js
 Injector.transform(
   'my-transformation', 
-  (update) => update('TextField', FinalTransform),
+  (update) => update.react('TextField', FinalTransform),
   { after: '*' }
 );
 ```
@@ -599,7 +599,7 @@ __my-module/js/main.js__
 import ConfirmingFormButton from './components/ConfirmingFormButton';
 
 Injector.transform('my-transformation', (update) => {
-  update('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
+  update.react('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
 });
 ```
 ### Registering new React components
@@ -611,7 +611,7 @@ __my-public-module/js/main.js__
 ```js
 import Injector from 'lib/Injector';
 
-Injector.register('MyComponent', MyComponent);
+Injector.react.register('MyComponent', MyComponent);
 ```
 
 Now other developers can customise your components with `Injector.update()`.
@@ -640,6 +640,146 @@ class MyGallery extends React.Component {
 }
 
 export default withInjector(MyGallery);
+```
+
+### Using injector to customise redux state data
+
+It is recommended to be familiar with the concepts of Immutability and Redux before starting this.
+
+The examples use `Spread in object literals` which is at this moment in Stage 3 Proposal. If you're more comfortable with using
+ the `Object.assign()` API that shouldn't present any problems and should work the same.
+
+To start customising, you'll need to transform an existing registered reducer.
+
+```js
+Injector.transform('customisationName', (update) => {
+  update.reducer('assetAdmin', MyReducerTransformer);
+});
+```
+
+Alternatively, you can also register your own reducer to injector, particularly if you're building your own module.
+
+```js
+Injector.reducer.register('myCustom', MyCustomerReducer);
+```
+
+#### Structuring a transformer
+
+We utilise currying to supply utilities which your transformer may require to handle the transformation.
+- `originalReducer` - reducer callback which the transformer is customising, this will need to be called in most cases. This will also callback other transformations down the chain of execution, not calling this will break the chain.
+- `globalState` - state of the global redux store, there may be data outside the current scope in the reducer which you may need to help determine the transformation.
+- `state` - current state of the current scope, this is what should be used to form the new State.
+- `type` - the action to fire, like in any reducer in redux, this helps determine if your transformer should do anything
+- `payload` - the new data sent with the action to mutate the redux store.
+
+```js
+const MyReducerTransformer = (originalReducer) => (globalState) => (state, { type, payload }) => {
+  switch (type) {
+    case 'MY_ACTION': {
+      // recommended to call and return the originalReducer with the payload changed by the transformer
+      /* return action to call here; */
+    }
+    
+    case 'ANOTHER_ACTION_TRANSFORM': {
+      // could omit the originalReducer to enforce your change or cancel the originalREducer's change
+    }
+
+    default: {
+      // it is important to return the originalReducer with original redux parameters.
+      return originalReducer(state, { type, payload });
+    }
+  }
+}
+```
+
+#### A basic transformation
+
+We manipulate the payload data to show something else instead of "Files" before calling the originalReducer
+
+```js
+const MyReducerTransformer = (originalReducer) => (globalState) => (state, { type, payload }) => {
+  switch (type) {
+    case 'MY_ACTION': {
+      return originalReducer(state, {
+        type,
+        payload: {
+          breadcrumbs: payload.breadcrumbs.map((crumb) => (
+            (crumb.text === 'Files')
+              ? { ...crumb, text: 'Custom Files' }
+              : crumb
+          )),
+        },
+      });
+    }
+  }
+};
+```
+
+#### Using the globalState
+
+Accessing the globalState is easy, as it is passed in as part of the curried functions definition.
+
+```js
+export default (originalReducer) => (globalState) => (state, { type, payload }) => {
+  const baseUrl = globalState.config.baseUrl;
+  
+  switch (type) {
+    /* ... cases here ... */
+  }
+}
+```
+
+#### Setting a different initial state
+
+We can easily define a new initial state by providing the `state` param with a default value,
+ this does not work if an earlier transformer in the chain has defined an initial state already.
+
+```js
+const MyReducerTransformer = (originalReducer) => () => (state = { myCustom: 'initial state here'}, { type, payload }) => {
+  return originalReducer(state, { type, payload });
+};
+```
+
+If you would like your transformation before an earlier transformer, you can define a `before` rule like other Injector APIs.
+
+```js
+Injector.transform('customisationName', (update) => {
+  update.reducer('assetAdmin', MyReducerTransformer, { before: 'ThatSillyInitialTransformer' });
+});
+```
+
+#### Cancelling an action
+
+There are valid reasons to break the chain of reducer transformations, such as cancelling the redux store update.
+However, like an original reducer in redux, you will still need to return the original state.
+
+```js
+export default (originalReducer) => (globalState) => (state, { type, payload }) => {
+  switch (type) {
+    case 'CANCEL_THIS_ACTION': {
+      return state;
+    }
+  }
+};
+```
+
+#### Calling a different action
+
+You could manipulate the action called by the originalReducer, there isn't an example available but this block of
+ code will present the theory of how it can be achieved.
+
+```js
+ default (originalReducer) => (globalState) => (state, { type, payload }) => {
+  switch (type) {
+    case 'REMOVE_ERROR': {
+      // we'd like to archive errors instead of removing them
+      return originalReducer(state, {
+        type: 'ARCHIVE_ERROR',
+        payload,
+      });
+    }
+  }
+};
 ```
 
 ### Interfacing with legacy CMS JavaScript
