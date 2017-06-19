@@ -51,7 +51,6 @@ class FormFactoryTest extends SapphireTest
         $this->assertInstanceOf(HiddenField::class, $form->Fields()->fieldByName('ID'));
         $this->assertInstanceOf(HiddenField::class, $form->Fields()->fieldByName('SecurityID'));
 
-
         // Check preview link
         /** @var LiteralField $previewLink */
         $previewLink = $form->Fields()->fieldByName('PreviewLink');

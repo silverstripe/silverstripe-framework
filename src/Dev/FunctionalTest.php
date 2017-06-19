@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
@@ -408,11 +409,11 @@ class FunctionalTest extends SapphireTest
     public function useDraftSite($enabled = true)
     {
         if ($enabled) {
-            $this->session()->inst_set('readingMode', 'Stage.Stage');
-            $this->session()->inst_set('unsecuredDraftSite', true);
+            $this->session()->set('readingMode', 'Stage.Stage');
+            $this->session()->set('unsecuredDraftSite', true);
         } else {
-            $this->session()->inst_set('readingMode', 'Stage.Live');
-            $this->session()->inst_set('unsecuredDraftSite', false);
+            $this->session()->set('readingMode', 'Stage.Live');
+            $this->session()->set('unsecuredDraftSite', false);
         }
     }
 

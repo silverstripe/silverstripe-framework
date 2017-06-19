@@ -16,7 +16,7 @@ class FormRequestHandlerTest extends SapphireTest
     public function testCallsActionOnFormHandler()
     {
         $form = new TestForm(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(),
             new FieldList(new FormAction('mySubmitOnFormHandler'))
@@ -31,7 +31,7 @@ class FormRequestHandlerTest extends SapphireTest
     public function testCallsActionOnForm()
     {
         $form = new TestForm(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(),
             new FieldList(new FormAction('mySubmitOnForm'))

@@ -131,17 +131,8 @@ class Director implements TemplateGlobalProvider
         // Generate output
         $result = static::handleRequest($request);
 
-        // Save session data. Note that inst_save() will start/resume the session if required.
+        // Save session data. Note that save() will start/resume the session if required.
         $request->getSession()->save();
-
-        // Return code for a redirection request
-        // @todo: Refactor into CLIApplication
-        if ($result->isRedirect() && static::is_cli()) {
-            $url = Director::makeRelative($result->getHeader('Location'));
-            $request = clone $request;
-            $request->setUrl($url);
-            return static::direct($request);
-        }
 
         // Post-request handling
         $postRequest = RequestProcessor::singleton()->postRequest($request, $result);
@@ -178,7 +169,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function test(
         $url,
-        $postVars = null,
+        $postVars = [],
         $session = array(),
         $httpMethod = null,
         $body = null,
@@ -213,13 +204,24 @@ class Director implements TemplateGlobalProvider
         }
 
         // Default httpMethod
-        $newVars['_SERVER']['REQUEST_METHOD'] = $httpMethod
-            ?: (($postVars || is_array($postVars)) ? "POST" : "GET");
+        $newVars['_SERVER']['REQUEST_METHOD'] = $httpMethod ?: ($postVars ? "POST" : "GET");
+        $newVars['_POST'] = (array)$postVars;
 
         // Setup session
-        $newVars['_SESSION'] = $session instanceof Session
-            ? $session->getAll()
-            : ($session ?: []);
+        if ($session instanceof Session) {
+            // Note: If passing $session as object, ensure that changes are written back
+            // This is important for classes such as FunctionalTest which emulate cross-request persistence
+            $newVars['_SESSION'] = $session->getAll();
+            $finally[] = function () use ($session) {
+                if (isset($_SESSION)) {
+                    foreach ($_SESSION as $key => $value) {
+                        $session->set($key, $value);
+                    }
+                }
+            };
+        } else {
+            $newVars['_SESSION'] = $session ?: [];
+        }
 
         // Setup cookies
         $cookieJar = $cookies instanceof Cookie_Backend
@@ -267,6 +269,9 @@ class Director implements TemplateGlobalProvider
                 $request->addHeader($k, $v);
             }
         }
+
+        // Apply new vars to environment
+        static::varsToEnv($newVars);
 
         try {
             // Normal request handling

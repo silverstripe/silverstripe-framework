@@ -26,6 +26,12 @@ class DefaultFormFactory implements FormFactory
         $this->constructExtensions();
     }
 
+    /**
+     * @param RequestHandler $controller
+     * @param string $name
+     * @param array $context
+     * @return Form
+     */
     public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
     {
         // Validate context

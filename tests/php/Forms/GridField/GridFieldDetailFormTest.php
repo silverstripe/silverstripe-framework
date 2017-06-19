@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField;
 
 use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\HiddenField;
@@ -244,7 +245,6 @@ class GridFieldDetailFormTest extends FunctionalTest
             )
         );
         $this->assertFalse($response->isError());
-
         $person = Person::get()->sort('FirstName')->First();
         $category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
         $this->assertEquals(
@@ -363,18 +363,17 @@ class GridFieldDetailFormTest extends FunctionalTest
             }
         );
         // Note: A lot of scaffolding to execute the tested logic,
-        // due to the coupling of form creation with request handling (and its context)
-        /**
- * @skipUpgrade
-*/
-        $request = new GridFieldDetailForm_ItemRequest(
+        // due to the coupling of form creation with itemRequest handling (and its context)
+        /** @skipUpgrade */
+        $itemRequest = new GridFieldDetailForm_ItemRequest(
             GridField::create('Categories', 'Categories'),
             $component,
             $category,
-            new Controller(),
+            Controller::curr(),
             'Form'
         );
-        $form = $request->ItemEditForm();
+        $itemRequest->setRequest(Controller::curr()->getRequest());
+        $form = $itemRequest->ItemEditForm();
         $this->assertNotNull($form->Fields()->fieldByName('Callback'));
     }
 

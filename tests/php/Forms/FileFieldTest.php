@@ -20,7 +20,7 @@ class FileFieldTest extends FunctionalTest
     public function testUploadRequiredFile()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 $fileField = new FileField('cv', 'Upload your CV')
@@ -46,7 +46,7 @@ class FileFieldTest extends FunctionalTest
     public function testUploadMissingRequiredFile()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 $fileField = new FileField('cv', 'Upload your CV')

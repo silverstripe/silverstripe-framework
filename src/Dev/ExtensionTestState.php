@@ -55,7 +55,7 @@ class ExtensionTestState implements TestState
                     continue;
                 }
                 if (!isset($this->extensionsToReapply[$dataClass])) {
-                    $this->extensionsToReapply[$dataClass] = array();
+                    $this->extensionsToReapply[$dataClass] = [];
                 }
                 $this->extensionsToReapply[$dataClass][] = $extension;
                 $dataClass::remove_extension($extension);
@@ -70,14 +70,13 @@ class ExtensionTestState implements TestState
             }
             $this->extensionsToRemove[$dataClass] = array();
             foreach ($extensions as $extension) {
-                $dataClass = Extension::get_classname_without_arguments($extension);
-                if (!class_exists($dataClass)) {
-                    $self = static::class;
-                    throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
+                $extension = Extension::get_classname_without_arguments($extension);
+                if (!class_exists($extension)) {
+                    throw new LogicException("Test {$class} requires extension {$extension} which doesn't exist");
                 }
                 if (!$dataClass::has_extension($extension)) {
                     if (!isset($this->extensionsToRemove[$dataClass])) {
-                        $this->extensionsToReapply[$dataClass] = array();
+                        $this->extensionsToReapply[$dataClass] = [];
                     }
                     $this->extensionsToRemove[$dataClass][] = $extension;
                     $dataClass::add_extension($extension);

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\RequestHandler;
@@ -347,7 +348,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     protected function getSession()
     {
-        return $this->getRequestHandler()->getRequest()->getSession();
+        // Note: Session may not be available if this form doesn't have a request handler
+        $controller = $this->getController() ?: Controller::curr();
+        return $controller->getRequest()->getSession();
     }
 
     /**

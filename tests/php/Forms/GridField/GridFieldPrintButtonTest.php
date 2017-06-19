@@ -43,11 +43,8 @@ class GridFieldPrintButtonTest extends SapphireTest
             ->addComponent(new GridFieldPaginator(10))
             ->addComponent($button);
         $gridField = new GridField('testfield', 'testfield', $list, $config);
-        $controller = new Controller();
-        /**
- * @skipUpgrade
-*/
-        new Form($controller, 'Form', new FieldList($gridField), new FieldList());
+        /** @skipUpgrade */
+        new Form(Controller::curr(), 'Form', new FieldList($gridField), new FieldList());
 
         // Printed data should ignore pagination limit
         $printData = $button->generatePrintData($gridField);

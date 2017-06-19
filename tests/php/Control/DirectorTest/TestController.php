@@ -7,6 +7,14 @@ use SilverStripe\Dev\TestOnly;
 
 class TestController extends Controller implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
+
     private static $url_segment = 'TestController';
 
     private static $allowed_actions = array(

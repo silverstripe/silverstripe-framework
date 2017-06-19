@@ -134,9 +134,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         }
 
         /** @var GridFieldDataColumns $dataCols */
-        $dataCols = $gridField->getConfig()->getComponentByType(
-            'SilverStripe\\Forms\\GridField\\GridFieldDataColumns'
-        );
+        $dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         if ($dataCols) {
             return $dataCols->getDisplayFields($gridField);
         }

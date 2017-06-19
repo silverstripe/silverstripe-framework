@@ -365,7 +365,7 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
-     * @param string $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
     public function disablePlugins($plugin)

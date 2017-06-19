@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\EmailFieldTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -16,6 +17,13 @@ use SilverStripe\View\SSViewer;
  */
 class TestController extends Controller implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
 
     private static $allowed_actions = array('Form');
 
@@ -25,11 +33,9 @@ class TestController extends Controller implements TestOnly
 
     protected $template = 'BlankPage';
 
-    function Link($action = null)
+    public function Link($action = null)
     {
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         return Controller::join_links(
             'EmailFieldTest_Controller',
             $this->getRequest()->latestParam('Action'),
@@ -38,7 +44,10 @@ class TestController extends Controller implements TestOnly
         );
     }
 
-    function Form()
+    /**
+     * @return Form
+     */
+    public function Form()
     {
         $form = new Form(
             $this,
@@ -60,13 +69,13 @@ class TestController extends Controller implements TestOnly
         return $form;
     }
 
-    function doSubmit($data, $form, $request)
+    public function doSubmit($data, Form $form, HTTPRequest $request)
     {
         $form->sessionMessage('Test save was successful', 'good');
         return $this->redirectBack();
     }
 
-    function getViewer($action = null)
+    public function getViewer($action = null)
     {
         return new SSViewer('BlankPage');
     }

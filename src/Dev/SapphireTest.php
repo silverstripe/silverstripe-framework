@@ -904,7 +904,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
             DataObject::reset();
 
-            // Set dummy controller
+            // Set dummy controller;
             $controller = Controller::create();
             $controller->setRequest($request);
             $controller->pushCurrent();

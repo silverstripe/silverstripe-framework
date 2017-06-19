@@ -12,6 +12,14 @@ use SilverStripe\Versioned\Versioned;
  */
 class TestController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
+
     private static $extensions = [
         ControllerExtension::class,
     ];
@@ -25,6 +33,9 @@ class TestController extends Controller
         );
     }
 
+    /**
+     * @return Form
+     */
     public function Form()
     {
         // Simple example; Just get the first draft record

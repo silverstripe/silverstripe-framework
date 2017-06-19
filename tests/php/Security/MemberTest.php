@@ -34,9 +34,9 @@ class MemberTest extends FunctionalTest
         Member::class => '*',
     ];
 
-    public function __construct()
+    public static function setUpBeforeClass()
     {
-        parent::__construct();
+        parent::setUpBeforeClass();
 
         //Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
         //This is because the test relies on the yaml file being interpreted according to a particular date format

@@ -50,7 +50,7 @@ class GroupTest extends FunctionalTest
         $parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
 
         // Test single group relation through checkboxsetfield
-        $form = new GroupTest\MemberForm(new Controller(), 'Form');
+        $form = new GroupTest\MemberForm(Controller::curr(), 'Form');
         $member = $this->objFromFixture(TestMember::class, 'admin');
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
@@ -102,6 +102,8 @@ class GroupTest extends FunctionalTest
 
         // Persists after writing to DB
         $group->write();
+
+        /** @var Group $group */
         $group = Group::get()->byID($group->ID);
         $this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
     }

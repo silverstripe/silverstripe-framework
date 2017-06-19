@@ -21,6 +21,13 @@ use SilverStripe\View\SSViewer;
  */
 class TestController extends Controller implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
 
     private static $allowed_actions = array('Form');
 

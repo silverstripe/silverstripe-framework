@@ -61,6 +61,7 @@ class TestSession
         $this->controller = new Controller();
         $this->controller->setRequest($request);
         $this->controller->pushCurrent();
+        $this->controller->doInit();
     }
 
     public function __destruct()
