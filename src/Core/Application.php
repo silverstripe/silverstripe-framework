@@ -13,13 +13,4 @@ interface Application
      * @return Kernel
      */
     public function getKernel();
-
-    /**
-     * Invoke the application control chain
-     *
-     * @param callable $callback
-     * @param bool $flush
-     * @return mixed
-     */
-    public function execute(callable $callback, $flush = false);
 }

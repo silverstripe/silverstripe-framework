@@ -316,7 +316,7 @@ class HTTPRequest implements ArrayAccess
         }
 
         // Initiate an empty session - doesn't initialize an actual PHP session (see HTTPApplication)
-        $session = new Session($variables['_SESSION']);
+        $session = new Session(isset($variables['_SESSION']) ? $variables['_SESSION'] : null);
         $request->setSession($session);
 
         return $request;

@@ -2,13 +2,15 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\HTTPMiddleware;
 
 /**
  * Emits response to the browser
  */
-class OutputMiddleware
+class OutputMiddleware implements HTTPMiddleware
 {
     protected $defaultResponse = null;
 
@@ -24,11 +26,11 @@ class OutputMiddleware
         $this->defaultResponse = $defaultResponse;
     }
 
-    public function __invoke(callable $next)
+    public function process(HTTPRequest $request, callable $delegate)
     {
         /** @var HTTPResponse $response */
         try {
-            $response = call_user_func($next);
+            $response = call_user_func($delegate, $request);
         } catch (HTTPResponse_Exception $exception) {
             $response = $exception->getResponse();
         }

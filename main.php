@@ -15,5 +15,5 @@ $request = HTTPRequest::createFromEnvironment();
 $kernel = new AppKernel();
 $app = new HTTPApplication($kernel);
 $app->addMiddleware(new OutputMiddleware());
-$app->addMiddleware(new ErrorControlChainMiddleware($app, $request));
+$app->addMiddleware(new ErrorControlChainMiddleware($app));
 $app->handle($request);

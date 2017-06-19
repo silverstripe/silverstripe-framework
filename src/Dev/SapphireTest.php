@@ -898,7 +898,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $app = new HTTPApplication($kernel);
 
         // Custom application
-        $app->execute(function () use ($request) {
+        $app->execute($request, function (HTTPRequest $request) {
             // Start session and execute
             $request->getSession()->init();
 

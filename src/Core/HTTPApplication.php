@@ -12,12 +12,12 @@ use SilverStripe\Control\HTTPResponse;
 class HTTPApplication implements Application
 {
     /**
-     * @var callable[]
+     * @var HTTPMiddleware[]
      */
     protected $middlewares = [];
 
     /**
-     * @return callable[]
+     * @return HTTPMiddleware[]
      */
     public function getMiddlewares()
     {
@@ -25,7 +25,7 @@ class HTTPApplication implements Application
     }
 
     /**
-     * @param callable[] $middlewares
+     * @param HTTPMiddleware[] $middlewares
      * @return $this
      */
     public function setMiddlewares($middlewares)
@@ -35,10 +35,10 @@ class HTTPApplication implements Application
     }
 
     /**
-     * @param callable $middleware
+     * @param HTTPMiddleware $middleware
      * @return $this
      */
-    public function addMiddleware($middleware)
+    public function addMiddleware(HTTPMiddleware $middleware)
     {
         $this->middlewares[] = $middleware;
         return $this;
@@ -47,19 +47,21 @@ class HTTPApplication implements Application
     /**
      * Call middleware
      *
+     * @param HTTPRequest $request
      * @param callable $last Last config to call
      * @return HTTPResponse
      */
-    protected function callMiddleware($last)
+    protected function callMiddleware(HTTPRequest $request, $last)
     {
         // Reverse middlewares
         $next = $last;
+        /** @var HTTPMiddleware $middleware */
         foreach (array_reverse($this->getMiddlewares()) as $middleware) {
-            $next = function () use ($middleware, $next) {
-                return call_user_func($middleware, $next);
+            $next = function ($request) use ($middleware, $next) {
+                return $middleware->process($request, $next);
             };
         }
-        return call_user_func($next);
+        return call_user_func($next, $request);
     }
 
     /**
@@ -93,7 +95,7 @@ class HTTPApplication implements Application
         $flush = $request->getVar('flush') || strpos($request->getURL(), 'dev/build') === 0;
 
         // Ensure boot is invoked
-        return $this->execute(function () use ($request) {
+        return $this->execute($request, function (HTTPRequest $request) {
             // Start session and execute
             $request->getSession()->init();
             return Director::direct($request);
@@ -103,17 +105,18 @@ class HTTPApplication implements Application
     /**
      * Safely boot the application and execute the given main action
      *
+     * @param HTTPRequest $request
      * @param callable $callback
      * @param bool $flush
      * @return HTTPResponse
      */
-    public function execute(callable $callback, $flush = false)
+    public function execute(HTTPRequest $request, callable $callback, $flush = false)
     {
         try {
-            return $this->callMiddleware(function () use ($callback, $flush) {
+            return $this->callMiddleware($request, function ($request) use ($callback, $flush) {
                 // Pre-request boot
                 $this->getKernel()->boot($flush);
-                return call_user_func($callback);
+                return call_user_func($callback, $request);
             });
         } finally {
             $this->getKernel()->shutdown();
