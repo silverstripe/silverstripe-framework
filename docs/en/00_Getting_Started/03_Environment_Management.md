@@ -60,7 +60,7 @@ SilverStripe core environment variables are listed here, though you're free to d
 
 | Name  | Description |
 | ----  | ----------- |
-| `SS_DATABASE_CLASS` | The database class to use, MySQLPDODatabase, MySQLDatabase, MSSQLDatabase, etc. defaults to MySQLDatabase.|
+| `SS_DATABASE_CLASS` | The database class to use, MySQLPDODatabase, MySQLDatabase, MSSQLDatabase, etc. defaults to MySQLPDODatabase.|
 | `SS_DATABASE_SERVER`| The database server to use, defaulting to localhost.|
 | `SS_DATABASE_USERNAME`| The database username (mandatory).|
 | `SS_DATABASE_PASSWORD`| The database password (mandatory).|
