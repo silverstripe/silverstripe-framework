@@ -7,10 +7,10 @@ namespace SilverStripe\Core;
  */
 class TestKernel extends AppKernel
 {
-    public function __construct()
+    public function __construct($basePath)
     {
         $this->setEnvironment(self::DEV);
-        parent::__construct();
+        parent::__construct($basePath);
     }
 
     /**

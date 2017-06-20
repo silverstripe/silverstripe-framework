@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\State;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -24,21 +25,21 @@ class GlobalsTestState implements TestState
 
     public function setUp(SapphireTest $test)
     {
-        $this->vars = Director::envToVars();
+        $this->vars = Environment::getVariables();
     }
 
     public function tearDown(SapphireTest $test)
     {
-        Director::varsToEnv($this->vars);
+        Environment::setVariables($this->vars);
     }
 
     public function setUpOnce($class)
     {
-        $this->staticVars = Director::envToVars();
+        $this->staticVars = Environment::getVariables();
     }
 
     public function tearDownOnce($class)
     {
-        Director::varsToEnv($this->staticVars);
+        Environment::setVariables($this->staticVars);
     }
 }

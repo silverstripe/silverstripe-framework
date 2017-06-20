@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
@@ -122,6 +123,14 @@ class Director implements TemplateGlobalProvider
      */
     public static function direct(HTTPRequest $request)
     {
+        // check allowed hosts
+        if (getenv('SS_ALLOWED_HOSTS') && !static::is_cli()) {
+            $allowedHosts = explode(',', getenv('SS_ALLOWED_HOSTS'));
+            if (!in_array(static::host(), $allowedHosts)) {
+                return new HTTPResponse('Invalid Host', 400);
+            }
+        }
+
         // Pre-request
         $output = RequestProcessor::singleton()->preRequest($request);
         if ($output === false) {
@@ -231,9 +240,9 @@ class Director implements TemplateGlobalProvider
         };
 
         // backup existing vars, and create new vars
-        $existingVars = static::envToVars();
+        $existingVars = Environment::getVariables();
         $finally[] = function () use ($existingVars) {
-            static::varsToEnv($existingVars);
+            Environment::setVariables($existingVars);
         };
         $newVars = $existingVars;
 
@@ -307,7 +316,7 @@ class Director implements TemplateGlobalProvider
         $newVars['_REQUEST'] = array_merge($newVars['_GET'], $newVars['_POST']);
 
         // Create new request
-        $request = HTTPRequest::createFromVariables($newVars, $body);
+        $request = HTTPRequestBuilder::createFromVariables($newVars, $body);
         if ($headers) {
             foreach ($headers as $k => $v) {
                 $request->addHeader($k, $v);
@@ -315,7 +324,7 @@ class Director implements TemplateGlobalProvider
         }
 
         // Apply new vars to environment
-        static::varsToEnv($newVars);
+        Environment::setVariables($newVars);
 
         try {
             // Normal request handling
@@ -383,29 +392,6 @@ class Director implements TemplateGlobalProvider
 
         // No URL rules matched, so return a 404 error.
         return new HTTPResponse('No URL rule was matched', 404);
-    }
-
-    /**
-     * Extract env vars prior to modification
-     *
-     * @return array List of all super globals
-     */
-    public static function envToVars()
-    {
-        // Suppress return by-ref
-        return array_merge($GLOBALS, []);
-    }
-
-    /**
-     * Restore a backed up or modified list of vars to $globals
-     *
-     * @param array $vars
-     */
-    public static function varsToEnv(array $vars)
-    {
-        foreach ($vars as $key => $value) {
-            $GLOBALS[$key] = $value;
-        }
     }
 
     /**

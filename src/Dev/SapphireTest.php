@@ -894,7 +894,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $request->setSession($session);
 
         // Test application
-        $kernel = new TestKernel();
+        $kernel = new TestKernel(BASE_PATH);
         $app = new HTTPApplication($kernel);
 
         // Custom application

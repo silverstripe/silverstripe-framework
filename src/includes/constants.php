@@ -3,6 +3,7 @@
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use SilverStripe\Control\Util\IPUtils;
+use SilverStripe\Core\TempFolder;
 
 /**
  * This file is the Framework constants bootstrap. It will prepare some basic common constants.
@@ -148,5 +149,5 @@ if (defined('CUSTOM_INCLUDE_PATH')) {
 
 // Define the temporary folder if it wasn't defined yet
 if (!defined('TEMP_FOLDER')) {
-    define('TEMP_FOLDER', getTempFolder(BASE_PATH));
+    define('TEMP_FOLDER', TempFolder::getTempFolder(BASE_PATH));
 }

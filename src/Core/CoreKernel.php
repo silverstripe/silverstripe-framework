@@ -76,6 +76,11 @@ class CoreKernel implements Kernel
     {
         $this->configLoader->activate();
         $this->injectorLoader->activate();
+
+        // Self register
+        $this->getInjectorLoader()
+            ->getManifest()
+            ->registerService($this, Kernel::class);
         return $this;
     }
 

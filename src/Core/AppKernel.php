@@ -28,8 +28,17 @@ use SilverStripe\View\ThemeResourceLoader;
 
 class AppKernel extends CoreKernel
 {
-    public function __construct()
+    protected $basePath = null;
+
+    /**
+     * Create a new kernel for this application
+     *
+     * @param string $basePath Path to base dir for this application
+     */
+    public function __construct($basePath)
     {
+        $this->basePath = $basePath;
+
         // Initialise the dependency injector as soon as possible, as it is
         // subsequently used by some of the following code
         $injectorLoader = InjectorLoader::inst();
@@ -42,12 +51,12 @@ class AppKernel extends CoreKernel
 
         // Class loader
         $classLoader = ClassLoader::inst();
-        $classLoader->pushManifest(new ClassManifest(BASE_PATH, $manifestCacheFactory));
+        $classLoader->pushManifest(new ClassManifest($basePath, $manifestCacheFactory));
         $this->setClassLoader($classLoader);
 
         // Module loader
         $moduleLoader = ModuleLoader::inst();
-        $moduleManifest = new ModuleManifest(BASE_PATH, $manifestCacheFactory);
+        $moduleManifest = new ModuleManifest($basePath, $manifestCacheFactory);
         $moduleLoader->pushManifest($moduleManifest);
         $this->setModuleLoader($moduleLoader);
 
@@ -62,7 +71,7 @@ class AppKernel extends CoreKernel
         // Load template manifest
         $themeResourceLoader = ThemeResourceLoader::inst();
         $themeResourceLoader->addSet('$default', new ThemeManifest(
-            BASE_PATH,
+            $basePath,
             project(),
             $manifestCacheFactory
         ));
@@ -165,8 +174,8 @@ class AppKernel extends CoreKernel
     protected function detectLegacyEnvironment()
     {
         // Is there an _ss_environment.php file?
-        if (!file_exists(BASE_PATH . '/_ss_environment.php') &&
-            !file_exists(dirname(BASE_PATH) . '/_ss_environment.php')
+        if (!file_exists($this->basePath . '/_ss_environment.php') &&
+            !file_exists(dirname($this->basePath) . '/_ss_environment.php')
         ) {
             return;
         }
@@ -197,7 +206,7 @@ class AppKernel extends CoreKernel
     protected function redirectToInstaller()
     {
         // Error if installer not available
-        if (!file_exists(BASE_PATH . '/install.php')) {
+        if (!file_exists($this->basePath . '/install.php')) {
             throw new HTTPResponse_Exception(
                 'SilverStripe Framework requires a $databaseConfig defined.',
                 500
@@ -290,7 +299,7 @@ class AppKernel extends CoreKernel
         if ($chooseName) {
             // Find directory to build name from
             $loopCount = (int)$chooseName;
-            $databaseDir = BASE_PATH;
+            $databaseDir = $this->basePath;
             for ($i = 0; $i < $loopCount-1; $i++) {
                 $databaseDir = dirname($databaseDir);
             }
@@ -323,12 +332,15 @@ class AppKernel extends CoreKernel
         /**
          * Ensure we have enough memory
          */
-        increase_memory_limit_to('64M');
+        Environment::increaseMemoryLimitTo('64M');
 
-        /**
-         * Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
-         */
-        increase_xdebug_nesting_level_to(200);
+        // Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
+        if (function_exists('xdebug_enable')) {
+            $current = ini_get('xdebug.max_nesting_level');
+            if ((int)$current < 200) {
+                ini_set('xdebug.max_nesting_level', 200);
+            }
+        }
 
         /**
          * Set default encoding
@@ -350,7 +362,7 @@ class AppKernel extends CoreKernel
     {
         return new ManifestCacheFactory([
             'namespace' => 'manifestcache',
-            'directory' => getTempFolder(),
+            'directory' => TempFolder::getTempFolder($this->basePath),
         ]);
     }
 
@@ -407,7 +419,7 @@ class AppKernel extends CoreKernel
         if ($errorLog) {
             $logger = Injector::inst()->get(LoggerInterface::class);
             if ($logger instanceof Logger) {
-                $logger->pushHandler(new StreamHandler(BASE_PATH . '/' . $errorLog, Logger::WARNING));
+                $logger->pushHandler(new StreamHandler($this->basePath . '/' . $errorLog, Logger::WARNING));
             } else {
                 user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
             }

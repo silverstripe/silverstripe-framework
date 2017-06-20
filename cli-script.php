@@ -1,19 +1,23 @@
 <?php
 
 // CLI specific bootstrapping
+use SilverStripe\Control\CLIRequestBuilder;
 use SilverStripe\Core\AppKernel;
 use SilverStripe\Core\HTTPApplication;
-use SilverStripe\Core\Startup\OutputMiddleware;
-use SilverStripe\Control\HTTPRequest;
 
-require __DIR__ . '/src/includes/cli.php';
 require __DIR__ . '/src/includes/autoload.php';
 
+// Ensure that people can't access this from a web-server
+if (!in_array(PHP_SAPI, ["cli", "cgi", "cgi-fcgi"])) {
+    echo "cli-script.php can't be run from a web request, you have to run it on the command-line.";
+    die();
+}
+
 // Build request and detect flush
-$request = HTTPRequest::createFromEnvironment();
+$request = CLIRequestBuilder::createFromEnvironment();
 
 // Default application
-$kernel = new AppKernel();
+$kernel = new AppKernel(BASE_PATH);
 $app = new HTTPApplication($kernel);
-$app->addMiddleware(new OutputMiddleware());
-$app->handle($request);
+$response = $app->handle($request);
+$response->output();
