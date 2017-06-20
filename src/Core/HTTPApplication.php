@@ -17,6 +17,16 @@ class HTTPApplication implements Application
     protected $middlewares = [];
 
     /**
+     * @var Kernel
+     */
+    protected $kernel;
+
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
+    /**
      * @return HTTPMiddleware[]
      */
     public function getMiddlewares()
@@ -62,16 +72,6 @@ class HTTPApplication implements Application
             };
         }
         return call_user_func($next, $request);
-    }
-
-    /**
-     * @var Kernel
-     */
-    protected $kernel;
-
-    public function __construct(Kernel $kernel)
-    {
-        $this->kernel = $kernel;
     }
 
     /**

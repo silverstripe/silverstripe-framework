@@ -3,7 +3,9 @@
 namespace SilverStripe\Core;
 
 /**
- * Look wrapper around global environment variables
+ * Consolidates access and modification of PHP global variables and settings.
+ * This class should be used sparingly, and only if information cannot be obtained
+ * from a current {@link HTTPRequest} object.
  */
 class Environment
 {
