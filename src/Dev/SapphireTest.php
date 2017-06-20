@@ -19,7 +19,7 @@ use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Core\TestKernel;
+use SilverStripe\Dev\TestKernel;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;

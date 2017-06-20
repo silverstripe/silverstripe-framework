@@ -1,11 +1,13 @@
 <?php
 
-namespace SilverStripe\Core;
+namespace SilverStripe\Dev;
+
+use SilverStripe\Core\CoreKernel;
 
 /**
  * Kernel for running unit tests
  */
-class TestKernel extends AppKernel
+class TestKernel extends CoreKernel
 {
     public function __construct($basePath)
     {

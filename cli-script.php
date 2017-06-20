@@ -2,7 +2,7 @@
 
 // CLI specific bootstrapping
 use SilverStripe\Control\CLIRequestBuilder;
-use SilverStripe\Core\AppKernel;
+use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\HTTPApplication;
 
 require __DIR__ . '/src/includes/autoload.php';
@@ -17,7 +17,7 @@ if (!in_array(PHP_SAPI, ["cli", "cgi", "cgi-fcgi"])) {
 $request = CLIRequestBuilder::createFromEnvironment();
 
 // Default application
-$kernel = new AppKernel(BASE_PATH);
+$kernel = new CoreKernel(BASE_PATH);
 $app = new HTTPApplication($kernel);
 $response = $app->handle($request);
 $response->output();

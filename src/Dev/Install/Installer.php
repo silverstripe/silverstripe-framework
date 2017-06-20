@@ -5,7 +5,7 @@ namespace SilverStripe\Dev\Install;
 use Exception;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Core\AppKernel;
+use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
@@ -215,7 +215,7 @@ PHP
         $request->setSession($session);
 
         // Install kernel (fix to dev)
-        $kernel = new AppKernel(BASE_PATH);
+        $kernel = new CoreKernel(BASE_PATH);
         $kernel->setEnvironment(Kernel::DEV);
         $app = new HTTPApplication($kernel);
 

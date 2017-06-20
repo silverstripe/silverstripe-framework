@@ -36,6 +36,10 @@ function singleton($className)
 function project()
 {
     global $project;
+    // Set default project
+    if (empty($project) && file_exists(BASE_PATH . '/mysite')) {
+        $project = 'mysite';
+    }
     return $project;
 }
 

@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Core\TestKernel;
+use SilverStripe\Dev\TestKernel;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -22,7 +22,7 @@ class KernelTestState implements TestState
     /**
      * Get active Kernel instance
      *
-     * @return TestKernel
+     * @return \SilverStripe\Dev\TestKernel
      */
     protected function kernel()
     {

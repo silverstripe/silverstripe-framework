@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\SapphireTest;
@@ -119,7 +120,7 @@ class DatabaseAdmin extends Controller
     public function build()
     {
         // The default time limit of 30 seconds is normally not enough
-        increase_time_limit_to(600);
+        Environment::increaseTimeLimitTo(600);
 
         // Get all our classes
         ClassLoader::inst()->getManifest()->regenerate(false);

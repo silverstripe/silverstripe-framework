@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
@@ -142,8 +143,8 @@ abstract class BulkLoader extends ViewableData
 	 */
     public function load($filepath)
     {
-        increase_time_limit_to(3600);
-        increase_memory_limit_to('512M');
+        Environment::increaseTimeLimitTo(3600);
+        Environment::increaseMemoryLimitTo('512M');
 
         //get all instances of the to be imported data object
         if ($this->deleteExistingRecords) {

@@ -48,7 +48,7 @@ class Environment
 
     /**
      * Increase the memory limit to the given level if it's currently too low.
-     * Only increases up to the maximum defined in {@link set_increase_memory_limit_max()},
+     * Only increases up to the maximum defined in {@link setMemoryLimitMax()},
      * and defaults to the 'memory_limit' setting in the PHP configuration.
      *
      * @param string|float|int $memoryLimit A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
@@ -81,7 +81,7 @@ class Environment
     }
 
     /**
-     * Set the maximum allowed value for {@link increase_memory_limit_to()}.
+     * Set the maximum allowed value for {@link increaseMemoryLimitTo()}.
      * The same result can also be achieved through 'suhosin.memory_limit'
      * if PHP is running with the Suhosin system.
      *
@@ -109,7 +109,7 @@ class Environment
     /**
      * Increase the time limit of this script. By default, the time will be unlimited.
      * Only works if 'safe_mode' is off in the PHP configuration.
-     * Only values up to {@link get_increase_time_limit_max()} are allowed.
+     * Only values up to {@link getTimeLimitMax()} are allowed.
      *
      * @param int $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
      * @return Boolean TRUE indicates a successful change, FALSE a denied change.
@@ -135,7 +135,7 @@ class Environment
     }
 
     /**
-     * Set the maximum allowed value for {@link increase_timeLimit_to()};
+     * Set the maximum allowed value for {@link increaseTimeLimitTo()};
      *
      * @param int $timeLimit Limit in seconds
      */
