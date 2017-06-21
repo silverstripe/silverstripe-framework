@@ -43,6 +43,7 @@ class MemoryLimitTest extends SapphireTest
     public function testIncreaseMemoryLimitTo()
     {
         ini_set('memory_limit', '64M');
+        Environment::setMemoryLimitMax('256M');
 
         // It can go up
         Environment::increaseMemoryLimitTo('128M');
@@ -54,22 +55,20 @@ class MemoryLimitTest extends SapphireTest
 
         // Test the different kinds of syntaxes
         Environment::increaseMemoryLimitTo(1024*1024*200);
-        $this->assertEquals(1024*1024*200, ini_get('memory_limit'));
+        $this->assertEquals('200M', ini_get('memory_limit'));
 
-        Environment::increaseMemoryLimitTo('409600K');
-        $this->assertEquals('409600K', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo('109600K');
+        $this->assertEquals('200M', ini_get('memory_limit'));
 
+        // Attempting to increase past max size only sets to max
         Environment::increaseMemoryLimitTo('1G');
+        $this->assertEquals('256M', ini_get('memory_limit'));
 
-        // If memory limit was left at 409600K, that means that the current testbox doesn't have
-        // 1G of memory available.  That's okay; let's not report a failure for that.
-        if (ini_get('memory_limit') != '409600K') {
-            $this->assertEquals('1G', ini_get('memory_limit'));
+        // No argument means unlimited (but only if originally allowed)
+        if (is_numeric($this->origMemLimitMax) && $this->origMemLimitMax < 0) {
+            Environment::increaseMemoryLimitTo();
+            $this->assertEquals(-1, ini_get('memory_limit'));
         }
-
-        // No argument means unlimited
-        Environment::increaseMemoryLimitTo();
-        $this->assertEquals(-1, ini_get('memory_limit'));
     }
 
     public function testIncreaseTimeLimitTo()

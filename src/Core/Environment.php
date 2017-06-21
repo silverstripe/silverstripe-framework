@@ -67,7 +67,7 @@ class Environment
         // Check hard maximums
         $max = static::getMemoryLimitMax();
         if ($max > 0 && ($memoryLimit < 0 || $memoryLimit > $max)) {
-            return false;
+            $memoryLimit = $max;
         }
 
         // Increase the memory limit if it's too low

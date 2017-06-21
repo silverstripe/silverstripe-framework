@@ -96,10 +96,7 @@ class ExtensionTestState implements TestState
         // reset the schema (if there were extra objects) then force a reset
         if ($isAltered && empty($class::getExtraDataObjects())) {
             DataObject::reset();
-            if (!SapphireTest::using_temp_db()) {
-                SapphireTest::create_temp_db();
-            }
-            $class::resetDBSchema(true);
+            $class::resetDBSchema(true, true);
         }
     }
 

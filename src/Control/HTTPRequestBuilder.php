@@ -65,7 +65,7 @@ class HTTPRequestBuilder
      *
      * @return array
      */
-    protected static function extractRequestHeaders(array $server)
+    public static function extractRequestHeaders(array $server)
     {
         $headers = array();
         foreach ($server as $key => $value) {

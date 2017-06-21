@@ -5,6 +5,7 @@ namespace SilverStripe\Control\Tests;
 use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestProcessor;
@@ -523,7 +524,7 @@ class DirectorTest extends SapphireTest
             'Content-Length'  => '10'
         );
 
-        $this->assertEquals($headers, HTTPRequest::extractRequestHeaders($request));
+        $this->assertEquals($headers, HTTPRequestBuilder::extractRequestHeaders($request));
     }
 
     public function testUnmatchedRequestReturns404()

@@ -391,7 +391,11 @@ class Security extends Controller implements TemplateGlobalProvider
             }
 
             static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
-            $loginResponse = static::singleton()->login($controller ? $controller->getRequest() : $controller);
+            $request = new HTTPRequest('GET', '/');
+            if ($controller) {
+                $request->setSession($controller->getRequest()->getSession());
+            }
+            $loginResponse = static::singleton()->login($request);
             if ($loginResponse instanceof HTTPResponse) {
                 return $loginResponse;
             }

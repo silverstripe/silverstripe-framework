@@ -13,20 +13,16 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\TestKernel;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\SS_List;
@@ -45,6 +41,9 @@ if (!class_exists(PHPUnit_Framework_TestCase::class)) {
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier
  * to work with.
+ *
+ * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
+ * in production sites.
  */
 class SapphireTest extends PHPUnit_Framework_TestCase
 {
@@ -67,6 +66,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * @var Boolean If set to TRUE, this will force a test database to be generated
      * in {@link setUp()}. Note that this flag is overruled by the presence of a
      * {@link $fixture_file}, which always forces a database build.
+     *
+     * @var bool
      */
     protected $usesDatabase = null;
 
@@ -92,6 +93,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * the values are an array of illegal extensions on that class.
      *
      * Set a class to `*` to remove all extensions (unadvised)
+     *
+     * @var array
      */
     protected static $illegal_extensions = [];
 
@@ -106,6 +109,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * <code>
      * array("MyTreeDataObject" => array("Versioned", "Hierarchy"))
      * </code>
+     *
+     * @var array
      */
     protected static $required_extensions = [];
 
@@ -113,6 +118,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * By default, the test database won't contain any DataObjects that have the interface TestOnly.
      * This variable lets you define additional TestOnly DataObjects to set up for this test.
      * Set it to an array of DataObject subclass names.
+     *
+     * @var array
      */
     protected static $extra_dataobjects = [];
 
@@ -138,6 +145,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * @var TestState
      */
     protected static $state = null;
+
+    /**
+     * Temp database helper
+     *
+     * @var TempDatabase
+     */
+    protected static $tempDB = null;
 
     /**
      * Gets illegal extensions for this class
@@ -229,13 +243,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Set up fixture
         if ($fixtureFiles || $this->usesDatabase) {
-            if (!self::using_temp_db()) {
-                self::create_temp_db();
+            if (!static::$tempDB->isUsed()) {
+                static::$tempDB->build();
             }
 
             DataObject::singleton()->flushCache();
 
-            self::empty_temp_db();
+            static::$tempDB->clearAllData();
 
             foreach ($this->requireDefaultRecordsFrom as $className) {
                 $instance = singleton($className);
@@ -292,10 +306,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Build DB if we have objects
         if (static::getExtraDataObjects()) {
             DataObject::reset();
-            if (!self::using_temp_db()) {
-                self::create_temp_db();
-            }
-            static::resetDBSchema(true);
+            static::resetDBSchema(true, true);
         }
     }
 
@@ -915,159 +926,26 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Register state
         static::$state = SapphireTestState::singleton();
+        // Register temp DB holder
+        static::$tempDB = TempDatabase::create();
     }
 
     /**
-     * Returns true if we are currently using a temporary database
-     *
-     * @return bool
-     */
-    public static function using_temp_db()
-    {
-        $dbConn = DB::get_conn();
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        return 1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbConn->getSelectedDatabase());
-    }
-
-    /**
-     * Destroy all temp databases
-     */
-    public static function kill_temp_db()
-    {
-        // Delete our temporary database
-        if (self::using_temp_db()) {
-            $dbConn = DB::get_conn();
-            $dbName = $dbConn->getSelectedDatabase();
-            if ($dbName && DB::get_conn()->databaseExists($dbName)) {
-                // Some DataExtensions keep a static cache of information that needs to
-                // be reset whenever the database is killed
-                foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
-                    $toCall = array($class, 'on_db_reset');
-                    if (is_callable($toCall)) {
-                        call_user_func($toCall);
-                    }
-                }
-
-                // echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
-                $dbConn->dropSelectedDatabase();
-            }
-        }
-    }
-
-    /**
-     * Remove all content from the temporary database.
-     */
-    public static function empty_temp_db()
-    {
-        if (self::using_temp_db()) {
-            DB::get_conn()->clearAllData();
-
-            // Some DataExtensions keep a static cache of information that needs to
-            // be reset whenever the database is cleaned out
-            $classes = array_merge(ClassInfo::subclassesFor(DataExtension::class), ClassInfo::subclassesFor(DataObject::class));
-            foreach ($classes as $class) {
-                $toCall = array($class, 'on_db_reset');
-                if (is_callable($toCall)) {
-                    call_user_func($toCall);
-                }
-            }
-        }
-    }
-
-    /**
-     * Create temp DB without creating extra objects
-     *
-     * @return string
-     */
-    public static function create_temp_db()
-    {
-        // Disable PHPUnit error handling
-        $oldErrorHandler = set_error_handler(null);
-
-        // Create a temporary database, and force the connection to use UTC for time
-        global $databaseConfig;
-        $databaseConfig['timezone'] = '+0:00';
-        DB::connect($databaseConfig);
-        $dbConn = DB::get_conn();
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        do {
-            $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
-        } while ($dbConn->databaseExists($dbname));
-
-        $dbConn->selectDatabase($dbname, true);
-
-        static::resetDBSchema();
-
-        // Reinstate PHPUnit error handling
-        set_error_handler($oldErrorHandler);
-
-        // Ensure test db is killed on exit
-        register_shutdown_function(function () {
-            static::kill_temp_db();
-        });
-
-        return $dbname;
-    }
-
-    public static function delete_all_temp_dbs()
-    {
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        foreach (DB::get_schema()->databaseList() as $dbName) {
-            if (1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbName)) {
-                DB::get_schema()->dropDatabase($dbName);
-                if (Director::is_cli()) {
-                    echo "Dropped database \"$dbName\"" . PHP_EOL;
-                } else {
-                    echo "<li>Dropped database \"$dbName\"</li>" . PHP_EOL;
-                }
-                flush();
-            }
-        }
-    }
-
-    /**
-     * Reset the testing database's schema.
+     * Reset the testing database's schema, but only if it is active
      * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
+     * @param bool $forceCreate Force DB to be created if it doesn't exist
      */
-    public static function resetDBSchema($includeExtraDataObjects = false)
+    public static function resetDBSchema($includeExtraDataObjects = false, $forceCreate = false)
     {
-        if (self::using_temp_db()) {
-            DataObject::reset();
-
-            // clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-            Injector::inst()->unregisterObjects(DataObject::class);
-
-            $dataClasses = ClassInfo::subclassesFor(DataObject::class);
-            array_shift($dataClasses);
-
-            DB::quiet();
-            $schema = DB::get_schema();
-            $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : null;
-            $schema->schemaUpdate(function () use ($dataClasses, $extraDataObjects) {
-                foreach ($dataClasses as $dataClass) {
-                    // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                    if (class_exists($dataClass)) {
-                        $SNG = singleton($dataClass);
-                        if (!($SNG instanceof TestOnly)) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
-
-                // If we have additional dataobjects which need schema, do so here:
-                if ($extraDataObjects) {
-                    foreach ($extraDataObjects as $dataClass) {
-                        $SNG = singleton($dataClass);
-                        if (singleton($dataClass) instanceof DataObject) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
-            });
-
-            ClassInfo::reset_db_cache();
-            DataObject::singleton()->flushCache();
+        // Check if DB is active before reset
+        if (!static::$tempDB->isUsed()) {
+            if (!$forceCreate) {
+                return;
+            }
+            static::$tempDB->build();
         }
+        $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : [];
+        static::$tempDB->resetDBSchema((array)$extraDataObjects);
     }
 
     /**
@@ -1163,25 +1041,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected function useTestTheme($themeBaseDir, $theme, $callback)
     {
         Config::nest();
-
         if (strpos($themeBaseDir, BASE_PATH) === 0) {
             $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
         }
         SSViewer::config()->update('theme_enabled', true);
         SSViewer::set_themes([$themeBaseDir.'/themes/'.$theme, '$default']);
 
-        $e = null;
-
         try {
             $callback();
-        } catch (Exception $e) {
-        /* NOP for now, just save $e */
-        }
-
-        Config::unnest();
-
-        if ($e) {
-            throw $e;
+        } finally {
+            Config::unnest();
         }
     }
 

@@ -582,7 +582,7 @@ class Convert
      */
     public static function bytes2memstring($bytes, $decimal = 0)
     {
-        $scales = ['b','k','m','g'];
+        $scales = ['B','K','M','G'];
         // Get scale
         $scale = (int)floor(log($bytes, 1024));
         if (!isset($scales[$scale])) {

@@ -5,6 +5,7 @@ namespace SilverStripe\Core;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 
 /**
  * Invokes the HTTP application within an ErrorControlChain
@@ -118,6 +119,8 @@ class HTTPApplication implements Application
                 $this->getKernel()->boot($flush);
                 return call_user_func($callback, $request);
             });
+        } catch (HTTPResponse_Exception $ex) {
+            return $ex->getResponse();
         } finally {
             $this->getKernel()->shutdown();
         }

@@ -163,15 +163,17 @@ class HTTP
      *
      * @param string $varname
      * @param string $varvalue
-     * @param string $currentURL Relative or absolute URL.
+     * @param string|null $currentURL Relative or absolute URL, or HTTPRequest to get url from
      * @param string $separator Separator for http_build_query().
-     *
      * @return string
      */
     public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;')
     {
-        $request = Controller::curr()->getRequest();
-        $uri = $currentURL ?: $request->getURL();
+        if (!isset($currentURL)) {
+            $request = Controller::curr()->getRequest();
+            $currentURL = $request->getURL(true);
+        }
+        $uri = $currentURL;
 
         $isRelative = false;
         // We need absolute URLs for parse_url()

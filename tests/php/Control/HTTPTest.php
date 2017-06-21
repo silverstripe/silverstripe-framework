@@ -2,7 +2,10 @@
 
 namespace SilverStripe\Control\Tests;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
@@ -129,14 +132,20 @@ class HTTPTest extends FunctionalTest
     {
         // Hackery to work around volatile URL formats in test invocation,
         // and the inability of Director::absoluteBaseURL() to produce consistent URLs.
-        $origURI = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = 'relative/url/';
+        Director::mockRequest(function (HTTPRequest $request) {
+            $controller = new Controller();
+            $controller->setRequest($request);
+            $controller->pushCurrent();
+            try {
                 $this->assertContains(
-                    'relative/url/?foo=bar',
+                    'relative/url?foo=bar',
                     HTTP::setGetVar('foo', 'bar'),
                     'Omitting a URL falls back to current URL'
                 );
-        $_SERVER['REQUEST_URI'] = $origURI;
+            } finally {
+                $controller->popCurrent();
+            }
+        }, 'relative/url/');
 
         $this->assertEquals(
             'relative/url?foo=bar',

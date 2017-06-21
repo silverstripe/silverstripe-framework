@@ -2,17 +2,16 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\DevelopmentAdmin;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * DatabaseAdmin class
