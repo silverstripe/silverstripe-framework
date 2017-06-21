@@ -179,7 +179,7 @@ class RequestHandler extends ViewableData
     }
 
     /**
-     * Returns the HTTPResponse object that this controller is building up. Can be used to set the
+     * Returns the HTTPResponse object that this handler is building up. Can be used to set the
      * status code and headers.
      *
      * @return HTTPResponse
@@ -194,7 +194,7 @@ class RequestHandler extends ViewableData
     }
 
     /**
-     * Sets the HTTPResponse object that this controller is building up.
+     * Sets the HTTPResponse object that this handler is building up.
      *
      * @param HTTPResponse $response
      *
@@ -229,21 +229,20 @@ class RequestHandler extends ViewableData
      */
     public function handleRequest(HTTPRequest $request, DataModel $model)
     {
-        // $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
-        if ($this->brokenOnConstruct) {
-            $handlerClass = static::class;
-            throw new BadMethodCallException(
-                "parent::__construct() needs to be called on {$handlerClass}::__construct()"
-            );
-        }
+        $this->beforeHandleRequest($request, $model);
 
-        $this->setRequest($request);
-        $this->setDataModel($model);
+        if ($this->getResponse()->isFinished()) {
+            $this->afterHandleRequest($this->getResponse());
+
+            return $this->getResponse();
+        }
 
         $match = $this->findAction($request);
 
         // If nothing matches, return this object
         if (!$match) {
+            $this->afterHandleRequest($this);
+
             return $this;
         }
 
@@ -283,6 +282,8 @@ class RequestHandler extends ViewableData
             }
             $result = $this->handleAction($request, $action);
         } catch (HTTPResponse_Exception $e) {
+            $this->afterHandleRequest($e->getResponse());
+
             return $e->getResponse();
         } catch (PermissionFailureException $e) {
             $result = Security::permissionFailure(null, $e->getMessage());
@@ -292,6 +293,8 @@ class RequestHandler extends ViewableData
             if (isset($_REQUEST['debug_request'])) {
                 Debug::message("Rule resulted in HTTP error; breaking");
             }
+            $this->afterHandleRequest($result);
+
             return $result;
         }
 
@@ -311,11 +314,14 @@ class RequestHandler extends ViewableData
             if (is_array($returnValue)) {
                 $returnValue = $this->customise($returnValue);
             }
+            $this->afterHandleRequest($returnValue);
 
             return $returnValue;
 
         // If we return some other data, and all the URL is parsed, then return that
         } elseif ($request->allParsed()) {
+            $this->afterHandleRequest($result);
+
             return $result;
 
         // But if we have more content on the URL and we don't know what to do with it, return an error.
@@ -323,6 +329,57 @@ class RequestHandler extends ViewableData
             return $this->httpError(404, "I can't handle sub-URLs $classMessage.");
         }
     }
+
+    /**
+     * @param HTTPRequest $request
+     * @param DataModel $model
+     */
+    protected function beforeHandleRequest(HTTPRequest $request, DataModel $model)
+    {
+        // $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
+        if ($this->brokenOnConstruct) {
+            $handlerClass = get_class($this);
+            throw new BadMethodCallException(
+                "parent::__construct() needs to be called on {$handlerClass}::__construct()"
+            );
+        }
+        $this->setRequest($request);
+        $this->setDataModel($model);
+    }
+
+    /**
+     * @param mixed $response
+     */
+    protected function afterHandleRequest($response)
+    {
+        $this->prepareResponse($response);
+    }
+
+    /**
+     * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
+     * changes the controller response object appropriately
+     *
+     * @param mixed $response
+     */
+    protected function prepareResponse($response)
+    {
+        if ($response instanceof HTTPResponse) {
+            if (isset($_REQUEST['debug_request'])) {
+                Debug::message(
+                    "Request handler returned HTTPResponse object to $this->class controller;"
+                    . "returning it without modification."
+                );
+            }
+            $this->setResponse($response);
+        } else {
+            $this->getResponse()->setBody($response);
+        }
+        //deal with content if appropriate
+        ContentNegotiator::process($this->getResponse());
+        //add cache headers
+        HTTP::add_cache_headers($this->getResponse());
+    }
+
 
     /**
      * @param HTTPRequest $request

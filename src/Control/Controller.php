@@ -149,68 +149,26 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     {
         //Push the current controller to protect against weird session issues
         $this->pushCurrent();
-        //Set up the internal dependencies (request, response, datamodel)
-        $this->setRequest($request);
-        $this->setResponse(new HTTPResponse());
-        $this->setDataModel($model);
+        parent::beforeHandleRequest ($request, $model);
         //kick off the init functionality
         $this->doInit();
     }
 
     /**
      * Cleanup for the handleRequest method
+     * @param HTTPResponse $response
      */
-    protected function afterHandleRequest()
+    protected function afterHandleRequest($response)
     {
+        if ($response instanceof Object && $response->hasMethod('getViewer')) {
+            $responseBody = $response->getViewer($this->getAction())->process($response);
+            $this->getResponse()->setBody($responseBody);
+            $response = $this->getResponse();
+        }
+        parent::afterHandleRequest($response);
+
         //Pop the current controller from the stack
         $this->popCurrent();
-    }
-
-    /**
-     * Executes this controller, and return an {@link HTTPResponse} object with the result.
-     *
-     * This method defers to {@link RequestHandler->handleRequest()} to determine which action
-     *    should be executed
-     *
-     * Note: You should rarely need to overload handleRequest() -
-     * this kind of change is only really appropriate for things like nested
-     * controllers - {@link ModelAsController} and {@link RootURLController}
-     * are two examples here.  If you want to make more
-     * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
-     *
-     * Important: If you are going to overload handleRequest,
-     * make sure that you start the method with $this->beforeHandleRequest()
-     * and end the method with $this->afterHandleRequest()
-     *
-     * @param HTTPRequest $request
-     * @param DataModel $model
-     *
-     * @return HTTPResponse
-     */
-    public function handleRequest(HTTPRequest $request, DataModel $model)
-    {
-        if (!$request) {
-            user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
-        }
-
-        //set up the controller for the incoming request
-        $this->beforeHandleRequest($request, $model);
-
-        //if the before handler manipulated the response in a way that we shouldn't proceed, then skip our request
-        // handling
-        if (!$this->getResponse()->isFinished()) {
-            //retrieve the response for the request
-            $response = parent::handleRequest($request, $model);
-
-            //prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses)
-            $this->prepareResponse($response);
-        }
-
-        //after request work
-        $this->afterHandleRequest();
-
-        //return the response
-        return $this->getResponse();
     }
 
     /**
