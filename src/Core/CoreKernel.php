@@ -186,6 +186,16 @@ class CoreKernel implements Kernel
         $this->bootManifests($flush);
         $this->bootErrorHandling();
         $this->bootDatabase();
+        $this->bootConfigs();
+    }
+
+    /**
+     * Include all _config.php files
+     */
+    protected function bootConfigs()
+    {
+        // After loading all other app manifests, include _config.php files
+        $this->getModuleLoader()->getManifest()->activateConfig();
     }
 
     /**
@@ -435,9 +445,6 @@ class CoreKernel implements Kernel
                 $config->setFlush(true);
             }
         }
-
-        // After loading config, boot _config.php files
-        $this->getModuleLoader()->getManifest()->activateConfig();
 
         // Find default templates
         $defaultSet = $this->getThemeResourceLoader()->getSet('$default');

@@ -2,8 +2,8 @@
 
 // CLI specific bootstrapping
 use SilverStripe\Control\CLIRequestBuilder;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\CoreKernel;
-use SilverStripe\Core\HTTPApplication;
 
 require __DIR__ . '/src/includes/autoload.php';
 

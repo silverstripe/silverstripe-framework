@@ -316,7 +316,7 @@ class DB
      * @param string $name
      * @return mixed
      */
-    public static function getConfig($name)
+    public static function getConfig($name = 'default')
     {
         if (isset(static::$configs[$name])) {
             return static::$configs[$name];
