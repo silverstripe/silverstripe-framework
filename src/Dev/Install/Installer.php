@@ -6,7 +6,7 @@ use Exception;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\CoreKernel;
-use SilverStripe\Core\HTTPApplication;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\ORM\DatabaseAdmin;

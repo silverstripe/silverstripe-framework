@@ -1,11 +1,10 @@
 <?php
 
-namespace SilverStripe\Core;
+namespace SilverStripe\Control;
 
-use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Application;
+use SilverStripe\Control\HTTPMiddleware;
+use SilverStripe\Core\Kernel;
 
 /**
  * Invokes the HTTP application within an ErrorControlChain

@@ -1,8 +1,8 @@
 <?php
 
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Core\CoreKernel;
-use SilverStripe\Core\HTTPApplication;
 use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
 
 require __DIR__ . '/src/includes/autoload.php';

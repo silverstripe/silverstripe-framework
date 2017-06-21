@@ -30,7 +30,7 @@ class ClassLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return self::$instance ? self::$instance : self::$instance = new static();
     }
 
     /**

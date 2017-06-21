@@ -7,7 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Application;
-use SilverStripe\Core\HTTPMiddleware;
+use SilverStripe\Control\HTTPMiddleware;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 

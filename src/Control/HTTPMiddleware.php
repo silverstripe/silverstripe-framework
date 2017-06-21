@@ -1,9 +1,6 @@
 <?php
 
-namespace SilverStripe\Core;
-
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
+namespace SilverStripe\Control;
 
 /**
  * HTTP Request middleware
