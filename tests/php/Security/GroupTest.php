@@ -171,6 +171,37 @@ class GroupTest extends FunctionalTest
         $this->assertSame(['childgroup', 'grandchildgroup'], $children->column('Code'));
     }
 
+    public function testGroupInGroupMethods()
+    {
+        $parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
+        $childGroup = $this->objFromFixture(Group::class, 'childgroup');
+        $grandchildGroup = $this->objFromFixture(Group::class, 'grandchildgroup');
+        $adminGroup = $this->objFromFixture(Group::class, 'admingroup');
+        $group1 = $this->objFromFixture(Group::class, 'group1');
+
+        $this->assertTrue($grandchildGroup->inGroup($childGroup));
+        $this->assertTrue($grandchildGroup->inGroup($childGroup->ID));
+        $this->assertTrue($grandchildGroup->inGroup($childGroup->Code));
+
+        $this->assertTrue($grandchildGroup->inGroup($parentGroup));
+        $this->assertTrue($grandchildGroup->inGroups([$parentGroup, $childGroup]));
+        $this->assertTrue($grandchildGroup->inGroups([$childGroup, $parentGroup]));
+        $this->assertTrue($grandchildGroup->inGroups([$parentGroup, $childGroup], true));
+
+        $this->assertFalse($grandchildGroup->inGroup($adminGroup));
+        $this->assertFalse($grandchildGroup->inGroups([$adminGroup, $group1]));
+        $this->assertFalse($grandchildGroup->inGroups([$adminGroup, $childGroup], true));
+
+        $this->assertFalse($grandchildGroup->inGroup('NotARealGroup'));
+        $this->assertFalse($grandchildGroup->inGroup(99999999999));
+        $this->assertFalse($grandchildGroup->inGroup(new TestMember()));
+
+        // Edgecases
+        $this->assertTrue($grandchildGroup->inGroup($grandchildGroup));
+        $this->assertFalse($grandchildGroup->inGroups([]));
+        $this->assertFalse($grandchildGroup->inGroups([], true));
+    }
+
     public function testDelete()
     {
         $group = $this->objFromFixture(Group::class, 'parentgroup');

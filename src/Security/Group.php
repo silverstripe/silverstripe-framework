@@ -377,6 +377,64 @@ class Group extends DataObject
     }
 
     /**
+     * Check if the group is a child of the given group or any parent groups
+     *
+     * @param string|int|Group $group Group instance, Group Code or ID
+     * @return bool Returns TRUE if the Group is a child of the given group, otherwise FALSE
+     */
+    public function inGroup($group)
+    {
+        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs());
+    }
+
+    /**
+     * Check if the group is a child of the given groups or any parent groups
+     *
+     * @param (string|int|Group)[] $groups
+     * @param bool $requireAll set to TRUE if must be in ALL groups, or FALSE if must be in ANY
+     * @return bool Returns TRUE if the Group is a child of any of the given groups, otherwise FALSE
+     */
+    public function inGroups($groups, $requireAll = false)
+    {
+        $ancestorIDs = $this->collateAncestorIDs();
+        $candidateIDs = [];
+        foreach ($groups as $group) {
+            $groupID = $this->identifierToGroupID($group);
+            if ($groupID) {
+                $candidateIDs[] = $groupID;
+            } elseif ($requireAll) {
+                return false;
+            }
+        }
+        if (empty($candidateIDs)) {
+            return false;
+        }
+        $matches = array_intersect($candidateIDs, $ancestorIDs);
+        if ($requireAll) {
+            return count($candidateIDs) === count($matches);
+        }
+        return !empty($matches);
+    }
+
+    /**
+     * Turn a string|int|Group into a GroupID
+     *
+     * @param string|int|Group $groupID Group instance, Group Code or ID
+     * @return int|null the Group ID or NULL if not found
+     */
+    protected function identifierToGroupID($groupID)
+    {
+        if (is_numeric($groupID) && Group::get()->byID($groupID)) {
+            return $groupID;
+        } elseif (is_string($groupID) && $groupByCode = Group::get()->filter(['Code' => $groupID])->first()) {
+            return $groupByCode->ID;
+        } elseif ($groupID instanceof Group && $groupID->exists()) {
+            return $groupID->ID;
+        }
+        return null;
+    }
+
+    /**
      * This isn't a decendant of SiteTree, but needs this in case
      * the group is "reorganised";
      */
