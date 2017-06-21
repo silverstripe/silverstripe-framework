@@ -873,9 +873,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						linkDataSource = selectedEl = selectedEl.parents('a:first');
 					}
 				}
-				if(linkDataSource && linkDataSource.length) this.modifySelection(function(ed){
-					ed.selectNode(linkDataSource[0]);
-				});
 
 				// Is anchor not a link
 				if (!linkDataSource.attr('href')) linkDataSource = null;
