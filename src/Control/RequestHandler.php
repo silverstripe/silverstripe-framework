@@ -161,6 +161,9 @@ class RequestHandler extends ViewableData
      */
     public function getRequest()
     {
+        if (!$this->request) {
+            $this->setRequest(new NullHTTPRequest());
+        }
         return $this->request;
     }
 
