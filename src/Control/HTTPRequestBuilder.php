@@ -15,8 +15,12 @@ class HTTPRequestBuilder
      */
     public static function createFromEnvironment()
     {
+        // Clean and update live global variables
+        $variables = static::cleanEnvironment(Environment::getVariables());
+        Environment::setVariables($variables); // Currently necessary for SSViewer, etc to work
+
         // Health-check prior to creating environment
-        return static::createFromVariables(Environment::getVariables(), @file_get_contents('php://input'));
+        return static::createFromVariables($variables, @file_get_contents('php://input'));
     }
 
     /**
@@ -28,8 +32,6 @@ class HTTPRequestBuilder
      */
     public static function createFromVariables(array $variables, $input)
     {
-        $variables = static::cleanEnvironment($variables);
-
         // Strip `url` out of querystring
         $url = $variables['_GET']['url'];
         unset($variables['_GET']['url']);
@@ -92,7 +94,7 @@ class HTTPRequestBuilder
      * @param array $variables
      * @return array Cleaned variables
      */
-    protected static function cleanEnvironment(array $variables)
+    public static function cleanEnvironment(array $variables)
     {
         // IIS will sometimes generate this.
         if (!empty($variables['_SERVER']['HTTP_X_ORIGINAL_URL'])) {

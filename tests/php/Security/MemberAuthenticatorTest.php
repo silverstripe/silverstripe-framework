@@ -3,21 +3,20 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Security;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -54,6 +53,8 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testCustomIdentifierField()
     {
+        Member::config()->set('unique_identifier_field', 'Username');
+
         $label = Member::singleton()
             ->fieldLabel(Member::config()->get('unique_identifier_field'));
 
@@ -69,7 +70,7 @@ class MemberAuthenticatorTest extends SapphireTest
         // Create basic login form
         $frontendResponse = $authenticator
             ->getLoginHandler($controller->link())
-            ->handleRequest(new HTTPRequest('get', '/'));
+            ->handleRequest(Controller::curr()->getRequest());
 
         $this->assertTrue(is_array($frontendResponse));
         $this->assertTrue(isset($frontendResponse['Form']));

@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests\GridField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -108,6 +109,7 @@ class GridFieldDeleteActionTest extends SapphireTest
                 'SecurityID' => null,
             )
         );
+        $request->setSession(new Session([]));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
     }
 

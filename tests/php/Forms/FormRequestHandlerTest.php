@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -24,6 +25,7 @@ class FormRequestHandlerTest extends SapphireTest
         $form->disableSecurityToken();
         $handler = new TestFormRequestHandler($form);
         $request = new HTTPRequest('POST', '/', null, ['action_mySubmitOnFormHandler' => 1]);
+        $request->setSession(new Session([]));
         $response = $handler->httpSubmission($request);
         $this->assertFalse($response->isError());
     }
@@ -39,6 +41,7 @@ class FormRequestHandlerTest extends SapphireTest
         $form->disableSecurityToken();
         $handler = new FormRequestHandler($form);
         $request = new HTTPRequest('POST', '/', null, ['action_mySubmitOnForm' => 1]);
+        $request->setSession(new Session([]));
         $response = $handler->httpSubmission($request);
         $this->assertFalse($response->isError());
     }

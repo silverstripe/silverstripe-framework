@@ -34,7 +34,7 @@ class TempFolder
      *
      * @return string
      */
-    protected static function getTempFolderUsername()
+    public static function getTempFolderUsername()
     {
         $user = getenv('APACHE_RUN_USER');
         if (!$user) {

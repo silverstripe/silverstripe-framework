@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
+use SilverStripe\Core\TempFolder;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 
@@ -22,31 +23,31 @@ class CoreTest extends SapphireTest
 
     public function testGetTempPathInProject()
     {
-        $user = getTempFolderUsername();
+        $user = TempFolder::getTempFolderUsername();
 
         if (file_exists($this->tempPath)) {
-            $this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
+            $this->assertEquals(TempFolder::getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
         } else {
-            $user = getTempFolderUsername();
+            $user = TempFolder::getTempFolderUsername();
             $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
                 preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 
             // A typical Windows location for where sites are stored on IIS
             $this->assertEquals(
                 $base . 'C--inetpub-wwwroot-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
-                getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project')
+                TempFolder::getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project')
             );
 
             // A typical Mac OS X location for where sites are stored
             $this->assertEquals(
                 $base . '-Users-joebloggs-Sites-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
-                getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project')
+                TempFolder::getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project')
             );
 
             // A typical Linux location for where sites are stored
             $this->assertEquals(
                 $base . '-var-www-silverstripe-test-project' . DIRECTORY_SEPARATOR . $user,
-                getTempFolder('/var/www/silverstripe-test-project')
+                TempFolder::getTempFolder('/var/www/silverstripe-test-project')
             );
         }
     }
@@ -54,7 +55,7 @@ class CoreTest extends SapphireTest
     protected function tearDown()
     {
         parent::tearDown();
-        $user = getTempFolderUsername();
+        $user = TempFolder::getTempFolderUsername();
         $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
             preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
         foreach (array(

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Session;
 use SilverStripe\Forms\Tests\FormTest\TestController;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
@@ -778,6 +779,7 @@ class FormTest extends FunctionalTest
             'action_doSubmit' => 1
             )
         );
+        $request->setSession(new Session([]));
 
         $form->getRequestHandler()->httpSubmission($request);
         $button = $form->getRequestHandler()->buttonClicked();
@@ -798,6 +800,7 @@ class FormTest extends FunctionalTest
             'action_doSubmit' => 1
             )
         );
+        $request->setSession(new Session([]));
 
         $form->getRequestHandler()->httpSubmission($request);
         $button = $form->getRequestHandler()->buttonClicked();

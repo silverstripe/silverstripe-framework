@@ -3,6 +3,7 @@
 namespace SilverStripe\View\Tests;
 
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\TempFolder;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Dev\SapphireTest;
@@ -41,7 +42,7 @@ class SSViewerCacheBlockTest extends SapphireTest
 
         $cache = null;
         if ($cacheOn) {
-            $cache = new FilesystemCache('cacheblock', 0, getTempFolder()); // cache indefinitely
+            $cache = new FilesystemCache('cacheblock', 0, TempFolder::getTempFolder(BASE_PATH)); // cache indefinitely
         } else {
             $cache = new NullCache();
         }

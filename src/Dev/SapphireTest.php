@@ -6,6 +6,7 @@ use Exception;
 use LogicException;
 use PHPUnit_Framework_TestCase;
 use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\Control\CLIRequestBuilder;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
@@ -889,9 +890,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         static::set_is_running_test(true);
 
         // Mock request
-        $session = new Session(isset($_SESSION) ? $_SESSION : array());
-        $request = new HTTPRequest('GET', '/');
-        $request->setSession($session);
+        $_SERVER['argv'] = ['vendor/bin/phpunit', '/'];
+        $request = CLIRequestBuilder::createFromEnvironment();
 
         // Test application
         $kernel = new TestKernel(BASE_PATH);

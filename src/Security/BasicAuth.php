@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 /**

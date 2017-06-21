@@ -315,6 +315,9 @@ class Director implements TemplateGlobalProvider
         $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . $url;
         $newVars['_REQUEST'] = array_merge($newVars['_GET'], $newVars['_POST']);
 
+        // Normalise vars
+        $newVars = HTTPRequestBuilder::cleanEnvironment($newVars);
+
         // Create new request
         $request = HTTPRequestBuilder::createFromVariables($newVars, $body);
         if ($headers) {

@@ -2,18 +2,18 @@
 
 namespace SilverStripe\Security\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
+use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\Session;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Tests\GroupTest\TestMember;
 
 class GroupTest extends FunctionalTest
 {
-
     protected static $fixture_file = 'GroupTest.yml';
 
     protected static $extra_dataobjects = [
@@ -44,13 +44,14 @@ class GroupTest extends FunctionalTest
      */
     public function testMemberGroupRelationForm()
     {
-        Session::set('loggedInAs', $this->idFromFixture(TestMember::class, 'admin'));
+        $this->logInAs($this->idFromFixture(TestMember::class, 'admin'));
 
         $adminGroup = $this->objFromFixture(Group::class, 'admingroup');
         $parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
 
         // Test single group relation through checkboxsetfield
         $form = new GroupTest\MemberForm(Controller::curr(), 'Form');
+        /** @var Member $member */
         $member = $this->objFromFixture(TestMember::class, 'admin');
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
@@ -110,7 +111,9 @@ class GroupTest extends FunctionalTest
 
     public function testCollateAncestorIDs()
     {
+        /** @var Group $parentGroup */
         $parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
+        /** @var Group $childGroup */
         $childGroup = $this->objFromFixture(Group::class, 'childgroup');
         $orphanGroup = new Group();
         $orphanGroup->ParentID = 99999;
@@ -144,6 +147,7 @@ class GroupTest extends FunctionalTest
      */
     public function testCollateFamilyIds()
     {
+        /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'parentgroup');
         $groupIds = $this->allFixtureIDs(Group::class);
         $ids = array_intersect_key($groupIds, array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
@@ -152,11 +156,11 @@ class GroupTest extends FunctionalTest
 
     /**
      * Test that an exception is thrown if collateFamilyIDs is called on an unsaved Group
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Cannot call collateFamilyIDs on unsaved Group.
      */
     public function testCannotCollateUnsavedGroupFamilyIds()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot call collateFamilyIDs on unsaved Group.');
         $group = new Group;
         $group->collateFamilyIDs();
     }
@@ -166,8 +170,8 @@ class GroupTest extends FunctionalTest
      */
     public function testGetAllChildren()
     {
+        /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'parentgroup');
-
         $children = $group->getAllChildren();
         $this->assertInstanceOf(ArrayList::class, $children);
         $this->assertSame(['childgroup', 'grandchildgroup'], $children->column('Code'));
@@ -204,7 +208,9 @@ class GroupTest extends FunctionalTest
 
     public function testValidatesPrivilegeLevelOfParent()
     {
+        /** @var Group $nonAdminGroup */
         $nonAdminGroup = $this->objFromFixture(Group::class, 'childgroup');
+        /** @var Group $adminGroup */
         $adminGroup = $this->objFromFixture(Group::class, 'admingroup');
 
         // Making admin group parent of a non-admin group, effectively expanding is privileges
@@ -226,6 +232,7 @@ class GroupTest extends FunctionalTest
         $nonAdminGroup->write();
 
         $this->logInWithPermission('ADMIN');
+        /** @var Group $inheritedAdminGroup */
         $inheritedAdminGroup = $this->objFromFixture(Group::class, 'group1');
         $inheritedAdminGroup->ParentID = $adminGroup->ID;
         $inheritedAdminGroup->write(); // only works with ADMIN login

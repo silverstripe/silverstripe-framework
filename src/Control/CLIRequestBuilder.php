@@ -7,7 +7,7 @@ namespace SilverStripe\Control;
  */
 class CLIRequestBuilder extends HTTPRequestBuilder
 {
-    protected static function cleanEnvironment(array $variables)
+    public static function cleanEnvironment(array $variables)
     {
         // Create all blank vars
         foreach (['_REQUEST', '_GET', '_POST', '_SESSION', '_SERVER', '_COOKIE', '_ENV', '_FILES'] as $key) {

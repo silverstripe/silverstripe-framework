@@ -1325,9 +1325,12 @@ class Requirements_Backend
         if ($minify && !$this->minifier) {
             throw new Exception(
                 sprintf(
-                    'Cannot minify files without a minification service defined.
-        			Set %s::minifyCombinedFiles to false, or inject a %s service on
-        			%s.properties.minifier',
+                    <<<MESSAGE
+Cannot minify files without a minification service defined.
+Set %s::minifyCombinedFiles to false, or inject a %s service on
+%s.properties.minifier
+MESSAGE
+                    ,
                     __CLASS__,
                     Requirements_Minifier::class,
                     __CLASS__

@@ -4,7 +4,6 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -124,11 +123,11 @@ class MemberLoginForm extends BaseLoginForm
      */
     protected function getFormFields()
     {
-        $request = $this->getController()->getRequest();
+        $request = $this->getRequest();
         if ($request->getVar('BackURL')) {
             $backURL = $request->getVar('BackURL');
         } else {
-            $backURL = Session::get('BackURL');
+            $backURL = $request->getSession()->get('BackURL');
         }
 
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
@@ -191,11 +190,13 @@ class MemberLoginForm extends BaseLoginForm
         return $actions;
     }
 
+
+
     public function restoreFormState()
     {
         parent::restoreFormState();
 
-        $session = Controller::curr()->getRequest()->getSession();
+        $session = $this->getSession();
         $forceMessage = $session->get('MemberLoginForm.force_message');
         if (($member = Security::getCurrentUser()) && !$forceMessage) {
             $message = _t(

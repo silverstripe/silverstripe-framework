@@ -3,17 +3,16 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use InvalidArgumentException;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\Session;
-use SilverStripe\Core\Extensible;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\DefaultAdminService;
 
 /**
  * Authenticator for the default "member" method
@@ -69,14 +68,14 @@ class MemberAuthenticator implements Authenticator
             if ($result->isValid()) {
                 // Check if default admin credentials are correct
                 if (DefaultAdminService::isDefaultAdminCredentials($email, $data['Password'])) {
-                return $member;
-            } else {
-                $result->addError(_t(
-                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                    "The provided details don't seem to be correct. Please try again."
-                ));
+                    return $member;
+                } else {
+                    $result->addError(_t(
+                        'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                        "The provided details don't seem to be correct. Please try again."
+                    ));
+                }
             }
-        }
         }
 
         // Attempt to identify user by email

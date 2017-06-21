@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests\Startup;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token;
 use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken;
@@ -29,6 +30,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $get['parameterconfirmationtokentest_emptytoken'] = '1';
         $get['parameterconfirmationtokentest_emptytokentoken'] = '';
         $this->request = new HTTPRequest('GET', '/', $get);
+        $this->request->setSession(new Session([]));
     }
 
     public function testParameterDetectsParameters()

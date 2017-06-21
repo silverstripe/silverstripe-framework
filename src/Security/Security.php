@@ -391,7 +391,7 @@ class Security extends Controller implements TemplateGlobalProvider
             }
 
             static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
-            $loginResponse = static::singleton()->login();
+            $loginResponse = static::singleton()->login($controller ? $controller->getRequest() : $controller);
             if ($loginResponse instanceof HTTPResponse) {
                 return $loginResponse;
             }
@@ -702,15 +702,19 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
+        if ($request) {
+            $this->setRequest($request);
+        } elseif ($request) {
+            $request = $this->getRequest();
+        } else {
+            throw new HTTPResponse_Exception("No request available", 500);
+        }
+
         // Check pre-login process
         if ($response = $this->preLogin()) {
             return $response;
         }
         $authName = null;
-
-        if (!$request) {
-            $request = $this->getRequest();
-        }
 
         if ($request && $request->param('ID')) {
             $authName = $request->param('ID');
