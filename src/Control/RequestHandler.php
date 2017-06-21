@@ -243,7 +243,7 @@ class RequestHandler extends ViewableData
         if (!$match) {
             $this->afterHandleRequest($this);
 
-            return $this;
+            return $this->getResponse();
         }
 
         // Start to find what action to call. Start by using what findAction returned
@@ -295,7 +295,7 @@ class RequestHandler extends ViewableData
             }
             $this->afterHandleRequest($result);
 
-            return $result;
+            return $this->getResponse();
         }
 
         // If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
@@ -316,13 +316,13 @@ class RequestHandler extends ViewableData
             }
             $this->afterHandleRequest($returnValue);
 
-            return $returnValue;
+            return $this->getResponse();
 
         // If we return some other data, and all the URL is parsed, then return that
         } elseif ($request->allParsed()) {
             $this->afterHandleRequest($result);
 
-            return $result;
+            return $this->getResponse();
 
         // But if we have more content on the URL and we don't know what to do with it, return an error.
         } else {
