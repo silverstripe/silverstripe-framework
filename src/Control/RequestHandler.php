@@ -59,12 +59,19 @@ class RequestHandler extends ViewableData
      * @var HTTPRequest $request The request object that the controller was called with.
      * Set in {@link handleRequest()}. Useful to generate the {}
      */
-    protected $request = null;
+    private $request;
+
+    /**
+     * The response object that the controller returns.
+     *
+     * @var HTTPResponse
+     */
+    private $response;
 
     /**
      * The DataModel for this request
      */
-    protected $model = null;
+    private $model;
 
     /**
      * This variable records whether RequestHandler::__construct()
@@ -121,22 +128,83 @@ class RequestHandler extends ViewableData
     {
         $this->brokenOnConstruct = false;
 
-        $this->setRequest(new NullHTTPRequest());
-
-        // This will prevent bugs if setDataModel() isn't called.
-        $this->model = DataModel::inst();
-
         parent::__construct();
+    }
+
+    public function getDataModel()
+    {
+        if (!$this->model) {
+            $this->setDataModel(DataModel::inst());
+        }
+        return $this->model;
     }
 
     /**
      * Set the DataModel for this request.
      *
      * @param DataModel $model
+     * @return $this
      */
     public function setDataModel($model)
     {
         $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * Returns the HTTPRequest object that this controller is using.
+     * Returns a placeholder {@link NullHTTPRequest} object unless
+     * {@link handleAction()} or {@link handleRequest()} have been called,
+     * which adds a reference to an actual {@link HTTPRequest} object.
+     *
+     * @return HTTPRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Typically the request is set through {@link handleAction()}
+     * or {@link handleRequest()}, but in some based we want to set it manually.
+     *
+     * @param HTTPRequest $request
+     * @return $this
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+
+    /**
+     * Returns the HTTPResponse object that this controller is building up. Can be used to set the
+     * status code and headers.
+     *
+     * @return HTTPResponse
+     */
+    public function getResponse()
+    {
+        if (!$this->response) {
+            $this->setResponse(new HTTPResponse());
+        }
+
+        return $this->response;
+    }
+
+    /**
+     * Sets the HTTPResponse object that this controller is building up.
+     *
+     * @param HTTPResponse $response
+     *
+     * @return $this
+     */
+    public function setResponse(HTTPResponse $response)
+    {
+        $this->response = $response;
+
+        return $this;
     }
 
     /**
@@ -537,32 +605,6 @@ class RequestHandler extends ViewableData
 
         // Throw a new exception
         throw new HTTPResponse_Exception($errorMessage, $errorCode);
-    }
-
-    /**
-     * Returns the HTTPRequest object that this controller is using.
-     * Returns a placeholder {@link NullHTTPRequest} object unless
-     * {@link handleAction()} or {@link handleRequest()} have been called,
-     * which adds a reference to an actual {@link HTTPRequest} object.
-     *
-     * @return HTTPRequest
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * Typically the request is set through {@link handleAction()}
-     * or {@link handleRequest()}, but in some based we want to set it manually.
-     *
-     * @param HTTPRequest $request
-     * @return $this
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-        return $this;
     }
 
     /**

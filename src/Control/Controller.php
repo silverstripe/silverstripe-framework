@@ -67,15 +67,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $basicAuthEnabled = true;
 
     /**
-     * The response object that the controller returns.
-     *
-     * Set in {@link handleRequest()}.
-     *
-     * @var HTTPResponse
-     */
-    protected $response;
-
-    /**
      * Default URL handlers.
      *
      * @var array
@@ -328,33 +319,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function getURLParams()
     {
         return $this->urlParams;
-    }
-
-    /**
-     * Returns the HTTPResponse object that this controller is building up. Can be used to set the
-     * status code and headers.
-     *
-     * @return HTTPResponse
-     */
-    public function getResponse()
-    {
-        if (!$this->response) {
-            $this->setResponse(new HTTPResponse());
-        }
-        return $this->response;
-    }
-
-    /**
-     * Sets the HTTPResponse object that this controller is building up.
-     *
-     * @param HTTPResponse $response
-     *
-     * @return $this
-     */
-    public function setResponse(HTTPResponse $response)
-    {
-        $this->response = $response;
-        return $this;
     }
 
     /**
