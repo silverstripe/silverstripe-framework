@@ -11,20 +11,23 @@
 
 namespace SilverStripe\Dev\Install;
 
-/**
- * SilverStripe CMS SilverStripe\Dev\Install\Installer
- * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
- */
+// Back up original ini config
+$originalIni = [];
+$iniSet = function ($name, $value) use (&$originalIni) {
+    if (!isset($originalIni[$name])) {
+        $originalIni[$name] = ini_get($name);
+    }
+    ini_set($name, $value);
+};
 
 // speed up mysql_connect timeout if the server can't be found
-ini_set('mysql.connect_timeout', 5);
+$iniSet('mysql.connect_timeout', 5);
 // Don't die half was through installation; that does more harm than good
-ini_set('max_execution_time', 0);
+$iniSet('max_execution_time', 0);
 
 // set display_errors php setting to on to force installer to avoid blank screen of death.
 // get the original value so it can be used in PHP requirement checks later in this script.
-$originalDisplayErrorsValue = ini_get('display_errors');
-ini_set('display_errors', '1');
+$iniSet('display_errors', '1');
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -201,19 +204,22 @@ if (file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
 }
 
 // Check requirements
-$req = new InstallRequirements();
+$req = new InstallRequirements($originalIni);
 $req->check();
 
-$webserverConfigFile = '';
 if ($req->isIIS()) {
     $webserverConfigFile = 'web.config';
 } else {
     $webserverConfigFile = '.htaccess';
 }
 
+$hasErrorOtherThanDatabase = false;
+$hasOnlyWarnings = false;
+$phpIniLocation = php_ini_loaded_file();
 if ($req->hasErrors()) {
     $hasErrorOtherThanDatabase = true;
-    $phpIniLocation = php_ini_loaded_file();
+} elseif ($req->hasWarnings()) {
+    $hasOnlyWarnings = true;
 }
 
 $dbReq = new InstallRequirements();
@@ -236,6 +242,17 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
     $dbReq->listErrors();
     exit(1);
 }
+
+// config-form.html vars (placeholder to prevent deletion)
+[
+    $defaultLocale,
+    $silverstripe_version,
+    $locales,
+    $webserverConfigFile,
+    $hasErrorOtherThanDatabase,
+    $hasOnlyWarnings, // If warnings but not errors
+    $phpIniLocation
+];
 
 if ((isset($_REQUEST['go']) || $installFromCli)
     && !$req->hasErrors()
@@ -262,4 +279,3 @@ if ((isset($_REQUEST['go']) || $installFromCli)
 } else {
     include(__DIR__ . '/config-form.html');
 }
-

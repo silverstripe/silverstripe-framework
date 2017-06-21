@@ -6,7 +6,7 @@
 	<head>
 		<title>SilverStripe CMS / Framework Installation</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<script type="application/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script type="application/javascript" src="//code.jquery.com/jquery-1.7.2.min.js"></script>
 		<script type="application/javascript" src="<?=FRAMEWORK_NAME; ?>/src/Dev/Install/client/js/install.js"></script>
 		<link rel="stylesheet" type="text/css" href="<?=FRAMEWORK_NAME; ?>/src/Dev/Install/client/styles/install.css">
 		<link rel="shortcut icon" href="favicon.ico">
@@ -29,13 +29,13 @@
 				<div id="Layout">
 					<div class="typography">
 						<form action="install.php" method="post">
-							<?php if(isset($hasErrorOtherThanDatabase)): ?>
+							<?php if($hasErrorOtherThanDatabase): ?>
 								<p class="message error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/framework/en/installation/server-requirements" target="_blank">server requirements</a>.
 								</p>
-								<?php if (isset($phpIniLocation)): ?>
-									<p>Your php.ini file is located at <?=$phpIniLocation; ?></p>
+								<?php if ($phpIniLocation): ?>
+									<p class="message warning">Your php.ini file is located at <?=$phpIniLocation; ?></p>
 								<?php endif; ?>
 							<?php else: ?>
 								<?php if($alreadyInstalled): ?>
@@ -252,7 +252,7 @@
 							</ul>
 							<h3 class="sectionHeading" id="install">Confirm Install <small>Step 5 of 5</small></h3>
 
-							<?php if(isset($hasErrorOtherThanDatabase)): ?>
+							<?php if($hasErrorOtherThanDatabase): ?>
 								<p class="error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see above</a> for details.<br>
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements page</a>.

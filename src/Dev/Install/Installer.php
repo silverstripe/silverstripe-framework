@@ -13,6 +13,10 @@ use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\Security;
 
+/**
+ * SilverStripe CMS SilverStripe\Dev\Install\Installer
+ * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
+ */
 class Installer extends InstallRequirements
 {
     public function __construct()
@@ -126,39 +130,25 @@ class Installer extends InstallRequirements
         global $usingEnv;
         if ($usingEnv) {
             $this->statusMessage("Setting up 'mysite/_config.php' for use with environment variables...");
-            $this->writeToFile("mysite/_config.php", <<<PHP
-<?php
-
-global \$project;
-\$project = 'mysite';
-
-global \$database;
-\$database = '{$dbConfig['database']}';
-
-require_once('conf/ConfigureFromEnv.php');
-
-PHP
-            );
+            $this->writeToFile("mysite/_config.php", "<?php\n ");
         } else {
             $this->statusMessage("Setting up 'mysite/_config.php'...");
             // Create databaseConfig
             $lines = array(
-                $lines[] = "\t'type' => '$type'"
+                $lines[] = "    'type' => '$type'"
             );
             foreach ($dbConfig as $key => $value) {
-                $lines[] = "\t'{$key}' => '$value'";
+                $lines[] = "    '{$key}' => '$value'";
             }
             $databaseConfigContent = implode(",\n", $lines);
             $this->writeToFile("mysite/_config.php", <<<PHP
 <?php
 
-global \$project;
-\$project = 'mysite';
+use SilverStripe\\ORM\\DB;
 
-global \$databaseConfig;
-\$databaseConfig = array(
+DB::setConfig([
 {$databaseConfigContent}
-);
+]);
 
 PHP
             );

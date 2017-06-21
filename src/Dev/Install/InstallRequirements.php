@@ -16,7 +16,15 @@ use SilverStripe\Core\TempFolder;
  */
 class InstallRequirements
 {
-    var $errors, $warnings, $tests;
+    protected $errors = [];
+    protected $warnings = [];
+    protected $tests = [];
+
+    /**
+     * Backup of original ini settings
+     * @var array
+     */
+    protected $originalIni = [];
 
     /**
      * Check the database configuration. These are done one after another
@@ -172,7 +180,7 @@ class InstallRequirements
      */
     public function check()
     {
-        $this->errors = null;
+        $this->errors = [];
         $isApache = $this->isApache();
         $isIIS = $this->isIIS();
         $webserver = $this->findWebserver();
@@ -376,7 +384,7 @@ class InstallRequirements
             'PHP Configuration',
             'date.timezone setting and validity',
             'date.timezone option in php.ini must be set correctly.',
-            ini_get('date.timezone')
+            $this->getOriginalIni('date.timezone')
         ));
 
         $this->suggestClass('finfo', array(
@@ -441,10 +449,24 @@ class InstallRequirements
             "PHP Configuration",
             "Memory allocation (PHP config option 'memory_limit')",
             "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.",
-            ini_get("memory_limit")
+            $this->getOriginalIni("memory_limit")
         ));
 
         return $this->errors;
+    }
+
+    /**
+     * Get ini setting
+     *
+     * @param string $settingName
+     * @return mixed
+     */
+    protected function getOriginalIni($settingName)
+    {
+        if (isset($this->originalIni[$settingName])) {
+            return $this->originalIni[$settingName];
+        }
+        return ini_get($settingName);
     }
 
     public function suggestPHPSetting($settingName, $settingValues, $testDetails)
@@ -453,12 +475,7 @@ class InstallRequirements
 
         // special case for display_errors, check the original value before
         // it was changed at the start of this script.
-        if ($settingName == 'display_errors') {
-            global $originalDisplayErrorsValue;
-            $val = $originalDisplayErrorsValue;
-        } else {
-            $val = ini_get($settingName);
-        }
+        $val = $this->getOriginalIni($settingName);
 
         if (!in_array($val, $settingValues) && $val != $settingValues) {
             $this->warning($testDetails, "$settingName is set to '$val' in php.ini.  $testDetails[2]");
@@ -469,7 +486,7 @@ class InstallRequirements
     {
         $this->testing($testDetails);
 
-        $val = ini_get($settingName);
+        $val = $this->getOriginalIni($settingName);
         if (!in_array($val, $settingValues) && $val != $settingValues) {
             $this->error($testDetails, "$settingName is set to '$val' in php.ini.  $testDetails[2]");
         }
@@ -496,8 +513,8 @@ class InstallRequirements
     public function requireDateTimezone($testDetails)
     {
         $this->testing($testDetails);
-
-        $result = ini_get('date.timezone') && in_array(ini_get('date.timezone'), timezone_identifiers_list());
+        $val = $this->getOriginalIni('date.timezone');
+        $result = $val && in_array($val, timezone_identifiers_list());
         if (!$result) {
             $this->error($testDetails);
         }
@@ -508,20 +525,21 @@ class InstallRequirements
         $_SESSION['forcemem'] = false;
 
         $mem = $this->getPHPMemory();
+        $memLimit = $this->getOriginalIni("memory_limit");
         if ($mem < (64 * 1024 * 1024)) {
             ini_set('memory_limit', '64M');
             $mem = $this->getPHPMemory();
-            $testDetails[3] = ini_get("memory_limit");
+            $testDetails[3] = $memLimit;
         }
 
         $this->testing($testDetails);
 
         if ($mem < $min && $mem > 0) {
-            $message = $testDetails[2] . " You only have " . ini_get("memory_limit") . " allocated";
+            $message = $testDetails[2] . " You only have " . $memLimit . " allocated";
             $this->error($testDetails, $message);
             return false;
         } elseif ($mem < $recommended && $mem > 0) {
-            $message = $testDetails[2] . " You only have " . ini_get("memory_limit") . " allocated";
+            $message = $testDetails[2] . " You only have " . $memLimit . " allocated";
             $this->warning($testDetails, $message);
             return false;
         } elseif ($mem == 0) {
@@ -535,7 +553,7 @@ class InstallRequirements
 
     public function getPHPMemory()
     {
-        $memString = ini_get("memory_limit");
+        $memString = $this->getOriginalIni("memory_limit");
 
         switch (strtolower(substr($memString, -1))) {
             case "k":
