@@ -55,6 +55,7 @@ class FormSchemaTest extends SapphireTest
                 ]
             ],
             'messages' => [],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);
@@ -84,6 +85,7 @@ class FormSchemaTest extends SapphireTest
                 'value' => 'All saved',
                 'type' => 'good'
             ]],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);
@@ -126,7 +128,8 @@ class FormSchemaTest extends SapphireTest
                     'name' => 'SecurityID',
                 ]
             ],
-            'messages' => []
+            'messages' => [],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);

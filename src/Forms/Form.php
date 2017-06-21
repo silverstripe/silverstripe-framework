@@ -263,6 +263,11 @@ class Form extends ViewableData implements HasRequestHandler
     protected $securityTokenAdded = false;
 
     /**
+     * @var bool
+     */
+    protected $notifyUnsavedChanges = false;
+
+    /**
      * Create a new form, with the given fields an action buttons.
      *
      * @param RequestHandler $controller Optional parent request handler
@@ -307,6 +312,22 @@ class Form extends ViewableData implements HasRequestHandler
         $this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
 
         $this->setupDefaultClasses();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNotifyUnsavedChanges()
+    {
+        return $this->notifyUnsavedChanges;
+    }
+
+    /**
+     * @param bool
+     */
+    public function setNotifyUnsavedChanges($flag)
+    {
+        $this->notifyUnsavedChanges = $flag;
     }
 
     /**
