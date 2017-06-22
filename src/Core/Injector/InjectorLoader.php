@@ -36,6 +36,11 @@ class InjectorLoader
      */
     public function getManifest()
     {
+        if ($this !== self::$instance) {
+            throw new BadMethodCallException(
+                "Non-current injector manifest cannot be accessed. Please call ->activate() first"
+            );
+        }
         if (empty($this->manifests)) {
             throw new BadMethodCallException("No injector manifests available");
         }
@@ -87,8 +92,8 @@ class InjectorLoader
      */
     public function nest()
     {
-        // Nest config
-        $manifest = $this->getManifest()->nest();
+        // Nest injector (note: Don't call getManifest()->nest() since that self-pushes a new manifest)
+        $manifest = clone $this->getManifest();
 
         // Create new blank loader with new stack (top level nesting)
         $newLoader = new static;
@@ -101,9 +106,12 @@ class InjectorLoader
 
     /**
      * Mark this instance as the current instance
+     *
+     * @return $this
      */
     public function activate()
     {
         static::$instance = $this;
+        return $this;
     }
 }

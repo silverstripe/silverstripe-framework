@@ -37,6 +37,11 @@ class ConfigLoader
      */
     public function getManifest()
     {
+        if ($this !== self::$instance) {
+            throw new BadMethodCallException(
+                "Non-current config manifest cannot be accessed. Please call ->activate() first"
+            );
+        }
         if (empty($this->manifests)) {
             throw new BadMethodCallException("No config manifests available");
         }
