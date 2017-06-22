@@ -19,15 +19,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
-use SilverStripe\i18n\i18n;
 
 /**
  * Test the security class, including log-in form, change password form, etc
