@@ -9,7 +9,7 @@ a list of our best practices for contributing and modifying the core javascript 
 __Deprecated:__
 The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS, Redux, and GraphQL](./ReactJS_Redux_and_GraphQL).
 
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 
