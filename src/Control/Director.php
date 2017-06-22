@@ -131,23 +131,11 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Pre-request
-        $output = RequestProcessor::singleton()->preRequest($request);
-        if ($output === false) {
-            return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
-        }
-
         // Generate output
         $result = static::handleRequest($request);
 
         // Save session data. Note that save() will start/resume the session if required.
         $request->getSession()->save();
-
-        // Post-request handling
-        $postRequest = RequestProcessor::singleton()->postRequest($request, $result);
-        if ($postRequest === false) {
-            return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
-        }
 
         // Return
         return $result;
@@ -351,6 +339,14 @@ class Director implements TemplateGlobalProvider
     {
         $rules = Director::config()->uninherited('rules');
 
+        // Get global middlewares
+        $middlewares = Director::config()->uninherited('middlewares') ?: [];
+
+        // Default handler - mo URL rules matched, so return a 404 error.
+        $handler = function () {
+            return new HTTPResponse('No URL rule was matched', 404);
+        };
+
         foreach ($rules as $pattern => $controllerOptions) {
             // Normalise route rule
             if (is_string($controllerOptions)) {
@@ -360,6 +356,18 @@ class Director implements TemplateGlobalProvider
                     $controllerOptions = array('Controller' => $controllerOptions);
                 }
             }
+
+            // Add controller-specific middlewares
+            if (isset($controllerOptions['Middlewares'])) {
+                // Force to array
+                if (!is_array($controllerOptions['Middlewares'])) {
+                    $controllerOptions['Middlewares'] = [$controllerOptions['Middlewares']];
+                }
+                $middlewares = array_merge($middlewares, $controllerOptions['Middlewares']);
+            }
+
+            // Remove null middlewares (may be included due to limitatons of config yml)
+            $middlewares = array_filter($middlewares);
 
             // Match pattern
             $arguments = $request->match($pattern, true);
@@ -373,28 +381,71 @@ class Director implements TemplateGlobalProvider
                     $request->shift($controllerOptions['_PopTokeniser']);
                 }
 
-                // Handle redirection
+                // Handler for redirection
                 if (isset($arguments['Redirect'])) {
-                    // Redirection
-                    $response = new HTTPResponse();
-                    $response->redirect(static::absoluteURL($arguments['Redirect']));
-                    return $response;
+                    $handler = function () use ($arguments) {
+                        // Redirection
+                        $response = new HTTPResponse();
+                        $response->redirect(static::absoluteURL($arguments['Redirect']));
+                        return $response;
+                    };
+                    break;
                 }
 
                 // Find the controller name
                 $controller = $arguments['Controller'];
                 $controllerObj = Injector::inst()->create($controller);
 
-                try {
-                    return $controllerObj->handleRequest($request);
-                } catch (HTTPResponse_Exception $responseException) {
-                    return $responseException->getResponse();
-                }
+                // Handler for calling a controller
+                $handler = function ($request) use ($controllerObj) {
+                    try {
+                        return $controllerObj->handleRequest($request);
+                    } catch (HTTPResponse_Exception $responseException) {
+                        return $responseException->getResponse();
+                    }
+                };
+                break;
             }
         }
 
-        // No URL rules matched, so return a 404 error.
-        return new HTTPResponse('No URL rule was matched', 404);
+        // Call the handler with the given middlewares
+        return self::callWithMiddlewares(
+            $request,
+            $middlewares,
+            $handler
+        );
+    }
+
+    /**
+     * Call the given request handler with the given middlewares
+     * Middlewares are specified as Injector service names
+     *
+     * @param $request The request to pass to the handler
+     * @param $middlewareNames The services names of the middlewares to apply
+     * @param $handler The request handler
+     */
+    protected static function callWithMiddlewares(HTTPRequest $request, array $middlewareNames, callable $handler)
+    {
+        $next = $handler;
+
+        if ($middlewareNames) {
+            $middlewares = array_map(
+                function ($name) {
+                    return Injector::inst()->get($name);
+                },
+                $middlewareNames
+            );
+
+            // Reverse middlewares
+            /** @var HTTPMiddleware $middleware */
+            foreach (array_reverse($middlewares) as $middleware) {
+                $next = function ($request) use ($middleware, $next) {
+                    return $middleware->process($request, $next);
+                };
+            }
+        }
+
+        return $next($request);
     }
 
     /**
