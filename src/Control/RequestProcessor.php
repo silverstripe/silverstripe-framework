@@ -3,11 +3,13 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Deprecation;
 
 /**
- * Represents a request processer that delegates pre and post request handling to nested request filters
+ * Middleware that provides back-support for the deprecated RequestFilter API.
+ * You should use HTTPMiddleware directly instead.
  */
-class RequestProcessor implements RequestFilter
+class RequestProcessor implements HTTPMiddleware
 {
     use Injectable;
 
@@ -33,25 +35,34 @@ class RequestProcessor implements RequestFilter
         $this->filters = $filters;
     }
 
-    public function preRequest(HTTPRequest $request)
+    /**
+     * @inheritdoc
+     */
+    public function process(HTTPRequest $request, callable $delegate)
     {
+        if ($this->filters) {
+            Deprecation::notice(
+                '4.0',
+                'Deprecated RequestFilters are in use. Apply HTTPMiddleware to Director.middlewares instead.'
+            );
+        }
+
         foreach ($this->filters as $filter) {
             $res = $filter->preRequest($request);
             if ($res === false) {
-                return false;
+                return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
             }
         }
-        return null;
-    }
 
-    public function postRequest(HTTPRequest $request, HTTPResponse $response)
-    {
+        $response = $delegate($request);
+
         foreach ($this->filters as $filter) {
             $res = $filter->postRequest($request, $response);
             if ($res === false) {
-                return false;
+                return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
             }
         }
-        return null;
+
+        return $response;
     }
 }
