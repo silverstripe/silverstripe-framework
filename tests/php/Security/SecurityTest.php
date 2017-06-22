@@ -12,6 +12,7 @@ use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
@@ -275,6 +276,60 @@ class SecurityTest extends FunctionalTest
         $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
+    }
+
+    public function testLogout()
+    {
+        /* Enable SecurityToken */
+        $securityTokenWasEnabled = SecurityToken::is_enabled();
+        SecurityToken::enable();
+
+        $member = DataObject::get_one(Member::class);
+
+        /* Log in with any user that we can find */
+        Security::setCurrentUser($member);
+
+        /* Visit the Security/logout page with a test referer, but without a security token */
+        $response = $this->get(
+            Config::inst()->get(Security::class, 'logout_url'),
+            null,
+            ['Referer' => Director::absoluteBaseURL() . 'testpage']
+        );
+
+        /* Make sure the user is still logged in */
+        $this->assertNotNull(Security::getCurrentUser(), 'User is still logged in.');
+
+        $token = $this->cssParser()->getBySelector('#LogoutForm_Form #LogoutForm_Form_SecurityID');
+        $actions = $this->cssParser()->getBySelector('#LogoutForm_Form input.action');
+
+        /* We have a security token, and an action to allow the user to log out */
+        $this->assertCount(1, $token, 'There is a hidden field containing a security token.');
+        $this->assertCount(1, $actions, 'There is 1 action, allowing the user to log out.');
+
+        /* Submit the form, using the logout action */
+        $response = $this->submitForm(
+            'LogoutForm_Form',
+            null,
+            array(
+                'action_doLogout' => 1,
+            )
+        );
+
+        /* We get a good response */
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertRegExp(
+            '/testpage/',
+            $response->getHeader('Location'),
+            "Logout form redirects to back to referer."
+        );
+
+        /* User is logged out successfully */
+        $this->assertNull(Security::getCurrentUser(), 'User is logged out.');
+
+        /* Re-disable SecurityToken */
+        if (!$securityTokenWasEnabled) {
+            SecurityToken::disable();
+        }
     }
 
     public function testExternalBackUrlRedirectionDisallowed()

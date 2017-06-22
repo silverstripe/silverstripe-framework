@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use LogicException;
 use Page;
+use ReflectionClass;
 use SilverStripe\CMS\Controllers\ModelAsController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -391,7 +392,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 $message = $messageSet['default'];
             }
 
-            static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
+            static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
             $loginResponse = static::singleton()->login();
             if ($loginResponse instanceof HTTPResponse) {
                 return $loginResponse;
@@ -406,7 +407,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        static::singleton()->setLoginMessage($message, ValidationResult::TYPE_WARNING);
+        static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
 
         Session::set("BackURL", $_SERVER['REQUEST_URI']);
 
@@ -482,54 +483,6 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
-     * Log the currently logged in user out
-     *
-     * Logging out without ID-parameter in the URL, will log the user out of all applicable Authenticators.
-     *
-     * Adding an ID will only log the user out of that Authentication method.
-     *
-     * Logging out of Default will <i>always</i> completely log out the user.
-     *
-     * @param bool $redirect Redirect the user back to where they came.
-     *                       - If it's false, the code calling logout() is
-     *                         responsible for sending the user where-ever
-     *                         they should go.
-     * @return HTTPResponse|null
-     */
-    public function logout($redirect = true)
-    {
-        $this->extend('beforeMemberLoggedOut');
-        $member = static::getCurrentUser();
-
-        if ($member) { // If we don't have a member, there's not much to log out.
-            /** @var array|Authenticator[] $authenticators */
-            $authenticators = $this->getApplicableAuthenticators(Authenticator::LOGOUT);
-
-            /** @var Authenticator[] $authenticator */
-            foreach ($authenticators as $name => $authenticator) {
-                $handler = $authenticator->getLogOutHandler(Controller::join_links($this->Link(), 'logout'));
-                $this->delegateToHandler($handler, $name);
-            }
-            // In the rare case, but plausible with e.g. an external IdentityStore, the user is not logged out.
-            if (static::getCurrentUser() !== null) {
-                $this->extend('failureMemberLoggedOut', $authenticator);
-
-                return $this->redirectBack();
-            }
-            $this->extend('successMemberLoggedOut', $authenticator);
-            // Member is successfully logged out. Write possible changes to the database.
-            $member->write();
-        }
-        $this->extend('afterMemberLoggedOut');
-
-        if ($redirect && (!$this->getResponse()->isFinished())) {
-            return $this->redirectBack();
-        }
-
-        return null;
-    }
-
-    /**
      * Perform pre-login checking and prepare a response if available prior to login
      *
      * @return HTTPResponse Substitute response object if the login process should be curcumvented.
@@ -558,7 +511,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // This step is necessary in cases such as automatic redirection where a user is authenticated
         // upon landing on an SSL secured site and is automatically logged in, or some other case
         // where the user has permissions to continue but is not given the option.
-        if (!$this->getLoginMessage()
+        if (!$this->getSessionMessage()
             && ($member = static::getCurrentUser())
             && $member->exists()
             && $this->getRequest()->requestVar('BackURL')
@@ -605,18 +558,18 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param array|Form[] $forms
      * @return string
      */
-    protected function generateLoginFormSet($forms)
+    protected function generateTabbedFormSet($forms)
     {
         if (count($forms) === 1) {
             return $forms;
         }
 
-        $viewData = new ArrayData(array(
+        $viewData = new ArrayData([
             'Forms' => new ArrayList($forms),
-        ));
+        ]);
 
         return $viewData->renderWith(
-            $this->getTemplatesFor('MultiAuthenticatorLogin')
+            $this->getTemplatesFor('MultiAuthenticatorTabbedForms')
         );
     }
 
@@ -626,7 +579,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string &$messageType Type of message, if available, passed back to caller
      * @return string Message in HTML format
      */
-    protected function getLoginMessage(&$messageType = null)
+    protected function getSessionMessage(&$messageType = null)
     {
         $message = Session::get('Security.Message.message');
         $messageType = null;
@@ -650,7 +603,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $messageType Message type. One of ValidationResult::TYPE_*
      * @param string $messageCast Message cast. One of ValidationResult::CAST_*
      */
-    public function setLoginMessage(
+    public function setSessionMessage(
         $message,
         $messageType = ValidationResult::TYPE_WARNING,
         $messageCast = ValidationResult::CAST_TEXT
@@ -663,7 +616,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Clear login message
      */
-    public static function clearLoginMessage()
+    public static function clearSessionMessage()
     {
         Session::clear('Security.Message');
     }
@@ -678,7 +631,6 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param null|HTTPRequest $request
      * @param int $service
      * @return HTTPResponse|string Returns the "login" page as HTML code.
-     * @throws HTTPResponse_Exception
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
@@ -692,30 +644,9 @@ class Security extends Controller implements TemplateGlobalProvider
             $request = $this->getRequest();
         }
 
-        if ($request && $request->param('ID')) {
-            $authName = $request->param('ID');
-        }
+        $handlers = $this->getServiceAuthenticatorsFromRequest($service, $request);
 
         $link = $this->Link('login');
-
-        // Delegate to a single handler - Security/login/<authname>/...
-        if ($authName && $this->hasAuthenticator($authName)) {
-            if ($request) {
-                $request->shift();
-            }
-
-            $authenticator = $this->getAuthenticator($authName);
-
-            if (!$authenticator->supportedServices() & $service) {
-                throw new HTTPResponse_Exception('Invalid Authenticator "' . $authName . '" for login action', 418);
-            }
-
-            $handlers = [$authName => $authenticator];
-        } else {
-            // Delegate to all of them, building a tabbed view - Security/login
-            $handlers = $this->getApplicableAuthenticators($service);
-        }
-
         array_walk(
             $handlers,
             function (Authenticator &$auth, $name) use ($link) {
@@ -726,22 +657,137 @@ class Security extends Controller implements TemplateGlobalProvider
         return $this->delegateToMultipleHandlers(
             $handlers,
             _t('Security.LOGIN', 'Log in'),
-            $this->getTemplatesFor('login')
+            $this->getTemplatesFor('login'),
+            [$this, 'aggregateTabbedForms']
         );
     }
 
     /**
-     * Delegate to an number of handlers, extracting their forms and rendering a tabbed form-set.
-     * This is used to built the log-in page where there are multiple authenticators active.
+     * Log the currently logged in user out
+     *
+     * Logging out without ID-parameter in the URL, will log the user out of all applicable Authenticators.
+     *
+     * Adding an ID will only log the user out of that Authentication method.
+     *
+     * @param null|HTTPRequest $request
+     * @param int $service
+     * @return HTTPResponse|string
+     */
+    public function logout($request = null, $service = Authenticator::LOGOUT)
+    {
+        $authName = null;
+
+        if (!$request) {
+            $request = $this->getRequest();
+        }
+
+        $handlers = $this->getServiceAuthenticatorsFromRequest($service, $request);
+
+        $link = $this->Link('logout');
+        array_walk(
+            $handlers,
+            function (Authenticator &$auth, $name) use ($link) {
+                $auth = $auth->getLogoutHandler(Controller::join_links($link, $name));
+            }
+        );
+
+        return $this->delegateToMultipleHandlers(
+            $handlers,
+            _t('Security.LOGOUT', 'Log out'),
+            $this->getTemplatesFor('logout'),
+            [$this, 'aggregateTabbedForms']
+        );
+    }
+
+    /**
+     * Get authenticators for the given service, optionally filtered by the ID parameter
+     * of the current request
+     *
+     * @param int $service
+     * @param HTTPRequest $request
+     * @throws HTTPResponse_Exception
+     */
+    protected function getServiceAuthenticatorsFromRequest($service, HTTPRequest $request)
+    {
+        $authName = null;
+
+        if ($request->param('ID')) {
+            $authName = $request->param('ID');
+        }
+
+        // Delegate to a single named handler - e.g. Security/login/<authname>/
+        if ($authName && $this->hasAuthenticator($authName)) {
+            if ($request) {
+                $request->shift();
+            }
+
+            $authenticator = $this->getAuthenticator($authName);
+
+            if (!$authenticator->supportedServices() & $service) {
+                // Try to be helpful and show the service constant name, e.g. Authenticator::LOGIN
+                $constants = array_flip((new ReflectionClass(Authenticator::class))->getConstants());
+
+                $message = 'Invalid Authenticator "' . $authName . '" for ';
+                if (array_key_exists($service, $constants)) {
+                    $message .= 'service: Authenticator::' . $constants[$service];
+                } else {
+                    $message .= 'unknown authenticator service';
+                }
+
+                throw new HTTPResponse_Exception($message, 400);
+            }
+
+            $handlers = [$authName => $authenticator];
+        } else {
+            // Delegate to all of them, building a tabbed view - e.g. Security/login/
+            $handlers = $this->getApplicableAuthenticators($service);
+        }
+
+        return $handlers;
+    }
+
+    /**
+     * Aggregate tabbed forms from each handler to fragments ready to be rendered.
+     *
+     * @param array $results
+     * @return array
+     */
+    protected function aggregateTabbedForms(array $results)
+    {
+        $forms = [];
+        foreach ($results as $authName => $singleResult) {
+            // The result *must* be an array with a Form key
+            if (!is_array($singleResult) || !isset($singleResult['Form'])) {
+                user_error('Authenticator "' . $authName . '" doesn\'t support tabbed forms', E_USER_WARNING);
+                continue;
+            }
+
+            $forms[] = $singleResult['Form'];
+        }
+
+        if (!$forms) {
+            throw new \LogicException('No authenticators found compatible with tabbed forms');
+        }
+
+        return [
+            'Forms' => ArrayList::create($forms),
+            'Form' => $this->generateTabbedFormSet($forms)
+        ];
+    }
+
+    /**
+     * Delegate to a number of handlers and aggregate the results. This is used, for example, to
+     * build the log-in page where there are multiple authenticators active.
      *
      * If a single handler is passed, delegateToHandler() will be called instead
      *
      * @param array|RequestHandler[] $handlers
      * @param string $title The title of the form
      * @param array $templates
+     * @param callable $aggregator
      * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
      */
-    protected function delegateToMultipleHandlers(array $handlers, $title, array $templates)
+    protected function delegateToMultipleHandlers(array $handlers, $title, array $templates, callable $aggregator)
     {
 
         // Simpler case for a single authenticator
@@ -757,30 +803,8 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers
         );
 
-        // Aggregate all their forms, assuming they all return
-        $forms = [];
-        foreach ($results as $authName => $singleResult) {
-            // The result *must* be an array with a Form key
-            if (!is_array($singleResult) || !isset($singleResult['Form'])) {
-                user_error('Authenticator "' . $authName . '" doesn\'t support a tabbed login', E_USER_WARNING);
-                continue;
-            }
-
-            $forms[] = $singleResult['Form'];
-        }
-
-        if (!$forms) {
-            throw new \LogicException('No authenticators found compatible with a tabbed login');
-        }
-
-        return $this->renderWrappedController(
-            $title,
-            [
-                'Forms' => ArrayList::create($forms),
-                'Form' => $this->generateLoginFormSet($forms),
-            ],
-            $templates
-        );
+        $fragments = call_user_func_array($aggregator, [$results]);
+        return $this->renderWrappedController($title, $fragments, $templates);
     }
 
     /**
@@ -796,8 +820,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         $result = $handler->handleRequest($this->getRequest(), DataModel::inst());
 
-        // Return the customised controller - used to render in a Form
-        // Post requests are expected to be login posts, so they'll be handled downstairs
+        // Return the customised controller - may be used to render a Form (e.g. login form)
         if (is_array($result)) {
             $result = $this->renderWrappedController($title, $result, $templates);
         }
@@ -807,6 +830,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Render the given fragments into a security page controller with the given title.
+     *
      * @param string $title string The title to give the security page
      * @param array $fragments A map of objects to render into the page, e.g. "Form"
      * @param array $templates An array of templates to use for the render
@@ -823,10 +847,10 @@ class Security extends Controller implements TemplateGlobalProvider
 
         // Handle any form messages from validation, etc.
         $messageType = '';
-        $message = $this->getLoginMessage($messageType);
+        $message = $this->getSessionMessage($messageType);
 
         // We've displayed the message in the form output, so reset it for the next run.
-        static::clearLoginMessage();
+        static::clearSessionMessage();
 
         if ($message) {
             $messageResult = [
@@ -865,7 +889,8 @@ class Security extends Controller implements TemplateGlobalProvider
         return $this->delegateToMultipleHandlers(
             $handlers,
             _t('SilverStripe\\Security\\Security.LOSTPASSWORDHEADER', 'Lost Password'),
-            $this->getTemplatesFor('lostpassword')
+            $this->getTemplatesFor('lostpassword'),
+            [$this, 'aggregateTabbedForms']
         );
     }
 
@@ -893,7 +918,8 @@ class Security extends Controller implements TemplateGlobalProvider
         return $this->delegateToMultipleHandlers(
             $handlers,
             _t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'),
-            $this->getTemplatesFor('changepassword')
+            $this->getTemplatesFor('changepassword'),
+            [$this, 'aggregateTabbedForms']
         );
     }
 
@@ -1220,7 +1246,8 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function logout_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->get('logout_url'));
+        $logoutUrl = Controller::join_links(Director::baseURL(), self::config()->get('logout_url'));
+        return SecurityToken::inst()->addToUrl($logoutUrl);
     }
 
     /**

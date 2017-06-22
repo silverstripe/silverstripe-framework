@@ -89,9 +89,9 @@ class CMSSecurity extends Security
         return $this;
     }
 
-    protected function getLoginMessage(&$messageType = null)
+    protected function getSessionMessage(&$messageType = null)
     {
-        $message =  parent::getLoginMessage($messageType);
+        $message =  parent::getSessionMessage($messageType);
         if ($message) {
             return $message;
         }

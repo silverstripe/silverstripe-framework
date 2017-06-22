@@ -17,3 +17,11 @@ Feature: Log in
     # disable automatic redirection so we can use the profiler
     When I go to "/admin/"
     And I should see a log-in form
+
+  Scenario: Logout without token
+    Given I am logged in with "ADMIN" permissions
+    When I go to "/Security/logout"
+    Then I should see a log-out form
+    When I press the "Log out" button
+    And I go to "/admin/"
+    Then I should see a log-in form
