@@ -94,14 +94,14 @@ class CMSSecurity extends Security
         $message =  parent::getSessionMessage($messageType);
         if ($message) {
             return $message;
-    }
+        }
 
         // Format
-            return _t(
+        return _t(
             __CLASS__.'.LOGIN_MESSAGE',
             '<p>Your session has timed out due to inactivity</p>'
-            );
-        }
+        );
+    }
 
     /**
      * Check if there is a logged in member

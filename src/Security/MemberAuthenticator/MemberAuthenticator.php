@@ -100,12 +100,12 @@ class MemberAuthenticator implements Authenticator
             }
         } elseif ($member) {
                 $member->registerSuccessfulLogin();
-            } else {
-                // A non-existing member occurred. This will make the result "valid" so let's invalidate
-                $result->addError(_t(
-                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                    "The provided details don't seem to be correct. Please try again."
-                ));
+        } else {
+            // A non-existing member occurred. This will make the result "valid" so let's invalidate
+            $result->addError(_t(
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                "The provided details don't seem to be correct. Please try again."
+            ));
             return null;
         }
 
@@ -139,7 +139,7 @@ class MemberAuthenticator implements Authenticator
         // Check a password is set on this member
         if (empty($member->Password) && $member->exists()) {
             $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
-            }
+        }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
         if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {

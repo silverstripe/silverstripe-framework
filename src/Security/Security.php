@@ -1012,7 +1012,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
-        }
+    }
 
     /**
      * Flush the default admin credentials

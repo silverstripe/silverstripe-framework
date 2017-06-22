@@ -268,7 +268,7 @@ class Member extends DataObject
     {
         Deprecation::notice('5.0', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
         return DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
-        }
+    }
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
@@ -287,12 +287,12 @@ class Member extends DataObject
         $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
         foreach ($authenticators as $authenticator) {
             $authenticator->checkPassword($this, $password, $result);
-        if (!$result->isValid()) {
+            if (!$result->isValid()) {
                 break;
-        }
+            }
         }
             return $result;
-        }
+    }
 
     /**
      * Check if this user is the currently configured default admin
