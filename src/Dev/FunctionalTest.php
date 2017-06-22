@@ -34,7 +34,7 @@ use SimpleXMLElement;
  *  }
  * </code>
  */
-class FunctionalTest extends SapphireTest
+class FunctionalTest extends SapphireTest implements TestOnly
 {
     /**
      * Set this to true on your sub-class to disable the use of themes in this test.

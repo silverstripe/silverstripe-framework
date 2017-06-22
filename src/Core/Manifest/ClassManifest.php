@@ -368,7 +368,9 @@ class ClassManifest
             'name_regex'    => '/^[^_].*\\.php$/',
             'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
             'ignore_tests'  => !$includeTests,
-            'file_callback' => array($this, 'handleFile'),
+            'file_callback' => function ($basename, $pathname) use ($includeTests) {
+                $this->handleFile($basename, $pathname, $includeTests);
+            },
         ));
         $finder->find($this->base);
 
@@ -388,7 +390,7 @@ class ClassManifest
         }
     }
 
-    public function handleFile($basename, $pathname)
+    public function handleFile($basename, $pathname, $includeTests)
     {
         $classes    = null;
         $interfaces = null;
@@ -401,6 +403,7 @@ class ClassManifest
         $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
         // Attempt to load from cache
+        $changed = false;
         if ($this->cache
             && ($data = $this->cache->get($key))
             && $this->validateItemCache($data)
@@ -409,6 +412,7 @@ class ClassManifest
             $interfaces = $data['interfaces'];
             $traits = $data['traits'];
         } else {
+            $changed = true;
             // Build from php file parser
             $fileContents = ClassContentRemover::remove_class_content($pathname);
             try {
@@ -422,23 +426,16 @@ class ClassManifest
             $classes = $this->getVisitor()->getClasses();
             $interfaces = $this->getVisitor()->getInterfaces();
             $traits = $this->getVisitor()->getTraits();
-
-            // Save back to cache if configured
-            if ($this->cache) {
-                $cache = array(
-                    'classes' => $classes,
-                    'interfaces' => $interfaces,
-                    'traits' => $traits,
-                );
-                $this->cache->set($key, $cache);
-            }
         }
 
         // Merge this data into the global list
         foreach ($classes as $className => $classInfo) {
-            $extends = isset($classInfo['extends']) ? $classInfo['extends'] : null;
-            $implements = isset($classInfo['interfaces']) ? $classInfo['interfaces'] : null;
-
+            $extends = !empty($classInfo['extends'])
+                ? array_map('strtolower', $classInfo['extends'])
+                : [];
+            $implements = !empty($classInfo['interfaces'])
+                ? array_map('strtolower', $classInfo['interfaces'])
+                : [];
             $lowercaseName = strtolower($className);
             if (array_key_exists($lowercaseName, $this->classes)) {
                 throw new Exception(sprintf(
@@ -449,12 +446,20 @@ class ClassManifest
                 ));
             }
 
+            // Skip if implements TestOnly, but doesn't include tests
+            if (!$includeTests
+                && $implements
+                && in_array(strtolower(TestOnly::class), $implements)
+            ) {
+                $changed = true;
+                unset($classes[$className]);
+                continue;
+            }
+
             $this->classes[$lowercaseName] = $pathname;
 
             if ($extends) {
                 foreach ($extends as $ancestor) {
-                    $ancestor = strtolower($ancestor);
-
                     if (!isset($this->children[$ancestor])) {
                         $this->children[$ancestor] = array($className);
                     } else {
@@ -467,8 +472,6 @@ class ClassManifest
 
             if ($implements) {
                 foreach ($implements as $interface) {
-                    $interface = strtolower($interface);
-
                     if (!isset($this->implementors[$interface])) {
                         $this->implementors[$interface] = array($className);
                     } else {
@@ -483,6 +486,16 @@ class ClassManifest
         }
         foreach ($traits as $traitName => $traitInfo) {
             $this->traits[strtolower($traitName)] = $pathname;
+        }
+
+        // Save back to cache if configured
+        if ($changed && $this->cache) {
+            $cache = array(
+                'classes' => $classes,
+                'interfaces' => $interfaces,
+                'traits' => $traits,
+            );
+            $this->cache->set($key, $cache);
         }
     }
 

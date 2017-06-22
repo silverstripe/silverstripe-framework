@@ -45,7 +45,7 @@ if (!class_exists(PHPUnit_Framework_TestCase::class)) {
  * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
  * in production sites.
  */
-class SapphireTest extends PHPUnit_Framework_TestCase
+class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 {
     /**
      * Path to fixture data for this test run.
