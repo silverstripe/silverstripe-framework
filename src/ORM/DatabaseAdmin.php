@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use BadMethodCallException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
@@ -221,17 +222,16 @@ class DatabaseAdmin extends Controller
             }
 
             // Load parameters from existing configuration
-            global $databaseConfig;
+            $databaseConfig = DB::getConfig();
             if (empty($databaseConfig) && empty($_REQUEST['db'])) {
-                user_error("No database configuration available", E_USER_ERROR);
+                throw new BadMethodCallException("No database configuration available");
             }
             $parameters = (!empty($databaseConfig)) ? $databaseConfig : $_REQUEST['db'];
 
             // Check database name is given
             if (empty($parameters['database'])) {
-                user_error(
-                    "No database name given; please give a value for \$databaseConfig['database']",
-                    E_USER_ERROR
+                throw new BadMethodCallException(
+                    "No database name given; please give a value for SS_DATABASE_NAME or set SS_DATABASE_CHOOSE_NAME"
                 );
             }
             $database = $parameters['database'];

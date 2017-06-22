@@ -45,6 +45,10 @@ class AuthenticationRequestFilter implements RequestFilter
      */
     public function preRequest(HTTPRequest $request)
     {
+        if (!Security::database_is_ready()) {
+            return;
+        }
+
         try {
             $this
                 ->getAuthenticationHandler()
