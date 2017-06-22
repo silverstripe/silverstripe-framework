@@ -2,35 +2,35 @@
 
 namespace SilverStripe\View\Tests;
 
+use Exception;
+use InvalidArgumentException;
 use PHPUnit_Framework_MockObject_MockObject;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
+use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\PaginatedList;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\Requirements_Minifier;
+use SilverStripe\View\SSTemplateParser;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\Requirements;
+use SilverStripe\View\SSViewer_FromString;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\ViewableData;
-use SilverStripe\View\SSViewer_FromString;
-use SilverStripe\View\SSTemplateParser;
-use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
-use Exception;
 
 class SSViewerTest extends SapphireTest
 {
@@ -213,8 +213,11 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirementsCombine()
     {
+        /** @var Requirements_Backend $testBackend */
         $testBackend = Injector::inst()->create(Requirements_Backend::class);
         $testBackend->setSuffixRequirements(false);
+        $testBackend->setCombinedFilesEnabled(true);
+
         //$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
         $jsFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/bad.js';
@@ -237,9 +240,12 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirementsMinification()
     {
+        /** @var Requirements_Backend $testBackend */
         $testBackend = Injector::inst()->create(Requirements_Backend::class);
         $testBackend->setSuffixRequirements(false);
         $testBackend->setMinifyCombinedFiles(true);
+        $testBackend->setCombinedFilesEnabled(true);
+
         $testFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/RequirementsTest_a.js';
         $testFileContent = file_get_contents($testFile);
 
@@ -263,10 +269,8 @@ class SSViewerTest extends SapphireTest
         ->method('minify');
         $testBackend->processCombinedFiles();
 
-        $this->setExpectedExceptionRegExp(
-            Exception::class,
-            '/minification service/'
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('/^Cannot minify files without a minification service defined./');
 
         $testBackend->setMinifyCombinedFiles(true);
         $testBackend->setMinifier(null);
@@ -1614,8 +1618,8 @@ after'
                 );
 
                 // Let's throw something random in there.
-                $this->setExpectedException('InvalidArgumentException');
-                SSViewer::get_templates_by_class(array());
+                $this->expectException(InvalidArgumentException::class);
+                SSViewer::get_templates_by_class(null);
             }
         );
     }
@@ -1732,7 +1736,6 @@ EOC;
 
     public function testRenderWithSourceFileComments()
     {
-        Director::set_environment_type('dev');
         SSViewer::config()->update('source_file_comments', true);
         $i = __DIR__ . '/SSViewerTest/templates/Includes';
         $f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';
@@ -1853,13 +1856,13 @@ EOC;
 
         Requirements::set_backend($backend);
 
-        $this->assertEquals(1, substr_count($template->process(array()), "a.css"));
-        $this->assertEquals(1, substr_count($template->process(array()), "b.css"));
+        $this->assertEquals(1, substr_count($template->process(new ViewableData()), "a.css"));
+        $this->assertEquals(1, substr_count($template->process(new ViewableData()), "b.css"));
 
         // if we disable the requirements then we should get nothing
         $template->includeRequirements(false);
-        $this->assertEquals(0, substr_count($template->process(array()), "a.css"));
-        $this->assertEquals(0, substr_count($template->process(array()), "b.css"));
+        $this->assertEquals(0, substr_count($template->process(new ViewableData()), "a.css"));
+        $this->assertEquals(0, substr_count($template->process(new ViewableData()), "b.css"));
     }
 
     public function testRequireCallInTemplateInclude()
@@ -1873,7 +1876,7 @@ EOC;
             $this->assertEquals(
                 1,
                 substr_count(
-                    $template->process(array()),
+                    $template->process(new ViewableData()),
                     "tests/php/View/SSViewerTest/javascript/RequirementsTest_a.js"
                 )
             );

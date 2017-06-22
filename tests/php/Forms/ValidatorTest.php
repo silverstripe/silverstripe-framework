@@ -30,7 +30,7 @@ class ValidatorTest extends SapphireTest
             $fieldList->add(new TextField($name));
         }
 
-        return new Form(new Controller(), "testForm", $fieldList, new FieldList([/* no actions */]));
+        return new Form(Controller::curr(), "testForm", $fieldList, new FieldList([/* no actions */]));
     }
 
 

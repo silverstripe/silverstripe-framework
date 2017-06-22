@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\Core\Tests\Manifest;
 
 use SilverStripe\Core\Manifest\ModuleManifest;
@@ -23,7 +22,8 @@ class ModuleManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest = new ModuleManifest($this->base, false);
+        $this->manifest = new ModuleManifest($this->base);
+        $this->manifest->init();
     }
 
     public function testGetModules()

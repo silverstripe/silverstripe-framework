@@ -19,7 +19,9 @@ class ClassLoader
     private static $instance;
 
     /**
-     * @var array Map of 'instance' (ClassManifest) and other options.
+     * Map of 'instance' (ClassManifest) and other options.
+     *
+     * @var array
      */
     protected $manifests = array();
 
@@ -28,7 +30,7 @@ class ClassLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return self::$instance ? self::$instance : self::$instance = new static();
     }
 
     /**
@@ -111,6 +113,23 @@ class ClassLoader
             }
         }
         return false;
+    }
+
+    /**
+     * Initialise the class loader
+     *
+     * @param bool $includeTests
+     * @param bool $forceRegen
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
+        foreach ($this->manifests as $manifest) {
+            /** @var ClassManifest $instance */
+            $instance = $manifest['instance'];
+            $instance->init($includeTests, $forceRegen);
+        }
+
+        $this->registerAutoloader();
     }
 
     /**

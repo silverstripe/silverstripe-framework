@@ -2,117 +2,96 @@
 
 namespace SilverStripe\Core\Tests;
 
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 
 class MemoryLimitTest extends SapphireTest
 {
-
-    public function testIncreaseMemoryLimitTo()
-    {
-        if (!$this->canChangeMemory()) {
-            return;
-        }
-
-        ini_set('memory_limit', '64M');
-
-        // It can go up
-        increase_memory_limit_to('128M');
-        $this->assertEquals('128M', ini_get('memory_limit'));
-
-        // But not down
-        increase_memory_limit_to('64M');
-        $this->assertEquals('128M', ini_get('memory_limit'));
-
-        // Test the different kinds of syntaxes
-        increase_memory_limit_to(1024*1024*200);
-        $this->assertEquals(1024*1024*200, ini_get('memory_limit'));
-
-        increase_memory_limit_to('409600K');
-        $this->assertEquals('409600K', ini_get('memory_limit'));
-
-        increase_memory_limit_to('1G');
-
-        // If memory limit was left at 409600K, that means that the current testbox doesn't have
-        // 1G of memory available.  That's okay; let's not report a failure for that.
-        if (ini_get('memory_limit') != '409600K') {
-            $this->assertEquals('1G', ini_get('memory_limit'));
-        }
-
-        // No argument means unlimited
-        increase_memory_limit_to();
-        $this->assertEquals(-1, ini_get('memory_limit'));
-    }
-
-    public function testIncreaseTimeLimitTo()
-    {
-        if (!$this->canChangeMemory()) {
-            return;
-        }
-
-        // Can't change time limit
-        if (!set_time_limit(6000)) {
-            return;
-        }
-
-        // It can go up
-        $this->assertTrue(increase_time_limit_to(7000));
-        $this->assertEquals(7000, ini_get('max_execution_time'));
-
-        // But not down
-        $this->assertTrue(increase_time_limit_to(5000));
-        $this->assertEquals(7000, ini_get('max_execution_time'));
-
-        // 0/nothing means infinity
-        $this->assertTrue(increase_time_limit_to());
-        $this->assertEquals(0, ini_get('max_execution_time'));
-
-        // Can't go down from there
-        $this->assertTrue(increase_time_limit_to(10000));
-        $this->assertEquals(0, ini_get('max_execution_time'));
-    }
-
-
-    ///////////////////
-
-    private $origMemLimit, $origTimeLimit;
+    protected $origMemLimitMax;
+    protected $origTimeLimitMax;
+    protected $origMemLimit;
+    protected $origTimeLimit;
 
     protected function setUp()
     {
-        $this->origMemLimit = ini_get('memory_limit');
-        $this->origTimeLimit = ini_get('max_execution_time');
-        $this->origMemLimitMax = get_increase_memory_limit_max();
-        $this->origTimeLimitMax = get_increase_time_limit_max();
-        set_increase_memory_limit_max(-1);
-        set_increase_time_limit_max(-1);
+        parent::setUp();
+
+        // see http://www.hardened-php.net/suhosin/configuration.html#suhosin.memory_limit
+        if (in_array('suhosin', get_loaded_extensions())) {
+            $this->markTestSkipped("This test cannot be run with suhosin installed");
+        } else {
+            $this->origMemLimit = ini_get('memory_limit');
+            $this->origTimeLimit = ini_get('max_execution_time');
+            $this->origMemLimitMax = Environment::getMemoryLimitMax();
+            $this->origTimeLimitMax = Environment::getTimeLimitMax();
+            Environment::setMemoryLimitMax(null);
+            Environment::setTimeLimitMax(null);
+        }
     }
 
     protected function tearDown()
     {
-        ini_set('memory_limit', $this->origMemLimit);
-        set_time_limit($this->origTimeLimit);
-        set_increase_memory_limit_max($this->origMemLimitMax);
-        set_increase_time_limit_max($this->origTimeLimitMax);
+        if (!in_array('suhosin', get_loaded_extensions())) {
+            ini_set('memory_limit', $this->origMemLimit);
+            set_time_limit($this->origTimeLimit);
+            Environment::setMemoryLimitMax($this->origMemLimitMax);
+            Environment::setTimeLimitMax($this->origTimeLimitMax);
+        }
+        parent::tearDown();
     }
 
-    /**
-     * Determines wether the environment generally allows
-     * to change the memory limits, which is not always the case.
-     *
-     * @return Boolean
-     */
-    protected function canChangeMemory()
+    public function testIncreaseMemoryLimitTo()
     {
-        $exts = get_loaded_extensions();
-        // see http://www.hardened-php.net/suhosin/configuration.html#suhosin.memory_limit
-        if (in_array('suhosin', $exts)) {
-            return false;
+        ini_set('memory_limit', '64M');
+        Environment::setMemoryLimitMax('256M');
+
+        // It can go up
+        Environment::increaseMemoryLimitTo('128M');
+        $this->assertEquals('128M', ini_get('memory_limit'));
+
+        // But not down
+        Environment::increaseMemoryLimitTo('64M');
+        $this->assertEquals('128M', ini_get('memory_limit'));
+
+        // Test the different kinds of syntaxes
+        Environment::increaseMemoryLimitTo(1024*1024*200);
+        $this->assertEquals('200M', ini_get('memory_limit'));
+
+        Environment::increaseMemoryLimitTo('109600K');
+        $this->assertEquals('200M', ini_get('memory_limit'));
+
+        // Attempting to increase past max size only sets to max
+        Environment::increaseMemoryLimitTo('1G');
+        $this->assertEquals('256M', ini_get('memory_limit'));
+
+        // No argument means unlimited (but only if originally allowed)
+        if (is_numeric($this->origMemLimitMax) && $this->origMemLimitMax < 0) {
+            Environment::increaseMemoryLimitTo();
+            $this->assertEquals(-1, ini_get('memory_limit'));
+        }
+    }
+
+    public function testIncreaseTimeLimitTo()
+    {
+        // Can't change time limit
+        if (!set_time_limit(6000)) {
+            $this->markTestSkipped("Cannot change time limit");
         }
 
-        // We can't change memory limit in safe mode
-        if (ini_get('safe_mode')) {
-            return false;
-        }
+        // It can go up
+        $this->assertTrue(Environment::increaseTimeLimitTo(7000));
+        $this->assertEquals(7000, ini_get('max_execution_time'));
 
-        return true;
+        // But not down
+        $this->assertTrue(Environment::increaseTimeLimitTo(5000));
+        $this->assertEquals(7000, ini_get('max_execution_time'));
+
+        // 0/nothing means infinity
+        $this->assertTrue(Environment::increaseTimeLimitTo());
+        $this->assertEquals(0, ini_get('max_execution_time'));
+
+        // Can't go down from there
+        $this->assertTrue(Environment::increaseTimeLimitTo(10000));
+        $this->assertEquals(0, ini_get('max_execution_time'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\FunctionalTest;
@@ -29,24 +30,21 @@ class BasicAuthTest extends FunctionalTest
         parent::setUp();
 
         // Fixtures assume Email is the field used to identify the log in identity
-        Member::config()->unique_identifier_field = 'Email';
+        Member::config()->set('unique_identifier_field', 'Email');
         Security::force_database_is_ready(true); // Prevents Member test subclasses breaking ready test
-        Member::config()->lock_out_after_incorrect_logins = 10;
+        Member::config()->set('lock_out_after_incorrect_logins', 10);
+
+        // Temp disable is_cli() exemption for tests
+        BasicAuth::config()->set('ignore_cli', false);
     }
 
     public function testBasicAuthEnabledWithoutLogin()
     {
-        $origUser = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
-        $origPw = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
-
         unset($_SERVER['PHP_AUTH_USER']);
         unset($_SERVER['PHP_AUTH_PW']);
 
-        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission', null, $_SESSION, null, null, $_SERVER);
+        $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
         $this->assertEquals(401, $response->getStatusCode());
-
-        $_SERVER['PHP_AUTH_USER'] = $origUser;
-        $_SERVER['PHP_AUTH_PW'] = $origPw;
     }
 
     public function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure()

@@ -7,7 +7,6 @@ use SilverStripe\Dev\TestOnly;
 
 class TestFlushable implements Flushable, TestOnly
 {
-
     public static $flushed = false;
 
     public static function flush()

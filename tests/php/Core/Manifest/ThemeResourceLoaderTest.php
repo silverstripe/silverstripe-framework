@@ -36,7 +36,8 @@ class ThemeResourceLoaderTest extends SapphireTest
         // Fake project root
         $this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
         // New ThemeManifest for that root
-        $this->manifest = new ThemeManifest($this->base, 'myproject', false);
+        $this->manifest = new ThemeManifest($this->base, 'myproject');
+        $this->manifest->init();
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);

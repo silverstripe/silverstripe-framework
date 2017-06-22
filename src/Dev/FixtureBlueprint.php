@@ -2,13 +2,13 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Assets\File;
-use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
+use SilverStripe\Assets\File;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 
 /**
  * A blueprint on how to create instances of a certain {@link DataObject} subclass.
@@ -94,7 +94,7 @@ class FixtureBlueprint
         try {
             $class = $this->class;
             $schema = DataObject::getSchema();
-            $obj = DataModel::inst()->$class->newObject();
+            $obj = Injector::inst()->create($class);
 
             // If an ID is explicitly passed, then we'll sort out the initial write straight away
             // This is just in case field setters triggered by the population code in the next block

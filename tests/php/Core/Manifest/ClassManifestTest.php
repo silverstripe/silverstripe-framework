@@ -32,8 +32,10 @@ class ClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest      = new ClassManifest($this->base, false);
-        $this->manifestTests = new ClassManifest($this->base, true);
+        $this->manifest      = new ClassManifest($this->base);
+        $this->manifest->init(false);
+        $this->manifestTests = new ClassManifest($this->base);
+        $this->manifestTests->init(true);
     }
 
     public function testGetItemPath()
@@ -155,6 +157,7 @@ class ClassManifestTest extends SapphireTest
     public function testManifestWarnsAboutDuplicateClasses()
     {
         $this->expectException(Exception::class);
-        new ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates', false);
+        $manifest = new ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates');
+        $manifest->init();
     }
 }

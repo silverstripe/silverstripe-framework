@@ -550,4 +550,47 @@ class Convert
 
         return $return;
     }
+
+
+
+    /**
+     * Turn a memory string, such as 512M into an actual number of bytes.
+     *
+     * @param string $memString A memory limit string, such as "64M"
+     * @return float
+     */
+    public static function memstring2bytes($memString)
+    {
+        switch (strtolower(substr($memString, -1))) {
+            case "b":
+                return round(substr($memString, 0, -1));
+            case "k":
+                return round(substr($memString, 0, -1) * 1024);
+            case "m":
+                return round(substr($memString, 0, -1) * 1024 * 1024);
+            case "g":
+                return round(substr($memString, 0, -1) * 1024 * 1024 * 1024);
+            default:
+                return round($memString);
+        }
+    }
+
+    /**
+     * @param float $bytes
+     * @param int $decimal decimal precision
+     * @return string
+     */
+    public static function bytes2memstring($bytes, $decimal = 0)
+    {
+        $scales = ['B','K','M','G'];
+        // Get scale
+        $scale = (int)floor(log($bytes, 1024));
+        if (!isset($scales[$scale])) {
+            $scale = 2;
+        }
+
+        // Size
+        $num = round($bytes / pow(1024, $scale), $decimal);
+        return $num . $scales[$scale];
+    }
 }

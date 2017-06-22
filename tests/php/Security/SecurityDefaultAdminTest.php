@@ -21,10 +21,10 @@ class SecurityDefaultAdminTest extends SapphireTest
 
         // TODO Workaround to force database clearing with no fixture present,
         // and avoid sideeffects from other tests
-        if (!self::using_temp_db()) {
-            self::create_temp_db();
+        if (!static::$tempDB->isUsed()) {
+            static::$tempDB->build();
         }
-        self::empty_temp_db();
+        static::$tempDB->clearAllData();
 
         if (DefaultAdminService::hasDefaultAdmin()) {
             $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();

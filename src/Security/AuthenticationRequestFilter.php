@@ -6,9 +6,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestFilter;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\ValidationException;
 
 class AuthenticationRequestFilter implements RequestFilter
@@ -42,13 +40,15 @@ class AuthenticationRequestFilter implements RequestFilter
      * Identify the current user from the request
      *
      * @param HTTPRequest $request
-     * @param Session $session
-     * @param DataModel $model
      * @return bool|void
      * @throws HTTPResponse_Exception
      */
-    public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
+    public function preRequest(HTTPRequest $request)
     {
+        if (!Security::database_is_ready()) {
+            return;
+        }
+
         try {
             $this
                 ->getAuthenticationHandler()
@@ -66,10 +66,9 @@ class AuthenticationRequestFilter implements RequestFilter
      *
      * @param HTTPRequest $request
      * @param HTTPResponse $response
-     * @param DataModel $model
      * @return bool|void
      */
-    public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
+    public function postRequest(HTTPRequest $request, HTTPResponse $response)
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\Session;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 
@@ -89,7 +89,9 @@ class GridField_FormAction extends FormAction
 
         // Ensure $id doesn't contain only numeric characters
         $id = 'gf_' . substr(md5(serialize($state)), 0, 8);
-        Session::set($id, $state);
+
+        $session = Controller::curr()->getRequest()->getSession();
+        $session->set($id, $state);
         $actionData['StateID'] = $id;
 
         return array_merge(

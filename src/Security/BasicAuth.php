@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 /**
@@ -29,6 +29,13 @@ class BasicAuth
      * @var Boolean Flag set by {@link self::protect_entire_site()}
      */
     private static $entire_site_protected = false;
+
+    /**
+     * Set to true to ignore in CLI mode
+     *
+     * @var bool
+     */
+    private static $ignore_cli = true;
 
     /**
      * @config
@@ -65,8 +72,7 @@ class BasicAuth
         $permissionCode = null,
         $tryUsingSessionLogin = true
     ) {
-        $isRunningTests = (class_exists(SapphireTest::class, false) && SapphireTest::is_running_test());
-        if (!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
+        if (!Security::database_is_ready() || (Director::is_cli() && static::config()->get('ignore_cli'))) {
             return true;
         }
 
@@ -96,7 +102,7 @@ class BasicAuth
                 $member = $authenticator->authenticate([
                     'Email' => $request->getHeader('PHP_AUTH_USER'),
                     'Password' => $request->getHeader('PHP_AUTH_PW'),
-                ]);
+                ], $request);
                 if ($member instanceof Member) {
                     break;
                 }
@@ -180,9 +186,12 @@ class BasicAuth
      */
     public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
     {
-        static::config()->set('entire_site_protected', $protect);
-        static::config()->set('entire_site_protected_code', $code);
-        static::config()->set('entire_site_protected_message', $message);
+        static::config()
+            ->set('entire_site_protected', $protect)
+            ->set('entire_site_protected_code', $code);
+        if ($message) {
+            static::config()->set('entire_site_protected_message', $message);
+        }
     }
 
     /**
@@ -197,7 +206,6 @@ class BasicAuth
         $config = static::config();
         $request = Controller::curr()->getRequest();
         if ($config->get('entire_site_protected')) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             static::requireLogin(
                 $request,
                 $config->get('entire_site_protected_message'),

@@ -2,17 +2,16 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\Core\Convert;
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest
 {

@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -177,14 +178,6 @@ class Member extends DataObject
     private static $unique_identifier_field = 'Email';
 
     /**
-     * Object for validating user's password
-     *
-     * @config
-     * @var PasswordValidator
-     */
-    private static $password_validator = null;
-
-    /**
      * @config
      * The number of days that a password should be valid for.
      * By default, this is null, which means that passwords never expire
@@ -275,14 +268,14 @@ class Member extends DataObject
     {
         Deprecation::notice('5.0', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
         return DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
-    }
+        }
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
      * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
      *
-     * @param string $password
+     * @param  string $password
      * @return ValidationResult
      */
     public function checkPassword($password)
@@ -294,12 +287,12 @@ class Member extends DataObject
         $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
         foreach ($authenticators as $authenticator) {
             $authenticator->checkPassword($this, $password, $result);
-            if (!$result->isValid()) {
+        if (!$result->isValid()) {
                 break;
-            }
         }
-        return $result;
-    }
+        }
+            return $result;
+        }
 
     /**
      * Check if this user is the currently configured default admin
@@ -369,23 +362,31 @@ class Member extends DataObject
     /**
      * Set a {@link PasswordValidator} object to use to validate member's passwords.
      *
-     * @param PasswordValidator $pv
+     * @param PasswordValidator $validator
      */
-    public static function set_password_validator($pv)
+    public static function set_password_validator(PasswordValidator $validator = null)
     {
-        self::$password_validator = $pv;
+        // Override existing config
+        Config::modify()->remove(Injector::class, PasswordValidator::class);
+        if ($validator) {
+            Injector::inst()->registerService($validator, PasswordValidator::class);
+        } else {
+            Injector::inst()->unregisterNamedObject(PasswordValidator::class);
+        }
     }
 
     /**
-     * Returns the current {@link PasswordValidator}
+     * Returns the default {@link PasswordValidator}
      *
      * @return PasswordValidator
      */
     public static function password_validator()
     {
-        return self::$password_validator;
+        if (Injector::inst()->has(PasswordValidator::class)) {
+            return Injector::inst()->get(PasswordValidator::class);
+        }
+        return null;
     }
-
 
     public function isPasswordExpired()
     {
@@ -1605,16 +1606,17 @@ class Member extends DataObject
     public function validate()
     {
         $valid = parent::validate();
+        $validator = static::password_validator();
 
         if (!$this->ID || $this->isChanged('Password')) {
-            if ($this->Password && self::$password_validator) {
-                $valid->combineAnd(self::$password_validator->validate($this->Password, $this));
+            if ($this->Password && $validator) {
+                $valid->combineAnd($validator->validate($this->Password, $this));
             }
         }
 
         if ((!$this->ID && $this->SetPassword) || $this->isChanged('SetPassword')) {
-            if ($this->SetPassword && self::$password_validator) {
-                $valid->combineAnd(self::$password_validator->validate($this->SetPassword, $this));
+            if ($this->SetPassword && $validator) {
+                $valid->combineAnd($validator->validate($this->SetPassword, $this));
             }
         }
 

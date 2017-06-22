@@ -18,25 +18,30 @@ Directory   | Description
 We're using `<mysite>` as an example - arbitrary directory-names are allowed, as long as they don't collide with
 existing modules or the directories lists in "Core Structure".
 
- | Directory           | Description                                                         |
- | ---------           | -----------                                                         |
+ | Directory             | Description                                                         |
+ | ---------             | -----------                                                         |
  | `<mysite>/`           | This directory contains all of your code that defines your website. |
  | `<mysite>/_config`    | YAML configuration specific to  your application                    |
- | `<mysite>/code`       | PHP code for model and controller (subdirectories are optional)     |
- | `<mysite>/templates`  | HTML [templates](/developer_guides/templates) with *.ss-extension                     |
+ | `<mysite>/src`        | PHP code for model and controller (subdirectories are optional)     |
+ | `<mysite>/tests`      | PHP Unit tests                                                      |
+ | `<mysite>/templates`  | HTML [templates](/developer_guides/templates) with *.ss-extension for the `$default` theme   |
  | `<mysite>/css `       | CSS files                                                           |
  | `<mysite>/images `    | Images used in the HTML templates                                   |
- | `<mysite>/javascript` | Javascript and other script files |
+ | `<mysite>/javascript` | Javascript and other script files                                   |
  | `<mysite>/client`     | More complex projects can alternatively contain frontend assets in a common `client` folder |
+ | `<mysite>/themes/<yourtheme>` | Custom nested themes (note: theme structure is described below)     |
 
 Check our [JavaScript Coding Conventions](javascript_coding_conventions) for more details
 on folder and file naming in SilverStripe core modules.
 
 ## Themes Structure
 
- | `themes/simple/`      | Standard "simple" theme                                         |
- | ------------------        | ---------------------------                                         |
- | `themes/yourtheme/`       | The themes folder can contain more than one theme - here's your own |
+ | Directory                       | Description                                                     |
+ | ------------------              | ---------------------------                                     |
+ | `themes/simple/`                | Standard "simple" theme                                         |
+ | `themes/<yourtheme>/`           | Custom theme base directory                                     |
+ | `themes/<yourtheme>/templates`  | Theme templates                                                 |
+ | `themes/<yourtheme>/css`        | Theme CSS files                                                 |
 
 
 See [themes](/developer_guides/templates/themes)
@@ -77,7 +82,7 @@ Example Forum Documentation:
  | `forum/docs/en/`       | English documentation  |
  | `forum/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
  | `forum/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
- | `forum/docs/en//_images/` | Folder to store any images or media |
+ | `forum/docs/en/_images/` | Folder to store any images or media |
  | `forum/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
 |`forum/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
 

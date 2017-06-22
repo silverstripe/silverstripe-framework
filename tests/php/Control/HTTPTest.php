@@ -2,10 +2,14 @@
 
 namespace SilverStripe\Control\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
+use SilverStripe\Dev\FunctionalTest;
 
 /**
  * Tests the {@link HTTP} class
@@ -27,13 +31,15 @@ class HTTPTest extends FunctionalTest
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
         // Ensure max-age is zero for development.
-        Director::set_environment_type('dev');
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        $kernel->setEnvironment(Kernel::DEV);
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
 
         // Ensure max-age setting is respected in production.
-        Director::set_environment_type('live');
+        $kernel->setEnvironment(Kernel::LIVE);
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
@@ -57,9 +63,11 @@ class HTTPTest extends FunctionalTest
 
     public function testConfigVary()
     {
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        Director::set_environment_type('live');
+        $kernel->setEnvironment(Kernel::LIVE);
         HTTP::set_cache_age(30);
         HTTP::add_cache_headers($response);
 
@@ -124,14 +132,20 @@ class HTTPTest extends FunctionalTest
     {
         // Hackery to work around volatile URL formats in test invocation,
         // and the inability of Director::absoluteBaseURL() to produce consistent URLs.
-        $origURI = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = 'relative/url/';
+        Director::mockRequest(function (HTTPRequest $request) {
+            $controller = new Controller();
+            $controller->setRequest($request);
+            $controller->pushCurrent();
+            try {
                 $this->assertContains(
-                    'relative/url/?foo=bar',
+                    'relative/url?foo=bar',
                     HTTP::setGetVar('foo', 'bar'),
                     'Omitting a URL falls back to current URL'
                 );
-        $_SERVER['REQUEST_URI'] = $origURI;
+            } finally {
+                $controller->popCurrent();
+            }
+        }, 'relative/url/');
 
         $this->assertEquals(
             'relative/url?foo=bar',
@@ -206,30 +220,30 @@ class HTTPTest extends FunctionalTest
     {
         $this->withBaseURL(
             'http://www.silverstripe.org/',
-            function ($test) {
+            function () {
 
                 // background-image
                 // Note that using /./ in urls is absolutely acceptable
-                $test->assertEquals(
+                $this->assertEquals(
                     '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'.
                     'Content</div>',
                     HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
                 );
 
                 // background
-                $test->assertEquals(
+                $this->assertEquals(
                     '<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
                     HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
                 );
 
                 // list-style-image
-                $test->assertEquals(
+                $this->assertEquals(
                     '<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
                     HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
                 );
 
                 // list-style
-                $test->assertEquals(
+                $this->assertEquals(
                     '<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
                     HTTP::absoluteURLs('<div style=\'background: url("./assets/list.png");\'>Content</div>')
                 );
@@ -244,37 +258,37 @@ class HTTPTest extends FunctionalTest
     {
         $this->withBaseURL(
             'http://www.silverstripe.org/',
-            function ($test) {
+            function () {
                 //empty links
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/">test</a>',
                     HTTP::absoluteURLs('<a href="">test</a>')
                 );
 
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/">test</a>',
                     HTTP::absoluteURLs('<a href="/">test</a>')
                 );
 
                 //relative
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/">test</a>',
                     HTTP::absoluteURLs('<a href="./">test</a>')
                 );
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/">test</a>',
                     HTTP::absoluteURLs('<a href=".">test</a>')
                 );
 
                 // links
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href=\'http://www.silverstripe.org/blog/\'>SS Blog</a>',
                     HTTP::absoluteURLs('<a href=\'/blog/\'>SS Blog</a>')
                 );
 
                 // background
                 // Note that using /./ in urls is absolutely acceptable
-                $test->assertEquals(
+                $this->assertEquals(
                     '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'.
                     'SS Blog</div>',
                     HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
@@ -283,25 +297,25 @@ class HTTPTest extends FunctionalTest
                 //check dot segments
                 // Assumption: dots are not removed
                 //if they were, the url should be: http://www.silverstripe.org/abc
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/test/page/../../abc">Test</a>',
                     HTTP::absoluteURLs('<a href="test/page/../../abc">Test</a>')
                 );
 
                 // image
-                $test->assertEquals(
+                $this->assertEquals(
                     '<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
                     HTTP::absoluteURLs('<img src=\'themes/silverstripe/images/logo-org.png\' />')
                 );
 
                 // link
-                $test->assertEquals(
+                $this->assertEquals(
                     '<link href=http://www.silverstripe.org/base.css />',
                     HTTP::absoluteURLs('<link href=base.css />')
                 );
 
                 // Test special characters are retained
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="http://www.silverstripe.org/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>',
                     HTTP::absoluteURLs('<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>')
                 );
@@ -319,14 +333,14 @@ class HTTPTest extends FunctionalTest
             function ($test) {
 
                 // mailto
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>',
                     HTTP::absoluteURLs('<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>'),
                     'Email links are not rewritten'
                 );
 
                 // data uri
-                $test->assertEquals(
+                $this->assertEquals(
                     '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38'.
                     'GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
                     HTTP::absoluteURLs(
@@ -337,7 +351,7 @@ class HTTPTest extends FunctionalTest
                 );
 
                 // call
-                $test->assertEquals(
+                $this->assertEquals(
                     '<a href="callto:12345678" />',
                     HTTP::absoluteURLs('<a href="callto:12345678" />'),
                     'Call to links are not rewritten'
@@ -352,7 +366,7 @@ class HTTPTest extends FunctionalTest
             'http://www.silverstripe.org/',
             function ($test) {
                 $frameworkTests = ltrim(FRAMEWORK_DIR . '/tests', '/');
-                $test->assertEquals(
+                $this->assertEquals(
                     "http://www.silverstripe.org/$frameworkTests/php/Control/HTTPTest.php",
                     HTTP::filename2url(__FILE__)
                 );

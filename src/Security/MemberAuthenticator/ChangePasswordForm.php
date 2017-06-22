@@ -28,7 +28,8 @@ class ChangePasswordForm extends Form
      */
     public function __construct($controller, $name, $fields = null, $actions = null)
     {
-        $backURL = $controller->getBackURL() ?: Session::get('BackURL');
+        $backURL = $controller->getBackURL()
+            ?: $controller->getRequest()->getSession()->get('BackURL');
 
         if (!$fields) {
             $fields = $this->getFormFields();

@@ -479,7 +479,7 @@ class DropdownFieldTest extends SapphireTest
             )
         );
         $validator = new RequiredFields();
-        $form = new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
+        new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
         $field->setValue("One");
         $this->assertTrue($field->validate($validator));
         $field->setName("TestNew"); //try changing name of field

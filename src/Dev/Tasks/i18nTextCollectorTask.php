@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\Tasks;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\BuildTask;
@@ -40,7 +41,7 @@ class i18nTextCollectorTask extends BuildTask
      */
     public function run($request)
     {
-        increase_time_limit_to();
+        Environment::increaseTimeLimitTo();
         $collector = i18nTextCollector::create($request->getVar('locale'));
 
         $merge = $this->getIsMerge($request);

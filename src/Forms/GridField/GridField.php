@@ -2,23 +2,21 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Control\HasRequestHandler;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\RequestHandler;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\Form;
-use LogicException;
-use InvalidArgumentException;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\HTML;
 
 /**
@@ -910,7 +908,7 @@ class GridField extends FormField
 
         foreach ($data as $dataKey => $dataValue) {
             if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey, $matches)) {
-                $stateChange = Session::get($matches[1]);
+                $stateChange = $request->getSession()->get($matches[1]);
                 $actionName = $stateChange['actionName'];
 
                 $arguments = array();
@@ -972,11 +970,10 @@ class GridField extends FormField
      * @todo copy less code from RequestHandler.
      *
      * @param HTTPRequest $request
-     * @param DataModel $model
      * @return array|RequestHandler|HTTPResponse|string
      * @throws HTTPResponse_Exception
      */
-    public function handleRequest(HTTPRequest $request, DataModel $model)
+    public function handleRequest(HTTPRequest $request)
     {
         if ($this->brokenOnConstruct) {
             user_error(
@@ -989,7 +986,6 @@ class GridField extends FormField
         }
 
         $this->setRequest($request);
-        $this->setDataModel($model);
 
         $fieldData = $this->getRequest()->requestVar($this->getName());
 
@@ -1038,7 +1034,7 @@ class GridField extends FormField
                                 if ($result instanceof HasRequestHandler) {
                                     $result = $result->getRequestHandler();
                                 }
-                                $returnValue = $result->handleRequest($request, $model);
+                                $returnValue = $result->handleRequest($request);
 
                                 if (is_array($returnValue)) {
                                     throw new LogicException(
@@ -1066,7 +1062,7 @@ class GridField extends FormField
             }
         }
 
-        return parent::handleRequest($request, $model);
+        return parent::handleRequest($request);
     }
 
     /**

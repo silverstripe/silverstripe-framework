@@ -20,7 +20,6 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
@@ -329,7 +328,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         self::set_ignore_disallowed_actions(true);
 
-        if (!$controller) {
+        if (!$controller && Controller::has_curr()) {
             $controller = Controller::curr();
         }
 
@@ -358,7 +357,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 $messageSet = $configMessageSet;
             } else {
                 $messageSet = array(
-                    'default' => _t(
+                    'default'         => _t(
                         'SilverStripe\\Security\\Security.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
                         . "you right along."
@@ -393,7 +392,11 @@ class Security extends Controller implements TemplateGlobalProvider
             }
 
             static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
-            $loginResponse = static::singleton()->login();
+            $request = new HTTPRequest('GET', '/');
+            if ($controller) {
+                $request->setSession($controller->getRequest()->getSession());
+            }
+            $loginResponse = static::singleton()->login($request);
             if ($loginResponse instanceof HTTPResponse) {
                 return $loginResponse;
             }
@@ -409,7 +412,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
 
-        Session::set("BackURL", $_SERVER['REQUEST_URI']);
+        $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
 
         // TODO AccessLogEntry needs an extension to handle permission denied errors
         // Audit logging hook
@@ -522,6 +525,21 @@ class Security extends Controller implements TemplateGlobalProvider
         return null;
     }
 
+    public function getRequest()
+    {
+        // Support Security::singleton() where a request isn't always injected
+        $request = parent::getRequest();
+        if ($request) {
+            return $request;
+        }
+
+        if (Controller::has_curr() && Controller::curr() !== $this) {
+            return Controller::curr()->getRequest();
+        }
+
+        return null;
+    }
+
     /**
      * Prepare the controller for handling the response to this request
      *
@@ -546,7 +564,6 @@ class Security extends Controller implements TemplateGlobalProvider
         $holderPage->ID = -1 * random_int(1, 10000000);
 
         $controller = ModelAsController::controller_for($holderPage);
-        $controller->setDataModel($this->model);
         $controller->doInit();
 
         return $controller;
@@ -581,14 +598,15 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function getSessionMessage(&$messageType = null)
     {
-        $message = Session::get('Security.Message.message');
+        $session = $this->getRequest()->getSession();
+        $message = $session->get('Security.Message.message');
         $messageType = null;
         if (empty($message)) {
             return null;
         }
 
-        $messageType = Session::get('Security.Message.type');
-        $messageCast = Session::get('Security.Message.cast');
+        $messageType = $session->get('Security.Message.type');
+        $messageCast = $session->get('Security.Message.cast');
         if ($messageCast !== ValidationResult::CAST_HTML) {
             $message = Convert::raw2xml($message);
         }
@@ -608,9 +626,12 @@ class Security extends Controller implements TemplateGlobalProvider
         $messageType = ValidationResult::TYPE_WARNING,
         $messageCast = ValidationResult::CAST_TEXT
     ) {
-        Session::set('Security.Message.message', $message);
-        Session::set('Security.Message.type', $messageType);
-        Session::set('Security.Message.cast', $messageCast);
+        Controller::curr()
+            ->getRequest()
+            ->getSession()
+            ->set("Security.Message.message", $message)
+            ->set("Security.Message.type", $messageType)
+            ->set("Security.Message.cast", $messageCast);
     }
 
     /**
@@ -618,7 +639,10 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function clearSessionMessage()
     {
-        Session::clear('Security.Message');
+        Controller::curr()
+            ->getRequest()
+            ->getSession()
+            ->clear("Security.Message");
     }
 
 
@@ -634,15 +658,19 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
+        if ($request) {
+            $this->setRequest($request);
+        } elseif ($request) {
+            $request = $this->getRequest();
+        } else {
+            throw new HTTPResponse_Exception("No request available", 500);
+        }
+
         // Check pre-login process
         if ($response = $this->preLogin()) {
             return $response;
         }
         $authName = null;
-
-        if (!$request) {
-            $request = $this->getRequest();
-        }
 
         $handlers = $this->getServiceAuthenticatorsFromRequest($service, $request);
 
@@ -798,7 +826,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // Process each of the handlers
         $results = array_map(
             function (RequestHandler $handler) {
-                return $handler->handleRequest($this->getRequest(), DataModel::inst());
+                return $handler->handleRequest($this->getRequest());
             },
             $handlers
         );
@@ -818,7 +846,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function delegateToHandler(RequestHandler $handler, $title, array $templates = [])
     {
-        $result = $handler->handleRequest($this->getRequest(), DataModel::inst());
+        $result = $handler->handleRequest($this->getRequest());
 
         // Return the customised controller - may be used to render a Form (e.g. login form)
         if (is_array($result)) {
@@ -984,7 +1012,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
-    }
+        }
 
     /**
      * Flush the default admin credentials
@@ -997,7 +1025,6 @@ class Security extends Controller implements TemplateGlobalProvider
 
         DefaultAdminService::clearDefaultAdmin();
     }
-
 
     /**
      * Set a default admin in dev-mode
@@ -1118,7 +1145,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return [
             'password'  => $encryptor->encrypt($password, $salt, $member),
-            'salt' => $salt,
+            'salt'      => $salt,
             'algorithm' => $algorithm,
             'encryptor' => $encryptor
         ];
@@ -1270,11 +1297,11 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function get_template_global_variables()
     {
         return [
-            "LoginURL" => "login_url",
-            "LogoutURL" => "logout_url",
+            "LoginURL"        => "login_url",
+            "LogoutURL"       => "logout_url",
             "LostPasswordURL" => "lost_password_url",
-            "CurrentMember" => "getCurrentUser",
-            "currentUser" => "getCurrentUser"
+            "CurrentMember"   => "getCurrentUser",
+            "currentUser"     => "getCurrentUser"
         ];
     }
 }

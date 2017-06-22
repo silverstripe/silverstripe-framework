@@ -2,53 +2,61 @@
 
 namespace SilverStripe\Control\Tests;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Session;
+use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests to cover the {@link Session} class
  */
 class SessionTest extends SapphireTest
 {
+    /**
+     * @var Session
+     */
+    protected $session = null;
+
+    protected function setUp()
+    {
+        $this->session = new Session([]);
+        return parent::setUp();
+    }
 
     public function testGetSetBasics()
     {
-        Session::set('Test', 'Test');
+        $this->session->set('Test', 'Test');
 
-        $this->assertEquals(Session::get('Test'), 'Test');
+        $this->assertEquals($this->session->get('Test'), 'Test');
     }
 
     public function testClearElement()
     {
-        Session::set('Test', 'Test');
-        Session::clear('Test');
+        $this->session->set('Test', 'Test');
+        $this->session->clear('Test');
 
-        $this->assertEquals(Session::get('Test'), '');
+        $this->assertEquals($this->session->get('Test'), '');
     }
 
     public function testClearAllElements()
     {
-        Session::set('Test', 'Test');
-        Session::set('Test-1', 'Test-1');
+        $this->session->set('Test', 'Test');
+        $this->session->set('Test-1', 'Test-1');
 
-        Session::clear_all();
+        $this->session->clearAll();
 
         // should session get return null? The array key should probably be
         // unset from the data array
-        $this->assertEquals(Session::get('Test'), '');
-        $this->assertEquals(Session::get('Test-1'), '');
+        $this->assertEquals($this->session->get('Test'), '');
+        $this->assertEquals($this->session->get('Test-1'), '');
     }
 
     public function testGetAllElements()
     {
-        Session::clear_all(); // Remove all session that might've been set by the test harness
+        $this->session->clearAll(); // Remove all session that might've been set by the test harness
 
-        Session::set('Test', 'Test');
-        Session::set('Test-2', 'Test-2');
+        $this->session->set('Test', 'Test');
+        $this->session->set('Test-2', 'Test-2');
 
-        $session = Session::get_all();
+        $session = $this->session->getAll();
         unset($session['HTTP_USER_AGENT']);
 
         $this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
@@ -56,10 +64,10 @@ class SessionTest extends SapphireTest
 
     public function testSettingExistingDoesntClear()
     {
-        $s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
+        $s = new Session(array('something' => array('does' => 'exist')));
 
-        $s->inst_set('something.does', 'exist');
-        $result = $s->inst_changedData();
+        $s->set('something.does', 'exist');
+        $result = $s->changedData();
         unset($result['HTTP_USER_AGENT']);
         $this->assertEquals(array(), $result);
     }
@@ -69,16 +77,16 @@ class SessionTest extends SapphireTest
      */
     public function testClearElementThatDoesntExist()
     {
-        $s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
+        $s = new Session(array('something' => array('does' => 'exist')));
 
-        $s->inst_clear('something.doesnt.exist');
-        $result = $s->inst_changedData();
+        $s->clear('something.doesnt.exist');
+        $result = $s->changedData();
         unset($result['HTTP_USER_AGENT']);
         $this->assertEquals(array(), $result);
 
-        $s->inst_set('something-else', 'val');
-        $s->inst_clear('something-new');
-        $result = $s->inst_changedData();
+        $s->set('something-else', 'val');
+        $s->clear('something-new');
+        $result = $s->changedData();
         unset($result['HTTP_USER_AGENT']);
         $this->assertEquals(array('something-else' => 'val'), $result);
     }
@@ -88,20 +96,12 @@ class SessionTest extends SapphireTest
      */
     public function testClearElementThatDoesExist()
     {
-        $s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
+        $s = new Session(array('something' => array('does' => 'exist')));
 
-        $s->inst_clear('something.does');
-        $result = $s->inst_changedData();
+        $s->clear('something.does');
+        $result = $s->changedData();
         unset($result['HTTP_USER_AGENT']);
         $this->assertEquals(array('something' => array('does' => null)), $result);
-    }
-
-    public function testNonStandardPath()
-    {
-        Config::inst()->update('SilverStripe\\Control\\Session', 'store_path', (realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session')));
-        Session::start();
-
-        $this->assertEquals(Config::inst()->get('SilverStripe\\Control\\Session', 'store_path'), '');
     }
 
     public function testUserAgentLockout()
@@ -110,15 +110,17 @@ class SessionTest extends SapphireTest
         $_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
 
         // Generate our session
-        $s = Injector::inst()->create('SilverStripe\\Control\\Session', array());
-        $s->inst_set('val', 123);
-        $s->inst_finalize();
+        $s = new Session(array());
+        $s->init();
+        $s->set('val', 123);
+        $s->finalize();
 
         // Change our UA
         $_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
 
         // Verify the new session reset our values
-        $s2 = Injector::inst()->create('SilverStripe\\Control\\Session', $s);
-        $this->assertNotEquals($s2->inst_get('val'), 123);
+        $s2 = new Session($s);
+        $s2->init();
+        $this->assertNotEquals($s2->get('val'), 123);
     }
 }

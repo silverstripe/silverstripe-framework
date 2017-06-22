@@ -94,14 +94,14 @@ class CMSSecurity extends Security
         $message =  parent::getSessionMessage($messageType);
         if ($message) {
             return $message;
-        }
+    }
 
         // Format
-        return _t(
+            return _t(
             __CLASS__.'.LOGIN_MESSAGE',
             '<p>Your session has timed out due to inactivity</p>'
-        );
-    }
+            );
+        }
 
     /**
      * Check if there is a logged in member
@@ -187,7 +187,7 @@ PHP
         $controller = $this->getResponseController(_t(__CLASS__.'.SUCCESS', 'Success'));
         $backURLs = array(
             $this->getRequest()->requestVar('BackURL'),
-            Session::get('BackURL'),
+            $this->getRequest()->getSession()->get('BackURL'),
             Director::absoluteURL(AdminRootController::config()->get('url_base'), true),
         );
         $backURL = null;
@@ -201,7 +201,7 @@ PHP
         $controller = $controller->customise(array(
             'Content' => DBField::create_field(DBHTMLText::class, _t(
                 __CLASS__.'.SUCCESSCONTENT',
-                '<p>Login success. If you are not automatically redirected '.
+                '<p>Login success. If you are not automatically redirected ' .
                 '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',
                 array('link' => Convert::raw2att($backURL))

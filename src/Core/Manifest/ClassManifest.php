@@ -29,12 +29,11 @@ class ClassManifest
     protected $base;
 
     /**
-     * Set if including test classes
+     * Used to build cache during boot
      *
-     * @see TestOnly
-     * @var bool
+     * @var CacheFactory
      */
-    protected $tests;
+    protected $cacheFactory;
 
     /**
      * Cache to use, if caching.
@@ -56,7 +55,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $classes      = array();
+    protected $classes = array();
 
     /**
      * List of root classes with no parent class
@@ -122,27 +121,30 @@ class ClassManifest
      * from the cache or re-scanning for classes.
      *
      * @param string $base The manifest base path.
-     * @param bool $includeTests Include the contents of "tests" directories.
-     * @param bool $forceRegen Force the manifest to be regenerated.
      * @param CacheFactory $cacheFactory Optional cache to use. Set to null to not cache.
      */
-    public function __construct(
-        $base,
-        $includeTests = false,
-        $forceRegen = false,
-        CacheFactory $cacheFactory = null
-    ) {
+    public function __construct($base, CacheFactory $cacheFactory = null)
+    {
         $this->base = $base;
-        $this->tests = $includeTests;
+        $this->cacheFactory = $cacheFactory;
+        $this->cacheKey = 'manifest';
+    }
 
+    /**
+     * Initialise the class manifest
+     *
+     * @param bool $includeTests
+     * @param bool $forceRegen
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
         // build cache from factory
-        if ($cacheFactory) {
-            $this->cache = $cacheFactory->create(
+        if ($this->cacheFactory) {
+            $this->cache = $this->cacheFactory->create(
                 CacheInterface::class.'.classmanifest',
                 [ 'namespace' => 'classmanifest' . ($includeTests ? '_tests' : '') ]
             );
         }
-        $this->cacheKey = 'manifest';
 
         if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
             $this->classes = $data['classes'];
@@ -151,7 +153,7 @@ class ClassManifest
             $this->implementors = $data['implementors'];
             $this->traits = $data['traits'];
         } else {
-            $this->regenerate();
+            $this->regenerate($includeTests);
         }
     }
 
@@ -346,8 +348,10 @@ class ClassManifest
 
     /**
      * Completely regenerates the manifest file.
+     *
+     * @param bool $includeTests
      */
-    public function regenerate()
+    public function regenerate($includeTests)
     {
         $resets = array(
             'classes', 'roots', 'children', 'descendants', 'interfaces',
@@ -363,8 +367,10 @@ class ClassManifest
         $finder->setOptions(array(
             'name_regex'    => '/^[^_].*\\.php$/',
             'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
-            'ignore_tests'  => !$this->tests,
-            'file_callback' => array($this, 'handleFile'),
+            'ignore_tests'  => !$includeTests,
+            'file_callback' => function ($basename, $pathname) use ($includeTests) {
+                $this->handleFile($basename, $pathname, $includeTests);
+            },
         ));
         $finder->find($this->base);
 
@@ -384,7 +390,7 @@ class ClassManifest
         }
     }
 
-    public function handleFile($basename, $pathname)
+    public function handleFile($basename, $pathname, $includeTests)
     {
         $classes    = null;
         $interfaces = null;
@@ -397,6 +403,7 @@ class ClassManifest
         $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
         // Attempt to load from cache
+        $changed = false;
         if ($this->cache
             && ($data = $this->cache->get($key))
             && $this->validateItemCache($data)
@@ -405,6 +412,7 @@ class ClassManifest
             $interfaces = $data['interfaces'];
             $traits = $data['traits'];
         } else {
+            $changed = true;
             // Build from php file parser
             $fileContents = ClassContentRemover::remove_class_content($pathname);
             try {
@@ -418,23 +426,16 @@ class ClassManifest
             $classes = $this->getVisitor()->getClasses();
             $interfaces = $this->getVisitor()->getInterfaces();
             $traits = $this->getVisitor()->getTraits();
-
-            // Save back to cache if configured
-            if ($this->cache) {
-                $cache = array(
-                    'classes' => $classes,
-                    'interfaces' => $interfaces,
-                    'traits' => $traits,
-                );
-                $this->cache->set($key, $cache);
-            }
         }
 
         // Merge this data into the global list
         foreach ($classes as $className => $classInfo) {
-            $extends = isset($classInfo['extends']) ? $classInfo['extends'] : null;
-            $implements = isset($classInfo['interfaces']) ? $classInfo['interfaces'] : null;
-
+            $extends = !empty($classInfo['extends'])
+                ? array_map('strtolower', $classInfo['extends'])
+                : [];
+            $implements = !empty($classInfo['interfaces'])
+                ? array_map('strtolower', $classInfo['interfaces'])
+                : [];
             $lowercaseName = strtolower($className);
             if (array_key_exists($lowercaseName, $this->classes)) {
                 throw new Exception(sprintf(
@@ -445,12 +446,20 @@ class ClassManifest
                 ));
             }
 
+            // Skip if implements TestOnly, but doesn't include tests
+            if (!$includeTests
+                && $implements
+                && in_array(strtolower(TestOnly::class), $implements)
+            ) {
+                $changed = true;
+                unset($classes[$className]);
+                continue;
+            }
+
             $this->classes[$lowercaseName] = $pathname;
 
             if ($extends) {
                 foreach ($extends as $ancestor) {
-                    $ancestor = strtolower($ancestor);
-
                     if (!isset($this->children[$ancestor])) {
                         $this->children[$ancestor] = array($className);
                     } else {
@@ -463,8 +472,6 @@ class ClassManifest
 
             if ($implements) {
                 foreach ($implements as $interface) {
-                    $interface = strtolower($interface);
-
                     if (!isset($this->implementors[$interface])) {
                         $this->implementors[$interface] = array($className);
                     } else {
@@ -479,6 +486,16 @@ class ClassManifest
         }
         foreach ($traits as $traitName => $traitInfo) {
             $this->traits[strtolower($traitName)] = $pathname;
+        }
+
+        // Save back to cache if configured
+        if ($changed && $this->cache) {
+            $cache = array(
+                'classes' => $classes,
+                'interfaces' => $interfaces,
+                'traits' => $traits,
+            );
+            $this->cache->set($key, $cache);
         }
     }
 

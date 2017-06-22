@@ -5,9 +5,7 @@ namespace SilverStripe\Control\Tests\DirectorTest;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestFilter;
-use SilverStripe\Control\Session;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataModel;
 
 class TestRequestFilter implements RequestFilter, TestOnly
 {
@@ -17,22 +15,24 @@ class TestRequestFilter implements RequestFilter, TestOnly
     public $failPre = false;
     public $failPost = false;
 
-    public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
+    public function preRequest(HTTPRequest $request)
     {
         ++$this->preCalls;
 
         if ($this->failPre) {
             return false;
         }
+        return true;
     }
 
-    public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
+    public function postRequest(HTTPRequest $request, HTTPResponse $response)
     {
         ++$this->postCalls;
 
         if ($this->failPost) {
             return false;
         }
+        return true;
     }
 
     public function reset()

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -271,8 +272,8 @@ trait Extensible
         }
         Config::modify()->set($class, 'extensions', $config);
 
-        // unset singletons to avoid side-effects
-        Injector::inst()->unregisterAllObjects();
+        // Unset singletons
+        Injector::inst()->unregisterObjects($class);
 
         // unset some caches
         $subclasses = ClassInfo::subclassesFor($class);

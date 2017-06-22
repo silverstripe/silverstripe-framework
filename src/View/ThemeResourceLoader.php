@@ -3,7 +3,6 @@
 namespace SilverStripe\View;
 
 use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Dev\Debug;
 
 /**
  * Handles finding templates from a stack of template manifest objects.

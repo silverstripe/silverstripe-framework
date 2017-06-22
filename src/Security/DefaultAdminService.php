@@ -18,9 +18,12 @@ class DefaultAdminService
     use Injectable;
 
     /**
-     * @var bool
+     * Can be set to explicitly true or false, or left null.
+     * If null, hasDefaultAdmin() will be inferred from environment.
+     *
+     * @var bool|null
      */
-    protected static $has_default_admin = false;
+    protected static $has_default_admin = null;
 
     /**
      * @var string
@@ -72,7 +75,7 @@ class DefaultAdminService
                 "No default admin configured. Please call hasDefaultAdmin() before getting default admin username"
             );
         }
-        return static::$default_username;
+        return static::$default_username ?: getenv('SS_DEFAULT_ADMIN_USERNAME');
     }
 
     /**
@@ -86,7 +89,7 @@ class DefaultAdminService
                 "No default admin configured. Please call hasDefaultAdmin() before getting default admin password"
             );
         }
-        return static::$default_password;
+        return static::$default_password ?: getenv('SS_DEFAULT_ADMIN_PASSWORD');
     }
 
     /**
@@ -96,11 +99,16 @@ class DefaultAdminService
      */
     public static function hasDefaultAdmin()
     {
+        // Check environment if not explicitly set
+        if (!isset(static::$has_default_admin)) {
+            return !empty(getenv('SS_DEFAULT_ADMIN_USERNAME'))
+                && !empty(getenv('SS_DEFAULT_ADMIN_PASSWORD'));
+        }
         return static::$has_default_admin;
     }
 
     /**
-     * Flush the default admin credentials
+     * Flush the default admin credentials.
      */
     public static function clearDefaultAdmin()
     {

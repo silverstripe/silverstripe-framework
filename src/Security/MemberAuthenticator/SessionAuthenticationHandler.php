@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
 use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\Member;
 
@@ -47,7 +47,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     {
         // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
         // ValidationException
-        $id = Session::get($this->getSessionVariable());
+        $id = $request->getSession()->get($this->getSessionVariable());
         if (!$id) {
             return null;
         }
@@ -64,7 +64,8 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
         static::regenerateSessionId();
-        Session::set($this->getSessionVariable(), $member->ID);
+        $request = $request ?: Controller::curr()->getRequest();
+        $request->getSession()->set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
         // @todo make this a setting on the authentication handler
@@ -102,6 +103,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      */
     public function logOut(HTTPRequest $request = null)
     {
-        Session::clear($this->getSessionVariable());
+        $request = $request ?: Controller::curr()->getRequest();
+        $request->getSession()->clear($this->getSessionVariable());
     }
 }

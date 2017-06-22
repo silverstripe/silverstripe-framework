@@ -15,6 +15,14 @@ use SilverStripe\ORM\ArrayList;
  */
 class TestController extends Controller implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
+
     public function Link($action = null)
     {
         return Controller::join_links('GridField_URLHandlerTest_Controller', $action, '/');

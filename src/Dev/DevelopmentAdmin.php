@@ -42,6 +42,16 @@ class DevelopmentAdmin extends Controller
         'generatesecuretoken',
     );
 
+    /**
+     * Assume that CLI equals admin permissions
+     * If set to false, normal permission model will apply even in CLI mode
+     * Applies to all development admin tasks (E.g. TaskRunner, DatabaseAdmin)
+     *
+     * @config
+     * @var bool
+     */
+    private static $allow_all_cli = true;
+
     protected function init()
     {
         parent::init();
@@ -52,10 +62,11 @@ class DevelopmentAdmin extends Controller
 
         // We allow access to this controller regardless of live-status or ADMIN permission only
         // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+        $allowAllCLI = static::config()->get('allow_all_cli');
         $canAccess = (
             $requestedDevBuild
             || Director::isDev()
-            || Director::is_cli()
+            || (Director::is_cli() && $allowAllCLI)
             // Its important that we don't run this check if dev/build was requested
             || Permission::check("ADMIN")
         );
