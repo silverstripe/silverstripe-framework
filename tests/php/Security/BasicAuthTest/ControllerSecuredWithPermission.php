@@ -29,6 +29,7 @@ class ControllerSecuredWithPermission extends Controller implements TestOnly
     public function index()
     {
         self::$index_called = true;
+        return "index";
     }
 
     public function Link($action = null)

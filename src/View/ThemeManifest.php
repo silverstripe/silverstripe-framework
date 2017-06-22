@@ -22,13 +22,6 @@ class ThemeManifest implements ThemeList
     protected $base;
 
     /**
-     * Include tests
-     *
-     * @var bool
-     */
-    protected $tests;
-
-    /**
      * Path to application code
      *
      * @var string
@@ -57,38 +50,43 @@ class ThemeManifest implements ThemeList
     protected $themes = null;
 
     /**
+     * @var CacheFactory
+     */
+    protected $cacheFactory= null;
+
+    /**
      * Constructs a new template manifest. The manifest is not actually built
      * or loaded from cache until needed.
      *
      * @param string $base The base path.
      * @param string $project Path to application code
-     *
-     * @param bool $includeTests Include tests in the manifest.
-     * @param bool $forceRegen Force the manifest to be regenerated.
      * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct(
-        $base,
-        $project,
-        $includeTests = false,
-        $forceRegen = false,
-        CacheFactory $cacheFactory = null
-    ) {
-        $this->base  = $base;
-        $this->tests = $includeTests;
+    public function __construct($base, $project, CacheFactory $cacheFactory = null)
+    {
+        $this->base = $base;
         $this->project = $project;
+        $this->cacheFactory = $cacheFactory;
+    }
 
+    /**
+     * @param bool $includeTests Include tests in the manifest
+     * @param bool $forceRegen Force the manifest to be regenerated.
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
         // build cache from factory
-        if ($cacheFactory) {
-            $this->cache = $cacheFactory->create(
+        if ($this->cacheFactory) {
+            $this->cache = $this->cacheFactory->create(
                 CacheInterface::class.'.thememanifest',
                 [ 'namespace' => 'thememanifest' . ($includeTests ? '_tests' : '') ]
             );
         }
-        $this->cacheKey = $this->getCacheKey();
-
-        if ($forceRegen) {
-            $this->regenerate();
+        $this->cacheKey = $this->getCacheKey($includeTests);
+        if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
+            $this->themes = $data;
+        } else {
+            $this->regenerate($includeTests);
         }
     }
 
@@ -104,36 +102,37 @@ class ThemeManifest implements ThemeList
      * Generate a unique cache key to avoid manifest cache collisions.
      * We compartmentalise based on the base path, the given project, and whether
      * or not we intend to include tests.
+     *
+     * @param bool $includeTests
      * @return string
      */
-    public function getCacheKey()
+    public function getCacheKey($includeTests = false)
     {
         return sha1(sprintf(
             "manifest-%s-%s-%u",
             $this->base,
             $this->project,
-            $this->tests
+            $includeTests
         ));
     }
 
     public function getThemes()
     {
-        if ($this->themes === null) {
-            $this->init();
-        }
         return $this->themes;
     }
 
     /**
      * Regenerates the manifest by scanning the base path.
+     *
+     * @param bool $includeTests
      */
-    public function regenerate()
+    public function regenerate($includeTests = false)
     {
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
             'include_themes' => false,
             'ignore_dirs' => array('node_modules', THEMES_DIR),
-            'ignore_tests'  => !$this->tests,
+            'ignore_tests'  => !$includeTests,
             'dir_callback'  => array($this, 'handleDirectory')
         ));
 
@@ -170,18 +169,6 @@ class ThemeManifest implements ThemeList
             array_unshift($this->themes, $path);
         } else {
             array_push($this->themes, $path);
-        }
-    }
-
-    /**
-     * Initialise the manifest
-     */
-    protected function init()
-    {
-        if ($this->cache && ($data = $this->cache->get($this->cacheKey))) {
-            $this->themes = $data;
-        } else {
-            $this->regenerate();
         }
     }
 }

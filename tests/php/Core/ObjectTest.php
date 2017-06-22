@@ -2,8 +2,13 @@
 
 namespace SilverStripe\Core\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Tests\ObjectTest\BaseObject;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest3;
@@ -16,7 +21,6 @@ use SilverStripe\Core\Tests\ObjectTest\MyObject;
 use SilverStripe\Core\Tests\ObjectTest\MySubObject;
 use SilverStripe\Core\Tests\ObjectTest\TestExtension;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
 use SilverStripe\Versioned\Versioned;
 
 /**
@@ -30,7 +34,10 @@ class ObjectTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        Injector::inst()->unregisterAllObjects();
+        Injector::inst()->unregisterObjects([
+            Extension::class,
+            BaseObject::class,
+        ]);
     }
 
     public function testHasmethodBehaviour()

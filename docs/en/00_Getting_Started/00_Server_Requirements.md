@@ -24,12 +24,13 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
      * `/dev/urandom`
      * [`mcrypt_create_iv()`](http://php.net/manual/en/function.mcrypt-create-iv.php)
      * CAPICOM Utilities (`CAPICOM.Utilities.1`, Windows only)
- * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
+ * Required modules: ctype, dom, fileinfo, hash, intl, mbstring, session, simplexml, tokenizer, xml.
+ * At least one from each group of extensions:
+     * Image library extension (gd2, imagick)
+     * DB connector library (pdo, mysqli, pgsql)
  * Recommended configuration
-
-		safe_mode = Off
-		magic_quotes_gpc = Off
-		memory_limit = 48M
+     * Dev (local development for running test framework): memory_limit 512MB
+     * Production: memory_limit = 64M
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
  * One of the following databases: 

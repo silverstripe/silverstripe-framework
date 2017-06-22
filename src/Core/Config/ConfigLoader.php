@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Config;
 
+use BadMethodCallException;
 use SilverStripe\Config\Collections\ConfigCollectionInterface;
 
 /**
@@ -25,7 +26,7 @@ class ConfigLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return self::$instance ? self::$instance : self::$instance = new static();
     }
 
     /**
@@ -36,6 +37,14 @@ class ConfigLoader
      */
     public function getManifest()
     {
+        if ($this !== self::$instance) {
+            throw new BadMethodCallException(
+                "Non-current config manifest cannot be accessed. Please call ->activate() first"
+            );
+        }
+        if (empty($this->manifests)) {
+            throw new BadMethodCallException("No config manifests available");
+        }
         return $this->manifests[count($this->manifests) - 1];
     }
 
@@ -78,14 +87,31 @@ class ConfigLoader
     }
 
     /**
-     * Nest the current manifest
+     * Nest the config loader and activates it
      *
-     * @return ConfigCollectionInterface
+     * @return static
      */
     public function nest()
     {
-        $manifest = $this->getManifest()->nest();
-        $this->pushManifest($manifest);
-        return $manifest;
+        // Nest config
+        $manifest = clone $this->getManifest();
+
+        // Create new blank loader with new stack (top level nesting)
+        $newLoader = new static;
+        $newLoader->pushManifest($manifest);
+
+        // Activate new loader
+        return $newLoader->activate();
+    }
+
+    /**
+     * Mark this instance as the current instance
+     *
+     * @return $this
+     */
+    public function activate()
+    {
+        static::$instance = $this;
+        return $this;
     }
 }

@@ -19,7 +19,7 @@ class FormFactoryTest extends SapphireTest
 
     protected static $fixture_file = 'FormFactoryTest.yml';
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         // Prevent setup breaking if versioned module absent
         if (class_exists(Versioned::class)) {
@@ -50,7 +50,6 @@ class FormFactoryTest extends SapphireTest
         $this->assertInstanceOf(TextField::class, $form->Fields()->fieldByName('Title'));
         $this->assertInstanceOf(HiddenField::class, $form->Fields()->fieldByName('ID'));
         $this->assertInstanceOf(HiddenField::class, $form->Fields()->fieldByName('SecurityID'));
-
 
         // Check preview link
         /** @var LiteralField $previewLink */

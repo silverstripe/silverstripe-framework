@@ -2,8 +2,12 @@
 
 namespace SilverStripe\Forms;
 
+use BadMethodCallException;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
@@ -333,9 +337,44 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function clearFormState()
     {
-        Session::clear("FormInfo.{$this->FormName()}.result");
-        Session::clear("FormInfo.{$this->FormName()}.data");
+        $this
+            ->getSession()
+            ->clear("FormInfo.{$this->FormName()}.result")
+            ->clear("FormInfo.{$this->FormName()}.data");
         return $this;
+    }
+
+    /**
+     * Helper to get current request for this form
+     *
+     * @return HTTPRequest
+     */
+    protected function getRequest()
+    {
+        // Check if current request handler has a request object
+        $controller = $this->getController();
+        if ($controller && !($controller->getRequest() instanceof NullHTTPRequest)) {
+            return $controller->getRequest();
+        }
+        // Fall back to current controller
+        if (Controller::has_curr() && !(Controller::curr()->getRequest() instanceof NullHTTPRequest)) {
+            return Controller::curr()->getRequest();
+        }
+        return null;
+    }
+
+    /**
+     * Get session for this form
+     *
+     * @return Session
+     */
+    protected function getSession()
+    {
+        $request = $this->getRequest();
+        if ($request) {
+            return $request->getSession();
+        }
+        throw new BadMethodCallException("Session not available in the current context");
     }
 
     /**
@@ -345,7 +384,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getSessionData()
     {
-        return Session::get("FormInfo.{$this->FormName()}.data");
+        return $this->getSession()->get("FormInfo.{$this->FormName()}.data");
     }
 
     /**
@@ -356,7 +395,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setSessionData($data)
     {
-        Session::set("FormInfo.{$this->FormName()}.data", $data);
+        $this->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
         return $this;
     }
 
@@ -367,7 +406,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getSessionValidationResult()
     {
-        $resultData = Session::get("FormInfo.{$this->FormName()}.result");
+        $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
             return unserialize($resultData);
         }
@@ -396,7 +435,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Serialise
         $resultData = $result ? serialize($result) : null;
-        Session::set("FormInfo.{$this->FormName()}.result", $resultData);
+        $this->getSession()->set("FormInfo.{$this->FormName()}.result", $resultData);
         return $this;
     }
 

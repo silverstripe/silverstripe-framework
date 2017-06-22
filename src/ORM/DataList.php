@@ -50,13 +50,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected $dataQuery;
 
     /**
-     * The DataModel from which this DataList comes.
-     *
-     * @var DataModel
-     */
-    protected $model;
-
-    /**
      * Create a new DataList.
      * No querying is done on construction, but the initial query schema is set up.
      *
@@ -68,16 +61,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $this->dataQuery = new DataQuery($this->dataClass);
 
         parent::__construct();
-    }
-
-    /**
-     * Set the DataModel
-     *
-     * @param DataModel $model
-     */
-    public function setDataModel(DataModel $model)
-    {
-        $this->model = $model;
     }
 
     /**
@@ -796,7 +779,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $class = $row['RecordClassName'];
         }
 
-        $item = Injector::inst()->create($class, $row, false, $this->model, $this->getQueryParams());
+        $item = Injector::inst()->create($class, $row, false, $this->getQueryParams());
 
         return $item;
     }
@@ -1119,7 +1102,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function newObject($initialFields = null)
     {
         $class = $this->dataClass;
-        return Injector::inst()->create($class, $initialFields, false, $this->model);
+        return Injector::inst()->create($class, $initialFields, false);
     }
 
     /**

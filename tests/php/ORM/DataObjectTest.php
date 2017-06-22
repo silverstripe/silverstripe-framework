@@ -57,7 +57,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationChildSecond::class,
     );
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,

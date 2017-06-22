@@ -87,7 +87,7 @@ abstract class Config
     {
         // Unnest unless we would be left at 0 manifests
         $loader = ConfigLoader::inst();
-        if ($loader->countManifests() < 2) {
+        if ($loader->countManifests() <= 1) {
             user_error(
                 "Unable to unnest root Config, please make sure you don't have mis-matched nest/unnest",
                 E_USER_WARNING

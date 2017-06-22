@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Cookie_Backend;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -53,11 +54,14 @@ class TestSession
 
     public function __construct()
     {
-        $this->session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
-        $this->cookies = Injector::inst()->create('SilverStripe\\Control\\Cookie_Backend');
+        $this->session = Injector::inst()->create(Session::class, array());
+        $this->cookies = Injector::inst()->create(Cookie_Backend::class);
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession($this->session());
         $this->controller = new Controller();
-        $this->controller->setSession($this->session);
+        $this->controller->setRequest($request);
         $this->controller->pushCurrent();
+        $this->controller->doInit();
     }
 
     public function __destruct()

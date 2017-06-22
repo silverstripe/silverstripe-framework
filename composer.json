@@ -82,12 +82,12 @@
       "SilverStripe\\Framework\\Tests\\Behaviour\\": "tests/behat/src/"
     },
     "files": [
-      "src/Core/Constants.php",
-      "src/Dev/PhpUnitShim.php"
+      "src/includes/constants.php"
     ]
   },
   "include-path": [
       "src/",
+      "src/includes/",
       "thirdparty/"
   ],
   "scripts": {

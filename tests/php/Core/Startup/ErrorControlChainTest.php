@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Core\Tests\Startup;
 
+use Exception;
+use Foo;
 use SilverStripe\Core\Startup\ErrorControlChain;
 use SilverStripe\Dev\SapphireTest;
-use Foo;
-use Exception;
 
 class ErrorControlChainTest extends SapphireTest
 {

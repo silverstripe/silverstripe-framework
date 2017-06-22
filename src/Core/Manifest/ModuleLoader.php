@@ -22,7 +22,7 @@ class ModuleLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return self::$instance ? self::$instance : self::$instance = new static();
     }
 
     /**
@@ -84,5 +84,18 @@ class ModuleLoader
     public function countManifests()
     {
         return count($this->manifests);
+    }
+
+    /**
+     * Initialise the module loader
+     *
+     * @param bool $includeTests
+     * @param bool $forceRegen
+     */
+    public function init($includeTests = false, $forceRegen = false)
+    {
+        foreach ($this->manifests as $manifest) {
+            $manifest->init($includeTests, $forceRegen);
+        }
     }
 }

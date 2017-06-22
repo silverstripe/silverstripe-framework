@@ -78,21 +78,26 @@ can leave sensitive files exposed to public access (the `RewriteRule` conditions
 
 ## Bootstrap
 
-All requests go through `framework/main.php`, which sets up the execution environment:
+The `constants.php` file is included automatically in any project which requires silverstripe/framework.
+This is included automatically when the composer `vendor/autoload.php` is included, and performs its
+tasks silently in the background.
 
- * Tries to locate an `.env` 
+  * Tries to locate an `.env` 
    [configuration file](/getting_started/environment_management) in the webroot.
- * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`)
- * Normalizes the `url` parameter in preparation for handing it off to `Director`
- * Connects to a database, based on information stored in the global `$databaseConfig` variable.
-   The configuration is either defined in your `_config.php`, or through `.env`
- * Sets up [error handlers](../debugging/error_handling)
- * Optionally continues a [session](../cookies_and_sessions/sessions) if the request already contains a session identifier
- * Loads manifests for PHP classes, templates, as well as any [YAML configuration](../configuration).
- * Optionally regenerates these manifests (if a ["flush" query parameter](flushable) is set)
- * Executes all procedural configuration defined through `_config.php` in all discovered modules
- * Loads the Composer PHP class autoloader
- * Hands control over to [api:Director]
+  * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`)
+
+All requests go through `framework/main.php`, which sets up the core [api:Kernel] and [api:HTTPApplication]
+objects. See [/developer_guides/execution_pipeline/app_object_and_kernel] for details on this.
+The main process follows:
+
+ 
+ * Include `autoload.php`
+ * Construct [api:HTTPRequest] object from environment.
+ * Construct a `Kernel` instance
+ * Construct a `HTTPApplication` instance
+ * Add any necessary middleware to this application
+ * Pass the request to the application, and request a response
+ 
 
 While you usually don't need to modify the bootstrap on this level, some deeper customizations like
 adding your own manifests or a performance-optimized routing might require it.

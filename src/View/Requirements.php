@@ -2,12 +2,11 @@
 
 namespace SilverStripe\View;
 
+use InvalidArgumentException;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Control\HTTPResponse;
-use InvalidArgumentException;
 
 /**
  * Requirements tracker for JavaScript and CSS.
@@ -104,7 +103,7 @@ class Requirements implements Flushable
     public static function backend()
     {
         if (!self::$backend) {
-            self::$backend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
+            self::$backend = Requirements_Backend::create();
         }
         return self::$backend;
     }

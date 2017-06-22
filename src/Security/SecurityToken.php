@@ -150,7 +150,8 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public function getValue()
     {
-        $value = Session::get($this->getName());
+        $session = Controller::curr()->getRequest()->getSession();
+        $value = $session->get($this->getName());
 
         // only regenerate if the token isn't already set in the session
         if (!$value) {
@@ -166,7 +167,8 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public function setValue($val)
     {
-        Session::set($this->getName(), $val);
+        $session = Controller::curr()->getRequest()->getSession();
+        $session->set($this->getName(), $val);
     }
 
     /**

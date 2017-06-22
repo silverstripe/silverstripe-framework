@@ -2,16 +2,17 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
+use Exception;
+use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use \Exception;
 
 class HTMLEditorConfigTest extends SapphireTest
 {
@@ -48,7 +49,7 @@ class HTMLEditorConfigTest extends SapphireTest
 
     public function testEnablePluginsByArrayWithPaths()
     {
-        Config::inst()->update(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
+        Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');
@@ -106,7 +107,7 @@ class HTMLEditorConfigTest extends SapphireTest
             $this->markTestSkipped('No silverstripe/admin module loaded');
         }
         TinyMCEConfig::config()->remove('base_dir');
-        Config::inst()->update(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
+        Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');
@@ -191,36 +192,30 @@ class HTMLEditorConfigTest extends SapphireTest
     public function testExceptionThrownWhenTinyMCEPathCannotBeComputed()
     {
         TinyMCEConfig::config()->remove('base_dir');
-        ModuleLoader::inst()->pushManifest(new ModuleManifest(
-            dirname(__FILE__),
-            false
-        ));
-        $c = new TinyMCEConfig();
+        ModuleLoader::inst()->pushManifest(new ModuleManifest(__DIR__));
 
-        $this->setExpectedExceptionRegExp(
-            Exception::class,
-            '/module is not installed/'
-        );
-
-        $c->getScriptURL();
-
-        ModuleLoader::inst()->popManifest();
+        try {
+            $config = new TinyMCEConfig();
+            $this->expectException(Exception::class);
+            $this->expectExceptionMessageRegExp('/module is not installed/');
+            $config->getScriptURL();
+        } finally {
+            ModuleLoader::inst()->popManifest();
+        }
     }
 
     public function testExceptionThrownWhenTinyMCEGZipPathDoesntExist()
     {
         HTMLEditorField::config()->set('use_gzip', true);
+        /** @var TinyMCEConfig|PHPUnit_Framework_MockObject_MockObject $stub */
         $stub = $this->getMockBuilder(TinyMCEConfig::class)
             ->setMethods(['getTinyMCEPath'])
             ->getMock();
         $stub->method('getTinyMCEPath')
             ->willReturn('fail');
 
-        $this->setExpectedExceptionRegExp(
-            Exception::class,
-            '/does not exist/'
-        );
-
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('/does not exist/');
         $stub->getScriptURL();
     }
 }

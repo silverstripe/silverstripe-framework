@@ -28,7 +28,8 @@ class NamespacedClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
-        $this->manifest = new ClassManifest($this->base, false);
+        $this->manifest = new ClassManifest($this->base);
+        $this->manifest->init();
         ClassLoader::inst()->pushManifest($this->manifest, false);
     }
 

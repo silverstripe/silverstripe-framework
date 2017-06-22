@@ -24,4 +24,4 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
     die();
 }
 
-include(__DIR__ . '/install.php5');
+include(__DIR__ . '/install5.php');

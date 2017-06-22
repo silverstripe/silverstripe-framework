@@ -69,7 +69,7 @@ class CSSContentParser
      * See {@link getByXpath()} for a more direct selector syntax.
      *
      * @param String $selector
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement[]
      */
     public function getBySelector($selector)
     {
@@ -81,7 +81,7 @@ class CSSContentParser
      * Allows querying the content through XPATH selectors.
      *
      * @param String $xpath SimpleXML compatible XPATH statement
-     * @return SimpleXMLElement|false
+     * @return SimpleXMLElement[]
      */
     public function getByXpath($xpath)
     {

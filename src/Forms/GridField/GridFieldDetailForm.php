@@ -2,17 +2,16 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use Closure;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\Validator;
 use SilverStripe\Forms\FieldList;
-use Closure;
+use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 
 /**
@@ -118,7 +117,7 @@ class GridFieldDetailForm implements GridField_URLHandler
             $this->setValidator($record->getCMSValidator());
         }
 
-        return $handler->handleRequest($request, DataModel::inst());
+        return $handler->handleRequest($request);
     }
 
     /**

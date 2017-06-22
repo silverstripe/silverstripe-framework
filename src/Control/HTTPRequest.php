@@ -2,9 +2,10 @@
 
 namespace SilverStripe\Control;
 
+use ArrayAccess;
+use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
-use ArrayAccess;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
@@ -22,7 +23,6 @@ use ArrayAccess;
  */
 class HTTPRequest implements ArrayAccess
 {
-
     /**
      * @var string
      */
@@ -126,6 +126,11 @@ class HTTPRequest implements ArrayAccess
     protected $unshiftedButParsedParts = 0;
 
     /**
+     * @var Session
+     */
+    protected $session;
+
+    /**
      * Construct a HTTPRequest from a URL relative to the site root.
      *
      * @param string $httpMethod
@@ -138,7 +143,6 @@ class HTTPRequest implements ArrayAccess
     {
         $this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
         $this->setUrl($url);
-
         $this->getVars = (array) $getVars;
         $this->postVars = (array) $postVars;
         $this->body = $body;
@@ -435,21 +439,15 @@ class HTTPRequest implements ArrayAccess
         return $this->requestVar($offset);
     }
 
-    /**
-     * @ignore
-     * @param string $offset
-     * @param mixed $value
-     */
     public function offsetSet($offset, $value)
     {
+        $this->getVars[$offset] = $value;
     }
 
-    /**
-     * @ignore
-     * @param mixed $offset
-     */
     public function offsetUnset($offset)
     {
+        unset($this->getVars[$offset]);
+        unset($this->postVars[$offset]);
     }
 
     /**
@@ -865,5 +863,26 @@ class HTTPRequest implements ArrayAccess
         } else {
             return $origMethod;
         }
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        if (empty($this->session)) {
+            throw new BadMethodCallException("No session available for this HTTPRequest");
+        }
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     * @return $this
+     */
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
+        return $this;
     }
 }

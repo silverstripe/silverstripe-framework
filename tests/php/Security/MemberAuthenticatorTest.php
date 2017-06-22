@@ -2,22 +2,21 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataModel;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Security;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -71,7 +70,7 @@ class MemberAuthenticatorTest extends SapphireTest
         // Create basic login form
         $frontendResponse = $authenticator
             ->getLoginHandler($controller->link())
-            ->handleRequest(new HTTPRequest('get', '/'), DataModel::inst());
+            ->handleRequest(Controller::curr()->getRequest());
 
         $this->assertTrue(is_array($frontendResponse));
         $this->assertTrue(isset($frontendResponse['Form']));
@@ -116,10 +115,11 @@ class MemberAuthenticatorTest extends SapphireTest
         // Test correct login
         /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
-            array(
+            [
             'tempid' => $tempID,
             'Password' => 'mypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
 
@@ -129,10 +129,11 @@ class MemberAuthenticatorTest extends SapphireTest
 
         // Test incorrect login
         $result = $authenticator->authenticate(
-            array(
+            [
             'tempid' => $tempID,
             'Password' => 'notmypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
 
@@ -154,10 +155,11 @@ class MemberAuthenticatorTest extends SapphireTest
         // Test correct login
         /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
-            array(
+            [
             'Email' => 'admin',
             'Password' => 'password'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
         $this->assertNotEmpty($result);
@@ -166,10 +168,11 @@ class MemberAuthenticatorTest extends SapphireTest
 
         // Test incorrect login
         $result = $authenticator->authenticate(
-            array(
+            [
             'Email' => 'admin',
             'Password' => 'notmypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
         $messages = $message->getMessages();
@@ -193,7 +196,8 @@ class MemberAuthenticatorTest extends SapphireTest
             [
                 'Email' => 'admin',
                 'Password' => 'wrongpassword'
-            ]
+            ],
+            Controller::curr()->getRequest()
         );
 
         $defaultAdmin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();

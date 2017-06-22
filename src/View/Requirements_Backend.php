@@ -2,8 +2,8 @@
 
 namespace SilverStripe\View;
 
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -13,7 +13,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 
 class Requirements_Backend
@@ -33,9 +32,9 @@ class Requirements_Backend
     /**
      * Whether to combine CSS and JavaScript files
      *
-     * @var bool
+     * @var bool|null
      */
-    protected $combinedFilesEnabled = true;
+    protected $combinedFilesEnabled = null;
 
     /**
      * Determine if files should be combined automatically on dev mode.
@@ -1326,9 +1325,12 @@ class Requirements_Backend
         if ($minify && !$this->minifier) {
             throw new Exception(
                 sprintf(
-                    'Cannot minify files without a minification service defined.
-        			Set %s::minifyCombinedFiles to false, or inject a %s service on
-        			%s.properties.minifier',
+                    <<<MESSAGE
+Cannot minify files without a minification service defined.
+Set %s::minifyCombinedFiles to false, or inject a %s service on
+%s.properties.minifier
+MESSAGE
+                    ,
                     __CLASS__,
                     Requirements_Minifier::class,
                     __CLASS__
@@ -1394,18 +1396,8 @@ class Requirements_Backend
      */
     public function getCombinedFilesEnabled()
     {
-        if (!$this->combinedFilesEnabled) {
-            return false;
-        }
-
-        // Tests should be combined
-        if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
-            return true;
-        }
-
-        // Check if specified via querystring
-        if (isset($_REQUEST['combine'])) {
-            return true;
+        if (isset($this->combinedFilesEnabled)) {
+            return $this->combinedFilesEnabled;
         }
 
         // Non-dev sites are always combined

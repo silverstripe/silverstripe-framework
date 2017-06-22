@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -38,8 +39,9 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         );
     }
 
-    public function handleItem($gridField, $request)
+    public function handleItem(GridField $gridField, HTTPRequest $request)
     {
+        $this->setRequest($request);
         $id = $request->param("ID");
         return new TestComponent_ItemRequest(
             $gridField,
@@ -53,16 +55,21 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         return $this->gridField->Link();
     }
 
-    public function showform($gridField, $request)
+    public function showform(GridField $gridField, HTTPRequest $request)
     {
+        $this->setRequest($request);
         return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form($gridField, $request)->forTemplate();
     }
 
     /**
      * @skipUpgrade
+     * @param GridField $gridField
+     * @param HTTPRequest $request
+     * @return Form
      */
-    public function Form($gridField, $request)
+    public function Form(GridField $gridField, HTTPRequest $request)
     {
+        $this->setRequest($request);
         $this->gridField = $gridField;
         return new Form(
             $this,
@@ -81,8 +88,9 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         return "Submitted " . $data['Test'] . " to component";
     }
 
-    public function testpage($gridField, $request)
+    public function testpage(GridField $gridField, HTTPRequest $request)
     {
+        $this->setRequest($request);
         return "Test page for component";
     }
 }

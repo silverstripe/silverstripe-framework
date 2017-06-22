@@ -86,6 +86,7 @@ class RequirementsTest extends SapphireTest
         $backend->clearCombinedFiles();
         $backend->setCombinedFilesFolder('_combinedfiles');
         $backend->setMinifyCombinedFiles(false);
+        $backend->setCombinedFilesEnabled(true);
         Requirements::flush();
     }
 
@@ -193,6 +194,7 @@ class RequirementsTest extends SapphireTest
     {
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
+        $backend->setCombinedFilesEnabled(true);
         $this->setupCombinedRequirements($backend);
 
         $combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';

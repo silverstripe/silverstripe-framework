@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
@@ -33,7 +34,7 @@ use SimpleXMLElement;
  *  }
  * </code>
  */
-class FunctionalTest extends SapphireTest
+class FunctionalTest extends SapphireTest implements TestOnly
 {
     /**
      * Set this to true on your sub-class to disable the use of themes in this test.
@@ -84,12 +85,13 @@ class FunctionalTest extends SapphireTest
 
     protected function setUp()
     {
+        parent::setUp();
+
         // Skip calling FunctionalTest directly.
         if (static::class == __CLASS__) {
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
         }
 
-        parent::setUp();
         $this->mainSession = new TestSession();
 
         // Disable theme, if necessary
@@ -114,9 +116,8 @@ class FunctionalTest extends SapphireTest
     protected function tearDown()
     {
         SecurityToken::enable();
-
-        parent::tearDown();
         unset($this->mainSession);
+        parent::tearDown();
     }
 
     /**
@@ -408,11 +409,11 @@ class FunctionalTest extends SapphireTest
     public function useDraftSite($enabled = true)
     {
         if ($enabled) {
-            $this->session()->inst_set('readingMode', 'Stage.Stage');
-            $this->session()->inst_set('unsecuredDraftSite', true);
+            $this->session()->set('readingMode', 'Stage.Stage');
+            $this->session()->set('unsecuredDraftSite', true);
         } else {
-            $this->session()->inst_set('readingMode', 'Stage.Live');
-            $this->session()->inst_set('unsecuredDraftSite', false);
+            $this->session()->set('readingMode', 'Stage.Live');
+            $this->session()->set('unsecuredDraftSite', false);
         }
     }
 

@@ -17,6 +17,13 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
  */
 class TestController extends Controller implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
+    }
 
     private static $allowed_actions = array('Form');
 
@@ -29,9 +36,7 @@ class TestController extends Controller implements TestOnly
 
     public function Form()
     {
-        /**
- * @var Player $player
-*/
+        /** @var Player $player */
         $player = Player::get()->find('Email', 'player1@test.com');
         $config = GridFieldConfig::create()->addComponents(
             $relationComponent = new GridFieldAddExistingAutocompleter('before'),

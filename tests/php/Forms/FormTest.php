@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Session;
 use SilverStripe\Forms\Tests\FormTest\TestController;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
@@ -61,7 +62,7 @@ class FormTest extends FunctionalTest
     public function testLoadDataFromRequest()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new TextField('key1'),
@@ -130,7 +131,7 @@ class FormTest extends FunctionalTest
     public function testLoadDataFromUnchangedHandling()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new TextField('key1'),
@@ -158,7 +159,7 @@ class FormTest extends FunctionalTest
     public function testLoadDataFromObject()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new HeaderField('MyPlayerHeader', 'My Player'),
@@ -200,7 +201,7 @@ class FormTest extends FunctionalTest
     public function testLoadDataFromClearMissingFields()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new HeaderField('MyPlayerHeader', 'My Player'),
@@ -250,7 +251,7 @@ class FormTest extends FunctionalTest
     {
         $object = new Team();
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new LookupField('Players', 'Players')
@@ -280,7 +281,7 @@ class FormTest extends FunctionalTest
     public function testLoadDataFromIgnoreFalseish()
     {
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(
                 new TextField('Biography', 'Biography', 'Custom Default')
@@ -447,7 +448,7 @@ class FormTest extends FunctionalTest
     {
         $this->get('FormTest_Controller');
 
-        $result = $this->post(
+        $this->post(
             'FormTest_Controller/Form',
             array(
                 'Email' => 'test@test.com',
@@ -778,6 +779,7 @@ class FormTest extends FunctionalTest
             'action_doSubmit' => 1
             )
         );
+        $request->setSession(new Session([]));
 
         $form->getRequestHandler()->httpSubmission($request);
         $button = $form->getRequestHandler()->buttonClicked();
@@ -798,6 +800,7 @@ class FormTest extends FunctionalTest
             'action_doSubmit' => 1
             )
         );
+        $request->setSession(new Session([]));
 
         $form->getRequestHandler()->httpSubmission($request);
         $button = $form->getRequestHandler()->buttonClicked();
