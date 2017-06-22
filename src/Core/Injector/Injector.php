@@ -929,6 +929,11 @@ class Injector implements ContainerInterface
      */
     protected function getNamedService($name, $asSingleton = true, $constructorArgs = [])
     {
+        // Allow service names of the form "%$ServiceName"
+        if (substr($name, 0, 2) == '%$') {
+            $name = substr($name, 2);
+        }
+
         // Normalise service / args
         list($name, $constructorArgs) = $this->normaliseArguments($name, $constructorArgs);
 
