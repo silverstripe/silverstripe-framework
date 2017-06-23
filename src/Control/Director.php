@@ -132,13 +132,7 @@ class Director implements TemplateGlobalProvider
         }
 
         // Generate output
-        $result = static::handleRequest($request);
-
-        // Save session data. Note that save() will start/resume the session if required.
-        $request->getSession()->save();
-
-        // Return
-        return $result;
+        return static::handleRequest($request);
     }
 
     /**
