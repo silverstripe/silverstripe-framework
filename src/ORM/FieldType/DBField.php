@@ -75,6 +75,13 @@ abstract class DBField extends ViewableData
     protected $arrayValue;
 
     /**
+     * Optional parameters for this field
+     *
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * The escape type for this field when inserted into a template - either "xml" or "raw".
      *
      * @var string
@@ -89,6 +96,16 @@ abstract class DBField extends ViewableData
      * @config
      */
     private static $default_search_filter_class = 'PartialMatchFilter';
+
+    /**
+     * Whether this field type should be indexed by default. Can be overridden by {@link setOptions()}
+     * with "indexed" => true or via a DBField constructor, e.g. "MyField" => "Varchar(255, ['indexed' => false])".
+     * Note: if doing this, be aware of the existing field constructor arguments, like the length above.
+     *
+     * @var bool
+     * @config
+     */
+    private static $indexed = false;
 
     private static $casting = array(
         'ATT' => 'HTMLFragment',
@@ -110,9 +127,23 @@ abstract class DBField extends ViewableData
      */
     protected $defaultVal;
 
-    public function __construct($name = null)
+    /**
+     * Provide the DBField name and an array of options, e.g. ['indexed' => true], or ['nullifyEmpty' => false]
+     *
+     * @param  string $name
+     * @param  array  $options
+     * @throws InvalidArgumentException If $options was passed by not an array
+     */
+    public function __construct($name = null, $options = [])
     {
         $this->name = $name;
+
+        if ($options) {
+            if (!is_array($options)) {
+                throw new \InvalidArgumentException("Invalid options $options");
+            }
+            $this->setOptions($options);
+        }
 
         parent::__construct();
     }
@@ -224,6 +255,54 @@ abstract class DBField extends ViewableData
         return $this;
     }
 
+    /**
+     * Update the optional parameters for this field
+     *
+     * @param array $options Array of options
+     * @return $this
+     */
+    public function setOptions(array $options = [])
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * Get optional parameters for this field
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Set whether this DBField instance should be indexed
+     *
+     * @param bool $indexed
+     * @return $this
+     */
+    public function setIndexed($indexed)
+    {
+        $this->options['indexed'] = (bool) $indexed;
+        return $this;
+    }
+
+    /**
+     * Get whether this DBField should be indexed
+     *
+     * @return bool
+     */
+    public function getIndexed()
+    {
+        if (array_key_exists('indexed', $this->options)) {
+            return (bool) $this->options['indexed'];
+        }
+
+        // Default to global configuration per DBField instance
+        return (bool) static::config()->get('indexed');
+    }
 
     /**
      * Determines if the field has a value which is not considered to be 'null'
@@ -548,5 +627,15 @@ DBG;
     public function getSchemaValue()
     {
         return $this->RAW();
+    }
+
+    /**
+     * Get the field(s) that should be used if this field is indexed
+     *
+     * @return array
+     */
+    public function getIndexSpecs()
+    {
+        return [$this->getName()];
     }
 }

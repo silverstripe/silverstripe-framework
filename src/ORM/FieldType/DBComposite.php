@@ -293,4 +293,11 @@ abstract class DBComposite extends DBField
 
         return parent::castingHelper($field);
     }
+
+    public function getIndexSpecs()
+    {
+        return array_map(function ($name) {
+            return $this->getName() . $name;
+        }, array_keys((array) static::config()->get('composite_db')));
+    }
 }

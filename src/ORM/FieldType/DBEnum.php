@@ -51,8 +51,9 @@ class DBEnum extends DBString
      * @param string $name
      * @param string|array $enum A string containing a comma separated list of options or an array of Vals.
      * @param string $default The default option, which is either NULL or one of the items in the enumeration.
+     * @param array  $options Optional parameters for this DB field
      */
-    public function __construct($name = null, $enum = null, $default = null)
+    public function __construct($name = null, $enum = null, $default = null, $options = [])
     {
         if ($enum) {
             $this->setEnum($enum);
@@ -73,7 +74,7 @@ class DBEnum extends DBString
             }
         }
 
-        parent::__construct($name);
+        parent::__construct($name, $options);
     }
 
     /**

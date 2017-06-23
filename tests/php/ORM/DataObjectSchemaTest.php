@@ -3,8 +3,10 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\AllIndexes;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseClass;
@@ -12,7 +14,9 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseDataClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\ChildClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\DefaultTableName;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\GrandChildClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasComposites;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasFields;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasIndexesInFieldSpecs;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\NoFields;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithCustomTable;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
@@ -270,5 +274,57 @@ class DataObjectSchemaTest extends SapphireTest
             'type' => 'index',
             'columns' => ['Title'],
         ], $indexes['IndexNormal']);
+    }
+
+    public function testCompositeDatabaseFieldIndexes()
+    {
+        $indexes = DataObject::getSchema()->databaseIndexes(HasComposites::class);
+        $this->assertCount(3, $indexes);
+        $this->assertArrayHasKey('RegularHasOneID', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['RegularHasOneID']
+        ], $indexes['RegularHasOneID']);
+
+        $this->assertArrayHasKey('Polymorpheus', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['PolymorpheusID', 'PolymorpheusClass']
+        ], $indexes['Polymorpheus']);
+
+        // Check that DBPolymorphicForeignKey's "Class" is not indexed on its own
+        $this->assertArrayNotHasKey('PolymorpheusClass', $indexes);
+    }
+
+    public function testCompositeFieldsCanBeIndexedByDefaultConfiguration()
+    {
+        Config::modify()->set(DBMoney::class, 'indexed', true);
+        $indexes = DataObject::getSchema()->databaseIndexes(HasComposites::class);
+        $this->assertCount(4, $indexes);
+        $this->assertArrayHasKey('Amount', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['AmountCurrency', 'AmountAmount']
+        ], $indexes['Amount']);
+    }
+
+    public function testFieldsCanBeIndexedFromFieldSpecs()
+    {
+        $indexes = DataObject::getSchema()->databaseIndexes(HasIndexesInFieldSpecs::class);
+
+        $this->assertCount(3, $indexes);
+        $this->assertArrayHasKey('ClassName', $indexes);
+
+        $this->assertArrayHasKey('IndexedTitle', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['IndexedTitle']
+        ], $indexes['IndexedTitle']);
+
+        $this->assertArrayHasKey('IndexedMoney', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['IndexedMoneyCurrency', 'IndexedMoneyAmount']
+        ], $indexes['IndexedMoney']);
     }
 }

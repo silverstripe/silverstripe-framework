@@ -9,10 +9,11 @@ use SilverStripe\ORM\DataObject;
  */
 class DBPolymorphicForeignKey extends DBComposite
 {
+    private static $indexed = true;
 
     private static $composite_db = array(
         'ID' => 'Int',
-        'Class' => "DBClassName('SilverStripe\\ORM\\DataObject')"
+        'Class' => "DBClassName('" . DataObject::class . "', ['indexed' => false])"
     );
 
     public function scaffoldFormField($title = null, $params = null)

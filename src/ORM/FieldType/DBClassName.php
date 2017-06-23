@@ -37,6 +37,8 @@ class DBClassName extends DBEnum
      */
     protected static $classname_cache = array();
 
+    private static $indexed = true;
+
     /**
      * Clear all cached classname specs. It's necessary to clear all cached subclassed names
      * for any classes if a new class manifest is generated.
@@ -49,13 +51,14 @@ class DBClassName extends DBEnum
     /**
      * Create a new DBClassName field
      *
-     * @param string $name Name of field
+     * @param string      $name      Name of field
      * @param string|null $baseClass Optional base class to limit selections
+     * @param array       $options   Optional parameters for this DBField instance
      */
-    public function __construct($name = null, $baseClass = null)
+    public function __construct($name = null, $baseClass = null, $options = [])
     {
         $this->setBaseClass($baseClass);
-        parent::__construct($name);
+        parent::__construct($name, null, null, $options);
     }
 
     /**

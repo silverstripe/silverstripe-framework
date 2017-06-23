@@ -7,12 +7,6 @@ namespace SilverStripe\ORM\FieldType;
  */
 abstract class DBString extends DBField
 {
-
-    /**
-     * @var boolean
-     */
-    protected $nullifyEmpty = true;
-
     /**
      * @var array
      */
@@ -26,22 +20,14 @@ abstract class DBString extends DBField
     );
 
     /**
-     * Construct a string type field with a set of optional parameters.
+     * Set the default value for "nullify empty"
      *
-     * @param string $name string The name of the field
-     * @param array $options array An array of options e.g. array('nullifyEmpty'=>false).  See
-     *                       {@link StringField::setOptions()} for information on the available options
+     * {@inheritDoc}
      */
-    public function __construct($name = null, $options = array())
+    public function __construct($name = null, $options = [])
     {
-        if ($options) {
-            if (!is_array($options)) {
-                throw new \InvalidArgumentException("Invalid options $options");
-            }
-            $this->setOptions($options);
-        }
-
-        parent::__construct($name);
+        $this->options['nullifyEmpty'] = true;
+        parent::__construct($name, $options);
     }
 
     /**
@@ -56,14 +42,17 @@ abstract class DBString extends DBField
      *   </li></ul>
      * @return $this
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
-        if (array_key_exists("nullifyEmpty", $options)) {
-            $this->nullifyEmpty = $options["nullifyEmpty"] ? true : false;
+        parent::setOptions($options);
+
+        if (array_key_exists('nullifyEmpty', $options)) {
+            $this->options['nullifyEmpty'] = (bool) $options['nullifyEmpty'];
         }
-        if (array_key_exists("default", $options)) {
-            $this->setDefaultValue($options["default"]);
+        if (array_key_exists('default', $options)) {
+            $this->setDefaultValue($options['default']);
         }
+
         return $this;
     }
 
@@ -72,10 +61,12 @@ abstract class DBString extends DBField
      * them to null.
      *
      * @param $value boolean True if empty strings are to be converted to null
+     * @return $this
      */
     public function setNullifyEmpty($value)
     {
-        $this->nullifyEmpty = ($value ? true : false);
+        $this->options['nullifyEmpty'] = (bool) $value;
+        return $this;
     }
 
     /**
@@ -86,7 +77,7 @@ abstract class DBString extends DBField
      */
     public function getNullifyEmpty()
     {
-        return $this->nullifyEmpty;
+        return $this->options['nullifyEmpty'];
     }
 
     /**
@@ -108,7 +99,7 @@ abstract class DBString extends DBField
         }
 
         // Return "empty" value
-        if ($this->nullifyEmpty || $value === null) {
+        if ($this->options['nullifyEmpty'] || $value === null) {
             return null;
         }
         return '';
