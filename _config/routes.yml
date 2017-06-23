@@ -2,8 +2,6 @@
 Name: rootroutes
 ---
 SilverStripe\Control\Director:
-  middlewares:
-    RequestProcessor: 'SilverStripe\Control\RequestProcessor'
   rules:
     '': SilverStripe\Control\Controller
 ---

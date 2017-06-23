@@ -8,20 +8,19 @@ use SilverStripe\Core\ClassInfo;
 /**
  * Triggers a call to flush() on all implementors of Flushable.
  */
-class FlushRequestFilter implements RequestFilter
+class FlushMiddleware implements HTTPMiddleware
 {
-    public function preRequest(HTTPRequest $request)
+    /**
+     * @inheritdoc
+     */
+    public function process(HTTPRequest $request, callable $delegate)
     {
         if (array_key_exists('flush', $request->getVars())) {
             foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
                 $class::flush();
             }
         }
-        return true;
-    }
 
-    public function postRequest(HTTPRequest $request, HTTPResponse $response)
-    {
-        return true;
+        return $delegate($request);
     }
 }
