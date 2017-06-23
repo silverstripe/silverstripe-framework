@@ -96,7 +96,7 @@ class HTTPApplication implements Application
 
         // Ensure boot is invoked
         return $this->execute($request, function (HTTPRequest $request) {
-            return Director::direct($request);
+            return Director::handleRequest($request);
         }, $flush);
     }
 
