@@ -3,6 +3,7 @@ Name: requestprocessors
 ---
 SilverStripe\Control\Director:
   middlewares:
+    SessionMiddleware: 'SilverStripe\Control\SessionMiddleware'
     RequestProcessor: 'SilverStripe\Control\RequestProcessor'
     FlushMiddleware: '%$SilverStripe\Control\FlushMiddleware'
 

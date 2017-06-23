@@ -96,8 +96,6 @@ class HTTPApplication implements Application
 
         // Ensure boot is invoked
         return $this->execute($request, function (HTTPRequest $request) {
-            // Start session and execute
-            $request->getSession()->init();
             return Director::direct($request);
         }, $flush);
     }
