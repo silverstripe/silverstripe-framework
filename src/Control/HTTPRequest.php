@@ -53,6 +53,20 @@ class HTTPRequest implements ArrayAccess
     protected $httpMethod;
 
     /**
+     * The URL scheme in lowercase: http or https
+     *
+     * @var string
+     */
+    protected $scheme;
+
+    /**
+     * The client IP address
+     *
+     * @var string
+     */
+    protected $ip;
+
+    /**
      * Contains alls HTTP GET parameters passed into this request.
      *
      * @var array
@@ -146,6 +160,7 @@ class HTTPRequest implements ArrayAccess
         $this->getVars = (array) $getVars;
         $this->postVars = (array) $postVars;
         $this->body = $body;
+        $this->scheme = "http";
     }
 
     /**
@@ -757,35 +772,23 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * Returns the client IP address which
-     * originated this request.
+     * Returns the client IP address which originated this request.
      *
      * @return string
      */
     public function getIP()
     {
-        $headerOverrideIP = null;
-        if (TRUSTED_PROXY) {
-            $headers = (getenv('SS_TRUSTED_PROXY_IP_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_IP_HEADER')) : null;
-            if (!$headers) {
-                // Backwards compatible defaults
-                $headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR');
-            }
-            foreach ($headers as $header) {
-                if (!empty($_SERVER[$header])) {
-                    $headerOverrideIP = $_SERVER[$header];
-                    break;
-                }
-            }
-        }
+        return $this->ip;
+    }
 
-        if ($headerOverrideIP && filter_var($headerOverrideIP, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return $this->getIPFromHeaderValue($headerOverrideIP);
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            return $_SERVER['REMOTE_ADDR'];
-        } else {
-            return null;
-        }
+    /**
+     * Sets the client IP address which originated this request.
+     *
+     * @param $ip string
+     */
+    public function setIP($ip)
+    {
+        $this->ip = $ip;
     }
 
     /**
@@ -835,6 +838,25 @@ class HTTPRequest implements ArrayAccess
     public function httpMethod()
     {
         return $this->httpMethod;
+    }
+
+    /**
+     * Return the URL scheme (e.g. "http" or "https").
+     * Equivalent to PSR-7 getUri()->getScheme()
+     * @return string
+     */
+    public function getScheme() {
+        return $this->scheme;
+    }
+
+    /**
+     * Set the URL scheme (e.g. "http" or "https").
+     * Equivalent to PSR-7 getUri()->getScheme(),
+     *
+     * @param string $scheme
+     */
+    public function setScheme($scheme) {
+        $this->scheme = $scheme;
     }
 
     /**
