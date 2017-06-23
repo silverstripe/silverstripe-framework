@@ -123,14 +123,6 @@ class Director implements TemplateGlobalProvider
      */
     public static function direct(HTTPRequest $request)
     {
-        // check allowed hosts
-        if (getenv('SS_ALLOWED_HOSTS') && !static::is_cli()) {
-            $allowedHosts = explode(',', getenv('SS_ALLOWED_HOSTS'));
-            if (!in_array(static::host(), $allowedHosts)) {
-                return new HTTPResponse('Invalid Host', 400);
-            }
-        }
-
         // Generate output
         return static::handleRequest($request);
     }
