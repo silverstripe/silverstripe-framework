@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Control\Tests;
 
-use SilverStripe\Control\Tests\FlushRequestFilterTest\TestFlushable;
+use SilverStripe\Control\Tests\FlushMiddlewareTest\TestFlushable;
 use SilverStripe\Dev\FunctionalTest;
 
-class FlushRequestFilterTest extends FunctionalTest
+class FlushMiddlewareTest extends FunctionalTest
 {
     /**
      * Assert that classes that implement flushable are called

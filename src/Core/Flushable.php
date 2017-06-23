@@ -14,7 +14,7 @@ interface Flushable
      * parameter has been set. Each class that implements Flushable implements
      * this function which looks after it's own specific flushing functionality.
      *
-     * @see FlushRequestFilter
+     * @see FlushMiddleware
      */
     public static function flush();
 }
