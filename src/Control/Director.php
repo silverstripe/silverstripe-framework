@@ -304,6 +304,8 @@ class Director implements TemplateGlobalProvider
      */
     public static function handleRequest(HTTPRequest $request)
     {
+        Injector::inst()->registerService($request, HTTPRequest::class);
+
         $rules = Director::config()->uninherited('rules');
 
         // Get global middlewares
@@ -376,11 +378,15 @@ class Director implements TemplateGlobalProvider
         }
 
         // Call the handler with the given middlewares
-        return self::callWithMiddlewares(
+        $response = self::callWithMiddlewares(
             $request,
             $middlewares,
             $handler
         );
+
+        Injector::inst()->unregisterNamedObject(HTTPRequest::class);
+
+        return $response;
     }
 
     /**
