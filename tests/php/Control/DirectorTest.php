@@ -1,5 +1,4 @@
 <?php
-
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Cookie_Backend;
@@ -13,6 +12,7 @@ use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Config\Config;
 
 /**
  * @todo test Director::alternateBaseFolder()
@@ -645,5 +645,77 @@ class DirectorTest extends SapphireTest
 
         // preCall 'true' will trigger an exception and prevent post call execution
         $this->assertEquals(2, $filter->postCalls);
+    }
+
+    public function testGlobalMiddleware()
+    {
+        $middleware = new DirectorTest\TestMiddleware;
+
+        Injector::inst()->registerService($middleware, 'Middleware1');
+        Config::modify()->set(Director::class, 'middlewares', [ 'Middleware1' ]);
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(404, $response->getStatusCode());
+
+        // Both triggered
+        $this->assertEquals(1, $middleware->preCalls);
+        $this->assertEquals(1, $middleware->postCalls);
+
+        $middleware->failPost = true;
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(500, $response->getStatusCode());
+
+        // Both triggered
+        $this->assertEquals(2, $middleware->preCalls);
+        $this->assertEquals(2, $middleware->postCalls);
+
+        $middleware->failPre = true;
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(400, $response->getStatusCode());
+
+        // Pre triggered, post not
+        $this->assertEquals(3, $middleware->preCalls);
+        $this->assertEquals(2, $middleware->postCalls);
+    }
+
+    public function testRouteSpecificMiddleware()
+    {
+        $middleware = new DirectorTest\TestMiddleware;
+        $specificMiddleware = new DirectorTest\TestMiddleware;
+
+        Injector::inst()->registerService($middleware, 'Middleware1');
+        Injector::inst()->registerService($specificMiddleware, 'Middleware2');
+
+        // Global middleware
+        Config::modify()->set(Director::class, 'middlewares', [ 'Middleware1' ]);
+
+        // URL rules, one of which has a specific middleware
+        Config::modify()->set(
+            Director::class,
+            'rules',
+            [
+                'url-one' => TestController::class,
+                'url-two' => [
+                    'Controller' => TestController::class,
+                    'Middlewares' => [ 'Middleware2' ]
+                ]
+            ]
+        );
+
+        // URL without a route-specific middleware
+        $response = Director::test('url-one');
+
+        // Only the global middleware triggered
+        $this->assertEquals(1, $middleware->preCalls);
+        $this->assertEquals(0, $specificMiddleware->postCalls);
+
+        $response = Director::test('url-two');
+
+        // Both triggered on the url with the specific middleware applied
+        $this->assertEquals(2, $middleware->preCalls);
+        $this->assertEquals(1, $specificMiddleware->postCalls);
+
     }
 }
