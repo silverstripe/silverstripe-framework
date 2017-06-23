@@ -846,7 +846,7 @@ class HTTPRequest implements ArrayAccess
      * Using GET for the "_method" override is not supported,
      * as GET should never carry out state changes.
      * Alternatively you can use a custom HTTP header 'X-HTTP-Method-Override'
-     * to override the original method in {@link Director::direct()}.
+     * to override the original method.
      * The '_method' POST parameter overrules the custom HTTP header.
      *
      * @param string $origMethod Original HTTP method from the browser request
@@ -857,7 +857,7 @@ class HTTPRequest implements ArrayAccess
     {
         if (isset($postVars['_method'])) {
             if (!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
-                user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
+                user_error('HTTPRequest::detect_method(): Invalid "_method" parameter', E_USER_ERROR);
             }
             return strtoupper($postVars['_method']);
         } else {

@@ -16,13 +16,13 @@ use SilverStripe\View\TemplateGlobalProvider;
 /**
  * Director is responsible for processing URLs, and providing environment information.
  *
- * The most important part of director is {@link Director::direct()}, which is passed a URL and will
+ * The most important part of director is {@link Director::handleRequest()}, which is passed an HTTPRequest and will
  * execute the appropriate controller.
  *
  * Director also has a number of static methods that provide information about the environment, such as
  * {@link Director::$environment_type}.
  *
- * @see Director::direct()
+ * @see Director::handleRequest()
  * @see Director::$rules
  * @see Director::$environment_type
  */
@@ -100,39 +100,9 @@ class Director implements TemplateGlobalProvider
     protected static $environment_type;
 
     /**
-     * Process the given URL, creating the appropriate controller and executing it.
-     *
-     * Request processing is handled as follows:
-     * - Director::direct() creates a new HTTPResponse object and passes this to
-     *   Director::handleRequest().
-     * - Director::handleRequest($request) checks each of the Director rules and identifies a controller
-     *   to handle this request.
-     * - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL,
-     *   and call the rule handling method.
-     * - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method
-     *   returns a RequestHandler object.
-     *
-     * In addition to request processing, Director will manage the session, and perform the output of
-     * the actual response to the browser.
-     *
-     * @uses handleRequest() rule-lookup logic is handled by this.
-     * @uses TestController::handleRequest() This handles the page logic for a Director::direct() call.
-     * @param HTTPRequest $request
-     * @return HTTPResponse
-     * @throws HTTPResponse_Exception
-     */
-    public static function direct(HTTPRequest $request)
-    {
-        // Generate output
-        return static::handleRequest($request);
-    }
-
-    /**
-     * Test a URL request, returning a response object. This method is the counterpart of
-     * Director::direct() that is used in functional testing. It will execute the URL given, and
+     * Test a URL request, returning a response object. This method is a wrapper around
+     * Director::handleRequest() to assist with functional testing. It will execute the URL given, and
      * return the result as an HTTPResponse object.
-     *
-     * @uses TestController::handleRequest() Handles the page logic for a Director::direct() call.
      *
      * @param string $url The URL to visit.
      * @param array $postVars The $_POST & $_FILES variables.
@@ -162,7 +132,7 @@ class Director implements TemplateGlobalProvider
     ) {
         return static::mockRequest(
             function (HTTPRequest $request) {
-                return static::direct($request);
+                return static::handleRequest($request);
             },
             $url,
             $postVars,
@@ -315,13 +285,24 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Handle an HTTP request, defined with a HTTPRequest object.
+     * Process the given URL, creating the appropriate controller and executing it.
      *
-     * @skipUpgrade
+     * Request processing is handled as follows:
+     * - Director::handleRequest($request) checks each of the Director rules and identifies a controller
+     *   to handle this request.
+     * - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL,
+     *   and call the rule handling method.
+     * - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method
+     *   returns a RequestHandler object.
+     *
+     * In addition to request processing, Director will manage the session, and perform the output of
+     * the actual response to the browser.
+     *
      * @param HTTPRequest $request
      * @return HTTPResponse
+     * @throws HTTPResponse_Exception
      */
-    protected static function handleRequest(HTTPRequest $request)
+    public static function handleRequest(HTTPRequest $request)
     {
         $rules = Director::config()->uninherited('rules');
 
