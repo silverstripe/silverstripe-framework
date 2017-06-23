@@ -5,11 +5,11 @@ namespace SilverStripe\Security;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\RequestFilter;
+use SilverStripe\Control\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ValidationException;
 
-class AuthenticationRequestFilter implements RequestFilter
+class AuthenticationMiddleware implements HTTPMiddleware
 {
     use Configurable;
 
@@ -43,32 +43,21 @@ class AuthenticationRequestFilter implements RequestFilter
      * @return bool|void
      * @throws HTTPResponse_Exception
      */
-    public function preRequest(HTTPRequest $request)
+    public function process(HTTPRequest $request, callable $delegate)
     {
-        if (!Security::database_is_ready()) {
-            return;
+        if (Security::database_is_ready()) {
+            try {
+                $this
+                    ->getAuthenticationHandler()
+                    ->authenticateRequest($request);
+            } catch (ValidationException $e) {
+                return new HTTPResponse(
+                    "Bad log-in details: " . $e->getMessage(),
+                    400
+                );
+            }
         }
 
-        try {
-            $this
-                ->getAuthenticationHandler()
-                ->authenticateRequest($request);
-        } catch (ValidationException $e) {
-            throw new HTTPResponse_Exception(
-                "Bad log-in details: " . $e->getMessage(),
-                400
-            );
-        }
+        return $delegate($request);
     }
-
-    /**
-     * No-op
-     *
-     * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @return bool|void
-     */
-    public function postRequest(HTTPRequest $request, HTTPResponse $response)
-    {
     }
-}
