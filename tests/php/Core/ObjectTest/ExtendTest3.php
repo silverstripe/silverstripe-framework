@@ -11,6 +11,7 @@ class ExtendTest3 extends Extension implements TestOnly
 
     public function __construct()
     {
+        parent::__construct();
         $this->constructorArgs = func_get_args();
     }
 
