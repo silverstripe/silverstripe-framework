@@ -3,6 +3,7 @@ Name: requestprocessors
 ---
 SilverStripe\Control\Director:
   middlewares:
+    TrustedProxyMiddleware: '%$SilverStripe\Control\TrustedProxyMiddleware'
     AllowedHostsMiddleware: '%$SilverStripe\Control\AllowedHostsMiddleware'
     SessionMiddleware: 'SilverStripe\Control\SessionMiddleware'
     RequestProcessor: 'SilverStripe\Control\RequestProcessor'
@@ -13,3 +14,6 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\AllowedHostsMiddleware:
     properties:
       AllowedHosts: "`SS_ALLOWED_HOSTS`"
+  SilverStripe\Control\TrustedProxyMiddleware:
+    properties:
+      TrustedProxyIPs: "`SS_TRUSTED_PROXY_IPS`"

@@ -384,6 +384,8 @@ class Director implements TemplateGlobalProvider
             $handler
         );
 
+        // Note that if a different request was previously registered, this will now be lost
+        // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
         Injector::inst()->unregisterNamedObject(HTTPRequest::class);
 
         return $response;
@@ -518,18 +520,9 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Validate proxy-specific headers
-        if (TRUSTED_PROXY) {
-            // Check headers to validate
-            $headers = getenv('SS_TRUSTED_PROXY_HOST_HEADER')
-                ? explode(',', getenv('SS_TRUSTED_PROXY_HOST_HEADER'))
-                : ['HTTP_X_FORWARDED_HOST']; // Backwards compatible defaults
-            foreach ($headers as $header) {
-                if (!empty($_SERVER[$header])) {
-                    // Get the first host, in case there's multiple separated through commas
-                    return strtok($_SERVER[$header], ',');
-                }
-            }
+        $request = Injector::inst()->get(HTTPRequest::class);
+        if ($request && $host = $request->getHeader('Host')) {
+            return $host;
         }
 
         // Check given header
@@ -587,26 +580,10 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-        // See https://support.microsoft.com/en-us/kb/307347
-        if (TRUSTED_PROXY) {
-            $headers = getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')
-                ? explode(',', getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER'))
-                : ['HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS'];
-            foreach ($headers as $header) {
-                $headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
-                if (!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
-                    return true;
-                }
-            }
-        }
-
-        // Check common $_SERVER
-        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-            return true;
-        }
-        if (isset($_SERVER['SSL'])) {
-            return true;
+        // Check the current request
+        $request = Injector::inst()->get(HTTPRequest::class);
+        if ($request && $host = $request->getHeader('Host')) {
+            return $request->getScheme() === 'https';
         }
 
         // Check default_base_url
