@@ -3,7 +3,13 @@ Name: requestprocessors
 ---
 SilverStripe\Control\Director:
   middlewares:
+    AllowedHostsMiddleware: '%$SilverStripe\Control\AllowedHostsMiddleware'
     SessionMiddleware: 'SilverStripe\Control\SessionMiddleware'
     RequestProcessor: 'SilverStripe\Control\RequestProcessor'
     FlushMiddleware: '%$SilverStripe\Control\FlushMiddleware'
 
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\AllowedHostsMiddleware:
+    properties:
+      AllowedHosts: "`SS_ALLOWED_HOSTS`"
