@@ -29,6 +29,7 @@ use SilverStripe\View\TemplateGlobalProvider;
 class Director implements TemplateGlobalProvider
 {
     use Configurable;
+    use HTTPMiddlewareAware;
 
     /**
      * Specifies this url is relative to the base.
@@ -132,7 +133,7 @@ class Director implements TemplateGlobalProvider
     ) {
         return static::mockRequest(
             function (HTTPRequest $request) {
-                return static::handleRequest($request);
+                return Injector::inst()->get(Director::class)->handleRequest($request);
             },
             $url,
             $postVars,
@@ -302,14 +303,11 @@ class Director implements TemplateGlobalProvider
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public static function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request)
     {
         Injector::inst()->registerService($request, HTTPRequest::class);
 
         $rules = Director::config()->uninherited('rules');
-
-        // Get global middlewares
-        $middlewares = Director::config()->uninherited('middlewares') ?: [];
 
         // Default handler - mo URL rules matched, so return a 404 error.
         $handler = function () {
@@ -325,18 +323,6 @@ class Director implements TemplateGlobalProvider
                     $controllerOptions = array('Controller' => $controllerOptions);
                 }
             }
-
-            // Add controller-specific middlewares
-            if (isset($controllerOptions['Middlewares'])) {
-                // Force to array
-                if (!is_array($controllerOptions['Middlewares'])) {
-                    $controllerOptions['Middlewares'] = [$controllerOptions['Middlewares']];
-                }
-                $middlewares = array_merge($middlewares, $controllerOptions['Middlewares']);
-            }
-
-            // Remove null middlewares (may be included due to limitatons of config yml)
-            $middlewares = array_filter($middlewares);
 
             // Match pattern
             $arguments = $request->match($pattern, true);
@@ -363,12 +349,25 @@ class Director implements TemplateGlobalProvider
 
                 // Find the controller name
                 $controller = $arguments['Controller'];
-                $controllerObj = Injector::inst()->create($controller);
+
+                // String = service name
+                if (is_string($controller)) {
+                    $controllerObj = Injector::inst()->get($controller);
+                // Array = service spec
+                } elseif (is_array($controller)) {
+                    $controllerObj = Injector::inst()->createFromSpec($controller);
+                } else {
+                    throw new \LogicException("Invalid Controller value '$controller'");
+                }
 
                 // Handler for calling a controller
                 $handler = function ($request) use ($controllerObj) {
                     try {
-                        return $controllerObj->handleRequest($request);
+                        // Apply the controller's middleware. We do this outside of handleRequest so that
+                        // subclasses of handleRequest will be called after the middlware processing
+                        return $controllerObj->callMiddleware($request, function ($request) use ($controllerObj) {
+                            return $controllerObj->handleRequest($request);
+                        });
                     } catch (HTTPResponse_Exception $responseException) {
                         return $responseException->getResponse();
                     }
@@ -377,12 +376,8 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Call the handler with the given middlewares
-        $response = self::callWithMiddlewares(
-            $request,
-            $middlewares,
-            $handler
-        );
+        // Call the handler with the configured middlewares
+        $response = $this->callMiddleware($request, $handler);
 
         // Note that if a different request was previously registered, this will now be lost
         // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
