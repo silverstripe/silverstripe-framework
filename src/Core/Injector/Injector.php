@@ -526,6 +526,15 @@ class Injector implements ContainerInterface
     }
 
     /**
+     * Instantiate an object from the given spec, without saving to the service cache
+     */
+    public function createFromSpec(array $spec)
+    {
+        $this->updateSpecConstructor($spec);
+        return $this->instantiate($spec, null, 'prototype');
+    }
+
+    /**
      * Instantiate a managed object
      *
      * Given a specification of the form
@@ -591,7 +600,7 @@ class Injector implements ContainerInterface
         }
 
         // now inject safely
-        $this->inject($object, $id);
+        $this->inject($object, $spec, $id);
 
         return $object;
     }
@@ -610,17 +619,15 @@ class Injector implements ContainerInterface
      *              for a type is referenced correctly in case $object is no longer the same
      *              type as the loaded config specification had it as.
      */
-    public function inject($object, $asType = null)
+    protected function inject($object, $spec, $asType = null)
     {
         $objtype = $asType ? $asType : get_class($object);
         $mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
-        $spec = empty($this->specs[$objtype]) ? array() : $this->specs[$objtype];
-
         // first off, set any properties defined in the service specification for this
         // object type
         if (!empty($spec['properties']) && is_array($spec['properties'])) {
-            foreach ($this->specs[$objtype]['properties'] as $key => $value) {
+            foreach ($spec['properties'] as $key => $value) {
                 $val = $this->convertServiceProperty($value);
                 $this->setObjectProperty($object, $key, $val);
             }
