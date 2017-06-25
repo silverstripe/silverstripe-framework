@@ -509,7 +509,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function host()
+    public static function host(HTTPRequest $request = null)
     {
         // Check if overridden by alternate_base_url
         if ($baseURL = self::config()->get('alternate_base_url')) {
@@ -520,7 +520,9 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        $request = Injector::inst()->get(HTTPRequest::class);
+        if (!$request) {
+            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
+        }
         if ($request && $host = $request->getHeader('Host')) {
             return $host;
         }
@@ -549,9 +551,9 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool|string
      */
-    public static function protocolAndHost()
+    public static function protocolAndHost(HTTPRequest $request = null)
     {
-        return static::protocol() . static::host();
+        return static::protocol($request) . static::host($request);
     }
 
     /**
@@ -559,9 +561,9 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function protocol()
+    public static function protocol(HTTPRequest $request = null)
     {
-        return (self::is_https()) ? 'https://' : 'http://';
+        return (self::is_https($request)) ? 'https://' : 'http://';
     }
 
     /**
@@ -569,7 +571,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_https()
+    public static function is_https(HTTPRequest $request = null)
     {
         // Check override from alternate_base_url
         if ($baseURL = self::config()->uninherited('alternate_base_url')) {
@@ -581,7 +583,9 @@ class Director implements TemplateGlobalProvider
         }
 
         // Check the current request
-        $request = Injector::inst()->get(HTTPRequest::class);
+        if (!$request) {
+            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
+        }
         if ($request && $host = $request->getHeader('Host')) {
             return $request->getScheme() === 'https';
         }

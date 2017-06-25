@@ -84,7 +84,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
         $this->getApplication()->getKernel()->boot(false);
 
         // Ensure session is started
-        $request->getSession()->init();
+        $request->getSession()->init($request);
 
         // Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
         if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
