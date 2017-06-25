@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Tests\DirectorTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Dev\TestOnly;
 
 class TestController extends Controller implements TestOnly
@@ -22,6 +23,7 @@ class TestController extends Controller implements TestOnly
         'returnPostValue',
         'returnRequestValue',
         'returnCookieValue',
+        'returnIsSSL',
     );
 
     public function returnGetValue($request)
@@ -54,5 +56,10 @@ class TestController extends Controller implements TestOnly
             return $_COOKIE['somekey'];
         }
         return null;
+    }
+
+    public function returnIsSSL()
+    {
+        return Director::is_https() ? 'yes': 'no';
     }
 }

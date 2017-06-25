@@ -4,8 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\HTTPMiddleware;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ValidationException;
 
@@ -40,8 +39,8 @@ class AuthenticationMiddleware implements HTTPMiddleware
      * Identify the current user from the request
      *
      * @param HTTPRequest $request
-     * @return bool|void
-     * @throws HTTPResponse_Exception
+     * @param callable $delegate
+     * @return HTTPResponse
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
@@ -60,4 +59,4 @@ class AuthenticationMiddleware implements HTTPMiddleware
 
         return $delegate($request);
     }
-    }
+}

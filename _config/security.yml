@@ -23,7 +23,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
     properties:
       Middlewares:
-        - %$SilverStripe\Security\AuthenticationMiddleware
+    - %$SilverStripe\Security\AuthenticationMiddleware
   SilverStripe\Security\AuthenticationMiddleware:
     properties:
       AuthenticationHandler: %$SilverStripe\Security\AuthenticationHandler

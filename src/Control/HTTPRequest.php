@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use ArrayAccess;
 use BadMethodCallException;
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
 
@@ -783,12 +784,18 @@ class HTTPRequest implements ArrayAccess
 
     /**
      * Sets the client IP address which originated this request.
+     * Use setIPFromHeaderValue if assigning from header value.
      *
      * @param $ip string
+     * @return $this
      */
     public function setIP($ip)
     {
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            throw new InvalidArgumentException("Invalid ip $ip");
+        }
         $this->ip = $ip;
+        return $this;
     }
 
     /**
@@ -820,9 +827,11 @@ class HTTPRequest implements ArrayAccess
     /**
      * Return the URL scheme (e.g. "http" or "https").
      * Equivalent to PSR-7 getUri()->getScheme()
+     *
      * @return string
      */
-    public function getScheme() {
+    public function getScheme()
+    {
         return $this->scheme;
     }
 
@@ -832,7 +841,8 @@ class HTTPRequest implements ArrayAccess
      *
      * @param string $scheme
      */
-    public function setScheme($scheme) {
+    public function setScheme($scheme)
+    {
         $this->scheme = $scheme;
     }
 

@@ -261,7 +261,7 @@ mappings:
   Cookie_Backend: SilverStripe\Control\Cookie_Backend
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
-  FlushRequestFilter: SilverStripe\Control\FlushMiddleware
+  FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse

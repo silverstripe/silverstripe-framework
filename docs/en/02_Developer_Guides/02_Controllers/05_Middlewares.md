@@ -8,8 +8,9 @@ authentication, logging, caching, request processing, and many other purposes. N
 replaces the SilverStripe 3 interface, [api:RequestFilter], which still works but is deprecated.
 
 To create a middleware class, implement `SilverStripe\Control\HTTPMiddleware` and define the
-`process($request, $delegate)` method. You can do anything you like in this method, but to continue
-normal execution, you should call `$response = $delegate($request)` at some point in this method.
+`process(HTTPRequest $request, callbale $delegate)` method. You can do anything you like in this
+method, but to continue normal execution, you should call `$response = $delegate($request)`
+at some point in this method.
 
 In addition, you should return an HTTPResponse object. In normal cases, this should be the
 $response object returned by `$delegate`, perhaps with some modification. However, sometimes you
@@ -58,10 +59,20 @@ middleware will be executed on every request:
 
 **mysite/_config/app.yml**
 
+
 	:::yml
-    SilverStripe\Control\Director:
-      middlewares:
-       - %$CustomMiddleware
+    ---
+    Name: myrequestprocessors
+    After:
+      - requestprocessors
+    ---
+    SilverStripe\Core\Injector\Injector:
+      SilverStripe\Control\HTTPMiddleware.director:
+        class: SilverStripe\Control\CompositeHTTPMiddleware
+        properties:
+          Middlewares:
+            - %$CustomMiddleware
+
 
 Because these are service names, you can configure properties into a custom service if you would
 like:
@@ -69,19 +80,22 @@ like:
 **mysite/_config/app.yml**
 
     :::yml
-    SilverStripe\Control\Director:
-      middlewares:
-       - %$ConfiguredMiddleware
+    SilverStripe\Core\Injector\Injector:
+      SilverStripe\Control\HTTPMiddleware.director:
+        class: SilverStripe\Control\CompositeHTTPMiddleware
+        properties:
+          Middlewares:
+           - %$ConfiguredMiddleware
     SilverStripe\Core\Injector\Injector:
       ConfiguredMiddleware:
-       class: $CustomMiddleware
+       class: 'CustomMiddleware'
        properties:
          Secret: "DIFFERENT-ONE"
 
 ## Route-specific middleware
 
 Alternatively, you can apply middlewares to a specific route. These will be processed after the
-global middlewares. You do this by specifying the "Middlewares" property of the route rule:
+global middlewares. You do this by specifying the "Middleware" property of the route rule:
 
 **mysite/_config/app.yml**
 
@@ -90,8 +104,27 @@ global middlewares. You do this by specifying the "Middlewares" property of the 
       rules:
         special\section:
           Controller: SpecialSectionController
+          Middleware: 'CustomMiddleware'
+
+
+If you need to apply multiple middleware you can use the `CompositeHTTPMiddleware`
+wrapper.
+
+
+    :::yml
+    SilverStripe\Core\Injector\Injector:
+      SpecialRouteMiddleware:
+        class: SilverStripe\Control\CompositeHTTPMiddleware
+        properties
           Middlewares:
-           - %$CustomMiddleware
+            - %$CustomMiddleware
+            - %$AnotherMiddleware
+    SilverStripe\Control\Director:
+      rules:
+        special\section:
+          Controller: SpecialSectionController
+          Middleware: 'CustomMiddleware'
+
 
 ## API Documentation
 

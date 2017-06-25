@@ -3,6 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
@@ -361,12 +362,12 @@ class Director implements TemplateGlobalProvider
                 }
 
                 // Handler for calling a controller
-                $handler = function ($request) use ($controllerObj) {
+                $handler = function (HTTPRequest $request) use ($controllerObj) {
                     try {
                         // Apply the controller's middleware. We do this outside of handleRequest so that
                         // subclasses of handleRequest will be called after the middlware processing
                         return $controllerObj->callMiddleware($request, function ($request) use ($controllerObj) {
-                            return $controllerObj->handleRequest($request);
+                        return $controllerObj->handleRequest($request);
                         });
                     } catch (HTTPResponse_Exception $responseException) {
                         return $responseException->getResponse();
@@ -515,11 +516,13 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        if (!$request) {
-            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
-        }
-        if ($request && $host = $request->getHeader('Host')) {
-            return $host;
+        if (Injector::inst()->has(HTTPRequest::class)) {
+            /** @var HTTPRequest $request */
+            $request = Injector::inst()->get(HTTPRequest::class);
+            $host = $request->getHeader('Host');
+            if ($host) {
+                return $host;
+            }
         }
 
         // Check given header
@@ -578,11 +581,13 @@ class Director implements TemplateGlobalProvider
         }
 
         // Check the current request
-        if (!$request) {
-            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
-        }
-        if ($request && $host = $request->getHeader('Host')) {
-            return $request->getScheme() === 'https';
+        if (Injector::inst()->has(HTTPRequest::class)) {
+            /** @var HTTPRequest $request */
+            $request = Injector::inst()->get(HTTPRequest::class);
+            $scheme = $request->getScheme();
+            if ($scheme) {
+                return $scheme === 'https';
+            }
         }
 
         // Check default_base_url

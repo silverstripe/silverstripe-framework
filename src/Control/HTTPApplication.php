@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Application;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPMiddleware;
@@ -12,7 +13,6 @@ use SilverStripe\Core\Kernel;
  */
 class HTTPApplication implements Application
 {
-
     use HTTPMiddlewareAware;
 
     /**
