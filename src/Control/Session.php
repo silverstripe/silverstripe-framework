@@ -145,13 +145,9 @@ class Session
      *
      * @return string
      */
-    protected function userAgent()
+    protected function userAgent($request)
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            return $_SERVER['HTTP_USER_AGENT'];
-        } else {
-            return '';
-        }
+        return $request->getHeader('User-Agent');
     }
 
     /**
@@ -180,7 +176,7 @@ class Session
 
         // Funny business detected!
         if (isset($this->data['HTTP_USER_AGENT'])) {
-            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent()) {
+            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
                 $this->destroy();
                 $this->start($request);
@@ -468,9 +464,9 @@ class Session
     /**
      * Set user agent key
      */
-    public function finalize()
+    public function finalize(HTTPRequest $request)
     {
-        $this->set('HTTP_USER_AGENT', $this->userAgent());
+        $this->set('HTTP_USER_AGENT', $this->userAgent($request));
     }
 
     /**
@@ -480,7 +476,7 @@ class Session
     public function save(HTTPRequest $request)
     {
         if ($this->changedData) {
-            $this->finalize();
+            $this->finalize($request);
 
             if (!$this->isStarted()) {
                 $this->start($request);
