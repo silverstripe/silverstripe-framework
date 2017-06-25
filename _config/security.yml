@@ -18,6 +18,8 @@ SilverStripe\Core\Injector\Injector:
         alc: %$SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
 ---
 Name: coresecurity
+After:
+  - requestprocessors
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
