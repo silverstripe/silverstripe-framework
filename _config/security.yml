@@ -19,10 +19,11 @@ SilverStripe\Core\Injector\Injector:
 ---
 Name: coresecurity
 ---
-SilverStripe\Control\Director:
-  middlewares:
-    - %$SilverStripe\Security\AuthenticationMiddleware
 SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        - %$SilverStripe\Security\AuthenticationMiddleware
   SilverStripe\Security\AuthenticationMiddleware:
     properties:
       AuthenticationHandler: %$SilverStripe\Security\AuthenticationHandler
