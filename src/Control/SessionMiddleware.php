@@ -12,7 +12,7 @@ class SessionMiddleware implements HTTPMiddleware
     {
         try {
             // Start session and execute
-            $request->getSession()->init();
+            $request->getSession()->init($request);
 
             // Generate output
             $response = $delegate($request);
@@ -20,7 +20,7 @@ class SessionMiddleware implements HTTPMiddleware
         // Save session data, even if there was an exception.
         // Note that save() will start/resume the session if required.
         } finally {
-            $request->getSession()->save();
+            $request->getSession()->save($request);
         }
 
         return $response;

@@ -172,10 +172,10 @@ class Session
     /**
      * Init this session instance before usage
      */
-    public function init()
+    public function init(HTTPRequest $request)
     {
         if (!$this->isStarted()) {
-            $this->start();
+            $this->start($request);
         }
 
         // Funny business detected!
@@ -183,7 +183,7 @@ class Session
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent()) {
                 $this->clearAll();
                 $this->destroy();
-                $this->start();
+                $this->start($request);
             }
         }
     }
@@ -191,10 +191,10 @@ class Session
     /**
      * Destroy existing session and restart
      */
-    public function restart()
+    public function restart(HTTPRequest $request)
     {
         $this->destroy();
-        $this->init();
+        $this->init($request);
     }
 
     /**
@@ -210,9 +210,9 @@ class Session
     /**
      * Begin session
      *
-     * @param string $sid
+     * @param $request The request for which to start a session
      */
-    public function start($sid = null)
+    public function start(HTTPRequest $request)
     {
         if ($this->isStarted()) {
             throw new BadMethodCallException("Session has already started");
@@ -223,7 +223,7 @@ class Session
             $path = Director::baseURL();
         }
         $domain = $this->config()->get('cookie_domain');
-        $secure = Director::is_https() && $this->config()->get('cookie_secure');
+        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $session_path = $this->config()->get('session_store_path');
         $timeout = $this->config()->get('timeout');
 
@@ -255,9 +255,6 @@ class Session
                 session_name('SECSESSID');
             }
 
-            if ($sid) {
-                session_id($sid);
-            }
             session_start();
 
             $this->data = isset($_SESSION) ? $_SESSION : array();
@@ -480,13 +477,13 @@ class Session
      * Save data to session
      * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
      */
-    public function save()
+    public function save(HTTPRequest $request)
     {
         if ($this->changedData) {
             $this->finalize();
 
             if (!$this->isStarted()) {
-                $this->start();
+                $this->start($request);
             }
 
             $this->recursivelyApply($this->changedData, $_SESSION);
