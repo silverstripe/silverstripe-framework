@@ -2,9 +2,8 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Application;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\HTTPMiddleware;
 use SilverStripe\Core\Kernel;
 
 /**
@@ -12,7 +11,6 @@ use SilverStripe\Core\Kernel;
  */
 class HTTPApplication implements Application
 {
-
     use HTTPMiddlewareAware;
 
     /**
@@ -47,7 +45,7 @@ class HTTPApplication implements Application
 
         // Ensure boot is invoked
         return $this->execute($request, function (HTTPRequest $request) {
-            return Injector::inst()->get(Director::class)->handleRequest($request);
+            return Director::singleton()->handleRequest($request);
         }, $flush);
     }
 

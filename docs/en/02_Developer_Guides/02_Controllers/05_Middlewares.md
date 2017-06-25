@@ -8,8 +8,9 @@ authentication, logging, caching, request processing, and many other purposes. N
 replaces the SilverStripe 3 interface, [api:RequestFilter], which still works but is deprecated.
 
 To create a middleware class, implement `SilverStripe\Control\HTTPMiddleware` and define the
-`process($request, $delegate)` method. You can do anything you like in this method, but to continue
-normal execution, you should call `$response = $delegate($request)` at some point in this method.
+`process(HTTPRequest $request, callbale $delegate)` method. You can do anything you like in this
+method, but to continue normal execution, you should call `$response = $delegate($request)`
+at some point in this method.
 
 In addition, you should return an HTTPResponse object. In normal cases, this should be the
 $response object returned by `$delegate`, perhaps with some modification. However, sometimes you
@@ -20,7 +21,7 @@ will deliberately return a different response, e.g. an error response or a redir
 	:::php
 	<?php
 
-    use SilverStripe\Control\HTTPMiddleware
+    use SilverStripe\Control\Middleware\HTTPMiddleware
 
 	class CustomMiddleware implements HTTPMiddleware {
 
@@ -53,15 +54,24 @@ use of it.
 
 ## Global middleware
 
-By adding the service or class name to the SilverStripe\Control\Director.middlewares array, a
-middleware will be executed on every request:
+By adding the service or class name to the Director::Middlewares property via injector,
+array, a middleware will be executed on every request:
 
 **mysite/_config/app.yml**
 
+
 	:::yml
-    SilverStripe\Control\Director:
-      middlewares:
-       - %$CustomMiddleware
+    ---
+    Name: myrequestprocessors
+    After:
+      - requestprocessors
+    ---
+    SilverStripe\Core\Injector\Injector:
+      SilverStripe\Control\Director:
+        properties:
+          Middlewares:
+            CustomMiddleware: %$CustomMiddleware
+
 
 Because these are service names, you can configure properties into a custom service if you would
 like:
@@ -69,29 +79,39 @@ like:
 **mysite/_config/app.yml**
 
     :::yml
-    SilverStripe\Control\Director:
-      middlewares:
-       - %$ConfiguredMiddleware
     SilverStripe\Core\Injector\Injector:
+      SilverStripe\Control\Director:
+        properties:
+          Middlewares:
+            CustomMiddleware: %$ConfiguredMiddleware
       ConfiguredMiddleware:
-       class: $CustomMiddleware
+       class: 'CustomMiddleware'
        properties:
          Secret: "DIFFERENT-ONE"
 
 ## Route-specific middleware
 
 Alternatively, you can apply middlewares to a specific route. These will be processed after the
-global middlewares. You do this by specifying the "Middlewares" property of the route rule:
+global middlewares. You can do this by using the `RequestHandlerMiddlewareAdapter` class
+as a replacement for your controller, and register it as a service with a `Middlewares`
+property. The controller which does the work should be registered under the
+`RequestHandler` property.
 
 **mysite/_config/app.yml**
 
     :::yml
+    SilverStripe\Core\Injector\Injector:
+      SpecialRouteMiddleware:
+        class: SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter
+        properties
+          RequestHandler: %$MyController
+          Middlewares:
+            - %$CustomMiddleware
+            - %$AnotherMiddleware
     SilverStripe\Control\Director:
       rules:
         special\section:
-          Controller: SpecialSectionController
-          Middlewares:
-           - %$CustomMiddleware
+          Controller: SpecialRouteMiddleware
 
 ## API Documentation
 

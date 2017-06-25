@@ -2,12 +2,14 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Deprecation;
 
 /**
  * Middleware that provides back-support for the deprecated RequestFilter API.
- * You should use HTTPMiddleware directly instead.
+ *
+ * @deprecated 4.0..5.0 Use HTTPMiddleware directly instead.
  */
 class RequestProcessor implements HTTPMiddleware
 {
@@ -16,10 +18,15 @@ class RequestProcessor implements HTTPMiddleware
     /**
      * List of currently assigned request filters
      *
-     * @var array
+     * @var RequestFilter[]
      */
     private $filters = array();
 
+    /**
+     * Construct new RequestFilter with a list of filter objects
+     *
+     * @param RequestFilter[] $filters
+     */
     public function __construct($filters = array())
     {
         $this->filters = $filters;
@@ -28,11 +35,13 @@ class RequestProcessor implements HTTPMiddleware
     /**
      * Assign a list of request filters
      *
-     * @param array $filters
+     * @param RequestFilter[] $filters
+     * @return $this
      */
     public function setFilters($filters)
     {
         $this->filters = $filters;
+        return $this;
     }
 
     /**
@@ -42,7 +51,7 @@ class RequestProcessor implements HTTPMiddleware
     {
         if ($this->filters) {
             Deprecation::notice(
-                '4.0',
+                '5.0',
                 'Deprecated RequestFilters are in use. Apply HTTPMiddleware to Director.middlewares instead.'
             );
         }

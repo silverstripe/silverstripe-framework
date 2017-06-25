@@ -143,9 +143,10 @@ class Session
     /**
      * Get user agent for this request
      *
+     * @param HTTPRequest $request
      * @return string
      */
-    protected function userAgent($request)
+    protected function userAgent(HTTPRequest $request)
     {
         return $request->getHeader('User-Agent');
     }
@@ -167,6 +168,8 @@ class Session
 
     /**
      * Init this session instance before usage
+     *
+     * @param HTTPRequest $request
      */
     public function init(HTTPRequest $request)
     {
@@ -186,6 +189,8 @@ class Session
 
     /**
      * Destroy existing session and restart
+     *
+     * @param HTTPRequest $request
      */
     public function restart(HTTPRequest $request)
     {
@@ -206,7 +211,7 @@ class Session
     /**
      * Begin session
      *
-     * @param $request The request for which to start a session
+     * @param HTTPRequest $request The request for which to start a session
      */
     public function start(HTTPRequest $request)
     {
@@ -463,6 +468,8 @@ class Session
 
     /**
      * Set user agent key
+     *
+     * @param HTTPRequest $request
      */
     public function finalize(HTTPRequest $request)
     {
@@ -472,6 +479,8 @@ class Session
     /**
      * Save data to session
      * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
+     *
+     * @param HTTPRequest $request
      */
     public function save(HTTPRequest $request)
     {

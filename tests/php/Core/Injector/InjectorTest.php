@@ -24,6 +24,7 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\TestObject;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestSetterInjections;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestStaticInjections;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 use stdClass;
 
 define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
@@ -802,10 +803,40 @@ class InjectorTest extends SapphireTest
     public function testNamedServices()
     {
         $injector = new Injector();
-        $service  = new stdClass();
+        $service  = new TestObject();
+        $service->setSomething('injected');
 
+        // Test registering with non-class name
         $injector->registerService($service, 'NamedService');
+        $this->assertTrue($injector->has('NamedService'));
         $this->assertEquals($service, $injector->get('NamedService'));
+
+        // Unregister by name only: New instance of the
+        // old class will be constructed
+        $injector->unregisterNamedObject('NamedService');
+        $this->assertTrue($injector->has('NamedService'));
+        $this->assertNotEquals($service, $injector->get(TestObject::class));
+
+        // Unregister name and spec, injector forgets about this
+        // service spec altogether
+        $injector->unregisterNamedObject('NamedService', true);
+        $this->assertFalse($injector->has('NamedService'));
+
+        // Test registered with class name
+        $injector->registerService($service);
+        $this->assertTrue($injector->has(TestObject::class));
+        $this->assertEquals($service, $injector->get(TestObject::class));
+
+        // Unregister by name only: New instance of the
+        // old class will be constructed
+        $injector->unregisterNamedObject(TestObject::class);
+        $this->assertTrue($injector->has(TestObject::class));
+        $this->assertNotEquals($service, $injector->get(TestObject::class));
+
+        // Unregister name and spec, injector forgets about this
+        // service spec altogether
+        $injector->unregisterNamedObject(TestObject::class, true);
+        $this->assertFalse($injector->has(TestObject::class));
     }
 
     public function testCreateConfiggedObjectWithCustomConstructorArgs()

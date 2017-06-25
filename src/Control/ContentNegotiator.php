@@ -84,7 +84,7 @@ class ContentNegotiator
             return false;
         }
 
-        if (static::config()->enabled) {
+        if (static::config()->get('enabled')) {
             return true;
         } else {
             return (substr($response->getBody(), 0, 5) == '<' . '?xml');
@@ -106,7 +106,7 @@ class ContentNegotiator
         );
         $q = array();
         if (headers_sent()) {
-            $chosenFormat = static::config()->default_format;
+            $chosenFormat = static::config()->get('default_format');
         } elseif (isset($_GET['forceFormat'])) {
             $chosenFormat = $_GET['forceFormat'];
         } else {

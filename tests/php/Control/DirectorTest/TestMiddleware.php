@@ -4,7 +4,7 @@ namespace SilverStripe\Control\Tests\DirectorTest;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPMiddleware;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Dev\TestOnly;
 
 class TestMiddleware implements HTTPMiddleware, TestOnly

@@ -1,6 +1,8 @@
 <?php
 
-namespace SilverStripe\Control;
+namespace SilverStripe\Control\Middleware;
+
+use SilverStripe\Control\HTTPRequest;
 
 class SessionMiddleware implements HTTPMiddleware
 {

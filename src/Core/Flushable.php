@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Control\Middleware\FlushMiddleware;
+
 /**
  * Provides an interface for classes to implement their own flushing functionality
  * whenever flush=1 is requested.

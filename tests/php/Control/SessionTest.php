@@ -109,7 +109,7 @@ class SessionTest extends SapphireTest
     {
         // Set a user agent
         $req1 = new HTTPRequest('GET', '/');
-        $req1->setHeader('User-Agent', 'Test Agent');
+        $req1->addHeader('User-Agent', 'Test Agent');
 
         // Generate our session
         $s = new Session(array());
@@ -119,7 +119,7 @@ class SessionTest extends SapphireTest
 
         // Change our UA
         $req2 = new HTTPRequest('GET', '/');
-        $req2->setHeader('User-Agent', 'Test Agent');
+        $req2->addHeader('User-Agent', 'Fake Agent');
 
         // Verify the new session reset our values
         $s2 = new Session($s);

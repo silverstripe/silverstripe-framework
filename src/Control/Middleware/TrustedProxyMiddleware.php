@@ -1,24 +1,47 @@
 <?php
 
-namespace SilverStripe\Control;
+namespace SilverStripe\Control\Middleware;
+
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Util\IPUtils;
 
 /**
  * This middleware will rewrite headers that provide IP and host details from an upstream proxy.
  */
 class TrustedProxyMiddleware implements HTTPMiddleware
 {
-
+    /**
+     * Comma-separated list of IP ranges that are trusted to provide proxy headers.
+     * Can also be 'none' or '*' (all)
+     *
+     * @var string
+     */
     private $trustedProxyIPs = null;
 
+    /**
+     * Array of headers from which to lookup the hostname
+     *
+     * @var array
+     */
     private $proxyHostHeaders = [
         'X-Forwarded-Host'
     ];
 
+    /**
+     * Array of headers from which to lookup the client IP
+     *
+     * @var array
+     */
     private $proxyIPHeaders = [
         'Client-IP',
         'X-Forwarded-For'
     ];
 
+    /**
+     * Array of headers from which to lookup the client scheme (http/https)
+     *
+     * @var array
+     */
     private $proxySchemeHeaders = [
         'X-Forwarded-Protocol',
         'X-Forwarded-Proto',
@@ -26,6 +49,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
 
     /**
      * Return the comma-separated list of IP ranges that are trusted to provide proxy headers
+     * Can also be 'none' or '*' (all)
      *
      * @return string
      */
@@ -36,18 +60,21 @@ class TrustedProxyMiddleware implements HTTPMiddleware
 
     /**
      * Set the comma-separated list of IP ranges that are trusted to provide proxy headers
+     * Can also be 'none' or '*' (all)
      *
-     * @param $trustedProxyIPs string
+     * @param string $trustedProxyIPs
+     * @return $this
      */
     public function setTrustedProxyIPs($trustedProxyIPs)
     {
         $this->trustedProxyIPs = $trustedProxyIPs;
+        return $this;
     }
 
     /**
-     * Return the comma-separated list of headers from which to lookup the hostname
+     * Return the array of headers from which to lookup the hostname
      *
-     * @return string
+     * @return array
      */
     public function getProxyHostHeaders()
     {
@@ -55,19 +82,25 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Set the comma-separated list of headers from which to lookup the hostname
+     * Set the array of headers from which to lookup the hostname
+     * Can also specify comma-separated list as a single string.
      *
-     * @param $proxyHostHeaders string
+     * @param array|string $proxyHostHeaders
+     * @return $this
      */
     public function setProxyHostHeaders($proxyHostHeaders)
     {
-        $this->proxyHostHeaders = $proxyHostHeaders;
+        if (is_string($proxyHostHeaders)) {
+            $proxyHostHeaders = preg_split('/ *, */', $proxyHostHeaders);
+        }
+        $this->proxyHostHeaders = $proxyHostHeaders ?: [];
+        return $this;
     }
 
     /**
-     * Return the comma-separated list of headers from which to lookup the client IP
+     * Return the array of headers from which to lookup the client IP
      *
-     * @return string
+     * @return array
      */
     public function getProxyIPHeaders()
     {
@@ -75,19 +108,25 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Set the comma-separated list of headers from which to lookup the client IP
+     * Set the array of headers from which to lookup the client IP
+     * Can also specify comma-separated list as a single string.
      *
-     * @param $proxyIPHeaders string
+     * @param array|string $proxyIPHeaders
+     * @return $this
      */
     public function setProxyIPHeaders($proxyIPHeaders)
     {
-        $this->proxyIPHeaders = $proxyIPHeaders;
+        if (is_string($proxyIPHeaders)) {
+            $proxyIPHeaders = preg_split('/ *, */', $proxyIPHeaders);
+        }
+        $this->proxyIPHeaders = $proxyIPHeaders ?: [];
+        return $this;
     }
 
     /**
-     * Return the comma-separated list of headers from which to lookup the client scheme (http/https)
+     * Return the array of headers from which to lookup the client scheme (http/https)
      *
-     * @return string
+     * @return array
      */
     public function getProxySchemeHeaders()
     {
@@ -95,13 +134,19 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Set the comma-separated list of headers from which to lookup the client scheme (http/https)
+     * Set array of headers from which to lookup the client scheme (http/https)
+     * Can also specify comma-separated list as a single string.
      *
-     * @param $proxySchemeHeaders string
+     * @param array|string $proxySchemeHeaders
+     * @return $this
      */
     public function setProxySchemeHeaders($proxySchemeHeaders)
     {
-        $this->proxySchemeHeaders = $proxySchemeHeaders;
+        if (is_string($proxySchemeHeaders)) {
+            $proxySchemeHeaders = preg_split('/ *, */', $proxySchemeHeaders);
+        }
+        $this->proxySchemeHeaders = $proxySchemeHeaders ?: [];
+        return $this;
     }
 
     public function process(HTTPRequest $request, callable $delegate)
@@ -109,29 +154,32 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         // If this is a trust proxy
         if ($this->isTrustedProxy($request)) {
             // Replace host
-            foreach ($this->proxyHostHeaders as $header) {
+            foreach ($this->getProxyHostHeaders() as $header) {
                 $hostList = $request->getHeader($header);
                 if ($hostList) {
-                    $request->setHeader('Host', strtok($hostList, ','));
+                    $request->addHeader('Host', strtok($hostList, ','));
                     break;
                 }
             }
 
             // Replace scheme
-            foreach ($this->proxySchemeHeaders as $header) {
-                $scheme = $request->getHeader($header);
-                if ($scheme) {
-                    $request->setScheme(strtolower($scheme));
+            foreach ($this->getProxySchemeHeaders() as $header) {
+                $headerValue = $request->getHeader($header);
+                if ($headerValue) {
+                    $request->setScheme(strtolower($headerValue));
                     break;
                 }
             }
 
             // Replace IP
             foreach ($this->proxyIPHeaders as $header) {
-                $ipHeader = $this->getIPFromHeaderValue($request->getHeader($header));
-                if ($ipHeader) {
-                    $request->setIP($ipHeader);
-                    break;
+                $headerValue = $request->getHeader($header);
+                if ($headerValue) {
+                    $ipHeader = $this->getIPFromHeaderValue($headerValue);
+                    if ($ipHeader) {
+                        $request->setIP($ipHeader);
+                        break;
+                    }
                 }
             }
         }
@@ -142,12 +190,15 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     /**
      * Determine if the current request is coming from a trusted proxy
      *
-     * @return boolean True if the request's source IP is a trusted proxy
+     * @param HTTPRequest $request
+     * @return bool True if the request's source IP is a trusted proxy
      */
-    protected function isTrustedProxy($request)
+    protected function isTrustedProxy(HTTPRequest $request)
     {
+        $trustedIPs = $this->getTrustedProxyIPs();
+
         // Disabled
-        if (empty($this->trustedProxyIPs) || $trustedIPs === 'none') {
+        if (empty($trustedIPs) || $trustedIPs === 'none') {
             return false;
         }
 
@@ -157,8 +208,9 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         }
 
         // Validate IP address
-        if ($ip = $request->getIP()) {
-            return IPUtils::checkIP($ip, explode(',', $trustedIPs));
+        $ip = $request->getIP();
+        if ($ip) {
+            return IPUtils::checkIP($ip, preg_split('/ *, */', $trustedIPs));
         }
 
         return false;
@@ -173,19 +225,24 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      */
     protected function getIPFromHeaderValue($headerValue)
     {
-        if (strpos($headerValue, ',') !== false) {
-            //sometimes the IP from a load balancer could be "x.x.x.x, y.y.y.y, z.z.z.z" so we need to find the most
-            // likely candidate
-            $ips = explode(',', $headerValue);
+        // Sometimes the IP from a load balancer could be "x.x.x.x, y.y.y.y, z.z.z.z"
+        // so we need to find the most likely candidate
+        $ips = preg_split('/\s*,\s*/', $headerValue);
+
+        // Prioritise filters
+        $filters = [
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
+            FILTER_FLAG_NO_PRIV_RANGE,
+            null
+        ];
+        foreach ($filters as $filter) {
+            // Find best IP
             foreach ($ips as $ip) {
-                $ip = trim($ip);
-                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                if (filter_var($ip, FILTER_VALIDATE_IP, $filter)) {
                     return $ip;
-                } else {
-                    return null;
                 }
             }
         }
-        return $headerValue;
+        return null;
     }
 }

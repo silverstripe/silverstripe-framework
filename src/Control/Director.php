@@ -3,8 +3,10 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
@@ -29,6 +31,7 @@ use SilverStripe\View\TemplateGlobalProvider;
 class Director implements TemplateGlobalProvider
 {
     use Configurable;
+    use Injectable;
     use HTTPMiddlewareAware;
 
     /**
@@ -133,7 +136,7 @@ class Director implements TemplateGlobalProvider
     ) {
         return static::mockRequest(
             function (HTTPRequest $request) {
-                return Injector::inst()->get(Director::class)->handleRequest($request);
+                return Director::singleton()->handleRequest($request);
             },
             $url,
             $postVars,
@@ -315,6 +318,12 @@ class Director implements TemplateGlobalProvider
         };
 
         foreach ($rules as $pattern => $controllerOptions) {
+            // Match pattern
+            $arguments = $request->match($pattern, true);
+            if ($arguments == false) {
+                continue;
+            }
+
             // Normalise route rule
             if (is_string($controllerOptions)) {
                 if (substr($controllerOptions, 0, 2) == '->') {
@@ -323,57 +332,39 @@ class Director implements TemplateGlobalProvider
                     $controllerOptions = array('Controller' => $controllerOptions);
                 }
             }
+            $request->setRouteParams($controllerOptions);
 
-            // Match pattern
-            $arguments = $request->match($pattern, true);
-            if ($arguments !== false) {
-                $request->setRouteParams($controllerOptions);
-                // controllerOptions provide some default arguments
-                $arguments = array_merge($controllerOptions, $arguments);
+            // controllerOptions provide some default arguments
+            $arguments = array_merge($controllerOptions, $arguments);
 
-                // Pop additional tokens from the tokenizer if necessary
-                if (isset($controllerOptions['_PopTokeniser'])) {
-                    $request->shift($controllerOptions['_PopTokeniser']);
-                }
+            // Pop additional tokens from the tokenizer if necessary
+            if (isset($controllerOptions['_PopTokeniser'])) {
+                $request->shift($controllerOptions['_PopTokeniser']);
+            }
 
-                // Handler for redirection
-                if (isset($arguments['Redirect'])) {
-                    $handler = function () use ($arguments) {
-                        // Redirection
-                        $response = new HTTPResponse();
-                        $response->redirect(static::absoluteURL($arguments['Redirect']));
-                        return $response;
-                    };
-                    break;
-                }
-
-                // Find the controller name
-                $controller = $arguments['Controller'];
-
-                // String = service name
-                if (is_string($controller)) {
-                    $controllerObj = Injector::inst()->get($controller);
-                // Array = service spec
-                } elseif (is_array($controller)) {
-                    $controllerObj = Injector::inst()->createFromSpec($controller);
-                } else {
-                    throw new \LogicException("Invalid Controller value '$controller'");
-                }
-
-                // Handler for calling a controller
-                $handler = function ($request) use ($controllerObj) {
-                    try {
-                        // Apply the controller's middleware. We do this outside of handleRequest so that
-                        // subclasses of handleRequest will be called after the middlware processing
-                        return $controllerObj->callMiddleware($request, function ($request) use ($controllerObj) {
-                            return $controllerObj->handleRequest($request);
-                        });
-                    } catch (HTTPResponse_Exception $responseException) {
-                        return $responseException->getResponse();
-                    }
+            // Handler for redirection
+            if (isset($arguments['Redirect'])) {
+                $handler = function () use ($arguments) {
+                    // Redirection
+                    $response = new HTTPResponse();
+                    $response->redirect(static::absoluteURL($arguments['Redirect']));
+                    return $response;
                 };
                 break;
             }
+
+            /** @var RequestHandler $controllerObj */
+            $controllerObj = Injector::inst()->create($arguments['Controller']);
+
+            // Handler for calling a controller
+            $handler = function (HTTPRequest $request) use ($controllerObj) {
+                try {
+                    return $controllerObj->handleRequest($request);
+                } catch (HTTPResponse_Exception $responseException) {
+                    return $responseException->getResponse();
+                }
+            };
+            break;
         }
 
         // Call the handler with the configured middlewares
@@ -381,41 +372,9 @@ class Director implements TemplateGlobalProvider
 
         // Note that if a different request was previously registered, this will now be lost
         // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
-        Injector::inst()->unregisterNamedObject(HTTPRequest::class);
+        Injector::inst()->unregisterNamedObject(HTTPRequest::class, true);
 
         return $response;
-    }
-
-    /**
-     * Call the given request handler with the given middlewares
-     * Middlewares are specified as Injector service names
-     *
-     * @param $request The request to pass to the handler
-     * @param $middlewareNames The services names of the middlewares to apply
-     * @param $handler The request handler
-     */
-    protected static function callWithMiddlewares(HTTPRequest $request, array $middlewareNames, callable $handler)
-    {
-        $next = $handler;
-
-        if ($middlewareNames) {
-            $middlewares = array_map(
-                function ($name) {
-                    return Injector::inst()->get($name);
-                },
-                $middlewareNames
-            );
-
-            // Reverse middlewares
-            /** @var HTTPMiddleware $middleware */
-            foreach (array_reverse($middlewares) as $middleware) {
-                $next = function ($request) use ($middleware, $next) {
-                    return $middleware->process($request, $next);
-                };
-            }
-        }
-
-        return $next($request);
     }
 
     /**
@@ -502,6 +461,7 @@ class Director implements TemplateGlobalProvider
      *  - SERVER_NAME
      *  - gethostname()
      *
+     * @param HTTPRequest $request
      * @return string
      */
     public static function host(HTTPRequest $request = null)
@@ -515,10 +475,8 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        if (!$request) {
-            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
-        }
-        if ($request && $host = $request->getHeader('Host')) {
+        $request = static::currentRequest($request);
+        if ($request && ($host = $request->getHeader('Host'))) {
             return $host;
         }
 
@@ -544,6 +502,7 @@ class Director implements TemplateGlobalProvider
      * Returns the domain part of the URL 'http://www.mysite.com'. Returns FALSE is this environment
      * variable isn't set.
      *
+     * @param HTTPRequest $request
      * @return bool|string
      */
     public static function protocolAndHost(HTTPRequest $request = null)
@@ -554,6 +513,7 @@ class Director implements TemplateGlobalProvider
     /**
      * Return the current protocol that the site is running under.
      *
+     * @param HTTPRequest $request
      * @return string
      */
     public static function protocol(HTTPRequest $request = null)
@@ -564,6 +524,7 @@ class Director implements TemplateGlobalProvider
     /**
      * Return whether the site is running as under HTTPS.
      *
+     * @param HTTPRequest $request
      * @return bool
      */
     public static function is_https(HTTPRequest $request = null)
@@ -578,11 +539,9 @@ class Director implements TemplateGlobalProvider
         }
 
         // Check the current request
-        if (!$request) {
-            $request = Injector::inst()->get(HTTPRequest::class, true, ['GET', '/']);
-        }
-        if ($request && $host = $request->getHeader('Host')) {
-            return $request->getScheme() === 'https';
+        $request = static::currentRequest($request);
+        if ($request && ($scheme = $request->getScheme())) {
+            return $scheme === 'https';
         }
 
         // Check default_base_url
@@ -842,9 +801,10 @@ class Director implements TemplateGlobalProvider
      * Returns the Absolute URL of the site root, embedding the current basic-auth credentials into
      * the URL.
      *
+     * @param HTTPRequest|null $request
      * @return string
      */
-    public static function absoluteBaseURLWithAuth()
+    public static function absoluteBaseURLWithAuth(HTTPRequest $request = null)
     {
         $login = "";
 
@@ -852,7 +812,7 @@ class Director implements TemplateGlobalProvider
             $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
         }
 
-        return Director::protocol() . $login .  static::host() . Director::baseURL();
+        return Director::protocol($request) . $login .  static::host($request) . Director::baseURL();
     }
 
     /**
@@ -960,12 +920,14 @@ class Director implements TemplateGlobalProvider
      * Checks if the current HTTP-Request is an "Ajax-Request" by checking for a custom header set by
      * jQuery or whether a manually set request-parameter 'ajax' is present.
      *
+     * @param HTTPRequest $request
      * @return bool
      */
-    public static function is_ajax()
+    public static function is_ajax(HTTPRequest $request = null)
     {
-        if (Controller::has_curr()) {
-            return Controller::curr()->getRequest()->isAjax();
+        $request = self::currentRequest($request);
+        if ($request) {
+            return $request->isAjax();
         } else {
             return (
                 isset($_REQUEST['ajax']) ||
@@ -1045,5 +1007,21 @@ class Director implements TemplateGlobalProvider
             'isAjax' => 'is_ajax',
             'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
         );
+    }
+
+    /**
+     * Helper to validate or check the current request object
+     *
+     * @param HTTPRequest $request
+     * @return HTTPRequest Request object if one is both current and valid
+     */
+    protected static function currentRequest(HTTPRequest $request = null)
+    {
+        // Ensure we only use a registered HTTPRequest and don't
+        // incidentally construct a singleton
+        if (!$request && Injector::inst()->has(HTTPRequest::class)) {
+            $request = Injector::inst()->get(HTTPRequest::class);
+        }
+        return $request;
     }
 }

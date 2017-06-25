@@ -1,9 +1,10 @@
 <?php
 
-namespace SilverStripe\Control;
+namespace SilverStripe\Control\Middleware;
 
-use SilverStripe\Core\Flushable;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Flushable;
 
 /**
  * Triggers a call to flush() on all implementors of Flushable.
@@ -17,6 +18,7 @@ class FlushMiddleware implements HTTPMiddleware
     {
         if (array_key_exists('flush', $request->getVars())) {
             foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
+                /** @var Flushable|string $class */
                 $class::flush();
             }
         }

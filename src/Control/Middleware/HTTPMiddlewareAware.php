@@ -1,6 +1,9 @@
 <?php
 
-namespace SilverStripe\Control;
+namespace SilverStripe\Control\Middleware;
+
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 
 /**
  * Adds middleware support to an object.
@@ -45,11 +48,11 @@ trait HTTPMiddlewareAware
     /**
      * Call middleware
      *
-     * @param $request The request to pass to the middlewares and callback
-     * @param $last The callback to call after all middlewares
+     * @param HTTPRequest $request The request to pass to the middlewares and callback
+     * @param callable $last The callback to call after all middlewares
      * @return HTTPResponse
      */
-    public function callMiddleware(HTTPRequest $request, callable $last)
+    protected function callMiddleware(HTTPRequest $request, callable $last)
     {
         // Reverse middlewares
         $next = $last;
