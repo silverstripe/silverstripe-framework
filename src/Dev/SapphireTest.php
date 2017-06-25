@@ -911,7 +911,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         // Custom application
         $app->execute($request, function (HTTPRequest $request) {
             // Start session and execute
-            $request->getSession()->init();
+            $request->getSession()->init($request);
 
             // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
             // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
