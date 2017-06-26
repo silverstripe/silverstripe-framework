@@ -66,7 +66,7 @@ Injector.transform(
 
 ## Conditionally adding a CSS class to a form field
 
-In this exmaple, we'll add the class "danger" to the `Price` field when `TicketsRemaining` is less than 10.
+In this example, we'll add the class "danger" to the `Price` field when `TicketsRemaining` is less than 10.
 
 ```js
 Injector.transform(

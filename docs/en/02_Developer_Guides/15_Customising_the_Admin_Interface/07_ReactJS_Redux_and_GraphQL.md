@@ -162,7 +162,9 @@ Let's say you have an application that features error logging. By default, the e
 
 _LoggingService.js_
 ```js
-(error) => console.error(error);
+const LoggingService = (error) => console.error(error);
+
+export default LoggingService;
 ```
 
 Now, let's add some middleware to that service. The signature of middleware is: 
@@ -172,25 +174,37 @@ Now, let's add some middleware to that service. The signature of middleware is:
 Where `next()` is the next customisation in the "chain" of middleware. Before invoking the next implementation, you can add whatever customisations you need. Here's how we would use middleware to enhance `LoggingService`.
 
 ```js
-(LoggingService) => (error) => {
+import thirdPartyLogger from 'third-party-logger';
+const addLoggingMiddleware = (next) => (error) => {
 	if (error.type === LoggingService.CRITICAL) {
-		sendToThirdpartyLoggingService(error.message);
+		thirdpartyLogger.send(error.message);
 	}
-	return LoggingService(error);
+	return next(error);
 }
+```
+
+Then, we would create a new logging service that merges both implementations.
+```js
+import LoggingService from './LoggingService';
+import addLoggingMiddleware from './addLoggingMiddleware';
+
+const MyNewLogger = addLoggingMiddleware(LoggingService);
 ```
 
 We haven't overriden any functionality. `LoggingService(error)` will still invoke `console.error`, once all the middleware has run. But what if we did want to kill the original functionality?
 
 ```js
-(LoggingService) => (error) => {
+import LoggingService from './LoggingService';
+import thirdPartyLogger from 'third-party-logger';
+
+const addLoggingMiddleware = (next) => (error) => {
 	// Critical errors go to a thirdparty service
 	if (error.type === LoggingService.CRITICAL) {
-		sendToThirdpartyLoggingService(error.message);
+		thirdPartyLogger.send(error.message);
 	}
 	// Other errors get logged, but not to our thirdparty
 	else if (error.type === LoggingService.ERROR) {
-		LoggingService(error);
+		next(error);
 	} 
 	// Minor errors are ignored
 	else {
@@ -211,6 +225,12 @@ import Injector from 'lib/Injector';
 
 Injector.react.register('MyComponent', MyComponent);
 Injector.reducer.register('myCustom', MyReducer);
+```
+
+Services can then be fetched using their respective `.get()` methods.
+
+```js
+const MyComponent = Injector.react.get('MyComponent');
 ```
 
 <div class="notice" markdown="1">
@@ -248,7 +268,7 @@ Much like the configuration layer, we need to specify a name for this transforma
 The second parameter of the `transform` argument is a callback which receives an `updater`object. It contains four functions: `react()`, `reducer()`, `form.alterSchema()` and `form.addValidation()`. We'll cover all of these in detail functions in detail further into the document, but briefly, these update functions allow you to mutate the DI container with a wrapper for the service. Remember, this function does not _replace_
 the service -- it enhances it with new functionality.
 
-### Helpful tip: Name your higher order components
+### Helpful tip: Name your component middleware
 
 Since multiple enhancements can be applied to the same component, it will be really
 useful for debugging purposes to reveal the names of each enhancement on the `displayName` of
@@ -340,10 +360,6 @@ Injector.transform('my-transform', (updater) => {
 
 	// Applies to any textfield named "Title" in any admin
 	updater.react('TextField.*.*.Title', MyTextField);
-
-	// Applies to all text fields in AssetAdmin
-	updater.react('TextField.AssetAdmin', MyTextField);
-
 })
 ```
 
@@ -412,13 +428,22 @@ If your component has dependencies, you can add them via the injector using the 
 higher order component. The function accepts the following arguments:
 
 ```js
-inject(Component, [dependencies], mapDependenciesToProps)
+inject([dependencies], mapDependenciesToProps)(Component)
 ```
-* **Component** The component definition to inject into
 * **[dependencies]**: An array of dependencies (or a string, if just one)
-* **mapDependenciesToProps**: (optional) All depdencies are passed into this function as params. The function
+* **mapDependenciesToProps**: (optional) All dependencies are passed into this function as params. The function
 is expected to return a map of props to dependencies. If this parameter is not specified,
 the prop names and the service names will mirror each other.
+
+The result is a function that is ready to apply to a component.
+ 
+ ```js
+const MyInjectedComponent = inject(
+  ['Dependency1', 'Dependency2']
+)(MyComponent);
+// MyComponent now has access to props.Dependency1 and props.Dependency2
+```
+Here is its usage with a bit more context:
 
 __my-module/js/components/Gallery.js__
 ```js
@@ -483,7 +508,7 @@ Most behavioural and aesthetic customisations will happen via a mutation of the 
 Injector.transform(
 	'my-custom-form',
 	(updater) => {
-		update.form.alterSchema(
+		updater.form.alterSchema(
 			'AssetAdmin.*',
 			(updateSchema) => (form, values) => (
 				updateSchema(
@@ -504,17 +529,22 @@ The `alterSchema()` function takes a callback, with an instance of `SchemaStateM
 * `updateFields({ myFieldName: updates:object })`
 * `mutateField(fieldName:string, callback:function)`
 * `setFieldComponent(fieldName:string, componentName:string)`
-* `setFieldClass(fieldName:string, cssClassName:string, active:boolean)
+* `setFieldClass(fieldName:string, cssClassName:string, active:boolean)`
 * `addFieldClass(fieldName:string, cssClassName:string)`
 * `removeFieldClass(fieldName:string, cssClassName:string)`
 
+<div class="info" markdown="1">
+For a complete list of props that are available to update on a `Field` object,
+see http://redux-form.com/6.8.0/docs/api/Field.md/#props-you-can-pass-to-field-
+</div>
+
 <div class="notice" markdown="1">
-It is critical that you end series of mutation calls with `getState()`. The form schema middleware expects an object, and will not handle an instance of `SchemaStateManager`.
+It is critical that you end series of mutation calls with `getState()`.
 </div>
 
 ### Adding validation to a form
 
-Validation for React-rendered forms is handled by the `redux-form` package. You can inject your own middleware to add custom validation rules using the `updater.form.addValidation()` function.
+Validation for React-rendered forms is handled by the [redux-form](http://redux-form.com) package. You can inject your own middleware to add custom validation rules using the `updater.form.addValidation()` function.
 
 ```js
 Injector.transform(
