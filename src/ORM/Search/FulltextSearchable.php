@@ -88,6 +88,7 @@ class FulltextSearchable extends DataExtension
      */
     public function __construct($searchFields = array())
     {
+        parent::__construct();
         if (is_array($searchFields)) {
             $this->searchFields = $searchFields;
         } else {

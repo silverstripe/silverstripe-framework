@@ -44,6 +44,10 @@ abstract class Extension
      */
     private $ownerStack = [];
 
+    public function __construct()
+    {
+    }
+
     /**
      * Called when this extension is added to a particular class
      *
