@@ -851,15 +851,12 @@ class Injector implements ContainerInterface
      * by the inject
      *
      * @param string $name The name to unregister
-     * @param bool $flushSpecs Set to true to clear spec for this service
      * @return $this
      */
-    public function unregisterNamedObject($name, $flushSpecs = false)
+    public function unregisterNamedObject($name)
     {
         unset($this->serviceCache[$name]);
-        if ($flushSpecs) {
-            unset($this->specs[$name]);
-        }
+        unset($this->specs[$name]);
         return $this;
     }
 
@@ -867,10 +864,9 @@ class Injector implements ContainerInterface
      * Clear out objects of one or more types that are managed by the injetor.
      *
      * @param array|string $types Base class of object (not service name) to remove
-     * @param bool $flushSpecs Set to true to clear spec for this service
      * @return $this
      */
-    public function unregisterObjects($types, $flushSpecs = false)
+    public function unregisterObjects($types)
     {
         if (!is_array($types)) {
             $types = [ $types ];
@@ -884,7 +880,7 @@ class Injector implements ContainerInterface
                     throw new InvalidArgumentException("Global unregistration is not allowed");
                 }
                 if ($object instanceof $filterClass) {
-                    $this->unregisterNamedObject($key, $flushSpecs);
+                    $this->unregisterNamedObject($key);
                     break;
                 }
             }

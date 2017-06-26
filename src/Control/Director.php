@@ -372,7 +372,7 @@ class Director implements TemplateGlobalProvider
 
         // Note that if a different request was previously registered, this will now be lost
         // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
-        Injector::inst()->unregisterNamedObject(HTTPRequest::class, true);
+        Injector::inst()->unregisterNamedObject(HTTPRequest::class);
 
         return $response;
     }

@@ -111,9 +111,8 @@ property. The controller which does the work should be registered under the
     SilverStripe\Control\Director:
       rules:
         special\section:
-          Controller: SpecialRouteMiddleware
+          Controller: %$SpecialRouteMiddleware
 
 ## API Documentation
 
 * [api:SilverStripe\Control\HTTPMiddleware]
-

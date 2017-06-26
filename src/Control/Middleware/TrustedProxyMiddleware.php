@@ -82,17 +82,13 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Set the array of headers from which to lookup the hostname
-     * Can also specify comma-separated list as a single string.
+     * Set the array of headers from which to lookup the hostname.
      *
-     * @param array|string $proxyHostHeaders
+     * @param array $proxyHostHeaders
      * @return $this
      */
     public function setProxyHostHeaders($proxyHostHeaders)
     {
-        if (is_string($proxyHostHeaders)) {
-            $proxyHostHeaders = preg_split('/ *, */', $proxyHostHeaders);
-        }
         $this->proxyHostHeaders = $proxyHostHeaders ?: [];
         return $this;
     }
@@ -108,17 +104,13 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Set the array of headers from which to lookup the client IP
-     * Can also specify comma-separated list as a single string.
+     * Set the array of headers from which to lookup the client IP.
      *
-     * @param array|string $proxyIPHeaders
+     * @param array $proxyIPHeaders
      * @return $this
      */
     public function setProxyIPHeaders($proxyIPHeaders)
     {
-        if (is_string($proxyIPHeaders)) {
-            $proxyIPHeaders = preg_split('/ *, */', $proxyIPHeaders);
-        }
         $this->proxyIPHeaders = $proxyIPHeaders ?: [];
         return $this;
     }
@@ -137,14 +129,11 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * Set array of headers from which to lookup the client scheme (http/https)
      * Can also specify comma-separated list as a single string.
      *
-     * @param array|string $proxySchemeHeaders
+     * @param array $proxySchemeHeaders
      * @return $this
      */
     public function setProxySchemeHeaders($proxySchemeHeaders)
     {
-        if (is_string($proxySchemeHeaders)) {
-            $proxySchemeHeaders = preg_split('/ *, */', $proxySchemeHeaders);
-        }
         $this->proxySchemeHeaders = $proxySchemeHeaders ?: [];
         return $this;
     }
@@ -210,7 +199,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         // Validate IP address
         $ip = $request->getIP();
         if ($ip) {
-            return IPUtils::checkIP($ip, preg_split('/ *, */', $trustedIPs));
+            return IPUtils::checkIP($ip, preg_split('/\s*,\s*/', $trustedIPs));
         }
 
         return false;
