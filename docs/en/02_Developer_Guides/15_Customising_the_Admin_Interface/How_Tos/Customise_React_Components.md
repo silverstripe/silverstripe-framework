@@ -32,8 +32,8 @@ __my-module/js/main.js__
 import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 
-Injector.transform('character-count-transform', (update) => {
-  update.component('TextField', CharacterCounter);
+Injector.transform('character-count-transform', (updater) => {
+  updater.component('TextField', CharacterCounter);
 });
 ```
 
@@ -90,8 +90,8 @@ __my-module/js/main.js__
 import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';
 
-Injector.transform('text-length-transform', (update) => {
-  update.component('TextField', TextLengthChecker);
+Injector.transform('text-length-transform', (updater) => {
+  updater.component('TextField', TextLengthChecker);
 });
 ```
 
@@ -142,9 +142,9 @@ __module-a/js/main.js__
 import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 Injector.transform(
-  'my-transformation', 
+  'character-count-transform', 
   (update) => update.component('TextField', CharacterCounter),
-  { after: 'my-other-transformation' }
+  { after: 'text-length-transform' }
 );
 ```
 
@@ -154,9 +154,9 @@ import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';
 
 Injector.transform(
-  'my-other-transformation', 
-  (update) => update.component('TextField', TextLengthChecker),
-  { before: 'my-transformation' }
+  'text-length-transform', 
+  (updater) => updater.component('TextField', TextLengthChecker),
+  { before: 'character-count-transform' }
 );
 ```
 
@@ -182,8 +182,8 @@ Now, both components, coming from different modules, play together nicely, in th
  import Injector from 'lib/Injector';
  import TextLengthChecker from './components/TextLengthChecker';
  
- Injector.transform('my-other-transformation', (update) => {
-   update('TextField.AssetAdmin.FileEditForm', TextLengthChecker);
+ Injector.transform('text-length-transform', (updater) => {
+   updater.component('TextField.AssetAdmin.FileEditForm', TextLengthChecker);
  });
  ```
 
@@ -221,8 +221,8 @@ __my-module/js/main.js__
 ```js
 import ConfirmingFormButton from './components/ConfirmingFormButton';
 
-Injector.transform('my-transformation', (update) => {
-  update.component('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
+Injector.transform('confirming-button-transform', (updater) => {
+  updater.component('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
 });
 ```
 

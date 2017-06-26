@@ -589,8 +589,8 @@ is the same as
 To start customising, you'll need to transform an existing registered reducer, you can find what reducers are registered by importing Injector and running `Injector.reducer.getAll()`
 
 ```js
-Injector.transform('customisationName', (update) => {
-  update.reducer('assetAdmin', MyReducerTransformer);
+Injector.transform('customisationName', (updater) => {
+  updater.reducer('assetAdmin', MyReducerTransformer);
 });
 ```
 
