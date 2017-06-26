@@ -543,7 +543,20 @@ Before starting this tutorial, you should become familiar with the concepts of [
 The examples use [Spread in object literals](http://redux.js.org/docs/recipes/UsingObjectSpreadOperator.html) which is at this moment in Stage 3 Proposal. If you're more comfortable with using
  the `Object.assign()` API that shouldn't present any problems and should work the same.
 
-To start customising, you'll need to transform an existing registered reducer.
+For example:
+```js
+  newProps = { ...oldProps, name: 'New name' };
+```
+is the same as
+```js
+  newProps = Object.assign(
+    {},
+    oldProps,
+    { name: 'New name' }
+  );
+```
+
+To start customising, you'll need to transform an existing registered reducer, you can find what reducers are registered by importing Injector and running `Injector.reducer.getAll()`
 
 ```js
 Injector.transform('customisationName', (update) => {
@@ -551,7 +564,13 @@ Injector.transform('customisationName', (update) => {
 });
 ```
 
-Instead of the `react()` function we used above, we use the `reducer()` function on the `update` object to augment Redux state transformations.
+As you can see, we use the `reducer()` function on the `update` object to augment Redux state transformations.
+
+### Using Redux dev tools
+
+It is important to learn the basics of [Redux dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en), so that you can find out what ACTIONS and payloads to intercept and modify in your Transformer should target.
+
+Most importantly, it helps to understand the "Action" sub-tab on the right panel (bottom if your dev tools is small), as this will be the data your Transformer will most likely receive, pending other transformers that may run before/after your one.
 
 ### Structuring a transformer
 
@@ -565,12 +584,12 @@ We use currying to supply utilities which your transformer may require to handle
 ```js
 const MyReducerTransformer = (originalReducer) => (globalState) => (state, { type, payload }) => {
   switch (type) {
-    case 'MY_ACTION': {
+    case 'EXISTING_ACTION': {
       // recommended to call and return the originalReducer with the payload changed by the transformer
       /* return action to call here; */
     }
     
-    case 'ANOTHER_ACTION_TRANSFORM': {
+    case 'OVERRIDE_EXISTING_ACTION': {
       // could omit the originalReducer to enforce your change or cancel the originalREducer's change
     }
 
@@ -584,12 +603,14 @@ const MyReducerTransformer = (originalReducer) => (globalState) => (state, { typ
 
 ### A basic transformation
 
-We'll manipulate the payload data to show something else instead of "Files" before calling the originalReducer.
+This example we will illustrate modifying the payload to get different data saved into the original reducer.
+
+We will rename anything in the breadcrumbs that is displaying "Files" to display "Custom Files" instead.
 
 ```js
 const MyReducerTransformer = (originalReducer) => (globalState) => (state, { type, payload }) => {
   switch (type) {
-    case 'MY_ACTION': {
+    case 'SET_BREADCRUMBS': {
       return originalReducer(state, {
         type,
         payload: {
@@ -621,12 +642,17 @@ export default (originalReducer) => (globalState) => (state, { type, payload }) 
 
 ### Setting a different initial state
 
-We can easily define a new initial state by providing the `state` param with a default value,
- this does not work if an earlier transformer in the chain has defined an initial state already.
+We can easily define a new initial state by providing the `state` param with a default value.
+It is recommended to keep the call for the original initialState for your initialState then override values, so that you do not lose any potentially critical data that would have originally been set.
 
 ```js
-const MyReducerTransformer = (originalReducer) => () => (state = { myCustom: 'initial state here'}, { type, payload }) => {
-  return originalReducer(state, { type, payload });
+const MyReducerTransformer = (originalReducer) => () => (state, { type, payload }) => {
+  if (typeof state === 'undefined') {
+    return {
+      ...originalReducer(state, { type, payload }),
+      myCustom: 'initial state here',
+    };
+  }
 };
 ```
 
