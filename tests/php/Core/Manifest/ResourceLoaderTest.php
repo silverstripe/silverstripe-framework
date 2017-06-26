@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
-use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for the {@link TemplateLoader} class.
  */
-class ThemeResourceLoaderTest extends SapphireTest
+class ResourceLoaderTest extends SapphireTest
 {
     /**
      * @var string
@@ -22,7 +22,7 @@ class ThemeResourceLoaderTest extends SapphireTest
     private $manifest;
 
     /**
-     * @var ThemeResourceLoader
+     * @var ResourceLoader
      */
     private $loader;
 
@@ -39,7 +39,7 @@ class ThemeResourceLoaderTest extends SapphireTest
         $this->manifest = new ThemeManifest($this->base, 'myproject');
         $this->manifest->init();
         // New Loader for that root
-        $this->loader = new ThemeResourceLoader($this->base);
+        $this->loader = new ResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
     }
 

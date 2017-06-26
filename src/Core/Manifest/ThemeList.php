@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\View;
+namespace SilverStripe\Core\Manifest;
 
 /**
  * Contains references to any number of themes or theme directories

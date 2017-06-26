@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
+use SilverStripe\Core\Manifest\ThemeList;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")

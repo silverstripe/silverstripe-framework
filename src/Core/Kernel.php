@@ -7,7 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Core\Manifest\ResourceLoader;
 
 /**
  * Represents the core state of a SilverStripe application
@@ -108,15 +108,15 @@ interface Kernel
     public function setConfigLoader($configLoader);
 
     /**
-     * @return ThemeResourceLoader
+     * @return ResourceLoader
      */
-    public function getThemeResourceLoader();
+    public function getResourceLoader();
 
     /**
-     * @param ThemeResourceLoader $themeResourceLoader
+     * @param ResourceLoader $resourceLoader
      * @return $this
      */
-    public function setThemeResourceLoader($themeResourceLoader);
+    public function setResourceLoader($resourceLoader);
 
     /**
      * One of dev, live, or test

@@ -5,10 +5,10 @@ namespace SilverStripe\i18n\Data;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * Data sources for localisation strings. I.e. yml files stored
@@ -100,7 +100,7 @@ class Sources implements Resettable
         }
 
         // Search theme dirs (receives relative paths)
-        $locator = ThemeResourceLoader::inst();
+        $locator = ResourceLoader::inst();
         foreach (SSViewer::get_themes() as $theme) {
             if ($locator->getSet($theme)) {
                 continue;

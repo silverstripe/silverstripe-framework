@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use Exception;
 use InvalidArgumentException;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -1444,7 +1445,7 @@ MESSAGE
      */
     public function themedCSS($name, $media = null)
     {
-        $path = ThemeResourceLoader::inst()->findThemedCSS($name, SSViewer::get_themes());
+        $path = ResourceLoader::inst()->findThemedCSS($name, SSViewer::get_themes());
         if ($path) {
             $this->css($path, $media);
         } else {
@@ -1468,7 +1469,7 @@ MESSAGE
      */
     public function themedJavascript($name, $type = null)
     {
-        $path = ThemeResourceLoader::inst()->findThemedJavascript($name, SSViewer::get_themes());
+        $path = ResourceLoader::inst()->findThemedJavascript($name, SSViewer::get_themes());
         if ($path) {
             $opts = [];
             if ($type) {

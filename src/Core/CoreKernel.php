@@ -20,12 +20,12 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\Dev\DebugView;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ThemeManifest;
-use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * Simple Kernel container
@@ -68,9 +68,9 @@ class CoreKernel implements Kernel
     protected $injectorLoader = null;
 
     /**
-     * @var ThemeResourceLoader
+     * @var ResourceLoader
      */
-    protected $themeResourceLoader = null;
+    protected $resourceLoader = null;
 
     protected $basePath = null;
 
@@ -113,13 +113,13 @@ class CoreKernel implements Kernel
         $this->setConfigLoader($configLoader);
 
         // Load template manifest
-        $themeResourceLoader = ThemeResourceLoader::inst();
-        $themeResourceLoader->addSet('$default', new ThemeManifest(
+        $resourceLoader = ResourceLoader::inst();
+        $resourceLoader->addSet('$default', new ThemeManifest(
             $basePath,
             project(),
             $manifestCacheFactory
         ));
-        $this->setThemeResourceLoader($themeResourceLoader);
+        $this->setResourceLoader($resourceLoader);
     }
 
     public function getEnvironment()
@@ -480,7 +480,7 @@ class CoreKernel implements Kernel
         }
 
         // Find default templates
-        $defaultSet = $this->getThemeResourceLoader()->getSet('$default');
+        $defaultSet = $this->getResourceLoader()->getSet('$default');
         if ($defaultSet instanceof ThemeManifest) {
             $defaultSet->init($this->getIncludeTests(), $flush);
         }
@@ -600,14 +600,14 @@ class CoreKernel implements Kernel
         return $this;
     }
 
-    public function getThemeResourceLoader()
+    public function getResourceLoader()
     {
-        return $this->themeResourceLoader;
+        return $this->resourceLoader;
     }
 
-    public function setThemeResourceLoader($themeResourceLoader)
+    public function setResourceLoader($resourceLoader)
     {
-        $this->themeResourceLoader = $themeResourceLoader;
+        $this->resourceLoader = $resourceLoader;
         return $this;
     }
 }

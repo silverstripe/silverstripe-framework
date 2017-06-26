@@ -1,17 +1,15 @@
 <?php
 
-namespace SilverStripe\View;
-
-use SilverStripe\Core\Manifest\ModuleLoader;
+namespace SilverStripe\Core\Manifest;
 
 /**
- * Handles finding templates from a stack of template manifest objects.
+ * Finds resources from 1 or more themes/modules.
  */
-class ThemeResourceLoader
+class ResourceLoader
 {
 
     /**
-     * @var ThemeResourceLoader
+     * @var ResourceLoader
      */
     private static $instance;
 
@@ -26,7 +24,7 @@ class ThemeResourceLoader
     protected $sets = [];
 
     /**
-     * @return ThemeResourceLoader
+     * @return ResourceLoader
      */
     public static function inst()
     {
@@ -36,9 +34,9 @@ class ThemeResourceLoader
     /**
      * Set instance
      *
-     * @param ThemeResourceLoader $instance
+     * @param ResourceLoader $instance
      */
-    public static function set_instance(ThemeResourceLoader $instance)
+    public static function set_instance(ResourceLoader $instance)
     {
         self::$instance = $instance;
     }
@@ -71,6 +69,23 @@ class ThemeResourceLoader
             return $this->sets[$set];
         }
         return null;
+    }
+
+    /**
+     * Returns the absolute path to the given resource
+     */
+    public function getResourcePath($theme, $resource)
+    {
+
+    }
+
+    /**
+     * Returns the URL of the given resource.
+     * The URL will be relative to the domain root (it will start with "/") unless it exists on a different domain.
+     */
+    public function getResourceURL($theme, $resource)
+    {
+
     }
 
     /**
