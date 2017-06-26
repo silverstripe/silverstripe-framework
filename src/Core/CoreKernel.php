@@ -185,8 +185,10 @@ class CoreKernel implements Kernel
         $this->bootPHP();
         $this->bootManifests($flush);
         $this->bootErrorHandling();
-        $this->bootDatabase();
+        $this->bootDatabaseEnvVars();
         $this->bootConfigs();
+        $this->bootDatabaseGlobals();
+        $this->validateDatabase();
     }
 
     /**
@@ -199,25 +201,61 @@ class CoreKernel implements Kernel
     }
 
     /**
-     * Configure database
-     *
-     * @throws HTTPResponse_Exception
+     * Load default database configuration from the $database and $databaseConfig globals
      */
-    protected function bootDatabase()
+    protected function bootDatabaseGlobals()
     {
-        // Check if a DB is named
-        $name = $this->getDatabaseName();
+        // Now that configs have been loaded, we can check global for database config
+        global $databaseConfig;
+        global $database;
 
-        // Gracefully fail if no DB is configured
-        if (empty($name)) {
-            $this->detectLegacyEnvironment();
-            $this->redirectToInstaller();
+        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'SS_';
+
+        // Case 1: $databaseConfig global exists. Merge $database in as needed
+        if (!empty($databaseConfig)) {
+            if (!empty($database)) {
+                $databaseConfig['database'] = $prefix . $database;
+            }
+
+            // Only set it if its valid, otherwise ignore $databaseConfig entirely
+            if (!empty($databaseConfig['database'])) {
+                DB::setConfig($databaseConfig);
+                return;
+            }
         }
 
+        // Case 2: $database merged into existing config
+        if (!empty($database)) {
+            $existing = DB::getConfig();
+            $existing['database'] = $prefix . $database;
+            DB::setConfig($existing);
+        }
+    }
+
+    /**
+     * Load default database configuration from environment variable
+     */
+    protected function bootDatabaseEnvVars()
+    {
         // Set default database config
         $databaseConfig = $this->getDatabaseConfig();
         $databaseConfig['database'] = $this->getDatabaseName();
         DB::setConfig($databaseConfig);
+    }
+
+    /**
+     * Check that the database configuration is valid, throwing an HTTPResponse_Exception if it's not
+     *
+     * @throws HTTPResponse_Exception
+     */
+    protected function validateDatabase()
+    {
+        $databaseConfig = DB::getConfig();
+        // Gracefully fail if no DB is configured
+        if (empty($databaseConfig['database'])) {
+            $this->detectLegacyEnvironment();
+            $this->redirectToInstaller();
+        }
     }
 
     /**
@@ -280,11 +318,6 @@ class CoreKernel implements Kernel
      */
     protected function getDatabaseConfig()
     {
-        // Check global config
-        global $databaseConfig;
-        if (!empty($databaseConfig)) {
-            return $databaseConfig;
-        }
 
         /** @skipUpgrade */
         $databaseConfig = [
