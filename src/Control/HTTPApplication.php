@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Application;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPMiddleware;
 use SilverStripe\Core\Kernel;
 
@@ -11,10 +13,7 @@ use SilverStripe\Core\Kernel;
  */
 class HTTPApplication implements Application
 {
-    /**
-     * @var HTTPMiddleware[]
-     */
-    protected $middlewares = [];
+    use HTTPMiddlewareAware;
 
     /**
      * @var Kernel
@@ -24,54 +23,6 @@ class HTTPApplication implements Application
     public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;
-    }
-
-    /**
-     * @return HTTPMiddleware[]
-     */
-    public function getMiddlewares()
-    {
-        return $this->middlewares;
-    }
-
-    /**
-     * @param HTTPMiddleware[] $middlewares
-     * @return $this
-     */
-    public function setMiddlewares($middlewares)
-    {
-        $this->middlewares = $middlewares;
-        return $this;
-    }
-
-    /**
-     * @param HTTPMiddleware $middleware
-     * @return $this
-     */
-    public function addMiddleware(HTTPMiddleware $middleware)
-    {
-        $this->middlewares[] = $middleware;
-        return $this;
-    }
-
-    /**
-     * Call middleware
-     *
-     * @param HTTPRequest $request
-     * @param callable $last Last config to call
-     * @return HTTPResponse
-     */
-    protected function callMiddleware(HTTPRequest $request, $last)
-    {
-        // Reverse middlewares
-        $next = $last;
-        /** @var HTTPMiddleware $middleware */
-        foreach (array_reverse($this->getMiddlewares()) as $middleware) {
-            $next = function ($request) use ($middleware, $next) {
-                return $middleware->process($request, $next);
-            };
-        }
-        return call_user_func($next, $request);
     }
 
     /**
@@ -96,9 +47,7 @@ class HTTPApplication implements Application
 
         // Ensure boot is invoked
         return $this->execute($request, function (HTTPRequest $request) {
-            // Start session and execute
-            $request->getSession()->init();
-            return Director::direct($request);
+            return Injector::inst()->get(Director::class)->handleRequest($request);
         }, $flush);
     }
 

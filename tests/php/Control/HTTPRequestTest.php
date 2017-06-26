@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Tests;
 
+use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
 use ReflectionMethod;
@@ -267,9 +268,9 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals('home', $req->getURL());
     }
 
-    public function testGetIPFromHeaderValue()
+    public function testSetIPFromHeaderValue()
     {
-        $req = new HTTPRequest('GET', '/');
+        $req = new TrustedProxyMiddleware();
         $reflectionMethod = new ReflectionMethod($req, 'getIPFromHeaderValue');
         $reflectionMethod->setAccessible(true);
 

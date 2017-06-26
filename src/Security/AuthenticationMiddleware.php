@@ -4,12 +4,11 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\RequestFilter;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ValidationException;
 
-class AuthenticationRequestFilter implements RequestFilter
+class AuthenticationMiddleware implements HTTPMiddleware
 {
     use Configurable;
 
@@ -40,35 +39,24 @@ class AuthenticationRequestFilter implements RequestFilter
      * Identify the current user from the request
      *
      * @param HTTPRequest $request
-     * @return bool|void
-     * @throws HTTPResponse_Exception
+     * @param callable $delegate
+     * @return HTTPResponse
      */
-    public function preRequest(HTTPRequest $request)
+    public function process(HTTPRequest $request, callable $delegate)
     {
-        if (!Security::database_is_ready()) {
-            return;
+        if (Security::database_is_ready()) {
+            try {
+                $this
+                    ->getAuthenticationHandler()
+                    ->authenticateRequest($request);
+            } catch (ValidationException $e) {
+                return new HTTPResponse(
+                    "Bad log-in details: " . $e->getMessage(),
+                    400
+                );
+            }
         }
 
-        try {
-            $this
-                ->getAuthenticationHandler()
-                ->authenticateRequest($request);
-        } catch (ValidationException $e) {
-            throw new HTTPResponse_Exception(
-                "Bad log-in details: " . $e->getMessage(),
-                400
-            );
-        }
-    }
-
-    /**
-     * No-op
-     *
-     * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @return bool|void
-     */
-    public function postRequest(HTTPRequest $request, HTTPResponse $response)
-    {
+        return $delegate($request);
     }
 }

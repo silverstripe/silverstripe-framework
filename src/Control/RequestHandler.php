@@ -46,6 +46,9 @@ use BadMethodCallException;
  */
 class RequestHandler extends ViewableData
 {
+
+    use HTTPMiddlewareAware;
+
     /**
      * Optional url_segment for this request handler
      *

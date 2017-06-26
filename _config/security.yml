@@ -18,15 +18,17 @@ SilverStripe\Core\Injector\Injector:
         alc: %$SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
 ---
 Name: coresecurity
+After:
+  - requestprocessors
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Security\AuthenticationRequestFilter:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+    - %$SilverStripe\Security\AuthenticationMiddleware
+  SilverStripe\Security\AuthenticationMiddleware:
     properties:
       AuthenticationHandler: %$SilverStripe\Security\AuthenticationHandler
-  SilverStripe\Control\RequestProcessor:
-    properties:
-      filters:
-        - %$SilverStripe\Security\AuthenticationRequestFilter
   SilverStripe\Security\Security:
     properties:
       Authenticators:

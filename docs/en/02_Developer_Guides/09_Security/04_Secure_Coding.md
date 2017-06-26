@@ -556,6 +556,18 @@ In order to prevent this kind of attack, it's necessary to whitelist trusted pro
 server IPs using the SS_TRUSTED_PROXY_IPS define in your `.env`.
 
 	SS_TRUSTED_PROXY_IPS="127.0.0.1,192.168.0.1"
+
+If you wish to change the headers that are used to find the proxy information, you should reconfigure the
+TrustedProxyMiddleware service:
+
+    :::yml
+    SilverStripe\Control\TrustedProxyMiddleware:
+      properties:
+        ProxyHostHeaders: X-Forwarded-Host
+        ProxySchemeHeaders: X-Forwarded-Protocol
+        ProxyIPHeaders: X-Forwarded-Ip
+
+
 	SS_TRUSTED_PROXY_HOST_HEADER="HTTP_X_FORWARDED_HOST"
 	SS_TRUSTED_PROXY_IP_HEADER="HTTP_X_FORWARDED_FOR"
 	SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTOCOL"

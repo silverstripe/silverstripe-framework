@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Control\Middleware\FlushMiddleware;
+
 /**
  * Provides an interface for classes to implement their own flushing functionality
  * whenever flush=1 is requested.
@@ -14,7 +16,7 @@ interface Flushable
      * parameter has been set. Each class that implements Flushable implements
      * this function which looks after it's own specific flushing functionality.
      *
-     * @see FlushRequestFilter
+     * @see FlushMiddleware
      */
     public static function flush();
 }

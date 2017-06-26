@@ -3,6 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
@@ -16,19 +17,20 @@ use SilverStripe\View\TemplateGlobalProvider;
 /**
  * Director is responsible for processing URLs, and providing environment information.
  *
- * The most important part of director is {@link Director::direct()}, which is passed a URL and will
+ * The most important part of director is {@link Director::handleRequest()}, which is passed an HTTPRequest and will
  * execute the appropriate controller.
  *
  * Director also has a number of static methods that provide information about the environment, such as
  * {@link Director::$environment_type}.
  *
- * @see Director::direct()
+ * @see Director::handleRequest()
  * @see Director::$rules
  * @see Director::$environment_type
  */
 class Director implements TemplateGlobalProvider
 {
     use Configurable;
+    use HTTPMiddlewareAware;
 
     /**
      * Specifies this url is relative to the base.
@@ -100,65 +102,9 @@ class Director implements TemplateGlobalProvider
     protected static $environment_type;
 
     /**
-     * Process the given URL, creating the appropriate controller and executing it.
-     *
-     * Request processing is handled as follows:
-     * - Director::direct() creates a new HTTPResponse object and passes this to
-     *   Director::handleRequest().
-     * - Director::handleRequest($request) checks each of the Director rules and identifies a controller
-     *   to handle this request.
-     * - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL,
-     *   and call the rule handling method.
-     * - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method
-     *   returns a RequestHandler object.
-     *
-     * In addition to request processing, Director will manage the session, and perform the output of
-     * the actual response to the browser.
-     *
-     * @uses handleRequest() rule-lookup logic is handled by this.
-     * @uses TestController::handleRequest() This handles the page logic for a Director::direct() call.
-     * @param HTTPRequest $request
-     * @return HTTPResponse
-     * @throws HTTPResponse_Exception
-     */
-    public static function direct(HTTPRequest $request)
-    {
-        // check allowed hosts
-        if (getenv('SS_ALLOWED_HOSTS') && !static::is_cli()) {
-            $allowedHosts = explode(',', getenv('SS_ALLOWED_HOSTS'));
-            if (!in_array(static::host(), $allowedHosts)) {
-                return new HTTPResponse('Invalid Host', 400);
-            }
-        }
-
-        // Pre-request
-        $output = RequestProcessor::singleton()->preRequest($request);
-        if ($output === false) {
-            return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
-        }
-
-        // Generate output
-        $result = static::handleRequest($request);
-
-        // Save session data. Note that save() will start/resume the session if required.
-        $request->getSession()->save();
-
-        // Post-request handling
-        $postRequest = RequestProcessor::singleton()->postRequest($request, $result);
-        if ($postRequest === false) {
-            return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
-        }
-
-        // Return
-        return $result;
-    }
-
-    /**
-     * Test a URL request, returning a response object. This method is the counterpart of
-     * Director::direct() that is used in functional testing. It will execute the URL given, and
+     * Test a URL request, returning a response object. This method is a wrapper around
+     * Director::handleRequest() to assist with functional testing. It will execute the URL given, and
      * return the result as an HTTPResponse object.
-     *
-     * @uses TestController::handleRequest() Handles the page logic for a Director::direct() call.
      *
      * @param string $url The URL to visit.
      * @param array $postVars The $_POST & $_FILES variables.
@@ -188,7 +134,7 @@ class Director implements TemplateGlobalProvider
     ) {
         return static::mockRequest(
             function (HTTPRequest $request) {
-                return static::direct($request);
+                return Injector::inst()->get(Director::class)->handleRequest($request);
             },
             $url,
             $postVars,
@@ -341,15 +287,33 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Handle an HTTP request, defined with a HTTPRequest object.
+     * Process the given URL, creating the appropriate controller and executing it.
      *
-     * @skipUpgrade
+     * Request processing is handled as follows:
+     * - Director::handleRequest($request) checks each of the Director rules and identifies a controller
+     *   to handle this request.
+     * - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL,
+     *   and call the rule handling method.
+     * - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method
+     *   returns a RequestHandler object.
+     *
+     * In addition to request processing, Director will manage the session, and perform the output of
+     * the actual response to the browser.
+     *
      * @param HTTPRequest $request
      * @return HTTPResponse
+     * @throws HTTPResponse_Exception
      */
-    protected static function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request)
     {
+        Injector::inst()->registerService($request, HTTPRequest::class);
+
         $rules = Director::config()->uninherited('rules');
+
+        // Default handler - mo URL rules matched, so return a 404 error.
+        $handler = function () {
+            return new HTTPResponse('No URL rule was matched', 404);
+        };
 
         foreach ($rules as $pattern => $controllerOptions) {
             // Normalise route rule
@@ -373,28 +337,86 @@ class Director implements TemplateGlobalProvider
                     $request->shift($controllerOptions['_PopTokeniser']);
                 }
 
-                // Handle redirection
+                // Handler for redirection
                 if (isset($arguments['Redirect'])) {
-                    // Redirection
-                    $response = new HTTPResponse();
-                    $response->redirect(static::absoluteURL($arguments['Redirect']));
-                    return $response;
+                    $handler = function () use ($arguments) {
+                        // Redirection
+                        $response = new HTTPResponse();
+                        $response->redirect(static::absoluteURL($arguments['Redirect']));
+                        return $response;
+                    };
+                    break;
                 }
 
                 // Find the controller name
                 $controller = $arguments['Controller'];
-                $controllerObj = Injector::inst()->create($controller);
 
-                try {
-                    return $controllerObj->handleRequest($request);
-                } catch (HTTPResponse_Exception $responseException) {
-                    return $responseException->getResponse();
+                // String = service name
+                if (is_string($controller)) {
+                    $controllerObj = Injector::inst()->get($controller);
+                // Array = service spec
+                } elseif (is_array($controller)) {
+                    $controllerObj = Injector::inst()->createFromSpec($controller);
+                } else {
+                    throw new \LogicException("Invalid Controller value '$controller'");
                 }
+
+                // Handler for calling a controller
+                $handler = function (HTTPRequest $request) use ($controllerObj) {
+                    try {
+                        // Apply the controller's middleware. We do this outside of handleRequest so that
+                        // subclasses of handleRequest will be called after the middlware processing
+                        return $controllerObj->callMiddleware($request, function ($request) use ($controllerObj) {
+                        return $controllerObj->handleRequest($request);
+                        });
+                    } catch (HTTPResponse_Exception $responseException) {
+                        return $responseException->getResponse();
+                    }
+                };
+                break;
             }
         }
 
-        // No URL rules matched, so return a 404 error.
-        return new HTTPResponse('No URL rule was matched', 404);
+        // Call the handler with the configured middlewares
+        $response = $this->callMiddleware($request, $handler);
+
+        // Note that if a different request was previously registered, this will now be lost
+        // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
+        Injector::inst()->unregisterNamedObject(HTTPRequest::class);
+
+        return $response;
+    }
+
+    /**
+     * Call the given request handler with the given middlewares
+     * Middlewares are specified as Injector service names
+     *
+     * @param $request The request to pass to the handler
+     * @param $middlewareNames The services names of the middlewares to apply
+     * @param $handler The request handler
+     */
+    protected static function callWithMiddlewares(HTTPRequest $request, array $middlewareNames, callable $handler)
+    {
+        $next = $handler;
+
+        if ($middlewareNames) {
+            $middlewares = array_map(
+                function ($name) {
+                    return Injector::inst()->get($name);
+                },
+                $middlewareNames
+            );
+
+            // Reverse middlewares
+            /** @var HTTPMiddleware $middleware */
+            foreach (array_reverse($middlewares) as $middleware) {
+                $next = function ($request) use ($middleware, $next) {
+                    return $middleware->process($request, $next);
+                };
+            }
+        }
+
+        return $next($request);
     }
 
     /**
@@ -483,7 +505,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function host()
+    public static function host(HTTPRequest $request = null)
     {
         // Check if overridden by alternate_base_url
         if ($baseURL = self::config()->get('alternate_base_url')) {
@@ -494,17 +516,12 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Validate proxy-specific headers
-        if (TRUSTED_PROXY) {
-            // Check headers to validate
-            $headers = getenv('SS_TRUSTED_PROXY_HOST_HEADER')
-                ? explode(',', getenv('SS_TRUSTED_PROXY_HOST_HEADER'))
-                : ['HTTP_X_FORWARDED_HOST']; // Backwards compatible defaults
-            foreach ($headers as $header) {
-                if (!empty($_SERVER[$header])) {
-                    // Get the first host, in case there's multiple separated through commas
-                    return strtok($_SERVER[$header], ',');
-                }
+        if (Injector::inst()->has(HTTPRequest::class)) {
+            /** @var HTTPRequest $request */
+            $request = Injector::inst()->get(HTTPRequest::class);
+            $host = $request->getHeader('Host');
+            if ($host) {
+                return $host;
             }
         }
 
@@ -532,9 +549,9 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool|string
      */
-    public static function protocolAndHost()
+    public static function protocolAndHost(HTTPRequest $request = null)
     {
-        return static::protocol() . static::host();
+        return static::protocol($request) . static::host($request);
     }
 
     /**
@@ -542,9 +559,9 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function protocol()
+    public static function protocol(HTTPRequest $request = null)
     {
-        return (self::is_https()) ? 'https://' : 'http://';
+        return (self::is_https($request)) ? 'https://' : 'http://';
     }
 
     /**
@@ -552,7 +569,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_https()
+    public static function is_https(HTTPRequest $request = null)
     {
         // Check override from alternate_base_url
         if ($baseURL = self::config()->uninherited('alternate_base_url')) {
@@ -563,26 +580,14 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-        // See https://support.microsoft.com/en-us/kb/307347
-        if (TRUSTED_PROXY) {
-            $headers = getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')
-                ? explode(',', getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER'))
-                : ['HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS'];
-            foreach ($headers as $header) {
-                $headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
-                if (!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
-                    return true;
-                }
+        // Check the current request
+        if (Injector::inst()->has(HTTPRequest::class)) {
+            /** @var HTTPRequest $request */
+            $request = Injector::inst()->get(HTTPRequest::class);
+            $scheme = $request->getScheme();
+            if ($scheme) {
+                return $scheme === 'https';
             }
-        }
-
-        // Check common $_SERVER
-        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-            return true;
-        }
-        if (isset($_SERVER['SSL'])) {
-            return true;
         }
 
         // Check default_base_url
