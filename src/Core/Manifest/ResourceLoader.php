@@ -2,6 +2,9 @@
 
 namespace SilverStripe\Core\Manifest;
 
+// TO DO: allow pluggable provider of client URLs and move that plugin to SilverStripe\Control.
+use SilverStripe\Control\Director;
+
 /**
  * Finds resources from 1 or more themes/modules.
  */
@@ -72,20 +75,59 @@ class ResourceLoader
     }
 
     /**
-     * Returns the absolute path to the given resource
+     * Returns the absolute path to the given resource.
+     *
+     * @param string|array $module 1 or more modules or themes to searrh
+     * @return string|null The absolute path to the file, if it exists. Returns null if the file can't be found
      */
-    public function getResourcePath($theme, $resource)
+    public function getResourcePath($module, $resource)
     {
-
+        $path = $this->getRelativeResourcePath($module, $resource);
+        if ($path) {
+            return $this->base . '/' . $path;
+        }
     }
 
     /**
      * Returns the URL of the given resource.
-     * The URL will be relative to the domain root (it will start with "/") unless it exists on a different domain.
+     *
+     * The URL will be relative to the domain root, unless assets are on a different path (not currently supported but
+     * may be added in the future.
+     *
+     * @param string|array $module A module or list of modules to
+     * @return string|null The URL of the resource, if it exists
      */
-    public function getResourceURL($theme, $resource)
+    public function getResourceURL($module, $resource)
     {
+        $path = $this->getRelativeResourcePath($module, $resource);
+        if ($path) {
+            return Director::baseURL() . $path;
+        }
+    }
 
+    /**
+     * Returns the path to the given resource, relative to BASE_PATH
+     *
+     * @param string|array $module 1 or more modules or themes to searrh
+     * @return string|null The absolute path to the file, if it exists. Returns null if the file can't be found
+     */
+    public function getRelativeResourcePath($module, $resource)
+    {
+        if ($resource[0] !== '/') {
+            $resource = '/' . $resource;
+        }
+
+        $paths = $this->getThemePaths(is_array($module) ? $module : [$module]);
+
+        foreach ($paths as $themePath) {
+            $abspath = $themePath;
+            if (file_exists(BASE_PATH . '/' . $abspath . $resource)) {
+                return $themePath . $resource;
+            }
+        }
+
+        // Resource exists in no context
+        return null;
     }
 
     /**
@@ -102,7 +144,7 @@ class ResourceLoader
      * @param string $identifier Theme identifier.
      * @return string Path from root, not including leading or trailing forward slash. E.g. themes/mytheme
      */
-    public function getPath($identifier)
+    public function getThemePath($identifier)
     {
         $slashPos = strpos($identifier, '/');
 
@@ -233,79 +275,6 @@ class ResourceLoader
     }
 
     /**
-     * Resolve themed CSS path
-     *
-     * @param string $name Name of CSS file without extension
-     * @param array $themes List of themes
-     * @return string Path to resolved CSS file (relative to base dir)
-     */
-    public function findThemedCSS($name, $themes)
-    {
-        if (substr($name, -4) !== '.css') {
-            $name .= '.css';
-        }
-
-        $filename = $this->findThemedResource("css/$name", $themes);
-        if ($filename === null) {
-            $filename = $this->findThemedResource($name, $themes);
-        }
-
-        return $filename;
-    }
-
-    /**
-     * Resolve themed javascript path
-     *
-     * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
-     * and it that doesn't exist and the module parameter is set then a javascript file with that name in
-     * the module is used.
-     *
-     * @param string $name The name of the file - eg '/js/File.js' would have the name 'File'
-     * @param array $themes List of themes
-     * @return string Path to resolved javascript file (relative to base dir)
-     */
-    public function findThemedJavascript($name, $themes)
-    {
-        if (substr($name, -3) !== '.js') {
-            $name .= '.js';
-        }
-
-        $filename = $this->findThemedResource("javascript/$name", $themes);
-        if ($filename === null) {
-            $filename = $this->findThemedResource($name, $themes);
-        }
-
-        return $filename;
-    }
-
-    /**
-     * Resolve a themed resource
-     *
-     * A themed resource and be any file that resides in a theme folder.
-     *
-     * @param string $resource A file path relative to the root folder of a theme
-     * @param array $themes An order listed of themes to search
-     */
-    public function findThemedResource($resource, $themes)
-    {
-        if ($resource[0] !== '/') {
-            $resource = '/' . $resource;
-        }
-
-        $paths = $this->getThemePaths($themes);
-
-        foreach ($paths as $themePath) {
-            $abspath = $this->base . '/' . $themePath;
-            if (file_exists($abspath . $resource)) {
-                return $themePath . $resource;
-            }
-        }
-
-        // Resource exists in no context
-        return null;
-    }
-
-    /**
      * Resolve all themes to the list of root folders relative to site root
      *
      * @param array $themes List of themes to resolve. Supports named theme sets.
@@ -321,7 +290,7 @@ class ResourceLoader
 
             // Resolve paths
             foreach ($subthemes as $theme) {
-                $paths[] = $this->getPath($theme);
+                $paths[] = $this->getThemePath($theme);
             }
         }
         return $paths;

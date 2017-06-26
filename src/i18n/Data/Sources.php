@@ -105,7 +105,7 @@ class Sources implements Resettable
             if ($locator->getSet($theme)) {
                 continue;
             }
-            $path = $locator->getPath($theme);
+            $path = $locator->getThemePath($theme);
             $langPath = BASE_PATH . "/{$path}/lang/";
             if (is_dir($langPath)) {
                 $paths[] = $langPath;

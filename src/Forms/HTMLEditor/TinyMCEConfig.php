@@ -618,12 +618,12 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        $editor[] = Director::absoluteURL(ltrim($this->getAdminPath() . '/client/dist/styles/editor.css', '/'));
+        $editor[] = ResourceLoader::inst()->getResourceURL('framework/admin/', 'client/dist/styles/css/editor.css');
 
         // Themed editor.css
-        $themedEditor = ResourceLoader::inst()->findThemedCSS('editor', SSViewer::get_themes());
+        $themedEditor = ResourceLoader::inst()->getResourceURL(SSViewer::get_themes(), 'css/editor.css');
         if ($themedEditor) {
-            $editor[] = Director::absoluteURL($themedEditor, Director::BASE);
+            $editor[] = $themedEditor;
         }
 
         return $editor;
