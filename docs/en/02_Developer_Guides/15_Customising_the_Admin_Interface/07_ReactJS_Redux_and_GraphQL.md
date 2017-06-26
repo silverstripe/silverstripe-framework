@@ -42,7 +42,7 @@ Might actually render HTML that looks like this:
 This syntax is known as JSX. It is transpiled at build time into native Javascript calls
 to the React API. While optional, it is recommended to express components this way.
 
-### React Dev Tools
+### Recommended: React Dev Tools
 
 The [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) extension available for Chrome and Firefox is critical to debugging a React UI. It will let you browse the React UI much like the DOM, showing the tree of rendered components and their current props and state in real time.
 
@@ -74,7 +74,7 @@ store.dispatch({ type: 'INCREMENT' })
 // 1
 ```
 
-## Redux Devtools
+### Recommended: Redux Devtools
 
 It's important to be able to view the state of the React application when you're debugging and
 building the interface.
@@ -87,7 +87,7 @@ engine.
 
 ## GraphQL and Apollo
 
-[GraphQL](http://graphql.org/learn/) is a strictly-types query language that allows you to describe what data you want to fetch from your API. Because it is based on types, it is self-documenting and predictable. Further, it's structure lends itself nicely to fetching nested objects. Here is an example of a simple GraphQL query:
+[GraphQL](http://graphql.org/learn/) is a strictly-typed query language that allows you to describe what data you want to fetch from your API. Because it is based on types, it is self-documenting and predictable. Further, it's structure lends itself nicely to fetching nested objects. Here is an example of a simple GraphQL query:
 
 ```
 query GetUser($ID: Int!) {
@@ -141,7 +141,10 @@ documentation available all over the web. We recommend:
 
 # The Injector API
 
-Much like customisation is done in the backend through [Injector](../../extending/injector), the client-side framework has its own implementation of dependency injection known as `Injector`. Using Injector, you can register new services, and transform existing services.
+Much like SilverStripe's [Injector API](../../extending/injector) in PHP,
+the client-side framework has its own implementation of dependency injection 
+known as `Injector`. Using Injector, you can register new services, and 
+transform existing services.
 
 Injector is broken up into three sub-APIs:
 * `Injector.react` for React UI components
