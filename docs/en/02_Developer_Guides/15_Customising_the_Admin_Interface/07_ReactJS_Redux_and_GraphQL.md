@@ -147,7 +147,7 @@ known as `Injector`. Using Injector, you can register new services, and
 transform existing services.
 
 Injector is broken up into three sub-APIs:
-* `Injector.react` for React UI components
+* `Injector.component` for React UI components
 * `Injector.reducer` for Redux state management
 * `Injector.form` for forms rendered via `FormSchema`.
 
@@ -223,14 +223,14 @@ __my-public-module/js/main.js__
 ```js
 import Injector from 'lib/Injector';
 
-Injector.react.register('MyComponent', MyComponent);
+Injector.component.register('MyComponent', MyComponent);
 Injector.reducer.register('myCustom', MyReducer);
 ```
 
 Services can then be fetched using their respective `.get()` methods.
 
 ```js
-const MyComponent = Injector.react.get('MyComponent');
+const MyComponent = Injector.component.get('MyComponent');
 ```
 
 <div class="notice" markdown="1">
@@ -255,7 +255,7 @@ __someone-elses-module/js/main.js__
 Injector.transform(
 	'my-transformation',
 	(updater) => {
-		updater.react('MyComponent', MyCustomComponent);
+		updater.component('MyComponent', MyCustomComponent);
 		updater.reducer('myCustom', MyCustomReducer);
 
 	}
@@ -265,7 +265,7 @@ Injector.transform(
 
 Much like the configuration layer, we need to specify a name for this transformation. This will help other modules negotiate their priority over the injector in relation to yours.
 
-The second parameter of the `transform` argument is a callback which receives an `updater`object. It contains four functions: `react()`, `reducer()`, `form.alterSchema()` and `form.addValidation()`. We'll cover all of these in detail functions in detail further into the document, but briefly, these update functions allow you to mutate the DI container with a wrapper for the service. Remember, this function does not _replace_
+The second parameter of the `transform` argument is a callback which receives an `updater`object. It contains four functions: `component()`, `reducer()`, `form.alterSchema()` and `form.addValidation()`. We'll cover all of these in detail functions in detail further into the document, but briefly, these update functions allow you to mutate the DI container with a wrapper for the service. Remember, this function does not _replace_
 the service -- it enhances it with new functionality.
 
 ### Helpful tip: Name your component middleware
@@ -275,16 +275,16 @@ useful for debugging purposes to reveal the names of each enhancement on the `di
  the component. This will really help you when viewing the rendered component tree in 
  [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en).
  
- For this, you can use the third parameter of the `updater.react` function. It takes an arbitrary
+ For this, you can use the third parameter of the `updater.component` function. It takes an arbitrary
  name for the enhancement you're applying.
  
  __module-a/js/main.js__
  ```js
- (updater) => updater.react('TextField', CharacterCounter, 'CharacterCounter')
+ (updater) => updater.component('TextField', CharacterCounter, 'CharacterCounter')
  ```
  __module-b/js/main.js__
  ```js
- (updater) => updater.react('TextField', TextLengthChecker, 'TextLengthChecker')
+ (updater) => updater.component('TextField', TextLengthChecker, 'TextLengthChecker')
  ```
 
 
@@ -298,7 +298,7 @@ __my-module/js/main.js__
 Injector.transform(
 	'my-transformation',
 	(updater) => {
-		updater.react('MyComponent', MyCustomComponent);
+		updater.component('MyComponent', MyCustomComponent);
 		updater.reducer('myCustom', MyCustomReducer);
 
 	},
@@ -312,7 +312,7 @@ Injector.transform(
 ```js
 Injector.transform(
   'my-transformation', 
-  (updater) => updater.react('MyComponent', MyCustomComponent);
+  (updater) => updater.component('MyComponent', MyCustomComponent);
   { before: ['my-transformation', 'some-other-transformation'] }
 );
 ```
@@ -325,7 +325,7 @@ If you really want to be sure your customisation gets loaded first or last, you 
 ```js
 Injector.transform(
   'my-transformation', 
-  (updater) => updater.react('MyComponent', FinalTransform),
+  (updater) => updater.component('MyComponent', FinalTransform),
   { after: '*' }
 );
 ```
@@ -350,16 +350,16 @@ Likewise, services can be applied for specific contexts.
 ```js
 Injector.transform('my-transform', (updater) => {
 	// Applies to all text fields in AssetAdmin
-	updater.react('TextField.AssetAdmin', MyTextField);
+	updater.component('TextField.AssetAdmin', MyTextField);
 
 	// Applies to all text fields in AssetAdmin editform
-	updater.react('TextField.AssetAdmin.FileEditForm', MyTextField);
+	updater.component('TextField.AssetAdmin.FileEditForm', MyTextField);
 
 	// Applies to any textfield named "Title" in AssetAdmin
-	updater.react('TextField.AssetAdmin.*.Title', MyTextField);
+	updater.component('TextField.AssetAdmin.*.Title', MyTextField);
 
 	// Applies to any textfield named "Title" in any admin
-	updater.react('TextField.*.*.Title', MyTextField);
+	updater.component('TextField.*.*.Title', MyTextField);
 })
 ```
 

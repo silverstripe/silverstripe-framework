@@ -33,7 +33,7 @@ import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 
 Injector.transform('character-count-transform', (update) => {
-  update.react('TextField', CharacterCounter);
+  update.component('TextField', CharacterCounter);
 });
 ```
 
@@ -91,7 +91,7 @@ import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';
 
 Injector.transform('text-length-transform', (update) => {
-  update.react('TextField', TextLengthChecker);
+  update.component('TextField', TextLengthChecker);
 });
 ```
 
@@ -143,7 +143,7 @@ import Injector from 'lib/Injector';
 import CharacterCounter from './components/CharacterCounter';
 Injector.transform(
   'my-transformation', 
-  (update) => update.react('TextField', CharacterCounter),
+  (update) => update.component('TextField', CharacterCounter),
   { after: 'my-other-transformation' }
 );
 ```
@@ -155,7 +155,7 @@ import TextLengthChecker from './components/TextLengthChecker';
 
 Injector.transform(
   'my-other-transformation', 
-  (update) => update.react('TextField', TextLengthChecker),
+  (update) => update.component('TextField', TextLengthChecker),
   { before: 'my-transformation' }
 );
 ```
@@ -222,7 +222,7 @@ __my-module/js/main.js__
 import ConfirmingFormButton from './components/ConfirmingFormButton';
 
 Injector.transform('my-transformation', (update) => {
-  update.react('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
+  update.component('FormAction', ConfirmingFormButton, 'ConfirmingFormButton');
 });
 ```
 

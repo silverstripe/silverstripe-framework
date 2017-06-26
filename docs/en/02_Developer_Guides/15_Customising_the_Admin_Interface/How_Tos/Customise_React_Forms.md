@@ -36,7 +36,7 @@ _my-module/js/main.js_
 Injector.transform(
   'toggle-field',
   (updater) => {
-    updater.react('ReduxFormField', HideableComponentCreator);
+    updater.component('ReduxFormField', HideableComponentCreator);
   }
 );
 ```
