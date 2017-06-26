@@ -202,8 +202,6 @@ class SecurityTest extends FunctionalTest
         /* We have only 1 input, one to allow the user to log in as someone else */
         $this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
 
-        $this->autoFollowRedirection = true;
-
         /* Submit the form, using only the logout action and a hidden field for the authenticator */
         $response = $this->submitForm(
             'MemberLoginForm_LoginForm',
@@ -214,8 +212,7 @@ class SecurityTest extends FunctionalTest
         );
 
         /* We get a good response */
-        $this->assertEquals($response->getStatusCode(), 200, 'We have a 200 OK response');
-        $this->assertNotNull($response->getBody(), 'There is body content on the page');
+        $this->assertEquals($response->getStatusCode(), 302, 'We have a redirection response');
 
         /* Log the user out */
         Security::setCurrentUser(null);
