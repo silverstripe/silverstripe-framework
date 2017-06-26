@@ -209,17 +209,16 @@ class CoreKernel implements Kernel
         global $databaseConfig;
         global $database;
 
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'SS_';
-
         // Case 1: $databaseConfig global exists. Merge $database in as needed
         if (!empty($databaseConfig)) {
             if (!empty($database)) {
-                $databaseConfig['database'] = $prefix . $database;
+                $databaseConfig['database'] =  $this->getDatabasePrefix() . $database;
             }
 
             // Only set it if its valid, otherwise ignore $databaseConfig entirely
             if (!empty($databaseConfig['database'])) {
                 DB::setConfig($databaseConfig);
+
                 return;
             }
         }
@@ -227,7 +226,8 @@ class CoreKernel implements Kernel
         // Case 2: $database merged into existing config
         if (!empty($database)) {
             $existing = DB::getConfig();
-            $existing['database'] = $prefix . $database;
+            $existing['database'] = $this->getDatabasePrefix() . $database;
+
             DB::setConfig($existing);
         }
     }
@@ -357,32 +357,43 @@ class CoreKernel implements Kernel
     }
 
     /**
+     * @return string
+     */
+    protected function getDatabasePrefix()
+    {
+        return getenv('SS_DATABASE_PREFIX');
+    }
+
+    /**
      * Get name of database
      *
      * @return string
      */
     protected function getDatabaseName()
     {
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'SS_';
-
         // Check globals
         global $database;
+
         if (!empty($database)) {
-            return $prefix.$database;
+            return $this->getDatabasePrefix() . $database;
         }
+
         global $databaseConfig;
+
         if (!empty($databaseConfig['database'])) {
             return $databaseConfig['database']; // Note: Already includes prefix
         }
 
         // Check environment
         $database = getenv('SS_DATABASE_NAME');
+
         if ($database) {
-            return $prefix.$database;
+            return $this->getDatabasePrefix() . $database;
         }
 
         // Auto-detect name
         $chooseName = getenv('SS_DATABASE_CHOOSE_NAME');
+
         if ($chooseName) {
             // Find directory to build name from
             $loopCount = (int)$chooseName;
@@ -393,7 +404,13 @@ class CoreKernel implements Kernel
 
             // Build name
             $database = str_replace('.', '', basename($databaseDir));
-            return $prefix.$database;
+            $prefix = $this->getDatabasePrefix();
+
+            if ($prefix === false) {
+                $prefix = 'SS_';
+            }
+
+            return $prefix . $database;
         }
 
         // no DB name (may be optional for some connectors)
