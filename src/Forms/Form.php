@@ -1032,7 +1032,7 @@ class Form extends ViewableData implements HasRequestHandler
      * As most browsers only support GET and POST in
      * form submissions, all other HTTP methods are
      * added as a hidden field "_method" that
-     * gets evaluated in {@link Director::direct()}.
+     * gets evaluated in {@link HTTPRequest::detect_method()}.
      * See {@link FormMethod()} to get a HTTP method
      * for safe insertion into a <form> tag.
      *

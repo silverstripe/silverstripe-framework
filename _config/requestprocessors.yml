@@ -2,10 +2,17 @@
 Name: requestprocessors
 ---
 SilverStripe\Core\Injector\Injector:
-  FlushRequestFilter:
-    class: SilverStripe\Control\FlushRequestFilter
-  SilverStripe\Control\RequestProcessor:
+  SilverStripe\Control\Director:
     properties:
-      filters:
-        - '%$FlushRequestFilter'
-
+      Middlewares:
+        TrustedProxyMiddleware: %$SilverStripe\Control\Middleware\TrustedProxyMiddleware
+        AllowedHostsMiddleware: %$SilverStripe\Control\Middleware\AllowedHostsMiddleware
+        SessionMiddleware: %$SilverStripe\Control\Middleware\SessionMiddleware
+        RequestProcessor: %$SilverStripe\Control\RequestProcessor
+        FlushMiddleware: %$SilverStripe\Control\Middleware\FlushMiddleware
+  SilverStripe\Control\AllowedHostsMiddleware:
+    properties:
+      AllowedHosts: "`SS_ALLOWED_HOSTS`"
+  SilverStripe\Control\TrustedProxyMiddleware:
+    properties:
+      TrustedProxyIPs: "`SS_TRUSTED_PROXY_IPS`"

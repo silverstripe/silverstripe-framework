@@ -45,6 +45,17 @@ class HTTPRequestBuilder
             $input
         );
 
+        // Set the scheme to HTTPS if needed
+        if ((!empty($variables['_SERVER']['HTTPS']) && $variables['_SERVER']['HTTPS'] != 'off')
+            || isset($variables['_SERVER']['SSL'])) {
+            $request->setScheme('https');
+        }
+
+        // Set the client IP
+        if (!empty($variables['_SERVER']['REMOTE_ADDR'])) {
+            $request->setIP($variables['_SERVER']['REMOTE_ADDR']);
+        }
+
         // Add headers
         $headers = static::extractRequestHeaders($variables['_SERVER']);
         foreach ($headers as $header => $value) {

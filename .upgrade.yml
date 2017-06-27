@@ -261,7 +261,7 @@ mappings:
   Cookie_Backend: SilverStripe\Control\Cookie_Backend
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
-  FlushRequestFilter: SilverStripe\Control\FlushRequestFilter
+  FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse
@@ -496,8 +496,8 @@ mappings:
   TestRequestFilter: SilverStripe\Control\Tests\DirectorTest\TestRequestFilter
   DirectorTestRequest_Controller: SilverStripe\Control\Tests\DirectorTest\TestController
   FakeController: SilverStripe\Control\Tests\FakeController
-  FlushRequestFilterTest: SilverStripe\Control\Tests\FlushRequestFilterTest
-  FlushRequestFilterTest_Flushable: SilverStripe\Control\Tests\FlushRequestFilterTest\TestFlushable
+  FlushRequestFilterTest: SilverStripe\Control\Tests\FlushMiddlewareTest
+  FlushRequestFilterTest_Flushable: SilverStripe\Control\Tests\FlushMiddlewareTest\TestFlushable
   HTTPRequestTest: SilverStripe\Control\Tests\HTTPRequestTest
   HTTPResponseTest: SilverStripe\Control\Tests\HTTPResponseTest
   HTTPTest: SilverStripe\Control\Tests\HTTPTest

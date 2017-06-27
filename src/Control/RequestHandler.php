@@ -2,17 +2,17 @@
 
 namespace SilverStripe\Control;
 
+use BadMethodCallException;
+use Exception;
 use InvalidArgumentException;
+use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionFailureException;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ViewableData;
-use ReflectionClass;
-use Exception;
-use BadMethodCallException;
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
@@ -46,6 +46,7 @@ use BadMethodCallException;
  */
 class RequestHandler extends ViewableData
 {
+
     /**
      * Optional url_segment for this request handler
      *

@@ -143,15 +143,12 @@ class Session
     /**
      * Get user agent for this request
      *
+     * @param HTTPRequest $request
      * @return string
      */
-    protected function userAgent()
+    protected function userAgent(HTTPRequest $request)
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            return $_SERVER['HTTP_USER_AGENT'];
-        } else {
-            return '';
-        }
+        return $request->getHeader('User-Agent');
     }
 
     /**
@@ -171,30 +168,34 @@ class Session
 
     /**
      * Init this session instance before usage
+     *
+     * @param HTTPRequest $request
      */
-    public function init()
+    public function init(HTTPRequest $request)
     {
         if (!$this->isStarted()) {
-            $this->start();
+            $this->start($request);
         }
 
         // Funny business detected!
         if (isset($this->data['HTTP_USER_AGENT'])) {
-            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent()) {
+            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
                 $this->destroy();
-                $this->start();
+                $this->start($request);
             }
         }
     }
 
     /**
      * Destroy existing session and restart
+     *
+     * @param HTTPRequest $request
      */
-    public function restart()
+    public function restart(HTTPRequest $request)
     {
         $this->destroy();
-        $this->init();
+        $this->init($request);
     }
 
     /**
@@ -210,9 +211,9 @@ class Session
     /**
      * Begin session
      *
-     * @param string $sid
+     * @param HTTPRequest $request The request for which to start a session
      */
-    public function start($sid = null)
+    public function start(HTTPRequest $request)
     {
         if ($this->isStarted()) {
             throw new BadMethodCallException("Session has already started");
@@ -223,7 +224,7 @@ class Session
             $path = Director::baseURL();
         }
         $domain = $this->config()->get('cookie_domain');
-        $secure = Director::is_https() && $this->config()->get('cookie_secure');
+        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $session_path = $this->config()->get('session_store_path');
         $timeout = $this->config()->get('timeout');
 
@@ -255,9 +256,6 @@ class Session
                 session_name('SECSESSID');
             }
 
-            if ($sid) {
-                session_id($sid);
-            }
             session_start();
 
             $this->data = isset($_SESSION) ? $_SESSION : array();
@@ -470,23 +468,27 @@ class Session
 
     /**
      * Set user agent key
+     *
+     * @param HTTPRequest $request
      */
-    public function finalize()
+    public function finalize(HTTPRequest $request)
     {
-        $this->set('HTTP_USER_AGENT', $this->userAgent());
+        $this->set('HTTP_USER_AGENT', $this->userAgent($request));
     }
 
     /**
      * Save data to session
      * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
+     *
+     * @param HTTPRequest $request
      */
-    public function save()
+    public function save(HTTPRequest $request)
     {
         if ($this->changedData) {
-            $this->finalize();
+            $this->finalize($request);
 
             if (!$this->isStarted()) {
-                $this->start();
+                $this->start($request);
             }
 
             $this->recursivelyApply($this->changedData, $_SESSION);

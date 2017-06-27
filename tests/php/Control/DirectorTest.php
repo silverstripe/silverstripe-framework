@@ -1,5 +1,4 @@
 <?php
-
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Cookie_Backend;
@@ -8,8 +7,12 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
+use SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter;
+use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\RequestProcessor;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
@@ -535,63 +538,91 @@ class DirectorTest extends SapphireTest
 
     public function testIsHttps()
     {
-        if (!TRUSTED_PROXY) {
-            $this->markTestSkipped('Test cannot be run without trusted proxy');
-        }
+        // Trust all IPs for this test
+        /** @var TrustedProxyMiddleware $trustedProxyMiddleware */
+        $trustedProxyMiddleware
+            = Injector::inst()->get(TrustedProxyMiddleware::class);
+        $trustedProxyMiddleware->setTrustedProxyIPs('*');
+
+        // Clear alternate_base_url for this test
+        Director::config()->remove('alternate_base_url');
+
         // nothing available
         $headers = array(
             'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
         );
-
-        $origServer = $_SERVER;
-
         foreach ($headers as $header) {
             if (isset($_SERVER[$header])) {
                 unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
             }
         }
 
-        $this->assertFalse(Director::is_https());
+        $this->assertEquals(
+            'no',
+            Director::test('TestController/returnIsSSL')->getBody()
+        );
 
-        $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'https';
-        $this->assertTrue(Director::is_https());
+        $this->assertEquals(
+            'yes',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                [ 'X-Forwarded-Protocol' => 'https' ]
+            )->getBody()
+        );
 
-        $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'http';
-        $this->assertFalse(Director::is_https());
+        $this->assertEquals(
+            'no',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                [ 'X-Forwarded-Protocol' => 'http' ]
+            )->getBody()
+        );
 
-        $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'ftp';
-        $this->assertFalse(Director::is_https());
-
-        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
-        $this->assertTrue(Director::is_https());
-
-        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
-        $this->assertFalse(Director::is_https());
-
-        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'ftp';
-        $this->assertFalse(Director::is_https());
-
-        $_SERVER['HTTP_FRONT_END_HTTPS'] = 'On';
-        $this->assertTrue(Director::is_https());
-
-        $_SERVER['HTTP_FRONT_END_HTTPS'] = 'Off';
-        $this->assertFalse(Director::is_https());
+        $this->assertEquals(
+            'no',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                [ 'X-Forwarded-Protocol' => 'ftp' ]
+            )->getBody()
+        );
 
         // https via HTTPS
         $_SERVER['HTTPS'] = 'true';
-        $this->assertTrue(Director::is_https());
+        $this->assertEquals(
+            'yes',
+            Director::test('TestController/returnIsSSL')->getBody()
+        );
 
         $_SERVER['HTTPS'] = '1';
-        $this->assertTrue(Director::is_https());
+        $this->assertEquals(
+            'yes',
+            Director::test('TestController/returnIsSSL')->getBody()
+        );
 
         $_SERVER['HTTPS'] = 'off';
-        $this->assertFalse(Director::is_https());
+        $this->assertEquals(
+            'no',
+            Director::test('TestController/returnIsSSL')->getBody()
+        );
 
         // https via SSL
         $_SERVER['SSL'] = '';
-        $this->assertTrue(Director::is_https());
-
-        $_SERVER = $origServer;
+        $this->assertEquals(
+            'yes',
+            Director::test('TestController/returnIsSSL')->getBody()
+        );
     }
 
     public function testTestIgnoresHashes()
@@ -645,5 +676,89 @@ class DirectorTest extends SapphireTest
 
         // preCall 'true' will trigger an exception and prevent post call execution
         $this->assertEquals(2, $filter->postCalls);
+    }
+
+    public function testGlobalMiddleware()
+    {
+        $middleware = new DirectorTest\TestMiddleware;
+        Director::singleton()->setMiddlewares([$middleware]);
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(404, $response->getStatusCode());
+
+        // Both triggered
+        $this->assertEquals(1, $middleware->preCalls);
+        $this->assertEquals(1, $middleware->postCalls);
+
+        $middleware->failPost = true;
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(500, $response->getStatusCode());
+
+        // Both triggered
+        $this->assertEquals(2, $middleware->preCalls);
+        $this->assertEquals(2, $middleware->postCalls);
+
+        $middleware->failPre = true;
+
+        $response = Director::test('some-dummy-url');
+        $this->assertEquals(400, $response->getStatusCode());
+
+        // Pre triggered, post not
+        $this->assertEquals(3, $middleware->preCalls);
+        $this->assertEquals(2, $middleware->postCalls);
+    }
+
+    public function testRouteSpecificMiddleware()
+    {
+        // Inject adapter in place of controller
+        $specificMiddleware = new DirectorTest\TestMiddleware;
+        Injector::inst()->registerService($specificMiddleware, 'SpecificMiddleware');
+
+        // Register adapter as factory for creating this controller
+        Config::modify()->merge(
+            Injector::class,
+            'ControllerWithMiddleware',
+            [
+                'class' => RequestHandlerMiddlewareAdapter::class,
+                'constructor' => [
+                    '%$' . TestController::class
+                ],
+                'properties' => [
+                    'Middlewares' => [
+                        '%$SpecificMiddleware',
+                    ],
+                ],
+            ]
+        );
+
+        // Global middleware
+        $middleware = new DirectorTest\TestMiddleware;
+        Director::singleton()->setMiddlewares([ $middleware ]);
+
+        // URL rules, one of which has a specific middleware
+        Config::modify()->set(
+            Director::class,
+            'rules',
+            [
+                'url-one' => TestController::class,
+                'url-two' => [
+                    'Controller' => 'ControllerWithMiddleware',
+                ],
+            ]
+        );
+
+        // URL without a route-specific middleware
+        Director::test('url-one');
+
+        // Only the global middleware triggered
+        $this->assertEquals(1, $middleware->preCalls);
+        $this->assertEquals(0, $specificMiddleware->postCalls);
+
+        Director::test('url-two');
+
+        // Both triggered on the url with the specific middleware applied
+        $this->assertEquals(2, $middleware->preCalls);
+        $this->assertEquals(1, $specificMiddleware->postCalls);
     }
 }

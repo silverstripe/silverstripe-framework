@@ -415,7 +415,7 @@ class Member extends DataObject
      */
     public function beforeMemberLoggedIn()
     {
-        // @todo Move to middleware on the AuthenticationRequestFilter IdentityStore
+        // @todo Move to middleware on the AuthenticationMiddleware IdentityStore
         $this->extend('beforeMemberLoggedIn');
     }
 

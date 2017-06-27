@@ -4,6 +4,7 @@ namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * Tests to cover the {@link Session} class
@@ -107,20 +108,22 @@ class SessionTest extends SapphireTest
     public function testUserAgentLockout()
     {
         // Set a user agent
-        $_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
+        $req1 = new HTTPRequest('GET', '/');
+        $req1->addHeader('User-Agent', 'Test Agent');
 
         // Generate our session
         $s = new Session(array());
-        $s->init();
+        $s->init($req1);
         $s->set('val', 123);
-        $s->finalize();
+        $s->finalize($req1);
 
         // Change our UA
-        $_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
+        $req2 = new HTTPRequest('GET', '/');
+        $req2->addHeader('User-Agent', 'Fake Agent');
 
         // Verify the new session reset our values
         $s2 = new Session($s);
-        $s2->init();
+        $s2->init($req2);
         $this->assertNotEquals($s2->get('val'), 123);
     }
 }
