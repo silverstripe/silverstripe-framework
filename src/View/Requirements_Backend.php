@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use Exception;
 use InvalidArgumentException;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -1444,12 +1445,19 @@ MESSAGE
      */
     public function themedCSS($name, $media = null)
     {
-        $path = ThemeResourceLoader::inst()->findThemedCSS($name, SSViewer::get_themes());
+        if (substr($name, -4) !== '.css') {
+            $name .= '.css';
+        }
+
+        $path = ResourceLoader::inst()->getRelativeResourcePath(SSViewer::get_themes(), "css/$name");
+        if (!$path) {
+            $path =  ResourceLoader::inst()->getRelativeResourcePath(SSViewer::get_themes(), $name);
+        }
         if ($path) {
             $this->css($path, $media);
         } else {
             throw new \InvalidArgumentException(
-                "The css file doesn't exist. Please check if the file $name.css exists in any context or search for "
+                "The css file doesn't exist. Please check if the file $name exists in any context or search for "
                 . "themedCSS references calling this file in your templates."
             );
         }
@@ -1468,7 +1476,14 @@ MESSAGE
      */
     public function themedJavascript($name, $type = null)
     {
-        $path = ThemeResourceLoader::inst()->findThemedJavascript($name, SSViewer::get_themes());
+        if (substr($name, -3) !== '.js') {
+            $name .= '.js';
+        }
+
+        $path = ResourceLoader::inst()->getRelativeResourcePath(SSViewer::get_themes(), "javascript/$name");
+        if (!$path) {
+            $path =  ResourceLoader::inst()->getRelativeResourcePath(SSViewer::get_themes(), $name);
+        }
         if ($path) {
             $opts = [];
             if ($type) {
@@ -1477,7 +1492,7 @@ MESSAGE
             $this->javascript($path, $opts);
         } else {
             throw new \InvalidArgumentException(
-                "The javascript file doesn't exist. Please check if the file $name.js exists in any "
+                "The javascript file doesn't exist. Please check if the file $name exists in any "
                 . "context or search for themedJavascript references calling this file in your templates."
             );
         }

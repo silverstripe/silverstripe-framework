@@ -3,6 +3,7 @@
 namespace SilverStripe\View;
 
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\Core\ClassInfo;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Convert;
@@ -284,7 +285,7 @@ class SSViewer implements Flushable
      */
     public static function chooseTemplate($templates)
     {
-        return ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
+        return ResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
 
     /**
@@ -319,7 +320,7 @@ class SSViewer implements Flushable
      */
     public static function hasTemplate($templates)
     {
-        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
+        return (bool)ResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
 
     /**
@@ -362,7 +363,7 @@ class SSViewer implements Flushable
      */
     public static function getTemplateFileByType($identifier, $type = null)
     {
-        return ThemeResourceLoader::inst()->findTemplate(['type' => $type, $identifier], self::get_themes());
+        return ResourceLoader::inst()->findTemplate(['type' => $type, $identifier], self::get_themes());
     }
 
     /**

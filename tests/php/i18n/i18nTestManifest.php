@@ -8,6 +8,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
@@ -18,7 +19,6 @@ use SilverStripe\i18n\Tests\i18nTest\MySubObject;
 use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\SSViewer_DataPresenter;
-use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ViewableData;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -60,9 +60,9 @@ trait i18nTestManifest
     }
 
     /**
-     * @var ThemeResourceLoader
+     * @var ResourceLoader
      */
-    protected $oldThemeResourceLoader = null;
+    protected $oldResourceLoader = null;
 
     /**
      * @var string
@@ -87,8 +87,8 @@ trait i18nTestManifest
         $this->pushModuleManifest($moduleManifest);
 
         // Replace old template loader with new one with alternate base path
-        $this->oldThemeResourceLoader = ThemeResourceLoader::inst();
-        ThemeResourceLoader::set_instance($loader = new ThemeResourceLoader($this->alternateBasePath));
+        $this->oldResourceLoader = ResourceLoader::inst();
+        ResourceLoader::set_instance($loader = new ResourceLoader($this->alternateBasePath));
         $loader->addSet(
             '$default',
             $default = new ThemeManifest($this->alternateBasePath, project())
@@ -123,7 +123,7 @@ trait i18nTestManifest
 
     public function tearDownManifest()
     {
-        ThemeResourceLoader::set_instance($this->oldThemeResourceLoader);
+        ResourceLoader::set_instance($this->oldResourceLoader);
         i18n::set_locale($this->originalLocale);
 
         // Reset any manifests pushed during this test

@@ -9,7 +9,7 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Core\Manifest\ResourceLoader;
 use TinyMCE_Compressor;
 use Exception;
 
@@ -618,12 +618,12 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        $editor[] = Director::absoluteURL(ltrim($this->getAdminPath() . '/client/dist/styles/editor.css', '/'));
+        $editor[] = ResourceLoader::inst()->getResourceURL('framework/admin/', 'client/dist/styles/css/editor.css');
 
         // Themed editor.css
-        $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', SSViewer::get_themes());
+        $themedEditor = ResourceLoader::inst()->getResourceURL(SSViewer::get_themes(), 'css/editor.css');
         if ($themedEditor) {
-            $editor[] = Director::absoluteURL($themedEditor, Director::BASE);
+            $editor[] = $themedEditor;
         }
 
         return $editor;
