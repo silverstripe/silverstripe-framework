@@ -455,7 +455,7 @@ EOT;
 		$obj2aa->delete();
 		$obj2ab->delete();
 		// Don't pre-load all children
-		$nodeCountThreshold = 1;
+		$nodeCountThreshold = 3;
 
 		$childrenMethod = 'AllChildren';
 		$numChildrenMethod = 'numChildren';
@@ -500,7 +500,7 @@ EOT;
 		$obj2aa->delete();
 		$obj2ab->delete();
 		// Don't pre-load all children
-		$nodeCountThreshold = 1;
+		$nodeCountThreshold = 3;
 
 		$childrenMethod = 'AllChildrenIncludingDeleted';
 		$numChildrenMethod = 'numHistoricalChildren';

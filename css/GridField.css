@@ -38,6 +38,8 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table thead { color: #323e46; background: transparent; }
 .cms table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
 .cms table.ss-gridfield-table thead tr.filter-header .fieldgroup .fieldgroup-field { padding: 0; }
+.cms table.ss-gridfield-table thead tr.filter-header .field { color: #323e46; }
+.cms table.ss-gridfield-table thead tr.filter-header .field label { color: #FFF; }
 .cms table.ss-gridfield-table thead tr:first-child th:first-child { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
 .cms table.ss-gridfield-table thead tr:first-child th:last-child { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
 .cms table.ss-gridfield-table tbody { background: #FFF; }

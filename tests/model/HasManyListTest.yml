@@ -1,0 +1,26 @@
+HasManyListTest_Company:
+  silverstripe:
+    Name: 'SilverStripe Ltd'
+HasManyListTest_Employee:
+  john:
+    Name: 'John Smith'
+    Company: =>HasManyListTest_Company.silverstripe
+  jenny:
+    Name: 'Jenny Smith'
+    Company: =>HasManyListTest_Company.silverstripe
+HasManyListTest_CompanyCar:
+  jaguar:
+    Make: 'Jaguar'
+    Model: 'E Type'
+    User: =>HasManyListTest_Employee.john
+    Company: =>HasManyListTest_Company.silverstripe
+  ferrari:
+    Make: 'Ferrari'
+    Model: 'F40'
+    User: =>HasManyListTest_Employee.jenny
+    Company: =>HasManyListTest_Company.silverstripe
+  lamborghini:
+    Make: 'Lamborghini'
+    Model: 'Countach'
+    User: =>HasManyListTest_Employee.jenny
+    Company: =>HasManyListTest_Company.silverstripe

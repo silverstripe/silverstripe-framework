@@ -323,6 +323,7 @@ class GDBackend extends Object implements Image_Backend {
 		}
 		$rotate=imagecreatetruecolor($destWidth,$destHeight);
 		imagealphablending($rotate, false);
+		imagesavealpha($rotate, true); // to maintain PNG transparency
 		for ($x = 0; $x < ($sourceWidth); $x++) {
 			for ($y = 0; $y < ($sourceHeight); $y++) {
 				$color = imagecolorat($this->gd, $x, $y);
