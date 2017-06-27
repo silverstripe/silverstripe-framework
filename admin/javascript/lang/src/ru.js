@@ -1,7 +1,7 @@
 {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Вы выбрали {num} страниц(у)\nВы уверены что хотите отправить их в архив?\n\nПубликации этих страниц и их под-страниц будут отменены и отправлены в архив. ",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Вы выбрали {num} страниц(у)\n\nВы уверены что хотите отменить публикацию этих страниц?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Вы выбрали {num} страниц(у)\n\nВы уверены что хотите их опубликовать?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Вы выбрали {num} страниц(у)\n\nВы уверены что хотите восстановить эти страницы в черновик?\n\nПод-страницы архивных страниц будут восстановлены в корень если эти страницы также не отмечены для восстановления.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Вы выбрали {num} страниц(у)\n\nВы уверены что хотите отменить их публикацию?",

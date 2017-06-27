@@ -1,7 +1,7 @@
 {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "شما {num} صفحه(صفحه‌ها) را انتخاب کرده‌اید.\n\n\nآیا از این‌که می‌خواهید بایگانی شوند اطمینان دارید؟\n\nتمامی این صفحات و تمامی صفحات فرزند آن‌ها عدم انتشار می‌شوند و به بایگانی ارسال می‌گردند.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "شما {num} صفحه(صفحه‌ها) را انتخاب کرده‌اید.\n\nآیا واقعاً می‌خواهید آن‌ها از لایو را حذف نمایید؟",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "شما {num} صفحه(صفحه‌ها) را انتخاب کرده‌اید.\n\nآیا واقعاً می‌خواهید آن‌ها را منتشر نمایید؟",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "شما {num} صفحه را انتخاب کرده‌اید.\n\nآیا واقعاً می‌خواهید انتشار آن‌ها را لغو نمایید",
