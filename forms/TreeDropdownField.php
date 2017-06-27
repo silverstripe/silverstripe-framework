@@ -107,6 +107,13 @@ class TreeDropdownField extends FormField {
 			$this->childrenMethod = 'ChildFolders';
 			$this->numChildrenMethod = 'numChildFolders';
 		}
+		else {
+			// AllChildren should be used as a default because
+			// if you use AllChildrenIncludingDeleted instead, the filters will be much more demanding
+			// this is because instead of working with DataList you will be working with ArrayList
+			// AllChildren should be always used when dealing with more pages than the node leaf limit
+			$this->childrenMethod = 'AllChildren';
+		}
 
 		$this->addExtraClass('single');
 
@@ -303,16 +310,57 @@ class TreeDropdownField extends FormField {
 		if ($this->filterCallback || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 
-		$obj->markPartialTree($nodeCountThreshold = 30, $context = null,
-			$this->childrenMethod, $this->numChildrenMethod);
+		// prepare a filter by ids, this is very useful when we have thousands of child pages under common parent
+		$filteredIds = ($this->search != '' && !is_null($this->searchIds) && is_array($this->searchIds))
+			? array_keys($this->searchIds) : array();
+
+		// collect IDs of currently selected pages (this includes hierarchy path)
+		$forceValue = $request->requestVar('forceValue');
+		if (!is_null($forceValue) || $this->value) {
+			$fieldValue = (!is_null($forceValue) ? $forceValue : $this->value);
+
+			if (($values = preg_split('/,\s*/', $fieldValue)) && count($values)) {
+				foreach ($values as $value) {
+					if (!$value || $value == 'unchanged') {
+						continue;
+					}
+
+					$selectedObject = $this->objectForKey($value);
+
+					// add all pages along the hierarchy path
+					$stack = $selectedObject->parentStack();
+					foreach ($stack as $stackItem) {
+						$filteredIds[] = $stackItem->ID;
+					}
+				}
+			}
+		}
+
+		// main node leaf limit configuration
+		$nodeCountThreshold = 30;
+		$obj->markPartialTree(
+			$nodeCountThreshold, $context = null,
+			$this->childrenMethod, $this->numChildrenMethod, $filteredIds
+		);
 
 		// allow to pass values to be selected within the ajax request
-		if( isset($_REQUEST['forceValue']) || $this->value ) {
-			$forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
-			if(($values = preg_split('/,\s*/', $forceValue)) && count($values)) foreach($values as $value) {
-				if(!$value || $value == 'unchanged') continue;
+		if (!is_null($forceValue) || $this->value) {
+			$fieldValue = (!is_null($forceValue) ? $forceValue : $this->value);
 
-				$obj->markToExpose($this->objectForKey($value));
+			if (($values = preg_split('/,\s*/', $fieldValue)) && count($values)) {
+				foreach ($values as $value) {
+					if (!$value || $value == 'unchanged') {
+						continue;
+					}
+
+					$obj->markToExpose(
+						$this->objectForKey($value),
+						$this->childrenMethod,
+						$this->numChildrenMethod,
+						$nodeCountThreshold,
+						$filteredIds
+					);
+				}
 			}
 		}
 
@@ -337,7 +385,7 @@ class TreeDropdownField extends FormField {
 		// Skip the check if we're filtering the tree, since its not clear how many children will
 		// match the filter criteria until they're queried (and matched up with previously marked nodes).
 		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
-		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
+		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search && count($filteredIds) == 0) {
 			$className = $this->sourceObject;
 			$nodeCountCallback = function($parent, $numChildren) use($className, $nodeThresholdLeaf) {
 				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
@@ -361,7 +409,8 @@ class TreeDropdownField extends FormField {
 				$this->numChildrenMethod,
 				true, // root call
 				null,
-				$nodeCountCallback
+				$nodeCountCallback,
+                $filteredIds
 			);
 			return substr(trim($html), 4, -5);
 		} else {
@@ -374,7 +423,8 @@ class TreeDropdownField extends FormField {
 				$this->numChildrenMethod,
 				true, // root call
 				null,
-				$nodeCountCallback
+				$nodeCountCallback,
+                $filteredIds
 			);
 			return $html;
 		}

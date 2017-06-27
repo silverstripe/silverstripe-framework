@@ -44,8 +44,14 @@ class HasManyList extends RelationList {
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) $id = $this->getForeignID();
 
+		// Try to include the table name for the given foreign key
+		if ($table = ClassInfo::table_for_object_field($this->dataClass, $this->foreignKey)) {
+			$key = "\"$table\".\"$this->foreignKey\"";
+		} else {
+			$key = "\"$this->foreignKey\"";
+		}
+
 		// Apply relation filter
-		$key = "\"$this->foreignKey\"";
 		if(is_array($id)) {
 			return array("$key IN (".DB::placeholders($id).")"  => $id);
 		} else if($id !== null){

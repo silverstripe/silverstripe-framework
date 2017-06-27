@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('it', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Hai selezionato {num} pagina(e).\n\nSei sicuro di volerle archiviare?\n\nQueste pagine insieme a tutte le pagine figlio saranno spubblicate ed archiviate.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Hai {num} pagine selezionate.\n\nVuoi veramente eliminare queste pagine dal sito live?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Hai {num} pagine selezionate.\n\nVuoi veramente pubblicarle?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Hai selezionato {num} pagina(e).\n\nSei sicuri di volerle ripristinare?\n\nI figli delle pagine archiviate saranno ripristinati nel primo livello, a meno anche i genitori non vengano ripristinati.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Hai {num} pagine selezionate.\n\nVuoi veramente nasconderle?",

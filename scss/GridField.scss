@@ -150,11 +150,21 @@ $gf_grid_x:	16px;
 		thead {
 			color: darken($color-base, 50%);
 			background: transparent;
+
 			tr.filter-header {
 				.fieldgroup {
-					max-width:$gf_grid_x*32; //max width 512px
+					max-width: $gf_grid_x * 32; //max width 512px
+
 					.fieldgroup-field {
-						padding:0;
+						padding: 0;
+					}
+				}
+
+				.field {
+					color: darken($color-base, 50%);
+
+					label {
+						color: #FFF;
 					}
 				}
 			}

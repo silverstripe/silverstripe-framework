@@ -2027,13 +2027,14 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *                       reusing a string which has already been "declared" (using another call to this function,
 	 *                       with the same class and entity), you can omit it.
 	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help
-	 *                        translators with some more info using this param
-	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding
-	 *                              expressions in {curly brackets} in the $string. The injection array can also be
-	 *                              used as the their argument to the _t() function
+	 *                       translators with some more info using this param
+	 * @param array $injection (optional) array of key value pairs that are used to replace corresponding
+	 *                       expressions in {curly brackets} in the $string. The injection array can also be
+	 *                       used as the their argument to the _t() function. The injection array can be the second,
+	 *                       third or fourth parameter. The function will use the first parameter that is an array
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
-	public static function _t($entity, $string = "", $context = "", $injection = "") {
+	public static function _t($entity, $string = "", $context = "", $injection = array()) {
 		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
 			Deprecation::notice(
 				'3.0',
