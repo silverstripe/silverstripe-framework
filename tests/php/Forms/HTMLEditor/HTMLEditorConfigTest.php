@@ -5,10 +5,13 @@ namespace SilverStripe\Forms\Tests\HTMLEditor;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\SimpleResourceURLGenerator;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -49,6 +52,10 @@ class HTMLEditorConfigTest extends SapphireTest
 
     public function testEnablePluginsByArrayWithPaths()
     {
+        // Disable nonces
+        $urlGenerator = new SimpleResourceURLGenerator();
+        Injector::inst()->registerService($urlGenerator, ResourceURLGenerator::class);
+
         Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
@@ -92,7 +99,7 @@ class HTMLEditorConfigTest extends SapphireTest
         // Plugin specified with standard location
         $this->assertContains('plugin4', array_keys($plugins));
         $this->assertEquals(
-            'http://mysite.com/subdir/test/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
+            '/subdir/silverstripe-admin/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
             $plugins['plugin4']
         );
 

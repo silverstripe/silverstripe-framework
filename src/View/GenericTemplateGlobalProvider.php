@@ -2,7 +2,7 @@
 
 namespace SilverStripe\View;
 
-use InvalidArgumentException;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\ORM\DataList;
 
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider
@@ -17,31 +17,23 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
     }
 
     /**
-     * @var array Module paths
-     */
-    public static $modules = array(
-        'framework' => FRAMEWORK_DIR,
-        'frameworkadmin' => FRAMEWORK_ADMIN_DIR,
-        'thirdparty' => THIRDPARTY_DIR,
-        'assets' => ASSETS_DIR
-    );
-
-    /**
      * Given some pre-defined modules, return the filesystem path of the module.
      * @param string $name Name of module to find path of
      * @return string
      */
     public static function ModulePath($name)
     {
-        if (isset(self::$modules[$name])) {
-            return self::$modules[$name];
-        } else {
-            throw new InvalidArgumentException(sprintf(
-                '%s is not a supported argument. Possible values: %s',
-                $name,
-                implode(', ', self::$modules)
-            ));
+        // BC for a couple fo the key modules in the old syntax. Reduces merge brittleness but can
+        // be removed before 4.0 stable
+        $legacyMapping = [
+            'framework' => 'silverstripe/framework',
+            'frameworkadmin' => 'silverstripe/admin',
+        ];
+        if (isset($legacyMapping[$name])) {
+            $name = $legacyMapping[$name];
         }
+
+        return ModuleLoader::getModule($name)->getRelativePath();
     }
 
     /**

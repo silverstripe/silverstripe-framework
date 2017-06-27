@@ -11,6 +11,8 @@ use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\View\Requirements_Backend;
+use SilverStripe\Core\Manifest\ResourceURLGenerator;
+use SilverStripe\Control\SimpleResourceURLGenerator;
 
 /**
  * @todo Test that order of combine_files() is correct
@@ -634,14 +636,14 @@ class RequirementsTest extends SapphireTest
 
         /* Javascript has correct path */
         $this->assertRegExp(
-            '/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',
+            '/src=".*\/RequirementsTest_a\.js\?test=1&amp;test=2&amp;test=3&amp;m=\d\d+/',
             $html,
             'javascript has correct path'
         );
 
         /* CSS has correct path */
         $this->assertRegExp(
-            '/href=".*\/RequirementsTest_a\.css\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',
+            '/href=".*\/RequirementsTest_a\.css\?test=1&amp;test=2&amp;test=3&amp;m=\d\d+/',
             $html,
             'css has correct path'
         );
@@ -804,6 +806,9 @@ class RequirementsTest extends SapphireTest
 
     public function testCommentedOutScriptTagIsIgnored()
     {
+        /// Disable nonce
+        Injector::inst()->registerService(new SimpleResourceURLGenerator(), ResourceURLGenerator::class);
+
         $template = '<html><head></head><body><!--<script>alert("commented out");</script>-->'
             . '<h1>more content</h1></body></html>';
         /**
@@ -811,7 +816,7 @@ class RequirementsTest extends SapphireTest
 */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
-        $backend->setSuffixRequirements(false);
+
         $src = $this->getThemeRoot() . '/javascript/RequirementsTest_a.js';
         $urlSrc = Controller::join_links(Director::baseURL(), $src);
         $backend->javascript($src);
@@ -889,6 +894,10 @@ EOS
 
     public function testSuffix()
     {
+        /// Disable nonce
+        $urlGenerator = new SimpleResourceURLGenerator();
+        Injector::inst()->registerService($urlGenerator, ResourceURLGenerator::class);
+
         $template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
         $basePath = $this->getThemeRoot();
 
@@ -901,20 +910,20 @@ EOS
         $backend->css($basePath .'/css/RequirementsTest_a.css');
         $backend->css($basePath .'/css/RequirementsTest_b.css?foo=bar&bla=blubb');
 
-        $backend->setSuffixRequirements(true);
+        $urlGenerator->setNonceStyle('mtime');
         $html = $backend->includeInHTML($template);
         $this->assertRegExp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
-        $this->assertRegExp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+        $this->assertRegExp('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
         $this->assertRegExp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
-        $this->assertRegExp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+        $this->assertRegExp('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
 
-        $backend->setSuffixRequirements(false);
+        $urlGenerator->setNonceStyle(null);
         $html = $backend->includeInHTML($template);
         $this->assertNotContains('RequirementsTest_a.js=', $html);
         $this->assertNotRegExp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
-        $this->assertNotRegExp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+        $this->assertNotRegExp('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
         $this->assertNotRegExp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
-        $this->assertNotRegExp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+        $this->assertNotRegExp('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
     }
 
     /**
