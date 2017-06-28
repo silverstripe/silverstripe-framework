@@ -82,7 +82,7 @@ class ModuleManifestTest extends SapphireTest
         $this->assertFalse($module->hasResource('package.json'));
         $this->assertEquals(
             'moduleb/composer.json',
-            $module->getResourcePath('composer.json')
+            $module->getRelativeResourcePath('composer.json')
         );
     }
 
@@ -96,7 +96,7 @@ class ModuleManifestTest extends SapphireTest
         $this->assertTrue($module->hasResource('composer.json'));
         $this->assertEquals(
             'composer.json',
-            $module->getResourcePath('composer.json')
+            $module->getRelativeResourcePath('composer.json')
         );
     }
 }

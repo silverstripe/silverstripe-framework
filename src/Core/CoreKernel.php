@@ -318,7 +318,6 @@ class CoreKernel implements Kernel
      */
     protected function getDatabaseConfig()
     {
-
         /** @skipUpgrade */
         $databaseConfig = [
             "type" => getenv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
@@ -361,7 +360,7 @@ class CoreKernel implements Kernel
      */
     protected function getDatabasePrefix()
     {
-        return getenv('SS_DATABASE_PREFIX');
+        return getenv('SS_DATABASE_PREFIX') ?: '';
     }
 
     /**
@@ -406,8 +405,12 @@ class CoreKernel implements Kernel
             $database = str_replace('.', '', basename($databaseDir));
             $prefix = $this->getDatabasePrefix();
 
-            if ($prefix === false) {
+            if ($prefix) {
                 $prefix = 'SS_';
+            } else {
+                // If no prefix, hard-code prefix into database global
+                $prefix = '';
+                $database = 'SS_' . $database;
             }
 
             return $prefix . $database;

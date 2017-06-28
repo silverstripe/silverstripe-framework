@@ -212,7 +212,7 @@ PHP
         // Build db within HTTPApplication
         $app->execute($request, function (HTTPRequest $request) use ($config) {
             // Start session and execute
-            $request->getSession()->init();
+            $request->getSession()->init($request);
 
             // Output status
             $this->statusMessage("Building database schema...");
@@ -242,7 +242,7 @@ PHP
 
             $request->getSession()->set('username', $config['admin']['username']);
             $request->getSession()->set('password', $config['admin']['password']);
-            $request->getSession()->save();
+            $request->getSession()->save($request);
         }, true);
 
         // Check result of install
