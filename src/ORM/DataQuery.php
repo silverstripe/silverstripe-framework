@@ -1093,7 +1093,7 @@ class DataQuery
     }
 
     /**
-     * Select the given fields from the given table.
+     * Select the only given fields from the given table.
      *
      * @param string $table Unquoted table name (will be escaped automatically)
      * @param array $fields Database column names (will be escaped automatically)
@@ -1102,10 +1102,28 @@ class DataQuery
     public function selectFromTable($table, $fields)
     {
         $fieldExpressions = array_map(function ($item) use ($table) {
-            return "\"{$table}\".\"{$item}\"";
+            return Convert::symbol2sql("{$table}.{$item}");
         }, $fields);
 
         $this->query->setSelect($fieldExpressions);
+
+        return $this;
+    }
+
+    /**
+     * Add the given fields from the given table to the select statement.
+     *
+     * @param string $table Unquoted table name (will be escaped automatically)
+     * @param array $fields Database column names (will be escaped automatically)
+     * @return $this
+     */
+    public function addSelectFromTable($table, $fields)
+    {
+        $fieldExpressions = array_map(function ($item) use ($table) {
+            return Convert::symbol2sql("{$table}.{$item}");
+        }, $fields);
+
+        $this->query->addSelect($fieldExpressions);
 
         return $this;
     }

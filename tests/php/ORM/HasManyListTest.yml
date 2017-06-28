@@ -1,0 +1,26 @@
+SilverStripe\ORM\Tests\DataObjectTest\Company:
+  silverstripe:
+    Name: 'SilverStripe Ltd'
+SilverStripe\ORM\Tests\HasManyListTest\Employee:
+  john:
+    Name: 'John Smith'
+    Company: =>SilverStripe\ORM\Tests\DataObjectTest\Company.silverstripe
+  jenny:
+    Name: 'Jenny Smith'
+    Company: =>SilverStripe\ORM\Tests\DataObjectTest\Company.silverstripe
+SilverStripe\ORM\Tests\HasManyListTest\CompanyCar:
+  jaguar:
+    Make: 'Jaguar'
+    Model: 'E Type'
+    User: =>SilverStripe\ORM\Tests\HasManyListTest\Employee.john
+    Company: =>SilverStripe\ORM\Tests\DataObjectTest\Company.silverstripe
+  ferrari:
+    Make: 'Ferrari'
+    Model: 'F40'
+    User: =>SilverStripe\ORM\Tests\HasManyListTest\Employee.jenny
+    Company: =>SilverStripe\ORM\Tests\DataObjectTest\Company.silverstripe
+  lamborghini:
+    Make: 'Lamborghini'
+    Model: 'Countach'
+    User: =>SilverStripe\ORM\Tests\HasManyListTest\Employee.jenny
+    Company: =>SilverStripe\ORM\Tests\DataObjectTest\Company.silverstripe

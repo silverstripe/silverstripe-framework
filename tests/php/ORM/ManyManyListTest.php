@@ -8,6 +8,8 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
+use SilverStripe\ORM\Tests\ManyManyListTest\Product;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -51,6 +53,29 @@ class ManyManyListTest extends SapphireTest
         $this->assertEquals('Foo', $check->Reference, 'Basic scalar fields should exist');
         $this->assertInstanceOf(DBMoney::class, $check->Worth, 'Composite fields should exist on the record');
         $this->assertEquals(100, $check->Worth->getAmount());
+    }
+
+    /**
+     * This test targets a bug where appending many_many_extraFields to a query would
+     * result in erroneous queries for sort orders that rely on _SortColumn0
+     */
+    public function testAddCompositedExtraFieldsWithSortColumn0()
+    {
+        $obj = new ExtraFieldsObject();
+        $obj->write();
+
+        $product = new Product();
+        $product->Title = 'Test Product';
+        $product->write();
+
+        // the actual test is that this does not generate an error in the sql.
+        $obj->Products()->add($product, array(
+            'Reference' => 'Foo'
+        ));
+
+        $result = $obj->Products()->First();
+        $this->assertEquals('Foo', $result->Reference, 'Basic scalar fields should exist');
+        $this->assertEquals('Test Product', $result->Title);
     }
 
     public function testCreateList()
