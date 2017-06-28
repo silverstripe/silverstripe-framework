@@ -881,6 +881,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         foreach ($this->getFinalisedQuery() as $row) {
             yield $this->createDataObject($row);
         }
+
+        // Re-set the finaliseQuery so that it can be re-executed
+        $this->finalisedQuery = null;
     }
 
     /**
