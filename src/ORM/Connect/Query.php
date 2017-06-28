@@ -84,6 +84,15 @@ abstract class Query implements \IteratorAggregate
     }
 
     /**
+     * @deprecated Use record() instead
+     * @return array
+     */
+    public function first()
+    {
+        return $this->record();
+    }
+
+    /**
      * Returns the first column of the first record.
      *
      * @return string
