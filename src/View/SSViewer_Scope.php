@@ -3,6 +3,7 @@
 namespace SilverStripe\View;
 
 use ArrayIterator;
+use Countable;
 use Iterator;
 
 /**
@@ -289,22 +290,30 @@ class SSViewer_Scope
         }
 
         if (!$this->itemIterator) {
-            // Turn the iterator into an array. This lets us get the count and iterate on it, even if it's a generator.
-            if (is_array($this->item)) {
-                $arrayVersion = $this->item;
+            // TemplateIterator provides methods for extracting the count and iterator directly
+            if ($this->item instanceof TemplateIterator) {
+                $this->itemIterator = $this->item->getTemplateIterator();
+                $this->itemIteratorTotal = $this->item->getTemplateIteratorCount();
             } else {
-                $arrayVersion = [];
-                foreach ($this->item as $record) {
-                    $arrayVersion[] = $record;
+                // Item may be an array or a regular IteratorAggregate
+                if (is_array($this->item)) {
+                    $this->itemIterator = new ArrayIterator($this->item);
+                } else {
+                    $this->itemIterator = $this->item->getIterator();
+                }
+
+                // If the item implements Countable, use that to fetch the count, otherwise we have to inspect the
+                // iterator and then rewind it
+                if ($this->item instanceof Countable) {
+                    $this->itemIteratorTotal = count($this->item);
+                } else {
+                    $this->itemIteratorTotal = iterator_count($this->itemIterator);
+                    $this->itemIterator->rewind();
                 }
             }
 
-            $this->itemIterator = new ArrayIterator($arrayVersion);
-
             $this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR] = $this->itemIterator;
-            $this->itemIteratorTotal = count($arrayVersion); // Count the total number of items
             $this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR_TOTAL] = $this->itemIteratorTotal;
-            $this->itemIterator->rewind();
         } else {
             $this->itemIterator->next();
         }
