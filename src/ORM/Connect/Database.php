@@ -343,12 +343,8 @@ abstract class Database
                         $query->addWhere(array('"ID"' => $writeInfo['id']));
                     }
 
-                    // Test to see if this update query shouldn't, in fact, be an insert
-                    if ($query->toSelect()->count()) {
-                        $query->execute();
-                        break;
-                    }
-                    // ...if not, we'll skip on to the insert code
+                    $query->execute();
+                    break;
 
                 case "insert":
                     // Ensure that the ID clause is given if possible
