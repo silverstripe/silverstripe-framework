@@ -33,7 +33,7 @@ use LogicException;
  *
  * Subclasses of DataList may add other methods that have the same effect.
  */
-class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable, TemplateIterator
+class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
 
     /**
@@ -856,29 +856,12 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * @return Generator|DataObject[]
-     */
-    public function getTemplateIterator()
-    {
-        foreach ($this->getFinalisedQuery() as $row) {
-            yield $this->createDataObject($row);
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getTemplateIteratorCount()
-    {
-        return $this->getFinalisedQuery()->numRecords();
-    }
-
-    /**
      * Returns the Query result for this DataList. Repeated calls will return
      * a cached result, unless the DataQuery underlying this list has been
      * modified
      *
      * @return SilverStripe\ORM\Connect\Query
+     * @internal This API may change in minor releases
      */
     protected function getFinalisedQuery()
     {
