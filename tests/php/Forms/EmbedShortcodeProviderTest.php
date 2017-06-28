@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider;
+use SilverStripe\View\ViewSupport\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\framework\tests\php\Forms\EmbedShortcodeProviderTest\MockResolver;
 

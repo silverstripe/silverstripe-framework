@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Forms\HtmlEditor;
+namespace SilverStripe\View\ViewSupport;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
