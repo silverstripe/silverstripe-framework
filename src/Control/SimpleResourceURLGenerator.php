@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 
 /**
@@ -30,6 +31,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * Currently only "mtime" is allowed
      *
      * @param string|null $nonceStyle The style of nonces to apply, or null to disable
+     * @return $this
      */
     public function setNonceStyle($nonceStyle)
     {
@@ -37,6 +39,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             throw new InvalidArgumentException('The only allowed NonceStyle is mtime');
         }
         $this->nonceStyle = $nonceStyle;
+        return $this;
     }
 
     /**
@@ -55,7 +58,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         }
 
         $nonce = '';
-        if ($this->nonceStyle) {
+        // Don't add nonce to directories
+        if ($this->nonceStyle && is_file($absolutePath)) {
             $nonce = (strpos($relativePath, '?') === false) ? '?' : '&';
 
             switch ($this->nonceStyle) {
