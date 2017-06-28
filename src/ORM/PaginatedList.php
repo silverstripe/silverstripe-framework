@@ -233,7 +233,7 @@ class PaginatedList extends ListDecorator
         $result = [];
 
         // Use getIterator()
-        foreach($this as $record) {
+        foreach ($this as $record) {
             $result[] = $record;
         }
 
