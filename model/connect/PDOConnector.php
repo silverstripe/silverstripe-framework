@@ -164,6 +164,20 @@ class PDOConnector extends DBConnector {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;
 		}
 
+		// Set SSL options from mysite/_config.php if they exist
+		if(
+			array_key_exists('ssl_key', $parameters) &&
+			array_key_exists('ssl_cert', $parameters) &&
+			array_key_exists('ssl_ca', $parameters) &&
+			array_key_exists('ssl_cipher', $parameters)) {
+
+				$options[PDO::MYSQL_ATTR_SSL_KEY] = $parameters['ssl_key'];
+		        $options[PDO::MYSQL_ATTR_SSL_CERT] =$parameters['ssl_cert'];
+		        $options[PDO::MYSQL_ATTR_SSL_CA] = $parameters['ssl_ca'];
+		        $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $parameters['ssl_cipher'];
+
+		}
+		
 		// May throw a PDOException if fails
 		$this->pdoConnection = new PDO(
 			$driver.implode(';', $dsn),
