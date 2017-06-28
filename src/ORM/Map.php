@@ -262,21 +262,21 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         $keyField = $this->keyField;
         $valueField = $this->valueField;
 
-        foreach($this->firstItems as $k => $v) {
+        foreach ($this->firstItems as $k => $v) {
             yield $k => $v;
         }
 
-        foreach($this->list as $record) {
-            if(isset($this->firstItems[$record->$keyField])) {
+        foreach ($this->list as $record) {
+            if (isset($this->firstItems[$record->$keyField])) {
                 continue;
             }
-            if(isset($this->lastItems[$record->$keyField])) {
+            if (isset($this->lastItems[$record->$keyField])) {
                 continue;
             }
             yield $this->extractValue($record, $this->keyField) => $this->extractValue($record, $this->valueField);
         }
 
-        foreach($this->lastItems as $k => $v) {
+        foreach ($this->lastItems as $k => $v) {
             yield $k => $v;
         }
     }

@@ -42,5 +42,4 @@ class PDOQuery extends Query
     {
         return count($this->results);
     }
-
 }

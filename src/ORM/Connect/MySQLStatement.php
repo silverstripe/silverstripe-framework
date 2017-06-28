@@ -96,7 +96,7 @@ class MySQLStatement extends Query
 
     public function getIterator()
     {
-        while($this->statement->fetch()) {
+        while ($this->statement->fetch()) {
             // Dereferenced row
             $row = array();
             foreach ($this->boundValues as $key => $value) {

@@ -44,7 +44,7 @@ class PDODatabaseTest extends SapphireTest
 
         // Iterating one level should not buffer, but return the right result
         $result1Array = [];
-        foreach($result1 as $record) {
+        foreach ($result1 as $record) {
             $result1Array[] = $record;
         }
         $this->assertEquals(
@@ -62,7 +62,7 @@ class PDODatabaseTest extends SapphireTest
 
         // Test second statement
         $result2Array = [];
-        foreach($result2 as $record) {
+        foreach ($result2 as $record) {
             $result2Array[] = $record;
             break;
         }
@@ -75,7 +75,7 @@ class PDODatabaseTest extends SapphireTest
 
         // Test non-prepared query
         $result3Array = [];
-        foreach($result3 as $record) {
+        foreach ($result3 as $record) {
             $result3Array[] = $record;
             break;
         }
