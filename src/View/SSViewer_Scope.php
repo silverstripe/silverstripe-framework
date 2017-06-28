@@ -290,26 +290,27 @@ class SSViewer_Scope
         }
 
         if (!$this->itemIterator) {
-            // TemplateIterator provides methods for extracting the count and iterator directly
-            if ($this->item instanceof TemplateIterator) {
-                $this->itemIterator = $this->item->getTemplateIterator();
-                $this->itemIteratorTotal = $this->item->getTemplateIteratorCount();
-            } else {
-                // Item may be an array or a regular IteratorAggregate
-                if (is_array($this->item)) {
-                    $this->itemIterator = new ArrayIterator($this->item);
-                } else {
-                    $this->itemIterator = $this->item->getIterator();
-                }
+            // Note: it is important that getIterator() is called before count() as implemenations may rely on
+            // this to efficiency get both the number of records and an iterator (e.g. DataList does this)
 
-                // If the item implements Countable, use that to fetch the count, otherwise we have to inspect the
-                // iterator and then rewind it
-                if ($this->item instanceof Countable) {
-                    $this->itemIteratorTotal = count($this->item);
-                } else {
-                    $this->itemIteratorTotal = iterator_count($this->itemIterator);
-                    $this->itemIterator->rewind();
-                }
+            // Item may be an array or a regular IteratorAggregate
+            if (is_array($this->item)) {
+                $this->itemIterator = new ArrayIterator($this->item);
+            } else {
+                $this->itemIterator = $this->item->getIterator();
+
+                // This will execute code in a generator up to the first yield. For example, this ensures that
+                // DataList::getIterator() is called before Datalist::count()
+                $this->itemIterator->rewind();
+            }
+
+            // If the item implements Countable, use that to fetch the count, otherwise we have to inspect the
+            // iterator and then rewind it.
+            if ($this->item instanceof Countable) {
+                $this->itemIteratorTotal = count($this->item);
+            } else {
+                $this->itemIteratorTotal = iterator_count($this->itemIterator);
+                $this->itemIterator->rewind();
             }
 
             $this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR] = $this->itemIterator;
