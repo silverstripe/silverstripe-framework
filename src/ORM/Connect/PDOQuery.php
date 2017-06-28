@@ -33,7 +33,8 @@ class PDOQuery extends Query
         $statement->closeCursor();
     }
 
-    public function getIterator() {
+    public function getIterator()
+    {
         return new ArrayIterator($this->results);
     }
 
