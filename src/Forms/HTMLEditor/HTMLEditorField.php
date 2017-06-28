@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
-use SilverStripe\Assets\Image;
+use SilverStripe\Assets\ViewSupport\ImageShortcodeProvider;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -145,7 +145,7 @@ class HTMLEditorField extends TextareaField
     public function setValue($value, $data = null)
     {
         // Regenerate links prior to preview, so that the editor can see them.
-        $value = Image::regenerate_html_links($value);
+        $value = ImageShortcodeProvider::regenerate_html_links($value);
         return parent::setValue($value);
     }
 
