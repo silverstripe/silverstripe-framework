@@ -127,6 +127,7 @@ class FormSchema
             'id' => $form->FormName(),
             'fields' => [],
             'messages' => [],
+            'notifyUnsavedChanges' => $form->getNotifyUnsavedChanges(),
         ];
 
         // flattened nested fields are returned, rather than only top level fields.
