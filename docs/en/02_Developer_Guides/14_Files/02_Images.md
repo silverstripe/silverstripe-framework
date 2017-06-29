@@ -141,7 +141,40 @@ For usage on a website form, see [api:FileField].
 
 ### Image Quality
 
-To adjust the quality of the generated images when they are resized add the
+#### Source images
+
+Whenever SilverStripe performs a manipulation on an image, it saves the output
+as a new image file, and applies compression during the process. If the source
+image already had lossy compression applied, this leads to the image being
+compressed twice over which can produce a poor result. To ensure the best
+quality output images, it's recommended to upload high quality source images 
+(minimal or no compression) in to your asset store, and let SilverStripe take
+care of applying compression.
+
+Very high resolution images may cause GD to crash (especially on shared hosting 
+environments where resources are limited) so a good size for website images is 
+around 2000px on the longest edge.
+
+#### Forced resampling
+
+Since the 'master' images in your asset store may have a large file size, by
+default SilverStripe will always apply compression to your images to save
+bandwidth - even if no other manipulation (such as a crop or resize) is taking
+place. If you expect the images in your asset store to already have
+compression applied and want to serve up the original when no resampling is
+necessary, you can add this to your mysite/config/config.yml file:
+
+	:::yml
+	# Configure resampling for File dataobject
+	File:
+	  force_resample: false
+	# DBFile can be configured independently
+	SilverStripe\Filesystem\Storage\DBFile:
+	  force_resample: false
+
+#### Resampled image quality
+
+To adjust the quality of the generated images when they are resampled, add the
 following to your mysite/config/config.yml file:
 
 	:::yml
@@ -149,24 +182,6 @@ following to your mysite/config/config.yml file:
          SilverStripe\Assets\InterventionBackend:
            properties:
              Quality: 90
-
-By default SilverStripe image functions will not resample an image if no
-cropping or resizing is taking place. You can tell SilverStripe to always to
-always produce resampled output by adding this to your
-mysite/config/config.yml file:
-
-	:::yml
-	# Configure resampling for File dataobject
-	File:
-	  force_resample: true
-	# DBFile can be configured independently
-	SilverStripe\Filesystem\Storage\DBFile:
-	  force_resample: true
-
-If you are intending to resample images with SilverStripe it is good practice
-to upload high quality (minimal compression) images as these will produce
-better results when resampled. Very high resolution images may cause GD to
-crash so a good size for website images is around 2000px on the longest edge.
 
 ## Changing the manipulation driver to Imagick
 
