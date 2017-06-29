@@ -3,7 +3,7 @@ summary: Customize the generated HTML for a FormField or an entire Form.
 
 # Form Templates
 
-Most markup generated in SilverStripe can be replaced by custom templates. Both [api:Form] and [api:FormField] instances
+Most markup generated in SilverStripe can be replaced by custom templates. Both [api:SilverStripe\Forms\Form] and [api:SilverStripe\Forms\FormField] instances
 can be rendered out using custom templates using `setTemplate`. 
 
 	:::php
@@ -31,7 +31,7 @@ While you can override all templates using normal view inheritance (i.e defining
 the core template structure. It is recommended to use `setTemplate` and unique templates for specific forms.
 </div>
 
-For [api:FormField] instances, there are several other templates that are used on top of the main `setTemplate`.
+For [api:SilverStripe\Forms\FormField] instances, there are several other templates that are used on top of the main `setTemplate`.
 
 	:::php
 	$field = new TextField();
@@ -56,7 +56,7 @@ For [api:FormField] instances, there are several other templates that are used o
 	// field is embedded within another field. For example, if the field is 
 	// part of a `FieldGroup` or `CompositeField` alongside other fields.
 
-All templates are rendered within the scope of the [api:FormField]. To understand more about Scope within Templates as 
+All templates are rendered within the scope of the [api:SilverStripe\Forms\FormField]. To understand more about Scope within Templates as 
 well as the available syntax, see the [Templates](../templates) documentation.
 
 ## Related Documentation
@@ -65,5 +65,5 @@ well as the available syntax, see the [Templates](../templates) documentation.
 
 ## API Documentation
 
-* [api:Form]
-* [api:FormField]
+* [api:SilverStripe\Forms\Form]
+* [api:SilverStripe\Forms\FormField]

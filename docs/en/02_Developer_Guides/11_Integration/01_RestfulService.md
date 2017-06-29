@@ -187,7 +187,7 @@ To set global cURL settings you can update the `RestfulService` config via the C
 Here is an example to increase the HTTP Timeout globally. Insert this in your `_config.php` file:
 
 ```php
-Config::inst()->update('RestfulService', 'default_curl_options', array(
+SilverStripe\Core\Config\Config::inst()->update('RestfulService', 'default_curl_options', array(
 	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
 	CURLOPT_CONNECTTIMEOUT => 10,
 ));

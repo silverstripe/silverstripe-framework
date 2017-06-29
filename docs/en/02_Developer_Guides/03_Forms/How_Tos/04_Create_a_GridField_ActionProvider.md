@@ -3,7 +3,7 @@
 In a [GridField](/developer_guides/forms/field_types/gridfield) instance each table row can have a
 number of actions located the end of the row such as edit or delete actions.
 Each action is represented as a instance of a specific class
-(e.g [api:GridFieldEditButton]) which has been added to the `GridFieldConfig`
+(e.g [api:SilverStripe\Forms\GridField\GridFieldEditButton]) which has been added to the `GridFieldConfig`
 for that `GridField`
 
 As a developer, you can create your own custom actions to be located alongside
@@ -78,7 +78,7 @@ below:
 ## Add the GridFieldCustomAction to the current `GridFieldConfig`
 
 While we're working on the code, to add this new action to the `GridField`, add
-a new instance of the class to the [api:GridFieldConfig] object. The `GridField`
+a new instance of the class to the [api:SilverStripe\Forms\GridField\GridFieldConfig] object. The `GridField`
 [Reference](/developer_guides/forms/field_types/gridfield) documentation has more information about
 manipulating the `GridFieldConfig` instance if required.
 
@@ -99,7 +99,7 @@ Now let's go back and dive through the `GridFieldCustomAction` class in more
 detail.
 
 First thing to note is that our new class implements two interfaces,
-[api:GridField_ColumnProvider] and [api:GridField_ActionProvider].
+[api:SilverStripe\Forms\GridField\GridField_ColumnProvider] and [api:SilverStripe\Forms\GridField\GridField_ActionProvider].
 
 Each interface allows our class to define particular behaviors and is a core
 concept of the modular `GridFieldConfig` system.

@@ -40,11 +40,11 @@ code.
 
 <div class="alert" markdown="1">
 These checks are not enforced on low-level ORM operations such as `write()` or `delete()`, but rather rely on being 
-checked in the invoking code. The CMS default sections as well as custom interfaces like [api:ModelAdmin] or 
-[api:GridField] already enforce these permissions.
+checked in the invoking code. The CMS default sections as well as custom interfaces like [api:SilverStripe\Admin\ModelAdmin] or 
+[api:SilverStripe\Forms\GridField\GridField] already enforce these permissions.
 </div>
 
 ## API Documentation
 
-* [api:DataObject]
-* [api:Permission]
+* [api:SilverStripe\ORM\DataObject]
+* [api:SilverStripe\Security\Permission]

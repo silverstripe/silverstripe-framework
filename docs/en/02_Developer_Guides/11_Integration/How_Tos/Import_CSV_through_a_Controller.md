@@ -64,6 +64,6 @@ form (which is used for `MyDataObject` instances). You can access it through
 	}
 
 <div class="alert" markdown="1">
-This interface is not secured, consider using [api:Permission::check()] to limit the controller to users with certain 
+This interface is not secured, consider using [api:SilverStripe\Security\Permission::check()] to limit the controller to users with certain 
 access rights.
 </div>

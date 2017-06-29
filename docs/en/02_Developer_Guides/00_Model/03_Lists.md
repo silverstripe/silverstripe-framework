@@ -3,13 +3,13 @@ summary: The SS_List interface allows you to iterate through and manipulate a li
 
 # Managing Lists
 
-Whenever using the ORM to fetch records or navigate relationships you will receive an [api:SS_List] instance commonly as
-either [api:DataList] or [api:RelationList]. This object gives you the ability to iterate over each of the results or
+Whenever using the ORM to fetch records or navigate relationships you will receive an [api:SilverStripe\ORM\SS_List] instance commonly as
+either [api:SilverStripe\ORM\DataList] or [api:SilverStripe\ORM\RelationList]. This object gives you the ability to iterate over each of the results or
 modify.
 
 ## Iterating over the list.
 
-[api:SS_List] implements `IteratorAggregate`, allowing you to loop over the instance.
+[api:SilverStripe\ORM\SS_List] implements `IteratorAggregate`, allowing you to loop over the instance.
 
 	:::php
 	$members = Member::get();
@@ -50,7 +50,7 @@ A map is an array where the array indexes contain data as well as the values. Yo
 	//	3 => 'Will'
 	// );
 	
-This functionality is provided by the [api:Map] class, which can be used to build a map around any `SS_List`.
+This functionality is provided by the [api:SilverStripe\ORM\Map] class, which can be used to build a map around any `SS_List`.
 
 	:::php
 	$members = Member::get();
@@ -71,7 +71,7 @@ This functionality is provided by the [api:Map] class, which can be used to buil
 
 ## ArrayList
 
-[api:ArrayList] exists to wrap a standard PHP array in the same API as a database backed list.
+[api:SilverStripe\ORM\ArrayList] exists to wrap a standard PHP array in the same API as a database backed list.
 
 	:::php
 	$sam = Member::get()->byId(5);
@@ -87,8 +87,8 @@ This functionality is provided by the [api:Map] class, which can be used to buil
 
 ## API Documentation
 
-* [api:SS_List]
-* [api:RelationList]
-* [api:DataList]
-* [api:ArrayList]
-* [api:Map]
+* [api:SilverStripe\ORM\SS_List]
+* [api:SilverStripe\ORM\RelationList]
+* [api:SilverStripe\ORM\DataList]
+* [api:SilverStripe\ORM\ArrayList]
+* [api:SilverStripe\ORM\Map]

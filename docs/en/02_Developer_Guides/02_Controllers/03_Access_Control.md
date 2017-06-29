@@ -200,4 +200,4 @@ execution. This behavior can be used to implement permission checks.
 
 ## API Documentation
 
-* [api:Controller]
+* [api:SilverStripe\Control\Controller]

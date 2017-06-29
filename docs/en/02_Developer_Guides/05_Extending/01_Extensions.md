@@ -3,12 +3,12 @@ summary: Extensions and DataExtensions let you modify and augment objects transp
 
 # Extensions and DataExtensions
 
-An [api:Extension] allows for adding additional functionality to a [api:Object] or modifying existing functionality 
+An [api:SilverStripe\Core\Extension] allows for adding additional functionality to a [api:Object] or modifying existing functionality 
 without the hassle of creating a subclass. Developers can add Extensions to any [api:Object] subclass within core, modules
 or even their own code to make it more reusable.
 
-Extensions are defined as subclasses of either [api:DataExtension] for extending a [api:DataObject] subclass or 
-the [api:Extension] class for non DataObject subclasses (such as [api:Controllers])
+Extensions are defined as subclasses of either [api:SilverStripe\ORM\DataExtension] for extending a [api:SilverStripe\ORM\DataObject] subclass or 
+the [api:SilverStripe\Core\Extension] class for non DataObject subclasses (such as [api:SilverStripe\Control\Controller])
 
 <div class="info" markdown="1">
 For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
@@ -54,7 +54,7 @@ Alternatively, we can add extensions through PHP code (in the `_config.php` file
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
 transformed the original `Member` class in two ways:
 
-* Added a new [api:SS_Datetime] for the users date of birth, and;
+* Added a new [api:SilverStripe\ORM\FieldType\DBDatetime] for the users date of birth, and;
 * Added a `SayHi` method to output `Hi <User>`
 
 From within the extension we can add more functions, database fields, relations or other properties and have them added
@@ -199,7 +199,7 @@ you need to provide extension hooks at the beginning of the method use `before{.
 
 ## Owner
 
-In your [api:Extension] class you can only refer to the source object through the `owner` property on the class as 
+In your [api:SilverStripe\Core\Extension] class you can only refer to the source object through the `owner` property on the class as 
 `$this` will refer to your `Extension` instance.
 
 	:::php
@@ -285,5 +285,5 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 
 ## API Documentation
 
-* [api:Extension]
-* [api:DataExtension]
+* [api:SilverStripe\Core\Extension]
+* [api:SilverStripe\ORM\DataExtension]

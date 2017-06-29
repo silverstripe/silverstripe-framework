@@ -3,7 +3,7 @@ summary: A brief look at the definition of a Controller, creating actions and ho
 
 # Introduction to Controllers
 
-The following example is for a simple [api:Controller] class. When building off the SilverStripe Framework you will
+The following example is for a simple [api:SilverStripe\Control\Controller] class. When building off the SilverStripe Framework you will
 subclass the base `Controller` class.
 
 **mysite/code/controllers/TeamController.php**
@@ -67,10 +67,10 @@ It is standard in SilverStripe for your controller actions to be `lowercasewithn
 
 Action methods can return one of four main things:
 
-* an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:HTTPResponse] with the body set to the current template.
+* an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:SilverStripe\Control\HTTPResponse] with the body set to the current template.
 * `HTML`. SilverStripe will wrap the `HTML` into a `HTTPResponse` and set the status code to 200.
-* an [api:HTTPResponse] containing a manually defined `status code` and `body`.
-* an [api:HTTPResponse_Exception]. A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
+* an [api:SilverStripe\Control\HTTPResponse] containing a manually defined `status code` and `body`.
+* an [api:SilverStripe\Control\HTTPResponse_Exception]. A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
 **mysite/code/controllers/TeamController.php**
 
@@ -159,7 +159,7 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 	}
 
 <div class="info" markdown="1">
-The [api:Controller::join_links()] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
+The [api:SilverStripe\Control\Controller::join_links()] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 </div>
 
 ## Related Documentation
@@ -169,6 +169,6 @@ The [api:Controller::join_links()] is optional, but makes `Link()` more flexible
 
 ## API Documentation
 
-* [api:Controller]
-* [api:Director]
+* [api:SilverStripe\Control\Controller]
+* [api:SilverStripe\Control\Director]
 

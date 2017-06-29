@@ -3,7 +3,7 @@ summary: A more in depth look at how to map requests to particular controllers a
 
 # Routing
 
-Routing is the process of mapping URL's to [api:Controllers] and actions. In the introduction we defined a new custom route
+Routing is the process of mapping URL's to [api:SilverStripe\Control\Controller] and actions. In the introduction we defined a new custom route
 for our `TeamController` mapping any `teams` URL to our `TeamController`
 
 <div class="info" markdown="1">
@@ -97,7 +97,7 @@ echo $this->getRequest()->param('ID');
 
 ## URL Patterns
 
-The [api:RequestHandler] class will parse all rules you specify against the following patterns. The most specific rule
+The [api:SilverStripe\Control\RequestHandler] class will parse all rules you specify against the following patterns. The most specific rule
 will be the one followed for the response.
 
 <div class="alert">
@@ -148,16 +148,16 @@ pattern does not use the Controller class's default pattern of
 a *class name* object" with HTTP status 404.
 </div>
 
-In the above example the URLs were configured using the [api:Director] rules in the **routes.yml** file. Alternatively 
+In the above example the URLs were configured using the [api:SilverStripe\Control\Director] rules in the **routes.yml** file. Alternatively 
 you can specify these in your Controller class via the **$url_handlers** static array. This array is processed by the 
-[api:RequestHandler] at runtime once the `Controller` has been matched.
+[api:SilverStripe\Control\RequestHandler] at runtime once the `Controller` has been matched.
 
 This is useful when you want to provide custom actions for the mapping of `teams/*`. Say for instance we want to respond
 `coaches`, and `staff` to the one controller action `payroll`.
 
 **mysite/code/controllers/TeamController.php**
 
-```
+```php
 <?php
 
 use SilverStripe\Control\Controller;
@@ -214,7 +214,7 @@ Director:
 
 ## Links
 
-* [api:Controller] API documentation
-* [api:Director] API documentation
+* [api:SilverStripe\Control\Controller] API documentation
+* [api:SilverStripe\Control\Director] API documentation
 * [Example routes: framework](https://github.com/silverstripe/silverstripe-framework/blob/master/_config/routes.yml)
 * [Example routes: cms](https://github.com/silverstripe/silverstripe-cms/blob/master/_config/routes.yml)

@@ -10,7 +10,7 @@ currently in scope as well as its' subclasses or extensions.
 Knowing what methods you can call can be tricky, but the first step is to understand the scope you're in. Scope is 
 explained in more detail on the [syntax](syntax#scope) page. Many of the methods listed below can be called from any 
 scope, and you can specify additional static methods to be available globally in templates by implementing the 
-[api:TemplateGlobalProvider] interface.
+[api:SilverStripe\View\TemplateGlobalProvider] interface.
 
 <div class="notice" markdown="1">
 Want a quick way of knowing what scope you're in? Try putting `$ClassName` in your template. You should see a string 
@@ -49,7 +49,7 @@ A `<% base_tag %>` is nearly always required or assumed by SilverStripe to exist
 
 ## CurrentMember
 
-Returns the currently logged in [api:Member] instance, if there is one logged in. 
+Returns the currently logged in [api:SilverStripe\Security\Member] instance, if there is one logged in. 
 
 	:::ss
 	<% if $CurrentMember %>
@@ -350,7 +350,7 @@ You can add your own forms by implementing new form instances (see the [Forms tu
 
 ## API Documentation
 
- * [api:ContentController]: The main controller responsible for handling pages.
- * [api:Controller]: Generic controller (not specific to pages.)
- * [api:DataObject]: Underlying model class for page objects.
- * [api:ViewableData]: Underlying object class for pretty much anything displayable.
+ * [api:SilverStripe\CMS\Controllers\ContentController]: The main controller responsible for handling pages.
+ * [api:SilverStripe\Control\Controller]: Generic controller (not specific to pages.)
+ * [api:SilverStripe\ORM\DataObject]: Underlying model class for page objects.
+ * [api:SilverStripe\View\ViewableData]: Underlying object class for pretty much anything displayable.

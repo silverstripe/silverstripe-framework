@@ -1,8 +1,8 @@
 # Dynamic Default Values
 
-The [api:DataObject::$defaults] array allows you to specify simple static values to be the default values when a
+The [api:SilverStripe\ORM\DataObject::$defaults] array allows you to specify simple static values to be the default values when a
 record is created, but in many situations default values need to be dynamically calculated. In order to do this, the
-[api:DataObject::populateDefaults()] method will need to be overloaded.
+[api:SilverStripe\ORM\DataObject::populateDefaults()] method will need to be overloaded.
 
 This method is called whenever a new record is instantiated, and you must be sure to call the method on the parent
 object!

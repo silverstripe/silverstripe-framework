@@ -6,7 +6,7 @@ introduction: Upload, manage and manipulate files and images.
 
 ## API Documentation
 
-* [api:File]
-* [api:Image]
-* [api:DBFile]
-* [api:Folder]
+* [api:SilverStripe\Assets\File]
+* [api:SilverStripe\Assets\Image]
+* [api:SilverStripe\Assets\Storage\DBFile]
+* [api:SilverStripe\Assets\Folder]
