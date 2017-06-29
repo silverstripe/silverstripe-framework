@@ -3,7 +3,7 @@ summary: SilverStripe's YAML based Configuration API for setting runtime configu
 
 # Configuration API
 
-SilverStripe comes with a comprehensive code based configuration system through the [api:Config] class. It primarily 
+SilverStripe comes with a comprehensive code based configuration system through the [api:SilverStripe\Core\Config\Config] class. It primarily 
 relies on declarative [YAML](http://en.wikipedia.org/wiki/YAML) files, and falls back to procedural PHP code, as well 
 as PHP static variables. This is provided by the [silverstripe/config](https://github.com/silverstripe/silverstripe-config)
 library.

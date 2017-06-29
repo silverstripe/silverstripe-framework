@@ -36,11 +36,11 @@ final page. Lets look at each one individually:
 
 ### Model
 
-All content on our site is stored in a database. Each class that is a child of the [api:DataObject] class will have its own table in our database. 
+All content on our site is stored in a database. Each class that is a child of the [api:SilverStripe\ORM\DataObject] class will have its own table in our database. 
 
 Every object of such a class will correspond to a row in that table -
 this is our "data object", the **"model"** of Model-View-Controller. A page type has a data object that represents all the data for our page. Rather than inheriting 
-directly from [api:DataObject], it inherits from [api:SiteTree].  We generally create a "Page" data object, and subclass this for all other page types. This allows us to define behavior that is consistent across all pages in our site.
+directly from [api:DataObject], it inherits from [api:SilverStripe\CMS\Model\SiteTree].  We generally create a "Page" data object, and subclass this for all other page types. This allows us to define behavior that is consistent across all pages in our site.
 
 ### View
 
@@ -49,7 +49,7 @@ presentation of our website.
 
 ### Controller
 
-Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from [api:ContentController]. Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "Page_Controller" that is subclassed.
+Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from [api:SilverStripe\CMS\Controllers\ContentController]. Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "Page_Controller" that is subclassed.
 
 
 Creating a new page type requires creating each of these three elements. We will then have full control over presentation, the database, and editable CMS fields. 
@@ -162,7 +162,7 @@ Let's walk through this method.
 
 
 Firstly, we get the fields from the parent class; we want to add fields, not replace them. The *$fields* variable
-returned is a [api:FieldList] object.
+returned is a [api:SilverStripe\Forms\FieldList] object.
 
 	:::php
 	$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
@@ -170,14 +170,14 @@ returned is a [api:FieldList] object.
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
-"Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a [api:FormField] - see the documentation for more details. 
+"Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a [api:SilverStripe\Forms/FormField] - see the documentation for more details. 
 
 <div class="hint" markdown="1">
 Note: By default, the CMS only has one tab. Creating new tabs is much like adding to existing tabs. For instance: `$fields->addFieldToTab('Root.NewTab', new TextField('Author'));`
 would create a new tab called "New Tab", and a single "Author" textfield inside.
 </div>
 
-We have added two fields: A simple [api:TextField] and a [api:DateField]. 
+We have added two fields: A simple [api:SilverStripe\Forms\TextField] and a [api:SilverStripe\Forms\DateField]. 
 There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/field_types/common_subclasses).
 
 	:::php
@@ -232,7 +232,7 @@ By enabling *showCalendar* you show a calendar overlay when clicking on the fiel
 	:::php
 	$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 
-*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the [api:DateField] documentation for more configuration options.
+*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the [api:SilverStripe\ORM\FieldType\DBDateField] documentation for more configuration options.
 
 	:::php
 	$fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
@@ -305,7 +305,7 @@ We'll now create a template for the article holder. We want our news section to 
 	</div>
 
 
-Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the [api:HTMLText] field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
+Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the [api:SilverStripe\ORM\FieldType\DBHTMLText] field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
 
 ![](../_images/tutorial2_articleholder.jpg)
 
@@ -398,7 +398,7 @@ The controller for a page is only created when page is actually visited, while t
 
 ## Creating a RSS feed
 
-An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an [api:RSSFeed] class to do all the hard work for us. Add the following in the *ArticleHolder_Controller* class:
+An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an [api:SilverStripe\Control\RSS\RSSFeed] class to do all the hard work for us. Add the following in the *ArticleHolder_Controller* class:
 
 **mysite/code/ArticleHolder.php**
 
@@ -483,7 +483,7 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 
 Instead of adding our *Image* as a field in *$db*, we have used the *$has_one* array. This is because an *Image* is not a simple database field like all the fields we have seen so far, but has its own database table. By using the *$has_one* array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective *Image* in the *StaffPage* table.
 
-We then add an [api:UploadField] in the *getCMSFields* function to the tab "Root.Images". Since this tab doesn't exist,
+We then add an [api:SilverStripe\AssetAdmin\Forms\UploadField] in the *getCMSFields* function to the tab "Root.Images". Since this tab doesn't exist,
 the *addFieldToTab* function will create it for us. The *UploadField* allows us to select an image or upload a new one in
 the CMS.
 
@@ -497,7 +497,7 @@ a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
 ### Creating the staff section templates
 
-The staff section templates aren't too difficult to create, thanks to the utility methods provided by the [api:Image] class.
+The staff section templates aren't too difficult to create, thanks to the utility methods provided by the [api:SilverStripe\Assets\Image] class.
 
 **themes/simple/templates/Layout/StaffHolder.ss**
 

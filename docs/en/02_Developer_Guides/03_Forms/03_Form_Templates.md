@@ -3,7 +3,7 @@ summary: Customize the generated HTML for a FormField or an entire Form.
 
 # Form Templates
 
-Most markup generated in SilverStripe can be replaced by custom templates. Both [api:Form] and [api:FormField] instances
+Most markup generated in SilverStripe can be replaced by custom templates. Both [api:SilverStripe\FormsForm] and [api:SilverStripe\Forms/FormField] instances
 can be rendered out using custom templates using `setTemplate`. 
 
 	:::php

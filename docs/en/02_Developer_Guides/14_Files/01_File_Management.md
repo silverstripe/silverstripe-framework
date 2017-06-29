@@ -8,7 +8,7 @@ Asset storage is provided out of the box via a [Flysystem](http://flysystem.thep
 However, any class that implements the `AssetStore` interface could be substituted to provide storage backends
 via other mechanisms.
 
-Internally, files are stored as `[api:DBFile]` records on the rows of parent objects. These records are composite fields
+Internally, files are stored as `[api:SilverStripe\Assets\Storage\DBFile]` records on the rows of parent objects. These records are composite fields
 which contain sufficient information useful to the configured asset backend in order to store, manage, and 
 publish files. By default this composite field behind this field stores the following details:
 
@@ -155,6 +155,6 @@ You may also notice the 'Sync files' button (highlighted below). This button all
 
 Files can be managed through forms in one way:
 
- * [api:FileField]: provides a simple HTML input with a type of "file".
+ * [api:SilverStripe\Forms\FileField]: provides a simple HTML input with a type of "file".
 
 _NOTE_: Modules are also available to handle Files.

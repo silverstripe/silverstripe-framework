@@ -4,7 +4,7 @@ summary: Fulltext search allows sophisticated searching on text content.
 # FulltextSearchable
 
 Fulltext search allows advanced search criteria for searching words within a text based data column. While basic
-Fulltext search can be achieved using the built-in [api:MySQLDatabase] class a more powerful wrapper for Fulltext
+Fulltext search can be achieved using the built-in [api:SilverStripe\ORM\Connect\MySQLDatabase] class a more powerful wrapper for Fulltext
 search is provided through a module.
 
 <div class="notice" markdown="1">
@@ -31,18 +31,18 @@ You can do so by adding this static variable to your class definition:
 		);
 	}
 
-The [api:FulltextSearchable] extension will add the correct `Fulltext` indexes to the data model.
+The [api:SilverStripe\ORM\Search\FulltextSearchable] extension will add the correct `Fulltext` indexes to the data model.
 
 <div class="alert" markdown="1">
-The [api:SearchForm] and [api:FulltextSearchable] API's are currently hard coded to be specific to `Page` and `File`
+The [api:SilverStripe\CMS\Search\SearchForm] and [api:FulltextSearchable] API's are currently hard coded to be specific to `Page` and `File`
 records and cannot easily be adapted to include custom `DataObject` instances. To include your custom objects in the
 default site search, have a look at those extensions and modify as required.
 </div>
 
 ### Fulltext Filter
 
-SilverStripe provides a [api:FulltextFilter] which you can use to perform custom fulltext searches on
-[api:DataList]s.
+SilverStripe provides a [api:SilverStripe\ORM\Filters\FulltextFilter] which you can use to perform custom fulltext searches on
+[api:SilverStripe\ORM\DataList]s.
 
 Example DataObject:
 

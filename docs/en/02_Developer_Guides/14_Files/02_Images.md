@@ -2,20 +2,20 @@ summary: Learn how to crop and resize images in templates and PHP code
 
 # Image
 
-Image files can be stored either through the `[api:Image]` dataobject, or though [api:DBFile] fields.
+Image files can be stored either through the `[api:SilverStripe\Assets\Image]` dataobject, or though [api:SilverStripe\Assets\Storage\DBFile] fields.
 In either case, the same image resizing and manipulation functionality is available though the common
-[api:ImageManipulation] trait.
+[api:SilverStripe\Assets\ImageManipulation] trait.
 
 ## Usage
 
 ### Managing images through form fields
 
-Images can be uploaded like any other file, through [api:FileField].
+Images can be uploaded like any other file, through [api:SilverStripe\Forms\FileField].
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
 
 ### Inserting images into the WYSIWYG editor
 
-Images can be inserted into `[api:HTMLValue]` database fields
+Images can be inserted into `[api:SilverStripe\View\Parsers\HTMLValue]` database fields
 through the built-in WYSIWYG editor. In order to retain a relationship
 to the underlying `[api:Image]` records, images are saved as [shortcodes](/developer-guides/extending/shortcodes).
 The shortcode (`[image id="<id>" alt="My text" ...]`) will be converted
@@ -137,7 +137,7 @@ You can also create your own functions by decorating the `Image` class.
 
 ### Form Upload
 
-For usage on a website form, see [api:FileField].
+For usage on a website form, see [api:SilverStripe\Assets\FileField].
 
 ### Image Quality
 

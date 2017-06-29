@@ -37,7 +37,7 @@ The following example will add a simple DateField to your Page, allowing you to 
 
 ## Custom Date Format
 
-A custom date format for a [api:DateField] can be provided through `setDateFormat`.
+A custom date format for a [api:SilverStripe\Forms\DateField] can be provided through `setDateFormat`.
 This is only necessary if you want to opt-out of the built-in browser localisation via `type=date`.
 
 	:::php
@@ -81,7 +81,7 @@ field description as an example.
 	$dateField->setAttribute('placeholder', $dateField->getDateFormat());
 
 <div class="notice" markdown="1">
-Fields scaffolded through [api:DataObject::scaffoldCMSFields()] automatically have a description attached to them.
+Fields scaffolded through [api:SilverStripe\ORM\DataObject::scaffoldCMSFields()] automatically have a description attached to them.
 </div>
 
 ## API Documentation

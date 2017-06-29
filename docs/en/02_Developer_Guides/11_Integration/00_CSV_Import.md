@@ -9,7 +9,7 @@ be customised to fit your data.
 
 ## The CsvBulkLoader class
 
-The [api:CsvBulkLoader] class facilitate complex CSV-imports by defining column-mappings and custom converters.
+The [api:SilverStripe\Dev\CsvBulkLoader] class facilitate complex CSV-imports by defining column-mappings and custom converters.
 It uses PHP's built-in `fgetcsv()` function to process CSV input, and accepts a file handle as an input.
 
 Feature overview:
@@ -26,7 +26,7 @@ Feature overview:
 
 You can use the CsvBulkLoader without subclassing or other customizations, if the column names
 in your CSV file match `$db` properties in your dataobject. E.g. a simple import for the
-[api:Member] class could have this data in a file:
+[api:SilverStripe\Security\Member] class could have this data in a file:
 
 	FirstName,LastName,Email
 	Donald,Duck,donald@disney.com
@@ -38,12 +38,12 @@ The loader would be triggered through the `load()` method:
 	$loader = new CsvBulkLoader('Member');
 	$result = $loader->load('<my-file-path>');
 
-By the way, you can import [api:Member] and [api:Group] data through `http://localhost/admin/security`
+By the way, you can import [api:Member] and [api:SilverStripe\Security\Group] data through `http://localhost/admin/security`
 interface out of the box.
 
 ## Import through ModelAdmin
 
-The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interface - you get an upload form out of the box.
+The simplest way to use [api:CsvBulkLoader] is through a [api:SilverStripe\Admin\ModelAdmin] interface - you get an upload form out of the box.
 
 	:::php
 	<?php
@@ -109,7 +109,7 @@ You'll need to add a route to your controller to make it accessible via URL
 		}
 	}
 
-Note: This interface is not secured, consider using [api:Permission::check()] to limit the controller to users
+Note: This interface is not secured, consider using [api:SilverStripe\Security\Permission::check()] to limit the controller to users
 with certain access rights.
 
 ## Column mapping and relation import
@@ -213,5 +213,5 @@ Building off of the ModelAdmin example up top, use a custom loader instead of th
 
 ## Related
 
-*  [api:CsvParser]
+*  [api:SilverStripe\Dev\CsvParser]
 *  [api:ModelAdmin]

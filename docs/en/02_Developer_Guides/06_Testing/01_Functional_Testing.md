@@ -3,9 +3,9 @@ summary: Test controllers, forms and HTTP responses.
 
 # Functional Testing
 
-[api:FunctionalTest] test your applications `Controller` logic and anything else which requires a web request. The 
+[api:SilverStripe\Dev\FunctionalTest] test your applications `Controller` logic and anything else which requires a web request. The 
 core idea of these tests is the same as `SapphireTest` unit tests but `FunctionalTest` adds several methods for 
-creating [api:HTTPRequest], receiving [api:HTTPResponse] objects and modifying the current user session.
+creating [api:SilverStripe\Control\HTTPRequest], receiving [api:SilverStripe\Control\HTTPResponse] objects and modifying the current user session.
 
 ## Get
 	

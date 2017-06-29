@@ -10,8 +10,8 @@ On top of the base functionality, we use our own insertion dialogs to ensure you
 files. In addition to the markup managed by TinyMCE, we use [shortcodes](/developer_guides/extending/shortcodes) to store 
 information about inserted images or media elements.
 
-The framework comes with a [api:HTMLEditorField] form field class which encapsulates most of the required
-functionality. It is usually added through the [api:DataObject::getCMSFields()] method:
+The framework comes with a [api:SilverStripe\Forms\HTMLEditor\HTMLEditorField] form field class which encapsulates most of the required
+functionality. It is usually added through the [api:SilverStripe\ORM\DataObject::getCMSFields()] method:
 
 **mysite/code/MyObject.php**
 
@@ -35,7 +35,7 @@ functionality. It is usually added through the [api:DataObject::getCMSFields()] 
 
 By default, a config named 'cms' is used in any new [api:HTMLEditorField].
 
-If you have created your own [api:HtmlEditorConfig] and would like to use it,
+If you have created your own [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig] and would like to use it,
 you can call `HtmlEditorConfig::set_active('myConfig')` and all subsequently created [api:HTMLEditorField]
 will use the configuration with the name 'myConfig'.
 
@@ -155,12 +155,12 @@ You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_
 
 ## Image and media insertion
 
-The [api:HtmlEditorField] API also handles inserting images and media files into the managed HTML content. It can be 
-used both for referencing files on the webserver filesystem (through the [api:File] and [api:Image] APIs), as well 
+The [api:SilverStripe\Forms\HTMLEditor\HtmlEditorField] API also handles inserting images and media files into the managed HTML content. It can be 
+used both for referencing files on the webserver filesystem (through the [api:SilverStripe\Assets\File] and [api:SilverStripe\Assets\Image] APIs), as well 
 as hotlinking files from the web. 
 
 We use [shortcodes](/developer_guides/extending/shortcodes) to store information about inserted images or media elements. The 
-[api:ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
+[api:SilverStripe\View\Parsers\ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
 ## oEmbed: Embedding media through external services
@@ -207,7 +207,7 @@ By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it wi
 `<article>` or `<figure>`. If you plan to use those, add them to the 
 [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
-Also, the [api:HTMLValue] API underpinning the HTML processing parses the markup into a temporary object tree 
+Also, the [api:SilverStripe\View\Parsers\HTMLValue] API underpinning the HTML processing parses the markup into a temporary object tree 
 which can be traversed and modified before saving. The built-in parser only supports HTML4 and XHTML syntax. In order 
 to successfully process HTML5 tags, please use the 
 ['silverstripe/html5' module](https://github.com/silverstripe/silverstripe-html5).
@@ -246,8 +246,8 @@ to get you started.
 
 Different groups of authors can be assigned their own config,
 e.g. a more restricted rule set for content reviewers (see the "Security" )
-The config is available on each user record through [api:Member::getHtmlEditorConfigForCMS()].
-The group assignment is done through the "Security" interface for each [api:Group] record.
+The config is available on each user record through [api:SilverStripe\Security\Member::getHtmlEditorConfigForCMS()].
+The group assignment is done through the "Security" interface for each [api:SilverStripe\Security\Group] record.
 Note: The dropdown is only available if more than one config exists.
 
 ### Using the editor outside of the CMS

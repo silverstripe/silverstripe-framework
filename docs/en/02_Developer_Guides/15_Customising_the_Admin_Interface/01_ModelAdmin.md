@@ -3,14 +3,14 @@ summary: Create admin UI's for managing your data records.
 
 # ModelAdmin
 
-[api:ModelAdmin] provides a simple way to utilize the SilverStripe Admin UI with your own data models. It can create
-searchables list and edit views of [api:DataObject] subclasses, and even provides import and export of your data.
+[api:SilverStripe\Admin\ModelAdmin] provides a simple way to utilize the SilverStripe Admin UI with your own data models. It can create
+searchables list and edit views of [api:SilverStripe\ORM\DataObject] subclasses, and even provides import and export of your data.
 
 It uses the framework's knowledge about the model to provide sensible defaults, allowing you to get started in a couple
 of lines of code, while still providing a solid base for customization.
 
 <div class="info" markdown="1">
-The interface is mainly powered by the [api:GridField] class ([documentation](../forms/field_types/gridfield)), which can
+The interface is mainly powered by the [api:SilverStripe\Forms\GridField\GridField] class ([documentation](../forms/field_types/gridfield)), which can
 also be used in other areas of your application.
 </div>
 
@@ -147,7 +147,7 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 ## Displaying Results
 
 The results are shown in a tabular listing, powered by the [GridField](../forms/field_types/gridfield), more specifically
-the [api:GridFieldDataColumns] component. This component looks for a [api:DataObject::$summary_fields] static on your
+the [api:SilverStripe\Forms\GridField\GridFieldDataColumns] component. This component looks for a [api:DataObject::$summary_fields] static on your
 model class, where you can add or remove columns. To change the title, use [api:DataObject::$field_labels].
 
 **mysite/code/Product.php**
@@ -167,8 +167,8 @@ model class, where you can add or remove columns. To change the title, use [api:
 	   );
 	}
 
-The results list are retrieved from [api:SearchContext::getResults()], based on the parameters passed through the search
-form. If no search parameters are given, the results will show every record. Results are a [api:DataList] instance, so
+The results list are retrieved from [api:SilverStripe\ORM\Search\SearchContext::getResults()], based on the parameters passed through the search
+form. If no search parameters are given, the results will show every record. Results are a [api:SilverStripe\ORM\DataList] instance, so
 can be customized by additional SQL filters, joins.
 
 For example, we might want to exclude all products without prices in our sample `MyAdmin` implementation.
@@ -288,7 +288,7 @@ to only one specific `GridField`:
 
 ## Data Import
 
-The `ModelAdmin` class provides import of CSV files through the [api:CsvBulkLoader] API. which has support for column
+The `ModelAdmin` class provides import of CSV files through the [api:SilverStripe\Dev\CsvBulkLoader] API. which has support for column
 mapping, updating existing records, and identifying relationships - so its a powerful tool to get your data into a
 SilverStripe database.
 
@@ -298,7 +298,7 @@ with a more specific importer implementation, use the [api:ModelAdmin::$model_im
 ## Data Export
 
 Export is available as a CSV format through a button at the end of a results list. You can also export search results.
-This is handled through the [api:GridFieldExportButton] component.
+This is handled through the [api:SilverStripe\Forms\GridField\GridFieldExportButton] component.
 
 To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
@@ -327,7 +327,7 @@ To customize the exported columns, create a new method called `getExportFields` 
 ## API Documentation
 
 * [api:ModelAdmin]
-* [api:LeftAndMain]
+* [api:SilverStripe\Admin\LeftAndMain]
 * [api:GridField]
 * [api:DataList]
 * [api:CsvBulkLoader]

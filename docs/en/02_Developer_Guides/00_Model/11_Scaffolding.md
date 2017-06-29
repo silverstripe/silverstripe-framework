@@ -4,7 +4,7 @@ summary: A Model-driven approach to defining your application UI.
 # Scaffolding
 
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 
-SilverStripe will use that information to provide scaffold some interfaces. This is done though [api:FormScaffolder]
+SilverStripe will use that information to provide scaffold some interfaces. This is done though [api:SilverStripe\Forms\FormScaffolder]
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans). You can then further 
 customise those fields as required.
 
@@ -72,8 +72,8 @@ system. The default is a set of array values listing the fields.
 	}
 
 
-Searchable fields will be appear in the search interface with a default form field (usually a [api:TextField]) and a 
-default search filter assigned (usually an [api:ExactMatchFilter]). To override these defaults, you can specify 
+Searchable fields will be appear in the search interface with a default form field (usually a [api:SilverStripe\Forms\TextField]) and a 
+default search filter assigned (usually an [api:SilverStripe\ORM\Filters\ExactMatchFilter]). To override these defaults, you can specify 
 additional information on `$searchable_fields`:
 
 	:::php
@@ -87,7 +87,7 @@ additional information on `$searchable_fields`:
 		);
 	}
 
-If you assign a single string value, you can set it to be either a [api:FormField] or [api:SearchFilter]. To specify 
+If you assign a single string value, you can set it to be either a [api:SilverStripe\Forms/FormField] or [api:SilverStripe\ORM\Filters\SearchFilter]. To specify 
 both, you can assign an array:
 
 	:::php
@@ -145,8 +145,8 @@ To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, 
 
 ### Summary Fields
 
-Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. The most common use 
-is their display as table columns, e.g. in the search results of a [api:ModelAdmin] CMS interface.
+Summary fields can be used to show a quick overview of the data for a specific [api:SilverStripe\ORM\DataObject] record. The most common use 
+is their display as table columns, e.g. in the search results of a [api:SilverStripe\Admin\ModelAdmin] CMS interface.
 
 	:::php
 	<?php

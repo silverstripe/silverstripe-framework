@@ -3,12 +3,12 @@ summary: Output records from your database as an RSS Feed.
 
 # RSS Feed
 
-Generating RSS / Atom-feeds is a matter of rendering a [api:SS_List] instance through the [api:RSSFeed] class.
+Generating RSS / Atom-feeds is a matter of rendering a [api:SilverStripe\ORM\SS_List] instance through the [api:SilverStripe\Control\RSS\RSSFeed] class.
 
 The [api:RSSFeed] class doesn't limit you to generating article based feeds, it is just as easy to create a feed of 
-your current staff members, comments or any other custom [api:DataObject] subclasses you have defined. The only
+your current staff members, comments or any other custom [api:SilverStripe\ORM\DataObject] subclasses you have defined. The only
 logical limitation here is that every item in the RSS-feed should be accessible through a URL on your website, so it's 
-advisable to just create feeds from subclasses of [api:SiteTree].
+advisable to just create feeds from subclasses of [api:SilverStripe\CMS\Model\SiteTree].
 
 <div class="warning" markdown="1">
 If you wish to generate an RSS feed that contains a [api:DataObject], ensure you define a `AbsoluteLink` method on

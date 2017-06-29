@@ -2,7 +2,7 @@ summary: Send HTML and plain text email from your SilverStripe application.
 
 # Email
 
-Creating and sending email in SilverStripe is done through the [api:Email] and [api:Mailer] classes. This document 
+Creating and sending email in SilverStripe is done through the [api:SilverStripe\Control\Email\Email] and [api:SilverStripe\Control\Email\Mailer] classes. This document 
 covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
 
 ## Configuration

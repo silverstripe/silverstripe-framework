@@ -19,7 +19,7 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 
 ## PermissionProvider
 
-[api:PermissionProvider] is an interface which lets you define a method *providePermissions()*.
+[api:SilverStripe\Security\PermissionProvider] is an interface which lets you define a method *providePermissions()*.
 This method should return a map of permission code names with a human readable explanation of its purpose.
 
 ```php
@@ -107,4 +107,4 @@ Internally, this checks that the user has any of the defined `CMS_ACCESS_*` perm
 
 
 ## API Documentation
-[api:Permission]
+[api:SilverStripe\Security\Permission]

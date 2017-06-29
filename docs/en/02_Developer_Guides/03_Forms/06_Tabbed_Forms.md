@@ -3,12 +3,12 @@ summary: Find out how CMS interfaces use jQuery UI tabs to provide nested FormFi
 
 # Tabbed Forms
 
-SilverStripe's [api:FormScaffolder] can automatically generate [api:Form] instances for certain database models. In the
-CMS and other scaffolded interfaces, it will output [api:TabSet] and [api:Tab] objects and use jQuery Tabs to split 
+SilverStripe's [api:SilverStripe\Forms\FormScaffolder] can automatically generate [api:SilverStripe\FormsForm] instances for certain database models. In the
+CMS and other scaffolded interfaces, it will output [api:SilverStripe\Forms\TabSet] and [api:SilverStripe\Forms\Tab] objects and use jQuery Tabs to split 
 parts of the data model. 
 
 <div class="notice" markdown="1">
-All interfaces within the CMS such as [api:ModelAdmin] and [api:LeftAndMain] use tabbed interfaces by default.
+All interfaces within the CMS such as [api:SilverStripe\Admin\ModelAdmin] and [api:SilverStripe\Admin\LeftAndMain] use tabbed interfaces by default.
 </div>
 
 When dealing with tabbed forms, modifying the fields in the form has a few differences. Each [api:Tab] will be given a

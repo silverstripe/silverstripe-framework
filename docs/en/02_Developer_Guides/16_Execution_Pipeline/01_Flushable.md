@@ -6,8 +6,8 @@ summary: Allows a class to define it's own flush functionality.
 ## Introduction
 
 Allows a class to define it's own flush functionality, which is triggered when `flush=1` is requested in the URL.
-[api:FlushMiddleware] is run before a request is made, calling `flush()` statically on all
-implementors of [api:Flushable].
+[api:SilverStripe\Control\Middleware\FlushMiddleware] is run before a request is made, calling `flush()` statically on all
+implementors of [api:SilverStripe\Core\Flushable].
 
 ## Usage
 

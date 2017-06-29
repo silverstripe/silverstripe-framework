@@ -3,8 +3,8 @@
 ## Introduction
 
 A lot can be achieved in SilverStripe by adding properties and form fields
-to your own page types (via [api:SiteTree::getCMSFields()]), as well as creating
-your own data management interfaces through [api:ModelAdmin]. But sometimes
+to your own page types (via [api:SilverStripe\CMS\Model\SiteTree::getCMSFields()]), as well as creating
+your own data management interfaces through [api:SilverStripe\Admin\ModelAdmin]. But sometimes
 you'll want to go deeper and tailor the underlying interface to your needs as well.
 For example, to build a personalized CMS dashboard, or content "slots" where authors
 can drag their content into. At its core, SilverStripe is a web application
@@ -52,7 +52,7 @@ coding conventions.
 
 ## The Admin URL
 
-The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[api:AdminRootController]` and clear the old rule like in the example below.
+The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[api:SilverStripe\Admin\AdminRootController]` and clear the old rule like in the example below.
 
 	:::yml
 	---
@@ -89,14 +89,14 @@ You can also create your own classes that extend the `[api:AdminRootController]`
 
 ## Templates and Controllers
 
-The CMS backend is handled through the [api:LeftAndMain] controller class,
+The CMS backend is handled through the [api:SilverStripe\Admin\LeftAndMain] controller class,
 which contains base functionality like displaying and saving a record.
-This is extended through various subclasses, e.g. to add a group hierarchy ([api:SecurityAdmin]),
-a search interface ([api:ModelAdmin]) or an "Add Page" form ([api:CMSPageAddController]).
+This is extended through various subclasses, e.g. to add a group hierarchy ([api:SilverStripe\Admin\SecurityAdmin]),
+a search interface ([api:ModelAdmin]) or an "Add Page" form ([api:SilverStripe\CMS\Controllers\CMSPageAddController]).
 
 The controller structure is too complex to document here, a good starting point
 for following the execution path in code are [api:LeftAndMain::getRecord()] and [api:LeftAndMain::getEditForm()].
-If you have the `cms` module installed, have a look at [api:CMSMain::getEditForm()] for a good
+If you have the `cms` module installed, have a look at [api:SilverStripe\CMS\Controllers\CMSMain::getEditForm()] for a good
 example on how to extend the base functionality (e.g. by adding page versioning hints to the form).
 
 CMS templates are inherited based on their controllers, similar to subclasses of
@@ -208,7 +208,7 @@ any particular element.
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
 The JavaScript logic powering the CMS is divided into many files,
-which typically are included via the [api:Requirements] class, by adding
+which typically are included via the [api:SilverStripe\View\Requirements] class, by adding
 them to [api:LeftAndMain::init()] and its subclassed methods.
 This class also takes care of minification and combination of the files,
 which is crucial for the CMS performance (see [api:Requirements::combine_files()]).
@@ -335,7 +335,7 @@ we often want to update these sections independently from their neighbouring con
 
 In order for this to work, the CMS templates declare certain sections as "PJAX fragments"
 through a `data-pjax-fragment` attribute. These names correlate to specific
-rendering logic in the PHP controllers, through the [api:PjaxResponseNegotiator] class.
+rendering logic in the PHP controllers, through the [api:SilverStripe\Control\PjaxResponseNegotiator] class.
 
 Through a custom `X-Pjax` HTTP header, the client can declare which view they're expecting,
 through identifiers like `CurrentForm` or `Content` (see [api:LeftAndMain::getResponseNegotiator()]).
@@ -516,7 +516,7 @@ when using an input of type button, submit or reset, support is limited to plain
 
 ## Menu
 
-The navigation menu in the CMS is created through the [api:CMSMenu] API,
+The navigation menu in the CMS is created through the [api:SilverStripe\Admin\CMSMenu] API,
 which auto-detects all subclasses of `LeftAndMain`. This means that your custom
 `ModelAdmin` subclasses will already appear in there without any explicit definition.
 To modify existing menu entries or create new ones, see [api:CMSMenu::add_menu_item()]
@@ -551,13 +551,13 @@ For more information, see the [Howto: Customise the CMS tree](/developer_guides/
 
 Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
-([api:TreeDropdownField] and [api:TreeMultiselectField]).
+([api:SilverStripe\Forms\TreeDropdownField] and [api:SilverStripe\Forms\TreeMultiselectField]).
 
 ## Tabs
 
 We're using [jQuery UI tabs](http://jqueryui.com/), but in a customised fashion.
 HTML with tabs can be created either directly through HTML templates in the CMS,
-or indirectly through a [api:TabSet] form field. Since tabsets are useable
+or indirectly through a [api:SilverStripe\Forms\TabSet] form field. Since tabsets are useable
 outside of the CMS as well, the baseline application of tabs happens via
 a small wrapper around `jQuery.tabs()` stored in `TabSet.js`.
 

@@ -7,7 +7,7 @@ summary: A set of static methods for manipulating PHP cookies.
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 
 
 SilverStripe uses cookies for remembering users preferences. Application code can modify a users cookies through
-the [api:Cookie] class. This class mostly follows the PHP API.
+the [api:SilverStripe\Control\Cookie] class. This class mostly follows the PHP API.
 
 ### set
 
@@ -40,8 +40,8 @@ Clears a given cookie.
 
 ## Cookie_Backend
 
-The [api:Cookie] class manipulates and sets cookies using a [api:Cookie_Backend]. The backend is in charge of the logic
-that fetches, sets and expires cookies. By default we use a [api:CookieJar] backend which uses PHP's 
+The [api:Cookie] class manipulates and sets cookies using a [api:SilverStripe\Control\Cookie_Backend]. The backend is in charge of the logic
+that fetches, sets and expires cookies. By default we use a [api:SilverStripe\Control\CookieJar] backend which uses PHP's 
 [setcookie](http://www.php.net/manual/en/function.setcookie.php) function.
 
 The [api:CookieJar] keeps track of cookies that have been set by the current process as well as those that were received
@@ -127,4 +127,4 @@ One can also access all of the cookies in one go using the `Cookie_Backend`
 
 * [api:Cookie]
 * [api:CookieJar]
-* [api:CookieBackend]
+* [api:SilverStripe\Control\Cookie_Backend]

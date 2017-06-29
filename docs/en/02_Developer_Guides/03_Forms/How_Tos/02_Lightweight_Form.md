@@ -2,10 +2,10 @@ title: How to Create Lightweight Form
 
 # How to Create Lightweight Form
 
-Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [api:FormFields], however this can 
+Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [api:SilverStripe\Forms/FormField], however this can 
 sometimes produce markup which is unnecessarily bloated.
 
-For example, a basic search form. We want to use the [api:Form] API to handle the form but we may want to provide a 
+For example, a basic search form. We want to use the [api:SilverStripe\FormsForm] API to handle the form but we may want to provide a 
 totally custom template to meet our needs. To do this, we'll provide the class with a unique template through 
 `setTemplate`.
 

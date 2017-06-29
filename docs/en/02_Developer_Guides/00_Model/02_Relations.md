@@ -3,7 +3,7 @@ summary: Relate models together using the ORM using has_one, has_many, and many_
 
 # Relations between Records
 
-In most situations you will likely see more than one [api:DataObject] and several classes in your data model may relate
+In most situations you will likely see more than one [api:SilverStripe\ORM\DataObject] and several classes in your data model may relate
 to one another. An example of this is a `Player` object may have a relationship to one or more `Team` or `Coach` classes
 and could take part in many `Games`. Relations are a key part of designing and building a good data model.
 
@@ -132,7 +132,7 @@ available on both ends.
 	}
 
 Much like the `has_one` relationship, `has_many` can be navigated through the `ORM` as well. The only difference being
-you will get an instance of [api:HasManyList] rather than the object.
+you will get an instance of [api:SilverStripe\ORM\HasManyList] rather than the object.
 
 	:::php
 	$team = Team::get()->first();
@@ -384,7 +384,7 @@ more likely that the user will select Categories for a Product than vice-versa.
 ## Adding relations
 
 Adding new items to a relations works the same, regardless if you're editing a **has_many** or a **many_many**. They are 
-encapsulated by [api:HasManyList] and [api:ManyManyList], both of which provide very similar APIs, e.g. an `add()`
+encapsulated by [api:HasManyList] and [api:SilverStripe\ORM\ManyManyList], both of which provide very similar APIs, e.g. an `add()`
 and `remove()` method.
 
 	:::php
@@ -428,7 +428,7 @@ criteria on the added record.
 ## Relations on Unsaved Objects
 
 You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behavior uses the 
-[api:UnsavedRelationList] and converts it into the correct `RelationList` when saving the `DataObject` for the first 
+[api:SilverStripe\ORM\UnsavedRelationList] and converts it into the correct `RelationList` when saving the `DataObject` for the first 
 time.
 
 This unsaved lists will also recursively save any unsaved objects that they contain.

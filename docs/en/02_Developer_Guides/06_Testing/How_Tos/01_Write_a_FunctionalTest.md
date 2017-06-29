@@ -2,9 +2,9 @@ title: How to write a FunctionalTest
 
 # How to Write a FunctionalTest
 
-[api:FunctionalTest] test your applications `Controller` instances and anything else which requires a web request. The 
-core of these tests are the same as `SapphireTest` unit tests but add several methods for creating [api:HTTPRequest]
-and receiving [api:HTTPResponse] objects. In this How To, we'll see how to write a test to query a page, check the
+[api:SilverStripe\Dev\FunctionalTest] test your applications `Controller` instances and anything else which requires a web request. The 
+core of these tests are the same as `SapphireTest` unit tests but add several methods for creating [api:SilverStripe\Control\HTTPRequest]
+and receiving [api:SilverStripe\Control\HTTPResponse] objects. In this How To, we'll see how to write a test to query a page, check the
 response and modify the session within a test.
 
 **mysite/tests/HomePageTest.php**

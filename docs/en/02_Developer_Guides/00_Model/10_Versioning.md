@@ -9,8 +9,8 @@ lifetime of a database record.
 It is most commonly applied to pages in the CMS (the `SiteTree` class). Draft content edited in the CMS can be different 
 from published content shown to your website visitors. 
 
-Versioning in SilverStripe is handled through the [api:Versioned] class. As a [api:DataExtension] it is possible to 
-be applied to any [api:DataObject] subclass. The extension class will automatically update read and write operations
+Versioning in SilverStripe is handled through the [api:SilverStripe\Versioned\Versioned] class. As a [api:SilverStripe\ORM\DataExtension] it is possible to 
+be applied to any [api:SilverStripe\ORM\DataObject] subclass. The extension class will automatically update read and write operations
 done via the ORM via the `augmentSQL` database hook.
 
 Adding Versioned to your `DataObject` subclass works the same as any other extension. It has one of two behaviours,
@@ -101,7 +101,7 @@ The record is retrieved as a `DataObject`, but saving back modifications via `wr
 rather than modifying the existing one.
 </div>
 
-In order to get a list of all versions for a specific record, we need to generate specialized [api:Versioned_Version] 
+In order to get a list of all versions for a specific record, we need to generate specialized [api:SilverStripe\Versioned\Versioned_Version] 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
 	
@@ -242,7 +242,7 @@ E.g.
 
 #### DataObject Ownership in HTML Content
 
-If you are using `[api:HTMLText]` or `[api:HTMLVarchar]` fields in your `DataObject::$db` definitions,
+If you are using `[api:SilverStripe\ORM\FieldType\DBHTMLText]` or `[api:SilverStripe\ORM\FieldType\DBHTMLVarchar]` fields in your `DataObject::$db` definitions,
 it's likely that your authors can insert images into those fields via the CMS interface.
 These images are usually considered to be owned by the `DataObject`, and should be published alongside it.
 The ownership relationship is tracked through an `[image]` [shortcode](/developer-guides/extending/shortcodes),

@@ -46,7 +46,7 @@ Test case classes should end with `Test` (e.g `PageTest`) and test methods must 
 Ensure you [import](http://php.net/manual/en/language.namespaces.importing.php#example-252) any classes you need for the test, including `SilverStripe\Dev\SapphireTest` or `SilverStripe\Dev\FunctionalTest`.
 </div>
 
-A SilverStripe unit test is created by extending one of two classes, [api:SapphireTest] or [api:FunctionalTest]. 
+A SilverStripe unit test is created by extending one of two classes, [api:SilverStripe\Dev\SapphireTest] or [api:SilverStripe\Dev\FunctionalTest]. 
 
 [api:SapphireTest] is used to test your model logic (such as a `DataObject`), and [api:FunctionalTest] is used when 
 you want to test a `Controller`, `Form` or anything that requires a web page.

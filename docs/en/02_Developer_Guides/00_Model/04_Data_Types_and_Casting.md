@@ -3,10 +3,10 @@ summary: Learn how how data is stored going in and coming out of the ORM and how
 
 # Data Types and Casting
 
-Each model in a SilverStripe [api:DataObject] will handle data at some point. This includes database columns such as 
+Each model in a SilverStripe [api:SilverStripe\ORM\DataObject] will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [api:DBField] subclass. The class is responsible for telling the ORM 
+A Data Type is represented in SilverStripe by a [api:SilverStripe\ORM\FieldType\DBField] subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -28,19 +28,19 @@ In the `Player` example, we have four database columns each with a different dat
 
 ## Available Types
 
-*  [api:Boolean]: A boolean field.
-*  [api:Currency]: A number with 2 decimal points of precision, designed to store currency values.
-*  [api:Date]: A date field
-*  [api:Decimal]: A decimal number.
-*  [api:Enum]: An enumeration of a set of strings
-*  [api:HTMLText]: A variable-length string of up to 2MB, designed to store HTML
-*  [api:HTMLVarchar]: A variable-length string of up to 255 characters, designed to store HTML
-*  [api:Int]: An integer field.
-*  [api:Percentage]: A decimal number between 0 and 1 that represents a percentage.
-*  [api:SS_Datetime]: A date / time field
-*  [api:Text]: A variable-length string of up to 2MB, designed to store raw text
-*  [api:Time]: A time field
-*  [api:Varchar]: A variable-length string of up to 255 characters, designed to store raw text.
+*  [api:SilverStripe\ORM\FieldType\DBBoolean]: A boolean field.
+*  [api:SilverStripe\ORM\FieldType\DBCurrency]: A number with 2 decimal points of precision, designed to store currency values.
+*  [api:SilverStripe\ORM\FieldType\DBDate]: A date field
+*  [api:SilverStripe\ORM\FieldType\DBDecimal]: A decimal number.
+*  [api:SilverStripe\ORM\FieldType\DBEnum]: An enumeration of a set of strings
+*  [api:SilverStripe\ORM\FieldType\DBHTMLText]: A variable-length string of up to 2MB, designed to store HTML
+*  [api:SilverStripe\ORM\FieldType\DBHTMLVarchar]: A variable-length string of up to 255 characters, designed to store HTML
+*  [api:SilverStripe\ORM\FieldType\DBInt]: An integer field.
+*  [api:SilverStripe\ORM\FieldType\DBPercentage]: A decimal number between 0 and 1 that represents a percentage.
+*  [api:SilverStripe\ORM\FieldType\DBDatetime]: A date / time field
+*  [api:SilverStripe\ORM\FieldType\DBText]: A variable-length string of up to 2MB, designed to store raw text
+*  [api:SilverStripe\ORM\FieldType\DBTime]: A time field
+*  [api:SilverStripe\ORM\FieldType\DBVarchar]: A variable-length string of up to 255 characters, designed to store raw text.
 
 See the [API documentation](api:DBField) for a full list of available Data Types. You can define your own [api:DBField] instances if required as well. 
 
@@ -165,7 +165,7 @@ sophisticated helpers, like showing the time difference to the current date:
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [api:ViewableData], which means they know how to present themselves in a view 
+Most objects in SilverStripe extend from [api:SilverStripe\View\ViewableData], which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 	:::php

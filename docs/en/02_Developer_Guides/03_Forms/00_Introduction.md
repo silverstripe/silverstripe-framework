@@ -4,7 +4,7 @@ summary: An introduction to creating a Form instance and handling submissions.
 # Forms
 
 The HTML `Form` is the most used way to interact with a user. SilverStripe provides classes to generate forms through 
-the [api:Form] class, [api:FormField] instances to capture data and submissions through [api:FormAction].
+the [api:SilverStripe\FormsForm] class, [api:SilverStripe\Forms/FormField] instances to capture data and submissions through [api:SilverStripe\Forms\FormAction].
 
 <div class="notice" markdown="1">
 See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of creating a `Form`
@@ -84,7 +84,7 @@ variable.
 When constructing the `Form` instance (`new Form($controller, $name)`) both controller and name are required. The
 `$controller` and `$name` are used to allow SilverStripe to calculate the origin of the `Form object`. When a user 
 submits the `HelloForm` from your `contact-us` page the form submission will go to `contact-us/HelloForm` before any of
-the [api:FormActions]. The URL is known as the `$controller` instance will know the 'contact-us' link and we provide 
+the [api:SilverStripe\Forms\FormAction]. The URL is known as the `$controller` instance will know the 'contact-us' link and we provide 
 `HelloForm` as the `$name` of the form. `$name` **needs** to match the method name.
 
 Because the `HelloForm()` method will be the location the user is taken to, it needs to be handled like any other 
@@ -104,8 +104,8 @@ separately through [api:Form::httpSubmission()].
 
 ## Adding FormFields
 
-Fields in a [api:Form] are represented as a single [api:FieldList] instance containing subclasses of [api:FormField]. 
-Some common examples are [api:TextField] or [api:DropdownField]. 
+Fields in a [api:Form] are represented as a single [api:SilverStripe\Forms\FieldList] instance containing subclasses of [api:FormField]. 
+Some common examples are [api:SilverStripe\Forms\TextField] or [api:SilverStripe\Forms\DropdownField]. 
 
 ```php
 TextField::create($name, $title, $value);
@@ -327,7 +327,7 @@ class PageController extends ContentController
 
 ## Validation
 
-Form validation is handled by the [api:Validator] class and the `validator` property on the `Form` object. The validator 
+Form validation is handled by the [api:SilverStripe\Forms\Validator] class and the `validator` property on the `Form` object. The validator 
 is provided with a name of each of the [api:FormField]s to validate and each `FormField` instance is responsible for 
 validating its' own data value. 
 

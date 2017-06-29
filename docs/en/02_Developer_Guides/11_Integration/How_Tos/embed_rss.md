@@ -39,7 +39,7 @@ First, we write the code to query the API feed.
 		return $output;
 	}
 
-This will provide our `Page` template with a new `WellingtonWeather` variable (an [api:ArrayList]). Each item has a 
+This will provide our `Page` template with a new `WellingtonWeather` variable (an [api:SilverStripe\ORM\ArrayList]). Each item has a 
 single field `Description`.
 
 **mysite/templates/Page.ss**

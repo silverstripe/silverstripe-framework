@@ -58,10 +58,10 @@ Parameterised updates and inserts are also supported, but the syntax is a little
 
 SilverStripe internally will use parameterised queries in SQL statements wherever possible.
 
-If necessary Silverstripe performs any required escaping through database-specific methods (see [api:Database::addslashes()]).
-For [api:MySQLDatabase], this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+If necessary Silverstripe performs any required escaping through database-specific methods (see [api:SilverStripe\ORM\Connect\Database::addslashes()]).
+For [api:SilverStripe\ORM\Connect\MySQLDatabase], this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
 
-*  Most [api:DataList] accessors (see escaping note in method documentation)
+*  Most [api:SilverStripe\ORM\DataList] accessors (see escaping note in method documentation)
 *  DataObject::get_by_id()
 *  DataObject::update()
 *  DataObject::castedUpdate()
@@ -213,8 +213,8 @@ We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) th
 
 ### Escaping model properties
 
-[api:SSViewer] (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
-object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a [api:DBField] object.
+[api:SilverStripe\View\SSViewer] (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a [api:SilverStripe\ORM\FieldType\DBField] object.
 
 PHP:
 
@@ -297,7 +297,7 @@ presentation from business logic.
 When using *customise()* or *renderWith()* calls in your controller, or otherwise forcing a custom context for your
 template, you'll need to take care of casting and escaping yourself in PHP. 
 
-The [api:Convert] class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
+The [api:SilverStripe\Core\Convert] class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
 also used by *XML* and *ATT* in template code).
 
 PHP:
@@ -372,14 +372,14 @@ SilverStripe has built-in countermeasures against [CSRF](http://shiflett.org/art
 will automatically contain a `SecurityID` parameter which is generated as a secure hash on the server, connected to the
 currently active session of the user. If this form is submitted without this parameter, or if the parameter doesn't
 match the hash stored in the users session, the request is discarded.
-You can disable this behaviour through [api:Form::disableSecurityToken()].
+You can disable this behaviour through [api:SilverStripe\FormsForm::disableSecurityToken()].
 
 It is also recommended to limit form submissions to the intended HTTP verb (mostly `GET` or `POST`)
 through [api:Form::setStrictFormMethodCheck()]. 
 
 Sometimes you need to handle state-changing HTTP submissions which aren't handled through
 SilverStripe's form system. In this case, you can also check the current HTTP request
-for a valid token through [api:SecurityToken::checkRequest()].
+for a valid token through [api:SilverStripe\Security\SecurityToken::checkRequest()].
 
 ## Casting user input
 
@@ -481,15 +481,15 @@ list of allowed extensions by adding these to the `File.allowed_extensions` conf
 ## Passwords
 
 SilverStripe stores passwords with a strong hashing algorithm (blowfish) by default
-(see [api:PasswordEncryptor]). It adds randomness to these hashes via
+(see [api:SilverStripe\Security\PasswordEncryptor]). It adds randomness to these hashes via
 salt values generated with the strongest entropy generators available on the platform
-(see [api:RandomGenerator]). This prevents brute force attacks with
+(see [api:SilverStripe\Security\RandomGenerator]). This prevents brute force attacks with
 [Rainbow tables](http://en.wikipedia.org/wiki/Rainbow_table).
 
 Strong passwords are a crucial part of any system security.
 So in addition to storing the password in a secure fashion,
 you can also enforce specific password policies by configuring
-a [api:PasswordValidator]:
+a [api:SilverStripe\Security\PasswordValidator]:
 
 	:::php
 	$validator = new PasswordValidator();

@@ -190,7 +190,7 @@ and needs to be manually advanced):
   create the new temporary release branch (via `--branch-auto`). You can also customise this branch
   with `--branch=<branchname>`, but it's best to use the standard.
 * `release:translate` All upstream transifex strings will be pulled into the
-  local master strings, and then the [api:i18nTextCollector] task will be invoked
+  local master strings, and then the [api:SilverStripe\i18n\TextCollection\i18nTextCollector] task will be invoked
   and will merge these strings together, before pushing all new master strings
   back up to transifex to make them available for translation. Changes to these
   files will also be automatically committed to git.

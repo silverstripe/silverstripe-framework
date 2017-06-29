@@ -4,7 +4,7 @@ title: Members
 
 ## Introduction
 
-The [api:Member] class is used to represent user accounts on a SilverStripe site (including newsletter recipients).
+The [api:SilverStripe\Security\Member] class is used to represent user accounts on a SilverStripe site (including newsletter recipients).
  
 ## Testing For Logged In Users
 
@@ -39,7 +39,7 @@ Returns the full *Member* Object for the current user, returns *null* if user is
 ## Subclassing
 
 <div class="warning" markdown="1">
-This is the least desirable way of extending the [api:Member] class. It's better to use [api:DataExtension]
+This is the least desirable way of extending the [api:Member] class. It's better to use [api:SilverStripe\ORM\DataExtension]
 (see below).
 </div>
 
@@ -65,7 +65,7 @@ Note that if you want to look this class-name up, you can call Object::getCustom
 ## Overloading getCMSFields()
 
 If you overload the built-in public function getCMSFields(), then you can change the form that is used to view & edit member
-details in the newsletter system.  This function returns a [api:FieldList] object.  You should generally start by calling
+details in the newsletter system.  This function returns a [api:SilverStripe\Forms\FieldList] object.  You should generally start by calling
 parent::getCMSFields() and manipulate the [api:FieldList] from there.
 
 	:::php
@@ -100,7 +100,7 @@ class. A better way is to use role extensions to add this behaviour. Add the fol
 
 A role extension is simply a subclass of [api:DataExtension] that is designed to be used to add behaviour to [api:Member]. 
 The roles affect the entire class - all members will get the additional behaviour.  However, if you want to restrict
-things, you should add appropriate [api:Permission::checkMember()] calls to the role's methods.
+things, you should add appropriate [api:SilverStripe\Security\Permission::checkMember()] calls to the role's methods.
 
 	:::php
 	class MyMemberExtension extends DataExtension {
@@ -131,7 +131,7 @@ things, you should add appropriate [api:Permission::checkMember()] calls to the 
 
 Logins can be "remembered" across multiple devices when user checks the "Remember Me" box. By default, a new login token
 will be created and associated with the device used during authentication. When user logs out, all previously saved tokens
-for all devices will be revoked, unless `[api:RememberLoginHash::$logout_across_devices] is set to false. For extra security,
+for all devices will be revoked, unless `[api:SilverStripe\Security\RememberLoginHash::$logout_across_devices] is set to false. For extra security,
 single tokens can be enforced by setting `[api:RememberLoginHash::$force_single_token] to true.
 
 ## Acting as another user ##

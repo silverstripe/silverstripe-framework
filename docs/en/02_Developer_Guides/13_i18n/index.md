@@ -24,7 +24,7 @@ The i18n class is enabled by default.
 
 ### Setting the locale
 
-To set the locale you just need to call [api:i18n::set_locale()] passing, as a parameter, the name of the locale that 
+To set the locale you just need to call [api:SilverStripe\i18n\i18n::set_locale()] passing, as a parameter, the name of the locale that 
 you want to set.
 
 	:::php
@@ -132,7 +132,7 @@ Please refer to [W3C: Introduction to IDN and IRI](http://www.w3.org/Internation
 
 ### i18n in Form Fields
 
-Date and time related form fields are automatically localised ([api:DateField], [api:TimeField], [api:DatetimeField]).
+Date and time related form fields are automatically localised ([api:SilverStripe\Forms\DateField], [api:SilverStripe\Forms\TimeField], [api:SilverStripe\Forms\DatetimeField]).
 Since they use HTML5 `type=date` and `type=time` fields by default, these fields will present dates
 in a localised format chosen by the browser and operating system.
 

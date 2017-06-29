@@ -30,7 +30,7 @@ To access variables in the PHP:
 
 ## Extending SiteConfig
 
-To extend the options available in the panel, define your own fields via a [api:DataExtension].
+To extend the options available in the panel, define your own fields via a [api:SilverStripe\ORM\DataExtension].
 
 **mysite/code/extensions/CustomSiteConfig.php**
 
@@ -69,4 +69,4 @@ provide the users a place to configure settings then the `SiteConfig` panel is t
 
 ## API Documentation
 
-* [api:SiteConfig]
+* [api:SilverStripe\SiteConfig\SiteConfig]
