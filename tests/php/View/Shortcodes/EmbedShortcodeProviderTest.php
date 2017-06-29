@@ -1,10 +1,9 @@
 <?php
 
-namespace SilverStripe\Forms\Tests;
+namespace SilverStripe\View\Tests\Shortcodes;
 
-use SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider;
+use SilverStripe\View\Shortcodes\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\framework\tests\php\Forms\EmbedShortcodeProviderTest\MockResolver;
 
 /**
  * Class EmbedShortcodeProviderTest
