@@ -2071,4 +2071,14 @@ class DataObjectTest extends SapphireTest
         $staff->write();
         $this->assertEquals(PHP_INT_MAX, DataObjectTest\Staff::get()->byID($staff->ID)->Salary);
     }
+
+    public function testGetOneMissingValueReturnsNull()
+    {
+
+        // Test that missing values return null
+        $this->assertEquals(null, DataObject::get_one(
+            DataObjectTest\TeamComment::class,
+            ['"DataObjectTest_TeamComment"."Name"' => 'does not exists']
+        ));
+    }
 }
