@@ -22,5 +22,5 @@ default:
         browser: firefox
 
     SilverStripe\BehatExtension\Extension:
-      screenshot_path: %paths.base%/tests/behat/artifacts/screenshots
+      screenshot_path: %paths.base%/artifacts/screenshots
       bootstrap_file: "tests/behat/serve-bootstrap.php"
