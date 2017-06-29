@@ -99,7 +99,7 @@ class MemberAuthenticator implements Authenticator
                 $member->registerFailedLogin();
             }
         } elseif ($member) {
-                $member->registerSuccessfulLogin();
+            $member->registerSuccessfulLogin();
         } else {
             // A non-existing member occurred. This will make the result "valid" so let's invalidate
             $result->addError(_t(
@@ -179,13 +179,13 @@ class MemberAuthenticator implements Authenticator
         if ($success && $member) {
             // successful login (member is existing with matching password)
             $attempt->MemberID = $member->ID;
-            $attempt->Status = 'Success';
+            $attempt->Status = LoginAttempt::SUCCESS;
 
             // Audit logging hook
             $member->extend('authenticationSucceeded');
         } else {
             // Failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
-            $attempt->Status = 'Failure';
+            $attempt->Status = LoginAttempt::FAILURE;
             if ($member) {
                 // Audit logging hook
                 $attempt->MemberID = $member->ID;

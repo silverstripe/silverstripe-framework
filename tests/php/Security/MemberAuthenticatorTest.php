@@ -11,6 +11,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
@@ -204,5 +205,63 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNotNull($defaultAdmin);
         $this->assertFalse($defaultAdmin->canLogin());
         $this->assertEquals('2016-04-18 00:10:00', $defaultAdmin->LockedOutUntil);
+    }
+
+    public function testNonExistantMemberGetsLoginAttemptRecorded()
+    {
+        Security::config()->set('login_recording', true);
+        Member::config()
+            ->set('lock_out_after_incorrect_logins', 1)
+            ->set('lock_out_delay_mins', 10);
+
+        $email = 'notreal@example.com';
+        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertCount(0, LoginAttempt::get());
+        $authenticator = new MemberAuthenticator();
+        $result = new ValidationResult();
+        $member = $authenticator->authenticate(
+            [
+                'Email' => $email,
+                'Password' => 'password',
+            ],
+            Controller::curr()->getRequest(),
+            $result
+        );
+        $this->assertFalse($result->isValid());
+        $this->assertNull($member);
+        $this->assertCount(1, LoginAttempt::get());
+        $attempt = LoginAttempt::get()->first();
+        $this->assertEquals($email, $attempt->Email);
+        $this->assertEquals(LoginAttempt::FAILURE, $attempt->Status);
+    }
+
+    public function testNonExistantMemberGetsLockedOut()
+    {
+        Security::config()->set('login_recording', true);
+        Member::config()
+            ->set('lock_out_after_incorrect_logins', 1)
+            ->set('lock_out_delay_mins', 10);
+
+        $email = 'notreal@example.com';
+        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+
+        $authenticator = new MemberAuthenticator();
+        $result = new ValidationResult();
+        $member = $authenticator->authenticate(
+            [
+                'Email' => $email,
+                'Password' => 'password',
+            ],
+            Controller::curr()->getRequest(),
+            $result
+        );
+
+        $this->assertNull($member);
+        $this->assertFalse($result->isValid());
+        $member = new Member();
+        $member->Email = $email;
+
+        $this->assertTrue($member->isLockedOut());
+        $this->assertFalse($member->canLogIn());
     }
 }

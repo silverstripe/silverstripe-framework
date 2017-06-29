@@ -282,7 +282,7 @@ class SecurityTest extends FunctionalTest
         Security::setCurrentUser($member);
 
         /* Visit the Security/logout page with a test referer, but without a security token */
-        $response = $this->get(
+        $this->get(
             Config::inst()->get(Security::class, 'logout_url'),
             null,
             ['Referer' => Director::absoluteBaseURL() . 'testpage']
@@ -494,8 +494,11 @@ class SecurityTest extends FunctionalTest
         i18n::set_locale('en_US');
         Member::config()->set('lock_out_after_incorrect_logins', 5);
         Member::config()->set('lock_out_delay_mins', 15);
+        DBDatetime::set_mock_now('2017-05-22 00:00:00');
 
         // Login with a wrong password for more than the defined threshold
+        /** @var Member $member */
+        $member = null;
         for ($i = 1; $i <= 6; $i++) {
             $this->doTestLoginForm('testuser@example.com', 'incorrectpassword');
             /** @var Member $member */
@@ -513,38 +516,36 @@ class SecurityTest extends FunctionalTest
                     )
                 );
             } else {
-                // Fuzzy matching for time to avoid side effects from slow running tests
-                $this->assertGreaterThan(
-                    time() + 14*60,
-                    strtotime($member->LockedOutUntil),
+                // Lockout should be exactly 15 minutes from now
+                /** @var DBDatetime $lockedOutUntilObj */
+                $lockedOutUntilObj = $member->dbObject('LockedOutUntil');
+                $this->assertEquals(
+                    DBDatetime::now()->getTimestamp() + (15 * 60),
+                    $lockedOutUntilObj->getTimestamp(),
                     'User has a lockout time set after too many failed attempts'
                 );
             }
         }
-            $msg = _t(
-                'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
-                'Your account has been temporarily disabled because of too many failed attempts at ' .
-                'logging in. Please try again in {count} minutes.',
-                null,
-                array('count' => 15)
-            );
-                $this->assertHasMessage($msg);
-
-
+        $msg = _t(
+            'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
+            'Your account has been temporarily disabled because of too many failed attempts at ' .
+            'logging in. Please try again in {count} minutes.',
+            null,
+            array('count' => 15)
+        );
+        $this->assertHasMessage($msg);
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertNull(
             $this->session()->get('loggedInAs'),
             'The user can\'t log in after being locked out, even with the right password'
         );
 
-        // (We fake this by re-setting LockedOutUntil)
-        $member = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
-        $member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
-        $member->write();
+        // Move into the future so we can login again
+        DBDatetime::set_mock_now('2017-06-22 00:00:00');
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertEquals(
-            $this->session()->get('loggedInAs'),
             $member->ID,
+            $this->session()->get('loggedInAs'),
             'After lockout expires, the user can login again'
         );
 
