@@ -2,7 +2,7 @@ title: How to use a FixtureFactory
 
 # How to use a FixtureFactory
 
-The [api:SilverStripe\Dev\FixtureFactory] is used to manually create data structures for use with tests. For more information on fixtures
+The [FixtureFactory](api:SilverStripe\Dev\FixtureFactory) is used to manually create data structures for use with tests. For more information on fixtures
 see the [Fixtures](../fixtures) documentation.
 
 In this how to we'll use a `FixtureFactory` and a custom blue print for giving us a shortcut for creating new objects
@@ -46,5 +46,5 @@ with information that we need.
 
 ## API Documentation
 
-* [api:SilverStripe\Dev\FixtureFactory]
+* [FixtureFactory](api:SilverStripe\Dev\FixtureFactory)
 * [api:SilverStripe\Dev\FixtureBlueprint]

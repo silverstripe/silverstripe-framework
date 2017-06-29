@@ -10,8 +10,8 @@ On top of the base functionality, we use our own insertion dialogs to ensure you
 files. In addition to the markup managed by TinyMCE, we use [shortcodes](/developer_guides/extending/shortcodes) to store 
 information about inserted images or media elements.
 
-The framework comes with a [api:SilverStripe\Forms\HTMLEditor\HTMLEditorField] form field class which encapsulates most of the required
-functionality. It is usually added through the [api:SilverStripe\ORM\DataObject::getCMSFields()] method:
+The framework comes with a [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField) form field class which encapsulates most of the required
+functionality. It is usually added through the [DataObject::getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method:
 
 **mysite/code/MyObject.php**
 
@@ -33,14 +33,14 @@ functionality. It is usually added through the [api:SilverStripe\ORM\DataObject:
 
 ### Specify which configuration to use
 
-By default, a config named 'cms' is used in any new [api:SilverStripe\Forms\HTMLEditor\HTMLEditorField].
+By default, a config named 'cms' is used in any new [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField).
 
-If you have created your own [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig] and would like to use it,
-you can call `HtmlEditorConfig::set_active('myConfig')` and all subsequently created [api:SilverStripe\Forms\HTMLEditor\HTMLEditorField]
+If you have created your own [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) and would like to use it,
+you can call `HtmlEditorConfig::set_active('myConfig')` and all subsequently created [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField)
 will use the configuration with the name 'myConfig'.
 
-You can also specify which [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig] to use on a per field basis via the construct argument.
-This is particularly useful if you need different configurations for multiple [api:SilverStripe\Forms\HTMLEditor\HTMLEditorField] on the same page or form.
+You can also specify which [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) to use on a per field basis via the construct argument.
+This is particularly useful if you need different configurations for multiple [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField) on the same page or form.
 
 	:::php
 	class MyObject extends DataObject {
@@ -62,10 +62,10 @@ In the above example, the 'Content' field will use the default 'cms' config whil
 ## Configuration
 
 To keep the JavaScript editor configuration manageable and extensible, we've wrapped it in a PHP class called 
-[api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig]. The class comes with its own defaults, which are extended through the [Configuration API](../../configuration)
+[HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig). The class comes with its own defaults, which are extended through the [Configuration API](../../configuration)
 in the framework (and the `cms` module in case you've got that installed).
 
-There can be multiple configs, which should always be created / accessed using [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::get()]. You can 
+There can be multiple configs, which should always be created / accessed using [HtmlEditorConfig::get()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::get()). You can 
 then set the currently active config using `set_active()`.
 
 <div class="info" markdown="1">
@@ -81,7 +81,7 @@ order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.p
 
 In its simplest form, the configuration of the editor includes adding and removing buttons and plugins.
 
-You can add plugins to the editor using the Framework's [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()] method. This will
+You can add plugins to the editor using the Framework's [HtmlEditorConfig::enablePlugins()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()) method. This will
 transparently generate the relevant underlying TinyMCE code.
 
 **mysite/_config.php**
@@ -108,7 +108,7 @@ Buttons can also be removed:
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 
 <div class="notice" markdown="1">
-Internally [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig] uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
+Internally [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
 [TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
 for more details.
 </div>
@@ -145,7 +145,7 @@ The default setting for the CMS's `extended_valid_elements` we are overriding he
 ## Writing custom plugins
 
 It is also possible to add custom plugins to TinyMCE, for example toolbar buttons.
-You can enable them through [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()]:
+You can enable them through [HtmlEditorConfig::enablePlugins()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()):
 
 **mysite/_config.php**
 	:::php
@@ -155,12 +155,12 @@ You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_
 
 ## Image and media insertion
 
-The [api:SilverStripe\Forms\HTMLEditor\HtmlEditorField] API also handles inserting images and media files into the managed HTML content. It can be 
-used both for referencing files on the webserver filesystem (through the [api:SilverStripe\Assets\File] and [api:SilverStripe\Assets\Image] APIs), as well 
+The [HtmlEditorField](api:SilverStripe\Forms\HTMLEditor\HtmlEditorField) API also handles inserting images and media files into the managed HTML content. It can be 
+used both for referencing files on the webserver filesystem (through the [File](api:SilverStripe\Assets\File) and [Image](api:SilverStripe\Assets\Image) APIs), as well 
 as hotlinking files from the web. 
 
 We use [shortcodes](/developer_guides/extending/shortcodes) to store information about inserted images or media elements. The 
-[api:SilverStripe\View\Parsers\ShortcodeParser] API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
+[ShortcodeParser](api:SilverStripe\View\Parsers\ShortcodeParser) API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
 ## oEmbed: Embedding media through external services
@@ -169,7 +169,7 @@ The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media ser
 representation of files just by referencing a website URL. For example, a content author can insert a playable youtube 
 video just by knowing its URL, as opposed to dealing with manual HTML code.
 
-oEmbed powers the "Insert from web" feature available through [api:SilverStripe\Forms\HTMLEditor\HtmlEditorField]. Internally, it makes HTTP 
+oEmbed powers the "Insert from web" feature available through [HtmlEditorField](api:SilverStripe\Forms\HTMLEditor\HtmlEditorField). Internally, it makes HTTP 
 queries to a list of external services if it finds a matching URL. These services are described in the 
 `Oembed.providers` configuration. Since these requests are performed on page rendering, they typically have a long 
 cache time (multiple days). 
@@ -207,7 +207,7 @@ By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it wi
 `<article>` or `<figure>`. If you plan to use those, add them to the 
 [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
-Also, the [api:SilverStripe\View\Parsers\HTMLValue] API underpinning the HTML processing parses the markup into a temporary object tree 
+Also, the [HTMLValue](api:SilverStripe\View\Parsers\HTMLValue) API underpinning the HTML processing parses the markup into a temporary object tree 
 which can be traversed and modified before saving. The built-in parser only supports HTML4 and XHTML syntax. In order 
 to successfully process HTML5 tags, please use the 
 ['silverstripe/html5' module](https://github.com/silverstripe/silverstripe-html5).
@@ -239,22 +239,22 @@ Adding functionality is a bit more advanced, you'll most likely
 need to add some fields to the PHP forms, as well as write some
 JavaScript to ensure the values from those fields make it into the content
 elements (and back out in case an existing element gets edited).
-There's lots of extension points in the [api:HtmlEditorField_Toolbar] class
+There's lots of extension points in the [HtmlEditorField_Toolbar](api:HtmlEditorField_Toolbar) class
 to get you started.
 
 ### Security groups with their own editor configuration
 
 Different groups of authors can be assigned their own config,
 e.g. a more restricted rule set for content reviewers (see the "Security" )
-The config is available on each user record through [api:SilverStripe\Security\Member::getHtmlEditorConfigForCMS()].
-The group assignment is done through the "Security" interface for each [api:SilverStripe\Security\Group] record.
+The config is available on each user record through [Member::getHtmlEditorConfigForCMS()](api:SilverStripe\Security\Member::getHtmlEditorConfigForCMS()).
+The group assignment is done through the "Security" interface for each [Group](api:SilverStripe\Security\Group) record.
 Note: The dropdown is only available if more than one config exists.
 
 ### Using the editor outside of the CMS
 
 Each interface can have multiple fields of this type, each with their own toolbar to set formatting
 and insert HTML elements. They do share one common set of dialogs for inserting links and other media though,
-encapsulated in the [api:HtmlEditorField_Toolbar] class.
+encapsulated in the [HtmlEditorField_Toolbar](api:HtmlEditorField_Toolbar) class.
 In the CMS, those dialogs are automatically instantiate, but in your own interfaces outside
 of the CMS you have to take care of instantiate yourself:
 
@@ -281,7 +281,7 @@ WYSIWYG editors are complex beasts, so replacing it completely is a difficult ta
 The framework provides a wrapper implementation for the basic required functionality,
 mainly around selecting and inserting content into the editor view.
 Have a look in `HtmlEditorField.js` and the `ss.editorWrapper` object to get you started
-on your own editor wrapper. Note that the [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig] is currently hardwired to support TinyMCE,
+on your own editor wrapper. Note that the [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) is currently hardwired to support TinyMCE,
 so its up to you to either convert existing configuration as applicable,
 or start your own configuration.
 

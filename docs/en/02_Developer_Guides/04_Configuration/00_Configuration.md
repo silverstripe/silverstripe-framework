@@ -3,7 +3,7 @@ summary: SilverStripe's YAML based Configuration API for setting runtime configu
 
 # Configuration API
 
-SilverStripe comes with a comprehensive code based configuration system through the [api:SilverStripe\Core\Config\Config] class. It primarily 
+SilverStripe comes with a comprehensive code based configuration system through the [Config](api:SilverStripe\Core\Config\Config) class. It primarily 
 relies on declarative [YAML](http://en.wikipedia.org/wiki/YAML) files, and falls back to procedural PHP code, as well 
 as PHP static variables. This is provided by the [silverstripe/config](https://github.com/silverstripe/silverstripe-config)
 library.
@@ -47,7 +47,7 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 ## Accessing and Setting Configuration Properties
 
-This can be done by calling the static method [api:SilverStripe\Core\Config\Config::inst()], like so:
+This can be done by calling the static method [Config::inst()](api:SilverStripe\Core\Config\Config::inst()), like so:
 
 	:::php
 	$config = Config::inst()->get('MyClass', 'property');
@@ -334,4 +334,4 @@ That is, the fragment will be included if all Only rules match, except if all Ex
 
 ## API Documentation
 
-* [api:SilverStripe\Core\Config\Config]
+* [Config](api:SilverStripe\Core\Config\Config)

@@ -15,7 +15,7 @@ bottle-necks and identify slow moving parts of your application chain.
 
 ## Debugging Utilities
 
-The [api:SilverStripe\Dev\Debug] class contains a number of static utility methods for more advanced debugging.
+The [Debug](api:SilverStripe\Dev\Debug) class contains a number of static utility methods for more advanced debugging.
 
 	:::php
 	Debug::show($myVariable);
@@ -29,6 +29,6 @@ The [api:SilverStripe\Dev\Debug] class contains a number of static utility metho
 
 ## API Documentation
 
-* [api:SS_Log]
-* [api:SilverStripe\Dev\Backtrace]
-* [api:SilverStripe\Dev\Debug]
+* [SS_Log](api:SS_Log)
+* [Backtrace](api:SilverStripe\Dev\Backtrace)
+* [Debug](api:SilverStripe\Dev\Debug)

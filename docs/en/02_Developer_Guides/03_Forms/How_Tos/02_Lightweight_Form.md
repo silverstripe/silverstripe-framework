@@ -2,10 +2,10 @@ title: How to Create Lightweight Form
 
 # How to Create Lightweight Form
 
-Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [api:SilverStripe\Forms\FormField], however this can 
+Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [FormField](api:SilverStripe\Forms\FormField), however this can 
 sometimes produce markup which is unnecessarily bloated.
 
-For example, a basic search form. We want to use the [api:SilverStripe\Forms\Form] API to handle the form but we may want to provide a 
+For example, a basic search form. We want to use the [Form](api:SilverStripe\Forms\Form) API to handle the form but we may want to provide a 
 totally custom template to meet our needs. To do this, we'll provide the class with a unique template through 
 `setTemplate`.
 
@@ -43,7 +43,7 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 	</form>
 
 `SearchForm.ss` will be executed within the scope of the `Form` object so has access to any of the methods and 
-properties on [api:SilverStripe\Forms\Form] such as `$Fields` and `$Actions`. 
+properties on [Form](api:SilverStripe\Forms\Form) such as `$Fields` and `$Actions`. 
 
 <div class="notice">
 To understand more about Scope or the syntax for custom templates, read the [Templates](../../templates) guide.

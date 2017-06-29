@@ -4,7 +4,7 @@ summary: Fulltext search allows sophisticated searching on text content.
 # FulltextSearchable
 
 Fulltext search allows advanced search criteria for searching words within a text based data column. While basic
-Fulltext search can be achieved using the built-in [api:SilverStripe\ORM\Connect\MySQLDatabase] class a more powerful wrapper for Fulltext
+Fulltext search can be achieved using the built-in [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase) class a more powerful wrapper for Fulltext
 search is provided through a module.
 
 <div class="notice" markdown="1">
@@ -15,7 +15,7 @@ a high level wrapper for running advanced search services such as Solr, Lucene o
 
 ## Adding Fulltext Support to MySQLDatabase
 
-The [api:SilverStripe\ORM\Connect\MySQLDatabase] class defaults to creating tables using the InnoDB storage engine. As Fulltext search in MySQL
+The [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase) class defaults to creating tables using the InnoDB storage engine. As Fulltext search in MySQL
 requires the MyISAM storage engine, any DataObject you wish to use with Fulltext search must be changed to use MyISAM
 storage engine.
 
@@ -31,18 +31,18 @@ You can do so by adding this static variable to your class definition:
 		);
 	}
 
-The [api:SilverStripe\ORM\Search\FulltextSearchable] extension will add the correct `Fulltext` indexes to the data model.
+The [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) extension will add the correct `Fulltext` indexes to the data model.
 
 <div class="alert" markdown="1">
-The [api:SilverStripe\CMS\Search\SearchForm] and [api:SilverStripe\ORM\Search\FulltextSearchable] API's are currently hard coded to be specific to `Page` and `File`
+The [SearchForm](api:SilverStripe\CMS\Search\SearchForm) and [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) API's are currently hard coded to be specific to `Page` and `File`
 records and cannot easily be adapted to include custom `DataObject` instances. To include your custom objects in the
 default site search, have a look at those extensions and modify as required.
 </div>
 
 ### Fulltext Filter
 
-SilverStripe provides a [api:SilverStripe\ORM\Filters\FulltextFilter] which you can use to perform custom fulltext searches on
-[api:SilverStripe\ORM\DataList]s.
+SilverStripe provides a [FulltextFilter](api:SilverStripe\ORM\Filters\FulltextFilter) which you can use to perform custom fulltext searches on
+[DataList](api:SilverStripe\ORM\DataList)s.
 
 Example DataObject:
 
@@ -77,4 +77,4 @@ field instead of the index.
 
 ## API Documentation
 
-* [api:SilverStripe\ORM\Search\FulltextSearchable]
+* [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable)

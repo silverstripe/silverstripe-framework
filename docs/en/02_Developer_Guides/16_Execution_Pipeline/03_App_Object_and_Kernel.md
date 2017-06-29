@@ -3,7 +3,7 @@ summary: Provides bootstrapping and entrypoint to the SilverStripe application
 
 # Kernel
 
-The [api:SilverStripe\Core\Kernel] object provides a container for the various manifests, services, and components
+The [Kernel](api:SilverStripe\Core\Kernel) object provides a container for the various manifests, services, and components
 which a SilverStripe application must have available in order for requests to be executed.
 
 This can be accessed in user code via Injector
@@ -16,18 +16,18 @@ This can be accessed in user code via Injector
 
 Services accessible from this kernel include:
 
-  * getContainer() -> Current [api:SilverStripe\Core\Injector\Injector] service
-  * getThemeResourceLoader() -> [api:SilverStripe\View\ThemeResourceLoader] Service for loading of discovered templates.
+  * getContainer() -> Current [Injector](api:SilverStripe\Core\Injector\Injector) service
+  * getThemeResourceLoader() -> [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader) Service for loading of discovered templates.
     Also used to contain nested theme sets such as the `$default` set for all root module /templates folders.
   * getEnvironment() -> String value for the current environment. One of 'dev', 'live' or 'test'
 
 Several meta-services are also available from Kernel (which are themselves containers for
 other core services) but are not commonly accessed directly:
 
-  * getClassLoader() -> [api:SilverStripe\Core\Manifest\ClassLoader] service which handles the class manifest
-  * getModuleLoader() -> [api:SilverStripe\Core\Manifest] service which handles module registration
-  * getConfigLoader() -> [api:SilverStripe\Core\Config\ConfigLoader] Service which assists with nesting of [api:SilverStripe\Core\Config\Config] instances
-  * getInjectorLoader() -> [api:SilverStripe\Core\Injector\InjectorLoader] Service which assists with nesting of [api:SilverStripe\Core\Injector\Injector] instances
+  * getClassLoader() -> [ClassLoader](api:SilverStripe\Core\Manifest\ClassLoader) service which handles the class manifest
+  * getModuleLoader() -> [Manifest](api:SilverStripe\Core\Manifest) service which handles module registration
+  * getConfigLoader() -> [ConfigLoader](api:SilverStripe\Core\Config\ConfigLoader) Service which assists with nesting of [Config](api:SilverStripe\Core\Config\Config) instances
+  * getInjectorLoader() -> [InjectorLoader](api:SilverStripe\Core\Injector\InjectorLoader) Service which assists with nesting of [Injector](api:SilverStripe\Core\Injector\Injector) instances
 
 ## Kernel nesting
 
@@ -60,7 +60,7 @@ The role of the application is to:
 ## HTTPApplication
 
 The HTTPApplication provides a specialised application implementation for handling HTTP Requests.
-This class provides basic support for HTTP Middleware, such as [api:SilverStripe\Core\Startup\ErrorControlChainMiddleware].
+This class provides basic support for HTTP Middleware, such as [ErrorControlChainMiddleware](api:SilverStripe\Core\Startup\ErrorControlChainMiddleware).
 
 `main.php` contains the default application implementation.
 

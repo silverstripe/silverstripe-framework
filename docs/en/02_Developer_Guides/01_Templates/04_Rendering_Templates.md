@@ -5,7 +5,7 @@ summary: Call and render SilverStripe templates manually.
 
 Templates do nothing on their own. Rather, they are used to render a particular object.  All of the `<% if %>`, 
 `<% loop %>` and other variables are methods or parameters that are called on the current object in 
-[scope](syntax#scope).  All that is necessary is that the object is an instance of [api:SilverStripe\View\ViewableData] (or one of its 
+[scope](syntax#scope).  All that is necessary is that the object is an instance of [ViewableData](api:SilverStripe\View\ViewableData) (or one of its 
 subclasses).
 
 The following will render the given data into a template. Given the template:
@@ -16,7 +16,7 @@ The following will render the given data into a template. Given the template:
 <strong>$Name</strong> is the $Role on our team.
 ```
 
-Our application code can render into that view using `renderWith`. This method is called on the [api:SilverStripe\View\ViewableData] 
+Our application code can render into that view using `renderWith`. This method is called on the [ViewableData](api:SilverStripe\View\ViewableData) 
 instance with a template name or an array of templates to render. 
 
 **mysite/code/Page.php**
@@ -34,7 +34,7 @@ echo $arrayData->renderWith('Coach_Message');
 
 <div class="info" markdown="1">
 Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
-includes [api:SilverStripe\Control\Controller], [api:SilverStripe\Forms\FormField] and [api:SilverStripe\ORM\DataObject] instances.
+includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:SilverStripe\Forms\FormField) and [DataObject](api:SilverStripe\ORM\DataObject) instances.
 </div>
 
 ```php

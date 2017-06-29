@@ -3,7 +3,7 @@ summary: How to use the GridField class for managing tabular data.
 
 # GridField
 
-[api:SilverStripe\Forms\GridField\GridField] is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 
+[GridField](api:SilverStripe\Forms\GridField\GridField) is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 
 tabular data in a format that is easy to view and modify. It can be thought of as a HTML table with some tricks.
 
 	:::php
@@ -16,12 +16,12 @@ GridField can only be used with `$list` data sets that are of the type `SS_List`
 </div>
 
 <div class="notice" markdown="1">
-[api:SilverStripe\Forms\GridField\GridField] powers the automated data UI of [api:SilverStripe\Admin\ModelAdmin]. For more information about `ModelAdmin` see the 
+[GridField](api:SilverStripe\Forms\GridField\GridField) powers the automated data UI of [ModelAdmin](api:SilverStripe\Admin\ModelAdmin). For more information about `ModelAdmin` see the 
 [Customizing the CMS](/developer_guides/customising_the_admin_interface) guide.
 </div>
 
-Each `GridField` is built from a number of components grouped into the [api:SilverStripe\Forms\GridField\GridFieldConfig]. Without any components, 
-a `GridField` has almost no functionality. The `GridFieldConfig` instance and the attached [api:SilverStripe\Forms\GridField\GridFieldComponent] are 
+Each `GridField` is built from a number of components grouped into the [GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig). Without any components, 
+a `GridField` has almost no functionality. The `GridFieldConfig` instance and the attached [GridFieldComponent](api:SilverStripe\Forms\GridField\GridFieldComponent) are 
 responsible for all the user interactions including formatting data to be readable, modifying data and performing any 
 actions such as deleting records.
 
@@ -44,14 +44,14 @@ actions such as deleting records.
 	}
 
 This will display a bare bones `GridField` instance under `Pages` tab in the CMS. As we have not specified the 
-`GridField` configuration, the default configuration is an instance of [api:SilverStripe\Forms\GridField\GridFieldConfig_Base] which provides:
+`GridField` configuration, the default configuration is an instance of [GridFieldConfig_Base](api:SilverStripe\Forms\GridField\GridFieldConfig_Base) which provides:
 
- * [api:SilverStripe\Forms\GridField\GridFieldToolbarHeader]
- * [api:SilverStripe\Forms\GridField\GridFieldSortableHeader]
- * [api:SilverStripe\Forms\GridField\GridFieldFilterHeader]
- * [api:SilverStripe\Forms\GridField\GridFieldDataColumns]
- * [api:SilverStripe\Forms\GridField\GridFieldPageCount]
- * [api:SilverStripe\Forms\GridField\GridFieldPaginator]
+ * [GridFieldToolbarHeader](api:SilverStripe\Forms\GridField\GridFieldToolbarHeader)
+ * [GridFieldSortableHeader](api:SilverStripe\Forms\GridField\GridFieldSortableHeader)
+ * [GridFieldFilterHeader](api:SilverStripe\Forms\GridField\GridFieldFilterHeader)
+ * [GridFieldDataColumns](api:SilverStripe\Forms\GridField\GridFieldDataColumns)
+ * [GridFieldPageCount](api:SilverStripe\Forms\GridField\GridFieldPageCount)
+ * [GridFieldPaginator](api:SilverStripe\Forms\GridField\GridFieldPaginator)
 
 The configuration of those `GridFieldComponent` instances and the addition or subtraction of components is done through 
 the `getConfig()` method on `GridField`.
@@ -131,17 +131,17 @@ Fetch a component to modify it later on.
 Here is a list of components for use bundled with the core framework. Many more components are provided by third-party
 modules and extensions.
 
- - [api:SilverStripe\Forms\GridField\GridFieldToolbarHeader]
- - [api:SilverStripe\Forms\GridField\GridFieldSortableHeader]
- - [api:SilverStripe\Forms\GridField\GridFieldFilterHeader]
- - [api:SilverStripe\Forms\GridField\GridFieldDataColumns]
- - [api:SilverStripe\Forms\GridField\GridFieldDeleteAction]
- - [api:SilverStripe\Forms\GridField\GridFieldViewButton]
- - [api:SilverStripe\Forms\GridField\GridFieldEditButton]
- - [api:SilverStripe\Forms\GridField\GridFieldExportButton]
- - [api:SilverStripe\Forms\GridField\GridFieldPrintButton]
- - [api:SilverStripe\Forms\GridField\GridFieldPaginator]
- - [api:SilverStripe\Forms\GridField\GridFieldDetailForm]
+ - [GridFieldToolbarHeader](api:SilverStripe\Forms\GridField\GridFieldToolbarHeader)
+ - [GridFieldSortableHeader](api:SilverStripe\Forms\GridField\GridFieldSortableHeader)
+ - [GridFieldFilterHeader](api:SilverStripe\Forms\GridField\GridFieldFilterHeader)
+ - [GridFieldDataColumns](api:SilverStripe\Forms\GridField\GridFieldDataColumns)
+ - [GridFieldDeleteAction](api:SilverStripe\Forms\GridField\GridFieldDeleteAction)
+ - [GridFieldViewButton](api:SilverStripe\Forms\GridField\GridFieldViewButton)
+ - [GridFieldEditButton](api:SilverStripe\Forms\GridField\GridFieldEditButton)
+ - [GridFieldExportButton](api:SilverStripe\Forms\GridField\GridFieldExportButton)
+ - [GridFieldPrintButton](api:SilverStripe\Forms\GridField\GridFieldPrintButton)
+ - [GridFieldPaginator](api:SilverStripe\Forms\GridField\GridFieldPaginator)
+ - [GridFieldDetailForm](api:SilverStripe\Forms\GridField\GridFieldDetailForm)
 
 ## Bundled GridFieldConfig
 
@@ -233,7 +233,7 @@ database.
 
 The `GridFieldDetailForm` component drives the record viewing and editing form. It takes its' fields from 
 `DataObject->getCMSFields()` method but can be customised to accept different fields via the 
-[api:SilverStripe\Forms\GridField\GridFieldDetailForm::setFields()] method.
+[GridFieldDetailForm::setFields()](api:SilverStripe\Forms\GridField\GridFieldDetailForm::setFields()) method.
 
 	:::php
 	$form = $gridField->getConfig()->getComponentByType('GridFieldDetailForm');
@@ -244,7 +244,7 @@ The `GridFieldDetailForm` component drives the record viewing and editing form. 
 ### many_many_extraFields
 
 The component also has the ability to load and save data stored on join tables when two records are related via a 
-"many_many" relationship, as defined through [api:SilverStripe\ORM\DataObject::$many_many_extraFields]. While loading and saving works 
+"many_many" relationship, as defined through [DataObject::$many_many_extraFields](api:SilverStripe\ORM\DataObject::$many_many_extraFields). While loading and saving works 
 transparently, you need to add the necessary fields manually, they're not included in the `getCMSFields()` scaffolding.
 
 These extra fields act like usual form fields, but need to be "namespaced" in order for the `GridField` logic to detect 
@@ -316,10 +316,10 @@ The goal is for multiple components to share the same space, for example a heade
  - `header`/`footer`: Renders in a `<thead>`/`<tfoot>`, should contain table markup
  - `before`/`after`: Renders before/after the actual `<table>`
  - `buttons-before-left`/`buttons-before-right`/`buttons-after-left`/`buttons-after-right`: 
-    Renders in a shared row before the table. Requires [api:SilverStripe\Forms\GridField\GridFieldButtonRow].
+    Renders in a shared row before the table. Requires [GridFieldButtonRow](api:SilverStripe\Forms\GridField\GridFieldButtonRow).
 
 These built-ins can be used by passing the fragment names into the constructor of various components. Note that some 
-[api:SilverStripe\Forms\GridField\GridFieldConfig] classes will already have rows added to them. The following example will add a print button at the 
+[GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig) classes will already have rows added to them. The following example will add a print button at the 
 bottom right of the table.
 
 	:::php
@@ -351,7 +351,7 @@ processed placeholders as opposed to native template syntax.
 </div>
 
 Now you can add other components into this area by returning them as an array from your 
-[api:SilverStripe\Forms\GridField\GridFieldComponent::getHTMLFragments()] implementation:
+[GridFieldComponent::getHTMLFragments()](api:SilverStripe\Forms\GridField\GridFieldComponent::getHTMLFragments()) implementation:
 
 	:::php
 	<?php
@@ -365,7 +365,7 @@ Now you can add other components into this area by returning them as an array fr
 		}
 	}
 
-Your new area can also be used by existing components, e.g. the [api:SilverStripe\Forms\GridField\GridFieldPrintButton]
+Your new area can also be used by existing components, e.g. the [GridFieldPrintButton](api:SilverStripe\Forms\GridField\GridFieldPrintButton)
 
 	:::php
 	new GridFieldPrintButton('my-component-area');
@@ -377,7 +377,7 @@ functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_grid
 
 ## Creating a Custom GridField_ActionProvider
 
-[api:SilverStripe\Forms\GridField\GridField_ActionProvider] provides row level actions such as deleting a record. See 
+[GridField_ActionProvider](api:SilverStripe\Forms\GridField\GridField_ActionProvider) provides row level actions such as deleting a record. See 
 [How to Create a GridField_ActionProvider](../how_tos/create_a_gridfield_actionprovider).
 
 ## Saving the GridField State
@@ -389,6 +389,6 @@ The `GridState_Component` sets and gets data from the `GridState`.
 
 ## API Documentation
 
- * [api:SilverStripe\Forms\GridField\GridField]
- * [api:SilverStripe\Forms\GridField\GridFieldConfig]
- * [api:SilverStripe\Forms\GridField\GridFieldComponent] 
+ * [GridField](api:SilverStripe\Forms\GridField\GridField)
+ * [GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig)
+ * [GridFieldComponent](api:SilverStripe\Forms\GridField\GridFieldComponent) 

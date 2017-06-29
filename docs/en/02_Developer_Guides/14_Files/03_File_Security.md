@@ -173,7 +173,7 @@ The urls for these two files, however, do not reflect the physical structure dir
 * `http://www.mysite.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
   and will not invoke a php request.
 * `http://www.mysite.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
-  which will be passed to the `[api:SilverStripe\Assets\Storage\ProtectedFileController]` controller, which will serve
+  which will be passed to the `[ProtectedFileController](api:SilverStripe\Assets\Storage\ProtectedFileController)` controller, which will serve
   up the content of the hidden file, conditional on a permission check.
 
 When the file `NewCompanyLogo.gif` is made public, the url will not change, but the file location

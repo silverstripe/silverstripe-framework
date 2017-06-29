@@ -2,22 +2,22 @@ summary: Learn how to crop and resize images in templates and PHP code
 
 # Image
 
-Image files can be stored either through the `[api:SilverStripe\Assets\Image]` dataobject, or though [api:SilverStripe\Assets\Storage\DBFile] fields.
+Image files can be stored either through the `[Image](api:SilverStripe\Assets\Image)` dataobject, or though [DBFile](api:SilverStripe\Assets\Storage\DBFile) fields.
 In either case, the same image resizing and manipulation functionality is available though the common
-[api:SilverStripe\Assets\ImageManipulation] trait.
+[ImageManipulation](api:SilverStripe\Assets\ImageManipulation) trait.
 
 ## Usage
 
 ### Managing images through form fields
 
-Images can be uploaded like any other file, through [api:SilverStripe\Forms\FileField].
+Images can be uploaded like any other file, through [FileField](api:SilverStripe\Forms\FileField).
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
 
 ### Inserting images into the WYSIWYG editor
 
-Images can be inserted into `[api:SilverStripe\View\Parsers\HTMLValue]` database fields
+Images can be inserted into `[HTMLValue](api:SilverStripe\View\Parsers\HTMLValue)` database fields
 through the built-in WYSIWYG editor. In order to retain a relationship
-to the underlying `[api:SilverStripe\Assets\Image]` records, images are saved as [shortcodes](/developer-guides/extending/shortcodes).
+to the underlying `[Image](api:SilverStripe\Assets\Image)` records, images are saved as [shortcodes](/developer-guides/extending/shortcodes).
 The shortcode (`[image id="<id>" alt="My text" ...]`) will be converted
 into an `<img>` tag on your website automatically.
 
@@ -91,7 +91,7 @@ The image manipulation functions can be used in your code with the same names, e
 
 Some of the MetaData functions need to be prefixed with 'get', example `getHeight()`, `getOrientation()` etc.
 
-Please refer to the [api:SilverStripe\Assets\ImageManipulation] API documentation for specific functions.
+Please refer to the [ImageManipulation](api:SilverStripe\Assets\ImageManipulation) API documentation for specific functions.
 
 ### Creating custom image functions
 
@@ -137,7 +137,7 @@ You can also create your own functions by decorating the `Image` class.
 
 ### Form Upload
 
-For usage on a website form, see [api:SilverStripe\Assets\FileField].
+For usage on a website form, see [FileField](api:SilverStripe\Assets\FileField).
 
 ### Image Quality
 
@@ -197,7 +197,7 @@ SilverStripe\Core\Injector\Injector:
 
 ## API Documentation
 
- * [api:SilverStripe\Assets\File]
- * [api:SilverStripe\Assets\Image]
- * [api:SilverStripe\Assets\Storage\DBFile]
- * [api:SilverStripe\Assets\ImageManipulation]
+ * [File](api:SilverStripe\Assets\File)
+ * [Image](api:SilverStripe\Assets\Image)
+ * [DBFile](api:SilverStripe\Assets\Storage\DBFile)
+ * [ImageManipulation](api:SilverStripe\Assets\ImageManipulation)

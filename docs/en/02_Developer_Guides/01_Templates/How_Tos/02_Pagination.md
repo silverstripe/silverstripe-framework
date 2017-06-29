@@ -3,8 +3,8 @@ title: How to Create a Paginated List
 # How to Create a Paginated List
 
 In order to create a paginated list, create a method on your controller that first creates a `SS_List` that contains
-all your record, then wraps it in a [api:SilverStripe\ORM\PaginatedList] object. The `PaginatedList` object should also passed the 
-[api:SilverStripe\Control\HTTPRequest] object so it can read the current page information from the "?start=" GET var.
+all your record, then wraps it in a [PaginatedList](api:SilverStripe\ORM\PaginatedList) object. The `PaginatedList` object should also passed the 
+[HTTPRequest](api:SilverStripe\Control\HTTPRequest) object so it can read the current page information from the "?start=" GET var.
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 
@@ -25,8 +25,8 @@ Note that the concept of "pages" used in pagination does not necessarily mean th
 it's just a term to describe a sub-collection of the list.
 </div>
 
-There are two ways to generate pagination controls: [api:SilverStripe\ORM\PaginatedList::Pages()] and 
-[api:SilverStripe\ORM\PaginatedList::PaginationSummary()]. In this example we will use `PaginationSummary()`.
+There are two ways to generate pagination controls: [PaginatedList::Pages()](api:SilverStripe\ORM\PaginatedList::Pages()) and 
+[PaginatedList::PaginationSummary()](api:SilverStripe\ORM\PaginatedList::PaginationSummary()). In this example we will use `PaginationSummary()`.
 
 The first step is to simply list the objects in the template:
 
@@ -71,8 +71,8 @@ If there is more than one page, this block will render a set of pagination contr
 ## Paginating Custom Lists
 
 In some situations where you are generating the list yourself, the underlying list will already contain only the items 
-that you wish to display on the current page. In this situation the automatic limiting done by [api:SilverStripe\ORM\PaginatedList]
-will break the pagination. You can disable automatic limiting using the [api:SilverStripe\ORM\PaginatedList::setLimitItems()] method 
+that you wish to display on the current page. In this situation the automatic limiting done by [PaginatedList](api:SilverStripe\ORM\PaginatedList)
+will break the pagination. You can disable automatic limiting using the [PaginatedList::setLimitItems()](api:SilverStripe\ORM\PaginatedList::setLimitItems()) method 
 when using custom lists.
 
 	:::php
@@ -108,6 +108,6 @@ list.
 
 ## API Documentation
 
-* [api:SilverStripe\ORM\PaginatedList]
+* [PaginatedList](api:SilverStripe\ORM\PaginatedList)
 
 

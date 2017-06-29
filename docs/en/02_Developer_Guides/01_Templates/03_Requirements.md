@@ -5,7 +5,7 @@ summary: How to include and require other assets in your templates such as javas
 
 The requirements class takes care of including CSS and JavaScript into your applications. This is preferred to hard 
 coding any references in the `<head>` tag of your template, as it enables a more flexible handling through the 
-[api:SilverStripe\View\Requirements] class.
+[Requirements](api:SilverStripe\View\Requirements) class.
 
 The examples below are using certain folder naming conventions (CSS files in `css/`, JavaScript files in `javascript/`).
 SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
@@ -27,7 +27,7 @@ Requiring assets from the template is restricted compared to the PHP API.
 ## PHP Requirements API
 
 It is common practice to include most Requirements either in the *init()*-method of your [controller](../controllers/), or
-as close to rendering as possible (e.g. in [api:SilverStripe\Forms\FormField]).
+as close to rendering as possible (e.g. in [FormField](api:SilverStripe\Forms\FormField)).
 
 	:::php
 	<?php
@@ -140,7 +140,7 @@ files in order to ensure that current files are served in requests.
 
 By default, files will be generated on demand in the format `assets/_combinedfiles/name-<hash>.js`,
 where `<hash>` represents the hash of the source files used to generate that content. The default flysystem backend,
-as used by the `[api:SilverStripe\Assets\Storage\AssetStore]` backend, is used for this storage, but it can be substituted for any
+as used by the `[AssetStore](api:SilverStripe\Assets\Storage\AssetStore)` backend, is used for this storage, but it can be substituted for any
 other backend.
 
 You can also use any of the below options in order to tweak this behaviour:
@@ -353,5 +353,5 @@ If the Javascript files are preferred to be placed in the `<head>` tag rather th
 
 ## API Documentation
 
- * [api:SilverStripe\View\Requirements]
+ * [Requirements](api:SilverStripe\View\Requirements)
  * [CMS Architecture and Build Tooling](/developer_guides/customising_the_admin_interface/cms_architecture)

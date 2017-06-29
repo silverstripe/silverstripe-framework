@@ -88,4 +88,4 @@ modify an index as the next `dev/build` will `DROP` the index, and then `ADD` it
 
 ## API Documentation
 
-* [api:SilverStripe\ORM\DataObject]
+* [DataObject](api:SilverStripe\ORM\DataObject)

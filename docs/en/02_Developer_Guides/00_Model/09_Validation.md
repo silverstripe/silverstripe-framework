@@ -9,17 +9,17 @@ While this is a useful approach, it can lead to data inconsistencies if the reco
 controller and form context.
 
 Most validation constraints are actually data constraints which belong on the model. SilverStripe provides the 
-[api:SilverStripe\ORM\DataObject::validate()] method for this purpose.
+[DataObject::validate()](api:SilverStripe\ORM\DataObject::validate()) method for this purpose.
 
 By default, there is no validation - objects are always valid! However, you can overload this method in your DataObject 
-sub-classes to specify custom validation, or use the `validate` hook through a [api:SilverStripe\ORM\DataExtension].
+sub-classes to specify custom validation, or use the `validate` hook through a [DataExtension](api:SilverStripe\ORM\DataExtension).
 
-Invalid objects won't be able to be written - a [api:SilverStripe\ORM\ValidationException] will be thrown and no write will occur.
+Invalid objects won't be able to be written - a [ValidationException](api:SilverStripe\ORM\ValidationException) will be thrown and no write will occur.
 
 It is expected that you call `validate()` in your own application to test that an object is valid before attempting a 
 write, and respond appropriately if it isn't.
 
-The return value of `validate()` is a [api:SilverStripe\ORM\ValidationResult] object.
+The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\ValidationResult) object.
 
 	:::php
 	<?php
@@ -44,5 +44,5 @@ The return value of `validate()` is a [api:SilverStripe\ORM\ValidationResult] ob
 
 ## API Documentation
 
-* [api:SilverStripe\ORM\DataObject]
-* [api:SilverStripe\ORM\ValidationResult];
+* [DataObject](api:SilverStripe\ORM\DataObject)
+* [ValidationResult](api:SilverStripe\ORM\ValidationResult);

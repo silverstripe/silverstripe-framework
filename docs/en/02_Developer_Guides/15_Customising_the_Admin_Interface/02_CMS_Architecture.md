@@ -3,8 +3,8 @@
 ## Introduction
 
 A lot can be achieved in SilverStripe by adding properties and form fields
-to your own page types (via [api:SilverStripe\CMS\Model\SiteTree::getCMSFields()]), as well as creating
-your own data management interfaces through [api:SilverStripe\Admin\ModelAdmin]. But sometimes
+to your own page types (via [SiteTree::getCMSFields()](api:SilverStripe\CMS\Model\SiteTree::getCMSFields())), as well as creating
+your own data management interfaces through [ModelAdmin](api:SilverStripe\Admin\ModelAdmin). But sometimes
 you'll want to go deeper and tailor the underlying interface to your needs as well.
 For example, to build a personalized CMS dashboard, or content "slots" where authors
 can drag their content into. At its core, SilverStripe is a web application
@@ -52,7 +52,7 @@ coding conventions.
 
 ## The Admin URL
 
-The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[api:SilverStripe\Admin\AdminRootController]` and clear the old rule like in the example below.
+The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[AdminRootController](api:SilverStripe\Admin\AdminRootController)` and clear the old rule like in the example below.
 
 	:::yml
 	---
@@ -85,18 +85,18 @@ And in JavaScript, this is avaible through the `ss` namespace
 
 ### Multiple Admin URL and overrides
 
-You can also create your own classes that extend the `[api:SilverStripe\Admin\AdminRootController]` to create multiple or custom admin areas, with a `Director.rules` for each one.
+You can also create your own classes that extend the `[AdminRootController](api:SilverStripe\Admin\AdminRootController)` to create multiple or custom admin areas, with a `Director.rules` for each one.
 
 ## Templates and Controllers
 
-The CMS backend is handled through the [api:SilverStripe\Admin\LeftAndMain] controller class,
+The CMS backend is handled through the [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) controller class,
 which contains base functionality like displaying and saving a record.
-This is extended through various subclasses, e.g. to add a group hierarchy ([api:SilverStripe\Admin\SecurityAdmin]),
-a search interface ([api:SilverStripe\Admin\ModelAdmin]) or an "Add Page" form ([api:SilverStripe\CMS\Controllers\CMSPageAddController]).
+This is extended through various subclasses, e.g. to add a group hierarchy ([SecurityAdmin](api:SilverStripe\Admin\SecurityAdmin)),
+a search interface ([ModelAdmin](api:SilverStripe\Admin\ModelAdmin)) or an "Add Page" form ([CMSPageAddController](api:SilverStripe\CMS\Controllers\CMSPageAddController)).
 
 The controller structure is too complex to document here, a good starting point
-for following the execution path in code are [api:SilverStripe\Admin\LeftAndMain::getRecord()] and [api:SilverStripe\Admin\LeftAndMain::getEditForm()].
-If you have the `cms` module installed, have a look at [api:SilverStripe\CMS\Controllers\CMSMain::getEditForm()] for a good
+for following the execution path in code are [LeftAndMain::getRecord()](api:SilverStripe\Admin\LeftAndMain::getRecord()) and [LeftAndMain::getEditForm()](api:SilverStripe\Admin\LeftAndMain::getEditForm()).
+If you have the `cms` module installed, have a look at [CMSMain::getEditForm()](api:SilverStripe\CMS\Controllers\CMSMain::getEditForm()) for a good
 example on how to extend the base functionality (e.g. by adding page versioning hints to the form).
 
 CMS templates are inherited based on their controllers, similar to subclasses of
@@ -110,13 +110,13 @@ which is in charge of rendering the main content area apart from the CMS menu.
 Depending on the complexity of your layout, you'll also need to overload the
 "EditForm" template (e.g. `MyCMSController_EditForm.ss`), e.g. to implement
 a tabbed form which only scrolls the main tab areas, while keeping the buttons at the bottom of the frame.
-This requires manual assignment of the template to your form instance, see [api:SilverStripe\CMS\Controllers\CMSMain::getEditForm()] for details.
+This requires manual assignment of the template to your form instance, see [CMSMain::getEditForm()](api:SilverStripe\CMS\Controllers\CMSMain::getEditForm()) for details.
 
 Often its useful to have a "tools" panel in between the menu and your content,
 usually occupied by a search form or navigational helper.
 In this case, you can either overload the full base template as described above.
-To avoid duplicating all this template code, you can also use the special [api:SilverStripe\Admin\LeftAndMain::Tools()] and
-[api:SilverStripe\Admin\LeftAndMain::EditFormTools()] methods available in `LeftAndMain`.
+To avoid duplicating all this template code, you can also use the special [LeftAndMain::Tools()](api:SilverStripe\Admin\LeftAndMain::Tools()) and
+[LeftAndMain::EditFormTools()](api:SilverStripe\Admin\LeftAndMain::EditFormTools()) methods available in `LeftAndMain`.
 These placeholders are populated by auto-detected templates,
 with the naming convention of "<controller classname>_Tools.ss" and "<controller classname>_EditFormTools.ss".
 So to add or "subclass" a tools panel, simply create this file and it's automatically picked up.
@@ -208,10 +208,10 @@ any particular element.
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
 The JavaScript logic powering the CMS is divided into many files,
-which typically are included via the [api:SilverStripe\View\Requirements] class, by adding
-them to [api:SilverStripe\Admin\LeftAndMain::init()] and its subclassed methods.
+which typically are included via the [Requirements](api:SilverStripe\View\Requirements) class, by adding
+them to [LeftAndMain::init()](api:SilverStripe\Admin\LeftAndMain::init()) and its subclassed methods.
 This class also takes care of minification and combination of the files,
-which is crucial for the CMS performance (see [api:SilverStripe\View\Requirements::combine_files()]).
+which is crucial for the CMS performance (see [Requirements::combine_files()](api:SilverStripe\View\Requirements::combine_files())).
 
 Due to the procedural and selector-driven style of UI programming in jQuery.entwine,
 it can be difficult to find the piece of code responsible for a certain behaviour.
@@ -231,7 +231,7 @@ and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic
 Most interfaces will require their own JavaScript and CSS files, so the Ajax loading has
 to ensure they're loaded unless already present. A custom-built library called
 `jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
-so as a developer just declare your dependencies through the [api:SilverStripe\View\Requirements] API.
+so as a developer just declare your dependencies through the [Requirements](api:SilverStripe\View\Requirements) API.
 
 ## Client-side routing
 
@@ -335,10 +335,10 @@ we often want to update these sections independently from their neighbouring con
 
 In order for this to work, the CMS templates declare certain sections as "PJAX fragments"
 through a `data-pjax-fragment` attribute. These names correlate to specific
-rendering logic in the PHP controllers, through the [api:SilverStripe\Control\PjaxResponseNegotiator] class.
+rendering logic in the PHP controllers, through the [PjaxResponseNegotiator](api:SilverStripe\Control\PjaxResponseNegotiator) class.
 
 Through a custom `X-Pjax` HTTP header, the client can declare which view they're expecting,
-through identifiers like `CurrentForm` or `Content` (see [api:SilverStripe\Admin\LeftAndMain::getResponseNegotiator()]).
+through identifiers like `CurrentForm` or `Content` (see [LeftAndMain::getResponseNegotiator()](api:SilverStripe\Admin\LeftAndMain::getResponseNegotiator())).
 These identifiers are passed to `loadPanel()` via the `pjax` data option.
 The HTTP response is a JSON object literal, with template replacements keyed by their Pjax fragment.
 Through PHP callbacks, we ensure that only the required template parts are actually executed and rendered.
@@ -516,11 +516,11 @@ when using an input of type button, submit or reset, support is limited to plain
 
 ## Menu
 
-The navigation menu in the CMS is created through the [api:SilverStripe\Admin\CMSMenu] API,
+The navigation menu in the CMS is created through the [CMSMenu](api:SilverStripe\Admin\CMSMenu) API,
 which auto-detects all subclasses of `LeftAndMain`. This means that your custom
 `ModelAdmin` subclasses will already appear in there without any explicit definition.
-To modify existing menu entries or create new ones, see [api:SilverStripe\Admin\CMSMenu::add_menu_item()]
-and [api:SilverStripe\Admin\CMSMenu::remove_menu_item()].
+To modify existing menu entries or create new ones, see [CMSMenu::add_menu_item()](api:SilverStripe\Admin\CMSMenu::add_menu_item())
+and [CMSMenu::remove_menu_item()](api:SilverStripe\Admin\CMSMenu::remove_menu_item()).
 
 New content panels are typically loaded via Ajax, which might change
 the current menu context. For example, a link to edit a file might be clicked
@@ -536,7 +536,7 @@ which is picked up by the menu:
 		return 'my response';
 	}
 
-This is usually handled by the existing [api:SilverStripe\Admin\LeftAndMain] logic,
+This is usually handled by the existing [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) logic,
 so you don't need to worry about it. The same concept applies for
 'X-Title' (change the window title) and 'X-ControllerURL' (change the URL recorded in browser history).
 Note: You can see any additional HTTP headers through the web developer tools in your browser of choice.
@@ -551,13 +551,13 @@ For more information, see the [Howto: Customise the CMS tree](/developer_guides/
 
 Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
-([api:SilverStripe\Forms\TreeDropdownField] and [api:SilverStripe\Forms\TreeMultiselectField]).
+([TreeDropdownField](api:SilverStripe\Forms\TreeDropdownField) and [TreeMultiselectField](api:SilverStripe\Forms\TreeMultiselectField)).
 
 ## Tabs
 
 We're using [jQuery UI tabs](http://jqueryui.com/), but in a customised fashion.
 HTML with tabs can be created either directly through HTML templates in the CMS,
-or indirectly through a [api:SilverStripe\Forms\TabSet] form field. Since tabsets are useable
+or indirectly through a [TabSet](api:SilverStripe\Forms\TabSet) form field. Since tabsets are useable
 outside of the CMS as well, the baseline application of tabs happens via
 a small wrapper around `jQuery.tabs()` stored in `TabSet.js`.
 

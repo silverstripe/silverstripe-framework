@@ -3,12 +3,12 @@ summary: Extensions and DataExtensions let you modify and augment objects transp
 
 # Extensions and DataExtensions
 
-An [api:SilverStripe\Core\Extension] allows for adding additional functionality to a [api:Object] or modifying existing functionality 
-without the hassle of creating a subclass. Developers can add Extensions to any [api:Object] subclass within core, modules
+An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a [Object](api:Object) or modifying existing functionality 
+without the hassle of creating a subclass. Developers can add Extensions to any [Object](api:Object) subclass within core, modules
 or even their own code to make it more reusable.
 
-Extensions are defined as subclasses of either [api:SilverStripe\ORM\DataExtension] for extending a [api:SilverStripe\ORM\DataObject] subclass or 
-the [api:SilverStripe\Core\Extension] class for non DataObject subclasses (such as [api:SilverStripe\Control\Controller])
+Extensions are defined as subclasses of either [DataExtension](api:SilverStripe\ORM\DataExtension) for extending a [DataObject](api:SilverStripe\ORM\DataObject) subclass or 
+the [Extension](api:SilverStripe\Core\Extension) class for non DataObject subclasses (such as [Controller](api:SilverStripe\Control\Controller))
 
 <div class="info" markdown="1">
 For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
@@ -54,7 +54,7 @@ Alternatively, we can add extensions through PHP code (in the `_config.php` file
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
 transformed the original `Member` class in two ways:
 
-* Added a new [api:SilverStripe\ORM\FieldType\DBDatetime] for the users date of birth, and;
+* Added a new [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime) for the users date of birth, and;
 * Added a `SayHi` method to output `Hi <User>`
 
 From within the extension we can add more functions, database fields, relations or other properties and have them added
@@ -98,7 +98,7 @@ $has_one etc.
 
 ## Adding Methods
 
-Methods that have a unique name will be called as part of the `__call` method on [api:Object]. In the previous example
+Methods that have a unique name will be called as part of the `__call` method on [Object](api:Object). In the previous example
 we added a `SayHi` method which is unique to our extension.
 
 **mysite/templates/Page.ss**
@@ -119,7 +119,7 @@ we added a `SayHi` method which is unique to our extension.
 
 If the `Extension` needs to modify an existing method it's a little trickier. It requires that the method you want to
 customise has provided an *Extension Hook* in the place where you want to modify the data. An *Extension Hook* is done 
-through the [api:Object::extend()] method.
+through the [Object::extend()](api:Object::extend()) method.
 
 **framework/security/Member.php**
 
@@ -199,7 +199,7 @@ you need to provide extension hooks at the beginning of the method use `before{.
 
 ## Owner
 
-In your [api:SilverStripe\Core\Extension] class you can only refer to the source object through the `owner` property on the class as 
+In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to the source object through the `owner` property on the class as 
 `$this` will refer to your `Extension` instance.
 
 	:::php
@@ -215,8 +215,8 @@ In your [api:SilverStripe\Core\Extension] class you can only refer to the source
 
 ## Checking to see if an Object has an Extension
 
-To see what extensions are currently enabled on an object, use [api:Object::getExtensionInstances()] and 
-[api:Object::hasExtension()]
+To see what extensions are currently enabled on an object, use [Object::getExtensionInstances()](api:Object::getExtensionInstances()) and 
+[Object::hasExtension()](api:Object::hasExtension())
 
 
 	:::php
@@ -281,9 +281,9 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 ## Related Documentaion
 
 * [Injector](injector/)
-* [api:Object::useCustomClass]
+* [Object::useCustomClass](api:Object::useCustomClass)
 
 ## API Documentation
 
-* [api:SilverStripe\Core\Extension]
-* [api:SilverStripe\ORM\DataExtension]
+* [Extension](api:SilverStripe\Core\Extension)
+* [DataExtension](api:SilverStripe\ORM\DataExtension)

@@ -2,8 +2,8 @@ title: How to test emails within unit tests
 
 # Testing Email within Unit Tests
 
-SilverStripe's test system has built-in support for testing emails sent using the [api:SilverStripe\Control\Email\Email] class. If you are 
-running a [api:SilverStripe\Dev\SapphireTest] test, then it holds off actually sending the email, and instead lets you assert that an 
+SilverStripe's test system has built-in support for testing emails sent using the [Email](api:SilverStripe\Control\Email\Email) class. If you are 
+running a [SapphireTest](api:SilverStripe\Dev\SapphireTest) test, then it holds off actually sending the email, and instead lets you assert that an 
 email was sent using this method.
 
 	:::php
@@ -15,7 +15,7 @@ email was sent using this method.
 		$e->send();
 	}
 
-To test that `MyMethod` sends the correct email, use the [api:SilverStripe\Dev\SapphireTest::assertEmailSent()] method.
+To test that `MyMethod` sends the correct email, use the [SapphireTest::assertEmailSent()](api:SilverStripe\Dev\SapphireTest::assertEmailSent()) method.
 
 	:::php
 	$this->assertEmailSent($to, $from, $subject, $body);
@@ -36,5 +36,5 @@ Each of the arguments (`$to`, `$from`, `$subject` and `$body`) can be either one
 
 ## API Documentation
 
-* [api:SilverStripe\Control\Email\Email]
+* [Email](api:SilverStripe\Control\Email\Email)
 

@@ -4,7 +4,7 @@ summary: A look at the operations, variables and language controls you can use w
 # Template Syntax
 
 A template can contain any markup language (e.g HTML, CSV, JSON..) and before being rendered to the user, they're
-processed through [api:SilverStripe\View\SSViewer]. This process replaces placeholders such as `$Var` with real content from your
+processed through [SSViewer](api:SilverStripe\View\SSViewer). This process replaces placeholders such as `$Var` with real content from your
 [model](../model) and allows you to define logic controls like `<% if $Var %>`.
 
 An example of a SilverStripe template is below:
@@ -113,8 +113,8 @@ Variables can come from your database fields, or custom methods you define on yo
 </div>
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
-object the methods get called on. For the standard `Page.ss` template the scope is the current [api:SilverStripe\CMS\Controllers\ContentController\PageController] 
-class. This object gives you access to all the database fields on [api:SilverStripe\CMS\Model\SiteTree\PageController], its corresponding [api:SilverStripe\CMS\Model\SiteTree\Page]
+object the methods get called on. For the standard `Page.ss` template the scope is the current [PageController](api:SilverStripe\CMS\Controllers\ContentController\PageController) 
+class. This object gives you access to all the database fields on [PageController](api:SilverStripe\CMS\Model\SiteTree\PageController), its corresponding [Page](api:SilverStripe\CMS\Model\SiteTree\Page)
 record and any subclasses of those two.
 
 **mysite/code/Layout/Page.ss**
@@ -239,7 +239,7 @@ include.
 
 ## Looping Over Lists
 
-The `<% loop %>` tag is used to iterate or loop over a collection of items such as [api:SilverStripe\ORM\DataList] or a [api:SilverStripe\ORM\ArrayList] 
+The `<% loop %>` tag is used to iterate or loop over a collection of items such as [DataList](api:SilverStripe\ORM\DataList) or a [ArrayList](api:SilverStripe\ORM\ArrayList) 
 collection.
 
 	:::ss
@@ -264,8 +264,8 @@ object that is being looped over.
 
 ### Altering the list
 
-`<% loop %>` statements iterate over a [api:SilverStripe\ORM\DataList] instance. As the template has access to the list object, 
-templates can call [api:SilverStripe\ORM\DataList] methods. 
+`<% loop %>` statements iterate over a [DataList](api:SilverStripe\ORM\DataList) instance. As the template has access to the list object, 
+templates can call [DataList](api:SilverStripe\ORM\DataList) methods. 
 
 Sorting the list by a given field.
 
@@ -408,7 +408,7 @@ In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<
 the scope of the top level `Page`. But inside the loop, we were in the scope of an item in the list (i.e the `Child`) 
 
 The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a `Page.ss` 
-layout template is the [api:SilverStripe\CMS\Controllers\ContentController\PageController] that is currently being rendered. 
+layout template is the [PageController](api:SilverStripe\CMS\Controllers\ContentController\PageController) that is currently being rendered. 
 
 When the scope is a `PageController` it will automatically also look up any methods in the corresponding `Page` data
 record. In the case of `$Title` the flow looks like
@@ -416,7 +416,7 @@ record. In the case of `$Title` the flow looks like
 	$Title --> [Looks up: Current PageController and parent classes] --> [Looks up: Current Page and parent classes]
 
 The list of variables you could use in your template is the total of all the methods in the current scope object, parent
-classes of the current scope object, and any [api:SilverStripe\Core\Extension] instances you have.
+classes of the current scope object, and any [Extension](api:SilverStripe\Core\Extension) instances you have.
 
 ### Navigating Scope
 
@@ -495,7 +495,7 @@ This is functionalty the same as the following:
 Notice that the first example is much tidier, as it removes the repeated use of the `$CurrentMember` accessor.
 
 Outside the `<% with %>.`, we are in the page scope. Inside it, we are in the scope of `$CurrentMember` object. We can 
-refer directly to properties and methods of the [api:SilverStripe\Security\Member] object. `$FirstName` inside the scope is equivalent to 
+refer directly to properties and methods of the [Member](api:SilverStripe\Security\Member) object. `$FirstName` inside the scope is equivalent to 
 `$CurrentMember.FirstName`.
 
 ### Me
@@ -529,5 +529,5 @@ for adding notes for other developers but for things you don't want published in
 
 ## API Documentation
 
-* [api:SilverStripe\View\SSViewer]
-* [api:SS_TemplateManifest]
+* [SSViewer](api:SilverStripe\View\SSViewer)
+* [SS_TemplateManifest](api:SS_TemplateManifest)

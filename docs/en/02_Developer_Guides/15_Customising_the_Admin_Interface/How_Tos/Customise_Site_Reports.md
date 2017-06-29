@@ -71,4 +71,4 @@ More useful reports can be created by changing the `DataList` returned in the `s
 *  More examples
 
 ## API documentation
-[api:SilverStripe\Reports\ReportAdmin]
+[ReportAdmin](api:SilverStripe\Reports\ReportAdmin)

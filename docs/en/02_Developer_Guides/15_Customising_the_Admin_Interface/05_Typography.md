@@ -30,4 +30,4 @@ After you have defined the `editor.css` make sure you clear your SilverStripe ca
 
 ## API Documentation
 
-* [api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig]
+* [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig)

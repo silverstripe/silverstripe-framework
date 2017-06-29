@@ -3,15 +3,15 @@ summary: Configure the search form within ModelAdmin using the SearchContext cla
 
 # SearchContext
 
-[api:SilverStripe\ORM\Search\SearchContext] manages searching of properties on one or more [api:SilverStripe\ORM\DataObject] types, based on a given set of
-input parameters. [api:SilverStripe\ORM\Search\SearchContext] is intentionally decoupled from any controller-logic, it just receives a set of
+[SearchContext](api:SilverStripe\ORM\Search\SearchContext) manages searching of properties on one or more [DataObject](api:SilverStripe\ORM\DataObject) types, based on a given set of
+input parameters. [SearchContext](api:SilverStripe\ORM\Search\SearchContext) is intentionally decoupled from any controller-logic, it just receives a set of
 search parameters and an object class it acts on.
 
-The default output of a [api:SilverStripe\ORM\Search\SearchContext] is either a [api:SilverStripe\ORM\Queries\SQLSelect] object for further refinement, or a
-[api:SilverStripe\ORM\DataObject] instance.
+The default output of a [SearchContext](api:SilverStripe\ORM\Search\SearchContext) is either a [SQLSelect](api:SilverStripe\ORM\Queries\SQLSelect) object for further refinement, or a
+[DataObject](api:SilverStripe\ORM\DataObject) instance.
 
 <div class="notice" markdown="1">
-[api:SilverStripe\ORM\Search\SearchContext] is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
+[SearchContext](api:SilverStripe\ORM\Search\SearchContext) is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
 </div>
 
 ## Usage
@@ -204,7 +204,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 
 ## Available SearchFilters
 
-See [api:SilverStripe\ORM\Filters\SearchFilter] API Documentation
+See [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter) API Documentation
 
 
 ## Related Documentation
@@ -214,6 +214,6 @@ See [api:SilverStripe\ORM\Filters\SearchFilter] API Documentation
 
 ## API Documentation
 
-* [api:SilverStripe\ORM\Search\SearchContext]
-* [api:SilverStripe\ORM\DataObject]
+* [SearchContext](api:SilverStripe\ORM\Search\SearchContext)
+* [DataObject](api:SilverStripe\ORM\DataObject)
 

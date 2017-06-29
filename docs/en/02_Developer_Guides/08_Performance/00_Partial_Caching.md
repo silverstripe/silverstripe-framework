@@ -35,7 +35,7 @@ Here are some more complex examples:
 	<% end_cached %>
 
 An additional global key is incorporated in the cache lookup. The default value for this is 
-`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current [api:SilverStripe\Versioned\Versioned] state and user ID are used. 
+`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current [Versioned](api:SilverStripe\Versioned\Versioned) state and user ID are used. 
 This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary to flush the 
 template caching when modifying this config, as this key is cached within the template itself.
 
@@ -53,7 +53,7 @@ user does not influence your template content, you can update this key as below;
 
 Often you want to invalidate a cache when any object in a set of objects change, or when the objects in a relationship 
 change. To do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
-on sets of [api:SilverStripe\ORM\DataObject]s - the most useful for us being the `max` aggregate.
+on sets of [DataObject](api:SilverStripe\ORM\DataObject)s - the most useful for us being the `max` aggregate.
 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
 otherwise. By using aggregates, we do that like this:
