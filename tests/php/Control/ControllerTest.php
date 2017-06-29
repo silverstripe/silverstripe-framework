@@ -3,8 +3,8 @@
 namespace SilverStripe\Control\Tests;
 
 use InvalidArgumentException;
-use PHPUnit_Framework_Error;
-use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Tests\ControllerTest\AccessBaseController;
 use SilverStripe\Control\Tests\ControllerTest\AccessSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\AccessWildcardSecuredController;
@@ -15,13 +15,8 @@ use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
@@ -526,22 +521,12 @@ class ControllerTest extends FunctionalTest
 
     public function testSubActions()
     {
-        /* If a controller action returns another controller, ensure that the $action variable is correctly forwarded */
+        // If a controller action returns another controller, ensure that the $action variable is correctly forwarded
         $response = $this->get("ContainerController/subcontroller/subaction");
         $this->assertEquals('subaction', $response->getBody());
 
-        $request = new HTTPRequest(
-            'GET',
-            'ContainerController/subcontroller/substring/subvieweraction'
-        );
-        /* Shift to emulate the director selecting the controller */
-        $request->shift();
-        /* Handle the request to create conditions where improperly passing the action to the viewer might fail */
-        $controller = new ControllerTest\ContainerController();
-        try {
-            $controller->handleRequest($request, DataModel::inst());
-        } catch (ControllerTest\SubController_Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        // Handle nested action
+        $response = $this->get('ContainerController/subcontroller/substring/subvieweraction');
+        $this->assertEquals('Hope this works', $response->getBody());
     }
 }

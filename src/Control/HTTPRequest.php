@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Control;
 
+use ArrayAccess;
+use BadMethodCallException;
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
-use ArrayAccess;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
@@ -22,7 +24,6 @@ use ArrayAccess;
  */
 class HTTPRequest implements ArrayAccess
 {
-
     /**
      * @var string
      */
@@ -51,6 +52,20 @@ class HTTPRequest implements ArrayAccess
      * @var string
      */
     protected $httpMethod;
+
+    /**
+     * The URL scheme in lowercase: http or https
+     *
+     * @var string
+     */
+    protected $scheme;
+
+    /**
+     * The client IP address
+     *
+     * @var string
+     */
+    protected $ip;
 
     /**
      * Contains alls HTTP GET parameters passed into this request.
@@ -126,6 +141,11 @@ class HTTPRequest implements ArrayAccess
     protected $unshiftedButParsedParts = 0;
 
     /**
+     * @var Session
+     */
+    protected $session;
+
+    /**
      * Construct a HTTPRequest from a URL relative to the site root.
      *
      * @param string $httpMethod
@@ -138,10 +158,10 @@ class HTTPRequest implements ArrayAccess
     {
         $this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
         $this->setUrl($url);
-
         $this->getVars = (array) $getVars;
         $this->postVars = (array) $postVars;
         $this->body = $body;
+        $this->scheme = "http";
     }
 
     /**
@@ -435,21 +455,15 @@ class HTTPRequest implements ArrayAccess
         return $this->requestVar($offset);
     }
 
-    /**
-     * @ignore
-     * @param string $offset
-     * @param mixed $value
-     */
     public function offsetSet($offset, $value)
     {
+        $this->getVars[$offset] = $value;
     }
 
-    /**
-     * @ignore
-     * @param mixed $offset
-     */
     public function offsetUnset($offset)
     {
+        unset($this->getVars[$offset]);
+        unset($this->postVars[$offset]);
     }
 
     /**
@@ -759,58 +773,29 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * Returns the client IP address which
-     * originated this request.
+     * Returns the client IP address which originated this request.
      *
      * @return string
      */
     public function getIP()
     {
-        $headerOverrideIP = null;
-        if (TRUSTED_PROXY) {
-            $headers = (getenv('SS_TRUSTED_PROXY_IP_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_IP_HEADER')) : null;
-            if (!$headers) {
-                // Backwards compatible defaults
-                $headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR');
-            }
-            foreach ($headers as $header) {
-                if (!empty($_SERVER[$header])) {
-                    $headerOverrideIP = $_SERVER[$header];
-                    break;
-                }
-            }
-        }
-
-        if ($headerOverrideIP && filter_var($headerOverrideIP, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return $this->getIPFromHeaderValue($headerOverrideIP);
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            return $_SERVER['REMOTE_ADDR'];
-        } else {
-            return null;
-        }
+        return $this->ip;
     }
 
     /**
-     * Extract an IP address from a header value that has been obtained. Accepts single IP or comma separated string of
-     * IPs
+     * Sets the client IP address which originated this request.
+     * Use setIPFromHeaderValue if assigning from header value.
      *
-     * @param string $headerValue The value from a trusted header
-     * @return string The IP address
+     * @param $ip string
+     * @return $this
      */
-    protected function getIPFromHeaderValue($headerValue)
+    public function setIP($ip)
     {
-        if (strpos($headerValue, ',') !== false) {
-            //sometimes the IP from a load balancer could be "x.x.x.x, y.y.y.y, z.z.z.z" so we need to find the most
-            // likely candidate
-            $ips = explode(',', $headerValue);
-            foreach ($ips as $ip) {
-                $ip = trim($ip);
-                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) {
-                    return $ip;
-                }
-            }
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            throw new InvalidArgumentException("Invalid ip $ip");
         }
-        return $headerValue;
+        $this->ip = $ip;
+        return $this;
     }
 
     /**
@@ -840,6 +825,30 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
+     * Return the URL scheme (e.g. "http" or "https").
+     * Equivalent to PSR-7 getUri()->getScheme()
+     *
+     * @return string
+     */
+    public function getScheme()
+    {
+        return $this->scheme;
+    }
+
+    /**
+     * Set the URL scheme (e.g. "http" or "https").
+     * Equivalent to PSR-7 getUri()->getScheme(),
+     *
+     * @param string $scheme
+     * @return $this
+     */
+    public function setScheme($scheme)
+    {
+        $this->scheme = $scheme;
+        return $this;
+    }
+
+    /**
      * Gets the "real" HTTP method for a request.
      *
      * Used to work around browser limitations of form
@@ -848,7 +857,7 @@ class HTTPRequest implements ArrayAccess
      * Using GET for the "_method" override is not supported,
      * as GET should never carry out state changes.
      * Alternatively you can use a custom HTTP header 'X-HTTP-Method-Override'
-     * to override the original method in {@link Director::direct()}.
+     * to override the original method.
      * The '_method' POST parameter overrules the custom HTTP header.
      *
      * @param string $origMethod Original HTTP method from the browser request
@@ -859,11 +868,32 @@ class HTTPRequest implements ArrayAccess
     {
         if (isset($postVars['_method'])) {
             if (!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
-                user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
+                user_error('HTTPRequest::detect_method(): Invalid "_method" parameter', E_USER_ERROR);
             }
             return strtoupper($postVars['_method']);
         } else {
             return $origMethod;
         }
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        if (empty($this->session)) {
+            throw new BadMethodCallException("No session available for this HTTPRequest");
+        }
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     * @return $this
+     */
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
+        return $this;
     }
 }

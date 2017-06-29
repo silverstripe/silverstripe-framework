@@ -365,7 +365,7 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
-     * @param string $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
     public function disablePlugins($plugin)
@@ -555,10 +555,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = Controller::join_links(
-            Director::absoluteBaseURL(),
-            $this->getTinyMCEPath()
-        );
+        $tinyMCEBaseURL = $this->getAdminModule()->getResourceURL('thirdparty/tinymce');
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
@@ -618,7 +615,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        $editor[] = Director::absoluteURL(ltrim($this->getAdminPath() . '/client/dist/styles/editor.css', '/'));
+        $editor[] = $this->getAdminModule()->getResourceURL('client/dist/styles/editor.css');
 
         // Themed editor.css
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', SSViewer::get_themes());
@@ -635,6 +632,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      * so that multiple HTTP requests on the client don't need to be made.
      *
      * @return string
+     * @throws Exception
      */
     public function getScriptURL()
     {
@@ -687,18 +685,7 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * @return string|false
-     */
-    public function getAdminPath()
-    {
-        $module = $this->getAdminModule();
-        if ($module) {
-            return $module->getRelativePath();
-        }
-        return false;
-    }
-
-    /**
-     * @return string|false
+     * @throws Exception
      */
     public function getTinyMCEPath()
     {
@@ -708,7 +695,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
 
         if ($admin = $this->getAdminModule()) {
-            return $admin->getResourcePath('thirdparty/tinymce');
+            return $admin->getRelativeResourcePath('thirdparty/tinymce');
         }
 
         throw new Exception(sprintf(
@@ -723,6 +710,6 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     protected function getAdminModule()
     {
-        return ModuleLoader::inst()->getManifest()->getModule('silverstripe/admin');
+        return ModuleLoader::getModule('silverstripe/admin');
     }
 }

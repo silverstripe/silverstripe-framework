@@ -6,6 +6,10 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\Forms\Schema\FormSchema
   FixtureFactory:
     class: SilverStripe\Dev\FixtureFactory
+  SilverStripe\Core\Manifest\ResourceURLGenerator:
+    class: SilverStripe\Control\SimpleResourceURLGenerator
+    properties:
+      NonceStyle: mtime
 SilverStripe\Control\HTTP:
   cache_control:
     max-age: 0

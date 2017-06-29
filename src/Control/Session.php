@@ -2,10 +2,8 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
+use BadMethodCallException;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  * Handles all manipulation of the session.
@@ -89,7 +87,7 @@ use SilverStripe\Dev\Deprecation;
  */
 class Session
 {
-    use Injectable;
+    use Configurable;
 
     /**
      * Set session timeout in seconds.
@@ -130,141 +128,105 @@ class Session
     private static $cookie_secure = false;
 
     /**
-     * Session data
+     * Session data.
+     * Will be null if session has not been started
+     *
+     * @var array|null
      */
-    protected $data = array();
+    protected $data = null;
 
+    /**
+     * @var array
+     */
     protected $changedData = array();
 
-    protected function userAgent()
+    /**
+     * Get user agent for this request
+     *
+     * @param HTTPRequest $request
+     * @return string
+     */
+    protected function userAgent(HTTPRequest $request)
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            return $_SERVER['HTTP_USER_AGENT'];
-        } else {
-            return '';
-        }
+        return $request->getHeader('User-Agent');
     }
 
     /**
      * Start PHP session, then create a new Session object with the given start data.
      *
-     * @param $data array|Session Can be an array of data (such as $_SESSION) or another Session object to clone.
+     * @param array|null|Session $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+     * If null, this session is treated as unstarted.
      */
     public function __construct($data)
     {
         if ($data instanceof Session) {
-            $data = $data->inst_getAll();
+            $data = $data->getAll();
         }
 
         $this->data = $data;
+    }
 
+    /**
+     * Init this session instance before usage
+     *
+     * @param HTTPRequest $request
+     */
+    public function init(HTTPRequest $request)
+    {
+        if (!$this->isStarted()) {
+            $this->start($request);
+        }
+
+        // Funny business detected!
         if (isset($this->data['HTTP_USER_AGENT'])) {
-            if ($this->data['HTTP_USER_AGENT'] != $this->userAgent()) {
-                // Funny business detected!
-                $this->inst_clearAll();
-                $this->inst_destroy();
-                $this->inst_start();
+            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
+                $this->clearAll();
+                $this->destroy();
+                $this->start($request);
             }
         }
     }
 
     /**
-     * Add a value to a specific key in the session array
+     * Destroy existing session and restart
      *
-     * @param string $name
-     * @param mixed $val
+     * @param HTTPRequest $request
      */
-    public static function add_to_array($name, $val)
+    public function restart(HTTPRequest $request)
     {
-        return self::current_session()->inst_addToArray($name, $val);
+        $this->destroy();
+        $this->init($request);
     }
 
     /**
-     * Set a key/value pair in the session
+     * Determine if this session has started
      *
-     * @param string $name Key
-     * @param string|array $val Value
+     * @return bool
      */
-    public static function set($name, $val)
+    public function isStarted()
     {
-        return self::current_session()->inst_set($name, $val);
+        return isset($this->data);
     }
 
     /**
-     * Return a specific value by session key
+     * Begin session
      *
-     * @param string $name Key to lookup
-     * @return mixed
+     * @param HTTPRequest $request The request for which to start a session
      */
-    public static function get($name)
+    public function start(HTTPRequest $request)
     {
-        return self::current_session()->inst_get($name);
-    }
-
-    /**
-     * Return all the values in session
-     *
-     * @return array
-     */
-    public static function get_all()
-    {
-        return self::current_session()->inst_getAll();
-    }
-
-    /**
-     * Clear a given session key, value pair.
-     *
-     * @param string $name Key to lookup
-     */
-    public static function clear($name)
-    {
-        return self::current_session()->inst_clear($name);
-    }
-
-    /**
-     * Clear all the values
-     *
-     * @return void
-     */
-    public static function clear_all()
-    {
-        self::current_session()->inst_clearAll();
-        self::$default_session = null;
-    }
-
-    /**
-     * Save all the values in our session to $_SESSION
-     */
-    public static function save()
-    {
-        return self::current_session()->inst_save();
-    }
-
-    protected static $default_session = null;
-
-    protected static function current_session()
-    {
-        if (Controller::has_curr()) {
-            return Controller::curr()->getSession();
-        } else {
-            if (!self::$default_session) {
-                self::$default_session = Injector::inst()->create('SilverStripe\\Control\\Session', isset($_SESSION) ? $_SESSION : array());
-            }
-
-            return self::$default_session;
+        if ($this->isStarted()) {
+            throw new BadMethodCallException("Session has already started");
         }
-    }
 
-    public function inst_start($sid = null)
-    {
-        $path = Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_path');
+        $path = $this->config()->get('cookie_path');
         if (!$path) {
             $path = Director::baseURL();
         }
-        $domain = Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_domain');
-        $secure = Director::is_https() && Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_secure');
-        $session_path = Config::inst()->get('SilverStripe\\Control\\Session', 'session_store_path');
-        $timeout = Config::inst()->get('SilverStripe\\Control\\Session', 'timeout');
+        $domain = $this->config()->get('cookie_domain');
+        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
+        $session_path = $this->config()->get('session_store_path');
+        $timeout = $this->config()->get('timeout');
 
         // Director::baseURL can return absolute domain names - this extracts the relevant parts
         // for the session otherwise we can get broken session cookies
@@ -294,12 +256,11 @@ class Session
                 session_name('SECSESSID');
             }
 
-            if ($sid) {
-                session_id($sid);
-            }
             session_start();
 
             $this->data = isset($_SESSION) ? $_SESSION : array();
+        } else {
+            $this->data = [];
         }
 
         // Modify the timeout behaviour so it's the *inactive* time before the session expires.
@@ -310,28 +271,41 @@ class Session
         }
     }
 
-    public function inst_destroy($removeCookie = true)
+    /**
+     * Destroy this session
+     *
+     * @param bool $removeCookie
+     */
+    public function destroy($removeCookie = true)
     {
         if (session_id()) {
             if ($removeCookie) {
-                $path = Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_path') ?: Director::baseURL();
-                $domain = Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_domain');
-                $secure = Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_secure');
-
+                $path = $this->config()->get('cookie_path') ?: Director::baseURL();
+                $domain = $this->config()->get('cookie_domain');
+                $secure = $this->config()->get('cookie_secure');
                 Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
             }
-
             session_destroy();
-
-            // Clean up the superglobal - session_destroy does not do it.
-            // http://nz1.php.net/manual/en/function.session-destroy.php
-            unset($_SESSION);
-            $this->data = array();
         }
+        // Clean up the superglobal - session_destroy does not do it.
+        // http://nz1.php.net/manual/en/function.session-destroy.php
+        unset($_SESSION);
+        $this->data = null;
     }
 
-    public function inst_set($name, $val)
+    /**
+     * Set session value
+     *
+     * @param string $name
+     * @param mixed $val
+     * @return $this
+     */
+    public function set($name, $val)
     {
+        if (!$this->isStarted()) {
+            throw new BadMethodCallException("Session cannot be modified until it's started");
+        }
+
         // Quicker execution path for "."-free names
         if (strpos($name, '.') === false) {
             $this->data[$name] = $val;
@@ -360,10 +334,21 @@ class Session
                 $diffVar = $val;
             }
         }
+        return $this;
     }
 
-    public function inst_addToArray($name, $val)
+    /**
+     * Merge value with array
+     *
+     * @param string $name
+     * @param mixed $val
+     */
+    public function addToArray($name, $val)
     {
+        if (!$this->isStarted()) {
+            throw new BadMethodCallException("Session cannot be modified until it's started");
+        }
+
         $names = explode('.', $name);
 
         // We still want to do this even if we have strict path checking for legacy code
@@ -379,8 +364,18 @@ class Session
         $diffVar[sizeof($var)-1] = $val;
     }
 
-    public function inst_get($name)
+    /**
+     * Get session value
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function get($name)
     {
+        if (!$this->isStarted()) {
+            throw new BadMethodCallException("Session cannot be accessed until it's started");
+        }
+
         // Quicker execution path for "."-free names
         if (strpos($name, '.') === false) {
             if (isset($this->data[$name])) {
@@ -407,8 +402,18 @@ class Session
         }
     }
 
-    public function inst_clear($name)
+    /**
+     * Clear session value
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function clear($name)
     {
+        if (!$this->isStarted()) {
+            throw new BadMethodCallException("Session cannot be modified until it's started");
+        }
+
         $names = explode('.', $name);
 
         // We still want to do this even if we have strict path checking for legacy code
@@ -418,7 +423,7 @@ class Session
         foreach ($names as $n) {
             // don't clear a record that doesn't exist
             if (!isset($var[$n])) {
-                return;
+                return $this;
             }
             $var = &$var[$n];
         }
@@ -432,38 +437,58 @@ class Session
             $var = null;
             $diffVar = null;
         }
+        return $this;
     }
 
-    public function inst_clearAll()
+    /**
+     * Clear all values
+     */
+    public function clearAll()
     {
+        if (!$this->isStarted()) {
+            throw new BadMethodCallException("Session cannot be modified until it's started");
+        }
+
         if ($this->data && is_array($this->data)) {
             foreach (array_keys($this->data) as $key) {
-                $this->inst_clear($key);
+                $this->clear($key);
             }
         }
     }
 
-    public function inst_getAll()
+    /**
+     * Get all values
+     *
+     * @return array|null
+     */
+    public function getAll()
     {
         return $this->data;
     }
 
-    public function inst_finalize()
+    /**
+     * Set user agent key
+     *
+     * @param HTTPRequest $request
+     */
+    public function finalize(HTTPRequest $request)
     {
-        $this->inst_set('HTTP_USER_AGENT', $this->userAgent());
+        $this->set('HTTP_USER_AGENT', $this->userAgent($request));
     }
 
     /**
      * Save data to session
      * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
+     *
+     * @param HTTPRequest $request
      */
-    public function inst_save()
+    public function save(HTTPRequest $request)
     {
         if ($this->changedData) {
-            $this->inst_finalize();
+            $this->finalize($request);
 
-            if (!isset($_SESSION)) {
-                $this->inst_start();
+            if (!$this->isStarted()) {
+                $this->start($request);
             }
 
             $this->recursivelyApply($this->changedData, $_SESSION);
@@ -493,55 +518,11 @@ class Session
 
     /**
      * Return the changed data, for debugging purposes.
+     *
      * @return array
      */
-    public function inst_changedData()
+    public function changedData()
     {
         return $this->changedData;
-    }
-
-    /**
-    * Sets the appropriate form message in session, with type. This will be shown once,
-    * for the form specified.
-    *
-    * @param string $formname the form name you wish to use ( usually $form->FormName() )
-    * @param string $message the message you wish to add to it
-    * @param string $type the type of message
-    */
-    public static function setFormMessage($formname, $message, $type)
-    {
-        Session::set("FormInfo.$formname.formError.message", $message);
-        Session::set("FormInfo.$formname.formError.type", $type);
-    }
-
-    /**
-     * Is there a session ID in the request?
-     * @return bool
-     */
-    public static function request_contains_session_id()
-    {
-        $secure = Director::is_https() && Config::inst()->get('SilverStripe\\Control\\Session', 'cookie_secure');
-        $name = $secure ? 'SECSESSID' : session_name();
-        return isset($_COOKIE[$name]) || isset($_REQUEST[$name]);
-    }
-
-    /**
-     * Initialize session.
-     *
-     * @param string $sid Start the session with a specific ID
-     */
-    public static function start($sid = null)
-    {
-        self::current_session()->inst_start($sid);
-    }
-
-    /**
-     * Destroy the active session.
-     *
-     * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
-     */
-    public static function destroy($removeCookie = true)
-    {
-        self::current_session()->inst_destroy($removeCookie);
     }
 }

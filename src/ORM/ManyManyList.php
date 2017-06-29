@@ -118,7 +118,7 @@ class ManyManyList extends RelationList
             }
         }
 
-        $this->dataQuery->selectFromTable($this->joinTable, $finalized);
+        $this->dataQuery->addSelectFromTable($this->joinTable, $finalized);
     }
 
     /**

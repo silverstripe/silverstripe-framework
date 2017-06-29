@@ -6,10 +6,24 @@ summary: Advanced documentation about writing and customizing javascript within 
 The following document is an advanced guide on building rich javascript interactions within the SilverStripe CMS and
 a list of our best practices for contributing and modifying the core javascript framework.
 
+## ES6 and build tools
+The remainder of this tutorial is written in [ECMAScript 6](http://es6-features.org/#Constants), or _ES6_
+for short. This is the new spec for Javascript (currently ES5) that is as of this writing
+only partially implmented in modern browsers. Because it doesn't yet enjoy vast native support,
+it has to be [transpiled](https://www.stevefenton.co.uk/2012/11/compiling-vs-transpiling/) in order to work
+in a browser. This transpiling can be done using a variety of toolchains, but the basic
+ principle is that a browser-ready, ES5 version of your code is generated in your dev
+ environment as part of your workflow.
+   
+   As stated above, there are many ways to solve the problem of transpiling. The toolchain
+   we use in core SilverStripe modules includes:
+   * [Babel](http://babeljs.io) (ES6 transpiler)
+   * [Webpack](http://webpack.js.org) (Module bundler)
+
 __Deprecated:__
 The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS, Redux, and GraphQL](./ReactJS_Redux_and_GraphQL).
 
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 

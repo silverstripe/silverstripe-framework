@@ -6,7 +6,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
@@ -105,17 +104,18 @@ class LoginHandler extends RequestHandler
      *
      * @param array $data Submitted data
      * @param MemberLoginForm $form
+     * @param HTTPRequest $request
      * @return HTTPResponse
      */
-    public function doLogin($data, $form)
+    public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
     {
         $failureMessage = null;
 
         $this->extend('beforeLogin');
         // Successful login
         /** @var ValidationResult $result */
-        if ($member = $this->checkLogin($data, $result)) {
-            $this->performLogin($member, $data, $form->getRequestHandler()->getRequest());
+        if ($member = $this->checkLogin($data, $request, $result)) {
+            $this->performLogin($member, $data, $request);
             // Allow operations on the member after successful login
             $this->extend('afterLogin', $member);
 
@@ -138,8 +138,11 @@ class LoginHandler extends RequestHandler
         /** @skipUpgrade */
         if (array_key_exists('Email', $data)) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
-            Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
-            Session::set('SessionForms.MemberLoginForm.Remember', $rememberMe);
+            $this
+                ->getRequest()
+                ->getSession()
+                ->set('SessionForms.MemberLoginForm.Email', $data['Email'])
+                ->set('SessionForms.MemberLoginForm.Remember', $rememberMe);
         }
 
         // Fail to login redirects back to form
@@ -167,8 +170,11 @@ class LoginHandler extends RequestHandler
      */
     protected function redirectAfterSuccessfulLogin()
     {
-        Session::clear('SessionForms.MemberLoginForm.Email');
-        Session::clear('SessionForms.MemberLoginForm.Remember');
+        $this
+            ->getRequest()
+            ->getSession()
+            ->clear('SessionForms.MemberLoginForm.Email')
+            ->clear('SessionForms.MemberLoginForm.Remember');
 
         $member = Security::getCurrentUser();
         if ($member->isPasswordExpired()) {
@@ -195,7 +201,7 @@ class LoginHandler extends RequestHandler
                 'Welcome Back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
-            Security::singleton()->setLoginMessage($message, ValidationResult::TYPE_GOOD);
+            Security::singleton()->setSessionMessage($message, ValidationResult::TYPE_GOOD);
         }
 
         // Redirect back
@@ -206,13 +212,14 @@ class LoginHandler extends RequestHandler
      * Try to authenticate the user
      *
      * @param array $data Submitted data
+     * @param HTTPRequest $request
      * @param ValidationResult $result
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function checkLogin($data, ValidationResult &$result = null)
+    public function checkLogin($data, HTTPRequest $request, ValidationResult &$result = null)
     {
-        $member = $this->authenticator->authenticate($data, $result);
+        $member = $this->authenticator->authenticate($data, $request, $result);
         if ($member instanceof Member) {
             return $member;
         }
@@ -229,11 +236,13 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function performLogin($member, $data, $request)
+    public function performLogin($member, $data, HTTPRequest $request)
     {
         /** IdentityStore */
         $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled'));
-        Injector::inst()->get(IdentityStore::class)->logIn($member, $rememberMe, $request);
+        /** @var IdentityStore $identityStore */
+        $identityStore = Injector::inst()->get(IdentityStore::class);
+        $identityStore->logIn($member, $rememberMe, $request);
 
         return $member;
     }

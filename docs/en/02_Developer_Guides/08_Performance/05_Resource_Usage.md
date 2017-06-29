@@ -19,16 +19,11 @@ resources are required temporarily. In general, we recommend running resource in
 [command line](../cli), where configuration defaults for these settings are higher or even unlimited.
 
 <div class="info" markdown="1">
-SilverStripe can request more resources through `increase_memory_limit_to()` and `increase_time_limit_to()` functions.
+SilverStripe can request more resources through `Environment::increaseMemoryLimitTo()` and
+`Environment::increaseTimeLimitTo()` functions.
 </div>
 
 	:::php
-	function myBigFunction() {
-		increase_time_limit_to(400);
-
-		// or..
-		
-		set_increase_time_limit_max();
-
-		// ..
+	public function myBigFunction() {
+		Environment::increaseTimeLimitTo(400);
 	}

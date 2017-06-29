@@ -3,8 +3,8 @@
 namespace SilverStripe\Dev\Tasks;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 
@@ -31,6 +31,7 @@ class CleanupTestDatabasesTask extends BuildTask
             die;
         }
 
-        SapphireTest::delete_all_temp_dbs();
+        // Delete all temp DBs
+        TempDatabase::create()->deleteAll();
     }
 }

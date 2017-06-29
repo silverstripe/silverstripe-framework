@@ -2,25 +2,23 @@
 
 namespace SilverStripe\Security\Tests;
 
-use SilverStripe\Dev\Debug;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Security\SecurityToken;
 
 /**
  * Test the security class, including log-in form, change password form, etc
@@ -45,11 +43,11 @@ class SecurityTest extends FunctionalTest
         /**
          * @skipUpgrade
          */
-        Member::config()->unique_identifier_field = 'Email';
+        Member::config()->set('unique_identifier_field', 'Email');
 
         parent::setUp();
 
-        Config::modify()->merge('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
+        Director::config()->set('alternate_base_url', '/');
     }
 
     public function testAccessingAuthenticatedPageRedirectsToLoginForm()
@@ -73,21 +71,21 @@ class SecurityTest extends FunctionalTest
 
     public function testPermissionFailureSetsCorrectFormMessages()
     {
-        Config::nest();
-
         // Controller that doesn't attempt redirections
         $controller = new SecurityTest\NullController();
+        $controller->setRequest(Controller::curr()->getRequest());
         $controller->setResponse(new HTTPResponse());
 
+        $session = Controller::curr()->getRequest()->getSession();
         Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
-        $this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
+        $this->assertEquals('Oops, not allowed', $session->get('Security.Message.message'));
 
         // Test that config values are used correctly
-        Config::inst()->update(Security::class, 'default_message_set', 'stringvalue');
+        Config::modify()->set(Security::class, 'default_message_set', 'stringvalue');
         Security::permissionFailure($controller);
         $this->assertEquals(
             'stringvalue',
-            Session::get('Security.Message.message'),
+            $session->get('Security.Message.message'),
             'Default permission failure message value was not present'
         );
 
@@ -96,7 +94,7 @@ class SecurityTest extends FunctionalTest
         Security::permissionFailure($controller);
         $this->assertEquals(
             'arrayvalue',
-            Session::get('Security.Message.message'),
+            $session->get('Security.Message.message'),
             'Default permission failure message value was not present'
         );
 
@@ -105,7 +103,7 @@ class SecurityTest extends FunctionalTest
         // been fetched and output as part of it, so has been removed from the session
         $this->logInWithPermission('EDITOR');
 
-        Config::inst()->update(
+        Config::modify()->set(
             Security::class,
             'default_message_set',
             array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!')
@@ -126,8 +124,6 @@ class SecurityTest extends FunctionalTest
             $controller->getResponse()->getBody(),
             "Message set passed to Security::permissionFailure() didn't override Config values"
         );
-
-        Config::unnest();
     }
 
     /**
@@ -199,14 +195,12 @@ class SecurityTest extends FunctionalTest
         Security::setCurrentUser($member);
 
         /* View the Security/login page */
-        $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
+        $this->get(Config::inst()->get(Security::class, 'login_url'));
 
         $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 
         /* We have only 1 input, one to allow the user to log in as someone else */
         $this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
-
-        $this->autoFollowRedirection = true;
 
         /* Submit the form, using only the logout action and a hidden field for the authenticator */
         $response = $this->submitForm(
@@ -218,8 +212,7 @@ class SecurityTest extends FunctionalTest
         );
 
         /* We get a good response */
-        $this->assertEquals($response->getStatusCode(), 200, 'We have a 200 OK response');
-        $this->assertNotNull($response->getBody(), 'There is body content on the page');
+        $this->assertEquals($response->getStatusCode(), 302, 'We have a redirection response');
 
         /* Log the user out */
         Security::setCurrentUser(null);
@@ -228,12 +221,12 @@ class SecurityTest extends FunctionalTest
     public function testMemberIDInSessionDoesntExistInDatabaseHasToLogin()
     {
         /* Log in with a Member ID that doesn't exist in the DB */
-        $this->session()->inst_set('loggedInAs', 500);
+        $this->session()->set('loggedInAs', 500);
 
         $this->autoFollowRedirection = true;
 
         /* Attempt to get into the admin section */
-        $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
+        $this->get(Config::inst()->get(Security::class, 'login_url'));
 
         $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
@@ -243,14 +236,14 @@ class SecurityTest extends FunctionalTest
         $this->autoFollowRedirection = false;
 
         /* Log the user out */
-        $this->session()->inst_set('loggedInAs', null);
+        $this->session()->set('loggedInAs', null);
     }
 
     public function testLoginUsernamePersists()
     {
         // Test that username does not persist
-        $this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
-        Security::config()->remember_username = false;
+        $this->session()->set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
+        Security::config()->set('remember_username', false);
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
@@ -263,8 +256,8 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals('off', (string)$form[0]->attributes()->autocomplete);
 
         // Test that username does persist when necessary
-        $this->session()->inst_set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
-        Security::config()->remember_username = true;
+        $this->session()->set('SessionForms.MemberLoginForm.Email', 'myuser@silverstripe.com');
+        Security::config()->set('remember_username', true);
         $this->get(Config::inst()->get(Security::class, 'login_url'));
         $items = $this
             ->cssParser()
@@ -275,6 +268,60 @@ class SecurityTest extends FunctionalTest
         $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
         $this->assertEquals(1, count($form));
         $this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
+    }
+
+    public function testLogout()
+    {
+        /* Enable SecurityToken */
+        $securityTokenWasEnabled = SecurityToken::is_enabled();
+        SecurityToken::enable();
+
+        $member = DataObject::get_one(Member::class);
+
+        /* Log in with any user that we can find */
+        Security::setCurrentUser($member);
+
+        /* Visit the Security/logout page with a test referer, but without a security token */
+        $this->get(
+            Config::inst()->get(Security::class, 'logout_url'),
+            null,
+            ['Referer' => Director::absoluteBaseURL() . 'testpage']
+        );
+
+        /* Make sure the user is still logged in */
+        $this->assertNotNull(Security::getCurrentUser(), 'User is still logged in.');
+
+        $token = $this->cssParser()->getBySelector('#LogoutForm_Form #LogoutForm_Form_SecurityID');
+        $actions = $this->cssParser()->getBySelector('#LogoutForm_Form input.action');
+
+        /* We have a security token, and an action to allow the user to log out */
+        $this->assertCount(1, $token, 'There is a hidden field containing a security token.');
+        $this->assertCount(1, $actions, 'There is 1 action, allowing the user to log out.');
+
+        /* Submit the form, using the logout action */
+        $response = $this->submitForm(
+            'LogoutForm_Form',
+            null,
+            array(
+                'action_doLogout' => 1,
+            )
+        );
+
+        /* We get a good response */
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertRegExp(
+            '/testpage/',
+            $response->getHeader('Location'),
+            "Logout form redirects to back to referer."
+        );
+
+        /* User is logged out successfully */
+        $this->assertNull(Security::getCurrentUser(), 'User is logged out.');
+
+        /* Re-disable SecurityToken */
+        if (!$securityTokenWasEnabled) {
+            SecurityToken::disable();
+        }
     }
 
     public function testExternalBackUrlRedirectionDisallowed()
@@ -288,7 +335,7 @@ class SecurityTest extends FunctionalTest
             "Internal relative BackURLs work when passed through to login form"
         );
         // Log the user out
-        $this->session()->inst_set('loggedInAs', null);
+        $this->session()->set('loggedInAs', null);
 
         // Test internal absolute redirect
         $response = $this->doTestLoginForm(
@@ -303,7 +350,7 @@ class SecurityTest extends FunctionalTest
             "Internal absolute BackURLs work when passed through to login form"
         );
         // Log the user out
-        $this->session()->inst_set('loggedInAs', null);
+        $this->session()->set('loggedInAs', null);
 
         // Test external redirect
         $response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'http://myspoofedhost.com');
@@ -323,7 +370,7 @@ class SecurityTest extends FunctionalTest
         );
 
         // Log the user out
-        $this->session()->inst_set('loggedInAs', null);
+        $this->session()->set('loggedInAs', null);
     }
 
     /**
@@ -335,7 +382,7 @@ class SecurityTest extends FunctionalTest
         $badResponse = $this->doTestLoginForm('testuser@example.com', 'badpassword');
         $this->assertEquals(302, $badResponse->getStatusCode());
         $this->assertRegExp('/Security\/login/', $badResponse->getHeader('Location'));
-        $this->assertNull($this->session()->inst_get('loggedInAs'));
+        $this->assertNull($this->session()->get('loggedInAs'));
 
         /* UNEXPIRED PASSWORD GO THROUGH WITHOUT A HITCH */
         $goodResponse = $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
@@ -344,7 +391,7 @@ class SecurityTest extends FunctionalTest
             Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
             $goodResponse->getHeader('Location')
         );
-        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
+        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
         $this->logOut();
 
@@ -357,7 +404,7 @@ class SecurityTest extends FunctionalTest
         );
         $this->assertEquals(
             $this->idFromFixture(Member::class, 'expiredpassword'),
-            $this->session()->inst_get('loggedInAs')
+            $this->session()->get('loggedInAs')
         );
 
         // Make sure it redirects correctly after the password has been changed
@@ -372,7 +419,7 @@ class SecurityTest extends FunctionalTest
 
     public function testChangePasswordForLoggedInUsers()
     {
-        $goodResponse = $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
+        $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
 
         // Change the password
         $this->get('Security/changepassword?BackURL=test/back');
@@ -382,7 +429,7 @@ class SecurityTest extends FunctionalTest
             Controller::join_links(Director::absoluteBaseURL(), 'test/back'),
             $changedResponse->getHeader('Location')
         );
-        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
+        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
         // Check if we can login with the new password
         $this->logOut();
@@ -392,11 +439,12 @@ class SecurityTest extends FunctionalTest
             Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
             $goodResponse->getHeader('Location')
         );
-        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
+        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
     }
 
     public function testChangePasswordFromLostPassword()
     {
+        /** @var Member $admin */
         $admin = $this->objFromFixture(Member::class, 'test');
         $admin->FailedLoginCount = 99;
         $admin->LockedOutUntil = DBDatetime::now()->getValue();
@@ -405,8 +453,8 @@ class SecurityTest extends FunctionalTest
         $this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');
 
         // Request new password by email
-        $response = $this->get('Security/lostpassword');
-        $response = $this->post('Security/lostpassword/LostPasswordForm', array('Email' => 'testuser@example.com'));
+        $this->get('Security/lostpassword');
+        $this->post('Security/lostpassword/LostPasswordForm', array('Email' => 'testuser@example.com'));
 
         $this->assertEmailSent('testuser@example.com');
 
@@ -426,15 +474,15 @@ class SecurityTest extends FunctionalTest
         );
 
         // Follow redirection to form without hash in GET parameter
-        $response = $this->get('Security/changepassword');
-        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
-        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
+        $this->get('Security/changepassword');
+        $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
         // Check if we can login with the new password
         $this->logOut();
         $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
         $this->assertEquals(302, $goodResponse->getStatusCode());
-        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->inst_get('loggedInAs'));
+        $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
         $admin = DataObject::get_by_id(Member::class, $admin->ID, false);
         $this->assertNull($admin->LockedOutUntil);
@@ -443,18 +491,20 @@ class SecurityTest extends FunctionalTest
 
     public function testRepeatedLoginAttemptsLockingPeopleOut()
     {
-        $local = i18n::get_locale();
         i18n::set_locale('en_US');
-
-        Member::config()->lock_out_after_incorrect_logins = 5;
-        Member::config()->lock_out_delay_mins = 15;
+        Member::config()->set('lock_out_after_incorrect_logins', 5);
+        Member::config()->set('lock_out_delay_mins', 15);
+        DBDatetime::set_mock_now('2017-05-22 00:00:00');
 
         // Login with a wrong password for more than the defined threshold
-        for ($i = 1; $i <= (Member::config()->lock_out_after_incorrect_logins+1); $i++) {
+        /** @var Member $member */
+        $member = null;
+        for ($i = 1; $i <= 6; $i++) {
             $this->doTestLoginForm('testuser@example.com', 'incorrectpassword');
+            /** @var Member $member */
             $member = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
 
-            if ($i < Member::config()->get('lock_out_after_incorrect_logins')) {
+            if ($i < 5) {
                 $this->assertNull(
                     $member->LockedOutUntil,
                     'User does not have a lockout time set if under threshold for failed attempts'
@@ -466,10 +516,12 @@ class SecurityTest extends FunctionalTest
                     )
                 );
             } else {
-                // Fuzzy matching for time to avoid side effects from slow running tests
-                $this->assertGreaterThan(
-                    time() + 14*60,
-                    strtotime($member->LockedOutUntil),
+                // Lockout should be exactly 15 minutes from now
+                /** @var DBDatetime $lockedOutUntilObj */
+                $lockedOutUntilObj = $member->dbObject('LockedOutUntil');
+                $this->assertEquals(
+                    DBDatetime::now()->getTimestamp() + (15 * 60),
+                    $lockedOutUntilObj->getTimestamp(),
                     'User has a lockout time set after too many failed attempts'
                 );
             }
@@ -479,25 +531,21 @@ class SecurityTest extends FunctionalTest
             'Your account has been temporarily disabled because of too many failed attempts at ' .
             'logging in. Please try again in {count} minutes.',
             null,
-            array('count' => Member::config()->lock_out_delay_mins)
+            array('count' => 15)
         );
         $this->assertHasMessage($msg);
-
-
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertNull(
-            $this->session()->inst_get('loggedInAs'),
+            $this->session()->get('loggedInAs'),
             'The user can\'t log in after being locked out, even with the right password'
         );
 
-        // (We fake this by re-setting LockedOutUntil)
-        $member = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
-        $member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
-        $member->write();
+        // Move into the future so we can login again
+        DBDatetime::set_mock_now('2017-06-22 00:00:00');
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertEquals(
-            $this->session()->inst_get('loggedInAs'),
             $member->ID,
+            $this->session()->get('loggedInAs'),
             'After lockout expires, the user can login again'
         );
 
@@ -505,10 +553,10 @@ class SecurityTest extends FunctionalTest
         $this->logOut();
 
         // Login again with wrong password, but less attempts than threshold
-        for ($i = 1; $i < Member::config()->lock_out_after_incorrect_logins; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             $this->doTestLoginForm('testuser@example.com', 'incorrectpassword');
         }
-        $this->assertNull($this->session()->inst_get('loggedInAs'));
+        $this->assertNull($this->session()->get('loggedInAs'));
         $this->assertHasMessage(
             _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
             'The user can retry with a wrong password after the lockout expires'
@@ -516,17 +564,15 @@ class SecurityTest extends FunctionalTest
 
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
         $this->assertEquals(
-            $this->session()->inst_get('loggedInAs'),
+            $this->session()->get('loggedInAs'),
             $member->ID,
             'The user can login successfully after lockout expires, if staying below the threshold'
         );
-
-        i18n::set_locale($local);
     }
 
     public function testAlternatingRepeatedLoginAttempts()
     {
-        Member::config()->lock_out_after_incorrect_logins = 3;
+        Member::config()->set('lock_out_after_incorrect_logins', 3);
 
         // ATTEMPTING LOG-IN TWICE WITH ONE ACCOUNT AND TWICE WITH ANOTHER SHOULDN'T LOCK ANYBODY OUT
 
@@ -536,7 +582,9 @@ class SecurityTest extends FunctionalTest
         $this->doTestLoginForm('noexpiry@silverstripe.com', 'incorrectpassword');
         $this->doTestLoginForm('noexpiry@silverstripe.com', 'incorrectpassword');
 
+        /** @var Member $member1 */
         $member1 = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'test'));
+        /** @var Member $member2 */
         $member2 = DataObject::get_by_id(Member::class, $this->idFromFixture(Member::class, 'noexpiry'));
 
         $this->assertNull($member1->LockedOutUntil);
@@ -556,21 +604,22 @@ class SecurityTest extends FunctionalTest
 
     public function testUnsuccessfulLoginAttempts()
     {
-        Security::config()->login_recording = true;
+        Security::config()->set('login_recording', true);
 
         /* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
         $this->doTestLoginForm('testuser@example.com', 'wrongpassword');
+        /** @var LoginAttempt $attempt */
         $attempt = DataObject::get_one(
             LoginAttempt::class,
             array(
-                '"LoginAttempt"."Email"' => 'testuser@example.com'
+            '"LoginAttempt"."Email"' => 'testuser@example.com'
             )
         );
-        $this->assertTrue(is_object($attempt));
+        $this->assertInstanceOf(LoginAttempt::class, $attempt);
         $member = DataObject::get_one(
             Member::class,
             array(
-                '"Member"."Email"' => 'testuser@example.com'
+            '"Member"."Email"' => 'testuser@example.com'
             )
         );
         $this->assertEquals($attempt->Status, 'Failure');
@@ -593,16 +642,18 @@ class SecurityTest extends FunctionalTest
 
     public function testSuccessfulLoginAttempts()
     {
-        Security::config()->login_recording = true;
+        Security::config()->set('login_recording', true);
 
         /* SUCCESSFUL ATTEMPTS ARE LOGGED */
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
+        /** @var LoginAttempt $attempt */
         $attempt = DataObject::get_one(
             LoginAttempt::class,
             array(
             '"LoginAttempt"."Email"' => 'testuser@example.com'
             )
         );
+        /** @var Member $member */
         $member = DataObject::get_one(
             Member::class,
             array(
@@ -645,7 +696,7 @@ class SecurityTest extends FunctionalTest
 
     public function testDoNotSendEmptyRobotsHeaderIfNotDefined()
     {
-        Config::inst()->remove(Security::class, 'robots_tag');
+        Config::modify()->remove(Security::class, 'robots_tag');
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
         $robotsHeader = $response->getHeader('X-Robots-Tag');
         $this->assertNull($robotsHeader);
@@ -654,11 +705,16 @@ class SecurityTest extends FunctionalTest
     /**
      * Execute a log-in form using Director::test().
      * Helper method for the tests above
+     *
+     * @param string $email
+     * @param string $password
+     * @param string $backURL
+     * @return HTTPResponse
      */
     public function doTestLoginForm($email, $password, $backURL = 'test/link')
     {
         $this->get(Config::inst()->get(Security::class, 'logout_url'));
-        $this->session()->inst_set('BackURL', $backURL);
+        $this->session()->set('BackURL', $backURL);
         $this->get(Config::inst()->get(Security::class, 'login_url'));
 
         return $this->submitForm(
@@ -675,6 +731,10 @@ class SecurityTest extends FunctionalTest
 
     /**
      * Helper method to execute a change password form
+     *
+     * @param string $oldPassword
+     * @param string $newPassword
+     * @return HTTPResponse
      */
     public function doTestChangepasswordForm($oldPassword, $newPassword)
     {
@@ -716,7 +776,7 @@ class SecurityTest extends FunctionalTest
      */
     protected function getValidationResult()
     {
-        $result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
+        $result = $this->session()->get('FormInfo.MemberLoginForm_LoginForm.result');
         if ($result) {
             return unserialize($result);
         }

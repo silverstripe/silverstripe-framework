@@ -2,23 +2,31 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\DataModel;
+use SilverStripe\Dev\Deprecation;
 
 /**
- * Represents a request processer that delegates pre and post request handling to nested request filters
+ * Middleware that provides back-support for the deprecated RequestFilter API.
+ *
+ * @deprecated 4.0..5.0 Use HTTPMiddleware directly instead.
  */
-class RequestProcessor implements RequestFilter
+class RequestProcessor implements HTTPMiddleware
 {
     use Injectable;
 
     /**
      * List of currently assigned request filters
      *
-     * @var array
+     * @var RequestFilter[]
      */
     private $filters = array();
 
+    /**
+     * Construct new RequestFilter with a list of filter objects
+     *
+     * @param RequestFilter[] $filters
+     */
     public function __construct($filters = array())
     {
         $this->filters = $filters;
@@ -27,32 +35,43 @@ class RequestProcessor implements RequestFilter
     /**
      * Assign a list of request filters
      *
-     * @param array $filters
+     * @param RequestFilter[] $filters
+     * @return $this
      */
     public function setFilters($filters)
     {
         $this->filters = $filters;
+        return $this;
     }
 
-    public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
+    /**
+     * @inheritdoc
+     */
+    public function process(HTTPRequest $request, callable $delegate)
     {
-        foreach ($this->filters as $filter) {
-            $res = $filter->preRequest($request, $session, $model);
-            if ($res === false) {
-                return false;
-            }
+        if ($this->filters) {
+            Deprecation::notice(
+                '5.0',
+                'Deprecated RequestFilters are in use. Apply HTTPMiddleware to Director.middlewares instead.'
+            );
         }
-        return null;
-    }
 
-    public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
-    {
         foreach ($this->filters as $filter) {
-            $res = $filter->postRequest($request, $response, $model);
+            $res = $filter->preRequest($request);
             if ($res === false) {
-                return false;
+                return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
             }
         }
-        return null;
+
+        $response = $delegate($request);
+
+        foreach ($this->filters as $filter) {
+            $res = $filter->postRequest($request, $response);
+            if ($res === false) {
+                return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
+            }
+        }
+
+        return $response;
     }
 }

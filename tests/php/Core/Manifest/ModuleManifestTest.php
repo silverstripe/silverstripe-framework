@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\Core\Tests\Manifest;
 
 use SilverStripe\Core\Manifest\ModuleManifest;
@@ -23,7 +22,8 @@ class ModuleManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest = new ModuleManifest($this->base, false);
+        $this->manifest = new ModuleManifest($this->base);
+        $this->manifest->init();
     }
 
     public function testGetModules()
@@ -82,7 +82,7 @@ class ModuleManifestTest extends SapphireTest
         $this->assertFalse($module->hasResource('package.json'));
         $this->assertEquals(
             'moduleb/composer.json',
-            $module->getResourcePath('composer.json')
+            $module->getRelativeResourcePath('composer.json')
         );
     }
 
@@ -96,7 +96,7 @@ class ModuleManifestTest extends SapphireTest
         $this->assertTrue($module->hasResource('composer.json'));
         $this->assertEquals(
             'composer.json',
-            $module->getResourcePath('composer.json')
+            $module->getRelativeResourcePath('composer.json')
         );
     }
 }

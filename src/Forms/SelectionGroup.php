@@ -4,7 +4,7 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\Requirements;
+use SilverStripe\View\HTML;
 
 /**
  * Represents a number of fields which are selectable by a radio
@@ -92,7 +92,7 @@ class SelectionGroup extends CompositeField
             $itemID = $this->ID() . '_' . (++$count);
             // @todo Move into SelectionGroup_Item.ss template at some point.
             $extra = array(
-                "RadioButton" => DBField::create_field('HTMLFragment', FormField::create_tag(
+                "RadioButton" => DBField::create_field('HTMLFragment', HTML::createTag(
                     'input',
                     array(
                         'class' => 'selector',

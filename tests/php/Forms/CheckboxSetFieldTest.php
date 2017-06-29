@@ -169,17 +169,14 @@ class CheckboxSetFieldTest extends SapphireTest
 
     public function testLoadDataFromObject()
     {
-        $article = $this->objFromFixture(Article::class, 'articlewithouttags');
         $articleWithTags = $this->objFromFixture(Article::class, 'articlewithtags');
         $tag1 = $this->objFromFixture(Tag::class, 'tag1');
         $tag2 = $this->objFromFixture(Tag::class, 'tag2');
 
         $field = new CheckboxSetField("Tags", "Test field", DataObject::get(Tag::class)->map());
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         $form = new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList($field),
             new FieldList()

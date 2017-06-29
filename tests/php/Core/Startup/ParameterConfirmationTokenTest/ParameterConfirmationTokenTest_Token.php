@@ -11,8 +11,8 @@ use SilverStripe\Dev\TestOnly;
 class ParameterConfirmationTokenTest_Token extends ParameterConfirmationToken implements TestOnly
 {
 
-    public function currentAbsoluteURL()
+    public function currentURL()
     {
-        return parent::currentAbsoluteURL();
+        return parent::currentURL();
     }
 }

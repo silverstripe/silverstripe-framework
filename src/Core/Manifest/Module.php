@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use Exception;
 use Serializable;
+use SilverStripe\Core\Injector\Injector;
 
 class Module implements Serializable
 {
@@ -161,11 +162,42 @@ class Module implements Serializable
      * @param string $path File or directory path relative to module directory
      * @return string Path relative to base directory
      */
-    public function getResourcePath($path)
+    public function getRelativeResourcePath($path)
     {
         $base = trim($this->getRelativePath(), '/\\');
         $path = trim($path, '/\\');
         return trim("{$base}/{$path}", '/\\');
+    }
+
+    /**
+     * Gets path to physical file resource relative to base directory.
+     * Directories included
+     *
+     * This method makes no distinction between public / local resources,
+     * which may change in the near future.
+     *
+     * @internal Experimental API and may change
+     * @param string $path File or directory path relative to module directory
+     * @return string Path relative to base directory
+     */
+    public function getResourcePath($path)
+    {
+        return $this->basePath . '/' . $this->getRelativeResourcePath($path);
+    }
+
+    /**
+     * Gets the URL for a given resource.
+     * Relies on the ModuleURLGenerator Injector service to do the heavy lifting
+     *
+     * @internal Experimental API and may change
+     * @param string $path File or directory path relative to module directory
+     * @return string URL, either domain-relative (starting with /) or absolute
+     */
+    public function getResourceURL($path)
+    {
+        return Injector::inst()
+            ->get(ResourceURLGenerator::class)
+            ->urlForResource($this->getRelativeResourcePath($path));
     }
 
     /**
@@ -177,7 +209,6 @@ class Module implements Serializable
      */
     public function hasResource($path)
     {
-        $resource = $this->getResourcePath($path);
-        return file_exists($this->basePath . '/' . $resource);
+        return file_exists($this->getResourcePath($path));
     }
 }

@@ -2,16 +2,14 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DatetimeField;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\Tests\DatetimeFieldTest\Model;
-use SilverStripe\Forms\TimeField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Tests\DatetimeFieldTest\Model;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
@@ -452,7 +450,7 @@ class DatetimeFieldTest extends SapphireTest
     {
         /** @skipUpgrade */
         return new Form(
-            new Controller(),
+            Controller::curr(),
             'Form',
             new FieldList(),
             new FieldList(

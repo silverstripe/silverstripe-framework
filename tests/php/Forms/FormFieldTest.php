@@ -2,18 +2,18 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use SilverStripe\Core\Config\Config;
+use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use ReflectionClass;
-use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
+use SilverStripe\Forms\TextField;
 
 class FormFieldTest extends SapphireTest
 {
@@ -207,7 +207,7 @@ class FormFieldTest extends SapphireTest
 
     public function testEveryFieldTransformsReadonlyAsClone()
     {
-        $fieldClasses = ClassInfo::subclassesFor('SilverStripe\\Forms\\FormField');
+        $fieldClasses = ClassInfo::subclassesFor(FormField::class);
         foreach ($fieldClasses as $fieldClass) {
             $reflectionClass = new ReflectionClass($fieldClass);
             if (!$reflectionClass->isInstantiable()) {
@@ -217,12 +217,13 @@ class FormFieldTest extends SapphireTest
             if ($constructor->getNumberOfRequiredParameters() > 1) {
                 continue;
             }
-            if (is_a($fieldClass, 'SilverStripe\\Forms\\CompositeField', true)) {
+            if (is_a($fieldClass, CompositeField::class, true)) {
                 continue;
             }
 
             $fieldName = $reflectionClass->getShortName() . '_instance';
-            if ($fieldClass = 'SilverStripe\\Forms\\NullableField') {
+            /** @var FormField $instance */
+            if ($fieldClass = NullableField::class) {
                 $instance = new $fieldClass(new TextField($fieldName));
             } else {
                 $instance = new $fieldClass($fieldName);
@@ -248,7 +249,7 @@ class FormFieldTest extends SapphireTest
 
     public function testEveryFieldTransformsDisabledAsClone()
     {
-        $fieldClasses = ClassInfo::subclassesFor('SilverStripe\\Forms\\FormField');
+        $fieldClasses = ClassInfo::subclassesFor(FormField::class);
         foreach ($fieldClasses as $fieldClass) {
             $reflectionClass = new ReflectionClass($fieldClass);
             if (!$reflectionClass->isInstantiable()) {
@@ -258,12 +259,13 @@ class FormFieldTest extends SapphireTest
             if ($constructor->getNumberOfRequiredParameters() > 1) {
                 continue;
             }
-            if (is_a($fieldClass, 'SilverStripe\\Forms\\CompositeField', true)) {
+            if (is_a($fieldClass, CompositeField::class, true)) {
                 continue;
             }
 
             $fieldName = $reflectionClass->getShortName() . '_instance';
-            if ($fieldClass = 'SilverStripe\\Forms\\NullableField') {
+            /** @var FormField $instance */
+            if ($fieldClass = NullableField::class) {
                 $instance = new $fieldClass(new TextField($fieldName));
             } else {
                 $instance = new $fieldClass($fieldName);
@@ -326,7 +328,7 @@ class FormFieldTest extends SapphireTest
         $field = new FormField('MyField');
 
         // Make sure the user can update values.
-        $field = $field->setSchemaData(['name' => 'MyUpdatedField']);
+        $field->setSchemaData(['name' => 'MyUpdatedField']);
         $schema = $field->getSchemaData();
         $this->assertEquals($schema['name'], 'MyUpdatedField');
 
@@ -349,12 +351,12 @@ class FormFieldTest extends SapphireTest
         $field = new FormField('MyField');
 
         // Make sure the user can update values.
-        $field = $field->setSchemaState(['value' => 'My custom value']);
+        $field->setSchemaState(['value' => 'My custom value']);
         $schema = $field->getSchemaState();
         $this->assertEquals($schema['value'], 'My custom value');
 
         // Make user the user can't define custom keys on the schema.
-        $field = $field->setSchemaState(['myCustomKey' => 'yolo']);
+        $field->setSchemaState(['myCustomKey' => 'yolo']);
         $schema = $field->getSchemaState();
         $this->assertEquals(array_key_exists('myCustomKey', $schema), false);
     }
@@ -370,15 +372,5 @@ class FormFieldTest extends SapphireTest
             '"My Field" is required',
             $schema['message']['value']
         );
-    }
-
-    public function testCreateVoidTag()
-    {
-        $tag = FormField::create_tag('meta', [
-            'name' => 'description',
-            'content' => 'test tag',
-        ]);
-        $this->assertNotContains('</meta>', $tag);
-        $this->assertRegexp('#/>$#', $tag);
     }
 }

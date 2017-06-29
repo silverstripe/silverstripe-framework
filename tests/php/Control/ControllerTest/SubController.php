@@ -34,10 +34,6 @@ class SubController extends Controller implements TestOnly
 
     public function subvieweraction()
     {
-        return $this->customise(
-            array(
-            'Thoughts' => 'Hope this works',
-            )
-        );
+        return 'Hope this works';
     }
 }

@@ -3,9 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
@@ -48,18 +46,19 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $action;
 
     /**
-     * The {@link Session} object for this controller.
-     *
-     * @var Session
-     */
-    protected $session;
-
-    /**
      * Stack of current controllers. Controller::$controller_stack[0] is the current controller.
      *
      * @var array
      */
     protected static $controller_stack = array();
+
+    /**
+     * Assign templates for this controller.
+     * Map of action => template name
+     *
+     * @var array
+     */
+    protected $templates = [];
 
     /**
      * @var bool
@@ -152,16 +151,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
      *
      * @param HTTPRequest $request
-     * @param DataModel $model
      */
-    protected function beforeHandleRequest(HTTPRequest $request, DataModel $model)
+    protected function beforeHandleRequest(HTTPRequest $request)
     {
+        //Set up the internal dependencies (request, response)
+        $this->setRequest($request);
         //Push the current controller to protect against weird session issues
         $this->pushCurrent();
-        //Set up the internal dependencies (request, response, datamodel)
-        $this->setRequest($request);
         $this->setResponse(new HTTPResponse());
-        $this->setDataModel($model);
         //kick off the init functionality
         $this->doInit();
     }
@@ -192,24 +189,22 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * and end the method with $this->afterHandleRequest()
      *
      * @param HTTPRequest $request
-     * @param DataModel $model
-     *
      * @return HTTPResponse
      */
-    public function handleRequest(HTTPRequest $request, DataModel $model)
+    public function handleRequest(HTTPRequest $request)
     {
         if (!$request) {
             user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
         }
 
         //set up the controller for the incoming request
-        $this->beforeHandleRequest($request, $model);
+        $this->beforeHandleRequest($request);
 
         //if the before handler manipulated the response in a way that we shouldn't proceed, then skip our request
         // handling
         if (!$this->getResponse()->isFinished()) {
             //retrieve the response for the request
-            $response = parent::handleRequest($request, $model);
+            $response = parent::handleRequest($request);
 
             //prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses)
             $this->prepareResponse($response);
@@ -520,7 +515,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $template = $this->getViewer($this->getAction());
 
         // if the object is already customised (e.g. through Controller->run()), use it
-        $obj = ($this->customisedObj) ? $this->customisedObj : $this;
+        $obj = $this->getCustomisedObj() ?: $this;
 
         if ($params) {
             $obj = $this->customise($params);
@@ -593,18 +588,15 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Pushes this controller onto the stack of current controllers. This means that any redirection,
      * session setting, or other things that rely on Controller::curr() will now write to this
      * controller object.
+     *
+     * Note: Ensure this controller is assigned a request with a valid session before pushing
+     * it to the stack.
      */
     public function pushCurrent()
     {
+        // Ensure this controller has a valid session
+        $this->getRequest()->getSession();
         array_unshift(self::$controller_stack, $this);
-        // Create a new session object
-        if (!$this->session) {
-            if (isset(self::$controller_stack[1])) {
-                $this->session = self::$controller_stack[1]->getSession();
-            } else {
-                $this->session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
-            }
-        }
     }
 
     /**
@@ -651,26 +643,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function redirectedTo()
     {
         return $this->getResponse() && $this->getResponse()->getHeader('Location');
-    }
-
-    /**
-     * Get the Session object representing this Controller's session.
-     *
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * Set the Session object.
-     *
-     * @param Session $session
-     */
-    public function setSession(Session $session)
-    {
-        $this->session = $session;
     }
 
     /**

@@ -314,7 +314,6 @@ class MySQLSchemaManager extends DBSchemaManager
 
     public function alterIndex($tableName, $indexName, $indexSpec)
     {
-        $indexSpec = $this->parseIndexSpec($indexName, $indexSpec);
         $this->query(sprintf('ALTER TABLE "%s" DROP INDEX "%s"', $tableName, $indexName));
         $this->query(sprintf(
             'ALTER TABLE "%s" ADD %s "%s" %s',

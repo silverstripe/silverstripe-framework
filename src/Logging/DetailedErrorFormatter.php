@@ -24,7 +24,7 @@ class DetailedErrorFormatter implements FormatterInterface
                 'trace' => $exception->getTrace(),
             );
         } else {
-            $context = $record['context'];
+            $context = isset($record['context']) ? $record['context'] : $record;
             foreach (array('code','message','file','line') as $key) {
                 if (!isset($context[$key])) {
                     $context[$key] = isset($record[$key]) ? $record[$key] : null;

@@ -6,6 +6,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
+use SilverStripe\View\Parsers\HTMLValue;
 
 class HTMLEditorSanitiserTest extends FunctionalTest
 {
@@ -53,7 +54,7 @@ class HTMLEditorSanitiserTest extends FunctionalTest
             $config->setOptions(array('valid_elements' => $validElements));
             $sanitiser = new HtmlEditorSanitiser($config);
 
-            $htmlValue = Injector::inst()->create('HTMLValue', $input);
+            $htmlValue = HTMLValue::create($input);
             $sanitiser->sanitise($htmlValue);
 
             $this->assertEquals($output, $htmlValue->getContent(), $desc);

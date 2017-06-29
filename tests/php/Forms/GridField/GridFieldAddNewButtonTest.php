@@ -25,18 +25,6 @@ class GridFieldAddNewButtonTest extends SapphireTest
         Category::class,
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        Injector::nest();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        Injector::unnest();
-    }
-
     public function testButtonPassesParentContextToSingletonWhenRelationListIsUsed()
     {
         $group = $this->objFromFixture(PeopleGroup::class, 'group');

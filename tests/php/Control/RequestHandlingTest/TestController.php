@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Tests\RequestHandlingTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Dev\TestOnly;
@@ -41,25 +42,28 @@ class TestController extends Controller implements TestOnly
     {
         $this->failover = new ControllerFailover();
         parent::__construct();
+        if (Controller::has_curr()) {
+            $this->setRequest(Controller::curr()->getRequest());
+        }
     }
 
-    public function index($request)
+    public function index(HTTPRequest $request)
     {
         return "This is the controller";
     }
 
-    public function method($request)
+    public function method(HTTPRequest $request)
     {
         return "This is a method on the controller: " . $request->param('ID') . ', ' . $request->param('OtherID');
     }
 
-    public function legacymethod($request)
+    public function legacymethod(HTTPRequest $request)
     {
         return "\$this->urlParams can be used, for backward compatibility: " . $this->urlParams['ID'] . ', '
         . $this->urlParams['OtherID'];
     }
 
-    public function virtualfile($request)
+    public function virtualfile(HTTPRequest $request)
     {
         return "This is the virtualfile method";
     }

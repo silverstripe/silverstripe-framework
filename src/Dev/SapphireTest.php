@@ -2,62 +2,51 @@
 
 namespace SilverStripe\Dev;
 
+use Exception;
+use LogicException;
+use PHPUnit_Framework_TestCase;
 use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\Control\CLIRequestBuilder;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Tests\FakeController;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\ConfigLoader;
-use SilverStripe\Core\Config\CoreConfigFactory;
-use SilverStripe\Core\Config\DefaultConfig;
-use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
-use SilverStripe\Core\Extension;
-use SilverStripe\Core\Flushable;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Core\Resettable;
+use SilverStripe\Dev\State\SapphireTestState;
+use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DB;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Group;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\Requirements;
+use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\View\ThemeManifest;
-use PHPUnit_Framework_TestCase;
-use Translatable;
-use LogicException;
-use Exception;
+
+if (!class_exists(PHPUnit_Framework_TestCase::class)) {
+    return;
+}
 
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier
  * to work with.
+ *
+ * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
+ * in production sites.
  */
-class SapphireTest extends PHPUnit_Framework_TestCase
+class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 {
-
-    /** @config */
-    private static $dependencies = array(
-        'fixtureFactory' => '%$FixtureFactory',
-    );
-
     /**
      * Path to fixture data for this test run.
      * If passed as an array, multiple fixture files will be loaded.
@@ -77,38 +66,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * @var Boolean If set to TRUE, this will force a test database to be generated
      * in {@link setUp()}. Note that this flag is overruled by the presence of a
      * {@link $fixture_file}, which always forces a database build.
+     *
+     * @var bool
      */
     protected $usesDatabase = null;
-    protected $originalMemberPasswordValidator;
-    protected $originalRequirements;
-    protected $originalIsRunningTest;
-    protected $originalNestedURLsState;
-    protected $originalMemoryLimit;
 
     /**
-     * @var TestMailer
-     */
-    protected $mailer;
-
-    /**
-     * Pointer to the manifest that isn't a test manifest
-     */
-    protected static $regular_manifest;
-
-    /**
-     * @var boolean
+     * @var bool
      */
     protected static $is_running_test = false;
-
-    /**
-     * @var ClassManifest
-     */
-    protected static $test_class_manifest;
 
     /**
      * By default, setUp() does not require default records. Pass
      * class names in here, and the require/augment default records
      * function will be called on them.
+     *
+     * @var array
      */
     protected $requireDefaultRecordsFrom = array();
 
@@ -120,6 +93,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * the values are an array of illegal extensions on that class.
      *
      * Set a class to `*` to remove all extensions (unadvised)
+     *
+     * @var array
      */
     protected static $illegal_extensions = [];
 
@@ -134,6 +109,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * <code>
      * array("MyTreeDataObject" => array("Versioned", "Hierarchy"))
      * </code>
+     *
+     * @var array
      */
     protected static $required_extensions = [];
 
@@ -141,6 +118,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * By default, the test database won't contain any DataObjects that have the interface TestOnly.
      * This variable lets you define additional TestOnly DataObjects to set up for this test.
      * Set it to an array of DataObject subclass names.
+     *
+     * @var array
      */
     protected static $extra_dataobjects = [];
 
@@ -161,56 +140,58 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected $backupGlobals = false;
 
     /**
-     * Helper arrays for illegal_extensions/required_extensions code
+     * State management container for SapphireTest
+     *
+     * @var TestState
      */
-    private static $extensions_to_reapply = [];
-
-    private static $extensions_to_remove = [];
+    protected static $state = null;
 
     /**
-     * Check flushables on setupBeforeClass()
+     * Temp database helper
      *
-     * @var bool
+     * @var TempDatabase
      */
-    protected static $flushedFlushables = false;
+    protected static $tempDB = null;
 
     /**
-     * Determines if unit tests are currently run, flag set during test bootstrap.
-     * This is used as a cheap replacement for fully mockable state
-     * in certain contiditions (e.g. access checks).
-     * Caution: When set to FALSE, certain controllers might bypass
-     * access checks, so this is a very security sensitive setting.
+     * Gets illegal extensions for this class
      *
-     * @return boolean
+     * @return array
      */
-    public static function is_running_test()
+    public static function getIllegalExtensions()
+    {
+        return static::$illegal_extensions;
+    }
+
+    /**
+     * Gets required extensions for this class
+     *
+     * @return array
+     */
+    public static function getRequiredExtensions()
+    {
+        return static::$required_extensions;
+    }
+
+    /**
+     * Check if test bootstrapping has been performed. Must not be relied on
+     * outside of unit tests.
+     *
+     * @return bool
+     */
+    protected static function is_running_test()
     {
         return self::$is_running_test;
     }
 
-    public static function set_is_running_test($bool)
+    /**
+     * Set test running state
+     *
+     * @param bool $bool
+     */
+    protected static function set_is_running_test($bool)
     {
         self::$is_running_test = $bool;
-    }
-
-    /**
-     * Set the manifest to be used to look up test classes by helper functions
-     *
-     * @param ClassManifest $manifest
-     */
-    public static function set_test_class_manifest($manifest)
-    {
-        self::$test_class_manifest = $manifest;
-    }
-
-    /**
-     * Return the manifest being used to look up test classes by helper functions
-     *
-     * @return ClassManifest
-     */
-    public static function get_test_class_manifest()
-    {
-        return self::$test_class_manifest;
     }
 
     /**
@@ -221,27 +202,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         return static::$fixture_file;
     }
 
-    protected $model;
-
     /**
-     * State of Versioned before this test is run
+     * Setup  the test.
+     * Always sets up in order:
+     *  - Reset php state
+     *  - Nest
+     *  - Custom state helpers
      *
-     * @var string
+     * User code should call parent::setUp() before custom setup code
      */
-    protected $originalReadingMode = null;
-
-    protected $originalEnv = null;
-
     protected function setUp()
     {
-        //nest config and injector for each test so they are effectively sandboxed per test
-        Config::nest();
-        Injector::nest();
-
-        $this->originalEnv = Director::get_environment_type();
-        if (class_exists(Versioned::class)) {
-            $this->originalReadingMode = Versioned::get_reading_mode();
-        }
+        // Call state helpers
+        static::$state->setUp($this);
 
         // We cannot run the tests on this abstract class.
         if (static::class == __CLASS__) {
@@ -249,34 +222,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        // Mark test as being run
-        $this->originalIsRunningTest = self::$is_running_test;
-        self::$is_running_test = true;
-
         // i18n needs to be set to the defaults or tests fail
         i18n::set_locale(i18n::config()->uninherited('default_locale'));
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
 
-        // Remove password validation
-        $this->originalMemberPasswordValidator = Member::password_validator();
-        $this->originalRequirements = Requirements::backend();
         Member::set_password_validator(null);
         Cookie::config()->update('report_errors', false);
         if (class_exists(RootURLController::class)) {
             RootURLController::reset();
         }
 
-        // Reset all resettables
-        /** @var Resettable $resettable */
-        foreach (ClassInfo::implementorsOf(Resettable::class) as $resettable) {
-            $resettable::reset();
-        }
-
-        if (Controller::has_curr()) {
-            Controller::curr()->setSession(Session::create(array()));
-        }
         Security::clear_database_is_ready();
 
         // Set up test routes
@@ -284,18 +241,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         $fixtureFiles = $this->getFixturePaths();
 
-        // Todo: this could be a special test model
-        $this->model = DataModel::inst();
-
         // Set up fixture
         if ($fixtureFiles || $this->usesDatabase) {
-            if (!self::using_temp_db()) {
-                self::create_temp_db();
+            if (!static::$tempDB->isUsed()) {
+                static::$tempDB->build();
             }
 
             DataObject::singleton()->flushCache();
 
-            self::empty_temp_db();
+            static::$tempDB->clearAllData();
 
             foreach ($this->requireDefaultRecordsFrom as $className) {
                 $instance = singleton($className);
@@ -315,18 +269,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $this->logInWithPermission("ADMIN");
         }
 
-        // Preserve memory settings
-        $this->originalMemoryLimit = ini_get('memory_limit');
-
         // turn off template debugging
         SSViewer::config()->update('source_file_comments', false);
 
-        // Clear requirements
-        Requirements::clear();
-
         // Set up the test mailer
-        $this->mailer = new TestMailer();
-        Injector::inst()->registerService($this->mailer, Mailer::class);
+        Injector::inst()->registerService(new TestMailer(), Mailer::class);
         Email::config()->remove('send_all_emails_to');
         Email::config()->remove('send_all_emails_from');
         Email::config()->remove('cc_all_emails_to');
@@ -340,125 +287,46 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * don't change state for any called method inside the test,
      * e.g. dynamically adding an extension. See {@link teardownAfterClass()}
      * for tearing down the state again.
+     *
+     * Always sets up in order:
+     *  - Reset php state
+     *  - Nest
+     *  - Custom state helpers
+     *
+     * User code should call parent::setUpBeforeClass() before custom setup code
      */
     public static function setUpBeforeClass()
     {
+        // Start tests
         static::start();
 
-        //nest config and injector for each suite so they are effectively sandboxed
-        Config::nest();
-        Injector::nest();
-        $isAltered = false;
+        // Call state helpers
+        static::$state->setUpOnce(static::class);
 
-        if (!Director::isDev()) {
-            user_error('Tests can only run in "dev" mode', E_USER_ERROR);
-        }
-
-        // Remove any illegal extensions that are present
-        foreach (static::$illegal_extensions as $class => $extensions) {
-            if (!class_exists($class)) {
-                continue;
-            }
-            if ($extensions === '*') {
-                $extensions = $class::get_extensions();
-            }
-            foreach ($extensions as $extension) {
-                if (!class_exists($extension) || !$class::has_extension($extension)) {
-                    continue;
-                }
-                if (!isset(self::$extensions_to_reapply[$class])) {
-                    self::$extensions_to_reapply[$class] = array();
-                }
-                self::$extensions_to_reapply[$class][] = $extension;
-                $class::remove_extension($extension);
-                $isAltered = true;
-            }
-        }
-
-        // Add any required extensions that aren't present
-        foreach (static::$required_extensions as $class => $extensions) {
-            if (!class_exists($class)) {
-                $self = static::class;
-                throw new LogicException("Test {$self} requires class {$class} which doesn't exist");
-            }
-            self::$extensions_to_remove[$class] = array();
-            foreach ($extensions as $extension) {
-                $extensionClass = Extension::get_classname_without_arguments($extension);
-                if (!class_exists($extensionClass)) {
-                    $self = static::class;
-                    throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
-                }
-                if (!$class::has_extension($extension)) {
-                    if (!isset(self::$extensions_to_remove[$class])) {
-                        self::$extensions_to_reapply[$class] = array();
-                    }
-                    self::$extensions_to_remove[$class][] = $extension;
-                    $class::add_extension($extension);
-                    $isAltered = true;
-                }
-            }
-        }
-
-        // If we have made changes to the extensions present, then migrate the database schema.
-        if ($isAltered || self::$extensions_to_reapply || self::$extensions_to_remove || static::getExtraDataObjects()) {
+        // Build DB if we have objects
+        if (static::getExtraDataObjects()) {
             DataObject::reset();
-            if (!self::using_temp_db()) {
-                self::create_temp_db();
-            }
-            static::resetDBSchema(true);
-        }
-        // clear singletons, they're caching old extension info
-        // which is used in DatabaseAdmin->doBuild()
-        Injector::inst()->unregisterAllObjects();
-
-        // Set default timezone consistently to avoid NZ-specific dependencies
-        date_default_timezone_set('UTC');
-
-        // Flush all flushable records
-        $flush = !empty($_GET['flush']);
-        if (!self::$flushedFlushables && $flush) {
-            self::$flushedFlushables = true;
-            foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
-                $class::flush();
-            }
+            static::resetDBSchema(true, true);
         }
     }
 
     /**
      * tearDown method that's called once per test class rather once per test method.
+     *
+     * Always sets up in order:
+     *  - Custom state helpers
+     *  - Unnest
+     *  - Reset php state
+     *
+     * User code should call parent::tearDownAfterClass() after custom tear down code
      */
     public static function tearDownAfterClass()
     {
-        // If we have made changes to the extensions present, then migrate the database schema.
-        if (self::$extensions_to_reapply || self::$extensions_to_remove) {
-            // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
-            // Object::$extra_methods is properly flushed. This should be replaced with a simple
-            // flush mechanism for each $class.
-            //
-            // Remove extensions added for testing
-            foreach (self::$extensions_to_remove as $class => $extensions) {
-                foreach ($extensions as $extension) {
-                    $class::remove_extension($extension);
-                }
-            }
+        // Call state helpers
+        static::$state->tearDownOnce(static::class);
 
-            // Reapply ones removed
-            foreach (self::$extensions_to_reapply as $class => $extensions) {
-                foreach ($extensions as $extension) {
-                    $class::add_extension($extension);
-                }
-            }
-        }
-
-        //unnest injector / config now that the test suite is over
-        // this will reset all the extensions on the object too (see setUpBeforeClass)
-        Injector::unnest();
-        Config::unnest();
-
-        $extraDataObjects = static::getExtraDataObjects();
-        if (!empty(self::$extensions_to_reapply) || !empty(self::$extensions_to_remove) || !empty($extraDataObjects)) {
-            static::resetDBSchema();
-        }
+        // Reset DB schema
+        static::resetDBSchema();
     }
 
     /**
@@ -472,6 +340,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         return $this->fixtureFactory;
     }
 
+    /**
+     * Sets a new fixture factory
+     *
+     * @param FixtureFactory $factory
+     * @return $this
+     */
     public function setFixtureFactory(FixtureFactory $factory)
     {
         $this->fixtureFactory = $factory;
@@ -560,11 +434,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     /**
      * Useful for writing unit tests without hardcoding folder structures.
      *
-     * @return String Absolute path to current class.
+     * @return string Absolute path to current class.
      */
     protected function getCurrentAbsolutePath()
     {
-        $filename = self::$test_class_manifest->getItemPath(static::class);
+        $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
             throw new LogicException("getItemPath returned null for " . static::class);
         }
@@ -572,7 +446,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return String File path relative to webroot
+     * @return string File path relative to webroot
      */
     protected function getCurrentRelativePath()
     {
@@ -584,28 +458,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         return $path;
     }
 
+    /**
+     * Setup  the test.
+     * Always sets up in order:
+     *  - Custom state helpers
+     *  - Unnest
+     *  - Reset php state
+     *
+     * User code should call parent::tearDown() after custom tear down code
+     */
     protected function tearDown()
     {
-        // Preserve memory settings
-        ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
-
-        // Restore email configuration
-        $this->mailer = null;
-
-        // Restore password validation
-        if ($this->originalMemberPasswordValidator) {
-            Member::set_password_validator($this->originalMemberPasswordValidator);
-        }
-
-        // Restore requirements
-        if ($this->originalRequirements) {
-            Requirements::set_backend($this->originalRequirements);
-        }
-
-        // Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
-        self::$is_running_test = $this->originalIsRunningTest;
-        $this->originalIsRunningTest = null;
-
         // Reset mocked datetime
         DBDatetime::clear_mock_now();
 
@@ -618,14 +481,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $response->removeHeader('Location');
         }
 
-        Director::set_environment_type($this->originalEnv);
-        if (class_exists(Versioned::class)) {
-            Versioned::set_reading_mode($this->originalReadingMode);
-        }
-
-        //unnest injector / config now that tests are over
-        Injector::unnest();
-        Config::unnest();
+        // Call state helpers
+        static::$state->tearDown($this);
     }
 
     public static function assertContains(
@@ -658,36 +515,48 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
     /**
      * Clear the log of emails sent
+     *
+     * @return bool True if emails cleared
      */
     public function clearEmails()
     {
-        return $this->mailer->clearEmails();
+        /** @var Mailer $mailer */
+        $mailer = Injector::inst()->get(Mailer::class);
+        if ($mailer instanceof TestMailer) {
+            $mailer->clearEmails();
+            return true;
+        }
+        return false;
     }
 
     /**
      * Search for an email that was sent.
      * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
-     * @param $to
-     * @param $from
-     * @param $subject
-     * @param $content
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $content
      * @return array Contains keys: 'type', 'to', 'from', 'subject','content', 'plainContent', 'attachedFiles',
      *               'customHeaders', 'htmlContent', 'inlineImages'
      */
     public function findEmail($to, $from = null, $subject = null, $content = null)
     {
-        return $this->mailer->findEmail($to, $from, $subject, $content);
+        /** @var Mailer $mailer */
+        $mailer = Injector::inst()->get(Mailer::class);
+        if ($mailer instanceof TestMailer) {
+            return $mailer->findEmail($to, $from, $subject, $content);
+        }
+        return null;
     }
 
     /**
      * Assert that the matching email was sent since the last call to clearEmails()
      * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
-     * @param $to
-     * @param $from
-     * @param $subject
-     * @param $content
-     * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
-     *               'customHeaders', 'htmlContent', inlineImages'
+     *
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $content
      */
     public function assertEmailSent($to, $from = null, $subject = null, $content = null)
     {
@@ -1021,186 +890,62 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public static function start()
     {
-        if (!static::is_running_test()) {
-            new FakeController();
-            static::use_test_manifest();
-            static::set_is_running_test(true);
+        if (static::is_running_test()) {
+            return;
         }
-    }
 
-    /**
-     * Pushes a class and template manifest instance that include tests onto the
-     * top of the loader stacks.
-     */
-    protected static function use_test_manifest()
-    {
-        $flush = !empty($_GET['flush']);
-        $classManifest = new ClassManifest(
-            BASE_PATH,
-            true,
-            $flush
-        );
-
-        ClassLoader::inst()->pushManifest($classManifest, false);
-        static::set_test_class_manifest($classManifest);
-
-        ThemeResourceLoader::inst()->addSet('$default', new ThemeManifest(
-            BASE_PATH,
-            project(),
-            true,
-            $flush
-        ));
-
-        // Once new class loader is registered, push a new uncached config
-        $config = CoreConfigFactory::inst()->createCore();
-        ConfigLoader::inst()->pushManifest($config);
-
-        // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
-        // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
-        DataObject::reset();
-    }
-
-    /**
-     * Returns true if we are currently using a temporary database
-     */
-    public static function using_temp_db()
-    {
-        $dbConn = DB::get_conn();
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        return 1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbConn->getSelectedDatabase());
-    }
-
-    public static function kill_temp_db()
-    {
-        // Delete our temporary database
-        if (self::using_temp_db()) {
-            $dbConn = DB::get_conn();
-            $dbName = $dbConn->getSelectedDatabase();
-            if ($dbName && DB::get_conn()->databaseExists($dbName)) {
-                // Some DataExtensions keep a static cache of information that needs to
-                // be reset whenever the database is killed
-                foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
-                    $toCall = array($class, 'on_db_reset');
-                    if (is_callable($toCall)) {
-                        call_user_func($toCall);
-                    }
-                }
-
-                // echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
-                $dbConn->dropSelectedDatabase();
-            }
+        // Health check
+        if (InjectorLoader::inst()->countManifests()) {
+            throw new LogicException("SapphireTest::start() cannot be called within another application");
         }
-    }
+        static::set_is_running_test(true);
 
-    /**
-     * Remove all content from the temporary database.
-     */
-    public static function empty_temp_db()
-    {
-        if (self::using_temp_db()) {
-            DB::get_conn()->clearAllData();
+        // Mock request
+        $_SERVER['argv'] = ['vendor/bin/phpunit', '/'];
+        $request = CLIRequestBuilder::createFromEnvironment();
 
-            // Some DataExtensions keep a static cache of information that needs to
-            // be reset whenever the database is cleaned out
-            $classes = array_merge(ClassInfo::subclassesFor(DataExtension::class), ClassInfo::subclassesFor(DataObject::class));
-            foreach ($classes as $class) {
-                $toCall = array($class, 'on_db_reset');
-                if (is_callable($toCall)) {
-                    call_user_func($toCall);
-                }
-            }
-        }
-    }
+        // Test application
+        $kernel = new TestKernel(BASE_PATH);
+        $app = new HTTPApplication($kernel);
 
-    public static function create_temp_db()
-    {
-        // Disable PHPUnit error handling
-        $oldErrorHandler = set_error_handler(null);
+        // Custom application
+        $app->execute($request, function (HTTPRequest $request) {
+            // Start session and execute
+            $request->getSession()->init($request);
 
-        // Create a temporary database, and force the connection to use UTC for time
-        global $databaseConfig;
-        $databaseConfig['timezone'] = '+0:00';
-        DB::connect($databaseConfig);
-        $dbConn = DB::get_conn();
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        do {
-            $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
-        } while ($dbConn->databaseExists($dbname));
-
-        $dbConn->selectDatabase($dbname, true);
-
-        static::resetDBSchema();
-
-        // Reinstate PHPUnit error handling
-        set_error_handler($oldErrorHandler);
-
-        // Ensure test db is killed on exit
-        register_shutdown_function(function () {
-            static::kill_temp_db();
-        });
-
-        return $dbname;
-    }
-
-    public static function delete_all_temp_dbs()
-    {
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
-        foreach (DB::get_schema()->databaseList() as $dbName) {
-            if (1 === preg_match(sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')), $dbName)) {
-                DB::get_schema()->dropDatabase($dbName);
-                if (Director::is_cli()) {
-                    echo "Dropped database \"$dbName\"" . PHP_EOL;
-                } else {
-                    echo "<li>Dropped database \"$dbName\"</li>" . PHP_EOL;
-                }
-                flush();
-            }
-        }
-    }
-
-    /**
-     * Reset the testing database's schema.
-     * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
-     */
-    public static function resetDBSchema($includeExtraDataObjects = false)
-    {
-        if (self::using_temp_db()) {
+            // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
+            // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
             DataObject::reset();
 
-            // clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-            Injector::inst()->unregisterAllObjects();
+            // Set dummy controller;
+            $controller = Controller::create();
+            $controller->setRequest($request);
+            $controller->pushCurrent();
+            $controller->doInit();
+        }, true);
 
-            $dataClasses = ClassInfo::subclassesFor(DataObject::class);
-            array_shift($dataClasses);
+        // Register state
+        static::$state = SapphireTestState::singleton();
+        // Register temp DB holder
+        static::$tempDB = TempDatabase::create();
+    }
 
-            DB::quiet();
-            $schema = DB::get_schema();
-            $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : null;
-            $schema->schemaUpdate(function () use ($dataClasses, $extraDataObjects) {
-                foreach ($dataClasses as $dataClass) {
-                    // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                    if (class_exists($dataClass)) {
-                        $SNG = singleton($dataClass);
-                        if (!($SNG instanceof TestOnly)) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
-
-                // If we have additional dataobjects which need schema, do so here:
-                if ($extraDataObjects) {
-                    foreach ($extraDataObjects as $dataClass) {
-                        $SNG = singleton($dataClass);
-                        if (singleton($dataClass) instanceof DataObject) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
-            });
-
-            ClassInfo::reset_db_cache();
-            DataObject::singleton()->flushCache();
+    /**
+     * Reset the testing database's schema, but only if it is active
+     * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
+     * @param bool $forceCreate Force DB to be created if it doesn't exist
+     */
+    public static function resetDBSchema($includeExtraDataObjects = false, $forceCreate = false)
+    {
+        // Check if DB is active before reset
+        if (!static::$tempDB->isUsed()) {
+            if (!$forceCreate) {
+                return;
+            }
+            static::$tempDB->build();
         }
+        $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : [];
+        static::$tempDB->resetDBSchema((array)$extraDataObjects);
     }
 
     /**
@@ -1275,14 +1020,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public function logOut()
     {
-        Injector::inst()->get(IdentityStore::class)->logOut();
+        /** @var IdentityStore $store */
+        $store = Injector::inst()->get(IdentityStore::class);
+        $store->logOut();
     }
 
     /**
      * Cache for logInWithPermission()
      */
     protected $cache_generatedMembers = array();
-
 
     /**
      * Test against a theme.
@@ -1295,25 +1041,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected function useTestTheme($themeBaseDir, $theme, $callback)
     {
         Config::nest();
-
         if (strpos($themeBaseDir, BASE_PATH) === 0) {
             $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
         }
         SSViewer::config()->update('theme_enabled', true);
         SSViewer::set_themes([$themeBaseDir.'/themes/'.$theme, '$default']);
 
-        $e = null;
-
         try {
             $callback();
-        } catch (Exception $e) {
-        /* NOP for now, just save $e */
-        }
-
-        Config::unnest();
-
-        if ($e) {
-            throw $e;
+        } finally {
+            Config::unnest();
         }
     }
 
@@ -1340,7 +1077,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * Return all extra objects to scaffold for this test
      * @return array
      */
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return static::$extra_dataobjects;
     }
@@ -1350,7 +1087,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    protected static function getExtraControllers()
+    public static function getExtraControllers()
     {
         return static::$extra_controllers;
     }

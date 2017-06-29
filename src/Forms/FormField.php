@@ -316,61 +316,6 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Construct and return HTML tag.
-     *
-     * @param string $tag
-     * @param array $attributes
-     * @param null|string $content
-     *
-     * @return string
-     */
-    public static function create_tag($tag, $attributes, $content = null)
-    {
-        $preparedAttributes = '';
-
-        foreach ($attributes as $attributeKey => $attributeValue) {
-            if (!empty($attributeValue) || $attributeValue === '0' || ($attributeKey == 'value' && $attributeValue !== null)) {
-                $preparedAttributes .= sprintf(
-                    ' %s="%s"',
-                    $attributeKey,
-                    Convert::raw2att($attributeValue)
-                );
-            }
-        }
-
-        if ($content || !in_array($tag, [
-                'area',
-                'base',
-                'br',
-                'col',
-                'embed',
-                'hr',
-                'img',
-                'input',
-                'link',
-                'meta',
-                'param',
-                'source',
-                'track',
-                'wbr',
-        ])) {
-            return sprintf(
-                '<%s%s>%s</%s>',
-                $tag,
-                $preparedAttributes,
-                $content,
-                $tag
-            );
-        }
-
-        return sprintf(
-            '<%s%s />',
-            $tag,
-            $preparedAttributes
-        );
-    }
-
-    /**
      * Creates a new field.
      *
      * @param string $name The internal field name, passed to forms.

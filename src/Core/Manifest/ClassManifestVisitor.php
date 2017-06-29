@@ -30,7 +30,7 @@ class ClassManifestVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\Stmt\Class_) {
-            $extends = '';
+            $extends = [];
             $interfaces = [];
 
             if ($node->extends) {

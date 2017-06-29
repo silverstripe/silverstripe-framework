@@ -27,9 +27,9 @@ First we're telling Homebrew about some new repositories to get the PHP installa
 	brew tap homebrew/dupes
 	brew tap homebrew/php
 
-We're installing PHP 5.5 here, with the required `mcrypt` module:
+We're installing PHP 5.6 here, with the required `mcrypt` module:
 
-	brew install php55 php55-mcrypt
+	brew install php56 php56-mcrypt php56-intl php56-apcu
 
 There's a [Homebrew Troubleshooting](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Troubleshooting.md) guide if Homebrew doesn't work out as expected (run `brew update` and `brew doctor`).
 

@@ -6,11 +6,9 @@ use SilverStripe\Dev\TestOnly;
 
 class TestStaticInjections implements TestOnly
 {
-
     public $backend;
-    /**
- * @config
-*/
+
+    /** @config */
     private static $dependencies = array(
         'backend' => '%$SilverStripe\\Core\\Tests\\Injector\\InjectorTest\\NewRequirementsBackend'
     );

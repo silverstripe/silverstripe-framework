@@ -17,7 +17,7 @@ class GridField_URLHandlerTest extends FunctionalTest
 
     public function testFormSubmission()
     {
-        $result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
+        $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
         $formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar'));
         $this->assertEquals("Submitted foo bar to component", $formResult->getBody());
     }

@@ -131,6 +131,31 @@ each vulnerability. The rating indicates how important an update is:
 | **Moderate**  | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content. *Examples: Cross Site Scripting (XSS) in template helpers.* |
 | **Low**       | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. *Example: Exposure of the core version number, Cross Site Scripting (XSS) limited to the admin interface.* |
 
+### Internal Security Process
+
+Follow these instructions in sequence as much as possible:
+
+ * When receiving a report:
+   * Perform initial criticality assessment, and ensure that the reporter is given a justification for all issues we classify or demote as non-security vulnerabilities.
+   * Assign a unique identifier (see "Acknowledgement and disclosure").
+     Identifiers are based on reported year and order reported in JIRA (Example: `SS-2017-001`)
+   * Respond to issue reporter with this identifier on the same discussion thread (cc security@silverstripe.org). Clarify issue if required.
+   * If encrypted information is provided, add pass phrases into the SilverStripe Ltd. LastPass account. Keep encrypted documents in Google Drive and only share directly with relevant participants
+   * Add a new bug on our [Open Source Security JIRA board](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail). Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
+   * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794) on silverstripe.org. Describe the issue in a readable way, make the impact clear. Credit the author if applicable. 
+   * Clarify who picks up owns the issue resolution
+ * When developing a fix:
+   * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo
+   * Ensure that all security commit messages are prefixed with the CVE. E.g. "[ss-2015-001] Fixed invalid XSS"
+   * Get them peer reviewed by posting on security@silverstripe.org with a link to the JIRA issue
+ * Before release (or release candidate)
+   * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
+   * Send out a note on the pre-announce list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
+   * Link to silverstripe.org security release page in the changelog.
+ * After release
+   * Publish silverstripe.org security release page
+   * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
+
 ### Pre-announce Mailinglist
 
 In addition to our public disclosure process, we maintain a private mailinglist

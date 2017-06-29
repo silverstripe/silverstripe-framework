@@ -2,22 +2,22 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataModel;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\LoginAttempt;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Security;
 
 class MemberAuthenticatorTest extends SapphireTest
 {
@@ -71,7 +71,7 @@ class MemberAuthenticatorTest extends SapphireTest
         // Create basic login form
         $frontendResponse = $authenticator
             ->getLoginHandler($controller->link())
-            ->handleRequest(new HTTPRequest('get', '/'), DataModel::inst());
+            ->handleRequest(Controller::curr()->getRequest());
 
         $this->assertTrue(is_array($frontendResponse));
         $this->assertTrue(isset($frontendResponse['Form']));
@@ -116,10 +116,11 @@ class MemberAuthenticatorTest extends SapphireTest
         // Test correct login
         /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
-            array(
+            [
             'tempid' => $tempID,
             'Password' => 'mypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
 
@@ -129,10 +130,11 @@ class MemberAuthenticatorTest extends SapphireTest
 
         // Test incorrect login
         $result = $authenticator->authenticate(
-            array(
+            [
             'tempid' => $tempID,
             'Password' => 'notmypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
 
@@ -154,10 +156,11 @@ class MemberAuthenticatorTest extends SapphireTest
         // Test correct login
         /** @var ValidationResult $message */
         $result = $authenticator->authenticate(
-            array(
+            [
             'Email' => 'admin',
             'Password' => 'password'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
         $this->assertNotEmpty($result);
@@ -166,10 +169,11 @@ class MemberAuthenticatorTest extends SapphireTest
 
         // Test incorrect login
         $result = $authenticator->authenticate(
-            array(
+            [
             'Email' => 'admin',
             'Password' => 'notmypassword'
-            ),
+            ],
+            Controller::curr()->getRequest(),
             $message
         );
         $messages = $message->getMessages();
@@ -193,12 +197,71 @@ class MemberAuthenticatorTest extends SapphireTest
             [
                 'Email' => 'admin',
                 'Password' => 'wrongpassword'
-            ]
+            ],
+            Controller::curr()->getRequest()
         );
 
         $defaultAdmin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
         $this->assertNotNull($defaultAdmin);
         $this->assertFalse($defaultAdmin->canLogin());
         $this->assertEquals('2016-04-18 00:10:00', $defaultAdmin->LockedOutUntil);
+    }
+
+    public function testNonExistantMemberGetsLoginAttemptRecorded()
+    {
+        Security::config()->set('login_recording', true);
+        Member::config()
+            ->set('lock_out_after_incorrect_logins', 1)
+            ->set('lock_out_delay_mins', 10);
+
+        $email = 'notreal@example.com';
+        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertCount(0, LoginAttempt::get());
+        $authenticator = new MemberAuthenticator();
+        $result = new ValidationResult();
+        $member = $authenticator->authenticate(
+            [
+                'Email' => $email,
+                'Password' => 'password',
+            ],
+            Controller::curr()->getRequest(),
+            $result
+        );
+        $this->assertFalse($result->isValid());
+        $this->assertNull($member);
+        $this->assertCount(1, LoginAttempt::get());
+        $attempt = LoginAttempt::get()->first();
+        $this->assertEquals($email, $attempt->Email);
+        $this->assertEquals(LoginAttempt::FAILURE, $attempt->Status);
+    }
+
+    public function testNonExistantMemberGetsLockedOut()
+    {
+        Security::config()->set('login_recording', true);
+        Member::config()
+            ->set('lock_out_after_incorrect_logins', 1)
+            ->set('lock_out_delay_mins', 10);
+
+        $email = 'notreal@example.com';
+        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+
+        $authenticator = new MemberAuthenticator();
+        $result = new ValidationResult();
+        $member = $authenticator->authenticate(
+            [
+                'Email' => $email,
+                'Password' => 'password',
+            ],
+            Controller::curr()->getRequest(),
+            $result
+        );
+
+        $this->assertNull($member);
+        $this->assertFalse($result->isValid());
+        $member = new Member();
+        $member->Email = $email;
+
+        $this->assertTrue($member->isLockedOut());
+        $this->assertFalse($member->canLogIn());
     }
 }

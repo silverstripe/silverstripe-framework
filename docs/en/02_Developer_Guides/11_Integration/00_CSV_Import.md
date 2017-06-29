@@ -194,6 +194,22 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	   }
 	}
 	?>
+	
+Building off of the ModelAdmin example up top, use a custom loader instead of the default loader by adding it to `$model_importers`. In this example, `CsvBulkLoader` is replaced with `PlayerCsvBulkLoader`.
+
+	:::php
+	<?php
+	class PlayerAdmin extends ModelAdmin {
+	   private static $managed_models = array(
+		  'Player'
+	   );
+	   private static $model_importers = array(
+		  'Player' => 'PlayerCsvBulkLoader',
+	   );
+	   private static $url_segment = 'players';
+	}
+	?>
+
 
 ## Related
 

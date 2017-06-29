@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Control;
 
+use BadMethodCallException;
+use Exception;
 use InvalidArgumentException;
+use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\DataModel;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionFailureException;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ViewableData;
-use ReflectionClass;
-use Exception;
-use BadMethodCallException;
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
@@ -47,6 +46,7 @@ use BadMethodCallException;
  */
 class RequestHandler extends ViewableData
 {
+
     /**
      * Optional url_segment for this request handler
      *
@@ -123,20 +123,7 @@ class RequestHandler extends ViewableData
 
         $this->setRequest(new NullHTTPRequest());
 
-        // This will prevent bugs if setDataModel() isn't called.
-        $this->model = DataModel::inst();
-
         parent::__construct();
-    }
-
-    /**
-     * Set the DataModel for this request.
-     *
-     * @param DataModel $model
-     */
-    public function setDataModel($model)
-    {
-        $this->model = $model;
     }
 
     /**
@@ -156,10 +143,9 @@ class RequestHandler extends ViewableData
      * customise the controller.
      *
      * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
-     * @param DataModel $model
      * @return HTTPResponse|RequestHandler|string|array
      */
-    public function handleRequest(HTTPRequest $request, DataModel $model)
+    public function handleRequest(HTTPRequest $request)
     {
         // $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
         if ($this->brokenOnConstruct) {
@@ -170,7 +156,6 @@ class RequestHandler extends ViewableData
         }
 
         $this->setRequest($request);
-        $this->setDataModel($model);
 
         $match = $this->findAction($request);
 
@@ -237,7 +222,7 @@ class RequestHandler extends ViewableData
             if ($result instanceof HasRequestHandler) {
                 $result = $result->getRequestHandler();
             }
-            $returnValue = $result->handleRequest($request, $model);
+            $returnValue = $result->handleRequest($request);
 
             // Array results can be used to handle
             if (is_array($returnValue)) {

@@ -4,18 +4,31 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\ORM\Tests\HasManyListTest\Company;
+use SilverStripe\ORM\Tests\HasManyListTest\CompanyCar;
+use SilverStripe\ORM\Tests\HasManyListTest\Employee;
 
 class HasManyListTest extends SapphireTest
 {
 
     // Borrow the model from DataObjectTest
-    protected static $fixture_file = 'DataObjectTest.yml';
+    protected static $fixture_file = [
+        'DataObjectTest.yml', // Borrow the model from DataObjectTest
+        'HasManyListTest.yml',
+    ];
 
-    protected static function getExtraDataObjects()
+    public static $extra_data_objects = array(
+        Company::class,
+        Employee::class,
+        CompanyCar::class,
+    );
+
+    public static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,
-            ManyManyListTest::$extra_data_objects
+            ManyManyListTest::$extra_data_objects,
+            static::$extra_data_objects
         );
     }
 

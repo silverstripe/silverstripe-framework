@@ -51,7 +51,7 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
             return $this->configs[$name];
         }
 
-        $config = Config::inst()->get('SilverStripe\\Core\\Injector\\Injector', $name);
+        $config = Config::inst()->get(Injector::class, $name);
         $this->configs[$name] = $config;
         return $config;
     }

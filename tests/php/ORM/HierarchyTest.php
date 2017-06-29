@@ -16,7 +16,7 @@ class HierarchyTest extends SapphireTest
         HierarchyTest\HideTestSubObject::class,
     );
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         // Prevent setup breaking if versioned module absent
         if (class_exists(Versioned::class)) {

@@ -3,7 +3,7 @@
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\CMS\Controllers\ErrorPageControllerExtension;
+use SilverStripe\ErrorPage\ErrorPageControllerExtension;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Tests\RequestHandlingTest\AllowedController;
 use SilverStripe\Control\Tests\RequestHandlingTest\ControllerFormWithAllowedActions;

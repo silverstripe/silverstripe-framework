@@ -2,7 +2,17 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\Session;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
@@ -12,15 +22,6 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridField;
 
 class GridFieldDeleteActionTest extends SapphireTest
 {
@@ -91,15 +92,13 @@ class GridFieldDeleteActionTest extends SapphireTest
     public function testActionsRequireCSRF()
     {
         $this->logInWithPermission('ADMIN');
-        $this->setExpectedException(
-            HTTPResponse_Exception::class,
-            _t(
-                "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                "There seems to have been a technical problem. Please click the back button, ".
-                "refresh your browser, and try again."
-            ),
-            400
-        );
+        $this->expectException(HTTPResponse_Exception::class);
+        $this->expectExceptionMessage(_t(
+            "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
+            "There seems to have been a technical problem. Please click the back button, ".
+            "refresh your browser, and try again."
+        ));
+        $this->expectExceptionCode(400);
         $stateID = 'testGridStateActionField';
         $request = new HTTPRequest(
             'POST',
@@ -110,6 +109,7 @@ class GridFieldDeleteActionTest extends SapphireTest
                 'SecurityID' => null,
             )
         );
+        $request->setSession(new Session([]));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
     }
 
@@ -118,10 +118,11 @@ class GridFieldDeleteActionTest extends SapphireTest
         if (Security::getCurrentUser()) {
             Security::setCurrentUser(null);
         }
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $stateID = 'testGridStateActionField';
-        Session::set(
+        $session = Controller::curr()->getRequest()->getSession();
+        $session->set(
             $stateID,
             array(
                 'grid' => '',
@@ -141,6 +142,7 @@ class GridFieldDeleteActionTest extends SapphireTest
                 $token->getName() => $token->getValue(),
             )
         );
+        $request->setSession($session);
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         $this->assertEquals(
             3,
@@ -153,7 +155,8 @@ class GridFieldDeleteActionTest extends SapphireTest
     {
         $this->logInWithPermission('ADMIN');
         $stateID = 'testGridStateActionField';
-        Session::set(
+        $session = Controller::curr()->getRequest()->getSession();
+        $session->set(
             $stateID,
             array(
                 'grid'=>'',
@@ -173,6 +176,7 @@ class GridFieldDeleteActionTest extends SapphireTest
                 $token->getName() => $token->getValue(),
             )
         );
+        $request->setSession($session);
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
     }
@@ -183,11 +187,11 @@ class GridFieldDeleteActionTest extends SapphireTest
 
         $config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction(true));
 
+        $session = Controller::curr()->getRequest()->getSession();
         $gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
-
+        new Form(null, 'mockform', new FieldList(array($gridField)), new FieldList());
         $stateID = 'testGridStateActionField';
-        Session::set(
+        $session->set(
             $stateID,
             array(
                 'grid'=>'',
@@ -207,7 +211,8 @@ class GridFieldDeleteActionTest extends SapphireTest
                 $token->getName() => $token->getValue(),
             )
         );
-        $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+        $request->setSession($session);
+        $gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
     }
 }

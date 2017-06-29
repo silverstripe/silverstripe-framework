@@ -10,6 +10,11 @@ In 2016, SilverStripe started a rewrite of its CMS interface in
 [ReactJS](http://facebook.github.io/react/). Code written prior to this rewrite
 might not follow these conventions, and is placed in a `legacy/` folder structure.
 
+## NPM Packages
+
+SilverStripe authored npm dependencies are posted under the
+[silverstripe npm](https://www.npmjs.com/org/silverstripe) organisation.
+
 ## Browser support
 
 Check our [requirements](/getting_started/server_requirements) documentation.

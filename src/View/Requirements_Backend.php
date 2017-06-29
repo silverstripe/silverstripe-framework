@@ -2,8 +2,8 @@
 
 namespace SilverStripe\View;
 
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
@@ -11,9 +11,11 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ResourceURLGenerator;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 
 class Requirements_Backend
@@ -33,9 +35,9 @@ class Requirements_Backend
     /**
      * Whether to combine CSS and JavaScript files
      *
-     * @var bool
+     * @var bool|null
      */
-    protected $combinedFilesEnabled = true;
+    protected $combinedFilesEnabled = null;
 
     /**
      * Determine if files should be combined automatically on dev mode.
@@ -390,7 +392,7 @@ class Requirements_Backend
     /**
      * Register the given JavaScript file as required.
      *
-     * @param string $file Relative to docroot
+     * @param string $file Either relative to docroot or in the form "vendor/package:resource"
      * @param array $options List of options. Available options include:
      * - 'provides' : List of scripts files included in this file
      * - 'async' : Boolean value to set async attribute to script tag
@@ -399,6 +401,8 @@ class Requirements_Backend
      */
     public function javascript($file, $options = array())
     {
+        $file = $this->parseModuleResourceReference($file);
+
         // Get type
         $type = null;
         if (isset($this->javascript[$file]['type'])) {
@@ -622,9 +626,32 @@ class Requirements_Backend
      */
     public function css($file, $media = null)
     {
+        $file = $this->parseModuleResourceReference($file);
+
         $this->css[$file] = array(
             "media" => $media
         );
+    }
+
+    /**
+     * Convert a file of the form "vendor/package:resource" into a BASE_PATH-relative file
+     * For other files, reutrn original value
+     *
+     * @param string $file
+     * @return string
+     */
+    protected function parseModuleResourceReference($file)
+    {
+        // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
+        if (preg_match('#([^ ]*/[^ ]*) *: *([^ ]*)#', $file, $matches)) {
+            list(, $module, $resource) = $matches;
+            $moduleObj = ModuleLoader::getModule($module);
+            if (!$moduleObj) {
+                throw new \InvalidArgumentException("Can't find module '$module'");
+            }
+            return $moduleObj->getRelativeResourcePath($resource);
+        }
+        return $file;
     }
 
     /**
@@ -778,38 +805,55 @@ class Requirements_Backend
         // Combine files - updates $this->javascript and $this->css
         $this->processCombinedFiles();
 
+        // Script tags for js links
         foreach ($this->getJavascript() as $file => $attributes) {
-            $async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
-            $defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
-            $type = Convert::raw2att(isset($attributes['type']) ? $attributes['type'] : "application/javascript");
-            $path = Convert::raw2att($this->pathForFile($file));
-            if ($path) {
-                $jsRequirements .= "<script type=\"{$type}\" src=\"{$path}\"{$async}{$defer}></script>";
+            // Build html attributes
+            $htmlAttributes = [
+                'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
+                'src' => $this->pathForFile($file),
+            ];
+            if (!empty($attributes['async'])) {
+                $htmlAttributes['async'] = 'async';
             }
+            if (!empty($attributes['defer'])) {
+                $htmlAttributes['defer'] = 'defer';
+            }
+            $jsRequirements .= HTML::createTag('script', $htmlAttributes);
+            $jsRequirements .= "\n";
         }
 
         // Add all inline JavaScript *after* including external files they might rely on
         foreach ($this->getCustomScripts() as $script) {
-            $jsRequirements .= "<script type=\"application/javascript\">//<![CDATA[\n";
-            $jsRequirements .= "$script\n";
-            $jsRequirements .= "//]]></script>";
+            $jsRequirements .= HTML::createTag(
+                'script',
+                [ 'type' => 'application/javascript' ],
+                "//<![CDATA[\n{$script}\n//]]>"
+            );
+            $jsRequirements .= "\n";
         }
 
+        // CSS file links
         foreach ($this->getCSS() as $file => $params) {
-            $path = Convert::raw2att($this->pathForFile($file));
-            if ($path) {
-                $media = (isset($params['media']) && !empty($params['media']))
-                    ? " media=\"{$params['media']}\"" : "";
-                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\" {$media} href=\"$path\" />\n";
+            $htmlAttributes = [
+                'rel' => 'stylesheet',
+                'type' => 'text/css',
+                'href' => $this->pathForFile($file),
+            ];
+            if (!empty($params['media'])) {
+                $htmlAttributes['media'] = $params['media'];
             }
+            $requirements .= HTML::createTag('link', $htmlAttributes);
+            $requirements .= "\n";
         }
 
+        // Literal custom CSS content
         foreach ($this->getCustomCSS() as $css) {
-            $requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+            $requirements .= HTML::createTag('style', ['type' => 'text/css'], "\n{$css}\n");
+            $requirements .= "\n";
         }
 
         foreach ($this->getCustomHeadTags() as $customHeadTag) {
-            $requirements .= "$customHeadTag\n";
+            $requirements .= "{$customHeadTag}\n";
         }
 
         // Inject CSS  into body
@@ -971,8 +1015,8 @@ class Requirements_Backend
         $candidates = array(
             'en.js',
             'en_US.js',
-            i18n::getData()->langFromLocale(i18n::config()->default_locale) . '.js',
-            i18n::config()->default_locale . '.js',
+            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')) . '.js',
+            i18n::config()->get('default_locale') . '.js',
             i18n::getData()->langFromLocale(i18n::get_locale()) . '.js',
             i18n::get_locale() . '.js',
         );
@@ -1003,27 +1047,8 @@ class Requirements_Backend
         // Since combined urls could be root relative, treat them as urls here.
         if (preg_match('{^(//)|(http[s]?:)}', $fileOrUrl) || Director::is_root_relative_url($fileOrUrl)) {
             return $fileOrUrl;
-        } elseif (Director::fileExists($fileOrUrl)) {
-            $filePath = preg_replace('/\?.*/', '', Director::baseFolder() . '/' . $fileOrUrl);
-            $prefix = Director::baseURL();
-            $mtimesuffix = "";
-            $suffix = '';
-            if ($this->getSuffixRequirements()) {
-                $mtimesuffix = "?m=" . filemtime($filePath);
-                $suffix = '&';
-            }
-            if (strpos($fileOrUrl, '?') !== false) {
-                if (strlen($suffix) == 0) {
-                    $suffix = '?';
-                }
-                $suffix .= substr($fileOrUrl, strpos($fileOrUrl, '?') + 1);
-                $fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
-            } else {
-                $suffix = '';
-            }
-            return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
         } else {
-            throw new InvalidArgumentException("File {$fileOrUrl} does not exist");
+            return Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($fileOrUrl);
         }
     }
 
@@ -1309,9 +1334,12 @@ class Requirements_Backend
         if ($minify && !$this->minifier) {
             throw new Exception(
                 sprintf(
-                    'Cannot minify files without a minification service defined.
-        			Set %s::minifyCombinedFiles to false, or inject a %s service on
-        			%s.properties.minifier',
+                    <<<MESSAGE
+Cannot minify files without a minification service defined.
+Set %s::minifyCombinedFiles to false, or inject a %s service on
+%s.properties.minifier
+MESSAGE
+                    ,
                     __CLASS__,
                     Requirements_Minifier::class,
                     __CLASS__
@@ -1377,18 +1405,8 @@ class Requirements_Backend
      */
     public function getCombinedFilesEnabled()
     {
-        if (!$this->combinedFilesEnabled) {
-            return false;
-        }
-
-        // Tests should be combined
-        if (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
-            return true;
-        }
-
-        // Check if specified via querystring
-        if (isset($_REQUEST['combine'])) {
-            return true;
+        if (isset($this->combinedFilesEnabled)) {
+            return $this->combinedFilesEnabled;
         }
 
         // Non-dev sites are always combined

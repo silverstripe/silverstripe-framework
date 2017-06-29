@@ -24,6 +24,15 @@ use SilverStripe\ORM\DataObject;
  */
 class LoginAttempt extends DataObject
 {
+    /**
+     * Success status
+     */
+    const SUCCESS = 'Success';
+
+    /**
+     * Failure status
+     */
+    const FAILURE = 'Failure';
 
     private static $db = array(
         'Email' => 'Varchar(255)',
@@ -32,7 +41,7 @@ class LoginAttempt extends DataObject
     );
 
     private static $has_one = array(
-        'Member' => 'SilverStripe\\Security\\Member', // only linked if the member actually exists
+        'Member' => Member::class, // only linked if the member actually exists
     );
 
     private static $table_name = "LoginAttempt";

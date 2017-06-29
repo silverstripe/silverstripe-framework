@@ -9,11 +9,6 @@ SilverStripe\Core\Injector\Injector:
         directory: '`TEMP_FOLDER`'
         version: null
       logger: %$Psr\Log\LoggerInterface
-  Psr\SimpleCache\CacheInterface.GDBackend_Manipulations:
-    factory: SilverStripe\Core\Cache\CacheFactory
-    constructor:
-      namespace: "GDBackend_Manipulations"
-      defaultLifetime: 100
   Psr\SimpleCache\CacheInterface.cacheblock:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:

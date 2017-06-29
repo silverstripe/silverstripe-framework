@@ -11,36 +11,29 @@ class SwiftPlugin implements \Swift_Events_SendListener
      */
     public function beforeSendPerformed(\Swift_Events_SendEvent $evt)
     {
-
         /** @var \Swift_Message $message */
         $message = $evt->getMessage();
-        $sendAllTo = Email::config()->send_all_emails_to;
-        $ccAllTo = Email::config()->cc_all_emails_to;
-        $bccAllTo = Email::config()->bcc_all_emails_to;
-        $sendAllFrom = Email::config()->send_all_emails_from;
 
+        $sendAllTo = Email::getSendAllEmailsTo();
         if (!empty($sendAllTo)) {
             $this->setTo($message, $sendAllTo);
         }
 
+        $ccAllTo = Email::getCCAllEmailsTo();
         if (!empty($ccAllTo)) {
-            if (!is_array($ccAllTo)) {
-                $ccAllTo = array($ccAllTo => null);
-            }
             foreach ($ccAllTo as $address => $name) {
                 $message->addCc($address, $name);
             }
         }
 
+        $bccAllTo = Email::getBCCAllEmailsTo();
         if (!empty($bccAllTo)) {
-            if (!is_array($bccAllTo)) {
-                $bccAllTo = array($bccAllTo => null);
-            }
             foreach ($bccAllTo as $address => $name) {
                 $message->addBcc($address, $name);
             }
         }
 
+        $sendAllFrom = Email::getSendAllEmailsFrom();
         if (!empty($sendAllFrom)) {
             $this->setFrom($message, $sendAllFrom);
         }
@@ -48,7 +41,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
 
     /**
      * @param \Swift_Mime_Message $message
-     * @param string $to
+     * @param array|string $to
      */
     protected function setTo($message, $to)
     {
@@ -70,7 +63,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
 
     /**
      * @param \Swift_Mime_Message $message
-     * @param string $from
+     * @param array|string $from
      */
     protected function setFrom($message, $from)
     {

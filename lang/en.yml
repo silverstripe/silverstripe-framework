@@ -207,19 +207,19 @@ en:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
-  SilverStripe\Security\CMSMemberLoginForm:
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS Member Login Form'
-    BUTTONFORGOTPASSWORD: 'Forgot password?'
-    BUTTONLOGIN: 'Log back in'
+    BUTTONFORGOTPASSWORD: 'Forgot password'
+    BUTTONLOGIN: 'Let me back in'
     BUTTONLOGOUT: 'Log out'
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
-    LoginMessage: '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
+    LOGIN_MESSAGE: '<p>Your session has timed out due to inactivity.</p>'
     SUCCESS: Success
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
-    TimedOutTitleAnonymous: 'Your session has timed out.'
-    TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
+    LOGIN_TITLE: 'Return to where you left off by logging back in'
+    SUCCESS_TITLE: Success
   SilverStripe\Security\Group:
     AddRole: 'Add a role for this group'
     Code: 'Group Code'
@@ -259,6 +259,7 @@ en:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
+    BUTTONLOGOUT: 'Log out'
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
@@ -285,7 +286,7 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
-    REMEMBERME: 'Remember me next time? (for %d days on this device)'
+    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
@@ -354,9 +355,11 @@ en:
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
+    CONFIRMLOGOUT: 'Please click the button below to confirm that you wish to log out.'
     ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
     LOGIN: 'Log in'
+    LOGOUT: 'Log out'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'

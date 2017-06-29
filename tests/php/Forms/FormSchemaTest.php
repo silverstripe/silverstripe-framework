@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\NumericField;
@@ -16,6 +17,16 @@ use SilverStripe\Forms\PopoverField;
 
 class FormSchemaTest extends SapphireTest
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        // Clear old messages
+        $session = Controller::curr()->getRequest()->getSession();
+        $session
+            ->clear("FormInfo.TestForm.result")
+            ->clear("FormInfo.TestForm.data");
+    }
 
     public function testGetSchema()
     {
@@ -44,6 +55,7 @@ class FormSchemaTest extends SapphireTest
                 ]
             ],
             'messages' => [],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);
@@ -73,6 +85,7 @@ class FormSchemaTest extends SapphireTest
                 'value' => 'All saved',
                 'type' => 'good'
             ]],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);
@@ -86,6 +99,7 @@ class FormSchemaTest extends SapphireTest
         $actions = new FieldList();
         $validator = new RequiredFields('Title');
         $form = new Form(null, 'TestForm', $fields, $actions, $validator);
+        $form->clearMessage();
         $form->loadDataFrom(
             [
             'Title' => null,
@@ -114,7 +128,8 @@ class FormSchemaTest extends SapphireTest
                     'name' => 'SecurityID',
                 ]
             ],
-            'messages' => []
+            'messages' => [],
+            'notifyUnsavedChanges' => false
         ];
 
         $state = $formSchema->getState($form);

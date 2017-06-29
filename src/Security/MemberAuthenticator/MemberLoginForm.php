@@ -4,7 +4,6 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -124,11 +123,11 @@ class MemberLoginForm extends BaseLoginForm
      */
     protected function getFormFields()
     {
-        $request = $this->getController()->getRequest();
+        $request = $this->getRequest();
         if ($request->getVar('BackURL')) {
             $backURL = $request->getVar('BackURL');
         } else {
-            $backURL = Session::get('BackURL');
+            $backURL = $request->getSession()->get('BackURL');
         }
 
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
@@ -143,7 +142,7 @@ class MemberLoginForm extends BaseLoginForm
         $emailField->setAttribute('autofocus', 'true');
 
         if (Security::config()->get('remember_username')) {
-            $emailField->setValue(Session::get('SessionForms.MemberLoginForm.Email'));
+            $emailField->setValue($this->getSession()->get('SessionForms.MemberLoginForm.Email'));
         } else {
             // Some browsers won't respect this attribute unless it's added to the form
             $this->setAttribute('autocomplete', 'off');
@@ -156,9 +155,10 @@ class MemberLoginForm extends BaseLoginForm
                     _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
                 )->setAttribute(
                     'title',
-                    sprintf(
-                        _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
-                        RememberLoginHash::config()->uninherited('token_expiry_days')
+                    _t(
+                        'SilverStripe\\Security\\Member.REMEMBERME',
+                        "Remember me next time? (for {count} days on this device)",
+                        [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
             );
@@ -190,11 +190,14 @@ class MemberLoginForm extends BaseLoginForm
         return $actions;
     }
 
+
+
     public function restoreFormState()
     {
         parent::restoreFormState();
 
-        $forceMessage = Session::get('MemberLoginForm.force_message');
+        $session = $this->getSession();
+        $forceMessage = $session->get('MemberLoginForm.force_message');
         if (($member = Security::getCurrentUser()) && !$forceMessage) {
             $message = _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
@@ -206,7 +209,7 @@ class MemberLoginForm extends BaseLoginForm
 
         // Reset forced message
         if ($forceMessage) {
-            Session::set('MemberLoginForm.force_message', false);
+            $session->set('MemberLoginForm.force_message', false);
         }
 
         return $this;

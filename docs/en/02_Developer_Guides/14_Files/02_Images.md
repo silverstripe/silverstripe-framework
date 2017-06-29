@@ -98,54 +98,42 @@ Please refer to the [api:ImageManipulation] API documentation for specific funct
 You can also create your own functions by decorating the `Image` class.
 
 	:::php
-	class MyImage extends DataExtension {
-		
-		public function Landscape()	{
-			return $this->owner->getWidth() > $this->owner->getHeight();
-		}
-		
-		public function Portrait() {
-			return $this->owner->getWidth() < $this->owner->getHeight();
-		}
-		
-		public function PerfectSquare()	{
-			$variant = $this->owner->variantName(__FUNCTION__);
-			return $this->owner->manipulateImage($variant, function(Image_Backend $backend) {
-			return $backend->croppedResize(100,100);
-			});
-		}
-		
-		public function Exif(){
-			//http://www.v-nessa.net/2010/08/02/using-php-to-extract-image-exif-data
-			$mime = $this->owner->getMimeType();
-			$content = $this->owner->getAsString();
-			$image = "data://{$mime};base64," . base64_encode($content);
-			$d=new ArrayList();	
-			$exif = exif_read_data($image, 0, true);
-			foreach ($exif as $key => $section) {
-				$a=new ArrayList();	
-				foreach ($section as $name => $val) {
-					$a->push(new ArrayData(array(
-						"Title"=>$name,
-						"Content"=>$val
-					)));
-			}
-				$d->push(new ArrayData(array(
-					"Title"=>strtolower($key),
-					"Content"=>$a
-				)));
-			}
-			return $d;
-		}
-	}
+	class ImageExtension extends \SilverStripe\Core\Extension
+    {
+    
+        public function Square($width)
+        {
+            $variant = $this->owner->variantName(__FUNCTION__, $width);
+            return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use($width) {
+                $clone = clone $backend;
+                $resource = clone $backend->getImageResource();
+                $resource->fit($width);
+                $clone->setImageResource($resource);
+                return $clone;
+            });
+        }
+    
+        public function Blur($amount = null)
+        {
+            $variant = $this->owner->variantName(__FUNCTION__, $amount);
+            return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use ($amount) {
+                $clone = clone $backend;
+                $resource = clone $backend->getImageResource();
+                $resource->blur($amount);
+                $clone->setImageResource($resource);
+                return $clone;
+            });
+        }
+    
+    }
 
 	:::yml
-	Image:
+	SilverStripe\Assets\Image:
 	  extensions:
-	    - MyImage
+	    - ImageExtension
 	SilverStripe\Filesystem\Storage\DBFile:
 	  extensions:
-	    - MyImage
+	    - ImageExtension
 
 ### Form Upload
 
@@ -153,35 +141,59 @@ For usage on a website form, see [api:FileField].
 
 ### Image Quality
 
-To adjust the quality of the generated images when they are resized add the
-following to your mysite/config/config.yml file:
+#### Source images
 
-	:::yml
-	GDBackend:
-	  default_quality: 90
-	# or
-	ImagickBackend:
-	  default_quality: 90
+Whenever SilverStripe performs a manipulation on an image, it saves the output
+as a new image file, and applies compression during the process. If the source
+image already had lossy compression applied, this leads to the image being
+compressed twice over which can produce a poor result. To ensure the best
+quality output images, it's recommended to upload high quality source images 
+(minimal or no compression) in to your asset store, and let SilverStripe take
+care of applying compression.
 
-The default value is 75.
+Very high resolution images may cause GD to crash (especially on shared hosting 
+environments where resources are limited) so a good size for website images is 
+around 2000px on the longest edge.
 
-By default SilverStripe image functions will not resample an image if no
-cropping or resizing is taking place. You can tell SilverStripe to always to
-always produce resampled output by adding this to your
-mysite/config/config.yml file:
+#### Forced resampling
+
+Since the 'master' images in your asset store may have a large file size, by
+default SilverStripe will always apply compression to your images to save
+bandwidth - even if no other manipulation (such as a crop or resize) is taking
+place. If you expect the images in your asset store to already have
+compression applied and want to serve up the original when no resampling is
+necessary, you can add this to your mysite/config/config.yml file:
 
 	:::yml
 	# Configure resampling for File dataobject
 	File:
-	  force_resample: true
+	  force_resample: false
 	# DBFile can be configured independently
 	SilverStripe\Filesystem\Storage\DBFile:
-	  force_resample: true
+	  force_resample: false
 
-If you are intending to resample images with SilverStripe it is good practice
-to upload high quality (minimal compression) images as these will produce
-better results when resampled. Very high resolution images may cause GD to
-crash so a good size for website images is around 2000px on the longest edge.
+#### Resampled image quality
+
+To adjust the quality of the generated images when they are resampled, add the
+following to your mysite/config/config.yml file:
+
+	:::yml
+       SilverStripe\Core\Injector\Injector:
+         SilverStripe\Assets\InterventionBackend:
+           properties:
+             Quality: 90
+
+## Changing the manipulation driver to Imagick
+
+If you want to change the image manipulation driver to use Imagick instead of GD, you'll need to change your config so
+that the `Intervention\Image\ImageManager` is instantiated with the `imagick` driver instead of GD:
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  Intervention\Image\ImageManager:
+    constructor:
+      - { driver: imagick }
+```
 
 ## API Documentation
 

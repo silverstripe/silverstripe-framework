@@ -2,19 +2,19 @@
 
 namespace SilverStripe\ORM;
 
+use InvalidArgumentException;
+use LogicException;
+use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\Connect\Database;
 use SilverStripe\ORM\Connect\DBConnector;
 use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLExpression;
-use SilverStripe\ORM\Connect\Database;
-use InvalidArgumentException;
-use LogicException;
 
 /**
  * Global database interface, complete with static methods.
@@ -34,9 +34,19 @@ class DB
 
     /**
      * The global database connection.
+     *
      * @var Database
      */
-    private static $connections = array();
+    protected static $connections = [];
+
+    /**
+     * List of configurations for each connection
+     *
+     * @var array List of configs each in the $databaseConfig format
+     */
+    protected static $configs = [];
+
+
 
     /**
      * The last SQL query run.
@@ -77,6 +87,13 @@ class DB
         if (isset(self::$connections[$name])) {
             return self::$connections[$name];
         }
+
+        // lazy connect
+        $config = static::getConfig($name);
+        if ($config) {
+            return static::connect($config, $name);
+        }
+
         return null;
     }
 
@@ -247,7 +264,7 @@ class DB
     }
 
     /**
-     * Connect to a database.
+     * Specify connection to a database
      *
      * Given the database configuration, this method will create the correct
      * subclass of {@link SS_Database}.
@@ -259,14 +276,13 @@ class DB
      */
     public static function connect($databaseConfig, $label = 'default')
     {
-
         // This is used by the "testsession" module to test up a test session using an alternative name
         if ($name = self::get_alternative_database_name()) {
             $databaseConfig['database'] = $name;
         }
 
         if (!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
-            user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
+            throw new InvalidArgumentException("DB::connect: Not passed a valid database config");
         }
 
         self::$connection_attempted = true;
@@ -281,6 +297,30 @@ class DB
         self::set_conn($conn, $label);
 
         return $conn;
+    }
+
+    /**
+     * Set config for a lazy-connected database
+     *
+     * @param array $databaseConfig
+     * @param string $name
+     */
+    public static function setConfig($databaseConfig, $name = 'default')
+    {
+        static::$configs[$name] = $databaseConfig;
+    }
+
+    /**
+     * Get the named connection config
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public static function getConfig($name = 'default')
+    {
+        if (isset(static::$configs[$name])) {
+            return static::$configs[$name];
+        }
     }
 
     /**

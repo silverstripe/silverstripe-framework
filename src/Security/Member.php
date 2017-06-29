@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -177,14 +178,6 @@ class Member extends DataObject
     private static $unique_identifier_field = 'Email';
 
     /**
-     * Object for validating user's password
-     *
-     * @config
-     * @var PasswordValidator
-     */
-    private static $password_validator = null;
-
-    /**
      * @config
      * The number of days that a password should be valid for.
      * By default, this is null, which means that passwords never expire
@@ -282,7 +275,7 @@ class Member extends DataObject
      *
      * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
      *
-     * @param string $password
+     * @param  string $password
      * @return ValidationResult
      */
     public function checkPassword($password)
@@ -298,7 +291,7 @@ class Member extends DataObject
                 break;
             }
         }
-        return $result;
+            return $result;
     }
 
     /**
@@ -357,35 +350,74 @@ class Member extends DataObject
      */
     public function isLockedOut()
     {
-        if (!$this->LockedOutUntil) {
+        /** @var DBDatetime $lockedOutUntilObj */
+        $lockedOutUntilObj = $this->dbObject('LockedOutUntil');
+        if ($lockedOutUntilObj->InFuture()) {
+            return true;
+        }
+
+        $maxAttempts = $this->config()->get('lock_out_after_incorrect_logins');
+        if ($maxAttempts <= 0) {
             return false;
         }
 
-        /** @var DBDatetime $lockedOutUntil */
-        $lockedOutUntil = $this->dbObject('LockedOutUntil');
-        return DBDatetime::now()->getTimestamp() < $lockedOutUntil->getTimestamp();
+        $idField = static::config()->get('unique_identifier_field');
+        $attempts = LoginAttempt::get()
+            ->filter('Email', $this->{$idField})
+            ->sort('Created', 'DESC')
+            ->limit($maxAttempts);
+
+        if ($attempts->count() < $maxAttempts) {
+            return false;
+        }
+
+        foreach ($attempts as $attempt) {
+            if ($attempt->Status === 'Success') {
+                return false;
+            }
+        }
+
+        // Calculate effective LockedOutUntil
+        /** @var DBDatetime $firstFailureDate */
+        $firstFailureDate = $attempts->first()->dbObject('Created');
+        $maxAgeSeconds = $this->config()->get('lock_out_delay_mins') * 60;
+        $lockedOutUntil = $firstFailureDate->getTimestamp() + $maxAgeSeconds;
+        $now = DBDatetime::now()->getTimestamp();
+        if ($now < $lockedOutUntil) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Set a {@link PasswordValidator} object to use to validate member's passwords.
      *
-     * @param PasswordValidator $pv
+     * @param PasswordValidator $validator
      */
-    public static function set_password_validator($pv)
+    public static function set_password_validator(PasswordValidator $validator = null)
     {
-        self::$password_validator = $pv;
+        // Override existing config
+        Config::modify()->remove(Injector::class, PasswordValidator::class);
+        if ($validator) {
+            Injector::inst()->registerService($validator, PasswordValidator::class);
+        } else {
+            Injector::inst()->unregisterNamedObject(PasswordValidator::class);
+        }
     }
 
     /**
-     * Returns the current {@link PasswordValidator}
+     * Returns the default {@link PasswordValidator}
      *
      * @return PasswordValidator
      */
     public static function password_validator()
     {
-        return self::$password_validator;
+        if (Injector::inst()->has(PasswordValidator::class)) {
+            return Injector::inst()->get(PasswordValidator::class);
+        }
+        return null;
     }
-
 
     public function isPasswordExpired()
     {
@@ -414,7 +446,7 @@ class Member extends DataObject
      */
     public function beforeMemberLoggedIn()
     {
-        // @todo Move to middleware on the AuthenticationRequestFilter IdentityStore
+        // @todo Move to middleware on the AuthenticationMiddleware IdentityStore
         $this->extend('beforeMemberLoggedIn');
     }
 
@@ -1605,16 +1637,17 @@ class Member extends DataObject
     public function validate()
     {
         $valid = parent::validate();
+        $validator = static::password_validator();
 
         if (!$this->ID || $this->isChanged('Password')) {
-            if ($this->Password && self::$password_validator) {
-                $valid->combineAnd(self::$password_validator->validate($this->Password, $this));
+            if ($this->Password && $validator) {
+                $valid->combineAnd($validator->validate($this->Password, $this));
             }
         }
 
         if ((!$this->ID && $this->SetPassword) || $this->isChanged('SetPassword')) {
-            if ($this->SetPassword && self::$password_validator) {
-                $valid->combineAnd(self::$password_validator->validate($this->SetPassword, $this));
+            if ($this->SetPassword && $validator) {
+                $valid->combineAnd($validator->validate($this->SetPassword, $this));
             }
         }
 
@@ -1650,7 +1683,7 @@ class Member extends DataObject
         $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
         if ($lockOutAfterCount) {
             // Keep a tally of the number of failed log-ins so that we can lock people out
-            $this->FailedLoginCount = $this->FailedLoginCount + 1;
+            ++$this->FailedLoginCount;
 
             if ($this->FailedLoginCount >= $lockOutAfterCount) {
                 $lockoutMins = self::config()->get('lock_out_delay_mins');
@@ -1670,6 +1703,7 @@ class Member extends DataObject
         if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
+            $this->LockedOutUntil = null;
             $this->write();
         }
     }

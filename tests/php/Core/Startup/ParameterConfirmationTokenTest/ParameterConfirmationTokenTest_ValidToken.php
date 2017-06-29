@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest;
 
-use SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token;
-
 /**
  * A token that always validates a given token
  */

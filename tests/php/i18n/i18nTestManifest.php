@@ -50,7 +50,7 @@ trait i18nTestManifest
      */
     protected $moduleManifests = 0;
 
-    protected static function getExtraDataObjects()
+    public static function getExtraDataObjects()
     {
         return [
             TestDataObject::class,
@@ -82,7 +82,8 @@ trait i18nTestManifest
         Director::config()->update('alternate_base_folder', $this->alternateBasePath);
 
         // New module manifest
-        $moduleManifest = new ModuleManifest($this->alternateBasePath, false);
+        $moduleManifest = new ModuleManifest($this->alternateBasePath);
+        $moduleManifest->init(true);
         $this->pushModuleManifest($moduleManifest);
 
         // Replace old template loader with new one with alternate base path
@@ -90,8 +91,9 @@ trait i18nTestManifest
         ThemeResourceLoader::set_instance($loader = new ThemeResourceLoader($this->alternateBasePath));
         $loader->addSet(
             '$default',
-            new ThemeManifest($this->alternateBasePath, project(), false)
+            $default = new ThemeManifest($this->alternateBasePath, project())
         );
+        $default->init(true);
 
         SSViewer::set_themes([
             'testtheme1',
@@ -102,7 +104,8 @@ trait i18nTestManifest
         i18n::set_locale('en_US');
 
         // Set new manifest against the root
-        $classManifest = new ClassManifest($this->alternateBasePath, true);
+        $classManifest = new ClassManifest($this->alternateBasePath);
+        $classManifest->init(true);
         $this->pushManifest($classManifest);
 
         // Setup uncached translator

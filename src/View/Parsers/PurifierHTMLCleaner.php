@@ -2,7 +2,6 @@
 
 namespace SilverStripe\View\Parsers;
 
-use SilverStripe\Core\Injector\Injector;
 use HTMLPurifier;
 
 /**
@@ -14,7 +13,7 @@ class PurifierHTMLCleaner extends HTMLCleaner
     public function cleanHTML($content)
     {
         $html = new HTMLPurifier();
-        $doc = Injector::inst()->create('HTMLValue', $html->purify($content));
+        $doc = HTMLValue::create($html->purify($content));
         return $doc->getContent();
     }
 }

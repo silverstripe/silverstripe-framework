@@ -5,6 +5,10 @@ namespace SilverStripe\View\Tests\SSViewerTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
 
+/**
+ * @property string $TextValue
+ * @property string $HTMLValue
+ */
 class TestViewableData extends ViewableData implements TestOnly
 {
 
