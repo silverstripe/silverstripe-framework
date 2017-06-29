@@ -41,7 +41,7 @@ class HTTPApplication implements Application
      */
     public function handle(HTTPRequest $request)
     {
-        $flush = $request->getVar('flush') || strpos($request->getURL(), 'dev/build') === 0;
+        $flush = array_key_exists('flush', $request->getVars()) || strpos($request->getURL(), 'dev/build') === 0;
 
         // Ensure boot is invoked
         return $this->execute($request, function (HTTPRequest $request) {
