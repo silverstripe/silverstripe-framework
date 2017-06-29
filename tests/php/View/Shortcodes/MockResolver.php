@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\View\ViewSupport\Tests;
+namespace SilverStripe\View\Tests\Shortcodes;
 
 use Embed\Http\DispatcherInterface;
 use Embed\Http\ImageResponse;

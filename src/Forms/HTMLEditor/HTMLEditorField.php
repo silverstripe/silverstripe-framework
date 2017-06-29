@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
-use SilverStripe\Assets\ViewSupport\ImageShortcodeProvider;
+use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;

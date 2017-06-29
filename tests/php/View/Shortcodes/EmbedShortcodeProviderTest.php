@@ -1,8 +1,8 @@
 <?php
 
-namespace SilverStripe\View\ViewSupport\Tests;
+namespace SilverStripe\View\Tests\Shortcodes;
 
-use SilverStripe\View\ViewSupport\EmbedShortcodeProvider;
+use SilverStripe\View\Shortcodes\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
 
 /**

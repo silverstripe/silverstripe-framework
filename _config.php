@@ -1,9 +1,9 @@
 <?php
 
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\View\ViewSupport\EmbedShortcodeProvider;
-use SilverStripe\Assets\ViewSupport\FileShortcodeProvider;
-use SilverStripe\Assets\ViewSupport\ImageShortcodeProvider;
+use SilverStripe\View\Shortcodes\EmbedShortcodeProvider;
+use SilverStripe\Assets\Shortcodes\FileShortcodeProvider;
+use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**

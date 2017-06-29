@@ -79,7 +79,6 @@
       "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
       "SilverStripe\\View\\": "src/View/",
       "SilverStripe\\View\\Tests\\": "tests/php/View/",
-      "SilverStripe\\View\\ViewSupport\\Tests\\": "tests/php/View/ViewSupport",
       "SilverStripe\\Framework\\Tests\\Behaviour\\": "tests/behat/src/"
     },
     "files": [

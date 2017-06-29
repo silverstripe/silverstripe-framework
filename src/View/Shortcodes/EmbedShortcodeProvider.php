@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\View\ViewSupport;
+namespace SilverStripe\View\Shortcodes;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
