@@ -44,6 +44,13 @@ Composer can create a new site for you, using the installer as a template (by de
 composer create-project silverstripe/installer ./my/website/folder
 ```
 
+If you want to get all additional fixtures for testing, such as behat and phpunit configuration,
+an example `.env.example` file, and all documentation, then it's recommended to use `--prefer-source`
+to include these files.
+
+If you want a minimal installation with the bare essentials to get working without any additional overhead,
+and don't plan on contributing back changes to framework, use `--prefer-dist` (default) for a more lightweight install.
+
 `./my/website/folder` should be the root directory where your site will live.  
 For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need.
@@ -205,7 +212,7 @@ You have to tell composer three things in order to be able to do this:
 The first two steps are done as part of the initial create project using additional arguments.
 
 ```
-composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 4.0.x-dev
+composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 4.0.x-dev --prefer-source
 ```
 
 The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 4.0 release line. To check out from master instead,
