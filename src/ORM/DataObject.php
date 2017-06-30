@@ -2824,7 +2824,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param boolean $cache Use caching
      * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
      *
-     * @return DataObject The first item matching the query
+     * @return DataObject|null The first item matching the query
      */
     public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "")
     {
@@ -2851,7 +2851,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
             }
         }
-        return $cache ? self::$_cache_get_one[$callerClass][$cacheKey] : $item;
+
+        if ($cache) {
+            return self::$_cache_get_one[$callerClass][$cacheKey] ?: null;
+        } else {
+            return $item;
+        }
     }
 
     /**
