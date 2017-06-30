@@ -30,6 +30,7 @@
     "symfony/translation": "^2.8",
     "symfony/yaml": "~3.2",
     "vlucas/phpdotenv": "^2.4",
+    "instaclick/php-webdriver": "1.4.3",
 
     "php": ">=5.6.0",
     "ext-intl": "*",
