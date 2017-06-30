@@ -3,7 +3,9 @@
 namespace SilverStripe\Dev\Install;
 
 use Exception;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Control\HTTPApplication;
@@ -199,10 +201,8 @@ PHP
             }
         }
 
-        // Mock request
-        $session = new Session(isset($_SESSION) ? $_SESSION : array());
-        $request = new HTTPRequest('GET', '/');
-        $request->setSession($session);
+        // Build request
+        $request = HTTPRequestBuilder::createFromEnvironment();
 
         // Install kernel (fix to dev)
         $kernel = new CoreKernel(BASE_PATH);
@@ -211,6 +211,9 @@ PHP
 
         // Build db within HTTPApplication
         $app->execute($request, function (HTTPRequest $request) use ($config) {
+            // Suppress cookie errors on install
+            Cookie::config()->set('report_errors', false);
+
             // Start session and execute
             $request->getSession()->init($request);
 
