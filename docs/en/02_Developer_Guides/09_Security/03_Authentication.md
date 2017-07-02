@@ -46,3 +46,86 @@ It is advisable to configure this user in your `.env` file inside of the web roo
 When a user logs in with these credentials, then a [Member](api:SilverStripe\Security\Member) with the Email 'admin' will be generated in
 the database, but without any password information. This means that the password can be reset or changed by simply
 updating the `.env` file.
+
+## Registering a new Authenticator
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\Security:
+    properties:
+      Authenticators:
+        myauthenticator: %$MyVendor\MyProject\Authenticator\MyAuthenticator
+```
+If there is no authenticator registered, `Authenticator` will try to fall back on the default provided authenticator (`default`), which can be changed using the following config, replacing the MemberAuthenticator with your authenticator:
+```yaml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\Security:
+    properties:
+      Authenticators:
+        default: %$MyVendor\MyProject\Authenticator\MyAuthenticator
+```
+
+By default, the `SilverStripe\Security\MemberAuthenticator\MemberAuthenticator` is seen as the default authenticator until it's explicitly set in the config.
+
+Every Authenticator is expected to handle services. The `Authenticator` Interface provides the available services:
+```php
+
+    const LOGIN = 1;
+    const LOGOUT = 2;
+    const CHANGE_PASSWORD = 4;
+    const RESET_PASSWORD = 8;
+    const CMS_LOGIN = 16;
+
+    /**
+     * Returns the services supported by this authenticator
+     *
+     * The number should be a bitwise-OR of 1 or more of the following constants:
+     * Authenticator::LOGIN, Authenticator::LOGOUT, Authenticator::CHANGE_PASSWORD,
+     * Authenticator::RESET_PASSWORD, or Authenticator::CMS_LOGIN
+     *
+     * @return int
+     */
+    public function supportedServices();
+```
+
+If there is no available authenticator for the required action (either one of the constants above), an error will be thrown.
+
+Custom Authenticators are expected to have the following methods implemented:
+* `getLoginHandler()`
+* `getLogoutHandler()`
+* `getChangePasswordHandler()`
+* `getLostPasswordHandler()`
+
+All expect a `$link` variable, to handle the request.
+Further, there is 
+* `authenticate()`
+Which expects the data to be used for authentication as an array and a nullable variable `$result` by reference, which returns a `ValidationResult`.
+
+If only a subset of the supportedServices() will be provided by the custom Authenticator, it is advised to extend `SilverStripe\Security\MemberAuthenticator\MemberAuthenticator`, as that default contains all required methods already and only an override or follow up needs to be written.
+
+An example of how to write a multi-factor authentication [can be found here](https://gist.github.com/sminnee/bc646147f3941a764d0410f2044433c7).
+
+## IdentityStore
+
+A new IdentityStore, e.g. an LDAP IdentityStore can be registered as follows in a `security.yml` file (Not an actual valid LDAP configuration):
+```yaml
+SilverStripe\Core\Injector\Injector:
+  MyProject\LDAP\Authenticator\LDAPAuthenticator:
+    properties:
+      LDAPSettings:
+        - URL: https://my-ldap-location.com
+      CascadeInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+  SilverStripe\Security\AuthenticationHandler:
+    class: SilverStripe\Security\RequestAuthenticationHandler
+    properties:
+      Handlers:
+        ldap: %$MyProject\LDAP\Authenticator\LDAPAuthenticator
+```
+
+CascadeInTo is used to defer login or logout actions to other authenticators, after the first one has been logged in. In the example of LDAP authenticator, this is useful to check e.g. the validity of the Session (is the user still logged in?) and if not, or it's LDAP login period has expired, only then validate against the external service again, limiting the amount of requests to the external service.
+
+Upon request, the Member is authenticated against the given AuthenticatorHandlers. To override an Authenticator, override it's name in the `YML` to your own Handler.
+
+To get applicable Authenticators for a certain request, refer to [API:Security:getApplicableAuthenticators()].
+
+To register `CMS` authenticators, use the same procedure as above, only replace `SilverStripe\Security\Security` with `SilverStripe\Security\CMSSecurity`. 
