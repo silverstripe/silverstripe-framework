@@ -73,4 +73,4 @@ module if required. The module provides an consistent API for allowing third-par
 
 ## API Documentation
 
-* [api:SilverStripe\Security\SecurityToken]
+* [SecurityToken](api:SilverStripe\Security\SecurityToken)

@@ -19,4 +19,4 @@ framework for dealing with submissions and validation.
 ## API Documentation
 
 * [Form](api:SilverStripe\Forms\Form)
-* [api:SilverStripe\Forms\FormField]
+* [FormField](api:SilverStripe\Forms\FormField)

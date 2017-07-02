@@ -7,4 +7,4 @@ introduction: Both the Cookie and Session classes can be used to preserve certai
 ## API Documentation
 
 * [Cookie](api:SilverStripe\Control\Cookie)
-* [api:SilverStripe\Control\Session]
+* [Session](api:SilverStripe\Control\Session)

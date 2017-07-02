@@ -47,4 +47,4 @@ checked in the invoking code. The CMS default sections as well as custom interfa
 ## API Documentation
 
 * [DataObject](api:SilverStripe\ORM\DataObject)
-* [api:SilverStripe\Security\Permission]
+* [Permission](api:SilverStripe\Security\Permission)

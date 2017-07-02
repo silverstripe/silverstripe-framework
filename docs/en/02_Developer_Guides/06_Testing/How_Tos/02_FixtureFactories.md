@@ -47,4 +47,4 @@ with information that we need.
 ## API Documentation
 
 * [FixtureFactory](api:SilverStripe\Dev\FixtureFactory)
-* [api:SilverStripe\Dev\FixtureBlueprint]
+* [FixtureBlueprint](api:SilverStripe\Dev\FixtureBlueprint)

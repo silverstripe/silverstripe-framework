@@ -127,4 +127,4 @@ One can also access all of the cookies in one go using the `Cookie_Backend`
 
 * [Cookie](api:SilverStripe\Control\Cookie)
 * [CookieJar](api:SilverStripe\Control\CookieJar)
-* [api:SilverStripe\Control\Cookie_Backend]
+* [Cookie_Backend](api:SilverStripe\Control\Cookie_Backend)

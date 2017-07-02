@@ -44,4 +44,4 @@ For more information on `$url_handlers` see the [Routing](routing) documenation.
 
 ## API Documentation
 
-* [api:SilverStripe\Control\Controller]
+* [Controller](api:SilverStripe\Control\Controller)
