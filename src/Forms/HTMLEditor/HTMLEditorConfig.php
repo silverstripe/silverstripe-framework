@@ -52,7 +52,10 @@ abstract class HTMLEditorConfig
     private static $default_config = 'default';
 
     /**
-     * @var List of themes defined for the frontend
+     * List of themes defined for the frontend
+     *
+     * @config
+     * @var array
      */
     private static $user_themes = [];
 
@@ -108,7 +111,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_active_identifier()
     {
-        $identifier = self::$current ?: static::config()->default_config;
+        $identifier = self::$current ?: static::config()->get('default_config');
         return $identifier;
     }
 
@@ -150,15 +153,6 @@ abstract class HTMLEditorConfig
         }
 
         return $configs;
-    }
-
-    /**
-     * Set user defined (non-admin) themes
-     * @param array $themes
-     */
-    public static function set_user_themes($themes)
-    {
-        self::config()->set('user_themes', $themes);
     }
 
     /**
