@@ -52,6 +52,14 @@ abstract class HTMLEditorConfig
     private static $default_config = 'default';
 
     /**
+     * List of themes defined for the frontend
+     *
+     * @config
+     * @var array
+     */
+    private static $user_themes = [];
+
+    /**
      * Get the HTMLEditorConfig object for the given identifier. This is a correct way to get an HTMLEditorConfig
      * instance - do not call 'new'
      *
@@ -103,7 +111,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_active_identifier()
     {
-        $identifier = self::$current ?: static::config()->default_config;
+        $identifier = self::$current ?: static::config()->get('default_config');
         return $identifier;
     }
 
