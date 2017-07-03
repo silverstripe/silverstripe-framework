@@ -120,7 +120,7 @@ for any record.
 In addition, each call will automatically create a new version in the 
 `<class>_versions` table. To avoid this, use [Versioned::writeWithoutVersion()](api:SilverStripe\Versioned\Versioned::writeWithoutVersion()) instead.
 
-To move a saved version from one stage to another, call [writeToStage(<stage>)](api:Versioned->writeToStage()) on the 
+To move a saved version from one stage to another, call [writeToStage(<stage>)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the 
 object. The process of moving a version to a different stage is also called "publishing". This can be
 done via one of several ways:
 

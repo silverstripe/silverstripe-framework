@@ -132,7 +132,7 @@ Refer to [Layout reference](/developer_guides/customising_the_admin_interface/cm
 ## Forms
 
 SilverStripe constructs forms and its fields within PHP,
-mainly through the [getCMSFields()](api:DataObject::getCMSFields()) method.
+mainly through the [getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method.
 This in turn means that the CMS loads these forms as HTML via Ajax calls,
 e.g. after saving a record (which requires a form refresh), or switching the section in the CMS.
 
@@ -654,6 +654,6 @@ through the `PjaxResponseNegotiator` class (see above).
 
  * [Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface)
  * [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree)
- * [ModelAdmin API](api:ModelAdmin)
+ * [ModelAdmin API](api:SilverStripe\Admin\ModelAdmin)
  * [Reference: Layout](/developer_guides/customising_the_admin_interface/cms_layout)
  * [Rich Text Editing](/developer_guides/forms/field_types/htmleditorfield)

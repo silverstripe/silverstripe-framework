@@ -185,8 +185,8 @@ To disable oEmbed usage, set the `Oembed.enabled` configuration property to "fal
 HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
 inserting files for use with oembed.
 
-This is performed through the config variables `HtmlEditorField_Toolbar::$fileurl_scheme_whitelist` and
-`HtmlEditorField_Toolbar::$fileurl_domain_whitelist`.
+This is performed through the config variables `ModalController::$fileurl_scheme_whitelist` and
+`ModalController::$fileurl_domain_whitelist`.
 
 Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
 lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
@@ -233,13 +233,13 @@ Example: Remove field for "image captions"
 
 	:::php
 	// File: mysite/_config.php
-	HtmlEditorField_Toolbar::add_extension('MyToolbarExtension');
+	ModalController::add_extension('MyToolbarExtension');
 
 Adding functionality is a bit more advanced, you'll most likely
 need to add some fields to the PHP forms, as well as write some
 JavaScript to ensure the values from those fields make it into the content
 elements (and back out in case an existing element gets edited).
-There's lots of extension points in the [HtmlEditorField_Toolbar](api:HtmlEditorField_Toolbar) class
+There's lots of extension points in the [ModalController](api:SilverStripe\Admin\ModalController) class
 to get you started.
 
 ### Security groups with their own editor configuration
@@ -254,7 +254,7 @@ Note: The dropdown is only available if more than one config exists.
 
 Each interface can have multiple fields of this type, each with their own toolbar to set formatting
 and insert HTML elements. They do share one common set of dialogs for inserting links and other media though,
-encapsulated in the [HtmlEditorField_Toolbar](api:HtmlEditorField_Toolbar) class.
+encapsulated in the [ModalController](api:SilverStripe\Admin\ModalController) class.
 In the CMS, those dialogs are automatically instantiate, but in your own interfaces outside
 of the CMS you have to take care of instantiate yourself:
 

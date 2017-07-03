@@ -9,7 +9,7 @@ This tutorial is deprecated, and has been replaced by Lessons 7, 8, 9, and 10 in
 
 ## Overview
 
-This tutorial explores the relationship and management of [DataObjects](api:DataObject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
+This tutorial explores the relationship and management of [DataObjects](api:SilverStripe\ORM\DataObject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
 additional fields on our models, and attach images to them.
 
 ## What are we working towards?

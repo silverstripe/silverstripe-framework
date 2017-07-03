@@ -42,7 +42,7 @@ In the `Player` example, we have four database columns each with a different dat
 *  [DBTime](api:SilverStripe\ORM\FieldType\DBTime): A time field
 *  [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar): A variable-length string of up to 255 characters, designed to store raw text.
 
-See the [API documentation](api:DBField) for a full list of available Data Types. You can define your own [DBField](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
+See the [API documentation](api:api:SilverStripe\ORM\FieldType\DBField) for a full list of available Data Types. You can define your own [DBField](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
 
 ## Default Values
 
