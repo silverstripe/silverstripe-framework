@@ -5,7 +5,6 @@ mappings:
   DatabaseAdmin: SilverStripe\ORM\DatabaseAdmin
   DataExtension: SilverStripe\ORM\DataExtension
   DataList: SilverStripe\ORM\DataList
-  DataModel: SilverStripe\ORM\DataModel
   DataObject: SilverStripe\ORM\DataObject
   DataObjectInterface: SilverStripe\ORM\DataObjectInterface
   DataObjectSchema: SilverStripe\ORM\DataObjectSchema
@@ -118,8 +117,8 @@ mappings:
   Hierarchy: SilverStripe\ORM\Hierarchy\Hierarchy
   Authenticator: SilverStripe\Security\Authenticator
   BasicAuth: SilverStripe\Security\BasicAuth
-  ChangePasswordForm: SilverStripe\Security\ChangePasswordForm
-  CMSMemberLoginForm: SilverStripe\Security\CMSMemberLoginForm
+  ChangePasswordForm: SilverStripe\Security\MemberAuthenticator\ChangePasswordForm
+  CMSMemberLoginForm: SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm
   CMSSecurity: SilverStripe\Security\CMSSecurity
   Group: SilverStripe\Security\Group
   GroupCsvBulkLoader: SilverStripe\Security\GroupCsvBulkLoader
@@ -128,9 +127,9 @@ mappings:
   Member: SilverStripe\Security\Member
   Member_GroupSet: SilverStripe\Security\Member_GroupSet
   Member_Validator: SilverStripe\Security\Member_Validator
-  MemberAuthenticator: SilverStripe\Security\MemberAuthenticator
+  MemberAuthenticator: SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
   MemberCsvBulkLoader: SilverStripe\Security\MemberCsvBulkLoader
-  MemberLoginForm: SilverStripe\Security\MemberLoginForm
+  MemberLoginForm: SilverStripe\Security\MemberAuthenticator\MemberLoginForm
   MemberPassword: SilverStripe\Security\MemberPassword
   PasswordEncryptor: SilverStripe\Security\PasswordEncryptor
   PasswordEncryptor_Blowfish: SilverStripe\Security\PasswordEncryptor_Blowfish
@@ -173,25 +172,15 @@ mappings:
   SilverStripe\Framework\Core\Configurable: SilverStripe\Core\Config\Configurable
   PaginatedList: SilverStripe\ORM\PaginatedList
   ArrayLib: SilverStripe\ORM\ArrayLib
-  SS_DAG: SilverStripe\Core\Config\Dag
-  SilverStripe\Core\Config\SS_DAG: SilverStripe\Core\Config\Dag
-  SS_DAG_CyclicException: SilverStripe\Core\Config\SS_DAG_CyclicException
-  SilverStripe\Core\Config\SS_DAG_CyclicException: SilverStripe\Core\Config\DAG_CyclicException
-  SS_DAG_Iterator: SilverStripe\Core\Config\Dag_Iterator
-  SilverStripe\Core\Config\SS_DAG_Iterator: SilverStripe\Core\Config\Dag_Iterator
   SilverStripe\Framework\Injector\Factory: SilverStripe\Core\Injector\Factory
   SilverStripe\Framework\Core\Extensible: SilverStripe\Core\Extensible
   SilverStripe\Framework\Core\Injectable: SilverStripe\Core\Injector\Injectable
-  SS_Cache: SilverStripe\Core\Cache
-  SilverStripe\Core\SS_Cache: SilverStripe\Core\Cache
   ClassInfo: SilverStripe\Core\ClassInfo
   Convert: SilverStripe\Core\Convert
   Extension: SilverStripe\Core\Extension
   Flushable: SilverStripe\Core\Flushable
-  Object: SilverStripe\Core\Object
   Config: SilverStripe\Core\Config\Config
   Config_ForClass: SilverStripe\Core\Config\Config_ForClass
-  Config_MemCache: SilverStripe\Core\Config\Config_MemCache
   AfterCallAspect: SilverStripe\Core\Injector\AfterCallAspect
   AopProxyService: SilverStripe\Core\Injector\AopProxyService
   BeforeCallAspect: SilverStripe\Core\Injector\BeforeCallAspect
@@ -199,20 +188,11 @@ mappings:
   Injector: SilverStripe\Core\Injector\Injector
   ServiceConfigurationLocator: SilverStripe\Core\Injector\ServiceConfigurationLocator
   SilverStripeServiceConfigurationLocator: SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator
-  SS_ClassLoader: SilverStripe\Core\Manifest\SS_ClassLoader
+  SS_ClassLoader: SilverStripe\Core\Manifest\ClassLoader
   SilverStripe\Core\Manifest\SS_ClassLoader: SilverStripe\Core\Manifest\ClassLoader
   SS_ClassManifest: SilverStripe\Core\Manifest\ClassManifest
   SilverStripe\Core\Manifest\SS_ClassManifest: SilverStripe\Core\Manifest\ClassManifest
-  SS_ConfigManifest: SilverStripe\Core\Manifest\ConfigManifest
-  SilverStripe\Core\Manifest\SS_ConfigManifest: SilverStripe\Core\Manifest\ConfigManifest
-  SS_ConfigStaticManifest: SilverStripe\Core\Manifest\ConfigStaticManifest
-  SilverStripe\Core\Manifest\SS_ConfigStaticManifest: SilverStripe\Core\Manifest\ConfigStaticManifest
-  ManifestCache: SilverStripe\Core\Manifest\ManifestCache
-  ManifestCache_File: SilverStripe\Core\Manifest\ManifestCache_File
-  ManifestCache_File_PHP: SilverStripe\Core\Manifest\ManifestCache_File_PHP
-  ManifestCache_APC: SilverStripe\Core\Manifest\ManifestCache_APC
   ManifestFileFinder: SilverStripe\Core\Manifest\ManifestFileFinder
-  TokenisedRegularExpression: SilverStripe\Core\Manifest\TokenisedRegularExpression
   ErrorControlChain: SilverStripe\Core\Startup\ErrorControlChain
   ParameterConfirmationToken: SilverStripe\Core\Startup\ParameterConfirmationToken
   DatabaseAdapterRegistry: SilverStripe\Dev\Install\DatabaseAdapterRegistry
@@ -227,7 +207,6 @@ mappings:
   SS_Cli: SilverStripe\Dev\CLI
   SilverStripe\Dev\SS_Cli: SilverStripe\Dev\CLI
   CliDebugView: SilverStripe\Dev\CliDebugView
-  CliTestReporter: SilverStripe\Dev\CliTestReporter
   CSSContentParser: SilverStripe\Dev\CSSContentParser
   CsvBulkLoader: SilverStripe\Dev\CsvBulkLoader
   CSVParser: SilverStripe\Dev\CSVParser
@@ -244,11 +223,7 @@ mappings:
   SapphireInfo: SilverStripe\Dev\SapphireInfo
   SapphireREPL: SilverStripe\Dev\SapphireREPL
   SapphireTest: SilverStripe\Dev\SapphireTest
-  SapphireTestReporter: SilverStripe\Dev\SapphireTestReporter
-  SilverStripeListener: SilverStripe\Dev\SilverStripeListener
   TaskRunner: SilverStripe\Dev\TaskRunner
-  TeamCityListener: SilverStripe\Dev\TeamCityListener
-  SS_TestListener: SilverStripe\Dev\SS_TestListener
   TestMailer: SilverStripe\Dev\TestMailer
   TestOnly: SilverStripe\Dev\TestOnly
   TestSession: SilverStripe\Dev\TestSession
@@ -276,13 +251,11 @@ mappings:
   RequestHandler: SilverStripe\Control\RequestHandler
   RequestProcessor: SilverStripe\Control\RequestProcessor
   Session: SilverStripe\Control\Session
-  VersionedRequestFilter: SilverStripe\Versioned\VersionedRequestFilter
   Email: SilverStripe\Control\Email\Email
   Mailer: SilverStripe\Control\Email\Mailer
   RSSFeed: SilverStripe\Control\RSS\RSSFeed
   RSSFeed_Entry: SilverStripe\Control\RSS\RSSFeed_Entry
   CleanupTestDatabasesTask: SilverStripe\Dev\Tasks\CleanupTestDatabasesTask
-  EncryptAllPasswordsTask: SilverStripe\Dev\Tasks\EncryptAllPasswordsTask
   i18nTextCollectorTask: SilverStripe\Dev\Tasks\i18nTextCollectorTask
   MigrateFileTask: SilverStripe\Dev\Tasks\MigrateFileTask
   CheckboxField: SilverStripe\Forms\CheckboxField
@@ -296,7 +269,6 @@ mappings:
   DatalessField: SilverStripe\Forms\DatalessField
   DateField: SilverStripe\Forms\DateField
   DateField_Disabled: SilverStripe\Forms\DateField_Disabled
-  DateField_View_JQuery: SilverStripe\Forms\DateField_View_JQuery
   DatetimeField: SilverStripe\Forms\DatetimeField
   DisabledTransformation: SilverStripe\Forms\DisabledTransformation
   DropdownField: SilverStripe\Forms\DropdownField
@@ -310,7 +282,7 @@ mappings:
   FormField: SilverStripe\Forms\FormField
   FormScaffolder: SilverStripe\Forms\FormScaffolder
   FormTemplateHelper: SilverStripe\Forms\FormTemplateHelper
-  FormTemplateHelper_Pre32: SilverStripe\Forms\FormTemplateHelper_Pre32
+  FormTemplateHelper_Pre32: SilverStripe\Forms\FormTemplateHelper
   FormTransformation: SilverStripe\Forms\FormTransformation
   GroupedDropdownField: SilverStripe\Forms\GroupedDropdownField
   HeaderField: SilverStripe\Forms\HeaderField
@@ -323,7 +295,6 @@ mappings:
   MultiSelectField: SilverStripe\Forms\MultiSelectField
   NullableField: SilverStripe\Forms\NullableField
   NumericField: SilverStripe\Forms\NumericField
-  NumericField_Readonly: SilverStripe\Forms\NumericField_Readonly
   OptionsetField: SilverStripe\Forms\OptionsetField
   PasswordField: SilverStripe\Forms\PasswordField
   PopoverField: SilverStripe\Forms\PopoverField
@@ -332,7 +303,6 @@ mappings:
   ReadonlyField: SilverStripe\Forms\ReadonlyField
   ReadonlyTransformation: SilverStripe\Forms\ReadonlyTransformation
   RequiredFields: SilverStripe\Forms\RequiredFields
-  ResetFormAction: SilverStripe\Forms\ResetFormAction
   SelectField: SilverStripe\Forms\SelectField
   SelectionGroup: SilverStripe\Forms\SelectionGroup
   SelectionGroup_Item: SilverStripe\Forms\SelectionGroup_Item
@@ -352,11 +322,6 @@ mappings:
   HTMLEditorConfig: SilverStripe\Forms\HTMLEditor\HTMLEditorConfig
   HTMLEditorField: SilverStripe\Forms\HTMLEditor\HTMLEditorField
   HTMLEditorField_Readonly: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
-  HTMLEditorField_Toolbar: SilverStripe\Admin\ModalController\HTMLEditorField_Toolbar
-  HTMLEditorField_Embed: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Embed
-  HTMLEditorField_File: SilverStripe\Forms\HTMLEditor\HTMLEditorField_File
-  HTMLEditorField_Flash: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Flash
-  HTMLEditorField_Image: SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image
   HTMLEditorSanitiser: SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser
   HTMLReadonlyField: SilverStripe\Forms\HTMLReadonlyField
   TinyMCEConfig: SilverStripe\Forms\HTMLEditor\TinyMCEConfig
@@ -397,24 +362,16 @@ mappings:
   GridState_Component: SilverStripe\Forms\GridField\GridState_Component
   i18n: SilverStripe\i18n\i18n
   i18nEntityProvider: SilverStripe\i18n\i18nEntityProvider
-  i18nRailsYamlAdapter: SilverStripe\i18n\i18nRailsYamlAdapter
-  i18nSSLegacyAdapter: SilverStripe\i18n\i18nSSLegacyAdapter
-  i18nSSLegacyAdapter_Iterator: SilverStripe\i18n\i18nSSLegacyAdapter_Iterator
   i18nTextCollector: SilverStripe\i18n\TextCollection\i18nTextCollector
   i18nTextCollector_Writer: SilverStripe\i18n\Messages\Writer
   i18nTextCollector_Writer_RailsYaml: SilverStripe\i18n\Messages\YamlWriter
   i18nTextCollector_Parser: SilverStripe\i18n\TextCollection\Parser
-  i18nTranslateAdapterInterface: SilverStripe\i18n\i18nTranslateAdapterInterface
   SilverStripe\Framework\Logging\DebugViewFriendlyErrorFormatter: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
   SilverStripe\Framework\Logging\DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter
   SilverStripe\Framework\Logging\HTTPOutputHandler: SilverStripe\Logging\HTTPOutputHandler
   SilverStripe\Framework\Logging\MonologErrorHandler: SilverStripe\Logging\MonologErrorHandler
-  DebugViewFriendlyErrorFormatter: Monolog\Formatter\FormatterInterface.friendly
-  DetailedErrorFormatter: Monolog\Formatter\FormatterInterface.detailed
   DisplayErrorHandler: Monolog\Handler\HandlerInterface
-  ErrorHandler: SilverStripe\Logging\ErrorHandler;
-  SS_Log: SilverStripe\Logging\Log
-  SilverStripe\Logging\SS_Log: SilverStripe\Logging\Log
+  ErrorHandler: SilverStripe\Logging\ErrorHandler
   ComparisonFilter: SilverStripe\ORM\Filters\ComparisonFilter
   EndsWithFilter: SilverStripe\ORM\Filters\EndsWithFilter
   ExactMatchFilter: SilverStripe\ORM\Filters\ExactMatchFilter
@@ -460,8 +417,6 @@ mappings:
   SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   SilverStripe\View\Parsers\SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   URLSegmentFilter: SilverStripe\View\Parsers\URLSegmentFilter
-  CampaignAdminTest: SilverStripe\Admin\Tests\CampaignAdminTest
-  CampaignAdminTest_InvalidChangeSet: SilverStripe\Admin\Tests\CampaignAdminTest\InvalidChangeSet
   CMSMenuItemTest: SilverStripe\Admin\Tests\CMSMenuItemTest
   CMSMenuTest: SilverStripe\Admin\Tests\CMSMenuTest
   CMSMenuTest_LeftAndMainController: SilverStripe\Admin\Tests\CMSMenuTest\LeftAndMainController
@@ -469,8 +424,6 @@ mappings:
   CMSProfileControllerTest: SilverStripe\Admin\Tests\CMSProfileControllerTest
   CMSProfileControllerTestExtension: SilverStripe\Admin\Tests\CMSProfileControllerTest\TestExtension
   LeftAndMainTest: SilverStripe\Admin\Tests\LeftAndMainTest
-  LeftAndMainTest_Controller: SilverStripe\Admin\Tests\LeftAndMainTest\LeftAndMainTest\TestController
-  LeftAndMainTest_Object: SilverStripe\Admin\Tests\LeftAndMainTest\TestObject
   ModelAdminTest: SilverStripe\Admin\Tests\ModelAdminTest
   ModelAdminTest_Admin: SilverStripe\Admin\Tests\ModelAdminTest\ContactAdmin
   ModelAdminTest_PlayerAdmin: SilverStripe\Admin\Tests\ModelAdminTest\PlayerAdmin
@@ -495,7 +448,6 @@ mappings:
   DirectorTest: SilverStripe\Control\Tests\DirectorTest
   TestRequestFilter: SilverStripe\Control\Tests\DirectorTest\TestRequestFilter
   DirectorTestRequest_Controller: SilverStripe\Control\Tests\DirectorTest\TestController
-  FakeController: SilverStripe\Control\Tests\FakeController
   FlushRequestFilterTest: SilverStripe\Control\Tests\FlushMiddlewareTest
   FlushRequestFilterTest_Flushable: SilverStripe\Control\Tests\FlushMiddlewareTest\TestFlushable
   HTTPRequestTest: SilverStripe\Control\Tests\HTTPRequestTest
@@ -519,7 +471,7 @@ mappings:
   RequestHandlingFieldTest_Controller: SilverStripe\Control\Tests\RequestHandlingTest\FieldController
   RequestHandlingTest_HandlingField: SilverStripe\Control\Tests\RequestHandlingTest\HandlingField
   SessionTest: SilverStripe\Control\Tests\SessionTest
-  CacheTest: SilverStripe\Core\Tests\CacheTest
+  CacheTest: SilverStripe\Core\Tests\Cache\CacheTest
   ClassInfoTest: SilverStripe\Core\Tests\ClassInfoTest
   ClassInfoTest_BaseClass: SilverStripe\Core\Tests\ClassInfoTest\BaseClass
   ClassInfoTest_ChildClass: SilverStripe\Core\Tests\ClassInfoTest\ChildClass
@@ -559,7 +511,7 @@ mappings:
   PhpSyntaxTest: SilverStripe\Core\Tests\PhpSyntaxTest
   BacktraceTest: SilverStripe\Dev\Tests\BacktraceTest
   BulkLoaderResultTest: SilverStripe\Dev\Tests\BulkLoaderResultTest
-  BulkLoaderTestPlayer: SilverStripe\Dev\Tests\BulkLoaderResultTest\BulkLoaderTestPlayer
+  BulkLoaderTestPlayer: SilverStripe\Dev\Tests\BulkLoaderResultTest\Player
   CSSContentParserTest: SilverStripe\Dev\Tests\CSSContentParserTest
   CsvBulkLoaderTest: SilverStripe\Dev\Tests\CsvBulkLoaderTest
   CsvBulkLoaderTest_CustomLoader: SilverStripe\Dev\Tests\CsvBulkLoaderTest\CustomLoader
@@ -574,7 +526,7 @@ mappings:
   FixtureBlueprintTest: SilverStripe\Dev\Tests\FixtureBlueprintTest
   FixtureBlueprintTest_SiteTree: SilverStripe\Dev\Tests\FixtureBlueprintTest\TestSiteTree
   FixtureBlueprintTest_Page: SilverStripe\Dev\Tests\FixtureBlueprintTest\TestPage
-  FixtureBlueprintTest_Article: SilverStripe\Dev\Tests\FixtureBlueprintTest\TestArticle
+  FixtureBlueprintTest_Article: SilverStripe\Dev\Tests\FixtureBlueprintTest\Article
   FixtureFactoryTest: SilverStripe\Dev\Tests\FixtureFactoryTest
   FixtureFactoryTest_DataObject: SilverStripe\Dev\Tests\FixtureFactoryTest\TestDataObject
   FixtureFactoryTest_DataObjectRelation: SilverStripe\Dev\Tests\FixtureFactoryTest\DataObjectRelation
@@ -597,14 +549,13 @@ mappings:
   ConfirmedPasswordFieldTest: SilverStripe\Forms\Tests\ConfirmedPasswordFieldTest
   CurrencyFieldTest: SilverStripe\Forms\Tests\CurrencyFieldTest
   DateFieldTest: SilverStripe\Forms\Tests\DateFieldTest
-  DateFieldViewJQueryTest: SilverStripe\Forms\Tests\DateFieldViewJQueryTest
   DatetimeFieldTest: SilverStripe\Forms\Tests\DatetimeFieldTest
   DatetimeFieldTest_Model: SilverStripe\Forms\Tests\DatetimeFieldTest\Model
   DropdownFieldTest: SilverStripe\Forms\Tests\DropdownFieldTest
   EmailFieldTest: SilverStripe\Forms\Tests\EmailFieldTest
   EmailFieldTest_Validator: SilverStripe\Forms\Tests\EmailFieldTest\TestValidator
   EmailFieldTest_Controller: SilverStripe\Forms\Tests\EmailFieldTest\TestController
-  EmbedShortcodeProviderTest: SilverStripe\Forms\Tests\EmbedShortcodeProviderTest
+  EmbedShortcodeProviderTest: SilverStripe\View\Tests\Shortcodes\EmbedShortcodeProviderTest
   EnumFieldTest: SilverStripe\Forms\Tests\EnumFieldTest
   FieldGroupTest: SilverStripe\Forms\Tests\FieldGroupTest
   FieldListTest: SilverStripe\Forms\Tests\FieldListTest
@@ -639,8 +590,6 @@ mappings:
   ListboxFieldTest_Article: SilverStripe\Forms\Tests\ListboxFieldTest\Article
   ListboxFieldTest_Tag: SilverStripe\Forms\Tests\ListboxFieldTest\Tag
   LookupFieldTest: SilverStripe\Forms\Tests\LookupFieldTest
-  MemberDatetimeOptionsetFieldTest: SilverStripe\Forms\Tests\MemberDatetimeOptionsetFieldTest
-  MemberDatetimeOptionsetFieldTest_Controller: SilverStripe\Forms\Tests\MemberDatetimeOptionsetFieldTest_Controller
   MoneyFieldTest: SilverStripe\Forms\Tests\MoneyFieldTest
   MoneyFieldTest_Object: SilverStripe\Forms\Tests\MoneyFieldTest\TestObject
   MoneyFieldTest_CustomSetter_Object: SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object
@@ -656,10 +605,8 @@ mappings:
   TimeFieldTest: SilverStripe\Forms\Tests\TimeFieldTest
   TreeDropdownFieldTest: SilverStripe\Forms\Tests\TreeDropdownFieldTest
   i18nTest: SilverStripe\i18n\Tests\i18nTest
-  i18nTest_DataObject: SilverStripe\i18n\Tests\i18Test\TestDataObject
-  i18nTest_Object: SilverStripe\i18n\Tests\i18Test\TestObject
-  i18nTest_CustomTranslatorAdapter: SilverStripe\i18n\Tests\i18nTest\CustomTranslatorAdapter
-  i18nTest_OtherCustomTranslatorAdapter: SilverStripe\i18n\Tests\i18Test\OtherCustomTranslatorAdapter
+  i18nTest_DataObject: SilverStripe\i18n\Tests\i18nTest\TestDataObject
+  i18nTest_Object: SilverStripe\i18n\Tests\i18nTest\TestObject
   i18nTextCollectorTest: SilverStripe\i18n\Tests\i18nTextCollectorTest
   i18nTextCollectorTest_Collector: SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector
   ArrayLibTest: SilverStripe\ORM\Tests\ArrayLibTest
@@ -703,8 +650,6 @@ mappings:
   DataObjectDuplicateTestClass2: SilverStripe\ORM\Tests\DataObjectDuplicationTest\Class2
   DataObjectDuplicateTestClass3: SilverStripe\ORM\Tests\DataObjectDuplicationTest\Class3
   DataObjectLazyLoadingTest: SilverStripe\ORM\Tests\DataObjectLazyLoadingTest
-  VersionedLazy_DataObject: SilverStripe\Versioned\Tests\VersionedDataObjectLazyLoadingTest\VersionedObject
-  VersionedLazySub_DataObject: SilverStripe\Versioned\Tests\VersionedDataObjectLazyLoadingTest\VersionedSubObject
   DataObjectSchemaGenerationTest: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest
   DataObjectSchemaGenerationTest_DO: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject
   DataObjectSchemaGenerationTest_IndexDO: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject
@@ -761,11 +706,11 @@ mappings:
   DBDatetimeTest: SilverStripe\ORM\Tests\DBDatetimeTest
   DBFieldTest: SilverStripe\ORM\Tests\DBFieldTest
   DBHTMLTextTest: SilverStripe\ORM\Tests\DBHTMLTextTest
-  DBHTMLTextTest_Shortcode: SilverStripe\ORM\Tests\DBHTMLTextTest\Shortcode
+  DBHTMLTextTest_Shortcode: SilverStripe\ORM\Tests\DBHTMLTextTest\TestShortcode
   DBLocaleTest: SilverStripe\ORM\Tests\DBLocaleTest
   DBMoneyTest: SilverStripe\ORM\Tests\DBMoneyTest
-  MoneyTest_DataObject: SilverStripe\ORM\Tests\MoneyTest\TestObject
-  MoneyTest_SubClass: SilverStripe\ORM\Tests\MoneyTest\TestObjectSubclass
+  MoneyTest_DataObject: SilverStripe\ORM\Tests\DBMoneyTest\TestObject
+  MoneyTest_SubClass: SilverStripe\ORM\Tests\DBMoneyTest\TestObjectSubclass
   DBPercentageTest: SilverStripe\ORM\Tests\DBPercentageTest
   DBStringTest: SilverStripe\ORM\Tests\DBStringTest
   StringFieldTest_MyStringField: SilverStripe\ORM\Tests\DBStringTest\MyStringField
@@ -779,7 +724,7 @@ mappings:
   HierarchyTest: SilverStripe\ORM\Tests\HierarchyTest
   HierarchyTest_Object: SilverStripe\ORM\Tests\HierarchyTest\TestObject
   HierarchyHideTest_Object: SilverStripe\ORM\Tests\HierarchyTest\HideTestObject
-  HierarchyHideTest_SubObject: SilverStripe\ORM\Tests\HierarchyHideTest\HideTestSubObject
+  HierarchyHideTest_SubObject: SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject
   LabelFieldTest: SilverStripe\ORM\Tests\LabelFieldTest
   ManyManyListExtensionTest: SilverStripe\ORM\Tests\ManyManyListExtensionTest
   ManyManyListTest_IndirectPrimary: SilverStripe\ORM\Tests\ManyManyListTest\IndirectPrimary
@@ -812,7 +757,7 @@ mappings:
   SQLUpdateTest: SilverStripe\ORM\Tests\SQLUpdateTest
   SQLUpdateTestBase: SilverStripe\ORM\Tests\SQLUpdateTest\TestBase
   SQLUpdateChild: SilverStripe\ORM\Tests\SQLUpdateTest\TestChild
-  TimeTest: SilverStripe\ORM\Tests\TimeTest
+  TimeTest: SilverStripe\ORM\Tests\DBTimeTest
   TransactionTest: SilverStripe\ORM\Tests\TransactionTest
   TransactionTest_Object: SilverStripe\ORM\Tests\TransactionTest\TestObject
   UnsavedRelationListTest: SilverStripe\ORM\Tests\UnsavedRelationListTest
@@ -892,7 +837,7 @@ mappings:
   ViewableDataTest: SilverStripe\View\Tests\ViewableDataTest
   ViewableDataTest_Castable: SilverStripe\View\Tests\ViewableDataTest\Castable
   ViewableDataTest_RequiresCasting: SilverStripe\View\Tests\ViewableDataTest\RequiresCasting
-  ViewableData_UnescaptedCaster: SilverStripe\View\Tests\ViewableDataTest\UnescaptedCaster
+  ViewableData_UnescaptedCaster: SilverStripe\View\Tests\ViewableDataTest\UnescapedCaster
   ViewableData_Caster: SilverStripe\View\Tests\ViewableDataTest\Caster
   ViewableDataTest_Container: SilverStripe\View\Tests\ViewableDataTest\Container
   ViewableDataTest_CastingClass: SilverStripe\View\Tests\ViewableDataTest\CastingClass
@@ -911,7 +856,7 @@ mappings:
   GridFieldConfigTest_MyOtherComponent: SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyOtherComponent
   GridFieldDataColumnsTest: SilverStripe\Forms\Tests\GridField\GridFieldDataColumnsTest
   GridFieldDeleteActionTest: SilverStripe\Forms\Tests\GridField\GridFieldDeleteActionTest
-  GridFieldAction_Delete_Team: SilverStripe\Forms\Tests\GridField\GridFieldDeleteActionTest\GridFieldAction_Delete_Team
+  GridFieldAction_Delete_Team: SilverStripe\Forms\Tests\GridField\GridFieldTest\Team
   GridFieldDetailFormTest: SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest
   GridFieldDetailFormTest_Person: SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person
   GridFieldDetailFormTest_PeopleGroup: SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup
@@ -921,7 +866,7 @@ mappings:
   GridFieldDetailFormTest_CategoryController: SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController
   GridFieldDetailFormTest_ItemRequest: SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\ItemRequest
   GridFieldEditButtonTest: SilverStripe\Forms\Tests\GridField\GridFieldEditButtonTest
-  GridFieldAction_Edit_Team: SilverStripe\Forms\Tests\GridField\GridFieldAction_Edit_Team
+  GridFieldAction_Edit_Team: SilverStripe\Forms\Tests\GridField\GridFieldTest\Team
   GridFieldExportButtonTest: SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest
   GridFieldExportButtonTest_Team: SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team
   GridFieldExportButtonTest_NoView: SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView
@@ -953,13 +898,13 @@ mappings:
   SearchFilterApplyRelationTest_DO: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\TestObject
   SearchFilterApplyRelationTest_HasOneParent: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneParent
   SearchFilterApplyRelationTest_HasOneChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneChild
-  SearchFilterApplyRelationTest_HasOneGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneGrantChild
+  SearchFilterApplyRelationTest_HasOneGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasOneGrandChild
   SearchFilterApplyRelationTest_HasManyParent: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyParent
   SearchFilterApplyRelationTest_HasManyChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyChild
-  SearchFilterApplyRelationTest_HasManyGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrantChild
+  SearchFilterApplyRelationTest_HasManyGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\HasManyGrandChild
   SearchFilterApplyRelationTest_ManyManyParent: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyParent
   SearchFilterApplyRelationTest_ManyManyChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyChild
-  SearchFilterApplyRelationTest_ManyManyGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrantChild
+  SearchFilterApplyRelationTest_ManyManyGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\ManyManyGrandChild
   RSSFeedTest: SilverStripe\Control\Tests\RSS\RSSFeedTest
   RSSFeedTest_ItemA: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemA
   RSSFeedTest_ItemB: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemB
@@ -967,16 +912,12 @@ mappings:
   RSSFeedTest_ItemD: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemD
   ClassLoaderTest: SilverStripe\Core\Tests\Manifest\ClassLoaderTest
   ClassManifestTest: SilverStripe\Core\Tests\Manifest\ClassManifestTest
-  ConfigManifestTest_ConfigManifestAccess: SilverStripe\Core\Tests\Manifest\ConfigManifestTest\ConfigManifestAccess
   ConfigManifestTest: SilverStripe\Core\Tests\Manifest\ConfigManifestTest
-  ConfigStaticManifestTest: SilverStripe\Core\Tests\Manifest\ConfigStaticManifestTest
   ManifestFileFinderTest: SilverStripe\Core\Tests\Manifest\ManifestFileFinderTest
   NamespacedClassManifestTest: SilverStripe\Core\Tests\Manifest\NamespacedClassManifestTest
   ThemeResourceLoaderTest: SilverStripe\Core\Tests\Manifest\ThemeResourceLoaderTest
-  TokenisedRegularExpressionTest: SilverStripe\Core\Tests\Manifest\TokenisedRegularExpressionTest
   EmailTest: SilverStripe\Control\Tests\Email\EmailTest
-  EmailTest_Mailer: SilverStripe\Control\Tests\Email\EmailTest\TestMailer
-  MailerTest: SilverStripe\Control\Tests\Email\MailerTest
+  MailerTest: SilverStripe\Control\Tests\Email\SwiftMailerTest
   ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTest_Chain
   ErrorControlChainTest: SilverStripe\Core\Tests\Startup\ErrorControlChainTest
   ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token
@@ -995,21 +936,24 @@ mappings:
   ConfigStaticTest_Combined3: SilverStripe\Core\Tests\Config\ConfigTest\Combined3
   ConfigTest_TestNest: SilverStripe\Core\Tests\Config\ConfigTest\TestNest
   ConfigTest: SilverStripe\Core\Tests\Config\ConfigTest
-  ConfigTest_Config_MemCache: SilverStripe\Core\Tests\Config\ConfigTest\ConfigTestMemCache
   Page_Controller: PageController
   Boolean: SilverStripe\ORM\FieldType\DBBoolean
-  ChangePasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
-  CheckboxSetField_ss: SilverStripe\Forms\CheckboxSetField_ss
   Date: SilverStripe\ORM\FieldType\DBDate
   Enum: SilverStripe\ORM\FieldType\DBEnum
-  ForgotPasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
   GridAction: SilverStripe\Forms\GridField\GridFieldDeleteAction
   GridFieldAction_Delete: SilverStripe\Forms\GridField\GridFieldDeleteAction
-  GridFieldEditButton_ss: SilverStripe\Forms\GridField\GridFieldEditButton_ss
   TableListField: SilverStripe\Forms\GridField\GridField
   TableListField_PageControls_ss: SilverStripe\Forms\GridField\GridField
   UploadField: SilverStripe\AssetAdmin\Forms\UploadField
   Pagination: SilverStripe\Forms\GridField\GridField
+  # Note: These should be substituted with the given service aliases in injector yml config
+  DebugViewFriendlyErrorFormatter: SilverStripe\Logging\DebugViewFriendlyErrorFormatter # Monolog\Formatter\FormatterInterface.friendly
+  DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter # Monolog\Formatter\FormatterInterface.detailed
+  # Template-only i18n substitutions (non-class)
+  ChangePasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
+  CheckboxSetField_ss: SilverStripe\Forms\CheckboxSetField_ss
+  ForgotPasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
+  GridFieldEditButton_ss: SilverStripe\Forms\GridField\GridFieldEditButton_ss
 skipYML:
   - MySQLPDODatabase
   - MySQLDatabase
