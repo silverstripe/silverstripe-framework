@@ -1,22 +1,22 @@
 km:
   SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'ផ្លាស់ប្តូរពាក្យសំងាត់'
+    SHOWONCLICKTITLE: ផ្លាស់ប្តូរពាក្យសំងាត់
   SilverStripe\Forms\DropdownField:
     CHOOSE: (ជ្រើសរើស)
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'ទទេ'
+    IsNullLabel: ទទេ
   SilverStripe\Security\Group:
-    Code: 'លេខកូដក្រុម'
+    Code: លេខកូដក្រុម
     Locked: 'មិនអាចប្រើ'
     Parent: 'ចំណាត់ក្រុមដើម'
     has_many_Permissions: ការអនុញ្ញាតិ្ត
     many_many_Members: សមាជិក
   SilverStripe\Security\Member:
     EMAIL: អ៊ីម៉េល
-    INTERFACELANG: 'ភាសាប្រើសំរាប់ទំព័រមុខ'
-    SUBJECTPASSWORDCHANGED: 'ពាក្យសំងាត់របស់អ្នកបានផ្លាស់ប្តូរ'
-    SUBJECTPASSWORDRESET: 'លីងសំរាប់ប្តូរពាក្យសំងាត់របស់អ្នក'
-    belongs_many_many_Groups: ចំណាត់ក្រុម
+    INTERFACELANG: ភាសាប្រើសំរាប់ទំព័រមុខ
+    SUBJECTPASSWORDCHANGED: ពាក្យសំងាត់របស់អ្នកបានផ្លាស់ប្តូរ
+    SUBJECTPASSWORDRESET: លីងសំរាប់ប្តូរពាក្យសំងាត់របស់អ្នក
+    belongs_many_many_Groups: 'ចំណាត់ក្រុម'
     db_LockedOutUntil: 'ដោះចេញរហូតដល់'
     db_PasswordExpiry: 'កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់'
   SilverStripe\Security\Security:

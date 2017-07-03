@@ -2,8 +2,8 @@ id:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Permintaan tidak valid'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Tidak'
-    YESANSWER: 'Ya'
+    NOANSWER: Tidak
+    YESANSWER: Ya
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Kata kunci harus setidaknya terdiri dari {min} karakter.'
     BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
@@ -13,7 +13,7 @@ id:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'tidak diatur'
-    TODAY: hari ini
+    TODAY: 'hari ini'
     VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
     VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
@@ -31,7 +31,7 @@ id:
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
   SilverStripe\Forms\FormField:
-    NONE: tidak ada
+    NONE: 'tidak ada'
   SilverStripe\Forms\GridField\GridField:
     Add: 'Tambah {name}'
     CSVEXPORT: 'Ekspor ke CSV'
@@ -65,9 +65,9 @@ id:
     EDIT: Edit
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Jumlah
-    FIELDLABELCURRENCY: Mata Uang
+    FIELDLABELCURRENCY: 'Mata Uang'
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'N/A'
+    IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
   SilverStripe\Forms\PhoneNumberField:
@@ -76,8 +76,8 @@ id:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Semua
-    NOANSWER: 'Tidak'
-    YESANSWER: 'Ya'
+    NOANSWER: Tidak
+    YESANSWER: Ya
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'kurang dari semenit'
     TIMEDIFFAGO: '{difference} yang lalu'
@@ -93,7 +93,7 @@ id:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
     BUTTONLOGIN: 'Masuk kembali'
-    BUTTONLOGOUT: 'Keluar'
+    BUTTONLOGOUT: Keluar
     PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
@@ -114,7 +114,7 @@ id:
     NoRoles: 'Tidak ada peran'
     Parent: 'Kelompok Induk'
     RolesAddEditLink: 'Kelola peran'
-    Sort: 'Urutkan'
+    Sort: Urutkan
     has_many_Permissions: Perijinan
     many_many_Members: Pengguna
   SilverStripe\Security\LoginAttempt:
@@ -123,7 +123,7 @@ id:
   SilverStripe\Security\Member:
     ADDGROUP: 'Tambah kelompok'
     BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
-    BUTTONLOGIN: 'Masuk'
+    BUTTONLOGIN: Masuk
     BUTTONLOGINOTHER: 'Masuk dengan akun lain'
     BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
@@ -141,18 +141,18 @@ id:
     LOGGEDINAS: 'Anda masuk sebagai {name}.'
     NEWPASSWORD: 'Kata Kunci Baru'
     NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
-    PASSWORD: Kata kunci
+    PASSWORD: 'Kata kunci'
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
     SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
-    SURNAME: Nama Belakang
+    SURNAME: 'Nama Belakang'
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
     WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
     YOUROLDPASSWORD: 'Kata kunci lama'
     belongs_many_many_Groups: Kelompok
     db_Locale: 'Lokal Antarmuka'
     db_LockedOutUntil: 'Kunci sampai'
-    db_Password: Kata kunci
+    db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
@@ -181,7 +181,7 @@ id:
     CHANGEPASSWORDHEADER: 'Ganti kata kunci'
     ENTERNEWPASSWORD: 'Mohon isikan kata kunci yang baru.'
     ERRORPASSWORDPERMISSION: 'Anda harus masuk untuk bisa mengganti kata kunci!'
-    LOGIN: 'Masuk'
+    LOGIN: Masuk
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
     NOTERESETLINKINVALID: '<p>Tautan penggantian kata kunci tidak valid atau sudah kadaluarsa.</p><p>Anda dapat meminta yang baru <a href="{link1}">di sini</a> atau mengganti kata kunci setelah Anda <a href="{link2}">masuk</a>.</p>'

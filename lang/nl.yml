@@ -2,8 +2,8 @@ nl:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Fout bij verwerken'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Geen keuze mogelijk'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -40,7 +40,7 @@ nl:
     CSVEXPORT: 'Exporteer naar CSV'
     CSVIMPORT: 'CSV importeren'
     Filter: Filter
-    FilterBy: 'Filteren'
+    FilterBy: Filteren
     Find: Zoeken
     LinkExisting: 'Koppel een bestaand item'
     NewRecord: 'Nieuw %s'
@@ -80,8 +80,8 @@ nl:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Elke
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'minder dan één minuut'
     TIMEDIFFAGO: '{difference} geleden'
@@ -91,7 +91,7 @@ nl:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Validatiefout'
+    DEFAULT_ERROR: Validatiefout
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Voer een gebruikersnaam en wachtwoord in.'
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
@@ -99,7 +99,7 @@ nl:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten?'
     BUTTONLOGIN: 'Opnieuw inloggen'
-    BUTTONLOGOUT: 'Uitloggen'
+    BUTTONLOGOUT: Uitloggen
     PASSWORDEXPIRED: '<p>Uw wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
@@ -120,7 +120,7 @@ nl:
     NoRoles: 'Geen rollen gevonden'
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Rollen beheren'
-    Sort: 'Sorteer-richting'
+    Sort: Sorteer-richting
     has_many_Permissions: Rechten
     many_many_Members: Leden
   SilverStripe\Security\LoginAttempt:
@@ -129,7 +129,7 @@ nl:
   SilverStripe\Security\Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
-    BUTTONLOGIN: 'Inloggen'
+    BUTTONLOGIN: Inloggen
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
@@ -142,7 +142,7 @@ nl:
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord kom niet overeen, probeer het nogmaals'
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
-    FIRSTNAME: 'Voornaam'
+    FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
@@ -166,7 +166,7 @@ nl:
     TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
   SilverStripe\Security\Permission:
     AdminGroup: Beheerder
-    CONTENT_CATEGORY: 'Inhoudsrechten'
+    CONTENT_CATEGORY: Inhoudsrechten
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'

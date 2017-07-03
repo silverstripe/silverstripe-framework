@@ -2,30 +2,30 @@ sk:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nie'
-    YESANSWER: 'Áno'
+    NOANSWER: Nie
+    YESANSWER: Áno
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Heslá musia byť nejmenej {min} znakov dlhé.'
     BETWEEN: 'Heslá musia byť {min} až {max} znakov dlhé.'
-    CURRENT_PASSWORD_ERROR: 'Vaše terajšie heslo, ktore ste zadali nie je správne.'
-    CURRENT_PASSWORD_MISSING: 'Musíte zadat vaše terajšie heslo.'
+    CURRENT_PASSWORD_ERROR: 'Vaše terajšie heslo, ktoré ste zadali, nie je správne.'
+    CURRENT_PASSWORD_MISSING: 'Musíte zadať vaše terajšie heslo.'
     LOGGED_IN_ERROR: 'Pre zmenu vášho hesla musíte byť prihlásený.'
     MAXIMUM: 'Heslá musia byť najviac {max} znakov dlhé.'
     SHOWONCLICKTITLE: 'Zmeniť heslo'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'nezadané'
+    NOTSET: nezadané
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
   SilverStripe\Forms\DropdownField:
-    CHOOSE: (Vyberte si)
+    CHOOSE: '(Vyberte si)'
     CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
-    VALIDATION: 'Prosím zadajte email adresu'
+    VALIDATION: 'Prosím zadajte platnú e-mailovú adresu'
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Čas Vášho sedenia vypršal. Prosím znova odošlite formulár.'
     CSRF_FAILED_MESSAGE: 'Zdá sa, že nastal technický problém. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste to opäť.'
@@ -48,7 +48,7 @@ sk:
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Vytlačené v'
-    PRINTEDBY: 'Vytlačené'
+    PRINTEDBY: Vytlačené
     PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     Print: Tlačiť
@@ -86,7 +86,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: Šírka
+    IMAGEWIDTHPX: 'Šírka'
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Iba absolutné url môžu byť zabudované'
@@ -113,8 +113,8 @@ sk:
     SINGULARNAME: 'Dátový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ktorýkoľvek
-    NOANSWER: 'Nie'
-    YESANSWER: 'Áno'
+    NOANSWER: Nie
+    YESANSWER: Áno
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'menej ako minúta'
     TIMEDIFFAGO: '{difference} pred'
@@ -181,7 +181,7 @@ sk:
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
-    FIRSTNAME: 'Meno'
+    FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
     KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
@@ -238,7 +238,7 @@ sk:
     CHANGEPASSWORDHEADER: 'Zmeniť heslo'
     ENTERNEWPASSWORD: 'Prosím zadajte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
-    LOGIN: 'Prihlásiť'
+    LOGIN: Prihlásiť
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je vypršala jeho platnosť.</p><p>Môžete požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo po <a href="{link2}">prihlásení</a>.</p>'

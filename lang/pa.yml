@@ -1,6 +1,6 @@
 pa:
   SilverStripe\Forms\DropdownField:
-    CHOOSE: ( ਚੁਣੋ )
+    CHOOSE: '( ਚੁਣੋ )'
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
