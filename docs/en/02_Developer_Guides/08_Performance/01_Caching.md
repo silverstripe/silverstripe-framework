@@ -8,10 +8,10 @@ By default, the storage mechanism chooses the most performant adapter available
 
 The most common caches are manifests of various resources: 
 
- * PHP class locations ([api:ClassManifest])
- * Template file locations and compiled templates ([api:SS_TemplateManifest])
- * Configuration settings from YAML files ([api:ConfigManifest])
- * Language files ([api:i18n])
+ * PHP class locations ([ClassManifest](api:SilverStripe\Core\Manifest\ClassManifest))
+ * Template file locations and compiled templates ([SS_TemplateManifest](api:SS_TemplateManifest))
+ * Configuration settings from YAML files ([ConfigManifest](api:ConfigManifest))
+ * Language files ([i18n](api:SilverStripe\i18n\i18n))
 
 Flushing the various manifests is performed through a GET
 parameter (`flush=1`). Since this action requires more server resources than normal requests,

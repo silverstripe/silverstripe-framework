@@ -3,10 +3,10 @@ summary: Learn how how data is stored going in and coming out of the ORM and how
 
 # Data Types and Casting
 
-Each model in a SilverStripe [api:DataObject] will handle data at some point. This includes database columns such as 
+Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [api:DBField] subclass. The class is responsible for telling the ORM 
+A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -28,21 +28,21 @@ In the `Player` example, we have four database columns each with a different dat
 
 ## Available Types
 
-*  [api:Boolean]: A boolean field.
-*  [api:Currency]: A number with 2 decimal points of precision, designed to store currency values.
-*  [api:Date]: A date field
-*  [api:Decimal]: A decimal number.
-*  [api:Enum]: An enumeration of a set of strings
-*  [api:HTMLText]: A variable-length string of up to 2MB, designed to store HTML
-*  [api:HTMLVarchar]: A variable-length string of up to 255 characters, designed to store HTML
-*  [api:Int]: An integer field.
-*  [api:Percentage]: A decimal number between 0 and 1 that represents a percentage.
-*  [api:SS_Datetime]: A date / time field
-*  [api:Text]: A variable-length string of up to 2MB, designed to store raw text
-*  [api:Time]: A time field
-*  [api:Varchar]: A variable-length string of up to 255 characters, designed to store raw text.
+*  [DBBoolean](api:SilverStripe\ORM\FieldType\DBBoolean): A boolean field.
+*  [DBCurrency](api:SilverStripe\ORM\FieldType\DBCurrency): A number with 2 decimal points of precision, designed to store currency values.
+*  [DBDate](api:SilverStripe\ORM\FieldType\DBDate): A date field
+*  [DBDecimal](api:SilverStripe\ORM\FieldType\DBDecimal): A decimal number.
+*  [DBEnum](api:SilverStripe\ORM\FieldType\DBEnum): An enumeration of a set of strings
+*  [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText): A variable-length string of up to 2MB, designed to store HTML
+*  [DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar): A variable-length string of up to 255 characters, designed to store HTML
+*  [DBInt](api:SilverStripe\ORM\FieldType\DBInt): An integer field.
+*  [DBPercentage](api:SilverStripe\ORM\FieldType\DBPercentage): A decimal number between 0 and 1 that represents a percentage.
+*  [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime): A date / time field
+*  [DBText](api:SilverStripe\ORM\FieldType\DBText): A variable-length string of up to 2MB, designed to store raw text
+*  [DBTime](api:SilverStripe\ORM\FieldType\DBTime): A time field
+*  [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar): A variable-length string of up to 255 characters, designed to store raw text.
 
-See the [API documentation](api:DBField) for a full list of available Data Types. You can define your own [api:DBField] instances if required as well. 
+See the [API documentation](api:SilverStripe\ORM\FieldType\DBField) for a full list of available Data Types. You can define your own [DBField](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
 
 ## Default Values
 
@@ -98,7 +98,7 @@ For example:
 The Data Type does more than setup the correct database schema. They can also define methods and formatting helpers for
 output. You can manually create instances of a Data Type and pass it through to the template. 
 
-If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [api:Varchar]
+If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
 **mysite/code/Player.php**
@@ -148,7 +148,7 @@ Rather than manually returning objects from your custom functions. You can use t
 	}
 
 The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
-instance of the [api:DBField] class, providing additional helpers. For example, a string can be cast as a [api:Text] 
+instance of the [DBField](api:SilverStripe\ORM\FieldType\DBField) class, providing additional helpers. For example, a string can be cast as a [DBText](api:SilverStripe\ORM\FieldType\DBText) 
 type, which has a `FirstSentence()` method to retrieve the first sentence in a longer piece of text.
 
 On the most basic level, the class can be used as simple conversion class from one value to another, e.g. to round a 
@@ -157,7 +157,7 @@ number.
 	:::php
 	DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 
-Of course that's much more verbose than the equivalent PHP call. The power of [api:DBField] comes with its more 
+Of course that's much more verbose than the equivalent PHP call. The power of [DBField](api:SilverStripe\ORM\FieldType\DBField) comes with its more 
 sophisticated helpers, like showing the time difference to the current date:
 
 	:::php
@@ -165,7 +165,7 @@ sophisticated helpers, like showing the time difference to the current date:
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [api:ViewableData], which means they know how to present themselves in a view 
+Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 	:::php
@@ -191,7 +191,7 @@ context. Through a `$casting` array, arbitrary properties and getters can be cas
 
 ## Casting HTML Text
 
-The database field types [api:HTMLVarchar]/[api:HTMLText] and [api:Varchar]/[api:Text] are exactly the same in 
+The database field types [DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar)/[DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText) and [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)/[DBText](api:SilverStripe\ORM\FieldType\DBText) are exactly the same in 
 the database.  However, the template engine knows to escape fields without the `HTML` prefix automatically in templates,
 to prevent them from rendering HTML interpreted by browsers. This escaping prevents attacks like CSRF or XSS (see 
 "[security](../security)"), which is important if these fields store user-provided data.
@@ -200,7 +200,7 @@ See the [Template casting](/developer_guides/templates/casting) section for cont
 
 ## Overloading
 
-"Getters" and "Setters" are functions that help us save fields to our [api:DataObject] instances. By default, the 
+"Getters" and "Setters" are functions that help us save fields to our [DataObject](api:SilverStripe\ORM\DataObject) instances. By default, the 
 methods `getField()` and `setField()` are used to set column data.  They save to the protected array, `$obj->record`. 
 We can overload the default behavior by making a function called "get`<fieldname>`" or "set`<fieldname>`".
 
@@ -223,5 +223,5 @@ database column using `dbObject`.
 
 ## API Documentation
 
-* [api:DataObject]
-* [api:DBField]
+* [DataObject](api:SilverStripe\ORM\DataObject)
+* [DBField](api:SilverStripe\ORM\FieldType\DBField)

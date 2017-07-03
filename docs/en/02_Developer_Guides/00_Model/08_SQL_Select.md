@@ -82,7 +82,7 @@ E.g.
 		echo $row['BirthYear'];
 	}
 
-The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [api:SS_Query]. 
+The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [Query](api:SilverStripe\ORM\Connect\Query). 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
 ### DELETE
@@ -275,8 +275,8 @@ An alternative approach would be a custom getter in the object definition.
 
 ## API Documentation
 
-* [api:DataObject]
-* [api:SQLSelect]
-* [api:DB]
-* [api:Query]
-* [api:Database]
+* [DataObject](api:SilverStripe\ORM\DataObject)
+* [SQLSelect](api:SilverStripe\ORM\Queries\SQLSelect)
+* [DB](api:SilverStripe\ORM\DB)
+* [Query](api:SilverStripe\ORM\Connect\Query)
+* [Database](api:SilverStripe\ORM\Connect\Database)

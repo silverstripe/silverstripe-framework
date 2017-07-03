@@ -9,7 +9,7 @@ This tutorial is deprecated, and has been replaced by Lessons 7, 8, 9, and 10 in
 
 ## Overview
 
-This tutorial explores the relationship and management of [DataObjects](api:DataObject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
+This tutorial explores the relationship and management of [DataObjects](api:SilverStripe\ORM\DataObject). It builds on the [second tutorial](/tutorials/extending_a_basic_site) where we learnt how to define
 additional fields on our models, and attach images to them.
 
 ## What are we working towards?
@@ -205,7 +205,7 @@ It's empty by default, but you can add new students as required,
 or relate them to the project by typing in the box above the table.
 
 In our case, we want to manage those records, edit their details, and add new ones. 
-To accomplish this, we have added a specific [api:GridFieldConfig].
+To accomplish this, we have added a specific [GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig).
 While we could've built the config from scratch, there's several
 preconfigured instances. The `GridFieldConfig_RecordEditor` default configures
 the field to edit records, rather than just viewing them.
@@ -502,4 +502,4 @@ we suggest some excercises to make the solution more flexible:
    and avoid any duplication between the two subclasses.
  * Render mentor details in their own template
  * Change the `GridField` to list only five records per page (the default is 20).
-   This configuration is stored in the [api:GridFieldPaginator] component
+   This configuration is stored in the [GridFieldPaginator](api:SilverStripe\Forms\GridField\GridFieldPaginator) component

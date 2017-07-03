@@ -5,7 +5,7 @@ summary: How to include and require other assets in your templates such as javas
 
 The requirements class takes care of including CSS and JavaScript into your applications. This is preferred to hard 
 coding any references in the `<head>` tag of your template, as it enables a more flexible handling through the 
-[api:Requirements] class.
+[Requirements](api:SilverStripe\View\Requirements) class.
 
 The examples below are using certain folder naming conventions (CSS files in `css/`, JavaScript files in `javascript/`).
 SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
@@ -27,7 +27,7 @@ Requiring assets from the template is restricted compared to the PHP API.
 ## PHP Requirements API
 
 It is common practice to include most Requirements either in the *init()*-method of your [controller](../controllers/), or
-as close to rendering as possible (e.g. in [api:FormField]).
+as close to rendering as possible (e.g. in [FormField](api:SilverStripe\Forms\FormField)).
 
 	:::php
 	<?php
@@ -140,7 +140,7 @@ files in order to ensure that current files are served in requests.
 
 By default, files will be generated on demand in the format `assets/_combinedfiles/name-<hash>.js`,
 where `<hash>` represents the hash of the source files used to generate that content. The default flysystem backend,
-as used by the `[api:AssetStore]` backend, is used for this storage, but it can be substituted for any
+as used by the `[AssetStore](api:SilverStripe\Assets\Storage\AssetStore)` backend, is used for this storage, but it can be substituted for any
 other backend.
 
 You can also use any of the below options in order to tweak this behaviour:
@@ -212,15 +212,15 @@ You can also combine CSS files into a media-specific stylesheets as you would wi
 the third paramter of the `combine_files` function:
 
 ```php
-$loader = ThemeResourceLoader::inst();
-$themes = SSViewer::get_themes();
+$loader = SilverStripe\View\ThemeResourceLoader::inst();
+$themes = SilverStripe\View\SSViewer::get_themes();
 
 $printStylesheets = array(
 	$loader->findThemedCSS('print_HomePage.css', $themes),
 	$loader->findThemedCSS('print_Page.css', $themes)
 );
 
-Requirements::combine_files('print.css', $printStylesheets, 'print');
+SilverStripe\View\Requirements::combine_files('print.css', $printStylesheets, 'print');
 ```
 
 By default, all requirements files are flushed (deleted) when ?flush querystring parameter is set.
@@ -237,15 +237,15 @@ You can also add the 'async' and/or 'defer' attributes to combined Javascript fi
 `Requirements::javascript` call - use the third paramter of the `combine_files` function:
 
 ```php
-$loader = ThemeResourceLoader::inst();
-$themes = SSViewer::get_themes();
+$loader = SilverStripe\View\ThemeResourceLoader::inst();
+$themes = SilverStripe\View\SSViewer::get_themes();
 
 $scripts = array(
     $loader->findThemedJavascript('some_script.js', $themes),
     $loader->findThemedJavascript('some_other_script.js', $themes)
 );
 
-Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
+SilverStripe\View\Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
 ```
 
 ### Minification of CSS and JS files
@@ -353,5 +353,5 @@ If the Javascript files are preferred to be placed in the `<head>` tag rather th
 
 ## API Documentation
 
- * [api:Requirements]
+ * [Requirements](api:SilverStripe\View\Requirements)
  * [CMS Architecture and Build Tooling](/developer_guides/customising_the_admin_interface/cms_architecture)

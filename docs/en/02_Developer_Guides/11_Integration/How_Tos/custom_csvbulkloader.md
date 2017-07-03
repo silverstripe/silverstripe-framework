@@ -99,5 +99,5 @@ Our final import looks like this.
 
 ## Related
 
-*  [api:CsvParser]
-*  [api:ModelAdmin]
+*  [CsvParser](api:SilverStripe\Dev\CsvParser)
+*  [ModelAdmin](api:SilverStripe\Admin\ModelAdmin)

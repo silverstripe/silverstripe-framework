@@ -2,7 +2,7 @@ summary: Send HTML and plain text email from your SilverStripe application.
 
 # Email
 
-Creating and sending email in SilverStripe is done through the [api:Email] and [api:Mailer] classes. This document 
+Creating and sending email in SilverStripe is done through the [Email](api:SilverStripe\Control\Email\Email) and [Mailer](api:SilverStripe\Control\Email\Mailer) classes. This document 
 covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
 
 ## Configuration
@@ -86,7 +86,7 @@ to specify your own own plaintext version/template you can use `$email->setPlain
 the plain email:
 
 ```php
-$email = new Email();
+$email = new SilverStripe\Control\Email\Email();
 $email->setPlainTemplate('MyPlanTemplate');
 $this->send();
 ```
@@ -160,4 +160,4 @@ For further information on SwiftMailer, consult their docs: http://swiftmailer.o
 
 ## API Documentation
 
-* [api:Email]
+* [Email](api:SilverStripe\Control\Email\Email)

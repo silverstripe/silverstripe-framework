@@ -1,13 +1,13 @@
 # Grouping lists of records
 
-The [api:SS_List] class is designed to return a flat list of records.
+The [SS_List](api:SilverStripe\ORM\SS_List) class is designed to return a flat list of records.
 These lists can get quite long, and hard to present on a single list.
 [Pagination](/developer_guides/templates/how_tos/pagination) is one way to solve this problem,
 by splitting up the list into multiple pages.
 
 In this howto, we present an alternative to pagination: 
-Grouping a list by various criteria, through the [api:GroupedList] class.
-This class is a [api:SS_ListDecorator], which means it wraps around a list,
+Grouping a list by various criteria, through the [GroupedList](api:SilverStripe\ORM\GroupedList) class.
+This class is a [ListDecorator](api:SilverStripe\ORM\ListDecorator), which means it wraps around a list,
 adding new functionality. 
 
 It provides a `groupBy()` method, which takes a field name, and breaks up the managed list 
@@ -16,7 +16,7 @@ Similarly, the `GroupedBy()` method builds on this and returns the same data in 
 
 ## Grouping Sets By First Letter
 
-This example deals with breaking up a [api:SS_List] into sub-headings by the first letter.
+This example deals with breaking up a [SS_List](api:SilverStripe\ORM\SS_List) into sub-headings by the first letter.
 
 Let's say you have a set of Module objects, each representing a SilverStripe module, and you want to output a list of
 these in alphabetical order, with each letter as a heading; something like the following list:
@@ -88,7 +88,7 @@ In this case, the `getTitleFirstLetter()` method defined earlier is used to brea
 Grouping a set by month is a very similar process. 
 The only difference would be to sort the records by month name, and
 then create a method on the DataObject that returns the month name, 
-and pass that to the [api:GroupedList::GroupedBy()] call.
+and pass that to the [GroupedList::GroupedBy()](api:SilverStripe\ORM\GroupedList::GroupedBy()) call.
 
 We're reusing our example `Module` object,
 but grouping by its built-in `Created` property instead,
@@ -128,7 +128,7 @@ sorted by month name from January to December. This can be accomplshed by sortin
 	
 	}
 
-The final step is the render this into the template using the [api:GroupedList::GroupedBy()] method.
+The final step is the render this into the template using the [GroupedList::GroupedBy()](api:SilverStripe\ORM\GroupedList::GroupedBy()) method.
 
 	:::ss
 	// Modules list grouped by the Month Posted

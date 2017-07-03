@@ -7,7 +7,7 @@ summary: A set of static methods for manipulating PHP cookies.
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 
 
 SilverStripe uses cookies for remembering users preferences. Application code can modify a users cookies through
-the [api:Cookie] class. This class mostly follows the PHP API.
+the [Cookie](api:SilverStripe\Control\Cookie) class. This class mostly follows the PHP API.
 
 ### set
 
@@ -40,11 +40,11 @@ Clears a given cookie.
 
 ## Cookie_Backend
 
-The [api:Cookie] class manipulates and sets cookies using a [api:Cookie_Backend]. The backend is in charge of the logic
-that fetches, sets and expires cookies. By default we use a [api:CookieJar] backend which uses PHP's 
+The [Cookie](api:SilverStripe\Control\Cookie) class manipulates and sets cookies using a [Cookie_Backend](api:SilverStripe\Control\Cookie_Backend). The backend is in charge of the logic
+that fetches, sets and expires cookies. By default we use a [CookieJar](api:SilverStripe\Control\CookieJar) backend which uses PHP's 
 [setcookie](http://www.php.net/manual/en/function.setcookie.php) function.
 
-The [api:CookieJar] keeps track of cookies that have been set by the current process as well as those that were received
+The [CookieJar](api:SilverStripe\Control\CookieJar) keeps track of cookies that have been set by the current process as well as those that were received
 from the browser.
 
 	:::php
@@ -94,7 +94,7 @@ If you need to implement your own Cookie_Backend you can use the injector system
 	  Cookie_Backend:
 		class: MyCookieJar
 
-To be a valid backend your class must implement the [api:Cookie_Backend] interface.
+To be a valid backend your class must implement the [Cookie_Backend](api:SilverStripe\Control\Cookie_Backend) interface.
 
 ## Advanced Usage
 
@@ -125,6 +125,6 @@ One can also access all of the cookies in one go using the `Cookie_Backend`
 
 ## API Documentation
 
-* [api:Cookie]
-* [api:CookieJar]
-* [api:CookieBackend]
+* [Cookie](api:SilverStripe\Control\Cookie)
+* [CookieJar](api:SilverStripe\Control\CookieJar)
+* [Cookie_Backend](api:SilverStripe\Control\Cookie_Backend)

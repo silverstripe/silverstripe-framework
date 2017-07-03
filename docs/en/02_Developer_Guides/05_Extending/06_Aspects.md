@@ -88,7 +88,7 @@ object that's made use of above.
 	      password: pass
 	      database: write_database
 
-This means that whenever something asks the [api:Injector] for the `WriteMySQLDatabase` object, it'll receive an object 
+This means that whenever something asks the [Injector](api:SilverStripe\Core\Injector\Injector) for the `WriteMySQLDatabase` object, it'll receive an object 
 of type `MySQLDatabase`, configured to point at the 'write_database'.
 
 Next, this should be bound into an instance of the `Aspect` class
@@ -115,7 +115,7 @@ Next, we need to define the database connection that will be used for all non-wr
 	    password: pass
 	    database: read_database
 
-The final piece that ties everything together is the [api:AopProxyService] instance that will be used as the replacement
+The final piece that ties everything together is the [AopProxyService](api:SilverStripe\Core\Injector\AopProxyService) instance that will be used as the replacement
 object when the framework creates the database connection.
 
 **mysite/_config/app.yml**
@@ -191,7 +191,7 @@ code instead of the actual return value of the called method.
 
 ## API Documentation
 
-* [api:AopProxyService]
-* [api:BeforeCallAspect]
-* [api:AfterCallAspect]
-* [api:Injector]
+* [AopProxyService](api:SilverStripe\Core\Injector\AopProxyService)
+* [BeforeCallAspect](api:SilverStripe\Core\Injector\BeforeCallAspect)
+* [AfterCallAspect](api:SilverStripe\Core\Injector\AfterCallAspect)
+* [Injector](api:SilverStripe\Core\Injector\Injector)

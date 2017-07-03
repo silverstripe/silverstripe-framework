@@ -8,7 +8,7 @@ Asset storage is provided out of the box via a [Flysystem](http://flysystem.thep
 However, any class that implements the `AssetStore` interface could be substituted to provide storage backends
 via other mechanisms.
 
-Internally, files are stored as `[api:DBFile]` records on the rows of parent objects. These records are composite fields
+Internally, files are stored as `[DBFile](api:SilverStripe\Assets\Storage\DBFile)` records on the rows of parent objects. These records are composite fields
 which contain sufficient information useful to the configured asset backend in order to store, manage, and 
 publish files. By default this composite field behind this field stores the following details:
 
@@ -98,7 +98,7 @@ The default asset store supports each of these.
 
 ## Getting content from a `DBFile`
 
-When placed into a template (e.g. `$MyFileField`) then `[api:DBFile]` will automatically generate the appropriate
+When placed into a template (e.g. `$MyFileField`) then `[DBFile](api:SilverStripe\Assets\Storage\DBFile)` will automatically generate the appropriate
 template for the file mime type. For images, this will embed an image tag. For documents a download link will be presented.
 
 As with storage, there are also different ways of loading the content (or properties) of the file:
@@ -127,7 +127,7 @@ Each record has the following database fields:
 | `ClassName`    | The class name of the file (e.g. File, Image or Folder).                                                                                             |
 | `Name`         | The 'basename' of the file, or the folder name. For example 'my-image.jpg', or 'images' for a folder.                                                |
 | `Title`        | The optional, human-readable title of the file for display only (doesn't apply to folders).                                                          |
-| `File`         | The `[api:DBFile]` field (see above) which stores the underlying asset content.																		|
+| `File`         | The `[DBFile](api:SilverStripe\Assets\Storage\DBFile)` field (see above) which stores the underlying asset content.																		|
 | `ShowInSearch` | Whether the file should be shown in search results, defaults to '1'. See ["Tutorial 4 - Site Search"](/tutorials/site_search) for enabling search. |
 | `ParentID`     | The ID of the parent Folder that this File/Folder is in. A ParentID of '0' indicates that this is a top level record.								|
 | `OwnerID`      | The ID of the Member that 'owns' the File/Folder (not related to filesystem permissions).                                                            |
@@ -155,6 +155,6 @@ You may also notice the 'Sync files' button (highlighted below). This button all
 
 Files can be managed through forms in one way:
 
- * [api:FileField]: provides a simple HTML input with a type of "file".
+ * [FileField](api:SilverStripe\Forms\FileField): provides a simple HTML input with a type of "file".
 
 _NOTE_: Modules are also available to handle Files.

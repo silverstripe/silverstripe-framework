@@ -51,7 +51,7 @@ to a lot of development problems.  Here are some specifics situations:
 
 ## A SQL query fails with "Column not found" or "Table not found"
 
-Whenever you change the model definitions in PHP (e.g. when adding a property to the [$db](api:DataObject::$db) array,
+Whenever you change the model definitions in PHP (e.g. when adding a property to the [$db](api:SilverStripe\ORM\DataObject::$db) array,
 creating a new page type), SilverStripe will need to update the database. Visiting `http://localhost/dev/build` in
 your browser runs a script that will check the database schema and update it as necessary.  Putting `?flush=1` on the
 end makes sure that nothing that's linked to the old database structure will be carried over.  If things aren't saving,
@@ -71,7 +71,7 @@ every page on the site, if that's easier.
 
 ## I can see unparsed PHP output in my browser
 
-Please make sure all code inside `*.php` files is wrapped in classes. Due to the way [api:ManifestBuilder]
+Please make sure all code inside `*.php` files is wrapped in classes. Due to the way [ClassManifest](api:SilverStripe\Core\Manifest\ClassManifest)
 includes all files with this extension, any **procedural code will be executed on every call**. The most common error here
 is putting a test.php/phpinfo.php file in the document root. See [datamodel](/developer_guides/model/data_model_and_orm) and [controllers](/developer_guides/controllers)
 for ways how to structure your code.

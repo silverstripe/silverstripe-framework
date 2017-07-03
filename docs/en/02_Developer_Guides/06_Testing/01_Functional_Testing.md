@@ -3,16 +3,16 @@ summary: Test controllers, forms and HTTP responses.
 
 # Functional Testing
 
-[api:FunctionalTest] test your applications `Controller` logic and anything else which requires a web request. The 
+[FunctionalTest](api:SilverStripe\Dev\FunctionalTest) test your applications `Controller` logic and anything else which requires a web request. The 
 core idea of these tests is the same as `SapphireTest` unit tests but `FunctionalTest` adds several methods for 
-creating [api:HTTPRequest], receiving [api:HTTPResponse] objects and modifying the current user session.
+creating [HTTPRequest](api:SilverStripe\Control\HTTPRequest), receiving [HTTPResponse](api:SilverStripe\Control\HTTPResponse) objects and modifying the current user session.
 
 ## Get
 	
 	:::php
 	$page = $this->get($url);
 	
-Performs a GET request on $url and retrieves the [api:HTTPResponse]. This also changes the current page to the value
+Performs a GET request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
 of the response.
 
 ## Post
@@ -20,7 +20,7 @@ of the response.
 	:::php
 	$page = $this->post($url);
 	
-Performs a POST request on $url and retrieves the [api:HTTPResponse]. This also changes the current page to the value
+Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
 of the response.
 
 ## Submit
@@ -28,7 +28,7 @@ of the response.
 	:::php
 	$submit = $this->submitForm($formID, $button = null, $data = array());
 
-Submits the given form (`#ContactForm`) on the current page and returns the [api:HTTPResponse].
+Submits the given form (`#ContactForm`) on the current page and returns the [HTTPResponse](api:SilverStripe\Control\HTTPResponse).
 
 ## LogInAs
 
@@ -103,4 +103,4 @@ assertion fails if one of the expectedMatches fails to appear.
 
 ## API Documentation
 
-* [api:FunctionalTest]
+* [FunctionalTest](api:SilverStripe\Dev\FunctionalTest)

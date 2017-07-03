@@ -2,7 +2,7 @@ title: Embed an RSS Feed
 
 # Embed an RSS Feed
 
-[api:RestfulService] can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 
+[RestfulService](api:RestfulService) can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 
 weather information from the Yahoo Weather API.
 
 First, we write the code to query the API feed.
@@ -39,7 +39,7 @@ First, we write the code to query the API feed.
 		return $output;
 	}
 
-This will provide our `Page` template with a new `WellingtonWeather` variable (an [api:ArrayList]). Each item has a 
+This will provide our `Page` template with a new `WellingtonWeather` variable (an [ArrayList](api:SilverStripe\ORM\ArrayList)). Each item has a 
 single field `Description`.
 
 **mysite/templates/Page.ss**
@@ -54,4 +54,4 @@ single field `Description`.
 ## Related
 
 * [RestfulService Documentation](../restfulservice)
-* [api:RestfulService]
+* [RestfulService](api:RestfulService)

@@ -30,11 +30,11 @@ As we've added a new file, make sure you flush your SilverStripe cache by visiti
 Template inheritance works on more than email templates. All files within the `templates` directory including `includes`, 
 `layout` or anything else from core (or add-on's) template directory can be overridden by being located inside your 
 `mysite/templates` directory. SilverStripe keeps an eye on what templates have been overridden and the location of the
-correct template through a [api:SS_TemplateManifest].
+correct template through a [SS_TemplateManifest](api:SS_TemplateManifest).
 
 ## Template Manifest
 
-The location of each template and the hierarchy of what template to use is stored within a [api:SS_TemplateManifest] 
+The location of each template and the hierarchy of what template to use is stored within a [SS_TemplateManifest](api:SS_TemplateManifest) 
 instance. This is a serialized object containing a map of template names, paths and other meta data for each template 
 and is cached in your applications `TEMP_FOLDER` for performance. For SilverStripe to find the `GenericEmail` template 
 it does not check all your `template` folders on the fly, it simply asks the `manifest`. 

@@ -27,4 +27,4 @@ string wherever `{name}` appears in that string. In this case, it is assigning a
 
 ## API Documentation
 
-* [api:i18n]
+* [i18n](api:SilverStripe\i18n\i18n)

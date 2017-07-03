@@ -3,7 +3,7 @@ summary: Flexible content embedding
 
 # Shortcodes
 
-The [api:ShortcodeParser] API is simple parser that allows you to map specifically formatted content to a callback to 
+The [ShortcodeParser](api:SilverStripe\View\Parsers\ShortcodeParser) API is simple parser that allows you to map specifically formatted content to a callback to 
 transform them into something else. You might know this concept from forum software which don't allow you to insert
 direct HTML, instead resorting to a custom syntax. 
 
@@ -31,9 +31,9 @@ Here's some syntax variations:
 	#
 	[my_shortcode,myparameter="value"]Enclosed Content[/my_shortcode]
 
-Shortcodes are automatically parsed on any database field which is declared as [api:HTMLValue] or [api:HTMLText], 
+Shortcodes are automatically parsed on any database field which is declared as [HTMLValue](api:SilverStripe\View\Parsers\HTMLValue) or [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText), 
 when rendered into a template. This means you can use shortcodes on common fields like `SiteTree.Content`, and any 
-other [api:DataObject::$db] definitions of these types.
+other [DataObject::$db](api:SilverStripe\ORM\DataObject::$db) definitions of these types.
 
 Other fields can be manually parsed with shortcodes through the `parse` method.
 
@@ -104,7 +104,7 @@ Links to internal `File` database records work exactly the same, but with the `[
 ### Images
 
 Images inserted through the "Insert Media" form (WYSIWYG editor) need to retain a relationship with
-the underlying `[api:Image]` database record. The `[image]` shortcode saves this database reference
+the underlying `[Image](api:SilverStripe\Assets\Image)` database record. The `[image]` shortcode saves this database reference
 instead of hard-linking to the filesystem path of a given image.
 
 	[image id="99" alt="My text"]
@@ -229,4 +229,4 @@ The parser will raise an error if it can not find a matching opening tag for any
 
 ## API Documentation
 
- * [api:ShortcodeParser]
+ * [ShortcodeParser](api:SilverStripe\View\Parsers\ShortcodeParser)

@@ -147,5 +147,5 @@ Form actions can also be defined within your `Form` subclass to keep the entire 
 
 ## API Documentation
 
-* [api:Form]
+* [Form](api:SilverStripe\Forms\Form)
 

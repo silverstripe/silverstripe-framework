@@ -7,7 +7,7 @@ core framework, the modules or themes you install, and your own custom templates
 
 SilverStripe templates are simple text files that have `.ss` extension. They can contain any markup language (e.g HTML, 
 XML, JSON..) and are processed to add features such as `$Var` to output variables and logic controls like 
-`<% if $Var %>`. In this guide we'll look at the syntax of the custom template engine [api:SSViewer] and how to render
+`<% if $Var %>`. In this guide we'll look at the syntax of the custom template engine [SSViewer](api:SilverStripe\View\SSViewer) and how to render
 templates from your controllers.
 
 [CHILDREN Exclude=How_Tos]

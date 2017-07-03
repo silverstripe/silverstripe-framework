@@ -6,13 +6,13 @@ summary: Use suffixes on your ORM queries.
 The `filter` and `exclude` operations specify exact matches by default. However, there are a number of suffixes that
 you can put on field names to change this behavior. These are represented as `SearchFilter` subclasses and include.
 
- * [api:StartsWithFilter]
- * [api:EndsWithFilter] 
- * [api:PartialMatchFilter]
- * [api:GreaterThanFilter]
- * [api:GreaterThanOrEqualFilter]
- * [api:LessThanFilter]
- * [api:LessThanOrEqualFilter]
+ * [StartsWithFilter](api:SilverStripe\ORM\Filters\StartsWithFilter)
+ * [EndsWithFilter](api:SilverStripe\ORM\Filters\EndsWithFilter) 
+ * [PartialMatchFilter](api:SilverStripe\ORM\Filters\PartialMatchFilter)
+ * [GreaterThanFilter](api:SilverStripe\ORM\Filters\GreaterThanFilter)
+ * [GreaterThanOrEqualFilter](api:SilverStripe\ORM\Filters\GreaterThanOrEqualFilter)
+ * [LessThanFilter](api:SilverStripe\ORM\Filters\LessThanFilter)
+ * [LessThanOrEqualFilter](api:SilverStripe\ORM\Filters\LessThanOrEqualFilter)
 
 An example of a `SearchFilter` in use:
 	
@@ -29,14 +29,14 @@ An example of a `SearchFilter` in use:
 		'LastName:PartialMatch' => 'z'
 	));
 
-Developers can define their own [api:SearchFilter] if needing to extend the ORM filter and exclude behaviors.
+Developers can define their own [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter) if needing to extend the ORM filter and exclude behaviors.
 
 These suffixes can also take modifiers themselves. The modifiers currently supported are `":not"`, `":nocase"` and 
 `":case"`. These negate the filter, make it case-insensitive and make it case-sensitive, respectively. The default
 comparison uses the database's default. For MySQL and MSSQL, this is case-insensitive. For PostgreSQL, this is 
 case-sensitive.
 
-Note that all search filters (e.g. `:PartialMatch`) refer to services registered with [api:Injector]
+Note that all search filters (e.g. `:PartialMatch`) refer to services registered with [Injector](api:SilverStripe\Core\Injector\Injector)
 within the `DataListFilter.` prefixed namespace. New filters can be registered using the below yml
 config:
 
@@ -61,4 +61,4 @@ The following is a query which will return everyone whose first name starts with
 
 ## API Documentation
 
-* [api:SearchFilter]
+* [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter)

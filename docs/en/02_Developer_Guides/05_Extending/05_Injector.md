@@ -3,7 +3,7 @@ summary: Introduction to using Dependency Injection within SilverStripe.
 
 # Injector
 
-The [api:Injector] class is the central manager of inter-class dependencies in SilverStripe. It offers developers the 
+The [Injector](api:SilverStripe\Core\Injector\Injector) class is the central manager of inter-class dependencies in SilverStripe. It offers developers the 
 ability to declare the dependencies a class type has, or to change the nature of the dependencies defined by other 
 developers. 
 
@@ -139,7 +139,7 @@ Note: undefined variables will be replaced with null.
 ## Factories
 
 Some services require non-trivial construction which means they must be created by a factory class. To do this, create
-a factory class which implements the [api:SilverStripe\Framework\Injector\Factory] interface. You can then specify
+a factory class which implements the [Factory](api:SilverStripe\Framework\Injector\Factory) interface. You can then specify
 the `factory` key in the service definition, and the factory service will be used.
 
 An example using the `MyFactory` service to create instances of the `MyService` service is shown below:
@@ -281,5 +281,5 @@ This is useful when writing test cases, as certain services may be necessary to 
 
 ## API Documentation
 
-* [api:Injector]
-* [api:Factory]
+* [Injector](api:SilverStripe\Core\Injector\Injector)
+* [Factory](api:SilverStripe\Core\Injector\Factory)

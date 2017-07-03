@@ -19,11 +19,12 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 
 ## PermissionProvider
 
-[api:PermissionProvider] is an interface which lets you define a method *providePermissions()*.
+[PermissionProvider](api:SilverStripe\Security\PermissionProvider) is an interface which lets you define a method *providePermissions()*.
 This method should return a map of permission code names with a human readable explanation of its purpose.
 
 ```php
 use SilverStripe\Security\PermissionProvider;
+use SilverStripe\Security\Security;
 
 class PageController implements PermissionProvider
 {
@@ -98,7 +99,7 @@ This works much like ADMIN permissions (see above)
 You can check if a user has access to the CMS by simply performing a check against `CMS_ACCESS`.
 
 ```php
-if (Permission::checkMember($member, 'CMS_ACCESS')) {
+if (SilverStripe\Security\Permission::checkMember($member, 'CMS_ACCESS')) {
     //user can access the CMS
 }
 ```
@@ -107,4 +108,4 @@ Internally, this checks that the user has any of the defined `CMS_ACCESS_*` perm
 
 
 ## API Documentation
-[api:Permission]
+[Permission](api:SilverStripe\Security\Permission)

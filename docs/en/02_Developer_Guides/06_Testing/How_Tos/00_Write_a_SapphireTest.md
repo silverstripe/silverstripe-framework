@@ -2,7 +2,7 @@ title: How to write a SapphireTest
 
 # How to write a SapphireTest
 
-Here is an example of a test which extends [api:SapphireTest] to test the URL generation of the page. It also showcases
+Here is an example of a test which extends [SapphireTest](api:SilverStripe\Dev\SapphireTest) to test the URL generation of the page. It also showcases
 how you can load default records into the test database.
 
 **mysite/tests/PageTest.php**
@@ -63,7 +63,7 @@ The test database is rebuilt every time one of these methods is run.
 
 Inside our test method is the `objFromFixture` method that will generate an object for us based on data from our fixture
 file. To identify to the object, we provide a class name and an identifier. The identifier is specified in the YAML file
-but not saved in the database anywhere, `objFromFixture` looks the [api:DataObject] up in memory rather than using the
+but not saved in the database anywhere, `objFromFixture` looks the [DataObject](api:SilverStripe\ORM\DataObject) up in memory rather than using the
 database. This means that you can use it to test the functions responsible for looking up content in the database.
 
 The final part of our test is an assertion command, `assertEquals`. An assertion command allows us to test for something
@@ -81,5 +81,5 @@ For more information on PHPUnit's assertions see the [PHPUnit manual](http://www
 
 ## API Documentation
 
-* [api:SapphireTest]
-* [api:FunctionalTest]
+* [SapphireTest](api:SilverStripe\Dev\SapphireTest)
+* [FunctionalTest](api:SilverStripe\Dev\FunctionalTest)

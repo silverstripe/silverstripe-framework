@@ -2,7 +2,7 @@ summary: Consume external data through their RESTFul interfaces.
 
 # Restful Service
 
-[api:RestfulService] is used to enable connections to remote web services through PHP's `curl` command. It provides an
+[RestfulService](api:RestfulService) is used to enable connections to remote web services through PHP's `curl` command. It provides an
 interface and utility functions for generating a valid request and parsing the response returned from the web service. 
 
 <div class="alert" markdown="1">
@@ -134,7 +134,7 @@ To get the value of entry node with the namespace media, use:
 ### Handling Errors
 
 If the web service returned an error (for example, API key not available or inadequate parameters), 
-[api:RestfulService] can delegate the error handling to it's descendant class. To handle the errors, subclass 
+[RestfulService](api:RestfulService) can delegate the error handling to it's descendant class. To handle the errors, subclass 
 `RestfulService and define a function called errorCatch.
 
 	:::php
@@ -187,7 +187,7 @@ To set global cURL settings you can update the `RestfulService` config via the C
 Here is an example to increase the HTTP Timeout globally. Insert this in your `_config.php` file:
 
 ```php
-Config::inst()->update('RestfulService', 'default_curl_options', array(
+SilverStripe\Core\Config\Config::inst()->update('RestfulService', 'default_curl_options', array(
 	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
 	CURLOPT_CONNECTTIMEOUT => 10,
 ));
@@ -220,4 +220,4 @@ $service->request('service.json', 'GET', null, null, $curlOptions);
 
 ## API Documentation
 
-* [api:RestfulService]
+* [RestfulService](api:RestfulService)

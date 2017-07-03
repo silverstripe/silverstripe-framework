@@ -76,4 +76,4 @@ This uses the session_name `SECSESSID` for `https` connections instead of the de
 
 ## API Documentation
 
-* [api:Session]
+* [Session](api:SilverStripe\Control\Session)
