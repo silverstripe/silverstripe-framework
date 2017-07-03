@@ -35,7 +35,7 @@ sl:
     NewRecord: 'Novih %s'
     NoItemsFound: 'Ni rezultatov'
     PRINTEDAT: 'Tiskano pri'
-    PRINTEDBY: 'Natisnil'
+    PRINTEDBY: Natisnil
     PlaceHolder: 'Poišči {type} '
     PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
     Print: Natisni
@@ -45,7 +45,7 @@ sl:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-    UnlinkRelation: Odstrani povezavo
+    UnlinkRelation: 'Odstrani povezavo'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -93,12 +93,12 @@ sl:
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
   SilverStripe\Security\LoginAttempt:
-    IP: 'IP-naslov'
+    IP: IP-naslov
     Status: Stanje
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
@@ -110,8 +110,8 @@ sl:
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
-    FIRSTNAME: 'Ime'
-    INTERFACELANG: 'Jezik'
+    FIRSTNAME: Ime
+    INTERFACELANG: Jezik
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     NoPassword: 'Za tega člana ni gesla'
@@ -143,7 +143,7 @@ sl:
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'

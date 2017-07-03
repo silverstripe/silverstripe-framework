@@ -2,4 +2,4 @@ da:
   SilverStripe\Forms\GridField\GridField:
     Filter: Filter
   SilverStripe\Security\Permission:
-    CONTENT_CATEGORY: 'Indholdsrettigheder'
+    CONTENT_CATEGORY: Indholdsrettigheder

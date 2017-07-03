@@ -1,4 +1,7 @@
 en:
+  Security:
+    LOGIN: 'Log in'
+    LOGOUT: 'Log out'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
@@ -9,13 +12,14 @@ en:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT3: 'Change password'
     HELLO: Hi
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Invalid request'
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Invalid request'
+    REQUEST_ABORTED: 'Request aborted'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -99,57 +103,6 @@ en:
     OF: of
     Page: Page
     View: View
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
-    ANCHORSPAGENOTFOUND: 'Target page not found.'
-    CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_File:
-    CREATED: 'First uploaded'
-    LASTEDIT: 'Last changed'
-    SIZE: 'File size'
-    TYPE: 'File type'
-    URL: URL
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image:
-    HEIGHT: Height
-    WIDTH: Width
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ANCHORVALUE: Anchor
-    EMAIL: 'Email address'
-    ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
-    ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
-    ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
-    ERROR_NOTFOUND: 'Unable to find file to view'
-    ERROR_OEMBED_REMOTE: 'Embed is only compatible with remote files'
-    ERROR_SCHEME: 'This file scheme is not included in the whitelist'
-    FILE: File
-    LINK: 'Insert Link'
-    LINKANCHOR: 'Link to an anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKDETAILS: 'Link details'
-    LINKEMAIL: 'Link to an email address'
-    LINKEXTERNAL: 'Link to another website'
-    LINKFILE: 'Link to download a file'
-    LINKINTERNAL: 'Link to a page on this site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link type'
-    PAGE: Page
-    SUBJECT: 'Email subject'
-    URL: URL
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -207,19 +160,17 @@ en:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
-  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
-    AUTHENTICATORNAME: 'CMS Member Login Form'
-    BUTTONFORGOTPASSWORD: 'Forgot password'
-    BUTTONLOGIN: 'Let me back in'
-    BUTTONLOGOUT: 'Log out'
+  SilverStripe\Security\CMSMemberLoginForm:
     PASSWORDEXPIRED: '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>'
-    LOGIN_MESSAGE: '<p>Your session has timed out due to inactivity.</p>'
+    LOGIN_MESSAGE: '<p>Your session has timed out due to inactivity</p>'
+    LOGIN_TITLE: 'Return to where you left off by logging back in'
     SUCCESS: Success
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
-    LOGIN_TITLE: 'Return to where you left off by logging back in'
-    SUCCESS_TITLE: Success
+    SUCCESS_TITLE: 'Login successful'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Default Admin'
   SilverStripe\Security\Group:
     AddRole: 'Add a role for this group'
     Code: 'Group Code'
@@ -259,13 +210,12 @@ en:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
-    BUTTONLOGOUT: 'Log out'
     BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOGOUT: 'Log out'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     CURRENT_PASSWORD: 'Current Password'
-    DefaultAdminFirstname: 'Default Admin'
     EDIT_PASSWORD: 'New Password'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
@@ -279,7 +229,6 @@ en:
     KEEPMESIGNEDIN: 'Keep me signed in'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
-    NoPassword: 'There is no password on this member.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
@@ -299,6 +248,14 @@ en:
     db_LockedOutUntil: 'Locked out until'
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'CMS Member Login Form'
+    BUTTONFORGOTPASSWORD: 'Forgot password'
+    BUTTONLOGIN: 'Let me back in'
+    BUTTONLOGOUT: 'Log out'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
+    NoPassword: 'There is no password on this member.'
   SilverStripe\Security\MemberLoginForm:
     AUTHENTICATORNAME: 'E-mail &amp; Password'
   SilverStripe\Security\MemberPassword:
@@ -358,8 +315,6 @@ en:
     CONFIRMLOGOUT: 'Please click the button below to confirm that you wish to log out.'
     ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGIN: 'Log in'
-    LOGOUT: 'Log out'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'

@@ -10,7 +10,7 @@ mi:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'kāore i tautuhia'
-    TODAY: tēnei rā
+    TODAY: 'tēnei rā'
     VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
@@ -41,7 +41,7 @@ mi:
     PlaceHolderWithLabels: 'Rapu {type} mā te {name}'
     Print: Tā
     RelationSearch: 'Rapu whanaunga'
-    ResetFilter: Tautuhi anō
+    ResetFilter: 'Tautuhi anō'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Muku
     Delete: Muku
@@ -69,13 +69,13 @@ mi:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Ko tētahi
+    ANY: 'Ko tētahi'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'iti iho i te meneti kotahi'
     TIMEDIFFAGO: '{difference} i mua'
     TIMEDIFFIN: 'i roto i te {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Ko tētahi
+    ANY: 'Ko tētahi'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Kua kitea he koromeke mutunga kore i roto i te aroākapanga "{type}". Hurihia te matua hei whakaea i tēnei'
   SilverStripe\Security\BasicAuth:
@@ -85,7 +85,7 @@ mi:
   SilverStripe\Security\Group:
     AddRole: 'Tāpiritia he tūnga mō tēnei rōpū'
     Code: 'Waehere Rōpū'
-    DefaultGroupTitleAdministrators: Ngā Kaiwhakahaere
+    DefaultGroupTitleAdministrators: 'Ngā Kaiwhakahaere'
     DefaultGroupTitleContentAuthors: 'Ngā Kaituhi Ihirangi'
     Description: Whakaahuatanga
     GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
@@ -94,15 +94,15 @@ mi:
     Parent: 'Rōpū Matua'
     RolesAddEditLink: 'Whakahaere tūnga'
     Sort: 'Raupapa Kōmaka'
-    has_many_Permissions: Ngā Whakaaetanga
-    many_many_Members: Ngā Mema
+    has_many_Permissions: 'Ngā Whakaaetanga'
+    many_many_Members: 'Ngā Mema'
   SilverStripe\Security\LoginAttempt:
     IP: 'Wāhitau KI'
     Status: Tūnga
   SilverStripe\Security\Member:
     ADDGROUP: 'Tāpiri rōpū'
     BUTTONCHANGEPASSWORD: 'Huri Kupuhipa'
-    BUTTONLOGIN: 'Takiuru'
+    BUTTONLOGIN: Takiuru
     BUTTONLOGINOTHER: 'Takiuru hei tangata kē'
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
@@ -123,11 +123,11 @@ mi:
     PASSWORD: Kupuhipa
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
-    SURNAME: Ingoa Whānau
+    SURNAME: 'Ingoa Whānau'
     ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
     WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
     YOUROLDPASSWORD: 'Tō kupuhipa tawhito'
-    belongs_many_many_Groups: Ngā Rōpū
+    belongs_many_many_Groups: 'Ngā Rōpū'
     db_Locale: 'Tauwāhi Atanga'
     db_LockedOutUntil: 'Ka maukatia tae atu ki te'
     db_Password: Kupuhipa
@@ -157,7 +157,7 @@ mi:
     CHANGEPASSWORDHEADER: 'Hurihia tō kupuhipa'
     ENTERNEWPASSWORD: 'Tāurua he kupuhipa hōu'
     ERRORPASSWORDPERMISSION: 'Me takiuru koe i mua i te huri i tō kupuhipa!'
-    LOGIN: 'Takiuru'
+    LOGIN: Takiuru
     LOSTPASSWORDHEADER: 'Kupuhipa Ngaro'
     NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
     NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'

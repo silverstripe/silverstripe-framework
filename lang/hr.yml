@@ -2,8 +2,8 @@ hr:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neispravan zahtjev'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Promjenite lozinku'
   SilverStripe\Forms\CurrencyField:
@@ -42,21 +42,21 @@ hr:
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Molim unesite ispravan telefonski broj'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Bilo koji
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    ANY: 'Bilo koji'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manje od minute'
     TIMEDIFFAGO: 'prije {difference}'
     TIMEDIFFIN: 'za {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: bilo koji
+    ANY: 'bilo koji'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Unesite korisničko ime i lozinu'
     ERRORNOTADMIN: 'Korisnik nije administrator'
@@ -82,7 +82,7 @@ hr:
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
     BUTTONLOSTPASSWORD: 'Zaboravljena lozinka?'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
@@ -93,7 +93,7 @@ hr:
     EMAIL: Email
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova lozinka'
     PASSWORD: Lozinka

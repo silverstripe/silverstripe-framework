@@ -22,7 +22,7 @@ sr:
     VALIDATIONPASSWORDSDONTMATCH: 'Лозинке се не поклапају'
     VALIDATIONPASSWORDSNOTEMPTY: 'Поља за лозинке не смеју да буду празна'
     VALIDATIONSTRONGPASSWORD: 'Лозинке морају ра садрже бар једну цифру и бар један алфанумерички знак'
-    VALIDATOR: Проверивач исправности
+    VALIDATOR: 'Проверивач исправности'
     VALIDCURRENCY: 'Унесите исправну валуту'
   SilverStripe\Forms\FormField:
     NONE: без
@@ -35,19 +35,19 @@ sr:
     LinkExisting: 'Постојање линка'
     NewRecord: 'Нови %s'
     NoItemsFound: 'Ниједна ставка није пронађена'
-    PRINTEDAT: 'Одштампано'
-    PRINTEDBY: 'Одштампао'
+    PRINTEDAT: Одштампано
+    PRINTEDBY: Одштампао
     PlaceHolder: 'Пронађи {type}'
     PlaceHolderWithLabels: 'Пронађи {type} по {name}'
     Print: Штампај
     RelationSearch: 'Претраживање релације'
-    ResetFilter: Врати у пређашње стање
+    ResetFilter: 'Врати у пређашње стање'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Избриши
     Delete: Избриши
     DeletePermissionsFailure: 'Немате дозволу за брисање'
     EditPermissionsFailure: 'Немате дозволу да раскинете линк са записом'
-    UnlinkRelation: Раскини линк
+    UnlinkRelation: 'Раскини линк'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Одустани
     Create: Креирај
@@ -69,13 +69,13 @@ sr:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Унесите исправан формат времена ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Било која
+    ANY: 'Било која'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'мање од минуте'
     TIMEDIFFAGO: '{difference} раније'
     TIMEDIFFIN: 'кроз {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Било који
+    ANY: 'Било који'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Откривена је бесконачна петља у оквиру "{type}" хијерархије. Промените родитеља да би сте разрешили ситуацију'
   SilverStripe\Security\BasicAuth:
@@ -116,7 +116,7 @@ sr:
     ERRORNEWPASSWORD: 'Нова лозинка коју сте унели се не поклапа. Покушајте поново.'
     ERRORPASSWORDNOTMATCH: 'Ваша тренутна лозинка се не поклапа. Покушајте поново.'
     ERRORWRONGCRED: 'Пружени детаљи изгледа нису коректни. Покушајте поново.'
-    FIRSTNAME: 'Име'
+    FIRSTNAME: Име
     INTERFACELANG: 'Језик интерфејса'
     LOGGEDINAS: 'Пријављени сте као {name}.'
     NEWPASSWORD: 'Нова лозинка'
@@ -160,7 +160,7 @@ sr:
     CHANGEPASSWORDHEADER: 'Промени моју лозинку'
     ENTERNEWPASSWORD: 'Унесите нову лозинку.'
     ERRORPASSWORDPERMISSION: 'Морате да будете пријављени да бисте променили своју лозинку!'
-    LOGIN: 'Пријављивање'
+    LOGIN: Пријављивање
     NOTEPAGESECURED: 'Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај.'
     NOTERESETLINKINVALID: '<p>Линк за ресетовање лозинке је погрешан или је истекло време за његово коришћење.</p><p>Можете да захтевате нови <a href="{link1}">овде</a> или да промените Вашу лозинку након што се <a href="{link2}">пријавите</a>.</p>'
     NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'

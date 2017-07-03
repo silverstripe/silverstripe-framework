@@ -2,8 +2,8 @@ cs:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Ano'
+    NOANSWER: Ne
+    YESANSWER: Ano
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hesla musí být nejméně {min} znaků dlouhé.'
     BETWEEN: 'Hesla musí být {min} až {max} znaků dlouhé.'
@@ -15,7 +15,7 @@ cs:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Kč
   SilverStripe\Forms\DateField:
-    NOTSET: 'nenastaveno'
+    NOTSET: nenastaveno
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající maximu povoleného datumu ({date})'
@@ -47,7 +47,7 @@ cs:
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žádné položky'
     PRINTEDAT: 'Vytištěno v'
-    PRINTEDBY: 'Vytištěno'
+    PRINTEDBY: Vytištěno
     PlaceHolder: 'Hledat {type}'
     PlaceHolderWithLabels: 'Hledat {type} podle {name}'
     Print: Tisk
@@ -85,7 +85,7 @@ cs:
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
-    IMAGEWIDTHPX: Šířka
+    IMAGEWIDTHPX: 'Šířka'
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
   SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Jen absolutní url mohou být vstavěna'
@@ -112,8 +112,8 @@ cs:
     SINGULARNAME: 'Datový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakkýkoliv
-    NOANSWER: 'Ne'
-    YESANSWER: 'Ano'
+    NOANSWER: Ne
+    YESANSWER: Ano
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'méně než minuta'
     TIMEDIFFAGO: 'před {difference}'
@@ -152,7 +152,7 @@ cs:
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Spravovat role'
     SINGULARNAME: Skupina
-    Sort: 'Řazení'
+    Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
   SilverStripe\Security\LoginAttempt:
@@ -235,7 +235,7 @@ cs:
     CHANGEPASSWORDHEADER: 'Změnit heslo'
     ENTERNEWPASSWORD: 'Prosím zadejte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pro změnu hesla musíte být přihlášení!'
-    LOGIN: 'Přihlásit'
+    LOGIN: Přihlásit
     LOSTPASSWORDHEADER: 'Zapomenuté heslo'
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetování hesla není platný nebo je prošlý.</p><p>Můžete požádat o nový <a href="{link1}">zde</a> nebo změňte své heslo až <a href="{link2}">se přihlásíte</a>.</p>'

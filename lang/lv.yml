@@ -46,7 +46,7 @@ lv:
     Status: Statuss
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mainīt paroli'
-    BUTTONLOGIN: 'PIeslēgties'
+    BUTTONLOGIN: PIeslēgties
     BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
@@ -57,7 +57,7 @@ lv:
     ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
     ERRORNEWPASSWORD: 'Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz'
     ERRORPASSWORDNOTMATCH: 'Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz'
-    FIRSTNAME: 'Vārds'
+    FIRSTNAME: Vārds
     INTERFACELANG: 'Saskarnes Valoda'
     NEWPASSWORD: 'Jaunā parole'
     PASSWORD: Parole
@@ -84,6 +84,6 @@ lv:
     CHANGEPASSWORDHEADER: 'Mainīt paroli'
     ENTERNEWPASSWORD: 'Lūdzu ievadiet jaunu paroli.'
     ERRORPASSWORDPERMISSION: 'Lai mainītu paroli, Jums ir jāpieslēdzas!'
-    LOGIN: 'Pieslēgties'
+    LOGIN: Pieslēgties
     NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
     NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'

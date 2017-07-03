@@ -30,17 +30,17 @@ ms:
     ENTEREMAIL: 'Sila masukkan alamat emel untuk mendapatkan pautan menganjak kata lalaun'
     ERRORNEWPASSWORD: 'Kata Lalaun baru yang dimasukkan tidak sepadan, sila cuba semula'
     ERRORPASSWORDNOTMATCH: 'Kata lalaun semasa tidak sepadan, sila cuba semula'
-    FIRSTNAME: 'Nama'
+    FIRSTNAME: Nama
     INTERFACELANG: 'Bahasa antaramuka'
     NEWPASSWORD: 'Katalaluan Baru'
-    PASSWORD: Kata Lalaun
+    PASSWORD: 'Kata Lalaun'
     SUBJECTPASSWORDCHANGED: 'Kata lalaun anda telah ditukar'
     SUBJECTPASSWORDRESET: 'Pautan penukaran kata lalaun anda'
-    SURNAME: Nama keluarga
+    SURNAME: 'Nama keluarga'
     YOUROLDPASSWORD: 'Kata lalaun lama anda'
     belongs_many_many_Groups: Kumpulan-kumpulan
     db_LockedOutUntil: 'Dikuncikan keluar sehingga'
-    db_Password: Kata Laluan
+    db_Password: 'Kata Laluan'
     db_PasswordExpiry: 'Tempoh Tamat Kata Lalaun'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'

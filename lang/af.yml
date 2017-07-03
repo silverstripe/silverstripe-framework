@@ -51,7 +51,7 @@ af:
     Save: Stoor
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Bedrag
-    FIELDLABELCURRENCY: Geld eenheid
+    FIELDLABELCURRENCY: 'Geld eenheid'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
   SilverStripe\Forms\PhoneNumberField:
@@ -97,7 +97,7 @@ af:
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
     ERRORNEWPASSWORD: 'Jy het jou nuwe wagwoord anders ingetik. Probeer weer'
     ERRORPASSWORDNOTMATCH: 'U huidige wagwoord pas nie, probeer asseblief weer'
-    FIRSTNAME: 'Voornaam'
+    FIRSTNAME: Voornaam
     INTERFACELANG: 'Koppelvlak Taal'
     LOGGEDINAS: 'Jy is ingeteken as {name}'
     NEWPASSWORD: 'Nuwe wagwoord'

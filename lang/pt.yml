@@ -58,7 +58,7 @@ pt:
     Status: Estado
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Password'
-    BUTTONLOGIN: 'Entrar'
+    BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
     BUTTONLOSTPASSWORD: 'Recuperar Password'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'

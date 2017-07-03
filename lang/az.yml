@@ -3,21 +3,21 @@ az:
     SHOWONCLICKTITLE: 'Parolu dəyiş'
   SilverStripe\Forms\DateField:
     NOTSET: 'təyin edilməyib'
-    TODAY: bu gün
+    TODAY: 'bu gün'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçin)
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Parollar uyğun gəlmir'
     VALIDATIONPASSWORDSNOTEMPTY: 'Parollar boş ola bilməz'
   SilverStripe\Forms\FormField:
-    NONE: heç bir
+    NONE: 'heç bir'
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV-yə ixrac et'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Boşdur'
+    IsNullLabel: Boşdur
   SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -32,10 +32,10 @@ az:
     Code: 'Qrup kodu'
     DefaultGroupTitleAdministrators: Administratorlar
     DefaultGroupTitleContentAuthors: 'Məzmun müəllifləri'
-    Description: Qısa təsvir
+    Description: 'Qısa təsvir'
     Locked: 'Bloklanıb?'
     Parent: 'Valideyn qrupu'
-    Sort: 'Sıralama'
+    Sort: Sıralama
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
   SilverStripe\Security\LoginAttempt:
@@ -53,7 +53,7 @@ az:
     ENTEREMAIL: 'Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin.'
     ERRORNEWPASSWORD: 'Yeni parolunuzu başqa cür daxil etdiniz, bir daha cəhd edin'
     ERRORPASSWORDNOTMATCH: 'Parol uyğun gəlmir, yenidən cəhd edin'
-    FIRSTNAME: 'Ad'
+    FIRSTNAME: Ad
     INTERFACELANG: 'İnterfeys dili'
     NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol

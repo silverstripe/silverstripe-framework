@@ -2,8 +2,8 @@ sl_SI:
   SilverStripe\Control\Director:
     INVALID_REQUEST: 'Neveljavna zahteva'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
   SilverStripe\Forms\CurrencyField:
@@ -28,7 +28,7 @@ sl_SI:
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    UnlinkRelation: Odstrani povezavo
+    UnlinkRelation: 'Odstrani povezavo'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -41,17 +41,17 @@ sl_SI:
   SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
     ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
-    CAPTIONTEXT: 'Napis'
+    CAPTIONTEXT: Napis
     CSSCLASS: 'Poravnava / stil'
     IMAGEALT: 'Alternativni tekst (alt)'
     IMAGEALTTEXT: 'Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati'
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Višina
     IMAGETITLETEXT: 'Naslov (namig)'
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
   SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manj kot minuto'
   SilverStripe\Security\BasicAuth:
@@ -61,7 +61,7 @@ sl_SI:
   SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Pozabljeno geslo?'
     BUTTONLOGIN: 'Ponovna prijava'
-    BUTTONLOGOUT: 'Odjava'
+    BUTTONLOGOUT: Odjava
   SilverStripe\Security\CMSSecurity:
     TimedOutTitleAnonymous: 'Vaša seja je potekla.'
     TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
@@ -79,7 +79,7 @@ sl_SI:
   SilverStripe\Security\Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
@@ -100,5 +100,5 @@ sl_SI:
   SilverStripe\Security\Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     LOSTPASSWORDHEADER: 'Pozabljeno geslo'

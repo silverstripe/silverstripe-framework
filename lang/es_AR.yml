@@ -37,7 +37,7 @@ es_AR:
     Locked: '¿Bloqueado?'
     Parent: 'Grupo Superior'
     RolesAddEditLink: 'Agregar/Editar roles'
-    Sort: 'Ordenar'
+    Sort: Ordenar
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   SilverStripe\Security\LoginAttempt:
@@ -45,13 +45,13 @@ es_AR:
     Status: Estado
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: 'Acceder'
+    BUTTONLOGIN: Acceder
     BUTTONLOGINOTHER: 'Ingresar como otra persona'
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
     DefaultAdminFirstname: 'Administrador por defecto'
-    EMAIL: Dirección Email
+    EMAIL: 'Dirección Email'
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtelo nuevamente'
     ENTEREMAIL: 'Por favor ingrese una dirección email para obtener un enlace de renovación de la contraseña'
     ERRORNEWPASSWORD: 'Ingresó su nueva contraseña en forma diferente, inténtelo otra vez'
@@ -82,6 +82,6 @@ es_AR:
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber ingresado al sitio para cambiar la contraseña!'
-    LOGIN: 'Acceso'
+    LOGIN: Acceso
     NOTEPAGESECURED: 'Esta página está protegida. Ingresa tus credenciales abajo y en seguida te enviaremos una autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección email y te enviaremos un enlace con el cual podrás restablecer la contraseña'
