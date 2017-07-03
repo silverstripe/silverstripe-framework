@@ -185,8 +185,8 @@ To disable oEmbed usage, set the `Oembed.enabled` configuration property to "fal
 HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
 inserting files for use with oembed.
 
-This is performed through the config variables `ModalController::$fileurl_scheme_whitelist` and
-`ModalController::$fileurl_domain_whitelist`.
+This is performed through the config variables [RemoteFileFormFactory::$fileurl_scheme_whitelist](api:SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory::$fileurl_scheme_whitelist) and
+[RemoteFileFormFactory::$fileurl_domain_whitelist](api:SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory::$fileurl_domain_whitelist).
 
 Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
 lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
