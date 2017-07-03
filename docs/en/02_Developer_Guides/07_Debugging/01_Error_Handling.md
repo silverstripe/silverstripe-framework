@@ -155,7 +155,7 @@ non-dev.
 	SilverStripe\Core\Injector\Injector:
 	  Psr\Log\LoggerInterface:
 	    calls:
-	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
+	      pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
 	  DisplayErrorHandler:
 	    class: SilverStripe\Logging\HTTPOutputHandler
 	    constructor:
@@ -171,8 +171,8 @@ non-dev.
 	SilverStripe\Core\Injector\Injector:
 	  Psr\Log\LoggerInterface:
 	    calls:
-	      - [ pushHandler, [ %$LogFileHandler ]] 
-	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
+	      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]] 
+	      pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
 	  LogFileHander:
 	    class: Monolog\Handler\StreamHandler
 	    constructor:

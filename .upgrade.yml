@@ -950,3 +950,4 @@ skipConfigs:
   - url_segment
 excludedPaths:
   - '*fixtures*'
+  - '*vendor*'
