@@ -58,6 +58,7 @@ class TreeDropdownField extends FormField
 {
     protected $schemaDataType = self::SCHEMA_DATA_TYPE_SINGLESELECT;
 
+    /** @skipUpgrade */
     protected $schemaComponent = 'TreeDropdownField';
 
     private static $url_handlers = array(

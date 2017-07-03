@@ -22,6 +22,8 @@ use SilverStripe\Security\SecurityToken;
 
 /**
  * Test the security class, including log-in form, change password form, etc
+ *
+ * @skipUpgrade
  */
 class SecurityTest extends FunctionalTest
 {

@@ -18,6 +18,7 @@ class MoneyField extends FormField
 {
 
     // TODO replace with `FormField::SCHEMA_DATA_TYPE_TEXT` when MoneyField is implemented
+    /** @skipUpgrade */
     protected $schemaDataType = 'MoneyField';
 
     /**

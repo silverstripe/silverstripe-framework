@@ -9,6 +9,7 @@ if (!getenv('SS_ENVIRONMENT_TYPE')) {
     $loader->setEnvironmentVariable('SS_ENVIRONMENT_TYPE', 'dev');
 }
 
+/** @skipUpgrade */
 if (!getenv('SS_DATABASE_CLASS') && !getenv('SS_DATABASE_USERNAME')) {
     // The default settings let us define the database config via environment vars
     // Database connection, including PDO and legacy ORM support

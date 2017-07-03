@@ -9,6 +9,9 @@ use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Dev\SapphireTest;
 
+/**
+ * @skipUpgrade
+ */
 class MySQLDatabaseTest extends SapphireTest
 {
 

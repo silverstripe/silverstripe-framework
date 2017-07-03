@@ -83,6 +83,9 @@ class RSSFeedTest extends SapphireTest
         );
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function testRenderWithTemplate()
     {
         $rssFeed = new RSSFeed(new ArrayList(), "", "", "");
@@ -99,7 +102,7 @@ class RSSFeedTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        Config::inst()->update(Director::class, 'alternate_base_url', '/');
+        Config::modify()->set(Director::class, 'alternate_base_url', '/');
         if (!self::$original_host) {
             self::$original_host = $_SERVER['HTTP_HOST'];
         }

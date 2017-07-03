@@ -17,9 +17,11 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 
+/**
+ * @skipUpgrade
+ */
 class GridFieldDetailFormTest extends FunctionalTest
 {
-
     protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
     protected static $extra_dataobjects = array(

@@ -60,7 +60,7 @@ use SilverStripe\ORM\ValidationResult;
  */
 class FieldGroup extends CompositeField
 {
-
+    /** @skipUpgrade */
     protected $schemaComponent = 'FieldGroup';
 
     protected $zebra;

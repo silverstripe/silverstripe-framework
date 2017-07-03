@@ -6,6 +6,9 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Security\BasicAuth;
 
+/**
+ * @skipUpgrade
+ */
 class ControllerSecuredWithPermission extends Controller implements TestOnly
 {
 

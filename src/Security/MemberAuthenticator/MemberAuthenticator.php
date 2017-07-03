@@ -5,7 +5,6 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use InvalidArgumentException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extensible;
-use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\DefaultAdminService;
@@ -49,6 +48,7 @@ class MemberAuthenticator implements Authenticator
     /**
      * Attempt to find and authenticate member if possible from the given data
      *
+     * @skipUpgrade
      * @param array $data Form submitted data
      * @param ValidationResult $result
      * @param Member $member This third parameter is used in the CMSAuthenticator(s)

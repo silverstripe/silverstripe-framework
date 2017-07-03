@@ -346,6 +346,7 @@ class Member extends DataObject
     /**
      * Returns true if this user is locked out
      *
+     * @skipUpgrade
      * @return bool
      */
     public function isLockedOut()
@@ -1413,6 +1414,7 @@ class Member extends DataObject
      * Return a {@link FieldList} of fields that would appropriate for editing
      * this member.
      *
+     * @skipUpgrade
      * @return FieldList Return a FieldList of fields that would appropriate for
      *                   editing this member.
      */

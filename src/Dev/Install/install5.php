@@ -113,6 +113,7 @@ foreach ($databaseClasses as $class => $details) {
 }
 
 // Load database config
+/** @skipUpgrade */
 if (isset($_REQUEST['db'])) {
     if (isset($_REQUEST['db']['type'])) {
         $type = $_REQUEST['db']['type'];

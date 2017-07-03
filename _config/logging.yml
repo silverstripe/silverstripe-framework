@@ -17,7 +17,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "error-log"
     calls:
-      DisplayErrorHandler: [ pushHandler, [ %$Monolog\Handler\HandlerInterface ] ]
+      pushDisplayErrorHandler: [ pushHandler, [ %$Monolog\Handler\HandlerInterface ] ]
 ---
 Name: loggingformatters
 ---

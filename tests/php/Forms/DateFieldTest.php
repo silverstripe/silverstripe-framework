@@ -9,6 +9,9 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
+/**
+ * @skipUpgrade
+ */
 class DateFieldTest extends SapphireTest
 {
     protected function setUp()

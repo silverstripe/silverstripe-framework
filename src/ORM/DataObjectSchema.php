@@ -500,6 +500,7 @@ class DataObjectSchema
 
         // look for indexable field types
         foreach ($this->databaseFields($class, false) as $field => $type) {
+            /** @skipUpgrade */
             if ($type === 'ForeignKey' || $type === 'DBClassName') {
                 $indexes[$field] = [
                     'type' => 'index',

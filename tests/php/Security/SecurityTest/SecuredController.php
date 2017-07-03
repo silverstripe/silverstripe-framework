@@ -7,6 +7,9 @@ use SilverStripe\Dev\TestOnly;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 
+/**
+ * @skipUpgrade
+ */
 class SecuredController extends Controller implements TestOnly
 {
     private static $allowed_actions = array('index');

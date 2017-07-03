@@ -12,6 +12,9 @@ use SilverStripe\Forms\FormRequestHandler;
 use SilverStripe\Forms\Tests\FormRequestHandlerTest\TestForm;
 use SilverStripe\Forms\Tests\FormRequestHandlerTest\TestFormRequestHandler;
 
+/**
+ * @skipUpgrade
+ */
 class FormRequestHandlerTest extends SapphireTest
 {
     public function testCallsActionOnFormHandler()

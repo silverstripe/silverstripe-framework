@@ -13,6 +13,9 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 
+/**
+ * @skipUpgrade
+ */
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest
 {
 

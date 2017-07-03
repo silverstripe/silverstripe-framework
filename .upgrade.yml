@@ -1010,7 +1010,52 @@ mappings:
   TableListField_PageControls_ss: SilverStripe\Forms\GridField\GridField
   UploadField: SilverStripe\AssetAdmin\Forms\UploadField
   Pagination: SilverStripe\Forms\GridField\GridField
+skipYML:
+  - MySQLPDODatabase
+  - MySQLDatabase
+  - MySQLiConnector
+  - PDOConnector
+  - MySQLSchemaManager
+  - MySQLQueryBuilder
+  - EndsWithFilter
+  - ExactMatchFilter
+  - FulltextFilter
+  - GreaterThanFilter
+  - GreaterThanOrEqualFilter
+  - LessThanFilter
+  - LessThanOrEqualFilter
+  - PartialMatchFilter
+  - StartsWithFilter
+  - WithinRangeFilter
+  - Boolean
+  - Currency
+  - DBClassName
+  - Date
+  - Datetime
+  - DBDatetime
+  - Decimal
+  - Double
+  - Enum
+  - Float
+  - ForeignKey
+  - HTMLText
+  - HTMLFragment
+  - HTMLVarchar
+  - Int
+  - BigInt
+  - Locale
+  - DBLocale
+  - Money
+  - MultiEnum
+  - Percentage
+  - PolymorphicForeignKey
+  - PrimaryKey
+  - Text
+  - Time
+  - Varchar
+  - Year
 skipConfigs:
+  - required_fields
   - db
   - casting
   - table_name
@@ -1022,5 +1067,8 @@ skipConfigs:
   - owns
   - searchable_fields
   - summary_fields
+  - many_many_extraFields
   - default_search_filter_class
   - segment
+excludedPaths:
+  - '*fixtures*'
