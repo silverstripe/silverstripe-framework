@@ -510,14 +510,11 @@ Injector.transform(
 	(updater) => {
 		updater.form.alterSchema(
 			'AssetAdmin.*',
-			(updateSchema) => (form, values) => (
-				updateSchema(
-					form.updateField('Title', {
-						myCustomProp: true
-					})
-					.getState()
-				)
-			)
+			(values, form) =>
+        form.updateField('Title', {
+            myCustomProp: true
+        })
+        .getState()
 		)
 	}
 );
@@ -552,14 +549,10 @@ Injector.transform(
   (updater) => {
     updater.form.addValidation(
       'AssetAdmin.*',
-      (validate) => (values, errors) => (
-      	validate(
-          values,
-          {
-            PostalCode: values.PostalCode.length !== 5 ? 'Invalid postal code' : null
-          }
-      	)
-      )
+      (values, errors) => ({
+        ...errors,
+        PostalCode: values.PostalCode.length !== 5 ? 'Invalid postal code' : null,
+      })
     )
   }
 );
