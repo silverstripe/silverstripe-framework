@@ -947,5 +947,6 @@ skipConfigs:
   - many_many_extraFields
   - default_search_filter_class
   - segment
+  - url_segment
 excludedPaths:
   - '*fixtures*'
