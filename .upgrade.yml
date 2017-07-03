@@ -154,21 +154,6 @@ mappings:
   Security: SilverStripe\Security\Security
   SecurityToken: SilverStripe\Security\SecurityToken
   NullSecurityToken: SilverStripe\Security\NullSecurityToken
-  AdminRootController: SilverStripe\Admin\AdminRootController
-  CMSBatchAction: SilverStripe\Admin\CMSBatchAction
-  CMSBatchActionHandler: SilverStripe\Admin\CMSBatchActionHandler
-  CMSMenu: SilverStripe\Admin\CMSMenu
-  CMSMenuItem: SilverStripe\Admin\CMSMenuItem
-  CMSPreviewable: SilverStripe\ORM\CMSPreviewable
-  CMSProfileController: SilverStripe\Admin\CMSProfileController
-  GroupImportForm: SilverStripe\Admin\GroupImportForm
-  LeftAndMain: SilverStripe\Admin\LeftAndMain
-  LeftAndMain_HTTPResponse: SilverStripe\Admin\LeftAndMain_HTTPResponse
-  LeftAndMain_SearchFilter: SilverStripe\Admin\LeftAndMain_SearchFilter
-  LeftAndMainExtension: SilverStripe\Admin\LeftAndMainExtension
-  MemberImportForm: SilverStripe\Admin\MemberImportForm
-  ModelAdmin: SilverStripe\Admin\ModelAdmin
-  SecurityAdmin: SilverStripe\Admin\SecurityAdmin
   SilverStripe\Framework\Core\Configurable: SilverStripe\Core\Config\Configurable
   PaginatedList: SilverStripe\ORM\PaginatedList
   ArrayLib: SilverStripe\ORM\ArrayLib
@@ -417,19 +402,6 @@ mappings:
   SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   SilverStripe\View\Parsers\SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   URLSegmentFilter: SilverStripe\View\Parsers\URLSegmentFilter
-  CMSMenuItemTest: SilverStripe\Admin\Tests\CMSMenuItemTest
-  CMSMenuTest: SilverStripe\Admin\Tests\CMSMenuTest
-  CMSMenuTest_LeftAndMainController: SilverStripe\Admin\Tests\CMSMenuTest\LeftAndMainController
-  CMSMenuTest_CustomTitle: SilverStripe\Admin\Tests\CMSMenuTest\CustomTitle
-  CMSProfileControllerTest: SilverStripe\Admin\Tests\CMSProfileControllerTest
-  CMSProfileControllerTestExtension: SilverStripe\Admin\Tests\CMSProfileControllerTest\TestExtension
-  LeftAndMainTest: SilverStripe\Admin\Tests\LeftAndMainTest
-  ModelAdminTest: SilverStripe\Admin\Tests\ModelAdminTest
-  ModelAdminTest_Admin: SilverStripe\Admin\Tests\ModelAdminTest\ContactAdmin
-  ModelAdminTest_PlayerAdmin: SilverStripe\Admin\Tests\ModelAdminTest\PlayerAdmin
-  ModelAdminTest_Contact: SilverStripe\Admin\Tests\ModelAdminTest\Contact
-  ModelAdminTest_Player: SilverStripe\Admin\Tests\ModelAdminTest\Player
-  SecurityAdminTest: SilverStripe\Admin\Tests\SecurityAdminTest
   ControllerTest: SilverStripe\Control\Tests\ControllerTest
   ControllerTest_Controller: SilverStripe\Control\Tests\ControllerTest\TestController
   ControllerTest_UnsecuredController: SilverStripe\Control\Tests\ControllerTest\UnsecuredController
@@ -612,22 +584,11 @@ mappings:
   ArrayLibTest: SilverStripe\ORM\Tests\ArrayLibTest
   ArrayListTest: SilverStripe\ORM\Tests\ArrayListTest
   ArrayListTest_Object: SilverStripe\ORM\Tests\ArrayListTest\TestObject
-  ChangeSetItemTest_Versioned: SilverStripe\Versioned\Tests\ChangeSetItemTest\VersionedObject
-  ChangeSetItemTest: SilverStripe\Versioned\Tests\ChangeSetItemTest
-  ChangeSetTest_Permissions: SilverStripe\Versioned\Tests\ChangeSetTest\Permissions
-  ChangeSetTest_Base: SilverStripe\Versioned\Tests\ChangeSetTest\BaseObject
-  ChangeSetTest_Mid: SilverStripe\Versioned\Tests\ChangeSetTest\MidObject
-  ChangeSetTest_End: SilverStripe\Versioned\Tests\ChangeSetTest\EndObject
-  ChangeSetTest_EndChild: SilverStripe\Versioned\Tests\ChangeSetTest\EndObjectChild
-  ChangeSetTest: SilverStripe\Versioned\Tests\ChangeSetTest
   ComponentSetTest: SilverStripe\ORM\Tests\ComponentSetTest
   ComponentSetTest_Player: SilverStripe\ORM\Tests\ComponentSetTest\Player
   ComponentSetTest_Team: SilverStripe\ORM\Tests\ComponentSetTest\Team
   DatabaseTest: SilverStripe\ORM\Tests\DatabaseTest
   DatabaseTest_MyObject: SilverStripe\ORM\Tests\DatabaseTest\MyObject
-  DataDifferencerTest: SilverStripe\Versioned\Tests\DataDifferencerTest
-  DataDifferencerTest_Object: SilverStripe\Versioned\Tests\DataDifferencerTest\TestObject
-  DataDifferencerTest_HasOneRelationObject: SilverStripe\Versioned\Tests\DataDifferencerTest\HasOneRelationObject
   DataExtensionTest: SilverStripe\ORM\Tests\DataExtensionTest
   DataExtensionTest_Member: SilverStripe\ORM\Tests\DataExtensionTest\TestMember
   DataExtensionTest_Player: SilverStripe\ORM\Tests\DataExtensionTest\Player
@@ -739,9 +700,6 @@ mappings:
   ManyManyThroughListTest_Object: SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject
   ManyManyThroughListTest_JoinObject: SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject
   ManyManyThroughListTest_Item: SilverStripe\ORM\Tests\ManyManyThroughListTest\Item
-  ManyManyThroughListTest_VersionedObject: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedObject
-  ManyManyThroughListTest_VersionedJoinObject: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedJoinObject
-  ManyManyThroughListTest_VersionedItem: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedItem
   MapTest: SilverStripe\ORM\Tests\MapTest
   MySQLDatabaseTest: SilverStripe\ORM\Tests\MySQLDatabaseTest
   MySQLDatabaseTest_Data: SilverStripe\ORM\Tests\MySQLDatabaseTest\Data
@@ -764,31 +722,6 @@ mappings:
   UnsavedRelationListTest_DataObject: SilverStripe\ORM\Tests\UnsavedRelationListTest\TestObject
   URLSegmentFilterTest: SilverStripe\ORM\Tests\URLSegmentFilterTest
   ValidationExceptionTest: SilverStripe\ORM\Tests\ValidationExceptionTest
-  VersionableExtensionsTest: SilverStripe\Versioned\Tests\VersionableExtensionsTest
-  VersionableExtensionsTest_DataObject: SilverStripe\Versioned\Tests\VersionableExtensionsTest\TestObject
-  VersionableExtensionsTest_Extension: SilverStripe\Versioned\Tests\VersionableExtensionsTest\TestExtension
-  VersionedOwnershipTest: SilverStripe\Versioned\Tests\VersionedOwnershipTest
-  VersionedOwnershipTest_Object: SilverStripe\Versioned\Tests\VersionedOwnershipTest\TestObject
-  VersionedOwnershipTest_Subclass: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Subclass
-  VersionedOwnershipTest_Related: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Related
-  VersionedOwnershipTest_RelatedMany: SilverStripe\Versioned\Tests\VersionedOwnershipTest\RelatedMany
-  VersionedOwnershipTest_Attachment: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Attachment
-  VersionedOwnershipTest_Page: SilverStripe\Versioned\Tests\VersionedOwnershipTest\TestPage
-  VersionedOwnershipTest_Banner: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Banner
-  VersionedOwnershipTest_CustomRelation: SilverStripe\Versioned\Tests\VersionedOwnershipTest\CustomRelation
-  VersionedOwnershipTest_Image: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Image
-  VersionedTest: SilverStripe\Versioned\Tests\VersionedTest
-  VersionedTest_DataObject: SilverStripe\Versioned\Tests\VersionedTest\TestObject
-  VersionedTest_WithIndexes: SilverStripe\Versioned\Tests\VersionedTest\WithIndexes
-  VersionedTest_RelatedWithoutVersion: SilverStripe\Versioned\Tests\VersionedTest\RelatedWithoutversion
-  VersionedTest_Subclass: SilverStripe\Versioned\Tests\VersionedTest\Subclass
-  VersionedTest_AnotherSubclass: SilverStripe\Versioned\Tests\VersionedTest\AnotherSubclass
-  VersionedTest_UnversionedWithField: SilverStripe\Versioned\Tests\VersionedTest\UnversionedWithField
-  VersionedTest_SingleStage: SilverStripe\Versioned\Tests\VersionedTest\SingleStage
-  VersionedTest_PublicStage: SilverStripe\Versioned\Tests\VersionedTest\PublicStage
-  VersionedTest_PublicViaExtension: SilverStripe\Versioned\Tests\VersionedTest\PublicViaExtension
-  VersionedTest_PublicExtension: SilverStripe\Versioned\Tests\VersionedTest\PublicExtension
-  VersionedTest_CustomTable: SilverStripe\Versioned\Tests\VersionedTest\CustomTable
   BasicAuthTest: SilverStripe\Security\Tests\BasicAuthTest
   BasicAuthTest_ControllerSecuredWithPermission: SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission
   BasicAuthTest_ControllerSecuredWithoutPermission: SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithoutPermission
@@ -944,8 +877,8 @@ mappings:
   GridFieldAction_Delete: SilverStripe\Forms\GridField\GridFieldDeleteAction
   TableListField: SilverStripe\Forms\GridField\GridField
   TableListField_PageControls_ss: SilverStripe\Forms\GridField\GridField
-  UploadField: SilverStripe\AssetAdmin\Forms\UploadField
   Pagination: SilverStripe\Forms\GridField\GridField
+  CMSPreviewable: SilverStripe\ORM\CMSPreviewable
   # Note: These should be substituted with the given service aliases in injector yml config
   DebugViewFriendlyErrorFormatter: SilverStripe\Logging\DebugViewFriendlyErrorFormatter # Monolog\Formatter\FormatterInterface.friendly
   DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter # Monolog\Formatter\FormatterInterface.detailed
