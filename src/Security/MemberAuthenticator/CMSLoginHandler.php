@@ -16,6 +16,9 @@ class CMSLoginHandler extends LoginHandler
 
     /**
      * Return the CMSMemberLoginForm form
+     *
+     * @skipUpgrade
+     * @return CMSMemberLoginForm
      */
     public function loginForm()
     {
@@ -26,6 +29,9 @@ class CMSLoginHandler extends LoginHandler
         );
     }
 
+    /**
+     * @return HTTPResponse
+     */
     public function redirectBackToForm()
     {
         // Redirect back to form

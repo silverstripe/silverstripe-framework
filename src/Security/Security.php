@@ -777,6 +777,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Aggregate tabbed forms from each handler to fragments ready to be rendered.
      *
+     * @skipUpgrade
      * @param array $results
      * @return array
      */

@@ -27,6 +27,7 @@ use SilverStripe\Versioned\Versioned;
  * @todo tests for addStaticVars()
  * @todo tests for setting statics which are not defined on the object as built-in PHP statics
  * @todo tests for setting statics through extensions (#2387)
+ * @skipUpgrade
  */
 class ObjectTest extends SapphireTest
 {

@@ -32,6 +32,9 @@ use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\ViewableData;
 
+/**
+ * @skipUpgrade
+ */
 class SSViewerTest extends SapphireTest
 {
 

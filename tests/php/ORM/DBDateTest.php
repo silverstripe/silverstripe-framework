@@ -2,15 +2,15 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use PHPUnit_Framework_Error_Notice;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDate;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBField;
 
+/**
+ * @skipUpgrade
+ */
 class DBDateTest extends SapphireTest
 {
     protected $oldError = null;

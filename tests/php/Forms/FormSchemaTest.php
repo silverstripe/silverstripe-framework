@@ -15,6 +15,9 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\PopoverField;
 
+/**
+ * @skipUpgrade
+ */
 class FormSchemaTest extends SapphireTest
 {
     protected function setUp()

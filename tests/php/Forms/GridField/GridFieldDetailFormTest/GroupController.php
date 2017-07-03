@@ -12,6 +12,9 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 
+/**
+ * @skipUpgrade
+ */
 class GroupController extends Controller implements TestOnly
 {
 

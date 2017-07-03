@@ -119,6 +119,7 @@ class MemberLoginForm extends BaseLoginForm
     /**
      * Build the FieldList for the login form
      *
+     * @skipUpgrade
      * @return FieldList
      */
     protected function getFormFields()

@@ -69,6 +69,9 @@ trait i18nTestManifest
      */
     protected $originalLocale = null;
 
+    /**
+     * @skipUpgrade
+     */
     public function setupManifest()
     {
         // force SSViewer_DataPresenter to cache global template vars before we switch to the

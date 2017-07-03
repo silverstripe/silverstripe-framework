@@ -44,7 +44,7 @@ class FixtureBlueprint
 
     /** @config */
     private static $dependencies = array(
-        'factory' => '%$FixtureFactory'
+        'factory' => '%$'.FixtureFactory::class,
     );
 
     /**

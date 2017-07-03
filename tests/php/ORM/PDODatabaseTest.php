@@ -8,9 +8,11 @@ use SilverStripe\ORM\Connect\PDOConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Dev\SapphireTest;
 
+/**
+ * @skipUpgrade
+ */
 class PDODatabaseTest extends SapphireTest
 {
-
     protected static $fixture_file = 'MySQLDatabaseTest.yml';
 
     protected static $extra_dataobjects = array(

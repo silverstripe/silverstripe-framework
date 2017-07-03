@@ -5,6 +5,9 @@ namespace SilverStripe\ORM\Tests\DataExtensionTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataExtension;
 
+/**
+ * @skipUpgrade
+ */
 class PlayerExtension extends DataExtension implements TestOnly
 {
 

@@ -15,7 +15,7 @@ use SilverStripe\Core\Convert;
  */
 class LookupField extends MultiSelectField
 {
-    
+    /** @skipUpgrade */
     protected $schemaComponent = 'LookupField';
 
     /**

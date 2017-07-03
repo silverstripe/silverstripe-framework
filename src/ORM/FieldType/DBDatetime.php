@@ -32,6 +32,7 @@ use InvalidArgumentException;
  * </code>
  *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ * @skipUpgrade
  */
 class DBDatetime extends DBDate implements TemplateGlobalProvider
 {

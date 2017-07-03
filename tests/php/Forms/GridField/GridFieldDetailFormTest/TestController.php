@@ -13,6 +13,9 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 
+/**
+ * @skipUpgrade
+ */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()

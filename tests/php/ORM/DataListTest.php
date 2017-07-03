@@ -21,6 +21,9 @@ use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 use SilverStripe\ORM\Tests\DataObjectTest\Staff;
 
+/**
+ * @skipUpgrade
+ */
 class DataListTest extends SapphireTest
 {
 

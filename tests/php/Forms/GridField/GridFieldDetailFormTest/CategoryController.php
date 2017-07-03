@@ -14,6 +14,9 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\TextField;
 
+/**
+ * @skipUpgrade
+ */
 class CategoryController extends Controller implements TestOnly
 {
     private static $allowed_actions = array('Form');

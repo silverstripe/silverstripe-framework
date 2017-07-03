@@ -2,10 +2,6 @@
 Name: coreconfig
 ---
 SilverStripe\Core\Injector\Injector:
-  FormSchema:
-    class: SilverStripe\Forms\Schema\FormSchema
-  FixtureFactory:
-    class: SilverStripe\Dev\FixtureFactory
   SilverStripe\Core\Manifest\ResourceURLGenerator:
     class: SilverStripe\Control\SimpleResourceURLGenerator
     properties:

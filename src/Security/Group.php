@@ -107,6 +107,7 @@ class Group extends DataObject
      * Caution: Only call on instances, not through a singleton.
      * The "root group" fields will be created through {@link SecurityAdmin->EditForm()}.
      *
+     * @skipUpgrade
      * @return FieldList
      */
     public function getCMSFields()
@@ -150,7 +151,7 @@ class Group extends DataObject
             $config->addComponents(new GridFieldExportButton('buttons-after-left'));
             $config->addComponents(new GridFieldPrintButton('buttons-after-left'));
             /** @var GridFieldAddExistingAutocompleter $autocompleter */
-            $autocompleter = $config->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldAddExistingAutocompleter');
+            $autocompleter = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
             /** @skipUpgrade */
             $autocompleter
                 ->setResultsFormat('$Title ($Email)')
@@ -274,6 +275,7 @@ class Group extends DataObject
     /**
      * @param bool $includerelations Indicate if the labels returned include relation fields
      * @return array
+     * @skipUpgrade
      */
     public function fieldLabels($includerelations = true)
     {

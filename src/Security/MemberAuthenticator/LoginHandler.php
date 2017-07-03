@@ -86,6 +86,7 @@ class LoginHandler extends RequestHandler
     /**
      * Return the MemberLoginForm form
      *
+     * @skipUpgrade
      * @return MemberLoginForm
      */
     public function loginForm()
