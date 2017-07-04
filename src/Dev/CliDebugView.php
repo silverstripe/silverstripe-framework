@@ -3,6 +3,8 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
@@ -128,5 +130,77 @@ class CliDebugView extends DebugView
         $output .= PHP_EOL;
 
         return $output;
+    }
+
+    /**
+     * Similar to renderVariable() but respects debug() method on object if available
+     *
+     * @param mixed $val
+     * @param array $caller
+     * @param bool $showHeader
+     * @return string
+     */
+    public function debugVariable($val, $caller, $showHeader = true)
+    {
+        $text = $this->debugVariableText($val);
+        if ($showHeader) {
+            $callerFormatted = $this->formatCaller($caller);
+            return "Debug ($callerFormatted)\n{$text}\n\n";
+        } else {
+            return $text;
+        }
+    }
+
+    /**
+     * Get debug text for this object
+     *
+     * @param mixed $val
+     * @return string
+     */
+    public function debugVariableText($val)
+    {
+        // Check debug
+        if (ClassInfo::hasMethod($val, 'debug')) {
+            return $val->debug();
+        }
+
+        // Format as array
+        if (is_array($val)) {
+            $result = '';
+            foreach ($val as $key => $valItem) {
+                $valText = $this->debugVariableText($valItem);
+                $result .= "$key = $valText\n";
+            }
+            return $result;
+        }
+
+        // Format object
+        if (is_object($val)) {
+            return var_export($val, true);
+        }
+
+        // Format bool
+        if (is_bool($val)) {
+            return '(bool) ' . ($val ? 'true' : 'false');
+        }
+
+        // Format text
+        if (is_string($val)) {
+            return wordwrap($val, self::config()->columns);
+        }
+
+        // Other
+        return var_export($val, true);
+    }
+
+    public function renderMessage($message, $caller, $showHeader = true)
+    {
+        $header = '';
+        if ($showHeader) {
+            $file = basename($caller['file']);
+            $line = $caller['line'];
+            $header .= "Debug (line {$line} of {$file}):\n";
+        }
+        return $header . "{$message}\n\n";
     }
 }
