@@ -9,8 +9,8 @@ class HasIndexesInFieldSpecs extends DataObject implements TestOnly
 {
     private static $db = [
         'Normal' => 'Varchar',
-        'IndexedTitle' => 'Varchar(255, ["indexed" => true])',
+        'IndexedTitle' => 'Varchar(255, ["index" => "fulltext"])',
         'NormalMoney' => 'Money',
-        'IndexedMoney' => 'Money(["indexed" => true])'
+        'IndexedMoney' => 'Money(["index" => true])'
     ];
 }

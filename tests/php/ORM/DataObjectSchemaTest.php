@@ -4,8 +4,8 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\AllIndexes;
@@ -298,12 +298,26 @@ class DataObjectSchemaTest extends SapphireTest
 
     public function testCompositeFieldsCanBeIndexedByDefaultConfiguration()
     {
-        Config::modify()->set(DBMoney::class, 'indexed', true);
+        Config::modify()->set(DBMoney::class, 'index', true);
         $indexes = DataObject::getSchema()->databaseIndexes(HasComposites::class);
+
         $this->assertCount(4, $indexes);
         $this->assertArrayHasKey('Amount', $indexes);
         $this->assertEquals([
             'type' => 'index',
+            'columns' => ['AmountCurrency', 'AmountAmount']
+        ], $indexes['Amount']);
+    }
+
+    public function testIndexTypeIsConfigurable()
+    {
+        Config::modify()->set(DBMoney::class, 'index', 'unique');
+
+        $indexes = DataObject::getSchema()->databaseIndexes(HasComposites::class);
+        $this->assertCount(4, $indexes);
+        $this->assertArrayHasKey('Amount', $indexes);
+        $this->assertEquals([
+            'type' => 'unique',
             'columns' => ['AmountCurrency', 'AmountAmount']
         ], $indexes['Amount']);
     }
@@ -317,7 +331,7 @@ class DataObjectSchemaTest extends SapphireTest
 
         $this->assertArrayHasKey('IndexedTitle', $indexes);
         $this->assertEquals([
-            'type' => 'index',
+            'type' => 'fulltext',
             'columns' => ['IndexedTitle']
         ], $indexes['IndexedTitle']);
 

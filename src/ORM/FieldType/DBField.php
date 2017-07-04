@@ -43,7 +43,7 @@ use SilverStripe\View\ViewableData;
  *
  * @todo remove MySQL specific code from subclasses
  */
-abstract class DBField extends ViewableData
+abstract class DBField extends ViewableData implements DBIndexable
 {
 
     /**
@@ -98,14 +98,13 @@ abstract class DBField extends ViewableData
     private static $default_search_filter_class = 'PartialMatchFilter';
 
     /**
-     * Whether this field type should be indexed by default. Can be overridden by {@link setOptions()}
-     * with "indexed" => true or via a DBField constructor, e.g. "MyField" => "Varchar(255, ['indexed' => false])".
-     * Note: if doing this, be aware of the existing field constructor arguments, like the length above.
+     * The type of index to use for this field. Can either be a string (one of the DBIndexable type options) or a
+     * boolean. When a boolean is given, false will not index the field, and true will use the default index type.
      *
-     * @var bool
+     * @var string|bool
      * @config
      */
-    private static $indexed = false;
+    private static $index = false;
 
     private static $casting = array(
         'ATT' => 'HTMLFragment',
@@ -128,7 +127,7 @@ abstract class DBField extends ViewableData
     protected $defaultVal;
 
     /**
-     * Provide the DBField name and an array of options, e.g. ['indexed' => true], or ['nullifyEmpty' => false]
+     * Provide the DBField name and an array of options, e.g. ['index' => true], or ['nullifyEmpty' => false]
      *
      * @param  string $name
      * @param  array  $options
@@ -277,31 +276,36 @@ abstract class DBField extends ViewableData
         return $this->options;
     }
 
-    /**
-     * Set whether this DBField instance should be indexed
-     *
-     * @param bool $indexed
-     * @return $this
-     */
-    public function setIndexed($indexed)
+    public function setIndexType($type)
     {
-        $this->options['indexed'] = (bool) $indexed;
+        if (!is_bool($type)
+            && !in_array($type, [DBIndexable::TYPE_INDEX, DBIndexable::TYPE_UNIQUE, DBIndexable::TYPE_FULLTEXT])
+        ) {
+            throw new \InvalidArgumentException(
+                "{$type} is not a valid index type or boolean. Please see DBIndexable."
+            );
+        }
+
+        $this->options['index'] = $type;
         return $this;
     }
 
-    /**
-     * Get whether this DBField should be indexed
-     *
-     * @return bool
-     */
-    public function getIndexed()
+    public function getIndexType()
     {
-        if (array_key_exists('indexed', $this->options)) {
-            return (bool) $this->options['indexed'];
+        if (array_key_exists('index', $this->options)) {
+            $type = $this->options['index'];
+        } else {
+            $type = static::config()->get('index');
         }
 
-        // Default to global configuration per DBField instance
-        return (bool) static::config()->get('indexed');
+        if (is_bool($type)) {
+            if (!$type) {
+                return false;
+            }
+            $type = DBIndexable::TYPE_DEFAULT;
+        }
+
+        return $type;
     }
 
     /**
@@ -629,11 +633,6 @@ DBG;
         return $this->RAW();
     }
 
-    /**
-     * Get the field(s) that should be used if this field is indexed
-     *
-     * @return array
-     */
     public function getIndexSpecs()
     {
         return [$this->getName()];

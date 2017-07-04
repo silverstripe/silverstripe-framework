@@ -37,7 +37,7 @@ class DBClassName extends DBEnum
      */
     protected static $classname_cache = array();
 
-    private static $indexed = true;
+    private static $index = true;
 
     /**
      * Clear all cached classname specs. It's necessary to clear all cached subclassed names
