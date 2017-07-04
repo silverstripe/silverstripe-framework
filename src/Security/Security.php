@@ -12,7 +12,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -655,6 +654,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param null|HTTPRequest $request
      * @param int $service
      * @return HTTPResponse|string Returns the "login" page as HTML code.
+     * @throws HTTPResponse_Exception
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
@@ -684,7 +684,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t('Security.LOGIN', 'Log in'),
+            _t(__CLASS__.'.LOGIN', 'Log in'),
             $this->getTemplatesFor('login'),
             [$this, 'aggregateTabbedForms']
         );
@@ -721,7 +721,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t('Security.LOGOUT', 'Log out'),
+            _t(__CLASS__.'.LOGOUT', 'Log out'),
             $this->getTemplatesFor('logout'),
             [$this, 'aggregateTabbedForms']
         );
@@ -733,6 +733,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param int $service
      * @param HTTPRequest $request
+     * @return Authenticator[]
      * @throws HTTPResponse_Exception
      */
     protected function getServiceAuthenticatorsFromRequest($service, HTTPRequest $request)
