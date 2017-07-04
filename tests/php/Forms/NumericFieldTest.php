@@ -127,6 +127,19 @@ class NumericFieldTest extends SapphireTest
         $this->assertContains('type="text"', $html, 'number type not set');
     }
 
+    public function testNullSet() {
+        $field = new NumericField('Number');
+        $field->setValue('');
+        $this->assertEquals('', $field->Value());
+        $this->assertNull($field->dataValue());
+        $field->setValue(null);
+        $this->assertNull($field->Value());
+        $this->assertNull($field->dataValue());
+        $field->setValue(0);
+        $this->assertEquals(0, $field->Value());
+        $this->assertEquals(0, $field->dataValue());
+    }
+
     public function dataForTestSubmittedValue()
     {
         return [

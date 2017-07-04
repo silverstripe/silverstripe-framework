@@ -132,7 +132,7 @@ class NumericField extends TextField
     public function Value()
     {
         // Show invalid value back to user in case of error
-        if ($this->value === false) {
+        if ($this->value === null || $this->value === false) {
             return $this->originalValue;
         }
         $formatter = $this->getFormatter();
@@ -154,6 +154,9 @@ class NumericField extends TextField
      */
     protected function cast($value)
     {
+        if (strlen($value) === 0) {
+            return null;
+        }
         if ($this->getScale() === 0) {
             return (int)$value;
         }
