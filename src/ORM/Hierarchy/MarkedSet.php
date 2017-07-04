@@ -407,13 +407,14 @@ class MarkedSet
         // Build root rode
         $expanded = $this->isExpanded($node);
         $opened = $this->isTreeOpened($node);
+        $count = ($limited && $numChildren > $this->getMaxChildNodes()) ? 0 : $numChildren;
         $output = [
             'node' => $node,
             'marked' => $this->isMarked($node),
             'expanded' => $expanded,
             'opened' => $opened,
             'depth' => $depth,
-            'count' => $numChildren, // Count of DB children
+            'count' => $count, // Count of DB children
             'limited' => $limited, // Flag whether 'items' has been limited
             'children' => [], // Children to return in this request
         ];
