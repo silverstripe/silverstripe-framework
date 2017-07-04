@@ -444,7 +444,6 @@ en:
     ShowAsList: 'show as list'
     TooManyPages: 'Too many pages'
     ValidationError: 'Validation error'
-    VersionUnknown: unknown
   LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -657,6 +656,8 @@ en:
     Tablet: Tablet
     ViewDeviceWidth: 'Select a preview width'
     Width: width
+  SilverStripeVersionProvider:
+    VERSIONUNKNOWN: Unknown
   SilverStripe\Admin\CMSProfileController:
     MENUTITLE: 'My Profile'
   SilverStripe\Admin\CampaignAdmin:

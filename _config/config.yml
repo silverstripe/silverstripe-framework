@@ -17,3 +17,9 @@ HTTP:
     must-revalidate: "true"
     no-transform: "true"
   vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
+LeftAndMain:
+  dependencies:
+    versionProvider: %$SilverStripeVersionProvider
+SilverStripeVersionProvider:
+  modules:
+    silverstripe/framework: Framework
