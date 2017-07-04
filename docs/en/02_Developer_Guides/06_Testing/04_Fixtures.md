@@ -9,7 +9,6 @@ SilverStripe starts with a fresh database containing no records. `Fixtures` prov
 to load into the database. The [api:SapphireTest] class takes care of populating a test database with data from
 fixtures - all we have to do is define them.
 
-<div class="info" markdown='1'>
 To include your fixture file in your tests, you should define it as your `$fixture_file`:
 
 
@@ -34,14 +33,12 @@ You can also use an array of fixture files, if you want to use parts of multiple
 	
 	class MyNewTest extends SapphireTest {
 	
-		protected static $fixture_file = [
+		protected static $fixture_file = array(
 			'fixtures.yml',
 			'otherfixtures.yml'
-		];
+		);
 		
 	}
-	
-</div>
 	
 Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
 
