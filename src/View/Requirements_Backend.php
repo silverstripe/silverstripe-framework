@@ -643,7 +643,7 @@ class Requirements_Backend
     protected function parseModuleResourceReference($file)
     {
         // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
-        if (preg_match('#([^ ]*/[^ ]*) *: *([^ ]*)#', $file, $matches)) {
+        if (preg_match('#([^\/\/][^ /]*\/[^ /]*) *: *([^ ]*)#', $file, $matches)) {
             list(, $module, $resource) = $matches;
             $moduleObj = ModuleLoader::getModule($module);
             if (!$moduleObj) {
