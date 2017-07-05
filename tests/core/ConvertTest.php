@@ -409,11 +409,7 @@ XML
 			}
 		}
 
-		// If the system doesn't have any of the UTF-8 locales, exit early
-		if ($localeInstalled === false) {
-			$this->markTestIncomplete('Unable to run this test because of missing locale!');
-			return;
-		}
+		$this->assertNotEquals(false, $localeInstalled, 'An UTF-8 locale must be installed for this test');
 
 		$problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT, 'UTF-8');
 
