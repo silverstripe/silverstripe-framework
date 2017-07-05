@@ -165,9 +165,22 @@ class DatabaseAdmin extends Controller
     {
         $dataClasses = ClassInfo::subclassesFor('SilverStripe\ORM\DataObject');
         array_shift($dataClasses);
+
+        if (!Director::is_cli()) {
+            echo "<ul>";
+        }
+
         foreach ($dataClasses as $dataClass) {
             singleton($dataClass)->requireDefaultRecords();
-            print "Defaults loaded for $dataClass<br/>";
+            if (Director::is_cli()) {
+                echo "Defaults loaded for $dataClass\n";
+            } else {
+                echo "<li>Defaults loaded for $dataClass</li>\n";
+            }
+        }
+
+        if (!Director::is_cli()) {
+            echo "</ul>";
         }
     }
 
@@ -250,7 +263,7 @@ class DatabaseAdmin extends Controller
             if (Director::is_cli()) {
                 echo "\nCREATING DATABASE TABLES\n\n";
             } else {
-                echo "\n<p><b>Creating database tables</b></p>\n\n";
+                echo "\n<p><b>Creating database tables</b></p><ul>\n\n";
             }
         }
 
@@ -287,12 +300,16 @@ class DatabaseAdmin extends Controller
         });
         ClassInfo::reset_db_cache();
 
+        if (!$quiet && !Director::is_cli()) {
+            echo "</ul>";
+        }
+
         if ($populate) {
             if (!$quiet) {
                 if (Director::is_cli()) {
                     echo "\nCREATING DATABASE RECORDS\n\n";
                 } else {
-                    echo "\n<p><b>Creating database records</b></p>\n\n";
+                    echo "\n<p><b>Creating database records</b></p><ul>\n\n";
                 }
             }
 
@@ -343,6 +360,10 @@ class DatabaseAdmin extends Controller
                         DB::prepared_query($query, [$newClassName, $oldClassName]);
                     }
                 }
+            }
+
+            if (!$quiet && !Director::is_cli()) {
+                echo "</ul>";
             }
         }
 

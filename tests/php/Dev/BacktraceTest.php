@@ -22,7 +22,7 @@ class BacktraceTest extends SapphireTest
             )
         );
         $this->assertEquals(
-            'MyClass->myFunction(1,more than 20 charact...)',
+            'MyClass->myFunction(1, more than 20 charact...)',
             Backtrace::full_func_name($func, true, 20)
         );
     }

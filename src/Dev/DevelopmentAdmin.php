@@ -193,7 +193,7 @@ class DevelopmentAdmin extends Controller
             $renderer = DebugView::create();
             echo $renderer->renderHeader();
             echo $renderer->renderInfo("Defaults Builder", Director::absoluteBaseURL());
-            echo "<div style=\"margin: 0 2em\">";
+            echo "<div class=\"build\">";
         }
 
         $da->buildDefaults();
