@@ -868,14 +868,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						// 	// Element contains a link
 						// 	var firstLinkEl = selectedEl.find('a:first');
 						// 	if(firstLinkEl.length) linkDataSource = firstLinkEl;
+
+                        // if(linkDataSource && linkDataSource.length) this.modifySelection(function(ed){
+                        //     ed.selectNode(linkDataSource[0]);
+                        // });
 					} else {
 						// Element is a child of a link
 						linkDataSource = selectedEl = selectedEl.parents('a:first');
 					}
 				}
-				if(linkDataSource && linkDataSource.length) this.modifySelection(function(ed){
-					ed.selectNode(linkDataSource[0]);
-				});
 
 				// Is anchor not a link
 				if (!linkDataSource.attr('href')) linkDataSource = null;
