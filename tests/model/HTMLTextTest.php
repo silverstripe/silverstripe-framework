@@ -314,4 +314,34 @@ class HTMLTextTest extends SapphireTest {
 
 		ShortcodeParser::set_active('default');
 	}
+
+	public function testValidUtf8()
+	{
+		// Install a UTF-8 locale
+		$currentLocale = setlocale(LC_ALL, 0);
+		$locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+		$localeInstalled = false;
+		foreach ($locales as $locale) {
+			if ($localeInstalled = setlocale(LC_ALL, $locale)) {
+				break;
+			}
+		}
+
+		// If the system doesn't have any of the UTF-8 locales, exit early
+		if ($localeInstalled === false) {
+			$this->markTestIncomplete('Unable to run this test because of missing locale!');
+			return;
+		}
+
+		$problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT, 'UTF-8');
+
+		$textObj = new HTMLText('Test');
+		$textObj->setValue($problematicText);
+
+		$this->assertTrue(mb_check_encoding($textObj->FirstSentence(), 'UTF-8'));
+		$this->assertTrue(mb_check_encoding($textObj->Summary(), 'UTF-8'));
+
+		// reset locale
+		setlocale(LC_ALL, $currentLocale);
+	}
 }
