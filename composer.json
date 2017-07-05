@@ -56,7 +56,12 @@
     "provide": {
         "psr/container-implementation": "1.0.0"
     },
-    "extra": [],
+    "extra": {
+        "branch-alias": {
+            "4.x-dev": "4.0.x-dev",
+            "dev-master": "5.x-dev"
+        },
+    },
     "autoload": {
         "psr-4": {
             "SilverStripe\\Control\\": "src/Control/",
