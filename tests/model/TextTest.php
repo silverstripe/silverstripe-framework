@@ -240,4 +240,29 @@ class TextTest extends SapphireTest {
 		$data = DBField::create_field('Text', '"this is a test"');
 		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
 	}
+
+	public function testValidUtf8()
+	{
+		// Install a UTF-8 locale
+		$currentLocale = setlocale(LC_ALL, 0);
+		$locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+		$localeInstalled = false;
+		foreach ($locales as $locale) {
+			if ($localeInstalled = setlocale(LC_ALL, $locale)) {
+				break;
+			}
+		}
+
+		$this->assertNotEquals(false, $localeInstalled, 'An UTF-8 locale must be installed for this test');
+
+		$problematicText = html_entity_decode('This is a&nbsp;Test with non-breaking&nbsp;space!', ENT_COMPAT, 'UTF-8');
+
+		$textObj = new Text('Test');
+		$textObj->setValue($problematicText);
+
+		$this->assertTrue(mb_check_encoding($textObj->FirstSentence(), 'UTF-8'));
+
+		// reset locale
+		setlocale(LC_ALL, $currentLocale);
+	}
 }
