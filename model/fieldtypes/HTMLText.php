@@ -140,8 +140,8 @@ class HTMLText extends Text {
 			/* See if we can pull a paragraph out*/
 
 			// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
-			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
-			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
+			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}u', '', $this->value);
+			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}u', $str, $matches)) $str = $matches[2];
 
 			/* If _that_ failed, just use the whole text */
 			if (!$str) $str = $this->value;
@@ -155,7 +155,7 @@ class HTMLText extends Text {
 
 		/* Now split into words. If we are under the maxWords limit, just return the whole string (re-implode for
 		 * whitespace normalization) */
-		$words = preg_split('/\s+/', $str);
+		$words = preg_split('/\s+/u', $str);
 		if ($maxWords == -1 || count($words) <= $maxWords) return implode(' ', $words);
 
 		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't
@@ -183,7 +183,7 @@ class HTMLText extends Text {
 		$paragraph = $this->Summary(-1);
 
 		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
-		$words = preg_split('/\s+/', $paragraph);
+		$words = preg_split('/\s+/u', $paragraph);
 		foreach ($words as $i => $word) {
 			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
@@ -270,7 +270,7 @@ class HTMLText extends Text {
 
 		// If it's just one or two tags on its own (and not the above) it's empty.
 		// This might be <p></p> or <h1></h1> or whatever.
-		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $value)) {
+		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/u', $value)) {
 			return false;
 		}
 

@@ -5,6 +5,24 @@
  */
 class TextTest extends SapphireTest {
 
+	private $previousLocaleSetting = null;
+
+	public function setUp()
+	{
+		parent::setUp();
+		// clear the previous locale setting
+		$this->previousLocaleSetting = null;
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+		// If a test sets the locale, reset it on teardown
+		if ($this->previousLocaleSetting) {
+			setlocale(LC_CTYPE, $this->previousLocaleSetting);
+		}
+	}
+
 	/**
 	 * Test {@link Text->LimitCharacters()}
 	 */
@@ -239,5 +257,31 @@ class TextTest extends SapphireTest {
 	public function testATT() {
 		$data = DBField::create_field('Text', '"this is a test"');
 		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
+	}
+
+	public function testValidUtf8()
+	{
+		// Install a UTF-8 locale
+		$this->previousLocaleSetting = setlocale(LC_CTYPE, 0);
+		$locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+		$localeInstalled = false;
+		foreach ($locales as $locale) {
+			if ($localeInstalled = setlocale(LC_CTYPE, $locale)) {
+				break;
+			}
+		}
+
+		// If the system doesn't have any of the UTF-8 locales, exit early
+		if ($localeInstalled === false) {
+			$this->markTestIncomplete('Unable to run this test because of missing locale!');
+			return;
+		}
+
+		$problematicText = html_entity_decode('This is a&nbsp;Test with non-breaking&nbsp;space!', ENT_COMPAT, 'UTF-8');
+
+		$textObj = new Text('Test');
+		$textObj->setValue($problematicText);
+
+		$this->assertTrue(mb_check_encoding($textObj->FirstSentence(), 'UTF-8'));
 	}
 }
