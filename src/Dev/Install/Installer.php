@@ -4,11 +4,10 @@ namespace SilverStripe\Dev\Install;
 
 use Exception;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\CoreKernel;
-use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\ORM\DatabaseAdmin;
@@ -229,9 +228,15 @@ PHP
 
             // Create default administrator user and group in database
             // (not using Security::setDefaultAdmin())
-            $adminMember = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
-            $adminMember->Email = $config['admin']['username'];
-            $adminMember->Password = $config['admin']['password'];
+            $username = $config['admin']['username'];
+            $password = $config['admin']['password'];
+            $adminMember = DefaultAdminService::singleton()
+                ->findOrCreateAdmin(
+                    $username,
+                    _t(DefaultAdminService::class . '.DefaultAdminFirstname', 'Default Admin')
+                );
+            $adminMember->Email = $username;
+            $adminMember->Password = $password;
             $adminMember->PasswordEncryption = Security::config()->get('encryption_algorithm');
 
             try {
@@ -243,8 +248,8 @@ PHP
                 );
             }
 
-            $request->getSession()->set('username', $config['admin']['username']);
-            $request->getSession()->set('password', $config['admin']['password']);
+            $request->getSession()->set('username', $username);
+            $request->getSession()->set('password', $password);
             $request->getSession()->save($request);
         }, true);
 
