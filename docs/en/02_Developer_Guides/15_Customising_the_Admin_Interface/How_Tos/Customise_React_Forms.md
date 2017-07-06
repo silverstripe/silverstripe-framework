@@ -49,15 +49,12 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (updateSchema) => (values, form) => {
-        return updateSchema(
-          form
-            .updateField('State', {
-              shouldHide: values.Country !== 'US'
-            })
-            .getState()
-        )
-      }
+      (values, form) =>
+        form
+          .updateField('State', {
+            shouldHide: values.Country !== 'US'
+          })
+          .getState()
     )
   }
 );
@@ -74,13 +71,10 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (updateSchema) => (values, form) => {
-        return updateSchema(
-          form
-            .setFieldClass('Price', 'danger', (values.TicketsRemaining < 10))
-            .getState()
-        )
-      }
+      (values, form) =>
+        form
+          .setFieldClass('Price', 'danger', (values.TicketsRemaining < 10))
+          .getState()
     );
   }
 );
@@ -122,13 +116,10 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (updateSchema) => (values, form) => {
-        return updateSchema(
-          form
-            .setFieldComponent('PhoneNumber', 'PrettyPhoneNumberField')
-            .getState()
-        )
-      }
+      (values, form) =>
+        form
+          .setFieldComponent('PhoneNumber', 'PrettyPhoneNumberField')
+          .getState()
     );
   }
 );
@@ -144,18 +135,15 @@ Injector.transform(
   (updater) => {
     updater.form.addValidation(
       'AssetAdmin.*',
-      (validate) => (values, errors) => {
+      (values, errors) => {
         const requiredLength = values.Country === 'US' ? 5 : 4;
         if (!values.Country || !values.PostalCode) {
           return;
         }
-        return validate(
-          values,
-          {
-            ...errors,
-            PostalCode: values.PostalCode.length !== requiredLength ? 'Invalid postal code' : null
-          }
-        );
+        return {
+          ...errors,
+          PostalCode: values.PostalCode.length !== requiredLength ? 'Invalid postal code' : null,
+        };
       }
     )
   }
@@ -197,7 +185,6 @@ export default (FormAction) => {
     }
 
     render() {
-      const extraButtons = [];
       const { confirmText, cancelText } = this.props;
       const buttonProps = {
         ...this.props,
@@ -238,17 +225,14 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (updateSchema) => (values, form) => {
-        return updateSchema(
+      (values, form) =>
           form
             .updateField('action_delete', {
               confirmText: 'Are you sure you want to delete?',
               cancelText: 'No!! Cancel!!!!'
             })
             .getState()
-        )
-      }
-    );
+    )
   }
 );
 ```
