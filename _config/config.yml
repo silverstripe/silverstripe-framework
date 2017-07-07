@@ -15,5 +15,5 @@ SilverStripe\Control\HTTP:
 SilverStripe\Core\Manifest\ModuleManifest:
   project: ''
   module_priority:
-    - '$project'
     - 'other_modules'
+    - '$project'

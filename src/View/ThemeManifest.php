@@ -166,13 +166,8 @@ class ThemeManifest implements ThemeList
             return;
         }
 
-        // We only want part of the full path, so split into directories
-        $parts = explode('/', $pathname);
-        // Take the end (the part relative to base), except the very last directory
-        $themeParts = array_slice($parts, -$depth, $depth-1);
-        // Then join again
-        $path = '/'.implode('/', $themeParts);
-        array_push($this->themes, $path);
+        $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
+        $this->themes[] = "/".$dir;
     }
 
     /**

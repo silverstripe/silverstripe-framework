@@ -4,6 +4,10 @@ namespace SilverStripe\Core\Manifest;
 
 use SilverStripe\Core\Injector\Injectable;
 
+/**
+ * Class ModuleSorter
+ * @package SilverStripe\Core\Manifest
+ */
 class ModuleSorter implements Sorter
 {
     use Injectable;
@@ -12,12 +16,24 @@ class ModuleSorter implements Sorter
 
     const PLACEHOLDER_PROJECT = '$project';
 
+    /**
+     * @var array
+     */
     protected $modules;
 
+    /**
+     * @var array
+     */
     protected $priorities;
 
+    /**
+     * @var string
+     */
     protected $project;
 
+    /**
+     * @var array
+     */
     protected $moduleNames;
 
     /**
@@ -31,6 +47,9 @@ class ModuleSorter implements Sorter
         $this->priorities = $priorities;
     }
 
+    /**
+     * @return array
+     */
     public function getSortedList()
     {
         if ($this->project) {
@@ -55,6 +74,10 @@ class ModuleSorter implements Sorter
         return $sortedModulePaths;
     }
 
+    /**
+     * @param array $priorities
+     * @return $this
+     */
     public function setPriorities(array $priorities)
     {
         $this->priorities = $priorities;
@@ -62,6 +85,10 @@ class ModuleSorter implements Sorter
         return $this;
     }
 
+    /**
+     * @param array $modules
+     * @return $this
+     */
     public function setModules(array $modules)
     {
         $this->modules = $modules;
@@ -70,6 +97,10 @@ class ModuleSorter implements Sorter
         return $this;
     }
 
+    /**
+     * @param $project
+     * @return $this
+     */
     public function setProject($project)
     {
         $this->project = $project;
@@ -77,6 +108,9 @@ class ModuleSorter implements Sorter
         return $this;
     }
 
+    /**
+     * If project is defined, make sure it takes priority
+     */
     protected function includeProject()
     {
         // Remove the "project" module from the list
@@ -95,7 +129,10 @@ class ModuleSorter implements Sorter
         }
     }
 
-    // If the placeholder "other_modules" exists in the order array, replace it by the unspecified modules
+    /**
+     * If the placeholder "other_modules" exists in the order array,
+     * replace it by the unspecified modules
+     */
     protected function includeOtherModules(array $list)
     {
         $otherModulesIndex = array_search(static::PLACEHOLDER_OTHER_MODULES, $this->priorities);
