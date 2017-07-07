@@ -5,6 +5,8 @@ namespace SilverStripe\View;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")
@@ -116,6 +118,9 @@ class ThemeManifest implements ThemeList
         ));
     }
 
+    /**
+     * @return \string[]
+     */
     public function getThemes()
     {
         return $this->themes;
@@ -137,7 +142,11 @@ class ThemeManifest implements ThemeList
         ));
 
         $this->themes = [];
-        $finder->find($this->base);
+
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
+        foreach($modules as $module) {
+            $finder->find($module->getPath());
+        }
 
         if ($this->cache) {
             $this->cache->set($this->cacheKey, $this->themes);
@@ -163,12 +172,16 @@ class ThemeManifest implements ThemeList
         $themeParts = array_slice($parts, -$depth, $depth-1);
         // Then join again
         $path = '/'.implode('/', $themeParts);
+        array_push($this->themes, $path);
+    }
 
-        // If this is in the project, add to beginning of list. Else add to end.
-        if ($themeParts && $themeParts[0] == $this->project) {
-            array_unshift($this->themes, $path);
-        } else {
-            array_push($this->themes, $path);
-        }
+    /**
+     * Sets the project
+     *
+     * @param $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
     }
 }

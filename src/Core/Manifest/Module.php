@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use Exception;
 use Serializable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 class Module implements Serializable
 {
@@ -127,9 +128,15 @@ class Module implements Serializable
      */
     public function activate()
     {
-        $config = "{$this->path}/_config.php";
-        if (file_exists($config)) {
-            require_once $config;
+        global $project;
+        $config = ModuleManifest::config();
+        $configPath = "{$this->path}/_config.php";
+        if (file_exists($configPath)) {
+            require_once $configPath;
+            if ($project !== $config->get('project')) {
+                Deprecation::notice('5.0', '$project global is deprecated');
+                $config->set('project', $project);
+            }
         }
     }
 

@@ -5,12 +5,15 @@ namespace SilverStripe\Core\Manifest;
 use LogicException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  * A utility class which builds a manifest of configuration items
  */
 class ModuleManifest
 {
+    use Configurable;
+
     /**
      * The base path used when building the manifest
      *
@@ -42,7 +45,14 @@ class ModuleManifest
      *
      * @var Module[]
      */
-    protected $modules = array();
+    protected $modules = [];
+
+    /**
+     * A cached list of sorted modules
+     *
+     * @var Module[]
+     */
+    protected $sortedModules;
 
     /**
      * Adds a path as a module
@@ -224,5 +234,25 @@ class ModuleManifest
     public function getModules()
     {
         return $this->modules;
+    }
+
+    /**
+     * Get modules sorted by priority
+     *
+     * @return Module[]
+     */
+    public function getSortedModules()
+    {
+        if (!$this->sortedModules) {
+            $order = static::config()->uninherited('module_priority');
+            $project = static::config()->get('project');
+
+            $sorter = ModuleSorter::create($this->modules, $order)
+                ->setProject($project);
+
+            $this->sortedModules = $sorter->getSortedList();
+        }
+
+        return $this->sortedModules;
     }
 }

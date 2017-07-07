@@ -116,7 +116,7 @@ class CoreKernel implements Kernel
         $themeResourceLoader = ThemeResourceLoader::inst();
         $themeResourceLoader->addSet('$default', new ThemeManifest(
             $basePath,
-            project(),
+            null, // project is defined in config, and this argument is deprecated
             $manifestCacheFactory
         ));
         $this->setThemeResourceLoader($themeResourceLoader);
@@ -502,6 +502,9 @@ class CoreKernel implements Kernel
         // Find default templates
         $defaultSet = $this->getThemeResourceLoader()->getSet('$default');
         if ($defaultSet instanceof ThemeManifest) {
+            $defaultSet->setProject(
+                ModuleManifest::config()->get('project')
+            );
             $defaultSet->init($this->getIncludeTests(), $flush);
         }
     }

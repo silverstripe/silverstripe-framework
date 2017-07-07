@@ -12,3 +12,8 @@ SilverStripe\Control\HTTP:
     must-revalidate: "true"
     no-transform: "true"
   vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: ''
+  module_priority:
+    - '$project'
+    - 'other_modules'
