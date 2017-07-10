@@ -7,6 +7,11 @@ use SilverStripe\Dev\SapphireTest;
 
 class PrioritySorterTest extends SapphireTest
 {
+    /**
+     * @var PrioritySorter
+     */
+    protected $sorter;
+
     public function setUp()
     {
         parent::setUp();
@@ -43,7 +48,7 @@ class PrioritySorterTest extends SapphireTest
             'module/three',
             '$project',
         ])
-        ->setVariable('$project', 'module/one');
+            ->setVariable('$project', 'module/one');
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
@@ -61,7 +66,7 @@ class PrioritySorterTest extends SapphireTest
             'other_modules',
             'module/four',
         ])
-        ->setRestKey('other_modules');
+            ->setRestKey('other_modules');
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
         $this->assertEquals('module/four', $keys[0]);
@@ -78,8 +83,8 @@ class PrioritySorterTest extends SapphireTest
             'other_modules',
             '$project',
         ])
-        ->setVariable('$project', 'module/four')
-        ->setRestKey('other_modules');
+            ->setVariable('$project', 'module/four')
+            ->setRestKey('other_modules');
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
@@ -96,8 +101,8 @@ class PrioritySorterTest extends SapphireTest
             'module/four',
             'module/two'
         ])
-        ->setVariable('$project', 'module/five')
-        ->setDefaultTop('$project');
+            ->setVariable('$project', 'module/five')
+            ->setDefaultTop('$project');
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
         $this->assertEquals('module/five', $keys[0]);
@@ -115,8 +120,8 @@ class PrioritySorterTest extends SapphireTest
             'module/four',
             'module/two'
         ])
-        ->setVariable('$project', 'module/five')
-        ->setDefaultTop('$project');
+            ->setVariable('$project', 'module/five')
+            ->setDefaultTop('$project');
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);

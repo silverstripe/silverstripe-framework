@@ -40,6 +40,11 @@ class PrioritySorter
      */
     protected $names;
 
+    /**
+     * If not specified in priorities, put this item at the top (can be a variable)
+     *
+     * @var string
+     */
     protected $defaultTop;
 
     /**
@@ -54,6 +59,8 @@ class PrioritySorter
     }
 
     /**
+     * Sorts the items and returns a new version of $this->items
+     *
      * @return array
      */
     public function getSortedList()
@@ -83,7 +90,9 @@ class PrioritySorter
     }
 
     /**
-     * @param array $priorities
+     * Set the priorities for the items
+     *
+     * @param array $priorities An array of keys used in $this->items
      * @return $this
      */
     public function setPriorities(array $priorities)
@@ -94,6 +103,8 @@ class PrioritySorter
     }
 
     /**
+     * Sets the list of all items
+     *
      * @param array $items
      * @return $this
      */
@@ -106,6 +117,8 @@ class PrioritySorter
     }
 
     /**
+     * Add a variable for replacination, e.g. addVariable->('$project', 'myproject')
+     *
      * @param string $name
      * @param $value
      * @return $this
@@ -118,6 +131,8 @@ class PrioritySorter
     }
 
     /**
+     * The key used for "all other items"
+     *
      * @param $key
      * @return $this
      */
@@ -128,12 +143,20 @@ class PrioritySorter
         return $this;
     }
 
+    /**
+     * Sets the default item that should be top priority, unless explicitly set
+     * in the priorities list.
+     *
+     * @param $name
+     * @return $this
+     */
     public function setDefaultTop($name)
     {
         $this->defaultTop = $name;
 
         return $this;
     }
+
     /**
      * If variables are defined, interpolate their values
      */
@@ -169,6 +192,9 @@ class PrioritySorter
         }
     }
 
+    /**
+     * If default top priority is used and not explicitly sorted, make sure it's on top
+     */
     protected function includeDefaultTop()
     {
         $value = $this->resolveValue($this->defaultTop);
@@ -177,6 +203,12 @@ class PrioritySorter
         }
     }
 
+    /**
+     * Ensure variables get converted to their values
+     *
+     * @param $name
+     * @return mixed
+     */
     protected function resolveValue($name)
     {
         return isset($this->variables[$name]) ? $this->variables[$name] : $name;
