@@ -6,6 +6,10 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\Control\SimpleResourceURLGenerator
     properties:
       NonceStyle: mtime
+  SilverStripe\Core\Manifest\PrioritySorter.modulesorter:
+    class: SilverStripe\Core\Manifest\PrioritySorter
+    properties:
+      RestKey: 'other_modules'
 SilverStripe\Control\HTTP:
   cache_control:
     max-age: 0

@@ -37,6 +37,7 @@ class Sources implements Resettable
     public function getSortedModules()
     {
         $i18nOrder = Sources::config()->uninherited('module_priority');
+        $sortedModules = [];
         if($i18nOrder) {
             Deprecation::notice('5.0', sprintf(
                 '%s.module_priority is deprecated. Use %s.module_priority instead.',
@@ -44,7 +45,12 @@ class Sources implements Resettable
                 ModuleManifest::class
             ));
         }
-        return ModuleLoader::inst()->getManifest()->getSortedModules();
+
+        foreach(ModuleLoader::inst()->getManifest()->getSortedModules() as $module) {
+            $sortedModules[$module->getName()] = $module->getPath();
+        };
+
+        return $sortedModules;
     }
 
     /**

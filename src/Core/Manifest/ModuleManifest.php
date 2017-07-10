@@ -6,6 +6,7 @@ use LogicException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -13,6 +14,8 @@ use SilverStripe\Core\Config\Configurable;
 class ModuleManifest
 {
     use Configurable;
+
+    const PROJECT_KEY = '$project';
 
     /**
      * The base path used when building the manifest
@@ -247,8 +250,15 @@ class ModuleManifest
             $order = static::config()->uninherited('module_priority');
             $project = static::config()->get('project');
 
-            $sorter = ModuleSorter::create($this->modules, $order)
-                ->setProject($project);
+            $sorter = Injector::inst()->createWithArgs(
+                PrioritySorter::class.'.modulesorter',
+                [
+                    $this->modules,
+                    $order
+                ]
+            )
+            ->setVariable(self::PROJECT_KEY, $project)
+            ->setDefaultTop(self::PROJECT_KEY);
 
             $this->sortedModules = $sorter->getSortedList();
         }

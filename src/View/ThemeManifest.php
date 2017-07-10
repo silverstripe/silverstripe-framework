@@ -6,7 +6,6 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")
@@ -64,7 +63,7 @@ class ThemeManifest implements ThemeList
      * @param string $project Path to application code
      * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct($base, $project, CacheFactory $cacheFactory = null)
+    public function __construct($base, $project = null, CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->project = $project;
@@ -143,7 +142,7 @@ class ThemeManifest implements ThemeList
 
         $this->themes = [];
 
-        $modules = ModuleLoader::inst()->getManifest()->getModules();
+        $modules = ModuleLoader::inst()->getManifest()->getSortedModules();
         foreach($modules as $module) {
             $finder->find($module->getPath());
         }
@@ -165,7 +164,6 @@ class ThemeManifest implements ThemeList
         if ($basename !== self::TEMPLATES_DIR) {
             return;
         }
-
         $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
         $this->themes[] = "/".$dir;
     }

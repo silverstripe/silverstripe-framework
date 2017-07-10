@@ -110,7 +110,10 @@ class Deprecation
 
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
+            echo "checking $callingfile in {realpath($module->getPath())}\n";
+            var_dump(strpos($callingfile, realpath($module->getPath())));
             if (strpos($callingfile, realpath($module->getPath())) === 0) {
+                echo "found it ... {$module->getName()}\n";
                 return $module;
             }
         }
