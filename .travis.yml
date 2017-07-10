@@ -49,7 +49,7 @@ before_script:
   - printf "\n" | pecl install imagick
   - if [[ $PHPCS_TEST ]]; then pyrus install pear/PHP_CodeSniffer; fi
   - phpenv rehash
-  - if [[ $PHPUNIT_COVERAGE_TEST == "" ]]; then phpenv config-rm xdebug.ini; fi
+  - phpenv config-rm xdebug.ini
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 # Temporarily update to 1.5.x-dev of composer
@@ -77,7 +77,7 @@ before_script:
 
 script:
   - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
   - if [[ $BEHAT_TEST == framework ]]; then vendor/bin/behat @framework; fi
   - if [[ $BEHAT_TEST == cms ]]; then vendor/bin/behat @cms; fi
   - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
