@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
@@ -40,6 +41,7 @@ use InvalidArgumentException;
 class SSViewer implements Flushable
 {
     use Configurable;
+    use Injectable;
 
     /**
      * Identifier for the default theme
@@ -65,17 +67,17 @@ class SSViewer implements Flushable
     /**
      * @var array $templates List of templates to select from
      */
-    private $templates = null;
+    protected $templates = null;
 
     /**
      * @var string $chosen Absolute path to chosen template file
      */
-    private $chosen = null;
+    protected $chosen = null;
 
     /**
      * @var array Templates to use when looking up 'Layout' or 'Content'
      */
-    private $subTemplates = null;
+    protected $subTemplates = null;
 
     /**
      * @var boolean
@@ -143,7 +145,7 @@ class SSViewer implements Flushable
      */
     public static function fromString($content, $cacheTemplate = null)
     {
-        $viewer = new SSViewer_FromString($content);
+        $viewer = SSViewer_FromString::create($content);
         if ($cacheTemplate !== null) {
             $viewer->setCacheTemplate($cacheTemplate);
         }
@@ -574,7 +576,7 @@ class SSViewer implements Flushable
      */
     public static function execute_template($template, $data, $arguments = null, $scope = null)
     {
-        $v = new SSViewer($template);
+        $v = SSViewer::create($template);
         $v->includeRequirements(false);
 
         return $v->process($data, $arguments, $scope);
