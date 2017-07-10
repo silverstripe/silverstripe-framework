@@ -887,24 +887,21 @@ class File extends DataObject {
 	 * @return int
 	 */
 	public static function ini2bytes($iniValue) {
-		$iniValues = str_split(trim($iniValue));
-		$unit = strtolower(array_pop($iniValues));
-		$quantity = (int) implode($iniValues);
-		switch ($unit) {
-			case 'g':
-				$quantity *= 1024;
-				// deliberate no break
-			case 'm':
-				$quantity *= 1024;
-				// deliberate no break
-			case 'k':
-				$quantity *= 1024;
-				// deliberate no break
-			default:
-				// no-op: pre-existing behaviour
-				break;
+		// Remove  non-unit characters from the size
+		$unit = preg_replace('/[^bkmgtpezy]/i', '', $iniValue);
+		// Remove non-numeric characters from the size
+		$size = preg_replace('/[^0-9\.]/', '', $iniValue);
+
+		if ($unit) {
+			// Find the position of the unit in the ordered string which is the power
+			// of magnitude to multiply a kilobyte by
+			$size = round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+		} else {
+			$size = round($size);
 		}
-		return $quantity;
+
+		// Cast to int - round() returns a float
+		return (int)$size;
 	}
 
 	/**
