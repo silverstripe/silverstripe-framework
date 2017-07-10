@@ -413,6 +413,33 @@ class FileTest extends SapphireTest {
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
 
+	/**
+	 * Test that ini2bytes returns the number of bytes for a PHP ini style size declaration
+	 *
+	 * @param string $iniValue
+	 * @param int    $expected
+	 * @dataProvider ini2BytesProvider
+	 */
+	public function testIni2Bytes($iniValue, $expected) {
+		$this->assertSame($expected, File::ini2bytes($iniValue));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ini2BytesProvider() {
+		return array(
+			array('2048', 2 * 1024),
+			array('2k', 2 * 1024),
+			array('512M', 512 * 1024 * 1024),
+			array('512MiB', 512 * 1024 * 1024),
+			array('512 mbytes', 512 * 1024 * 1024),
+			array('512 megabytes', 512 * 1024 * 1024),
+			array('1024g', 1024 * 1024 * 1024 * 1024),
+			array('1024G', 1024 * 1024 * 1024 * 1024)
+		);
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public function setUp() {
