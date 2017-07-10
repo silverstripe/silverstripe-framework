@@ -143,8 +143,6 @@ class FixtureBlueprint
                 }
             }
 
-            $obj->write();
-
             // Save to fixture before relationship processing in case of reflexive relationships
             if (!isset($fixtures[$class])) {
                 $fixtures[$class] = array();
