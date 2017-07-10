@@ -65,6 +65,14 @@ class ClassInfo
     private static $_cache_parse = [];
 
     /**
+     * Cache for class_name
+     *
+     * @internal
+     * @var array
+     */
+    private static $_cache_class_names = [];
+
+    /**
      * @todo Move this to SS_Database or DB
      *
      * @param string $tableName
@@ -200,8 +208,14 @@ class ClassInfo
         if (is_object($nameOrObject)) {
             return get_class($nameOrObject);
         }
-        $reflection = new ReflectionClass($nameOrObject);
-        return $reflection->getName();
+
+        $key = strtolower($nameOrObject);
+        if (!isset(static::$_cache_class_names[$key])) {
+            $reflection = new ReflectionClass($nameOrObject);
+            static::$_cache_class_names[$key] = $reflection->getName();
+        }
+
+        return static::$_cache_class_names[$key];
     }
 
     /**
