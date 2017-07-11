@@ -57,28 +57,47 @@ class SilverStripeVersionProvider
 	public function getModuleVersionFromComposer($modules = array())
 	{
 		$versions = array();
-		$composerLockPath = BASE_PATH . '/composer.lock';
-		if (file_exists($composerLockPath)) {
-			$cache = SS_Cache::factory('SilverStripeVersionProvider_composerlock');
-			$cacheKey = filemtime($composerLockPath);
-			$versions = $cache->load($cacheKey);
-			if ($versions) {
-				$versions = json_decode($versions, true);
-			} else {
-				$versions = array();
-			}
-			if (!$versions && $jsonData = file_get_contents($composerLockPath)) {
-				$lockData = json_decode($jsonData);
-				if ($lockData && isset($lockData->packages)) {
-					foreach ($lockData->packages as $package) {
-						if (in_array($package->name, $modules) && isset($package->version)) {
-							$versions[$package->name] = $package->version;
-						}
-					}
-					$cache->save(json_encode($versions), $cacheKey);
+		$lockData = $this->getComposerLock();
+		if ($lockData && !empty($lockData['packages'])) {
+			foreach ($lockData['packages'] as $package) {
+				if (in_array($package['name'], $modules) && isset($package['version'])) {
+					$versions[$package['name']] = $package['version'];
 				}
 			}
 		}
 		return $versions;
+	}
+
+	/**
+	 * Load composer.lock's contents and return it
+	 *
+	 * @param  bool $cache
+	 * @return array
+	 */
+	protected function getComposerLock($cache = true)
+	{
+		$composerLockPath = BASE_PATH . '/composer.lock';
+		if (!file_exists($composerLockPath)) {
+			return array();
+		}
+
+		$lockData = array();
+		if ($cache) {
+			$cache = SS_Cache::factory('SilverStripeVersionProvider_composerlock');
+			$cacheKey = filemtime($composerLockPath);
+			if ($versions = $cache->load($cacheKey)) {
+				$lockData = json_decode($versions, true);
+			}
+		}
+
+		if (empty($lockData) && $jsonData = file_get_contents($composerLockPath)) {
+			$lockData = json_decode($jsonData, true);
+
+			if ($cache) {
+				$cache->save(json_encode($lockData), $cacheKey);
+			}
+		}
+
+		return $lockData;
 	}
 }

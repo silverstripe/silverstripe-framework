@@ -52,4 +52,33 @@ class SilverStripeVersionProviderTest extends SapphireTest
 		$this->assertContains('Framework: ', $result);
 		$this->assertContains(', ', $result);
 	}
+
+	public function testGetModulesFromComposerLock()
+	{
+		$mock = $this->getMockBuilder('SilverStripeVersionProvider')
+			->setMethods(array('getComposerLock'))
+			->getMock();
+
+		$mock->expects($this->once())
+			->method('getComposerLock')
+			->will($this->returnValue(array(
+				'packages' => array(
+					array(
+						'name' => 'silverstripe/somepackage',
+						'version' => '1.2.3'
+					),
+					array(
+						'name' => 'silverstripe/another',
+						'version' => '2.3.4'
+					)
+				)
+			)));
+
+		Config::inst()->update('SilverStripeVersionProvider', 'modules', array(
+			'silverstripe/somepackage' => 'Some Package'
+		));
+
+		$result = $mock->getVersion();
+		$this->assertContains('Some Package: 1.2.3', $result);
+	}
 }
