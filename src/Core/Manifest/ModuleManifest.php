@@ -137,7 +137,9 @@ class ModuleManifest
      */
     public function activateConfig()
     {
-        foreach ($this->getModules() as $module) {
+        $modules = $this->getModules();
+        // Work in reverse priority, so the higher priority modules get later execution
+        foreach (array_reverse($modules) as $module) {
             $module->activate();
         }
     }
