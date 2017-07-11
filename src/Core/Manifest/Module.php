@@ -127,9 +127,9 @@ class Module implements Serializable
      */
     public function activate()
     {
-        $configPath = "{$this->path}/_config.php";
-        if (file_exists($configPath)) {
-            require_once $configPath;
+        $config = "{$this->path}/_config.php";
+        if (file_exists($config)) {
+            require_once $config;
         }
     }
 
