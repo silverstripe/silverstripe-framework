@@ -213,5 +213,4 @@ class PrioritySorter
     {
         return isset($this->variables[$name]) ? $this->variables[$name] : $name;
     }
-
 }

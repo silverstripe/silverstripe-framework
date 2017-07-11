@@ -143,7 +143,7 @@ class ThemeManifest implements ThemeList
         $this->themes = [];
 
         $modules = ModuleLoader::inst()->getManifest()->getSortedModules();
-        foreach($modules as $module) {
+        foreach ($modules as $module) {
             $finder->find($module->getPath());
         }
 

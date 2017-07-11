@@ -38,7 +38,7 @@ class Sources implements Resettable
     {
         $i18nOrder = Sources::config()->uninherited('module_priority');
         $sortedModules = [];
-        if($i18nOrder) {
+        if ($i18nOrder) {
             Deprecation::notice('5.0', sprintf(
                 '%s.module_priority is deprecated. Use %s.module_priority instead.',
                 __CLASS__,
@@ -46,7 +46,7 @@ class Sources implements Resettable
             ));
         }
 
-        foreach(ModuleLoader::inst()->getManifest()->getSortedModules() as $module) {
+        foreach (ModuleLoader::inst()->getManifest()->getSortedModules() as $module) {
             $sortedModules[$module->getName()] = $module->getPath();
         };
 
