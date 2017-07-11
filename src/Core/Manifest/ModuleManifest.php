@@ -51,13 +51,6 @@ class ModuleManifest
     protected $modules = [];
 
     /**
-     * A cached list of sorted modules
-     *
-     * @var Module[]
-     */
-    protected $sortedModules;
-
-    /**
      * Adds a path as a module
      *
      * @param string $path
