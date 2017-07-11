@@ -43,19 +43,58 @@ The manifest is created whenever you flush your SilverStripe cache by appending 
 example by visiting `http://yoursite.com/?flush=1`. When your include the `flush=1` flag, the manifest class will search 
 your entire project for the appropriate `.ss` files located in `template` directory and save that information for later.
 
-It will each and prioritize templates in the following priority:
-
-1. mysite (or other name given to site folder)
-2. module-specific themes (e.g. themes/simple_blog)
-3. themes (e.g. themes/simple)
-4. modules  (e.g. blog)
-5. framework
-
 <div class="warning">
 Whenever you add or remove template files, rebuild the manifest by visiting `http://yoursite.com/?flush=1`. You can 
 flush the cache from any page, (.com/home?flush=1, .com/admin?flush=1, etc.). Flushing the cache can be slow, so you 
 only need to do it when you're developing new templates.
 </div>
+
+## Template Priority
+
+The order in which templates are selected from themes can be explicitly declared
+through configuration. To specify the order you want, make a list of the module
+names under `SilverStripe\Core\Manifest\ModuleManifest.module_priority` in a
+configuration YAML file. 
+
+
+*some-module/_config.yml*
+```yml
+SilverStripe\Core\Manifest\ModuleManifest:
+  module_priority:
+    - 'example/module-one'
+    - 'example/module-two'
+    - '$other_modules'
+    - 'example/module-three'
+```
+
+The placeholder `$other_modules` is used to mark where all of the modules not specified
+in the list should appear. (In alphabetical order of their containing directory names).
+
+In this example, the module named `example/module-one` has the highest level of precedence,
+followed by `example/module-two`. The module `example/module-three` is guaranteed the lowest
+level of precedence.
+
+### Defining a "project"
+
+It is a good idea to define one of your modules as the `project`. Commonly, this is the
+`mysite/` module, but there is nothing compulsory about that module name. The "project"
+module can be specified as a variable in the `module_priorities` list, as well. 
+
+*some-module/_config.yml*
+```yml
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: 'myapp'
+  module_priority:
+    - '$project'
+    - '$other_modules'
+```
+
+### About module "names"
+
+Module names are derived their local `composer.json` files using the following precedence:
+* The value of the `name` attribute in `composer.json`
+* The value of `extras.installer_name` in `composer.json`
+* The basename of the directory that contains the module
 
 ## Nested Layouts through `$Layout`
 
