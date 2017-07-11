@@ -142,7 +142,7 @@ class ThemeManifest implements ThemeList
 
         $this->themes = [];
 
-        $modules = ModuleLoader::inst()->getManifest()->getSortedModules();
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             $finder->find($module->getPath());
         }
@@ -171,10 +171,13 @@ class ThemeManifest implements ThemeList
     /**
      * Sets the project
      *
-     * @param $project
+     * @param string $project
+     * @return $this
      */
     public function setProject($project)
     {
         $this->project = $project;
+
+        return $this;
     }
 }

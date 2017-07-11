@@ -35,11 +35,11 @@ class PrioritySorterTest extends SapphireTest
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
-        $this->assertEquals('module/two', $keys[0]);
+        $this->assertEquals('module/three', $keys[0]);
         $this->assertEquals('module/one', $keys[1]);
-        $this->assertEquals('module/three', $keys[2]);
-        $this->assertEquals('module/five', $keys[3]);
-        $this->assertEquals('module/four', $keys[4]);
+        $this->assertEquals('module/two', $keys[2]);
+        $this->assertEquals('module/four', $keys[3]);
+        $this->assertEquals('module/five', $keys[4]);
     }
 
     public function testModuleSortingWithVarsAndNoRest()
@@ -52,28 +52,28 @@ class PrioritySorterTest extends SapphireTest
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
-        $this->assertEquals('module/one', $keys[0]);
-        $this->assertEquals('module/three', $keys[1]);
-        $this->assertEquals('module/five', $keys[2]);
+        $this->assertEquals('module/three', $keys[0]);
+        $this->assertEquals('module/one', $keys[1]);
+        $this->assertEquals('module/two', $keys[2]);
         $this->assertEquals('module/four', $keys[3]);
-        $this->assertEquals('module/two', $keys[4]);
+        $this->assertEquals('module/five', $keys[4]);
     }
 
     public function testModuleSortingWithNoVarsAndWithRest()
     {
         $this->sorter->setPriorities([
             'module/two',
-            'other_modules',
+            '$other_modules',
             'module/four',
         ])
-            ->setRestKey('other_modules');
+            ->setRestKey('$other_modules');
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
-        $this->assertEquals('module/four', $keys[0]);
-        $this->assertEquals('module/five', $keys[1]);
+        $this->assertEquals('module/two', $keys[0]);
+        $this->assertEquals('module/one', $keys[1]);
         $this->assertEquals('module/three', $keys[2]);
-        $this->assertEquals('module/one', $keys[3]);
-        $this->assertEquals('module/two', $keys[4]);
+        $this->assertEquals('module/five', $keys[3]);
+        $this->assertEquals('module/four', $keys[4]);
     }
 
     public function testModuleSortingWithVarsAndWithRest()
@@ -88,47 +88,10 @@ class PrioritySorterTest extends SapphireTest
 
         $result = $this->sorter->getSortedList();
         $keys = array_keys($result);
-        $this->assertEquals('module/four', $keys[0]);
-        $this->assertEquals('module/five', $keys[1]);
-        $this->assertEquals('module/three', $keys[2]);
-        $this->assertEquals('module/one', $keys[3]);
-        $this->assertEquals('module/two', $keys[4]);
-    }
-
-    public function testDefaultTopNotSpecified()
-    {
-        $this->sorter->setPriorities([
-            'module/four',
-            'module/two'
-        ])
-            ->setVariable('$project', 'module/five')
-            ->setDefaultTop('$project');
-        $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
-        $this->assertEquals('module/five', $keys[0]);
-        $this->assertEquals('module/two', $keys[1]);
-        $this->assertEquals('module/four', $keys[2]);
-        $this->assertEquals('module/three', $keys[3]);
-        $this->assertEquals('module/one', $keys[4]);
-
-    }
-
-    public function testDefaultTopSpecified()
-    {
-        $this->sorter->setPriorities([
-            '$project',
-            'module/four',
-            'module/two'
-        ])
-            ->setVariable('$project', 'module/five')
-            ->setDefaultTop('$project');
-
-        $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
         $this->assertEquals('module/two', $keys[0]);
-        $this->assertEquals('module/four', $keys[1]);
-        $this->assertEquals('module/five', $keys[2]);
-        $this->assertEquals('module/three', $keys[3]);
-        $this->assertEquals('module/one', $keys[4]);
+        $this->assertEquals('module/one', $keys[1]);
+        $this->assertEquals('module/three', $keys[2]);
+        $this->assertEquals('module/five', $keys[3]);
+        $this->assertEquals('module/four', $keys[4]);
     }
 }

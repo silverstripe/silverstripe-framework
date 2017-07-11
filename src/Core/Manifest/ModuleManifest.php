@@ -240,29 +240,27 @@ class ModuleManifest
     }
 
     /**
-     * Get modules sorted by priority
+     * Sort modules sorted by priority
      *
-     * @return Module[]
+     * @return void
      */
-    public function getSortedModules()
+    public function sort()
     {
-        if (!$this->sortedModules) {
-            $order = static::config()->uninherited('module_priority');
-            $project = static::config()->get('project');
+        $order = static::config()->uninherited('module_priority');
+        $project = static::config()->get('project');
+        /* @var PrioritySorter $sorter */
+        $sorter = Injector::inst()->createWithArgs(
+            PrioritySorter::class.'.modulesorter',
+            [
+                $this->modules,
+                $order ?: []
+            ]
+        );
 
-            $sorter = Injector::inst()->createWithArgs(
-                PrioritySorter::class.'.modulesorter',
-                [
-                    $this->modules,
-                    $order
-                ]
-            )
-            ->setVariable(self::PROJECT_KEY, $project)
-            ->setDefaultTop(self::PROJECT_KEY);
-
-            $this->sortedModules = $sorter->getSortedList();
+        if ($project) {
+            $sorter->setVariable(self::PROJECT_KEY, $project);
         }
-
-        return $this->sortedModules;
+        
+        $this->modules = $sorter->getSortedList();
     }
 }

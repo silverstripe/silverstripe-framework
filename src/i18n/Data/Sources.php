@@ -46,7 +46,7 @@ class Sources implements Resettable
             ));
         }
 
-        foreach (ModuleLoader::inst()->getManifest()->getSortedModules() as $module) {
+        foreach (ModuleLoader::inst()->getManifest()->getModules() as $module) {
             $sortedModules[$module->getName()] = $module->getPath();
         };
 

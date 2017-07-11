@@ -5,8 +5,35 @@ namespace SilverStripe\Core\Manifest;
 use SilverStripe\Core\Injector\Injectable;
 
 /**
- * Class PrioritySorter
- * @package SilverStripe\Core\Manifest
+ * Sorts an associative array of items given a list of priorities,
+ * where priorities are the keys of the items in the order they are desired.
+ * Allows user-defined variables, and a "rest" key to symbolise all remaining items.
+ * Example:
+ *
+ * $myItems = [
+ *   'product-one' => new Product(...),
+ *   'product-two' => new Product(...),
+ *   'product-three' => new Product(...),
+ *   'product-four' =>  new Product(...),
+ * ];
+ *
+ * $priorities = [
+ *   '$featured',
+ *   'product-two',
+ *   '...rest',
+ * ];
+ *
+ * $sorter = new PrioritySorter($items, $priorities);
+ * $sorter->setVariable('$featured', 'product-three');
+ * $sorter->getSortedList();
+ *
+ * [
+ *   'product-three' => [object] Product,
+ *   'product-two' => [object] Product,
+ *   'product-one' => [object] Product,
+ *   'product-four' => [object] Product
+ * ]
+ *
  */
 class PrioritySorter
 {
@@ -26,26 +53,25 @@ class PrioritySorter
     protected $variables = [];
 
     /**
+     * An associative array of items, whose keys can be used in the $priorities list
+     *
      * @var array
      */
     protected $items;
 
     /**
+     * An indexed array of keys in the $items list, reflecting the desired sort
+     *
      * @var array
      */
     protected $priorities;
 
     /**
+     * The keys of the $items array
+     *
      * @var array
      */
     protected $names;
-
-    /**
-     * If not specified in priorities, put this item at the top (can be a variable)
-     *
-     * @var string
-     */
-    protected $defaultTop;
 
     /**
      * PrioritySorter constructor.
@@ -70,12 +96,8 @@ class PrioritySorter
         // Find all items that don't have their order specified by the config system
         $unspecified = array_diff($this->names, $this->priorities);
 
-        if ($this->restKey && !empty($unspecified)) {
+        if (!empty($unspecified)) {
             $this->includeRest($unspecified);
-        }
-
-        if ($this->defaultTop) {
-            $this->includeDefaultTop();
         }
 
         $sortedList = [];
@@ -84,7 +106,6 @@ class PrioritySorter
                 $sortedList[$itemName] = $this->items[$itemName];
             }
         }
-        $sortedList = array_reverse($sortedList, true);
 
         return $sortedList;
     }
@@ -144,20 +165,6 @@ class PrioritySorter
     }
 
     /**
-     * Sets the default item that should be top priority, unless explicitly set
-     * in the priorities list.
-     *
-     * @param $name
-     * @return $this
-     */
-    public function setDefaultTop($name)
-    {
-        $this->defaultTop = $name;
-
-        return $this;
-    }
-
-    /**
      * If variables are defined, interpolate their values
      */
     protected function addVariables()
@@ -187,19 +194,8 @@ class PrioritySorter
         if ($otherItemsIndex !== false) {
             array_splice($this->priorities, $otherItemsIndex, 1, $list);
         } else {
-            // Otherwise just jam them on the front
-            array_splice($this->priorities, 0, 0, $list);
-        }
-    }
-
-    /**
-     * If default top priority is used and not explicitly sorted, make sure it's on top
-     */
-    protected function includeDefaultTop()
-    {
-        $value = $this->resolveValue($this->defaultTop);
-        if (!in_array($value, $this->priorities)) {
-            $this->priorities[] = $value;
+            // Otherwise just jam them on the end
+            $this->priorities = array_merge($this->priorities, $list);
         }
     }
 
