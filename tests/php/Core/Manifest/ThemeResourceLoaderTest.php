@@ -36,13 +36,14 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         // Fake project root
         $this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
-        ModuleManifest::config()->set('module_priority', ['other_modules', '$project']);
+        ModuleManifest::config()->set('module_priority', ['$project', '$other_modules']);
         ModuleManifest::config()->set('project', 'myproject');
 
         $moduleLoader = ModuleLoader::inst();
         $moduleManifest = new ModuleManifest($this->base);
         $moduleManifest->init();
         $moduleLoader->pushManifest($moduleManifest);
+        $moduleLoader->getManifest()->sort();
 
         // New ThemeManifest for that root
         $this->manifest = new ThemeManifest($this->base);
