@@ -40,11 +40,10 @@ class ThemeResourceLoaderTest extends SapphireTest
         ModuleManifest::config()->set('module_priority', ['$project', '$other_modules']);
         ModuleManifest::config()->set('project', 'myproject');
 
-        $moduleLoader = ModuleLoader::inst();
         $moduleManifest = new ModuleManifest($this->base);
         $moduleManifest->init();
-        $moduleLoader->pushManifest($moduleManifest);
-        $moduleLoader->getManifest()->sort();
+        $moduleManifest->sort();
+        ModuleLoader::inst()->pushManifest($moduleManifest);
 
         // New ThemeManifest for that root
         $this->manifest = new ThemeManifest($this->base);
@@ -53,6 +52,12 @@ class ThemeResourceLoaderTest extends SapphireTest
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
+    }
+
+    protected function tearDown()
+    {
+        ModuleLoader::inst()->popManifest();
+        parent::tearDown();
     }
 
     /**
