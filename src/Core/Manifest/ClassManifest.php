@@ -323,27 +323,8 @@ class ClassManifest
      */
     public function getOwnerModule($class)
     {
-        $path = realpath($this->getItemPath($class));
-        if (!$path) {
-            return null;
-        }
-
-        /** @var Module $rootModule */
-        $rootModule = null;
-
-        // Find based on loaded modules
-        $modules = ModuleLoader::inst()->getManifest()->getModules();
-        foreach ($modules as $module) {
-            // Leave root module as fallback
-            if (empty($module->getRelativePath())) {
-                $rootModule = $module;
-            } elseif (stripos($path, realpath($module->getPath())) === 0) {
-                return $module;
-            }
-        }
-
-        // Fall back to top level module
-        return $rootModule;
+        $path = $this->getItemPath($class);
+        return ModuleLoader::inst()->getManifest()->getModuleByPath($path);
     }
 
     /**

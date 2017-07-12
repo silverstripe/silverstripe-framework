@@ -50,7 +50,7 @@ you should call `->activate()` on the kernel instance you would like to unnest t
 
 # Application
 
-An application represents a basic excution controller for the top level application entry point.
+An application represents a basic execution controller for the top level application entry point.
 The role of the application is to:
 
  - Control bootstrapping of a provided kernel instance

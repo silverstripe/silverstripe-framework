@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
+use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")
@@ -62,7 +63,7 @@ class ThemeManifest implements ThemeList
      * @param string $project Path to application code
      * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct($base, $project, CacheFactory $cacheFactory = null)
+    public function __construct($base, $project = null, CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->project = $project;
@@ -116,6 +117,9 @@ class ThemeManifest implements ThemeList
         ));
     }
 
+    /**
+     * @return \string[]
+     */
     public function getThemes()
     {
         return $this->themes;
@@ -137,7 +141,11 @@ class ThemeManifest implements ThemeList
         ));
 
         $this->themes = [];
-        $finder->find($this->base);
+
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
+        foreach ($modules as $module) {
+            $finder->find($module->getPath());
+        }
 
         if ($this->cache) {
             $this->cache->set($this->cacheKey, $this->themes);
@@ -156,19 +164,20 @@ class ThemeManifest implements ThemeList
         if ($basename !== self::TEMPLATES_DIR) {
             return;
         }
+        $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
+        $this->themes[] = "/".$dir;
+    }
 
-        // We only want part of the full path, so split into directories
-        $parts = explode('/', $pathname);
-        // Take the end (the part relative to base), except the very last directory
-        $themeParts = array_slice($parts, -$depth, $depth-1);
-        // Then join again
-        $path = '/'.implode('/', $themeParts);
+    /**
+     * Sets the project
+     *
+     * @param string $project
+     * @return $this
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
 
-        // If this is in the project, add to beginning of list. Else add to end.
-        if ($themeParts && $themeParts[0] == $this->project) {
-            array_unshift($this->themes, $path);
-        } else {
-            array_push($this->themes, $path);
-        }
+        return $this;
     }
 }

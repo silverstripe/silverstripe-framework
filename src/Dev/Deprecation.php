@@ -108,13 +108,7 @@ class Deprecation
 
         $callingfile = realpath($backtrace[1]['file']);
 
-        $modules = ModuleLoader::inst()->getManifest()->getModules();
-        foreach ($modules as $module) {
-            if (strpos($callingfile, realpath($module->getPath())) === 0) {
-                return $module;
-            }
-        }
-        return null;
+        return ModuleLoader::inst()->getManifest()->getModuleByPath($callingfile);
     }
 
     /**
