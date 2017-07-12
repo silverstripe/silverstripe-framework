@@ -111,8 +111,8 @@ class ModuleManifest
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
-                CacheInterface::class.'.modulemanifest',
-                [ 'namespace' => 'modulemanifest' . ($includeTests ? '_tests' : '') ]
+                CacheInterface::class . '.modulemanifest',
+                ['namespace' => 'modulemanifest' . ($includeTests ? '_tests' : '')]
             );
         }
 
@@ -132,6 +132,7 @@ class ModuleManifest
     {
         $modules = $this->getModules();
         // Work in reverse priority, so the higher priority modules get later execution
+        /** @var Module $module */
         foreach (array_reverse($modules) as $module) {
             $module->activate();
         }
@@ -153,20 +154,20 @@ class ModuleManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
             'min_depth' => 0,
-            'name_regex'    => '/(^|[\/\\\\])_config.php$/',
-            'ignore_tests'  => !$includeTests,
+            'name_regex' => '/(^|[\/\\\\])_config.php$/',
+            'ignore_tests' => !$includeTests,
             'file_callback' => array($this, 'addSourceConfigFile'),
             // Cannot be max_depth: 1 due to "/framework/admin/_config.php"
-            'max_depth'     => 2
+            'max_depth' => 2
         ));
         $finder->find($this->base);
 
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
-            'name_regex'    => '/\.ya?ml$/',
-            'ignore_tests'  => !$includeTests,
+            'name_regex' => '/\.ya?ml$/',
+            'ignore_tests' => !$includeTests,
             'file_callback' => array($this, 'addYAMLConfigFile'),
-            'max_depth'     => 2
+            'max_depth' => 2
         ));
         $finder->find($this->base);
 
@@ -245,7 +246,7 @@ class ModuleManifest
         $project = static::config()->get('project');
         /* @var PrioritySorter $sorter */
         $sorter = Injector::inst()->createWithArgs(
-            PrioritySorter::class.'.modulesorter',
+            PrioritySorter::class . '.modulesorter',
             [
                 $this->modules,
                 $order ?: []
@@ -255,7 +256,44 @@ class ModuleManifest
         if ($project) {
             $sorter->setVariable(self::PROJECT_KEY, $project);
         }
-        
+
         $this->modules = $sorter->getSortedList();
+    }
+
+    /**
+     * Get module that contains the given path
+     *
+     * @param string $path Full filesystem path to the given file
+     * @return Module The module, or null if not a path in any module
+     */
+    public function getModuleByPath($path)
+    {
+        // Ensure path exists
+        $path = realpath($path);
+        if (!$path) {
+            return null;
+        }
+
+        /** @var Module $rootModule */
+        $rootModule = null;
+
+        // Find based on loaded modules
+        $modules = ModuleLoader::inst()->getManifest()->getModules();
+        foreach ($modules as $module) {
+            // Check if path is in module
+            if (stripos($path, realpath($module->getPath())) !== 0) {
+                continue;
+            }
+
+            // If this is the root module, keep looking in case there is a more specific module later
+            if (empty($module->getRelativePath())) {
+                $rootModule = $module;
+            } else {
+                return $module;
+            }
+        }
+
+        // Fall back to top level module
+        return $rootModule;
     }
 }
