@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
@@ -44,7 +45,7 @@ class LogoutHandler extends RequestHandler
      * {@link __construct constructor} was set to TRUE and the user was
      * currently logged in.
      *
-     * @return bool|Member
+     * @return array|HTTPResponse
      */
     public function logout()
     {
