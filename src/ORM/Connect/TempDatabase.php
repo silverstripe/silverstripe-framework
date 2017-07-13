@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Exception;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -92,7 +93,6 @@ class TempDatabase
             }
         }
 
-        // echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
         $dbConn->dropSelectedDatabase();
     }
 
@@ -147,7 +147,11 @@ class TempDatabase
 
         // Ensure test db is killed on exit
         register_shutdown_function(function () {
-            $this->kill();
+            try {
+                $this->kill();
+            } catch (Exception $ex) {
+                // An exception thrown while trying to remove a test database shouldn't fail a build, ignore
+            }
         });
 
         return $dbname;
