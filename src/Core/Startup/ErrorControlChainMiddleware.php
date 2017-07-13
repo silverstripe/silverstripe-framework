@@ -61,9 +61,10 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
                 }
             })
             // Finally if a token was requested but there was an error while figuring out if it's allowed, do it anyway
-            ->thenIfErrored(function () use ($reloadToken, &$result) {
+            ->thenIfErrored(function () use ($reloadToken) {
                 if ($reloadToken) {
                     $result = $reloadToken->reloadWithToken();
+                    $result->output();
                 }
             })
             ->execute();
