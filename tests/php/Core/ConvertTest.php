@@ -517,4 +517,60 @@ XML
             'Non-alpha leading  with trailing upper camel'
         );
     }
+
+    /**
+     * Test that memstring2bytes returns the number of bytes for a PHP ini style size declaration
+     *
+     * @param string $memString
+     * @param int    $expected
+     * @dataProvider memString2BytesProvider
+     */
+    public function testMemString2Bytes($memString, $expected)
+    {
+        $this->assertSame($expected, Convert::memstring2bytes($memString));
+    }
+
+    /**
+     * @return array
+     */
+    public function memString2BytesProvider()
+    {
+        return [
+            ['2048', (float)(2 * 1024)],
+            ['2k', (float)(2 * 1024)],
+            ['512M', (float)(512 * 1024 * 1024)],
+            ['512MiB', (float)(512 * 1024 * 1024)],
+            ['512 mbytes', (float)(512 * 1024 * 1024)],
+            ['512 megabytes', (float)(512 * 1024 * 1024)],
+            ['1024g', (float)(1024 * 1024 * 1024 * 1024)],
+            ['1024G', (float)(1024 * 1024 * 1024 * 1024)]
+        ];
+    }
+
+    /**
+     * Test that bytes2memstring returns a binary prefixed string representing the number of bytes
+     *
+     * @param string $memString
+     * @param int    $expected
+     * @dataProvider bytes2MemStringProvider
+     */
+    public function testBytes2MemString($bytes, $expected)
+    {
+        $this->assertSame($expected, Convert::bytes2memstring($bytes));
+    }
+
+    /**
+     * @return array
+     */
+    public function bytes2MemStringProvider()
+    {
+        return [
+            [200, '200B'],
+            [(2 * 1024), '2K'],
+            [(512 * 1024 * 1024), '512M'],
+            [(512 * 1024 * 1024 * 1024), '512G'],
+            [(512 * 1024 * 1024 * 1024 * 1024), '512T'],
+            [(512 * 1024 * 1024 * 1024 * 1024 * 1024), '512P']
+        ];
+    }
 }
