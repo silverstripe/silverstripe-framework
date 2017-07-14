@@ -15,9 +15,65 @@ class TreeDropdownFieldTest extends SapphireTest
 
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
 
+    public function testTreeSearchJson()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
+    
+        // case insensitive search against keyword 'sub' for folders
+        $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json'));
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = json_decode($response->getBody(), true);
+    
+        $folder1 = $this->objFromFixture(Folder::class, 'folder1');
+        $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
+        
+        $this->assertContains(
+            $folder1->Name,
+            array_column($tree['children'], 'title'),
+            $folder1->Name.' is found in the json'
+        );
+        
+        $filtered = array_filter($tree['children'], function ($entry) use ($folder1) {
+            return $folder1->Name === $entry['title'];
+        });
+        $folder1Tree = array_pop($filtered);
+        
+        $this->assertContains(
+            $folder1Subfolder1->Name,
+            array_column($folder1Tree['children'], 'title'),
+            $folder1Subfolder1->Name.' is found in the folder1 entry in the json'
+        );
+    }
+    
+    public function testTreeSearchJsonFlatlist()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
+        
+        // case insensitive search against keyword 'sub' for folders
+        $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json', 'flatList' => '1'));
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = json_decode($response->getBody(), true);
+        
+        $folder1 = $this->objFromFixture(Folder::class, 'folder1');
+        $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
+        
+        $this->assertNotContains(
+            $folder1->Name,
+            array_column($tree['children'], 'title'),
+            $folder1->Name.' is not found in the json'
+        );
+        
+        $this->assertContains(
+            $folder1Subfolder1->Name,
+            array_column($tree['children'], 'title'),
+            $folder1Subfolder1->Name.' is found in the json'
+        );
+    }
+    
     public function testTreeSearch()
     {
-
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
         // case insensitive search against keyword 'sub' for folders
@@ -30,7 +86,8 @@ class TreeDropdownFieldTest extends SapphireTest
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
 
         $parser = new CSSContentParser($tree);
-        $cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
+        $cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.
+            $folder1Subfolder1->ID.' a span.item';
         $firstResult = $parser->getBySelector($cssPath);
         $this->assertEquals(
             $folder1Subfolder1->Name,
@@ -67,7 +124,8 @@ class TreeDropdownFieldTest extends SapphireTest
         $parser = new CSSContentParser($tree);
 
         // Even if we used File as the source object, folders are still returned because Folder is a File
-        $cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
+        $cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.
+            $folder1Subfolder1->ID.' a span.item';
         $firstResult = $parser->getBySelector($cssPath);
         $this->assertEquals(
             $folder1Subfolder1->Name,

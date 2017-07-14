@@ -154,10 +154,19 @@ class TreeDropdownField extends FormField
 
     /**
      * List of ids in current search result (keys are ids, values are true)
+     * This includes parents of search result children which may not be an actual result
      *
      * @var array
      */
     protected $searchIds = [];
+    
+    /**
+     * List of ids which matches the search result
+     * This excludes parents of search result children
+     *
+     * @var array
+     */
+    protected $realSearchIds = [];
 
     /**
      * Determine if search should be shown
@@ -378,9 +387,15 @@ class TreeDropdownField extends FormField
         $isSubTree = false;
 
         $this->search = $request->requestVar('search');
+        $flatlist = $request->requestVar('flatList');
         $id = (is_numeric($request->latestParam('ID')))
             ? (int)$request->latestParam('ID')
             : (int)$request->requestVar('ID');
+    
+        // pre-process the tree - search needs to operate globally, not locally as marking filter does
+        if ($this->search) {
+            $this->populateIDs();
+        }
 
         /** @var DataObject|Hierarchy $obj */
         $obj = null;
@@ -400,11 +415,6 @@ class TreeDropdownField extends FormField
             if (!$this->baseID || !$obj) {
                 $obj = DataObject::singleton($this->sourceObject);
             }
-        }
-
-        // pre-process the tree - search needs to operate globally, not locally as marking filter does
-        if ($this->search) {
-            $this->populateIDs();
         }
 
         // Create marking set
@@ -455,6 +465,11 @@ class TreeDropdownField extends FormField
             // Format JSON output
             $json = $markingSet
                 ->getChildrenAsArray($customised);
+            
+            if ($flatlist) {
+                // format and filter $json here
+                $json['children'] = $this->flattenChildrenArray($json['children']);
+            }
             return HTTPResponse::create()
                 ->addHeader('Content-Type', 'application/json')
                 ->setBody(json_encode($json));
@@ -554,7 +569,38 @@ class TreeDropdownField extends FormField
     {
         return $this->sourceObject;
     }
-
+    
+    /**
+     * Flattens a given list of children array items, so the data is no longer
+     * structured in a hierarchy
+     *
+     * NOTE: uses {@link TreeDropdownField::$realSearchIds} to filter items by if there is a search
+     *
+     * @param array $children - the list of children, which could contain their own children
+     * @param array $parentTitles - a list of parent titles, which we use to construct the contextString
+     * @return array - flattened list of children
+     */
+    protected function flattenChildrenArray($children, $parentTitles = [])
+    {
+        $output = [];
+    
+        foreach ($children as $child) {
+            $childTitles = array_merge($parentTitles, [$child['title']]);
+            $grandChildren = $child['children'];
+            $contextString = implode('/', $parentTitles);
+            
+            $child['contextString'] = ($contextString !== '') ? $contextString .'/' : '';
+            $child['children'] = [];
+    
+            if (!$this->search || in_array($child['id'], $this->realSearchIds)) {
+                $output[] = $child;
+            }
+            $output = array_merge($output, $this->flattenChildrenArray($grandChildren, $childTitles));
+        }
+        
+        return $output;
+    }
+    
     /**
      * Populate $this->searchIds with the IDs of the pages matching the searched parameter and their parents.
      * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter, but modified
@@ -563,57 +609,70 @@ class TreeDropdownField extends FormField
     protected function populateIDs()
     {
         // get all the leaves to be displayed
+        $res = $this->getSearchResults();
+        
+        if (!$res) {
+            return;
+        }
+        
+        // iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
+        foreach ($res as $row) {
+            if ($row->ParentID) {
+                $parents[$row->ParentID] = true;
+            }
+            $this->searchIds[$row->ID] = true;
+        }
+        $this->realSearchIds = $res->column();
+
+        $sourceObject = $this->sourceObject;
+
+        while (!empty($parents)) {
+            $items = DataObject::get($sourceObject)
+                ->filter("ID", array_keys($parents));
+            $parents = array();
+
+            foreach ($items as $item) {
+                if ($item->ParentID) {
+                    $parents[$item->ParentID] = true;
+                }
+                $this->searchIds[$item->ID] = true;
+                $this->searchExpanded[$item->ID] = true;
+            }
+        }
+    }
+    
+    /**
+     * Get the DataObjects that matches the searched parameter.
+     *
+     * @return DataList
+     */
+    protected function getSearchResults()
+    {
         if ($this->searchCallback) {
-            $res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
+            return call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
+        }
+        
+        $sourceObject = $this->sourceObject;
+        $filters = array();
+        if (singleton($sourceObject)->hasDatabaseField($this->labelField)) {
+            $filters["{$this->labelField}:PartialMatch"]  = $this->search;
         } else {
-            $sourceObject = $this->sourceObject;
-            $filters = array();
-            if (singleton($sourceObject)->hasDatabaseField($this->labelField)) {
-                $filters["{$this->labelField}:PartialMatch"]  = $this->search;
-            } else {
-                if (singleton($sourceObject)->hasDatabaseField('Title')) {
-                    $filters["Title:PartialMatch"] = $this->search;
-                }
-                if (singleton($sourceObject)->hasDatabaseField('Name')) {
-                    $filters["Name:PartialMatch"] = $this->search;
-                }
+            if (singleton($sourceObject)->hasDatabaseField('Title')) {
+                $filters["Title:PartialMatch"] = $this->search;
             }
-
-            if (empty($filters)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Cannot query by %s.%s, not a valid database column',
-                    $sourceObject,
-                    $this->labelField
-                ));
-            }
-            $res = DataObject::get($this->sourceObject)->filterAny($filters);
-        }
-
-        if ($res) {
-            // iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
-            foreach ($res as $row) {
-                if ($row->ParentID) {
-                    $parents[$row->ParentID] = true;
-                }
-                $this->searchIds[$row->ID] = true;
-            }
-
-            $sourceObject = $this->sourceObject;
-
-            while (!empty($parents)) {
-                $items = DataObject::get($sourceObject)
-                    ->filter("ID", array_keys($parents));
-                $parents = array();
-
-                foreach ($items as $item) {
-                    if ($item->ParentID) {
-                        $parents[$item->ParentID] = true;
-                    }
-                    $this->searchIds[$item->ID] = true;
-                    $this->searchExpanded[$item->ID] = true;
-                }
+            if (singleton($sourceObject)->hasDatabaseField('Name')) {
+                $filters["Name:PartialMatch"] = $this->search;
             }
         }
+
+        if (empty($filters)) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot query by %s.%s, not a valid database column',
+                $sourceObject,
+                $this->labelField
+            ));
+        }
+        return DataObject::get($this->sourceObject)->filterAny($filters);
     }
 
     /**
@@ -680,9 +739,12 @@ class TreeDropdownField extends FormField
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-        $data['data']['urlTree'] = $this->Link('tree');
-        $data['data']['emptyString'] = $this->getEmptyString();
-        $data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
+        $data['data'] = array_merge($data['data'], [
+            'urlTree' => $this->Link('tree'),
+            'showSearch' => $this->showSearch,
+            'emptyString' => $this->getEmptyString(),
+            'hasEmptyDefault' => $this->getHasEmptyDefault(),
+        ]);
 
         return $data;
     }
