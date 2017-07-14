@@ -551,8 +551,6 @@ class Convert
         return $return;
     }
 
-
-
     /**
      * Turn a memory string, such as 512M into an actual number of bytes.
      *
@@ -561,18 +559,18 @@ class Convert
      */
     public static function memstring2bytes($memString)
     {
-        switch (strtolower(substr($memString, -1))) {
-            case "b":
-                return round(substr($memString, 0, -1));
-            case "k":
-                return round(substr($memString, 0, -1) * 1024);
-            case "m":
-                return round(substr($memString, 0, -1) * 1024 * 1024);
-            case "g":
-                return round(substr($memString, 0, -1) * 1024 * 1024 * 1024);
-            default:
-                return round($memString);
+        // Remove  non-unit characters from the size
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString);
+        // Remove non-numeric characters from the size
+        $size = preg_replace('/[^0-9\.]/', '', $memString);
+
+        if ($unit) {
+            // Find the position of the unit in the ordered string which is the power
+            // of magnitude to multiply a kilobyte by
+            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
+
+        return round($size);
     }
 
     /**
@@ -582,7 +580,7 @@ class Convert
      */
     public static function bytes2memstring($bytes, $decimal = 0)
     {
-        $scales = ['B','K','M','G'];
+        $scales = ['B','K','M','G','T','P','E','Z','Y'];
         // Get scale
         $scale = (int)floor(log($bytes, 1024));
         if (!isset($scales[$scale])) {
