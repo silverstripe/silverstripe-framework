@@ -3,6 +3,7 @@
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\i18n\i18n;
+use SilverStripe\Core\Manifest\ModuleManifest;
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -35,12 +36,7 @@ function singleton($className)
 
 function project()
 {
-    global $project;
-    // Set default project
-    if (empty($project) && file_exists(BASE_PATH . '/mysite')) {
-        $project = 'mysite';
-    }
-    return $project;
+    return ModuleManifest::config()->get('project');
 }
 
 /**

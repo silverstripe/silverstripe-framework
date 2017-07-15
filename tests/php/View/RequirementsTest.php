@@ -45,9 +45,11 @@ class RequirementsTest extends SapphireTest
         $backend->javascript('http://www.mydomain.com/test.js');
         $backend->javascript('https://www.mysecuredomain.com/test.js');
         $backend->javascript('//scheme-relative.example.com/test.js');
+        $backend->javascript('http://www.mydomain.com:3000/test.js');
         $backend->css('http://www.mydomain.com/test.css');
         $backend->css('https://www.mysecuredomain.com/test.css');
         $backend->css('//scheme-relative.example.com/test.css');
+        $backend->css('http://www.mydomain.com:3000/test.css');
 
         $html = $backend->includeInHTML(self::$html_template);
 
@@ -64,6 +66,10 @@ class RequirementsTest extends SapphireTest
             'Load external scheme-relative javascript URL'
         );
         $this->assertTrue(
+            (strpos($html, 'http://www.mydomain.com:3000/test.js') !== false),
+            'Load external with port'
+        );
+        $this->assertTrue(
             (strpos($html, 'http://www.mydomain.com/test.css') !== false),
             'Load external CSS URL'
         );
@@ -74,6 +80,10 @@ class RequirementsTest extends SapphireTest
         $this->assertTrue(
             (strpos($html, '//scheme-relative.example.com/test.css') !== false),
             'Load scheme-relative CSS URL'
+        );
+        $this->assertTrue(
+            (strpos($html, 'http://www.mydomain.com:3000/test.css') !== false),
+            'Load external with port'
         );
     }
 

@@ -758,30 +758,30 @@ abstract class DBSchemaManager
             } else {
                 switch ($type) {
                     case "created":
-                        $color = "green";
+                        $class = "success";
                         break;
                     case "obsolete":
-                        $color = "red";
+                        $class = "error";
                         break;
                     case "notice":
-                        $color = "orange";
+                        $class = "warning";
                         break;
                     case "error":
-                        $color = "red";
+                        $class = "error";
                         break;
                     case "deleted":
-                        $color = "red";
+                        $class = "error";
                         break;
                     case "changed":
-                        $color = "blue";
+                        $class = "info";
                         break;
                     case "repaired":
-                        $color = "blue";
+                        $class = "info";
                         break;
                     default:
-                        $color = "";
+                        $class = "";
                 }
-                echo "<li style=\"color: $color\">$message</li>";
+                echo "<li class=\"$class\">$message</li>";
             }
         }
     }

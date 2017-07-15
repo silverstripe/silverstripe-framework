@@ -428,7 +428,7 @@ class HTTPRequest implements ArrayAccess
     {
         return (
             $this->requestVar('ajax') ||
-            $this->getHeader('X-Requested-With') && $this->getHeader('X-Requested-With') == "XMLHttpRequest"
+            $this->getHeader('X-Requested-With') === "XMLHttpRequest"
         );
     }
 

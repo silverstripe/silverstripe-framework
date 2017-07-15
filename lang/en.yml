@@ -1,7 +1,4 @@
 en:
-  Security:
-    LOGIN: 'Log in'
-    LOGOUT: 'Log out'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
@@ -315,6 +312,8 @@ en:
     CONFIRMLOGOUT: 'Please click the button below to confirm that you wish to log out.'
     ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGIN: 'Log in'
+    LOGOUT: 'Log out'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'

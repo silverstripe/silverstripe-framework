@@ -5,10 +5,12 @@ namespace SilverStripe\i18n\Data;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Data sources for localisation strings. I.e. yml files stored
@@ -34,43 +36,21 @@ class Sources implements Resettable
      */
     public function getSortedModules()
     {
-        // Get list of module => path pairs, and then just the names
-        $modules = ModuleLoader::inst()->getManifest()->getModules();
-        $moduleNames = array_keys($modules);
-
-        // Remove the "project" module from the list - we'll add it back specially later if needed
-        global $project;
-        if (($idx = array_search($project, $moduleNames)) !== false) {
-            array_splice($moduleNames, $idx, 1);
+        $i18nOrder = Sources::config()->uninherited('module_priority');
+        $sortedModules = [];
+        if ($i18nOrder) {
+            Deprecation::notice('5.0', sprintf(
+                '%s.module_priority is deprecated. Use %s.module_priority instead.',
+                __CLASS__,
+                ModuleManifest::class
+            ));
         }
 
-        // Get the order from the config system (lowest to highest)
-        $order = Sources::config()->uninherited('module_priority');
+        foreach (ModuleLoader::inst()->getManifest()->getModules() as $module) {
+            $sortedModules[$module->getName()] = $module->getPath();
+        };
 
-        // Find all modules that don't have their order specified by the config system
-        $unspecified = array_diff($moduleNames, $order);
-
-        // If the placeholder "other_modules" exists in the order array, replace it by the unspecified modules
-        if (($idx = array_search('other_modules', $order)) !== false) {
-            array_splice($order, $idx, 1, $unspecified);
-        } else {
-            // Otherwise just jam them on the front
-            array_splice($order, 0, 0, $unspecified);
-        }
-
-        // Put the project at end (highest priority)
-        if (!in_array($project, $order)) {
-            $order[] = $project;
-        }
-
-        $sortedModulePaths = array();
-        foreach ($order as $module) {
-            if (isset($modules[$module])) {
-                $sortedModulePaths[$module] = $modules[$module]->getPath();
-            }
-        }
-        $sortedModulePaths = array_reverse($sortedModulePaths, true);
-        return $sortedModulePaths;
+        return $sortedModules;
     }
 
     /**

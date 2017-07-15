@@ -99,7 +99,7 @@ class HTMLEditorConfigTest extends SapphireTest
         // Plugin specified with standard location
         $this->assertContains('plugin4', array_keys($plugins));
         $this->assertEquals(
-            '/subdir/silverstripe-admin/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
+            '/subdir/test/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
             $plugins['plugin4']
         );
 
@@ -109,12 +109,15 @@ class HTMLEditorConfigTest extends SapphireTest
 
     public function testPluginCompression()
     {
+        // This test requires the real tiny_mce_gzip.php file
         $module = ModuleLoader::inst()->getManifest()->getModule('silverstripe/admin');
         if (!$module) {
             $this->markTestSkipped('No silverstripe/admin module loaded');
         }
-        TinyMCEConfig::config()->remove('base_dir');
+        TinyMCEConfig::config()->set('base_dir', 'silverstripe/admin:thirdparty/tinymce');
         Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
+
+        // Build new config
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');

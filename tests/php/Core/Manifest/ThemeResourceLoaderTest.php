@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Manifest\ModuleManifest;
 
 /**
  * Tests for the {@link TemplateLoader} class.
@@ -35,12 +37,27 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         // Fake project root
         $this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
+        ModuleManifest::config()->set('module_priority', ['$project', '$other_modules']);
+        ModuleManifest::config()->set('project', 'myproject');
+
+        $moduleManifest = new ModuleManifest($this->base);
+        $moduleManifest->init();
+        $moduleManifest->sort();
+        ModuleLoader::inst()->pushManifest($moduleManifest);
+
         // New ThemeManifest for that root
-        $this->manifest = new ThemeManifest($this->base, 'myproject');
+        $this->manifest = new ThemeManifest($this->base);
+        $this->manifest->setProject('myproject');
         $this->manifest->init();
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
+    }
+
+    protected function tearDown()
+    {
+        ModuleLoader::inst()->popManifest();
+        parent::tearDown();
     }
 
     /**

@@ -414,7 +414,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $templates = array_unique(array_merge($actionTemplates, $classTemplates));
         }
 
-        return new SSViewer($templates);
+        return SSViewer::create($templates);
     }
 
     /**

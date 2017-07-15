@@ -26,6 +26,7 @@ use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -116,7 +117,7 @@ class CoreKernel implements Kernel
         $themeResourceLoader = ThemeResourceLoader::inst();
         $themeResourceLoader->addSet('$default', new ThemeManifest(
             $basePath,
-            project(),
+            null, // project is defined in config, and this argument is deprecated
             $manifestCacheFactory
         ));
         $this->setThemeResourceLoader($themeResourceLoader);
@@ -196,8 +197,15 @@ class CoreKernel implements Kernel
      */
     protected function bootConfigs()
     {
+        global $project;
+        $projectBefore = $project;
+        $config = ModuleManifest::config();
         // After loading all other app manifests, include _config.php files
         $this->getModuleLoader()->getManifest()->activateConfig();
+        if ($project && $project !== $projectBefore) {
+            Deprecation::notice('5.0', '$project global is deprecated');
+            $config->set('project', $project);
+        }
     }
 
     /**
@@ -498,10 +506,15 @@ class CoreKernel implements Kernel
                 $config->setFlush(true);
             }
         }
+        // tell modules to sort, now that config is available
+        $this->getModuleLoader()->getManifest()->sort();
 
         // Find default templates
         $defaultSet = $this->getThemeResourceLoader()->getSet('$default');
         if ($defaultSet instanceof ThemeManifest) {
+            $defaultSet->setProject(
+                ModuleManifest::config()->get('project')
+            );
             $defaultSet->init($this->getIncludeTests(), $flush);
         }
     }

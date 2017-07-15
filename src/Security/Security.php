@@ -12,7 +12,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -655,6 +654,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param null|HTTPRequest $request
      * @param int $service
      * @return HTTPResponse|string Returns the "login" page as HTML code.
+     * @throws HTTPResponse_Exception
      */
     public function login($request = null, $service = Authenticator::LOGIN)
     {
@@ -684,7 +684,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t('Security.LOGIN', 'Log in'),
+            _t(__CLASS__.'.LOGIN', 'Log in'),
             $this->getTemplatesFor('login'),
             [$this, 'aggregateTabbedForms']
         );
@@ -721,9 +721,9 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t('Security.LOGOUT', 'Log out'),
+            _t(__CLASS__.'.LOGOUT', 'Log out'),
             $this->getTemplatesFor('logout'),
-            [$this, 'aggregateTabbedForms']
+            [$this, 'aggregateAuthenticatorResponses']
         );
     }
 
@@ -733,6 +733,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param int $service
      * @param HTTPRequest $request
+     * @return array|Authenticator[]
      * @throws HTTPResponse_Exception
      */
     protected function getServiceAuthenticatorsFromRequest($service, HTTPRequest $request)
@@ -805,6 +806,40 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
+     * We have three possible scenarios.
+     * We get back Content (e.g. Password Reset)
+     * We get back a Form (no token set for logout)
+     * We get back a HTTPResponse, telling us to redirect.
+     * Return the first one, which is the default response, as that covers all required scenarios
+     *
+     * @param array $results
+     * @return array|HTTPResponse
+     */
+    protected function aggregateAuthenticatorResponses($results)
+    {
+        $error = false;
+        $result = null;
+        foreach ($results as $authName => $singleResult) {
+            if (($singleResult instanceof HTTPResponse) ||
+                (is_array($singleResult) &&
+                    (isset($singleResult['Content']) || isset($singleResult['Form'])))
+            ) {
+                // return the first successful response
+                return $singleResult;
+            } else {
+                // Not a valid response
+                $error = true;
+            }
+        }
+
+        if ($error) {
+            throw new \LogicException('No authenticators found compatible with logout operation');
+        }
+
+        return $result;
+    }
+
+    /**
      * Delegate to a number of handlers and aggregate the results. This is used, for example, to
      * build the log-in page where there are multiple authenticators active.
      *
@@ -832,8 +867,13 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers
         );
 
-        $fragments = call_user_func_array($aggregator, [$results]);
-        return $this->renderWrappedController($title, $fragments, $templates);
+        $response = call_user_func_array($aggregator, [$results]);
+        // The return could be a HTTPResponse, in which we don't want to call the render
+        if (is_array($response)) {
+            return $this->renderWrappedController($title, $response, $templates);
+        }
+
+        return $response;
     }
 
     /**
@@ -919,7 +959,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers,
             _t('SilverStripe\\Security\\Security.LOSTPASSWORDHEADER', 'Lost Password'),
             $this->getTemplatesFor('lostpassword'),
-            [$this, 'aggregateTabbedForms']
+            [$this, 'aggregateAuthenticatorResponses']
         );
     }
 
@@ -948,7 +988,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers,
             _t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'),
             $this->getTemplatesFor('changepassword'),
-            [$this, 'aggregateTabbedForms']
+            [$this, 'aggregateAuthenticatorResponses']
         );
     }
 

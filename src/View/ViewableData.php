@@ -382,7 +382,7 @@ class ViewableData implements IteratorAggregate
     public function renderWith($template, $customFields = null)
     {
         if (!is_object($template)) {
-            $template = new SSViewer($template);
+            $template = SSViewer::create($template);
         }
 
         $data = $this->getCustomisedObj() ?: $this;

@@ -5,7 +5,9 @@ namespace SilverStripe\Forms\HTMLEditor;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -191,12 +193,22 @@ class TinyMCEConfig extends HTMLEditorConfig
      * - themes
      * - skins
      *
-     * If left blank defaults to [admin dir]/tinyme
+     * Supports vendor/module:path
      *
      * @config
      * @var string
      */
     private static $base_dir = null;
+
+    /**
+     * Extra editor.css file paths.
+     *
+     * Supports vendor/module:path syntax
+     *
+     * @config
+     * @var array
+     */
+    private static $editor_css = [];
 
     /**
      * TinyMCE JS settings
@@ -555,7 +567,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = $this->getAdminModule()->getResourceURL('thirdparty/tinymce');
+        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEPath());
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
@@ -615,13 +627,15 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        $editor[] = $this->getAdminModule()->getResourceURL('client/dist/styles/editor.css');
+        foreach ($this->config()->get('editor_css') as $editorCSS) {
+            $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+        }
 
         // Themed editor.css
         $themes = $this->config()->get('user_themes') ?: SSViewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
-            $editor[] = Director::absoluteURL($themedEditor, Director::BASE);
+            $editor[] = Director::absoluteURL($themedEditor);
         }
 
         return $editor;
@@ -685,32 +699,46 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
-     * @return string|false
+     * @return string
      * @throws Exception
      */
     public function getTinyMCEPath()
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return $configDir;
-        }
-
-        if ($admin = $this->getAdminModule()) {
-            return $admin->getRelativeResourcePath('thirdparty/tinymce');
+            return $this->resolvePath($configDir);
         }
 
         throw new Exception(sprintf(
-            'If the silverstripe/admin module is not installed,
-            you must set the TinyMCE path in %s.base_dir',
+            'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
             __CLASS__
         ));
     }
 
     /**
-     * @return \SilverStripe\Core\Manifest\Module
+     * @return Module
+     * @deprecated 4.0..5.0
      */
     protected function getAdminModule()
     {
+        Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
+    }
+
+    /**
+     * Expand resource path to a relative filesystem path
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function resolvePath($path)
+    {
+        if (preg_match('#(?<module>[^/]+/[^/]+)\s*:\s*(?<path>[^:]+)#', $path, $results)) {
+            $module = ModuleLoader::getModule($results['module']);
+            if ($module) {
+                return $module->getRelativeResourcePath($results['path']);
+            }
+        }
+        return $path;
     }
 }

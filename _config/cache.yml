@@ -18,3 +18,7 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "LeftAndMain_CMSVersion"
+  Psr\SimpleCache\CacheInterface.VersionProvider_composerlock:
+      factory: SilverStripe\Core\Cache\CacheFactory
+      constructor:
+        namespace: "VersionProvider_composerlock"

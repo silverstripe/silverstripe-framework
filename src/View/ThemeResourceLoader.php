@@ -15,6 +15,11 @@ class ThemeResourceLoader
      */
     private static $instance;
 
+    /**
+     * The base path of the application
+     *
+     * @var string
+     */
     protected $base;
 
     /**
@@ -201,7 +206,6 @@ class ThemeResourceLoader
 
             $tail = array_pop($parts);
             $head = implode('/', $parts);
-
             $themePaths = $this->getThemePaths($themes);
             foreach ($themePaths as $themePath) {
                 // Join path

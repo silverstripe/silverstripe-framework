@@ -129,33 +129,53 @@ class DefaultAdminService
             return null;
         }
 
-        // Find or create ADMIN group
-        Group::singleton()->requireDefaultRecords();
-        $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
+        // Create admin with default admin username
+        $admin = $this->findOrCreateAdmin(
+            static::getDefaultAdminUsername(),
+            _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin')
+        );
 
-        if (!$adminGroup) {
-            Group::singleton()->requireDefaultRecords();
-            $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
-        }
+        $this->extend('afterFindOrCreateDefaultAdmin', $admin);
+
+        return $admin;
+    }
+
+    /**
+     * Find or create a Member with admin permissions
+     *
+     * @skipUpgrade
+     * @param string $email
+     * @param string $name
+     * @return Member
+     */
+    public function findOrCreateAdmin($email, $name = null)
+    {
+        $this->extend('beforeFindOrCreateAdmin', $email, $name);
 
         // Find member
-        /** @skipUpgrade */
+        /** @var Member $admin */
         $admin = Member::get()
-            ->filter('Email', static::getDefaultAdminUsername())
+            ->filter('Email', $email)
             ->first();
+
+        // Find or create admin group
+        $adminGroup = $this->findOrCreateAdminGroup();
+
         // If no admin is found, create one
-        if (!$admin) {
-            // 'Password' is not set to avoid creating
-            // persistent logins in the database. See Security::setDefaultAdmin().
+        if ($admin) {
+            $inGroup = $admin->inGroup($adminGroup);
+        } else {
+            // Note: This user won't be able to login until a password is set
             // Set 'Email' to identify this as the default admin
+            $inGroup = false;
             $admin = Member::create();
-            $admin->FirstName = _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin');
-            $admin->Email = static::getDefaultAdminUsername();
+            $admin->FirstName = $name ?: $email;
+            $admin->Email = $email;
             $admin->write();
         }
 
-        // Ensure this user is in the admin group
-        if (!$admin->inGroup($adminGroup)) {
+        // Ensure this user is in an admin group
+        if (!$inGroup) {
             // Add member to group instead of adding group to member
             // This bypasses the privilege escallation code in Member_GroupSet
             $adminGroup
@@ -163,9 +183,39 @@ class DefaultAdminService
                 ->add($admin);
         }
 
-        $this->extend('afterFindOrCreateDefaultAdmin', $admin);
+        $this->extend('afterFindOrCreateAdmin', $admin);
 
         return $admin;
+    }
+
+    /**
+     * Ensure a Group exists with admin permission
+     *
+     * @return Group
+     */
+    protected function findOrCreateAdminGroup()
+    {
+        // Check pre-existing group
+        $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
+        if ($adminGroup) {
+            return $adminGroup;
+        }
+
+        // Check if default records create the group
+        Group::singleton()->requireDefaultRecords();
+        $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
+        if ($adminGroup) {
+            return $adminGroup;
+        }
+
+        // Create new admin group directly
+        $adminGroup = Group::create();
+        $adminGroup->Code = 'administrators';
+        $adminGroup->Title = _t('SilverStripe\\Security\\Group.DefaultGroupTitleAdministrators', 'Administrators');
+        $adminGroup->Sort = 0;
+        $adminGroup->write();
+        Permission::grant($adminGroup->ID, 'ADMIN');
+        return $adminGroup;
     }
 
     /**

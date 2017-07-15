@@ -56,7 +56,7 @@ class SSViewer_FromString extends SSViewer
         if ($this->cacheTemplate !== null) {
             $cacheTemplate = $this->cacheTemplate;
         } else {
-            $cacheTemplate = Config::inst()->get('SilverStripe\\View\\SSViewer_FromString', 'cache_template');
+            $cacheTemplate = static::config()->get('cache_template');
         }
 
         if (!$cacheTemplate) {

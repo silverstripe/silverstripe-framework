@@ -1582,7 +1582,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function forAjaxTemplate()
     {
-        $view = new SSViewer($this->getTemplates());
+        $view = SSViewer::create($this->getTemplates());
 
         $return = $view->dontRewriteHashlinks()->process($this);
 
@@ -1631,7 +1631,7 @@ class Form extends ViewableData implements HasRequestHandler
         ));
 
         if (is_string($template)) {
-            $template = new SSViewer($template);
+            $template = SSViewer::create($template);
         }
 
         return $template->process($custom);
