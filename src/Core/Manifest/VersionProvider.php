@@ -33,11 +33,11 @@ class VersionProvider
     {
         $modules = $this->getModules();
         $lockModules = $this->getModuleVersionFromComposer(array_keys($modules));
-        $output = array();
+        $output = [];
         foreach ($modules as $module => $title) {
             $version = isset($lockModules[$module])
                 ? $lockModules[$module]
-                : _t('SilverStripe\Core\Manifest\VersionProvider.VERSIONUNKNOWN', 'Unknown');
+                : _t(__CLASS__.'.VERSIONUNKNOWN', 'Unknown');
             $output[] = $title . ': ' . $version;
         }
         return implode(', ', $output);
@@ -51,8 +51,8 @@ class VersionProvider
      */
     public function getModules()
     {
-        $modules = Config::inst()->get(static::class, 'modules');
-        return $modules ? array_filter($modules) : array();
+        $modules = Config::inst()->get(self::class, 'modules');
+        return $modules ? array_filter($modules) : [];
     }
 
     /**
@@ -61,9 +61,9 @@ class VersionProvider
      * @param  array $modules
      * @return array
      */
-    public function getModuleVersionFromComposer($modules = array())
+    public function getModuleVersionFromComposer($modules = [])
     {
-        $versions = array();
+        $versions = [];
         $lockData = $this->getComposerLock();
         if ($lockData && !empty($lockData['packages'])) {
             foreach ($lockData['packages'] as $package) {
@@ -85,10 +85,10 @@ class VersionProvider
     {
         $composerLockPath = BASE_PATH . '/composer.lock';
         if (!file_exists($composerLockPath)) {
-            return array();
+            return [];
         }
 
-        $lockData = array();
+        $lockData = [];
         $jsonData = file_get_contents($composerLockPath);
 
         if ($cache) {
