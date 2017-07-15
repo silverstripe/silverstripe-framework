@@ -9,6 +9,39 @@ SilverStripe starts with a fresh database containing no records. `Fixtures` prov
 to load into the database. The [SapphireTest](api:SilverStripe\Dev\SapphireTest) class takes care of populating a test database with data from 
 fixtures - all we have to do is define them.
 
+To include your fixture file in your tests, you should define it as your `$fixture_file`:
+
+
+**mysite/tests/MyNewTest.php**
+
+	:::php
+	<?php
+	
+	class MyNewTest extends SapphireTest {
+	
+		protected static $fixture_file = 'fixtures.yml';
+		
+	}
+
+You can also use an array of fixture files, if you want to use parts of multiple other tests:
+
+
+**mysite/tests/MyNewTest.php**
+
+	:::php
+	<?php
+	
+	class MyNewTest extends SapphireTest {
+	
+		protected static $fixture_file = array(
+			'fixtures.yml',
+			'otherfixtures.yml'
+		);
+		
+	}
+	
+Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
+
 Fixtures are defined in `YAML`. `YAML` is a markup language which is deliberately simple and easy to read, so it is 
 ideal for fixture generation. Say we have the following two DataObjects:
 
