@@ -156,6 +156,15 @@ class CmsUiContext implements Context
     }
 
     /**
+     * @When /^I should see a "([^"]*)" tab in the CMS content header tabs$/
+     */
+    public function stepIShouldSeeInCMSContentTabs($text)
+    {
+        // Wait until visible
+        assertNotNull($this->getCmsTabElement($text), sprintf('%s content tab not found', $text));
+    }
+
+    /**
      * Applies a specific action to an element
      *
      * @param NodeElement $element Element to act on
@@ -217,6 +226,44 @@ class CmsUiContext implements Context
         $treeNode = $treeEl->findLink($text);
         assertNotNull($treeNode, sprintf('%s not found', $text));
         $this->interactWithElement($treeNode, $method);
+    }
+
+    /**
+     * @When /^I (?P<method>(?:(?:double |right |left |)click)|hover) on "(?P<text>[^"]*)" in the header tabs$/
+     */
+    public function stepIClickOnElementInTheHeaderTabs($method, $text)
+    {
+        $tabsNode = $this->getCmsTabElement($text);
+        assertNotNull($tabsNode, sprintf('%s not found', $text));
+        $this->interactWithElement($tabsNode, $method);
+    }
+
+    /**
+     * @Then the :text header tab should be active
+     */
+    public function theHeaderTabShouldBeActive($text)
+    {
+        $element = $this->getCmsTabElement($text);
+        assertNotNull($element);
+        assertTrue($element->hasClass('active'));
+    }
+
+    /**
+     * @Then the :text header tab should not be active
+     */
+    public function theHeaderTabShouldNotBeActive($text)
+    {
+        $element = $this->getCmsTabElement($text);
+        assertNotNull($element);
+        assertFalse($element->hasClass('active'));
+    }
+
+    /**
+     * @return NodeElement
+     */
+    protected function getCmsTabElement($text)
+    {
+        return $this->getCmsTabsElement()->findLink($text);
     }
 
     /**
