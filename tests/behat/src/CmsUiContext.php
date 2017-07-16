@@ -243,7 +243,9 @@ class CmsUiContext implements Context
      */
     public function theHeaderTabShouldBeActive($text)
     {
-        assertTrue($this->getCmsTabElement($text)->hasClass('active'));
+        $element = $this->getCmsTabElement($text);
+        assertNotNull($element);
+        assertTrue($element->hasClass('active'));
     }
 
     /**
@@ -251,7 +253,9 @@ class CmsUiContext implements Context
      */
     public function theHeaderTabShouldNotBeActive($text)
     {
-        assertFalse($this->getCmsTabElement($text)->hasClass('active'));
+        $element = $this->getCmsTabElement($text);
+        assertNotNull($element);
+        assertFalse($element->hasClass('active'));
     }
 
     /**
