@@ -13,4 +13,12 @@ Requires PHPUnit ^5.7
     <testsuite name="cms">
         <directory>cms/tests</directory>
     </testsuite>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">.</directory>
+            <exclude>
+                <directory suffix=".php">tests/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
