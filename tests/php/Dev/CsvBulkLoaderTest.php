@@ -283,7 +283,7 @@ class CsvBulkLoaderTest extends SapphireTest
 
     public function testLargeFileSplitIntoSmallerFiles()
     {
-        Config::inst()->update(CsvBulkLoader::class, 'lines', 3);
+        Config::modify()->set(CsvBulkLoader::class, 'lines', 3);
 
         $loader = new CsvBulkLoader(Player::class);
         $path = $this->csvPath . 'LargeListOfPlayers.csv';
