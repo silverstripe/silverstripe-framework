@@ -185,8 +185,7 @@ class ParameterConfirmationToken
     protected function currentURL()
     {
         return Controller::join_links(
-            BASE_URL,
-            '/',
+            BASE_URL ?: '/',
             $this->request->getURL(false)
         );
     }
