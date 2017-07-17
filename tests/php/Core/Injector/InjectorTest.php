@@ -704,7 +704,7 @@ class InjectorTest extends SapphireTest
 
         // Test that child class does not automatically inherit config
         $injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
-        Config::inst()->update(
+        Config::modify()->merge(
             Injector::class,
             MyParentClass::class,
             [
@@ -727,7 +727,7 @@ class InjectorTest extends SapphireTest
             'locator' => SilverStripeServiceConfigurationLocator::class
             )
         );
-        Config::inst()->update(
+        Config::modify()->merge(
             Injector::class,
             MyChildClass::class,
             '%$'.MyParentClass::class

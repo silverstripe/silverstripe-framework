@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
@@ -127,10 +128,10 @@ class FunctionalTest extends SapphireTest implements TestOnly
      */
     protected function withBaseURL($url, $callback)
     {
-        $oldBase = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_base_url');
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', $url);
+        $oldBase = Config::inst()->get(Director::class, 'alternate_base_url');
+        Config::modify()->set(Director::class, 'alternate_base_url', $url);
         $callback($this);
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', $oldBase);
+        Config::modify()->set(Director::class, 'alternate_base_url', $oldBase);
     }
 
     /**
@@ -140,10 +141,10 @@ class FunctionalTest extends SapphireTest implements TestOnly
      */
     protected function withBaseFolder($folder, $callback)
     {
-        $oldFolder = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_base_folder');
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_folder', $folder);
+        $oldFolder = Config::inst()->get(Director::class, 'alternate_base_folder');
+        Config::modify()->set(Director::class, 'alternate_base_folder', $folder);
         $callback($this);
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_folder', $oldFolder);
+        Config::modify()->set(Director::class, 'alternate_base_folder', $oldFolder);
     }
 
     /**
