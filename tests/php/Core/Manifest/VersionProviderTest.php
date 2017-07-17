@@ -21,11 +21,11 @@ class VersionProviderTest extends SapphireTest
 
     public function testGetModules()
     {
-        Config::modify()->set(VersionProvider::class, 'modules', array(
+        Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/somepackage' => 'Some Package',
             'silverstripe/hidden' => '',
             'silverstripe/another' => 'Another'
-        ));
+        ]);
 
         $result = $this->provider->getModules();
         $this->assertArrayHasKey('silverstripe/somepackage', $result);
@@ -36,22 +36,22 @@ class VersionProviderTest extends SapphireTest
 
     public function testGetModuleVersionFromComposer()
     {
-        Config::modify()->set(VersionProvider::class, 'modules', array(
+        Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
             'silverstripe/siteconfig' => 'SiteConfig'
-        ));
+        ]);
 
-        $result = $this->provider->getModules(array('silverstripe/framework'));
+        $result = $this->provider->getModules(['silverstripe/framework']);
         $this->assertArrayHasKey('silverstripe/framework', $result);
         $this->assertNotEmpty($result['silverstripe/framework']);
     }
 
     public function testGetVersion()
     {
-        Config::modify()->set(VersionProvider::class, 'modules', array(
+        Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
             'silverstripe/siteconfig' => 'SiteConfig'
-        ));
+        ]);
 
         $result = $this->provider->getVersion();
         $this->assertContains('SiteConfig: ', $result);
@@ -61,30 +61,28 @@ class VersionProviderTest extends SapphireTest
 
     public function testGetModulesFromComposerLock()
     {
-        $this->markTestSkipped('Unable to get this passing');
-        
         $mock = $this->getMockBuilder(VersionProvider::class)
-            ->setMethods(array('getComposerLock'))
+            ->setMethods(['getComposerLock'])
             ->getMock();
 
         $mock->expects($this->once())
             ->method('getComposerLock')
-            ->will($this->returnValue(array(
-                'packages' => array(
-                    array(
+            ->will($this->returnValue([
+                'packages' => [
+                    [
                         'name' => 'silverstripe/somepackage',
                         'version' => '1.2.3'
-                    ),
-                    array(
+                    ],
+                    [
                         'name' => 'silverstripe/another',
                         'version' => '2.3.4'
-                    )
-                )
-            )));
+                    ]
+                ]
+            ]));
 
-        Config::modify()->set(VersionProvider::class, 'modules', array(
+        Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/somepackage' => 'Some Package'
-        ));
+        ]);
 
         $result = $mock->getVersion();
         $this->assertContains('Some Package: 1.2.3', $result);
