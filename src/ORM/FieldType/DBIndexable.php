@@ -42,7 +42,14 @@ interface DBIndexable
     public function getIndexType();
 
     /**
-     * Get the field(s) that should be used if this instance is indexed
+     * Returns the index specifications for the field instance, for example:
+     *
+     * <code>
+     * [
+     *     'type' => 'unique',
+     *     'columns' => ['FieldName']
+     * ]
+     * </code>
      *
      * @return array
      */

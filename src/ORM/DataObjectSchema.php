@@ -525,11 +525,8 @@ class DataObjectSchema
         foreach ($fieldSpecs as $field => $spec) {
             /** @var DBField $fieldObj */
             $fieldObj = Injector::inst()->create($spec, $field);
-            if ($type = $fieldObj->getIndexType()) {
-                $this->defaultDatabaseIndexes[$class][$field] = [
-                    'type' => $type,
-                    'columns' => $fieldObj->getIndexSpecs(),
-                ];
+            if ($indexSpecs = $fieldObj->getIndexSpecs()) {
+                $this->defaultDatabaseIndexes[$class][$field] = $indexSpecs;
             }
         }
         return $this->defaultDatabaseIndexes[$class];

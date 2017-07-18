@@ -635,6 +635,11 @@ DBG;
 
     public function getIndexSpecs()
     {
-        return [$this->getName()];
+        if ($type = $this->getIndexType()) {
+            return [
+                'type' => $type,
+                'columns' => [$this->getName()],
+            ];
+        }
     }
 }
