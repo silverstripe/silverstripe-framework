@@ -25,3 +25,11 @@ Feature: Log in
     When I press the "Log out" button
     And I go to "/admin/"
     Then I should see a log-in form
+
+  Scenario: Log in as someone else
+    Given I am logged in with "ADMIN" permissions
+    When I go to "/Security/login"
+    Then the response should contain "Log in as someone else"
+
+    When I press the "Log in as someone else" button
+    Then I should see a log-in form

@@ -109,6 +109,6 @@ class LogoutHandler extends RequestHandler
             return $this->redirect($backURL);
         }
 
-        return $this->redirect(Director::absoluteBaseURL());
+        return $this->redirect(Security::config()->get('login_url'));
     }
 }
