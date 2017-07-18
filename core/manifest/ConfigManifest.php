@@ -115,7 +115,8 @@ class SS_ConfigManifest {
 	{
 		return SS_Cache::factory('SS_Configuration', 'Core', array(
 			'automatic_serialization' => true,
-			'lifetime' => null
+			'lifetime' => null,
+			'cache_id_prefix' => 'SS_Configuration_',
 		));
 	}
 
