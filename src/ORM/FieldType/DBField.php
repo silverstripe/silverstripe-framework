@@ -43,7 +43,7 @@ use SilverStripe\View\ViewableData;
  *
  * @todo remove MySQL specific code from subclasses
  */
-abstract class DBField extends ViewableData
+abstract class DBField extends ViewableData implements DBIndexable
 {
 
     /**
@@ -75,6 +75,13 @@ abstract class DBField extends ViewableData
     protected $arrayValue;
 
     /**
+     * Optional parameters for this field
+     *
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * The escape type for this field when inserted into a template - either "xml" or "raw".
      *
      * @var string
@@ -89,6 +96,15 @@ abstract class DBField extends ViewableData
      * @config
      */
     private static $default_search_filter_class = 'PartialMatchFilter';
+
+    /**
+     * The type of index to use for this field. Can either be a string (one of the DBIndexable type options) or a
+     * boolean. When a boolean is given, false will not index the field, and true will use the default index type.
+     *
+     * @var string|bool
+     * @config
+     */
+    private static $index = false;
 
     private static $casting = array(
         'ATT' => 'HTMLFragment',
@@ -110,9 +126,23 @@ abstract class DBField extends ViewableData
      */
     protected $defaultVal;
 
-    public function __construct($name = null)
+    /**
+     * Provide the DBField name and an array of options, e.g. ['index' => true], or ['nullifyEmpty' => false]
+     *
+     * @param  string $name
+     * @param  array  $options
+     * @throws InvalidArgumentException If $options was passed by not an array
+     */
+    public function __construct($name = null, $options = [])
     {
         $this->name = $name;
+
+        if ($options) {
+            if (!is_array($options)) {
+                throw new \InvalidArgumentException("Invalid options $options");
+            }
+            $this->setOptions($options);
+        }
 
         parent::__construct();
     }
@@ -224,6 +254,59 @@ abstract class DBField extends ViewableData
         return $this;
     }
 
+    /**
+     * Update the optional parameters for this field
+     *
+     * @param array $options Array of options
+     * @return $this
+     */
+    public function setOptions(array $options = [])
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * Get optional parameters for this field
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setIndexType($type)
+    {
+        if (!is_bool($type)
+            && !in_array($type, [DBIndexable::TYPE_INDEX, DBIndexable::TYPE_UNIQUE, DBIndexable::TYPE_FULLTEXT])
+        ) {
+            throw new \InvalidArgumentException(
+                "{$type} is not a valid index type or boolean. Please see DBIndexable."
+            );
+        }
+
+        $this->options['index'] = $type;
+        return $this;
+    }
+
+    public function getIndexType()
+    {
+        if (array_key_exists('index', $this->options)) {
+            $type = $this->options['index'];
+        } else {
+            $type = static::config()->get('index');
+        }
+
+        if (is_bool($type)) {
+            if (!$type) {
+                return false;
+            }
+            $type = DBIndexable::TYPE_DEFAULT;
+        }
+
+        return $type;
+    }
 
     /**
      * Determines if the field has a value which is not considered to be 'null'
@@ -548,5 +631,15 @@ DBG;
     public function getSchemaValue()
     {
         return $this->RAW();
+    }
+
+    public function getIndexSpecs()
+    {
+        if ($type = $this->getIndexType()) {
+            return [
+                'type' => $type,
+                'columns' => [$this->getName()],
+            ];
+        }
     }
 }

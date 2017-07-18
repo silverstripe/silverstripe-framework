@@ -3,6 +3,7 @@ namespace SilverStripe\ORM\Tests\DataObjectSchemaTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBIndexable;
 
 class AllIndexes extends DataObject implements TestOnly
 {
@@ -18,7 +19,7 @@ class AllIndexes extends DataObject implements TestOnly
         'Content' => true,
         'IndexCols' => ['Title', 'Content'],
         'IndexUnique' => [
-            'type' => 'unique',
+            'type' => DBIndexable::TYPE_UNIQUE,
             'columns' => ['Number'],
         ],
         'IndexNormal' => [

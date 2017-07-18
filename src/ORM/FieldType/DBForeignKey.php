@@ -29,6 +29,8 @@ class DBForeignKey extends DBInt
      */
     protected $object;
 
+    private static $index = true;
+
     private static $default_search_filter_class = 'ExactMatchFilter';
 
     public function __construct($name, $object = null)
