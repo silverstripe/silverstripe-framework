@@ -12,9 +12,6 @@ SilverStripe\Control\HTTP:
     must-revalidate: "true"
     no-transform: "true"
   vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
-LeftAndMain:
-  dependencies:
-    versionProvider: %$VersionProvider
 SilverStripe\Core\Manifest\VersionProvider:
   modules:
     silverstripe/framework: Framework

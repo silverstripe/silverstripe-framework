@@ -761,4 +761,12 @@ class DirectorTest extends SapphireTest
         $this->assertEquals(2, $middleware->preCalls);
         $this->assertEquals(1, $specificMiddleware->postCalls);
     }
+
+    /**
+     * If using phpdbg it returns itself instead of "cli" from php_sapi_name()
+     */
+    public function testIsCli()
+    {
+        $this->assertTrue(Director::is_cli(), 'is_cli should be true for PHP CLI and phpdbg');
+    }
 }

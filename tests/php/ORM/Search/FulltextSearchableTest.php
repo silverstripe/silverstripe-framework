@@ -29,7 +29,7 @@ class FulltextSearchableTest extends SapphireTest
         parent::tearDown();
 
         File::remove_extension(FulltextSearchable::class);
-        Config::inst()->update(
+        Config::modify()->merge(
             File::class,
             'create_table_options',
             array(

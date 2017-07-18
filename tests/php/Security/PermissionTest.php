@@ -142,14 +142,14 @@ class PermissionTest extends SapphireTest
 
     public function testHiddenPermissions()
     {
-        $permissionCheckboxSet = new PermissionCheckboxSetField('Permissions', 'Permissions', 'SilverStripe\\Security\\Permission', 'GroupID');
+        $permissionCheckboxSet = new PermissionCheckboxSetField('Permissions', 'Permissions', Permission::class, 'GroupID');
         $this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-        Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
+        Config::modify()->merge(Permission::class, 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
 
         $this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-        Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions');
+        Config::inst()->remove(Permission::class, 'hidden_permissions');
         $this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
     }
 

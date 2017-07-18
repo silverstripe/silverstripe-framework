@@ -44,6 +44,13 @@ class DataObjectSchema
     protected $databaseIndexes = [];
 
     /**
+     * Fields that should be indexed, by class name
+     *
+     * @var array
+     */
+    protected $defaultDatabaseIndexes = [];
+
+    /**
      * Cache of composite database field
      *
      * @var array
@@ -65,6 +72,7 @@ class DataObjectSchema
         $this->tableNames = [];
         $this->databaseFields = [];
         $this->databaseIndexes = [];
+        $this->defaultDatabaseIndexes = [];
         $this->compositeFields = [];
     }
 
@@ -193,7 +201,6 @@ class DataObjectSchema
         foreach ($classes as $tableClass) {
             // Find all fields on this class
             $fields = $this->databaseFields($tableClass, false);
-
             // Merge with composite fields
             if (!$dbOnly) {
                 $compositeFields = $this->compositeFields($tableClass, false);
@@ -486,30 +493,56 @@ class DataObjectSchema
     }
 
     /**
-     * Cache all indexes for the given class.
-     * Will do nothing if already cached
+     * Cache all indexes for the given class. Will do nothing if already cached.
      *
      * @param $class
      */
     protected function cacheDatabaseIndexes($class)
     {
-        if (array_key_exists($class, $this->databaseIndexes)) {
-            return;
+        if (!array_key_exists($class, $this->databaseIndexes)) {
+            $this->databaseIndexes[$class] = array_merge(
+                $this->cacheDefaultDatabaseIndexes($class),
+                $this->buildCustomDatabaseIndexes($class)
+            );
         }
-        $indexes = [];
+    }
 
-        // look for indexable field types
-        foreach ($this->databaseFields($class, false) as $field => $type) {
-            /** @skipUpgrade */
-            if ($type === 'ForeignKey' || $type === 'DBClassName') {
-                $indexes[$field] = [
-                    'type' => 'index',
-                    'columns' => [$field],
-                ];
+    /**
+     * Get "default" database indexable field types
+     *
+     * @param  string $class
+     * @return array
+     */
+    protected function cacheDefaultDatabaseIndexes($class)
+    {
+        $indexes = [];
+        if (array_key_exists($class, $this->defaultDatabaseIndexes)) {
+            return $this->defaultDatabaseIndexes[$class];
+        }
+        $this->defaultDatabaseIndexes[$class] = [];
+
+        $fieldSpecs = $this->fieldSpecs($class, self::UNINHERITED);
+        foreach ($fieldSpecs as $field => $spec) {
+            /** @var DBField $fieldObj */
+            $fieldObj = Injector::inst()->create($spec, $field);
+            if ($indexSpecs = $fieldObj->getIndexSpecs()) {
+                $this->defaultDatabaseIndexes[$class][$field] = $indexSpecs;
             }
         }
+        return $this->defaultDatabaseIndexes[$class];
+    }
 
-        // look for custom indexes declared on the class
+    /**
+     * Look for custom indexes declared on the class
+     *
+     * @param  string $class
+     * @return array
+     * @throws InvalidArgumentException If an index already exists on the class
+     * @throws InvalidArgumentException If a custom index format is not valid
+     */
+    protected function buildCustomDatabaseIndexes($class)
+    {
+        $indexes = [];
         $classIndexes = Config::inst()->get($class, 'indexes', Config::UNINHERITED) ?: [];
         foreach ($classIndexes as $indexName => $indexSpec) {
             if (array_key_exists($indexName, $indexes)) {
@@ -546,8 +579,7 @@ class DataObjectSchema
             }
             $indexes[$indexName] = $indexSpec;
         }
-
-        $this->databaseIndexes[$class] = $indexes;
+        return $indexes;
     }
 
     /**
