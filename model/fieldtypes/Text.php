@@ -97,7 +97,7 @@ class Text extends StringField {
 		$paragraph = Convert::xml2raw( $this->RAW() );
 		if( !$paragraph ) return "";
 
-		$words = preg_split('/\s+/', $paragraph);
+		$words = preg_split('/\s+/u', $paragraph);
 		foreach ($words as $i => $word) {
 			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
 				return implode(' ', array_slice($words, 0, $i+1));

@@ -331,10 +331,10 @@ class Convert {
 
 		// Expand hyperlinks
 		if(!$preserveLinks && !$config['PreserveLinks']) {
-			$data = preg_replace_callback('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/i', function($matches) {
+			$data = preg_replace_callback('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ui', function($matches) {
 				return Convert::html2raw($matches[2]) . "[$matches[1]]";
 			}, $data);
-			$data = preg_replace_callback('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/i', function($matches) {
+			$data = preg_replace_callback('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ui', function($matches) {
 				return Convert::html2raw($matches[2]) . "[$matches[1]]";
 			}, $data);
 		}
@@ -347,13 +347,13 @@ class Convert {
 
 		// Compress whitespace
 		if($config['CompressWhitespace']) {
-			$data = preg_replace("/\s+/", " ", $data);
+			$data = preg_replace("/\s+/u", " ", $data);
 		}
 
 		// Parse newline tags
-		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
-		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
-		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */u", "\n\n", $data);
+		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */u", "\n\n", $data);
+		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */u", "\n\n", $data);
 		$data = preg_replace("/\n\n\n+/", "\n\n", $data);
 
 		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
