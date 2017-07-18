@@ -18,6 +18,7 @@ Requires PHPUnit ^5.7
             <directory suffix=".php">.</directory>
             <exclude>
                 <directory suffix=".php">tests/</directory>
+                <directory suffix=".php">thirdparty/</directory>
             </exclude>
         </whitelist>
     </filter>
