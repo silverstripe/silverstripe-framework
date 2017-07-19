@@ -17,3 +17,5 @@ HTTP:
     must-revalidate: "true"
     no-transform: "true"
   vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
+Hierarchy:
+  node_threshold_total: 30
