@@ -473,7 +473,7 @@ abstract class DBSchemaManager
             // Updated index
             $this->transAlterIndex($table, $index, $spec);
             $this->alterationMessage(
-                "Index $table.$index: changed to $specString <i style=\"color: #AAA\">(from $oldSpecString)</i>",
+                "Index $table.$index: changed to $specString <i class=\"build-info-before\">(from $oldSpecString)</i>",
                 "changed"
             );
         }
@@ -694,7 +694,7 @@ abstract class DBSchemaManager
             }
             $this->transAlterField($table, $field, $spec_orig);
             $this->alterationMessage(
-                "Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>",
+                "Field $table.$field: changed to $specValue <i class=\"build-info-before\">(from {$fieldValue})</i>",
                 "changed"
             );
         }
