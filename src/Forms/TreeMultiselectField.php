@@ -5,9 +5,11 @@ namespace SilverStripe\Forms;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Security\Group;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -54,52 +56,105 @@ use stdClass;
  */
 class TreeMultiselectField extends TreeDropdownField
 {
-    public function __construct($name, $title = null, $sourceObject = "SilverStripe\\Security\\Group", $keyField = "ID", $labelField = "Title")
-    {
+    public function __construct(
+        $name,
+        $title = null,
+        $sourceObject = Group::class,
+        $keyField = "ID",
+        $labelField = "Title"
+    ) {
         parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
         $this->removeExtraClass('single');
         $this->addExtraClass('multiple');
         $this->value = 'unchanged';
     }
+    
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
+    
+        $data['data'] = array_merge($data['data'], [
+            'hasEmptyDefault' => false,
+            'multiple' => true,
+        ]);
+        return $data;
+    }
+    
+    public function getSchemaStateDefaults()
+    {
+        $data = parent::getSchemaStateDefaults();
+        unset($data['data']['valueObject']);
+        
+        $items = $this->getItems();
+        $values = [];
+        foreach ($items as $item) {
+            if ($item instanceof DataObject) {
+                $values[] = [
+                    'id' => $item->getField($this->keyField),
+                    'title' => $item->getTitle(),
+                    'parentid' => $item->ParentID,
+                    'treetitle' => $item->obj($this->labelField)->getSchemaValue(),
+                ];
+            } else {
+                $values[] = $item;
+            }
+        }
+        $data['data']['valueObjects'] = $values;
+        
+        // cannot rely on $this->value as this could be a many-many relationship
+        $value = array_column($values, 'id');
+        $data['value'] = ($value) ? $value : 'unchanged';
+        
+        return $data;
+    }
 
     /**
      * Return this field's linked items
+     * @return ArrayList|DataList $items
      */
     public function getItems()
     {
+        $items = new ArrayList();
+        
         // If the value has been set, use that
-        if ($this->value != 'unchanged' && is_array($this->sourceObject)) {
-            $items = array();
-            $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
-            foreach ($values as $value) {
-                $item = new stdClass;
-                $item->ID = $value;
-                $item->Title = $this->sourceObject[$value];
-                $items[] = $item;
-            }
-            return $items;
-
-        // Otherwise, look data up from the linked relation
-        } if ($this->value != 'unchanged' && is_string($this->value)) {
-            $items = new ArrayList();
-            $ids = explode(',', $this->value);
-            foreach ($ids as $id) {
-                if (!is_numeric($id)) {
-                    continue;
-                }
-                $item = DataObject::get_by_id($this->sourceObject, $id);
-                if ($item) {
+        if ($this->value != 'unchanged') {
+            if (is_array($this->sourceObject)) {
+                $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
+                
+                foreach ($values as $value) {
+                    $item = new stdClass;
+                    $item->ID = $value;
+                    $item->Title = $this->sourceObject[$value];
                     $items->push($item);
                 }
+                return $items;
             }
-            return $items;
-        } elseif ($this->form) {
+    
+            // Otherwise, look data up from the linked relation
+            if (is_string($this->value)) {
+                $ids = explode(',', $this->value);
+                foreach ($ids as $id) {
+                    if (!is_numeric($id)) {
+                        continue;
+                    }
+                    $item = DataObject::get_by_id($this->sourceObject, $id);
+                    if ($item) {
+                        $items->push($item);
+                    }
+                }
+                return $items;
+            }
+        }
+    
+        if ($this->form) {
             $fieldName = $this->name;
             $record = $this->form->getRecord();
             if (is_object($record) && $record->hasMethod($fieldName)) {
                 return $record->$fieldName();
             }
         }
+        
+        return $items;
     }
 
     /**
@@ -161,7 +216,7 @@ class TreeMultiselectField extends TreeDropdownField
     {
         // Detect whether this field has actually been updated
         if ($this->value !== 'unchanged') {
-            $items = array();
+            $items = [];
 
             $fieldName = $this->name;
             $saveDest = $record->$fieldName();
@@ -173,8 +228,10 @@ class TreeMultiselectField extends TreeDropdownField
                     E_USER_ERROR
                 );
             }
-
-            if ($this->value) {
+    
+            if (is_array($this->value)) {
+                $items = $this->value;
+            } elseif ($this->value) {
                 $items = preg_split("/ *, */", trim($this->value));
             }
 

@@ -387,7 +387,6 @@ class TreeDropdownField extends FormField
         $isSubTree = false;
 
         $this->search = $request->requestVar('search');
-        $flatlist = $request->requestVar('flatList');
         $id = (is_numeric($request->latestParam('ID')))
             ? (int)$request->latestParam('ID')
             : (int)$request->requestVar('ID');
@@ -450,10 +449,11 @@ class TreeDropdownField extends FormField
 
         // Set title formatter
         $customised = function (DataObject $child) use ($isSubTree) {
+            $title = ($child->hasMethod('getMenuTitle')) ? $child->geMenuTitle() : $child->getTitle();
             return [
                 'name' => $this->getName(),
                 'id' => $child->obj($this->keyField),
-                'title' => $child->getTitle(),
+                'title' => $title,
                 'treetitle' => $child->obj($this->labelField),
                 'disabled' => $this->nodeIsDisabled($child),
                 'isSubTree' => $isSubTree
@@ -466,7 +466,7 @@ class TreeDropdownField extends FormField
             $json = $markingSet
                 ->getChildrenAsArray($customised);
             
-            if ($flatlist) {
+            if ($request->requestVar('flatList')) {
                 // format and filter $json here
                 $json['children'] = $this->flattenChildrenArray($json['children']);
             }
@@ -590,7 +590,7 @@ class TreeDropdownField extends FormField
             $contextString = implode('/', $parentTitles);
             
             $child['contextString'] = ($contextString !== '') ? $contextString .'/' : '';
-            $child['children'] = [];
+            unset($child['children']);
     
             if (!$this->search || in_array($child['id'], $this->realSearchIds)) {
                 $output[] = $child;
@@ -719,16 +719,15 @@ class TreeDropdownField extends FormField
     public function getSchemaStateDefaults()
     {
         $data = parent::getSchemaStateDefaults();
-        // Check label for field
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
-        $selectedlabel = null;
 
         // Ensure cache is keyed by last modified date of the underlying list
         $data['data']['cacheKey'] = DataList::create($this->sourceObject)->max('LastEdited');
         if ($record) {
+            $title = ($record->hasMethod('getMenuTitle')) ? $record->geMenuTitle() : $record->getTitle();
             $data['data']['valueObject'] = [
                 'id' => $record->getField($this->keyField),
-                'title' => $record->getTitle(),
+                'title' => $title,
                 'treetitle' => $record->obj($this->labelField)->getSchemaValue(),
             ];
         }
@@ -744,6 +743,7 @@ class TreeDropdownField extends FormField
             'showSearch' => $this->showSearch,
             'emptyString' => $this->getEmptyString(),
             'hasEmptyDefault' => $this->getHasEmptyDefault(),
+            'multiple' => false,
         ]);
 
         return $data;
