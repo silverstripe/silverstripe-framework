@@ -550,6 +550,7 @@ class CoreKernel implements Kernel
         $kernel = clone $this;
         $kernel->setConfigLoader($this->configLoader->nest());
         $kernel->setInjectorLoader($this->injectorLoader->nest());
+        $kernel->nestedFrom = $this;
         return $kernel;
     }
 
