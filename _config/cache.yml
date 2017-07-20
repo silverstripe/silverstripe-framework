@@ -14,10 +14,6 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       namespace: "cacheblock"
       defaultLifetime: 600
-  Psr\SimpleCache\CacheInterface.LeftAndMain_CMSVersion:
-    factory: SilverStripe\Core\Cache\CacheFactory
-    constructor:
-      namespace: "LeftAndMain_CMSVersion"
   Psr\SimpleCache\CacheInterface.VersionProvider_composerlock:
       factory: SilverStripe\Core\Cache\CacheFactory
       constructor:
