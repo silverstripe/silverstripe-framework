@@ -14,6 +14,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\Queries\SQLInsert;
@@ -3438,7 +3439,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @config
      */
     private static $create_table_options = array(
-        'SilverStripe\ORM\Connect\MySQLDatabase' => 'ENGINE=InnoDB'
+        MySQLSchemaManager::ID => 'ENGINE=InnoDB'
     );
 
     /**
