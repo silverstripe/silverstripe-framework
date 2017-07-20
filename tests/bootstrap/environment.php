@@ -4,13 +4,10 @@
 
 use Dotenv\Loader;
 
-$loader = new Loader(null);
-if (!getenv('SS_ENVIRONMENT_TYPE')) {
-    $loader->setEnvironmentVariable('SS_ENVIRONMENT_TYPE', 'dev');
-}
 
 /** @skipUpgrade */
 if (!getenv('SS_DATABASE_CLASS') && !getenv('SS_DATABASE_USERNAME')) {
+    $loader = new Loader(null);
     // The default settings let us define the database config via environment vars
     // Database connection, including PDO and legacy ORM support
     switch (getenv('DB')) {
