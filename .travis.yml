@@ -16,8 +16,13 @@ addons:
 env:
   global:
     - COMPOSER_ROOT_VERSION=4.0.x-dev
-    - DISPLAY=":99"
-    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+    - DISPLAY=:99.0
+    - XVFBARGS=":99.0 -ac -screen 0 1024x768x16"
+
+_browsers:
+  firefox: &firefox-esr
+    addons:
+      firefox: latest-esr
 
 matrix:
   fast_finish: true
@@ -40,6 +45,7 @@ matrix:
       env:
        - DB=MYSQL
        - BEHAT_TEST=framework
+      <<: *firefox-esr
     - php: 7.0
       env:
         - DB=MYSQL
@@ -48,6 +54,7 @@ matrix:
       env:
         - DB=MYSQL
         - BEHAT_TEST=cms
+      <<: *firefox-esr
 
 before_script:
 # Init PHP
