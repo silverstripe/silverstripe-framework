@@ -86,6 +86,10 @@ before_script:
   - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
   - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
   - if [[ $BEHAT_TEST ]]; then (vendor/bin/selenium-server-standalone > artifacts/selenium.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST ]]; then export GECKODRIVER_DOWNLOAD=`curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest' | python -c "import sys, json; r = json.load(sys.stdin); print([a for a in r['assets'] if 'linux64' in a['name']][0]['browser_download_url']);"`; fi
+  - if [[ $BEHAT_TEST ]]; then curl -L -o geckodriver.tar.gz $GECKODRIVER_DOWNLOAD; fi
+  - if [[ $BEHAT_TEST ]]; then gunzip -c geckodriver.tar.gz | tar xopf -; fi
+  - if [[ $BEHAT_TEST ]]; then chmod +x geckodriver && export PATH=`pwd`/geckodriver:$PATH; fi
   - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
   - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
 
