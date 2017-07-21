@@ -21,7 +21,7 @@ Except:
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   MultipleRules:
-    TwoExceptSucceed: "included - one of the excepts succeeds"
+    OneExceptFail: "excluded - one of the excepts fails"
 ---
 Except:
   ConstantDefined: MULTIPLERULES_DEFINEDCONSTANT
