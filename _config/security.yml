@@ -9,13 +9,13 @@ SilverStripe\Core\Injector\Injector:
     properties:
       TokenCookieName: alc_enc
       DeviceCookieName: alc_device
-      CascadeInTo: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
+      CascadeInTo: '%$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler'
   SilverStripe\Security\AuthenticationHandler:
     class: SilverStripe\Security\RequestAuthenticationHandler
     properties:
       Handlers:
-        session: %$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler
-        alc: %$SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
+        session: '%$SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler'
+        alc: '%$SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler'
 ---
 Name: coresecurity
 After:
@@ -25,16 +25,16 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
     properties:
       Middlewares:
-        AuthenticationMiddleware: %$SilverStripe\Security\AuthenticationMiddleware
+        AuthenticationMiddleware: '%$SilverStripe\Security\AuthenticationMiddleware'
   SilverStripe\Security\AuthenticationMiddleware:
     properties:
-      AuthenticationHandler: %$SilverStripe\Security\AuthenticationHandler
+      AuthenticationHandler: '%$SilverStripe\Security\AuthenticationHandler'
   SilverStripe\Security\Security:
     properties:
       Authenticators:
-        default: %$SilverStripe\Security\MemberAuthenticator\MemberAuthenticator
+        default: '%$SilverStripe\Security\MemberAuthenticator\MemberAuthenticator'
   SilverStripe\Security\CMSSecurity:
     properties:
       Authenticators:
-        cms: %$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator
-  SilverStripe\Security\IdentityStore: %$SilverStripe\Security\AuthenticationHandler
+        cms: '%$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator'
+  SilverStripe\Security\IdentityStore: '%$SilverStripe\Security\AuthenticationHandler'

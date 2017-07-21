@@ -5,10 +5,10 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Dev\State\SapphireTestState:
     properties:
       States:
-        globals: %$SilverStripe\Dev\State\GlobalsTestState
-        extensions: %$SilverStripe\Dev\State\ExtensionTestState
-        flushable: %$SilverStripe\Dev\State\FlushableTestState
-        requirements: %$SilverStripe\View\Dev\RequirementsTestState
+        globals: '%$SilverStripe\Dev\State\GlobalsTestState'
+        extensions: '%$SilverStripe\Dev\State\ExtensionTestState'
+        flushable: '%$SilverStripe\Dev\State\FlushableTestState'
+        requirements: '%$SilverStripe\View\Dev\RequirementsTestState'
 ---
 Name: kerneltest
 Before: '*'
@@ -17,4 +17,4 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Dev\State\SapphireTestState:
     properties:
       States:
-        kernel: %$SilverStripe\Dev\State\KernelTestState
+        kernel: '%$SilverStripe\Dev\State\KernelTestState'
