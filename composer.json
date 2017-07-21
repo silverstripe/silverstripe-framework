@@ -51,7 +51,7 @@
         "silverstripe/versioned": "^1.0@dev",
         "silverstripe/behat-extension": "^3",
         "silverstripe/serve": "dev-master",
-        "se/selenium-server-standalone": "2.41.0"
+        "se/selenium-server-standalone": "^3.4"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
