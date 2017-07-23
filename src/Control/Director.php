@@ -6,6 +6,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
@@ -32,6 +33,7 @@ use SilverStripe\View\TemplateGlobalProvider;
 class Director implements TemplateGlobalProvider
 {
     use Configurable;
+    use Extensible;
     use Injectable;
     use HTTPMiddlewareAware;
 
@@ -103,6 +105,11 @@ class Director implements TemplateGlobalProvider
      * @var string
      */
     protected static $environment_type;
+
+    public function __construct()
+    {
+        $this->constructExtensions();
+    }
 
     /**
      * Test a URL request, returning a response object. This method is a wrapper around
@@ -312,6 +319,8 @@ class Director implements TemplateGlobalProvider
         Injector::inst()->registerService($request, HTTPRequest::class);
 
         $rules = Director::config()->uninherited('rules');
+
+        $this->extend('updateRules', $rules);
 
         // Default handler - mo URL rules matched, so return a 404 error.
         $handler = function () {
