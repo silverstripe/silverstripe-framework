@@ -8,7 +8,7 @@ SilverStripe\Core\Injector\Injector:
       args:
         directory: '`TEMP_FOLDER`'
         version: null
-      logger: %$Psr\Log\LoggerInterface
+      logger: '%$Psr\Log\LoggerInterface'
   Psr\SimpleCache\CacheInterface.cacheblock:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:

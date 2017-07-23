@@ -24,14 +24,14 @@ SilverStripe\Core\Injector\Injector:
   Symfony\Component\Translation\Loader\LoaderInterface:
     class: SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader
     properties:
-      Reader: %$SilverStripe\i18n\Messages\Reader
+      Reader: '%$SilverStripe\i18n\Messages\Reader'
   # Ensure our cache respects ModuleYamlLoader's self-invalidation
   # @see DirectoryListResource::isFresh()
   # Note: This could be replaced with a more aggressive cache if necessary on a live environment
   Symfony\Component\Config\ConfigCacheFactoryInterface:
     class: Symfony\Component\Config\ResourceCheckerConfigCacheFactory
     constructor:
-      0: [ %$Symfony\Component\Config\Resource\SelfCheckingResourceChecker ]
+      0: [ '%$Symfony\Component\Config\Resource\SelfCheckingResourceChecker' ]
   # Create default translator with standard cache path and our custom loader
   Symfony\Component\Translation\TranslatorInterface:
     class: Symfony\Component\Translation\Translator
@@ -40,23 +40,23 @@ SilverStripe\Core\Injector\Injector:
       1: null
       2: '`TEMP_FOLDER`'
     properties:
-      ConfigCacheFactory: %$Symfony\Component\Config\ConfigCacheFactoryInterface
+      ConfigCacheFactory: '%$Symfony\Component\Config\ConfigCacheFactoryInterface'
     calls:
       FallbackLocales: [ setFallbackLocales, [['en']]]
-      Loader: [ addLoader, ['ss', %$Symfony\Component\Translation\Loader\LoaderInterface ]]
+      Loader: [ addLoader, ['ss', '%$Symfony\Component\Translation\Loader\LoaderInterface' ]]
   # Set this translator as our message provider for silverstripe's i18n
   SilverStripe\i18n\Messages\MessageProvider:
     class: SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
     properties:
-      Translator: %$Symfony\Component\Translation\TranslatorInterface
+      Translator: '%$Symfony\Component\Translation\TranslatorInterface'
 ---
 Name: textcollector
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\i18n\TextCollection\i18nTextCollector:
     properties:
-      Reader: %$SilverStripe\i18n\Messages\Reader
-      Writer: %$SilverStripe\i18n\Messages\Writer
+      Reader: '%$SilverStripe\i18n\Messages\Reader'
+      Writer: '%$SilverStripe\i18n\Messages\Writer'
 ---
 Name: i18ndata
 ---
