@@ -122,8 +122,12 @@ class DatabaseAdmin extends Controller
         // The default time limit of 30 seconds is normally not enough
         Environment::increaseTimeLimitTo(600);
 
-        // Get all our classes
-        ClassLoader::inst()->getManifest()->regenerate(false);
+        // If this code is being run outside of a dev/build or without a ?flush query string param,
+        // the class manifest hasn't been flushed, so do it here
+        $request = $this->getRequest();
+        if (!array_key_exists('flush', $request->getVars()) && strpos($request->getURL(), 'dev/build') !== 0) {
+            ClassLoader::inst()->getManifest()->regenerate(false);
+        }
 
         $url = $this->getReturnURL();
         if ($url) {
