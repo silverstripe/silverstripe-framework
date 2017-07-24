@@ -6,6 +6,7 @@ use BadMethodCallException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\ConfigLoader;
+use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Kernel;
@@ -18,8 +19,10 @@ class KernelTest extends SapphireTest
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
 
+        /** @var CoreKernel $nested1 */
         $nested1 = $kernel->nest();
         Director::config()->set('alternate_base_url', '/mysite/');
+        $this->assertEquals($kernel, $nested1->getNestedFrom());
         $this->assertEquals($nested1->getConfigLoader(), ConfigLoader::inst());
         $this->assertEquals($nested1->getInjectorLoader(), InjectorLoader::inst());
         $this->assertEquals(1, ConfigLoader::inst()->countManifests());
