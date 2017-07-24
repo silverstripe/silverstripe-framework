@@ -122,20 +122,6 @@ class CmsUiContext implements Context
         return $cms_tree_element;
     }
 
-    protected function getCmsListElement()
-    {
-        $this->getSession()->wait(
-            5000,
-            "document.querySelector('.cms-lists') !== null"
-        );
-
-        $page = $this->getSession()->getPage();
-        $cms_list_element = $page->find('css', '.cms-list');
-        assertNotNull($cms_list_element, 'CMS list not found');
-
-        return $cms_list_element;
-    }
-
     /**
      * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
      */
@@ -170,25 +156,26 @@ class CmsUiContext implements Context
     }
 
     /**
-     * @When /^I should see "([^"]*)" in the list$/
+     * @When /^I should (|not )see "([^"]*)" in the cms list$/
      */
-    public function stepIShouldSeeInCmsList($text)
+    public function stepIShouldSeeInCmsList($negate, $text)
     {
         // Wait until visible
-        $cmsListElement = $this->getCmsListElement();
-        $element = $cmsListElement->find('named', array('content', "'$text'"));
-        assertNotNull($element, sprintf('%s not found', $text));
-    }
+        $this->getSession()->wait(
+            5000,
+            "document.querySelector('.cms-lists') !== null"
+        );
+        $page = $this->getSession()->getPage();
+        $cmsListElement = $page->find('css', '.cms-list');
+        assertNotNull($cmsListElement, 'CMS list not found');
 
-    /**
-     * @When /^I should not see "([^"]*)" in the list$/
-     */
-    public function stepIShouldNotSeeInCmsList($text)
-    {
-        // Wait until visible
-        $cmsListElement = $this->getCmsListElement();
+        // Check text within this element
         $element = $cmsListElement->find('named', array('content', "'$text'"));
-        assertNull($element, sprintf('%s not found', $text));
+        if (strstr($negate, 'not')) {
+            assertNull($element, sprintf('Unexpected %s found in cms list', $text));
+        } else {
+            assertNotNull($element, sprintf('Expected %s not found in cms list', $text));
+        }
     }
 
     /**
