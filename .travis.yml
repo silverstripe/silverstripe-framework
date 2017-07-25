@@ -1,5 +1,7 @@
 language: php
 
+dist: precise
+
 sudo: false
 
 addons:
