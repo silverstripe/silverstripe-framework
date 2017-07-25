@@ -10,14 +10,14 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Logging\ErrorHandler:
     class: SilverStripe\Logging\MonologErrorHandler
     properties:
-      Logger: %$Psr\Log\LoggerInterface
+      Logger: '%$Psr\Log\LoggerInterface'
   Psr\Log\LoggerInterface:
     type: singleton
     class: Monolog\Logger
     constructor:
       - "error-log"
     calls:
-      pushDisplayErrorHandler: [ pushHandler, [ %$Monolog\Handler\HandlerInterface ] ]
+      pushDisplayErrorHandler: [ pushHandler, [ '%$Monolog\Handler\HandlerInterface' ] ]
 ---
 Name: loggingformatters
 ---
@@ -43,7 +43,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "notice"
     properties:
-      DefaultFormatter: %$Monolog\Formatter\FormatterInterface.detailed
+      DefaultFormatter: '%$Monolog\Formatter\FormatterInterface.detailed'
 ---
 Name: live-logging
 Except:
@@ -57,5 +57,5 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "error"
     properties:
-      DefaultFormatter: %$Monolog\Formatter\FormatterInterface.friendly
-      CLIFormatter: %$Monolog\Formatter\FormatterInterface.detailed
+      DefaultFormatter: '%$Monolog\Formatter\FormatterInterface.friendly'
+      CLIFormatter: '%$Monolog\Formatter\FormatterInterface.detailed'

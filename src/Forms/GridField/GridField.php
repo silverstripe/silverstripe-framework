@@ -127,12 +127,6 @@ class GridField extends FormField
 
         $this->setConfig($config);
 
-        $state = $this->config->getComponentByType(GridState_Component::class);
-
-        if (!$state) {
-            $this->config->addComponent(new GridState_Component());
-        }
-
         $this->state = new GridState($this);
 
         $this->addExtraClass('grid-field');
@@ -210,6 +204,10 @@ class GridField extends FormField
     public function setConfig(GridFieldConfig $config)
     {
         $this->config = $config;
+
+        if (!$this->config->getComponentByType(GridState_Component::class)) {
+            $this->config->addComponent(new GridState_Component());
+        }
 
         return $this;
     }

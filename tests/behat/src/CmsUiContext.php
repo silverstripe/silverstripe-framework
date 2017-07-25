@@ -156,6 +156,29 @@ class CmsUiContext implements Context
     }
 
     /**
+     * @When /^I should (|not )see "([^"]*)" in the cms list$/
+     */
+    public function stepIShouldSeeInCmsList($negate, $text)
+    {
+        // Wait until visible
+        $this->getSession()->wait(
+            5000,
+            "document.querySelector('.cms-lists') !== null"
+        );
+        $page = $this->getSession()->getPage();
+        $cmsListElement = $page->find('css', '.cms-list');
+        assertNotNull($cmsListElement, 'CMS list not found');
+
+        // Check text within this element
+        $element = $cmsListElement->find('named', array('content', "'$text'"));
+        if (strstr($negate, 'not')) {
+            assertNull($element, sprintf('Unexpected %s found in cms list', $text));
+        } else {
+            assertNotNull($element, sprintf('Expected %s not found in cms list', $text));
+        }
+    }
+
+    /**
      * @When /^I should see a "([^"]*)" tab in the CMS content header tabs$/
      */
     public function stepIShouldSeeInCMSContentTabs($text)

@@ -62,7 +62,7 @@ SilverStripe\Core\Injector\Injector:
 Name: coresearchfilters
 ---
 SilverStripe\Core\Injector\Injector:
-  DataListFilter.default: %$DataListFilter.ExactMatch
+  DataListFilter.default: '%$DataListFilter.ExactMatch'
   DataListFilter.EndsWith:
     class: SilverStripe\ORM\Filters\EndsWithFilter
   DataListFilter.ExactMatch:
@@ -87,13 +87,13 @@ SilverStripe\Core\Injector\Injector:
 Name: coresearchaliases
 ---
 SilverStripe\Core\Injector\Injector:
-  EndsWithFilter: %$DataListFilter.EndsWith
-  ExactMatchFilter: %$DataListFilter.ExactMatch
-  FulltextFilter: %$DataListFilter.Fulltext
-  GreaterThanFilter: $&DataListFilter.GreaterThan
-  GreaterThanOrEqualFilter: %$DataListFilter.GreaterThanOrEqual
-  LessThanFilter: %$DataListFilter.LessThan
-  LessThanOrEqualFilter: %$DataListFilter.LessThanOrEqual
-  PartialMatchFilter: %$DataListFilter.PartialMatch
-  StartsWithFilter: %$DataListFilter.StartsWith
-  WithinRangeFilter: %$DataListFilter.WithinRange
+  EndsWithFilter: '%$DataListFilter.EndsWith'
+  ExactMatchFilter: '%$DataListFilter.ExactMatch'
+  FulltextFilter: '%$DataListFilter.Fulltext'
+  GreaterThanFilter: '%$$DataListFilter.GreaterThan'
+  GreaterThanOrEqualFilter: '%$DataListFilter.GreaterThanOrEqual'
+  LessThanFilter: '%$DataListFilter.LessThan'
+  LessThanOrEqualFilter: '%$DataListFilter.LessThanOrEqual'
+  PartialMatchFilter: '%$DataListFilter.PartialMatch'
+  StartsWithFilter: '%$DataListFilter.StartsWith'
+  WithinRangeFilter: '%$DataListFilter.WithinRange'

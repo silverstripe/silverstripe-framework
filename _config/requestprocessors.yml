@@ -5,11 +5,11 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
     properties:
       Middlewares:
-        TrustedProxyMiddleware: %$SilverStripe\Control\Middleware\TrustedProxyMiddleware
-        AllowedHostsMiddleware: %$SilverStripe\Control\Middleware\AllowedHostsMiddleware
-        SessionMiddleware: %$SilverStripe\Control\Middleware\SessionMiddleware
-        RequestProcessorMiddleware: %$SilverStripe\Control\RequestProcessor
-        FlushMiddleware: %$SilverStripe\Control\Middleware\FlushMiddleware
+        TrustedProxyMiddleware: '%$SilverStripe\Control\Middleware\TrustedProxyMiddleware'
+        AllowedHostsMiddleware: '%$SilverStripe\Control\Middleware\AllowedHostsMiddleware'
+        SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
+        RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
+        FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
   SilverStripe\Control\AllowedHostsMiddleware:
     properties:
       AllowedHosts: "`SS_ALLOWED_HOSTS`"

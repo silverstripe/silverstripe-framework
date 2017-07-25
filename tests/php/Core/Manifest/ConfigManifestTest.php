@@ -210,9 +210,9 @@ class ConfigManifestTest extends SapphireTest
             'Fragment is included if both Only rules succeed.'
         );
 
-        $this->assertTrue(
-            isset($config['TwoExceptSucceed']),
-            'Fragment is included if one of the Except rules matches.'
+        $this->assertFalse(
+            isset($config['OneExceptFail']),
+            'Fragment is not included if one of the Except rules fails.'
         );
 
         $this->assertFalse(

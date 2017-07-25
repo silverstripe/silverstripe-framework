@@ -29,44 +29,53 @@ Requiring assets from the template is restricted compared to the PHP API.
 It is common practice to include most Requirements either in the *init()*-method of your [controller](../controllers/), or
 as close to rendering as possible (e.g. in [FormField](api:SilverStripe\Forms\FormField)).
 
-	:::php
-	<?php
+```php
+<?php
 
-	class MyCustomController extends Controller {
+use SilverStripe\Control\Director;
+use SilverStripe\View\Requirements;
 
-        public function init() {
-            parent::init();
-		
-            Requirements::javascript("<my-module-dir>/javascript/some_file.js");
-            Requirements::css("<my-module-dir>/css/some_file.css");
-        }
+class MyCustomController extends Controller
+{
+    protected function init()
+    {
+        parent::init();
+
+        Requirements::javascript("<my-module-dir>/javascript/some_file.js");
+        Requirements::css("<my-module-dir>/css/some_file.css");
     }
+}
+```
 
 ### CSS Files
 
-	:::php
-    Requirements::css($path, $media);
+```php
+Requirements::css($path, $media);
+```
 
 If you're using the CSS method a second argument can be used. This argument defines the 'media' attribute of the 
 `<link>` element, so you can define 'screen' or 'print' for example.
 
-	:::php
-    Requirements::css("<my-module-dir>/css/some_file.css", "screen,projection");
+```php
+Requirements::css("<my-module-dir>/css/some_file.css", "screen,projection");
+```
 
 ### Javascript Files
 
-	:::php
-    Requirements::javascript($path, $options);
+```php
+Requirements::javascript($path, $options);
+```
 
 A variant on the inclusion of custom javascript is the inclusion of *templated* javascript.  Here, you keep your
 JavaScript in a separate file and instead load, via search and replace, several PHP-generated variables into that code.
 
-	:::php
-    $vars = array(
-        "MemberID" => Member::currentUserID(),
-    );
+```php
+$vars = [
+    "MemberID" => Member::currentUserID(),
+];
 
-	Requirements::javascriptTemplate("<my-module-dir>/javascript/some_file.js", $vars);
+Requirements::javascriptTemplate("<my-module-dir>/javascript/some_file.js", $vars);
+```
 
 In this example, `some_file.js` is expected to contain a replaceable variable expressed as `MemberID`.
 
@@ -75,24 +84,26 @@ that your included files provide these scripts. This will ensure that subsequent
 Requirement calls that rely on those included scripts will not double include those
 files.
 
-    :::php
-    Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides' => [
-        '<my-module-dir>/javascript/jquery.js'
-        '<my-module-dir>/javascript/src/main.js',
-        '<my-module-dir>/javascript/src/functions.js'
-    ]]);
-    Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
+```php
+Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides' => [
+    '<my-module-dir>/javascript/jquery.js'
+    '<my-module-dir>/javascript/src/main.js',
+    '<my-module-dir>/javascript/src/functions.js'
+]]);
+Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
+```
 
-You can also use the second argumet to add the 'async' and/or 'defer attributes to the script tag generated:
+You can also use the second argument to add the 'async' and/or 'defer attributes to the script tag generated:
 
-	:::php
-    Requirements::javascript(
-    	"<my-module-dir>/javascript/some_file.js", 
-    	array(
-    		"async" => true,
-    		"defer" => true,
-    	)
-    );
+```php
+Requirements::javascript(
+	"<my-module-dir>/javascript/some_file.js", 
+	[
+		"async" => true,
+		"defer" => true,
+	]
+);
+```
 
 ### Custom Inline CSS or Javascript
 
@@ -101,32 +112,34 @@ of 'configuration' from the database in a raw format.  You'll need to use the `h
 this is generally speaking the best way to do these things - it clearly marks the copy as belonging to a different
 language.
 
-	:::php
-	Requirements::customScript(<<<JS
-	  alert("hi there");
-	JS
-	);
+```php
+Requirements::customScript(<<<JS
+  alert("hi there");
+JS
+);
 
-	Requirements::customCSS(<<<CSS
-	  .tree li.$className {
-	    background-image: url($icon);
-	  }
-	CSS
-	);
+Requirements::customCSS(<<<CSS
+  .tree li.$className {
+    background-image: url($icon);
+  }
+CSS
+);
+```
 
 ## Combining Files
 
 You can concatenate several CSS or javascript files into a single dynamically generated file. This increases performance
 by reducing HTTP requests.
 
-	:::php
-	Requirements::combine_files(
-		'foobar.js',
-		array(
-			'<my-module-dir>/javascript/foo.js',
-			'<my-module-dir>/javascript/bar.js',
-		)
-	);
+```php
+Requirements::combine_files(
+    'foobar.js',
+    [
+        '<my-module-dir>/javascript/foo.js',
+        '<my-module-dir>/javascript/bar.js',
+    ]
+);
+```
 
 <div class="alert" markdown='1'>
 To make debugging easier in your local environment, combined files is disabled when running your application in `dev`
@@ -165,36 +178,37 @@ is not appropriate. Normally a single backend is used for all site assets, so a 
 replaced. For instance, the below will set a new set of dependencies to write to `mysite/javascript/combined`
 
 
-    :::yaml
-    ---
-    Name: myrequirements
-    ---
-    SilverStripe\View\Requirements:
-      disable_flush_combined: true
-    SilverStripe\View\Requirements_Backend:
-      combine_in_dev: true
-      combine_hash_querystring: true
-      default_combined_files_folder: 'combined'
-    SilverStripe\Core\Injector\Injector:
-      # Create adapter that points to the custom directory root
-      SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter:
-        class: SilverStripe\Assets\Flysystem\PublicAssetAdapter
-        constructor:
-          Root: ./mysite/javascript
-      # Set flysystem filesystem that uses this adapter
-      League\Flysystem\Filesystem.custom-filesystem:
-        class: 'League\Flysystem\Filesystem'
-        constructor:
-          Adapter: '%$SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter'
-      # Create handler to generate assets using this filesystem
-      SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets:
-        class: SilverStripe\Assets\Flysystem\GeneratedAssets
-        properties:
-          Filesystem: %$League\Flysystem\Filesystem.custom-filesystem
-      # Assign this generator to the requirements builder
-      SilverStripe\View\Requirements_Backend:
-        properties:
-          AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets'
+```yaml
+---
+Name: myrequirements
+---
+SilverStripe\View\Requirements:
+  disable_flush_combined: true
+SilverStripe\View\Requirements_Backend:
+  combine_in_dev: true
+  combine_hash_querystring: true
+  default_combined_files_folder: 'combined'
+SilverStripe\Core\Injector\Injector:
+  # Create adapter that points to the custom directory root
+  SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter:
+    class: SilverStripe\Assets\Flysystem\PublicAssetAdapter
+    constructor:
+      Root: ./mysite/javascript
+  # Set flysystem filesystem that uses this adapter
+  League\Flysystem\Filesystem.custom-filesystem:
+    class: 'League\Flysystem\Filesystem'
+    constructor:
+      Adapter: '%$SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter'
+  # Create handler to generate assets using this filesystem
+  SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets:
+    class: SilverStripe\Assets\Flysystem\GeneratedAssets
+    properties:
+      Filesystem: %$League\Flysystem\Filesystem.custom-filesystem
+  # Assign this generator to the requirements builder
+  SilverStripe\View\Requirements_Backend:
+    properties:
+      AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler.custom-generated-assets'
+```
 
 In the above configuration, automatic expiry of generated files has been disabled, and it is necessary for
 the developer to maintain these files manually. This may be useful in environments where assets must
@@ -215,10 +229,10 @@ the third paramter of the `combine_files` function:
 $loader = SilverStripe\View\ThemeResourceLoader::inst();
 $themes = SilverStripe\View\SSViewer::get_themes();
 
-$printStylesheets = array(
-	$loader->findThemedCSS('print_HomePage.css', $themes),
-	$loader->findThemedCSS('print_Page.css', $themes)
-);
+$printStylesheets = [
+    $loader->findThemedCSS('print_HomePage.css', $themes),
+    $loader->findThemedCSS('print_Page.css', $themes)
+];
 
 SilverStripe\View\Requirements::combine_files('print.css', $printStylesheets, 'print');
 ```
@@ -240,12 +254,12 @@ You can also add the 'async' and/or 'defer' attributes to combined Javascript fi
 $loader = SilverStripe\View\ThemeResourceLoader::inst();
 $themes = SilverStripe\View\SSViewer::get_themes();
 
-$scripts = array(
+$scripts = [
     $loader->findThemedJavascript('some_script.js', $themes),
     $loader->findThemedJavascript('some_other_script.js', $themes)
-);
+];
 
-SilverStripe\View\Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
+SilverStripe\View\Requirements::combine_files('scripts.js', $scripts, ['async' => true, 'defer' => true]);
 ```
 
 ### Minification of CSS and JS files
@@ -294,13 +308,15 @@ tools to do this for you, e.g. [Webpack](https://webpack.github.io/), [Gulp](htt
 
 ## Clearing assets
 
-	:::php
-	Requirements::clear();
+```php
+Requirements::clear();
+```
 
 Clears all defined requirements. You can also clear specific requirements.
 
-	:::php
-	Requirements::clear(THIRDPARTY_DIR.'/prototype.js');
+```php
+Requirements::clear('modulename/javascript/some-lib.js');
+```
 
 <div class="alert" markdown="1">
 Depending on where you call this command, a Requirement might be *re-included* afterwards.
@@ -315,8 +331,9 @@ included requirements, and ones included after the `block()` call.
 One common example is to block the core `jquery.js` added by various form fields and core controllers, and use a newer 
 version in a custom location. This assumes you have tested your application with the newer version.
 
-	:::php
-	Requirements::block(ADMIN_THIRDPARTY_DIR . '/jquery/jquery.js');
+```php
+Requirements::block('silverstripe-admin/thirdparty/jquery/jquery.js');
+```
 
 <div class="alert" markdown="1">
 The CMS also uses the `Requirements` system, and its operation can be affected by `block()` calls. Avoid this by 
@@ -338,8 +355,9 @@ careful when messing with the order of requirements.
 By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
-	:::php
-	Requirements::set_force_js_to_bottom(true);
+```php
+Requirements::set_force_js_to_bottom(true);
+```
 
 `Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
@@ -347,8 +365,9 @@ if there is an earlier script tag.
 If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,
 `Requirements.write_js_to_body` should be set to false.
 
-	:::php
-	Requirements::set_write_js_to_body(false);
+```php
+Requirements::set_write_js_to_body(false);
+```
 
 
 ## API Documentation

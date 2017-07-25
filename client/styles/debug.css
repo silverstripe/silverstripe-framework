@@ -4,7 +4,7 @@ body {
     margin: 0;
     overflow-x: hidden;
     padding: 0;
-    color: #66727d;
+    color: #4F5861;
     background: #f6f7f8;
     font-size: 15px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -31,6 +31,19 @@ ul {
     padding: 0 0 0 18px;
 }
 
+li {
+    padding: 2px 0;
+}
+
+li.info {
+    word-wrap: break-word;
+    padding: 0;
+}
+
+.build-info-before {
+    color: #66727d;
+}
+
 b {
     color: #4f5861;
     font-weight: bold;
@@ -49,7 +62,7 @@ a:active {
 .info {
     position: relative;
     z-index: 9999;
-    padding: 20px;
+    padding: 15px 15px 0;
 }
 
 .info h1 {
@@ -71,14 +84,20 @@ a:active {
     border-bottom: solid 1px #004e7f;
     color: white;
     background: #005a93;
+    padding: 15px;
+}
+
+.header p {
+    color: #fff;
 }
 
 .header h1 {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmdJREFUeNpiYCASxJ17p8BAAmAh0sD5QAyiFYk1mJGAoQFQQwWgQoKLjIQ+kG0w0EABqIEByOKLjYWZ/////48Yg5lwuPI+uqF/f/88TqyhKGEMdWU/ECegK/r358/Va8tnx5AceVBD9wOxAbqCX18+zbm+am7HpaktD9AcEQCNUBDYAAz7CxhhDFTYAKTqkSX+//37+N3tq4Xboh33ALmfYcEAVJsA9ZkAmhtABifCLIAZ/B5Z4Z9vX1ddXjK15srMzkdAA38iudQB6jNcAJRiFEEpBxbGAsiRtNxWLh3I/ITkSpC3QUGRTyBoYfGUiJFBmJiY/wIN/IAl2S1AdgAoQr88fdjHysMjwyks3ohkBCioEsFBEXv2zUdGRiY+JEmQIQ+hLoQZdgBo2BMmFpaYnx/e9a1yVu0AhT0QM0cefjSPhYs7DEm/IAs0TFewcvOmodmKnuSevLp0uouVi3sDMEJ3AX31GZ60uLjV0DLSJ7DB9/dsalHxDrcGukYbV+B9enJ/xu5Un2tA5i1YhCKVIwbIqQkUN+Ccd7Ip7+nlRZP9QakB3UCQwrc3LoVsDrY4BdTwF8nQAiB1HogdkNX//v5tOUpZwQgMZCDFZ906S51fQVUGmjk+7Un3vwRKRkgGYi1HYMkUmKJSQMGEUQgBLWBGyur/gIp+I6VjA2g6Rs8cDNAIbYalKIzkBvIuKDnjCGqMHAdKdi8vnCgE+uwESoQykAYc0MuRlfaKVdCg+o232MRT6AugRyjQ0BKgga/RDSUJgCI39vTrRxGHHszWzahQBfLZGagFgIaJAzE/NAXhBQABBgBJL0aZBy/F5wAAAABJRU5ErkJggg==) no-repeat right 3px;
+    color: #fff;
 }
 
 .header h3 {
-    color: #7da4be;
+    color: #fff;
     font-weight: 400;
 }
 
@@ -99,8 +118,8 @@ a:active {
 .trace {
     position: relative;
     z-index: 9999;
-    padding: 20px;
-    background: #f6f7f8 !important;
+    padding: 15px;
+    background: #f6f7f8;
 }
 
 .options .description {
@@ -110,19 +129,19 @@ a:active {
 }
 
 .build .success {
-    color: #3fa142;
+    color: #2b6c2d;
 }
 
 .build .error {
-    color: #d40404;
+    color: #d30000;
 }
 
 .build .warning {
-    color: #f0ad4e;
+    color: #8a6d3b;
 }
 
 .build .info {
-    color: #5bc0de;
+    color: #0073c1;
 }
 
 /* Backtrace styles */
@@ -141,5 +160,5 @@ pre span {
 }
 
 pre .error {
-    color: #d40404;
+    color: #d30000;
 }

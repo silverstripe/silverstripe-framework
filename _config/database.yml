@@ -5,15 +5,15 @@ SilverStripe\Core\Injector\Injector:
   MySQLPDODatabase:
     class: 'SilverStripe\ORM\Connect\MySQLDatabase'
     properties:
-      connector: %$PDOConnector
-      schemaManager: %$MySQLSchemaManager
-      queryBuilder: %$MySQLQueryBuilder
+      connector: '%$PDOConnector'
+      schemaManager: '%$MySQLSchemaManager'
+      queryBuilder: '%$MySQLQueryBuilder'
   MySQLDatabase:
     class: 'SilverStripe\ORM\Connect\MySQLDatabase'
     properties:
-      connector: %$MySQLiConnector
-      schemaManager: %$MySQLSchemaManager
-      queryBuilder: %$MySQLQueryBuilder
+      connector: '%$MySQLiConnector'
+      schemaManager: '%$MySQLSchemaManager'
+      queryBuilder: '%$MySQLQueryBuilder'
   MySQLiConnector:
     class: 'SilverStripe\ORM\Connect\MySQLiConnector'
     type: prototype

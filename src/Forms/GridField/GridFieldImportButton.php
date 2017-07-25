@@ -77,7 +77,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
             null
         );
         $button
-            ->addExtraClass('btn btn-secondary no-ajax font-icon-upload btn--icon-large action_import')
+            ->addExtraClass('btn btn-secondary font-icon-upload btn--icon-large action_import')
             ->setForm($gridField->getForm())
             ->setAttribute('data-toggle', 'modal')
             ->setAttribute('aria-controls', $modalID)
