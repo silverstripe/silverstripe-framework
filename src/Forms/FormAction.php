@@ -70,6 +70,10 @@ class FormAction extends FormField
      */
     protected $validationExempt = false;
 
+    protected $savedTitle = null;
+    protected $savedClasses = null;
+    protected $savedIcon = null;
+
     /**
      * Create a new action button.
      *
@@ -93,7 +97,43 @@ class FormAction extends FormField
         $defaults = parent::getSchemaDataDefaults();
         $defaults['attributes']['type'] = $this->getUseButtonTag() ? 'button' : 'submit';
         $defaults['data']['icon'] = $this->getIcon();
+        $defaults['data']['savedTitle'] = $this->getSavedTitle();
+        $defaults['data']['savedClasses'] = $this->getSavedClasses();
+        $defaults['data']['savedIcon'] = $this->getSavedIcon();
         return $defaults;
+    }
+
+    public function setSavedTitle($title)
+    {
+        $this->savedTitle = $title;
+        return $this;
+    }
+
+    public function getSavedTitle()
+    {
+        return $this->savedTitle;
+    }
+
+    public function setSavedClasses($classes)
+    {
+        $this->savedClasses = $classes;
+        return $this;
+    }
+
+    public function getSavedClasses()
+    {
+        return $this->savedClasses;
+    }
+
+    public function setSavedIcon($icon)
+    {
+        $this->savedIcon = $icon;
+        return $this;
+    }
+
+    public function getSavedIcon()
+    {
+        return $this->savedIcon;
     }
 
     /**
