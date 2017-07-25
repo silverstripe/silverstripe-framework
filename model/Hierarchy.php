@@ -237,10 +237,12 @@ class Hierarchy extends DataExtension {
 	 * @param array $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($nodeCountThreshold = 30, $context = null,
+	public function markPartialTree($nodeCountThreshold = null, $context = null,
 			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren", array $filteredIds = array()) {
 
-		if(!is_numeric($nodeCountThreshold)) $nodeCountThreshold = 30;
+		if(!is_numeric($nodeCountThreshold)) {
+			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
+		}
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
@@ -446,6 +448,11 @@ class Hierarchy extends DataExtension {
 	 */
 	public function markToExpose($childObj, $childrenMethod = "AllChildrenIncludingDeleted",
 								$numChildrenMethod = "numChildren", $nodeCountThreshold = null, array $filteredIds = array()) {
+	    
+		if(!is_numeric($nodeCountThreshold)) {
+			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
+		}
+								    
 		if(is_object($childObj)){
 			$stack = array_reverse($childObj->parentStack());
 			foreach($stack as $stackItem) {

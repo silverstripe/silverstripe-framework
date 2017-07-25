@@ -337,9 +337,8 @@ class TreeDropdownField extends FormField {
 		}
 
 		// main node leaf limit configuration
-		$nodeCountThreshold = 30;
 		$obj->markPartialTree(
-			$nodeCountThreshold, $context = null,
+			$nodeCountThreshold = null, $context = null,
 			$this->childrenMethod, $this->numChildrenMethod, $filteredIds
 		);
 
@@ -357,7 +356,7 @@ class TreeDropdownField extends FormField {
 						$this->objectForKey($value),
 						$this->childrenMethod,
 						$this->numChildrenMethod,
-						$nodeCountThreshold,
+						$nodeCountThreshold = null,
 						$filteredIds
 					);
 				}
