@@ -226,10 +226,10 @@ class MySQLDatabase extends Database
 
         // Generate initial DataLists and base table names
         $lists = array();
-        $baseClasses = array($pageClass => '', $fileClass => '');
+        $sqlTables = array($pageClass => '', $fileClass => '');
         foreach ($classesToSearch as $class) {
             $lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class]);
-            $baseClasses[$class] = '"' . $class . '"';
+            $sqlTables[$class] = '"' . DataObject::getSchema()->tableName($class) . '"';
         }
 
         $charset = static::config()->get('charset');
@@ -237,14 +237,14 @@ class MySQLDatabase extends Database
         // Make column selection lists
         $select = array(
             $pageClass => array(
-                "ClassName", "{$pageTable}.\"ID\"", "ParentID",
+                "ClassName", "{$sqlTables[$pageClass]}.\"ID\"", "ParentID",
                 "Title", "MenuTitle", "URLSegment", "Content",
                 "LastEdited", "Created",
                 "Name" => "_{$charset}''",
                 "Relevance" => $relevance[$pageClass], "CanViewType"
             ),
             $fileClass => array(
-                "ClassName", "{$fileTable}.\"ID\"", "ParentID",
+                "ClassName", "{$sqlTables[$fileClass]}.\"ID\"", "ParentID",
                 "Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
                 "LastEdited", "Created",
                 "Name",
@@ -262,7 +262,7 @@ class MySQLDatabase extends Database
             $query = $list->dataQuery()->query();
 
             // There's no need to do all that joining
-            $query->setFrom($table);
+            $query->setFrom($sqlTables[$class]);
             $query->setSelect($select[$class]);
             $query->setOrderBy(array());
 
