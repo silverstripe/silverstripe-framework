@@ -68,43 +68,43 @@ class TreeMultiselectField extends TreeDropdownField
         $this->addExtraClass('multiple');
         $this->value = 'unchanged';
     }
-    
+
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-    
+
         $data['data'] = array_merge($data['data'], [
             'hasEmptyDefault' => false,
             'multiple' => true,
         ]);
         return $data;
     }
-    
+
     public function getSchemaStateDefaults()
     {
         $data = parent::getSchemaStateDefaults();
         unset($data['data']['valueObject']);
-        
+
         $items = $this->getItems();
         $values = [];
         foreach ($items as $item) {
             if ($item instanceof DataObject) {
                 $values[] = [
-                    'id' => $item->getField($this->keyField),
-                    'title' => $item->getTitle(),
+                    'id' => $item->obj($this->getKeyField())->getValue(),
+                    'title' => $item->obj($this->getTitleField())->getValue(),
                     'parentid' => $item->ParentID,
-                    'treetitle' => $item->obj($this->labelField)->getSchemaValue(),
+                    'treetitle' => $item->obj($this->getLabelField())->getSchemaValue(),
                 ];
             } else {
                 $values[] = $item;
             }
         }
         $data['data']['valueObjects'] = $values;
-        
+
         // cannot rely on $this->value as this could be a many-many relationship
         $value = array_column($values, 'id');
         $data['value'] = ($value) ? $value : 'unchanged';
-        
+
         return $data;
     }
 
@@ -115,21 +115,22 @@ class TreeMultiselectField extends TreeDropdownField
     public function getItems()
     {
         $items = new ArrayList();
-        
+
         // If the value has been set, use that
         if ($this->value != 'unchanged') {
-            if (is_array($this->sourceObject)) {
+            $sourceObject = $this->getSourceObject();
+            if (is_array($sourceObject)) {
                 $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
-                
+
                 foreach ($values as $value) {
                     $item = new stdClass;
                     $item->ID = $value;
-                    $item->Title = $this->sourceObject[$value];
+                    $item->Title = $sourceObject[$value];
                     $items->push($item);
                 }
                 return $items;
             }
-    
+
             // Otherwise, look data up from the linked relation
             if (is_string($this->value)) {
                 $ids = explode(',', $this->value);
@@ -137,7 +138,7 @@ class TreeMultiselectField extends TreeDropdownField
                     if (!is_numeric($id)) {
                         continue;
                     }
-                    $item = DataObject::get_by_id($this->sourceObject, $id);
+                    $item = DataObject::get_by_id($sourceObject, $id);
                     if ($item) {
                         $items->push($item);
                     }
@@ -145,7 +146,7 @@ class TreeMultiselectField extends TreeDropdownField
                 return $items;
             }
         }
-    
+
         if ($this->form) {
             $fieldName = $this->name;
             $record = $this->form->getRecord();
@@ -153,7 +154,7 @@ class TreeMultiselectField extends TreeDropdownField
                 return $record->$fieldName();
             }
         }
-        
+
         return $items;
     }
 
@@ -176,8 +177,8 @@ class TreeMultiselectField extends TreeDropdownField
             foreach ($items as $item) {
                 $idArray[] = $item->ID;
                 $titleArray[] = ($item instanceof ViewableData)
-                    ? $item->obj($this->labelField)->forTemplate()
-                    : Convert::raw2xml($item->{$this->labelField});
+                    ? $item->obj($this->getLabelField())->forTemplate()
+                    : Convert::raw2xml($item->{$this->getLabelField()});
             }
 
             $title = implode(", ", $titleArray);
@@ -228,7 +229,7 @@ class TreeMultiselectField extends TreeDropdownField
                     E_USER_ERROR
                 );
             }
-    
+
             if (is_array($this->value)) {
                 $items = $this->value;
             } elseif ($this->value) {
@@ -253,11 +254,12 @@ class TreeMultiselectField extends TreeDropdownField
      */
     public function performReadonlyTransformation()
     {
-        $copy = $this->castedCopy('SilverStripe\\Forms\\TreeMultiselectField_Readonly');
-        $copy->setKeyField($this->keyField);
-        $copy->setLabelField($this->labelField);
-        $copy->setSourceObject($this->sourceObject);
-
+        /** @var TreeMultiselectField_Readonly $copy */
+        $copy = $this->castedCopy(TreeMultiselectField_Readonly::class);
+        $copy->setKeyField($this->getKeyField());
+        $copy->setLabelField($this->getLabelField());
+        $copy->setSourceObject($this->getSourceObject());
+        $copy->setTitleField($this->getTitleField());
         return $copy;
     }
 }
