@@ -10,30 +10,34 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use SilverStripe\Forms\SelectField;
+use SilverStripe\Forms\CheckboxField;
 use InvalidArgumentException;
 use Exception;
 
 /**
-* Manages searching of properties on one or more {@link DataObject}
-* types, based on a given set of input parameters.
-* SearchContext is intentionally decoupled from any controller-logic,
-* it just receives a set of search parameters and an object class it acts on.
-*
-* The default output of a SearchContext is either a {@link SQLSelect} object
-* for further refinement, or a {@link SS_List} that can be used to display
-* search results, e.g. in a {@link TableListField} instance.
-*
-* In case you need multiple contexts, consider namespacing your request parameters
-* by using {@link FieldList->namespace()} on the $fields constructor parameter.
-*
-* Each DataObject subclass can have multiple search contexts for different cases,
-* e.g. for a limited frontend search and a fully featured backend search.
-* By default, you can use {@link DataObject->getDefaultSearchContext()} which is automatically
-* scaffolded. It uses {@link DataObject::$searchable_fields} to determine which fields
-* to include.
-*
-* @see http://doc.silverstripe.com/doku.php?id=searchcontext
-*/
+ * Manages searching of properties on one or more {@link DataObject}
+ * types, based on a given set of input parameters.
+ * SearchContext is intentionally decoupled from any controller-logic,
+ * it just receives a set of search parameters and an object class it acts on.
+ *
+ * The default output of a SearchContext is either a {@link SQLSelect} object
+ * for further refinement, or a {@link SS_List} that can be used to display
+ * search results, e.g. in a {@link TableListField} instance.
+ *
+ * In case you need multiple contexts, consider namespacing your request parameters
+ * by using {@link FieldList->namespace()} on the $fields constructor parameter.
+ *
+ * Each DataObject subclass can have multiple search contexts for different cases,
+ * e.g. for a limited frontend search and a fully featured backend search.
+ * By default, you can use {@link DataObject->getDefaultSearchContext()} which is automatically
+ * scaffolded. It uses {@link DataObject::$searchable_fields} to determine which fields
+ * to include.
+ *
+ * @see http://doc.silverstripe.com/doku.php?id=searchcontext
+ */
 class SearchContext
 {
     use Injectable;
@@ -60,6 +64,13 @@ class SearchContext
      * @var SearchFilter[]
      */
     protected $filters;
+
+    /**
+     * Key/value pairs of search fields to search terms
+     *
+     * @var array
+     */
+    protected $searchParams = [];
 
     /**
      * The logical connective used to join WHERE clauses. Defaults to AND.
@@ -110,10 +121,10 @@ class SearchContext
         $baseTable = DataObject::getSchema()->baseDataTable($this->modelClass);
         $fields = array("\"{$baseTable}\".*");
         if ($this->modelClass != $classes[0]) {
-            $fields[] = '"'.$classes[0].'".*';
+            $fields[] = '"' . $classes[0] . '".*';
         }
         //$fields = array_keys($model->db());
-        $fields[] = '"'.$classes[0].'".\"ClassName\" AS "RecordClassName"';
+        $fields[] = '"' . $classes[0] . '".\"ClassName\" AS "RecordClassName"';
         return $fields;
     }
 
@@ -121,7 +132,7 @@ class SearchContext
      * Returns a SQL object representing the search context for the given
      * list of query parameters.
      *
-     * @param array $searchParams Map of search criteria, mostly taked from $_REQUEST.
+     * @param array $searchParams Map of search criteria, mostly taken from $_REQUEST.
      *  If a filter is applied to a relationship in dot notation,
      *  the parameter name should have the dots replaced with double underscores,
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
@@ -160,20 +171,14 @@ class SearchContext
 
         /** @var DataList $query */
         $query = $query->sort($sort);
+        $this->setSearchParams($searchParams);
 
-        // hack to work with $searchParems when it's an Object
-        if ($searchParams instanceof HTTPRequest) {
-            $searchParamArray = $searchParams->getVars();
-        } else {
-            $searchParamArray = $searchParams;
-        }
-
-        foreach ($searchParamArray as $key => $value) {
+        foreach ($this->searchParams as $key => $value) {
             $key = str_replace('__', '.', $key);
             if ($filter = $this->getFilter($key)) {
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
-                if (! $filter->isEmpty()) {
+                if (!$filter->isEmpty()) {
                     $query = $query->alterDataQuery(array($filter, 'apply'));
                 }
             }
@@ -199,7 +204,7 @@ class SearchContext
      */
     public function getResults($searchParams, $sort = false, $limit = false)
     {
-        $searchParams = array_filter((array)$searchParams, array($this,'clearEmptySearchFields'));
+        $searchParams = array_filter((array)$searchParams, array($this, 'clearEmptySearchFields'));
 
         // getQuery actually returns a DataList
         return $this->getQuery($searchParams, $sort, $limit);
@@ -310,5 +315,73 @@ class SearchContext
     public function removeFieldByName($fieldName)
     {
         $this->fields->removeByName($fieldName);
+    }
+
+    /**
+     * @param $searchParams
+     */
+    public function setSearchParams($searchParams)
+    {
+        // hack to work with $searchParams when it's an Object
+        if ($searchParams instanceof HTTPRequest) {
+            $this->searchParams = $searchParams->getVars();
+        } else {
+            $this->searchParams = $searchParams;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchParams()
+    {
+        return $this->searchParams;
+    }
+
+    /**
+     * Gets a list of what fields were searched and the values provided
+     * for each field. Returns an ArrayList of ArrayData, suitable for
+     * rendering on a template.
+     *
+     * @return ArrayList
+     */
+    public function getSummary()
+    {
+        $list = ArrayList::create();
+        foreach ($this->searchParams as $searchField => $searchValue) {
+            if (empty($searchValue)) {
+                continue;
+            }
+            $filter = $this->getFilter($searchField);
+            if (!$filter) {
+                continue;
+            }
+
+            $field = $this->fields->fieldByName($filter->getFullName());
+            if (!$field) {
+                continue;
+            }
+
+            // For dropdowns, checkboxes, etc, get the value that was presented to the user
+            // e.g. not an ID
+            if ($field instanceof SelectField) {
+                $source = $field->getSource();
+                if (isset($source[$searchValue])) {
+                    $searchValue = $source[$searchValue];
+                }
+            } else {
+                // For checkboxes, it suffices to simply include the field in the list, since it's binary
+                if ($field instanceof CheckboxField) {
+                    $searchValue = null;
+                }
+            }
+
+            $list->push(ArrayData::create([
+                'Field' => $field->Title(),
+                'Value' => $searchValue,
+            ]));
+        }
+
+        return $list;
     }
 }
