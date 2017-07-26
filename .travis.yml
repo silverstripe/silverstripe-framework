@@ -4,6 +4,11 @@ dist: precise
 
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - vendor/
+
 addons:
   apt:
     packages:
