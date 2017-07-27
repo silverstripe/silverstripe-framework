@@ -318,7 +318,10 @@ class SearchContext
     }
 
     /**
-     * @param $searchParams
+     * Set search param values
+     *
+     * @param array|HTTPRequest $searchParams
+     * @return $this
      */
     public function setSearchParams($searchParams)
     {
@@ -328,6 +331,7 @@ class SearchContext
         } else {
             $this->searchParams = $searchParams;
         }
+        return $this;
     }
 
     /**
