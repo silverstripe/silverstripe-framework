@@ -240,8 +240,9 @@ abstract class DBComposite extends DBField
     {
         $this->objCacheClear();
 
-        // Skip non-db fields
+        // Non-db fields get assigned as normal properties
         if (!$this->hasField($field)) {
+            $this->$field = $value;
             return $this;
         }
 
