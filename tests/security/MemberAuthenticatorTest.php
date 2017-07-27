@@ -137,6 +137,44 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$this->assertEquals('bad', $form->MessageType());
 	}
 
+    public function testExpiredTempID()
+    {
+        //store original default admin as we'll need to clear it
+        $adminUser = Security::default_admin_username();
+        $adminPass = Security::default_admin_password();
+
+        // Make member with expired TempID
+        $member = new Member();
+        $member->Email = 'test1@test.com';
+        $member->PasswordEncryption = "sha1";
+        $member->Password = "mypassword";
+        $member->TempIDExpired = '2016-05-22 00:00:00';
+        $member->write();
+        $member->logIn(true);
+
+        $tempID = $member->TempIDHash;
+
+        // Make form
+        $controller = new Security();
+        $form = new Form($controller, 'Form', new FieldList(), new FieldList());
+
+        SS_Datetime::set_mock_now('2016-05-29 00:00:00');
+        Security::clear_default_admin();
+
+        $this->assertNotEmpty($tempID);
+        $this->assertFalse(Security::has_default_admin());
+
+        $result = MemberAuthenticator::authenticate(array(
+            'tempid' => $tempID,
+            'Password' => 'notmypassword'
+        ), $form);
+        $this->assertEmpty($result);
+
+        if (!is_null($adminUser) || !is_null($adminPass)) {
+            Security::setDefaultAdmin($adminUser, $adminPass);
+        }
+    }
+
 	/**
 	 * Test that the default admin can be authenticated
 	 */
