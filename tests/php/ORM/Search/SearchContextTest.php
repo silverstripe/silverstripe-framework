@@ -9,6 +9,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Search\SearchContext;
 
@@ -103,7 +104,6 @@ class SearchContextTest extends SapphireTest
     {
         $company = SearchContextTest\Company::singleton();
         $context = $company->getDefaultSearchContext();
-        $fields = $context->getFields();
         $this->assertEquals(
             new FieldList(
                 new TextField("Name", 'Name'),
@@ -118,16 +118,18 @@ class SearchContextTest extends SapphireTest
     {
         $action3 = $this->objFromFixture(SearchContextTest\Action::class, 'action3');
 
-        $project = singleton(SearchContextTest\Project::class);
+        $project = SearchContextTest\Project::singleton();
         $context = $project->getDefaultSearchContext();
 
         $params = array("Name" => "Blog Website", "Actions__SolutionArea" => "technical");
 
+        /** @var DataList $results */
         $results = $context->getResults($params);
 
-        $this->assertEquals(1, $results->Count());
+        $this->assertEquals(1, $results->count());
 
-        $project = $results->First();
+        /** @var SearchContextTest\Project $project */
+        $project = $results->first();
 
         $this->assertInstanceOf(SearchContextTest\Project::class, $project);
         $this->assertEquals("Blog Website", $project->Name);
@@ -247,7 +249,5 @@ class SearchContextTest extends SapphireTest
         // "Nothing" should come back null since there's no field for it
         $nothing = $list->find('Field', 'Nothing');
         $this->assertNull($nothing);
-
-
     }
 }

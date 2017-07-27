@@ -4,7 +4,13 @@ namespace SilverStripe\ORM\Tests\Search\SearchContextTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\HasManyList;
 
+/**
+ * @property string $Name
+ * @method Deadline Deadline()
+ * @method HasManyList Actions()
+ */
 class Project extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Project';
