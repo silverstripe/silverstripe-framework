@@ -6,8 +6,12 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
+use SilverStripe\ORM\Search\SearchContext;
 
 class SearchContextTest extends SapphireTest
 {
@@ -28,13 +32,13 @@ class SearchContextTest extends SapphireTest
     {
         $person = SearchContextTest\Person::singleton();
         $context = $person->getDefaultSearchContext();
-        $results = $context->getResults(array('Name'=>''));
+        $results = $context->getResults(array('Name' => ''));
         $this->assertEquals(5, $results->Count());
 
-        $results = $context->getResults(array('EyeColor'=>'green'));
+        $results = $context->getResults(array('EyeColor' => 'green'));
         $this->assertEquals(2, $results->Count());
 
-        $results = $context->getResults(array('EyeColor'=>'green', 'HairColor'=>'black'));
+        $results = $context->getResults(array('EyeColor' => 'green', 'HairColor' => 'black'));
         $this->assertEquals(1, $results->Count());
     }
 
@@ -100,7 +104,6 @@ class SearchContextTest extends SapphireTest
     {
         $company = SearchContextTest\Company::singleton();
         $context = $company->getDefaultSearchContext();
-        $fields = $context->getFields();
         $this->assertEquals(
             new FieldList(
                 new TextField("Name", 'Name'),
@@ -115,16 +118,18 @@ class SearchContextTest extends SapphireTest
     {
         $action3 = $this->objFromFixture(SearchContextTest\Action::class, 'action3');
 
-        $project = singleton(SearchContextTest\Project::class);
+        $project = SearchContextTest\Project::singleton();
         $context = $project->getDefaultSearchContext();
 
-        $params = array("Name"=>"Blog Website", "Actions__SolutionArea"=>"technical");
+        $params = array("Name" => "Blog Website", "Actions__SolutionArea" => "technical");
 
+        /** @var DataList $results */
         $results = $context->getResults($params);
 
-        $this->assertEquals(1, $results->Count());
+        $this->assertEquals(1, $results->count());
 
-        $project = $results->First();
+        /** @var SearchContextTest\Project $project */
+        $project = $results->first();
 
         $this->assertInstanceOf(SearchContextTest\Project::class, $project);
         $this->assertEquals("Blog Website", $project->Name);
@@ -183,5 +188,66 @@ class SearchContextTest extends SapphireTest
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->Count());
         $this->assertEquals("Filtered value", $results->First()->HiddenValue);
+    }
+
+    public function testSearchContextSummary()
+    {
+        $filters = [
+            'KeywordSearch' => PartialMatchFilter::create('KeywordSearch'),
+            'Country' => PartialMatchFilter::create('Country'),
+            'CategoryID' => PartialMatchFilter::create('CategoryID'),
+            'Featured' => PartialMatchFilter::create('Featured'),
+            'Nothing' => PartialMatchFilter::create('Nothing'),
+        ];
+
+        $fields = FieldList::create(
+            TextField::create('KeywordSearch', 'Keywords'),
+            TextField::create('Country', 'Country'),
+            DropdownField::create('CategoryID', 'Category', [
+                1 => 'Category one',
+                2 => 'Category two',
+            ]),
+            CheckboxField::create('Featured', 'Featured')
+        );
+
+        $context = SearchContext::create(
+            SearchContextTest\Person::class,
+            $fields,
+            $filters
+        );
+
+        $context->setSearchParams([
+            'KeywordSearch' => 'tester',
+            'Country' => null,
+            'CategoryID' => 2,
+            'Featured' => 1,
+            'Nothing' => 'empty',
+        ]);
+
+        $list = $context->getSummary();
+
+        $this->assertEquals(3, $list->count());
+        // KeywordSearch should be in the summary
+        $keyword = $list->find('Field', 'Keywords');
+        $this->assertNotNull($keyword);
+        $this->assertEquals('tester', $keyword->Value);
+
+        // Country should be skipped over
+        $country = $list->find('Field', 'Country');
+        $this->assertNull($country);
+
+        // Category should be expressed as the label
+        $category = $list->find('Field', 'Category');
+        $this->assertNotNull($category);
+        $this->assertEquals('Category two', $category->Value);
+
+        // Featured should have no value, since it's binary
+        $featured = $list->find('Field', 'Featured');
+        $this->assertNotNull($featured);
+        $this->assertNull($featured->Value);
+
+        // "Nothing" should come back null since there's no field for it
+        $nothing = $list->find('Field', 'Nothing');
+        $this->assertNull($nothing);
     }
 }
