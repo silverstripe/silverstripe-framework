@@ -292,9 +292,8 @@ class DB
         // Using Injector->create allows us to use registered configurations
         // which may or may not map to explicit objects
         $conn = Injector::inst()->create($dbClass);
-        $conn->connect($databaseConfig);
-
         self::set_conn($conn, $label);
+        $conn->connect($databaseConfig);
 
         return $conn;
     }
@@ -416,7 +415,7 @@ class DB
             } elseif (is_int($next)) {
                 $value = $next;
             } else {
-                $value = DB::is_active() ? Convert::raw2sql($next, true) : $next;
+                $value = (DB::get_conn() !== null) ? Convert::raw2sql($next, true) : $next;
             }
             $joined .= $value;
         }
