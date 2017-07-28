@@ -256,7 +256,7 @@ JS;
         $siteConfig->write();
         $siteConfig->flushCache();
     }
-    
+
     /**
      * Select a value in the tree dropdown field
      *
@@ -267,21 +267,26 @@ JS;
     public function iSelectValueInTreeDropdown($text, $selector)
     {
         $page = $this->getSession()->getPage();
-        $parentElement = $page->find('css', $selector);
-        assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
-        
-        $dropdown = $parentElement->find('css', '.Select');
-        assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
-        $dropdown->click();
-        
+        $parentElement = null;
+        $this->retryThrowable(function () use (&$parentElement, &$page, $selector) {
+            $parentElement = $page->find('css', $selector);
+            assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
+            $page = $this->getSession()->getPage();
+        });
+
+        $this->retryThrowable(function () use ($parentElement, $selector) {
+            $dropdown = $parentElement->find('css', '.Select-arrow');
+            assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
+            $dropdown->click();
+        });
+
         $this->retryThrowable(function () use ($text, $parentElement, $selector) {
             $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
             assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
-    
             $element->click();
         });
     }
-    
+
     /**
      * Locate an HTML editor field
      *
