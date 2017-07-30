@@ -242,7 +242,8 @@ abstract class DBComposite extends DBField
 
         // Non-db fields get assigned as normal properties
         if (!$this->hasField($field)) {
-            $this->$field = $value;
+            parent::setField($field, $value);
+            
             return $this;
         }
 
