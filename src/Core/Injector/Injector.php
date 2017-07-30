@@ -761,7 +761,7 @@ class Injector implements ContainerInterface
      */
     protected function setObjectProperty($object, $name, $value)
     {
-        if (method_exists($object, 'set'.$name)) {
+        if (ClassInfo::hasMethod($object, 'set'.$name)) {
             $object->{'set'.$name}($value);
         } else {
             $object->$name = $value;
