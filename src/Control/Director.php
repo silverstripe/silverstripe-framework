@@ -875,6 +875,10 @@ class Director implements TemplateGlobalProvider
     {
         // if no request i.e. has been set in _config.php - prevents loops
         if (!static::currentRequest()) {
+            user_error(
+                'Director::forceSSL() requires a current request. This usually means you have tried to  call this from _config.php. If so, please add this to the init() method of your PageController.',
+                E_USER_WARNING
+            );
             return false;
         }
 
@@ -922,6 +926,10 @@ class Director implements TemplateGlobalProvider
     {
         // if no request i.e. has been set in _config.php - prevents loops
         if (!static::currentRequest()) {
+            user_error(
+                'Director::forceWWW() requires a current request. This usually means you have tried to call this from _config.php. If so, please add this to the init() method of your PageController.',
+                E_USER_WARNING
+            );
             return false;
         }
 
