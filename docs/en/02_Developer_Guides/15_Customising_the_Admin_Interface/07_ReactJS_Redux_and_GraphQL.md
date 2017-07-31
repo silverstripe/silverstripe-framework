@@ -510,7 +510,7 @@ Injector.transform(
 	(updater) => {
 		updater.form.alterSchema(
 			'AssetAdmin.*',
-			(values, form) =>
+			(form) =>
         form.updateField('Title', {
             myCustomProp: true
         })
@@ -520,7 +520,7 @@ Injector.transform(
 );
 ```
 
-The `alterSchema()` function takes a callback, with an instance of `SchemaStateManager` (`form` in the above example), and a map of the current form values as parameters. `SchemaStateMangaer` allows you to declaratively update the form schema API using several helper methods, including:
+The `alterSchema()` function takes a callback, with an instance of `FormStateManager` (`form` in the above example) as a parameter. `FormStateMangaer` allows you to declaratively update the form schema API using several helper methods, including:
 
 * `updateField(fieldName:string, updates:object)`
 * `updateFields({ myFieldName: updates:object })`
@@ -538,6 +538,15 @@ see http://redux-form.com/6.8.0/docs/api/Field.md/#props-you-can-pass-to-field-
 <div class="notice" markdown="1">
 It is critical that you end series of mutation calls with `getState()`.
 </div>
+
+In addition to mutation methods, several readonly methods are available on `FormSchemaManager` to read the current form state, including:
+
+* `getValues()`: Returns a map of field names to their current values
+* `getValue(fieldName:string)`: Returns the value of the given field
+* `isDirty()`: Returns true if the form has been mutated from its original state
+* `isPristine()`: Returns true if the form is in its original state
+* `isValid()`: Returns true if the form has no validation errors
+* `isInvalid()`: Returns true if the form has validation errors
 
 ### Adding validation to a form
 
@@ -599,7 +608,7 @@ Most importantly, it helps to understand the "Action" sub-tab on the right panel
 
 We use currying to supply utilities which your transformer may require to handle the transformation.
 - `originalReducer` - reducer callback which the transformer is customising, this will need to be called in most cases. This will also callback other transformations down the chain of execution. Not calling this will break the chain.
-- `globalState` - state of the global Redux store. There may be data outside the current scope in the reducer which you may need to help determine the transformation.
+- `getGlobalState` - A function that gets the state of the global Redux store. There may be data outside the current scope in the reducer which you may need to help determine the transformation.
 - `state` - current state of the current scope. This is what should be used to form the new state.
 - `type` - the action to fire, like in any reducer in Redux. This helps determine if your transformer should do anything.
 - `payload` - the new data sent with the action to mutate the Redux store.
@@ -631,7 +640,7 @@ This example we will illustrate modifying the payload to get different data save
 We will rename anything in the breadcrumbs that is displaying "Files" to display "Custom Files" instead.
 
 ```js
-const MyReducerTransformer = (originalReducer) => (globalState) => (state, { type, payload }) => {
+const MyReducerTransformer = (originalReducer) => (getGlobalState) => (state, { type, payload }) => {
   switch (type) {
     case 'SET_BREADCRUMBS': {
       return originalReducer(state, {
@@ -654,7 +663,7 @@ const MyReducerTransformer = (originalReducer) => (globalState) => (state, { typ
 Accessing the globalState is easy, as it is passed in as part of the curried functions definition.
 
 ```js
-export default (originalReducer) => (globalState) => (state, { type, payload }) => {
+export default (originalReducer) => (getGlobalState) => (state, { type, payload }) => {
   const baseUrl = globalState.config.baseUrl;
   
   switch (type) {
@@ -685,7 +694,7 @@ There are valid reasons to break the chain of reducer transformations, such as c
 However, like an original reducer in redux, you will still need to return the original state.
 
 ```js
-export default (originalReducer) => (globalState) => (state, { type, payload }) => {
+export default (originalReducer) => (getGlobalState) => (state, { type, payload }) => {
   switch (type) {
     case 'CANCEL_THIS_ACTION': {
       return state;
@@ -700,7 +709,7 @@ You could manipulate the action called by the originalReducer, there isn't an ex
  code will present the theory of how it can be achieved.
 
 ```js
- default (originalReducer) => (globalState) => (state, { type, payload }) => {
+ default (originalReducer) => (getGlobalState) => (state, { type, payload }) => {
   switch (type) {
     case 'REMOVE_ERROR': {
       // we'd like to archive errors instead of removing them
