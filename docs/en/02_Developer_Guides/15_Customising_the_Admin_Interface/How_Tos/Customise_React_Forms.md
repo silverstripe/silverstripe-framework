@@ -49,10 +49,10 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (values, form) =>
+      (form) =>
         form
           .updateField('State', {
-            shouldHide: values.Country !== 'US'
+            shouldHide: form.getValue('Country') !== 'US'
           })
           .getState()
     )
@@ -71,9 +71,9 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (values, form) =>
+      (form) =>
         form
-          .setFieldClass('Price', 'danger', (values.TicketsRemaining < 10))
+          .setFieldClass('Price', 'danger', (form.getValue('TicketsRemaining') < 10))
           .getState()
     );
   }
@@ -116,7 +116,7 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (values, form) =>
+      (form) =>
         form
           .setFieldComponent('PhoneNumber', 'PrettyPhoneNumberField')
           .getState()
@@ -225,7 +225,7 @@ Injector.transform(
   (updater) => {
     updater.form.alterSchema(
       'AssetAdmin.*',
-      (values, form) =>
+      (form) =>
           form
             .updateField('action_delete', {
               confirmText: 'Are you sure you want to delete?',
