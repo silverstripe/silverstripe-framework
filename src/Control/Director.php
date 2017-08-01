@@ -843,7 +843,7 @@ class Director implements TemplateGlobalProvider
     /**
      * Force the site to run on SSL.
      *
-     * To use, call from _config.php. For example:
+     * To use, call from the init() method of your PageController. For example:
      * <code>
      * if (Director::isLive()) Director::forceSSL();
      * </code>
@@ -873,6 +873,15 @@ class Director implements TemplateGlobalProvider
      */
     public static function forceSSL($patterns = null, $secureDomain = null)
     {
+        // if no request i.e. has been set in _config.php - prevents loops
+        if (!static::currentRequest()) {
+            user_error(
+                'Director::forceSSL() requires a current request. This usually means you have tried to  call this from _config.php. If so, please add this to the init() method of your PageController.',
+                E_USER_WARNING
+            );
+            return false;
+        }
+
         // Already on SSL
         if (static::is_https()) {
             return true;
@@ -915,6 +924,15 @@ class Director implements TemplateGlobalProvider
      */
     public static function forceWWW()
     {
+        // if no request i.e. has been set in _config.php - prevents loops
+        if (!static::currentRequest()) {
+            user_error(
+                'Director::forceWWW() requires a current request. This usually means you have tried to call this from _config.php. If so, please add this to the init() method of your PageController.',
+                E_USER_WARNING
+            );
+            return false;
+        }
+
         if (!Director::isDev() && !Director::isTest() && strpos(static::host(), 'www') !== 0) {
             $destURL = str_replace(
                 Director::protocol(),

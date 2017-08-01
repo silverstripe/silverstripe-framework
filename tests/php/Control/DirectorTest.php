@@ -415,7 +415,8 @@ class DirectorTest extends SapphireTest
     public function testForceSSLProtectsEntireSite()
     {
         $this->expectExceptionRedirect('https://www.mysite.com/some-url');
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             Director::forceSSL();
         }, '/some-url');
     }
@@ -424,7 +425,8 @@ class DirectorTest extends SapphireTest
     {
         // Expect admin to trigger redirect
         $this->expectExceptionRedirect('https://www.mysite.com/admin');
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             Director::forceSSL(array('/^admin/'));
         }, '/admin');
     }
@@ -433,7 +435,8 @@ class DirectorTest extends SapphireTest
     {
         // Expect to redirect to security login page
         $this->expectExceptionRedirect('https://www.mysite.com/Security/login');
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             Director::forceSSL(array('/^Security/'));
         }, '/Security/login');
     }
@@ -441,12 +444,14 @@ class DirectorTest extends SapphireTest
     public function testForceSSLWithPatternDoesNotMatchOtherPages()
     {
         // Not on same url should not trigger redirect
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             $this->assertFalse(Director::forceSSL(array('/^admin/')));
         }, Director::baseURL() . 'normal-page');
 
         // nested url should not triger redirect either
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             $this->assertFalse(Director::forceSSL(array('/^admin/', '/^Security/')));
         }, Director::baseURL() . 'just-another-page/sub-url');
     }
@@ -455,7 +460,8 @@ class DirectorTest extends SapphireTest
     {
         // Ensure that forceSSL throws the appropriate exception
         $this->expectExceptionRedirect('https://secure.mysite.com/admin');
-        Director::mockRequest(function (HTTPRequest $request) {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request);
             return Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
         }, Director::baseURL() . 'admin');
     }
