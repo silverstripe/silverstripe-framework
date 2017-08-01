@@ -107,50 +107,6 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
     }
 
-    public function testPluginCompression()
-    {
-        // This test requires the real tiny_mce_gzip.php file
-        $module = ModuleLoader::inst()->getManifest()->getModule('silverstripe/admin');
-        if (!$module) {
-            $this->markTestSkipped('No silverstripe/admin module loaded');
-        }
-        TinyMCEConfig::config()->set('base_dir', 'silverstripe/admin:thirdparty/tinymce');
-        Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
-
-        // Build new config
-        $c = new TinyMCEConfig();
-        $c->setTheme('modern');
-        $c->setOption('language', 'es');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
-        $c->enablePlugins(
-            array(
-                'plugin1' => 'mypath/plugin1.js',
-                'plugin2' => '/anotherbase/mypath/plugin2.js',
-                'plugin3' => 'https://www.google.com/plugin.js',
-                'plugin4' => null,
-                'plugin5' => null,
-            )
-        );
-        $attributes = $c->getAttributes();
-        $config = Convert::json2array($attributes['data-config']);
-        $plugins = $config['external_plugins'];
-        $this->assertNotEmpty($plugins);
-
-        // Test plugins included via gzip compresser
-        HTMLEditorField::config()->update('use_gzip', true);
-        $this->assertEquals(
-            'silverstripe-admin/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
-            $c->getScriptURL()
-        );
-
-        // If gzip is disabled only the core plugin is loaded
-        HTMLEditorField::config()->remove('use_gzip');
-        $this->assertEquals(
-            'silverstripe-admin/thirdparty/tinymce/tinymce.min.js',
-            $c->getScriptURL()
-        );
-    }
-
     public function testDisablePluginsByString()
     {
         $c = new TinyMCEConfig();
@@ -199,7 +155,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertNotEmpty($cAttributes['data-config']);
     }
 
-    public function testExceptionThrownWhenTinyMCEPathCannotBeComputed()
+    public function testExceptionThrownWhenBaseDirAbsent()
     {
         TinyMCEConfig::config()->remove('base_dir');
         ModuleLoader::inst()->pushManifest(new ModuleManifest(__DIR__));
@@ -212,20 +168,5 @@ class HTMLEditorConfigTest extends SapphireTest
         } finally {
             ModuleLoader::inst()->popManifest();
         }
-    }
-
-    public function testExceptionThrownWhenTinyMCEGZipPathDoesntExist()
-    {
-        HTMLEditorField::config()->set('use_gzip', true);
-        /** @var TinyMCEConfig|PHPUnit_Framework_MockObject_MockObject $stub */
-        $stub = $this->getMockBuilder(TinyMCEConfig::class)
-            ->setMethods(['getTinyMCEPath'])
-            ->getMock();
-        $stub->method('getTinyMCEPath')
-            ->willReturn('fail');
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/does not exist/');
-        $stub->getScriptURL();
     }
 }

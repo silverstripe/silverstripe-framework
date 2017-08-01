@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
-use SilverStripe\Core\Convert;
+use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Deprecation;
@@ -12,8 +14,6 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
-use TinyMCE_Compressor;
-use Exception;
 
 /**
  * Default configuration for HtmlEditor specific to tinymce
@@ -332,7 +332,6 @@ class TinyMCEConfig extends HTMLEditorConfig
         return [
             'data-editor' => 'tinyMCE', // Register ss.editorWrappers.tinyMCE
             'data-config' => Convert::array2json($this->getConfig()),
-            'style' => 'height:350px'
         ];
     }
 
@@ -627,8 +626,11 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editor = array();
 
         // Add standard editor.css
-        foreach ($this->config()->get('editor_css') as $editorCSS) {
-            $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+        $editorCSSFiles = $this->config()->get('editor_css');
+        if ($editorCSSFiles) {
+            foreach ($editorCSSFiles as $editorCSS) {
+                $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+            }
         }
 
         // Themed editor.css
@@ -651,29 +653,9 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     public function getScriptURL()
     {
-        // If gzip is disabled just return core script url
-        $useGzip = HTMLEditorField::config()->get('use_gzip');
-        if (!$useGzip) {
-            return $this->getTinyMCEPath() . '/tinymce.min.js';
-        }
-
-        // tinyMCE JS requirement
-        $gzipPath = BASE_PATH . '/' . $this->getTinyMCEPath() . '/tiny_mce_gzip.php';
-        if (!file_exists($gzipPath)) {
-            throw new Exception("HTMLEditorField.use_gzip enabled, but file $gzipPath does not exist!");
-        }
-
-        require_once $gzipPath;
-
-        $tag = TinyMCE_Compressor::renderTag(array(
-            'url' => $this->getTinyMCEPath() . '/tiny_mce_gzip.php',
-            'plugins' => implode(',', $this->getInternalPlugins()),
-            'themes' => $this->getTheme(),
-            'languages' => $this->getOption('language')
-        ), true);
-        preg_match('/src="([^"]*)"/', $tag, $matches);
-
-        return html_entity_decode($matches[1]);
+        /** @var TinyMCEScriptGenerator $generator */
+        $generator = Injector::inst()->get(TinyMCEScriptGenerator::class);
+        return $generator->getScriptURL($this);
     }
 
     public function init()
