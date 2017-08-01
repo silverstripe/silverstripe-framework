@@ -8,6 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
+use SilverStripe\View\SSViewer;
 
 class TinyMCECombinedGeneratorTest extends SapphireTest
 {
@@ -18,6 +19,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         // Set custom base_path for tinymce
         Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
+        SSViewer::config()->set('themes', [ SSViewer::DEFAULT_THEME ]);
         TinyMCEConfig::config()->set('base_dir', 'tinymce');
     }
 
@@ -45,7 +47,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         /** @var TinyMCECombinedGenerator $generator */
         $generator = Injector::inst()->create(TinyMCECombinedGenerator::class);
         $this->assertEquals(
-            '_tinymce/tinymce-testconfig-8d695fc0be.js',
+            '_tinymce/tinymce-testconfig-6422b3814d.js',
             $generator->generateFilename($c),
             "Filename for config: " . json_encode($c->getAttributes()) . " should match expected value"
         );
