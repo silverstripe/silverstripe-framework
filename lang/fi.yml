@@ -250,9 +250,8 @@ fi:
     has_many_Permissions: Oikeudet
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
+    Email: Sähköpostiosoite
     IP: IP-osoite
-    LoginAttempt:
-      Email: Sähköpostiosoite
     PLURALNAME: Kirjautumisyritykset
     PLURALS:
       one: Kirjautumisyritys

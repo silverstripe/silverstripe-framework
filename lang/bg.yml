@@ -249,9 +249,8 @@ bg:
     has_many_Permissions: 'Разрешения'
     many_many_Members: Потребители
   SilverStripe\Security\LoginAttempt:
+    Email: 'Email адрес'
     IP: 'IP адрес'
-    LoginAttempt:
-      Email: 'Email адрес'
     PLURALNAME: 'Опити за влизане'
     PLURALS:
       one: 'Опит за влизане'

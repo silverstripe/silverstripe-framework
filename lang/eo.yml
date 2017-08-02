@@ -250,9 +250,8 @@ eo:
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
   SilverStripe\Security\LoginAttempt:
+    Email: 'Retpoŝta adreso'
     IP: IP-Adreso
-    LoginAttempt:
-      Email: 'Retpoŝta adreso'
     PLURALNAME: 'Provoj ensaluti'
     PLURALS:
       one: 'Unu provo ensaluti'

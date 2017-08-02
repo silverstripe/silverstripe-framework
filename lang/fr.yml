@@ -181,9 +181,8 @@ fr:
     has_many_Permissions: Autorisations
     many_many_Members: Membres
   SilverStripe\Security\LoginAttempt:
+    Email: 'Adresse email'
     IP: 'Adresse IP'
-    LoginAttempt:
-      Email: 'Adresse email'
     Status: Statut
   SilverStripe\Security\Member:
     ADDGROUP: 'Ajouter un groupe'
