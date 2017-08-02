@@ -195,8 +195,8 @@ en:
     has_many_Permissions: Permissions
     many_many_Members: Members
   SilverStripe\Security\LoginAttempt:
+    Email: 'Email Address'
     IP: 'IP Address'
-    LoginAttempt.Email: 'Email Address'
     PLURALNAME: 'Login Attempts'
     PLURALS:
       one: 'A Login Attempt'

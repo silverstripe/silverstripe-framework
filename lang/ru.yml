@@ -266,9 +266,8 @@ ru:
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
   SilverStripe\Security\LoginAttempt:
+    Email: Email
     IP: IP-адрес
-    LoginAttempt:
-      Email: Email
     PLURALNAME: 'Попыток входа в систему'
     PLURALS:
       one: 'Попытка входа в систему'

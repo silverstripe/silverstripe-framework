@@ -250,9 +250,8 @@ it:
     has_many_Permissions: Permessi
     many_many_Members: Membri
   SilverStripe\Security\LoginAttempt:
+    Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
-    LoginAttempt:
-      Email: 'Indirizzo e-mail'
     PLURALNAME: 'Tentativi d''accesso'
     PLURALS:
       one: 'Un tentativo d''accesso'
