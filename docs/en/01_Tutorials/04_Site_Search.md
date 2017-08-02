@@ -18,8 +18,9 @@ We are going to add a search box on the top of the page. When a user types somet
 To enable the search engine you need to include the following code in your `mysite/_config.php` file. 
 This will enable fulltext search on page content as well as names of all files in the `/assets` folder.
 
-	:::php
+```php
 	FulltextSearchable::enable();
+```	
 
 After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
 
@@ -34,7 +35,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 
 **themes/simple/templates/Includes/Header.ss**
 
-	:::ss
+```ss
 	...
 	<% if $SearchForm %>
 		<span class="search-dropdown-icon">L</span>
@@ -43,6 +44,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 		</div>      
 	<% end_if %>
 	<% include Navigation %>
+```
 
 This displays as:
 
@@ -55,11 +57,13 @@ is applied via `FulltextSearchable::enable()`
 
 **cms/code/search/ContentControllerSearchExtension.php**
 
-	:::php
-	class ContentControllerSearchExtension extends Extension {
+```php
+	class ContentControllerSearchExtension extends Extension 
+	{
 		...	
 	
-		function results($data, $form, $request) {
+		public function results($data, $form, $request) 
+		{
 			$data = array(
 				'Results' => $form->getResults(),
 				'Query' => $form->getSearchQuery(),
@@ -68,7 +72,7 @@ is applied via `FulltextSearchable::enable()`
 			return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
 		}
 	}
-
+```
 
 The code populates an array with the data we wish to pass to the template - the search results, query and title of the page. The final line is a little more complicated.
 
@@ -97,7 +101,7 @@ class.
 
 *themes/simple/templates/Layout/Page_results.ss*
 
-	:::ss
+```ss
 	<div id="Content" class="searchResults">
 	    <h1>$Title</h1>
 	     
@@ -148,6 +152,7 @@ class.
 	    </div>
 	    <% end_if %>
 	</div>
+```
 
 Then finally add ?flush=1 to the URL and you should see the new template.
 
