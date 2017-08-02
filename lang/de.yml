@@ -42,7 +42,7 @@ de:
     FilterBy: 'Filtern nach'
     Find: Suchen
     LinkExisting: 'Bestehenden Datensatz verknüpfen'
-    NewRecord: 'Neue(r) %s'
+    NewRecord: 'Neue(r) {type}'
     NoItemsFound: 'Keine Elemente gefunden'
     PRINTEDAT: 'Gedruckt am'
     PRINTEDBY: 'Gedruckt von'
@@ -62,7 +62,7 @@ de:
     Create: Erstellen
     Delete: Löschen
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
-    Deleted: 'Gelöscht %s %s'
+    Deleted: 'Gelöscht {type} {name}'
     Save: Speichern
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Bearbeiten
@@ -136,7 +136,7 @@ de:
     DefaultGroupTitleContentAuthors: Inhaltsautoren
     Description: Beschreibung
     GroupReminder: 'Diese Gruppe übernimmt automatisch die Rollen der Elterngruppe'
-    HierarchyPermsError: 'Kann Berechtigungen der Eltern-Gruppe "%s" nicht hinzufügen (erfordert Administratorrechte)'
+    HierarchyPermsError: 'Kann Berechtigungen der Eltern-Gruppe "{group}" nicht hinzufügen (erfordert Administratorrechte)'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
     PLURALNAME: Gruppen
@@ -194,9 +194,9 @@ de:
     PLURALNAME: Benutzerpasswörter
     SINGULARNAME: Benutzerpasswort
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: %s'
+    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: {chars}'
     PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
-    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens %s Zeichen lang sein'
+    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens {minimum} Zeichen lang sein'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CONTENT_CATEGORY: Inhaltsberechtigungen
@@ -209,7 +209,7 @@ de:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
     FromRole: 'abgeleited von Rolle "{title}"'
-    FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
+    FromRoleOnGroup: 'geerbt von Rolle "{roletitle}" für die Gruppe "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Nur Adminstratoren können beitreten'
     PLURALNAME: Rollen
@@ -217,7 +217,7 @@ de:
     Title: Titel
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: Berechtigungsrollencodes
-    PermsError: 'Kann Berechtigungen dem Code "%s" nicht hinzufügen (erfordert Administratorrechte)'
+    PermsError: 'Kann Berechtigungen dem Code "{code}" nicht hinzufügen (erfordert Administratorrechte)'
     SINGULARNAME: Berechtigungsrollencode
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'

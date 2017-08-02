@@ -30,8 +30,8 @@ ja:
     Filter: フィルタ
     FilterBy: によってフィルター
     Find: 探す
-    LinkExisting: 既存のリンク
-    NewRecord: 新しい%s
+    LinkExisting: '既存のリンク'
+    NewRecord: '新しい{type}'
     NoItemsFound: '項目が見つかりませんでした'
     PRINTEDAT: で印刷
     PRINTEDBY: によって印刷
@@ -51,7 +51,7 @@ ja:
     Create: 作成
     Delete: 削除
     DeletePermissionsFailure: 削除権限がありません
-    Deleted: '削除済み %s %s'
+    Deleted: '削除済み {type} {name}'
     Save: 保存
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 編集
@@ -131,7 +131,7 @@ ja:
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: %s'
+    LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: {chars}'
     PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
     TOOSHORT: パスワードが短すぎます、%文字以上でなければなりません
   SilverStripe\Security\Permission:
@@ -144,7 +144,7 @@ ja:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
-    FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
+    FromRoleOnGroup: 'グループ "{roletitle}" のロール "{grouptitle}"から継承'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: '管理者のみ適用可能'
     Title: タイトル

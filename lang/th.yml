@@ -24,7 +24,7 @@ th:
     FilterBy: กรองข้อมูลจาก
     Find: ค้นหา
     LinkExisting: ลิงก์ที่มีอยู่
-    NewRecord: 'ใหม่ %s'
+    NewRecord: 'ใหม่ {type}'
     NoItemsFound: ไม่พบรายการที่ต้องการ
     PRINTEDAT: ถูกสั่งพิมพ์ที่
     PRINTEDBY: พิมพ์โดย
@@ -40,7 +40,7 @@ th:
     CancelBtn: ยกเลิก
     Create: สร้าง
     Delete: ลบ
-    Deleted: 'ลบ %s %s แล้ว'
+    Deleted: 'ลบ {type} {name} แล้ว'
     Save: บันทึก
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: จำนวน
@@ -102,7 +102,7 @@ th:
     OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
     Title: หัวเรื่อง
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
+    ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ เข้าสู่ระบบอีกครั้ง'
     BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
     CHANGEPASSWORDBELOW: คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง
     ENTERNEWPASSWORD: กรุณากรอกรหัสผ่านใหม่ของคุณ

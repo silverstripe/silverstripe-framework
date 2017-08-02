@@ -48,7 +48,7 @@ es:
     FilterBy: 'Filtrar por'
     Find: Buscar
     LinkExisting: 'Enlace Existente'
-    NewRecord: 'Nuevo %s'
+    NewRecord: 'Nuevo {type}'
     NoItemsFound: 'No se encontraron registros'
     PRINTEDAT: 'Impreso en'
     PRINTEDBY: 'Impreso por'
@@ -68,7 +68,7 @@ es:
     Create: Crear
     Delete: Borrar
     DeletePermissionsFailure: 'Sin permiso para borrar'
-    Deleted: 'Borrado %s %s'
+    Deleted: 'Borrado {type} {name}'
     Save: Guardar
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editar
@@ -243,7 +243,7 @@ es:
       other: '{count} Contraseñas de Miembros'
     SINGULARNAME: 'Contraseña del Miembro'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: %s'
+    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: {chars}'
     PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
     TOOSHORT: 'Tu contraseña es muy corta'
   SilverStripe\Security\Permission:
@@ -261,7 +261,7 @@ es:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
     FromRole: 'heredado desde la regla "{title}"'
-    FromRoleOnGroup: 'heredado desde la regla "%s" del grupo "%s"'
+    FromRoleOnGroup: 'heredado desde la regla "{roletitle}" del grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Sólo el administrador puede aplicar'
     PLURALNAME: Roles

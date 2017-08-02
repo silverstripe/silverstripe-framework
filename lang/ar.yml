@@ -31,7 +31,7 @@ ar:
     FilterBy: 'ترشيح باستخدام'
     Find: ابحث
     LinkExisting: 'الرابط موجود'
-    NewRecord: 'جديد %s'
+    NewRecord: 'جديد {type}'
     NoItemsFound: 'لا يوجد عناصر'
     PRINTEDAT: 'تم الطباعة في'
     PRINTEDBY: 'تم الطباعة بواسطة'
@@ -51,7 +51,7 @@ ar:
     Create: إنشاء
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
-    Deleted: '%s %s تم حذفه'
+    Deleted: '{type} {name} تم حذفه'
     Save: حفظ
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: تعديل
@@ -132,9 +132,9 @@ ar:
     db_Password: 'الرقم السري'
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
+    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
     PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
-    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'
+    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على {minimum} أو أكثر من الحروف'
   SilverStripe\Security\Permission:
     AdminGroup: الإدارة
     CONTENT_CATEGORY: 'تصاريح المحتوى'
@@ -145,7 +145,7 @@ ar:
     AssignedTo: 'تم تعيينها إلى "{عنوان}"'
     FromGroup: 'موروثة من المجموعة "{عنوان}"'
     FromRole: 'موروثة من دور "{عنوان}"'
-    FromRoleOnGroup: 'توريث من القاعدة "%s"  على المجموعة "%s"'
+    FromRoleOnGroup: 'توريث من القاعدة "{roletitle}"  على المجموعة "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
     Title: عنوان

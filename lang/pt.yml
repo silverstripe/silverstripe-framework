@@ -16,7 +16,7 @@ pt:
     Filter: Filtrar
     Find: Procurar
     LinkExisting: 'Link existente'
-    NewRecord: 'Novo %s'
+    NewRecord: 'Novo {type}'
     NoItemsFound: 'Não foram encontrados elementos'
     PRINTEDAT: 'Impresso em'
     PRINTEDBY: 'Impresso por'
@@ -84,7 +84,7 @@ pt:
     CONTENT_CATEGORY: 'Permissões de conteúdo'
     FULLADMINRIGHTS: 'Direitos de Administrador'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
+    FromRoleOnGroup: 'herdada da regra "{roletitle}" no grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Título
   SilverStripe\Security\Security:

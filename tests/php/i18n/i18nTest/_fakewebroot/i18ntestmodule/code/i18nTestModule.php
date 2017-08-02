@@ -5,8 +5,7 @@ use SilverStripe\Dev\TestOnly;
 
 class i18nTestModule extends DataObject implements TestOnly
 {
-
-    static $db = array(
+    private static $db = array(
         'MyField' => 'Varchar',
     );
 

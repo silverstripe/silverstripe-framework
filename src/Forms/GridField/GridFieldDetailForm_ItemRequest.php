@@ -490,10 +490,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
         $this->record->delete();
 
-        $message = sprintf(
-            _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted', 'Deleted %s %s'),
-            $this->record->i18n_singular_name(),
-            htmlspecialchars($title, ENT_QUOTES)
+        $message = _t(
+            'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted',
+            'Deleted {type} {name}',
+            [
+                'type' => $this->record->i18n_singular_name(),
+                'name' => htmlspecialchars($title, ENT_QUOTES)
+            ]
         );
 
         $toplevelController = $this->getToplevelController();
@@ -592,7 +595,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             )));
         } else {
             $items->push(new ArrayData(array(
-                'Title' => sprintf(_t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
+                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
                 'Link' => false
             )));
         }

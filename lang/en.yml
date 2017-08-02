@@ -72,7 +72,7 @@ en:
     FilterBy: 'Filter by '
     Find: Find
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
+    NewRecord: 'New {type}'
     NoItemsFound: 'No items found'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
@@ -92,7 +92,7 @@ en:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    Deleted: 'Deleted {type} {name}'
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
@@ -176,7 +176,7 @@ en:
     Description: Description
     GROUPNAME: 'Group name'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HierarchyPermsError: 'Can''t assign parent group "%s" with privileged permissions (requires ADMIN access)'
+    HierarchyPermsError: 'Can''t assign parent group "{group}" with privileged permissions (requires ADMIN access)'
     Locked: 'Locked?'
     MEMBERS: Members
     NEWGROUP: 'New Group'
@@ -262,9 +262,9 @@ en:
       other: '{count} Member Passwords'
     SINGULARNAME: 'Member Password'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Please increase password strength by adding some of the following characters: %s'
+    LOWCHARSTRENGTH: 'Please increase password strength by adding some of the following characters: {chars}'
     PREVPASSWORD: 'You''ve already used that password in the past, please choose a new password'
-    TOOSHORT: 'Password is too short, it must be %s or more characters long'
+    TOOSHORT: 'Password is too short, it must be {minimum} or more characters long'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
@@ -282,7 +282,7 @@ en:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+    FromRoleOnGroup: 'inherited from role "{roletitle}" on group "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
@@ -296,7 +296,7 @@ en:
     PLURALS:
       one: 'A Permission Role Code'
       other: '{count} Permission Role Codes'
-    PermsError: 'Can''t assign code "%s" with privileged permissions (requires ADMIN access)'
+    PermsError: 'Can''t assign code "{code}" with privileged permissions (requires ADMIN access)'
     SINGULARNAME: 'Permission Role Code'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Login Hashes'

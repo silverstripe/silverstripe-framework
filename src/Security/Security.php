@@ -356,16 +356,15 @@ class Security extends Controller implements TemplateGlobalProvider
                 $messageSet = $configMessageSet;
             } else {
                 $messageSet = array(
-                    'default'         => _t(
-                        'SilverStripe\\Security\\Security.NOTEPAGESECURED',
+                    'default' => _t(
+                        __CLASS__ . '.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
-                        . "you right along."
+                            . "you right along."
                     ),
                     'alreadyLoggedIn' => _t(
-                        'SilverStripe\\Security\\Security.ALREADYLOGGEDIN',
+                        __CLASS__ . '.ALREADYLOGGEDIN',
                         "You don't have access to this page.  If you have another account that "
-                        . "can access that page, you can log in again below.",
-                        "%s will be replaced with a link to log in."
+                            . "can access that page, you can log in again below."
                     )
                 );
             }
@@ -1186,7 +1185,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return [
             'password'  => $encryptor->encrypt($password, $salt, $member),
-            'salt'      => $salt,
+            'salt' => $salt,
             'algorithm' => $algorithm,
             'encryptor' => $encryptor
         ];
@@ -1338,8 +1337,8 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function get_template_global_variables()
     {
         return [
-            "LoginURL"        => "login_url",
-            "LogoutURL"       => "logout_url",
+            "LoginURL" => "login_url",
+            "LogoutURL" => "logout_url",
             "LostPasswordURL" => "lost_password_url",
             "CurrentMember"   => "getCurrentUser",
             "currentUser"     => "getCurrentUser"

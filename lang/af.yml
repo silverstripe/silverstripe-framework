@@ -28,7 +28,7 @@ af:
     CSVEXPORT: 'Voer uit na CSV lêer'
     Find: Vind
     LinkExisting: 'Koppel bestaande'
-    NewRecord: 'Nuwe %s'
+    NewRecord: 'Nuwe {type}'
     NoItemsFound: 'Geen items gevind nie'
     PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
@@ -47,7 +47,7 @@ af:
     Create: Skep
     Delete: Verwyder
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
-    Deleted: 'Verwyderde %s %s'
+    Deleted: 'Verwyderde {type} {name}'
     Save: Stoor
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Bedrag
@@ -122,7 +122,7 @@ af:
     AssignedTo: 'toegeken aan "{title}"'
     FromGroup: 'geërf van groep "{title}"'
     FromRole: 'geërf van rol"{title}"'
-    FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
+    FromRoleOnGroup: 'oorgeërf van rol "{roletitle}" op groep "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'
     Title: Tietel

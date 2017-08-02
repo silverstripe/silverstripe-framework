@@ -45,7 +45,7 @@ sk:
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LinkExisting: 'Prepojenie existujúcich'
-    NewRecord: 'Nový %s'
+    NewRecord: 'Nový {type}'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Vytlačené v'
     PRINTEDBY: Vytlačené
@@ -65,7 +65,7 @@ sk:
     Create: Vytvoriť
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
-    Deleted: 'Zmazané %s %s'
+    Deleted: 'Zmazané {type} {name}'
     Save: Uložiť
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editovať
@@ -148,7 +148,7 @@ sk:
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
-    HierarchyPermsError: 'Nie je možné pripojiť nadriadenú skupinu "%s" s privilegovanými právami (vyžaduje ADMIN prístup)'
+    HierarchyPermsError: 'Nie je možné pripojiť nadriadenú skupinu "{group}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa úlohy'
     PLURALNAME: Skupiny
@@ -206,9 +206,9 @@ sk:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: %s'
+    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: {chars}'
     PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové hoslo, prosím'
-    TOOSHORT: 'Heslo je príliš krátke, musí byť %s alebo viacej znakov dlhé'
+    TOOSHORT: 'Heslo je príliš krátke, musí byť {minimum} alebo viacej znakov dlhé'
   SilverStripe\Security\Permission:
     AdminGroup: Administrátor
     CONTENT_CATEGORY: 'Práva k obsahu'
@@ -221,7 +221,7 @@ sk:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
     FromRole: 'zdedené z úlohy "{title}"'
-    FromRoleOnGroup: 'zdedené z úlohy "%s" v skupine "%s"'
+    FromRoleOnGroup: 'zdedené z úlohy "{roletitle}" v skupine "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Iba administrátor môže použiť'
     PLURALNAME: Roly
@@ -229,7 +229,7 @@ sk:
     Title: Názov
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia role'
-    PermsError: 'Nie je možné pripojiť kód "%s" s privilegovanými právami (vyžaduje ADMIN prístup)'
+    PermsError: 'Nie je možné pripojiť kód "{code}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     SINGULARNAME: 'Kód oprávnenia role'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa prihlásiť.'

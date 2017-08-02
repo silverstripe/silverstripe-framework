@@ -38,7 +38,7 @@ zh:
     FilterBy: 过滤条件
     Find: 查找
     LinkExisting: 链接已存在
-    NewRecord: '新 %s'
+    NewRecord: '新 {type}'
     NoItemsFound: 没有找到任何项目
     PRINTEDAT: 印刷地
     PRINTEDBY: 印刷人
@@ -58,7 +58,7 @@ zh:
     Create: 创建
     Delete: '删除'
     DeletePermissionsFailure: '没有删除权限'
-    Deleted: '已删除的 %s %s'
+    Deleted: '已删除的 {type} {name}'
     Save: 保存
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 编辑
@@ -108,7 +108,7 @@ zh:
     DefaultGroupTitleContentAuthors: '内容作者'
     Description: 描述
     GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
-    HierarchyPermsError: '无法为父组 "%s" 分配特权权限（要求具备 ADMIN 访问）'
+    HierarchyPermsError: '无法为父组 "{group}" 分配特权权限（要求具备 ADMIN 访问）'
     Locked: 锁定？
     NoRoles: 没有找到角色
     Parent: 父组
@@ -154,9 +154,9 @@ zh:
     db_Password: '密码'
     db_PasswordExpiry: '密码失效日期'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
     PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
-    TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'
+    TOOSHORT: '密码长度过短，必须为 {minimum} 个字符或更长'
   SilverStripe\Security\Permission:
     AdminGroup: 管理员
     CONTENT_CATEGORY: '内容权限'
@@ -167,12 +167,12 @@ zh:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
     FromRole: '从角色 "{title}"继承'
-    FromRoleOnGroup: '从 "%s" 小组的 "%s" 角色继承'
+    FromRoleOnGroup: '从 "{roletitle}" 小组的 "{grouptitle}" 角色继承'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 只有管理员可以应用
     Title: '标题'
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
+    PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
     BUTTONSEND: '将密码重设链接发送给我'

@@ -488,13 +488,13 @@ class Group extends DataObject
                 ->column('Code');
             $privilegedCodes = Permission::config()->get('privileged_permissions');
             if (array_intersect($inheritedCodes, $privilegedCodes)) {
-                $result->addError(sprintf(
+                $result->addError(
                     _t(
                         'SilverStripe\\Security\\Group.HierarchyPermsError',
-                        'Can\'t assign parent group "%s" with privileged permissions (requires ADMIN access)'
-                    ),
-                    $this->Parent()->Title
-                ));
+                        'Can\'t assign parent group "{group}" with privileged permissions (requires ADMIN access)',
+                        ['group' => $this->Parent()->Title]
+                    )
+                );
             }
         }
 
@@ -650,7 +650,7 @@ class Group extends DataObject
         if (!$allGroups->count()) {
             $authorGroup = new Group();
             $authorGroup->Code = 'content-authors';
-            $authorGroup->Title = _t('SilverStripe\\Security\\Group.DefaultGroupTitleContentAuthors', 'Content Authors');
+            $authorGroup->Title = _t(__CLASS__ . '.DefaultGroupTitleContentAuthors', 'Content Authors');
             $authorGroup->Sort = 1;
             $authorGroup->write();
             Permission::grant($authorGroup->ID, 'CMS_ACCESS_CMSMain');
@@ -664,7 +664,7 @@ class Group extends DataObject
         if (!$adminGroups->count()) {
             $adminGroup = new Group();
             $adminGroup->Code = 'administrators';
-            $adminGroup->Title = _t('SilverStripe\\Security\\Group.DefaultGroupTitleAdministrators', 'Administrators');
+            $adminGroup->Title = _t(__CLASS__ . '.DefaultGroupTitleAdministrators', 'Administrators');
             $adminGroup->Sort = 0;
             $adminGroup->write();
             Permission::grant($adminGroup->ID, 'ADMIN');

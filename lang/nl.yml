@@ -43,7 +43,7 @@ nl:
     FilterBy: Filteren
     Find: Zoeken
     LinkExisting: 'Koppel een bestaand item'
-    NewRecord: 'Nieuw %s'
+    NewRecord: 'Nieuw {type}'
     NoItemsFound: 'Geen items gevonden.'
     PRINTEDAT: 'Geprint op'
     PRINTEDBY: 'Geprint door'
@@ -63,7 +63,7 @@ nl:
     Create: Aanmaken
     Delete: Verwijderen
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    Deleted: '%s %s verwijderd'
+    Deleted: '{type} {name} verwijderd'
     Save: Opslaan
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Bewerken
@@ -115,7 +115,7 @@ nl:
     DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
     Description: 'Omschrijving '
     GroupReminder: 'Als u de bovenliggende groep selecteert, neemt deze groep alle rollen over'
-    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "%s" toe te kennen'
+    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "{group}" toe te kennen'
     Locked: 'Gesloten?'
     NoRoles: 'Geen rollen gevonden'
     Parent: 'Bovenliggende groep'
@@ -161,9 +161,9 @@ nl:
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s'
+    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
     PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
-    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
+    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal {minimum} karakters hebben'
   SilverStripe\Security\Permission:
     AdminGroup: Beheerder
     CONTENT_CATEGORY: Inhoudsrechten
@@ -174,14 +174,14 @@ nl:
     AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
     FromRole: 'geërfd van de rol "{title}"'
-    FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
+    FromRoleOnGroup: 'geërfd van rol "{roletitle}" in groep "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Alleen admin kan doorvoeren'
     PLURALNAME: Rollen
     SINGULARNAME: Rol
     Title: Titel
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
+    PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'

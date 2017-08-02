@@ -24,7 +24,7 @@ es_MX:
     FilterBy: 'Filtrar por'
     Find: Buscar
     LinkExisting: 'Enlazar existente'
-    NewRecord: 'Nuevo %s'
+    NewRecord: 'Nuevo {type}'
     NoItemsFound: 'No hay ítems encontrados'
     PRINTEDAT: 'Impreso en'
     PRINTEDBY: 'Imprimir por'
@@ -109,7 +109,7 @@ es_MX:
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'heredado del rol "%s" en el grupo "%s"'
+    FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede abrir una sesión abajo.'
     BUTTONSEND: 'Envíame enlace para restablecer contraseña'

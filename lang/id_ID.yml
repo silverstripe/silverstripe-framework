@@ -39,7 +39,7 @@ id_ID:
     FilterBy: 'Saring menurut '
     Find: Cari
     LinkExisting: 'Tautan yang Ada'
-    NewRecord: '%s baru'
+    NewRecord: '{type} baru'
     NoItemsFound: 'Tidak ada data'
     PRINTEDAT: 'Dicetak pada'
     PRINTEDBY: 'Dicetak oleh'
@@ -59,7 +59,7 @@ id_ID:
     Create: Buat
     Delete: Hapus
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
-    Deleted: '%s %s dihapus'
+    Deleted: '{type} {name} dihapus'
     Save: Simpan
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
@@ -109,7 +109,7 @@ id_ID:
     DefaultGroupTitleContentAuthors: 'Penulis Konten'
     Description: Deskripsi
     GroupReminder: 'Jika Anda memilih kelompok induk, kelompok ini akan mengambil perannya'
-    HierarchyPermsError: 'Tidak dapat menghubungkan kelompok induk "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    HierarchyPermsError: 'Tidak dapat menghubungkan kelompok induk "{group}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
     Locked: 'Terkunci?'
     NoRoles: 'Tidak ada peran'
     Parent: 'Kelompok Induk'
@@ -155,9 +155,9 @@ id_ID:
     db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
+    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
-    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari %s karakter atau lebih'
+    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari {minimum} karakter atau lebih'
   SilverStripe\Security\Permission:
     AdminGroup: Pengelola
     FULLADMINRIGHTS: 'Hak pengelolaan penuh'
@@ -167,12 +167,12 @@ id_ID:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
     FromRole: 'diwarisi dari peran "{title}"'
-    FromRoleOnGroup: 'diwarisi dari peran "%s" pada kelompok "%s"'
+    FromRoleOnGroup: 'diwarisi dari peran "{roletitle}" pada kelompok "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Hanya untuk pengelola'
     Title: Judul
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    PermsError: 'Tidak dapat menghubungkan kode "{code}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
     BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'

@@ -39,7 +39,7 @@ lt:
     FilterBy: 'Filtruoti pagal '
     Find: Rasti
     LinkExisting: 'Pasirinkti esamą'
-    NewRecord: 'Naujas %s'
+    NewRecord: 'Naujas {type}'
     NoItemsFound: 'Įrašų nerasta'
     PRINTEDAT: Atspausdinta
     PRINTEDBY: Atspausdino
@@ -59,7 +59,7 @@ lt:
     Create: Sukurti
     Delete: Ištrinti
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
-    Deleted: 'Ištrinta %s %s'
+    Deleted: 'Ištrinta {type} {name}'
     Save: Išsaugoti
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redaguoti
@@ -109,7 +109,7 @@ lt:
     DefaultGroupTitleContentAuthors: 'Turinio autoriai'
     Description: Aprašymas
     GroupReminder: 'Jeigu pasirinksite tėvinę grupę, ši grupė perims visas jos roles'
-    HierarchyPermsError: 'Nepavyko priskirti tėvinės grupės "%s" su priskirtais leidimais (būtina ADMIN prieeiga)'
+    HierarchyPermsError: 'Nepavyko priskirti tėvinės grupės "{group}" su priskirtais leidimais (būtina ADMIN prieeiga)'
     Locked: 'Užrakinta?'
     NoRoles: 'Rolių nerasta'
     Parent: 'Priklauso grupei'
@@ -155,9 +155,9 @@ lt:
     db_Password: Slaptažodis
     db_PasswordExpiry: 'Slaptažodžio pabaigos data'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s'
+    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: {chars}'
     PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
-    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių'
+    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš {minimum} arba didesnio skaičiaus simbolių'
   SilverStripe\Security\Permission:
     AdminGroup: Administratorius
     CONTENT_CATEGORY: 'Turinio teisės'
@@ -168,12 +168,12 @@ lt:
     AssignedTo: 'priskirta "{title}"'
     FromGroup: 'paveldėta iš grupės "{title}"'
     FromRole: 'paveldėta iš rolės "{title}"'
-    FromRoleOnGroup: 'paveldėta iš rolės "%s" grupėje "%s"'
+    FromRoleOnGroup: 'paveldėta iš rolės "{roletitle}" grupėje "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Gali priskirti tik administratorius'
     Title: Pavadinimas
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
+    PermsError: 'Nepavyko priskirto kodo "{code}" su priskirtais leidimais (būtina ADMIN prieiga)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'

@@ -5,6 +5,7 @@ bg:
     EDITINFO: 'Редактирай този файл'
     REMOVE: 'Премахни'
   SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Паролата за акаунт с адрес {email} беше променена. Ако не Вие сте променили паролата си, направете го от адреса долу'
     CHANGEPASSWORDTEXT1: 'Променихте паролата си за'
     CHANGEPASSWORDTEXT3: 'Променете паролата'
     HELLO: Здравей
@@ -15,6 +16,9 @@ bg:
     TEXT1: 'Това е Вашият'
     TEXT2: 'адрес за нулиране на парола'
     TEXT3: за
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Грешна заявка'
+    REQUEST_ABORTED: 'Заявката беше отказана'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Не
     YESANSWER: Да
@@ -71,7 +75,7 @@ bg:
     FilterBy: 'Филтриране по'
     Find: Търси
     LinkExisting: 'Свържи към съществуващ'
-    NewRecord: 'Нов %s'
+    NewRecord: 'Нов {type}'
     NoItemsFound: 'Няма намерени елементи'
     PRINTEDAT: 'Отпечатано на'
     PRINTEDBY: 'Отпечатано от'
@@ -91,7 +95,7 @@ bg:
     Create: Създай
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
-    Deleted: 'Изтрити %s %s'
+    Deleted: 'Изтрити {type} {name}'
     Save: Запис
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 'Редактиране'
@@ -211,11 +215,13 @@ bg:
     PASSWORDEXPIRED: '<p>Паролата ви е изтекла. <a target="_top" href="{link}">Моля, изберете друга.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Невалиден потребител. <a target="_top" href="{link}">Моля, потвърдете регистрацията си тук, </a> за да продължите.</p>'
-    LoginMessage: '<p>Ако не сте записали последните си промени, можете да се върнете и да продължите като влезете отново по-долу.</p>'
+    LOGIN_MESSAGE: '<p>Вашата сесия е изтекла поради неактивност</p>'
+    LOGIN_TITLE: 'Върнете се в системата като влезете отново'
     SUCCESS: Успешно
     SUCCESSCONTENT: '<p>Успешно влизане. Ако страницата не се зареди автоматично, <a target="_top" href="{link}">кликнете тук</a></p>'
-    TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
-    TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
+    SUCCESS_TITLE: 'Успешно влизане'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Администратор'
   SilverStripe\Security\Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
@@ -224,6 +230,7 @@ bg:
     Description: Описание
     GROUPNAME: 'Име на група'
     GroupReminder: 'Ако изберете родителска група, тази група ще наследи всички нейни роли'
+    HierarchyPermsError: 'Не може да се зададе родителска група "%s" с тези разрешения (изисква се достъп от ADMIN)'
     Locked: 'Заключена?'
     MEMBERS: Потребители
     NEWGROUP: 'Нова група'
@@ -256,6 +263,7 @@ bg:
     BUTTONCHANGEPASSWORD: 'Променете паролата'
     BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
+    BUTTONLOGOUT: 'Изход'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
@@ -265,6 +273,7 @@ bg:
     EMAIL: Еmail
     EMPTYNEWPASSWORD: 'Не е въведена нова парола'
     ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
+    ERRORLOCKEDOUT2: 'Вашият акаунт беше временно блокиран, поради прекалено много неуспешни опити за влизане. Моля, опитайте отново след {count} минути.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
     ERRORWRONGCRED: 'Детайлите не са коректни. Моля, опитайте отново.'
@@ -280,7 +289,7 @@ bg:
     PLURALS:
       one: Потребител
       other: '{count} потребителя'
-    REMEMBERME: 'Запомни ме следващия път? (за %d ден/дни на това устройство)'
+    REMEMBERME: 'Запомни ме следващия път? (за {count} ден/дни на това устройство)'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
@@ -293,6 +302,14 @@ bg:
     db_LockedOutUntil: 'Заключен до'
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'Форма за вход в CMS'
+    BUTTONFORGOTPASSWORD: 'Забравена парола'
+    BUTTONLOGIN: 'Влизане обратно'
+    BUTTONLOGOUT: 'Излизане'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Предоставените данни не са коректни. Моля, опитайте отново.'
+    NoPassword: 'Този потребител няма парола.'
   SilverStripe\Security\MemberLoginForm:
     AUTHENTICATORNAME: 'Email и парола'
   SilverStripe\Security\MemberPassword:
@@ -302,9 +319,9 @@ bg:
       other: '{count} потребителски пароли'
     SINGULARNAME: 'Потребителска парола'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Добавете някои от следните символи: %s, за да увеличите силата на паролата си'
+    LOWCHARSTRENGTH: 'Добавете някои от следните символи: {chars}, за да увеличите силата на паролата си'
     PREVPASSWORD: 'Вече сте използвали тази парола. Моля, изберете нова.'
-    TOOSHORT: 'Паролата е прекалено къса. Трябва да е от поне %s символа'
+    TOOSHORT: 'Паролата е прекалено къса. Трябва да е от поне {minimum} символа'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Достъп до CMS'
@@ -322,7 +339,7 @@ bg:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
     FromRole: 'унаследена от роля "{title}"'
-    FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
+    FromRoleOnGroup: 'унаследено от роля "{roletitle}" на група "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Може да се приложи само от администратор'
     PLURALNAME: 'Роли'
@@ -331,11 +348,25 @@ bg:
       other: '{count} роли'
     SINGULARNAME: 'Роля'
     Title: Заглавие
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Кодове за роли с разрешения'
+    PLURALS:
+      one: 'Код за роля с разрешения'
+      other: '{count} кода за роли с разрешения '
+    PermsError: 'Не може да се зададе код "%s" с тези разрешения (изисква се достъп от ADMIN)'
+    SINGULARNAME: 'Код за роля с разрешения'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Хешове за вход'
+    PLURALS:
+      one: 'Хеш за вход'
+      other: '{count} хеша за вход'
+    SINGULARNAME: 'Хеш за вход'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'
     CHANGEPASSWORDBELOW: 'Можете да смените вашата парола по-долу.'
     CHANGEPASSWORDHEADER: 'Сменете вашата парола'
+    CONFIRMLOGOUT: 'Потвърдете, че искате да излезете, като кликнете на бутона долу.'
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
     LOGIN: 'Влезте в системата'

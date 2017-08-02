@@ -42,7 +42,7 @@ fa_IR:
     FilterBy: 'پالایش براساس'
     Find: بگرد
     LinkExisting: 'لینک موجود'
-    NewRecord: '%s جدید'
+    NewRecord: '{type} جدید'
     NoItemsFound: 'هیچ آیتمی یافت نشد'
     PRINTEDAT: 'پرینت‌شده در'
     PRINTEDBY: 'پرینت‌شده توسط'
@@ -62,7 +62,7 @@ fa_IR:
     Create: ایجاد
     Delete: حذف
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
-    Deleted: 'حذف شده %s %s'
+    Deleted: 'حذف شده {type} {name}'
     Save: ذخیره
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: ویرایش
@@ -120,7 +120,7 @@ fa_IR:
     DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
     Description: توضحیات
     GroupReminder: 'اگر یک گروه مادر را برگزینید،‌ این گروه تمامی وظایف آن را می‌پذیرد'
-    HierarchyPermsError: 'با دسترسی‌های داده‌شده نمی‌توان گروه مادر "%s" را تخصیص داد (نیازمند دسترسی مدید ارشد)'
+    HierarchyPermsError: 'با دسترسی‌های داده‌شده نمی‌توان گروه مادر "{group}" را تخصیص داد (نیازمند دسترسی مدید ارشد)'
     Locked: قفل‌شده؟
     NoRoles: 'هیچ وظیفه‌ای پیدا نشد'
     PLURALNAME: گروه‌ها
@@ -174,7 +174,7 @@ fa_IR:
     PLURALNAME: 'گذرواژه‌های کاربر'
     SINGULARNAME: 'گذرواژه کاربر'
   SilverStripe\Security\PasswordValidator:
-    TOOSHORT: 'گذرواژه بسیار کوتاه است، باید %s کاراکتر یا بیشتر باشد'
+    TOOSHORT: 'گذرواژه بسیار کوتاه است، باید {minimum} کاراکتر یا بیشتر باشد'
   SilverStripe\Security\Permission:
     AdminGroup: 'مدیر کل'
     CONTENT_CATEGORY: 'دسترسی محتوا'
