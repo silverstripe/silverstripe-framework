@@ -155,10 +155,10 @@ PHP
             );
         }
 
-        $this->statusMessage("Setting up 'mysite/_config/config.yml'");
-        $this->writeToFile("mysite/_config/config.yml", <<<YML
+        $this->statusMessage("Setting up 'mysite/_config/theme.yml'");
+        $this->writeToFile("mysite/_config/theme.yml", <<<YML
 ---
-Name: mysite
+Name: mytheme
 ---
 # YAML configuration for SilverStripe
 # See http://doc.silverstripe.org/framework/en/topics/configuration
