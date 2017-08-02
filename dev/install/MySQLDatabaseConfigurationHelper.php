@@ -36,8 +36,27 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 					}
 				case 'MySQLPDODatabase':
 					// May throw a PDOException if fails
+
+					$ssl = null;
+
+					if(
+						array_key_exists('ssl_key', $databaseConfig) &&
+						array_key_exists('ssl_cert', $databaseConfig) &&
+						array_key_exists('ssl_ca', $databaseConfig) &&
+						array_key_exists('ssl_cipher', $databaseConfig)) {
+
+							$ssl = array(
+								PDO::MYSQL_ATTR_SSL_KEY => $databaseConfig['ssl_key'],
+								PDO::MYSQL_ATTR_SSL_CERT => $databaseConfig['ssl_cert'],
+								PDO::MYSQL_ATTR_SSL_CA => $databaseConfig['ssl_ca'],
+								PDO::MYSQL_ATTR_SSL_CIPHER => $databaseConfig['ssl_cipher'],
+							);
+
+
+					}
+
 					$conn = @new PDO('mysql:host='.$databaseConfig['server'], $databaseConfig['username'],
-									$databaseConfig['password']);
+									$databaseConfig['password'], $ssl);
 					if($conn) {
 						$conn->query("SET sql_mode = 'ANSI'");
 						return $conn;
