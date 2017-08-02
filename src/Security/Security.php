@@ -459,7 +459,7 @@ class Security extends Controller implements TemplateGlobalProvider
             },
             $this->getApplicableAuthenticators()
         );
-        }
+    }
 
 
     /**
@@ -678,7 +678,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers,
             function (Authenticator &$auth, $name) use ($link) {
                 $auth = $auth->getLoginHandler(Controller::join_links($link, $name));
-        }
+            }
         );
 
         return $this->delegateToMultipleHandlers(
@@ -686,8 +686,8 @@ class Security extends Controller implements TemplateGlobalProvider
             _t(__CLASS__.'.LOGIN', 'Log in'),
             $this->getTemplatesFor('login'),
             [$this, 'aggregateTabbedForms']
-            );
-        }
+        );
+    }
 
     /**
      * Log the currently logged in user out
@@ -891,7 +891,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // Return the customised controller - may be used to render a Form (e.g. login form)
         if (is_array($result)) {
             $result = $this->renderWrappedController($title, $result, $templates);
-    }
+        }
 
         return $result;
     }
@@ -988,8 +988,8 @@ class Security extends Controller implements TemplateGlobalProvider
             _t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'),
             $this->getTemplatesFor('changepassword'),
             [$this, 'aggregateAuthenticatorResponses']
-                );
-            }
+        );
+    }
 
     /**
      * Create a link to the password reset form.
@@ -1052,7 +1052,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
-        }
+    }
 
     /**
      * Flush the default admin credentials
