@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Framework\Tests\Behaviour;
 
+use Behat\Behat\Hook\Call\AfterStep;
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\Behat\Context\Context;
@@ -42,10 +44,16 @@ class CmsUiContext implements Context
      * Excluding scenarios with @modal tag is required,
      * because modal dialogs stop any JS interaction
      *
-     * @AfterStep ~@modal
+     * @AfterStep
+     * @param AfterStepScope $event
      */
-    public function handleCmsLoadingAfterStep(StepEvent $event)
+    public function handleCmsLoadingAfterStep(AfterStepScope $event)
     {
+        // Manually exclude @modal
+        if ($this->stepHasTag($event, 'modal')) {
+            return;
+        }
+
         $timeoutMs = $this->getMainContext()->getAjaxTimeout();
         $this->getSession()->wait(
             $timeoutMs,
