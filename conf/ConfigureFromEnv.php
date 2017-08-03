@@ -20,6 +20,14 @@
  *  - SS_DATABASE_MEMORY:   Use in-memory state if possible. Useful for testing, currently only
  *                          supported by the SQLite database adapter.
  *
+ * SSL Support (for MySQLPDODatabase)
+ *
+ * - SS_DATABASE_SSL_KEY:		Path to SSL private key file
+ * - SS_DATABASE_SSL_CERT:		Path to SSL certificate file
+ * - SS_DATABASE_SSL_CA:		Path to SSL CA file
+ * - SS_DATABASE_SSL_CIPHER: 	Override default cipher (defaults are set per database connector)
+ *
+ *
  * There is one more setting that is intended to be used by people who work on SilverStripe.
  *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if
  *    one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder
@@ -116,6 +124,30 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	// For SQlite3 memory databases (mainly for testing purposes)
 	if(defined('SS_DATABASE_MEMORY'))
 		$databaseConfig["memory"] = SS_DATABASE_MEMORY;
+
+	// Add ssl parameters to databaseConfig if these are defined
+	if(
+		defined('SS_DATABASE_SSL_KEY') && 
+		defined('SS_DATABASE_SSL_CERT')
+		) {
+
+		$databaseConfig['ssl_key'] = SS_DATABASE_SSL_KEY;
+		$databaseConfig['ssl_cert'] = SS_DATABASE_SSL_CERT;
+
+	}
+
+	// Some databases do not require a CA so this is optional
+	if(defined('SS_DATABASE_SSL_CA')) {
+		$databaseConfig['ssl_ca'] = SS_DATABASE_SSL_CA;		
+	}
+
+	// Cipher defaults should be set per connector
+	if(defined('SS_DATABASE_SSL_CIPHER')) {
+		$databaseConfig['ssl_cipher'] = SS_DATABASE_SSL_CIPHER;
+	}
+
+
+
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {

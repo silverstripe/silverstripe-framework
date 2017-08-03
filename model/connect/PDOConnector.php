@@ -16,6 +16,14 @@ class PDOConnector extends DBConnector {
 	private static $emulate_prepare = false;
 
 	/**
+	 * Default strong SSL cipher to be used
+	 *
+	 * @config
+	 * @var boolean
+	 */
+	private static $ssl_cipher_default = 'DHE-RSA-AES256-SHA';
+
+	/**
 	 * The PDO connection instance
 	 *
 	 * @var PDO
@@ -159,6 +167,25 @@ class PDOConnector extends DBConnector {
 		$options = array();
 		if($parameters['driver'] == 'mysql') {
 			$options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation;
+
+			// Set SSL options if they are defined
+			if(
+				array_key_exists('ssl_key', $parameters) &&
+				array_key_exists('ssl_cert', $parameters)) {
+
+					$options[PDO::MYSQL_ATTR_SSL_KEY] = $parameters['ssl_key'];
+					$options[PDO::MYSQL_ATTR_SSL_CERT] = $parameters['ssl_cert'];
+
+				if(array_key_exists('ssl_ca', $parameters)) {
+					$options[PDO::MYSQL_ATTR_SSL_CA] = $parameters['ssl_ca'];
+				}
+
+				// use default cipher if not provided
+				$options[PDO::MYSQL_ATTR_SSL_CIPHER] = $parameters['ssl_cipher'] ?: $this->config()->ssl_cipher_default;
+
+			}
+
+
 		}
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;

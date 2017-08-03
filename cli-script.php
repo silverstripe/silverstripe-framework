@@ -91,6 +91,14 @@ define('SS_DATABASE_SERVER', 'localhost');
 define('SS_DATABASE_USERNAME', '<user>');
 define('SS_DATABASE_PASSWORD', '<password>');
 define('SS_DATABASE_NAME', '<database>');
+
+/* SSL support for MySQLPDODatabase */
+/*
+define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
+define('SS_DATABASE_SSL_KEY', '/path/to/keyfile');
+define('SS_DATABASE_SSL_CERT', '/path/to/certfile');
+define('SS_DATABASE_SSL_CA', '/path/to/cafile');;
+*/
 --------------------------------------------------
 
 Once you have done that, run 'composer install' or './framework/sake dev/build' to create
