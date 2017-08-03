@@ -17,7 +17,9 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+
+```php
+
 	<?php
 	
 	class MyMemberExtension extends DataExtension {
@@ -31,6 +33,7 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 			return "Hi " . $this->owner->Name;
 		}
 	}
+```
 
 <div class="info" markdown="1">
 Convention is for extension class names to end in `Extension`. This isn't a requirement but makes it clearer
@@ -41,15 +44,21 @@ we want to add the `MyMemberExtension` too. To activate this extension, add the 
 
 **mysite/_config/app.yml**
 
-	:::yml
+
+```yml
+
 	Member:
 	  extensions:
 	    - MyMemberExtension
+```
 
 Alternatively, we can add extensions through PHP code (in the `_config.php` file).
 
-	:::php
+
+```php
+
 	Member::add_extension('MyMemberExtension');
+```
 
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
 transformed the original `Member` class in two ways:
@@ -70,7 +79,9 @@ $has_one etc.
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -88,13 +99,16 @@ $has_one etc.
 			return "Hi " . $this->owner->Name;
 		}
 	}
+```
 
 **mysite/templates/Page.ss**
-	
-	:::ss
+
+
+```ss
+
 	$CurrentMember.Position
 	$CurrentMember.Image
-
+```
 
 ## Adding Methods
 
@@ -102,18 +116,23 @@ Methods that have a unique name will be called as part of the `__call` method on
 we added a `SayHi` method which is unique to our extension.
 
 **mysite/templates/Page.ss**
-	:::ss
+
+```ss
+
 	<p>$CurrentMember.SayHi</p>
 
 	// "Hi Sam"
+```
 
 **mysite/code/Page.php**
-	:::php
+
+```php
+
 	$member = Security::getCurrentUser();
 	echo $member->SayHi;
 
 	// "Hi Sam"
-
+```
 
 ## Modifying Existing Methods
 
@@ -123,7 +142,9 @@ through the [Object::extend()](api:Object::extend()) method.
 
 **framework/security/Member.php**
 
-	:::php
+
+```php
+
 	public function getValidator() {
 		// ..
 		
@@ -131,6 +152,7 @@ through the [Object::extend()](api:Object::extend()) method.
 
 		// ..
 	}
+```
 
 Extension Hooks can be located anywhere in the method and provide a point for any `Extension` instances to modify the 
 variables at that given point. In this case, the core function `getValidator` on the `Member` class provides an 
@@ -139,7 +161,9 @@ validator by defining the `updateValidator` method.
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -151,6 +175,7 @@ validator by defining the `updateValidator` method.
 			$validator->addRequiredField('DateOfBirth');
 		}
 	}
+```
 
 <div class="info" markdown="1">
 The `$validator` parameter is passed by reference, as it is an object.
@@ -159,7 +184,9 @@ The `$validator` parameter is passed by reference, as it is an object.
 Another common example of when you will want to modify a method is to update the default CMS fields for an object in an 
 extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -178,14 +205,16 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 			$upload->setAllowedFileCategories('image/supported');
 		}
 	}
-
+```
 
 <div class="notice" markdown="1">
 If you're providing a module or working on code that may need to be extended by  other code, it should provide a *hook* 
 which allows an Extension to modify the results. 
 </div>
 
-	:::php
+
+```php
+
 	public function Foo() {
 		$foo = // ..
 
@@ -193,6 +222,7 @@ which allows an Extension to modify the results.
 
 		return $foo;
 	}
+```
 
 The convention for extension hooks is to provide an `update{$Function}` hook at the end before you return the result. If
 you need to provide extension hooks at the beginning of the method use `before{..}`.
@@ -202,7 +232,9 @@ you need to provide extension hooks at the beginning of the method use `before{.
 In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to the source object through the `owner` property on the class as 
 `$this` will refer to your `Extension` instance.
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -212,14 +244,14 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 			var_dump($this->owner);
 		}
 	}
+```
 
 ## Checking to see if an Object has an Extension
 
 To see what extensions are currently enabled on an object, use [Object::getExtensionInstances()](api:Object::getExtensionInstances()) and 
 [Object::hasExtension()](api:Object::hasExtension())
+```php
 
-
-	:::php
 	$member = Security::getCurrentUser();
 
 	print_r($member->getExtensionInstances());
@@ -227,7 +259,7 @@ To see what extensions are currently enabled on an object, use [Object::getExten
 	if($member->hasExtension('MyCustomMemberExtension')) {
 		// ..
 	}
-
+```
 
 ## Object extension injection points
 
@@ -245,7 +277,9 @@ require that a callback is registered each time, if necessary.
 Example: A class that wants to control default values during object  initialization. The code needs to assign a value 
 if not specified in `self::$defaults`, but before extensions have been called:
 
-	:::php
+
+```php
+
 	function __construct() {
 		$self = $this;
 
@@ -257,6 +291,7 @@ if not specified in `self::$defaults`, but before extensions have been called:
 
 		parent::__construct();
 	}
+```
 
 Example 2: User code can intervene in the process of extending cms fields.
 
@@ -264,7 +299,9 @@ Example 2: User code can intervene in the process of extending cms fields.
 This method is preferred to disabling, enabling, and calling field extensions manually.
 </div>
 
-	:::php
+
+```php
+
 	public function getCMSFields() {
 
 		$this->beforeUpdateCMSFields(function($fields) {
@@ -276,7 +313,7 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 		// ... additional fields here
 		return $fields;
 	}
-
+```
 
 ## Related Documentaion
 

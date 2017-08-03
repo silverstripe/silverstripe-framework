@@ -21,7 +21,8 @@ write, and respond appropriately if it isn't.
 
 The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\ValidationResult) object.
 
-	:::php
+```php
+
 	<?php
 
 	class MyObject extends DataObject {
@@ -41,6 +42,7 @@ The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\Va
 			return $result;
 		}
 	}
+```
 
 ## API Documentation
 

@@ -54,7 +54,9 @@ coding conventions.
 
 The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[AdminRootController](api:SilverStripe\Admin\AdminRootController)` and clear the old rule like in the example below.
 
-	:::yml
+
+```yml
+
 	---
 	Name: myadmin
 	After:
@@ -65,23 +67,33 @@ The CMS interface can be accessed by default through the `admin/` URL. You can c
 			'admin': ''
 			'newAdmin': 'AdminRootController'
 	---
+```
 
 When extending the CMS or creating modules, you can take advantage of various functions that will return the configured admin URL (by default 'admin/' is returned):
 
 In PHP you should use:
 
-	:::php
+
+```php
+
 	AdminRootController::admin_url()
+```
 
 When writing templates use:
 
-	:::ss
+
+```ss
+
 	$AdminURL
+```
 
 And in JavaScript, this is avaible through the `ss` namespace
 
-	:::js
+
+```js
+
 	ss.config.adminUrl
+```
 
 ### Multiple Admin URL and overrides
 
@@ -149,7 +161,9 @@ of a `PjaxResponseNegotiator` to handle its display.
 
 Basic example form in a CMS controller subclass:
 
-	:::php
+
+```php
+
 	class MyAdmin extends LeftAndMain {
 		function getEditForm() {
 			return CMSForm::create(
@@ -176,6 +190,7 @@ Basic example form in a CMS controller subclass:
 				->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		}
 	}
+```
 
 Note: Usually you don't need to worry about these settings,
 and will simply call `parent::getEditForm()` to modify an existing,
@@ -280,22 +295,20 @@ routing mechanism for this section. However, there are two major differences:
 Firstly, `reactRouter` must be passed as a boolean flag to indicate that this section is
 controlled by the react section, and thus should suppress registration of a page.js route
 for this section.
+```php
 
-
-	:::php
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
 			'reactRouter' => true
 		]);
 	}
-
+```
 
 Secondly, you should ensure that your react CMS section triggers route registration on the client side
 with the reactRouteRegister component. This will need to be done on the `DOMContentLoaded` event
 to ensure routes are registered before window.load is invoked. 
+```js
 
-
-	:::js
 	import { withRouter } from 'react-router';
 	import ConfigHelpers from 'lib/Config';
 	import reactRouteRegister from 'lib/ReactRouteRegister';
@@ -312,19 +325,18 @@ to ensure routes are registered before window.load is invoked.
 			],
 		});
 	});
-
+```
 
 Child routes can be registered post-boot by using `ReactRouteRegister` in the same way.
+```js
 
-
-	:::js
 	// Register a nested url under `sectionConfig.url`
 	const sectionConfig = ConfigHelpers.getSection('MyAdmin');
 	reactRouteRegister.add({
 		path: 'nested',
 		component: NestedComponent,
 	}, [ sectionConfig.url ]);
-
+```
 
 ## PJAX: Partial template replacement through Ajax
 
@@ -349,7 +361,9 @@ Example: Create a bare-bones CMS subclass which shows breadcrumbs (a built-in me
 as well as info on the current record. A single link updates both sections independently
 in a single Ajax request.
 
-	:::php
+
+```php
+
 	// mysite/code/MyAdmin.php
 	class MyAdmin extends LeftAndMain {
 		private static $url_segment = 'myadmin';
@@ -366,8 +380,9 @@ in a single Ajax request.
 			return $this->renderWith('MyRecordInfo');
 		}
 	}
+```
 
-	:::js
+```js
 	// MyAdmin.ss
 	<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
 	<div>Static content (not affected by update)</div>
@@ -381,17 +396,18 @@ in a single Ajax request.
 	<div data-pjax-fragment="MyRecordInfo">
 		Current Record: $currentPage.Title
 	</div>
+```
 
 A click on the link will cause the following (abbreviated) ajax HTTP request:
-
+```
 	GET /admin/myadmin HTTP/1.1
 	X-Pjax:MyRecordInfo,Breadcrumbs
 	X-Requested-With:XMLHttpRequest
-
+```
 ... and result in the following response:
-
+```
 	{"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
-
+```
 Keep in mind that the returned view isn't always decided upon when the Ajax request
 is fired, so the server might decide to change it based on its own logic,
 sending back different `X-Pjax` headers and content.
@@ -399,9 +415,9 @@ sending back different `X-Pjax` headers and content.
 On the client, you can set your preference through the `data-pjax-target` attributes
 on links or through the `X-Pjax` header. For firing off an Ajax request that is
 tracked in the browser history, use the `pjax` attribute on the state data.
-
+```js
 	$('.cms-container').loadPanel(ss.config.adminUrl+'pages', null, {pjax: 'Content'});
-
+```
 ## Loading lightweight PJAX fragments
 
 Normal navigation between URLs in the admin section of the Framework occurs through `loadPanel` and `submitForm`.
@@ -415,11 +431,11 @@ unrelated to the main flow.
 
 In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
 parallel as you want. This will not disturb the main navigation.
-
+```js
 		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1');
 		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2');
 		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment3');
-
+```
 The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
 result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
 
@@ -435,23 +451,23 @@ has been found on an element (this element will get completely replaced). Afterw
 will be triggered. In case of a request error a `loadfragmenterror` will be raised and DOM will not be touched.
 
 You can hook up a response handler that obtains all the details of the XHR request via Entwine handler:
-
+```js
 		'from .cms-container': {
 			onafterloadfragment: function(e, data) {
 				// Say 'success'!
 				alert(data.status);
 			}
 		}
-
+```
 Alternatively you can use the jQuery deferred API:
-
+```js
 		$('.cms-container')
 			.loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1')
 			.success(function(data, status, xhr) {
 				// Say 'success'!
 				alert(status);
 			});
-
+```
 ## Ajax Redirects
 
 Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,
@@ -471,7 +487,9 @@ For example, the currently used controller class might've changed due to a "redi
 which affects the currently active menu entry. We're using HTTP response headers to contain this data
 without affecting the response body.
 
-	:::php
+
+```php
+
 	class MyController extends LeftAndMain {
 		class myaction() {
 			// ...
@@ -479,6 +497,7 @@ without affecting the response body.
 			return $html;
 		}
 	}
+```
 
 Built-in headers are:
 
@@ -529,12 +548,15 @@ from "Page" to "Files & Images". To communicate this state change, a controller
 response has the option to pass along a special HTTP response header,
 which is picked up by the menu:
 
-	:::php
+
+```php
+
 	public function mycontrollermethod() {
 		// .. logic here
 		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
 		return 'my response';
 	}
+```
 
 This is usually handled by the existing [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) logic,
 so you don't need to worry about it. The same concept applies for
@@ -579,7 +601,9 @@ since all others should render with their tab navigation inline.
 
 Form template with custom tab navigation (trimmed down):
 
-	:::ss
+
+```ss
+
 	<form $FormAttributes data-layout-type="border">
 
 		<div class="cms-content-header north">
@@ -603,10 +627,13 @@ Form template with custom tab navigation (trimmed down):
 		</div>
 
 	</form>
+```
 
 Tabset template without tab navigation (e.g. `CMSTabset.ss`)
 
-	:::ss
+
+```ss
+
 	<div $AttributesHTML>
 		<% loop Tabs %>
 			<% if Tabs %>
@@ -620,6 +647,7 @@ Tabset template without tab navigation (e.g. `CMSTabset.ss`)
 			<% end_if %>
 		<% end_loop %>
 	</div>
+```
 
 Lazy loading works based on the `href` attribute of the tab navigation.
 The base behaviour is applied through adding a class `.cms-tabset` to a container.
@@ -629,7 +657,9 @@ This is achieved by template conditionals (see "MyActiveCondition").
 The `.cms-panel-link` class will automatically trigger the ajax loading,
 and load the HTML content into the main view. Example:
 
-	:::ss
+
+```ss
+
 	<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
 		<ul>
 			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
@@ -644,6 +674,7 @@ and load the HTML content into the main view. Example:
 			</li>
 		</ul>
 	</div>
+```
 
 The URL endpoints `{$AdminURL}mytabs/tab1` and `{$AdminURL}mytabs/tab2`
 should return HTML fragments suitable for inserting into the content area,

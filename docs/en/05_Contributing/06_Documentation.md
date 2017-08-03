@@ -90,31 +90,31 @@ sparingly.
 </div>
 
 Code for a Tip box:
-
+```
 	<div class="hint" markdown='1'>
 	...
 	</div>
-
+```
 <div class="notice" markdown='1'>
 "Notification box": A notification box is good for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
 </div>
 
 Code for a Notification box:
-
+```
 	<div class="notice" markdown='1'>
 	...
 	</div>
-
+```
 <div class="warning" markdown='1'>
 "Warning box": A warning box is useful for highlighting a severe bug or a technical issue requiring a user's attention. For example, suppose a rare edge case sometimes leads to a variable being overwritten incorrectly. A warning box can be used to alert the user to this case so they can write their own code to handle it.  
 </div>
 
 Code for a Warning box:
-
+```
 	<div class="warning" markdown='1'>
 	...
 	</div>
-
+```
 See [markdown extra documentation](http://michelf.com/projects/php-markdown/extra/#html) for more restrictions
 on placing HTML blocks inside Markdown.
 

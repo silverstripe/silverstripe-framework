@@ -7,7 +7,9 @@ how you can load default records into the test database.
 
 **mysite/tests/PageTest.php**
 
-	:::php
+
+```php
+
 	<?php
     
     use SilverStripe\Dev\SapphireTest;
@@ -44,6 +46,7 @@ how you can load default records into the test database.
 			}
 		}
 	}
+```
 
 Firstly we define a static `$fixture_file`, this should point to a file that represents the data we want to test,
 represented as a YAML [Fixture](../fixtures). When our test is run, the data from this file will be loaded into a test 

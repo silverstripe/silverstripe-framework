@@ -27,16 +27,19 @@ Feature overview:
 You can use the CsvBulkLoader without subclassing or other customizations, if the column names
 in your CSV file match `$db` properties in your dataobject. E.g. a simple import for the
 [Member](api:SilverStripe\Security\Member) class could have this data in a file:
-
+```
 	FirstName,LastName,Email
 	Donald,Duck,donald@disney.com
 	Daisy,Duck,daisy@disney.com
-
+```
 The loader would be triggered through the `load()` method:
 
-	:::php
+
+```php
+
 	$loader = new CsvBulkLoader('Member');
 	$result = $loader->load('<my-file-path>');
+```
 
 By the way, you can import [Member](api:SilverStripe\Security\Member) and [Group](api:SilverStripe\Security\Group) data through `http://localhost/admin/security`
 interface out of the box.
@@ -45,7 +48,9 @@ interface out of the box.
 
 The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is through a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) interface - you get an upload form out of the box.
 
-	:::php
+
+```php
+
 	<?php
 	class PlayerAdmin extends ModelAdmin {
 	   private static $managed_models = array(
@@ -57,6 +62,7 @@ The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is t
 	   private static $url_segment = 'players';
 	}
 	?>
+```
 
 The new admin interface will be available under `http://localhost/admin/players`, the import form is located
 below the search form on the left.
@@ -68,7 +74,9 @@ Let's create a simple upload form (which is used for `MyDataObject` instances).
 You'll need to add a route to your controller to make it accessible via URL 
 (see [director](/reference/director)).
 
-	:::php
+
+```php
+
 	<?php
 	class MyController extends Controller {
 
@@ -108,6 +116,7 @@ You'll need to add a route to your controller to make it accessible via URL
 			return $this->redirectBack();
 		}
 	}
+```
 
 Note: This interface is not secured, consider using [Permission::check()](api:SilverStripe\Security\Permission::check()) to limit the controller to users
 with certain access rights.
@@ -117,16 +126,18 @@ with certain access rights.
 We're going to use our knowledge from the previous example to import a more sophisticated CSV file.
 
 Sample CSV Content
-
+```
 	"Number","Name","Birthday","Team"
 	11,"John Doe",1982-05-12,"FC Bayern"
 	12,"Jane Johnson", 1982-05-12,"FC Bayern"
 	13,"Jimmy Dole",,"Schalke 04"
-
+```
 
 Datamodel for Player
 
-	:::php
+
+```php
+
 	<?php
 	class Player extends DataObject {
 	   private static $db = array(
@@ -140,11 +151,13 @@ Datamodel for Player
 	   );
 	}
 	?>
-
+```
 
 Datamodel for FootballTeam:
 
-	:::php
+
+```php
+
 	<?php
 	class FootballTeam extends DataObject {
 	   private static $db = array(
@@ -155,7 +168,7 @@ Datamodel for FootballTeam:
 	   );
 	}
 	?>
-
+```
 
 Sample implementation of a custom loader. Assumes a CSV-file in a certain format (see below).
 
@@ -163,9 +176,8 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Splits a combined "Name" fields from the CSV-data into `FirstName` and `Lastname` by a custom importer method
 *  Avoids duplicate imports by a custom `$duplicateChecks` definition
 *  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
+```php
 
-
-	:::php
 	<?php
 	class PlayerCsvBulkLoader extends CsvBulkLoader {
 	   public $columnMap = array(
@@ -194,10 +206,13 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	   }
 	}
 	?>
-	
+```
+
 Building off of the ModelAdmin example up top, use a custom loader instead of the default loader by adding it to `$model_importers`. In this example, `CsvBulkLoader` is replaced with `PlayerCsvBulkLoader`.
 
-	:::php
+
+```php
+
 	<?php
 	class PlayerAdmin extends ModelAdmin {
 	   private static $managed_models = array(
@@ -209,7 +224,7 @@ Building off of the ModelAdmin example up top, use a custom loader instead of th
 	   private static $url_segment = 'players';
 	}
 	?>
-
+```
 
 ## Related
 

@@ -18,7 +18,8 @@ a `ModelAdmin` record.
 
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
-	:::php
+```php
+
 	<?php
 
 	class Player extends DataObject {
@@ -49,6 +50,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	    parent::onBeforeWrite();
 	  }
 	}
+```
 
 ## onBeforeDelete
 
@@ -57,7 +59,8 @@ Triggered before executing *delete()* on an existing object.
 Example: Checking for a specific [permission](permissions) to delete this type of object. It checks if a 
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
-	:::php
+```php
+
 	<?php
 
 	class Player extends DataObject {
@@ -75,8 +78,7 @@ member is logged in who belongs to a group containing the permission "PLAYER_DEL
 	    parent::onBeforeDelete();
 	  }
 	}
-
-
+```
 
 <div class="notice" markdown='1'>
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 

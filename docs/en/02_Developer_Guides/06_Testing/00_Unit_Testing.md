@@ -8,7 +8,9 @@ to ensure that it works as it should. A simple example would be to test the resu
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	<?php
 
     use SilverStripe\CMS\Model\SiteTree;
@@ -20,10 +22,13 @@ to ensure that it works as it should. A simple example would be to test the resu
 			return (1 + 1);
 		}
 	}
+```
 
 **mysite/tests/PageTest.php**
 
-	:::php
+
+```php
+
 	<?php
     
     use Page;
@@ -36,6 +41,7 @@ to ensure that it works as it should. A simple example would be to test the resu
 			$this->assertEquals(2, Page::MyMethod());
 		}
 	}
+```
 
 <div class="info" markdown="1">
 Tests for your application should be stored in the `mysite/tests` directory. Test cases for add-ons should be stored in 
@@ -84,7 +90,9 @@ needs.
 
 **phpunit.xml**
 
-	:::xml
+
+```xml
+
 	<phpunit bootstrap="framework/tests/bootstrap.php" colors="true">
 		<testsuite name="Default">
 			<directory>mysite/tests</directory>
@@ -102,6 +110,7 @@ needs.
 			</exclude>
 		</groups>
 	</phpunit>
+```
 
 ### setUp() and tearDown()
 
@@ -109,7 +118,9 @@ In addition to loading data through a [Fixture File](fixtures), a test case may 
 run before each test method. For this, use the PHPUnit `setUp` and `tearDown` methods. These are run at the start and 
 end of each test.
 
-	:::php
+
+```php
+
 	<?php
 
     use SilverStripe\Core\Config\Config;
@@ -142,14 +153,17 @@ end of each test.
 			// ..
 		}
 	}
+```
 
 `tearDownAfterClass` and `setUpBeforeClass` can be used to run code just once for the file rather than before and after 
 each individual test case. Remember to class the parent method in each method to ensure the core boot-strapping of tests
 takes place.
 
-	:::php
-	<?php
 
+```php
+
+	<?php
+	
     use SilverStripe\Dev\SapphireTest;
 	
 	class PageTest extends SapphireTest
@@ -168,7 +182,8 @@ takes place.
 			// ..
 		}
 	}
-	
+```
+
 ### Config and Injector Nesting
 
 A powerful feature of both [`Config`](/developer_guides/configuration/configuration/) and [`Injector`](/developer_guides/extending/injector/) is the ability to "nest" them so that you can make changes that can easily be discarded without having to manage previous values.
@@ -179,7 +194,9 @@ If you need to make changes to `Config` (or `Injector`) for each test (or the wh
 
 It's important to remember that the `parent::setUp();` functions will need to be called first to ensure the nesting feature works as expected.
 
-	:::php
+
+```php
+
 	public static function setUpBeforeClass()
     {
 		parent::setUpBeforeClass();
@@ -197,6 +214,7 @@ It's important to remember that the `parent::setUp();` functions will need to be
     {
 		Config::inst()->get('ClassName', 'var_name'); // this will be 'var_value'
 	}
+```
 
 ## Related Documentation
 

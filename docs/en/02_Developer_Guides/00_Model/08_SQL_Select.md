@@ -18,7 +18,8 @@ such as counts or returning a single column.
 For example, if you want to run a simple `COUNT` SQL statement,
 the following three statements are functionally equivalent:
 
-	:::php
+```php
+
 	// Through raw SQL.
 	$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
 
@@ -28,6 +29,7 @@ the following three statements are functionally equivalent:
 
 	// Through the ORM.
 	$count = Member::get()->count();
+```
 
 If you do use raw SQL, you'll run the risk of breaking 
 various assumptions the ORM and code based on it have:
@@ -56,7 +58,8 @@ conditional filters, grouping, limiting, and sorting.
 
 E.g.
 
-	:::php
+```php
+
 	<?php
 
 	$sqlQuery = new SQLSelect();
@@ -81,6 +84,7 @@ E.g.
 	foreach($result as $row) {
 		echo $row['BirthYear'];
 	}
+```
 
 The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [Query](api:SilverStripe\ORM\Connect\Query). 
 This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
@@ -93,17 +97,20 @@ object instead.
 
 For example, creating a `SQLDelete` object
 
-	:::php
+```php
+
 	<?php
 
 	$query = SQLDelete::create()
 		->setFrom('"SiteTree"')
 		->setWhere(array('"SiteTree"."ShowInMenus"' => 0));
 	$query->execute();
+```
 
 Alternatively, turning an existing `SQLQuery` into a delete
 
-	:::php
+```php
+
 	<?php
 
 	$query = SQLQuery::create()
@@ -111,13 +118,16 @@ Alternatively, turning an existing `SQLQuery` into a delete
 		->setWhere(array('"SiteTree"."ShowInMenus"' => 0))
 		->toDelete();
 	$query->execute();
+```
 
 Directly querying the database
 
-	:::php
+```php
+
 	<?php
 
 	DB::prepared_query('DELETE FROM "SiteTree" WHERE "SiteTree"."ShowInMenus" = ?', array(0));
+```
 
 ### INSERT/UPDATE
 
@@ -163,7 +173,8 @@ SQLInsert also includes the following api methods:
 
 E.g.
 
-	:::php
+```php
+
 	<?php
 	$update = SQLUpdate::create('"SiteTree"')->addWhere(array('ID' => 3));
 
@@ -188,6 +199,7 @@ E.g.
 
 	// Perform the update
 	$update->execute();
+```
 
 In addition to assigning values, the SQLInsert object also supports multi-row 
 inserts. For database connectors and API that don't have multi-row insert support
@@ -195,7 +207,8 @@ these are translated internally as multiple single row inserts.
 
 For example,
 
-	:::php
+```php
+
 	<?php
 	$insert = SQLInsert::create('"SiteTree"');
 
@@ -216,6 +229,7 @@ For example,
 	// $columns will be array('"Title"', '"Content"', '"ClassName"');
 
 	$insert->execute();
+```
 
 ### Value Checks
 
@@ -224,18 +238,22 @@ e.g. when you want a single column rather than a full-blown object representatio
 
 Example: Get the count from a relationship.
 
-	:::php
+```php
+
 	$sqlQuery = new SQLSelect();
 	$sqlQuery->setFrom('Player');
 	$sqlQuery->addSelect('COUNT("Player"."ID")');
 	$sqlQuery->addWhere(array('"Team"."ID"' => 99));
 	$sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
 	$count = $sqlQuery->execute()->value();
-	
+```
+
 Note that in the ORM, this call would be executed in an efficient manner as well:
 
-	:::php
+```php
+
 	$count = $myTeam->Players()->count();
+```
 
 ### Mapping
 
@@ -244,19 +262,22 @@ This can be useful for creating dropdowns.
 
 Example: Show player names with their birth year, but set their birth dates as values.
 
-	:::php
+```php
+
 	$sqlQuery = new SQLSelect();
 	$sqlQuery->setFrom('Player');
 	$sqlQuery->setSelect('Birthdate');
 	$sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
 	$map = $sqlQuery->execute()->map();
 	$field = new DropdownField('Birthdates', 'Birthdates', $map);
+```
 
 Note that going through SQLSelect is just necessary here 
 because of the custom SQL value transformation (`YEAR()`). 
 An alternative approach would be a custom getter in the object definition.
 
-	:::php
+```php
+
 	class Player extends DataObject {
 		private static $db = array(
 			'Name' =>  'Varchar',
@@ -268,6 +289,7 @@ An alternative approach would be a custom getter in the object definition.
 	}
 	$players = Player::get();
 	$map = $players->map('Name', 'NameWithBirthyear');
+```
 
 ## Related
 

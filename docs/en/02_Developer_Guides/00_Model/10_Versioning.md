@@ -20,25 +20,27 @@ By default, adding the `Versioned extension will create a "Stage" and "Live" sta
 also track versioned history.
 
 
-	:::php
+```php
+
 	class MyStagedModel extends DataObject {
 		private static $extensions = [
 			Versioned::class
 		];
 	}
-
+```
 
 Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
 can be specified by setting the constructor argument to "Versioned"
 
 
-	:::php
+```php
+
 	class VersionedModel extends DataObject {
 		private static $extensions = [
 			"SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
 		];
 	}
-
+```
 
 <div class="notice" markdown="1">
 The extension is automatically applied to `SiteTree` class. For more information on extensions see 
@@ -79,7 +81,8 @@ automatically joined as required:
 By default, all records are retrieved from the "Draft" stage (so the `MyRecord` table in our example). You can 
 explicitly request a certain stage through various getters on the `Versioned` class.
 
-	:::php
+```php
+
 	// Fetching multiple records
 	$stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
 	$liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
@@ -87,14 +90,17 @@ explicitly request a certain stage through various getters on the `Versioned` cl
 	// Fetching a single record
 	$stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
 	$liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
+```
 
 ### Historical Versions
 
 The above commands will just retrieve the latest version of its respective stage for you, but not older versions stored 
 in the `<class>_versions` tables.
 
-	:::php
+```php
+
 	$historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
+```
 
 <div class="alert" markdown="1">
 The record is retrieved as a `DataObject`, but saving back modifications via `write()` will create a new version, 
@@ -105,10 +111,12 @@ In order to get a list of all versions for a specific record, we need to generat
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
 	
-	:::php
+```php
+
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	$versions = $record->allVersions();
 	echo $versions->First()->Version; // instance of Versioned_Version
+```
 
 ### Writing Versions and Changing Stages
 
@@ -130,7 +138,8 @@ done via one of several ways:
  * `publishRecursive` Publishes this record, and any dependant objects this record may refer to.
    See "DataObject ownership" for reference on dependant objects.
 
-	:::php
+```php
+
 	$record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
 	$record->MyField = 'changed';
 	// will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
@@ -138,25 +147,30 @@ done via one of several ways:
 	$record->write(); 
 	// will copy the saved record information to the `MyRecord_Live` table
 	$record->publishRecursive();
+```
 
 Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
 
-	:::php
+```php
+
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	// will remove the row from the `MyRecord_Live` table
 	$record->deleteFromStage(Versioned::LIVE);
+```
 
 ### Forcing the Current Stage
 
 The current stage is stored as global state on the object. It is usually modified by controllers, e.g. when a preview 
 is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
-	:::php
+```php
+
 	$origMode = Versioned::get_reading_mode(); // save current mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
 	Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
+```
 
 ### DataObject ownership
 
@@ -177,7 +191,8 @@ When pages of type `MyPage` are published, any owned images and banners will be 
 without requiring any custom code.
 
 
-	:::php
+```php
+
 	class MyPage extends Page {
 		private static $has_many = array(
 			'Banners' => Banner::class
@@ -199,7 +214,7 @@ without requiring any custom code.
 			'Image'
 		);
 	}
-
+```
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
 
@@ -216,7 +231,8 @@ that can be used to traverse between each, and then by ensuring you configure bo
 
 E.g.
 
-	:::php
+```php
+
 	class MyParent extends DataObject {
 		private static $extensions = array(
 			Versioned::class
@@ -239,6 +255,7 @@ E.g.
 			return MyParent::get()->first();
 		}
 	}
+```
 
 #### DataObject Ownership in HTML Content
 
@@ -257,8 +274,10 @@ smaller modifications of the generated `DataList` objects.
 
 Example: Get the first 10 live records, filtered by creation date:
 
-	:::php
+```php
+
 	$records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
+```
 
 ### Permissions
 
@@ -280,7 +299,8 @@ Versioned object visibility can be customised in one of the following ways by ed
  
 E.g.
 
-    :::php
+```php
+
     class MyObject extends DataObject {
         private static $extensions = array(
             Versioned::class,
@@ -298,6 +318,7 @@ E.g.
             return Permission::checkMember($member, 'ADMIN');
         }
     }
+```
 
 If you want to control permissions of an object in an extension, you can also use
 one of the below extension points in your `DataExtension` subclass:
@@ -310,25 +331,29 @@ only be invoked if the object is in a non-published state.
  
 E.g.
 
-    :::php
+```php
+
     class MyObjectExtension extends DataExtension {
         public function canViewNonLive($member = null) {
             return Permission::check($member, 'DRAFT_STATUS');
         }
     }
+```
 
 If none of the above checks are overridden, visibility will be determined by the 
 permissions in the `TargetObject.non_live_permissions` config.
 
 E.g.
 
-    :::php
+```php
+
     class MyObject extends DataObject {
         private static $extensions = array(
             Versioned::class,
         );
         private static $non_live_permissions = array('ADMIN');
     }
+```
 
 Versioned applies no additional permissions to `canEdit` or `canCreate`, and such
 these permissions should be implemented as per standard unversioned DataObjects.
@@ -345,12 +370,13 @@ default, and only preview draft content if explicitly requested (e.g. by the "pr
 to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
 
 **mysite/code/MyController.php**
-	:::php
+```php
+
 	public function init() {
 		parent::init();
 		Versioned::set_stage(Versioned::DRAFT);
 	}
-
+```
 
 ### Controllers
 

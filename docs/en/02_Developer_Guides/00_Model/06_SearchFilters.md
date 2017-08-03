@@ -16,7 +16,8 @@ you can put on field names to change this behavior. These are represented as `Se
 
 An example of a `SearchFilter` in use:
 	
-	:::php
+```php
+
 	// fetch any player that starts with a S
 	$players = Player::get()->filter(array(
 		'FirstName:StartsWith' => 'S',
@@ -28,6 +29,7 @@ An example of a `SearchFilter` in use:
 		'FirstName:PartialMatch' => 'z',
 		'LastName:PartialMatch' => 'z'
 	));
+```
 
 Developers can define their own [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter) if needing to extend the ORM filter and exclude behaviors.
 
@@ -41,15 +43,17 @@ within the `DataListFilter.` prefixed namespace. New filters can be registered u
 config:
 
 
-	:::yaml
+```yaml
+
 	SilverStripe\Core\Injector\Injector:
 	  DataListFilter.CustomMatch:
 	    class: MyVendor/Search/CustomMatchFilter
-
+```
 
 The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:
 
-	:::php
+```php
+
 	$players = Player::get()->filter(array(
 		'FirstName:StartsWith:nocase' => 'S'
 	));
@@ -58,6 +62,7 @@ The following is a query which will return everyone whose first name starts with
 	$players = Player::get()->filter(array(
 		'FirstName:StartsWith:not' => 'W'
 	));
+```
 
 ## API Documentation
 

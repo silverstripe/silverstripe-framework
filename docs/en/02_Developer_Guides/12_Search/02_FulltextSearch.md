@@ -21,7 +21,9 @@ storage engine.
 
 You can do so by adding this static variable to your class definition:
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -30,6 +32,7 @@ You can do so by adding this static variable to your class definition:
 			'MySQLDatabase' => 'ENGINE=MyISAM'
 		);
 	}
+```
 
 The [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) extension will add the correct `Fulltext` indexes to the data model.
 
@@ -46,7 +49,9 @@ SilverStripe provides a [FulltextFilter](api:SilverStripe\ORM\Filters\FulltextFi
 
 Example DataObject:
 
-	:::php
+
+```php
+
 	class SearchableDataObject extends DataObject {
 		
 		private static $db = array(
@@ -66,11 +71,15 @@ Example DataObject:
 		);
 
 	}
+```
 
 Performing the search:
 
-	:::php
+
+```php
+
 	SearchableDataObject::get()->filter('SearchFields:Fulltext', 'search term');
+```
 
 If your search index is a single field size, then you may also specify the search filter by the name of the
 field instead of the index.

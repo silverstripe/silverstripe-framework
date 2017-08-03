@@ -3,14 +3,14 @@ summary: Cache SilverStripe templates to reduce database queries.
 
 # Partial Caching
 
-Partial caching is a feature that allows the caching of just a portion of a page. 
+Partial caching is a feature that allows the caching of just a portion of a page.
+```ss
 
-	:::ss
 	<% cached 'CacheKey' %>
 	$DataTable
 	...
 	<% end_cached %>
-
+```
 
 Each cache block has a cache key. A cache key is an unlimited number of comma separated variables and quoted strings. 
 Every time the cache key returns a different result, the contents of the block are recalculated. If the cache key is 
@@ -21,7 +21,9 @@ will invalidate the cache after a given amount of time has expired (default 10 m
 
 Here are some more complex examples:
 
-	:::ss
+
+```ss
+
 	<% cached 'database', $LastEdited %> 
 		<!-- that updates every time the record changes. -->
 	<% end_cached %>
@@ -33,6 +35,7 @@ Here are some more complex examples:
 	<% cached 'loginblock', $LastEdited, $CurrentMember.isAdmin %>
 		<!-- recached when block object changes, and if the user is admin -->
 	<% end_cached %>
+```
 
 An additional global key is incorporated in the cache lookup. The default value for this is 
 `$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current [Versioned](api:SilverStripe\Versioned\Versioned) state and user ID are used. 
@@ -44,10 +47,12 @@ user does not influence your template content, you can update this key as below;
 
 **mysite/_config/app.yml**
 
-	:::yaml
+
+```yaml
+
 	SSViewer:
 		global_key: '$CurrentReadingMode, $Locale'
-	
+```
 
 ## Aggregates
 
@@ -58,16 +63,22 @@ on sets of [DataObject](api:SilverStripe\ORM\DataObject)s - the most useful for 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
 otherwise. By using aggregates, we do that like this:
 
-	:::ss
+
+```ss
+
 	<% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
+```
 
 The cache for this will update whenever a page is added, removed or edited.
 
 If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added 
 or edited
 
-	:::ss
+
+```ss
+
 	<% cached 'categorylist', $List('Category').max('LastEdited'), $List('Category').count() %>
+```
 
 <div class="notice" markdown="1">
 Note the use of both `.max('LastEdited')` and `.count()` - this takes care of both the case where an object has been 
@@ -85,7 +96,9 @@ fragment.
 For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
 `Page::$many_many = array('Slides' => 'Slide')` changes. In `PageController`:
 
-	:::php
+
+```php
+
 
 	public function SliderCacheKey() {
 		$fragments = array(
@@ -97,11 +110,15 @@ For example, a block that shows a collection of rotating slides needs to update 
 		);
 		return implode('-_-', $fragments);
 	}
+```
 
 Then reference that function in the cache key:
 
-	:::ss
+
+```ss
+
 	<% cached $SliderCacheKey %>
+```
 
 The example above would work for both a has_many and many_many relationship.
 
@@ -119,24 +136,31 @@ data updates.
 
 For instance, if we show some blog statistics, but are happy having them be slightly stale, we could do
 
-	:::ss
-	<% cached 'blogstatistics', $Blog.ID %>
 
+```ss
+
+	<% cached 'blogstatistics', $Blog.ID %>
+```
 
 which will invalidate after the cache lifetime expires. If you need more control than that (cache lifetime is
 configurable only on a site-wide basis), you could add a special function to your controller:
 
-	:::php
+
+```php
+
 	public function BlogStatisticsCounter() {
 	    return (int)(time() / 60 / 5); // Returns a new number every five minutes
 	}
+```
 
  
 and then use it in the cache key
 
-	:::ss
-	<% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
 
+```ss
+
+	<% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
+```
 
 ## Cache block conditionals
 
@@ -147,17 +171,22 @@ value must be true for that block to be cached. Conversely if 'unless' is used, 
 Following on from the previous example, you might wish to only cache slightly-stale data if the server is experiencing
 heavy load:
 
-	:::ss
-	<% cached 'blogstatistics', $Blog.ID if $HighLoad %>
 
+```ss
+
+	<% cached 'blogstatistics', $Blog.ID if $HighLoad %>
+```
 
 By adding a `HighLoad` function to your `PageController`, you could enable or disable caching dynamically.
 
 To cache the contents of a page for all anonymous users, but dynamically calculate the contents for logged in members,
  use something like:
 
-	:::ss
+
+```ss
+
 	<% cached unless $CurrentUser %>
+```
 
 ## Uncached
 
@@ -165,9 +194,11 @@ The template tag 'uncached' can be used - it is the exact equivalent of a cached
 returns false. The key and conditionals in an uncached tag are ignored, so you can easily temporarily disable a 
 particular cache block by changing just the tag, leaving the key and conditional intact.
 
-	:::ss
-	<% uncached %>
 
+```ss
+
+	<% uncached %>
+```
 
 ## Nested cache blocks
 
@@ -179,7 +210,9 @@ portion dynamic, without having to include any member info in the page's cache k
 
 An example:
 
-	:::ss
+
+```ss
+
 	<% cached $LastEdited %>
 	  Our wonderful site
 	
@@ -189,7 +222,7 @@ An example:
 	
 	  $ASlowCalculation
 	<% end_cached %>
-
+```
 
 This will cache the entire outer section until the next time the page is edited, but will display a different welcome
 message depending on the logged in member.
@@ -197,7 +230,9 @@ message depending on the logged in member.
 Cache conditionals and the uncached tag also work in the same nested manner. Since Member.Name is fast to calculate, you
 could also write the last example as:
 
-	:::ss
+
+```ss
+
 	<% cached $LastEdited %>
 	  Our wonderful site
 	
@@ -207,6 +242,7 @@ could also write the last example as:
 	
 	  $ASlowCalculation
 	<% end_cached %>
+```
 
 <div class="warning" markdown="1">
 Currently a nested cache block can not be contained within an if or loop block. The template engine will throw an error
@@ -215,7 +251,9 @@ letting you know if you've done this. You can often get around this using aggreg
 
 Failing example:
 
-	:::ss
+
+```ss
+
 	<% cached $LastEdited %>
 	
 	  <% loop $Children %>
@@ -225,10 +263,13 @@ Failing example:
 	  <% end_loop %>
 	
 	<% end_cached %>
+```
 
 Can be re-written as:
 
-	:::ss
+
+```ss
+
 	<% cached $LastEdited %>
 	
 	  <% cached $AllChildren.max('LastEdited') %>
@@ -238,10 +279,13 @@ Can be re-written as:
 	  <% end_cached %>
 	
 	<% end_cached %>
+```
 
 Or:
 
-	:::ss
+
+```ss
+
 	<% cached $LastEdited %>
 		(other code)
 	<% end_cached %>
@@ -251,6 +295,7 @@ Or:
 		  $Name
 		<% end_cached %>
 	<% end_loop %>
+```
 
 ## Cache expiry
 
@@ -261,6 +306,11 @@ logic is sound, you could increase the expiry dramatically.
 
 **mysite/_config.php**
 
-	:::php
+
+```php
+
 	// Set partial cache expiry to 7 days
 	SS_Cache::set_cache_lifetime('cacheblock', 60 * 60 * 24 * 7);
+```
+
+

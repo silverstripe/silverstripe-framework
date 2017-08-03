@@ -14,7 +14,9 @@ The following example will add a simple DateField to your Page, allowing you to 
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Page extends SiteTree {
@@ -34,17 +36,21 @@ The following example will add a simple DateField to your Page, allowing you to 
 			return $fields;
 		} 
 	}	
+```
 
 ## Custom Date Format
 
 A custom date format for a [DateField](api:SilverStripe\Forms\DateField) can be provided through `setDateFormat`.
 This is only necessary if you want to opt-out of the built-in browser localisation via `type=date`.
 
-	:::php
+
+```php
+
 	// will display a date in the following format: 31/06/2012
 	DateField::create('MyDate')
 	    ->setHTML5(false)
 	    ->setDateFormat('dd/MM/yyyy'); 
+```
 
 <div class="info" markdown="1">
 The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
@@ -56,10 +62,13 @@ The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/cl
 Sets the minimum and maximum allowed date values using the `min` and `max` configuration settings (in ISO format or 
 `strtotime()`).
 
-	:::php
+
+```php
+
 	DateField::create('MyDate')
 		->setMinDate('-7 days')
 		->setMaxDate('2012-12-31')
+```
 
 ## Formatting Hints
 
@@ -67,7 +76,9 @@ It's often not immediate apparent which format a field accepts, and showing the 
 of limited use to the average user. An alternative is to show the current date in the desired format alongside the 
 field description as an example.
 
-	:::php
+
+```php
+
 	$dateField = DateField::create('MyDate');
 
 	// Show long format as text below the field
@@ -79,6 +90,7 @@ field description as an example.
 
 	// Alternatively, set short format as a placeholder in the field
 	$dateField->setAttribute('placeholder', $dateField->getDateFormat());
+```
 
 <div class="notice" markdown="1">
 Fields scaffolded through [DataObject::scaffoldCMSFields()](api:SilverStripe\ORM\DataObject::scaffoldCMSFields()) automatically have a description attached to them.

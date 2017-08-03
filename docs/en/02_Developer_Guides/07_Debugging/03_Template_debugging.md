@@ -10,10 +10,11 @@ to track down a template or two. The template engine can help you along by displ
 source code comments indicating which template is responsible for rendering each 
 block of html on your page.
 
-	:::yaml
+```yaml
 	---
 	Only:
 	  environment: 'dev'
 	---
 	SSViewer:
 	  source_file_comments: true
+```

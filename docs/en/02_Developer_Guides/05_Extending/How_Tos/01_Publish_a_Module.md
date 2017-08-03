@@ -16,7 +16,9 @@ A basic usage of a module for 3.1 that requires the CMS would look similar to
 this:
 
 **mycustommodule/composer.json**
-	:::js
+
+```js
+
 	{
 	  "name": "your-vendor-name/module-name",
 	  "description": "One-liner describing your module",
@@ -42,7 +44,7 @@ this:
 	    ]
 	  }
 	}
-
+```
 
 Once your module is published online with a service like Github.com or Bitbucket.com, submit the repository to 
 [Packagist](https://packagist.org/) to have the module accessible to developers. It'll automatically get picked

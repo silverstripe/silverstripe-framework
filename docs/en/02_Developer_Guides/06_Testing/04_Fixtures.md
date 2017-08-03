@@ -14,7 +14,9 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 **mysite/tests/MyNewTest.php**
 
-	:::php
+
+```php
+
 	<?php
 	
 	class MyNewTest extends SapphireTest {
@@ -22,13 +24,16 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 		protected static $fixture_file = 'fixtures.yml';
 		
 	}
+```
 
 You can also use an array of fixture files, if you want to use parts of multiple other tests:
 
 
 **mysite/tests/MyNewTest.php**
 
-	:::php
+
+```php
+
 	<?php
 	
 	class MyNewTest extends SapphireTest {
@@ -39,13 +44,16 @@ You can also use an array of fixture files, if you want to use parts of multiple
 		);
 		
 	}
-	
+```
+
 Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
 
 Fixtures are defined in `YAML`. `YAML` is a markup language which is deliberately simple and easy to read, so it is 
 ideal for fixture generation. Say we have the following two DataObjects:
 
-	:::php
+
+```php
+
 	<?php
     
     use SilverStripe\ORM\DataObject;
@@ -72,12 +80,15 @@ ideal for fixture generation. Say we have the following two DataObjects:
 			'Players' => 'Player'
 		);
 	}
+```
 
 We can represent multiple instances of them in `YAML` as follows:
 
 **mysite/tests/fixtures.yml**
 
-	:::yml
+
+```yml
+
 	Team:
 		hurricanes:
 			Name: The Hurricanes
@@ -95,6 +106,7 @@ We can represent multiple instances of them in `YAML` as follows:
 		jack:
 			Name: Jack
 			Team: =>Team.crusaders
+```
 
 This `YAML` is broken up into three levels, signified by the indentation of each line. In the first level of 
 indentation, `Player` and `Team`, represent the class names of the objects we want to be created.
@@ -102,8 +114,11 @@ indentation, `Player` and `Team`, represent the class names of the objects we wa
 The second level, `john`/`joe`/`jack` & `hurricanes`/`crusaders`, are **identifiers**. Each identifier you specify 
 represents a new object and can be referenced in the PHP using `objFromFixture`
 
-	:::php
+
+```php
+
 	$player = $this->objFromFixture('Player', 'jack');
+```
 
 The third and final level represents each individual object's fields.
 
@@ -131,7 +146,9 @@ This style of relationship declaration can be used for any type of relationship 
 
 We can also declare the relationships conversely. Another way we could write the previous example is:
 
-	:::yml
+
+```yml
+
 	Player:
 		john:
 			Name: John
@@ -148,12 +165,15 @@ We can also declare the relationships conversely. Another way we could write the
 			Name: Crusaders
 			Origin: Canterbury
 			Players: =>Player.joe,=>Player.jack
+```
 
 The database is populated by instantiating `DataObject` objects and setting the fields declared in the `YAML`, then 
 calling `write()` on those objects. Take for instance the `hurricances` record in the `YAML`. It is equivalent to 
 writing:
 
-	:::php
+
+```php
+
 	$team = new Team(array(
 		'Name' => 'Hurricanes',
 		'Origin' => 'Wellington'
@@ -162,6 +182,7 @@ writing:
 	$team->write();
 
 	$team->Players()->add($john);
+```
 
 <div class="notice" markdown="1">
 As the YAML fixtures will call `write`, any `onBeforeWrite()` or default value logic will be executed as part of the 
@@ -172,7 +193,9 @@ test.
 
 As of SilverStripe 4 you will need to use fully qualfied class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
 
-    :::yml
+
+```yml
+
     MyProject\Model\Player:
       john:
         Name: join
@@ -182,6 +205,7 @@ As of SilverStripe 4 you will need to use fully qualfied class names in your YAM
         Name: Crusaders
         Origin: Canterbury
         Players: =>MyProject\Model\Player.john
+```
 
 <div class="notice" markdown="1">
 If your tests are failing and your database has table names that follow the fully qualified class names, you've probably forgotten to implement `private static $table_name = 'Player';` on your namespaced class. This property was introduced in SilverStripe 4 to reduce data migration work. See [DataObject](api:SilverStripe\ORM\DataObject) for an example.
@@ -192,7 +216,9 @@ If your tests are failing and your database has table names that follow the full
 `many_many` relations can have additional database fields attached to the relationship. For example we may want to 
 declare the role each player has in the team.
 
-	:::php
+
+```php
+
     use SilverStripe\ORM\DataObject;
     
 	class Player extends DataObject
@@ -222,10 +248,13 @@ declare the role each player has in the team.
 			)
 		);	
 	}
+```
 
 To provide the value for the `many_many_extraField` use the YAML list syntax.
 
-	:::yml
+
+```yml
+
 	Player:
 	  john:
 	    Name: John
@@ -247,6 +276,7 @@ To provide the value for the `many_many_extraField` use the YAML list syntax.
 	        Role: Captain
 	      - =>Player.jack:
 	        Role: Winger
+```
 
 ## Fixture Factories
 
@@ -266,17 +296,23 @@ name, which is usually set to the class it creates such as `Member` or `Page`.
 Blueprints are auto-created for all available DataObject subclasses, you only need to instantiate a factory to start 
 using them.
 
-	:::php
+
+```php
+
 	$factory = Injector::inst()->create('FixtureFactory');
 
 	$obj = $factory->createObject('Team', 'hurricanes');
+```
 
 In order to create an object with certain properties, just add a third argument:
 
-	:::php
+
+```php
+
 	$obj = $factory->createObject('Team', 'hurricanes', array(
 		'Name' => 'My Value'
 	));
+```
 
 <div class="warning" markdown="1">
 It is important to remember that fixtures are referenced by arbitrary identifiers ('hurricanes'). These are internally 
@@ -285,26 +321,33 @@ mapped to their database identifiers.
 
 After we've created this object in the factory, `getId` is used to retrieve it by the identifier.
 
-	:::php
-	$databaseId = $factory->getId('Team', 'hurricanes');
 
+```php
+
+	$databaseId = $factory->getId('Team', 'hurricanes');
+```
 
 ### Default Properties
 
 Blueprints can be overwritten in order to customise their behavior. For example, if a Fixture does not provide a Team
 name, we can set the default to be `Unknown Team`.
 
-	:::php
+
+```php
+
 	$factory->define('Team', array(
 		'Name' => 'Unknown Team'
 	));
+```
 
 ### Dependent Properties
 
 Values can be set on demand through anonymous functions, which can either generate random defaults, or create composite 
 values based on other fixture data.
 
-	:::php
+
+```php
+
 	$factory->define('Member', array(
 		'Email' => function($obj, $data, $fixtures) {
 			if(isset($data['FirstName']) {
@@ -315,23 +358,29 @@ values based on other fixture data.
 			$obj->Score = rand(0,10);
 		}
 	));
+```
 
 ### Relations
 
 Model relations can be expressed through the same notation as in the YAML fixture format described earlier, through the 
 `=>` prefix on data values.
 
-	:::php
+
+```php
+
 	$obj = $factory->createObject('Team', 'hurricanes', array(
 		'MyHasManyRelation' => '=>Player.john,=>Player.joe'
 	));
+```
 
 #### Callbacks
 
 Sometimes new model instances need to be modified in ways which can't be expressed in their properties, for example to 
 publish a page, which requires a method call.
 
-	:::php
+
+```php
+
 	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
 
 	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
@@ -339,6 +388,7 @@ publish a page, which requires a method call.
 	});
 
 	$page = $factory->define('Page', $blueprint);
+```
 
 Available callbacks:
 
@@ -351,7 +401,9 @@ Data of the same type can have variations, for example forum members vs. CMS adm
 class, but have completely different properties. This is where named blueprints come in. By default, blueprint names 
 equal the class names they manage.
 
-	:::php
+
+```php
+
 	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
 
 	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
@@ -366,6 +418,7 @@ equal the class names they manage.
 	$member = $factory->createObject('Member'); // not in admin group
 
 	$admin = $factory->createObject('AdminMember'); // in admin group
+```
 
 ## Related Documentation
 

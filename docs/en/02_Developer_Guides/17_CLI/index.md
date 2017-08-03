@@ -8,10 +8,11 @@ needs to interface over the command line.
 
 The main entry point for any command line execution is `framework/cli-script.php`. For example, to run a database 
 rebuild from the command line, use this command:
-	
-	:::bash
+```bash
+
 	cd your-webroot/
 	php framework/cli-script.php dev/build
+```
 
 <div class="notice">
 Your command line php version is likely to use a different configuration as your webserver (run `php -i` to find out 
@@ -32,10 +33,10 @@ when running the command php -v, then you may not have php-cli installed so sake
 ### Installation
 
 `sake` can be invoked using `./framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
-
+```
 	cd your-webroot/
 	sudo ./framework/sake installsake
-
+```
 <div class="warning">
 This currently only works on UNIX like systems, not on Windows.
 </div>
@@ -56,22 +57,27 @@ SS_BASE_URL="http://localhost/base-url"
 
 Sake can run any controller by passing the relative URL to that controller.
 
-	:::bash
+
+```bash
+
 	sake /
 	# returns the homepage
 
 	sake dev/
 	# shows a list of development operations
+```
 
 Sake is particularly useful for running build tasks.
-	
-	:::bash
+```bash
+
 	sake dev/build "flush=1"
+```
 
 It can also be handy if you have a long running script..
-	
-	:::bash
+```bash
+
 	sake dev/tasks/MyReallyLongTask
+```
 
 ### Running processes
 
@@ -85,7 +91,9 @@ sleep when the process is in the middle of doing things, and a long sleep when d
 
 This code provides a good template:
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyProcess extends Controller {
@@ -107,14 +115,16 @@ This code provides a good template:
 			}
 		}
 	}
+```
 
 Then the process can be managed through `sake`
 
-	:::bash
+
+```bash
+
 	sake -start MyProcess
 	sake -stop MyProcess
-
-
+```
 
 <div class="notice">
 `sake` stores `pid` and log files in the site root directory.
@@ -124,14 +134,20 @@ Then the process can be managed through `sake`
 
 Parameters can be added to the command. All parameters will be available in `$_GET` array on the server.
 
-	:::bash
+
+```bash
+
 	cd your-webroot/
 	php framework/cli-script.php myurl myparam=1 myotherparam=2
+```
 
 Or if you're using `sake`
 
-	:::bash
+
+```bash
+
 	sake myurl "myparam=1&myotherparam=2"
+```
 
 ## Running Regular Tasks With Cron
 
@@ -140,5 +156,6 @@ On a UNIX machine, you can typically run a scheduled task with a [cron job](http
 
 The following will run `MyTask` every minute.
 
-	:::bash
+```bash
 	* * * * * /your/site/folder/sake dev/tasks/MyTask
+```

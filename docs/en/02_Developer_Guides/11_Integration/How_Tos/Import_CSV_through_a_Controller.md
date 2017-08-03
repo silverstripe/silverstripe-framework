@@ -6,7 +6,9 @@ You can have more customised logic and interface feedback through a custom contr
 form (which is used for `MyDataObject` instances). You can access it through 
 `http://yoursite.com/MyController/?flush=all`.
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyController extends Controller {
@@ -62,6 +64,7 @@ form (which is used for `MyDataObject` instances). You can access it through
 			return $this->redirectBack();
 		}
 	}
+```
 
 <div class="alert" markdown="1">
 This interface is not secured, consider using [Permission::check()](api:SilverStripe\Security\Permission::check()) to limit the controller to users with certain 

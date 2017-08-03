@@ -38,9 +38,12 @@ In order to retain existing file paths in line with framework version 3 you shou
 `\SilverStripe\Assets\Flysystem\FlysystemAssetStore.legacy_filenames` config to true.
 Note that this will not allow you to utilise certain file versioning features in 4.0.
 
-	:::yaml
+
+```yaml
+
 	\SilverStripe\Assets\Flysystem\FlysystemAssetStore:
 		legacy_filenames: true
+```
 
 ## Loading content into `DBFile`
 
@@ -48,9 +51,8 @@ A file can be written to the backend from a file which exists on the local files
 within the assets folder).
 
 For example, to load a temporary file into a DataObject you could use the below:
+```php
 
-
-	:::php
 	<?
 	class Banner extends DataObject {
 		private static $db = array(
@@ -61,7 +63,7 @@ For example, to load a temporary file into a DataObject you could use the below:
 	// Image could be assigned in other parts of the code using the below
 	$banner = new Banner();
 	$banner->Image->setFromLocalFile($tempfile['path'], 'uploads/banner-file.jpg');
-
+```
 
 When uploading a file it's normally necessary to give the file a useful name and directory, otherwise the
 asset storage backend will choose one for you.

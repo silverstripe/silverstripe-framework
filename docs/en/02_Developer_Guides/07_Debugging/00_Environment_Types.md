@@ -9,14 +9,17 @@ and behaviors. The environment is managed either through a [YML configuration fi
 
 The definition of setting an environment type in a `mysite/_config/app.yml` looks like
 
-	:::yml
+
+```yml
+
 	SilverStripe\Control\Director:
 	  environment_type: 'dev'
+```
 
 The definition of setting an environment type in a `.env` file looks like
-
+```
 	SS_ENVIRONMENT_TYPE="dev"
-
+```
 The three environment types you can set are `dev`, `test` and `live`.
 
 ### Dev
@@ -38,13 +41,16 @@ Test mode is designed for staging environments or other private collaboration si
 In this mode error messages are hidden from the user and SilverStripe includes [BasicAuth](api:SilverStripe\Security\BasicAuth) integration if you 
 want to password protect the site. You can enable that by adding this to your `mysite/_config/app.yml` file:
 
-	:::yml
+
+```yml
+
 	---
 	Only:
 	  environment: 'test'
 	---
 	SilverStripe\Security\BasicAuth:
 	  entire_site_protected: true
+```
 
 ### Live Mode
 
@@ -60,6 +66,7 @@ Live sites should always run in live mode. You should not run production website
 You can check for the current environment type in [config files](../configuration) through the `environment` variant.
 
 **mysite/_config/app.yml**
+```yml
 	---
 	Only:
 	  environment: 'live'
@@ -72,11 +79,11 @@ You can check for the current environment type in [config files](../configuratio
 	---
 	MyClass:
 		myvar: test_value
-
+```
 Checking for what environment you're running in can also be done in PHP. Your application code may disable or enable 
-certain functionality depending on the environment type. 
+certain functionality depending on the environment type.
+```php
 
-	:::php
 	if (Director::isLive()) {
 		// is in live
 	} elseif (Director::isTest()) {
@@ -84,4 +91,6 @@ certain functionality depending on the environment type.
 	} elseif (Director::isDev()) {
 		// is in dev mode
 	}
+```
+
 

@@ -4,18 +4,20 @@ title: A custom CSVBulkLoader instance
 
 A an implementation of a custom `CSVBulkLoader` loader. In this example. we're provided with a unique CSV file 
 containing a list of football players and the team they play for. The file we have is in the format like below.
-
+```
 	"SpielerNummer", "Name", "Geburtsdatum", "Gruppe"
 	11, "John Doe", 1982-05-12,"FC Bayern"
 	12, "Jane Johnson", 1982-05-12,"FC Bayern"
 	13, "Jimmy Dole",,"Schalke 04"
-
+```
 This data needs to be imported into our application. For this, we have two `DataObjects` setup. `Player` contains 
 information about the individual player and a relation set up for managing the `Team`. 
 
  **mysite/code/Player.php**.
 
-	:::php
+
+```php
+
 	<?php
 
 	class Player extends DataObject {
@@ -31,10 +33,13 @@ information about the individual player and a relation set up for managing the `
 	      'Team' => 'FootballTeam'
 	   );
 	}
+```
 
 **mysite/code/FootballTeam.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class FootballTeam extends DataObject {
@@ -47,6 +52,7 @@ information about the individual player and a relation set up for managing the `
 	      'Players' => 'Player'
 	   );
 	}
+```
 
 Now going back to look at the CSV, we can see that what we're provided with does not match what our data model looks 
 like, so we have to create a sub class of `CsvBulkLoader` to handle the unique file. Things we need to consider with
@@ -62,7 +68,9 @@ Our final import looks like this.
 
 **mysite/code/PlayerCsvBulkLoader.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class PlayerCsvBulkLoader extends CsvBulkLoader {
@@ -96,6 +104,7 @@ Our final import looks like this.
 	      return FootballTeam::get()->filter('Title', $val)->First();
 	   }
 	}
+```
 
 ## Related
 

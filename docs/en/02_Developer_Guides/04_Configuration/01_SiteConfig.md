@@ -10,23 +10,28 @@ throughout the site. Out of the box this includes selecting the current site the
 
 `SiteConfig` options can be accessed from any template by using the $SiteConfig variable.
 
-	:::ss
+
+```ss
+
 	$SiteConfig.Title 
 	$SiteConfig.Tagline
 	
 	<% with $SiteConfig %>
 		$Title $AnotherField
 	<% end_with %>
+```
 
 To access variables in the PHP:
 
-	:::php
+
+```php
+
 	$config = SiteConfig::current_site_config(); 
 	
 	echo $config->Title;
 
 	// returns "Website Name"
-
+```
 
 ## Extending SiteConfig
 
@@ -34,7 +39,9 @@ To extend the options available in the panel, define your own fields via a [Data
 
 **mysite/code/extensions/CustomSiteConfig.php**
 
-	:::php
+
+```php
+
 	<?php
 	
 	class CustomSiteConfig extends DataExtension {
@@ -49,15 +56,19 @@ To extend the options available in the panel, define your own fields via a [Data
 			);
 		}
 	}
+```
 
 Then activate the extension.
 
 **mysite/_config/app.yml**
 
-	:::yml
+
+```yml
+
 	Silverstripe\SiteConfig\SiteConfig:
 	  extensions:
 	    - CustomSiteConfig
+```
 
 <div class="notice" markdown="1">
 After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.

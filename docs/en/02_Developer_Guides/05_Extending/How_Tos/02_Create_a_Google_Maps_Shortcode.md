@@ -4,16 +4,19 @@ title: How to Create a Google Maps Shortcode
 
 To demonstrate how easy it is to build custom shortcodes, we'll build one to display a Google Map based on a provided 
 address. We want our CMS authors to be able to embed the map using the following code:
-	
-	:::php
+
+
+```php
+
 	[googlemap,width=500,height=300]97-99 Courtenay Place, Wellington, New Zealand[/googlemap]
+```
 
 So we've got the address as "content" of our new `googlemap` shortcode tags, plus some `width` and `height` arguments. 
 We'll add defaults to those in our shortcode parser so they're optional.
 
 **mysite/_config.php**
 
-	:::php
+```php	
 	ShortcodeParser::get('default')->register('googlemap', function($arguments, $address, $parser, $shortcode) {
 		$iframeUrl = sprintf(
 			'http://maps.google.com/maps?q=%s&amp;hnear=%s&amp;ie=UTF8&hq=&amp;t=m&amp;z=14&amp;output=embed',
@@ -31,3 +34,4 @@ We'll add defaults to those in our shortcode parser so they're optional.
 			$iframeUrl
 		);
 	});
+```

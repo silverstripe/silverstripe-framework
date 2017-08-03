@@ -20,11 +20,14 @@ First we'll need a custom icon. For this purpose SilverStripe uses 16x16
 black-and-transparent PNG graphics. In this case we'll place the icon in
 `mysite/images`, but you are free to use any location.
 
-	:::php
+
+```php
+
 	class ProductAdmin extends ModelAdmin {
 		// ...
 		private static $menu_icon = 'mysite/images/product-icon.png';
 	}
+```
 
 ### Defining a Custom Title
 
@@ -32,11 +35,14 @@ The title of menu entries is configured through the `$menu_title` static.
 If its not defined, the CMS falls back to using the class name of the
 controller, removing the "Admin" bit at the end.
 
-	:::php
+
+```php
+
 	class ProductAdmin extends ModelAdmin {
 		// ...
 		private static $menu_title = 'My Custom Admin';
 	}
+```
 
 In order to localize the menu title in different languages, use the
 `<classname>.MENUTITLE` entity name, which is automatically created when running
@@ -54,7 +60,9 @@ Google to the menu.
 First, we need to define a [LeftAndMainExtension](api:SilverStripe\Admin\LeftAndMainExtension) which will contain our
 button configuration.
 
-	:::php
+
+```php
+
 	<?php
 
 	class CustomLeftAndMain extends LeftAndMainExtension {
@@ -82,14 +90,17 @@ button configuration.
 			CMSMenu::add_link($id, $title, $link, $priority, $attributes);
 		}
 	}
+```
 
 To have the link appear, make sure you add the extension to the `LeftAndMain`
 class. For more information about configuring extensions see the
 [extensions reference](/developer_guides/extending/extensions).
 
-	:::php
-	LeftAndMain::add_extension('CustomLeftAndMain')
 
+```php
+
+	LeftAndMain::add_extension('CustomLeftAndMain')
+```
 
 ## Related
 

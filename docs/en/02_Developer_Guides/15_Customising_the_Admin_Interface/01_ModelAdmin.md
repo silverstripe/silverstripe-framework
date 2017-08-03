@@ -19,7 +19,9 @@ a category.
 
 **mysite/code/Product.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Product extends DataObject {
@@ -34,10 +36,13 @@ a category.
 			'Category' => 'Category'
 		);
 	}
+```
 
 **mysite/code/Category.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Category extends DataObject {
@@ -50,6 +55,7 @@ a category.
 			'Products' => 'Product'
 		);
 	}
+```
 
 To create your own `ModelAdmin`, simply extend the base class, and edit the `$managed_models` property with the list of
 DataObject's you want to scaffold an interface for. The class can manage multiple models in parallel, if required.
@@ -58,7 +64,9 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 **mysite/code/MyAdmin.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -72,6 +80,7 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 		private static $menu_title = 'My Product Admin';
 	}
+```
 
 This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
 users will be able to upload and manage `Product` and `Category` instances through http://yoursite.com/admin/products.
@@ -96,7 +105,9 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 
 **mysite/code/Category.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Category extends DataObject {
@@ -116,6 +127,7 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 		public function canCreate($member = null) {
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
 		}
+```
 
 ## Searching Records
 
@@ -129,7 +141,9 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 **mysite/code/Product.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Product extends DataObject {
@@ -139,6 +153,7 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 	      'ProductCode'
 	   );
 	}
+```
 
 <div class="hint" markdown="1">
 [SearchContext](../search/searchcontext) documentation has more information on providing the search functionality.
@@ -152,7 +167,9 @@ model class, where you can add or remove columns. To change the title, use [Data
 
 **mysite/code/Product.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class Product extends DataObject {
@@ -166,6 +183,7 @@ model class, where you can add or remove columns. To change the title, use [Data
 	      'Price'
 	   );
 	}
+```
 
 The results list are retrieved from [SearchContext::getResults()](api:SilverStripe\ORM\Search\SearchContext::getResults()), based on the parameters passed through the search
 form. If no search parameters are given, the results will show every record. Results are a [DataList](api:SilverStripe\ORM\DataList) instance, so
@@ -175,7 +193,9 @@ For example, we might want to exclude all products without prices in our sample 
 
 **mysite/code/MyAdmin.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -191,13 +211,16 @@ For example, we might want to exclude all products without prices in our sample 
 			return $list;
 		}
 	}
+```
 
 You can also customize the search behavior directly on your `ModelAdmin` instance. For example, we might want to have a
 checkbox which limits search results to expensive products (over $100).
 
 **mysite/code/MyAdmin.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -224,13 +247,16 @@ checkbox which limits search results to expensive products (over $100).
 			return $list;
 		}
 	}
+```
 
 To alter how the results are displayed (via [GridField](api:SilverStripe\Forms\GridField\GridField)), you can also overload the `getEditForm()` method. For
 example, to add a new component.
 
 **mysite/code/MyAdmin.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -256,13 +282,16 @@ example, to add a new component.
 			return $form;
 		}
 	}
+```
 
 The above example will add the component to all `GridField`s (of all managed models). Alternatively we can also add it
 to only one specific `GridField`:
 
 **mysite/code/MyAdmin.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -285,6 +314,7 @@ to only one specific `GridField`:
 			return $form;
 		}
 	}
+```
 
 ## Data Import
 
@@ -302,7 +332,9 @@ This is handled through the [GridFieldExportButton](api:SilverStripe\Forms\GridF
 
 To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyAdmin extends ModelAdmin {
@@ -316,7 +348,7 @@ To customize the exported columns, create a new method called `getExportFields` 
 			);
 		}
 	}
-
+```
 
 ## Related Documentation
 

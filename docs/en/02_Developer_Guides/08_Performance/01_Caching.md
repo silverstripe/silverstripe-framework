@@ -31,20 +31,26 @@ but also exposes caches following the PSR-16 interface.
 Cache objects are configured via YAML
 and SilverStripe's [dependency injection](/developer-guides/extending/injector) system. 
 
-    :::yml
+
+```yml
+
     SilverStripe\Core\Injector\Injector:
       Psr\SimpleCache\CacheInterface.myCache:
         factory: SilverStripe\Core\Cache\CacheFactory
         constructor:
           namespace: "myCache"
+```
 
 Cache objects are instantiated through a [CacheFactory](SilverStripe\Core\Cache\CacheFactory),
 which determines which cache adapter is used (see "Adapters" below for details).
 This factory allows us you to globally define an adapter for all cache instances.  
 
-    :::php
+
+```php
+
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+```
 
 Caches are namespaced, which might allow granular clearing of a particular cache without affecting others.
 In our example, the namespace is "myCache", expressed in the service name as
@@ -59,9 +65,12 @@ service doesn't support this. See "Invalidation" for alternative strategies.
 
 Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class interface.
 
-	:::php
+
+```php
+
 	use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+
 
     // create a new item by trying to get it from the cache
     $myValue = $cache->get('myCacheKey');
@@ -73,6 +82,7 @@ Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class inte
     if (!$cache->has('myCacheKey')) {
         // ... item does not exists in the cache
     }
+```
     
 ## Invalidation
 
@@ -80,30 +90,40 @@ Caches can be invalidated in different ways. The easiest is to actively clear th
 entire cache. If the adapter supports namespaced cache clearing,
 this will only affect a subset of cache keys ("myCache" in this example):
 
-    :::php
+
+```php
+
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
     // remove all items in this (namespaced) cache
     $cache->clear();
     
+```
+
 You can also delete a single item based on it's cache key:
 
-    :::php
+
+```php
+
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
     // remove the cache item
     $cache->delete('myCacheKey');
+```
 
 Individual cache items can define a lifetime, after which the cached value is marked as expired:
 
-    :::php
+
+```php
+
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
     // remove the cache item
     $cache->set('myCacheKey', 'myValue', 300); // cache for 300 seconds
+```
 
 If a lifetime isn't defined on the `set()` call, it'll use the adapter default.
 In order to increase the chance of your cache actually being hit,
@@ -112,11 +132,14 @@ You can also set your lifetime to `0`, which means they won't expire.
 Since many adapters don't have a way to actively remove expired caches,
 you need to be careful with resources here (e.g. filesystem space).
 
-    :::yml
+
+```yml
+
     SilverStripe\Core\Injector\Injector:
       Psr\SimpleCache\CacheInterface.cacheblock:
           constructor:
             defaultLifetime: 3600
+```
 
 In most cases, invalidation and expiry should be handled by your cache key.
 For example, including the `LastEdited` value when caching `DataObject` results
@@ -125,13 +148,16 @@ The following example caches a member's group names, and automatically
 creates a new cache key when any group is edited. Depending on the used adapter,
 old cache keys will be garbage collected as the cache fills up.
 
-    :::php
+
+```php
+
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
     // Automatically changes when any group is edited
     $cacheKey = implode(['groupNames', $member->ID, Groups::get()->max('LastEdited')]);
     $cache->set($cacheKey, $member->Groups()->column('Title'));        
+```
 
 If `?flush=1` is requested in the URL, this will trigger a call to `flush()` on
 any classes that implement the [Flushable](/developer_guides/execution_pipeline/flushable/)
@@ -163,7 +189,9 @@ Example: Configure core caches to use [memcached](http://www.danga.com/memcached
 which requires the [memcached PHP extension](http://php.net/memcached),
 and takes a `MemcachedClient` instance as a constructor argument.
 
-    :::yml
+
+```yml
+
     ---
     After:
       - '#corecache'
@@ -177,6 +205,7 @@ and takes a `MemcachedClient` instance as a constructor argument.
         class: 'SilverStripe\Core\Cache\MemcachedCacheFactory'
         constructor:
           client: '%$MemcachedClient
+```
 
 ## Additional Caches
 

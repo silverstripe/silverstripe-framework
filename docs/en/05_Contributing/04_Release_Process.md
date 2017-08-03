@@ -61,7 +61,9 @@ How to deprecate an API:
 
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
-	:::php
+
+```php
+
 	/**
 	 * Returns true if your are in development mode
 	 * @deprecated 4.0 Use {@link Env::is_dev()} instead.
@@ -70,6 +72,7 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 		Deprecation::notice('4.0', 'Use Env::is_dev() instead');
 		return Env::is_dev();
 	}
+```
 
 This change could be committed to a minor release like *3.2.0*, and remains deprecated in all subsequent minor releases
 (e.g. *3.3.0*, *3.4.0*), until a new major release (e.g. *4.0.0*), at which point it gets removed from the codebase. 
@@ -82,9 +85,11 @@ notices are always disabled on both live and test.
 `mysite/_config.php`
 
 
-    :::php
-    Deprecation::set_enabled(false);
 
+```php
+
+    Deprecation::set_enabled(false);
+```
 
 `.env`
 

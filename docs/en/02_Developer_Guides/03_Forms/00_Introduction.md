@@ -14,7 +14,9 @@ See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of c
 
 Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
 
-    :::php
+
+```php
+
     $form = new Form(
         $controller, // the Controller to render this form on 
         $name, // name of the method that returns this form on the controller
@@ -22,6 +24,7 @@ Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
         FieldList $actions, // list of FormAction instances
         $required // optional use of RequiredFields object
     );
+```
 
 In practice, this looks like:
 

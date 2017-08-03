@@ -15,26 +15,30 @@ The [Member](api:SilverStripe\Security\Member) class comes with 2 static methods
 Retrieves the ID (int) of the current logged in member.  Returns *0* if user is not logged in.  Much lighter than the
 next method for testing if you just need to test.
 
-	:::php
+
+```php
+
 	// Is a member logged in?
 	if( Member::currentUserID() ) {
 		// Yes!
 	} else {
 		// No!
 	}
-
+```
 
 **Security::getCurrentUser()**
 
 Returns the full *Member* Object for the current user, returns *null* if user is not logged in.
 
-	:::php
+
+```php
+
 	if( $member = Security::getCurrentUser() ) {
 		// Work with $member
 	} else {
 		// Do non-member stuff
 	}
-
+```
 
 ## Subclassing
 
@@ -45,20 +49,25 @@ This is the least desirable way of extending the [Member](api:SilverStripe\Secur
 
 You can define subclasses of [Member](api:SilverStripe\Security\Member) to add extra fields or functionality to the built-in membership system.
 
-	:::php
+
+```php
+
 	class MyMember extends Member {
 		private static $db = array(
 			"Age" => "Int",
 			"Address" => "Text",
 		);
 	}
-
+```
 
 To ensure that all new members are created using this class, put a call to [Object::useCustomClass()](api:Object::useCustomClass()) in
 (project)/_config.php:
 
-	:::php
+
+```php
+
 	Object::useCustomClass("Member", "MyMember");
+```
 
 Note that if you want to look this class-name up, you can call Object::getCustomClass("Member")
 
@@ -68,7 +77,9 @@ If you overload the built-in public function getCMSFields(), then you can change
 details in the newsletter system.  This function returns a [FieldList](api:SilverStripe\Forms\FieldList) object.  You should generally start by calling
 parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\FieldList) from there.
 
-	:::php
+
+```php
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->insertBefore("HTMLEmail", new TextField("Age"));
@@ -76,7 +87,7 @@ parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\Fie
 		$fields->removeByName("Organisation");
 		return $fields;
 	}
-
+```
 
 ## Extending Member or DataObject?
 
@@ -93,16 +104,21 @@ Using inheritance to add extra behaviour or data fields to a member is limiting,
 class. A better way is to use role extensions to add this behaviour. Add the following to your
 `[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
 
-	:::yml
+
+```yml
+
 	Member:
 	  extensions:
 	    - MyMemberExtension
+```
 
 A role extension is simply a subclass of [DataExtension](api:SilverStripe\ORM\DataExtension) that is designed to be used to add behaviour to [Member](api:SilverStripe\Security\Member). 
 The roles affect the entire class - all members will get the additional behaviour.  However, if you want to restrict
 things, you should add appropriate [Permission::checkMember()](api:SilverStripe\Security\Permission::checkMember()) calls to the role's methods.
 
-	:::php
+
+```php
+
 	class MyMemberExtension extends DataExtension {
 	  /**
 	
@@ -126,6 +142,7 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 	    // You can add any other methods you like, which you can call directly on the member object.
 	  }
 	}
+```
 
 ## Saved User Logins ##
 
@@ -153,7 +170,9 @@ reasonably be expected to be allowed to do.
 E.g.
 
 
-    :::php
+
+```php
+
     class CleanRecordsTask extends BuildTask
     {
         public function run($request)
@@ -166,7 +185,7 @@ E.g.
                 DataRecord::get()->filter('Dirty', true)->removeAll();
             });
         }
-
+```
 
 ## API Documentation
 

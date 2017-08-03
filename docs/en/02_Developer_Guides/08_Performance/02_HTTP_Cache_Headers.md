@@ -17,17 +17,21 @@ headers:
 ## Customizing Cache Headers
 
 ### HTTP::set_cache_age
-	
-	:::php
+```php
+
 	HTTP::set_cache_age(0);
+```
 
 Used to set the max-age component of the cache-control line, in seconds. Set it to 0 to disable caching; the "no-cache" 
 clause in `Cache-Control` and `Pragma` will be included.
 
 ### HTTP::register_modification_date
 
-	:::php
+
+```php
+
 	HTTP::register_modification_date('2014-10-10');
+```
 
 Used to set the modification date to something more recent than the default. [DataObject::__construct](api:SilverStripe\ORM\DataObject::__construct) calls 
 [HTTP::register_modification_date(](api:SilverStripe\Control\HTTP::register_modification_date() whenever a record comes from the database ensuring the newest date is present.

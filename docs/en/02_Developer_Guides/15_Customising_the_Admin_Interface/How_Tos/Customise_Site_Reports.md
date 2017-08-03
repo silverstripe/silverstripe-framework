@@ -32,9 +32,9 @@ Inside the *mysite/code* folder create a file called *CustomSideReport.php*. Ins
 
 The following example will create a report to list every page on the current site.
 
-###CustomSideReport.php 
+###CustomSideReport.php
+```php
 
-	:::php
 	class CustomSideReport_NameOfReport extends SS_Report {
 		
 		// the name of the report
@@ -56,7 +56,8 @@ The following example will create a report to list every page on the current sit
 			return $fields;
 		}
 	}
-	
+```
+
 More useful reports can be created by changing the `DataList` returned in the `sourceRecords` function.
 
 ## Notes

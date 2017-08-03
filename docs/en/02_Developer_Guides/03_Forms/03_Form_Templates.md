@@ -4,15 +4,19 @@ summary: Customize the generated HTML for a FormField or an entire Form.
 # Form Templates
 
 Most markup generated in SilverStripe can be replaced by custom templates. Both [Form](api:SilverStripe\Forms\Form) and [FormField](api:SilverStripe\Forms\FormField) instances
-can be rendered out using custom templates using `setTemplate`. 
+can be rendered out using custom templates using `setTemplate`.
 
-	:::php
+
+```php
+
+
 	$form = new Form(..);
 	$form->setTemplate('MyCustomFormTemplate');
 
 	// or, just a field
 	$field = new TextField(..);
 	$field->setTemplate('MyCustomTextField');
+```
 
 Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **mysite/templates/forms/** or the same directory as the core.
 
@@ -33,7 +37,9 @@ the core template structure. It is recommended to use `setTemplate` and unique t
 
 For [FormField](api:SilverStripe\Forms\FormField) instances, there are several other templates that are used on top of the main `setTemplate`.
 
-	:::php
+
+```php
+
 	$field = new TextField();
 
 	$field->setTemplate('CustomTextField');
@@ -55,6 +61,7 @@ For [FormField](api:SilverStripe\Forms\FormField) instances, there are several o
 	// The difference here is the small field holder template is used when the 
 	// field is embedded within another field. For example, if the field is 
 	// part of a `FieldGroup` or `CompositeField` alongside other fields.
+```
 
 All templates are rendered within the scope of the [FormField](api:SilverStripe\Forms\FormField). To understand more about Scope within Templates as 
 well as the available syntax, see the [Templates](../templates) documentation.

@@ -8,9 +8,12 @@ which a SilverStripe application must have available in order for requests to be
 
 This can be accessed in user code via Injector
 
-    :::php
+
+```php
+
     $kernel = Injector::inst()->get(Kernel::class);
     echo "Current environment: " . $kernel->getEnvironment();
+```
 
 ## Kernel services
 
@@ -35,7 +38,9 @@ As with Config and Injector the Kernel can be nested to safely modify global app
 and subsequently restore state. Unlike those classes, however, there is no `::unnest()`. Instead
 you should call `->activate()` on the kernel instance you would like to unnest to.
 
-    :::php
+
+```php
+
     $oldKernel = Injector::inst()->get(Kernel::class);
     try {
         // Injector::inst() / Config::inst() are automatically updated to the new kernel
@@ -46,7 +51,7 @@ you should call `->activate()` on the kernel instance you would like to unnest t
         // Any changes to config (or other application state) have now been reverted
         $oldKernel->activate();
     }
-
+```
 
 # Application
 
@@ -64,7 +69,9 @@ This class provides basic support for HTTP Middleware, such as [ErrorControlChai
 
 `main.php` contains the default application implementation.
 
-    :::php
+
+```php
+
     <?php
     
     use SilverStripe\Control\HTTPApplication;
@@ -83,7 +90,7 @@ This class provides basic support for HTTP Middleware, such as [ErrorControlChai
     $app->addMiddleware(new ErrorControlChainMiddleware($app));
     $response = $app->handle($request);
     $response->output();
-
+```
 
 Users can customise their own application by coping the above to a file in `mysite/main.php`, and
 updating their `.htaccess` to point to the new file.
@@ -102,7 +109,9 @@ Note: This config must also be duplicated in the below template which provide as
 
 `silverstripe-assets/templates/SilverStripe/Assets/Flysystem/PublicAssetAdapter_HTAccess.ss`:
 
-    :::ss
+
+```ss
+
     <IfModule mod_rewrite.c>
         # ...
         # Non existant files passed to requesthandler
@@ -110,6 +119,7 @@ Note: This config must also be duplicated in the below template which provide as
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteRule .* ../mysite/main.php?url=%1 [QSA]
     </IfModule>
+```
 
 ## Custom application actions
 
@@ -124,20 +134,22 @@ For example, the below will setup a request, session, and current controller,
 but will leave the application in a "ready" state without performing any
 routing.
 
-    :::php
+
+```php
+
     $request = CLIRequestBuilder::createFromEnvironment();
     $kernel = new TestKernel(BASE_PATH);
     $app = new HTTPApplication($kernel);
     $app->execute($request, function (HTTPRequest $request) {
         // Start session and execute
         $request->getSession()->init();
-
+        
         // Set dummy controller
         $controller = Controller::create();
         $controller->setRequest($request);
         $controller->pushCurrent();
         $controller->doInit();
     }, true);
-
+```
 
  

@@ -8,7 +8,8 @@ subclass the base `Controller` class.
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
+
 	<?php
 	
 	class TeamController extends Controller {
@@ -26,6 +27,7 @@ subclass the base `Controller` class.
 			print_r($request->allParams());
 		}
 	}
+```
 
 ## Routing
 
@@ -44,7 +46,8 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 
 **mysite/_config/routes.yml**
 
-	:::yml
+```yml
+
 	---
 	Name: mysiteroutes
 	After: framework/routes#coreroutes
@@ -52,7 +55,7 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 	SilverStripe\Control\Director:
 	  rules:
 	    'teams//$Action/$ID/$Name': 'TeamController'
-
+```
 
 For more information about creating custom routes, see the [Routing](routing) documentation.
 
@@ -74,7 +77,8 @@ Action methods can return one of four main things:
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
+
 	/**
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
@@ -126,6 +130,7 @@ Action methods can return one of four main things:
 
 		return $this->getResponse().
 	}
+```
 
 For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.
 
@@ -153,10 +158,12 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
+
 	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
+```
 
 <div class="info" markdown="1">
 The [Controller::join_links()](api:SilverStripe\Control\Controller::join_links()) is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.

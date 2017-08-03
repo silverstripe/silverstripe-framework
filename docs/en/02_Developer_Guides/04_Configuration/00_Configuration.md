@@ -27,7 +27,9 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 **mysite/code/MyClass.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyClass extends Page {
@@ -44,18 +46,23 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 		// ..
 	}
+```
 
 ## Accessing and Setting Configuration Properties
 
 This can be done by calling the static method [Config::inst()](api:SilverStripe\Core\Config\Config::inst()), like so:
 
-	:::php
+
+```php
+
 	$config = Config::inst()->get('MyClass', 'property');
+```
 
 Or through the `config()` object on the class.
-	
+```php
 	$config = $this->config()->get('property')';
-	
+```
+
 Note that by default `Config::inst()` returns only an immutable version of config. Use `Config::modify()`
 if it's necessary to alter class config. This is generally undesirable in most applications, as modification
 of the config can immediately have performance implications, so this should be used sparingly, or
@@ -77,17 +84,22 @@ To set those configuration options on our previously defined class we can define
 
 **mysite/_config/app.yml**
 
-	:::yml
+
+```yml
+
 	MyClass:
 	  option_one: false
 	  option_two:
 	    - Foo
 	    - Bar
 	    - Baz
+```
 
 To use those variables in your application code:
 
-	:::php
+
+```php
+
 	$me = new MyClass();
 
 	echo $me->config()->option_one;
@@ -114,6 +126,7 @@ To use those variables in your application code:
 
 	echo implode(', ', MyClass::config()->option_one);
 	// returns 'Qux'
+```
 
 <div class="notice" markdown="1">
 There is no way currently to restrict read or write access to any configuration property, or influence/check the values 
@@ -188,9 +201,9 @@ The name of the files within the applications `_config` directly are arbitrary. 
 `email.yml` if you want. For add-on's and modules, it is recommended that you name them with `<module_name>.yml`.
 </div>
 
-The structure of each YAML file is a series of headers and values separated by YAML document separators. 
+The structure of each YAML file is a series of headers and values separated by YAML document separators.
+```yml
 
-	:::yml
 	---
 	Name: adminroutes
 	After:
@@ -201,6 +214,7 @@ The structure of each YAML file is a series of headers and values separated by Y
 	  rules:
 	    'admin': 'AdminRootController'
 	---
+```
 
 <div class="info">
 If there is only one set of values the header can be omitted.
@@ -237,7 +251,9 @@ before (lower priority than) or after (higher priority than) some other value se
 To specify these rules you add an "After" and/or "Before" key to the relevant header section. The value for these
 keys is a list of reference paths to other value sections. A basic example:
 
-	:::yml
+
+```yml
+
 	---
 	Name: adminroutes
 	After:
@@ -248,6 +264,7 @@ keys is a list of reference paths to other value sections. A basic example:
 	  rules:
 	    'admin': 'AdminRootController'
 	---
+```
 
 You do not have to specify all portions of a reference path. Any portion may be replaced with a wildcard "\*", or left
 out all together. Either has the same affect - that portion will be ignored when checking a value section's reference
@@ -300,7 +317,9 @@ You then list any of the following rules as sub-keys, with informational values 
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
-	:::yml
+
+```yml
+
 	---
 	Only:
 	  moduleexists: 'MyFineModule'
@@ -314,17 +333,20 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 	MyClass:
 	  property: 'bar'
 	---
+```
 
 Multiple conditions of the same type can be declared via array format
 
 
-    :::yaml
+
+```yaml
+
 	---
 	Only:
 	  moduleexists:
 	    - 'silverstripe/blog'
 	    - 'silverstripe/lumberjack'
-
+```
 
 <div class="alert" markdown="1">
 When you have more than one rule for a nested fragment, they're joined like 

@@ -15,7 +15,8 @@ SilverStripe supports a number of relationship types and each relationship type 
 A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in the example below this would be 
 "TeamID" on the "Player"-table.
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -35,13 +36,15 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 	    "Team" => "Team",
 	  );
 	}
+```
 
 This defines a relationship called `Team` which links to a `Team` class. The `ORM` handles navigating the relationship
 and provides a short syntax for accessing the related object.
 
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
 
-	:::php
+```php
+
 	$player = Player::get()->byId(1);
 
 	$team = $player->Team();
@@ -49,15 +52,18 @@ At the database level, the `has_one` creates a `TeamID` field on `Player`. A `ha
 
 	echo $player->Team()->Title;
 	// returns the 'Title' column on the 'Team' or `getTitle` if it exists.
+```
 
 The relationship can also be navigated in [templates](../templates).
 	
-	:::ss
+```ss
+
 	<% with $Player %>
 		<% if $Team %>
 			Plays for $Team.Title
 		<% end_if %>
 	<% end_with %>
+```
 
 ## Polymorphic has_one
 
@@ -70,7 +76,8 @@ with the ID column identifies the object.
 To specify that a has_one relation is polymorphic set the type to 'DataObject'.
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
-	::php
+```php
+
 
 	class Player extends DataObject {
 		private static $has_many = array(
@@ -92,6 +99,7 @@ Ideally, the associated has_many (or belongs_to) should be specified with dot no
 			"FanOf" => "DataObject"
 		);
 	}
+```
 
 <div class="warning" markdown='1'>
 Note: The use of polymorphic relationships can affect query performance, especially
@@ -110,7 +118,8 @@ Please specify a $has_one-relationship on the related child-class as well, in or
 available on both ends.
 </div>
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -130,11 +139,13 @@ available on both ends.
 	    "Team" => "Team",
 	  );
 	}
+```
 
 Much like the `has_one` relationship, `has_many` can be navigated through the `ORM` as well. The only difference being
 you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rather than the object.
 
-	:::php
+```php
+
 	$team = Team::get()->first();
 
 	echo $team->Players();
@@ -146,10 +157,12 @@ you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rath
 	foreach($team->Players() as $player) {
 		echo $player->FirstName;
 	}
+```
 
 To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
-	:::php
+```php
+
 	<?php
 
 	class Person extends DataObject {
@@ -167,7 +180,7 @@ To specify multiple `$has_many` to the same object you can use dot notation to d
 			"Cleaner" => "Person"
 		);
 	}
-
+```
 
 Multiple `$has_one` relationships are okay if they aren't linking to the same object type. Otherwise, they have to be
 named.
@@ -193,7 +206,8 @@ declaring the `$belongs_to`.
 Similarly with `$has_many`, dot notation can be used to explicitly specify the `$has_one` which refers to this relation. 
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -209,7 +223,7 @@ This is not mandatory unless the relationship would be otherwise ambiguous.
 			'Team' => 'Team.Coach'
 		);
 	}
-
+```
 
 ## many_many
 
@@ -226,12 +240,13 @@ Much like the `has_one` relationship, `many_many` can be navigated through the `
 The only difference being you will get an instance of [ManyManyList](api:SilverStripe\ORM\ManyManyList) or
 [ManyManyThroughList](api:SilverStripe\ORM\ManyManyThroughList) rather than the object.
 
-	:::php
+```php
+
 	$team = Team::get()->byId(1);
 
 	$supporters = $team->Supporters();
 	// returns a 'ManyManyList' instance.
-
+```
 
 ### Automatic many_many table
 
@@ -243,7 +258,8 @@ Extra fields on the mapping table can be created by declaring a `many_many_extra
 config to add extra columns.
 
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -263,7 +279,7 @@ config to add extra columns.
 	    "Supports" => "Team",
 	  ];
 	}
-
+```
 
 ### many_many through relationship joined on a separate DataObject
 
@@ -287,7 +303,8 @@ or child record.
 
 The syntax for `belongs_many_many` is unchanged.
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -316,15 +333,17 @@ The syntax for `belongs_many_many` is unchanged.
 	    'Supporter' => 'Supporter'
 	  ];
 	}
+```
 
 In order to filter on the join table during queries, you can use the class name of the joining table
 for any sql conditions.
 
 
-	:::php
+```php
+
 	$team = Team::get()->byId(1);
 	$supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
-
+```
 
 Note: ->filter() currently does not support joined fields natively due to the fact that the
 query for the join table is isolated from the outer query controlled by DataList.
@@ -335,13 +354,14 @@ query for the join table is isolated from the outer query controlled by DataList
 The relationship can also be navigated in [templates](../templates).
 The joined record can be accessed via `Join` or `TeamSupporter` property (many_many through only)
 	
-	:::ss
+```ss
+
 	<% with $Supporter %>
 		<% loop $Supports %>
 			Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
 		<% end_if %>
 	<% end_with %>
-
+```
 
 You can also use `$Join` in place of the join class alias (`$TeamSupporter`), if your template
 is class-agnostic and doesn't know the type of the join table. 
@@ -355,7 +375,8 @@ To specify multiple $many_manys between the same classes, specify use the dot no
 distinguish them like below:
 
 
-	:::php
+```php
+
 	<?php
 
 	class Category extends DataObject {
@@ -373,7 +394,7 @@ distinguish them like below:
 			'FeaturedInCategories' => 'Category.FeaturedProducts'
 		);
 	}
-
+```
 
 If you're unsure about whether an object should take on `many_many` or `belongs_many_many`,
 the best way to think about it is that the object where the relationship will be edited
@@ -387,7 +408,8 @@ Adding new items to a relations works the same, regardless if you're editing a *
 encapsulated by [HasManyList](api:SilverStripe\ORM\HasManyList) and [ManyManyList](api:SilverStripe\ORM\ManyManyList), both of which provide very similar APIs, e.g. an `add()`
 and `remove()` method.
 
-	:::php
+```php
+
 	$team = Team::get()->byId(1);
 
 	// create a new supporter
@@ -397,7 +419,7 @@ and `remove()` method.
 
 	// add the supporter.
 	$team->Supporters()->add($supporter);
-
+```
 
 ## Custom Relations
 
@@ -406,7 +428,8 @@ You can use the ORM to get a filtered result list without writing any SQL. For e
 
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
 
-	:::php
+```php
+
 	<?php
 
 	class Team extends DataObject {
@@ -419,6 +442,7 @@ See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more
 	  	return $this->Players()->filter('Status', 'Active');
 	  }
 	}
+```
 
 <div class="notice" markdown="1">
 Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the filtered 

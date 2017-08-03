@@ -9,7 +9,9 @@ First, we write the code to query the API feed.
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	public function getWellingtonWeather() {
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
@@ -38,18 +40,22 @@ First, we write the code to query the API feed.
 
 		return $output;
 	}
+```
 
 This will provide our `Page` template with a new `WellingtonWeather` variable (an [ArrayList](api:SilverStripe\ORM\ArrayList)). Each item has a 
 single field `Description`.
 
 **mysite/templates/Page.ss**
 
-	:::ss
+
+```ss
+
 	<% if WellingtonWeather %>
 	<% loop WellingtonWeather %>
 		$Description
 	<% end_loop %>
 	<% end_if %>
+```
 
 ## Related
 

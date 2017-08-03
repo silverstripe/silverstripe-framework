@@ -21,34 +21,49 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 ## Adding a field to a tab
 
-	:::php
+
+```php
+
 	$fields->addFieldToTab('Root.Main', new TextField(..));
+```
 
 ## Removing a field from a tab
-	
-	:::php
+
+
+```php
+
 	$fields->removeFieldFromTab('Root.Main', 'Content');
+```
 
 ## Creating a new tab
 
-	:::php
+
+```php
+
 	$fields->addFieldToTab('Root.MyNewTab', new TextField(..));
+```
 
 ## Moving a field between tabs
 
-	:::php
+
+```php
+
 	$content = $fields->dataFieldByName('Content');
 
 	$fields->removeFieldFromTab('Root.Main', 'Content');
 	$fields->addFieldToTab('Root.MyContent', $content);
+```
 
 ## Add multiple fields at once
 
-	:::php
+
+```php
+
 	$fields->addFieldsToTab('Root.Content', array(
 		TextField::create('Name'),
 		TextField::create('Email')
 	));
+```
 
 ## API Documentation
 

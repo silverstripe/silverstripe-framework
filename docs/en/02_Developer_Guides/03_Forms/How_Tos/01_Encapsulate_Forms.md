@@ -9,7 +9,9 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 	
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class PageController extends ContentController {
@@ -59,13 +61,16 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 		..
 	}
+```
 
 Now that is a bit of code to include on our controller and generally makes the file look much more complex than it 
 should be. Good practice would be to move this to a subclass and create a new instance for your particular controller.
 
 **mysite/code/forms/SearchForm.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class SearchForm extends Form {
@@ -120,12 +125,15 @@ should be. Good practice would be to move this to a subclass and create a new in
 			$this->loadDataFrom($_REQUEST);
 		}
 	}
+```
 
 Our controller will now just have to create a new instance of this form object. Keeping the file light and easy to read.
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	<?php
 
 	class PageController extends ContentController {
@@ -138,6 +146,7 @@ Our controller will now just have to create a new instance of this form object. 
 			return new SearchForm($this, 'SearchForm');
 		}
 	}
+```
 
 Form actions can also be defined within your `Form` subclass to keep the entire form logic encapsulated.
 

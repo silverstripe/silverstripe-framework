@@ -112,7 +112,7 @@ footer and navigation will remain the same and we don't want to replicate this w
 `$Layout` function allows us to define the child template area which can be overridden.
 
 **mysite/templates/Page.ss**
-
+```ss
 	<html>
 	<head>
 		..
@@ -126,19 +126,19 @@ footer and navigation will remain the same and we don't want to replicate this w
 
 		<% include Footer %>
 	</body>
-
+``
 **mysite/templates/Layout/Page.ss**
-
+```ss
 	<p>You are on a $Title page</p>
 
 	$Content
-
+```
 **mysite/templates/Layout/HomePage.ss**
-
+```ss
 	<h1>This is the homepage!</h1>
 
 	<blink>Hi!</blink>
-
+```
 
 If your classes have in a namespace, the Layout folder will be a found inside of the appropriate namespace folder.
 

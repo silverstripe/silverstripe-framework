@@ -50,7 +50,9 @@ Note how the configuration happens in different entwine namespaces
 ("ss.preview" and "ss"), as well as applies to different selectors
 (".cms-preview" and ".cms-container").
 
-	:::js
+
+```js
+
 	(function($) {
 		$.entwine('ss.preview', function($){
 			$('.cms-preview').entwine({
@@ -72,14 +74,18 @@ Note how the configuration happens in different entwine namespaces
 			});
 		});
 	}(jQuery));
+```
 
 Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'
 to the `LeftAndMain.extra_requirements_javascript` [configuration value](../configuration)
 
-	:::yml
+
+```yml
+
 	LeftAndMain:
 	  extra_requirements_javascript:
 	    - mysite/javascript/MyLeftAndMain.Preview.js
+```
 
 In order to find out which configuration values are available, the source code
 is your best reference at the moment - have a look in `framework/admin/javascript/src/LeftAndMain.Preview.js`.

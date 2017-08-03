@@ -35,7 +35,9 @@ images are preserved (meaning images are not stretched).
 
 Here are some examples, assuming the `$Image` object has dimensions of 200x100px:
 
-	:::ss
+
+```ss
+
 	// Scaling functions
 	$Image.ScaleWidth(150) // Returns a 150x75px image
 	$Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
@@ -66,11 +68,15 @@ Here are some examples, assuming the `$Image` object has dimensions of 200x100px
 	$Image.FileName // Returns the actual file name including directory path from web root
 	$Image.Link // Returns relative URL path to image
 	$Image.AbsoluteLink // Returns absolute URL path to image
+```
 
 Image methods are chainable. Example:
 
-	:::ss
+
+```ss
+
 	<body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
+```
 
 ### Padded Image Resize
 
@@ -80,10 +86,13 @@ pad any surplus space. You can specify the color of the padding using a hex code
 You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
 png images.
 
-	:::php
+
+```php
+
 	$Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
 	$Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
 	$Image.Pad(80, 80, FFFFFF) // white padding with no transparency
+```
 
 ### Manipulating images in PHP
 
@@ -97,7 +106,9 @@ Please refer to the [ImageManipulation](api:SilverStripe\Assets\ImageManipulatio
 
 You can also create your own functions by decorating the `Image` class.
 
-	:::php
+
+```php
+
 	class ImageExtension extends \SilverStripe\Core\Extension
     {
     
@@ -134,6 +145,7 @@ You can also create your own functions by decorating the `Image` class.
 	SilverStripe\Filesystem\Storage\DBFile:
 	  extensions:
 	    - ImageExtension
+```
 
 ### Form Upload
 
@@ -164,24 +176,30 @@ place. If you expect the images in your asset store to already have
 compression applied and want to serve up the original when no resampling is
 necessary, you can add this to your mysite/config/config.yml file:
 
-	:::yml
+
+```yml
+
 	# Configure resampling for File dataobject
 	File:
 	  force_resample: false
 	# DBFile can be configured independently
 	SilverStripe\Filesystem\Storage\DBFile:
 	  force_resample: false
+```
 
 #### Resampled image quality
 
 To adjust the quality of the generated images when they are resampled, add the
 following to your mysite/config/config.yml file:
 
-	:::yml
+
+```yml
+
        SilverStripe\Core\Injector\Injector:
          SilverStripe\Assets\InterventionBackend:
            properties:
              Quality: 90
+```
 
 ## Changing the manipulation driver to Imagick
 

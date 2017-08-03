@@ -24,7 +24,8 @@ this index is present on the associative entity).
 Indexes are represented on a `DataObject` through the `DataObject::$indexes` array which maps index names to a 
 descriptor. There are several supported notations:
 
-	:::php
+```php
+
 	<?php
 
 	class MyObject extends DataObject {
@@ -38,6 +39,7 @@ descriptor. There are several supported notations:
 			'<index-name>' => ['<column-name>', '<other-column-name>'],
 		];
 	}
+```
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
 we recommend building the index to suite the requirements of your data.
@@ -52,7 +54,8 @@ support the following:
 
 **mysite/code/MyTestObject.php**
 
-	:::php
+```php
+
 	<?php
 
 	class MyTestObject extends DataObject {
@@ -66,6 +69,7 @@ support the following:
 			'MyIndexName' => ['MyField', 'MyOtherField'],
 		];
 	}
+```
 
 ## Complex/Composite Indexes
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 

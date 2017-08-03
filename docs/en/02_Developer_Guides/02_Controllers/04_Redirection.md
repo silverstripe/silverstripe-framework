@@ -8,7 +8,9 @@ HTTP header.
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	$this->redirect('goherenow');
 	// redirect to Page::goherenow(), i.e on the contact-us page this will redirect to /contact-us/goherenow/
 
@@ -20,25 +22,30 @@ HTTP header.
 
 	$this->redirectBack();
 	// go back to the previous page.
+```
 
 ## Status Codes
 
 The `redirect()` method takes an optional HTTP status code, either `301` for permanent redirects, or `302` for 
 temporary redirects (default).
-	
-	:::php
+```php
+
 	$this->redirect('/', 302);
 	// go back to the homepage, don't cache that this page has moved
+```
 
 ## Redirection in URL Handling
 
 Controllers can specify redirections in the `$url_handlers` property rather than defining a method by using the '~'
 operator.
 
-	:::php
+
+```php
+
 	private static $url_handlers = array(
 		'players/john' => '~>coach'
 	);
+```
 
 For more information on `$url_handlers` see the [Routing](routing) documenation.
 

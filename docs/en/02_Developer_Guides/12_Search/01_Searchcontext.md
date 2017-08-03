@@ -18,7 +18,9 @@ The default output of a [SearchContext](api:SilverStripe\ORM\Search\SearchContex
 
 Defining search-able fields on your DataObject.
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -28,6 +30,7 @@ Defining search-able fields on your DataObject.
 	      'ProductCode'
 	   );
 	}
+```
 
 ## Customizing fields and filters
 
@@ -35,7 +38,9 @@ In this example we're defining three attributes on our MyDataObject subclass: `P
 and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDate` should only search for dates
 *after* the search entry (with a `GreaterThanFilter`).
 
-	:::php
+
+```php
+
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -63,6 +68,7 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 			);
 		}
 	}
+```
 
 <div class="notice" markdown="1">
 See the [SearchFilter](../model/searchfilters) documentation for more information about filters to use such as the
@@ -76,7 +82,9 @@ the `$fields` constructor parameter.
 
 ### Generating a search form from the context
 
-	:::php
+
+```php
+
 	<?php
 
 	// ..
@@ -106,6 +114,7 @@ the `$fields` constructor parameter.
 			))->renderWith('Page_results');
 		}
 	}
+```
 
 ### Pagination
 
@@ -114,7 +123,9 @@ For pagination records on multiple pages, you need to wrap the results in a
 in order to read page limit information. It is also passed the current
 `HTTPRequest` object so it can read the current page from a GET var.
 
-	:::php
+
+```php
+
 	public function getResults($searchCriteria = array()) {
 		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
 		$limit = 10;
@@ -132,11 +143,13 @@ in order to read page limit information. It is also passed the current
 		
 		return $records;
 	}
-
+```
 
 notice that if you want to use this getResults function, you need to change the function doSearch for this one:
 
-	:::php
+
+```php
+
 	public function doSearch($data, $form) {
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$results = $this->getResults($data);
@@ -144,7 +157,7 @@ notice that if you want to use this getResults function, you need to change the 
 			'Results' => $results
 		))->renderWith(array('Catalogo_results', 'Page'));
 	}
-
+```
 
 The change is in **$results = $this->getResults($data);**, because you are using a custom getResults function.
 
@@ -160,9 +173,8 @@ to show the results of your custom search you need at least this content in your
 Results.PaginationSummary(4) defines how many pages the search will show in the search results. something like:
 
 **Next   1 2  *3*  4  5 &hellip; 558**  
+```ss
 
-
-	:::ss
 	<% if $Results %>
 		<ul>
 			<% loop $Results %>
@@ -200,7 +212,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 			</p>
 		</div>
 	<% end_if %>
-
+```
 
 ## Available SearchFilters
 

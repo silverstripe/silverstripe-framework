@@ -44,12 +44,15 @@ plugin. See "[How jQuery Works](http://docs.jquery.com/How_jQuery_Works)" for a 
 
 You should write all your custom jQuery code in a closure.
 
-	:::javascript
+
+```javascript
+
 	(function($) {
 		$(document).ready(function(){
 			// your code here.
 		})
 	})(jQuery);
+```
 
 ## jQuery Plugins
 
@@ -70,7 +73,9 @@ development, most importantly:
 Example: A plugin to highlight a collection of elements with a configurable foreground and background colour
 (abbreviated example from [learningjquery.com](http://www.learningjquery.com/2007/10/a-plugin-development-pattern)).
 
-	:::js
+
+```js
+
 	// create closure
 	(function($) {
 	  // plugin definition
@@ -96,11 +101,13 @@ Example: A plugin to highlight a collection of elements with a configurable fore
 	  };
 	// end of closure
 	})(jQuery);
-
+```
 
 Usage:
 
-	:::js
+
+```js
+
 	(function($) {
 	  // Highlight all buttons with default colours
 	  jQuery(':button').highlight();
@@ -111,7 +118,7 @@ Usage:
 	  // Set all further highlight() calls to have a green background
 	  $.fn.hilight.defaults.background = "green";
 	})(jQuery);
-
+```
 
 ## jQuery UI Widgets
 
@@ -130,7 +137,9 @@ See the [official developer guide](http://jqueryui.com/docs/Developer_Guide) and
 
 Example: Highlighter
 
-	:::js
+
+```js
+
 	(function($) {
 	  $.widget("ui.myHighlight", {
 	    getBlink: function () {
@@ -156,11 +165,13 @@ Example: Highlighter
 	    blink: false
 	  };
 	})(jQuery);
-
+```
 
 Usage:
 
-	:::js
+
+```js
+
 	(function($) {
 	  // call with default options
 	  $(':button').myHighlight();
@@ -177,7 +188,7 @@ Usage:
 	  // Get property
 	  $(':button').myHighlight('getBlink');
 	})(jQuery);
-
+```
 
 ### jQuery.Entwine
 
@@ -192,7 +203,9 @@ It is also suited for more complex applications beyond a single-purpose plugin.
 
 Example: Highlighter
 
-	:::js
+
+```js
+
 	(function($) {
 	  $(':button').entwine({
 	    Foreground: 'red',
@@ -203,11 +216,13 @@ Example: Highlighter
 	    }
 	  });
 	})(jQuery);
-
+```
 
 Usage:
 
-	:::js
+
+```js
+
 	(function($) {
 	  // call with default options
 	  $(':button').entwine().highlight();
@@ -218,7 +233,7 @@ Usage:
 	  // get property
 	  $(':button').entwine().getBackground();
 	})(jQuery);
-
+```
 
 This is a deliberately simple example, the strength of jQuery.entwine over simple jQuery plugins lies in its public
 properties, namespacing, as well as its inheritance based on CSS selectors. Please see the [project
@@ -238,13 +253,15 @@ jQuery with a few lines of code.  Your jQuery code will normally end up as a ser
 
 Global properties are evil. They are accessible by other scripts, might be overwritten or misused. A popular case is the `$` shortcut in different libraries: in PrototypeJS it stands for `document.getElementByID()`, in jQuery for `jQuery()`.
 
-	:::js
+
+```js
+
 	// you can't rely on '$' being defined outside of the closure
 	(function($) {
 	  var myPrivateVar; // only available inside the closure
 	  // inside here you can use the 'jQuery' object as '$'
 	})(jQuery);
-
+```
 
 You can run `[jQuery.noConflict()](http://docs.jquery.com/Core/jQuery.noConflict)` to avoid namespace clashes.
 NoConflict mode is enabled by default in the SilverStripe CMS javascript.
@@ -254,12 +271,14 @@ NoConflict mode is enabled by default in the SilverStripe CMS javascript.
 You have to ensure that DOM elements you want to act on are loaded before using them. jQuery provides a wrapper around
 the `window.onload` and `document.ready` events.
 
-	:::js
+
+```js
+
 	// DOM elements might not be available here
 	$(document).ready(function() {
 	  // The DOM is fully loaded here
 	});
-
+```
 
 See [jQuery FAQ: Launching Code on Document
 Ready](http://docs.jquery.com/How_jQuery_Works#Launching_Code_on_Document_Ready).
@@ -273,7 +292,9 @@ Caution: Only applies to certain events, see the [jQuery.on() documentation](htt
 
 Example: Add a 'loading' classname to all pressed buttons
 
-	:::js
+
+```js
+
 	// manual binding, only applies to existing elements
 	$('input[[type=submit]]').on('click', function() {
 	  $(this).addClass('loading');
@@ -283,7 +304,7 @@ Example: Add a 'loading' classname to all pressed buttons
 	$('.cms-container').on('click', 'input[[type=submit]]', function() {
 	  $(this).addClass('loading');
 	});
-
+```
 
 ### Assume Element Collections
 
@@ -292,14 +313,16 @@ makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQ
 
 Example: ComplexTableField implements a paginated table with a pop-up for displaying
 
-	:::js
+
+```js
+
 	$('div.ComplexTableField').each(function() {
 	  // This is the over code for the tr elements inside a ComplexTableField.
 	  $(this).find('tr').hover(
 	    // ...
 	  );
 	});
-
+```
 
 ### Use plain HTML and jQuery.data() to store data
 
@@ -310,18 +333,22 @@ Example: Simple form change tracking to prevent submission of unchanged data
 
 Through CSS properties
 
-	:::js
+
+```js
+
 	$('form :input').bind('change', function(e) {
 	  $(this.form).addClass('isChanged');
 	});
 	$('form').bind('submit', function(e) {
 	  if($(this).hasClass('isChanged')) return false;
 	});
-
+```
 
 Through jQuery.data()
 
-	:::js
+
+```js
+
 	$('form :input').bind('change', function(e) {
 	  $(this.form).data('isChanged', true);
 	});
@@ -329,7 +356,7 @@ Through jQuery.data()
 	  alert($(this).data('isChanged'));
 	  if($(this).data('isChanged')) return false;
 	});
-
+```
 
 See [interactive example on jsbin.com](http://jsbin.com/opuva)
 
@@ -339,11 +366,16 @@ rendering a form element through the SilverStripe templating engine.
 
 Example: Restricted numeric value field
 
-	:::ss
+
+```ss
+
 	<input type="text" class="restricted-text {min:4,max:10}" />
+```
 
 
-	:::js
+
+```js
+
 	$('.restricted-text').bind('change', function(e) {
 	  if(
 	    e.target.value < $(this).metadata().min
@@ -353,7 +385,7 @@ Example: Restricted numeric value field
 	    return false;
 	  }
 	});
-
+```
 
 See [interactive example on jsbin.com](http://jsbin.com/axafa)
 
@@ -375,17 +407,21 @@ Example: Autocomplete input field loading page matches through AJAX
 
 Template:
 
-	:::ss
+
+```ss
+
 	<ul>
 	<% loop $Results %>
 	  <li id="Result-$ID">$Title</li>
 	<% end_loop %>
 	</ul>
-
+```
 
 PHP:
 
-	:::php
+
+```php
+
 	class MyController {
 	  public function autocomplete($request) {
 	    $results = Page::get()->filter("Title", $request->getVar('title'));
@@ -401,11 +437,13 @@ PHP:
 	    ))->renderWith('AutoComplete');
 	  }
 	}
-
+```
 
 HTML
 
-	:::ss
+
+```ss
+
 	<form action"#">
 	  <div class="autocomplete {url:'MyController/autocomplete'}">
 	    <input type="text" name="title" />
@@ -413,11 +451,13 @@ HTML
 	  </div>
 	  <input type="submit" value="action_autocomplete" />
 	</form>
-
+```
 
 JavaScript:
 
-	:::js
+
+```js
+
 	$('.autocomplete input').on('change', function() {
 	  var resultsEl = $(this).siblings('.results');
 	  resultsEl.load(
@@ -435,7 +475,7 @@ JavaScript:
 	    }
 	  );
 	});
-
+```
 
 Although they are the minority of cases, there are times when a simple HTML fragment isn't enough.  For example, if you
 have server side code that needs to trigger the update of a couple of elements in the CMS left-hand tree, it would be
@@ -456,7 +496,9 @@ events](http://docs.jquery.com/Namespaced_Events).
 
 Example: Trigger custom 'validationfailed' event on form submission for each empty element
 
-	:::js
+
+```js
+
 	$('form').bind('submit', function(e) {
 	  // $(this) refers to form
 	  $(this).find(':input').each(function() {
@@ -471,7 +513,7 @@ Example: Trigger custom 'validationfailed' event on form submission for each emp
 	  // $(this) refers to input field
 	  alert($(this).attr('name'));
 	});
-
+```
 
 See [interactive example on jsbin.com](http://jsbin.com/ipeca).
 
@@ -513,7 +555,9 @@ JSDoc-toolkit is a command line utility, see [usage](http://code.google.com/p/js
 
 Example: jQuery.entwine
 
-	:::js
+
+```js
+
 	/**
 
 	 * Available Custom Events:
@@ -560,7 +604,7 @@ Example: jQuery.entwine
 	    }
 	  };
 	]]);
-
+```
 
 ### Unit Testing
 
@@ -572,16 +616,18 @@ start with JSpec, as it provides a much more powerful testing framework.
 
 Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)):
 
-	:::js
+
+```js
+
 	test("a basic test example", function() {
 	  ok( true, "this test is fine" );
 	  var value = "hello";
 	  equals( "hello", value, "We expect value to be hello" );
 	});
-
+```
 
 Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionmedia.github.com/jspec/))
-
+```
 	describe 'ShoppingCart'
 	  before_each
 	    cart = new ShoppingCart
@@ -594,7 +640,7 @@ Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionme
 	    end
 	  end
 	end
-
+```
 ## Related
 
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)

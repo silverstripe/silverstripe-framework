@@ -22,7 +22,9 @@ web pages need to link to the URL to notify users that the RSS feed is available
 
 An outline of step one looks like:
 
-	:::php
+
+```php
+
 	$feed = new RSSFeed(
 		$list,
 		$link,
@@ -36,12 +38,14 @@ An outline of step one looks like:
 	);
 
 	$feed->outputToBrowser();
+```
 
 To achieve step two include the following code where ever you want to include the `<link>` tag to the RSS Feed. This
 will normally go in your `Controllers` `init` method.
-	
-	:::php
+```php
+
 	RSSFeed::linkToFeed($link, $title);
+```
 
 ## Examples
 
@@ -52,7 +56,9 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 	<?php
 	
 	..
@@ -84,6 +90,7 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 			return Page::get()->sort("LastEdited", "DESC")->limit(10);
 		}
 	}
+```
 
 ### Rendering DataObjects in a RSSFeed
 
@@ -97,7 +104,9 @@ If the items are all displayed on a single page you may simply hard code the lin
 Take an example, we want to create an RSS feed of all the `Players` objects in our site. We make sure the `AbsoluteLink`
 method is defined and returns a string to the full website URL.
 
-	:::php
+
+```php
+
 	<?php
 
 	class Player extends DataObject {
@@ -112,10 +121,13 @@ method is defined and returns a string to the full website URL.
 			);
 		}
 	}
+```
 
 Then in our controller, we add a new action which returns a the XML list of `Players`.
 
-	:::php
+
+```php
+
 	<?php
 
 	class PageController extends ContentController {
@@ -140,6 +152,7 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 			return $rss->outputToBrowser();
 		}
 	}
+```
 
 ### Customizing the RSS Feed template
 
@@ -150,7 +163,9 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 **mysite/templates/PlayersRss.ss**
 
-	:::xml
+
+```xml
+
 	<?xml version="1.0"?>
 	<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
 		<channel>
@@ -167,12 +182,15 @@ Say from that last example we want to include the Players Team in the XML feed w
 			<% end_loop %>
 		</channel>
 	</rss>
+```
 
 `setTemplate` can then be used to tell RSSFeed to use that new template. 
 
 **mysite/code/Page.php**
 
-	:::php
+
+```php
+
 
 	public function players() {
 		$rss = new RSSFeed(
@@ -185,6 +203,7 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 		return $rss->outputToBrowser();
 	}
+```
 
 <div class="warning">
 As we've added a new template (PlayersRss.ss) make sure you clear your SilverStripe cache.
