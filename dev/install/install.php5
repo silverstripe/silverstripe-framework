@@ -132,17 +132,23 @@ if(isset($_REQUEST['db'])) {
 			"database" => $_REQUEST['db'][$type]['database'],
 		);
 
+		// Set SSL parameters if they exist
 		if(
 			defined('SS_DATABASE_SSL_KEY') && 
-			defined('SS_DATABASE_SSL_CERT') &&
-			defined('SS_DATABASE_SSL_CA')
+			defined('SS_DATABASE_SSL_CERT')
 			) {
 
 			$databaseConfig['ssl_key'] = SS_DATABASE_SSL_KEY;
 			$databaseConfig['ssl_cert'] = SS_DATABASE_SSL_CERT;
-			$databaseConfig['ssl_ca'] = SS_DATABASE_SSL_CA;
-			$databaseConfig['ssl_cipher'] = defined('SS_DATABASE_SSL_CIPHER') ? SS_DATABASE_SSL_CIPHER : 'DHE-RSA-AES256-SHA';
 
+		}
+
+		if(defined('SS_DATABASE_SSL_CA')) {
+			$databaseConfig['ssl_ca'] = SS_DATABASE_SSL_CA;
+		}
+
+		if(defined('SS_DATABASE_SSL_CIPHER')) {
+			$databaseConfig['ssl_cipher'] = SS_DATABASE_SSL_CIPHER;
 		}
 
 

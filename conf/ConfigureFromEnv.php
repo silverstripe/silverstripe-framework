@@ -25,7 +25,7 @@
  * - SS_DATABASE_SSL_KEY:		Path to SSL private key file
  * - SS_DATABASE_SSL_CERT:		Path to SSL certificate file
  * - SS_DATABASE_SSL_CA:		Path to SSL CA file
- * - SS_DATABASE_SSL_CIPHER: 	Alternative cipher (defaults to DHE-RSA-AES256-SHA)
+ * - SS_DATABASE_SSL_CIPHER: 	Override default cipher (defaults are set per database connector)
  *
  *
  * There is one more setting that is intended to be used by people who work on SilverStripe.
@@ -125,23 +125,28 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	if(defined('SS_DATABASE_MEMORY'))
 		$databaseConfig["memory"] = SS_DATABASE_MEMORY;
 
-	// PDO MySQL SSL parameters
-	if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS === 'MySQLPDODatabase') {
+	// Add ssl parameters to databaseConfig if these are defined
+	if(
+		defined('SS_DATABASE_SSL_KEY') && 
+		defined('SS_DATABASE_SSL_CERT')
+		) {
 
-		// add ssl parameters if these are defined
-		if(
-			defined('SS_DATABASE_SSL_KEY') && 
-			defined('SS_DATABASE_SSL_CERT') &&
-			defined('SS_DATABASE_SSL_CA')
-			) {
+		$databaseConfig['ssl_key'] = SS_DATABASE_SSL_KEY;
+		$databaseConfig['ssl_cert'] = SS_DATABASE_SSL_CERT;
 
-			$databaseConfig['ssl_key'] = SS_DATABASE_SSL_KEY;
-			$databaseConfig['ssl_cert'] = SS_DATABASE_SSL_CERT;
-			$databaseConfig['ssl_ca'] = SS_DATABASE_SSL_CA;
-			$databaseConfig['ssl_cipher'] = defined('SS_DATABASE_SSL_CIPHER') ? SS_DATABASE_SSL_CIPHER : 'DHE-RSA-AES256-SHA';
-
-		}
 	}
+
+	// Some databases do not require a CA so this is optional
+	if(defined('SS_DATABASE_SSL_CA')) {
+		$databaseConfig['ssl_ca'] = SS_DATABASE_SSL_CA;		
+	}
+
+	// Cipher defaults should be set per connector
+	if(defined('SS_DATABASE_SSL_CIPHER')) {
+		$databaseConfig['ssl_cipher'] = SS_DATABASE_SSL_CIPHER;
+	}
+
+
 
 }
 

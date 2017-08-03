@@ -37,21 +37,25 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 				case 'MySQLPDODatabase':
 					// May throw a PDOException if fails
 
+					// Set SSL parameters
 					$ssl = null;
+					$defaultCipher = 'DHE-RSA-AES256-SHA';
 
 					if(
 						array_key_exists('ssl_key', $databaseConfig) &&
-						array_key_exists('ssl_cert', $databaseConfig) &&
-						array_key_exists('ssl_ca', $databaseConfig) &&
-						array_key_exists('ssl_cipher', $databaseConfig)) {
+						array_key_exists('ssl_cert', $databaseConfig)) {
 
 							$ssl = array(
 								PDO::MYSQL_ATTR_SSL_KEY => $databaseConfig['ssl_key'],
 								PDO::MYSQL_ATTR_SSL_CERT => $databaseConfig['ssl_cert'],
-								PDO::MYSQL_ATTR_SSL_CA => $databaseConfig['ssl_ca'],
-								PDO::MYSQL_ATTR_SSL_CIPHER => $databaseConfig['ssl_cipher'],
 							);
 
+						if(array_key_exists('ssl_ca', $databaseConfig)) {
+							$ssl[PDO::MYSQL_ATTR_SSL_CA] = $databaseConfig['ssl_ca'];
+						}
+
+						// use default cipher if not provided
+						$ssl[PDO::MYSQL_ATTR_SSL_CA] = array_key_exists('ssl_ca', $databaseConfig) ? $databaseConfig['ssl_ca'] : $defaultCipher;
 
 					}
 
