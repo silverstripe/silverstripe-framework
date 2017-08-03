@@ -6,9 +6,8 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Core\Application;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
-use SilverStripe\Security\Permission;
+use SilverStripe\Core\Application;
 use SilverStripe\Security\Security;
 
 /**
@@ -87,9 +86,10 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
         // Ensure session is started
         $request->getSession()->init($request);
 
-        // Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
-        if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
-            return $reloadToken->reloadWithToken();
+        // Request with ErrorDirector
+        $result = ErrorDirector::singleton()->handleRequestWithToken($request, $reloadToken, $this->getApplication()->getKernel());
+        if ($result) {
+            return $result;
         }
 
         // Fail and redirect the user to the login page

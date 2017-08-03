@@ -16,3 +16,10 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\TrustedProxyMiddleware:
     properties:
       TrustedProxyIPs: "`SS_TRUSTED_PROXY_IPS`"
+---
+Name: errorrequestprocessors
+After:
+  - requestprocessors
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Core\Startup\ErrorDirector: '%$SilverStripe\Control\Director'
