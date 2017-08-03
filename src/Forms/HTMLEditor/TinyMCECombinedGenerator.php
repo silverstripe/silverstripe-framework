@@ -6,14 +6,17 @@ use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Generates tinymce config using a combined file generated via a standard
  * SilverStripe {@link GeneratedAssetHandler}
  */
-class TinyMCECombinedGenerator implements TinyMCEScriptGenerator
+class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 {
     use Configurable;
+    use Injectable;
 
     /**
      * Named config
@@ -200,5 +203,18 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator
             $this->config()->get('filename_base')
         );
         return $url;
+    }
+
+    /**
+     * This function is triggered early in the request if the "flush" query
+     * parameter has been set. Each class that implements Flushable implements
+     * this function which looks after it's own specific flushing functionality.
+     *
+     * @see FlushMiddleware
+     */
+    public static function flush()
+    {
+        $dir = dirname(static::config()->get('filename_base'));
+        static::singleton()->getAssetHandler()->removeContent($dir);
     }
 }

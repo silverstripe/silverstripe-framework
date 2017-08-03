@@ -19,8 +19,15 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         // Set custom base_path for tinymce
         Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
-        SSViewer::config()->set('themes', [ SSViewer::DEFAULT_THEME ]);
+        SSViewer::config()->set('themes', [SSViewer::DEFAULT_THEME]);
         TinyMCEConfig::config()->set('base_dir', 'tinymce');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        // Flush test configs
+        HTMLEditorConfig::set_config('testconfig', null);
     }
 
     public function testConfig()
@@ -82,5 +89,29 @@ EOS
             ,
             $content
         );
+    }
+
+    public function testFlush()
+    {
+        // Disable nonces
+        $c = new TinyMCEConfig();
+        $c->setTheme('testtheme');
+        $c->setOption('language', 'en');
+        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
+        $c->enablePlugins(['plugin1' => 'mycode/plugin1.js']);
+        HTMLEditorConfig::set_config('testconfig', $c);
+
+        // Generate file for this
+        /** @var TinyMCECombinedGenerator $generator */
+        $generator = Injector::inst()->create(TinyMCECombinedGenerator::class);
+        $generator->getScriptURL($c);
+        $filename = $generator->generateFilename($c);
+
+        // Ensure content exists
+        $this->assertNotEmpty($generator->getAssetHandler()->getContent($filename));
+
+        // Flush should destroy this
+        TinyMCECombinedGenerator::flush();
+        $this->assertEmpty($generator->getAssetHandler()->getContent($filename));
     }
 }
