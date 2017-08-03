@@ -112,7 +112,8 @@ object we can control the formatting and it allows us to call methods defined fr
 
 		..
 
-		public function getName() {
+		public function getName() 
+		{
 			return DBField::create_field('Varchar', $this->FirstName . ' '. $this->LastName);
 		}
 	}
@@ -145,7 +146,8 @@ Rather than manually returning objects from your custom functions. You can use t
 	    "Name" => 'Varchar',
 	  ];
 	
-	  public function getName() {
+	  public function getName() 
+	  {
 	  	return $this->FirstName . ' '. $this->LastName;
 	  }
 	}
@@ -183,7 +185,8 @@ context. Through a `$casting` array, arbitrary properties and getters can be cas
 			'MyDate' => 'Date'
 		];
 
-		public function getMyDate() {
+		public function getMyDate() 
+		{
 			return '1982-01-01';
 		}
 	}
@@ -222,7 +225,8 @@ database column using `dbObject`.
 	    "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
 	  ];
 
-	  public function getStatus() {
+	  public function getStatus() 
+	  {
 	      return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
 	  }
 

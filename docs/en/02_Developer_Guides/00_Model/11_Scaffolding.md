@@ -22,7 +22,8 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 			'Content' => 'Text'
 		];
 
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			// parent::getCMSFields() does all the hard work and creates the fields for Title, IsActive and Content.
 			$fields = parent::getCMSFields();
 			$fields->dataFieldByName('IsActive')->setTitle('Is active?');
@@ -37,7 +38,8 @@ To fully customise your form fields, start with an empty FieldList.
 
 ```php
 	
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			$fields = FieldList::create(
 				TabSet::create("Root.Main",
 					CheckboxSetField::create('IsActive','Is active?'),

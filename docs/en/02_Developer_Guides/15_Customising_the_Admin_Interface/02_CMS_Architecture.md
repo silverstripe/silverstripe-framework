@@ -295,7 +295,8 @@ Firstly, `reactRouter` must be passed as a boolean flag to indicate that this se
 controlled by the react section, and thus should suppress registration of a page.js route
 for this section.
 ```php
-	public function getClientConfig() {
+	public function getClientConfig() 
+	{
 		return array_merge(parent::getClientConfig(), [
 			'reactRouter' => true
 		]);
@@ -366,7 +367,8 @@ in a single Ajax request.
 	class MyAdmin extends LeftAndMain 
 	{
 		private static $url_segment = 'myadmin';
-		public function getResponseNegotiator() {
+		public function getResponseNegotiator() 
+		{
 			$negotiator = parent::getResponseNegotiator();
 			$controller = $this;
 			// Register a new callback
@@ -375,7 +377,8 @@ in a single Ajax request.
 			});
 			return $negotiator;
 		}
-		public function MyRecordInfo() {
+		public function MyRecordInfo() 
+		{
 			return $this->renderWith('MyRecordInfo');
 		}
 	}
@@ -550,7 +553,8 @@ which is picked up by the menu:
 
 
 ```php
-	public function mycontrollermethod() {
+	public function mycontrollermethod() 
+	{
 		// .. logic here
 		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
 		return 'my response';

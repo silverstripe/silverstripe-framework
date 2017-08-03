@@ -59,7 +59,8 @@ used.
 			'insert','update','delete','replace'
 		];
 
-		public function beforeCall($proxied, $method, $args, &$alternateReturn) {
+		public function beforeCall($proxied, $method, $args, &$alternateReturn) 
+		{
 			if (isset($args[0])) {
 				$sql = $args[0];
 				$code = isset($args[1]) ? $args[1] : E_USER_ERROR;

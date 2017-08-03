@@ -58,7 +58,8 @@ Try to avoid using PHP's ability to mix HTML into the code.
 
 ```php
 	// PHP code
-	public function getTitle() {
+	public function getTitle() 
+	{
 		return "<h2>Bad Example</h2>";
 	}
 
@@ -71,7 +72,8 @@ Better: Keep HTML in template files:
 
 ```php
 	// PHP code
-	public function getTitle() {
+	public function getTitle() 
+	{
 		return "Better Example";
 	}
 

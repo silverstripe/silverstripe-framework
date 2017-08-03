@@ -37,7 +37,8 @@ SSViewer:
 Or, a better way is to call this just for the rendering phase of this particular file:
 
 	:::php
-	public function RenderCustomTemplate() {
+	public function RenderCustomTemplate() 
+	{
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);
 		$html = $this->renderWith('MyCustomTemplate');
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);

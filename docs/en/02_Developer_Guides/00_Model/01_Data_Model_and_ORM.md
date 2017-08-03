@@ -604,7 +604,8 @@ table and column.
 
 
 ```php
-	public function countDuplicates($model, $fieldToCheck) {
+	public function countDuplicates($model, $fieldToCheck) 
+	{
 		$table = DataObject::getSchema()->tableForField($model, $field);
 		$query = new SQLSelect();
 		$query->setFrom("\"{$table}\"");

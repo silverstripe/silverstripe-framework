@@ -47,7 +47,8 @@ To extend the options available in the panel, define your own fields via a [Data
 			'FooterContent' => 'HTMLText'
 		];
 	
-		public function updateCMSFields(FieldList $fields) {
+		public function updateCMSFields(FieldList $fields) 
+		{
 			$fields->addFieldToTab("Root.Main", 
 				new HTMLEditorField("FooterContent", "Footer Content")
 			);

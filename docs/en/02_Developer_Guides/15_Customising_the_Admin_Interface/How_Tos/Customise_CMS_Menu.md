@@ -65,7 +65,8 @@ button configuration.
 	class CustomLeftAndMain extends LeftAndMainExtension 
 	{
 
-		public function init() {
+		public function init() 
+		{
 			// unique identifier for this item. Will have an ID of Menu-$ID
 			$id = 'LinkToGoogle';
 

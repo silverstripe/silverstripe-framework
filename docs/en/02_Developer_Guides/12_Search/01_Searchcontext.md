@@ -48,7 +48,8 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 			'MyDate' => 'Date'
 		];
 		
-		public function getDefaultSearchContext() {
+		public function getDefaultSearchContext() 
+		{
 			$fields = $this->scaffoldSearchFields([
 				'restrictFields' => ['PublicProperty','MyDate']
 			]);
@@ -87,7 +88,8 @@ the `$fields` constructor parameter.
 	class PageController extends ContentController 
 	{
 
-		public function SearchForm() {
+		public function SearchForm() 
+		{
 			$context = singleton('MyDataObject')->getCustomSearchContext();
 			$fields = $context->getSearchFields();
 
@@ -101,7 +103,8 @@ the `$fields` constructor parameter.
 			return $form;
 		}
 
-		public function doSearch($data, $form) {
+		public function doSearch($data, $form) 
+		{
 			$context = singleton('MyDataObject')->getCustomSearchContext();
 			$results = $context->getResults($data);
 
@@ -122,7 +125,8 @@ in order to read page limit information. It is also passed the current
 
 
 ```php
-	public function getResults($searchCriteria = []) {
+	public function getResults($searchCriteria = []) 
+	{
 		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
 		$limit = 10;
 			
@@ -146,7 +150,8 @@ notice that if you want to use this getResults function, you need to change the 
 
 
 ```php
-	public function doSearch($data, $form) {
+	public function doSearch($data, $form) 
+	{
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$results = $this->getResults($data);
 		return $this->customise([

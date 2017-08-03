@@ -179,7 +179,8 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 	class MyFactory implements SilverStripe\Core\Injector\Factory 
 	{
 
-		public function create($service, array $params = []) {
+		public function create($service, array $params = []) 
+		{
 			return new MyServiceImplementation();
 		}
 	}
@@ -216,7 +217,8 @@ Assuming a class structure such as
 	{
 		private $database;
 
-		public function setDatabase($d) {	
+		public function setDatabase($d) 
+		{	
 			$this->database = $d;
 		}
 	}
@@ -225,7 +227,8 @@ Assuming a class structure such as
 		private $username;
 		private $password;
 		
-		public function __construct($username, $password) {
+		public function __construct($username, $password) 
+		{
 			$this->username = $username;
 			$this->password = $password;
 		}

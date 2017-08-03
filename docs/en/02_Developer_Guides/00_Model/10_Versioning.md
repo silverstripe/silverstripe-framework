@@ -235,7 +235,8 @@ E.g.
 		private static $owns = [
 			'ChildObjects'
 		];
-		public function ChildObjects() {
+		public function ChildObjects() 
+		{
 			return MyChild::get();
 		}
 	}
@@ -247,7 +248,8 @@ E.g.
 		private static $owned_by = [
 			'Parent'
 		];
-		public function Parent() {
+		public function Parent() 
+		{
 			return MyParent::get()->first();
 		}
 	}
@@ -302,7 +304,8 @@ E.g.
             Versioned::class,
         ];
         
-        public function canViewVersioned($member = null) {
+        public function canViewVersioned($member = null) 
+        {
             // Check if site is live
             $mode = $this->getSourceQueryParam("Versioned.mode");
             $stage = $this->getSourceQueryParam("Versioned.stage");
@@ -331,7 +334,8 @@ E.g.
 ```php
  class MyObjectExtension extends DataExtension 
  {
-        public function canViewNonLive($member = null) {
+        public function canViewNonLive($member = null) 
+        {
             return Permission::check($member, 'DRAFT_STATUS');
         }
     }
@@ -369,7 +373,8 @@ to force a specific stage, we recommend the `Controller->init()` method for this
 
 **mysite/code/MyController.php**
 ```php
-	public function init() {
+	public function init() 
+	{
 		parent::init();
 		Versioned::set_stage(Versioned::DRAFT);
 	}

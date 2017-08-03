@@ -11,7 +11,8 @@ example, this controller method will not behave as you might imagine.
 ```php
 	private $counter = 0;
 
-	public function Counter() {
+	public function Counter() 
+	{
 	    $this->counter += 1;
 
 	    return $this->counter;

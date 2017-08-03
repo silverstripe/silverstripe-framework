@@ -57,7 +57,8 @@ First we need to define a callback for the shortcode.
 			'MyShortCodeMethod' => 'HTMLText'
 		];
 
-		public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) {
+		public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) 
+		{
 			return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
 		}
 	}
@@ -197,7 +198,8 @@ When the location attribute is "leftAlone" or "center" then the DOM is split aro
 
 Here is a summary of the callback parameter values based on some example shortcodes.
 ```php
-	public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) {
+	public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) 
+	{
 		// ..
 	}
 

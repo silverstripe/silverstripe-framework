@@ -14,7 +14,8 @@ The `PaginatedList` will automatically set up query limits and read the request 
 	/**
 	 * Returns a paginated list of all pages in the site.
 	 */
-	public function PaginatedPages() {
+	public function PaginatedPages() 
+	{
 		$list = Page::get();
 
 		return new PaginatedList($list, $this->getRequest());

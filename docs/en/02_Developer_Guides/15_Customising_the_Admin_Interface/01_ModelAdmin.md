@@ -107,19 +107,23 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 	class Category extends DataObject 
 	{
 	  // ...
-		public function canView($member = null) {
+		public function canView($member = null) 
+		{
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
 		}
 
-		public function canEdit($member = null) {
+		public function canEdit($member = null) 
+		{
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
 		}
 
-		public function canDelete($member = null) {
+		public function canDelete($member = null) 
+		{
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
 		}
 
-		public function canCreate($member = null) {
+		public function canCreate($member = null) 
+		{
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
 		}
 ```
@@ -191,7 +195,8 @@ For example, we might want to exclude all products without prices in our sample 
 	class MyAdmin extends ModelAdmin 
 	{
 
-		public function getList() {
+		public function getList() 
+		{
 			$list = parent::getList();
 
 			// Always limit by model class, in case you're managing multiple
@@ -214,7 +219,8 @@ checkbox which limits search results to expensive products (over $100).
 	class MyAdmin extends ModelAdmin 
 	{
 
-		public function getSearchContext() {
+		public function getSearchContext() 
+		{
 			$context = parent::getSearchContext();
 
 			if($this->modelClass == 'Product') {
@@ -224,7 +230,8 @@ checkbox which limits search results to expensive products (over $100).
 			return $context;
 		}
 
-		public function getList() {
+		public function getList() 
+		{
 			$list = parent::getList();
 
 			$params = $this->getRequest()->requestVar('q'); // use this to access search parameters
@@ -254,7 +261,8 @@ example, to add a new component.
 		];
 
 		// ...
-		public function getEditForm($id = null, $fields = null) {
+		public function getEditForm($id = null, $fields = null) 
+		{
 			$form = parent::getEditForm($id, $fields);
 
 			// $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
@@ -287,7 +295,8 @@ to only one specific `GridField`:
 			'Category'
 		];
 
-		public function getEditForm($id = null, $fields = null) {
+		public function getEditForm($id = null, $fields = null) 
+		{
 			$form = parent::getEditForm($id, $fields);
 
 			$gridFieldName = 'Product';
@@ -325,7 +334,8 @@ To customize the exported columns, create a new method called `getExportFields` 
 	{
 		// ...
 
-		public function getExportFields() {
+		public function getExportFields() 
+		{
 			return [
 				'Name' => 'Name',
 				'ProductCode' => 'Product Code',

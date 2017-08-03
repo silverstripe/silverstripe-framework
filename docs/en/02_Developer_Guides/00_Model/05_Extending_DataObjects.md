@@ -26,7 +26,8 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	    "Teams"=>"Team"
 	  ];
 	
-	  public function onBeforeWrite() {
+	  public function onBeforeWrite() 
+	  {
 	    // check on first write action, aka "database row creation" (ID-property is not set)
 	    if(!$this->isInDb()) {
 	      $currentPlayer = Security::getCurrentUser();
@@ -66,7 +67,8 @@ member is logged in who belongs to a group containing the permission "PLAYER_DEL
 	    "Teams" => "Team"
 	  ];
 	
-	  public function onBeforeDelete() {
+	  public function onBeforeDelete() 
+	  {
 	    if(!Permission::check('PLAYER_DELETE')) {
 	      Security::permissionFailure($this);
 	      exit();

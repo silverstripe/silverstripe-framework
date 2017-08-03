@@ -18,22 +18,26 @@ explicitly logging in or by invoking the "remember me" functionality.
 			'NumVisit' => 'Int',
 		];
 
-		public function memberLoggedIn() {
+		public function memberLoggedIn() 
+		{
 			$this->logVisit();
 		}
 
-		public function memberAutoLoggedIn() {
+		public function memberAutoLoggedIn() 
+		{
 			$this->logVisit();
 		}
 
-		public function updateCMSFields(FieldList $fields) {
+		public function updateCMSFields(FieldList $fields) 
+		{
 			$fields->addFieldsToTab('Root.Main', [
 				ReadonlyField::create('LastVisited', 'Last visited'),
 				ReadonlyField::create('NumVisit', 'Number of visits')
 			]);
 		}
 
-		protected function logVisit() {
+		protected function logVisit() 
+		{
 			if(!Security::database_is_ready()) return;
 			
 			DB::query(sprintf(

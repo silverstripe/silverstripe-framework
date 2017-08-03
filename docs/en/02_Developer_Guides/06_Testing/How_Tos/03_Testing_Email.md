@@ -8,7 +8,8 @@ email was sent using this method.
 
 
 ```php
-	public function MyMethod() {
+	public function MyMethod() 
+	{
 		$e = new Email();
 		$e->To = "someone@example.com";
 		$e->Subject = "Hi there";

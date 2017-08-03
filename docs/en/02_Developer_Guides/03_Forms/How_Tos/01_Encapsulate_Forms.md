@@ -14,7 +14,8 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 	class PageController extends ContentController 
 	{
 		
-		public function SearchForm() {
+		public function SearchForm() 
+		{
 			$fields = new FieldList(
 				HeaderField::create('Header', 'Step 1. Basics'),
 				OptionsetField::create('Type', '', [
@@ -77,7 +78,8 @@ should be. Good practice would be to move this to a subclass and create a new in
 		 * method. We'll create the fields and actions in here.
 		 *
 		 */
-		public function __construct($controller, $name) {
+		public function __construct($controller, $name) 
+		{
 			$fields = new FieldList(
 				HeaderField::create('Header', 'Step 1. Basics'),
 				OptionsetField::create('Type', '', [
@@ -138,7 +140,8 @@ Our controller will now just have to create a new instance of this form object. 
 			'SearchForm',
 		];
 		
-		public function SearchForm() {
+		public function SearchForm() 
+		{
 			return new SearchForm($this, 'SearchForm');
 		}
 	}

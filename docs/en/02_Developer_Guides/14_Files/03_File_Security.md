@@ -67,7 +67,8 @@ authorised users, the following should be considered:
 ```php
  class PageController extends ContentController 
  {
-        public function init() {
+        public function init() 
+        {
             parent::init();
             // Whitelist any protected files on this page for the current user
             foreach($this->Files() as $file) {
@@ -99,7 +100,8 @@ authorised users, the following should be considered:
 ```php
  class PageController extends ContentController 
  {
-        public function init() {
+        public function init() 
+        {
             parent::init();
             // Whitelist any protected files on this page for the current user
             foreach($this->Files() as $file) {

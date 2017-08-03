@@ -12,7 +12,8 @@ Let's start by defining a new `ContactPage` page type:
 	class ContactPageController extends PageController 
 	{
 		private static $allowed_actions = ['Form'];
-		public function Form() { 
+		public function Form() 
+		{ 
 			$fields = new FieldList( 
 				new TextField('Name'), 
 				new EmailField('Email'), 
@@ -75,10 +76,12 @@ Now that we have a contact form, we need some way of collecting the data submitt
 	class ContactPageController extends PageController 
 	{
 		private static $allowed_actions = ['Form'];
-		public function Form() {
+		public function Form() 
+		{
 			// ...
 		}
-		public function submit($data, $form) { 
+		public function submit($data, $form) 
+		{ 
 			$email = new Email(); 
 			 
 			$email->setTo('siteowner@mysite.com'); 
@@ -122,7 +125,8 @@ The framework comes with a predefined validator called [RequiredFields](api:Silv
 
 
 ```php
-	public function Form() { 
+	public function Form() 
+	{ 
 		// ...
 		$validator = new RequiredFields('Name', 'Message');
 		return new Form($this, 'Form', $fields, $actions, $validator); 

@@ -423,7 +423,8 @@ See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more
 	    "Players" => "Player"
 	  ];
 	
-	  public function ActivePlayers() {
+	  public function ActivePlayers() 
+	  {
 	  	return $this->Players()->filter('Status', 'Active');
 	  }
 	}

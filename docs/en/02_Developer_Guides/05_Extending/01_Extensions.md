@@ -26,7 +26,8 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 			'DateOfBirth' => 'SS_Datetime'
 		];
 
-		public function SayHi() {
+		public function SayHi() 
+		{
 			// $this->owner refers to the original instance. In this case a `Member`.
 			return "Hi " . $this->owner->Name;
 		}
@@ -90,7 +91,8 @@ $has_one etc.
 			'Image' => 'Image',
 		];
 
-		public function SayHi() {
+		public function SayHi() 
+		{
 			// $this->owner refers to the original instance. In this case a `Member`.
 			return "Hi " . $this->owner->Name;
 		}
@@ -140,7 +142,8 @@ through the [Object::extend()](api:Object::extend()) method.
 
 
 ```php
-	public function getValidator() {
+	public function getValidator() 
+	{
 		// ..
 		
 		$this->extend('updateValidator', $validator);
@@ -163,7 +166,8 @@ validator by defining the `updateValidator` method.
 
 		// ..
 
-		public function updateValidator($validator) {
+		public function updateValidator($validator) 
+		{
 			// we want to make date of birth required for each member
 			$validator->addRequiredField('DateOfBirth');
 		}
@@ -190,7 +194,8 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 			'Image' => 'Image',
 		];
 
-		public function updateCMSFields(FieldList $fields) {
+		public function updateCMSFields(FieldList $fields) 
+		{
 			$fields->push(new TextField('Position'));
 			$fields->push($upload = new UploadField('Image', 'Profile Image'));
 			$upload->setAllowedFileCategories('image/supported');
@@ -206,7 +211,8 @@ which allows an Extension to modify the results.
 
 
 ```php
-	public function Foo() {
+	public function Foo() 
+	{
 		$foo = // ..
 
 		$this->extend('updateFoo', $foo);
@@ -228,7 +234,8 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 	class MyMemberExtension extends DataExtension 
 	{
 
-		public function updateFoo($foo) {
+		public function updateFoo($foo) 
+		{
 			// outputs the original class
 			var_dump($this->owner);
 		}
@@ -288,7 +295,8 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 
 
 ```php
-	public function getCMSFields() {
+	public function getCMSFields() 
+	{
 
 		$this->beforeUpdateCMSFields(function($fields) {
 			// Include field which must be present when updateCMSFields is called on extensions

@@ -216,7 +216,8 @@ use PageController;
 class HomePageController extends PageController
 {
     // ...
-    public function doBrowserPoll($data, $form) {
+    public function doBrowserPoll($data, $form) 
+    {
         $submission = new BrowserPollSubmission();
         $form->saveInto($submission);
         $submission->write();

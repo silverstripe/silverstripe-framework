@@ -89,14 +89,16 @@ Our final import looks like this.
 	      ]
 	   ];
 
-	   public static function importFirstAndLastName(&$obj, $val, $record) {
+	   public static function importFirstAndLastName(&$obj, $val, $record) 
+	   {
 	      $parts = explode(' ', $val);
 	      if(count($parts) != 2) return false;
 	      $obj->FirstName = $parts[0];
 	      $obj->LastName = $parts[1];
 	   }
 
-	   public static function getTeamByTitle(&$obj, $val, $record) {
+	   public static function getTeamByTitle(&$obj, $val, $record) 
+	   {
 	      return FootballTeam::get()->filter('Title', $val)->First();
 	   }
 	}

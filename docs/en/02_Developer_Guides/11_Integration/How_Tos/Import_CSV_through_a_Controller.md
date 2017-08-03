@@ -17,11 +17,13 @@ form (which is used for `MyDataObject` instances). You can access it through
 
 		protected $template = "BlankPage";
 
-		public function Link($action = null) {
+		public function Link($action = null) 
+		{
 			return Controller::join_links('MyController', $action);
 		}
 
-		public function Form() {
+		public function Form() 
+		{
 			$form = new Form(
 				$this,
 				'Form',
@@ -36,7 +38,8 @@ form (which is used for `MyDataObject` instances). You can access it through
 			return $form;
 		}
 
-		public function doUpload($data, $form) {
+		public function doUpload($data, $form) 
+		{
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
 			$messages = [];

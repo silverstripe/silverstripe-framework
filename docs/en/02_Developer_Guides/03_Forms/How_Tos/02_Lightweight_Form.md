@@ -14,7 +14,8 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 
 ```php
 	
-	public function SearchForm() {
+	public function SearchForm() 
+	{
 		$fields = new FieldList(
 			TextField::create('q')
 		);

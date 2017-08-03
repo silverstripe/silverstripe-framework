@@ -23,11 +23,13 @@ This example uses [Cache](api:Cache) in some custom code, and the same cache is 
 	class MyClass extends DataObject implements Flushable 
 	{
 	
-		public static function flush() {
+		public static function flush() 
+		{
 			Cache::factory('mycache')->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
 	
-		public function MyCachedContent() {
+		public function MyCachedContent() 
+		{
 			$cache = Cache::factory('mycache')
 			$something = $cache->load('mykey');
 			if(!$something) {
@@ -50,7 +52,8 @@ flush so they are re-created on demand.
 	class MyClass extends DataObject implements Flushable 
 	{
 	
-		public static function flush() {
+		public static function flush() 
+		{
 			foreach(glob(ASSETS_PATH . '/_tempfiles/*.jpg') as $file) {
 				unlink($file);
 			}

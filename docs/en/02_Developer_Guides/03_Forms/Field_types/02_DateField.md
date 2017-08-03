@@ -23,7 +23,8 @@ The following example will add a simple DateField to your Page, allowing you to 
 			'MyDate' => 'Date',
 		];
 	
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			$fields = parent::getCMSFields();
 			
 			$fields->addFieldToTab(

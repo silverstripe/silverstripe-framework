@@ -50,7 +50,8 @@ is specifically restricted.
 	class MyController extends Controller 
 	{
 
-		public function index() {
+		public function index() 
+		{
 			// allowed without an $allowed_action defined
 		}
 	}
@@ -80,11 +81,13 @@ Only public methods can be made accessible.
 			// secureaction won't work as it's private.
 		];
 
-		public function secure() {
+		public function secure() 
+		{
 			// ..
 		}
 
-		private function secureaction() {
+		private function secureaction() 
+		{
 			// ..
 		}
 	}
@@ -100,7 +103,8 @@ If a method on a parent class is overwritten, access control for it has to be re
 			'action',
 		];
 
-		public function action() {
+		public function action() 
+		{
 			// ..
 		}
 	}
@@ -111,7 +115,8 @@ If a method on a parent class is overwritten, access control for it has to be re
 			'action', // required as we are redefining action
 		];
 
-		public function action() {
+		public function action() 
+		{
 
 		}
 	}
@@ -134,11 +139,13 @@ as an `allowed_action`.
 			'ContactForm' // use the Form method, not the action
 		];
 
-		public function ContactForm() {
+		public function ContactForm() 
+		{
 			return new Form(..);
 		}
 
-		public function doContactForm($data, $form) {
+		public function doContactForm($data, $form) 
+		{
 			// ..
 		}
 	}
@@ -158,7 +165,8 @@ the passed request data.
 			'myaction'
 		];
 		
-		public function myaction($request) {
+		public function myaction($request) 
+		{
 			if(!$request->getVar('apikey')) {
 				return $this->httpError(403, 'No API key provided');
 			} 
@@ -189,7 +197,8 @@ execution. This behavior can be used to implement permission checks.
 		
 		private static $allowed_actions = [];
 		
-		public function init() {
+		public function init() 
+		{
 			parent::init();
 
 			if(!Permission::check('ADMIN')) {

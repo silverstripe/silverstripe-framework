@@ -68,11 +68,13 @@ __Example: using a subclass__
 ```php
 	class Page extends SiteTree 
 	{
-		public function getScheduledToPublish(){
+		public function getScheduledToPublish()
+		{
 			// return either true or false
 		}
 
-		public function getStatusFlags($cached = true) {
+		public function getStatusFlags($cached = true) 
+		{
 			$flags = parent::getStatusFlags($cached);
 			$flags['scheduledtopublish'] = "Scheduled To Publish";
 			return $flags;

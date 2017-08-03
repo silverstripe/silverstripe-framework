@@ -87,7 +87,8 @@ and insert the following code.
 			'IsBookmarked' => 'Boolean'
 		];
 
-		public function updateCMSFields(FieldList $fields) {
+		public function updateCMSFields(FieldList $fields) 
+		{
 			$fields->addFieldToTab('Root.Main',
 				new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
 			);
@@ -123,7 +124,8 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
 	{
 
-		public function BookmarkedPages() {
+		public function BookmarkedPages() 
+		{
 			return Page::get()->filter("IsBookmarked", 1);
 		}
 	}

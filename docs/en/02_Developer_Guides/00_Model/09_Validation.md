@@ -30,7 +30,8 @@ The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\Va
 			'Postcode' => 'Varchar'
 		];
 
-		public function validate() {
+		public function validate() 
+		{
 			$result = parent::validate();
 
 			if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {

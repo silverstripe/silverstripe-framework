@@ -65,13 +65,15 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 			'rss'
 		];
 
-		public function init() {
+		public function init() 
+		{
 			parent::init();
 
 			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
 		}
 
-		public function rss() {
+		public function rss() 
+		{
 			$rss = new RSSFeed(
 				$this->LatestUpdates(), 
 				$this->Link(), 
@@ -82,7 +84,8 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 			return $rss->outputToBrowser();
 		}
 
-		public function LatestUpdates() {
+		public function LatestUpdates() 
+		{
 			return Page::get()->sort("LastEdited", "DESC")->limit(10);
 		}
 	}
@@ -106,7 +109,8 @@ method is defined and returns a string to the full website URL.
 	class Player extends DataObject 
 	{
 
-		public function AbsoluteLink() {
+		public function AbsoluteLink() 
+		{
 			// assumes players can be accessed at yoursite.com/players/2
 
 			return Controller::join_links(
@@ -129,13 +133,15 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 			'players'
 		];
 
-		public function init() {
+		public function init() 
+		{
 			parent::init();
 
 			RSSFeed::linkToFeed($this->Link("players"), "Players");
 		}
 
-		public function players() {
+		public function players() 
+		{
 			$rss = new RSSFeed(
 				Player::get(),
 				$this->Link("players"),
@@ -184,7 +190,8 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 
 ```php
-	public function players() {
+	public function players() 
+	{
 		$rss = new RSSFeed(
 			Player::get(),
 			$this->Link("players"),

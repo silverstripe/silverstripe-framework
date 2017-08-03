@@ -8,7 +8,8 @@ also another tool at your disposal: The [Extension](api:SilverStripe\Core\Extens
 	class MyAdminExtension extends Extension 
 	{
 		// ...
-		public function updateEditForm(&$form) {
+		public function updateEditForm(&$form) 
+		{
 			$form->Fields()->push(/* ... */)
 		}
 	}

@@ -11,7 +11,8 @@ First, we write the code to query the API feed.
 
 
 ```php
-	public function getWellingtonWeather() {
+	public function getWellingtonWeather() 
+	{
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
 		);

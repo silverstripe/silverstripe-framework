@@ -98,7 +98,8 @@ For example, a block that shows a collection of rotating slides needs to update 
 
 
 ```php
-	public function SliderCacheKey() {
+	public function SliderCacheKey() 
+	{
 		$fragments = [
 			'Page-Slides',
 			$this->ID,
@@ -146,7 +147,8 @@ configurable only on a site-wide basis), you could add a special function to you
 
 
 ```php
-	public function BlogStatisticsCounter() {
+	public function BlogStatisticsCounter() 
+	{
 	    return (int)(time() / 60 / 5); // Returns a new number every five minutes
 	}
 ```

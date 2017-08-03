@@ -51,7 +51,8 @@ provide default template for an object.
 	class Page extends SiteTree 
 	{
 
-		public function forTemplate() {
+		public function forTemplate() 
+		{
 			return "Page: ". $this->Title;
 		}
 	}
@@ -78,7 +79,8 @@ to a template, SilverStripe will ensure that the object is wrapped in the correc
 			'MyCustomMethod' => 'HTMLText' 
 		];
 
-		public function MyCustomMethod() {
+		public function MyCustomMethod() 
+		{
 			return "<h1>This is my header</h1>";
 		}
 	}

@@ -21,7 +21,8 @@ in the template.
 
 
 ```php
-	public function getWellingtonWeather() {
+	public function getWellingtonWeather() 
+	{
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
 		);
@@ -163,7 +164,8 @@ If the web service returned an error (for example, API key not available or inad
 	class MyRestfulService extends RestfulService 
 	{
 
-		public function errorCatch($response) {
+		public function errorCatch($response) 
+		{
 			$err_msg = $response;
 			
 			if(strpos($err_msg, '<') === false) {
@@ -182,7 +184,8 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 	class MyRestfulService extends RestfulService 
 	{
 
-		public function __construct($expiry = NULL) {
+		public function __construct($expiry = NULL) 
+		{
 			parent::__construct('http://www.flickr.com/services/rest/', $expiry);
 			
 			$this->checkErrors = false;

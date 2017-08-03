@@ -82,11 +82,13 @@ You'll need to add a route to your controller to make it accessible via URL
 
 		protected $template = "BlankPage";
 
-		public function Link($action = null) {
+		public function Link($action = null) 
+		{
 			return Controller::join_links('MyController', $action);
 		}
 
-		public function Form() {
+		public function Form() 
+		{
 			$form = new Form(
 				$this,
 				'Form',
@@ -101,7 +103,8 @@ You'll need to add a route to your controller to make it accessible via URL
 			return $form;
 		}
 
-		public function doUpload($data, $form) {
+		public function doUpload($data, $form) 
+		{
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
 			$messages = [];
@@ -193,13 +196,15 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	         'callback' => 'getTeamByTitle'
 	      ]
 	   ];
-	   public static function importFirstAndLastName(&$obj, $val, $record) {
+	   public static function importFirstAndLastName(&$obj, $val, $record) 
+	   {
 	      $parts = explode(' ', $val);
 	      if(count($parts) != 2) return false;
 	      $obj->FirstName = $parts[0];
 	      $obj->LastName = $parts[1];
 	   }
-	   public static function getTeamByTitle(&$obj, $val, $record) {
+	   public static function getTeamByTitle(&$obj, $val, $record) 
+	   {
 	      return FootballTeam::get()->filter('Title', $val)->First();
 	   }
 	}

@@ -32,7 +32,8 @@ actions such as deleting records.
 	class Page extends SiteTree 
 	{
 		
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			$fields = parent::getCMSFields();
 
 			$fields->addFieldToTab('Root.Pages', 
@@ -64,7 +65,8 @@ the `getConfig()` method on `GridField`.
 	class Page extends SiteTree 
 	{
 		
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			$fields = parent::getCMSFields();
 
 			$fields->addFieldToTab('Root.Pages', 
@@ -297,7 +299,8 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 			]
 		];
 
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			$fields = parent::getCMSFields();
 
 			if($this->ID) {
@@ -355,7 +358,8 @@ create an area rendered before the table wrapped in a simple `<div>`.
 	class MyAreaComponent implements GridField_HTMLProvider 
 	{
 	
-		public function getHTMLFragments( $gridField) {
+		public function getHTMLFragments( $gridField) 
+		{
 			return [
 				'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
 			];
@@ -377,7 +381,8 @@ Now you can add other components into this area by returning them as an array fr
 	class MyShareLinkComponent implements GridField_HTMLProvider 
 	{
 	
-		public function getHTMLFragments( $gridField) {		
+		public function getHTMLFragments( $gridField) 
+		{		
 			return [
 				'my-area' => '<a href>...</a>'
 			];

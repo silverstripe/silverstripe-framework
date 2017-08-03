@@ -77,7 +77,8 @@ parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\Fie
 
 
 ```php
-	public function getCMSFields() {
+	public function getCMSFields() 
+	{
 		$fields = parent::getCMSFields();
 		$fields->insertBefore("HTMLEmail", new TextField("Age"));
 		$fields->removeByName("JobTitle");
@@ -121,7 +122,8 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 	
 	   * Modify the field set to be displayed in the CMS detail pop-up
 	   */
-	  public function updateCMSFields(FieldList $currentFields) {
+	  public function updateCMSFields(FieldList $currentFields) 
+	  {
 	    // Only show the additional fields on an appropriate kind of use 
 	    if(Permission::checkMember($this->owner->ID, "VIEW_FORUM")) {
 	      // Edit the FieldList passed, adding or removing fields as necessary
@@ -135,7 +137,8 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 		private static $many_many = []; 
 		private static $belongs_many_many = []; 
 	
-	  public function somethingElse() {
+	  public function somethingElse() 
+	  {
 	    // You can add any other methods you like, which you can call directly on the member object.
 	  }
 	}

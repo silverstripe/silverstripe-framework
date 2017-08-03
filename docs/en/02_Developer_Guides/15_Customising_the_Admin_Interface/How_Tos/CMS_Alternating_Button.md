@@ -28,7 +28,8 @@ Here is the configuration code for the button:
 
 
 ```php
-	public function getCMSActions() {
+	public function getCMSActions() 
+	{
 		$fields = parent::getCMSActions();
 
 		$fields->fieldByName('MajorActions')->push(
@@ -54,7 +55,8 @@ Here we initialise the button based on the backend check, and assume that the bu
 
 
 ```php
-	public function getCMSActions() {
+	public function getCMSActions() 
+	{
 		// ...
 		if ($this->needsCleaning()) {
 			// Will initialise the button into alternate state.

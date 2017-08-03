@@ -24,7 +24,8 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 			'Content' => 'HTMLText'
 		];
 		
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			return new FieldList(
 				new HTMLEditorField('Content')
 			);
@@ -53,7 +54,8 @@ This is particularly useful if you need different configurations for multiple [H
 			'OtherContent' => 'HTMLText'
 		];
 		
-		public function getCMSFields() {
+		public function getCMSFields() 
+		{
 			return new FieldList([
 				new HTMLEditorField('Content'),
 				new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
@@ -247,7 +249,8 @@ Example: Remove field for "image captions"
 	// File: mysite/code/MyToolbarExtension.php
 	class MyToolbarExtension extends Extension 
 	{
-		public function updateFieldsForImage(&$fields, $url, $file) {
+		public function updateFieldsForImage(&$fields, $url, $file) 
+		{
 			$fields->removeByName('CaptionText');
 		}
 	}
@@ -288,7 +291,8 @@ of the CMS you have to take care of instantiate yourself:
 	// File: mysite/code/MyController.php
 	class MyObjectController extends Controller 
 	{
-		public function Modals() {
+		public function Modals() 
+		{
 			return ModalController::create($this, "Modals");
 		}
 	}

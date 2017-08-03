@@ -17,7 +17,8 @@ response and modify the session within a test.
 		/**
 		 * Test generation of the view
 		 */
-		public function testViewHomePage() {
+		public function testViewHomePage() 
+		{
 			$page = $this->get('home/');
 
 			// Home page should load..

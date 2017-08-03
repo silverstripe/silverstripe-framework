@@ -116,7 +116,8 @@ Example:
 ```php
 	class MyForm extends Form 
 	{
-	  public function save($RAW_data, $form) {
+	  public function save($RAW_data, $form) 
+	  {
 			// Pass true as the second parameter of raw2sql to quote the value safely
 			$SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
 			$objs = Player::get()->where("Name = " . $SQL_data['name']);
@@ -136,7 +137,8 @@ Example:
 	class MyController extends Controller 
 	{
 	  private static $allowed_actions = ['myurlaction'];
-	  public function myurlaction($RAW_urlParams) {
+	  public function myurlaction($RAW_urlParams) 
+	  {
 			// Pass true as the second parameter of raw2sql to quote the value safely
 			$SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
 			$objs = Player::get()->where("Name = " . $SQL_data['OtherID']);
@@ -157,12 +159,14 @@ passing data through, escaping should happen at the end of the chain.
 	  /**
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
 	   */
-	  public function saveAllNames($RAW_data) {
+	  public function saveAllNames($RAW_data) 
+	  {
 	    // $SQL_data = Convert::raw2sql($RAW_data); // premature escaping
 	    foreach($RAW_data as $item) $this->saveName($item);
 	  }
 	
-	  public function saveName($RAW_name) {
+	  public function saveName($RAW_name) 
+	  {
 			$SQL_name = Convert::raw2sql($RAW_name, true);
 			DB::query("UPDATE Player SET Name = {$SQL_name}");
 	  }
@@ -293,7 +297,8 @@ PHP:
 			'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
 		];
 		
-		public function TitleWithHTMLSuffix($suffix) {
+		public function TitleWithHTMLSuffix($suffix) 
+		{
 			// $this->Title is not casted in PHP
 			return $this->Title . '<small>(' . $suffix. ')</small>';
 		}
@@ -330,7 +335,8 @@ PHP:
 	class MyController extends Controller 
 	{
 		private static $allowed_actions = ['search'];
-		public function search($request) {
+		public function search($request) 
+		{
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise([
 				'Query' => Text::create($request->getVar('Query')),
@@ -364,7 +370,8 @@ PHP:
 	class MyController extends Controller 
 	{
 		private static $allowed_actions = ['search'];
-		public function search($request) {
+		public function search($request) 
+		{
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
 			return $this->customise([
@@ -428,7 +435,8 @@ Below is an example with different ways you would use this casting technique:
 
 
 ```php
-	public function CaseStudies() {
+	public function CaseStudies() 
+	{
 	
 	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
 	   $anotherID = (int)Director::urlParam['ID'];
@@ -557,7 +565,8 @@ controller's `init()` method:
 ```php
 	class MyController extends Controller 
 	{
-		public function init() {
+		public function init() 
+		{
 			parent::init();
 			$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
 		}
@@ -698,7 +707,8 @@ unauthorised local persons. SilverStripe adds the current date for every request
 	class MySecureController extends Controller 
 	{
 		
-		public function init() {
+		public function init() 
+		{
 			parent::init();
         	
 			// Add cache headers to ensure sensitive content isn't cached.
