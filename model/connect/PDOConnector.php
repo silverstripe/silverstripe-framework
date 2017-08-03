@@ -19,7 +19,7 @@ class PDOConnector extends DBConnector {
 	 * Default strong SSL cipher to be used
 	 *
 	 * @config
-	 * @var boolean
+	 * @var string
 	 */
 	private static $ssl_cipher_default = 'DHE-RSA-AES256-SHA';
 
@@ -181,7 +181,7 @@ class PDOConnector extends DBConnector {
 				}
 
 				// use default cipher if not provided
-				$options[PDO::MYSQL_ATTR_SSL_CIPHER] = $parameters['ssl_cipher'] ?: $this->config()->ssl_cipher_default;
+				$options[PDO::MYSQL_ATTR_SSL_CIPHER] = $parameters['ssl_cipher'] ?: Config::inst()->get('PDOConnector', 'ssl_cipher_default');
 
 			}
 
