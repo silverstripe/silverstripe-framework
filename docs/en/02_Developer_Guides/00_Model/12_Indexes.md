@@ -25,8 +25,8 @@ Indexes are represented on a `DataObject` through the `DataObject::$indexes` arr
 descriptor. There are several supported notations:
 
 ```php
-	
-	class MyObject extends DataObject {
+	class MyObject extends DataObject 
+	{
 
 		private static $indexes = [
 			'<column-name>' => true,
@@ -53,8 +53,8 @@ support the following:
 **mysite/code/MyTestObject.php**
 
 ```php
-	
-	class MyTestObject extends DataObject {
+	class MyTestObject extends DataObject 
+	{
 
 		private static $db = [
 			'MyField' => 'Varchar',

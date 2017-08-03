@@ -5,7 +5,8 @@ also another tool at your disposal: The [Extension](api:SilverStripe\Core\Extens
 
 
 ```php
-	class MyAdminExtension extends Extension {
+	class MyAdminExtension extends Extension 
+	{
 		// ...
 		public function updateEditForm(&$form) {
 			$form->Fields()->push(/* ... */)

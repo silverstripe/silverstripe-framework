@@ -93,8 +93,8 @@ This code provides a good template:
 
 
 ```php
-	
-	class MyProcess extends Controller {
+	class MyProcess extends Controller 
+	{
 
 		private static $allowed_actions = [
 			'index'

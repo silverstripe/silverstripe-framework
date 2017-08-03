@@ -80,8 +80,8 @@ and insert the following code.
 
 
 ```php
-	
-	class BookmarkedPageExtension extends DataExtension {
+	class BookmarkedPageExtension extends DataExtension 
+	{
 
 		private static $db = [
 			'IsBookmarked' => 'Boolean'
@@ -120,8 +120,8 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 
 
 ```php
-	
-	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
+	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
+	{
 
 		public function BookmarkedPages() {
 			return Page::get()->filter("IsBookmarked", 1);
@@ -236,7 +236,8 @@ applicable controller actions to it:
 
 
 ```php
-	class CustomActionsExtension extends LeftAndMainExtension {
+	class CustomActionsExtension extends LeftAndMainExtension 
+	{
 		
 		private static $allowed_actions = [
         	'sampleAction'

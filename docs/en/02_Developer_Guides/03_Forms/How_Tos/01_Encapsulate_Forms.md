@@ -11,8 +11,8 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 
 ```php
-	
-	class PageController extends ContentController {
+	class PageController extends ContentController 
+	{
 		
 		public function SearchForm() {
 			$fields = new FieldList(
@@ -69,8 +69,8 @@ should be. Good practice would be to move this to a subclass and create a new in
 
 
 ```php
-	
-	class SearchForm extends Form {
+	class SearchForm extends Form 
+	{
 
 		/**
 		 * Our constructor only requires the controller and the name of the form
@@ -131,8 +131,8 @@ Our controller will now just have to create a new instance of this form object. 
 
 
 ```php
-	
-	class PageController extends ContentController {
+	class PageController extends ContentController 
+	{
 		
 		private static $allowed_actions = [
 			'SearchForm',

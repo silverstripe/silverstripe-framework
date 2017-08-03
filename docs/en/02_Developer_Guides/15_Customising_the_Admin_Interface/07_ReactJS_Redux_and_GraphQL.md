@@ -450,7 +450,9 @@ __my-module/js/components/Gallery.js__
 import React from 'react';
 import { inject } from 'lib/Injector';
 
-class Gallery extends React.Component {
+class Gallery extends React.Component 
+
+{
   render() {
     const { SearchComponent, ItemComponent } = this.props;
     return (
@@ -482,7 +484,8 @@ declare them in `inject()`. In cases like this, use `withInjector()`. This highe
 component puts the `Injector` instance in `context`.
 
 ```js
-class MyGallery extends React.Component {
+class MyGallery extends React.Component 
+{
   render () {
     <div>
       {this.props.items.map(item => {

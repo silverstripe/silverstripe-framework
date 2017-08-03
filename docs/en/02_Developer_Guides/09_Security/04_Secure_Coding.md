@@ -114,7 +114,8 @@ Example:
 
 
 ```php
-	class MyForm extends Form {
+	class MyForm extends Form 
+	{
 	  public function save($RAW_data, $form) {
 			// Pass true as the second parameter of raw2sql to quote the value safely
 			$SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
@@ -132,7 +133,8 @@ Example:
 
 
 ```php
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 	  private static $allowed_actions = ['myurlaction'];
 	  public function myurlaction($RAW_urlParams) {
 			// Pass true as the second parameter of raw2sql to quote the value safely
@@ -150,7 +152,8 @@ passing data through, escaping should happen at the end of the chain.
 
 
 ```php
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 	  /**
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
 	   */
@@ -231,7 +234,8 @@ PHP:
 
 
 ```php
-	class MyObject extends DataObject {
+	class MyObject extends DataObject 
+	{
 	  private static $db = [
 	    'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
 	    'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
@@ -280,7 +284,8 @@ PHP:
 
 
 ```php
-	class MyObject extends DataObject {
+	class MyObject extends DataObject 
+	{
 		public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
 	     
 		$casting = [
@@ -322,7 +327,8 @@ PHP:
 
 
 ```php
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		private static $allowed_actions = ['search'];
 		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
@@ -355,7 +361,8 @@ PHP:
 
 
 ```php
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		private static $allowed_actions = ['search'];
 		public function search($request) {
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
@@ -548,7 +555,8 @@ controller's `init()` method:
 
 
 ```php
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		public function init() {
 			parent::init();
 			$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -687,7 +695,8 @@ and `Date: <current date>` will ensure that sensitive content is not stored loca
 unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
 ```php
-	class MySecureController extends Controller {
+	class MySecureController extends Controller 
+	{
 		
 		public function init() {
 			parent::init();

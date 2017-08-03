@@ -14,8 +14,8 @@ In the `Player` example, we have four database columns each with a different dat
 **mysite/code/Player.php**
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		private static $db = [
 			'PlayerNumber' => 'Int',
@@ -53,8 +53,8 @@ For complex default values for newly instantiated objects see [Dynamic Default V
 For simple values you can make use of the `$defaults` array. For example:
 
 ```php
-	
-	class Car extends DataObject {
+	class Car extends DataObject 
+	{
 		
 		private static $db = [
 			'Wheels' => 'Int',
@@ -84,8 +84,8 @@ For enum values, it's the second parameter.
 For example:
 
 ```php
-	
-	class Car extends DataObject {
+	class Car extends DataObject 
+	{
 		
 		private static $db = [
 			'Wheels' => 'Int(4)',
@@ -107,8 +107,8 @@ object we can control the formatting and it allows us to call methods defined fr
 **mysite/code/Player.php**
 	
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		..
 
@@ -138,8 +138,8 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $casting = [
 	    "Name" => 'Varchar',
@@ -176,8 +176,8 @@ Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\Vi
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php
-	
-	class MyObject extends ViewableData {
+	class MyObject extends ViewableData 
+	{
 		
 		private static $casting = [
 			'MyDate' => 'Date'
@@ -215,8 +215,8 @@ The following example will use the result of `getStatus` instead of the 'Status'
 database column using `dbObject`.
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $db = [
 	    "Status" => "Enum(array('Active', 'Injured', 'Retired'))"

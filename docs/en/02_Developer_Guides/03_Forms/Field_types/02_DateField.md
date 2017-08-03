@@ -16,8 +16,8 @@ The following example will add a simple DateField to your Page, allowing you to 
 
 
 ```php
-	
-	class Page extends SiteTree {
+	class Page extends SiteTree 
+	{
 
 		private static $db = [
 			'MyDate' => 'Date',

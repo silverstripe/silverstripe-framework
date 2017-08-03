@@ -17,8 +17,8 @@ information about the individual player and a relation set up for managing the `
 
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 	
 	   private static $db = [
 	      'PlayerNumber' => 'Int',
@@ -38,8 +38,8 @@ information about the individual player and a relation set up for managing the `
 
 
 ```php
-	
-	class FootballTeam extends DataObject {
+	class FootballTeam extends DataObject 
+	{
 	   
 	   private static $db = [
 	      'Title' => 'Text'
@@ -68,8 +68,8 @@ Our final import looks like this.
 
 
 ```php
-	
-	class PlayerCsvBulkLoader extends CsvBulkLoader {
+	class PlayerCsvBulkLoader extends CsvBulkLoader 
+	{
 
 	   public $columnMap = [
 	      'Number' => 'PlayerNumber',

@@ -19,8 +19,8 @@ below:
 
 
 ```php
-	
-	class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider {
+	class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider 
+	{
 
 		public function augmentColumns($gridField, &$columns) {
 			if(!in_array('Actions', $columns)) {

@@ -20,12 +20,14 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 ```php
 	// mysite/code/NewsPageHolder.php
-	class NewsPageHolder extends Page {
+	class NewsPageHolder extends Page 
+	{
 		private static $allowed_children = ['NewsPage'];
 	}
 
 	// mysite/code/NewsPage.php
-	class NewsPage extends Page {
+	class NewsPage extends Page 
+	{
 		private static $has_one = [
 			'Author' => 'Member',
 		];
@@ -42,7 +44,8 @@ or across page types with common characteristics.
 
 ```php
 	// mysite/code/NewsPageHolderCMSMainExtension.php
-	class NewsPageHolderCMSMainExtension extends Extension {
+	class NewsPageHolderCMSMainExtension extends Extension 
+	{
 		function updateListView($listView) {
 			$parentId = $listView->getController()->getRequest()->requestVar('ParentID');
 			$parent = ($parentId) ? Page::get()->byId($parentId) : new Page();

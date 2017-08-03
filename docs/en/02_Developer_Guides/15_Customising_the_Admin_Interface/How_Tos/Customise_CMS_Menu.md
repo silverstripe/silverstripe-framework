@@ -22,7 +22,8 @@ black-and-transparent PNG graphics. In this case we'll place the icon in
 
 
 ```php
-	class ProductAdmin extends ModelAdmin {
+	class ProductAdmin extends ModelAdmin 
+	{
 		// ...
 		private static $menu_icon = 'mysite/images/product-icon.png';
 	}
@@ -36,7 +37,8 @@ controller, removing the "Admin" bit at the end.
 
 
 ```php
-	class ProductAdmin extends ModelAdmin {
+	class ProductAdmin extends ModelAdmin 
+	{
 		// ...
 		private static $menu_title = 'My Custom Admin';
 	}
@@ -60,8 +62,8 @@ button configuration.
 
 
 ```php
-	
-	class CustomLeftAndMain extends LeftAndMainExtension {
+	class CustomLeftAndMain extends LeftAndMainExtension 
+	{
 
 		public function init() {
 			// unique identifier for this item. Will have an ID of Menu-$ID

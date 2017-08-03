@@ -162,7 +162,8 @@ Basic example form in a CMS controller subclass:
 
 
 ```php
-	class MyAdmin extends LeftAndMain {
+	class MyAdmin extends LeftAndMain 
+	{
 		function getEditForm() {
 			return CMSForm::create(
 				$this,
@@ -362,7 +363,8 @@ in a single Ajax request.
 
 ```php
 	// mysite/code/MyAdmin.php
-	class MyAdmin extends LeftAndMain {
+	class MyAdmin extends LeftAndMain 
+	{
 		private static $url_segment = 'myadmin';
 		public function getResponseNegotiator() {
 			$negotiator = parent::getResponseNegotiator();
@@ -486,8 +488,10 @@ without affecting the response body.
 
 
 ```php
-	class MyController extends LeftAndMain {
-		class myaction() {
+	class MyController extends LeftAndMain 
+	{
+	class myaction() 
+	{
 			// ...
 			$this->getResponse()->addHeader('X-Controller', 'MyOtherController');
 			return $html;

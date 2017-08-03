@@ -17,8 +17,8 @@ code.
 </div>
 
 ```php
-	
-	class MyDataObject extends DataObject {
+	class MyDataObject extends DataObject 
+	{
 	
 		public function canView($member = null) {
 			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);

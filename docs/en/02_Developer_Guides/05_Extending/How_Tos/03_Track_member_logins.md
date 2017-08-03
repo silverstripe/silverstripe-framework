@@ -11,7 +11,8 @@ explicitly logging in or by invoking the "remember me" functionality.
 
 
 ```php
-		class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 		private static $db = [
 			'LastVisited' => 'Datetime',
 			'NumVisit' => 'Int',

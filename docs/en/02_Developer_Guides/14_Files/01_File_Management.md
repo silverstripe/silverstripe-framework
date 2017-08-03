@@ -53,7 +53,8 @@ within the assets folder).
 For example, to load a temporary file into a DataObject you could use the below:
 ```php
 	<?
-	class Banner extends DataObject {
+	class Banner extends DataObject 
+	{
 		private static $db = [
 			'Image' => 'DBFile'
 		];

@@ -21,7 +21,8 @@ also track versioned history.
 
 
 ```php
-	class MyStagedModel extends DataObject {
+	class MyStagedModel extends DataObject 
+	{
 		private static $extensions = [
 			Versioned::class
 		];
@@ -33,7 +34,8 @@ can be specified by setting the constructor argument to "Versioned"
 
 
 ```php
-	class VersionedModel extends DataObject {
+	class VersionedModel extends DataObject 
+	{
 		private static $extensions = [
 			"SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
 		];
@@ -184,7 +186,8 @@ without requiring any custom code.
 
 
 ```php
-	class MyPage extends Page {
+	class MyPage extends Page 
+	{
 		private static $has_many = [
 			'Banners' => Banner::class
 		];
@@ -192,8 +195,8 @@ without requiring any custom code.
 			'Banners'
 		];
 	}
-	
-	class Banner extends Page {
+	class Banner extends Page 
+	{
 		private static $extensions = [
 			Versioned::class
 		];
@@ -224,7 +227,8 @@ that can be used to traverse between each, and then by ensuring you configure bo
 E.g.
 
 ```php
-	class MyParent extends DataObject {
+	class MyParent extends DataObject 
+	{
 		private static $extensions = [
 			Versioned::class
 		];
@@ -235,7 +239,8 @@ E.g.
 			return MyChild::get();
 		}
 	}
-	class MyChild extends DataObject {
+	class MyChild extends DataObject 
+	{
 		private static $extensions = [
 			Versioned::class
 		];
@@ -291,7 +296,8 @@ Versioned object visibility can be customised in one of the following ways by ed
 E.g.
 
 ```php
-    class MyObject extends DataObject {
+ class MyObject extends DataObject 
+ {
         private static $extensions = [
             Versioned::class,
         ];
@@ -323,7 +329,8 @@ only be invoked if the object is in a non-published state.
 E.g.
 
 ```php
-    class MyObjectExtension extends DataExtension {
+ class MyObjectExtension extends DataExtension 
+ {
         public function canViewNonLive($member = null) {
             return Permission::check($member, 'DRAFT_STATUS');
         }
@@ -336,7 +343,8 @@ permissions in the `TargetObject.non_live_permissions` config.
 E.g.
 
 ```php
-    class MyObject extends DataObject {
+ class MyObject extends DataObject 
+ {
         private static $extensions = [
             Versioned::class,
         ];

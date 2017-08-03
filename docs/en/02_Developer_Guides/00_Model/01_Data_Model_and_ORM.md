@@ -20,8 +20,8 @@ Let's look at a simple example:
 **mysite/code/Player.php**
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		private static $db = [
 			'PlayerNumber' => 'Int',
@@ -77,8 +77,8 @@ system. Instead, it will generate a new `ID` by adding 1 to the current maximum 
 **mysite/code/Player.php**
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		private static $db = [
 			'PlayerNumber' => 'Int',
@@ -570,7 +570,8 @@ For instance, the below model will be stored in the table name `BannerImage`
 
 ```php
 	namespace SilverStripe\BannerManager;
-	class BannerImage extends \DataObject {
+	class BannerImage extends \DataObject 
+	{
 		private static $table_name = 'BannerImage';
 	}
 ```
@@ -660,8 +661,8 @@ Define the default values for all the `$db` fields. This example sets the "Statu
 whenever a new object is created.
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		private static $defaults = [
 			"Status" => 'Active',
@@ -685,12 +686,12 @@ time.
 For example, suppose we have the following set of classes:
 
 ```php
-	
-	class Page extends SiteTree {
+	class Page extends SiteTree 
+	{
 
 	}
-
-	class NewsPage extends Page {
+	class NewsPage extends Page 
+	{
 
 		private static $db = [
 			'Summary' => 'Text'

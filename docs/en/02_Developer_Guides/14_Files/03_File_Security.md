@@ -65,7 +65,8 @@ authorised users, the following should be considered:
 
 
 ```php
-    class PageController extends ContentController {
+ class PageController extends ContentController 
+ {
         public function init() {
             parent::init();
             // Whitelist any protected files on this page for the current user
@@ -96,7 +97,8 @@ authorised users, the following should be considered:
 
 
 ```php
-    class PageController extends ContentController {
+ class PageController extends ContentController 
+ {
         public function init() {
             parent::init();
             // Whitelist any protected files on this page for the current user
@@ -309,7 +311,8 @@ the `Versioned` extension.
 
 
 ```php
-    class MyVersiondObject extends DataObject {
+ class MyVersiondObject extends DataObject 
+ {
         /** Ensure assets are archived along with the DataObject */
         private static $keep_archived_assets = true;
         /** Versioned */

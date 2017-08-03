@@ -19,8 +19,8 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 
 
 ```php
-		
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 
 		private static $db = [
 			'DateOfBirth' => 'SS_Datetime'
@@ -79,8 +79,8 @@ $has_one etc.
 
 
 ```php
-	
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 
 		private static $db = [
 			'Position' => 'Varchar',
@@ -158,8 +158,8 @@ validator by defining the `updateValidator` method.
 
 
 ```php
-	
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 
 		// ..
 
@@ -179,8 +179,8 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
-	
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 
 		private static $db = [
 			'Position' => 'Varchar',
@@ -225,8 +225,8 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 
 ```php
-	
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 
 		public function updateFoo($foo) {
 			// outputs the original class

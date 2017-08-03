@@ -10,7 +10,8 @@ with information that we need.
 
 
 ```php
-	class MyObjectTest extends SapphireTest {
+	class MyObjectTest extends SapphireTest 
+	{
 
 		protected $factory;
 

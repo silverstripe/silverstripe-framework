@@ -47,8 +47,8 @@ used.
 
 
 ```php
-	
-	class MySQLWriteDbAspect implements BeforeCallAspect {
+	class MySQLWriteDbAspect implements BeforeCallAspect 
+	{
 
 		/**
 		 * @var MySQLDatabase

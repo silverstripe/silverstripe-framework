@@ -40,8 +40,8 @@ To extend the options available in the panel, define your own fields via a [Data
 
 
 ```php
-		
-	class CustomSiteConfig extends DataExtension {
+	class CustomSiteConfig extends DataExtension 
+	{
 		
 		private static $db = [
 			'FooterContent' => 'HTMLText'

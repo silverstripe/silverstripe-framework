@@ -115,7 +115,8 @@ The restriction is enforced through the `$allowed_children` directive.
 ```php
 use Page;
 
-class ProjectsHolder extends Page {
+class ProjectsHolder extends Page 
+{
     private static $allowed_children = [
         'Project'
     ];

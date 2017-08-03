@@ -49,7 +49,8 @@ The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is t
 
 
 ```php
-		class PlayerAdmin extends ModelAdmin {
+	class PlayerAdmin extends ModelAdmin 
+	{
 	   private static $managed_models = [
 	      'Player'
 	   ];
@@ -74,7 +75,8 @@ You'll need to add a route to your controller to make it accessible via URL
 
 
 ```php
-		class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		private static $allowed_actions = ['Form'];
 
@@ -134,7 +136,8 @@ Datamodel for Player
 
 
 ```php
-		class Player extends DataObject {
+	class Player extends DataObject 
+	{
 	   private static $db = [
 	      'PlayerNumber' => 'Int',
 	      'FirstName' => 'Text',
@@ -153,7 +156,8 @@ Datamodel for FootballTeam:
 
 
 ```php
-		class FootballTeam extends DataObject {
+	class FootballTeam extends DataObject 
+	{
 	   private static $db = [
 	      'Title' => 'Text',
 	   ];
@@ -172,7 +176,8 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Avoids duplicate imports by a custom `$duplicateChecks` definition
 *  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
 ```php
-		class PlayerCsvBulkLoader extends CsvBulkLoader {
+	class PlayerCsvBulkLoader extends CsvBulkLoader 
+	{
 	   public $columnMap = [
 	      'Number' => 'PlayerNumber', 
 	      'Name' => '->importFirstAndLastName', 
@@ -206,7 +211,8 @@ Building off of the ModelAdmin example up top, use a custom loader instead of th
 
 
 ```php
-		class PlayerAdmin extends ModelAdmin {
+	class PlayerAdmin extends ModelAdmin 
+	{
 	   private static $managed_models = [
 		  'Player'
 	   ];

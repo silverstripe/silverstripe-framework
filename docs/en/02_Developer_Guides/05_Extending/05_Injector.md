@@ -69,9 +69,8 @@ The `Injector` API can be used to define the types of `$dependencies` that an ob
 
 
 ```php
- 
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 	
 		// both of these properties will be automatically
 		// set by the injector on object creation
@@ -177,8 +176,8 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 
 
 ```php
-	
-	class MyFactory implements SilverStripe\Core\Injector\Factory {
+	class MyFactory implements SilverStripe\Core\Injector\Factory 
+	{
 
 		public function create($service, array $params = []) {
 			return new MyServiceImplementation();
@@ -213,16 +212,16 @@ Assuming a class structure such as
 
 
 ```php
-	
-	class RestrictivePermissionService {
+	class RestrictivePermissionService 
+	{
 		private $database;
 
 		public function setDatabase($d) {	
 			$this->database = $d;
 		}
 	}
-	
-	class MySQLDatabase {
+	class MySQLDatabase 
+	{
 		private $username;
 		private $password;
 		

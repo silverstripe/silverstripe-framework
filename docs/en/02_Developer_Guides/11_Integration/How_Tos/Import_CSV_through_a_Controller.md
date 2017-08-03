@@ -8,8 +8,8 @@ form (which is used for `MyDataObject` instances). You can access it through
 
 
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		private static $allowed_actions = [
 			'Form'

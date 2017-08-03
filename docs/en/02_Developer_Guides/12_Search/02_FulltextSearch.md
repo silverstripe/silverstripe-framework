@@ -23,8 +23,8 @@ You can do so by adding this static variable to your class definition:
 
 
 ```php
-	
-	class MyDataObject extends DataObject {
+	class MyDataObject extends DataObject 
+	{
 
 		private static $create_table_options = [
 			'MySQLDatabase' => 'ENGINE=MyISAM'
@@ -50,7 +50,8 @@ Example DataObject:
 
 
 ```php
-	class SearchableDataObject extends DataObject {
+	class SearchableDataObject extends DataObject 
+	{
 		
 		private static $db = [
 			"Title" => "Varchar(255)",

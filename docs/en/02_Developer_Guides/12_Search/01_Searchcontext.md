@@ -20,8 +20,8 @@ Defining search-able fields on your DataObject.
 
 
 ```php
-	
-	class MyDataObject extends DataObject {
+	class MyDataObject extends DataObject 
+	{
 
 	   private static $searchable_fields = [
 	      'Name',
@@ -39,8 +39,8 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 
 
 ```php
-	
-	class MyDataObject extends DataObject {
+	class MyDataObject extends DataObject 
+	{
 
 		private static $db = [
 			'PublicProperty' => 'Text'
@@ -84,8 +84,8 @@ the `$fields` constructor parameter.
 ```php
 	
 	// ..
-
-	class PageController extends ContentController {
+	class PageController extends ContentController 
+	{
 
 		public function SearchForm() {
 			$context = singleton('MyDataObject')->getCustomSearchContext();

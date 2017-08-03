@@ -12,8 +12,8 @@ Any action you define on a controller must be defined in a `$allowed_actions` st
 directly calling methods that they shouldn't.
 
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		
 		private static $allowed_actions = [
 			// someaction can be accessed by anyone, any time
@@ -47,8 +47,8 @@ is specifically restricted.
 
 ```php
 	<?php 
-
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		public function index() {
 			// allowed without an $allowed_action defined
@@ -59,8 +59,8 @@ is specifically restricted.
 `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ```php
-	
-	class MyExtension extends Extension {
+	class MyExtension extends Extension 
+	{
 
 		private static $allowed_actions = [
 			'mycustomaction'
@@ -72,8 +72,8 @@ is specifically restricted.
 Only public methods can be made accessible.
 
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		private static $allowed_actions = [
 			'secure',
@@ -93,8 +93,8 @@ Only public methods can be made accessible.
 
 If a method on a parent class is overwritten, access control for it has to be redefined as well.
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		private static $allowed_actions = [
 			'action',
@@ -104,8 +104,8 @@ If a method on a parent class is overwritten, access control for it has to be re
 			// ..
 		}
 	}
-
-	class MyChildController extends MyController {
+	class MyChildController extends MyController 
+	{
 
 		private static $allowed_actions = [
 			'action', // required as we are redefining action
@@ -127,8 +127,8 @@ Access checks on parent classes need to be overwritten via the [Configuration AP
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 
 		private static $allowed_actions = [
 			'ContactForm' // use the Form method, not the action
@@ -151,8 +151,8 @@ Each method responding to a URL can also implement custom permission checks, e.g
 the passed request data.
 
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		
 		private static $allowed_actions = [
 			'myaction'
@@ -184,8 +184,8 @@ execution. This behavior can be used to implement permission checks.
 `init` is called for any possible action on the controller and before any specific method such as `index`.
 </div>
 ```php
-	
-	class MyController extends Controller {
+	class MyController extends Controller 
+	{
 		
 		private static $allowed_actions = [];
 		

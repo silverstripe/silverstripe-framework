@@ -16,8 +16,8 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 
 ```php
-		
-	class MyNewTest extends SapphireTest {
+	class MyNewTest extends SapphireTest 
+	{
 	
 		protected static $fixture_file = 'fixtures.yml';
 		
@@ -31,8 +31,8 @@ You can also use an array of fixture files, if you want to use parts of multiple
 
 
 ```php
-		
-	class MyNewTest extends SapphireTest {
+	class MyNewTest extends SapphireTest 
+	{
 	
 		protected static $fixture_file = [
 			'fixtures.yml',

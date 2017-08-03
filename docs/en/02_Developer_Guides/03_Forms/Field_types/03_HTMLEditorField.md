@@ -17,8 +17,8 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 
 
 ```php
-	
-	class MyObject extends DataObject {
+	class MyObject extends DataObject 
+	{
 		
 		private static $db = [
 			'Content' => 'HTMLText'
@@ -46,7 +46,8 @@ This is particularly useful if you need different configurations for multiple [H
 
 
 ```php
-	class MyObject extends DataObject {
+	class MyObject extends DataObject 
+	{
 		private static $db = [
 			'Content' => 'HTMLText',
 			'OtherContent' => 'HTMLText'
@@ -244,7 +245,8 @@ Example: Remove field for "image captions"
 
 ```php
 	// File: mysite/code/MyToolbarExtension.php
-	class MyToolbarExtension extends Extension {
+	class MyToolbarExtension extends Extension 
+	{
 		public function updateFieldsForImage(&$fields, $url, $file) {
 			$fields->removeByName('CaptionText');
 		}
@@ -284,7 +286,8 @@ of the CMS you have to take care of instantiate yourself:
 
 ```php
 	// File: mysite/code/MyController.php
-	class MyObjectController extends Controller {
+	class MyObjectController extends Controller 
+	{
 		public function Modals() {
 			return ModalController::create($this, "Modals");
 		}

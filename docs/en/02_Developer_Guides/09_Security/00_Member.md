@@ -49,7 +49,8 @@ You can define subclasses of [Member](api:SilverStripe\Security\Member) to add e
 
 
 ```php
-	class MyMember extends Member {
+	class MyMember extends Member 
+	{
 		private static $db = [
 			"Age" => "Int",
 			"Address" => "Text",
@@ -114,7 +115,8 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 
 
 ```php
-	class MyMemberExtension extends DataExtension {
+	class MyMemberExtension extends DataExtension 
+	{
 	  /**
 	
 	   * Modify the field set to be displayed in the CMS detail pop-up

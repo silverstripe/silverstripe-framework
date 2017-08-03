@@ -21,8 +21,8 @@ a category.
 
 
 ```php
-	
-	class Product extends DataObject {
+	class Product extends DataObject 
+	{
 
 		private static $db = [
 			'Name' => 'Varchar',
@@ -41,8 +41,8 @@ a category.
 
 
 ```php
-	
-	class Category extends DataObject {
+	class Category extends DataObject 
+	{
 
 		private static $db = [
 			'Title' => 'Text'
@@ -64,8 +64,8 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 
 		private static $managed_models = [
 			'Product',
@@ -104,8 +104,8 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 
 
 ```php
-	
-	class Category extends DataObject {
+	class Category extends DataObject 
+	{
 	  // ...
 		public function canView($member = null) {
 			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
@@ -138,8 +138,8 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 
 ```php
-	
-	class Product extends DataObject {
+	class Product extends DataObject 
+	{
 
 	   private static $searchable_fields = [
 	      'Name',
@@ -163,8 +163,8 @@ model class, where you can add or remove columns. To change the title, use [Data
 
 
 ```php
-	
-	class Product extends DataObject {
+	class Product extends DataObject 
+	{
 
 	   private static $field_labels = [
 	      'Price' => 'Cost' // renames the column to "Cost"
@@ -188,8 +188,8 @@ For example, we might want to exclude all products without prices in our sample 
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 
 		public function getList() {
 			$list = parent::getList();
@@ -211,8 +211,8 @@ checkbox which limits search results to expensive products (over $100).
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 
 		public function getSearchContext() {
 			$context = parent::getSearchContext();
@@ -245,8 +245,8 @@ example, to add a new component.
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 
 		private static $managed_models = [
 			'Product',
@@ -279,8 +279,8 @@ to only one specific `GridField`:
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 
 		private static $managed_models = [
 			'Product',
@@ -321,8 +321,8 @@ To customize the exported columns, create a new method called `getExportFields` 
 
 
 ```php
-	
-	class MyAdmin extends ModelAdmin {
+	class MyAdmin extends ModelAdmin 
+	{
 		// ...
 
 		public function getExportFields() {

@@ -16,8 +16,8 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 "TeamID" on the "Player"-table.
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 
 		private static $db = [
 			'Title' => 'Varchar'
@@ -27,8 +27,8 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 			'Players' => 'Player'
 		];
 	}
-
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $has_one = [
 	    "Team" => "Team",
@@ -75,20 +75,22 @@ To specify that a has_one relation is polymorphic set the type to 'DataObject'.
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
 ```php
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 		private static $has_many = [
 			"Fans" => "Fan.FanOf"
 		];
 	}
-
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 		private static $has_many = [
 			"Fans" => "Fan.FanOf"
 		];
 	}
 
 	// Type of object returned by $fan->FanOf() will vary
-	class Fan extends DataObject {
+	class Fan extends DataObject 
+	{
 
 		// Generates columns FanOfID and FanOfClass
 		private static $has_one = [
@@ -116,8 +118,8 @@ available on both ends.
 </div>
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 
 		private static $db = [
 			'Title' => 'Varchar'
@@ -127,8 +129,8 @@ available on both ends.
 			'Players' => 'Player'
 		];
 	}
-
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $has_one = [
 	    "Team" => "Team",
@@ -157,16 +159,16 @@ you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rath
 To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
 ```php
-	
-	class Person extends DataObject {
+	class Person extends DataObject 
+	{
 
 		private static $has_many = [
 			"Managing" => "Company.Manager",
 			"Cleaning" => "Company.Cleaner",
 		];
 	}
-	
-	class Company extends DataObject {
+	class Company extends DataObject 
+	{
 
 		private static $has_one = [
 			"Manager" => "Person",
@@ -201,15 +203,15 @@ Similarly with `$has_many`, dot notation can be used to explicitly specify the `
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 		
 		private static $has_one = [
 			'Coach' => 'Coach'
 		];
 	}
-
-	class Coach extends DataObject {
+	class Coach extends DataObject 
+	{
 		
 		private static $belongs_to = [
 			'Team' => 'Team.Coach'
@@ -251,8 +253,8 @@ config to add extra columns.
 
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 	  private static $many_many = [
 	    "Supporters" => "Supporter",
 	  ];
@@ -262,8 +264,8 @@ config to add extra columns.
 	    ]
 	  ];
 	}
-
-	class Supporter extends DataObject {
+	class Supporter extends DataObject 
+	{
 
 	  private static $belongs_many_many = [
 	    "Supports" => "Team",
@@ -294,8 +296,8 @@ or child record.
 The syntax for `belongs_many_many` is unchanged.
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 	  private static $many_many = [
 	    "Supporters" => [
 	      'through' => 'TeamSupporter',
@@ -304,14 +306,14 @@ The syntax for `belongs_many_many` is unchanged.
 	    ]
 	  ];
 	}
-
-	class Supporter extends DataObject {
+	class Supporter extends DataObject 
+	{
 	  private static $belongs_many_many = [
 	    "Supports" => "Team",
 	  ];
 	}
-	
-	class TeamSupporter extends DataObject {
+	class TeamSupporter extends DataObject 
+	{
 	  private static $db = [
 	    'Ranking' => 'Int',
 	  ];
@@ -363,16 +365,16 @@ distinguish them like below:
 
 
 ```php
-	
-	class Category extends DataObject {
+	class Category extends DataObject 
+	{
 		
 		private static $many_many = [
 			'Products' => 'Product',
 			'FeaturedProducts' => 'Product'
 		];
 	}
-
-	class Product extends DataObject {
+	class Product extends DataObject 
+	{
 		
 		private static $belongs_many_many = [
 			'Categories' => 'Category.Products',
@@ -414,8 +416,8 @@ You can use the ORM to get a filtered result list without writing any SQL. For e
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 
 	  private static $has_many = [
 	    "Players" => "Player"

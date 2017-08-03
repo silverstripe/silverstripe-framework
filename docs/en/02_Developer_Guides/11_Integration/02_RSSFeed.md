@@ -58,8 +58,8 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 ```php
 		
 	..
-
-	class PageController extends ContentController {
+	class PageController extends ContentController 
+	{
 
 		private static $allowed_actions = [
 			'rss'
@@ -103,8 +103,8 @@ method is defined and returns a string to the full website URL.
 
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 		public function AbsoluteLink() {
 			// assumes players can be accessed at yoursite.com/players/2
@@ -122,8 +122,8 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 
 
 ```php
-	
-	class PageController extends ContentController {
+	class PageController extends ContentController 
+	{
 
 		private static $allowed_actions = [
 			'players'

@@ -160,8 +160,8 @@ If the web service returned an error (for example, API key not available or inad
 
 
 ```php
-	
-	class MyRestfulService extends RestfulService {
+	class MyRestfulService extends RestfulService 
+	{
 
 		public function errorCatch($response) {
 			$err_msg = $response;
@@ -179,8 +179,8 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 
 
 ```php
-	
-	class MyRestfulService extends RestfulService {
+	class MyRestfulService extends RestfulService 
+	{
 
 		public function __construct($expiry = NULL) {
 			parent::__construct('http://www.flickr.com/services/rest/', $expiry);

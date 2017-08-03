@@ -19,8 +19,8 @@ a `ModelAdmin` record.
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $has_many = [
 	    "Teams"=>"Team"
@@ -59,8 +59,8 @@ Example: Checking for a specific [permission](permissions) to delete this type o
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
 ```php
-	
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 
 	  private static $has_many = [
 	    "Teams" => "Team"

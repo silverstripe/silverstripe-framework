@@ -9,8 +9,8 @@ subclass the base `Controller` class.
 **mysite/code/controllers/TeamController.php**
 
 ```php
-		
-	class TeamController extends Controller {
+	class TeamController extends Controller 
+	{
 			
 		private static $allowed_actions = [
 			'players',

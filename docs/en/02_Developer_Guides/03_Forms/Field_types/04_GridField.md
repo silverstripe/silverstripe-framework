@@ -29,8 +29,8 @@ actions such as deleting records.
 
 
 ```php
-	
-	class Page extends SiteTree {
+	class Page extends SiteTree 
+	{
 		
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
@@ -61,8 +61,8 @@ the `getConfig()` method on `GridField`.
 
 
 ```php
-	
-	class Page extends SiteTree {
+	class Page extends SiteTree 
+	{
 		
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
@@ -269,8 +269,8 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 
 
 ```php
-	
-	class Team extends DataObject {
+	class Team extends DataObject 
+	{
 		
 		private static $db = [
 			'Name' => 'Text'
@@ -280,8 +280,8 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 			'Players' => 'Player'
 		];
 	}
-
-	class Player extends DataObject {
+	class Player extends DataObject 
+	{
 	
 		private static $db = [
 			'Name' => 'Text'
@@ -352,8 +352,8 @@ create an area rendered before the table wrapped in a simple `<div>`.
 
 
 ```php
-	
-	class MyAreaComponent implements GridField_HTMLProvider {
+	class MyAreaComponent implements GridField_HTMLProvider 
+	{
 	
 		public function getHTMLFragments( $gridField) {
 			return [
@@ -374,8 +374,8 @@ Now you can add other components into this area by returning them as an array fr
 
 
 ```php
-	
-	class MyShareLinkComponent implements GridField_HTMLProvider {
+	class MyShareLinkComponent implements GridField_HTMLProvider 
+	{
 	
 		public function getHTMLFragments( $gridField) {		
 			return [

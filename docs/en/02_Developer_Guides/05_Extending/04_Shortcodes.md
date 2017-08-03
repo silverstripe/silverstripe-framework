@@ -50,8 +50,8 @@ First we need to define a callback for the shortcode.
 
 
 ```php
-	
-	class Page extends SiteTree {
+	class Page extends SiteTree 
+	{
 		
 		private static $casting = [
 			'MyShortCodeMethod' => 'HTMLText'

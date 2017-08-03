@@ -11,8 +11,8 @@ response and modify the session within a test.
 
 
 ```php
-	
-	class HomePageTest extends FunctionalTest {
+	class HomePageTest extends FunctionalTest 
+	{
 
 		/**
 		 * Test generation of the view

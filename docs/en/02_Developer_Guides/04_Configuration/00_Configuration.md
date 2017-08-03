@@ -29,8 +29,8 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 
 ```php
-	
-	class MyClass extends Page {
+	class MyClass extends Page 
+	{
 
 		/**
 		 * @config
