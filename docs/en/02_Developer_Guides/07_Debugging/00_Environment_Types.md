@@ -83,7 +83,6 @@ You can check for the current environment type in [config files](../configuratio
 Checking for what environment you're running in can also be done in PHP. Your application code may disable or enable 
 certain functionality depending on the environment type.
 ```php
-
 	if (Director::isLive()) {
 		// is in live
 	} elseif (Director::isTest()) {

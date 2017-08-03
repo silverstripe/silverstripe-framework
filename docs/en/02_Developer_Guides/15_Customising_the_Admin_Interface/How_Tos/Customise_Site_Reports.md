@@ -34,7 +34,6 @@ The following example will create a report to list every page on the current sit
 
 ###CustomSideReport.php
 ```php
-
 	class CustomSideReport_NameOfReport extends SS_Report {
 		
 		// the name of the report
@@ -49,13 +48,14 @@ The following example will create a report to list every page on the current sit
 		
 		// which fields on that object we want to show
 		public function columns() {
-			$fields = array(
+			$fields = [
 				'Title' => 'Title'
-			);
+			];
 			
 			return $fields;
 		}
 	}
+
 ```
 
 More useful reports can be created by changing the `DataList` returned in the `sourceRecords` function.

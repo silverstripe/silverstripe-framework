@@ -17,14 +17,12 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 
 
 ```php
-
-	<?php
-
+	
 	class MyObject extends DataObject {
 		
-		private static $db = array(
+		private static $db = [
 			'Content' => 'HTMLText'
-		);
+		];
 		
 		public function getCMSFields() {
 			return new FieldList(
@@ -32,6 +30,7 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 			);
 		}
 	}
+
 ```
 
 ### Specify which configuration to use
@@ -47,20 +46,20 @@ This is particularly useful if you need different configurations for multiple [H
 
 
 ```php
-
 	class MyObject extends DataObject {
-		private static $db = array(
+		private static $db = [
 			'Content' => 'HTMLText',
 			'OtherContent' => 'HTMLText'
-		);
+		];
 		
 		public function getCMSFields() {
-			return new FieldList(array(
+			return new FieldList([
 				new HTMLEditorField('Content'),
 				new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
-			));
+			]);
 		}
 	}
+
 ```
 
 In the above example, the 'Content' field will use the default 'cms' config while 'OtherContent' will be using 'myConfig'.
@@ -93,7 +92,6 @@ transparently generate the relevant underlying TinyMCE code.
 **mysite/_config.php**
 
 ```php
-
 	HtmlEditorConfig::get('cms')->enablePlugins('media');
 ```
 
@@ -109,7 +107,6 @@ configuration. Here is an example of adding a `ssmacron` button after the `charm
 **mysite/_config.php**
 
 ```php
-
 	HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
 ```
 
@@ -118,7 +115,6 @@ Buttons can also be removed:
 **mysite/_config.php**
 
 ```php
-
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 ```
 
@@ -140,7 +136,6 @@ from the HTML source by the editor.
 **mysite/_config.php**
 
 ```php
-
 	// Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
 	HtmlEditorConfig::get('cms')->setOption(
 		'extended_valid_elements',
@@ -168,8 +163,8 @@ You can enable them through [HtmlEditorConfig::enablePlugins()](api:SilverStripe
 **mysite/_config.php**
 
 ```php
+	HtmlEditorConfig::get('cms')->enablePlugins(['myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js']);
 
-	HtmlEditorConfig::get('cms')->enablePlugins(array('myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js'));
 ```
 
 You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) from the TinyMCE documentation.
@@ -223,7 +218,6 @@ In case you want to adhere to HTML4 instead, use the following configuration:
 
 
 ```php
-
 	HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
 ```
 
@@ -249,7 +243,6 @@ Example: Remove field for "image captions"
 
 
 ```php
-
 	// File: mysite/code/MyToolbarExtension.php
 	class MyToolbarExtension extends Extension {
 		public function updateFieldsForImage(&$fields, $url, $file) {
@@ -261,7 +254,6 @@ Example: Remove field for "image captions"
 
 
 ```php
-
 	// File: mysite/_config.php
 	ModalController::add_extension('MyToolbarExtension');
 ```
@@ -291,7 +283,6 @@ of the CMS you have to take care of instantiate yourself:
 
 
 ```php
-
 	// File: mysite/code/MyController.php
 	class MyObjectController extends Controller {
 		public function Modals() {
@@ -305,7 +296,6 @@ so this is considered advanced usage of the field.
 
 
 ```php
-
 	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
 	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
@@ -332,7 +322,6 @@ Assuming you have the module installed, here's how you enable its use in `mysite
 
 
 ```php
-
 	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
 	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
 	HtmlEditorConfig::get('cms')->setOption(
@@ -346,7 +335,6 @@ Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecke
 
 
 ```php
-
 	
 	// ...
 	$config['general.engine'] = 'PSpell';

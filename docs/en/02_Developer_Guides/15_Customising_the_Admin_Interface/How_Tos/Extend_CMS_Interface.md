@@ -80,14 +80,12 @@ and insert the following code.
 
 
 ```php
-
-	<?php
-
+	
 	class BookmarkedPageExtension extends DataExtension {
 
-		private static $db = array(
+		private static $db = [
 			'IsBookmarked' => 'Boolean'
-		);
+		];
 
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldToTab('Root.Main',
@@ -95,6 +93,7 @@ and insert the following code.
 			);
 		}
 	}
+
 ```
 
 Enable the extension in your [configuration file](../../configuration)
@@ -121,9 +120,7 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 
 
 ```php
-
-	<?php
-
+	
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
 
 		public function BookmarkedPages() {
@@ -191,7 +188,6 @@ button group (`CompositeField`) in a similar fashion.
 
 
 ```php
-
 	$fields->unshift(FormAction::create('normal', 'Normal button'));
 ```
 
@@ -200,7 +196,6 @@ already present in the `FieldList`.
 
 
 ```php
-
 	$fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
 ```
 
@@ -209,7 +204,6 @@ infrequently used minor actions.
 
 
 ```php
-
 	$fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
 ```
 
@@ -218,7 +212,6 @@ We can also easily create new drop-up menus by defining new tabs within the
 
 
 ```php
-
 	$fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
 ```
 
@@ -243,12 +236,11 @@ applicable controller actions to it:
 
 
 ```php
-
 	class CustomActionsExtension extends LeftAndMainExtension {
 		
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
         	'sampleAction'
-    	);
+    	];
     	
     	public function sampleAction()
     	{
@@ -256,6 +248,7 @@ applicable controller actions to it:
     	}
     	
     }
+
 ```
 
 The extension then needs to be registered:
@@ -272,7 +265,6 @@ You can now use these handlers with your buttons:
 
 
 ```php
-
 	$fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
 ```
 

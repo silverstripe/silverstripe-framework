@@ -48,9 +48,7 @@ provide default template for an object.
 
 **mysite/code/Page.php**
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 
 		public function forTemplate() {
@@ -73,19 +71,18 @@ content that method sends back, or, provide a type in the `$casting` array for t
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 
-		private static $casting = array(
+		private static $casting = [
 			'MyCustomMethod' => 'HTMLText' 
-		);
+		];
 
 		public function MyCustomMethod() {
 			return "<h1>This is my header</h1>";
 		}
 	}
+
 ```
 
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data

@@ -66,7 +66,6 @@ __Example: using a subclass__
 
 
 ```php
-
 	class Page extends SiteTree {
 		public function getScheduledToPublish(){
 			// return either true or false

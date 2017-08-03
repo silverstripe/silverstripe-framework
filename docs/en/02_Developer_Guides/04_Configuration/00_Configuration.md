@@ -29,9 +29,7 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 
 ```php
-
-	<?php
-
+	
 	class MyClass extends Page {
 
 		/**
@@ -42,10 +40,11 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 		/**
 		 * @config
 		 */
-		private static $option_two = array();
+		private static $option_two = [];
 
 		// ..
 	}
+
 ```
 
 ## Accessing and Setting Configuration Properties
@@ -54,7 +53,6 @@ This can be done by calling the static method [Config::inst()](api:SilverStripe\
 
 
 ```php
-
 	$config = Config::inst()->get('MyClass', 'property');
 ```
 
@@ -99,7 +97,6 @@ To use those variables in your application code:
 
 
 ```php
-
 	$me = new MyClass();
 
 	echo $me->config()->option_one;
@@ -120,12 +117,13 @@ To use those variables in your application code:
 	// returns true
 
 	// You can also use the static version
-	MyClass::config()->option_two = array(
+	MyClass::config()->option_two = [
 		'Qux'
-	);
+	];
 
 	echo implode(', ', MyClass::config()->option_one);
 	// returns 'Qux'
+
 ```
 
 <div class="notice" markdown="1">

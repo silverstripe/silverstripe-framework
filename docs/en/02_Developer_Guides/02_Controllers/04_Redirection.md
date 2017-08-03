@@ -10,7 +10,6 @@ HTTP header.
 
 
 ```php
-
 	$this->redirect('goherenow');
 	// redirect to Page::goherenow(), i.e on the contact-us page this will redirect to /contact-us/goherenow/
 
@@ -29,7 +28,6 @@ HTTP header.
 The `redirect()` method takes an optional HTTP status code, either `301` for permanent redirects, or `302` for 
 temporary redirects (default).
 ```php
-
 	$this->redirect('/', 302);
 	// go back to the homepage, don't cache that this page has moved
 ```
@@ -41,10 +39,10 @@ operator.
 
 
 ```php
-
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		'players/john' => '~>coach'
-	);
+	];
+
 ```
 
 For more information on `$url_handlers` see the [Routing](routing) documenation.

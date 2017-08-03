@@ -14,7 +14,6 @@ unit-testing, you can create multiple Controllers, each with their own session.
 
 
 ```php
-
 	Session::set('MyValue', 6);
 ```
 
@@ -23,13 +22,13 @@ size restrictions as to how much you can save).
 
 
 ```php
-
 	// saves an array
-	Session::set('MyArrayOfValues', array('1','2','3'));
+	Session::set('MyArrayOfValues', ['1','2','3']);
 
 	// saves an object (you'll have to unserialize it back)
 	$object = new Object();
 	Session::set('MyObject', serialize($object));
+
 ```
 
  
@@ -40,7 +39,6 @@ can use this anywhere in your PHP files.
 
 
 ```php
-
 	echo Session::get('MyValue'); 
 	// returns 6
 
@@ -49,15 +47,16 @@ can use this anywhere in your PHP files.
 
 	$object = unserialize(Session::get('MyObject', $object)); 
 	// $object = Object()
+
 ```
 
 ## get_all
 
 You can also get all the values in the session at once. This is useful for debugging.
 ```php
-
 	Session::get_all(); 
 	// returns an array of all the session values.
+
 ```
 
 ## clear
@@ -65,14 +64,12 @@ You can also get all the values in the session at once. This is useful for debug
 Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have
 to specifically remove it.
 ```php
-
 	Session::clear('MyValue');
 ```
 
 Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
 including form and page comment information. None of this is vital but `clear_all` will clear everything.
 ```php
-
 	Session::clear_all();
 ```
 

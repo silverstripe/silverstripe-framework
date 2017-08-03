@@ -19,18 +19,18 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
 ```php
-
 	// mysite/code/NewsPageHolder.php
 	class NewsPageHolder extends Page {
-		private static $allowed_children = array('NewsPage');
+		private static $allowed_children = ['NewsPage'];
 	}
 
 	// mysite/code/NewsPage.php
 	class NewsPage extends Page {
-		private static $has_one = array(
+		private static $has_one = [
 			'Author' => 'Member',
-		);
+		];
 	}
+
 ```
 
 We'll now add an `Extension` subclass to `LeftAndMain`, which is the main CMS controller.
@@ -41,7 +41,6 @@ or across page types with common characteristics.
 
 
 ```php
-
 	// mysite/code/NewsPageHolderCMSMainExtension.php
 	class NewsPageHolderCMSMainExtension extends Extension {
 		function updateListView($listView) {

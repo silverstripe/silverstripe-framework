@@ -64,14 +64,15 @@ is applied via `FulltextSearchable::enable()`
 	
 		public function results($data, $form, $request) 
 		{
-			$data = array(
+			$data = [
 				'Results' => $form->getResults(),
 				'Query' => $form->getSearchQuery(),
 				'Title' => _t('SearchForm.SearchResults', 'Search Results')
-			);
-			return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
+			];
+			return $this->owner->customise($data)->renderWith(['Page_results', 'Page']);
 		}
 	}
+
 ```
 
 The code populates an array with the data we wish to pass to the template - the search results, query and title of the page. The final line is a little more complicated.

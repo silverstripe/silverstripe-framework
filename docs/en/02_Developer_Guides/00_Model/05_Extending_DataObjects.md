@@ -19,14 +19,12 @@ a `ModelAdmin` record.
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
-	  private static $has_many = array(
+	  private static $has_many = [
 	    "Teams"=>"Team"
-	  );
+	  ];
 	
 	  public function onBeforeWrite() {
 	    // check on first write action, aka "database row creation" (ID-property is not set)
@@ -50,6 +48,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	    parent::onBeforeWrite();
 	  }
 	}
+
 ```
 
 ## onBeforeDelete
@@ -60,14 +59,12 @@ Example: Checking for a specific [permission](permissions) to delete this type o
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
-	  private static $has_many = array(
+	  private static $has_many = [
 	    "Teams" => "Team"
-	  );
+	  ];
 	
 	  public function onBeforeDelete() {
 	    if(!Permission::check('PLAYER_DELETE')) {
@@ -78,6 +75,7 @@ member is logged in who belongs to a group containing the permission "PLAYER_DEL
 	    parent::onBeforeDelete();
 	  }
 	}
+
 ```
 
 <div class="notice" markdown='1'>

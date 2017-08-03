@@ -21,40 +21,38 @@ a category.
 
 
 ```php
-
-	<?php
-
+	
 	class Product extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'Name' => 'Varchar',
 			'ProductCode' => 'Varchar',
 			'Price' => 'Currency'
-		);
+		];
 
-		private static $has_one = array(
+		private static $has_one = [
 			'Category' => 'Category'
-		);
+		];
 	}
+
 ```
 
 **mysite/code/Category.php**
 
 
 ```php
-
-	<?php
-
+	
 	class Category extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'Title' => 'Text'
-		);
+		];
 
-		private static $has_many = array(
+		private static $has_many = [
 			'Products' => 'Product'
-		);
+		];
 	}
+
 ```
 
 To create your own `ModelAdmin`, simply extend the base class, and edit the `$managed_models` property with the list of
@@ -66,20 +64,19 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 
-		private static $managed_models = array(
+		private static $managed_models = [
 			'Product',
 			'Category'
-		);
+		];
 
 		private static $url_segment = 'products';
 
 		private static $menu_title = 'My Product Admin';
 	}
+
 ```
 
 This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
@@ -107,9 +104,7 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 
 
 ```php
-
-	<?php
-
+	
 	class Category extends DataObject {
 	  // ...
 		public function canView($member = null) {
@@ -143,16 +138,15 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 
 ```php
-
-	<?php
-
+	
 	class Product extends DataObject {
 
-	   private static $searchable_fields = array(
+	   private static $searchable_fields = [
 	      'Name',
 	      'ProductCode'
-	   );
+	   ];
 	}
+
 ```
 
 <div class="hint" markdown="1">
@@ -169,20 +163,19 @@ model class, where you can add or remove columns. To change the title, use [Data
 
 
 ```php
-
-	<?php
-
+	
 	class Product extends DataObject {
 
-	   private static $field_labels = array(
+	   private static $field_labels = [
 	      'Price' => 'Cost' // renames the column to "Cost"
-	   );
+	   ];
 
-	   private static $summary_fields = array(
+	   private static $summary_fields = [
 	      'Name',
 	      'Price'
-	   );
+	   ];
 	}
+
 ```
 
 The results list are retrieved from [SearchContext::getResults()](api:SilverStripe\ORM\Search\SearchContext::getResults()), based on the parameters passed through the search
@@ -195,9 +188,7 @@ For example, we might want to exclude all products without prices in our sample 
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 
 		public function getList() {
@@ -220,9 +211,7 @@ checkbox which limits search results to expensive products (over $100).
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 
 		public function getSearchContext() {
@@ -256,15 +245,13 @@ example, to add a new component.
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 
-		private static $managed_models = array(
+		private static $managed_models = [
 			'Product',
 			'Category'
-		);
+		];
 
 		// ...
 		public function getEditForm($id = null, $fields = null) {
@@ -282,6 +269,7 @@ example, to add a new component.
 			return $form;
 		}
 	}
+
 ```
 
 The above example will add the component to all `GridField`s (of all managed models). Alternatively we can also add it
@@ -291,15 +279,13 @@ to only one specific `GridField`:
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 
-		private static $managed_models = array(
+		private static $managed_models = [
 			'Product',
 			'Category'
-		);
+		];
 
 		public function getEditForm($id = null, $fields = null) {
 			$form = parent::getEditForm($id, $fields);
@@ -314,6 +300,7 @@ to only one specific `GridField`:
 			return $form;
 		}
 	}
+
 ```
 
 ## Data Import
@@ -334,20 +321,19 @@ To customize the exported columns, create a new method called `getExportFields` 
 
 
 ```php
-
-	<?php
-
+	
 	class MyAdmin extends ModelAdmin {
 		// ...
 
 		public function getExportFields() {
-			return array(
+			return [
 				'Name' => 'Name',
 				'ProductCode' => 'Product Code',
 				'Category.Title' => 'Category'
-			);
+			];
 		}
 	}
+
 ```
 
 ## Related Documentation

@@ -75,7 +75,6 @@ In PHP you should use:
 
 
 ```php
-
 	AdminRootController::admin_url()
 ```
 
@@ -163,7 +162,6 @@ Basic example form in a CMS controller subclass:
 
 
 ```php
-
 	class MyAdmin extends LeftAndMain {
 		function getEditForm() {
 			return CMSForm::create(
@@ -296,12 +294,12 @@ Firstly, `reactRouter` must be passed as a boolean flag to indicate that this se
 controlled by the react section, and thus should suppress registration of a page.js route
 for this section.
 ```php
-
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
 			'reactRouter' => true
 		]);
 	}
+
 ```
 
 Secondly, you should ensure that your react CMS section triggers route registration on the client side
@@ -363,7 +361,6 @@ in a single Ajax request.
 
 
 ```php
-
 	// mysite/code/MyAdmin.php
 	class MyAdmin extends LeftAndMain {
 		private static $url_segment = 'myadmin';
@@ -489,7 +486,6 @@ without affecting the response body.
 
 
 ```php
-
 	class MyController extends LeftAndMain {
 		class myaction() {
 			// ...
@@ -550,7 +546,6 @@ which is picked up by the menu:
 
 
 ```php
-
 	public function mycontrollermethod() {
 		// .. logic here
 		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');

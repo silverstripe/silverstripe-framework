@@ -9,7 +9,6 @@ creating [HTTPRequest](api:SilverStripe\Control\HTTPRequest), receiving [HTTPRes
 
 ## Get
 ```php
-
 	$page = $this->get($url);
 ```
 
@@ -18,7 +17,6 @@ of the response.
 
 ## Post
 ```php
-
 	$page = $this->post($url);
 ```
 
@@ -29,8 +27,8 @@ of the response.
 
 
 ```php
+	$submit = $this->submitForm($formID, $button = null, $data = []);
 
-	$submit = $this->submitForm($formID, $button = null, $data = array());
 ```
 
 Submits the given form (`#ContactForm`) on the current page and returns the [HTTPResponse](api:SilverStripe\Control\HTTPResponse).
@@ -39,7 +37,6 @@ Submits the given form (`#ContactForm`) on the current page and returns the [HTT
 
 
 ```php
-
 	$this->logInAs($member);
 ```
 
@@ -47,7 +44,6 @@ Logs a given user in, sets the current session. To log all users out pass `null`
 
 
 ```php
-
 	$this->logInAs(null);
 ```
 
@@ -59,10 +55,10 @@ The `FunctionalTest` class also provides additional asserts to validate your tes
 
 
 ```php
-
-	$this->assertPartialMatchBySelector('p.good',array(
+	$this->assertPartialMatchBySelector('p.good',[
 		'Test save was successful'
-	));
+	]);
+
 ```
 
 Asserts that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
@@ -74,10 +70,10 @@ assertion fails if one of the expectedMatches fails to appear.
 
 
 ```php
-
-	$this->assertExactMatchBySelector("#MyForm_ID p.error", array(
+	$this->assertExactMatchBySelector("#MyForm_ID p.error", [
 		"That email address is invalid."
-	));
+	]);
+
 ```
 
 Asserts that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
@@ -86,10 +82,10 @@ assertion fails if one of the expectedMatches fails to appear.
 
 ### assertPartialHTMLMatchBySelector
 ```php
-
-	$this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", array(
+	$this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", [
 		"That email address is invalid."
-	));
+	]);
+
 ```
 
 Assert that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
@@ -102,10 +98,10 @@ assertion fails if one of the expectedMatches fails to appear.
 
 ### assertExactHTMLMatchBySelector
 ```php
-
-	$this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", array(
+	$this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", [
 		"That email address is invalid."
-	));
+	]);
+
 ```
 
 Assert that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 

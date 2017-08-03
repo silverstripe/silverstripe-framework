@@ -104,7 +104,6 @@ Variables can come from your database fields, or custom methods you define on yo
 **mysite/code/Page.php**
 
 ```php
-
 	public function UsersIpAddress()
     {
 		return $this->getRequest()->getIP();

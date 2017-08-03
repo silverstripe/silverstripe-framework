@@ -24,7 +24,6 @@ SilverStripe\Core\Injector\Injector:
 
 
 ```php
-
 	$email = new Email($from, $to, $subject, $body);
 	$email->sendPlain();
 ```
@@ -37,7 +36,6 @@ to `*text*`).
 
 
 ```php
-
 	$email = new Email($from, $to, $subject, $body);
 	$email->send();
 ```
@@ -68,10 +66,10 @@ The PHP Logic..
 ```php
 $email = SilverStripe\Control\Email\Email::create()
     ->setHTMLTemplate('Email\\MyCustomEmail') 
-    ->setData(array(
+    ->setData([
         'Member' => Security::getCurrentUser(),
         'Link'=> $link,
-    ))
+    ])
     ->setFrom($from)
     ->setTo($to)
     ->setSubject($subject);
@@ -81,6 +79,7 @@ if ($email->send()) {
 } else {
     // there may have been 1 or more failures
 }
+
 ```
 
 <div class="alert" markdown="1">
@@ -136,7 +135,6 @@ Configuration of those properties looks like the following:
 
 
 ```php
-
 	if(Director::isLive()) {
 		Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
 	} else {
@@ -151,7 +149,6 @@ email, do the following. This is encouraged especially when the domain responsib
 necessarily the same which should be used for return correspondence and should help prevent your message from being 
 marked as spam.
 ```php
-
 	$email = new Email(..);
 	$email->setReplyTo('me@address.com');
 ```
@@ -163,7 +160,6 @@ For email headers which do not have getters or setters (like setTo(), setFrom())
 
 
 ```php
-
 	$email = new Email(...);
 	$email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValue');
 	..

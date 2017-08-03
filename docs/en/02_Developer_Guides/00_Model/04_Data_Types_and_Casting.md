@@ -14,18 +14,17 @@ In the `Player` example, we have four database columns each with a different dat
 **mysite/code/Player.php**
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'PlayerNumber' => 'Int',
 			'FirstName' => 'Varchar(255)',
 			'LastName' => 'Text',
 			'Birthday' => 'Date'
-		);
+		];
 	}
+
 ```
 
 ## Available Types
@@ -54,21 +53,20 @@ For complex default values for newly instantiated objects see [Dynamic Default V
 For simple values you can make use of the `$defaults` array. For example:
 
 ```php
-
-	<?php
-
+	
 	class Car extends DataObject {
 		
-		private static $db = array(
+		private static $db = [
 			'Wheels' => 'Int',
 			'Condition' => 'Enum(array("New","Fair","Junk"))'
-		);
+		];
 		
-		private static $defaults = array(
+		private static $defaults = [
 			'Wheels' => 4,
 			'Condition' => 'New'
-		);
+		];
 	}
+
 ```
 
 ### Default values for new database columns
@@ -86,17 +84,16 @@ For enum values, it's the second parameter.
 For example:
 
 ```php
-
-	<?php
-
+	
 	class Car extends DataObject {
 		
-		private static $db = array(
+		private static $db = [
 			'Wheels' => 'Int(4)',
 			'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
 			'Make' => 'Varchar(["default" => "Honda"]),
 		);
 	}
+
 ```
 
 ## Formatting Output
@@ -110,9 +107,7 @@ object we can control the formatting and it allows us to call methods defined fr
 **mysite/code/Player.php**
 	
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
 		..
@@ -126,7 +121,6 @@ object we can control the formatting and it allows us to call methods defined fr
 Then we can refer to a new `Name` column on our `Player` instances. In templates we don't need to use the `get` prefix.
 
 ```php
-
 	$player = Player::get()->byId(1);
 
 	echo $player->Name;
@@ -144,19 +138,18 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
-	  private static $casting = array(
+	  private static $casting = [
 	    "Name" => 'Varchar',
-	  );
+	  ];
 	
 	  public function getName() {
 	  	return $this->FirstName . ' '. $this->LastName;
 	  }
 	}
+
 ```
 
 The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
@@ -167,7 +160,6 @@ On the most basic level, the class can be used as simple conversion class from o
 number.
 
 ```php
-
 	DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 ```
 
@@ -175,7 +167,6 @@ Of course that's much more verbose than the equivalent PHP call. The power of [D
 sophisticated helpers, like showing the time difference to the current date:
 
 ```php
-
 	DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 ```
 
@@ -185,14 +176,12 @@ Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\Vi
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php
-
-	<?php
-
+	
 	class MyObject extends ViewableData {
 		
-		private static $casting = array(
+		private static $casting = [
 			'MyDate' => 'Date'
-		);
+		];
 
 		public function getMyDate() {
 			return '1982-01-01';
@@ -204,6 +193,7 @@ context. Through a `$casting` array, arbitrary properties and getters can be cas
 	$obj->MyDate; // returns string
 	$obj->obj('MyDate'); // returns object
 	$obj->obj('MyDate')->InPast(); // returns boolean
+
 ```
 
 ## Casting HTML Text
@@ -225,18 +215,17 @@ The following example will use the result of `getStatus` instead of the 'Status'
 database column using `dbObject`.
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
-	  private static $db = array(
+	  private static $db = [
 	    "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
-	  );
+	  ];
 
 	  public function getStatus() {
 	      return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
 	  }
+
 ```
 
 ## API Documentation

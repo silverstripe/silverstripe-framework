@@ -20,11 +20,11 @@ config option:
 
 
 ```php
-
     $store = singleton(AssetStore::class);
-    $store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, array(
+    $store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, [
         'visibility' => AssetStore::VISIBILITY_PROTECTED
-    ));
+    ]);
+
 ```
 
 ## User access control
@@ -65,7 +65,6 @@ authorised users, the following should be considered:
 
 
 ```php
-
     class PageController extends ContentController {
         public function init() {
             parent::init();
@@ -97,7 +96,6 @@ authorised users, the following should be considered:
 
 
 ```php
-
     class PageController extends ContentController {
         public function init() {
             parent::init();
@@ -130,10 +128,10 @@ E.g.
 
 
 ```php
-
-    $object->MyFile->setFromLocalFile($tmpFile['Path'], $filename, null, null, array(
+    $object->MyFile->setFromLocalFile($tmpFile['Path'], $filename, null, null, [
         'visibility' => AssetStore::VISIBILITY_PROTECTED
-    ));
+    ]);
+
 ```
 
 You can also adjust the visibility of any existing file to either public or protected.
@@ -141,7 +139,6 @@ You can also adjust the visibility of any existing file to either public or prot
 
 
 ```php
-
     // This will make the file available only when a user calls `->grant()`
     $object->SecretFile->protectFile();
     
@@ -197,7 +194,6 @@ the web server, bypassing the need for additional PHP requests.
 
 
 ```php
-
     $store = singleton(AssetStore::class);
     $store->publish('NewCompanyLogo.gif', 'a870de278b475cb75f5d9f451439b2d378e13af1');
 ```
@@ -313,13 +309,13 @@ the `Versioned` extension.
 
 
 ```php
-
     class MyVersiondObject extends DataObject {
         /** Ensure assets are archived along with the DataObject */
         private static $keep_archived_assets = true;
         /** Versioned */
-        private static $extensions = array('Versioned');
+        private static $extensions = ['Versioned'];
     }
+
 ```
 
 The extension can also be globally disabled by removing it at the root level:

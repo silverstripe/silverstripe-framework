@@ -8,8 +8,6 @@ SilverStripe provides server-side form validation out of the box through the [Va
 the [Form](api:SilverStripe\Forms\Form) constructor or through the function `setValidator`.
 
 ```php
-<?php
-
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\Form;
@@ -19,9 +17,9 @@ use SilverStripe\Forms\RequiredFields;
 
 class PageController extends ContentController
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'MyForm'
-    );
+    ];
 
     public function MyForm()
     {
@@ -35,9 +33,9 @@ class PageController extends ContentController
         );
 
         // the fields 'Name' and 'Email' are required.
-        $required = new RequiredFields(array(
+        $required = new RequiredFields([
             'Name', 'Email'
-        ));
+        ]);
 
         // $required can be set as an argument
         $form = new Form($controller, 'MyForm', $fields, $actions, $required);
@@ -53,6 +51,7 @@ class PageController extends ContentController
         //..
     }
 }
+
 ```
 
 In this example we will be required to input a value for `Name` and a valid email address for `Email` before the 
@@ -96,8 +95,6 @@ the same validation logic applied to it throughout.
 **mysite/code/CustomNumberField.php**
 
 ```php
-<?php
-
 use SilverStripe\Forms\TextField;
 
 class CustomNumberField extends TextField
@@ -128,8 +125,6 @@ reusable and would not be possible within the `CMS` or other automated `UI` but 
 `FormField` classes.
     
 ```php
-<?php
-
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -140,9 +135,9 @@ use SilverStripe\Security\Member;
 
 class Page_Controller extends ContentController
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'MyForm'
-    );
+    ];
 
     public function MyForm()
     {
@@ -179,6 +174,7 @@ class Page_Controller extends ContentController
         return $this->redirectBack();
     }
 }
+
 ```
     
 ## Exempt validation actions
@@ -283,17 +279,15 @@ Again, custom error messages can be provided through the `FormField`
 </div>
 
 ```php
-<?php
-
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\RequiredFields;
 
 class Page extends SiteTree
 {
-    private static $db = array(
+    private static $db = [
         'MyRequiredField' => 'Text'
-    );
+    ];
 
     public function getCMSFields()
     {
@@ -306,11 +300,12 @@ class Page extends SiteTree
     
     public function getCMSValidator()
     {
-        return new RequiredFields(array(
+        return new RequiredFields([
             'MyRequiredField'
-        ));
+        ]);
     }
 }
+
 ```
 
 ## API Documentation

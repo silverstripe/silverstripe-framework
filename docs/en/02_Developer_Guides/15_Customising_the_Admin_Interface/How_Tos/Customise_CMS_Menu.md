@@ -22,7 +22,6 @@ black-and-transparent PNG graphics. In this case we'll place the icon in
 
 
 ```php
-
 	class ProductAdmin extends ModelAdmin {
 		// ...
 		private static $menu_icon = 'mysite/images/product-icon.png';
@@ -37,7 +36,6 @@ controller, removing the "Admin" bit at the end.
 
 
 ```php
-
 	class ProductAdmin extends ModelAdmin {
 		// ...
 		private static $menu_title = 'My Custom Admin';
@@ -62,9 +60,7 @@ button configuration.
 
 
 ```php
-
-	<?php
-
+	
 	class CustomLeftAndMain extends LeftAndMainExtension {
 
 		public function init() {
@@ -83,13 +79,14 @@ button configuration.
 
 			// Add your own attributes onto the link. In our case, we want to
 			// open the link in a new window (not the original)
-			$attributes = array(
+			$attributes = [
 				'target' => '_blank'
-			);
+			];
 
 			CMSMenu::add_link($id, $title, $link, $priority, $attributes);
 		}
 	}
+
 ```
 
 To have the link appear, make sure you add the extension to the `LeftAndMain`
@@ -98,7 +95,6 @@ class. For more information about configuring extensions see the
 
 
 ```php
-
 	LeftAndMain::add_extension('CustomLeftAndMain')
 ```
 

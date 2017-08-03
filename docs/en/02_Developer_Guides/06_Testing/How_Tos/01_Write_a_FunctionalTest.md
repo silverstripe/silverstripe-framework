@@ -11,9 +11,7 @@ response and modify the session within a test.
 
 
 ```php
-
-	<?php
-
+	
 	class HomePageTest extends FunctionalTest {
 
 		/**
@@ -26,15 +24,15 @@ response and modify the session within a test.
 			$this->assertEquals(200, $page->getStatusCode());
 
 			// We should see a login form
-			$login = $this->submitForm("LoginFormID", null, array(
+			$login = $this->submitForm("LoginFormID", null, [
 				'Email' => 'test@test.com',
 				'Password' => 'wrongpassword'
-			));
+			]);
 
 			// wrong details, should now see an error message
-			$this->assertExactHTMLMatchBySelector("#LoginForm p.error", array(
+			$this->assertExactHTMLMatchBySelector("#LoginForm p.error", [
 				"That email address is invalid."
-			));
+			]);
 
 			// If we login as a user we should see a welcome message
 			$me = Member::get()->first();
@@ -42,11 +40,12 @@ response and modify the session within a test.
 			$this->logInAs($me);
 			$page = $this->get('home/');
 
-			$this->assertExactHTMLMatchBySelector("#Welcome", array(
+			$this->assertExactHTMLMatchBySelector("#Welcome", [
 				'Welcome Back'
-			));
+			]);
 		}
 	}
+
 ```
 
 ## Related Documentation

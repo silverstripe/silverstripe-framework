@@ -16,14 +16,12 @@ The following example will add a simple DateField to your Page, allowing you to 
 
 
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 
-		private static $db = array(
+		private static $db = [
 			'MyDate' => 'Date',
-		);
+		];
 	
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
@@ -36,6 +34,7 @@ The following example will add a simple DateField to your Page, allowing you to 
 			return $fields;
 		} 
 	}	
+
 ```
 
 ## Custom Date Format
@@ -45,7 +44,6 @@ This is only necessary if you want to opt-out of the built-in browser localisati
 
 
 ```php
-
 	// will display a date in the following format: 31/06/2012
 	DateField::create('MyDate')
 	    ->setHTML5(false)
@@ -64,7 +62,6 @@ Sets the minimum and maximum allowed date values using the `min` and `max` confi
 
 
 ```php
-
 	DateField::create('MyDate')
 		->setMinDate('-7 days')
 		->setMaxDate('2012-12-31')
@@ -78,7 +75,6 @@ field description as an example.
 
 
 ```php
-
 	$dateField = DateField::create('MyDate');
 
 	// Show long format as text below the field

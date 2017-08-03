@@ -8,8 +8,6 @@ can be rendered out using custom templates using `setTemplate`.
 
 
 ```php
-
-
 	$form = new Form(..);
 	$form->setTemplate('MyCustomFormTemplate');
 
@@ -39,7 +37,6 @@ For [FormField](api:SilverStripe\Forms\FormField) instances, there are several o
 
 
 ```php
-
 	$field = new TextField();
 
 	$field->setTemplate('CustomTextField');

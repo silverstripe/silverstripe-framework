@@ -29,7 +29,6 @@ you want to set.
 
 
 ```php
-
 	// mysite/_config.php
 	i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
 	i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
@@ -83,7 +82,6 @@ You can use these settings for your own view logic.
 
 
 ```php
-
 	Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 ```
@@ -157,7 +155,6 @@ followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 
 ```php
-
 	$field = new DateField();
 	$field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
 	$field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
@@ -170,7 +167,6 @@ language-dependent and use a translator function call instead.
 
 
 ```php
-
 	// without i18n
 	echo "This is a string";
 	// with i18n
@@ -215,7 +211,6 @@ For instance, this is an example of how to correctly declare pluralisations for 
 
 
 ```php
-
     class MyObject extends DataObject, implements i18nEntityProvider
     {
         public function provideI18nEntities()
@@ -255,19 +250,18 @@ Please ensure that any required plurals are exposed via provideI18nEntities.
 
 
 ```php
-
-
 	// Simple string translation
 	_t('LeftAndMain.FILESIMAGES','Files & Images');
 
 	// Using injection to add variables into the translated strings.
 	_t('CMSMain.RESTORED',
 		"Restored {value} successfully",
-		array('value' => $itemRestored)
+		['value' => $itemRestored]
 	);
 	
 	// Plurals are invoked via a `|` pipe-delimeter with a {count} argument
 	_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
+
 ```
 
 #### Usage in Template Files
@@ -404,7 +398,6 @@ Just point it to a directory instead of a file, and the class will figure out th
 
 
 ```php
-
 	Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 ```
 

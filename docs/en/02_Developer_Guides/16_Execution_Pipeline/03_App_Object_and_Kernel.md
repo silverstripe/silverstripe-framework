@@ -10,7 +10,6 @@ This can be accessed in user code via Injector
 
 
 ```php
-
     $kernel = Injector::inst()->get(Kernel::class);
     echo "Current environment: " . $kernel->getEnvironment();
 ```
@@ -40,7 +39,6 @@ you should call `->activate()` on the kernel instance you would like to unnest t
 
 
 ```php
-
     $oldKernel = Injector::inst()->get(Kernel::class);
     try {
         // Injector::inst() / Config::inst() are automatically updated to the new kernel
@@ -71,9 +69,7 @@ This class provides basic support for HTTP Middleware, such as [ErrorControlChai
 
 
 ```php
-
-    <?php
-    
+        
     use SilverStripe\Control\HTTPApplication;
     use SilverStripe\Control\HTTPRequestBuilder;
     use SilverStripe\Core\CoreKernel;
@@ -136,7 +132,6 @@ routing.
 
 
 ```php
-
     $request = CLIRequestBuilder::createFromEnvironment();
     $kernel = new TestKernel(BASE_PATH);
     $app = new HTTPApplication($kernel);

@@ -16,9 +16,7 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 
 ```php
-
-	<?php
-	
+		
 	class MyNewTest extends SapphireTest {
 	
 		protected static $fixture_file = 'fixtures.yml';
@@ -33,17 +31,16 @@ You can also use an array of fixture files, if you want to use parts of multiple
 
 
 ```php
-
-	<?php
-	
+		
 	class MyNewTest extends SapphireTest {
 	
-		protected static $fixture_file = array(
+		protected static $fixture_file = [
 			'fixtures.yml',
 			'otherfixtures.yml'
-		);
+		];
 		
 	}
+
 ```
 
 Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
@@ -53,33 +50,32 @@ ideal for fixture generation. Say we have the following two DataObjects:
 
 
 ```php
-
-	<?php
-    
+	    
     use SilverStripe\ORM\DataObject;
 
 	class Player extends DataObject
     {
-		private static $db = array (
+		private static $db = [
 			'Name' => 'Varchar(255)'
-		);
+		];
 
-		private static $has_one = array(
+		private static $has_one = [
 			'Team' => 'Team'
-		);
+		];
 	}
 
 	class Team extends DataObject
     {
-		private static $db = array (
+		private static $db = [
 			'Name' => 'Varchar(255)',
 			'Origin' => 'Varchar(255)'
-		);
+		];
 
-		private static $has_many = array(
+		private static $has_many = [
 			'Players' => 'Player'
-		);
+		];
 	}
+
 ```
 
 We can represent multiple instances of them in `YAML` as follows:
@@ -116,7 +112,6 @@ represents a new object and can be referenced in the PHP using `objFromFixture`
 
 
 ```php
-
 	$player = $this->objFromFixture('Player', 'jack');
 ```
 
@@ -173,15 +168,15 @@ writing:
 
 
 ```php
-
-	$team = new Team(array(
+	$team = new Team([
 		'Name' => 'Hurricanes',
 		'Origin' => 'Wellington'
-	));
+	]);
 
 	$team->write();
 
 	$team->Players()->add($john);
+
 ```
 
 <div class="notice" markdown="1">
@@ -218,36 +213,36 @@ declare the role each player has in the team.
 
 
 ```php
-
     use SilverStripe\ORM\DataObject;
     
 	class Player extends DataObject
     {
-		private static $db = array (
+		private static $db = [
 			'Name' => 'Varchar(255)'
-		);
+		];
 
-		private static $belongs_many_many = array(
+		private static $belongs_many_many = [
 			'Teams' => 'Team'
-		);
+		];
 	}
 
 	class Team extends DataObject
     {
-		private static $db = array (
+		private static $db = [
 			'Name' => 'Varchar(255)'
-		);
+		];
 
-		private static $many_many = array(
+		private static $many_many = [
 			'Players' => 'Player'
-		);
+		];
 
-		private static $many_many_extraFields = array(
-			'Players' => array(
+		private static $many_many_extraFields = [
+			'Players' => [
 				'Role' => "Varchar"
-			)
-		);	
+			]
+		];	
 	}
+
 ```
 
 To provide the value for the `many_many_extraField` use the YAML list syntax.
@@ -298,7 +293,6 @@ using them.
 
 
 ```php
-
 	$factory = Injector::inst()->create('FixtureFactory');
 
 	$obj = $factory->createObject('Team', 'hurricanes');
@@ -308,10 +302,10 @@ In order to create an object with certain properties, just add a third argument:
 
 
 ```php
-
-	$obj = $factory->createObject('Team', 'hurricanes', array(
+	$obj = $factory->createObject('Team', 'hurricanes', [
 		'Name' => 'My Value'
-	));
+	]);
+
 ```
 
 <div class="warning" markdown="1">
@@ -323,7 +317,6 @@ After we've created this object in the factory, `getId` is used to retrieve it b
 
 
 ```php
-
 	$databaseId = $factory->getId('Team', 'hurricanes');
 ```
 
@@ -334,10 +327,10 @@ name, we can set the default to be `Unknown Team`.
 
 
 ```php
-
-	$factory->define('Team', array(
+	$factory->define('Team', [
 		'Name' => 'Unknown Team'
-	));
+	]);
+
 ```
 
 ### Dependent Properties
@@ -347,8 +340,7 @@ values based on other fixture data.
 
 
 ```php
-
-	$factory->define('Member', array(
+	$factory->define('Member', [
 		'Email' => function($obj, $data, $fixtures) {
 			if(isset($data['FirstName']) {
 				$obj->Email = strtolower($data['FirstName']) . '@example.org';
@@ -357,7 +349,8 @@ values based on other fixture data.
 		'Score' => function($obj, $data, $fixtures) {
 			$obj->Score = rand(0,10);
 		}
-	));
+	)];
+
 ```
 
 ### Relations
@@ -367,10 +360,10 @@ Model relations can be expressed through the same notation as in the YAML fixtur
 
 
 ```php
-
-	$obj = $factory->createObject('Team', 'hurricanes', array(
+	$obj = $factory->createObject('Team', 'hurricanes', [
 		'MyHasManyRelation' => '=>Player.john,=>Player.joe'
-	));
+	]);
+
 ```
 
 #### Callbacks
@@ -380,7 +373,6 @@ publish a page, which requires a method call.
 
 
 ```php
-
 	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
 
 	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
@@ -403,7 +395,6 @@ equal the class names they manage.
 
 
 ```php
-
 	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
 
 	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');

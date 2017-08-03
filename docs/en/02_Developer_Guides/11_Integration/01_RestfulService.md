@@ -21,15 +21,14 @@ in the template.
 
 
 ```php
-
 	public function getWellingtonWeather() {
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
 		);
 		
-		$fetch->setQueryString(array(
+		$fetch->setQueryString([
 			'q' => 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="Wellington, NZ")'
-		));
+		]);
 		
 		// perform the query
 		$conn = $fetch->request();
@@ -42,14 +41,15 @@ in the template.
 
 		if($msgs) {
 			foreach($msgs as $msg) {
-				$output->push(new ArrayData(array(
+				$output->push(new ArrayData([
 					'Description' => Convert::xml2raw($msg->channel_item_description)
-				)));
+				]));
 			}
 		}
 
 		return $output;
 	}
+
 ```
 
 ## Features
@@ -58,7 +58,6 @@ in the template.
 
 
 ```php
-
 	$service = new RestfulService("http://example.harvestapp.com");
 	$service->basicAuth('username', 'password');
 ```
@@ -67,7 +66,6 @@ in the template.
 
 
 ```php
-
 	$service = new RestfulService("http://example.harvestapp.com");
 
 	$peopleXML = $service->request('/people');
@@ -85,7 +83,6 @@ To set the cache interval you can pass it as the 2nd argument to constructor.
 
 
 ```php
-
 	$expiry = 60 * 60; // 1 hour;
 
 	$request = new RestfulService("http://example.harvestapp.com", $expiry );
@@ -111,20 +108,20 @@ To extract the id attributes of the entries use:
 
 
 ```php
-
 	$this->getAttributes($xml, "entries", "entry");
 
 	// array(array('id' => 12), array('id' => '15'), ..)
+
 ```
 
 To extract the values (the names) of the entries use:
 
 
 ```php
-
 	$this->getValues($xml, "entries", "entry");
 
 	// array('Sally', 'Ted', 'Matt', 'John')
+
 ```
 
 ### Searching for Values & Attributes
@@ -147,10 +144,10 @@ To get the value of entry node with the namespace media, use:
 
 
 ```php
-
 	$this->searchValue($response, "//media:guide/media:entry");
 
 	// array('video');
+
 ```
 
 ## Best Practices
@@ -163,9 +160,7 @@ If the web service returned an error (for example, API key not available or inad
 
 
 ```php
-
-	<?php
-
+	
 	class MyRestfulService extends RestfulService {
 
 		public function errorCatch($response) {
@@ -184,9 +179,7 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 
 
 ```php
-
-	<?php
-
+	
 	class MyRestfulService extends RestfulService {
 
 		public function __construct($expiry = NULL) {
@@ -216,10 +209,11 @@ To set global cURL settings you can update the `RestfulService` config via the C
 Here is an example to increase the HTTP Timeout globally. Insert this in your `_config.php` file:
 
 ```php
-SilverStripe\Core\Config\Config::inst()->update('RestfulService', 'default_curl_options', array(
+SilverStripe\Core\Config\Config::inst()->update('RestfulService', 'default_curl_options', [
 	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
 	CURLOPT_CONNECTTIMEOUT => 10,
-));
+]);
+
 ```
 
 
@@ -231,14 +225,14 @@ parameter in `RestfulService::request()`.
 For example:
 
 ```php
-
 //cURL options
-$curlOptions = array(
+$curlOptions = [
 	CURLOPT_UNRESTRICTED_AUTH => true,
-);
+];
 
 $service = new RestfulService('http://example.com/');
 $service->request('service.json', 'GET', null, null, $curlOptions);
+
 
 ```
 

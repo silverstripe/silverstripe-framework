@@ -8,7 +8,6 @@ tabular data in a format that is easy to view and modify. It can be thought of a
 
 
 ```php
-
 	$field = new GridField($name, $title, $list);
 ```
 
@@ -30,9 +29,7 @@ actions such as deleting records.
 
 
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 		
 		public function getCMSFields() {
@@ -64,9 +61,7 @@ the `getConfig()` method on `GridField`.
 
 
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 		
 		public function getCMSFields() {
@@ -86,20 +81,20 @@ the `getConfig()` method on `GridField`.
 			//
 			$dataColumns = $config->getComponentByType('GridFieldDataColumns');
 			
-			$dataColumns->setDisplayFields(array(
+			$dataColumns->setDisplayFields([
 				'Title' => 'Title',
 				'Link'=> 'URL',
 				'LastEdited' => 'Changed'
-			));
+			]);
 
 			return $fields;
 		}
 	}
+
 ```
 
 With the `GridFieldConfig` instance, we can modify the behavior of the `GridField`.
 ```php
-
 	// `GridFieldConfig::create()` will create an empty configuration (no components).
 	$config = GridFieldConfig::create();
 
@@ -113,7 +108,6 @@ With the `GridFieldConfig` instance, we can modify the behavior of the `GridFiel
 `GridFieldConfig` provides a number of methods to make setting the configuration easier. We can insert a component 
 before another component by passing the second parameter.
 ```php
-
 	$config->addComponent(new GridFieldFilterHeader(), 'GridFieldDataColumns');
 ```
 
@@ -121,7 +115,6 @@ We can add multiple components in one call.
 
 
 ```php
-
 	$config->addComponents(
 		new GridFieldDataColumns(), 
 		new GridFieldToolbarHeader()
@@ -132,7 +125,6 @@ Or, remove a component.
 
 
 ```php
-
 	$config->removeComponentsByType('GridFieldDeleteAction');
 ```
 
@@ -140,7 +132,6 @@ Fetch a component to modify it later on.
 
 
 ```php
-
 	$component = $config->getComponentByType('GridFieldFilterHeader')
 ```
 
@@ -170,7 +161,6 @@ A simple read-only and paginated view of records with sortable and searchable he
 
 
 ```php
-
 	$config = GridFieldConfig_Base::create();
 
 	$gridField->setConfig($config);
@@ -201,7 +191,6 @@ this record.
 
 
 ```php
-
 	$config = GridFieldConfig_RecordViewer::create();
 	
 	$gridField->setConfig($config);
@@ -227,7 +216,6 @@ Permission control for editing and deleting the record uses the `canEdit()` and 
 
 
 ```php
-
 	$config = GridFieldConfig_RecordEditor::create();
 	
 	$gridField->setConfig($config);
@@ -243,7 +231,6 @@ Permission control for editing and deleting the record uses the `canEdit()` and 
 Similar to `GridFieldConfig_RecordEditor`, but adds features to work on a record's has-many or many-many relationships. 
 As such, it expects the list used with the `GridField` to be a instance of `RelationList`.
 ```php
-
 	$config = GridFieldConfig_RelationEditor::create();
 
 	$gridField->setConfig($config);
@@ -263,7 +250,6 @@ The `GridFieldDetailForm` component drives the record viewing and editing form. 
 
 
 ```php
-
 	$form = $gridField->getConfig()->getComponentByType('GridFieldDetailForm');
 	$form->setFields(new FieldList(
 		new TextField('Title')
@@ -283,35 +269,33 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 		
-		private static $db = array(
+		private static $db = [
 			'Name' => 'Text'
-		);
+		];
 
-		public static $many_many = array(
+		public static $many_many = [
 			'Players' => 'Player'
-		);
+		];
 	}
 
 	class Player extends DataObject {
 	
-		private static $db = array(
+		private static $db = [
 			'Name' => 'Text'
-		);
+		];
 		
-		public static $many_many = array(
+		public static $many_many = [
 			'Teams' => 'Team'
-		);
+		];
 		
-		public static $many_many_extraFields = array(
-			'Teams' => array(
+		public static $many_many_extraFields = [
+			'Teams' => [
 				'Position' => 'Text'
-			)
-		);
+			]
+		];
 
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
@@ -334,6 +318,7 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 			return $fields;
 		}
 	}
+
 ```
 
 ## Flexible Area Assignment through Fragments
@@ -355,7 +340,6 @@ bottom right of the table.
 
 
 ```php
-
 	$config->addComponent(new GridFieldButtonRow('after'));
 	$config->addComponent(new GridFieldPrintButton('buttons-after-right'));
 ```
@@ -368,17 +352,16 @@ create an area rendered before the table wrapped in a simple `<div>`.
 
 
 ```php
-
-	<?php
-
+	
 	class MyAreaComponent implements GridField_HTMLProvider {
 	
 		public function getHTMLFragments( $gridField) {
-			return array(
+			return [
 				'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
-			);
+			];
 		}
 	}
+
 ```
 
 <div class="notice" markdown="1">
@@ -391,24 +374,22 @@ Now you can add other components into this area by returning them as an array fr
 
 
 ```php
-
-	<?php
-
+	
 	class MyShareLinkComponent implements GridField_HTMLProvider {
 	
 		public function getHTMLFragments( $gridField) {		
-			return array(
+			return [
 				'my-area' => '<a href>...</a>'
-			);
+			];
 		}
 	}
+
 ```
 
 Your new area can also be used by existing components, e.g. the [GridFieldPrintButton](api:SilverStripe\Forms\GridField\GridFieldPrintButton)
 
 
 ```php
-
 	new GridFieldPrintButton('my-component-area');
 ```
 

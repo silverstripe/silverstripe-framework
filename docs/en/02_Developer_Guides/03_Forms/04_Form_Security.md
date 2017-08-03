@@ -22,7 +22,6 @@ The `SecurityToken` automatically added looks something like:
 
 
 ```php
-
 	$form = new Form(..);
 	echo $form->getSecurityToken()->getValue();
 
@@ -42,7 +41,6 @@ normally require a security token).
 
 
 ```php
-
 	$form = new Form(..);
 	$form->disableSecurityToken();
 ```
@@ -60,7 +58,6 @@ application errors or edge cases. If you need to disable this setting follow the
 
 
 ```php
-
 	$form = new Form(..);
 
 	$form->setFormMethod('POST');

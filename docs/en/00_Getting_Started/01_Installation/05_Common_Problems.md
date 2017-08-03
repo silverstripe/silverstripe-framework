@@ -103,7 +103,6 @@ Save it as `check.php` into your webroot, and run it as `php check.php` (or open
 After using the script (and fixing errors afterwards), please remember to remove it again.
 
 ```php
-<?php
 // Check for whitespace around PHP brackets which show in output,
 // and hence can break HTML rendering and HTTP operations.
 $path = dirname(__FILE__);

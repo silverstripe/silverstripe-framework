@@ -28,7 +28,6 @@ Here is the configuration code for the button:
 
 
 ```php
-
 	public function getCMSActions() {
 		$fields = parent::getCMSActions();
 
@@ -55,7 +54,6 @@ Here we initialise the button based on the backend check, and assume that the bu
 
 
 ```php
-
 	public function getCMSActions() {
 		// ...
 		if ($this->needsCleaning()) {

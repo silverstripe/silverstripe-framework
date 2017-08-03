@@ -11,30 +11,28 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 
 ```php
-
-	<?php
-
+	
 	class PageController extends ContentController {
 		
 		public function SearchForm() {
 			$fields = new FieldList(
 				HeaderField::create('Header', 'Step 1. Basics'),
-				OptionsetField::create('Type', '', array(
+				OptionsetField::create('Type', '', [
 					'foo' => 'Search Foo',
 					'bar' => 'Search Bar',
 					'baz' => 'Search Baz'
-				)),
+				]),
 
 				CompositeField::create(
 					HeaderField::create('Header2', 'Step 2. Advanced '),
-					CheckboxSetField::create('Foo', 'Select Option', array(
+					CheckboxSetField::create('Foo', 'Select Option', [
 						'qux' => 'Search Qux'
-					)),
+					]),
 
-					CheckboxSetField::create('Category', 'Category', array(
+					CheckboxSetField::create('Category', 'Category', [
 						'Foo' => 'Foo',
 						'Bar' => 'Bar'
-					)),
+					]),
 
 					NumericField::create('Minimum', 'Minimum'),
 					NumericField::create('Maximum', 'Maximum')
@@ -45,9 +43,9 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 				FormAction::create('doSearchForm', 'Search')
 			);
 			
-			$required = new RequiredFields(array(
+			$required = new RequiredFields([
 				'Type'
-			));
+			]);
 
 			$form = new Form($this, 'SearchForm', $fields, $actions, $required);
 			$form->setFormMethod('GET');
@@ -61,6 +59,7 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 		..
 	}
+
 ```
 
 Now that is a bit of code to include on our controller and generally makes the file look much more complex than it 
@@ -70,9 +69,7 @@ should be. Good practice would be to move this to a subclass and create a new in
 
 
 ```php
-
-	<?php
-
+	
 	class SearchForm extends Form {
 
 		/**
@@ -83,22 +80,22 @@ should be. Good practice would be to move this to a subclass and create a new in
 		public function __construct($controller, $name) {
 			$fields = new FieldList(
 				HeaderField::create('Header', 'Step 1. Basics'),
-				OptionsetField::create('Type', '', array(
+				OptionsetField::create('Type', '', [
 					'foo' => 'Search Foo',
 					'bar' => 'Search Bar',
 					'baz' => 'Search Baz'
-				)),
+				]),
 
 				CompositeField::create(
 					HeaderField::create('Header2', 'Step 2. Advanced '),
-					CheckboxSetField::create('Foo', 'Select Option', array(
+					CheckboxSetField::create('Foo', 'Select Option', [
 						'qux' => 'Search Qux'
-					)),
+					]),
 
-					CheckboxSetField::create('Category', 'Category', array(
+					CheckboxSetField::create('Category', 'Category', [
 						'Foo' => 'Foo',
 						'Bar' => 'Bar'
-					)),
+					]),
 
 					NumericField::create('Minimum', 'Minimum'),
 					NumericField::create('Maximum', 'Maximum')
@@ -109,9 +106,9 @@ should be. Good practice would be to move this to a subclass and create a new in
 				FormAction::create('doSearchForm', 'Search')
 			);
 			
-			$required = new RequiredFields(array(
+			$required = new RequiredFields([
 				'Type'
-			));
+			]);
 
 			// now we create the actual form with our fields and actions defined
 			// within this class
@@ -125,6 +122,7 @@ should be. Good practice would be to move this to a subclass and create a new in
 			$this->loadDataFrom($_REQUEST);
 		}
 	}
+
 ```
 
 Our controller will now just have to create a new instance of this form object. Keeping the file light and easy to read.
@@ -133,19 +131,18 @@ Our controller will now just have to create a new instance of this form object. 
 
 
 ```php
-
-	<?php
-
+	
 	class PageController extends ContentController {
 		
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'SearchForm',
-		);
+		];
 		
 		public function SearchForm() {
 			return new SearchForm($this, 'SearchForm');
 		}
 	}
+
 ```
 
 Form actions can also be defined within your `Form` subclass to keep the entire form logic encapsulated.

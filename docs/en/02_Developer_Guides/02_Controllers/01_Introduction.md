@@ -9,15 +9,13 @@ subclass the base `Controller` class.
 **mysite/code/controllers/TeamController.php**
 
 ```php
-
-	<?php
-	
+		
 	class TeamController extends Controller {
 			
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'players',
 			'index'
-		);
+		];
 		
 		public function index(HTTPRequest $request) {
 			// ..
@@ -27,6 +25,7 @@ subclass the base `Controller` class.
 			print_r($request->allParams());
 		}
 	}
+
 ```
 
 ## Routing
@@ -78,15 +77,14 @@ Action methods can return one of four main things:
 **mysite/code/controllers/TeamController.php**
 
 ```php
-
 	/**
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
 	 */
 	public function index(HTTPRequest $request) {
-		return array(
+		return [
 			'Title' => 'My Team Name'
-		);
+		];
 	}
 
 	/**
@@ -113,23 +111,24 @@ Action methods can return one of four main things:
 	 * We can render HTML and leave SilverStripe to set the response code and body.
 	 */
 	public function htmlaction() {
-		return $this->customise(new ArrayData(array(
+		return $this->customise(new ArrayData([
 			'Title' => 'HTML Action'
-		)))->renderWith('MyCustomTemplate');
+		]))->renderWith('MyCustomTemplate');
 	}
 
 	/**
 	 * We can send stuff to the browser which isn't HTML
 	 */
 	public function ajaxaction() {
-		$this->getResponse()->setBody(json_encode(array(
+		$this->getResponse()->setBody(json_encode([
 			'json' => true
-		)));
+		]));
 
 		$this->getResponse()->addHeader("Content-type", "application/json");
 
 		return $this->getResponse().
 	}
+
 ```
 
 For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.
@@ -159,7 +158,6 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 **mysite/code/controllers/TeamController.php**
 
 ```php
-
 	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}

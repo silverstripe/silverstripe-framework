@@ -24,7 +24,6 @@ An outline of step one looks like:
 
 
 ```php
-
 	$feed = new RSSFeed(
 		$list,
 		$link,
@@ -43,7 +42,6 @@ An outline of step one looks like:
 To achieve step two include the following code where ever you want to include the `<link>` tag to the RSS Feed. This
 will normally go in your `Controllers` `init` method.
 ```php
-
 	RSSFeed::linkToFeed($link, $title);
 ```
 
@@ -58,16 +56,14 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 
 
 ```php
-
-	<?php
-	
+		
 	..
 
 	class PageController extends ContentController {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'rss'
-		);
+		];
 
 		public function init() {
 			parent::init();
@@ -90,6 +86,7 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 			return Page::get()->sort("LastEdited", "DESC")->limit(10);
 		}
 	}
+
 ```
 
 ### Rendering DataObjects in a RSSFeed
@@ -106,9 +103,7 @@ method is defined and returns a string to the full website URL.
 
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 
 		public function AbsoluteLink() {
@@ -127,14 +122,12 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 
 
 ```php
-
-	<?php
-
+	
 	class PageController extends ContentController {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'players'
-		);
+		];
 
 		public function init() {
 			parent::init();
@@ -152,6 +145,7 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 			return $rss->outputToBrowser();
 		}
 	}
+
 ```
 
 ### Customizing the RSS Feed template
@@ -190,8 +184,6 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 
 ```php
-
-
 	public function players() {
 		$rss = new RSSFeed(
 			Player::get(),

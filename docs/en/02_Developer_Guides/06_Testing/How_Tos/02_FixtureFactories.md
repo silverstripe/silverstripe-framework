@@ -10,7 +10,6 @@ with information that we need.
 
 
 ```php
-
 	class MyObjectTest extends SapphireTest {
 
 		protected $factory;
@@ -21,9 +20,9 @@ with information that we need.
 			$factory = Injector::inst()->create('FixtureFactory');
 
 			// Defines a "blueprint" for new objects
-			$factory->define('MyObject', array(
+			$factory->define('MyObject', [
 				'MyProperty' => 'My Default Value'
-			));
+			]);
 
 			$this->factory = $factory;
 		}
@@ -31,7 +30,7 @@ with information that we need.
 		function testSomething() {
 			$MyObjectObj = $this->factory->createObject(
 				'MyObject',
-				array('MyOtherProperty' => 'My Custom Value')
+				['MyOtherProperty' => 'My Custom Value']
 			);
 
 			echo $MyObjectObj->MyProperty;
@@ -41,6 +40,7 @@ with information that we need.
 			// returns "My Custom Value"
 		}
 	}
+
 ```
 
 ## Related Documentation

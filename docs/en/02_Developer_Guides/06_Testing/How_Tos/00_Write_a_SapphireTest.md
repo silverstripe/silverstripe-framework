@@ -9,9 +9,7 @@ how you can load default records into the test database.
 
 
 ```php
-
-	<?php
-    
+	    
     use SilverStripe\Dev\SapphireTest;
 
 	class PageTest extends SapphireTest
@@ -32,12 +30,12 @@ how you can load default records into the test database.
 		 */
 		public function testURLGeneration()
         {
-			$expectedURLs = array(
+			$expectedURLs = [
 				'home' => 'home',
 				'staff' => 'my-staff',
 				'about' => 'about-us',
 				'staffduplicate' => 'my-staff-2'
-			);
+			];
 
 			foreach($expectedURLs as $fixture => $urlSegment) {
 				$obj = $this->objFromFixture('Page', $fixture);
@@ -46,6 +44,7 @@ how you can load default records into the test database.
 			}
 		}
 	}
+
 ```
 
 Firstly we define a static `$fixture_file`, this should point to a file that represents the data we want to test,

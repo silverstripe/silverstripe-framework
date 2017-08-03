@@ -12,12 +12,10 @@ Any action you define on a controller must be defined in a `$allowed_actions` st
 directly calling methods that they shouldn't.
 
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 		
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			// someaction can be accessed by anyone, any time
 			'someaction', 
 
@@ -35,8 +33,9 @@ directly calling methods that they shouldn't.
 
 			// complexactioncheck can only be accessed if $this->canComplexAction("MyRestrictedAction", false, 42) is true.
 			'complexactioncheck' => '->canComplexAction("MyRestrictedAction", false, 42)',
-		);
+		];
 	}
+
 ```
 
 <div class="info">
@@ -47,7 +46,6 @@ An action named "index" is white listed by default, unless `allowed_actions` is 
 is specifically restricted.
 
 ```php
-
 	<?php 
 
 	class MyController extends Controller {
@@ -61,29 +59,26 @@ is specifically restricted.
 `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ```php
-
-	<?php
-
+	
 	class MyExtension extends Extension {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'mycustomaction'
-		);
+		];
 	}
+
 ```
 
 Only public methods can be made accessible.
 
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'secure',
 			// secureaction won't work as it's private.
-		);
+		];
 
 		public function secure() {
 			// ..
@@ -93,18 +88,17 @@ Only public methods can be made accessible.
 			// ..
 		}
 	}
+
 ```
 
 If a method on a parent class is overwritten, access control for it has to be redefined as well.
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'action',
-		);
+		];
 
 		public function action() {
 			// ..
@@ -113,14 +107,15 @@ If a method on a parent class is overwritten, access control for it has to be re
 
 	class MyChildController extends MyController {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'action', // required as we are redefining action
-		);
+		];
 
 		public function action() {
 
 		}
 	}
+
 ```
 
 <div class="notice" markdown="1">
@@ -132,14 +127,12 @@ Access checks on parent classes need to be overwritten via the [Configuration AP
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'ContactForm' // use the Form method, not the action
-		);
+		];
 
 		public function ContactForm() {
 			return new Form(..);
@@ -149,6 +142,7 @@ as an `allowed_action`.
 			// ..
 		}
 	}
+
 ```
 
 ## Action Level Checks
@@ -157,14 +151,12 @@ Each method responding to a URL can also implement custom permission checks, e.g
 the passed request data.
 
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 		
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'myaction'
-		);
+		];
 		
 		public function myaction($request) {
 			if(!$request->getVar('apikey')) {
@@ -174,6 +166,7 @@ the passed request data.
 			return 'valid';
 		}
 	}
+
 ```
 
 <div class="notice" markdown="1">
@@ -191,12 +184,10 @@ execution. This behavior can be used to implement permission checks.
 `init` is called for any possible action on the controller and before any specific method such as `index`.
 </div>
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 		
-		private static $allowed_actions = array();
+		private static $allowed_actions = [];
 		
 		public function init() {
 			parent::init();
@@ -206,6 +197,7 @@ execution. This behavior can be used to implement permission checks.
 			}
 		}
 	}
+
 ```
 
 ## Related Documentation

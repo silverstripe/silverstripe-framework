@@ -47,7 +47,6 @@ This factory allows us you to globally define an adapter for all cache instances
 
 
 ```php
-
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 ```
@@ -67,7 +66,6 @@ Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class inte
 
 
 ```php
-
 	use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
@@ -92,7 +90,6 @@ this will only affect a subset of cache keys ("myCache" in this example):
 
 
 ```php
-
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
@@ -105,7 +102,6 @@ You can also delete a single item based on it's cache key:
 
 
 ```php
-
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
@@ -117,7 +113,6 @@ Individual cache items can define a lifetime, after which the cached value is ma
 
 
 ```php
-
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
@@ -150,7 +145,6 @@ old cache keys will be garbage collected as the cache fills up.
 
 
 ```php
-
     use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     

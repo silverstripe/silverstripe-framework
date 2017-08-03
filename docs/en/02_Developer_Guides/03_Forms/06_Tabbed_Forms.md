@@ -23,7 +23,6 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 
 ```php
-
 	$fields->addFieldToTab('Root.Main', new TextField(..));
 ```
 
@@ -31,7 +30,6 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 
 ```php
-
 	$fields->removeFieldFromTab('Root.Main', 'Content');
 ```
 
@@ -39,7 +37,6 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 
 ```php
-
 	$fields->addFieldToTab('Root.MyNewTab', new TextField(..));
 ```
 
@@ -47,7 +44,6 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 
 ```php
-
 	$content = $fields->dataFieldByName('Content');
 
 	$fields->removeFieldFromTab('Root.Main', 'Content');
@@ -58,11 +54,11 @@ display up to two levels of tabs in the interface. If you want to group data fur
 
 
 ```php
-
-	$fields->addFieldsToTab('Root.Content', array(
+	$fields->addFieldsToTab('Root.Content', [
 		TextField::create('Name'),
 		TextField::create('Email')
-	));
+	]);
+
 ```
 
 ## API Documentation

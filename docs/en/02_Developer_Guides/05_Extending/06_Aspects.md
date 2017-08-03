@@ -47,9 +47,7 @@ used.
 
 
 ```php
-
-	<?php
-
+	
 	class MySQLWriteDbAspect implements BeforeCallAspect {
 
 		/**
@@ -57,9 +55,9 @@ used.
 		 */
 		public $writeDb;
 		
-		public $writeQueries = array(
+		public $writeQueries = [
 			'insert','update','delete','replace'
-		);
+		];
 
 		public function beforeCall($proxied, $method, $args, &$alternateReturn) {
 			if (isset($args[0])) {
@@ -73,6 +71,7 @@ used.
 			}
 		}
 	}
+
 ```
 
 To actually make use of this class, a few different objects need to be configured. First up, define the `writeDb`
@@ -184,7 +183,6 @@ One major feature of an `Aspect` is the ability to modify what is returned from 
 As seen in the above example, the `beforeCall` method modifies the `&$alternateReturn` variable, and returns `false` 
 after doing so. 
 ```php
-
 	$alternateReturn = $this->writeDb->query($sql, $code);
 
 	return false;

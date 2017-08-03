@@ -8,14 +8,12 @@ form (which is used for `MyDataObject` instances). You can access it through
 
 
 ```php
-
-	<?php
-
+	
 	class MyController extends Controller {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'Form'
-		);
+		];
 
 		protected $template = "BlankPage";
 
@@ -41,7 +39,7 @@ form (which is used for `MyDataObject` instances). You can access it through
 		public function doUpload($data, $form) {
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
-			$messages = array();
+			$messages = [];
 
 			if($results->CreatedCount()) {
 				$messages[] = sprintf('Imported %d items', $results->CreatedCount());
@@ -64,6 +62,7 @@ form (which is used for `MyDataObject` instances). You can access it through
 			return $this->redirectBack();
 		}
 	}
+
 ```
 
 <div class="alert" markdown="1">

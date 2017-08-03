@@ -8,7 +8,6 @@ email was sent using this method.
 
 
 ```php
-
 	public function MyMethod() {
 		$e = new Email();
 		$e->To = "someone@example.com";
@@ -22,7 +21,6 @@ To test that `MyMethod` sends the correct email, use the [SapphireTest::assertEm
 
 
 ```php
-
 	$this->assertEmailSent($to, $from, $subject, $body);
 
 	// to assert that the email is sent to the correct person

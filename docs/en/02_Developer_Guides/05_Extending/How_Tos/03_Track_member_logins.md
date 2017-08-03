@@ -11,13 +11,11 @@ explicitly logging in or by invoking the "remember me" functionality.
 
 
 ```php
-
-	<?php
-	class MyMemberExtension extends DataExtension {
-		private static $db = array(
+		class MyMemberExtension extends DataExtension {
+		private static $db = [
 			'LastVisited' => 'Datetime',
 			'NumVisit' => 'Int',
-		);
+		];
 
 		public function memberLoggedIn() {
 			$this->logVisit();
@@ -28,10 +26,10 @@ explicitly logging in or by invoking the "remember me" functionality.
 		}
 
 		public function updateCMSFields(FieldList $fields) {
-			$fields->addFieldsToTab('Root.Main', array(
+			$fields->addFieldsToTab('Root.Main', [
 				ReadonlyField::create('LastVisited', 'Last visited'),
 				ReadonlyField::create('NumVisit', 'Number of visits')
-			));
+			]);
 		}
 
 		protected function logVisit() {
@@ -44,6 +42,7 @@ explicitly logging in or by invoking the "remember me" functionality.
 			));
 		}
 	}
+
 ```
 
 Now you just need to apply this extension through your config:

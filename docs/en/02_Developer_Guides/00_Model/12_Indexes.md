@@ -25,9 +25,7 @@ Indexes are represented on a `DataObject` through the `DataObject::$indexes` arr
 descriptor. There are several supported notations:
 
 ```php
-
-	<?php
-
+	
 	class MyObject extends DataObject {
 
 		private static $indexes = [
@@ -55,9 +53,7 @@ support the following:
 **mysite/code/MyTestObject.php**
 
 ```php
-
-	<?php
-
+	
 	class MyTestObject extends DataObject {
 
 		private static $db = [

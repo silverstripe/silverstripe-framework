@@ -63,7 +63,6 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 
 
 ```php
-
 	/**
 	 * Returns true if your are in development mode
 	 * @deprecated 4.0 Use {@link Env::is_dev()} instead.
@@ -87,7 +86,6 @@ notices are always disabled on both live and test.
 
 
 ```php
-
     Deprecation::set_enabled(false);
 ```
 

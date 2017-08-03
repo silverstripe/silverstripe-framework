@@ -18,7 +18,6 @@ headers:
 
 ### HTTP::set_cache_age
 ```php
-
 	HTTP::set_cache_age(0);
 ```
 
@@ -29,7 +28,6 @@ clause in `Cache-Control` and `Pragma` will be included.
 
 
 ```php
-
 	HTTP::register_modification_date('2014-10-10');
 ```
 

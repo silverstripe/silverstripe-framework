@@ -39,9 +39,9 @@ will be used both for grouping and for the title in the template.
 
 	class Module extends DataObject 
 	{
-		private static $db = array(
+		private static $db = [
 			'Title' => 'Text'
-		);
+		];
 	
 		/**
 		 * Returns the first letter of the module title, used for grouping.
@@ -52,6 +52,7 @@ will be used both for grouping and for the title in the template.
 			return $this->Title[0];
 		}
 	}
+
 ```
 
 The next step is to create a method or variable that will contain/return all the objects, 

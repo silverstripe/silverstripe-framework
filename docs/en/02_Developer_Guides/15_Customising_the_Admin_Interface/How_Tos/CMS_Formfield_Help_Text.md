@@ -11,7 +11,6 @@ at the last position within the field, and expects unescaped HTML content.
 
 
 ```php
-
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help');
 ```
@@ -21,7 +20,6 @@ add a `.cms-description-tooltip` class.
 
 
 ```php
-
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-tooltip');
@@ -42,7 +40,6 @@ by clicking the 'info' icon displayed alongside the field.
 
 
 ```php
-
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-toggle');
@@ -53,7 +50,6 @@ by setting an additional `RightTitle`.
 
 
 ```php
-
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-toggle')

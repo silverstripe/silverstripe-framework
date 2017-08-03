@@ -350,8 +350,6 @@ types right now, we will go into much more detail in the [next tutorial](/tutori
 Create a new file *HomePage.php* in *mysite/code*. Copy the following code into it:
 
 ```php
-<?php
-
 use Page;
 use PageController;
 

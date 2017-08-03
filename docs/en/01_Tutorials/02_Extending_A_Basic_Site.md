@@ -68,8 +68,7 @@ We'll start with the *ArticlePage* page type. First we create the model, a class
 **mysite/code/ArticlePage.php**
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class ArticlePage extends Page 
 	{
@@ -78,8 +77,7 @@ We'll start with the *ArticlePage* page type. First we create the model, a class
 ```	
 **mysite/code/ArticlePageController.php**	
 ```php
-	<?php
-	use PageController;
+		use PageController;
 
 	class ArticlePageController extends PageController 
 	{
@@ -97,8 +95,7 @@ Let's create the *ArticleHolder* page type.
 **mysite/code/ArticleHolder.php**
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class ArticleHolder extends Page 
 	{
@@ -107,8 +104,7 @@ Let's create the *ArticleHolder* page type.
 ```
 **mysite/code/ArticleHolderController.php**
 ```php	
-	<?php
-	use PageController; 
+		use PageController; 
 
 	class ArticleHolderController extends PageController 
 	{
@@ -136,8 +132,7 @@ the $db array to add extra fields to the database. It would be nice to know when
 it. Add a *$db* property definition in the *ArticlePage* class:
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class ArticlePage extends Page 
 	{
@@ -162,8 +157,7 @@ When we rebuild the database, we will see that the *ArticlePage* table has been 
 To add our new fields to the CMS we have to override the *getCMSFields()* method, which is called by the CMS when it creates the form to edit a page. Add the method to the *ArticlePage* class.
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class ArticlePage extends Page 
 	{
@@ -233,8 +227,7 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 the date field will have the date format defined by your locale.
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class ArticlePage extends Page 
 	{
@@ -488,8 +481,7 @@ Now that we have a complete news section, let's take a look at the staff section
 **mysite/code/StaffHolder.php**
 
 ```php
-	<?php
-	use Page;
+		use Page;
 
 	class StaffHolder extends Page 
 	{
@@ -502,8 +494,7 @@ Now that we have a complete news section, let's take a look at the staff section
 **mysite/code/StaffHolderController.php**
 
 ```php
-	<?php
-	use PageController;
+		use PageController;
 
 	class StaffHolderController extends PageController 
 	{
@@ -516,8 +507,7 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 **mysite/code/StaffPage.php**
 
 ```php
-	<?php
-	use SilverStripe\AssetAdmin\Forms\UploadField;
+		use SilverStripe\AssetAdmin\Forms\UploadField;
 	use SilverStripe\Assets\Image;
 
 	class StaffPage extends Page 
@@ -542,8 +532,7 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 **mysite/code/StaffPageController.php**
 
 ```php
-	<?php
-	use PageController;
+		use PageController;
 	
 	class StaffPageController extends PageController 
 	{

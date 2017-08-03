@@ -17,41 +17,39 @@ information about the individual player and a relation set up for managing the `
 
 
 ```php
-
-	<?php
-
+	
 	class Player extends DataObject {
 	
-	   private static $db = array(
+	   private static $db = [
 	      'PlayerNumber' => 'Int',
 	      'FirstName' => 'Text',
 	      'LastName' => 'Text',
 	      'Birthday' => 'Date'
-	   );
+	   ];
 	 
-	   private static $has_one = array(
+	   private static $has_one = [
 	      'Team' => 'FootballTeam'
-	   );
+	   ];
 	}
+
 ```
 
 **mysite/code/FootballTeam.php**
 
 
 ```php
-
-	<?php
-
+	
 	class FootballTeam extends DataObject {
 	   
-	   private static $db = array(
+	   private static $db = [
 	      'Title' => 'Text'
-	   );
+	   ];
 
-	   private static $has_many = array(
+	   private static $has_many = [
 	      'Players' => 'Player'
-	   );
+	   ];
 	}
+
 ```
 
 Now going back to look at the CSV, we can see that what we're provided with does not match what our data model looks 
@@ -70,28 +68,26 @@ Our final import looks like this.
 
 
 ```php
-
-	<?php
-
+	
 	class PlayerCsvBulkLoader extends CsvBulkLoader {
 
-	   public $columnMap = array(
+	   public $columnMap = [
 	      'Number' => 'PlayerNumber',
 	      'Name' => '->importFirstAndLastName',
 	      'Geburtsdatum' => 'Birthday',
 	      'Gruppe' => 'Team.Title',
-	   );
+	   ];
 
-	   public $duplicateChecks = array(
+	   public $duplicateChecks = [
 	      'SpielerNummer' => 'PlayerNumber'
-	   );
+	   ];
 
-	   public $relationCallbacks = array(
-	      'Team.Title' => array(
+	   public $relationCallbacks = [
+	      'Team.Title' => [
 	         'relationname' => 'Team',
 	         'callback' => 'getTeamByTitle'
-	      )
-	   );
+	      ]
+	   ];
 
 	   public static function importFirstAndLastName(&$obj, $val, $record) {
 	      $parts = explode(' ', $val);
@@ -104,6 +100,7 @@ Our final import looks like this.
 	      return FootballTeam::get()->filter('Title', $val)->First();
 	   }
 	}
+
 ```
 
 ## Related

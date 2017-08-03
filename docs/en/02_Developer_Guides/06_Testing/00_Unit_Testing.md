@@ -10,9 +10,7 @@ to ensure that it works as it should. A simple example would be to test the resu
 
 
 ```php
-
-	<?php
-
+	
     use SilverStripe\CMS\Model\SiteTree;
 
 	class Page extends SiteTree
@@ -28,9 +26,7 @@ to ensure that it works as it should. A simple example would be to test the resu
 
 
 ```php
-
-	<?php
-    
+	    
     use Page;
     use SilverStripe\Dev\SapphireTest;
 
@@ -120,9 +116,7 @@ end of each test.
 
 
 ```php
-
-	<?php
-
+	
     use SilverStripe\Core\Config\Config;
     use SilverStripe\Dev\SapphireTest;
 
@@ -134,7 +128,7 @@ end of each test.
 
 			// create 100 pages
 			for ($i = 0; $i < 100; $i++) {
-				$page = new Page(array('Title' => "Page $i"));
+				$page = new Page(['Title' => "Page $i"]);
 				$page->write();
 				$page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 			}
@@ -153,6 +147,7 @@ end of each test.
 			// ..
 		}
 	}
+
 ```
 
 `tearDownAfterClass` and `setUpBeforeClass` can be used to run code just once for the file rather than before and after 
@@ -161,9 +156,7 @@ takes place.
 
 
 ```php
-
-	<?php
-	
+		
     use SilverStripe\Dev\SapphireTest;
 	
 	class PageTest extends SapphireTest
@@ -196,7 +189,6 @@ It's important to remember that the `parent::setUp();` functions will need to be
 
 
 ```php
-
 	public static function setUpBeforeClass()
     {
 		parent::setUpBeforeClass();

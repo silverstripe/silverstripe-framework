@@ -421,7 +421,6 @@ PHP:
 
 
 ```php
-
 	class MyController {
 	  public function autocomplete($request) {
 	    $results = Page::get()->filter("Title", $request->getVar('title'));
@@ -432,11 +431,12 @@ PHP:
 
 	    // render all results with a custom template
 	    $vd = new ViewableData();
-	    return $vd->customise(array(
+	    return $vd->customise([
 	      "Results" => $results
-	    ))->renderWith('AutoComplete');
+	    ])->renderWith('AutoComplete');
 	  }
 	}
+
 ```
 
 HTML

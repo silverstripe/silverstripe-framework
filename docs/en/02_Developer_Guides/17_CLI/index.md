@@ -93,14 +93,12 @@ This code provides a good template:
 
 
 ```php
-
-	<?php
-
+	
 	class MyProcess extends Controller {
 
-		private static $allowed_actions = array(
+		private static $allowed_actions = [
 			'index'
-		);
+		];
 
 		function index() {
 			set_time_limit(0);
@@ -115,6 +113,7 @@ This code provides a good template:
 			}
 		}
 	}
+
 ```
 
 Then the process can be managed through `sake`

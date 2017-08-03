@@ -12,7 +12,6 @@ in their WYSIWYG editor. Shortcodes are a semi-technical solution for this. A go
 viewer or a Google Map at a certain location. 
 
 ```php
-
 	$text = "<h1>My Map</h1>[map]"
 	
 	// Will output
@@ -22,7 +21,6 @@ viewer or a Google Map at a certain location.
 Here's some syntax variations:
 
 ```php
-
 	[my_shortcode]
 	#
 	[my_shortcode /]
@@ -40,7 +38,6 @@ Other fields can be manually parsed with shortcodes through the `parse` method.
 
 
 ```php
-
 	$text = "My awesome [my_shortcode] is here.";
 	ShortcodeParser::get_active()->parse($text);
 ```
@@ -53,19 +50,18 @@ First we need to define a callback for the shortcode.
 
 
 ```php
-
-	<?php
-
+	
 	class Page extends SiteTree {
 		
-		private static $casting = array(
+		private static $casting = [
 			'MyShortCodeMethod' => 'HTMLText'
-		);
+		];
 
 		public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) {
 			return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
 		}
 	}
+
 ```
 
 These parameters are passed to the `MyShortCodeMethod` callback:
@@ -86,10 +82,10 @@ To register a shortcode you call the following.
 
 
 ```php
-
 	// ShortcodeParser::get('default')->register($shortcode, $callback);
 
-	ShortcodeParser::get('default')->register('my_shortcode', array('Page', 'MyShortCodeMethod'));
+	ShortcodeParser::get('default')->register('my_shortcode', ['Page', 'MyShortCodeMethod']);
+
 ```
 
 ## Built-in Shortcodes
@@ -104,7 +100,6 @@ shortcode, which takes an `id` parameter.
 
 
 ```php
-
 	<a href="[sitetree_link,id=99]">
 ```
 
@@ -112,7 +107,6 @@ Links to internal `File` database records work exactly the same, but with the `[
 
 
 ```php
-
 	<a href="[file_link,id=99]">
 ```
 
@@ -203,30 +197,30 @@ When the location attribute is "leftAlone" or "center" then the DOM is split aro
 
 Here is a summary of the callback parameter values based on some example shortcodes.
 ```php
-
 	public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) {
 		// ..
 	}
 
 	[my_shortcode]
-	$attributes 	=> array();
+	$attributes 	=> [];
 	$content 		=> null;
 	$parser         => ShortcodeParser instance,
 	$tagName 		=> 'my_shortcode')
 
 	[my_shortcode,attribute="foo",other="bar"]
 
-	$attributes      => array ('attribute'  => 'foo', 'other'      => 'bar')
+	$attributes      => ['attribute'  => 'foo', 'other'      => 'bar']
 	$enclosedContent => null
 	$parser          => ShortcodeParser instance
 	$tagName         => 'my_shortcode'
 
 	[my_shortcode,attribute="foo"]content[/my_shortcode]
 
-	$attributes      => array('attribute' => 'foo')
+	$attributes      => ['attribute' => 'foo']
 	$enclosedContent => 'content'
 	$parser          => ShortcodeParser instance
 	$tagName         => 'my_shortcode'
+
 ```
 
 ## Limitations

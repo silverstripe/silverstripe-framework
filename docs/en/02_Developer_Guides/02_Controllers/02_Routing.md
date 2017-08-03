@@ -84,6 +84,7 @@ print_r($this->getRequest()->params());
 //   [ID] => 1
 //   [Name] => null
 // )
+
 ```
 
 You can also fetch one parameter at a time.
@@ -158,20 +159,19 @@ This is useful when you want to provide custom actions for the mapping of `teams
 **mysite/code/controllers/TeamController.php**
 
 ```php
-<?php
-
 use SilverStripe\Control\Controller;
 
 class TeamController extends Controller
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'payroll'
-    );
+    ];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         'staff/$ID/$Name' => 'payroll',
         'coach/$ID/$Name' => 'payroll'
-    );
+    ];
+
 ```
 
 The syntax for the `$url_handlers` array users the same pattern matches as the `YAML` configuration rules.
@@ -188,10 +188,10 @@ use SilverStripe\CMS\Controllers\ContentController;
 
 class FeedController extends ContentController
 {
-    private static $allowed_actions = array('go');
-    private static $url_handlers = array(
+    private static $allowed_actions = ['go'];
+    private static $url_handlers = [
         'go/$UserName/$AuthToken/$Timestamp/$OutputType/$DeleteMode' => 'go'
-    );
+    ];
 
     public function go()
     {
@@ -205,6 +205,7 @@ class FeedController extends ContentController
 
 The YAML rule, in contrast, is simple. It needs to provide only enough
 information for the framework to choose the desired controller.
+
 
 ```yml
 Director:

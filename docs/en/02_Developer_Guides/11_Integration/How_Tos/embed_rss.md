@@ -11,15 +11,14 @@ First, we write the code to query the API feed.
 
 
 ```php
-
 	public function getWellingtonWeather() {
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
 		);
 		
-		$fetch->setQueryString(array(
+		$fetch->setQueryString([
 			'q' => 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="Wellington, NZ")'
-		));
+		]);
 		
 		// perform the query
 		$conn = $fetch->request();
@@ -32,14 +31,15 @@ First, we write the code to query the API feed.
 
 		if($msgs) {
 			foreach($msgs as $msg) {
-				$output->push(new ArrayData(array(
+				$output->push(new ArrayData([
 					'Description' => Convert::xml2raw($msg->channel_item_description)
-				)));
+				]));
 			}
 		}
 
 		return $output;
 	}
+
 ```
 
 This will provide our `Page` template with a new `WellingtonWeather` variable (an [ArrayList](api:SilverStripe\ORM\ArrayList)). Each item has a 

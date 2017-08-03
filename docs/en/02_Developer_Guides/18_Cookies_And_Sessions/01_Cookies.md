@@ -15,7 +15,6 @@ Sets the value of cookie with configuration.
 
 
 ```php
-
 	Cookie::set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false);
 
 	// Cookie::set('MyApplicationPreference', 'Yes');
@@ -27,7 +26,6 @@ Returns the value of cookie.
 
 
 ```php
-
 	Cookie::get($name);
 
 	// Cookie::get('MyApplicationPreference');
@@ -40,7 +38,6 @@ Clears a given cookie.
 
 
 ```php
-
 	Cookie::force_expiry($name, $path = null, $domain = null);
 
 	// Cookie::force_expiry('MyApplicationPreference')
@@ -57,16 +54,16 @@ from the browser.
 
 
 ```php
-
-	$myCookies = array(
+	$myCookies = [
 		'cookie1' => 'value1',
-	);
+	];
 
 	$newBackend = new CookieJar($myCookies);
 
 	Injector::inst()->registerService($newBackend, 'Cookie_Backend');
 
 	Cookie::get('cookie1');
+
 ```
 
 ### Resetting the Cookie_Backend state
@@ -77,7 +74,6 @@ create a new service for you using the `$_COOKIE` superglobal.
 
 
 ```php
-
 	Injector::inst()->unregisterNamedObject('Cookie_Backend');
 
 	Cookie::get('cookiename'); // will return $_COOKIE['cookiename'] if set
@@ -88,7 +84,6 @@ the current `CookieJar` service to tell you what it was like when it was registe
 
 
 ```php
-
 	//store the cookies that were loaded into the `CookieJar`
 	$recievedCookie = Cookie::get_inst()->getAll(false);
 
@@ -125,7 +120,6 @@ Using the `Cookie_Backend` we can do this like such:
 
 
 ```php
-
 	Cookie::set('CookieName', 'CookieVal');
 
 	Cookie::get('CookieName'); //gets the cookie as we set it
@@ -140,7 +134,6 @@ One can also access all of the cookies in one go using the `Cookie_Backend`
 
 
 ```php
-
 	Cookie::get_inst()->getAll(); //returns all the cookies including ones set during the current process
 
 	Cookie::get_inst()->getAll(false); //returns all the cookies in the request

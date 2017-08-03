@@ -26,35 +26,35 @@ come from user input.
 
 Example:
 ```php
-
-	$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
-	$records = MyClass::get()->where(array('"ID" = ?' => 3));
-	$records = MyClass::get()->where(array('"ID"' => 3));
+	$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', [3]);
+	$records = MyClass::get()->where(['"ID" = ?' => 3]);
+	$records = MyClass::get()->where(['"ID"' => 3]);
 	$records = DataObject::get_by_id('MyClass', 3);
-	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
+	$records = DataObject::get_one('MyClass', ['"ID" = ?' => 3]);
 	$records = MyClass::get()->byID(3);
-	$records = SQLSelect::create()->addWhere(array('"ID"' => 3))->execute();
+	$records = SQLSelect::create()->addWhere(['"ID"' => 3])->execute();
+
 ```
 
 Parameterised updates and inserts are also supported, but the syntax is a little different
 
 
 ```php
-
 	SQLInsert::create('"MyClass"')
 		->assign('"Name"', 'Daniel')
-		->addAssignments(array(
+		->addAssignments([
 			'"Position"' => 'Accountant',
-			'"Age"' => array(
-				'GREATEST(0,?,?)' => array(24, 28)
-			)
-		))
+			'"Age"' => [
+				'GREATEST(0,?,?)' => [24, 28]
+			]
+		])
 		->assignSQL('"Created"', 'NOW()')
 		->execute();
 	DB::prepared_query(
 		'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
-		array('Daniel', 'Accountant', 24, 28)
+		['Daniel', 'Accountant', 24, 28]
 	);
+
 ```
 
 ### Automatic escaping
@@ -80,15 +80,15 @@ handled via prepared statements.
 
 Example:
 ```php
-
 	// automatically escaped/quoted
 	$members = Member::get()->filter('Name', $_GET['name']); 
 	// automatically escaped/quoted
-	$members = Member::get()->filter(array('Name' => $_GET['name'])); 
+	$members = Member::get()->filter(['Name' => $_GET['name']]); 
 	// parameterised condition
-	$members = Member::get()->where(array('"Name" = ?' => $_GET['name'])); 
+	$members = Member::get()->where(['"Name" = ?' => $_GET['name']]); 
 	// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
 	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
+
 ```
 
 <div class="warning" markdown='1'>
@@ -114,7 +114,6 @@ Example:
 
 
 ```php
-
 	class MyForm extends Form {
 	  public function save($RAW_data, $form) {
 			// Pass true as the second parameter of raw2sql to quote the value safely
@@ -123,6 +122,7 @@ Example:
 	    // ...
 	  }
 	}
+
 ```
 
 *  `FormField->Value()`
@@ -132,9 +132,8 @@ Example:
 
 
 ```php
-
 	class MyController extends Controller {
-	  private static $allowed_actions = array('myurlaction');
+	  private static $allowed_actions = ['myurlaction'];
 	  public function myurlaction($RAW_urlParams) {
 			// Pass true as the second parameter of raw2sql to quote the value safely
 			$SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
@@ -142,6 +141,7 @@ Example:
 	    // ...
 	  }
 	}
+
 ```
 
 As a rule of thumb, you should escape your data **as close to querying as possible**
@@ -150,7 +150,6 @@ passing data through, escaping should happen at the end of the chain.
 
 
 ```php
-
 	class MyController extends Controller {
 	  /**
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
@@ -165,6 +164,7 @@ passing data through, escaping should happen at the end of the chain.
 			DB::query("UPDATE Player SET Name = {$SQL_name}");
 	  }
 	}
+
 ```
 
 This might not be applicable in all cases - especially if you are building an API thats likely to be customised. If
@@ -231,20 +231,19 @@ PHP:
 
 
 ```php
-
 	class MyObject extends DataObject {
-	  private static $db = array(
+	  private static $db = [
 	    'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
 	    'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
-	  );
+	  ];
 	}
+
 ```
 
 Template:
 
 
 ```php
-
 	<ul>
 	  <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
 	  <li>$MyUnescapedValue</li> // output: <b>bold</b>
@@ -263,7 +262,6 @@ Template (see above):
 
 
 ```php
-
 	<ul>
 	  // output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
 	  <li><a href="#" title="$Title.ATT">$Title</a></li>
@@ -282,27 +280,26 @@ PHP:
 
 
 ```php
-
 	class MyObject extends DataObject {
 		public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
 	     
-		$casting = array(
+		$casting = [
 			"Title" => "Text", // forcing a casting
 			'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
-		);
+		];
 		
 		public function TitleWithHTMLSuffix($suffix) {
 			// $this->Title is not casted in PHP
 			return $this->Title . '<small>(' . $suffix. ')</small>';
 		}
 	}
+
 ```
 
 Template:
 
 
 ```php
-
 	<ul>
 	  <li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
 	  <li>$Title.RAW</li> // output: <b>not bold</b>
@@ -325,24 +322,23 @@ PHP:
 
 
 ```php
-
 	class MyController extends Controller {
-		private static $allowed_actions = array('search');
+		private static $allowed_actions = ['search'];
 		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
-			return $this->customise(array(
+			return $this->customise([
 				'Query' => Text::create($request->getVar('Query')),
 				'HTMLTitle' => HTMLText::create($htmlTitle)
-			));
+			]);
 		}
 	}
+
 ```
 
 Template:
 
 
 ```php
-
 	<h2 title="Searching for $Query.ATT">$HTMLTitle</h2>
 ```
 
@@ -359,24 +355,23 @@ PHP:
 
 
 ```php
-
 	class MyController extends Controller {
-		private static $allowed_actions = array('search');
+		private static $allowed_actions = ['search'];
 		public function search($request) {
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
-			return $this->customise(array(
+			return $this->customise([
 				"RSSLink" => Text::create($rssLink),
-			));
+			]);
 		}
 	}
+
 ```
 
 Template:
 
 
 ```php
-
 	<a href="$RSSLink.ATT">RSS feed</a>
 ```
 
@@ -426,7 +421,6 @@ Below is an example with different ways you would use this casting technique:
 
 
 ```php
-
 	public function CaseStudies() {
 	
 	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
@@ -524,12 +518,12 @@ a [PasswordValidator](api:SilverStripe\Security\PasswordValidator):
 
 
 ```php
-
 	$validator = new PasswordValidator();
 	$validator->minLength(7);
 	$validator->checkHistoricalPasswords(6);
-	$validator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
+	$validator->characterStrength(3, ["lowercase", "uppercase", "digits", "punctuation"]);
 	Member::set_password_validator($validator);
+
 ```
 
 In addition, you can tighten password security with the following configuration settings:
@@ -554,7 +548,6 @@ controller's `init()` method:
 
 
 ```php
-
 	class MyController extends Controller {
 		public function init() {
 			parent::init();
@@ -638,8 +631,6 @@ variable will be no longer necessary, thus it will be necessary to always set
 SilverStripe recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
 director function `forceSSL()` 
 ```php
-
-
 	if (!Director::isDev()) {
 		Director::forceSSL();
 	}
@@ -668,7 +659,6 @@ clear text and can be intercepted and stolen by an attacker who is listening on 
 code. It is best practice to set this flag unless the application is known to use JavaScript to access these cookies 
 as this prevents an attacker who achieves cross-site scripting from accessing these cookies.
 ```php
-
 	
 	Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
 		$httpOnly = false
@@ -697,8 +687,6 @@ and `Date: <current date>` will ensure that sensitive content is not stored loca
 unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
 ```php
-
-
 	class MySecureController extends Controller {
 		
 		public function init() {

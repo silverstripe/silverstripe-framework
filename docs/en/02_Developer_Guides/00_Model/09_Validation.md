@@ -22,15 +22,13 @@ write, and respond appropriately if it isn't.
 The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\ValidationResult) object.
 
 ```php
-
-	<?php
-
+	
 	class MyObject extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'Country' => 'Varchar',
 			'Postcode' => 'Varchar'
-		);
+		];
 
 		public function validate() {
 			$result = parent::validate();
@@ -42,6 +40,7 @@ The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\Va
 			return $result;
 		}
 	}
+
 ```
 
 ## API Documentation

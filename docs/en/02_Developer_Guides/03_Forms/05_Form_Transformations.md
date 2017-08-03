@@ -11,7 +11,6 @@ To make an entire [Form](api:SilverStripe\Forms\Form) read-only.
 
 
 ```php
-
 	$form = new Form(..);
 	$form->makeReadonly();
 ```
@@ -20,7 +19,6 @@ To make all the fields within a [FieldList](api:SilverStripe\Forms\FieldList) re
 
 
 ```php
-
 	$fields = new FieldList(..);
 	$fields = $fields->makeReadonly();
 ```
@@ -29,7 +27,6 @@ To make a [FormField](api:SilverStripe\Forms\FormField) read-only you need to kn
 
 
 ```php
-
 	$field = new TextField(..);
 	$field = $field->performReadonlyTransformation();
 

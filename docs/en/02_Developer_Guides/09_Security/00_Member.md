@@ -17,7 +17,6 @@ next method for testing if you just need to test.
 
 
 ```php
-
 	// Is a member logged in?
 	if( Member::currentUserID() ) {
 		// Yes!
@@ -32,7 +31,6 @@ Returns the full *Member* Object for the current user, returns *null* if user is
 
 
 ```php
-
 	if( $member = Security::getCurrentUser() ) {
 		// Work with $member
 	} else {
@@ -51,13 +49,13 @@ You can define subclasses of [Member](api:SilverStripe\Security\Member) to add e
 
 
 ```php
-
 	class MyMember extends Member {
-		private static $db = array(
+		private static $db = [
 			"Age" => "Int",
 			"Address" => "Text",
-		);
+		];
 	}
+
 ```
 
 To ensure that all new members are created using this class, put a call to [Object::useCustomClass()](api:Object::useCustomClass()) in
@@ -65,7 +63,6 @@ To ensure that all new members are created using this class, put a call to [Obje
 
 
 ```php
-
 	Object::useCustomClass("Member", "MyMember");
 ```
 
@@ -79,7 +76,6 @@ parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\Fie
 
 
 ```php
-
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->insertBefore("HTMLEmail", new TextField("Age"));
@@ -118,7 +114,6 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 
 
 ```php
-
 	class MyMemberExtension extends DataExtension {
 	  /**
 	
@@ -132,16 +127,17 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 	  }
 	
 		// define additional properties
-		private static $db = array(); 
-		private static $has_one = array(); 
-		private static $has_many = array(); 
-		private static $many_many = array(); 
-		private static $belongs_many_many = array(); 
+		private static $db = []; 
+		private static $has_one = []; 
+		private static $has_many = []; 
+		private static $many_many = []; 
+		private static $belongs_many_many = []; 
 	
 	  public function somethingElse() {
 	    // You can add any other methods you like, which you can call directly on the member object.
 	  }
 	}
+
 ```
 
 ## Saved User Logins ##
@@ -172,7 +168,6 @@ E.g.
 
 
 ```php
-
     class CleanRecordsTask extends BuildTask
     {
         public function run($request)

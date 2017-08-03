@@ -13,16 +13,14 @@ customise those fields as required.
 An example is `DataObject`, SilverStripe will automatically create your CMS interface so you can modify what you need.
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 		
-		private static $db = array(
+		private static $db = [
 			'IsActive' => 'Boolean',
 			'Title' => 'Varchar',
 			'Content' => 'Text'
-		);
+		];
 
 		public function getCMSFields() {
 			// parent::getCMSFields() does all the hard work and creates the fields for Title, IsActive and Content.
@@ -32,14 +30,13 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 			return $fields;
 		}
 	}
+
 ```
 
 To fully customise your form fields, start with an empty FieldList.
 
 ```php
-
-	<?php
-
+	
 		public function getCMSFields() {
 			$fields = FieldList::create(
 				TabSet::create("Root.Main",
@@ -63,16 +60,15 @@ The `$searchable_fields` property uses a mixed array format that can be used to 
 system. The default is a set of array values listing the fields.
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 	
-	   private static $searchable_fields = array(
+	   private static $searchable_fields = [
 	      'Name',
 	      'ProductCode'
-	   );
+	   ];
 	}
+
 ```
 
 Searchable fields will be appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
@@ -80,74 +76,71 @@ default search filter assigned (usually an [ExactMatchFilter](api:SilverStripe\O
 additional information on `$searchable_fields`:
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 
-		private static $searchable_fields = array(
+		private static $searchable_fields = [
 			'Name' => 'PartialMatchFilter',
 			'ProductCode' => 'NumericField'
-		);
+		];
 	}
+
 ```
 
 If you assign a single string value, you can set it to be either a [FormField](api:SilverStripe\Forms\FormField) or [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter). To specify 
 both, you can assign an array:
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 	
-	   private static $searchable_fields = array(
-	       'Name' => array(
+	   private static $searchable_fields = [
+	       'Name' => [
 	          'field' => 'TextField',
 	          'filter' => 'PartialMatchFilter',
-	       ),
-	       'ProductCode' => array(
+	       ],
+	       'ProductCode' => [
 	           'title' => 'Product code #',
 	           'field' => 'NumericField',
 	           'filter' => 'PartialMatchFilter',
-	       ),
-	   );
+	       ],
+	   ];
 	}
+
 ```
 
 To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, you can use a dot-notation.
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Title' => 'Varchar'
-	  );
+	  ];
 	
-	  private static $many_many = array(
+	  private static $many_many = [
 	    'Players' => 'Player'
-	  );
+	  ];
 	
-	  private static $searchable_fields = array(
+	  private static $searchable_fields = [
 	      'Title',
 	      'Players.Name',
-	   );
+	   ];
 	}
 	
 	class Player extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Name' => 'Varchar',
 	    'Birthday' => 'Date'
-	  );
+	  ];
 	
-	  private static $belongs_many_many = array(
+	  private static $belongs_many_many = [
 	    'Teams' => 'Team'
-	  );
+	  ];
 	}
+
 ```
 
 ### Summary Fields
@@ -156,77 +149,74 @@ Summary fields can be used to show a quick overview of the data for a specific [
 is their display as table columns, e.g. in the search results of a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) CMS interface.
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Name' => 'Text',
 	    'OtherProperty' => 'Text',
 	    'ProductCode' => 'Int',
-	  ); 
+	  ]; 
 	
-	  private static $summary_fields = array(
+	  private static $summary_fields = [
 	    'Name',
 	    'ProductCode'
-	  );
+	  ];
 	}
+
 ```
 
 To include relations or field manipulations in your summaries, you can use a dot-notation.
 
 ```php
-
-	<?php
-
+	
 	class OtherObject extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Title' => 'Varchar'
-	  );
+	  ];
 	}
 	
 	class MyDataObject extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Name' => 'Text',
 	    'Description' => 'HTMLText'
-	  );
+	  ];
 	
-	  private static $has_one = array(
+	  private static $has_one = [
 	    'OtherObject' => 'OtherObject'
-	  );
+	  ];
 	
-	  private static $summary_fields = array(
+	  private static $summary_fields = [
 	    'Name' => 'Name',
 	    'Description.Summary' => 'Description (summary)',
 	    'OtherObject.Title' => 'Other Object Title'
-	  );
+	  ];
 	}
+
 ```
 
 Non-textual elements (such as images and their manipulations) can also be used in summaries.
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 	
-	  private static $db = array(
+	  private static $db = [
 	    'Name' => 'Text'
-	  );
+	  ];
 	
-	  private static $has_one = array(
+	  private static $has_one = [
 	    'HeroImage' => 'Image'
-	  );
+	  ];
 	
-	  private static $summary_fields = array(
+	  private static $summary_fields = [
 	    'Name' => 'Name',
 	    'HeroImage.CMSThumbnail' => 'Hero Image'
-	  );
+	  ];
 	}
+
 ```
 
 ## Related Documentation

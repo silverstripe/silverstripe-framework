@@ -32,8 +32,6 @@ It is common practice to include most Requirements either in the *init()*-method
 as close to rendering as possible (e.g. in [FormField](api:SilverStripe\Forms\FormField)).
 
 ```php
-<?php
-
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 

@@ -6,12 +6,10 @@ Let's start by defining a new `ContactPage` page type:
 
 
 ```php
-
-	<?php
-	class ContactPage extends Page {
+		class ContactPage extends Page {
 	}
 	class ContactPageController extends PageController {
-		private static $allowed_actions = array('Form');
+		private static $allowed_actions = ['Form'];
 		public function Form() { 
 			$fields = new FieldList( 
 				new TextField('Name'), 
@@ -24,6 +22,7 @@ Let's start by defining a new `ContactPage` page type:
 			return new Form($this, 'Form', $fields, $actions); 
 		}
 	}
+
 ```
 
 To create a form, we instanciate a `Form` object on a function on our page controller. We'll call this function `Form()`. You're free to choose this name, but it's standard practice to name the function `Form()` if there's only a single form on the page.
@@ -32,7 +31,6 @@ There's quite a bit in this function, so we'll step through one piece at a time.
 
 
 ```php
-
 	$fields = new FieldList(
 		new TextField('Name'),
 		new EmailField('Email'),
@@ -44,7 +42,6 @@ First we create all the fields we want in the contact form, and put them inside 
 
 
 ```php
-
 	$actions = FieldList(
 		new FormAction('submit', 'Submit')
 	);
@@ -54,7 +51,6 @@ We then create a [FieldList](api:SilverStripe\Forms\FieldList) of the form actio
 
 
 ```php
-
 	return new Form($this, 'Form', $fields, $actions);
 ```
 
@@ -74,9 +70,8 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 
 ```php
-
 	class ContactPageController extends PageController {
-		private static $allowed_actions = array('Form');
+		private static $allowed_actions = ['Form'];
 		public function Form() {
 			// ...
 		}
@@ -93,12 +88,13 @@ Now that we have a contact form, we need some way of collecting the data submitt
 			"; 
 			$email->setBody($messageBody); 
 			$email->send(); 
-			return array(
+			return [
 				'Content' => '<p>Thank you for your feedback.</p>',
 				'Form' => ''
-			);
+			];
 		}
 	}
+
 ```
 
 <div class="hint" markdown="1">
@@ -123,7 +119,6 @@ The framework comes with a predefined validator called [RequiredFields](api:Silv
 
 
 ```php
-
 	public function Form() { 
 		// ...
 		$validator = new RequiredFields('Name', 'Message');

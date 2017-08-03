@@ -20,7 +20,6 @@ The following sums up the simplest usage of the `Injector` it creates a new obje
 
 
 ```php
-
 	$object = Injector::inst()->create('MyClassName');
 ```
 
@@ -40,7 +39,6 @@ Repeated calls to `create()` create a new object each time.
 
 
 ```php
-
 	$object = Injector::inst()->create('MyClassName');
 	$object2 = Injector::inst()->create('MyClassName');
 
@@ -56,7 +54,6 @@ object instance as the first call.
 
 
 ```php
-
 	// sets up MyClassName as a singleton
 	$object = Injector::inst()->get('MyClassName');
 	$object2 = Injector::inst()->get('MyClassName');
@@ -73,8 +70,7 @@ The `Injector` API can be used to define the types of `$dependencies` that an ob
 
 ```php
  
-	<?php
-
+	
 	class MyController extends Controller {
 	
 		// both of these properties will be automatically
@@ -84,18 +80,18 @@ The `Injector` API can be used to define the types of `$dependencies` that an ob
 	
 		// we declare the types for each of the properties on the object. Anything we pass in via the Injector API must
 		// match these data types.
-		static $dependencies = array(
+		static $dependencies = [
 			'textProperty'		=> 'a string value',
 			'permissions'		=> '%$PermissionService',
-		);
+		];
 	}
+
 ```
 
 When creating a new instance of `MyController` the dependencies on that class will be met.
 
 
 ```php
-
 	$object = Injector::inst()->get('MyController');
 	
 	echo ($object->permissions instanceof PermissionService);
@@ -123,7 +119,6 @@ Now the dependencies will be replaced with our configuration.
 
 
 ```php
-
 	$object = Injector::inst()->get('MyController');
 	
 	echo ($object->permissions instanceof MyCustomPermissionService);
@@ -182,18 +177,17 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 
 
 ```php
-
-	<?php
-
+	
 	class MyFactory implements SilverStripe\Core\Injector\Factory {
 
-		public function create($service, array $params = array()) {
+		public function create($service, array $params = []) {
 			return new MyServiceImplementation();
 		}
 	}
 
 	// Will use MyFactoryImplementation::create() to create the service instance.
 	$instance = Injector::inst()->get('MyService');
+
 ```
 
 ## Dependency overrides
@@ -219,9 +213,7 @@ Assuming a class structure such as
 
 
 ```php
-
-	<?php
-
+	
 	class RestrictivePermissionService {
 		private $database;
 
@@ -266,7 +258,6 @@ Calling..
 
 
 ```php
-
 	// sets up ClassName as a singleton
 	$controller = Injector::inst()->get('MyController');
 ```
@@ -324,7 +315,6 @@ This is useful when writing test cases, as certain services may be necessary to 
 
 
 ```php
-
 	// Setup default service
 	Injector::inst()->registerService(new LiveService(), 'ServiceName');
 

@@ -25,7 +25,6 @@ To access variables in the PHP:
 
 
 ```php
-
 	$config = SiteConfig::current_site_config(); 
 	
 	echo $config->Title;
@@ -41,14 +40,12 @@ To extend the options available in the panel, define your own fields via a [Data
 
 
 ```php
-
-	<?php
-	
+		
 	class CustomSiteConfig extends DataExtension {
 		
-		private static $db = array(
+		private static $db = [
 			'FooterContent' => 'HTMLText'
-		);
+		];
 	
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldToTab("Root.Main", 
@@ -56,6 +53,7 @@ To extend the options available in the panel, define your own fields via a [Data
 			);
 		}
 	}
+
 ```
 
 Then activate the extension.

@@ -17,9 +17,7 @@ code.
 </div>
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 	
 		public function canView($member = null) {

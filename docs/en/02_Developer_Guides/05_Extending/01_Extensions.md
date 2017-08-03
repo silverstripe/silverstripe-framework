@@ -19,20 +19,19 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 
 
 ```php
-
-	<?php
-	
+		
 	class MyMemberExtension extends DataExtension {
 
-		private static $db = array(
+		private static $db = [
 			'DateOfBirth' => 'SS_Datetime'
-		);
+		];
 
 		public function SayHi() {
 			// $this->owner refers to the original instance. In this case a `Member`.
 			return "Hi " . $this->owner->Name;
 		}
 	}
+
 ```
 
 <div class="info" markdown="1">
@@ -56,7 +55,6 @@ Alternatively, we can add extensions through PHP code (in the `_config.php` file
 
 
 ```php
-
 	Member::add_extension('MyMemberExtension');
 ```
 
@@ -81,24 +79,23 @@ $has_one etc.
 
 
 ```php
-
-	<?php
-
+	
 	class MyMemberExtension extends DataExtension {
 
-		private static $db = array(
+		private static $db = [
 			'Position' => 'Varchar',
-		);
+		];
 
-		private static $has_one = array(
+		private static $has_one = [
 			'Image' => 'Image',
-		);
+		];
 
 		public function SayHi() {
 			// $this->owner refers to the original instance. In this case a `Member`.
 			return "Hi " . $this->owner->Name;
 		}
 	}
+
 ```
 
 **mysite/templates/Page.ss**
@@ -127,7 +124,6 @@ we added a `SayHi` method which is unique to our extension.
 **mysite/code/Page.php**
 
 ```php
-
 	$member = Security::getCurrentUser();
 	echo $member->SayHi;
 
@@ -144,7 +140,6 @@ through the [Object::extend()](api:Object::extend()) method.
 
 
 ```php
-
 	public function getValidator() {
 		// ..
 		
@@ -163,9 +158,7 @@ validator by defining the `updateValidator` method.
 
 
 ```php
-
-	<?php
-
+	
 	class MyMemberExtension extends DataExtension {
 
 		// ..
@@ -186,18 +179,16 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
-
-	<?php
-
+	
 	class MyMemberExtension extends DataExtension {
 
-		private static $db = array(
+		private static $db = [
 			'Position' => 'Varchar',
-		);
+		];
 
-		private static $has_one = array(
+		private static $has_one = [
 			'Image' => 'Image',
-		);
+		];
 
 		public function updateCMSFields(FieldList $fields) {
 			$fields->push(new TextField('Position'));
@@ -205,6 +196,7 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 			$upload->setAllowedFileCategories('image/supported');
 		}
 	}
+
 ```
 
 <div class="notice" markdown="1">
@@ -214,7 +206,6 @@ which allows an Extension to modify the results.
 
 
 ```php
-
 	public function Foo() {
 		$foo = // ..
 
@@ -234,9 +225,7 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 
 ```php
-
-	<?php
-
+	
 	class MyMemberExtension extends DataExtension {
 
 		public function updateFoo($foo) {
@@ -251,7 +240,6 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 To see what extensions are currently enabled on an object, use [Object::getExtensionInstances()](api:Object::getExtensionInstances()) and 
 [Object::hasExtension()](api:Object::hasExtension())
 ```php
-
 	$member = Security::getCurrentUser();
 
 	print_r($member->getExtensionInstances());
@@ -279,7 +267,6 @@ if not specified in `self::$defaults`, but before extensions have been called:
 
 
 ```php
-
 	function __construct() {
 		$self = $this;
 
@@ -301,7 +288,6 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 
 
 ```php
-
 	public function getCMSFields() {
 
 		$this->beforeUpdateCMSFields(function($fields) {

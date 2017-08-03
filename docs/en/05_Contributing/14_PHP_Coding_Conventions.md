@@ -27,7 +27,6 @@ As opposed to other variables, these should be declared as lower case with under
 
 
 ```php
-
 	class MyClass
 	{
 	    private static $my_config_variable = 'foo';
@@ -41,7 +40,6 @@ Read more in the PHP documentation for [comparison operators](http://php.net/man
 
 
 ```php
-
 	// good - only need to cast to (int) if $a might not already be an int
 	if ((int)$a === 100) {
 	    doThis();
@@ -59,7 +57,6 @@ Try to avoid using PHP's ability to mix HTML into the code.
 
 
 ```php
-
 	// PHP code
 	public function getTitle() {
 		return "<h2>Bad Example</h2>";
@@ -73,7 +70,6 @@ Better: Keep HTML in template files:
 
 
 ```php
-
 	// PHP code
 	public function getTitle() {
 		return "Better Example";
@@ -99,7 +95,6 @@ Example:
 
 
 ```php
-
 	/**
 	 * My short description for this class.
 	 * My longer description with
@@ -151,8 +146,8 @@ with the column or table name escaped with double quotes as below.
 
 
 ```php
+	MyClass::get()->where(["\"Score\" > ?" => 50]);
 
-	MyClass::get()->where(array("\"Score\" > ?" => 50));
 ```
 
 It is preferable to use parameterised queries whenever necessary to provide conditions
@@ -162,7 +157,6 @@ are single quoted.
 
 
 ```php
-
 	MyClass::get()->where("\"Title\" = 'my title'");
 ```
 

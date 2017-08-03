@@ -52,17 +52,17 @@ within the assets folder).
 
 For example, to load a temporary file into a DataObject you could use the below:
 ```php
-
 	<?
 	class Banner extends DataObject {
-		private static $db = array(
+		private static $db = [
 			'Image' => 'DBFile'
-		);
+		];
 	}
 
 	// Image could be assigned in other parts of the code using the below
 	$banner = new Banner();
 	$banner->Image->setFromLocalFile($tempfile['path'], 'uploads/banner-file.jpg');
+
 ```
 
 When uploading a file it's normally necessary to give the file a useful name and directory, otherwise the

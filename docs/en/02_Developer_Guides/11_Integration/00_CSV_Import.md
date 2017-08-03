@@ -36,7 +36,6 @@ The loader would be triggered through the `load()` method:
 
 
 ```php
-
 	$loader = new CsvBulkLoader('Member');
 	$result = $loader->load('<my-file-path>');
 ```
@@ -50,18 +49,17 @@ The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is t
 
 
 ```php
-
-	<?php
-	class PlayerAdmin extends ModelAdmin {
-	   private static $managed_models = array(
+		class PlayerAdmin extends ModelAdmin {
+	   private static $managed_models = [
 	      'Player'
-	   );
-	   private static $model_importers = array(
+	   ];
+	   private static $model_importers = [
 	      'Player' => 'CsvBulkLoader',
-	   );
+	   ];
 	   private static $url_segment = 'players';
 	}
 	?>
+
 ```
 
 The new admin interface will be available under `http://localhost/admin/players`, the import form is located
@@ -76,11 +74,9 @@ You'll need to add a route to your controller to make it accessible via URL
 
 
 ```php
+		class MyController extends Controller {
 
-	<?php
-	class MyController extends Controller {
-
-		private static $allowed_actions = array('Form');
+		private static $allowed_actions = ['Form'];
 
 		protected $template = "BlankPage";
 
@@ -106,7 +102,7 @@ You'll need to add a route to your controller to make it accessible via URL
 		public function doUpload($data, $form) {
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
-			$messages = array();
+			$messages = [];
 			if($results->CreatedCount()) $messages[] = sprintf('Imported %d items', $results->CreatedCount());
 			if($results->UpdatedCount()) $messages[] = sprintf('Updated %d items', $results->UpdatedCount());
 			if($results->DeletedCount()) $messages[] = sprintf('Deleted %d items', $results->DeletedCount());
@@ -116,6 +112,7 @@ You'll need to add a route to your controller to make it accessible via URL
 			return $this->redirectBack();
 		}
 	}
+
 ```
 
 Note: This interface is not secured, consider using [Permission::check()](api:SilverStripe\Security\Permission::check()) to limit the controller to users
@@ -137,37 +134,35 @@ Datamodel for Player
 
 
 ```php
-
-	<?php
-	class Player extends DataObject {
-	   private static $db = array(
+		class Player extends DataObject {
+	   private static $db = [
 	      'PlayerNumber' => 'Int',
 	      'FirstName' => 'Text',
 	      'LastName' => 'Text',
 	      'Birthday' => 'Date',
-	   );
-	   private static $has_one = array(
+	   ];
+	   private static $has_one = [
 	      'Team' => 'FootballTeam'
-	   );
+	   ];
 	}
 	?>
+
 ```
 
 Datamodel for FootballTeam:
 
 
 ```php
-
-	<?php
-	class FootballTeam extends DataObject {
-	   private static $db = array(
+		class FootballTeam extends DataObject {
+	   private static $db = [
 	      'Title' => 'Text',
-	   );
-	   private static $has_many = array(
+	   ];
+	   private static $has_many = [
 	      'Players' => 'Player'
-	   );
+	   ];
 	}
 	?>
+
 ```
 
 Sample implementation of a custom loader. Assumes a CSV-file in a certain format (see below).
@@ -177,24 +172,22 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Avoids duplicate imports by a custom `$duplicateChecks` definition
 *  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
 ```php
-
-	<?php
-	class PlayerCsvBulkLoader extends CsvBulkLoader {
-	   public $columnMap = array(
+		class PlayerCsvBulkLoader extends CsvBulkLoader {
+	   public $columnMap = [
 	      'Number' => 'PlayerNumber', 
 	      'Name' => '->importFirstAndLastName', 
 	      'Birthday' => 'Birthday', 
 	      'Team' => 'Team.Title', 
-	   );
-	   public $duplicateChecks = array(
+	   ];
+	   public $duplicateChecks = [
 	      'Number' => 'PlayerNumber'
-	   );
-	   public $relationCallbacks = array(
-	      'Team.Title' => array(
+	   ];
+	   public $relationCallbacks = [
+	      'Team.Title' => [
 	         'relationname' => 'Team',
 	         'callback' => 'getTeamByTitle'
-	      )
-	   );
+	      ]
+	   ];
 	   public static function importFirstAndLastName(&$obj, $val, $record) {
 	      $parts = explode(' ', $val);
 	      if(count($parts) != 2) return false;
@@ -206,24 +199,24 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	   }
 	}
 	?>
+
 ```
 
 Building off of the ModelAdmin example up top, use a custom loader instead of the default loader by adding it to `$model_importers`. In this example, `CsvBulkLoader` is replaced with `PlayerCsvBulkLoader`.
 
 
 ```php
-
-	<?php
-	class PlayerAdmin extends ModelAdmin {
-	   private static $managed_models = array(
+		class PlayerAdmin extends ModelAdmin {
+	   private static $managed_models = [
 		  'Player'
-	   );
-	   private static $model_importers = array(
+	   ];
+	   private static $model_importers = [
 		  'Player' => 'PlayerCsvBulkLoader',
-	   );
+	   ];
 	   private static $url_segment = 'players';
 	}
 	?>
+
 ```
 
 ## Related

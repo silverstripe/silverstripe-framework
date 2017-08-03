@@ -98,18 +98,17 @@ For example, a block that shows a collection of rotating slides needs to update 
 
 
 ```php
-
-
 	public function SliderCacheKey() {
-		$fragments = array(
+		$fragments = [
 			'Page-Slides',
 			$this->ID,
 			// identify which objects are in the list and their sort order
 			implode('-', $this->Slides()->Column('ID')),
 			$this->Slides()->max('LastEdited')
-		);
+		];
 		return implode('-_-', $fragments);
 	}
+
 ```
 
 Then reference that function in the cache key:
@@ -147,7 +146,6 @@ configurable only on a site-wide basis), you could add a special function to you
 
 
 ```php
-
 	public function BlogStatisticsCounter() {
 	    return (int)(time() / 60 / 5); // Returns a new number every five minutes
 	}
@@ -308,7 +306,6 @@ logic is sound, you could increase the expiry dramatically.
 
 
 ```php
-
 	// Set partial cache expiry to 7 days
 	SS_Cache::set_cache_lifetime('cacheblock', 60 * 60 * 24 * 7);
 ```

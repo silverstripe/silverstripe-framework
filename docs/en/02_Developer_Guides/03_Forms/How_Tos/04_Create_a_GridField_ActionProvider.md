@@ -19,9 +19,7 @@ below:
 
 
 ```php
-
-	<?php
-
+	
 	class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider {
 
 		public function augmentColumns($gridField, &$columns) {
@@ -31,17 +29,17 @@ below:
 		}
 
 		public function getColumnAttributes($gridField, $record, $columnName) {
-			return array('class' => 'grid-field__col-compact');
+			return ['class' => 'grid-field__col-compact'];
 		}
 
 		public function getColumnMetadata($gridField, $columnName) {
 			if($columnName == 'Actions') {
-				return array('title' => '');
+				return ['title' => ''];
 			}
 		}
 
 		public function getColumnsHandled($gridField) {
-			return array('Actions');
+			return ['Actions'];
 		}
 
 		public function getColumnContent($gridField, $record, $columnName) {
@@ -52,14 +50,14 @@ below:
 				'CustomAction'.$record->ID,
 				'Do Action',
 				"docustomaction",
-				array('RecordID' => $record->ID)
+				['RecordID' => $record->ID]
 			);
 
 			return $field->Field();
 		}
 
 		public function getActions($gridField) {
-			return array('docustomaction');
+			return ['docustomaction'];
 		}
 
 		public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
@@ -74,6 +72,7 @@ below:
 			}
 		}
 	}
+
 ```
 
 ## Add the GridFieldCustomAction to the current `GridFieldConfig`
@@ -85,7 +84,6 @@ manipulating the `GridFieldConfig` instance if required.
 
 
 ```php
-
 	// option 1: creating a new GridField with the CustomAction
 	$config = GridFieldConfig::create();
 	$config->addComponent(new GridFieldCustomAction());

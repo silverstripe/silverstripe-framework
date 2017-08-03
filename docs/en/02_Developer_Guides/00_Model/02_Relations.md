@@ -16,26 +16,25 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 "TeamID" on the "Player"-table.
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'Title' => 'Varchar'
-		);
+		];
 
-		private static $has_many = array(
+		private static $has_many = [
 			'Players' => 'Player'
-		);
+		];
 	}
 
 	class Player extends DataObject {
 
-	  private static $has_one = array(
+	  private static $has_one = [
 	    "Team" => "Team",
-	  );
+	  ];
 	}
+
 ```
 
 This defines a relationship called `Team` which links to a `Team` class. The `ORM` handles navigating the relationship
@@ -44,7 +43,6 @@ and provides a short syntax for accessing the related object.
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
 
 ```php
-
 	$player = Player::get()->byId(1);
 
 	$team = $player->Team();
@@ -77,28 +75,27 @@ To specify that a has_one relation is polymorphic set the type to 'DataObject'.
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
 ```php
-
-
 	class Player extends DataObject {
-		private static $has_many = array(
+		private static $has_many = [
 			"Fans" => "Fan.FanOf"
-		);
+		];
 	}
 
 	class Team extends DataObject {
-		private static $has_many = array(
+		private static $has_many = [
 			"Fans" => "Fan.FanOf"
-		);
+		];
 	}
 
 	// Type of object returned by $fan->FanOf() will vary
 	class Fan extends DataObject {
 
 		// Generates columns FanOfID and FanOfClass
-		private static $has_one = array(
+		private static $has_one = [
 			"FanOf" => "DataObject"
-		);
+		];
 	}
+
 ```
 
 <div class="warning" markdown='1'>
@@ -119,33 +116,31 @@ available on both ends.
 </div>
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'Title' => 'Varchar'
-		);
+		];
 
-		private static $has_many = array(
+		private static $has_many = [
 			'Players' => 'Player'
-		);
+		];
 	}
 
 	class Player extends DataObject {
 
-	  private static $has_one = array(
+	  private static $has_one = [
 	    "Team" => "Team",
-	  );
+	  ];
 	}
+
 ```
 
 Much like the `has_one` relationship, `has_many` can be navigated through the `ORM` as well. The only difference being
 you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rather than the object.
 
 ```php
-
 	$team = Team::get()->first();
 
 	echo $team->Players();
@@ -162,24 +157,23 @@ you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rath
 To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
 ```php
-
-	<?php
-
+	
 	class Person extends DataObject {
 
-		private static $has_many = array(
+		private static $has_many = [
 			"Managing" => "Company.Manager",
 			"Cleaning" => "Company.Cleaner",
-		);
+		];
 	}
 	
 	class Company extends DataObject {
 
-		private static $has_one = array(
+		private static $has_one = [
 			"Manager" => "Person",
 			"Cleaner" => "Person"
-		);
+		];
 	}
+
 ```
 
 Multiple `$has_one` relationships are okay if they aren't linking to the same object type. Otherwise, they have to be
@@ -207,22 +201,21 @@ Similarly with `$has_many`, dot notation can be used to explicitly specify the `
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 		
-		private static $has_one = array(
+		private static $has_one = [
 			'Coach' => 'Coach'
-		);
+		];
 	}
 
 	class Coach extends DataObject {
 		
-		private static $belongs_to = array(
+		private static $belongs_to = [
 			'Team' => 'Team.Coach'
-		);
+		];
 	}
+
 ```
 
 ## many_many
@@ -241,7 +234,6 @@ The only difference being you will get an instance of [ManyManyList](api:SilverS
 [ManyManyThroughList](api:SilverStripe\ORM\ManyManyThroughList) rather than the object.
 
 ```php
-
 	$team = Team::get()->byId(1);
 
 	$supporters = $team->Supporters();
@@ -259,9 +251,7 @@ config to add extra columns.
 
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 	  private static $many_many = [
 	    "Supporters" => "Supporter",
@@ -304,9 +294,7 @@ or child record.
 The syntax for `belongs_many_many` is unchanged.
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 	  private static $many_many = [
 	    "Supporters" => [
@@ -340,7 +328,6 @@ for any sql conditions.
 
 
 ```php
-
 	$team = Team::get()->byId(1);
 	$supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
 ```
@@ -376,24 +363,23 @@ distinguish them like below:
 
 
 ```php
-
-	<?php
-
+	
 	class Category extends DataObject {
 		
-		private static $many_many = array(
+		private static $many_many = [
 			'Products' => 'Product',
 			'FeaturedProducts' => 'Product'
-		);
+		];
 	}
 
 	class Product extends DataObject {
 		
-		private static $belongs_many_many = array(
+		private static $belongs_many_many = [
 			'Categories' => 'Category.Products',
 			'FeaturedInCategories' => 'Category.FeaturedProducts'
-		);
+		];
 	}
+
 ```
 
 If you're unsure about whether an object should take on `many_many` or `belongs_many_many`,
@@ -409,7 +395,6 @@ encapsulated by [HasManyList](api:SilverStripe\ORM\HasManyList) and [ManyManyLis
 and `remove()` method.
 
 ```php
-
 	$team = Team::get()->byId(1);
 
 	// create a new supporter
@@ -429,19 +414,18 @@ You can use the ORM to get a filtered result list without writing any SQL. For e
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
 
 ```php
-
-	<?php
-
+	
 	class Team extends DataObject {
 
-	  private static $has_many = array(
+	  private static $has_many = [
 	    "Players" => "Player"
-	  );
+	  ];
 	
 	  public function ActivePlayers() {
 	  	return $this->Players()->filter('Status', 'Active');
 	  }
 	}
+
 ```
 
 <div class="notice" markdown="1">

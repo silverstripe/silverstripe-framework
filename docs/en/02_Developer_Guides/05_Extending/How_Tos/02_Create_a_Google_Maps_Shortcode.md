@@ -7,7 +7,6 @@ address. We want our CMS authors to be able to embed the map using the following
 
 
 ```php
-
 	[googlemap,width=500,height=300]97-99 Courtenay Place, Wellington, New Zealand[/googlemap]
 ```
 

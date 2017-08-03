@@ -20,16 +20,15 @@ Defining search-able fields on your DataObject.
 
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 
-	   private static $searchable_fields = array(
+	   private static $searchable_fields = [
 	      'Name',
 	      'ProductCode'
-	   );
+	   ];
 	}
+
 ```
 
 ## Customizing fields and filters
@@ -40,26 +39,24 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 
 
 ```php
-
-	<?php
-
+	
 	class MyDataObject extends DataObject {
 
-		private static $db = array(
+		private static $db = [
 			'PublicProperty' => 'Text'
 			'HiddenProperty' => 'Text',
 			'MyDate' => 'Date'
-		);
+		];
 		
 		public function getDefaultSearchContext() {
-			$fields = $this->scaffoldSearchFields(array(
-				'restrictFields' => array('PublicProperty','MyDate')
-			));
+			$fields = $this->scaffoldSearchFields([
+				'restrictFields' => ['PublicProperty','MyDate']
+			]);
 
-			$filters = array(
+			$filters = [
 				'PublicProperty' => new PartialMatchFilter('PublicProperty'),
 				'MyDate' => new GreaterThanFilter('MyDate')
-			);
+			];
 
 			return new SearchContext(
 				$this->class, 
@@ -68,6 +65,7 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 			);
 		}
 	}
+
 ```
 
 <div class="notice" markdown="1">
@@ -84,9 +82,7 @@ the `$fields` constructor parameter.
 
 
 ```php
-
-	<?php
-
+	
 	// ..
 
 	class PageController extends ContentController {
@@ -109,11 +105,12 @@ the `$fields` constructor parameter.
 			$context = singleton('MyDataObject')->getCustomSearchContext();
 			$results = $context->getResults($data);
 
-			return $this->customise(array(
+			return $this->customise([
 				'Results' => $results
-			))->renderWith('Page_results');
+			])->renderWith('Page_results');
 		}
 	}
+
 ```
 
 ### Pagination
@@ -125,14 +122,13 @@ in order to read page limit information. It is also passed the current
 
 
 ```php
-
-	public function getResults($searchCriteria = array()) {
+	public function getResults($searchCriteria = []) {
 		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
 		$limit = 10;
 			
 		$context = singleton('MyDataObject')->getCustomSearchContext();
-		$query = $context->getQuery($searchCriteria, null, array('start'=>$start,'limit'=>$limit));
-		$records = $context->getResults($searchCriteria, null, array('start'=>$start,'limit'=>$limit));
+		$query = $context->getQuery($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
+		$records = $context->getResults($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
 		
 		if($records) {
 			$records = new PaginatedList($records, $this->getRequest());
@@ -143,20 +139,21 @@ in order to read page limit information. It is also passed the current
 		
 		return $records;
 	}
+
 ```
 
 notice that if you want to use this getResults function, you need to change the function doSearch for this one:
 
 
 ```php
-
 	public function doSearch($data, $form) {
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$results = $this->getResults($data);
-		return $this->customise(array(
+		return $this->customise([
 			'Results' => $results
-		))->renderWith(array('Catalogo_results', 'Page'));
+		])->renderWith(['Catalogo_results', 'Page']);
 	}
+
 ```
 
 The change is in **$results = $this->getResults($data);**, because you are using a custom getResults function.
