@@ -2,9 +2,13 @@
 
 namespace SilverStripe\Security\Tests;
 
+use Page;
+use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
@@ -702,6 +706,26 @@ class SecurityTest extends FunctionalTest
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
         $robotsHeader = $response->getHeader('X-Robots-Tag');
         $this->assertNull($robotsHeader);
+    }
+
+    public function testGetResponseController()
+    {
+        if (!class_exists(Page::class)) {
+            $this->markTestSkipped("This test requires CMS module");
+        }
+
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession(new Session([]));
+        $security = new Security();
+        $security->setRequest($request);
+        $reflection = new \ReflectionClass($security);
+        $method = $reflection->getMethod('getResponseController');
+        $method->setAccessible(true);
+        $result = $method->invoke($security, 'Page');
+
+        // Ensure page shares the same controller as security
+        $this->assertInstanceOf(PageController::class, $result);
+        $this->assertEquals($request, $result->getRequest());
     }
 
     /**

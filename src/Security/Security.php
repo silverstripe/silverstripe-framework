@@ -563,6 +563,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $controller = ModelAsController::controller_for($holderPage);
         $controller->doInit();
+        $controller->setRequest($this->getRequest());
 
         return $controller;
     }
