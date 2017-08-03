@@ -8,6 +8,14 @@
 class MySQLiConnector extends DBConnector {
 
 	/**
+	 * Default strong SSL cipher to be used
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $ssl_cipher_default = 'DHE-RSA-AES256-SHA';
+
+	/**
 	 * Connection to the MySQL database
 	 *
 	 * @var MySQLi
@@ -60,22 +68,34 @@ class MySQLiConnector extends DBConnector {
 		$connCharset = Config::inst()->get('MySQLDatabase', 'connection_charset');
 		$connCollation = Config::inst()->get('MySQLDatabase', 'connection_collation');
 
-		if(!empty($parameters['port'])) {
-			$this->dbConn = new MySQLi(
-				$parameters['server'],
-				$parameters['username'],
-				$parameters['password'],
-				$selectedDB,
-				$parameters['port']
+		$this->dbConn = mysqli_init();
+		
+		// Set SSL parameters if they exist. All parameters are required.
+
+		if(
+			array_key_exists('ssl_key', $parameters) &&
+			array_key_exists('ssl_cert', $parameters) &&
+			array_key_exists('ssl_ca', $parameters)) {
+
+			$this->dbConn->ssl_set(
+				$parameters['ssl_key'],
+				$parameters['ssl_cert'],
+				$parameters['ssl_ca'],
+				dirname($parameters['ssl_ca']),
+				array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : Config::inst()->get('MySQLiConnector', 'ssl_cipher_default')
 			);
-		} else {
-			$this->dbConn = new MySQLi(
-				$parameters['server'],
-				$parameters['username'],
-				$parameters['password'],
-				$selectedDB
-			);
+
 		}
+
+
+		$this->dbConn->real_connect(
+			$parameters['server'],
+			$parameters['username'],
+			$parameters['password'],
+			$selectedDB,
+			!empty($parameters['port']) ? $parameters['port'] : ini_get("mysqli.default_port")
+
+		);
 
 		if ($this->dbConn->connect_error) {
 			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);

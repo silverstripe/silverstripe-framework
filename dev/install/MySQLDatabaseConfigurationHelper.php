@@ -18,13 +18,39 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 * @param string $error Error message passed by value
 	 * @return mixed|null Either the connection object, or null if error
 	 */
+
 	protected function createConnection($databaseConfig, &$error) {
 		$error = null;
 		try {
 			switch($databaseConfig['type']) {
 				case 'MySQLDatabase':
-					$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'],
-										$databaseConfig['password']);
+
+
+					$conn = mysqli_init();
+					
+					// Set SSL parameters if they exist. All parameters are required.
+					if(
+						array_key_exists('ssl_key', $databaseConfig) &&
+						array_key_exists('ssl_cert', $databaseConfig) &&
+						array_key_exists('ssl_ca', $databaseConfig)) {
+
+						$conn->ssl_set(
+							$databaseConfig['ssl_key'],
+							$databaseConfig['ssl_cert'],
+							$databaseConfig['ssl_ca'],
+							dirname($databaseConfig['ssl_ca']),
+							array_key_exists('ssl_cipher', $databaseConfig) ? $databaseConfig['ssl_cipher'] : Config::inst()->get('MySQLiConnector', 'ssl_cipher_default')
+						);
+
+					}
+
+
+					@$conn->real_connect(
+						$databaseConfig['server'],
+						$databaseConfig['username'],
+						$databaseConfig['password']
+					);
+
 					if($conn && empty($conn->connect_errno)) {
 						$conn->query("SET sql_mode = 'ANSI'");
 						return $conn;
@@ -39,7 +65,6 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 
 					// Set SSL parameters
 					$ssl = null;
-					$defaultCipher = 'DHE-RSA-AES256-SHA';
 
 					if(
 						array_key_exists('ssl_key', $databaseConfig) &&
@@ -55,7 +80,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 						}
 
 						// use default cipher if not provided
-						$ssl[PDO::MYSQL_ATTR_SSL_CA] = array_key_exists('ssl_ca', $databaseConfig) ? $databaseConfig['ssl_ca'] : $defaultCipher;
+						$ssl[PDO::MYSQL_ATTR_SSL_CA] = array_key_exists('ssl_ca', $databaseConfig) ? $databaseConfig['ssl_ca'] : Config::inst()->get('PDOConnector', 'ssl_cipher_default');
 
 					}
 
