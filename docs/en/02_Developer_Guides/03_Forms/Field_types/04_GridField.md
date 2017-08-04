@@ -29,6 +29,9 @@ actions such as deleting records.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridField;
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 		
@@ -62,6 +65,9 @@ the `getConfig()` method on `GridField`.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridField;
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 		
@@ -271,6 +277,11 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 
 
 ```php
+	use SilverStripe\Forms\TextField;
+	use SilverStripe\Forms\GridField\GridField;
+	use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 		

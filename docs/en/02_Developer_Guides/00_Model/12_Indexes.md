@@ -25,6 +25,8 @@ Indexes are represented on a `DataObject` through the `DataObject::$indexes` arr
 descriptor. There are several supported notations:
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 
@@ -53,6 +55,8 @@ support the following:
 **mysite/code/MyTestObject.php**
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyTestObject extends DataObject 
 	{
 

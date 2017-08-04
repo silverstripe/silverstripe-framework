@@ -19,6 +19,8 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
 ```php
+	use Page;
+
 	// mysite/code/NewsPageHolder.php
 	class NewsPageHolder extends Page 
 	{
@@ -43,6 +45,9 @@ or across page types with common characteristics.
 
 
 ```php
+	use Page;
+	use SilverStripe\Core\Extension;
+
 	// mysite/code/NewsPageHolderCMSMainExtension.php
 	class NewsPageHolderCMSMainExtension extends Extension 
 	{

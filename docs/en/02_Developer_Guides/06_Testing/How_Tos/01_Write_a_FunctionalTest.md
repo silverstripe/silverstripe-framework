@@ -11,6 +11,8 @@ response and modify the session within a test.
 
 
 ```php
+	use SilverStripe\Security\Member;
+
 	class HomePageTest extends FunctionalTest 
 	{
 

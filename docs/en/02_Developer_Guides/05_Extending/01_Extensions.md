@@ -19,6 +19,8 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 
 
 ```php
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 
@@ -80,6 +82,8 @@ $has_one etc.
 
 
 ```php
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 
@@ -161,6 +165,8 @@ validator by defining the `updateValidator` method.
 
 
 ```php
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 
@@ -183,6 +189,10 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
+	use SilverStripe\Forms\TextField;
+	use SilverStripe\AssetAdmin\Forms\UploadField;
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 
@@ -231,6 +241,8 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 
 ```php
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 

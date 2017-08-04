@@ -211,6 +211,8 @@ For instance, this is an example of how to correctly declare pluralisations for 
 
 
 ```php
+ use SilverStripe\ORM\DataObject;
+
     class MyObject extends DataObject, implements i18nEntityProvider
     {
         public function provideI18nEntities()

@@ -114,6 +114,9 @@ Example:
 
 
 ```php
+	use SilverStripe\Core\Convert;
+	use SilverStripe\Forms\Form;
+
 	class MyForm extends Form 
 	{
 	  public function save($RAW_data, $form) 
@@ -134,6 +137,9 @@ Example:
 
 
 ```php
+	use SilverStripe\Core\Convert;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 	  private static $allowed_actions = ['myurlaction'];
@@ -154,6 +160,10 @@ passing data through, escaping should happen at the end of the chain.
 
 
 ```php
+	use SilverStripe\Core\Convert;
+	use SilverStripe\ORM\DB;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 	  /**
@@ -238,6 +248,8 @@ PHP:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 	  private static $db = [
@@ -288,6 +300,8 @@ PHP:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 		public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
@@ -332,6 +346,9 @@ PHP:
 
 
 ```php
+	use SilverStripe\Core\Convert;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		private static $allowed_actions = ['search'];
@@ -367,6 +384,8 @@ PHP:
 
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		private static $allowed_actions = ['search'];
@@ -563,6 +582,8 @@ controller's `init()` method:
 
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		public function init() 
@@ -704,6 +725,9 @@ and `Date: <current date>` will ensure that sensitive content is not stored loca
 unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
 ```php
+	use SilverStripe\Control\HTTP;
+	use SilverStripe\Control\Controller;
+
 	class MySecureController extends Controller 
 	{
 		

@@ -20,6 +20,8 @@ This example uses [Cache](api:Cache) in some custom code, and the same cache is 
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyClass extends DataObject implements Flushable 
 	{
 	
@@ -49,6 +51,8 @@ useful in an example like `GD` or `Imagick` generating resampled images, but we 
 flush so they are re-created on demand.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyClass extends DataObject implements Flushable 
 	{
 	

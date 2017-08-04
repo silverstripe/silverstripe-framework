@@ -11,6 +11,11 @@ explicitly logging in or by invoking the "remember me" functionality.
 
 
 ```php
+	use SilverStripe\Forms\ReadonlyField;
+	use SilverStripe\Security\Security;
+	use SilverStripe\ORM\DB;
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 		private static $db = [

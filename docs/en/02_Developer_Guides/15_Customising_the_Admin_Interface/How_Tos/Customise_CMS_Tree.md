@@ -66,6 +66,8 @@ __Example: using a subclass__
 
 
 ```php
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 		public function getScheduledToPublish()

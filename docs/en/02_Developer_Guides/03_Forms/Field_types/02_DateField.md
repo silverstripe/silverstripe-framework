@@ -16,6 +16,9 @@ The following example will add a simple DateField to your Page, allowing you to 
 
 
 ```php
+	use SilverStripe\Forms\DateField;
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 

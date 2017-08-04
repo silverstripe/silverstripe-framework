@@ -23,6 +23,8 @@ You can do so by adding this static variable to your class definition:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 
@@ -50,6 +52,8 @@ Example DataObject:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class SearchableDataObject extends DataObject 
 	{
 		

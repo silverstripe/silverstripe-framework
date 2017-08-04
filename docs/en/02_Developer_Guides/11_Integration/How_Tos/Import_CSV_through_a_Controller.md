@@ -8,6 +8,14 @@ form (which is used for `MyDataObject` instances). You can access it through
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\FileField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\Forms\RequiredFields;
+	use SilverStripe\Dev\CsvBulkLoader;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 

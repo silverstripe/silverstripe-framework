@@ -58,6 +58,8 @@ is applied via `FulltextSearchable::enable()`
 **cms/code/search/ContentControllerSearchExtension.php**
 
 ```php
+	use SilverStripe\Core\Extension;
+
 	class ContentControllerSearchExtension extends Extension 
 	{
 		...	

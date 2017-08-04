@@ -13,6 +13,8 @@ customise those fields as required.
 An example is `DataObject`, SilverStripe will automatically create your CMS interface so you can modify what you need.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 		
@@ -62,6 +64,8 @@ The `$searchable_fields` property uses a mixed array format that can be used to 
 system. The default is a set of array values listing the fields.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 	
@@ -78,6 +82,8 @@ default search filter assigned (usually an [ExactMatchFilter](api:SilverStripe\O
 additional information on `$searchable_fields`:
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 
@@ -93,6 +99,8 @@ If you assign a single string value, you can set it to be either a [FormField](a
 both, you can assign an array:
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 	
@@ -114,6 +122,8 @@ both, you can assign an array:
 To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, you can use a dot-notation.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 	
@@ -151,6 +161,8 @@ Summary fields can be used to show a quick overview of the data for a specific [
 is their display as table columns, e.g. in the search results of a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) CMS interface.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 	
@@ -171,6 +183,8 @@ is their display as table columns, e.g. in the search results of a [ModelAdmin](
 To include relations or field manipulations in your summaries, you can use a dot-notation.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class OtherObject extends DataObject 
 	{
 	
@@ -202,6 +216,8 @@ To include relations or field manipulations in your summaries, you can use a dot
 Non-textual elements (such as images and their manipulations) can also be used in summaries.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 	

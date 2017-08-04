@@ -29,6 +29,8 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 
 ```php
+	use Page;
+
 	class MyClass extends Page 
 	{
 

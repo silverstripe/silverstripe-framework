@@ -6,6 +6,15 @@ Let's start by defining a new `ContactPage` page type:
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\TextField;
+	use SilverStripe\Forms\EmailField;
+	use SilverStripe\Forms\TextareaField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\Forms\Form;
+	use Page;
+	use PageController;
+
 	class ContactPage extends Page 
 	{
 	}
@@ -73,6 +82,9 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 
 ```php
+	use SilverStripe\Control\Email\Email;
+	use PageController;
+
 	class ContactPageController extends PageController 
 	{
 		private static $allowed_actions = ['Form'];

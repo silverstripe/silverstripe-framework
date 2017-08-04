@@ -21,6 +21,9 @@ also track versioned history.
 
 
 ```php
+	use SilverStripe\Versioned\Versioned;
+	use SilverStripe\ORM\DataObject;
+
 	class MyStagedModel extends DataObject 
 	{
 		private static $extensions = [
@@ -34,6 +37,8 @@ can be specified by setting the constructor argument to "Versioned"
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class VersionedModel extends DataObject 
 	{
 		private static $extensions = [
@@ -186,6 +191,10 @@ without requiring any custom code.
 
 
 ```php
+	use SilverStripe\Versioned\Versioned;
+	use SilverStripe\Assets\Image;
+	use Page;
+
 	class MyPage extends Page 
 	{
 		private static $has_many = [
@@ -227,6 +236,9 @@ that can be used to traverse between each, and then by ensuring you configure bo
 E.g.
 
 ```php
+	use SilverStripe\Versioned\Versioned;
+	use SilverStripe\ORM\DataObject;
+
 	class MyParent extends DataObject 
 	{
 		private static $extensions = [
@@ -298,6 +310,10 @@ Versioned object visibility can be customised in one of the following ways by ed
 E.g.
 
 ```php
+ use SilverStripe\Versioned\Versioned;
+ use SilverStripe\Security\Permission;
+ use SilverStripe\ORM\DataObject;
+
  class MyObject extends DataObject 
  {
         private static $extensions = [
@@ -332,6 +348,9 @@ only be invoked if the object is in a non-published state.
 E.g.
 
 ```php
+ use SilverStripe\Security\Permission;
+ use SilverStripe\ORM\DataExtension;
+
  class MyObjectExtension extends DataExtension 
  {
         public function canViewNonLive($member = null) 
@@ -347,6 +366,9 @@ permissions in the `TargetObject.non_live_permissions` config.
 E.g.
 
 ```php
+ use SilverStripe\Versioned\Versioned;
+ use SilverStripe\ORM\DataObject;
+
  class MyObject extends DataObject 
  {
         private static $extensions = [

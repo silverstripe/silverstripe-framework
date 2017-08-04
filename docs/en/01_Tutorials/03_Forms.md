@@ -267,6 +267,9 @@ We can do this using a session variable. The [Session](api:SilverStripe\Control\
 **mysite/code/HomePageController.php**
 
 ```php
+use SilverStripe\Control\Session;
+use PageController;
+
 // ...
 class HomePageController extends PageController
 {
@@ -286,6 +289,8 @@ Then we simply need to check if the session variable has been set in 'BrowserPol
 it is.
 
 ```php
+use PageController;
+
 // ...
 class HomePageController extends PageController
 {

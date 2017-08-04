@@ -9,6 +9,8 @@ subclass the base `Controller` class.
 **mysite/code/controllers/TeamController.php**
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class TeamController extends Controller 
 	{
 			

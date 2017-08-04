@@ -17,6 +17,8 @@ information about the individual player and a relation set up for managing the `
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 	
@@ -38,6 +40,8 @@ information about the individual player and a relation set up for managing the `
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class FootballTeam extends DataObject 
 	{
 	   
@@ -68,6 +72,8 @@ Our final import looks like this.
 
 
 ```php
+	use SilverStripe\Dev\CsvBulkLoader;
+
 	class PlayerCsvBulkLoader extends CsvBulkLoader 
 	{
 

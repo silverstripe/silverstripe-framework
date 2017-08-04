@@ -17,6 +17,9 @@ code.
 </div>
 
 ```php
+	use SilverStripe\Security\Permission;
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 	

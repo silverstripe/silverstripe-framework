@@ -80,6 +80,9 @@ and insert the following code.
 
 
 ```php
+	use SilverStripe\Forms\CheckboxField;
+	use SilverStripe\ORM\DataExtension;
+
 	class BookmarkedPageExtension extends DataExtension 
 	{
 
@@ -121,6 +124,9 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 
 
 ```php
+	use Page;
+	use SilverStripe\Admin\LeftAndMainExtension;
+
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
 	{
 
@@ -238,6 +244,8 @@ applicable controller actions to it:
 
 
 ```php
+	use SilverStripe\Admin\LeftAndMainExtension;
+
 	class CustomActionsExtension extends LeftAndMainExtension 
 	{
 		

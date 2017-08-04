@@ -59,6 +59,8 @@ approach is to use depedency injection to pass the logger in for you. The [Injec
 can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
 
 ```php
+use SilverStripe\Control\Controller;
+
 class MyController extends Controller
 {
     private static $dependencies = [

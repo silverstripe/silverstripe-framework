@@ -34,6 +34,8 @@ The following example will create a report to list every page on the current sit
 
 ###CustomSideReport.php
 ```php
+	use Page;
+
 	class CustomSideReport_NameOfReport extends SS_Report 
 	{
 		

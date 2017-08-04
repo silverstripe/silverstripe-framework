@@ -56,6 +56,10 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 
 
 ```php
+	use SilverStripe\Control\RSS\RSSFeed;
+	use Page;
+	use SilverStripe\CMS\Controllers\ContentController;
+
 		
 	..
 	class PageController extends ContentController 
@@ -106,6 +110,10 @@ method is defined and returns a string to the full website URL.
 
 
 ```php
+	use SilverStripe\Control\Controller;
+	use SilverStripe\Control\Director;
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 
@@ -126,6 +134,9 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 
 
 ```php
+	use SilverStripe\Control\RSS\RSSFeed;
+	use SilverStripe\CMS\Controllers\ContentController;
+
 	class PageController extends ContentController 
 	{
 

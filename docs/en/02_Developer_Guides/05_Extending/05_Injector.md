@@ -69,6 +69,8 @@ The `Injector` API can be used to define the types of `$dependencies` that an ob
 
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 	

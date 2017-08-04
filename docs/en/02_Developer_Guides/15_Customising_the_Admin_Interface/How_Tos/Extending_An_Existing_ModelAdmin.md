@@ -5,6 +5,8 @@ also another tool at your disposal: The [Extension](api:SilverStripe\Core\Extens
 
 
 ```php
+	use SilverStripe\Core\Extension;
+
 	class MyAdminExtension extends Extension 
 	{
 		// ...

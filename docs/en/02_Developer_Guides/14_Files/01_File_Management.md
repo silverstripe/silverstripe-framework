@@ -52,6 +52,8 @@ within the assets folder).
 
 For example, to load a temporary file into a DataObject you could use the below:
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	<?
 	class Banner extends DataObject 
 	{

@@ -48,6 +48,8 @@ provide default template for an object.
 
 **mysite/code/Page.php**
 ```php
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 
@@ -72,6 +74,8 @@ content that method sends back, or, provide a type in the `$casting` array for t
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
 ```php
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 

@@ -20,6 +20,8 @@ Defining search-able fields on your DataObject.
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 
@@ -39,6 +41,11 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 
 
 ```php
+	use SilverStripe\ORM\Filters\PartialMatchFilter;
+	use SilverStripe\ORM\Filters\GreaterThanFilter;
+	use SilverStripe\ORM\Search\SearchContext;
+	use SilverStripe\ORM\DataObject;
+
 	class MyDataObject extends DataObject 
 	{
 
@@ -83,6 +90,11 @@ the `$fields` constructor parameter.
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\CMS\Controllers\ContentController;
+
 	
 	// ..
 	class PageController extends ContentController 

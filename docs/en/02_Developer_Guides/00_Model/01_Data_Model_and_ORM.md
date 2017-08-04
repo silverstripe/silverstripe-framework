@@ -20,6 +20,8 @@ Let's look at a simple example:
 **mysite/code/Player.php**
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 
@@ -77,6 +79,8 @@ system. Instead, it will generate a new `ID` by adding 1 to the current maximum 
 **mysite/code/Player.php**
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 
@@ -662,6 +666,8 @@ Define the default values for all the `$db` fields. This example sets the "Statu
 whenever a new object is created.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 
@@ -687,6 +693,9 @@ time.
 For example, suppose we have the following set of classes:
 
 ```php
+	use SilverStripe\CMS\Model\SiteTree;
+	use Page;
+
 	class Page extends SiteTree 
 	{
 

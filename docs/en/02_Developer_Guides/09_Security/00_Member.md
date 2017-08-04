@@ -49,6 +49,8 @@ You can define subclasses of [Member](api:SilverStripe\Security\Member) to add e
 
 
 ```php
+	use SilverStripe\Security\Member;
+
 	class MyMember extends Member 
 	{
 		private static $db = [
@@ -116,6 +118,9 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 
 
 ```php
+	use SilverStripe\Security\Permission;
+	use SilverStripe\ORM\DataExtension;
+
 	class MyMemberExtension extends DataExtension 
 	{
 	  /**
@@ -173,6 +178,11 @@ E.g.
 
 
 ```php
+ use SilverStripe\Control\Director;
+ use SilverStripe\Security\Security;
+ use SilverStripe\Security\Member;
+ use SilverStripe\Dev\BuildTask;
+
     class CleanRecordsTask extends BuildTask
     {
         public function run($request)

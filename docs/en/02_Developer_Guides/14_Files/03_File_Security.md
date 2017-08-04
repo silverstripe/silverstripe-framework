@@ -65,6 +65,8 @@ authorised users, the following should be considered:
 
 
 ```php
+ use SilverStripe\CMS\Controllers\ContentController;
+
  class PageController extends ContentController 
  {
         public function init() 
@@ -98,6 +100,8 @@ authorised users, the following should be considered:
 
 
 ```php
+ use SilverStripe\CMS\Controllers\ContentController;
+
  class PageController extends ContentController 
  {
         public function init() 
@@ -313,6 +317,8 @@ the `Versioned` extension.
 
 
 ```php
+ use SilverStripe\ORM\DataObject;
+
  class MyVersiondObject extends DataObject 
  {
         /** Ensure assets are archived along with the DataObject */

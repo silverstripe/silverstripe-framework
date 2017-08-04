@@ -16,6 +16,8 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 "TeamID" on the "Player"-table.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 
@@ -75,6 +77,8 @@ To specify that a has_one relation is polymorphic set the type to 'DataObject'.
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 		private static $has_many = [
@@ -118,6 +122,8 @@ available on both ends.
 </div>
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 
@@ -159,6 +165,8 @@ you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rath
 To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Person extends DataObject 
 	{
 
@@ -203,6 +211,8 @@ Similarly with `$has_many`, dot notation can be used to explicitly specify the `
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 		
@@ -253,6 +263,8 @@ config to add extra columns.
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 	  private static $many_many = [
@@ -296,6 +308,8 @@ or child record.
 The syntax for `belongs_many_many` is unchanged.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 	  private static $many_many = [
@@ -365,6 +379,8 @@ distinguish them like below:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Category extends DataObject 
 	{
 		
@@ -416,6 +432,8 @@ You can use the ORM to get a filtered result list without writing any SQL. For e
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Team extends DataObject 
 	{
 

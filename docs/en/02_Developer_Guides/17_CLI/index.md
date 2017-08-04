@@ -93,6 +93,8 @@ This code provides a good template:
 
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyProcess extends Controller 
 	{
 

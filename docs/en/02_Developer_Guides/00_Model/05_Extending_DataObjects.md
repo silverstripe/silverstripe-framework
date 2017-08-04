@@ -19,6 +19,9 @@ a `ModelAdmin` record.
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
 ```php
+	use SilverStripe\Security\Security;
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 
@@ -60,6 +63,10 @@ Example: Checking for a specific [permission](permissions) to delete this type o
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
 ```php
+	use SilverStripe\Security\Permission;
+	use SilverStripe\Security\Security;
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 

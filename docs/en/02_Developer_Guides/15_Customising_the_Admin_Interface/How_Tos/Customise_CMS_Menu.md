@@ -22,6 +22,8 @@ black-and-transparent PNG graphics. In this case we'll place the icon in
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class ProductAdmin extends ModelAdmin 
 	{
 		// ...
@@ -37,6 +39,8 @@ controller, removing the "Admin" bit at the end.
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class ProductAdmin extends ModelAdmin 
 	{
 		// ...
@@ -62,6 +66,9 @@ button configuration.
 
 
 ```php
+	use SilverStripe\Admin\CMSMenu;
+	use SilverStripe\Admin\LeftAndMainExtension;
+
 	class CustomLeftAndMain extends LeftAndMainExtension 
 	{
 

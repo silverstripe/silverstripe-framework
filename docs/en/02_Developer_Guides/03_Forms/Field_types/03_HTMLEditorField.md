@@ -17,6 +17,10 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 		
@@ -47,6 +51,10 @@ This is particularly useful if you need different configurations for multiple [H
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 		private static $db = [
@@ -246,6 +254,8 @@ Example: Remove field for "image captions"
 
 
 ```php
+	use SilverStripe\Core\Extension;
+
 	// File: mysite/code/MyToolbarExtension.php
 	class MyToolbarExtension extends Extension 
 	{
@@ -288,6 +298,9 @@ of the CMS you have to take care of instantiate yourself:
 
 
 ```php
+	use SilverStripe\Admin\ModalController;
+	use SilverStripe\Control\Controller;
+
 	// File: mysite/code/MyController.php
 	class MyObjectController extends Controller 
 	{

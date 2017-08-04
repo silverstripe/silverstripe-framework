@@ -50,6 +50,8 @@ First we need to define a callback for the shortcode.
 
 
 ```php
+	use SilverStripe\CMS\Model\SiteTree;
+
 	class Page extends SiteTree 
 	{
 		

@@ -22,6 +22,8 @@ write, and respond appropriately if it isn't.
 The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\ValidationResult) object.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class MyObject extends DataObject 
 	{
 

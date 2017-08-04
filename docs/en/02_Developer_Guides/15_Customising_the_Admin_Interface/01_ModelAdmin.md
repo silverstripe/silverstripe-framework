@@ -21,6 +21,8 @@ a category.
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Product extends DataObject 
 	{
 
@@ -41,6 +43,8 @@ a category.
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Category extends DataObject 
 	{
 
@@ -64,6 +68,8 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 
@@ -104,6 +110,9 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 
 
 ```php
+	use SilverStripe\Security\Permission;
+	use SilverStripe\ORM\DataObject;
+
 	class Category extends DataObject 
 	{
 	  // ...
@@ -142,6 +151,8 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Product extends DataObject 
 	{
 
@@ -167,6 +178,8 @@ model class, where you can add or remove columns. To change the title, use [Data
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Product extends DataObject 
 	{
 
@@ -192,6 +205,8 @@ For example, we might want to exclude all products without prices in our sample 
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 
@@ -216,6 +231,9 @@ checkbox which limits search results to expensive products (over $100).
 
 
 ```php
+	use SilverStripe\Forms\CheckboxField;
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 
@@ -252,6 +270,9 @@ example, to add a new component.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 
@@ -287,6 +308,9 @@ to only one specific `GridField`:
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 
@@ -330,6 +354,8 @@ To customize the exported columns, create a new method called `getExportFields` 
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class MyAdmin extends ModelAdmin 
 	{
 		// ...

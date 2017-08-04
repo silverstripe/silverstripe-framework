@@ -11,6 +11,17 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\RequiredFields;
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\HeaderField;
+	use SilverStripe\Forms\OptionsetField;
+	use SilverStripe\Forms\CompositeField;
+	use SilverStripe\Forms\CheckboxSetField;
+	use SilverStripe\Forms\NumericField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\CMS\Controllers\ContentController;
+
 	class PageController extends ContentController 
 	{
 		
@@ -70,6 +81,16 @@ should be. Good practice would be to move this to a subclass and create a new in
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\RequiredFields;
+	use SilverStripe\Forms\HeaderField;
+	use SilverStripe\Forms\OptionsetField;
+	use SilverStripe\Forms\CompositeField;
+	use SilverStripe\Forms\CheckboxSetField;
+	use SilverStripe\Forms\NumericField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\Forms\Form;
+
 	class SearchForm extends Form 
 	{
 
@@ -133,6 +154,9 @@ Our controller will now just have to create a new instance of this form object. 
 
 
 ```php
+	use SearchForm;
+	use SilverStripe\CMS\Controllers\ContentController;
+
 	class PageController extends ContentController 
 	{
 		

@@ -268,6 +268,8 @@ because of the custom SQL value transformation (`YEAR()`).
 An alternative approach would be a custom getter in the object definition.
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 		private static $db = [

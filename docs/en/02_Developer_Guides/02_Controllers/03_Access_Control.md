@@ -12,6 +12,8 @@ Any action you define on a controller must be defined in a `$allowed_actions` st
 directly calling methods that they shouldn't.
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		
@@ -46,6 +48,8 @@ An action named "index" is white listed by default, unless `allowed_actions` is 
 is specifically restricted.
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	<?php 
 	class MyController extends Controller 
 	{
@@ -60,6 +64,8 @@ is specifically restricted.
 `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ```php
+	use SilverStripe\Core\Extension;
+
 	class MyExtension extends Extension 
 	{
 
@@ -73,6 +79,8 @@ is specifically restricted.
 Only public methods can be made accessible.
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 
@@ -96,6 +104,8 @@ Only public methods can be made accessible.
 
 If a method on a parent class is overwritten, access control for it has to be redefined as well.
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 
@@ -132,6 +142,9 @@ Access checks on parent classes need to be overwritten via the [Configuration AP
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 
@@ -158,6 +171,8 @@ Each method responding to a URL can also implement custom permission checks, e.g
 the passed request data.
 
 ```php
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		
@@ -192,6 +207,9 @@ execution. This behavior can be used to implement permission checks.
 `init` is called for any possible action on the controller and before any specific method such as `index`.
 </div>
 ```php
+	use SilverStripe\Security\Permission;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 		

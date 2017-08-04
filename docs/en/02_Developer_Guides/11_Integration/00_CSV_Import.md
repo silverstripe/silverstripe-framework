@@ -49,6 +49,8 @@ The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is t
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class PlayerAdmin extends ModelAdmin 
 	{
 	   private static $managed_models = [
@@ -75,6 +77,14 @@ You'll need to add a route to your controller to make it accessible via URL
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\FileField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\Forms\RequiredFields;
+	use SilverStripe\Dev\CsvBulkLoader;
+	use SilverStripe\Control\Controller;
+
 	class MyController extends Controller 
 	{
 
@@ -139,6 +149,8 @@ Datamodel for Player
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class Player extends DataObject 
 	{
 	   private static $db = [
@@ -159,6 +171,8 @@ Datamodel for FootballTeam:
 
 
 ```php
+	use SilverStripe\ORM\DataObject;
+
 	class FootballTeam extends DataObject 
 	{
 	   private static $db = [
@@ -179,6 +193,8 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Avoids duplicate imports by a custom `$duplicateChecks` definition
 *  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
 ```php
+	use SilverStripe\Dev\CsvBulkLoader;
+
 	class PlayerCsvBulkLoader extends CsvBulkLoader 
 	{
 	   public $columnMap = [
@@ -216,6 +232,8 @@ Building off of the ModelAdmin example up top, use a custom loader instead of th
 
 
 ```php
+	use SilverStripe\Admin\ModelAdmin;
+
 	class PlayerAdmin extends ModelAdmin 
 	{
 	   private static $managed_models = [

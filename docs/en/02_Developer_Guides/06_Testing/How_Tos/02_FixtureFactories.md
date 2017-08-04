@@ -10,6 +10,8 @@ with information that we need.
 
 
 ```php
+	use SilverStripe\Core\Injector\Injector;
+
 	class MyObjectTest extends SapphireTest 
 	{
 

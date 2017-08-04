@@ -162,6 +162,12 @@ Basic example form in a CMS controller subclass:
 
 
 ```php
+	use SilverStripe\Forms\TabSet;
+	use SilverStripe\Forms\Tab;
+	use SilverStripe\Forms\TextField;
+	use SilverStripe\Forms\FormAction;
+	use SilverStripe\Admin\LeftAndMain;
+
 	class MyAdmin extends LeftAndMain 
 	{
 		function getEditForm() {
@@ -363,6 +369,8 @@ in a single Ajax request.
 
 
 ```php
+	use SilverStripe\Admin\LeftAndMain;
+
 	// mysite/code/MyAdmin.php
 	class MyAdmin extends LeftAndMain 
 	{
@@ -491,6 +499,8 @@ without affecting the response body.
 
 
 ```php
+	use SilverStripe\Admin\LeftAndMain;
+
 	class MyController extends LeftAndMain 
 	{
 	class myaction() 
