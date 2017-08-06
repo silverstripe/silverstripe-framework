@@ -22,7 +22,7 @@ instance with a template name or an array of templates to render.
 **mysite/code/Page.php**
 
 ```php
-$arrayData = new SilverStripe/View/ArrayData([
+$arrayData = new SilverStripe\View\ArrayData([
     'Name' => 'John',
     'Role' => 'Head Coach'
 ]);

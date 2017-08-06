@@ -348,6 +348,8 @@ PHP:
 ```php
 	use SilverStripe\Core\Convert;
 	use SilverStripe\Control\Controller;
+	use SilverStripe\ORM\FieldType\DBText;
+	use SilverStripe\ORM\FieldType\DBHTMLText;
 
 	class MyController extends Controller 
 	{
@@ -356,8 +358,8 @@ PHP:
 		{
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise([
-				'Query' => Text::create($request->getVar('Query')),
-				'HTMLTitle' => HTMLText::create($htmlTitle)
+				'Query' => DBText::create($request->getVar('Query')),
+				'HTMLTitle' => DBHTMLText::create($htmlTitle)
 			]);
 		}
 	}
@@ -385,6 +387,7 @@ PHP:
 
 ```php
 	use SilverStripe\Control\Controller;
+	use SilverStripe\ORM\FieldType\DBText;
 
 	class MyController extends Controller 
 	{
@@ -394,7 +397,7 @@ PHP:
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
 			return $this->customise([
-				"RSSLink" => Text::create($rssLink),
+				"RSSLink" => DBText::create($rssLink),
 			]);
 		}
 	}
@@ -724,6 +727,7 @@ For sensitive pages, such as members areas, or places where sensitive informatio
 and `Date: <current date>` will ensure that sensitive content is not stored locally or able to be retrieved by 
 unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
+ 
 ```php
 	use SilverStripe\Control\HTTP;
 	use SilverStripe\Control\Controller;

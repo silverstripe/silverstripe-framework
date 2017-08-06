@@ -20,7 +20,7 @@ By default the CMS ships with several basic reports:
 *  Broken links report
 *  Pages with no content
 *  Pages edited in the last 2 weeks
-
+ 
 Modules may come with their own additional reports.
 
 ## Creating custom reports
@@ -35,8 +35,9 @@ The following example will create a report to list every page on the current sit
 ###CustomSideReport.php
 ```php
 	use Page;
+	use SilverStripe\Reports\Report;
 
-	class CustomSideReport_NameOfReport extends SS_Report 
+	class CustomSideReport_NameOfReport extends Report 
 	{
 		
 		// the name of the report
@@ -68,7 +69,7 @@ More useful reports can be created by changing the `DataList` returned in the `s
 
 ## Notes
 
-*  `CustomSideReport_ReportName` must extend `SS_Report`
+*  `CustomSideReport_ReportName` must extend `Report`
 *  It is recommended to place all custom reports in the 1 file.
   * Create a *CustomSideReport.php* file and add classes as you need them inside for each report
 

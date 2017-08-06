@@ -279,7 +279,7 @@ class HomePageController extends PageController
         $submission = new BrowserPollSubmission();
         $form->saveInto($submission);
         $submission->write();
-        Session::set('BrowserPollVoted', true);
+        $this->getRequest()->getSession()->set('BrowserPollVoted', true);
         return $this->redirectBack();
     }
 }
@@ -297,7 +297,7 @@ class HomePageController extends PageController
     // ...
     public function BrowserPollForm()
     {
-        if (SilverStripe\Control\Session::get('BrowserPollVoted')) {
+        if ($this->getRequest()->getSession()->get('BrowserPollVoted')) {
             return false;
         }
         // ...

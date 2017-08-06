@@ -155,7 +155,7 @@ In order to set the correct layout classes, we also need a custom template.
 To obey the inheritance chain, we use `$this->getTemplatesWithSuffix('_EditForm')` for
 selecting the most specific template (so `MyAdmin_EditForm.ss`, if it exists).
 
-The form should be of type `CMSForm` rather than `Form`, since it allows the use
+The form should use a `LeftAndMainFormRequestHandler`, since it allows the use
 of a `PjaxResponseNegotiator` to handle its display.
 
 Basic example form in a CMS controller subclass:
@@ -163,18 +163,20 @@ Basic example form in a CMS controller subclass:
 
 ```php
 	use SilverStripe\Forms\TabSet;
+	use SilverStripe\Forms\FieldList;
 	use SilverStripe\Forms\Tab;
 	use SilverStripe\Forms\TextField;
 	use SilverStripe\Forms\FormAction;
 	use SilverStripe\Admin\LeftAndMain;
+	use SilverStripe\Admin\LeftAndMainFormRequestHandler;
 
 	class MyAdmin extends LeftAndMain 
 	{
 		function getEditForm() {
-			return CMSForm::create(
+			return Form::create(
 				$this,
 				'EditForm',
-				new FieldSet(
+				new FieldList(
 					TabSet::create(
 						'Root',
 						Tab::create('Main',
@@ -182,10 +184,14 @@ Basic example form in a CMS controller subclass:
 						)
 					)->setTemplate('CMSTabset')
 				),
-				new FieldSet(
+				new FieldList(
 					FormAction::create('doSubmit')
 				)
 			)
+				// Use a custom request handler
+				->setRequestHandler(
+					LeftAndMainFormRequestHandler::create($form)
+				)
 				// JS and CSS use this identifier
 				->setHTMLID('Form_EditForm')
 				// Render correct responses on validation errors

@@ -149,7 +149,7 @@ old cache keys will be garbage collected as the cache fills up.
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
     
     // Automatically changes when any group is edited
-    $cacheKey = implode(['groupNames', $member->ID, Groups::get()->max('LastEdited')]);
+    $cacheKey = implode(['groupNames', $member->ID, Group::get()->max('LastEdited')]);
     $cache->set($cacheKey, $member->Groups()->column('Title'));        
 ```
 

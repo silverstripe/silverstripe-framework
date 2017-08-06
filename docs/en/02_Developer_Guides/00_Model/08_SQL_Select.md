@@ -90,7 +90,7 @@ This class implements the *Iterator*-interface, and provides convenience-methods
 ### DELETE
 
 Deletion can be done either by calling `DB::query`/`DB::prepared_query` directly,
-by creating a `SQLDelete` object, or by transforming a `SQLQuery` into a `SQLDelete`
+by creating a `SQLDelete` object, or by transforming a `SQLSelect` into a `SQLDelete`
 object instead.
 
 For example, creating a `SQLDelete` object
@@ -104,11 +104,11 @@ For example, creating a `SQLDelete` object
 
 ```
 
-Alternatively, turning an existing `SQLQuery` into a delete
+Alternatively, turning an existing `SQLSelect` into a delete
 
 ```php
 	
-	$query = SQLQuery::create()
+	$query = SQLSelect::create()
 		->setFrom('"SiteTree"')
 		->setWhere(['"SiteTree"."ShowInMenus"' => 0])
 		->toDelete();

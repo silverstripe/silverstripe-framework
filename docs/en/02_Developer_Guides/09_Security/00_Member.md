@@ -61,15 +61,14 @@ You can define subclasses of [Member](api:SilverStripe\Security\Member) to add e
 
 ```
 
-To ensure that all new members are created using this class, put a call to [Object::useCustomClass()](api:Object::useCustomClass()) in
-(project)/_config.php:
+To ensure that all new members are created using this class, put it in `Injector`.
 
 
-```php
-	Object::useCustomClass("Member", "MyMember");
+```yaml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\Member:
+    class: My\Project\MyMember
 ```
-
-Note that if you want to look this class-name up, you can call Object::getCustomClass("Member")
 
 ## Overloading getCMSFields()
 

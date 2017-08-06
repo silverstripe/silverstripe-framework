@@ -50,7 +50,7 @@ user does not influence your template content, you can update this key as below;
 
 ```yaml
 
-	SSViewer:
+	SilverStripe\View\SSViewer:
 		global_key: '$CurrentReadingMode, $Locale'
 ```
 
@@ -296,20 +296,3 @@ Or:
 		<% end_cached %>
 	<% end_loop %>
 ```
-
-## Cache expiry
-
-The default expiry for partial caches is 10 minutes. The advantage of a short cache expiry is that if you have a problem
-with your caching logic, the window in which stale content may be shown is short. The disadvantage, particularly for 
-low-traffic sites, is that cache blocks may expire before they can be utilised. If you're confident that you're caching
-logic is sound, you could increase the expiry dramatically.
-
-**mysite/_config.php**
-
-
-```php
-	// Set partial cache expiry to 7 days
-	SS_Cache::set_cache_lifetime('cacheblock', 60 * 60 * 24 * 7);
-```
-
-
