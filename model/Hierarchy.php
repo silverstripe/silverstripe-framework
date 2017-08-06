@@ -218,10 +218,12 @@ class Hierarchy extends DataExtension {
 	 * @param int $nodeCountThreshold See {@link getChildrenAsUL()}
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($nodeCountThreshold = 30, $context = null,
+	public function markPartialTree($nodeCountThreshold = null, $context = null,
 			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
 
-		if(!is_numeric($nodeCountThreshold)) $nodeCountThreshold = 30;
+		if(!is_numeric($nodeCountThreshold)) {
+			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
+		}
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
