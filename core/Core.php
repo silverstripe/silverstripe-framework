@@ -116,7 +116,12 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 require_once(BASE_PATH . '/framework/model/fieldtypes/compat/autoload.php');
 
 // Now that the class manifest is up, load the static configuration
-$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+if (defined('SS_CONFIGSTATICMANIFEST')) {
+	$configManifest = SS_CONFIGSTATICMANIFEST;
+	$configManifest = new $configManifest(BASE_PATH, false, $flush);
+} else {
+	$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+}
 Config::inst()->pushConfigStaticManifest($configManifest);
 
 // And then the yaml configuration

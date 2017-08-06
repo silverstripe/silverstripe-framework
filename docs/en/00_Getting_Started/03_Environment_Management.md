@@ -125,3 +125,4 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you define this constant, all emails will be sent from this address.|
 | `SS_ERROR_LOG` | Relative path to the log file. |
+| `SS_CONFIGSTATICMANIFEST` | Set to `SS_ConfigStaticManifest_Reflection` to use the Silverstripe 4 Reflection config manifest (speed improvement during dev/build and ?flush) |
