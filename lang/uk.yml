@@ -26,8 +26,6 @@ uk:
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Будь ласка, введіть дійсний номер телефону'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Будь-який
   SilverStripe\Security\BasicAuth:
@@ -69,7 +67,7 @@ uk:
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Дозволи вмісту'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
+    FromRoleOnGroup: 'Успадкований з ролі "{roletitle}" на групу "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Назва
   SilverStripe\Security\Security:

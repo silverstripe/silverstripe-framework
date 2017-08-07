@@ -16,8 +16,6 @@ pt_BR:
     NONE: nenhum
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exportar para CSV'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor digite um número de telefone válido'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Por favor entre nome de usuário e senha.'
     ERRORNOTADMIN: 'Este usuário não é um administrador'

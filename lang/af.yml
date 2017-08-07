@@ -1,6 +1,4 @@
 af:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Ongeldige versoek'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
   SilverStripe\Forms\CurrencyField:
@@ -28,7 +26,7 @@ af:
     CSVEXPORT: 'Voer uit na CSV lêer'
     Find: Vind
     LinkExisting: 'Koppel bestaande'
-    NewRecord: 'Nuwe %s'
+    NewRecord: 'Nuwe {type}'
     NoItemsFound: 'Geen items gevind nie'
     PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
@@ -47,15 +45,13 @@ af:
     Create: Skep
     Delete: Verwyder
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
-    Deleted: 'Verwyderde %s %s'
+    Deleted: 'Verwyderde {type} {name}'
     Save: Stoor
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Bedrag
     FIELDLABELCURRENCY: 'Geld eenheid'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,7 +87,6 @@ af:
     BUTTONLOSTPASSWORD: 'Ek het my wagwoord verloor'
     CONFIRMNEWPASSWORD: 'Bevestig Nuwe Wagwoord'
     CONFIRMPASSWORD: 'Bevestig wagwoord'
-    DefaultAdminFirstname: 'Verstek Admin'
     EMAIL: Epos
     EMPTYNEWPASSWORD: 'Die nuwe wagwoord kan nie leeg wees nie. Probeer asseblief weer'
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
@@ -122,7 +117,7 @@ af:
     AssignedTo: 'toegeken aan "{title}"'
     FromGroup: 'geërf van groep "{title}"'
     FromRole: 'geërf van rol"{title}"'
-    FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
+    FromRoleOnGroup: 'oorgeërf van rol "{roletitle}" op groep "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'
     Title: Tietel

@@ -6,8 +6,6 @@ si:
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'මුර පද අසමානය'
     VALIDATIONPASSWORDSNOTEMPTY: 'මුර පදය විය නොහැක'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
     ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'

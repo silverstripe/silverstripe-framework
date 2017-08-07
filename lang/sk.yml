@@ -1,6 +1,4 @@
 sk:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Neplatná požiadavka'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
@@ -29,7 +27,6 @@ sk:
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Čas Vášho sedenia vypršal. Prosím znova odošlite formulár.'
     CSRF_FAILED_MESSAGE: 'Zdá sa, že nastal technický problém. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste to opäť.'
-    VALIDATIONCREDIT: 'Uistite sa, že ste zadali číslo kreditnej karty správne'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla sa nezhodujú'
     VALIDATIONPASSWORDSNOTEMPTY: 'Heslá nemôžu byť prázdne'
     VALIDATIONSTRONGPASSWORD: 'Heslá musia obsahovať aspoň jednu číslicu a jedno písmeno'
@@ -45,7 +42,7 @@ sk:
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LinkExisting: 'Prepojenie existujúcich'
-    NewRecord: 'Nový %s'
+    NewRecord: 'Nový {type}'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Vytlačené v'
     PRINTEDBY: Vytlačené
@@ -65,36 +62,10 @@ sk:
     Create: Vytvoriť
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
-    Deleted: 'Zmazané %s %s'
+    Deleted: 'Zmazané {type} {name}'
     Save: Uložiť
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editovať
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Nemáte povolený prístup k obsahu cieľovej stránky.'
-    ANCHORSPAGENOTFOUND: 'Cieľová stránka nebola nájdená.'
-    CAPTIONTEXT: 'Text nadpisu'
-    CSSCLASS: 'Zarovnanie / štýl'
-    CSSCLASSCENTER: 'Centrované samotné.'
-    CSSCLASSLEFT: 'Vľavo, s obtekajúcim textom.'
-    CSSCLASSLEFTALONE: 'Vľavo, samostatne.'
-    CSSCLASSRIGHT: 'Vpravo, s obtekajúcim textom.'
-    IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa ak obrázok nemože byť zobrazený '
-    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, ak obrázok nemôže byť zobrazený'
-    IMAGEDIMENSIONS: Rozmery
-    IMAGEHEIGHTPX: Výška
-    IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
-    IMAGETITLETEXT: 'Text titulky (tooltip)'
-    IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: 'Šírka'
-    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ERROR_ABSOLUTE: 'Iba absolutné url môžu byť zabudované'
-    ERROR_HOSTNAME: 'Toto hostname nie je obsiahnuté v whitelist'
-    ERROR_ID: 'Je potreba buď "ID" alebo "FileURL" parameter pre identifikáciu súboru'
-    ERROR_NOTFOUND: 'Nie je možné nájsť súbor pre náhľad'
-    ERROR_OEMBED_REMOTE: 'Vstavané je kompatibilné so vzdialenými súbormi'
-    ERROR_SCHEME: 'Táto schéma súboru nie je obsiahnutá v whitelist'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -104,8 +75,6 @@ sk:
     IsNullLabel: 'Je Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: 'Zadaná hodnota ''{value}'' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Prosím zadajte platné telefónne číslo'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosím zadajte platný formát času ({format})'
   SilverStripe\ORM\DataObject:
@@ -130,17 +99,11 @@ sk:
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
     ERRORNOTREC: 'Toto používateľské meno / heslo nebolo rozpoznané'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Zabudnuté heslo?'
-    BUTTONLOGIN: 'Prihlásiť sa späť'
-    BUTTONLOGOUT: 'Odhlásiť sa'
     PASSWORDEXPIRED: '<p>Vaše heslo bolo expirované. <a target="_top" href="{link}">Prosím zvoľte nové heslo.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Neplatný užívateľ. <a target="_top" href="{link}">Prosím overte sa znovu tu</a> pre pokračovanie.</p>'
-    LoginMessage: '<p>Ak máte akúkoľvek neuloženú prácu, môžete sa vrátiť na miesto, kde ste prestali, prihlásením sa späť nižšie.</p>'
     SUCCESS: Úspešné
     SUCCESSCONTENT: '<p>Úspešné prihlásenie. Ak nebudete automaticky presmerovaní <a target="_top" href="{link}">kliknite tu</a></p>'
-    TimedOutTitleAnonymous: 'Čas Vášho sedenia vypršal.'
-    TimedOutTitleMember: 'Ahoj {name}!<br />Čas Vášho sedenia vypršal.'
   SilverStripe\Security\Group:
     AddRole: 'Pridať úlohu pre túto skupinu'
     Code: 'Kód skupiny'
@@ -148,7 +111,7 @@ sk:
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
-    HierarchyPermsError: 'Nie je možné pripojiť nadriadenú skupinu "%s" s privilegovanými právami (vyžaduje ADMIN prístup)'
+    HierarchyPermsError: 'Nie je možné pripojiť nadriadenú skupinu "{group}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa úlohy'
     PLURALNAME: Skupiny
@@ -172,7 +135,6 @@ sk:
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
     CURRENT_PASSWORD: 'Terajšie heslo'
-    DefaultAdminFirstname: 'Predvolený administrátor'
     EDIT_PASSWORD: 'Nové heslo'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nové heslo nesmie byť prázdne, skúste to prosím znova'
@@ -186,7 +148,6 @@ sk:
     KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
-    NoPassword: 'Nie je tu heslo pre tohto člena.'
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo bolo expirované. Zvoľte nové heslo.'
     PLURALNAME: Členovia
@@ -206,9 +167,9 @@ sk:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: %s'
+    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: {chars}'
     PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové hoslo, prosím'
-    TOOSHORT: 'Heslo je príliš krátke, musí byť %s alebo viacej znakov dlhé'
+    TOOSHORT: 'Heslo je príliš krátke, musí byť {minimum} alebo viacej znakov dlhé'
   SilverStripe\Security\Permission:
     AdminGroup: Administrátor
     CONTENT_CATEGORY: 'Práva k obsahu'
@@ -221,7 +182,7 @@ sk:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
     FromRole: 'zdedené z úlohy "{title}"'
-    FromRoleOnGroup: 'zdedené z úlohy "%s" v skupine "%s"'
+    FromRoleOnGroup: 'zdedené z úlohy "{roletitle}" v skupine "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Iba administrátor môže použiť'
     PLURALNAME: Roly
@@ -229,7 +190,7 @@ sk:
     Title: Názov
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia role'
-    PermsError: 'Nie je možné pripojiť kód "%s" s privilegovanými právami (vyžaduje ADMIN prístup)'
+    PermsError: 'Nie je možné pripojiť kód "{code}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     SINGULARNAME: 'Kód oprávnenia role'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa prihlásiť.'

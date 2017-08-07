@@ -4,8 +4,6 @@ ne:
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
     VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'कृपया मिल्ने फोन नम्बर हाल्नुहोस् '
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
     ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'

@@ -8,3 +8,8 @@ SilverStripe\Core\Injector\Injector:
   HTMLValue: '%$SilverStripe\View\Parsers\HTMLValue'
   SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
     class: SilverStripe\Forms\HTMLEditor\TinyMCEConfig
+  SilverStripe\Forms\HTMLEditor\TinyMCEScriptGenerator: '%$SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator'
+  SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator:
+    class: SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator
+    properties:
+      AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler'

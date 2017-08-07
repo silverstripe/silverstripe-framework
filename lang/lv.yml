@@ -21,8 +21,6 @@ lv:
     FIELDLABELCURRENCY: Valūta
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Ir Null'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jebkurš
   SilverStripe\ORM\FieldType\DBEnum:
@@ -51,7 +49,6 @@ lv:
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
     CONFIRMPASSWORD: 'Apstiprināt paroli'
-    DefaultAdminFirstname: 'Noklusējuma administrators'
     EMAIL: E-pasts
     EMPTYNEWPASSWORD: 'Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz'
     ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
@@ -76,7 +73,7 @@ lv:
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'mantots no lomas "%s" grupā "%s"'
+    FromRoleOnGroup: 'mantots no lomas "{roletitle}" grupā "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat atkārtoti pieslēgties. '
     BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'

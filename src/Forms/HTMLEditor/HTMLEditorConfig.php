@@ -80,15 +80,19 @@ abstract class HTMLEditorConfig
     }
 
     /**
-     * Assign a new config for the given identifier
+     * Assign a new config, or clear existing, for the given identifier
      *
      * @param string $identifier A specific identifier
-     * @param HTMLEditorConfig $config
+     * @param HTMLEditorConfig $config Config to set, or null to clear
      * @return HTMLEditorConfig The assigned config
      */
-    public static function set_config($identifier, HTMLEditorConfig $config)
+    public static function set_config($identifier, HTMLEditorConfig $config = null)
     {
-        self::$configs[$identifier] = $config;
+        if ($config) {
+            self::$configs[$identifier] = $config;
+        } else {
+            unset(self::$configs[$identifier]);
+        }
         return $config;
     }
 

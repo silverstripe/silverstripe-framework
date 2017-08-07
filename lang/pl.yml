@@ -1,6 +1,4 @@
 pl:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Nieprawidłowe żądanie'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hasła muszą mieć przynajmniej {min} znaków.'
     BETWEEN: 'Hasła muszą mieć długość pomiędzy {min} a {max} znaków.'
@@ -33,7 +31,7 @@ pl:
     FilterBy: 'Filtruj wg'
     Find: Wyszukaj
     LinkExisting: 'Linkuj istniejący'
-    NewRecord: 'Nowy %s'
+    NewRecord: 'Nowy {type}'
     NoItemsFound: 'Nie znaleziono elementów'
     PRINTEDAT: 'Wydrukowane na'
     PRINTEDBY: 'Wydrukowane przez'
@@ -53,7 +51,7 @@ pl:
     Create: Stwórz
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
-    Deleted: 'Usunięto %s %s'
+    Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edytuj
@@ -64,8 +62,6 @@ pl:
     IsNullLabel: 'Jest Pusty'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Wprowadź poprawny numer telefonu'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -89,7 +85,7 @@ pl:
     DefaultGroupTitleContentAuthors: 'Autor treści'
     Description: Opis
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
-    HierarchyPermsError: 'Nie można przyporządkować uprzywilejowanej grupy "%s" (wymagane uprawnienie ADMIN)'
+    HierarchyPermsError: 'Nie można przyporządkować uprzywilejowanej grupy "{group}" (wymagane uprawnienie ADMIN)'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
     Parent: 'Grupa nadrzędna'
@@ -108,7 +104,6 @@ pl:
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
-    DefaultAdminFirstname: 'Domyślny administrator'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nowe hasło nie może być puste, spróbuj ponownie.'
     ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać link do zmiany hasła.'
@@ -120,7 +115,6 @@ pl:
     INTERFACELANG: 'Język interfejsu'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
-    NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
     PASSWORD: Hasło
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
@@ -136,7 +130,7 @@ pl:
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
-    TOOSHORT: 'Hasło jest za krótkie, proszę podać %s znaków lub więcej'
+    TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CONTENT_CATEGORY: 'Uprawnienie edycji treści'
@@ -147,12 +141,12 @@ pl:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
     FromRole: 'odziedziczone z roli "{title}"'
-    FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
+    FromRoleOnGroup: 'odziedziczone z roli "{roletitle}" w grupie "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Tylko administrator może to zastosować'
     Title: Tytuł
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "%s" (wymagane uprawnienie ADMIN)'
+    PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "{code}" (wymagane uprawnienie ADMIN)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'

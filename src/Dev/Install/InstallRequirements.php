@@ -142,24 +142,25 @@ class InstallRequirements
      */
     public function isIIS($fromVersion = 7)
     {
-        if (strpos($this->findWebserver(), 'IIS/') === false) {
-            return false;
+        $webserver = $this->findWebserver();
+        if (preg_match('#.*IIS/(?<version>[.\\d]+)$#', $webserver, $matches)) {
+            return version_compare($matches['version'], $fromVersion, '>=');
         }
-        return substr(strstr($this->findWebserver(), '/'), -3, 1) >= $fromVersion;
+        return false;
     }
 
+    /**
+     * @return bool
+     */
     public function isApache()
     {
-        if (strpos($this->findWebserver(), 'Apache') !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return strpos($this->findWebserver(), 'Apache') !== false;
     }
 
     /**
      * Find the webserver software running on the PHP host.
-     * @return string|boolean Server software or boolean FALSE
+     *
+     * @return string|false Server software or boolean FALSE
      */
     public function findWebserver()
     {

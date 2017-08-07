@@ -21,8 +21,6 @@ is:
     FIELDLABELCURRENCY: Gjaldmiðill
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Er Null'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Einhver
   SilverStripe\ORM\FieldType\DBEnum:

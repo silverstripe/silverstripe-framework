@@ -1,6 +1,4 @@
 sr_RS:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Погрешан захтев'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Лозинка мора садржати најмање {min} знакова.'
     BETWEEN: 'Лозинка мора садржати најмање {min}, а највише {max} знакова.'
@@ -33,7 +31,7 @@ sr_RS:
     FilterBy: 'Филтрирај по'
     Find: Пронађи
     LinkExisting: 'Постојање линка'
-    NewRecord: 'Нови %s'
+    NewRecord: 'Нови {type}'
     NoItemsFound: 'Ниједна ставка није пронађена'
     PRINTEDAT: Одштампано
     PRINTEDBY: Одштампао
@@ -53,7 +51,7 @@ sr_RS:
     Create: Креирај
     Delete: Избриши
     DeletePermissionsFailure: 'Немате право брисања'
-    Deleted: 'Избрисано %s %s'
+    Deleted: 'Избрисано {type} {name}'
     Save: Сачувај
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Измени
@@ -64,8 +62,6 @@ sr_RS:
     IsNullLabel: 'је Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' није број. Само бројеви могу бити прихваћени за ово поље'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Унесите исправан број телефона'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Унесите исправан формат времена ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -89,7 +85,7 @@ sr_RS:
     DefaultGroupTitleContentAuthors: 'Аутори садржаја'
     Description: Опис
     GroupReminder: 'Ако изаберете родитељску групу, ова група ће преузети све њене улоге'
-    HierarchyPermsError: 'Није могуће доделити родитељску групу "%s" са привилегованим дозволама (захтева Администраторски приступ)'
+    HierarchyPermsError: 'Није могуће доделити родитељску групу "{group}" са привилегованим дозволама (захтева Администраторски приступ)'
     Locked: 'Закључано?'
     NoRoles: 'Улоге нису пронађене'
     Parent: 'Родитељска група'
@@ -108,7 +104,6 @@ sr_RS:
     BUTTONLOSTPASSWORD: 'Заборавио сам лозинку'
     CONFIRMNEWPASSWORD: 'Потврдите нову лозинку'
     CONFIRMPASSWORD: 'Потврдите лозинку'
-    DefaultAdminFirstname: 'Подразумевани администратор'
     EMAIL: Е-пошта
     EMPTYNEWPASSWORD: 'Нова лозинка не може бити празна. Покушајте поново.'
     ENTEREMAIL: 'Унесите адресу е-поште да би сте добили линк за ресетовање лозинке.'
@@ -120,7 +115,6 @@ sr_RS:
     INTERFACELANG: 'Језик интерфејса'
     LOGGEDINAS: 'Пријављени сте као {name}.'
     NEWPASSWORD: 'Нова лозинка'
-    NoPassword: 'Не постоји лозинка за тог члана.'
     PASSWORD: Лозинка
     SUBJECTPASSWORDCHANGED: 'Ваша лозинка је промењена'
     SUBJECTPASSWORDRESET: 'Линк за ресетовање Ваше лозинке'
@@ -134,9 +128,9 @@ sr_RS:
     db_Password: Лозинка
     db_PasswordExpiry: 'Датум истека лозинке'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Појачајте лозинку додавањем неких од следећих знакова: %s'
+    LOWCHARSTRENGTH: 'Појачајте лозинку додавањем неких од следећих знакова: {chars}'
     PREVPASSWORD: 'Већ сте користили наведену лозинку у прошлости. Стога, изаберите другу лозинку'
-    TOOSHORT: 'Лозинка је прекратка. Лозинка мора садржати бар %s знакова'
+    TOOSHORT: 'Лозинка је прекратка. Лозинка мора садржати бар {minimum} знакова'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     FULLADMINRIGHTS: 'Пуна административна права'
@@ -146,12 +140,12 @@ sr_RS:
     AssignedTo: 'додељено "{title}"'
     FromGroup: 'наслеђено од групе "{title}"'
     FromRole: 'наслеђено од улоге "{title}"'
-    FromRoleOnGroup: 'наслеђено из улоге "%s" за групу "%s"'
+    FromRoleOnGroup: 'наслеђено из улоге "{roletitle}" за групу "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Може примењивати само администратор'
     Title: Наслов
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Није могуће доделити кôд  "%s" са привилегованим дозволама (захтева Администраторски приступ)'
+    PermsError: 'Није могуће доделити кôд  "{code}" са привилегованим дозволама (захтева Администраторски приступ)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Немате дозволу за приступ овој страни. Уколико имате други налог којим можете да приступите овој страни, пријавите се.'
     BUTTONSEND: 'Пошаљи ми линк за ресетовање лозинке'

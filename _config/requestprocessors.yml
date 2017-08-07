@@ -3,6 +3,7 @@ Name: requestprocessors
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
+    # Note: Don't add 'class' config here, as it will affect ErrorDirector as well
     properties:
       Middlewares:
         TrustedProxyMiddleware: '%$SilverStripe\Control\Middleware\TrustedProxyMiddleware'
@@ -16,3 +17,11 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\TrustedProxyMiddleware:
     properties:
       TrustedProxyIPs: "`SS_TRUSTED_PROXY_IPS`"
+---
+Name: errorrequestprocessors
+After:
+  - requestprocessors
+---
+SilverStripe\Core\Injector\Injector:
+  # Note: If Director config changes, take note it will affect this config too
+  SilverStripe\Core\Startup\ErrorDirector: '%$SilverStripe\Control\Director'

@@ -34,7 +34,6 @@ ro:
     BUTTONLOSTPASSWORD: 'Am uitat parola'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
-    DefaultAdminFirstname: 'Administrator implicit'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
     FIRSTNAME: Prenume
     INTERFACELANG: 'Limba interfetei'

@@ -6,8 +6,6 @@ hu:
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'A jelszavak nem egyeznek meg.'
     VALIDATIONPASSWORDSNOTEMPTY: 'A jelszó nem lehet üres.'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Kérünk, adj meg egy valós telefonszámot.'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Kérünk, ajd meg egy felhasználónevet és jelszót.'
     ERRORNOTADMIN: 'Ez a felhasználó nem adminisztrátor. '

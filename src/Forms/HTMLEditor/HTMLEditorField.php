@@ -51,7 +51,14 @@ class HTMLEditorField extends TextareaField
      * @config
      * @var int
      */
-    private static $default_rows = 30;
+    private static $default_rows = 20;
+
+    /**
+     * Extra height per row
+     *
+     * @var int
+     */
+    private static $fixed_row_height = 20;
 
     /**
      * ID or instance of editorconfig
@@ -110,7 +117,17 @@ class HTMLEditorField extends TextareaField
 
     public function getAttributes()
     {
+        // Fix CSS height based on rows
+        $rowHeight = $this->config()->get('fixed_row_height');
+        $attributes = [];
+        if ($rowHeight) {
+            $height = $this->getRows() * $rowHeight;
+            $attributes['style'] = sprintf('height: %dpx;', $height);
+        }
+
+        // Merge attributes
         return array_merge(
+            $attributes,
             parent::getAttributes(),
             $this->getEditorConfig()->getAttributes()
         );

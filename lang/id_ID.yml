@@ -1,6 +1,4 @@
 id_ID:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Permintaan tidak valid'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Tidak
     YESANSWER: Ya
@@ -39,7 +37,7 @@ id_ID:
     FilterBy: 'Saring menurut '
     Find: Cari
     LinkExisting: 'Tautan yang Ada'
-    NewRecord: '%s baru'
+    NewRecord: '{type} baru'
     NoItemsFound: 'Tidak ada data'
     PRINTEDAT: 'Dicetak pada'
     PRINTEDBY: 'Dicetak oleh'
@@ -59,7 +57,7 @@ id_ID:
     Create: Buat
     Delete: Hapus
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
-    Deleted: '%s %s dihapus'
+    Deleted: '{type} {name} dihapus'
     Save: Simpan
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
@@ -70,8 +68,6 @@ id_ID:
     IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Mohon isikan nomer telpon yang benar'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,17 +87,11 @@ id_ID:
     ERRORNOTADMIN: 'Pengguna tersebut bukan pengelola.'
     ERRORNOTREC: 'Nama pengguna dan kata kunci tidak dikenal'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
-    BUTTONLOGIN: 'Masuk kembali'
-    BUTTONLOGOUT: Keluar
     PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
-    LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
     SUCCESS: Berhasil
     SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
-    TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
-    TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
   SilverStripe\Security\Group:
     AddRole: 'Tambahkan peran untuk kelompok ini'
     Code: 'Kode Kelompok'
@@ -109,7 +99,7 @@ id_ID:
     DefaultGroupTitleContentAuthors: 'Penulis Konten'
     Description: Deskripsi
     GroupReminder: 'Jika Anda memilih kelompok induk, kelompok ini akan mengambil perannya'
-    HierarchyPermsError: 'Tidak dapat menghubungkan kelompok induk "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    HierarchyPermsError: 'Tidak dapat menghubungkan kelompok induk "{group}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
     Locked: 'Terkunci?'
     NoRoles: 'Tidak ada peran'
     Parent: 'Kelompok Induk'
@@ -128,7 +118,6 @@ id_ID:
     BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
     CONFIRMPASSWORD: 'Konfirmasi Kata Kunci'
-    DefaultAdminFirstname: 'Pengelola Utama'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Kata kunci baru tidak boleh kosong, mohon coba lagi'
     ENTEREMAIL: 'Mohon isikan alamat email untuk menerima tautan penggantian kata kunci.'
@@ -140,7 +129,6 @@ id_ID:
     INTERFACELANG: 'Bahasa Antarmuka'
     LOGGEDINAS: 'Anda masuk sebagai {name}.'
     NEWPASSWORD: 'Kata Kunci Baru'
-    NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
     PASSWORD: 'Kata kunci'
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
@@ -155,9 +143,9 @@ id_ID:
     db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: %s'
+    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
-    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari %s karakter atau lebih'
+    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari {minimum} karakter atau lebih'
   SilverStripe\Security\Permission:
     AdminGroup: Pengelola
     FULLADMINRIGHTS: 'Hak pengelolaan penuh'
@@ -167,12 +155,12 @@ id_ID:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
     FromRole: 'diwarisi dari peran "{title}"'
-    FromRoleOnGroup: 'diwarisi dari peran "%s" pada kelompok "%s"'
+    FromRoleOnGroup: 'diwarisi dari peran "{roletitle}" pada kelompok "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Hanya untuk pengelola'
     Title: Judul
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Tidak dapat menghubungkan kode "%s" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    PermsError: 'Tidak dapat menghubungkan kode "{code}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
     BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'

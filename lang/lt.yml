@@ -1,6 +1,4 @@
 lt:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Klaidinga užklausa'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Taip
@@ -39,7 +37,7 @@ lt:
     FilterBy: 'Filtruoti pagal '
     Find: Rasti
     LinkExisting: 'Pasirinkti esamą'
-    NewRecord: 'Naujas %s'
+    NewRecord: 'Naujas {type}'
     NoItemsFound: 'Įrašų nerasta'
     PRINTEDAT: Atspausdinta
     PRINTEDBY: Atspausdino
@@ -59,7 +57,7 @@ lt:
     Create: Sukurti
     Delete: Ištrinti
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
-    Deleted: 'Ištrinta %s %s'
+    Deleted: 'Ištrinta {type} {name}'
     Save: Išsaugoti
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redaguoti
@@ -70,8 +68,6 @@ lt:
     IsNullLabel: Tuščias
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Įveskite teisingą telefono numerį'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,17 +87,11 @@ lt:
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
-    BUTTONLOGIN: Prisijungti
-    BUTTONLOGOUT: Atsijungti
     PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
-    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
     SUCCESS: Sėkmingai
     SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
-    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
-    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
   SilverStripe\Security\Group:
     AddRole: 'Pridėti rolę šiai grupei'
     Code: 'Grupės kodas'
@@ -109,7 +99,7 @@ lt:
     DefaultGroupTitleContentAuthors: 'Turinio autoriai'
     Description: Aprašymas
     GroupReminder: 'Jeigu pasirinksite tėvinę grupę, ši grupė perims visas jos roles'
-    HierarchyPermsError: 'Nepavyko priskirti tėvinės grupės "%s" su priskirtais leidimais (būtina ADMIN prieeiga)'
+    HierarchyPermsError: 'Nepavyko priskirti tėvinės grupės "{group}" su priskirtais leidimais (būtina ADMIN prieeiga)'
     Locked: 'Užrakinta?'
     NoRoles: 'Rolių nerasta'
     Parent: 'Priklauso grupei'
@@ -128,7 +118,6 @@ lt:
     BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
     CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
-    DefaultAdminFirstname: 'Pagrindinis administratorius'
     EMAIL: 'E. paštas'
     EMPTYNEWPASSWORD: 'Naujas slaptažodis negali būti tuščias, bandykite iš naujo'
     ENTEREMAIL: 'Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą.'
@@ -140,7 +129,6 @@ lt:
     INTERFACELANG: Kalba
     LOGGEDINAS: 'Prisijungėte kaip {name}.'
     NEWPASSWORD: 'Naujas slaptažodis'
-    NoPassword: 'Šis vartotojas neturi slaptažodžio.'
     PASSWORD: Slaptažodis
     PASSWORDEXPIRED: 'Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują.'
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'
@@ -155,9 +143,9 @@ lt:
     db_Password: Slaptažodis
     db_PasswordExpiry: 'Slaptažodžio pabaigos data'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s'
+    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: {chars}'
     PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
-    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių'
+    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš {minimum} arba didesnio skaičiaus simbolių'
   SilverStripe\Security\Permission:
     AdminGroup: Administratorius
     CONTENT_CATEGORY: 'Turinio teisės'
@@ -168,12 +156,12 @@ lt:
     AssignedTo: 'priskirta "{title}"'
     FromGroup: 'paveldėta iš grupės "{title}"'
     FromRole: 'paveldėta iš rolės "{title}"'
-    FromRoleOnGroup: 'paveldėta iš rolės "%s" grupėje "%s"'
+    FromRoleOnGroup: 'paveldėta iš rolės "{roletitle}" grupėje "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Gali priskirti tik administratorius'
     Title: Pavadinimas
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
+    PermsError: 'Nepavyko priskirto kodo "{code}" su priskirtais leidimais (būtina ADMIN prieiga)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'

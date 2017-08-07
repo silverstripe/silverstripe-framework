@@ -54,7 +54,7 @@ class LoginAttempt extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Email'] = _t(__CLASS__.'.LoginAttempt.Email', 'Email Address');
+        $labels['Email'] = _t(__CLASS__.'.Email', 'Email Address');
         $labels['Status'] = _t(__CLASS__.'.Status', 'Status');
         $labels['IP'] = _t(__CLASS__.'.IP', 'IP Address');
 

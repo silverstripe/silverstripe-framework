@@ -18,7 +18,7 @@ gl_ES:
     Filter: Filtro
     Find: Atopar
     LinkExisting: 'Ligazón existente'
-    NewRecord: 'Novo %s'
+    NewRecord: 'Novo {type}'
     NoItemsFound: 'Ningún elemento atopado'
     PRINTEDAT: 'Impreso ás'
     PRINTEDBY: 'Impreso por'
@@ -33,8 +33,6 @@ gl_ES:
     FIELDLABELCURRENCY: Moeda
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'É Nulo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor insire un número de teléfono válido'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ningún
   SilverStripe\ORM\FieldType\DBEnum:
@@ -64,7 +62,6 @@ gl_ES:
     BUTTONLOSTPASSWORD: 'Perdín o meu contrasinal'
     CONFIRMNEWPASSWORD: 'Confirmar Novo Contrasinal'
     CONFIRMPASSWORD: 'Confirmar Contrasinal'
-    DefaultAdminFirstname: 'Administrador por Defecto'
     EMAIL: Correo-e
     EMPTYNEWPASSWORD: 'O novo contrasinal non pode ser baleiro, por favor téntao de novo'
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
@@ -89,7 +86,7 @@ gl_ES:
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
+    FromRoleOnGroup: 'herdado do role "{roletitle}" sobre o grupo "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
     BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'

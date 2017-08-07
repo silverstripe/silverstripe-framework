@@ -9,13 +9,14 @@ fi:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT3: 'Vaihda salasana'
     HELLO: Hei
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Pyyntö on virheellinen'
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hei
     TEXT1: 'Tässä sinun'
     TEXT2: 'salasanasi palautuslinkki'
     TEXT3: henkilölle
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Pyyntö on virheellinen'
+    REQUEST_ABORTED: 'Pyyntö keskeytetty'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -53,7 +54,6 @@ fi:
     BAD_METHOD: 'Tämä lomake vaatii {method} lähetyksen'
     CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
     CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
-    VALIDATIONCREDIT: 'Tarkista, ovatko antamasi luottokortin numerot oikein'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
     VALIDATIONPASSWORDSNOTEMPTY: 'Salasana ei voi olla tyhjä'
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
@@ -72,7 +72,7 @@ fi:
     FilterBy: 'Suodata &raquo;'
     Find: Etsi
     LinkExisting: 'Linkitä olemassaoleva'
-    NewRecord: 'Uusi %s'
+    NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
     PRINTEDAT: Tulostettu
     PRINTEDBY: Tulostaja
@@ -92,7 +92,7 @@ fi:
     Create: Luo
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
-    Deleted: 'Poistettiin %s %s'
+    Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Muokkaa
@@ -100,57 +100,6 @@ fi:
     OF: /
     Page: Sivu
     View: Näytä
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Sinulla ei ole oikeuksia tarkastella tämän sivun sisältöä.'
-    ANCHORSPAGENOTFOUND: 'Kohdesivua ei löytynyt.'
-    CAPTIONTEXT: Kuvateksti
-    CSSCLASS: 'Tasaus / tyyli'
-    CSSCLASSCENTER: 'Keskellä omillaan.'
-    CSSCLASSLEFT: 'Vasemmalla, tekstin ympäröimänä.'
-    CSSCLASSLEFTALONE: 'Keskellä omillaan.'
-    CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
-    IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
-    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
-    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää'
-    IMAGEDIMENSIONS: Mitat
-    IMAGEHEIGHTPX: Korkeus
-    IMAGETITLE: 'Otsikkoteksti (vihjelappu) - kuvan lisätietoja varten'
-    IMAGETITLETEXT: 'Otsikko teksti (vihjelappu)'
-    IMAGETITLETEXTDESC: 'Kuvan lisätiedot'
-    IMAGEWIDTHPX: Leveys
-    URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu vaihtaa median lähteeksi.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_File:
-    CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
-    LASTEDIT: 'Viimeksi muokattu'
-    SIZE: Tiedostokoko
-    TYPE: Tiedostotyyppi
-    URL: URL-osoite
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image:
-    HEIGHT: Korkeus
-    WIDTH: Leveys
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ANCHORVALUE: Ankkuri
-    EMAIL: Sähköpostiosoite
-    ERROR_ABSOLUTE: 'Vain absoluuttiset URL-osoitteet voidaan upottaa'
-    ERROR_HOSTNAME: 'Tämän tiedoston isäntänimi ei ole sallitujen listalla'
-    ERROR_ID: '"ID" tai "FileURL" parametri on pakollinen tiedoston tunnistamiseksi'
-    ERROR_NOTFOUND: 'Näytettävää tiedostoa ei löydy'
-    ERROR_OEMBED_REMOTE: 'Upotus on yhteensopiva vain etätiedostoihin'
-    ERROR_SCHEME: 'Tämän tiedoston skeema ei ole sallittujen listalla'
-    FILE: Tiedosto
-    LINK: 'Lisää tai muokkaa linkkiä valittuun tekstiin'
-    LINKANCHOR: 'Linkki ankkuriin tällä sivulla'
-    LINKDESCR: 'Linkin kuvaus'
-    LINKDETAILS: 'Linkin tiedot'
-    LINKEMAIL: 'Linkki sähköpostiosoitteeseen'
-    LINKEXTERNAL: 'Linkki toiseen verkko-osoitteeseen'
-    LINKFILE: 'Linkki ladattavaan tiedostoon'
-    LINKINTERNAL: 'Linkki sivuston toiseen sivuun'
-    LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
-    LINKTO: 'Linkin tyyppi'
-    PAGE: Sivu
-    SUBJECT: 'Sähköpostin aihe'
-    URL: URL
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -161,8 +110,6 @@ fi:
     IsNullLabel: 'On nolla'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Kirjoita pätevä puhelinnumero'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   SilverStripe\ORM\DataObject:
@@ -211,18 +158,16 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   SilverStripe\Security\CMSMemberLoginForm:
-    AUTHENTICATORNAME: 'CMS-järjestelmän käyttäjän kirjautuminen'
-    BUTTONFORGOTPASSWORD: 'Unohditko salasanasi?'
-    BUTTONLOGIN: 'Kirjaudu takaisin sisään'
-    BUTTONLOGOUT: 'Kirjaudu ulos'
     PASSWORDEXPIRED: '<p>Salasanasi on vanhentunut. <a target="_top" href="{link}">Valitse uusi.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Virheellinen käyttäjä. <a target="_top" href="{link}">Ole hyvä ja tunnistaudu uudelleen</a> jatkaaksesi.</p>'
-    LoginMessage: '<p>Mikäli tallennus jäi tekemättä, voit kirjautua uudelleen ja jatkaa muokkausta.</p>'
+    LOGIN_MESSAGE: '<p>Istuntosi on vanhentunut</p>'
+    LOGIN_TITLE: 'Palaa takaisin kirjautumalla sisään'
     SUCCESS: Onnistui
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
-    TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
-    TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
+    SUCCESS_TITLE: 'Kirjautuminen onnistui'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: Oletusylläpitäjä
   SilverStripe\Security\Group:
     AddRole: 'Lisää ryhmälle rooli'
     Code: 'Ryhmän koodi'
@@ -231,7 +176,7 @@ fi:
     Description: Kuvaus
     GROUPNAME: 'Ryhmän nimi'
     GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
-    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "{group}" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     Locked: 'Lukittu?'
     MEMBERS: Jäsenet
     NEWGROUP: 'Uusi ryhmä'
@@ -250,9 +195,8 @@ fi:
     has_many_Permissions: Oikeudet
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
+    Email: Sähköpostiosoite
     IP: IP-osoite
-    LoginAttempt:
-      Email: Sähköpostiosoite
     PLURALNAME: Kirjautumisyritykset
     PLURALS:
       one: Kirjautumisyritys
@@ -264,11 +208,11 @@ fi:
     BUTTONCHANGEPASSWORD: 'Vaihda salasana'
     BUTTONLOGIN: 'Kirjaudu sisään'
     BUTTONLOGINOTHER: 'Kirjaudu jonain muuna'
+    BUTTONLOGOUT: 'Kirjaudu ulos'
     BUTTONLOSTPASSWORD: 'Kadotin salasanani'
     CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
     CONFIRMPASSWORD: 'Syötä salasana uudelleen'
     CURRENT_PASSWORD: 'Nykyinen salasana'
-    DefaultAdminFirstname: Oletusylläpitäjä
     EDIT_PASSWORD: 'Uusi salasana'
     EMAIL: Sähköposti
     EMPTYNEWPASSWORD: 'Uusi salasana ei voi olla tyhjä, yritä uudelleen'
@@ -282,14 +226,13 @@ fi:
     KEEPMESIGNEDIN: 'Pidä minut kirjautuneena'
     LOGGEDINAS: 'Olet kirjautuneena nimellä {name}.'
     NEWPASSWORD: 'Uusi salasana'
-    NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Käyttäjät
     PLURALS:
       one: Käyttäjä
       other: '{count} Käyttäjää'
-    REMEMBERME: 'Muista minut? (%d päivän ajan tällä koneella)'
+    REMEMBERME: 'Muista minut? ({days} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
@@ -302,6 +245,14 @@ fi:
     db_LockedOutUntil: 'Lukittuna tähän asti:'
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'CMS-järjestelmän käyttäjän kirjautuminen'
+    BUTTONFORGOTPASSWORD: 'Unohdin salasanan'
+    BUTTONLOGIN: 'Päästä takaisin sisään'
+    BUTTONLOGOUT: 'Kirjaudu ulos'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
+    NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
   SilverStripe\Security\MemberLoginForm:
     AUTHENTICATORNAME: 'Sähköposti & Salasana'
   SilverStripe\Security\MemberPassword:
@@ -311,15 +262,16 @@ fi:
       other: '{count} Käyttäjän salasanaa'
     SINGULARNAME: 'Käyttäjän salasana'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: %s'
+    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: {chars}'
     PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
-    TOOSHORT: 'Salasanan on oltava vähintään %s merkkiä'
+    TOOSHORT: 'Salasanan on oltava vähintään {minimum} merkkiä'
   SilverStripe\Security\Permission:
     AdminGroup: Järjestelmänvalvoja
     CMS_ACCESS_CATEGORY: CMS-pääsy
     CONTENT_CATEGORY: 'Sisällön käyttöoikeudet'
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
+    PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
     PLURALNAME: Oikeudet
     PLURALS:
       one: Oikeus
@@ -330,7 +282,7 @@ fi:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
     FromRole: 'periytyivät roolista "{title}"'
-    FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
+    FromRoleOnGroup: 'periytynyt roolista "{roletitle}" ryhmässä "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Vain järjestelmänvalvojalla on oikeudet asettaa'
     PLURALNAME: Roolit
@@ -344,7 +296,7 @@ fi:
     PLURALS:
       one: 'Käyttöoikeuden roolin koodi'
       other: '{count} Käyttöoikeuksien roolien koodit'
-    PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    PermsError: 'Ei voida asettaa koodia "{code}" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: Kirjautumistarkisteet
@@ -357,6 +309,7 @@ fi:
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
     CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanasi alla.'
     CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
+    CONFIRMLOGOUT: 'Ole hyvä ja klikkaa nappulaa uloskirjautumisen vahvistamiseksi.'
     ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
     ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään jotta voit vaihtaa salasanasi.'
     LOGIN: 'Kirjaudu sisään'

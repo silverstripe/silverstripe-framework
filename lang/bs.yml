@@ -19,8 +19,6 @@ bs:
     CSVEXPORT: 'Izvezi u CSV'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Kreiraj
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Molimo, unesite ispravan broj telefona'
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da

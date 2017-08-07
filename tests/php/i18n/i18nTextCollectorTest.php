@@ -127,7 +127,7 @@ SS;
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
-<% _t('Test.SINGLEQUOTE','Single Quote'); %>
+<%t Test.SINGLEQUOTE 'Single Quote' %>
 SS;
         $this->assertEquals(
             [ 'Test.SINGLEQUOTE' => 'Single Quote' ],
@@ -135,7 +135,7 @@ SS;
         );
 
         $html = <<<SS
-<% _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   ); %>
+<%t   Test.DOUBLEQUOTE "Double Quote and Spaces"    %>
 SS;
         $this->assertEquals(
             [ 'Test.DOUBLEQUOTE' => "Double Quote and Spaces" ],
@@ -143,7 +143,7 @@ SS;
         );
 
         $html = <<<SS
-<% _t("Test.NOSEMICOLON","No Semicolon") %>
+<%t Test.NOSEMICOLON "No Semicolon" %>
 SS;
         $this->assertEquals(
             [ 'Test.NOSEMICOLON' => "No Semicolon" ],
@@ -158,22 +158,7 @@ SS;
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $html = <<<SS
-<% _t(
-	'NEWLINES',
-	'New Lines'
-) %>
-SS;
-        $this->assertEquals(
-            [ 'Test.NEWLINES' => "New Lines" ],
-            $c->collectFromTemplate($html, 'Test', $mymodule)
-        );
-
-        $html = <<<SS
-<% _t(
-	'Test.PRIOANDCOMMENT',
-	' Prio and Value with "Double Quotes"',
-	'Comment with "Double Quotes"'
-) %>
+<%t Test.PRIOANDCOMMENT ' Prio and Value with "Double Quotes"' is 'Comment with "Double Quotes"' %>
 SS;
         $this->assertEquals(
             [ 'Test.PRIOANDCOMMENT' => [
@@ -184,12 +169,7 @@ SS;
         );
 
         $html = <<<SS
-<% _t(
-	'Test.PRIOANDCOMMENT',
-	" Prio and Value with 'Single Quotes'",
-
-	"Comment with 'Single Quotes'"
-) %>
+<%t Test.PRIOANDCOMMENT " Prio and Value with 'Single Quotes'" is "Comment with 'Single Quotes'" %>
 SS;
         $this->assertEquals(
             [ 'Test.PRIOANDCOMMENT' => [
@@ -201,7 +181,7 @@ SS;
 
         // Test empty
         $html = <<<SS
-<% _t('Test.PRIOANDCOMMENT') %>
+<%t Test.PRIOANDCOMMENT %>
 SS;
         $this->assertEquals(
             [],
@@ -483,27 +463,27 @@ PHP;
             'Layout Template no namespace',
             $matches['i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE']
         );
-        $this->assertArrayHasKey('i18nTestModule.ss.SPRINTFNONAMESPACE', $matches);
+        $this->assertArrayHasKey('i18nTestModule.ss.REPLACEMENTNONAMESPACE', $matches);
         $this->assertEquals(
-            'My replacement no namespace: %s',
-            $matches['i18nTestModule.ss.SPRINTFNONAMESPACE']
+            'My replacement no namespace: {replacement}',
+            $matches['i18nTestModule.ss.REPLACEMENTNONAMESPACE']
         );
         $this->assertArrayHasKey('i18nTestModule.LAYOUTTEMPLATE', $matches);
         $this->assertEquals(
             'Layout Template',
             $matches['i18nTestModule.LAYOUTTEMPLATE']
         );
-        $this->assertArrayHasKey('i18nTestModule.SPRINTFNAMESPACE', $matches);
+        $this->assertArrayHasKey('i18nTestModule.REPLACEMENTNAMESPACE', $matches);
         $this->assertEquals(
-            'My replacement: %s',
-            $matches['i18nTestModule.SPRINTFNAMESPACE']
+            'My replacement: {replacement}',
+            $matches['i18nTestModule.REPLACEMENTNAMESPACE']
         );
 
         // Includes should not automatically inject translations into parent templates
         $this->assertArrayNotHasKey('i18nTestModule.WITHNAMESPACE', $matches);
-        $this->assertArrayNotHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
-        $this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
-        $this->assertArrayNotHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
+        $this->assertArrayNotHasKey('i18nTestModuleInclude_ss.NONAMESPACE', $matches);
+        $this->assertArrayNotHasKey('i18nTestModuleInclude_ss.REPLACEMENTINCLUDENAMESPACE', $matches);
+        $this->assertArrayNotHasKey('i18nTestModuleInclude_ss.REPLACEMENTINCLUDENONAMESPACE', $matches);
     }
 
     public function testCollectMergesWithExisting()

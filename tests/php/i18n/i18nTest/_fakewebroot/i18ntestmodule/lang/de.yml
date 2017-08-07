@@ -1,7 +1,7 @@
 de:
   NONAMESPACE: Include Entity without Namespace (de)
-  SPRINTFNONAMESPACE: "My replacement no namespace: %s (de)"
-  SPRINTFINCLUDENONAMESPACE: "My include replacement no namespace: %s (de)"
+  REPLACEMENTNONAMESPACE: "My replacement no namespace: {replacement} (de)"
+  REPLACEMENTINCLUDENONAMESPACE: "My include replacement no namespace: {replacement} (de)"
   LAYOUTTEMPLATENONAMESPACE: Layout Template no namespace (de)
   i18nTestModule:
     # Comment for entity
@@ -10,7 +10,7 @@ de:
     MAINTEMPLATE: Main Template (de)
     WITHNAMESPACE: Include Entity with Namespace (de)
     LAYOUTTEMPLATE: Layout Template (de)
-    SPRINTFNAMESPACE: "My replacement: %s (de)"
+    REPLACEMENTNAMESPACE: "My replacement: {replacement} (de)"
     PRIORITYNOTICE: Low Module Priority (de)
-  i18nTestModuleInclude.ss:
-    SPRINTFINCLUDENAMESPACE: "My include replacement: %s (de)"
+  i18nTestModuleInclude_ss:
+    REPLACEMENTINCLUDENAMESPACE: "My include replacement: {replacement} (de)"

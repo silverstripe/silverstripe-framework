@@ -6,8 +6,6 @@ he_IL:
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
     VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'יש להכניס מספר טלפון תקין'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
     ERRORNOTADMIN: 'משתמש זה אינו מנהל'

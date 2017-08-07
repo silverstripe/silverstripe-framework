@@ -1,6 +1,4 @@
 nl:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Fout bij verwerken'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nee
     YESANSWER: Ja
@@ -43,7 +41,7 @@ nl:
     FilterBy: Filteren
     Find: Zoeken
     LinkExisting: 'Koppel een bestaand item'
-    NewRecord: 'Nieuw %s'
+    NewRecord: 'Nieuw {type}'
     NoItemsFound: 'Geen items gevonden.'
     PRINTEDAT: 'Geprint op'
     PRINTEDBY: 'Geprint door'
@@ -63,7 +61,7 @@ nl:
     Create: Aanmaken
     Delete: Verwijderen
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    Deleted: '%s %s verwijderd'
+    Deleted: '{type} {name} verwijderd'
     Save: Opslaan
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Bewerken
@@ -74,8 +72,6 @@ nl:
     IsNullLabel: 'Is null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is geen getal, enkel getallen worden door dit veld geaccepteerd'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Voer een geldig telefoonnummer in'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -97,17 +93,11 @@ nl:
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
     ERRORNOTREC: 'De gebruikersnaam en/of het wachtwoord wordt niet herkend'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten?'
-    BUTTONLOGIN: 'Opnieuw inloggen'
-    BUTTONLOGOUT: Uitloggen
     PASSWORDEXPIRED: '<p>Uw wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
-    LoginMessage: '<p>U kunt verder met wat u aan het doen was, door opnieuw in te loggen.</p>'
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>U bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als u niet automatisch wordt doorgestuurd.</p>'
-    TimedOutTitleAnonymous: 'Sessie is verlopen'
-    TimedOutTitleMember: 'Hallo {name}!<br />Uw sessie is verlopen.'
   SilverStripe\Security\Group:
     AddRole: 'Voeg een rol toe aan deze groep'
     Code: 'Groep code'
@@ -115,7 +105,7 @@ nl:
     DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
     Description: 'Omschrijving '
     GroupReminder: 'Als u de bovenliggende groep selecteert, neemt deze groep alle rollen over'
-    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "%s" toe te kennen'
+    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "{group}" toe te kennen'
     Locked: 'Gesloten?'
     NoRoles: 'Geen rollen gevonden'
     Parent: 'Bovenliggende groep'
@@ -134,7 +124,6 @@ nl:
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
     CONFIRMPASSWORD: 'Bevestig wachtwoord'
-    DefaultAdminFirstname: 'Standaard Beheerder'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
@@ -146,7 +135,6 @@ nl:
     INTERFACELANG: 'Interface taal'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
-    NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
     PASSWORD: Wachtwoord
     PASSWORDEXPIRED: 'Uw wachtwoord is verlopen. Kies een nieuw wachtwoord.'
     SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'
@@ -161,9 +149,9 @@ nl:
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s'
+    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
     PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
-    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
+    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal {minimum} karakters hebben'
   SilverStripe\Security\Permission:
     AdminGroup: Beheerder
     CONTENT_CATEGORY: Inhoudsrechten
@@ -174,14 +162,14 @@ nl:
     AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
     FromRole: 'geërfd van de rol "{title}"'
-    FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
+    FromRoleOnGroup: 'geërfd van rol "{roletitle}" in groep "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Alleen admin kan doorvoeren'
     PLURALNAME: Rollen
     SINGULARNAME: Rol
     Title: Titel
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
+    PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'

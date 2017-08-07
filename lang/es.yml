@@ -1,6 +1,4 @@
 es:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sí
@@ -31,7 +29,6 @@ es:
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
     CSRF_FAILED_MESSAGE: 'Parece que hubo un problema técnico. Por favor, haga clic en el botón Volver, recargue su navegador y vuelva a intentarlo.'
-    VALIDATIONCREDIT: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no concuerdan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
@@ -48,7 +45,7 @@ es:
     FilterBy: 'Filtrar por'
     Find: Buscar
     LinkExisting: 'Enlace Existente'
-    NewRecord: 'Nuevo %s'
+    NewRecord: 'Nuevo {type}'
     NoItemsFound: 'No se encontraron registros'
     PRINTEDAT: 'Impreso en'
     PRINTEDBY: 'Impreso por'
@@ -68,36 +65,10 @@ es:
     Create: Crear
     Delete: Borrar
     DeletePermissionsFailure: 'Sin permiso para borrar'
-    Deleted: 'Borrado %s %s'
+    Deleted: 'Borrado {type} {name}'
     Save: Guardar
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editar
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'
-    ANCHORSPAGENOTFOUND: 'No se encontró la página destino.'
-    CAPTIONTEXT: 'Texto del título'
-    CSSCLASS: 'Alineación / estilo'
-    CSSCLASSCENTER: 'Centrado, en si mismo.'
-    CSSCLASSLEFT: 'A la izquierda, con el texto flotando alrededor.'
-    CSSCLASSLEFTALONE: 'Centrado, en si mismo.'
-    CSSCLASSRIGHT: 'A la derecha, con el texto flotando alrededor.'
-    IMAGEALT: 'Texto alternativo (alt)'
-    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
-    IMAGEALTTEXTDESC: 'Se muestra a los lectores de pantalla o si no se puede mostrar la imagen'
-    IMAGEDIMENSIONS: Dimensiones
-    IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
-    IMAGETITLETEXT: 'Texto del título (tooltip)'
-    IMAGETITLETEXTDESC: 'Para obtener información adicional acerca de la imagen'
-    IMAGEWIDTHPX: Ancho
-    URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' pudo ser convertida a un recurso multimedia.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ERROR_ABSOLUTE: 'Sólo se pueden incrustar URLs absolutas'
-    ERROR_HOSTNAME: 'Este nombre de host de archivo no está incluido en la lista blanca'
-    ERROR_ID: 'Necesita un parámetro "ID" o "ArchivoURL" para identificar el archivo'
-    ERROR_NOTFOUND: 'No se puede encontrar el archivo para ver'
-    ERROR_OEMBED_REMOTE: 'La inclusión sólo es compatible con archivos remotos'
-    ERROR_SCHEME: 'Este esquema de archivo no está incluido en la lista blanca'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda
@@ -108,8 +79,6 @@ es:
     IsNullLabel: 'Es Nulo'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' no es un número, sólo números pueden ser aceptados para este campo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor introduzca un número de teléfono válido'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
   SilverStripe\ORM\DataObject:
@@ -155,17 +124,11 @@ es:
     ERRORNOTADMIN: 'Ese usuario no es un administrador.'
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: '¿Olvidó su contraseña?'
-    BUTTONLOGIN: 'Volver a iniciar sesión'
-    BUTTONLOGOUT: 'Cerrar Sesión'
     PASSWORDEXPIRED: '<p>Su contraseña expiró. <a target="_top" href="{link}">Por favor, elija una nueva.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Usuario inválido. <a target="_top" href="{link}">Por favor, vuelva a autenticar aquí</a> para continuar.</p>'
-    LoginMessage: '<p>Si Ud tiene cualquier trabajo sin guardar puede volver donde lo dejó, iniciando sesión más abajo.</p>'
     SUCCESS: Exito
     SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
-    TimedOutTitleAnonymous: 'Expiró su sesión.'
-    TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
   SilverStripe\Security\Group:
     AddRole: 'Agregar un rol para este grupo'
     Code: 'Código de grupo'
@@ -203,7 +166,6 @@ es:
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
     CURRENT_PASSWORD: 'Contraseña actual'
-    DefaultAdminFirstname: 'Administrador por defecto'
     EDIT_PASSWORD: 'Contraseña Nueva'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtalo de nuevo'
@@ -217,7 +179,6 @@ es:
     KEEPMESIGNEDIN: 'Manténme conectado'
     LOGGEDINAS: 'Estás conectado como {name}.'
     NEWPASSWORD: 'Nueva Contraseña'
-    NoPassword: 'No hay contraseña para este usuario'
     PASSWORD: Contraseña
     PASSWORDEXPIRED: 'Su contraseña expiró. Por favor, elija una nueva.'
     PLURALNAME: Miembros
@@ -243,7 +204,7 @@ es:
       other: '{count} Contraseñas de Miembros'
     SINGULARNAME: 'Contraseña del Miembro'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: %s'
+    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: {chars}'
     PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
     TOOSHORT: 'Tu contraseña es muy corta'
   SilverStripe\Security\Permission:
@@ -261,7 +222,7 @@ es:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
     FromRole: 'heredado desde la regla "{title}"'
-    FromRoleOnGroup: 'heredado desde la regla "%s" del grupo "%s"'
+    FromRoleOnGroup: 'heredado desde la regla "{roletitle}" del grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Sólo el administrador puede aplicar'
     PLURALNAME: Roles

@@ -1,6 +1,4 @@
 ar:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'طلب غير صحيح'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
@@ -31,7 +29,7 @@ ar:
     FilterBy: 'ترشيح باستخدام'
     Find: ابحث
     LinkExisting: 'الرابط موجود'
-    NewRecord: 'جديد %s'
+    NewRecord: 'جديد {type}'
     NoItemsFound: 'لا يوجد عناصر'
     PRINTEDAT: 'تم الطباعة في'
     PRINTEDBY: 'تم الطباعة بواسطة'
@@ -51,7 +49,7 @@ ar:
     Create: إنشاء
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
-    Deleted: '%s %s تم حذفه'
+    Deleted: '{type} {name} تم حذفه'
     Save: حفظ
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: تعديل
@@ -62,8 +60,6 @@ ar:
     IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -106,7 +102,6 @@ ar:
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
-    DefaultAdminFirstname: 'المدير الافتراضي'
     EMAIL: 'البريد الإلكتروني'
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
@@ -118,7 +113,6 @@ ar:
     INTERFACELANG: 'لغة الواجهة'
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
-    NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
     PASSWORD: 'رقم المرور'
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
@@ -132,9 +126,9 @@ ar:
     db_Password: 'الرقم السري'
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: %s'
+    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
     PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
-    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على %s أو أكثر من الحروف'
+    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على {minimum} أو أكثر من الحروف'
   SilverStripe\Security\Permission:
     AdminGroup: الإدارة
     CONTENT_CATEGORY: 'تصاريح المحتوى'
@@ -145,7 +139,7 @@ ar:
     AssignedTo: 'تم تعيينها إلى "{عنوان}"'
     FromGroup: 'موروثة من المجموعة "{عنوان}"'
     FromRole: 'موروثة من دور "{عنوان}"'
-    FromRoleOnGroup: 'توريث من القاعدة "%s"  على المجموعة "%s"'
+    FromRoleOnGroup: 'توريث من القاعدة "{roletitle}"  على المجموعة "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
     Title: عنوان
