@@ -41,8 +41,8 @@ Note that this will not allow you to utilise certain file versioning features in
 
 ```yaml
 
-	\SilverStripe\Assets\Flysystem\FlysystemAssetStore:
-		legacy_filenames: true
+    \SilverStripe\Assets\Flysystem\FlysystemAssetStore:
+        legacy_filenames: true
 ```
 
 ## Loading content into `DBFile`
@@ -52,19 +52,19 @@ within the assets folder).
 
 For example, to load a temporary file into a DataObject you could use the below:
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	<?
-	class Banner extends DataObject 
-	{
-		private static $db = [
-			'Image' => 'DBFile'
-		];
-	}
+    <?
+    class Banner extends DataObject 
+    {
+        private static $db = [
+            'Image' => 'DBFile'
+        ];
+    }
 
-	// Image could be assigned in other parts of the code using the below
-	$banner = new Banner();
-	$banner->Image->setFromLocalFile($tempfile['path'], 'uploads/banner-file.jpg');
+    // Image could be assigned in other parts of the code using the below
+    $banner = new Banner();
+    $banner->Image->setFromLocalFile($tempfile['path'], 'uploads/banner-file.jpg');
 
 ```
 

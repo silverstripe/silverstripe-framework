@@ -265,10 +265,10 @@ appropriate file extensions for your instance. This can be done by setting the `
 config.
 ```yaml
 
-	File: 
-	  allowed_extensions: 
-	    - 7zip 
-	    - xzip
+    File: 
+      allowed_extensions: 
+        - 7zip 
+        - xzip
 ```
 
 <div class="warning" markdown="1">

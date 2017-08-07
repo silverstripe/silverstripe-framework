@@ -28,21 +28,21 @@ Here is the configuration code for the button:
 
 
 ```php
-	public function getCMSActions() 
-	{
-		$fields = parent::getCMSActions();
+    public function getCMSActions() 
+    {
+        $fields = parent::getCMSActions();
 
-		$fields->fieldByName('MajorActions')->push(
-			$cleanupAction = FormAction::create('cleanup', 'Cleaned')
-				// Set up an icon for the neutral state that will use the default text.
-				->setAttribute('data-icon', 'accept')
-				// Initialise the alternate constructive state.
-				->setAttribute('data-icon-alternate', 'addpage')
-				->setAttribute('data-text-alternate', 'Clean-up now')
-		);
+        $fields->fieldByName('MajorActions')->push(
+            $cleanupAction = FormAction::create('cleanup', 'Cleaned')
+                // Set up an icon for the neutral state that will use the default text.
+                ->setAttribute('data-icon', 'accept')
+                // Initialise the alternate constructive state.
+                ->setAttribute('data-icon-alternate', 'addpage')
+                ->setAttribute('data-text-alternate', 'Clean-up now')
+        );
 
-		return $fields;
-	}
+        return $fields;
+    }
 ```
 
 You can control the state of the button from the backend by applying `ss-ui-alternate` class to the `FormAction`. To
@@ -55,15 +55,15 @@ Here we initialise the button based on the backend check, and assume that the bu
 
 
 ```php
-	public function getCMSActions() 
-	{
-		// ...
-		if ($this->needsCleaning()) {
-			// Will initialise the button into alternate state.
-			$cleanupAction->addExtraClass('ss-ui-alternate');
-		}
-		// ...
-	}
+    public function getCMSActions() 
+    {
+        // ...
+        if ($this->needsCleaning()) {
+            // Will initialise the button into alternate state.
+            $cleanupAction->addExtraClass('ss-ui-alternate');
+        }
+        // ...
+    }
 ```
 
 ## Frontend support
@@ -81,7 +81,7 @@ First of all, you can toggle the state of the button - execute this code in the 
 
 ```js
 
-	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('toggleAlternate');
+    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('toggleAlternate');
 ```
 
 Another, more useful, scenario is to check the current state.
@@ -89,7 +89,7 @@ Another, more useful, scenario is to check the current state.
 
 ```js
 
-	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
+    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
 ```
 
 You can also force the button into a specific state by using UI options.
@@ -97,7 +97,7 @@ You can also force the button into a specific state by using UI options.
 
 ```js
 
-	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button({showingAlternate: true});
+    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button({showingAlternate: true});
 ```
 
 This will allow you to react to user actions in the CMS and give immediate feedback. Here is an example taken from the
@@ -107,23 +107,23 @@ CMS core that tracks the changes to the input fields and reacts by enabling the 
 
 ```js
 
-	/**
-	 * Enable save buttons upon detecting changes to content.
-	 * "changed" class is added by jQuery.changetracker.
-	 */
-	$('.cms-edit-form .changed').entwine({
-		// This will execute when the class is added to the element.
-		onmatch: function(e) {
-			var form = this.closest('.cms-edit-form');
-			form.find('#Form_EditForm_action_save').button({showingAlternate: true});
-			form.find('#Form_EditForm_action_publish').button({showingAlternate: true});
-			this._super(e);
-		},
-		// Entwine requires us to define this, even if we don't use it.
-		onunmatch: function(e) {
-			this._super(e);
-		}
-	});
+    /**
+     * Enable save buttons upon detecting changes to content.
+     * "changed" class is added by jQuery.changetracker.
+     */
+    $('.cms-edit-form .changed').entwine({
+        // This will execute when the class is added to the element.
+        onmatch: function(e) {
+            var form = this.closest('.cms-edit-form');
+            form.find('#Form_EditForm_action_save').button({showingAlternate: true});
+            form.find('#Form_EditForm_action_publish').button({showingAlternate: true});
+            this._super(e);
+        },
+        // Entwine requires us to define this, even if we don't use it.
+        onunmatch: function(e) {
+            this._super(e);
+        }
+    });
 ```
 
 ## Frontend hooks
@@ -157,26 +157,26 @@ cases.
 
 ```js
 
-	(function($) {
+    (function($) {
 
-		$.entwine('mysite', function($){
-			$('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').entwine({
-				/**
-				 * onafterrefreshalternate is SS-specific jQuery UI hook that is executed
-				 * every time the button is rendered (including on initialisation).
-				 */
-				onbuttonafterrefreshalternate: function() {
-					if (this.button('option', 'showingAlternate')) {
-						this.addClass('ss-ui-action-constructive');
-					}
-					else {
-						this.removeClass('ss-ui-action-constructive');
-					}
-				}
-			});
-		});
+        $.entwine('mysite', function($){
+            $('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').entwine({
+                /**
+                 * onafterrefreshalternate is SS-specific jQuery UI hook that is executed
+                 * every time the button is rendered (including on initialisation).
+                 */
+                onbuttonafterrefreshalternate: function() {
+                    if (this.button('option', 'showingAlternate')) {
+                        this.addClass('ss-ui-action-constructive');
+                    }
+                    else {
+                        this.removeClass('ss-ui-action-constructive');
+                    }
+                }
+            });
+        });
 
-	}(jQuery));
+    }(jQuery));
 ```
 
 ## Summary

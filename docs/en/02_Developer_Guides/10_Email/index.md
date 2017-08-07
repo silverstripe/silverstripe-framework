@@ -24,8 +24,8 @@ SilverStripe\Core\Injector\Injector:
 
 
 ```php
-	$email = new Email($from, $to, $subject, $body);
-	$email->sendPlain();
+    $email = new Email($from, $to, $subject, $body);
+    $email->sendPlain();
 ```
 
 ### Sending combined HTML and plain text
@@ -36,8 +36,8 @@ to `*text*`).
 
 
 ```php
-	$email = new Email($from, $to, $subject, $body);
-	$email->send();
+    $email = new Email($from, $to, $subject, $body);
+    $email->send();
 ```
 
 <div class="info" markdown="1">
@@ -57,8 +57,8 @@ email object additional information using the `setData` and `addData` methods.
 
 ```ss
 
-	<h1>Hi $Member.FirstName</h1>
-	<p>You can go to $Link.</p>
+    <h1>Hi $Member.FirstName</h1>
+    <p>You can go to $Link.</p>
 ```
 
 The PHP Logic..
@@ -108,8 +108,8 @@ You can set the default sender address of emails through the `Email.admin_email`
 
 ```yaml
 
-	SilverStripe\Control\Email\Email:
-	  admin_email: support@silverstripe.org
+    SilverStripe\Control\Email\Email:
+      admin_email: support@silverstripe.org
   
 ```
 
@@ -135,11 +135,11 @@ Configuration of those properties looks like the following:
 
 
 ```php
-	if(Director::isLive()) {
-		Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
-	} else {
-		Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com");
-	}
+    if(Director::isLive()) {
+        Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
+    } else {
+        Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com");
+    }
 ```
 
 ### Setting custom "Reply To" email address.
@@ -149,8 +149,8 @@ email, do the following. This is encouraged especially when the domain responsib
 necessarily the same which should be used for return correspondence and should help prevent your message from being 
 marked as spam.
 ```php
-	$email = new Email(..);
-	$email->setReplyTo('me@address.com');
+    $email = new Email(..);
+    $email->setReplyTo('me@address.com');
 ```
 
 ### Setting Custom Headers
@@ -160,9 +160,9 @@ For email headers which do not have getters or setters (like setTo(), setFrom())
 
 
 ```php
-	$email = new Email(...);
-	$email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValue');
-	..
+    $email = new Email(...);
+    $email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValue');
+    ..
 ```
 
 <div class="info" markdown="1">

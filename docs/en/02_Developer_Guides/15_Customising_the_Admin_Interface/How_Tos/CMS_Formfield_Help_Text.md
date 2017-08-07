@@ -11,8 +11,8 @@ at the last position within the field, and expects unescaped HTML content.
 
 
 ```php
-	TextField::create('MyText', 'My Text Label')
-		->setDescription('More <strong>detailed</strong> help');
+    TextField::create('MyText', 'My Text Label')
+        ->setDescription('More <strong>detailed</strong> help');
 ```
 
 To show the help text as a tooltip instead of inline,
@@ -20,9 +20,9 @@ add a `.cms-description-tooltip` class.
 
 
 ```php
-	TextField::create('MyText', 'My Text Label')
-		->setDescription('More <strong>detailed</strong> help')
-		->addExtraClass('cms-description-tooltip');
+    TextField::create('MyText', 'My Text Label')
+        ->setDescription('More <strong>detailed</strong> help')
+        ->addExtraClass('cms-description-tooltip');
 ```
 
 Tooltips are only supported
@@ -40,9 +40,9 @@ by clicking the 'info' icon displayed alongside the field.
 
 
 ```php
-	TextField::create('MyText', 'My Text Label')
-		->setDescription('More <strong>detailed</strong> help')
-		->addExtraClass('cms-description-toggle');
+    TextField::create('MyText', 'My Text Label')
+        ->setDescription('More <strong>detailed</strong> help')
+        ->addExtraClass('cms-description-toggle');
 ```
 
 If you want to provide a custom icon for toggling the description, you can do that
@@ -50,10 +50,10 @@ by setting an additional `RightTitle`.
 
 
 ```php
-	TextField::create('MyText', 'My Text Label')
-		->setDescription('More <strong>detailed</strong> help')
-		->addExtraClass('cms-description-toggle')
-		->setRightTitle('<a class="cms-description-trigger">My custom icon</a>');
+    TextField::create('MyText', 'My Text Label')
+        ->setDescription('More <strong>detailed</strong> help')
+        ->addExtraClass('cms-description-toggle')
+        ->setRightTitle('<a class="cms-description-trigger">My custom icon</a>');
 ```
 
 Note: For more advanced help text we recommend using

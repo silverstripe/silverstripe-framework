@@ -32,11 +32,11 @@ functionality may not be included.
 
 ```ss
 
-	<head>
-		<% base_tag %>
+    <head>
+        <% base_tag %>
 
-		..
-	</head>
+        ..
+    </head>
 ```
 
 The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as <img
@@ -53,17 +53,17 @@ A `<% base_tag %>` is nearly always required or assumed by SilverStripe to exist
 
 Returns the currently logged in [Member](api:SilverStripe\Security\Member) instance, if there is one logged in.```ss
 
-	<% if $CurrentMember %>
-	  Welcome Back, $CurrentMember.FirstName
-	<% end_if %>
+    <% if $CurrentMember %>
+      Welcome Back, $CurrentMember.FirstName
+    <% end_if %>
 ```
 
 ## Title and Menu Title
 
 ```ss
 
-	$Title
-	$MenuTitle
+    $Title
+    $MenuTitle
 ```
 
 Most objects within SilverStripe will respond to `$Title` (i.e they should have a `Title` database field or at least a
@@ -80,7 +80,7 @@ If `MenuTitle` is left blank by the CMS author, it'll just default to the value 
 
 ```ss
 
-	$Content
+    $Content
 ```
 
 It returns the database content of the `Content` property. With the CMS Module, this is the value of the WYSIWYG editor
@@ -104,7 +104,7 @@ web pages. You'll need to install it via `composer`.
 
 ```ss
 
-	$SiteConfig.Title
+    $SiteConfig.Title
 ```
 
 The [SiteConfig](../configuration/siteconfig) object allows content authors to modify global data in the CMS, rather 
@@ -128,30 +128,30 @@ By default `$MetaTags` renders:
 
 ```ss
 
-	<title>Title of the Page</title>
-	<meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Title of the Page</title>
+    <meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
 `$MetaTags(false)` will render```ss
 
-	<meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
 If using `$MetaTags(false)` we can provide a more custom `title`.
 
 ```ss
 
-	$MetaTags(false)
-	<title>$Title - Bob's Fantasy Football</title>
+    $MetaTags(false)
+    <title>$Title - Bob's Fantasy Football</title>
 ```
 
 ## Links
 
 ```ss
 
-	<a href="$Link">..</a>
+    <a href="$Link">..</a>
 ```
 
 All objects that could be accessible in SilverStripe should define a `Link` method and an `AbsoluteLink` method. Link 
@@ -160,19 +160,19 @@ link.
 
 ```ss
 
-	$Link
-	<!-- returns /about-us/offices/ -->
+    $Link
+    <!-- returns /about-us/offices/ -->
 
-	$AbsoluteLink
-	<!-- returns http://yoursite.com/about-us/offices/ -->
+    $AbsoluteLink
+    <!-- returns http://yoursite.com/about-us/offices/ -->
 ```
 
 ### Linking Modes
 
 ```ss
 
-	$isSection
-	$isCurrent
+    $isSection
+    $isCurrent
 ```
 
 When looping over a list of `SiteTree` instances through a `<% loop $Menu %>` or `<% loop $Children %>`, `$isSection` and `$isCurrent`
@@ -182,11 +182,11 @@ For instance, to only show the menu item linked if it's the current one:
 
 ```ss
 
-	<% if $isCurrent %>
-		$Title
-	<% else %>
-		<a href="$Link">$Title</a>
-	<% end_if %>
+    <% if $isCurrent %>
+        $Title
+    <% else %>
+        <a href="$Link">$Title</a>
+    <% end_if %>
 ```
 
 An example for checking for `current` or `section` is as follows:
@@ -202,9 +202,9 @@ An example for checking for `current` or `section` is as follows:
 
 ```ss
 
-	<% if $InSection(about-us) %>
-		<p>You are viewing the about us section</p>
-	<% end_if %>
+    <% if $InSection(about-us) %>
+        <p>You are viewing the about us section</p>
+    <% end_if %>
 ```
 
 ### URLSegment
@@ -215,11 +215,11 @@ It can be used within templates to generate anchors or other CSS classes.
 
 ```ss
 
-	<div id="section-$URLSegment">
+    <div id="section-$URLSegment">
 
-	</div>
+    </div>
 
-	<!-- returns <div id="section-offices"> -->
+    <!-- returns <div id="section-offices"> -->
 ```
 
 ##  ClassName
@@ -230,18 +230,18 @@ behavior based on the page type used:
 
 ```ss
 
-	<body class="$ClassName">
+    <body class="$ClassName">
 
-	<!-- returns <body class="HomePage">, <body class="BlogPage"> -->
+    <!-- returns <body class="HomePage">, <body class="BlogPage"> -->
 ```
 
 ## Children Loops
 
 ```ss
 
-	<% loop $Children %>
+    <% loop $Children %>
 
-	<% end_loop %>
+    <% end_loop %>
 ```
 
 Will loop over all Children records of the current object context. Children are pages that sit under the current page in
@@ -256,9 +256,9 @@ context.
 
 ```ss
 
-	<% loop $ChildrenOf(<my-page-url>) %>
+    <% loop $ChildrenOf(<my-page-url>) %>
 
-	<% end_loop %>
+    <% end_loop %>
 ```
 
 Will create a list of the children of the given page, as identified by its `URLSegment` value. This can come in handy 
@@ -274,18 +274,18 @@ preference, `AllChildren` does not filter by `ShowInMenus`.
 
 ```ss
 
-	<% loop $AllChildren %>
-		...
-	<% end_loop %>
+    <% loop $AllChildren %>
+        ...
+    <% end_loop %>
 ```
 
 ### Menu Loops
 
 ```ss
 
-	<% loop $Menu(1) %>
-		...
-	<% end_loop %>
+    <% loop $Menu(1) %>
+        ...
+    <% end_loop %>
 ```
 
 `$Menu(1)` returns the top-level menu of the website. You can also create a sub-menu using `$Menu(2)`, and so forth.
@@ -298,9 +298,9 @@ Pages with the `ShowInMenus` property set to `false` will be filtered out.
 
 ```ss
 
-	<% with $Page(my-page) %>
-		$Title
-	<% end_with %>
+    <% with $Page(my-page) %>
+        $Title
+    <% end_with %>
 ```
 
 Page will return a single page from site, looking it up by URL. 
@@ -311,9 +311,9 @@ Page will return a single page from site, looking it up by URL.
 
 ```ss
 
-	<% with $Level(1) %>
-		$Title
-	<% end_with %>
+    <% with $Level(1) %>
+        $Title
+    <% end_with %>
 ```
 
 Will return a page in the current path, at the level specified by the numbers. It is based on the current page context, 
@@ -329,13 +329,13 @@ For example, imagine you're on the "bob marley" page, which is three levels in: 
 
 ```ss
 
-	<!-- given we're on 'Bob Marley' in "about us > staff > bob marley" -->
-	
-	$Parent.Title
-	<!-- returns 'staff' -->
+    <!-- given we're on 'Bob Marley' in "about us > staff > bob marley" -->
+    
+    $Parent.Title
+    <!-- returns 'staff' -->
 
-	$Parent.Parent.Title
-	<!-- returns 'about us' -->
+    $Parent.Parent.Title
+    <!-- returns 'about us' -->
 ```
 
 ## Navigating Scope
@@ -352,18 +352,18 @@ While you can achieve breadcrumbs through the `$Level(<level>)` control manually
 
 ```ss
 
-	$Breadcrumbs
+    $Breadcrumbs
 ```
 
 By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.ss`
 
 ```ss
 
-	<% if $Pages %>
-		<% loop $Pages %>
-			<% if $Last %>$Title.XML<% else %><a href="$Link">$MenuTitle.XML</a> &raquo;<% end_if %>
-		<% end_loop %>
-	<% end_if %>
+    <% if $Pages %>
+        <% loop $Pages %>
+            <% if $Last %>$Title.XML<% else %><a href="$Link">$MenuTitle.XML</a> &raquo;<% end_if %>
+        <% end_loop %>
+    <% end_if %>
 ```
 
 <div class="info" markdown="1">
@@ -375,7 +375,7 @@ To customise the markup that the `$Breadcrumbs` generates, copy `cms/templates/B
 
 ```ss
 
-	$Form
+    $Form
 ```
 
 A page will normally contain some content and potentially a form of some kind. For example, the log-in page has a the

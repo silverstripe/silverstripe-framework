@@ -23,15 +23,15 @@ You can do so by adding this static variable to your class definition:
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class MyDataObject extends DataObject 
-	{
+    class MyDataObject extends DataObject 
+    {
 
-		private static $create_table_options = [
-			'MySQLDatabase' => 'ENGINE=MyISAM'
-		];
-	}
+        private static $create_table_options = [
+            'MySQLDatabase' => 'ENGINE=MyISAM'
+        ];
+    }
 
 ```
 
@@ -52,28 +52,28 @@ Example DataObject:
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class SearchableDataObject extends DataObject 
-	{
-		
-		private static $db = [
-			"Title" => "Varchar(255)",
-			"Content" => "HTMLText",
-		];
+    class SearchableDataObject extends DataObject 
+    {
+        
+        private static $db = [
+            "Title" => "Varchar(255)",
+            "Content" => "HTMLText",
+        ];
 
-		private static $indexes = [
-			'SearchFields' => [
-				'type' => 'fulltext',
-				'columns' => ['Title', 'Content'],
-			]
-		];
+        private static $indexes = [
+            'SearchFields' => [
+                'type' => 'fulltext',
+                'columns' => ['Title', 'Content'],
+            ]
+        ];
 
-		private static $create_table_options = [
-			'MySQLDatabase' => 'ENGINE=MyISAM'
-		];
+        private static $create_table_options = [
+            'MySQLDatabase' => 'ENGINE=MyISAM'
+        ];
 
-	}
+    }
 
 ```
 
@@ -81,7 +81,7 @@ Performing the search:
 
 
 ```php
-	SearchableDataObject::get()->filter('SearchFields:Fulltext', 'search term');
+    SearchableDataObject::get()->filter('SearchFields:Fulltext', 'search term');
 ```
 
 If your search index is a single field size, then you may also specify the search filter by the name of the

@@ -21,15 +21,15 @@ also track versioned history.
 
 
 ```php
-	use SilverStripe\Versioned\Versioned;
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\Versioned\Versioned;
+    use SilverStripe\ORM\DataObject;
 
-	class MyStagedModel extends DataObject 
-	{
-		private static $extensions = [
-			Versioned::class
-		];
-	}
+    class MyStagedModel extends DataObject 
+    {
+        private static $extensions = [
+            Versioned::class
+        ];
+    }
 ```
 
 Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
@@ -37,14 +37,14 @@ can be specified by setting the constructor argument to "Versioned"
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class VersionedModel extends DataObject 
-	{
-		private static $extensions = [
-			"SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
-		];
-	}
+    class VersionedModel extends DataObject 
+    {
+        private static $extensions = [
+            "SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
+        ];
+    }
 ```
 
 <div class="notice" markdown="1">
@@ -87,13 +87,13 @@ By default, all records are retrieved from the "Draft" stage (so the `MyRecord` 
 explicitly request a certain stage through various getters on the `Versioned` class.
 
 ```php
-	// Fetching multiple records
-	$stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
-	$liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
+    // Fetching multiple records
+    $stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
+    $liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
 
-	// Fetching a single record
-	$stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
-	$liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
+    // Fetching a single record
+    $stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
+    $liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
 ```
 
 ### Historical Versions
@@ -102,7 +102,7 @@ The above commands will just retrieve the latest version of its respective stage
 in the `<class>_versions` tables.
 
 ```php
-	$historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
+    $historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
 ```
 
 <div class="alert" markdown="1">
@@ -115,9 +115,9 @@ objects, which expose the same database information as a `DataObject`, but also 
 a record was published.
 	
 ```php
-	$record = MyRecord::get()->byID(99); // stage doesn't matter here
-	$versions = $record->allVersions();
-	echo $versions->First()->Version; // instance of Versioned_Version
+    $record = MyRecord::get()->byID(99); // stage doesn't matter here
+    $versions = $record->allVersions();
+    echo $versions->First()->Version; // instance of Versioned_Version
 ```
 
 ### Writing Versions and Changing Stages
@@ -141,21 +141,21 @@ done via one of several ways:
    See "DataObject ownership" for reference on dependant objects.
 
 ```php
-	$record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
-	$record->MyField = 'changed';
-	// will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
-	// and write a row to `MyRecord_versions`.
-	$record->write(); 
-	// will copy the saved record information to the `MyRecord_Live` table
-	$record->publishRecursive();
+    $record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
+    $record->MyField = 'changed';
+    // will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
+    // and write a row to `MyRecord_versions`.
+    $record->write(); 
+    // will copy the saved record information to the `MyRecord_Live` table
+    $record->publishRecursive();
 ```
 
 Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
 
 ```php
-	$record = MyRecord::get()->byID(99); // stage doesn't matter here
-	// will remove the row from the `MyRecord_Live` table
-	$record->deleteFromStage(Versioned::LIVE);
+    $record = MyRecord::get()->byID(99); // stage doesn't matter here
+    // will remove the row from the `MyRecord_Live` table
+    $record->deleteFromStage(Versioned::LIVE);
 ```
 
 ### Forcing the Current Stage
@@ -164,11 +164,11 @@ The current stage is stored as global state on the object. It is usually modifie
 is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
 ```php
-	$origMode = Versioned::get_reading_mode(); // save current mode
-	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
-	Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
-	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
-	Versioned::set_reading_mode($origMode); // reset current mode
+    $origMode = Versioned::get_reading_mode(); // save current mode
+    $obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
+    Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
+    $obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
+    Versioned::set_reading_mode($origMode); // reset current mode
 ```
 
 ### DataObject ownership
@@ -191,32 +191,32 @@ without requiring any custom code.
 
 
 ```php
-	use SilverStripe\Versioned\Versioned;
-	use SilverStripe\Assets\Image;
-	use Page;
+    use SilverStripe\Versioned\Versioned;
+    use SilverStripe\Assets\Image;
+    use Page;
 
-	class MyPage extends Page 
-	{
-		private static $has_many = [
-			'Banners' => Banner::class
-		];
-		private static $owns = [
-			'Banners'
-		];
-	}
-	class Banner extends Page 
-	{
-		private static $extensions = [
-			Versioned::class
-		];
-		private static $has_one = [
-			'Parent' => MyPage::class,
-			'Image' => Image::class,
-		];
-		private static $owns = [
-			'Image'
-		];
-	}
+    class MyPage extends Page 
+    {
+        private static $has_many = [
+            'Banners' => Banner::class
+        ];
+        private static $owns = [
+            'Banners'
+        ];
+    }
+    class Banner extends Page 
+    {
+        private static $extensions = [
+            Versioned::class
+        ];
+        private static $has_one = [
+            'Parent' => MyPage::class,
+            'Image' => Image::class,
+        ];
+        private static $owns = [
+            'Image'
+        ];
+    }
 
 ```
 
@@ -236,35 +236,35 @@ that can be used to traverse between each, and then by ensuring you configure bo
 E.g.
 
 ```php
-	use SilverStripe\Versioned\Versioned;
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\Versioned\Versioned;
+    use SilverStripe\ORM\DataObject;
 
-	class MyParent extends DataObject 
-	{
-		private static $extensions = [
-			Versioned::class
-		];
-		private static $owns = [
-			'ChildObjects'
-		];
-		public function ChildObjects() 
-		{
-			return MyChild::get();
-		}
-	}
-	class MyChild extends DataObject 
-	{
-		private static $extensions = [
-			Versioned::class
-		];
-		private static $owned_by = [
-			'Parent'
-		];
-		public function Parent() 
-		{
-			return MyParent::get()->first();
-		}
-	}
+    class MyParent extends DataObject 
+    {
+        private static $extensions = [
+            Versioned::class
+        ];
+        private static $owns = [
+            'ChildObjects'
+        ];
+        public function ChildObjects() 
+        {
+            return MyChild::get();
+        }
+    }
+    class MyChild extends DataObject 
+    {
+        private static $extensions = [
+            Versioned::class
+        ];
+        private static $owned_by = [
+            'Parent'
+        ];
+        public function Parent() 
+        {
+            return MyParent::get()->first();
+        }
+    }
 
 ```
 
@@ -286,7 +286,7 @@ smaller modifications of the generated `DataList` objects.
 Example: Get the first 10 live records, filtered by creation date:
 
 ```php
-	$records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
+    $records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
 ```
 
 ### Permissions
@@ -395,11 +395,11 @@ to force a specific stage, we recommend the `Controller->init()` method for this
 
 **mysite/code/MyController.php**
 ```php
-	public function init() 
-	{
-		parent::init();
-		Versioned::set_stage(Versioned::DRAFT);
-	}
+    public function init() 
+    {
+        parent::init();
+        Versioned::set_stage(Versioned::DRAFT);
+    }
 ```
 
 ### Controllers

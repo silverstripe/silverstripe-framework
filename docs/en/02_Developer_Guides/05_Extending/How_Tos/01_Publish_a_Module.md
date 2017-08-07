@@ -19,31 +19,31 @@ this:
 
 ```js
 
-	{
-	  "name": "your-vendor-name/module-name",
-	  "description": "One-liner describing your module",
-	  "type": "silverstripe-module",
-	  "homepage": "http://github.com/your-vendor-name/module-name",
-	  "keywords": ["silverstripe", "some-tag", "some-other-tag"],
-	  "license": "BSD-3-Clause",
-	  "authors": [
-	    {"name": "Your Name","email": "your@email.com"}
-	  ],
-	  "support": {
-	    "issues": "http://github.com/your-vendor-name/module-name/issues"
-	  },
-	  "require": {
-	    "silverstripe/cms": "~3.1",
-	    "silverstripe/framework": "~3.1"
-	  },
-	  "extra": {
-	    "installer-name": "module-name",
-	    "screenshots": [
-	      "relative/path/screenshot1.png",
-	      "http://myhost.com/screenshot2.png"
-	    ]
-	  }
-	}
+    {
+      "name": "your-vendor-name/module-name",
+      "description": "One-liner describing your module",
+      "type": "silverstripe-module",
+      "homepage": "http://github.com/your-vendor-name/module-name",
+      "keywords": ["silverstripe", "some-tag", "some-other-tag"],
+      "license": "BSD-3-Clause",
+      "authors": [
+        {"name": "Your Name","email": "your@email.com"}
+      ],
+      "support": {
+        "issues": "http://github.com/your-vendor-name/module-name/issues"
+      },
+      "require": {
+        "silverstripe/cms": "~3.1",
+        "silverstripe/framework": "~3.1"
+      },
+      "extra": {
+        "installer-name": "module-name",
+        "screenshots": [
+          "relative/path/screenshot1.png",
+          "http://myhost.com/screenshot2.png"
+        ]
+      }
+    }
 ```
 
 Once your module is published online with a service like Github.com or Bitbucket.com, submit the repository to 

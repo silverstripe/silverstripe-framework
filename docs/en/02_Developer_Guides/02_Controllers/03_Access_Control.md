@@ -12,31 +12,31 @@ Any action you define on a controller must be defined in a `$allowed_actions` st
 directly calling methods that they shouldn't.
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
-		
-		private static $allowed_actions = [
-			// someaction can be accessed by anyone, any time
-			'someaction', 
+    class MyController extends Controller 
+    {
+        
+        private static $allowed_actions = [
+            // someaction can be accessed by anyone, any time
+            'someaction', 
 
-			// So can otheraction
-			'otheraction' => true, 
-			
-			// restrictedaction can only be people with ADMIN privilege
-			'restrictedaction' => 'ADMIN', 
+            // So can otheraction
+            'otheraction' => true, 
+            
+            // restrictedaction can only be people with ADMIN privilege
+            'restrictedaction' => 'ADMIN', 
 
-			// restricted to uses that have the 'CMS_ACCESS_CMSMain' access
-			'cmsrestrictedaction' => 'CMS_ACCESS_CMSMain',
-			
-			// complexaction can only be accessed if $this->canComplexAction() returns true.
-			'complexaction' => '->canComplexAction',
+            // restricted to uses that have the 'CMS_ACCESS_CMSMain' access
+            'cmsrestrictedaction' => 'CMS_ACCESS_CMSMain',
+            
+            // complexaction can only be accessed if $this->canComplexAction() returns true.
+            'complexaction' => '->canComplexAction',
 
-			// complexactioncheck can only be accessed if $this->canComplexAction("MyRestrictedAction", false, 42) is true.
-			'complexactioncheck' => '->canComplexAction("MyRestrictedAction", false, 42)',
-		];
-	}
+            // complexactioncheck can only be accessed if $this->canComplexAction("MyRestrictedAction", false, 42) is true.
+            'complexactioncheck' => '->canComplexAction("MyRestrictedAction", false, 42)',
+        ];
+    }
 
 ```
 
@@ -48,88 +48,88 @@ An action named "index" is white listed by default, unless `allowed_actions` is 
 is specifically restricted.
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	<?php 
-	class MyController extends Controller 
-	{
+    <?php 
+    class MyController extends Controller 
+    {
 
-		public function index() 
-		{
-			// allowed without an $allowed_action defined
-		}
-	}
+        public function index() 
+        {
+            // allowed without an $allowed_action defined
+        }
+    }
 ```
 
 `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ```php
-	use SilverStripe\Core\Extension;
+    use SilverStripe\Core\Extension;
 
-	class MyExtension extends Extension 
-	{
+    class MyExtension extends Extension 
+    {
 
-		private static $allowed_actions = [
-			'mycustomaction'
-		];
-	}
+        private static $allowed_actions = [
+            'mycustomaction'
+        ];
+    }
 
 ```
 
 Only public methods can be made accessible.
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
+    class MyController extends Controller 
+    {
 
-		private static $allowed_actions = [
-			'secure',
-			// secureaction won't work as it's private.
-		];
+        private static $allowed_actions = [
+            'secure',
+            // secureaction won't work as it's private.
+        ];
 
-		public function secure() 
-		{
-			// ..
-		}
+        public function secure() 
+        {
+            // ..
+        }
 
-		private function secureaction() 
-		{
-			// ..
-		}
-	}
+        private function secureaction() 
+        {
+            // ..
+        }
+    }
 
 ```
 
 If a method on a parent class is overwritten, access control for it has to be redefined as well.
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
+    class MyController extends Controller 
+    {
 
-		private static $allowed_actions = [
-			'action',
-		];
+        private static $allowed_actions = [
+            'action',
+        ];
 
-		public function action() 
-		{
-			// ..
-		}
-	}
-	class MyChildController extends MyController 
-	{
+        public function action() 
+        {
+            // ..
+        }
+    }
+    class MyChildController extends MyController 
+    {
 
-		private static $allowed_actions = [
-			'action', // required as we are redefining action
-		];
+        private static $allowed_actions = [
+            'action', // required as we are redefining action
+        ];
 
-		public function action() 
-		{
+        public function action() 
+        {
 
-		}
-	}
+        }
+    }
 
 ```
 
@@ -142,26 +142,26 @@ Access checks on parent classes need to be overwritten via the [Configuration AP
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 ```php
-	use SilverStripe\Forms\Form;
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Forms\Form;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
+    class MyController extends Controller 
+    {
 
-		private static $allowed_actions = [
-			'ContactForm' // use the Form method, not the action
-		];
+        private static $allowed_actions = [
+            'ContactForm' // use the Form method, not the action
+        ];
 
-		public function ContactForm() 
-		{
-			return new Form(..);
-		}
+        public function ContactForm() 
+        {
+            return new Form(..);
+        }
 
-		public function doContactForm($data, $form) 
-		{
-			// ..
-		}
-	}
+        public function doContactForm($data, $form) 
+        {
+            // ..
+        }
+    }
 
 ```
 
@@ -171,24 +171,24 @@ Each method responding to a URL can also implement custom permission checks, e.g
 the passed request data.
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
-		
-		private static $allowed_actions = [
-			'myaction'
-		];
-		
-		public function myaction($request) 
-		{
-			if(!$request->getVar('apikey')) {
-				return $this->httpError(403, 'No API key provided');
-			} 
-				
-			return 'valid';
-		}
-	}
+    class MyController extends Controller 
+    {
+        
+        private static $allowed_actions = [
+            'myaction'
+        ];
+        
+        public function myaction($request) 
+        {
+            if(!$request->getVar('apikey')) {
+                return $this->httpError(403, 'No API key provided');
+            } 
+                
+            return 'valid';
+        }
+    }
 
 ```
 
@@ -207,23 +207,23 @@ execution. This behavior can be used to implement permission checks.
 `init` is called for any possible action on the controller and before any specific method such as `index`.
 </div>
 ```php
-	use SilverStripe\Security\Permission;
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Security\Permission;
+    use SilverStripe\Control\Controller;
 
-	class MyController extends Controller 
-	{
-		
-		private static $allowed_actions = [];
-		
-		public function init() 
-		{
-			parent::init();
+    class MyController extends Controller 
+    {
+        
+        private static $allowed_actions = [];
+        
+        public function init() 
+        {
+            parent::init();
 
-			if(!Permission::check('ADMIN')) {
-				return $this->httpError(403);
-			}
-		}
-	}
+            if(!Permission::check('ADMIN')) {
+                return $this->httpError(403);
+            }
+        }
+    }
 
 ```
 

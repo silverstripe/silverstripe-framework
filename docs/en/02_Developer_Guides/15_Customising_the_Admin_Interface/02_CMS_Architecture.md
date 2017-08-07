@@ -57,16 +57,16 @@ The CMS interface can be accessed by default through the `admin/` URL. You can c
 
 ```yml
 
-	---
-	Name: myadmin
-	After:
-		- '#adminroutes'
-	---
-	Director:
-		rules:
-			'admin': ''
-			'newAdmin': 'AdminRootController'
-	---
+    ---
+    Name: myadmin
+    After:
+        - '#adminroutes'
+    ---
+    Director:
+        rules:
+            'admin': ''
+            'newAdmin': 'AdminRootController'
+    ---
 ```
 
 When extending the CMS or creating modules, you can take advantage of various functions that will return the configured admin URL (by default 'admin/' is returned):
@@ -75,7 +75,7 @@ In PHP you should use:
 
 
 ```php
-	AdminRootController::admin_url()
+    AdminRootController::admin_url()
 ```
 
 When writing templates use:
@@ -83,7 +83,7 @@ When writing templates use:
 
 ```ss
 
-	$AdminURL
+    $AdminURL
 ```
 
 And in JavaScript, this is avaible through the `ss` namespace
@@ -91,7 +91,7 @@ And in JavaScript, this is avaible through the `ss` namespace
 
 ```js
 
-	ss.config.adminUrl
+    ss.config.adminUrl
 ```
 
 ### Multiple Admin URL and overrides
@@ -162,45 +162,45 @@ Basic example form in a CMS controller subclass:
 
 
 ```php
-	use SilverStripe\Forms\TabSet;
-	use SilverStripe\Forms\FieldList;
-	use SilverStripe\Forms\Tab;
-	use SilverStripe\Forms\TextField;
-	use SilverStripe\Forms\FormAction;
-	use SilverStripe\Admin\LeftAndMain;
-	use SilverStripe\Admin\LeftAndMainFormRequestHandler;
+    use SilverStripe\Forms\TabSet;
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\Tab;
+    use SilverStripe\Forms\TextField;
+    use SilverStripe\Forms\FormAction;
+    use SilverStripe\Admin\LeftAndMain;
+    use SilverStripe\Admin\LeftAndMainFormRequestHandler;
 
-	class MyAdmin extends LeftAndMain 
-	{
-		function getEditForm() {
-			return Form::create(
-				$this,
-				'EditForm',
-				new FieldList(
-					TabSet::create(
-						'Root',
-						Tab::create('Main',
-							TextField::create('MyText')
-						)
-					)->setTemplate('CMSTabset')
-				),
-				new FieldList(
-					FormAction::create('doSubmit')
-				)
-			)
-				// Use a custom request handler
-				->setRequestHandler(
-					LeftAndMainFormRequestHandler::create($form)
-				)
-				// JS and CSS use this identifier
-				->setHTMLID('Form_EditForm')
-				// Render correct responses on validation errors
-				->setResponseNegotiator($this->getResponseNegotiator());
-				// Required for correct CMS layout
-				->addExtraClass('cms-edit-form')
-				->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-		}
-	}
+    class MyAdmin extends LeftAndMain 
+    {
+        function getEditForm() {
+            return Form::create(
+                $this,
+                'EditForm',
+                new FieldList(
+                    TabSet::create(
+                        'Root',
+                        Tab::create('Main',
+                            TextField::create('MyText')
+                        )
+                    )->setTemplate('CMSTabset')
+                ),
+                new FieldList(
+                    FormAction::create('doSubmit')
+                )
+            )
+                // Use a custom request handler
+                ->setRequestHandler(
+                    LeftAndMainFormRequestHandler::create($form)
+                )
+                // JS and CSS use this identifier
+                ->setHTMLID('Form_EditForm')
+                // Render correct responses on validation errors
+                ->setResponseNegotiator($this->getResponseNegotiator());
+                // Required for correct CMS layout
+                ->addExtraClass('cms-edit-form')
+                ->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+        }
+    }
 ```
 
 Note: Usually you don't need to worry about these settings,
@@ -307,12 +307,12 @@ Firstly, `reactRouter` must be passed as a boolean flag to indicate that this se
 controlled by the react section, and thus should suppress registration of a page.js route
 for this section.
 ```php
-	public function getClientConfig() 
-	{
-		return array_merge(parent::getClientConfig(), [
-			'reactRouter' => true
-		]);
-	}
+    public function getClientConfig() 
+    {
+        return array_merge(parent::getClientConfig(), [
+            'reactRouter' => true
+        ]);
+    }
 
 ```
 
@@ -321,33 +321,33 @@ with the reactRouteRegister component. This will need to be done on the `DOMCont
 to ensure routes are registered before window.load is invoked. 
 ```js
 
-	import { withRouter } from 'react-router';
-	import ConfigHelpers from 'lib/Config';
-	import reactRouteRegister from 'lib/ReactRouteRegister';
-	import MyAdmin from './MyAdmin';
-	
-	document.addEventListener('DOMContentLoaded', () => {
-		const sectionConfig = ConfigHelpers.getSection('MyAdmin');
-	
-		reactRouteRegister.add({
-			path: sectionConfig.url,
-			component: withRouter(MyAdminComponent),
-			childRoutes: [
-				{ path: 'form/:id/:view', component: MyAdminComponent },
-			],
-		});
-	});
+    import { withRouter } from 'react-router';
+    import ConfigHelpers from 'lib/Config';
+    import reactRouteRegister from 'lib/ReactRouteRegister';
+    import MyAdmin from './MyAdmin';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+    
+        reactRouteRegister.add({
+            path: sectionConfig.url,
+            component: withRouter(MyAdminComponent),
+            childRoutes: [
+                { path: 'form/:id/:view', component: MyAdminComponent },
+            ],
+        });
+    });
 ```
 
 Child routes can be registered post-boot by using `ReactRouteRegister` in the same way.
 ```js
 
-	// Register a nested url under `sectionConfig.url`
-	const sectionConfig = ConfigHelpers.getSection('MyAdmin');
-	reactRouteRegister.add({
-		path: 'nested',
-		component: NestedComponent,
-	}, [ sectionConfig.url ]);
+    // Register a nested url under `sectionConfig.url`
+    const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+    reactRouteRegister.add({
+        path: 'nested',
+        component: NestedComponent,
+    }, [ sectionConfig.url ]);
 ```
 
 ## PJAX: Partial template replacement through Ajax
@@ -375,54 +375,57 @@ in a single Ajax request.
 
 
 ```php
-	use SilverStripe\Admin\LeftAndMain;
+    use SilverStripe\Admin\LeftAndMain;
 
-	// mysite/code/MyAdmin.php
-	class MyAdmin extends LeftAndMain 
-	{
-		private static $url_segment = 'myadmin';
-		public function getResponseNegotiator() 
-		{
-			$negotiator = parent::getResponseNegotiator();
-			$controller = $this;
-			// Register a new callback
-			$negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
-				return $controller->MyRecordInfo();
-			});
-			return $negotiator;
-		}
-		public function MyRecordInfo() 
-		{
-			return $this->renderWith('MyRecordInfo');
-		}
-	}
+    // mysite/code/MyAdmin.php
+    class MyAdmin extends LeftAndMain 
+    {
+        private static $url_segment = 'myadmin';
+        public function getResponseNegotiator() 
+        {
+            $negotiator = parent::getResponseNegotiator();
+            $controller = $this;
+            // Register a new callback
+            $negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
+                return $controller->MyRecordInfo();
+            });
+            return $negotiator;
+        }
+        public function MyRecordInfo() 
+        {
+            return $this->renderWith('MyRecordInfo');
+        }
+    }
 ```
 
 ```js
-	// MyAdmin.ss
-	<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
-	<div>Static content (not affected by update)</div>
-	<% include MyRecordInfo %>
-	<a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
-		Update record info
-	</a>
+    // MyAdmin.ss
+    <% include SilverStripe\\Admin\\CMSBreadcrumbs %>
+    <div>Static content (not affected by update)</div>
+    <% include MyRecordInfo %>
+    <a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
+        Update record info
+    </a>
+```    
 
-	:::ss
-	// MyRecordInfo.ss
-	<div data-pjax-fragment="MyRecordInfo">
-		Current Record: $currentPage.Title
-	</div>
+```ss
+    // MyRecordInfo.ss
+    <div data-pjax-fragment="MyRecordInfo">
+        Current Record: $currentPage.Title
+    </div>
 ```
 
 A click on the link will cause the following (abbreviated) ajax HTTP request:
+
 ```
-	GET /admin/myadmin HTTP/1.1
-	X-Pjax:MyRecordInfo,Breadcrumbs
-	X-Requested-With:XMLHttpRequest
+    GET /admin/myadmin HTTP/1.1
+    X-Pjax:MyRecordInfo,Breadcrumbs
+    X-Requested-With:XMLHttpRequest
 ```
 ... and result in the following response:
+
 ```
-	{"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
+    {"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
 ```
 Keep in mind that the returned view isn't always decided upon when the Ajax request
 is fired, so the server might decide to change it based on its own logic,
@@ -432,7 +435,7 @@ On the client, you can set your preference through the `data-pjax-target` attrib
 on links or through the `X-Pjax` header. For firing off an Ajax request that is
 tracked in the browser history, use the `pjax` attribute on the state data.
 ```js
-	$('.cms-container').loadPanel(ss.config.adminUrl+'pages', null, {pjax: 'Content'});
+    $('.cms-container').loadPanel(ss.config.adminUrl+'pages', null, {pjax: 'Content'});
 ```
 ## Loading lightweight PJAX fragments
 
@@ -448,9 +451,9 @@ unrelated to the main flow.
 In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
 parallel as you want. This will not disturb the main navigation.
 ```js
-		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1');
-		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2');
-		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment3');
+        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1');
+        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2');
+        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment3');
 ```
 The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
 result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
@@ -468,21 +471,21 @@ will be triggered. In case of a request error a `loadfragmenterror` will be rais
 
 You can hook up a response handler that obtains all the details of the XHR request via Entwine handler:
 ```js
-		'from .cms-container': {
-			onafterloadfragment: function(e, data) {
-				// Say 'success'!
-				alert(data.status);
-			}
-		}
+        'from .cms-container': {
+            onafterloadfragment: function(e, data) {
+                // Say 'success'!
+                alert(data.status);
+            }
+        }
 ```
 Alternatively you can use the jQuery deferred API:
 ```js
-		$('.cms-container')
-			.loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1')
-			.success(function(data, status, xhr) {
-				// Say 'success'!
-				alert(status);
-			});
+        $('.cms-container')
+            .loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1')
+            .success(function(data, status, xhr) {
+                // Say 'success'!
+                alert(status);
+            });
 ```
 ## Ajax Redirects
 
@@ -505,17 +508,17 @@ without affecting the response body.
 
 
 ```php
-	use SilverStripe\Admin\LeftAndMain;
+    use SilverStripe\Admin\LeftAndMain;
 
-	class MyController extends LeftAndMain 
-	{
-	class myaction() 
-	{
-			// ...
-			$this->getResponse()->addHeader('X-Controller', 'MyOtherController');
-			return $html;
-		}
-	}
+    class MyController extends LeftAndMain 
+    {
+    class myaction() 
+    {
+            // ...
+            $this->getResponse()->addHeader('X-Controller', 'MyOtherController');
+            return $html;
+        }
+    }
 ```
 
 Built-in headers are:
@@ -569,12 +572,12 @@ which is picked up by the menu:
 
 
 ```php
-	public function mycontrollermethod() 
-	{
-		// .. logic here
-		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
-		return 'my response';
-	}
+    public function mycontrollermethod() 
+    {
+        // .. logic here
+        $this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
+        return 'my response';
+    }
 ```
 
 This is usually handled by the existing [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) logic,
@@ -623,29 +626,29 @@ Form template with custom tab navigation (trimmed down):
 
 ```ss
 
-	<form $FormAttributes data-layout-type="border">
+    <form $FormAttributes data-layout-type="border">
 
-		<div class="cms-content-header north">
-			<% if Fields.hasTabset %>
-				<% with Fields.fieldByName('Root') %>
-				<div class="cms-content-header-tabs">
-					<ul>
-					<% loop Tabs %>
-						<li><a href="#$id">$Title</a></li>
-					<% end_loop %>
-					</ul>
-				</div>
-				<% end_with %>
-			<% end_if %>
-		</div>
+        <div class="cms-content-header north">
+            <% if Fields.hasTabset %>
+                <% with Fields.fieldByName('Root') %>
+                <div class="cms-content-header-tabs">
+                    <ul>
+                    <% loop Tabs %>
+                        <li><a href="#$id">$Title</a></li>
+                    <% end_loop %>
+                    </ul>
+                </div>
+                <% end_with %>
+            <% end_if %>
+        </div>
 
-		<div class="cms-content-fields center">
-			<fieldset>
-				<% loop Fields %>$FieldHolder<% end_loop %>
-			</fieldset>
-		</div>
+        <div class="cms-content-fields center">
+            <fieldset>
+                <% loop Fields %>$FieldHolder<% end_loop %>
+            </fieldset>
+        </div>
 
-	</form>
+    </form>
 ```
 
 Tabset template without tab navigation (e.g. `CMSTabset.ss`)
@@ -653,19 +656,19 @@ Tabset template without tab navigation (e.g. `CMSTabset.ss`)
 
 ```ss
 
-	<div $AttributesHTML>
-		<% loop Tabs %>
-			<% if Tabs %>
-				$FieldHolder
-			<% else %>
-				<div $AttributesHTML>
-					<% loop Fields %>
-						$FieldHolder
-					<% end_loop %>
-				</div>
-			<% end_if %>
-		<% end_loop %>
-	</div>
+    <div $AttributesHTML>
+        <% loop Tabs %>
+            <% if Tabs %>
+                $FieldHolder
+            <% else %>
+                <div $AttributesHTML>
+                    <% loop Fields %>
+                        $FieldHolder
+                    <% end_loop %>
+                </div>
+            <% end_if %>
+        <% end_loop %>
+    </div>
 ```
 
 Lazy loading works based on the `href` attribute of the tab navigation.
@@ -679,20 +682,20 @@ and load the HTML content into the main view. Example:
 
 ```ss
 
-	<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
-		<ul>
-			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-				<a href="{$AdminURL}mytabs/tab1" class="cms-panel-link">
-					Tab1
-				</a>
-			</li>
-			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-				<a href="{$AdminURL}mytabs/tab2" class="cms-panel-link">
-					Tab2
-				</a>
-			</li>
-		</ul>
-	</div>
+    <div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
+        <ul>
+            <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+                <a href="{$AdminURL}mytabs/tab1" class="cms-panel-link">
+                    Tab1
+                </a>
+            </li>
+            <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+                <a href="{$AdminURL}mytabs/tab2" class="cms-panel-link">
+                    Tab2
+                </a>
+            </li>
+        </ul>
+    </div>
 ```
 
 The URL endpoints `{$AdminURL}mytabs/tab1` and `{$AdminURL}mytabs/tab2`

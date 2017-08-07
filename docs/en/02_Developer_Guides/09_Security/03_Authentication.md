@@ -39,9 +39,9 @@ and password to be configured for a single special user outside of the normal me
 
 It is advisable to configure this user in your `.env` file inside of the web root, as below:
 ```
-	# Configure a default username and password to access the CMS on all sites in this environment.
-	SS_DEFAULT_ADMIN_USERNAME="admin"
-	SS_DEFAULT_ADMIN_PASSWORD="password"
+    # Configure a default username and password to access the CMS on all sites in this environment.
+    SS_DEFAULT_ADMIN_USERNAME="admin"
+    SS_DEFAULT_ADMIN_PASSWORD="password"
 ```
 When a user logs in with these credentials, then a [Member](api:SilverStripe\Security\Member) with the Email 'admin' will be generated in
 the database, but without any password information. This means that the password can be reset or changed by simply

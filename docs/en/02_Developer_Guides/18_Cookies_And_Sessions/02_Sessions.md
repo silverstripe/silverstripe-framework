@@ -19,10 +19,10 @@ use SilverStripe\Control\Controller;
 
 class MyController extends Controller
 {
-	public function MySession()
-	{
-		return $this->getRequest()->getSession();
-	}
+    public function MySession()
+    {
+        return $this->getRequest()->getSession();
+    }
 }
 ```
 
@@ -37,7 +37,7 @@ $session = $request->getSession();
 
 
 ```php
-	$session->set('MyValue', 6);
+    $session->set('MyValue', 6);
 ```
 
 Saves the value of to session data. You can also save arrays or serialized objects in session (but note there may be 
@@ -45,12 +45,12 @@ size restrictions as to how much you can save).
 
 
 ```php
-	// saves an array
-	$session->set('MyArrayOfValues', ['1','2','3']);
+    // saves an array
+    $session->set('MyArrayOfValues', ['1','2','3']);
 
-	// saves an object (you'll have to unserialize it back)
-	$object = new Object();
-	$session->set('MyObject', serialize($object));
+    // saves an object (you'll have to unserialize it back)
+    $object = new Object();
+    $session->set('MyObject', serialize($object));
 
 ```
 
@@ -62,14 +62,14 @@ can use this anywhere in your PHP files.
 
 
 ```php
-	echo $session->get('MyValue'); 
-	// returns 6
+    echo $session->get('MyValue'); 
+    // returns 6
 
-	$data = $session->get('MyArrayOfValues'); 
-	// $data = array(1,2,3)
+    $data = $session->get('MyArrayOfValues'); 
+    // $data = array(1,2,3)
 
-	$object = unserialize($session->get('MyObject', $object)); 
-	// $object = Object()
+    $object = unserialize($session->get('MyObject', $object)); 
+    // $object = Object()
 
 ```
 
@@ -77,8 +77,8 @@ can use this anywhere in your PHP files.
 
 You can also get all the values in the session at once. This is useful for debugging.
 ```php
-	$session->getAll();
-	// returns an array of all the session values.
+    $session->getAll();
+    // returns an array of all the session values.
 
 ```
 
@@ -87,13 +87,13 @@ You can also get all the values in the session at once. This is useful for debug
 Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have
 to specifically remove it.
 ```php
-	$session->clear('MyValue');
+    $session->clear('MyValue');
 ```
 
 Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
 including form and page comment information. None of this is vital but `clear_all` will clear everything.
 ```php
-	$session->clearAll();
+    $session->clearAll();
 ```
 
 ## Secure Session Cookie

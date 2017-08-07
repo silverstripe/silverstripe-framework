@@ -9,26 +9,26 @@ subclass the base `Controller` class.
 **mysite/code/controllers/TeamController.php**
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class TeamController extends Controller 
-	{
-			
-		private static $allowed_actions = [
-			'players',
-			'index'
-		];
-		
-		public function index(HTTPRequest $request) 
-		{
-			// ..
-		}
+    class TeamController extends Controller 
+    {
+            
+        private static $allowed_actions = [
+            'players',
+            'index'
+        ];
+        
+        public function index(HTTPRequest $request) 
+        {
+            // ..
+        }
 
-		public function players(HTTPRequest $request) 
-		{
-			print_r($request->allParams());
-		}
-	}
+        public function players(HTTPRequest $request) 
+        {
+            print_r($request->allParams());
+        }
+    }
 
 ```
 
@@ -51,13 +51,13 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 
 ```yml
 
-	---
-	Name: mysiteroutes
-	After: framework/routes#coreroutes
-	---
-	SilverStripe\Control\Director:
-	  rules:
-	    'teams//$Action/$ID/$Name': 'TeamController'
+    ---
+    Name: mysiteroutes
+    After: framework/routes#coreroutes
+    ---
+    SilverStripe\Control\Director:
+      rules:
+        'teams//$Action/$ID/$Name': 'TeamController'
 ```
 
 For more information about creating custom routes, see the [Routing](routing) documentation.
@@ -81,62 +81,62 @@ Action methods can return one of four main things:
 **mysite/code/controllers/TeamController.php**
 
 ```php
-	/**
-	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
-	 * 'MyTeamName' and continues on with generating the response.
-	 */
-	public function index(HTTPRequest $request) 
-	{
-		return [
-			'Title' => 'My Team Name'
-		];
-	}
+    /**
+     * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
+     * 'MyTeamName' and continues on with generating the response.
+     */
+    public function index(HTTPRequest $request) 
+    {
+        return [
+            'Title' => 'My Team Name'
+        ];
+    }
 
-	/**
-	 * We can manually create a response and return that to ignore any previous data.
-	 */
-	public function someaction(HTTPRequest $request) 
-	{
-		$this->setResponse(new HTTPResponse());
-		$this->getResponse()->setStatusCode(400);
-		$this->getResponse()->setBody('invalid');
+    /**
+     * We can manually create a response and return that to ignore any previous data.
+     */
+    public function someaction(HTTPRequest $request) 
+    {
+        $this->setResponse(new HTTPResponse());
+        $this->getResponse()->setStatusCode(400);
+        $this->getResponse()->setBody('invalid');
 
-		return $this->getResponse();
-	}
+        return $this->getResponse();
+    }
 
-	/**
-	 * Or, we can modify the response that is waiting to go out.
-	 */
-	public function anotheraction(HTTPRequest $request) 
-	{
-		$this->getResponse()->setStatusCode(400);
+    /**
+     * Or, we can modify the response that is waiting to go out.
+     */
+    public function anotheraction(HTTPRequest $request) 
+    {
+        $this->getResponse()->setStatusCode(400);
 
-		return $this->getResponse();
-	}
+        return $this->getResponse();
+    }
 
-	/**
-	 * We can render HTML and leave SilverStripe to set the response code and body.
-	 */
-	public function htmlaction() 
-	{
-		return $this->customise(new ArrayData([
-			'Title' => 'HTML Action'
-		]))->renderWith('MyCustomTemplate');
-	}
+    /**
+     * We can render HTML and leave SilverStripe to set the response code and body.
+     */
+    public function htmlaction() 
+    {
+        return $this->customise(new ArrayData([
+            'Title' => 'HTML Action'
+        ]))->renderWith('MyCustomTemplate');
+    }
 
-	/**
-	 * We can send stuff to the browser which isn't HTML
-	 */
-	public function ajaxaction() 
-	{
-		$this->getResponse()->setBody(json_encode([
-			'json' => true
-		]));
+    /**
+     * We can send stuff to the browser which isn't HTML
+     */
+    public function ajaxaction() 
+    {
+        $this->getResponse()->setBody(json_encode([
+            'json' => true
+        ]));
 
-		$this->getResponse()->addHeader("Content-type", "application/json");
+        $this->getResponse()->addHeader("Content-type", "application/json");
 
-		return $this->getResponse().
-	}
+        return $this->getResponse().
+    }
 
 ```
 
@@ -167,10 +167,10 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 **mysite/code/controllers/TeamController.php**
 
 ```php
-	public function Link($action = null) 
-	{
-		return Controller::join_links('teams', $action);
-	}
+    public function Link($action = null) 
+    {
+        return Controller::join_links('teams', $action);
+    }
 ```
 
 <div class="info" markdown="1">

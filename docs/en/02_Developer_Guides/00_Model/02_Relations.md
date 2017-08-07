@@ -16,26 +16,26 @@ A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in
 "TeamID" on the "Player"-table.
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
+    class Team extends DataObject 
+    {
 
-		private static $db = [
-			'Title' => 'Varchar'
-		];
+        private static $db = [
+            'Title' => 'Varchar'
+        ];
 
-		private static $has_many = [
-			'Players' => 'Player'
-		];
-	}
-	class Player extends DataObject 
-	{
+        private static $has_many = [
+            'Players' => 'Player'
+        ];
+    }
+    class Player extends DataObject 
+    {
 
-	  private static $has_one = [
-	    "Team" => "Team",
-	  ];
-	}
+      private static $has_one = [
+        "Team" => "Team",
+      ];
+    }
 
 ```
 
@@ -45,24 +45,24 @@ and provides a short syntax for accessing the related object.
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
 
 ```php
-	$player = Player::get()->byId(1);
+    $player = Player::get()->byId(1);
 
-	$team = $player->Team();
-	// returns a 'Team' instance.
+    $team = $player->Team();
+    // returns a 'Team' instance.
 
-	echo $player->Team()->Title;
-	// returns the 'Title' column on the 'Team' or `getTitle` if it exists.
+    echo $player->Team()->Title;
+    // returns the 'Title' column on the 'Team' or `getTitle` if it exists.
 ```
 
 The relationship can also be navigated in [templates](../templates).
 	
 ```ss
 
-	<% with $Player %>
-		<% if $Team %>
-			Plays for $Team.Title
-		<% end_if %>
-	<% end_with %>
+    <% with $Player %>
+        <% if $Team %>
+            Plays for $Team.Title
+        <% end_if %>
+    <% end_with %>
 ```
 
 ## Polymorphic has_one
@@ -77,30 +77,30 @@ To specify that a has_one relation is polymorphic set the type to 'DataObject'.
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject 
-	{
-		private static $has_many = [
-			"Fans" => "Fan.FanOf"
-		];
-	}
-	class Team extends DataObject 
-	{
-		private static $has_many = [
-			"Fans" => "Fan.FanOf"
-		];
-	}
+    class Player extends DataObject 
+    {
+        private static $has_many = [
+            "Fans" => "Fan.FanOf"
+        ];
+    }
+    class Team extends DataObject 
+    {
+        private static $has_many = [
+            "Fans" => "Fan.FanOf"
+        ];
+    }
 
-	// Type of object returned by $fan->FanOf() will vary
-	class Fan extends DataObject 
-	{
+    // Type of object returned by $fan->FanOf() will vary
+    class Fan extends DataObject 
+    {
 
-		// Generates columns FanOfID and FanOfClass
-		private static $has_one = [
-			"FanOf" => "DataObject"
-		];
-	}
+        // Generates columns FanOfID and FanOfClass
+        private static $has_one = [
+            "FanOf" => "DataObject"
+        ];
+    }
 
 ```
 
@@ -122,26 +122,26 @@ available on both ends.
 </div>
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
+    class Team extends DataObject 
+    {
 
-		private static $db = [
-			'Title' => 'Varchar'
-		];
+        private static $db = [
+            'Title' => 'Varchar'
+        ];
 
-		private static $has_many = [
-			'Players' => 'Player'
-		];
-	}
-	class Player extends DataObject 
-	{
+        private static $has_many = [
+            'Players' => 'Player'
+        ];
+    }
+    class Player extends DataObject 
+    {
 
-	  private static $has_one = [
-	    "Team" => "Team",
-	  ];
-	}
+      private static $has_one = [
+        "Team" => "Team",
+      ];
+    }
 
 ```
 
@@ -149,40 +149,40 @@ Much like the `has_one` relationship, `has_many` can be navigated through the `O
 you will get an instance of [HasManyList](api:SilverStripe\ORM\HasManyList) rather than the object.
 
 ```php
-	$team = Team::get()->first();
+    $team = Team::get()->first();
 
-	echo $team->Players();
-	// [HasManyList]
+    echo $team->Players();
+    // [HasManyList]
 
-	echo $team->Players()->Count();
-	// returns '14';
+    echo $team->Players()->Count();
+    // returns '14';
 
-	foreach($team->Players() as $player) {
-		echo $player->FirstName;
-	}
+    foreach($team->Players() as $player) {
+        echo $player->FirstName;
+    }
 ```
 
 To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Person extends DataObject 
-	{
+    class Person extends DataObject 
+    {
 
-		private static $has_many = [
-			"Managing" => "Company.Manager",
-			"Cleaning" => "Company.Cleaner",
-		];
-	}
-	class Company extends DataObject 
-	{
+        private static $has_many = [
+            "Managing" => "Company.Manager",
+            "Cleaning" => "Company.Cleaner",
+        ];
+    }
+    class Company extends DataObject 
+    {
 
-		private static $has_one = [
-			"Manager" => "Person",
-			"Cleaner" => "Person"
-		];
-	}
+        private static $has_one = [
+            "Manager" => "Person",
+            "Cleaner" => "Person"
+        ];
+    }
 
 ```
 
@@ -191,14 +191,14 @@ named.
 
 If you're using the default scaffolded form fields with multiple `has_one` relationships, you will end up with a CMS field for each relation. If you don't want these you can remove them by their IDs:
 
-    :::php
+```php
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $fields->removeByName(array('ManagerID', 'CleanerID'));
         return $fields;
     }
-
+```
 
 ## belongs_to
 
@@ -211,22 +211,22 @@ Similarly with `$has_many`, dot notation can be used to explicitly specify the `
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
-		
-		private static $has_one = [
-			'Coach' => 'Coach'
-		];
-	}
-	class Coach extends DataObject 
-	{
-		
-		private static $belongs_to = [
-			'Team' => 'Team.Coach'
-		];
-	}
+    class Team extends DataObject 
+    {
+        
+        private static $has_one = [
+            'Coach' => 'Coach'
+        ];
+    }
+    class Coach extends DataObject 
+    {
+        
+        private static $belongs_to = [
+            'Team' => 'Team.Coach'
+        ];
+    }
 
 ```
 
@@ -246,10 +246,10 @@ The only difference being you will get an instance of [ManyManyList](api:SilverS
 [ManyManyThroughList](api:SilverStripe\ORM\ManyManyThroughList) rather than the object.
 
 ```php
-	$team = Team::get()->byId(1);
+    $team = Team::get()->byId(1);
 
-	$supporters = $team->Supporters();
-	// returns a 'ManyManyList' instance.
+    $supporters = $team->Supporters();
+    // returns a 'ManyManyList' instance.
 ```
 
 ### Automatic many_many table
@@ -263,26 +263,26 @@ config to add extra columns.
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
-	  private static $many_many = [
-	    "Supporters" => "Supporter",
-	  ];
-	  private static $many_many_extraFields = [
-	    'Supporters' => [
-	      'Ranking' => 'Int' 
-	    ]
-	  ];
-	}
-	class Supporter extends DataObject 
-	{
+    class Team extends DataObject 
+    {
+      private static $many_many = [
+        "Supporters" => "Supporter",
+      ];
+      private static $many_many_extraFields = [
+        'Supporters' => [
+          'Ranking' => 'Int' 
+        ]
+      ];
+    }
+    class Supporter extends DataObject 
+    {
 
-	  private static $belongs_many_many = [
-	    "Supports" => "Team",
-	  ];
-	}
+      private static $belongs_many_many = [
+        "Supports" => "Team",
+      ];
+    }
 ```
 
 ### many_many through relationship joined on a separate DataObject
@@ -308,35 +308,35 @@ or child record.
 The syntax for `belongs_many_many` is unchanged.
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
-	  private static $many_many = [
-	    "Supporters" => [
-	      'through' => 'TeamSupporter',
-	      'from' => 'Team',
-	      'to' => 'Supporter',
-	    ]
-	  ];
-	}
-	class Supporter extends DataObject 
-	{
-	  private static $belongs_many_many = [
-	    "Supports" => "Team",
-	  ];
-	}
-	class TeamSupporter extends DataObject 
-	{
-	  private static $db = [
-	    'Ranking' => 'Int',
-	  ];
-	  
-	  private static $has_one = [
-	    'Team' => 'Team',
-	    'Supporter' => 'Supporter'
-	  ];
-	}
+    class Team extends DataObject 
+    {
+      private static $many_many = [
+        "Supporters" => [
+          'through' => 'TeamSupporter',
+          'from' => 'Team',
+          'to' => 'Supporter',
+        ]
+      ];
+    }
+    class Supporter extends DataObject 
+    {
+      private static $belongs_many_many = [
+        "Supports" => "Team",
+      ];
+    }
+    class TeamSupporter extends DataObject 
+    {
+      private static $db = [
+        'Ranking' => 'Int',
+      ];
+      
+      private static $has_one = [
+        'Team' => 'Team',
+        'Supporter' => 'Supporter'
+      ];
+    }
 ```
 
 In order to filter on the join table during queries, you can use the class name of the joining table
@@ -344,8 +344,8 @@ for any sql conditions.
 
 
 ```php
-	$team = Team::get()->byId(1);
-	$supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
+    $team = Team::get()->byId(1);
+    $supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
 ```
 
 Note: ->filter() currently does not support joined fields natively due to the fact that the
@@ -359,11 +359,11 @@ The joined record can be accessed via `Join` or `TeamSupporter` property (many_m
 	
 ```ss
 
-	<% with $Supporter %>
-		<% loop $Supports %>
-			Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
-		<% end_if %>
-	<% end_with %>
+    <% with $Supporter %>
+        <% loop $Supports %>
+            Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
+        <% end_if %>
+    <% end_with %>
 ```
 
 You can also use `$Join` in place of the join class alias (`$TeamSupporter`), if your template
@@ -379,24 +379,24 @@ distinguish them like below:
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Category extends DataObject 
-	{
-		
-		private static $many_many = [
-			'Products' => 'Product',
-			'FeaturedProducts' => 'Product'
-		];
-	}
-	class Product extends DataObject 
-	{
-		
-		private static $belongs_many_many = [
-			'Categories' => 'Category.Products',
-			'FeaturedInCategories' => 'Category.FeaturedProducts'
-		];
-	}
+    class Category extends DataObject 
+    {
+        
+        private static $many_many = [
+            'Products' => 'Product',
+            'FeaturedProducts' => 'Product'
+        ];
+    }
+    class Product extends DataObject 
+    {
+        
+        private static $belongs_many_many = [
+            'Categories' => 'Category.Products',
+            'FeaturedInCategories' => 'Category.FeaturedProducts'
+        ];
+    }
 
 ```
 
@@ -413,15 +413,15 @@ encapsulated by [HasManyList](api:SilverStripe\ORM\HasManyList) and [ManyManyLis
 and `remove()` method.
 
 ```php
-	$team = Team::get()->byId(1);
+    $team = Team::get()->byId(1);
 
-	// create a new supporter
-	$supporter = new Supporter();
-	$supporter->Name = "Foo";
-	$supporter->write();
+    // create a new supporter
+    $supporter = new Supporter();
+    $supporter->Name = "Foo";
+    $supporter->write();
 
-	// add the supporter.
-	$team->Supporters()->add($supporter);
+    // add the supporter.
+    $team->Supporters()->add($supporter);
 ```
 
 ## Custom Relations
@@ -432,20 +432,20 @@ You can use the ORM to get a filtered result list without writing any SQL. For e
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class Team extends DataObject 
-	{
+    class Team extends DataObject 
+    {
 
-	  private static $has_many = [
-	    "Players" => "Player"
-	  ];
-	
-	  public function ActivePlayers() 
-	  {
-	  	return $this->Players()->filter('Status', 'Active');
-	  }
-	}
+      private static $has_many = [
+        "Players" => "Player"
+      ];
+    
+      public function ActivePlayers() 
+      {
+          return $this->Players()->filter('Status', 'Active');
+      }
+    }
 
 ```
 

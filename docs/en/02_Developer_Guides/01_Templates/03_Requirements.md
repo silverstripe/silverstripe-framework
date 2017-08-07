@@ -17,9 +17,9 @@ The `Requirements` class can work with arbitrary file paths.
 
 ```ss
 
-	<% require css("<my-module-dir>/css/some_file.css") %>
-	<% require themedCSS("some_themed_file") %>
-	<% require javascript("<my-module-dir>/javascript/some_file.js") %>
+    <% require css("<my-module-dir>/css/some_file.css") %>
+    <% require themedCSS("some_themed_file") %>
+    <% require javascript("<my-module-dir>/javascript/some_file.js") %>
 ```
 
 <div class="alert" markdown="1">
@@ -97,11 +97,11 @@ You can also use the second argument to add the 'async' and/or 'defer attributes
 
 ```php
 Requirements::javascript(
-	"<my-module-dir>/javascript/some_file.js", 
-	[
-		"async" => true,
-		"defer" => true,
-	]
+    "<my-module-dir>/javascript/some_file.js", 
+    [
+        "async" => true,
+        "defer" => true,
+    ]
 );
 ```
 
@@ -281,13 +281,13 @@ class MyMinifier implements Requirements_Minifier
      * @param string $type Either js or css
      * @param string $filename Name of file to display in case of error
      * @return string minified content
-     */	
-	public function minify ($content, $type, $fileName)
-	{
-		// Minify $content;
+     */    
+    public function minify ($content, $type, $fileName)
+    {
+        // Minify $content;
 
-		return $minifiedContent;
-	}
+        return $minifiedContent;
+    }
 }
 ```
 

@@ -16,11 +16,11 @@ name in the `mysite/templates/email` folder or in the `themes/your_theme/templat
 
 **mysite/templates/email/GenericEmail.ss**
 	
-	:::ss
+```ss
 	$Body
 
 	<p>Thanks from Bob's Fantasy Football League.</p>
-
+```
 All emails going out of our application will have the footer `Thanks from Bob's Fantasy Football Leaguee` added.
 
 <div class="alert" markdown="1">
@@ -103,19 +103,19 @@ footer and navigation will remain the same and we don't want to replicate this w
 
 **mysite/templates/Page.ss**
 ```ss
-	<html>
-	<head>
-		..
-	</head>
-	
-	<body>
-		<% include Header %>
-		<% include Navigation %>
+    <html>
+    <head>
+        ..
+    </head>
+    
+    <body>
+        <% include Header %>
+        <% include Navigation %>
 
-		$Layout
+        $Layout
 
-		<% include Footer %>
-	</body>
+        <% include Footer %>
+    </body>
 ``
 **mysite/templates/Layout/Page.ss**
 ```ss

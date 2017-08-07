@@ -24,25 +24,25 @@ An outline of step one looks like:
 
 
 ```php
-	$feed = new RSSFeed(
-		$list,
-		$link,
-		$title,
-		$description,
-		$titleField,
-		$descriptionField,
-		$authorField,
-		$lastModifiedTime,
-		$etag
-	);
+    $feed = new RSSFeed(
+        $list,
+        $link,
+        $title,
+        $description,
+        $titleField,
+        $descriptionField,
+        $authorField,
+        $lastModifiedTime,
+        $etag
+    );
 
-	$feed->outputToBrowser();
+    $feed->outputToBrowser();
 ```
 
 To achieve step two include the following code where ever you want to include the `<link>` tag to the RSS Feed. This
 will normally go in your `Controllers` `init` method.
 ```php
-	RSSFeed::linkToFeed($link, $title);
+    RSSFeed::linkToFeed($link, $title);
 ```
 
 ## Examples
@@ -56,43 +56,43 @@ You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a f
 
 
 ```php
-	use SilverStripe\Control\RSS\RSSFeed;
-	use Page;
-	use SilverStripe\CMS\Controllers\ContentController;
+    use SilverStripe\Control\RSS\RSSFeed;
+    use Page;
+    use SilverStripe\CMS\Controllers\ContentController;
 
-		
-	..
-	class PageController extends ContentController 
-	{
+        
+    ..
+    class PageController extends ContentController 
+    {
 
-		private static $allowed_actions = [
-			'rss'
-		];
+        private static $allowed_actions = [
+            'rss'
+        ];
 
-		public function init() 
-		{
-			parent::init();
+        public function init() 
+        {
+            parent::init();
 
-			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
-		}
+            RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
+        }
 
-		public function rss() 
-		{
-			$rss = new RSSFeed(
-				$this->LatestUpdates(), 
-				$this->Link(), 
-				"10 Most Recently Updated Pages", 
-				"Shows a list of the 10 most recently updated pages."
-			);
+        public function rss() 
+        {
+            $rss = new RSSFeed(
+                $this->LatestUpdates(), 
+                $this->Link(), 
+                "10 Most Recently Updated Pages", 
+                "Shows a list of the 10 most recently updated pages."
+            );
 
-			return $rss->outputToBrowser();
-		}
+            return $rss->outputToBrowser();
+        }
 
-		public function LatestUpdates() 
-		{
-			return Page::get()->sort("LastEdited", "DESC")->limit(10);
-		}
-	}
+        public function LatestUpdates() 
+        {
+            return Page::get()->sort("LastEdited", "DESC")->limit(10);
+        }
+    }
 
 ```
 
@@ -110,58 +110,58 @@ method is defined and returns a string to the full website URL.
 
 
 ```php
-	use SilverStripe\Control\Controller;
-	use SilverStripe\Control\Director;
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Director;
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject 
-	{
+    class Player extends DataObject 
+    {
 
-		public function AbsoluteLink() 
-		{
-			// assumes players can be accessed at yoursite.com/players/2
+        public function AbsoluteLink() 
+        {
+            // assumes players can be accessed at yoursite.com/players/2
 
-			return Controller::join_links(
-				Director::absoluteBaseUrl(),
-				'players',
-				$this->ID
-			);
-		}
-	}
+            return Controller::join_links(
+                Director::absoluteBaseUrl(),
+                'players',
+                $this->ID
+            );
+        }
+    }
 ```
 
 Then in our controller, we add a new action which returns a the XML list of `Players`.
 
 
 ```php
-	use SilverStripe\Control\RSS\RSSFeed;
-	use SilverStripe\CMS\Controllers\ContentController;
+    use SilverStripe\Control\RSS\RSSFeed;
+    use SilverStripe\CMS\Controllers\ContentController;
 
-	class PageController extends ContentController 
-	{
+    class PageController extends ContentController 
+    {
 
-		private static $allowed_actions = [
-			'players'
-		];
+        private static $allowed_actions = [
+            'players'
+        ];
 
-		public function init() 
-		{
-			parent::init();
+        public function init() 
+        {
+            parent::init();
 
-			RSSFeed::linkToFeed($this->Link("players"), "Players");
-		}
+            RSSFeed::linkToFeed($this->Link("players"), "Players");
+        }
 
-		public function players() 
-		{
-			$rss = new RSSFeed(
-				Player::get(),
-				$this->Link("players"),
-				"Players"
-			);
+        public function players() 
+        {
+            $rss = new RSSFeed(
+                Player::get(),
+                $this->Link("players"),
+                "Players"
+            );
 
-			return $rss->outputToBrowser();
-		}
-	}
+            return $rss->outputToBrowser();
+        }
+    }
 
 ```
 
@@ -177,22 +177,22 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 ```xml
 
-	<?xml version="1.0"?>
-	<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
-		<channel>
-			<title>$Title</title>
-			<link>$Link</link>
-			<atom:link href="$Link" rel="self" type="application/rss+xml" />
-			<description>$Description.XML</description>
+    <?xml version="1.0"?>
+    <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+        <channel>
+            <title>$Title</title>
+            <link>$Link</link>
+            <atom:link href="$Link" rel="self" type="application/rss+xml" />
+            <description>$Description.XML</description>
 
-			<% loop $Entries %>
-			<item>
-				<title>$Title.XML</title>
-				<team>$Team.Title</team>
-			</item>
-			<% end_loop %>
-		</channel>
-	</rss>
+            <% loop $Entries %>
+            <item>
+                <title>$Title.XML</title>
+                <team>$Team.Title</team>
+            </item>
+            <% end_loop %>
+        </channel>
+    </rss>
 ```
 
 `setTemplate` can then be used to tell RSSFeed to use that new template. 
@@ -201,18 +201,18 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 
 ```php
-	public function players() 
-	{
-		$rss = new RSSFeed(
-			Player::get(),
-			$this->Link("players"),
-			"Players"
-		);
-	
-		$rss->setTemplate('PlayersRss');
+    public function players() 
+    {
+        $rss = new RSSFeed(
+            Player::get(),
+            $this->Link("players"),
+            "Players"
+        );
+    
+        $rss->setTemplate('PlayersRss');
 
-		return $rss->outputToBrowser();
-	}
+        return $rss->outputToBrowser();
+    }
 ```
 
 <div class="warning">

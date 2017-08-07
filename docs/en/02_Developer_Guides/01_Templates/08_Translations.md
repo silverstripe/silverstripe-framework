@@ -6,7 +6,7 @@ summary: Definition of the syntax for writing i18n compatible templates.
 Translations are easy to use with a template, and give access to SilverStripe's translation facilities. Here is an 
 example:
 ```ss
-	<%t Foo.BAR 'Bar' %>
+    <%t Foo.BAR 'Bar' %>
 
     <%t Member.WELCOME 'Welcome {name} to {site}' name=$Member.Name site="Foobar.com" %>
 ```

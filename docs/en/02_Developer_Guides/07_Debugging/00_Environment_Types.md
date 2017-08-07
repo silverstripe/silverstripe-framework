@@ -12,13 +12,13 @@ The definition of setting an environment type in a `mysite/_config/app.yml` look
 
 ```yml
 
-	SilverStripe\Control\Director:
-	  environment_type: 'dev'
+    SilverStripe\Control\Director:
+      environment_type: 'dev'
 ```
 
 The definition of setting an environment type in a `.env` file looks like
 ```
-	SS_ENVIRONMENT_TYPE="dev"
+    SS_ENVIRONMENT_TYPE="dev"
 ```
 The three environment types you can set are `dev`, `test` and `live`.
 
@@ -44,12 +44,12 @@ want to password protect the site. You can enable that by adding this to your `m
 
 ```yml
 
-	---
-	Only:
-	  environment: 'test'
-	---
-	SilverStripe\Security\BasicAuth:
-	  entire_site_protected: true
+    ---
+    Only:
+      environment: 'test'
+    ---
+    SilverStripe\Security\BasicAuth:
+      entire_site_protected: true
 ```
 
 ### Live Mode
@@ -67,29 +67,29 @@ You can check for the current environment type in [config files](../configuratio
 
 **mysite/_config/app.yml**
 ```yml
-	---
-	Only:
-	  environment: 'live'
-	---
-	MyClass:
-		myvar: live_value
-	---
-	Only:
-	  environment: 'test'
-	---
-	MyClass:
-		myvar: test_value
+    ---
+    Only:
+      environment: 'live'
+    ---
+    MyClass:
+        myvar: live_value
+    ---
+    Only:
+      environment: 'test'
+    ---
+    MyClass:
+        myvar: test_value
 ```
 Checking for what environment you're running in can also be done in PHP. Your application code may disable or enable 
 certain functionality depending on the environment type.
 ```php
-	if (Director::isLive()) {
-		// is in live
-	} elseif (Director::isTest()) {
-		// is in test mode
-	} elseif (Director::isDev()) {
-		// is in dev mode
-	}
+    if (Director::isLive()) {
+        // is in live
+    } elseif (Director::isTest()) {
+        // is in test mode
+    } elseif (Director::isDev()) {
+        // is in dev mode
+    }
 ```
 
 

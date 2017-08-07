@@ -213,14 +213,14 @@ Further guidelines:
 
 Example: Bad commit message
 ```
-	finally fixed this dumb rendering bug that Joe talked about ... LOL
-	also added another form field for password validation
+    finally fixed this dumb rendering bug that Joe talked about ... LOL
+    also added another form field for password validation
 ```
 Example: Good commit message
 ```
-	BUG Formatting through prepValueForDB() 
+    BUG Formatting through prepValueForDB() 
 
-	Added prepValueForDB() which is called on DBField->writeToManipulation() 
-	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
-	Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
+    Added prepValueForDB() which is called on DBField->writeToManipulation() 
+    to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
+    Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
 ```	

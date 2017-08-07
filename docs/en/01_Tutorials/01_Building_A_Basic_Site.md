@@ -112,27 +112,27 @@ for a template file in the *simple/templates* folder, with the name `<PageType>`
 Open *themes/simple/templates/Page.ss*. It uses standard HTML apart from these exceptions: 
 
 ```ss
-	<% base_tag %>
+    <% base_tag %>
 ```
 
 The base_tag variable is replaced with the HTML [base element](http://www.w3.org/TR/html401/struct/links.html#h-12.4). This
 ensures the browser knows where to locate your site's images and css files.
 
 ```ss
-	$Title
-	$SiteConfig.Title
+    $Title
+    $SiteConfig.Title
 ```
 
 These two variables are found within the html `<title>` tag, and are replaced by the "Page Name" and "Settings -> Site Title" fields in the CMS.
 
 ```ss
-	$MetaTags 
+    $MetaTags 
 ```
 
 The MetaTags variable will add meta tags, which are used by search engines. You can define your meta tags in the tab fields at the bottom of the content editor in the CMS. 
 
 ```ss
-	$Layout 
+    $Layout 
 ```
 
 The Layout variable is replaced with the contents of a template file with the same name as the page type we are using. 
@@ -140,7 +140,7 @@ The Layout variable is replaced with the contents of a template file with the sa
 Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more SilverStripe template replacement tags and variables.
 
 ```ss
-	$Content
+    $Content
 ```	
 
 The Content variable is replaced with the content of the page currently being viewed. This allows you to make all changes to
@@ -151,7 +151,7 @@ browser and are either prefixed with a dollar sign ($)
 or placed between SilverStripe template tags: 
 
 ```ss
-	<%  %>
+    <%  %>
 ```
 
 **Flushing the cache**
@@ -169,7 +169,7 @@ Open up *themes/simple/templates/Includes/Navigation.ss*
 The Menu for our site is created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template.
 
 ```ss
-	<% loop $Menu(1) %>
+    <% loop $Menu(1) %>
 ```	
 
 returns a set of first level menu items. We can then use the template variable
@@ -179,13 +179,13 @@ returns a set of first level menu items. We can then use the template variable
 
 
 ```ss
-	<ul>
-		<% loop $Menu(1) %>	  
-			<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-				<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
-			</li>
-		<% end_loop %>
-	</ul>
+    <ul>
+        <% loop $Menu(1) %>      
+            <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+                <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
+            </li>
+        <% end_loop %>
+    </ul>
 ```
 
 Here we've created an unordered list called *Menu1*, which *themes/simple/css/layout.css* will style into the menu.
@@ -204,15 +204,15 @@ A useful feature is highlighting the current page the user is looking at. We can
 For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section.
 
 ```ss
-	<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-	 	<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
-	</li>
+    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+         <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
+    </li>
 ```
 
 you will then be able to target a section in css (*simple/css/layout.css*), e.g.:
 
 ```css
-	.section { background:#ccc; } 
+    .section { background:#ccc; } 
 ```
 
 ## A second level of navigation
@@ -235,16 +235,16 @@ Great, we now have a hierarchical site structure! Let's look at how this is crea
 Adding a second level menu is very similar to adding the first level menu. Open up */themes/simple/templates/Includes/Sidebar.ss* template and look at the following code:
 
 ```ss
-	<ul>
-	  <% loop $Menu(2) %>
-	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-		    <a href="$Link" title="Go to the $Title.XML page">
-		    	<span class="arrow">→</span>
-		    	<span class="text">$MenuTitle.XML</span>
-		    </a>
-	    </li>
-	  <% end_loop %>
-	</ul>
+    <ul>
+      <% loop $Menu(2) %>
+        <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+            <a href="$Link" title="Go to the $Title.XML page">
+                <span class="arrow">→</span>
+                <span class="text">$MenuTitle.XML</span>
+            </a>
+        </li>
+      <% end_loop %>
+    </ul>
 ```
 
 This should look very familiar. It is the same idea as our first menu, except the loop block now uses *Menu(2)* instead of *Menu(1)*. 
@@ -257,20 +257,20 @@ Look again in the *Sidebar.ss* file and you will see that the menu is surrounded
 like this:
 
 ```ss
-	<% if $Menu(2) %>
-		...
-			<ul>
-				<% loop $Menu(2) %>
-				<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-					<a href="$Link" title="Go to the $Title.XML page">
-						<span class="arrow">→</span>
-						<span class="text">$MenuTitle.XML</span>
-					</a>
-				</li>
-				<% end_loop %>
-			</ul>
-		...
-	<% end_if %>  	
+    <% if $Menu(2) %>
+        ...
+            <ul>
+                <% loop $Menu(2) %>
+                <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+                    <a href="$Link" title="Go to the $Title.XML page">
+                        <span class="arrow">→</span>
+                        <span class="text">$MenuTitle.XML</span>
+                    </a>
+                </li>
+                <% end_loop %>
+            </ul>
+        ...
+    <% end_if %>      
 ```
 
 The if block only includes the code inside it if the condition is true. In this case, it checks for the existence of
@@ -282,11 +282,11 @@ Now that we have two levels of navigation, it would also be useful to include so
 Open up */themes/simple/templates/Includes/BreadCrumbs.ss* template and look at the following code:
 
 ```ss
-	<% if $Level(2) %>
-		<div id="Breadcrumbs">
-		   	$Breadcrumbs
-		</div>
-	<% end_if %>	
+    <% if $Level(2) %>
+        <div id="Breadcrumbs">
+               $Breadcrumbs
+        </div>
+    <% end_if %>    
 ```
 
 Breadcrumbs are only useful on pages that aren't in the top level. We can ensure that we only show them if we aren't in
@@ -295,7 +295,7 @@ the top level with another if statement.
 The *Level* page control allows you to get data from the page's parents, e.g. if you used *Level(1)*, you could use:
 
 ```ss
-	$Level(1).Title 
+    $Level(1).Title 
 ```
 
 to get the top level page title. In this case, we merely use it to check the existence of a second level page: if one exists then we include breadcrumbs.
@@ -309,25 +309,25 @@ Feel free to experiment with the if and loop statements. For example, you could 
 The following example runs an if statement and a loop on *Children*, checking to see if any sub-pages exist within each top level navigation item. You will need to come up with your own CSS to correctly style this approach.
 
 ```ss
-	<ul>
-	  <% loop $Menu(1) %>
-	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-	      <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
-	      <% if $Children %>
-		      <ul>
-		        <% loop $Children %>
-		          <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-		          	<a href="$Link" title="Go to the $Title.XML page">
-		          		<span class="arrow">→</span>
-		          		<span class="text">$MenuTitle.XML</span>
-		          	</a>
-		          </li>
-		        <% end_loop %>
-		      </ul>
-	      <% end_if %>
-	    </li>
-	  <% end_loop %>
-	</ul>
+    <ul>
+      <% loop $Menu(1) %>
+        <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+          <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
+          <% if $Children %>
+              <ul>
+                <% loop $Children %>
+                  <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+                      <a href="$Link" title="Go to the $Title.XML page">
+                          <span class="arrow">→</span>
+                          <span class="text">$MenuTitle.XML</span>
+                      </a>
+                  </li>
+                <% end_loop %>
+              </ul>
+          <% end_if %>
+        </li>
+      <% end_loop %>
+    </ul>
 ```
 
 
@@ -393,21 +393,21 @@ To create a new template layout, create a copy of *Page.ss* (found in *themes/si
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 
 ```ss
-	<% include SideBar %> 
+    <% include SideBar %> 
 ```
 
 We'll also replace the title text with an image. Find this line:
 
 ```ss
-	<h1>$Title</h1>
+    <h1>$Title</h1>
 ```
 
  and replace it with:
 
 ```ss
-	<div id="Banner">
-	  <img src="http://www.silverstripe.org/assets/SilverStripe-200.png" alt="Homepage image" />
-	</div>
+    <div id="Banner">
+      <img src="http://www.silverstripe.org/assets/SilverStripe-200.png" alt="Homepage image" />
+    </div>
 ```
 
 Your Home page should now look like this:

@@ -8,12 +8,12 @@ can be rendered out using custom templates using `setTemplate`.
 
 
 ```php
-	$form = new Form(..);
-	$form->setTemplate('MyCustomFormTemplate');
+    $form = new Form(..);
+    $form->setTemplate('MyCustomFormTemplate');
 
-	// or, just a field
-	$field = new TextField(..);
-	$field->setTemplate('MyCustomTextField');
+    // or, just a field
+    $field = new TextField(..);
+    $field->setTemplate('MyCustomTextField');
 ```
 
 Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **mysite/templates/forms/** or the same directory as the core.
@@ -37,27 +37,27 @@ For [FormField](api:SilverStripe\Forms\FormField) instances, there are several o
 
 
 ```php
-	$field = new TextField();
+    $field = new TextField();
 
-	$field->setTemplate('CustomTextField');
-	// Sets the template for the <input> tag. i.e '<input $AttributesHTML />'
-	
-	$field->setFieldHolderTemplate('CustomTextField_Holder');
-	// Sets the template for the wrapper around the text field. i.e 
-	//	'<div class="text">'
-	//
-	// The actual FormField is rendered into the holder via the `$Field` 
-	// variable.
-	//
-	// setFieldHolder() is used in most `Form` instances and needs to output 
-	// labels, error messages and the like.
+    $field->setTemplate('CustomTextField');
+    // Sets the template for the <input> tag. i.e '<input $AttributesHTML />'
+    
+    $field->setFieldHolderTemplate('CustomTextField_Holder');
+    // Sets the template for the wrapper around the text field. i.e 
+    //    '<div class="text">'
+    //
+    // The actual FormField is rendered into the holder via the `$Field` 
+    // variable.
+    //
+    // setFieldHolder() is used in most `Form` instances and needs to output 
+    // labels, error messages and the like.
 
-	$field->setSmallFieldHolderTemplate('CustomTextField_Holder_Small');
-	// Sets the template for the wrapper around the text field.
-	//
-	// The difference here is the small field holder template is used when the 
-	// field is embedded within another field. For example, if the field is 
-	// part of a `FieldGroup` or `CompositeField` alongside other fields.
+    $field->setSmallFieldHolderTemplate('CustomTextField_Holder_Small');
+    // Sets the template for the wrapper around the text field.
+    //
+    // The difference here is the small field holder template is used when the 
+    // field is embedded within another field. For example, if the field is 
+    // part of a `FieldGroup` or `CompositeField` alongside other fields.
 ```
 
 All templates are rendered within the scope of the [FormField](api:SilverStripe\Forms\FormField). To understand more about Scope within Templates as 

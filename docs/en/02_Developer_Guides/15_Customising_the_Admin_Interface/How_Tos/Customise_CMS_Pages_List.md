@@ -19,21 +19,21 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
 ```php
-	use Page;
+    use Page;
 
-	// mysite/code/NewsPageHolder.php
-	class NewsPageHolder extends Page 
-	{
-		private static $allowed_children = ['NewsPage'];
-	}
+    // mysite/code/NewsPageHolder.php
+    class NewsPageHolder extends Page 
+    {
+        private static $allowed_children = ['NewsPage'];
+    }
 
-	// mysite/code/NewsPage.php
-	class NewsPage extends Page 
-	{
-		private static $has_one = [
-			'Author' => 'Member',
-		];
-	}
+    // mysite/code/NewsPage.php
+    class NewsPage extends Page 
+    {
+        private static $has_one = [
+            'Author' => 'Member',
+        ];
+    }
 
 ```
 
@@ -45,41 +45,41 @@ or across page types with common characteristics.
 
 
 ```php
-	use Page;
-	use SilverStripe\Core\Extension;
+    use Page;
+    use SilverStripe\Core\Extension;
 
-	// mysite/code/NewsPageHolderCMSMainExtension.php
-	class NewsPageHolderCMSMainExtension extends Extension 
-	{
-		function updateListView($listView) {
-			$parentId = $listView->getController()->getRequest()->requestVar('ParentID');
-			$parent = ($parentId) ? Page::get()->byId($parentId) : new Page();
+    // mysite/code/NewsPageHolderCMSMainExtension.php
+    class NewsPageHolderCMSMainExtension extends Extension 
+    {
+        function updateListView($listView) {
+            $parentId = $listView->getController()->getRequest()->requestVar('ParentID');
+            $parent = ($parentId) ? Page::get()->byId($parentId) : new Page();
 
-			// Only apply logic for this page type
-			if($parent && $parent instanceof NewsPageHolder) {
-				$gridField = $listView->Fields()->dataFieldByName('Page');
-				if($gridField) {
-					// Sort by created
-					$list = $gridField->getList();
-					$gridField->setList($list->sort('Created', 'DESC'));
-					// Add author to columns
-					$cols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
-					if($cols) {
-						$fields = $cols->getDisplayFields($gridField);
-						$fields['Author.Title'] = 'Author';
-						$cols->setDisplayFields($fields);
-					}
-				}
-			}
-		}
-	}
+            // Only apply logic for this page type
+            if($parent && $parent instanceof NewsPageHolder) {
+                $gridField = $listView->Fields()->dataFieldByName('Page');
+                if($gridField) {
+                    // Sort by created
+                    $list = $gridField->getList();
+                    $gridField->setList($list->sort('Created', 'DESC'));
+                    // Add author to columns
+                    $cols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
+                    if($cols) {
+                        $fields = $cols->getDisplayFields($gridField);
+                        $fields['Author.Title'] = 'Author';
+                        $cols->setDisplayFields($fields);
+                    }
+                }
+            }
+        }
+    }
 ```
 
 Now you just need to enable the extension in your [configuration file](../../configuration).
 ```yml
-	// mysite/_config/config.yml
-	LeftAndMain:
-	  extensions:
-	    - NewsPageHolderCMSMainExtension
+    // mysite/_config/config.yml
+    LeftAndMain:
+      extensions:
+        - NewsPageHolderCMSMainExtension
 ```
 You're all set! Don't forget to flush the caches by appending `?flush=all` to the URL.

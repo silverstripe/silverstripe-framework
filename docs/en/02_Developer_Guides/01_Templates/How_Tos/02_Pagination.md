@@ -10,7 +10,7 @@ The `PaginatedList` will automatically set up query limits and read the request 
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	/**
 	 * Returns a paginated list of all pages in the site.
 	 */
@@ -20,6 +20,7 @@ The `PaginatedList` will automatically set up query limits and read the request 
 
 		return new PaginatedList($list, $this->getRequest());
 	}
+```
 
 <div class="notice" markdown="1">
 Note that the concept of "pages" used in pagination does not necessarily mean that we're dealing with `Page` classes, 
@@ -33,19 +34,19 @@ The first step is to simply list the objects in the template:
 
 **mysite/templates/Page.ss**
 
-	:::ss
+```ss
 	<ul>
 		<% loop $PaginatedPages %>
 			<li><a href="$Link">$Title</a></li>
 		<% end_loop %>
 	</ul>
-
+```
 By default this will display 10 pages at a time. The next step is to add pagination controls below this so the user can 
 switch between pages:
 
 **mysite/templates/Page.ss**
 
-	:::ss
+```ss
 	<% if $PaginatedPages.MoreThanOnePage %>
 		<% if $PaginatedPages.NotFirstPage %>
 			<a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
@@ -65,6 +66,7 @@ switch between pages:
 			<a class="next" href="$PaginatedPages.NextLink">Next</a>
 		<% end_if %>
 	<% end_if %>
+```
 
 If there is more than one page, this block will render a set of pagination controls in the form 
 `[1] ... [3] [4] [5] [6] [7] ... [10]`.
@@ -76,18 +78,19 @@ that you wish to display on the current page. In this situation the automatic li
 will break the pagination. You can disable automatic limiting using the [PaginatedList::setLimitItems()](api:SilverStripe\ORM\PaginatedList::setLimitItems()) method 
 when using custom lists.
 
-	:::php
+```php
 	$myPreLimitedList = Page::get()->limit(10);
 
 	$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
 	$pages->setLimitItems(false);
-
+```
 
 ## Setting the limit of items
 
-	:::php
+```php
 	$pages = new PaginatedList(Page::get(), $this->getRequest());
 	$pages->setPageLength(25);
+```
 
 If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page
 list.

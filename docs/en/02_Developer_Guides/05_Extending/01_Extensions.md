@@ -19,21 +19,21 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 
 
 ```php
-	use SilverStripe\ORM\DataExtension;
+    use SilverStripe\ORM\DataExtension;
 
-	class MyMemberExtension extends DataExtension 
-	{
+    class MyMemberExtension extends DataExtension 
+    {
 
-		private static $db = [
-			'DateOfBirth' => 'SS_Datetime'
-		];
+        private static $db = [
+            'DateOfBirth' => 'SS_Datetime'
+        ];
 
-		public function SayHi() 
-		{
-			// $this->owner refers to the original instance. In this case a `Member`.
-			return "Hi " . $this->owner->Name;
-		}
-	}
+        public function SayHi() 
+        {
+            // $this->owner refers to the original instance. In this case a `Member`.
+            return "Hi " . $this->owner->Name;
+        }
+    }
 
 ```
 
@@ -49,16 +49,16 @@ we want to add the `MyMemberExtension` too. To activate this extension, add the 
 
 ```yml
 
-	Member:
-	  extensions:
-	    - MyMemberExtension
+    Member:
+      extensions:
+        - MyMemberExtension
 ```
 
 Alternatively, we can add extensions through PHP code (in the `_config.php` file).
 
 
 ```php
-	Member::add_extension('MyMemberExtension');
+    Member::add_extension('MyMemberExtension');
 ```
 
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
@@ -82,25 +82,25 @@ $has_one etc.
 
 
 ```php
-	use SilverStripe\ORM\DataExtension;
+    use SilverStripe\ORM\DataExtension;
 
-	class MyMemberExtension extends DataExtension 
-	{
+    class MyMemberExtension extends DataExtension 
+    {
 
-		private static $db = [
-			'Position' => 'Varchar',
-		];
+        private static $db = [
+            'Position' => 'Varchar',
+        ];
 
-		private static $has_one = [
-			'Image' => 'Image',
-		];
+        private static $has_one = [
+            'Image' => 'Image',
+        ];
 
-		public function SayHi() 
-		{
-			// $this->owner refers to the original instance. In this case a `Member`.
-			return "Hi " . $this->owner->Name;
-		}
-	}
+        public function SayHi() 
+        {
+            // $this->owner refers to the original instance. In this case a `Member`.
+            return "Hi " . $this->owner->Name;
+        }
+    }
 
 ```
 
@@ -109,8 +109,8 @@ $has_one etc.
 
 ```ss
 
-	$CurrentMember.Position
-	$CurrentMember.Image
+    $CurrentMember.Position
+    $CurrentMember.Image
 ```
 
 ## Adding Methods
@@ -122,18 +122,18 @@ we added a `SayHi` method which is unique to our extension.
 
 ```ss
 
-	<p>$CurrentMember.SayHi</p>
+    <p>$CurrentMember.SayHi</p>
 
-	// "Hi Sam"
+    // "Hi Sam"
 ```
 
 **mysite/code/Page.php**
 
 ```php
-	$member = Security::getCurrentUser();
-	echo $member->SayHi;
+    $member = Security::getCurrentUser();
+    echo $member->SayHi;
 
-	// "Hi Sam"
+    // "Hi Sam"
 ```
 
 ## Modifying Existing Methods
@@ -146,14 +146,14 @@ through the `extend()` method of the [Extensible](api:SilverStripe\Core\Extensib
 
 
 ```php
-	public function getValidator() 
-	{
-		// ..
-		
-		$this->extend('updateValidator', $validator);
+    public function getValidator() 
+    {
+        // ..
+        
+        $this->extend('updateValidator', $validator);
 
-		// ..
-	}
+        // ..
+    }
 ```
 
 Extension Hooks can be located anywhere in the method and provide a point for any `Extension` instances to modify the 
@@ -165,19 +165,19 @@ validator by defining the `updateValidator` method.
 
 
 ```php
-	use SilverStripe\ORM\DataExtension;
+    use SilverStripe\ORM\DataExtension;
 
-	class MyMemberExtension extends DataExtension 
-	{
+    class MyMemberExtension extends DataExtension 
+    {
 
-		// ..
+        // ..
 
-		public function updateValidator($validator) 
-		{
-			// we want to make date of birth required for each member
-			$validator->addRequiredField('DateOfBirth');
-		}
-	}
+        public function updateValidator($validator) 
+        {
+            // we want to make date of birth required for each member
+            $validator->addRequiredField('DateOfBirth');
+        }
+    }
 ```
 
 <div class="info" markdown="1">
@@ -189,28 +189,28 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
-	use SilverStripe\Forms\TextField;
-	use SilverStripe\AssetAdmin\Forms\UploadField;
-	use SilverStripe\ORM\DataExtension;
+    use SilverStripe\Forms\TextField;
+    use SilverStripe\AssetAdmin\Forms\UploadField;
+    use SilverStripe\ORM\DataExtension;
 
-	class MyMemberExtension extends DataExtension 
-	{
+    class MyMemberExtension extends DataExtension 
+    {
 
-		private static $db = [
-			'Position' => 'Varchar',
-		];
+        private static $db = [
+            'Position' => 'Varchar',
+        ];
 
-		private static $has_one = [
-			'Image' => 'Image',
-		];
+        private static $has_one = [
+            'Image' => 'Image',
+        ];
 
-		public function updateCMSFields(FieldList $fields) 
-		{
-			$fields->push(new TextField('Position'));
-			$fields->push($upload = new UploadField('Image', 'Profile Image'));
-			$upload->setAllowedFileCategories('image/supported');
-		}
-	}
+        public function updateCMSFields(FieldList $fields) 
+        {
+            $fields->push(new TextField('Position'));
+            $fields->push($upload = new UploadField('Image', 'Profile Image'));
+            $upload->setAllowedFileCategories('image/supported');
+        }
+    }
 
 ```
 
@@ -221,14 +221,14 @@ which allows an Extension to modify the results.
 
 
 ```php
-	public function Foo() 
-	{
-		$foo = // ..
+    public function Foo() 
+    {
+        $foo = // ..
 
-		$this->extend('updateFoo', $foo);
+        $this->extend('updateFoo', $foo);
 
-		return $foo;
-	}
+        return $foo;
+    }
 ```
 
 The convention for extension hooks is to provide an `update{$Function}` hook at the end before you return the result. If
@@ -241,17 +241,17 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 
 ```php
-	use SilverStripe\ORM\DataExtension;
+    use SilverStripe\ORM\DataExtension;
 
-	class MyMemberExtension extends DataExtension 
-	{
+    class MyMemberExtension extends DataExtension 
+    {
 
-		public function updateFoo($foo) 
-		{
-			// outputs the original class
-			var_dump($this->owner);
-		}
-	}
+        public function updateFoo($foo) 
+        {
+            // outputs the original class
+            var_dump($this->owner);
+        }
+    }
 ```
 
 ## Checking to see if an Object has an Extension
@@ -259,13 +259,13 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 To see what extensions are currently enabled on an object, use the [getExtensionInstances()](api:SilverStripe\Core\Extensible::getExtensionInstances()) and 
 [hasExtension()](api:SilverStripe\Core\Extensible::hasExtension()) methods of the [Extensible](api:SilverStripe\Core\Extensible) trait.
 ```php
-	$member = Security::getCurrentUser();
+    $member = Security::getCurrentUser();
 
-	print_r($member->getExtensionInstances());
-	
-	if($member->hasExtension('MyCustomMemberExtension')) {
-		// ..
-	}
+    print_r($member->getExtensionInstances());
+    
+    if($member->hasExtension('MyCustomMemberExtension')) {
+        // ..
+    }
 ```
 
 ## Extension injection points
@@ -286,17 +286,17 @@ if not specified in `self::$defaults`, but before extensions have been called:
 
 
 ```php
-	function __construct() {
-		$self = $this;
+    function __construct() {
+        $self = $this;
 
-		$this->beforeExtending('populateDefaults', function() use ($self) {
-			if(empty($self->MyField)) {
-				$self->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
-			}
-		});
+        $this->beforeExtending('populateDefaults', function() use ($self) {
+            if(empty($self->MyField)) {
+                $self->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
+            }
+        });
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 ```
 
 Example 2: User code can intervene in the process of extending cms fields.
@@ -307,18 +307,18 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 
 
 ```php
-	public function getCMSFields() 
-	{
+    public function getCMSFields() 
+    {
 
-		$this->beforeUpdateCMSFields(function($fields) {
-			// Include field which must be present when updateCMSFields is called on extensions
-			$fields->addFieldToTab("Root.Main", new TextField('Detail', 'Details', null, 255));
-		});
+        $this->beforeUpdateCMSFields(function($fields) {
+            // Include field which must be present when updateCMSFields is called on extensions
+            $fields->addFieldToTab("Root.Main", new TextField('Detail', 'Details', null, 255));
+        });
 
-		$fields = parent::getCMSFields();
-		// ... additional fields here
-		return $fields;
-	}
+        $fields = parent::getCMSFields();
+        // ... additional fields here
+        return $fields;
+    }
 ```
 
 ## Related Documentaion

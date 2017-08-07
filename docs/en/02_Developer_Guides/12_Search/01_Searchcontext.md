@@ -20,16 +20,16 @@ Defining search-able fields on your DataObject.
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\DataObject;
 
-	class MyDataObject extends DataObject 
-	{
+    class MyDataObject extends DataObject 
+    {
 
-	   private static $searchable_fields = [
-	      'Name',
-	      'ProductCode'
-	   ];
-	}
+       private static $searchable_fields = [
+          'Name',
+          'ProductCode'
+       ];
+    }
 
 ```
 
@@ -41,38 +41,38 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 
 
 ```php
-	use SilverStripe\ORM\Filters\PartialMatchFilter;
-	use SilverStripe\ORM\Filters\GreaterThanFilter;
-	use SilverStripe\ORM\Search\SearchContext;
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\ORM\Filters\PartialMatchFilter;
+    use SilverStripe\ORM\Filters\GreaterThanFilter;
+    use SilverStripe\ORM\Search\SearchContext;
+    use SilverStripe\ORM\DataObject;
 
-	class MyDataObject extends DataObject 
-	{
+    class MyDataObject extends DataObject 
+    {
 
-		private static $db = [
-			'PublicProperty' => 'Text'
-			'HiddenProperty' => 'Text',
-			'MyDate' => 'Date'
-		];
-		
-		public function getDefaultSearchContext() 
-		{
-			$fields = $this->scaffoldSearchFields([
-				'restrictFields' => ['PublicProperty','MyDate']
-			]);
+        private static $db = [
+            'PublicProperty' => 'Text'
+            'HiddenProperty' => 'Text',
+            'MyDate' => 'Date'
+        ];
+        
+        public function getDefaultSearchContext() 
+        {
+            $fields = $this->scaffoldSearchFields([
+                'restrictFields' => ['PublicProperty','MyDate']
+            ]);
 
-			$filters = [
-				'PublicProperty' => new PartialMatchFilter('PublicProperty'),
-				'MyDate' => new GreaterThanFilter('MyDate')
-			];
+            $filters = [
+                'PublicProperty' => new PartialMatchFilter('PublicProperty'),
+                'MyDate' => new GreaterThanFilter('MyDate')
+            ];
 
-			return new SearchContext(
-				$this->class, 
-				$fields, 
-				$filters
-			);
-		}
-	}
+            return new SearchContext(
+                $this->class, 
+                $fields, 
+                $filters
+            );
+        }
+    }
 
 ```
 
@@ -90,41 +90,41 @@ the `$fields` constructor parameter.
 
 
 ```php
-	use SilverStripe\Forms\Form;
-	use SilverStripe\Forms\FieldList;
-	use SilverStripe\Forms\FormAction;
-	use SilverStripe\CMS\Controllers\ContentController;
+    use SilverStripe\Forms\Form;
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\FormAction;
+    use SilverStripe\CMS\Controllers\ContentController;
 
-	
-	// ..
-	class PageController extends ContentController 
-	{
+    
+    // ..
+    class PageController extends ContentController 
+    {
 
-		public function SearchForm() 
-		{
-			$context = singleton('MyDataObject')->getCustomSearchContext();
-			$fields = $context->getSearchFields();
+        public function SearchForm() 
+        {
+            $context = singleton('MyDataObject')->getCustomSearchContext();
+            $fields = $context->getSearchFields();
 
-			$form = new Form($this, "SearchForm",
-				$fields,
-				new FieldList(
-					new FormAction('doSearch')
-				)
-			);
+            $form = new Form($this, "SearchForm",
+                $fields,
+                new FieldList(
+                    new FormAction('doSearch')
+                )
+            );
 
-			return $form;
-		}
+            return $form;
+        }
 
-		public function doSearch($data, $form) 
-		{
-			$context = singleton('MyDataObject')->getCustomSearchContext();
-			$results = $context->getResults($data);
+        public function doSearch($data, $form) 
+        {
+            $context = singleton('MyDataObject')->getCustomSearchContext();
+            $results = $context->getResults($data);
 
-			return $this->customise([
-				'Results' => $results
-			])->renderWith('Page_results');
-		}
-	}
+            return $this->customise([
+                'Results' => $results
+            ])->renderWith('Page_results');
+        }
+    }
 
 ```
 
@@ -137,24 +137,24 @@ in order to read page limit information. It is also passed the current
 
 
 ```php
-	public function getResults($searchCriteria = []) 
-	{
-		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
-		$limit = 10;
-			
-		$context = singleton('MyDataObject')->getCustomSearchContext();
-		$query = $context->getQuery($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
-		$records = $context->getResults($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
-		
-		if($records) {
-			$records = new PaginatedList($records, $this->getRequest());
-			$records->setPageStart($start);
-			$records->setPageLength($limit);
-			$records->setTotalItems($query->unlimitedRowCount());
-		}
-		
-		return $records;
-	}
+    public function getResults($searchCriteria = []) 
+    {
+        $start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
+        $limit = 10;
+            
+        $context = singleton('MyDataObject')->getCustomSearchContext();
+        $query = $context->getQuery($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
+        $records = $context->getResults($searchCriteria, null, ['start'=>$start,'limit'=>$limit]);
+        
+        if($records) {
+            $records = new PaginatedList($records, $this->getRequest());
+            $records->setPageStart($start);
+            $records->setPageLength($limit);
+            $records->setTotalItems($query->unlimitedRowCount());
+        }
+        
+        return $records;
+    }
 
 ```
 
@@ -162,14 +162,14 @@ notice that if you want to use this getResults function, you need to change the 
 
 
 ```php
-	public function doSearch($data, $form) 
-	{
-		$context = singleton('MyDataObject')->getCustomSearchContext();
-		$results = $this->getResults($data);
-		return $this->customise([
-			'Results' => $results
-		])->renderWith(['Catalogo_results', 'Page']);
-	}
+    public function doSearch($data, $form) 
+    {
+        $context = singleton('MyDataObject')->getCustomSearchContext();
+        $results = $this->getResults($data);
+        return $this->customise([
+            'Results' => $results
+        ])->renderWith(['Catalogo_results', 'Page']);
+    }
 
 ```
 
@@ -189,43 +189,43 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 **Next   1 2  *3*  4  5 &hellip; 558**  
 ```ss
 
-	<% if $Results %>
-		<ul>
-			<% loop $Results %>
-				<li>$Title, $Autor</li>
-			<% end_loop %>
-		</ul>
-	<% else %>
-		<p>Sorry, your search query did not return any results.</p>
-	<% end_if %>
-	
-	<% if $Results.MoreThanOnePage %>
-		<div id="PageNumbers">
-			<p>
-				<% if $Results.NotFirstPage %>
-					<a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
-				<% end_if %>
-			
-				<span>
-			    		<% loop $Results.PaginationSummary(4) %>
-						<% if $CurrentBool %>
-							$PageNum
-						<% else %>
-							<% if $Link %>
-								<a href="$Link" title="View page number $PageNum">$PageNum</a>
-							<% else %>
-								&hellip;
-							<% end_if %>
-						<% end_if %>
-					<% end_loop %>
-				</span>
-			
-				<% if $Results.NotLastPage %>
-					<a class="next" href="$Results.NextLink" title="View the next page">Next</a>
-				<% end_if %>
-			</p>
-		</div>
-	<% end_if %>
+    <% if $Results %>
+        <ul>
+            <% loop $Results %>
+                <li>$Title, $Autor</li>
+            <% end_loop %>
+        </ul>
+    <% else %>
+        <p>Sorry, your search query did not return any results.</p>
+    <% end_if %>
+    
+    <% if $Results.MoreThanOnePage %>
+        <div id="PageNumbers">
+            <p>
+                <% if $Results.NotFirstPage %>
+                    <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
+                <% end_if %>
+            
+                <span>
+                        <% loop $Results.PaginationSummary(4) %>
+                        <% if $CurrentBool %>
+                            $PageNum
+                        <% else %>
+                            <% if $Link %>
+                                <a href="$Link" title="View page number $PageNum">$PageNum</a>
+                            <% else %>
+                                &hellip;
+                            <% end_if %>
+                        <% end_if %>
+                    <% end_loop %>
+                </span>
+            
+                <% if $Results.NotLastPage %>
+                    <a class="next" href="$Results.NextLink" title="View the next page">Next</a>
+                <% end_if %>
+            </p>
+        </div>
+    <% end_if %>
 ```
 
 ## Available SearchFilters

@@ -11,10 +11,10 @@ source code comments indicating which template is responsible for rendering each
 block of html on your page.
 
 ```yaml
-	---
-	Only:
-	  environment: 'dev'
-	---
-	SSViewer:
-	  source_file_comments: true
+    ---
+    Only:
+      environment: 'dev'
+    ---
+    SSViewer:
+      source_file_comments: true
 ```

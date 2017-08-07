@@ -9,7 +9,7 @@ creating [HTTPRequest](api:SilverStripe\Control\HTTPRequest), receiving [HTTPRes
 
 ## Get
 ```php
-	$page = $this->get($url);
+    $page = $this->get($url);
 ```
 
 Performs a GET request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
@@ -17,7 +17,7 @@ of the response.
 
 ## Post
 ```php
-	$page = $this->post($url);
+    $page = $this->post($url);
 ```
 
 Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
@@ -27,7 +27,7 @@ of the response.
 
 
 ```php
-	$submit = $this->submitForm($formID, $button = null, $data = []);
+    $submit = $this->submitForm($formID, $button = null, $data = []);
 
 ```
 
@@ -37,14 +37,14 @@ Submits the given form (`#ContactForm`) on the current page and returns the [HTT
 
 
 ```php
-	$this->logInAs($member);
+    $this->logInAs($member);
 ```
 
 Logs a given user in, sets the current session. To log all users out pass `null` to the method.
 
 
 ```php
-	$this->logInAs(null);
+    $this->logInAs(null);
 ```
 
 ## Assertions
@@ -55,9 +55,9 @@ The `FunctionalTest` class also provides additional asserts to validate your tes
 
 
 ```php
-	$this->assertPartialMatchBySelector('p.good',[
-		'Test save was successful'
-	]);
+    $this->assertPartialMatchBySelector('p.good',[
+        'Test save was successful'
+    ]);
 
 ```
 
@@ -70,9 +70,9 @@ assertion fails if one of the expectedMatches fails to appear.
 
 
 ```php
-	$this->assertExactMatchBySelector("#MyForm_ID p.error", [
-		"That email address is invalid."
-	]);
+    $this->assertExactMatchBySelector("#MyForm_ID p.error", [
+        "That email address is invalid."
+    ]);
 
 ```
 
@@ -82,9 +82,9 @@ assertion fails if one of the expectedMatches fails to appear.
 
 ### assertPartialHTMLMatchBySelector
 ```php
-	$this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", [
-		"That email address is invalid."
-	]);
+    $this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", [
+        "That email address is invalid."
+    ]);
 
 ```
 
@@ -98,9 +98,9 @@ assertion fails if one of the expectedMatches fails to appear.
 
 ### assertExactHTMLMatchBySelector
 ```php
-	$this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", [
-		"That email address is invalid."
-	]);
+    $this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", [
+        "That email address is invalid."
+    ]);
 
 ```
 

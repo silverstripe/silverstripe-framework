@@ -48,9 +48,9 @@ database credentials could be the same. To do this, you can add this snippet to 
 
 ```php
 try {
-	(new \Dotenv\Dotenv('/path/to/env/'))->load();
+    (new \Dotenv\Dotenv('/path/to/env/'))->load();
 } catch (\Dotenv\Exception\InvalidPathException $e) {
-	// no file found
+    // no file found
 }
 ```
 

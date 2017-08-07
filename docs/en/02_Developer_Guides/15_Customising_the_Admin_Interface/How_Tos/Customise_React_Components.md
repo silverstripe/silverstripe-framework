@@ -123,7 +123,7 @@ const CharacterCounter = (TextField) => (props) => {
         <div>
             <TextField {...props} />
             {showWarning &&
-            	<small>Characters remaining: {remainingChars}</small>
+                <small>Characters remaining: {remainingChars}</small>
             }
         </div>
     );

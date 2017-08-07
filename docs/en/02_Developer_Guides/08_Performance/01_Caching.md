@@ -65,7 +65,7 @@ Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class inte
 
 
 ```php
-	use Psr\SimpleCache\CacheInterface
+    use Psr\SimpleCache\CacheInterface
     $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
 

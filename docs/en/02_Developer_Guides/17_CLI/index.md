@@ -10,8 +10,8 @@ The main entry point for any command line execution is `framework/cli-script.php
 rebuild from the command line, use this command:
 ```bash
 
-	cd your-webroot/
-	php framework/cli-script.php dev/build
+    cd your-webroot/
+    php framework/cli-script.php dev/build
 ```
 
 <div class="notice">
@@ -34,8 +34,8 @@ when running the command php -v, then you may not have php-cli installed so sake
 
 `sake` can be invoked using `./framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
 ```
-	cd your-webroot/
-	sudo ./framework/sake installsake
+    cd your-webroot/
+    sudo ./framework/sake installsake
 ```
 <div class="warning">
 This currently only works on UNIX like systems, not on Windows.
@@ -60,23 +60,23 @@ Sake can run any controller by passing the relative URL to that controller.
 
 ```bash
 
-	sake /
-	# returns the homepage
+    sake /
+    # returns the homepage
 
-	sake dev/
-	# shows a list of development operations
+    sake dev/
+    # shows a list of development operations
 ```
 
 Sake is particularly useful for running build tasks.
 ```bash
 
-	sake dev/build "flush=1"
+    sake dev/build "flush=1"
 ```
 
 It can also be handy if you have a long running script..
 ```bash
 
-	sake dev/tasks/MyReallyLongTask
+    sake dev/tasks/MyReallyLongTask
 ```
 
 ### Running processes
@@ -93,28 +93,28 @@ This code provides a good template:
 
 
 ```php
-	use SilverStripe\Control\Controller;
+    use SilverStripe\Control\Controller;
 
-	class MyProcess extends Controller 
-	{
+    class MyProcess extends Controller 
+    {
 
-		private static $allowed_actions = [
-			'index'
-		];
+        private static $allowed_actions = [
+            'index'
+        ];
 
-		function index() {
-			set_time_limit(0);
+        function index() {
+            set_time_limit(0);
 
-			while(memory_get_usage() < 32*1024*1024) {
-				if($this->somethingToDo()) {
-					$this->doSomething();
-					sleep(1)
-				} else {
-					sleep(300);
-				}
-			}
-		}
-	}
+            while(memory_get_usage() < 32*1024*1024) {
+                if($this->somethingToDo()) {
+                    $this->doSomething();
+                    sleep(1)
+                } else {
+                    sleep(300);
+                }
+            }
+        }
+    }
 
 ```
 
@@ -123,8 +123,8 @@ Then the process can be managed through `sake`
 
 ```bash
 
-	sake -start MyProcess
-	sake -stop MyProcess
+    sake -start MyProcess
+    sake -stop MyProcess
 ```
 
 <div class="notice">
@@ -138,8 +138,8 @@ Parameters can be added to the command. All parameters will be available in `$_G
 
 ```bash
 
-	cd your-webroot/
-	php framework/cli-script.php myurl myparam=1 myotherparam=2
+    cd your-webroot/
+    php framework/cli-script.php myurl myparam=1 myotherparam=2
 ```
 
 Or if you're using `sake`
@@ -147,7 +147,7 @@ Or if you're using `sake`
 
 ```bash
 
-	sake myurl "myparam=1&myotherparam=2"
+    sake myurl "myparam=1&myotherparam=2"
 ```
 
 ## Running Regular Tasks With Cron
@@ -158,5 +158,5 @@ On a UNIX machine, you can typically run a scheduled task with a [cron job](http
 The following will run `MyTask` every minute.
 
 ```bash
-	* * * * * /your/site/folder/sake dev/tasks/MyTask
+    * * * * * /your/site/folder/sake dev/tasks/MyTask
 ```

@@ -23,41 +23,41 @@ display up to two levels of tabs in the interface.
 
 
 ```php
-	$fields->addFieldToTab('Root.Main', new TextField(..));
+    $fields->addFieldToTab('Root.Main', new TextField(..));
 ```
 
 ## Removing a field from a tab
 
 
 ```php
-	$fields->removeFieldFromTab('Root.Main', 'Content');
+    $fields->removeFieldFromTab('Root.Main', 'Content');
 ```
 
 ## Creating a new tab
 
 
 ```php
-	$fields->addFieldToTab('Root.MyNewTab', new TextField(..));
+    $fields->addFieldToTab('Root.MyNewTab', new TextField(..));
 ```
 
 ## Moving a field between tabs
 
 
 ```php
-	$content = $fields->dataFieldByName('Content');
+    $content = $fields->dataFieldByName('Content');
 
-	$fields->removeFieldFromTab('Root.Main', 'Content');
-	$fields->addFieldToTab('Root.MyContent', $content);
+    $fields->removeFieldFromTab('Root.Main', 'Content');
+    $fields->addFieldToTab('Root.MyContent', $content);
 ```
 
 ## Add multiple fields at once
 
 
 ```php
-	$fields->addFieldsToTab('Root.Content', [
-		TextField::create('Name'),
-		TextField::create('Email')
-	]);
+    $fields->addFieldsToTab('Root.Content', [
+        TextField::create('Name'),
+        TextField::create('Email')
+    ]);
 
 ```
 

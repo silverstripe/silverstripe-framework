@@ -23,24 +23,24 @@ code like this:
 
 ```ss
 
-	...
-	<ul>
-		...
-		<li id="record-15" class="class-Page closed jstree-leaf jstree-unchecked" data-id="15">
-		<ins class="jstree-icon">&nbsp;</ins>
-			<a class="" title="Page type: Page" href="{$AdminURL}page/edit/show/15">
-				<ins class="jstree-checkbox">&nbsp;</ins>
-				<ins class="jstree-icon">&nbsp;</ins>
-				<span class="text">
-					<span class="jstree-pageicon"></span>
-					<span class="item" title="Deleted">New Page</span>
-					<span class="badge deletedonlive">Deleted</span>
-				</span>
-			</a>
-		</li>
-		...
-	</ul>
-	...
+    ...
+    <ul>
+        ...
+        <li id="record-15" class="class-Page closed jstree-leaf jstree-unchecked" data-id="15">
+        <ins class="jstree-icon">&nbsp;</ins>
+            <a class="" title="Page type: Page" href="{$AdminURL}page/edit/show/15">
+                <ins class="jstree-checkbox">&nbsp;</ins>
+                <ins class="jstree-icon">&nbsp;</ins>
+                <span class="text">
+                    <span class="jstree-pageicon"></span>
+                    <span class="item" title="Deleted">New Page</span>
+                    <span class="badge deletedonlive">Deleted</span>
+                </span>
+            </a>
+        </li>
+        ...
+    </ul>
+    ...
 ```
 
 By applying the proper style sheet, the snippet html above could produce the look of:
@@ -66,22 +66,22 @@ __Example: using a subclass__
 
 
 ```php
-	use SilverStripe\CMS\Model\SiteTree;
+    use SilverStripe\CMS\Model\SiteTree;
 
-	class Page extends SiteTree 
-	{
-		public function getScheduledToPublish()
-		{
-			// return either true or false
-		}
+    class Page extends SiteTree 
+    {
+        public function getScheduledToPublish()
+        {
+            // return either true or false
+        }
 
-		public function getStatusFlags($cached = true) 
-		{
-			$flags = parent::getStatusFlags($cached);
-			$flags['scheduledtopublish'] = "Scheduled To Publish";
-			return $flags;
-		}
-	}
+        public function getStatusFlags($cached = true) 
+        {
+            $flags = parent::getStatusFlags($cached);
+            $flags['scheduledtopublish'] = "Scheduled To Publish";
+            return $flags;
+        }
+    }
 ```
 
 The above subclass of [SiteTree](api:SilverStripe\CMS\Model\SiteTree) will add a new flag for indicating its

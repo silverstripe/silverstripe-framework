@@ -29,9 +29,9 @@ you want to set.
 
 
 ```php
-	// mysite/_config.php
-	i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
-	i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
+    // mysite/_config.php
+    i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
+    i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
 ```
 
 Once we set a locale, all the calls to the translator function will return strings according to the set locale value, if
@@ -55,11 +55,11 @@ To let browsers know which language they're displaying a document in, you can de
 
 ```html
 
-	//'Page.ss' (HTML)
-	<html lang="$ContentLocale">
+    //'Page.ss' (HTML)
+    <html lang="$ContentLocale">
 
-	//'Page.ss' (XHTML)
-	<html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
+    //'Page.ss' (XHTML)
+    <html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
 ```
 
 Setting the `<html>` attribute is the most commonly used technique. There are other ways to specify content languages
@@ -72,7 +72,7 @@ and default alignment of paragraphs and tables to browsers.
 
 ```html
 
-	<html lang="$ContentLocale" dir="$i18nScriptDirection">
+    <html lang="$ContentLocale" dir="$i18nScriptDirection">
 ```
 
 ### Date and time formats
@@ -82,8 +82,8 @@ You can use these settings for your own view logic.
 
 
 ```php
-	Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
-	Config::inst()->update('i18n', 'time_format', 'HH:mm');
+    Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
+    Config::inst()->update('i18n', 'time_format', 'HH:mm');
 ```
 
 Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
@@ -107,11 +107,11 @@ In order to add a value, add the following to your `config.yml`:
 
 ```yml
 
-	i18n:
-	  common_locales:
-	    de_CGN:
-	      name: German (Cologne)
-	      native: Kölsch
+    i18n:
+      common_locales:
+        de_CGN:
+          name: German (Cologne)
+          native: Kölsch
 ```
 
 Similarly, to change an existing language label, you can overwrite one of these keys:
@@ -119,10 +119,10 @@ Similarly, to change an existing language label, you can overwrite one of these 
 
 ```yml
 
-	i18n:
-	  common_locales:
-	    en_NZ:
-	      native: Niu Zillund
+    i18n:
+      common_locales:
+        en_NZ:
+          native: Niu Zillund
 ```
 
 ### i18n in URLs
@@ -155,9 +155,9 @@ followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 
 ```php
-	$field = new DateField();
-	$field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
-	$field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
+    $field = new DateField();
+    $field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
+    $field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
 ```
 
 ## Translating text
@@ -167,10 +167,10 @@ language-dependent and use a translator function call instead.
 
 
 ```php
-	// without i18n
-	echo "This is a string";
-	// with i18n
-	echo _t("Namespace.Entity","This is a string");
+    // without i18n
+    echo "This is a string";
+    // with i18n
+    echo _t("Namespace.Entity","This is a string");
 ```
 
 All strings passed through the `_t()` function will be collected in a separate language table (see [Collecting text](#collecting-text)), which is the starting point for translations.
@@ -252,17 +252,17 @@ Please ensure that any required plurals are exposed via provideI18nEntities.
 
 
 ```php
-	// Simple string translation
-	_t('LeftAndMain.FILESIMAGES','Files & Images');
+    // Simple string translation
+    _t('LeftAndMain.FILESIMAGES','Files & Images');
 
-	// Using injection to add variables into the translated strings.
-	_t('CMSMain.RESTORED',
-		"Restored {value} successfully",
-		['value' => $itemRestored]
-	);
-	
-	// Plurals are invoked via a `|` pipe-delimeter with a {count} argument
-	_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
+    // Using injection to add variables into the translated strings.
+    _t('CMSMain.RESTORED',
+        "Restored {value} successfully",
+        ['value' => $itemRestored]
+    );
+    
+    // Plurals are invoked via a `|` pipe-delimeter with a {count} argument
+    _t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
 
 ```
 
@@ -282,13 +282,13 @@ the PHP version of the function.
 
 ```ss
 
-	// Simple string translation
-	<%t Namespace.Entity "String to translate" %>
+    // Simple string translation
+    <%t Namespace.Entity "String to translate" %>
 
-	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
-	<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
-	
-	// Plurals follow the same convention, required a `|` and `{count}` in the default string
+    // Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
+    <%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
+    
+    // Plurals follow the same convention, required a `|` and `{count}` in the default string
     <%t MyObject.PLURALS 'An item|{count} items' count=$Count %>
 ```
 
@@ -300,11 +300,11 @@ otherwise it won't pick up locale changes.
 
 ```ss
 
-	<% cached 'MyIdentifier', $CurrentLocale %>
-		<% loop $Students %>
-			$Name
-		<% end_loop %>
-	<% end_cached %>
+    <% cached 'MyIdentifier', $CurrentLocale %>
+        <% loop $Students %>
+            $Name
+        <% end_loop %>
+    <% end_cached %>
 ```
 
 ## Collecting text
@@ -337,15 +337,15 @@ This default order is configured in `framework/_config/i18n.yml`.  This file spe
 
 To create a custom module order, you need to specify a config fragment that inserts itself either after or before those items.  For example, you may have a number of modules that have to come after the framework/admin, but before anyhting else.  To do that, you would use this
 ```yml
-	---
-	Name: customi18n
-	Before: 'defaulti18n'
-	---
-	i18n:
-	  module_priority:
-	    - module1
-	    - module2
-	    - module3
+    ---
+    Name: customi18n
+    Before: 'defaulti18n'
+    ---
+    i18n:
+      module_priority:
+        - module1
+        - module2
+        - module3
 ```
 The config option being set is `i18n.module_priority`, and it is a list of module names.
 
@@ -366,19 +366,19 @@ By default, SilverStripe uses a YAML format which is loaded via the
 
 Example: framework/lang/en.yml (extract)
 ```yml
-	en:
-	  ImageUploader:
-	    Attach: 'Attach {title}'
-	  UploadField:
-	    NOTEADDFILES: 'You can add files once you have saved for the first time.'
+    en:
+      ImageUploader:
+        Attach: 'Attach {title}'
+      UploadField:
+        NOTEADDFILES: 'You can add files once you have saved for the first time.'
 ```
 Translation table: framework/lang/de.yml (extract)
 ```yml
-	de:
-	  ImageUploader:
-	    ATTACH: '{title} anhängen'
-	  UploadField:
-	    NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
+    de:
+      ImageUploader:
+        ATTACH: '{title} anhängen'
+      UploadField:
+        NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
 ```
 Note that translations are cached across requests.
 The cache can be cleared through the `?flush=1` query parameter,
@@ -400,7 +400,7 @@ Just point it to a directory instead of a file, and the class will figure out th
 
 
 ```php
-	Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
+    Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 ```
 
 ###  Translation Tables in JavaScript
@@ -413,13 +413,13 @@ Master Table (`<my-module-dir>/javascript/lang/en.js`)
 
 ```js
 
-	if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
-	  console.error('Class ss.i18n not defined');
-	} else {
-	  ss.i18n.addDictionary('en', {
-	    'MYMODULE.MYENTITY' : "Really delete these articles?"
-	  });
-	}
+    if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
+      console.error('Class ss.i18n not defined');
+    } else {
+      ss.i18n.addDictionary('en', {
+        'MYMODULE.MYENTITY' : "Really delete these articles?"
+      });
+    }
 ```
 
 Example Translation Table (`<my-module-dir>/javascript/lang/de.js`)
@@ -427,9 +427,9 @@ Example Translation Table (`<my-module-dir>/javascript/lang/de.js`)
 
 ```js
 
-	ss.i18n.addDictionary('de', {
-	  'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
-	});
+    ss.i18n.addDictionary('de', {
+      'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
+    });
 ```
 
 For most core modules, these files are generated by a
@@ -442,7 +442,7 @@ format which can be processed more easily by external translation providers (see
 
 ```js
 
-	alert(ss.i18n._t('MYMODULE.MYENTITY'));
+    alert(ss.i18n._t('MYMODULE.MYENTITY'));
 ```
 
 ### Advanced Use
@@ -456,13 +456,13 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 
 ```js
 
-	// MYMODULE.MYENTITY contains "Really delete %s articles by %s?"
-	alert(ss.i18n.sprintf(
-		ss.i18n._t('MYMODULE.MYENTITY'),
-		42,
-		'Douglas Adams'
-	));
-	// Displays: "Really delete 42 articles by Douglas Adams?"
+    // MYMODULE.MYENTITY contains "Really delete %s articles by %s?"
+    alert(ss.i18n.sprintf(
+        ss.i18n._t('MYMODULE.MYENTITY'),
+        42,
+        'Douglas Adams'
+    ));
+    // Displays: "Really delete 42 articles by Douglas Adams?"
 ```
 
 #### Variable injection with inject()
@@ -472,12 +472,12 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 
 ```js
 
-	// MYMODULE.MYENTITY contains "Really delete {count} articles by {author}?"
-	alert(ss.i18n.inject(
-		ss.i18n._t('MYMODULE.MYENTITY'),
-		{count: 42, author: 'Douglas Adams'}
-	));
-	// Displays: "Really delete 42 articles by Douglas Adams?"
+    // MYMODULE.MYENTITY contains "Really delete {count} articles by {author}?"
+    alert(ss.i18n.inject(
+        ss.i18n._t('MYMODULE.MYENTITY'),
+        {count: 42, author: 'Douglas Adams'}
+    ));
+    // Displays: "Really delete 42 articles by Douglas Adams?"
 ```
 
 ## Limitations

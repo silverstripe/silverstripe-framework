@@ -17,32 +17,32 @@ code.
 </div>
 
 ```php
-	use SilverStripe\Security\Permission;
-	use SilverStripe\ORM\DataObject;
+    use SilverStripe\Security\Permission;
+    use SilverStripe\ORM\DataObject;
 
-	class MyDataObject extends DataObject 
-	{
-	
-		public function canView($member = null) 
-		{
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+    class MyDataObject extends DataObject 
+    {
+    
+        public function canView($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canEdit($member = null) 
-		{
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+        public function canEdit($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canDelete($member = null) 
-		{
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+        public function canDelete($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canCreate($member = null) 
-		{
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
-	}
+        public function canCreate($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
+    }
 ```
 
 <div class="alert" markdown="1">

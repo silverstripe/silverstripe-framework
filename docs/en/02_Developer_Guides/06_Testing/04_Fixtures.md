@@ -16,12 +16,12 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 
 ```php
-	class MyNewTest extends SapphireTest 
-	{
-	
-		protected static $fixture_file = 'fixtures.yml';
-		
-	}
+    class MyNewTest extends SapphireTest 
+    {
+    
+        protected static $fixture_file = 'fixtures.yml';
+        
+    }
 ```
 
 You can also use an array of fixture files, if you want to use parts of multiple other tests:
@@ -31,15 +31,15 @@ You can also use an array of fixture files, if you want to use parts of multiple
 
 
 ```php
-	class MyNewTest extends SapphireTest 
-	{
-	
-		protected static $fixture_file = [
-			'fixtures.yml',
-			'otherfixtures.yml'
-		];
-		
-	}
+    class MyNewTest extends SapphireTest 
+    {
+    
+        protected static $fixture_file = [
+            'fixtures.yml',
+            'otherfixtures.yml'
+        ];
+        
+    }
 
 ```
 
@@ -50,31 +50,31 @@ ideal for fixture generation. Say we have the following two DataObjects:
 
 
 ```php
-	    
+        
     use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject
+    class Player extends DataObject
     {
-		private static $db = [
-			'Name' => 'Varchar(255)'
-		];
+        private static $db = [
+            'Name' => 'Varchar(255)'
+        ];
 
-		private static $has_one = [
-			'Team' => 'Team'
-		];
-	}
+        private static $has_one = [
+            'Team' => 'Team'
+        ];
+    }
 
-	class Team extends DataObject
+    class Team extends DataObject
     {
-		private static $db = [
-			'Name' => 'Varchar(255)',
-			'Origin' => 'Varchar(255)'
-		];
+        private static $db = [
+            'Name' => 'Varchar(255)',
+            'Origin' => 'Varchar(255)'
+        ];
 
-		private static $has_many = [
-			'Players' => 'Player'
-		];
-	}
+        private static $has_many = [
+            'Players' => 'Player'
+        ];
+    }
 
 ```
 
@@ -85,23 +85,23 @@ We can represent multiple instances of them in `YAML` as follows:
 
 ```yml
 
-	Team:
-		hurricanes:
-			Name: The Hurricanes
-			Origin: Wellington
-		crusaders:
-			Name: The Crusaders
-			Origin: Canterbury
-	Player:
-		john:
-			Name: John
-			Team: =>Team.hurricanes
-		joe:
-			Name: Joe
-			Team: =>Team.crusaders
-		jack:
-			Name: Jack
-			Team: =>Team.crusaders
+    Team:
+        hurricanes:
+            Name: The Hurricanes
+            Origin: Wellington
+        crusaders:
+            Name: The Crusaders
+            Origin: Canterbury
+    Player:
+        john:
+            Name: John
+            Team: =>Team.hurricanes
+        joe:
+            Name: Joe
+            Team: =>Team.crusaders
+        jack:
+            Name: Jack
+            Team: =>Team.crusaders
 ```
 
 This `YAML` is broken up into three levels, signified by the indentation of each line. In the first level of 
@@ -112,7 +112,7 @@ represents a new object and can be referenced in the PHP using `objFromFixture`
 
 
 ```php
-	$player = $this->objFromFixture('Player', 'jack');
+    $player = $this->objFromFixture('Player', 'jack');
 ```
 
 The third and final level represents each individual object's fields.
@@ -144,22 +144,22 @@ We can also declare the relationships conversely. Another way we could write the
 
 ```yml
 
-	Player:
-		john:
-			Name: John
-		joe:
-			Name: Joe
-		jack:
-			Name: Jack
-	Team:
-		hurricanes:
-			Name: Hurricanes
-			Origin: Wellington
-			Players: =>Player.john
-		crusaders:
-			Name: Crusaders
-			Origin: Canterbury
-			Players: =>Player.joe,=>Player.jack
+    Player:
+        john:
+            Name: John
+        joe:
+            Name: Joe
+        jack:
+            Name: Jack
+    Team:
+        hurricanes:
+            Name: Hurricanes
+            Origin: Wellington
+            Players: =>Player.john
+        crusaders:
+            Name: Crusaders
+            Origin: Canterbury
+            Players: =>Player.joe,=>Player.jack
 ```
 
 The database is populated by instantiating `DataObject` objects and setting the fields declared in the `YAML`, then 
@@ -168,14 +168,14 @@ writing:
 
 
 ```php
-	$team = new Team([
-		'Name' => 'Hurricanes',
-		'Origin' => 'Wellington'
-	]);
+    $team = new Team([
+        'Name' => 'Hurricanes',
+        'Origin' => 'Wellington'
+    ]);
 
-	$team->write();
+    $team->write();
 
-	$team->Players()->add($john);
+    $team->Players()->add($john);
 
 ```
 
@@ -215,33 +215,33 @@ declare the role each player has in the team.
 ```php
     use SilverStripe\ORM\DataObject;
     
-	class Player extends DataObject
+    class Player extends DataObject
     {
-		private static $db = [
-			'Name' => 'Varchar(255)'
-		];
+        private static $db = [
+            'Name' => 'Varchar(255)'
+        ];
 
-		private static $belongs_many_many = [
-			'Teams' => 'Team'
-		];
-	}
+        private static $belongs_many_many = [
+            'Teams' => 'Team'
+        ];
+    }
 
-	class Team extends DataObject
+    class Team extends DataObject
     {
-		private static $db = [
-			'Name' => 'Varchar(255)'
-		];
+        private static $db = [
+            'Name' => 'Varchar(255)'
+        ];
 
-		private static $many_many = [
-			'Players' => 'Player'
-		];
+        private static $many_many = [
+            'Players' => 'Player'
+        ];
 
-		private static $many_many_extraFields = [
-			'Players' => [
-				'Role' => "Varchar"
-			]
-		];	
-	}
+        private static $many_many_extraFields = [
+            'Players' => [
+                'Role' => "Varchar"
+            ]
+        ];    
+    }
 
 ```
 
@@ -250,27 +250,27 @@ To provide the value for the `many_many_extraField` use the YAML list syntax.
 
 ```yml
 
-	Player:
-	  john:
-	    Name: John
-	  joe:
-	    Name: Joe
-	  jack:
-	    Name: Jack
-	Team:
-	  hurricanes:
-	    Name: The Hurricanes
-	    Players: 
-	      - =>Player.john:
- 	        Role: Captain
+    Player:
+      john:
+        Name: John
+      joe:
+        Name: Joe
+      jack:
+        Name: Jack
+    Team:
+      hurricanes:
+        Name: The Hurricanes
+        Players: 
+          - =>Player.john:
+             Role: Captain
 
-	  crusaders:
-	    Name: The Crusaders
-	    Players: 
-	      - =>Player.joe:
-	        Role: Captain
-	      - =>Player.jack:
-	        Role: Winger
+      crusaders:
+        Name: The Crusaders
+        Players: 
+          - =>Player.joe:
+            Role: Captain
+          - =>Player.jack:
+            Role: Winger
 ```
 
 ## Fixture Factories
@@ -293,18 +293,18 @@ using them.
 
 
 ```php
-	$factory = Injector::inst()->create('FixtureFactory');
+    $factory = Injector::inst()->create('FixtureFactory');
 
-	$obj = $factory->createObject('Team', 'hurricanes');
+    $obj = $factory->createObject('Team', 'hurricanes');
 ```
 
 In order to create an object with certain properties, just add a third argument:
 
 
 ```php
-	$obj = $factory->createObject('Team', 'hurricanes', [
-		'Name' => 'My Value'
-	]);
+    $obj = $factory->createObject('Team', 'hurricanes', [
+        'Name' => 'My Value'
+    ]);
 
 ```
 
@@ -317,7 +317,7 @@ After we've created this object in the factory, `getId` is used to retrieve it b
 
 
 ```php
-	$databaseId = $factory->getId('Team', 'hurricanes');
+    $databaseId = $factory->getId('Team', 'hurricanes');
 ```
 
 ### Default Properties
@@ -327,9 +327,9 @@ name, we can set the default to be `Unknown Team`.
 
 
 ```php
-	$factory->define('Team', [
-		'Name' => 'Unknown Team'
-	]);
+    $factory->define('Team', [
+        'Name' => 'Unknown Team'
+    ]);
 
 ```
 
@@ -340,16 +340,16 @@ values based on other fixture data.
 
 
 ```php
-	$factory->define('Member', [
-		'Email' => function($obj, $data, $fixtures) {
-			if(isset($data['FirstName']) {
-				$obj->Email = strtolower($data['FirstName']) . '@example.org';
-			}
-		},
-		'Score' => function($obj, $data, $fixtures) {
-			$obj->Score = rand(0,10);
-		}
-	)];
+    $factory->define('Member', [
+        'Email' => function($obj, $data, $fixtures) {
+            if(isset($data['FirstName']) {
+                $obj->Email = strtolower($data['FirstName']) . '@example.org';
+            }
+        },
+        'Score' => function($obj, $data, $fixtures) {
+            $obj->Score = rand(0,10);
+        }
+    )];
 
 ```
 
@@ -360,9 +360,9 @@ Model relations can be expressed through the same notation as in the YAML fixtur
 
 
 ```php
-	$obj = $factory->createObject('Team', 'hurricanes', [
-		'MyHasManyRelation' => '=>Player.john,=>Player.joe'
-	]);
+    $obj = $factory->createObject('Team', 'hurricanes', [
+        'MyHasManyRelation' => '=>Player.john,=>Player.joe'
+    ]);
 
 ```
 
@@ -373,13 +373,13 @@ publish a page, which requires a method call.
 
 
 ```php
-	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
+    $blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
 
-	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
-	});
+    $blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+        $obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+    });
 
-	$page = $factory->define('Page', $blueprint);
+    $page = $factory->define('Page', $blueprint);
 ```
 
 Available callbacks:
@@ -395,20 +395,20 @@ equal the class names they manage.
 
 
 ```php
-	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
+    $memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
 
-	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
+    $adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
 
-	$adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-		if(isset($fixtures['Group']['admin'])) {
-			$adminGroup = Group::get()->byId($fixtures['Group']['admin']);
-			$obj->Groups()->add($adminGroup);
-		}
-	});
+    $adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+        if(isset($fixtures['Group']['admin'])) {
+            $adminGroup = Group::get()->byId($fixtures['Group']['admin']);
+            $obj->Groups()->add($adminGroup);
+        }
+    });
 
-	$member = $factory->createObject('Member'); // not in admin group
+    $member = $factory->createObject('Member'); // not in admin group
 
-	$admin = $factory->createObject('AdminMember'); // in admin group
+    $admin = $factory->createObject('AdminMember'); // in admin group
 ```
 
 ## Related Documentation

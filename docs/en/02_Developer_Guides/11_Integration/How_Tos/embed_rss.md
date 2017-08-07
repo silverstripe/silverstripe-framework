@@ -11,35 +11,35 @@ First, we write the code to query the API feed.
 
 
 ```php
-	public function getWellingtonWeather() 
-	{
-		$fetch = new RestfulService(
-			'https://query.yahooapis.com/v1/public/yql'
-		);
-		
-		$fetch->setQueryString([
-			'q' => 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="Wellington, NZ")'
-		]);
-		
-		// perform the query
-		$conn = $fetch->request();
+    public function getWellingtonWeather() 
+    {
+        $fetch = new RestfulService(
+            'https://query.yahooapis.com/v1/public/yql'
+        );
+        
+        $fetch->setQueryString([
+            'q' => 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="Wellington, NZ")'
+        ]);
+        
+        // perform the query
+        $conn = $fetch->request();
 
-		// parse the XML body
-		$msgs = $fetch->getValues($conn->getBody(), "results");
+        // parse the XML body
+        $msgs = $fetch->getValues($conn->getBody(), "results");
 
-		// generate an object our templates can read
-		$output = new ArrayList();
+        // generate an object our templates can read
+        $output = new ArrayList();
 
-		if($msgs) {
-			foreach($msgs as $msg) {
-				$output->push(new ArrayData([
-					'Description' => Convert::xml2raw($msg->channel_item_description)
-				]));
-			}
-		}
+        if($msgs) {
+            foreach($msgs as $msg) {
+                $output->push(new ArrayData([
+                    'Description' => Convert::xml2raw($msg->channel_item_description)
+                ]));
+            }
+        }
 
-		return $output;
-	}
+        return $output;
+    }
 
 ```
 
@@ -51,11 +51,11 @@ single field `Description`.
 
 ```ss
 
-	<% if WellingtonWeather %>
-	<% loop WellingtonWeather %>
-		$Description
-	<% end_loop %>
-	<% end_if %>
+    <% if WellingtonWeather %>
+    <% loop WellingtonWeather %>
+        $Description
+    <% end_loop %>
+    <% end_if %>
 ```
 
 ## Related

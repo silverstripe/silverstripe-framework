@@ -9,22 +9,22 @@ All functions that provide data to templates must have no side effects, as the v
 example, this controller method will not behave as you might imagine.
 
 ```php
-	private $counter = 0;
+    private $counter = 0;
 
-	public function Counter() 
-	{
-	    $this->counter += 1;
+    public function Counter() 
+    {
+        $this->counter += 1;
 
-	    return $this->counter;
-	}
+        return $this->counter;
+    }
 ```
 
 
 ```ss
 
-	$Counter, $Counter, $Counter
+    $Counter, $Counter, $Counter
 
-	// returns 1, 1, 1
+    // returns 1, 1, 1
 ```
 
 When we render `$Counter` to the template we would expect the value to increase and output `1, 2, 3`. However, as 
@@ -38,9 +38,9 @@ from the database to display, the contents of the area are fetched from a [cache
 
 ```ss
 
-	<% cached 'MyCachedContent', LastEdited %>
-		$Title
-	<% end_cached %>
+    <% cached 'MyCachedContent', LastEdited %>
+        $Title
+    <% end_cached %>
 ```
 
 

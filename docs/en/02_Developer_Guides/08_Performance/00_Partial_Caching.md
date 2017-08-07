@@ -6,10 +6,10 @@ summary: Cache SilverStripe templates to reduce database queries.
 Partial caching is a feature that allows the caching of just a portion of a page.
 ```ss
 
-	<% cached 'CacheKey' %>
-	$DataTable
-	...
-	<% end_cached %>
+    <% cached 'CacheKey' %>
+    $DataTable
+    ...
+    <% end_cached %>
 ```
 
 Each cache block has a cache key. A cache key is an unlimited number of comma separated variables and quoted strings. 
@@ -24,17 +24,17 @@ Here are some more complex examples:
 
 ```ss
 
-	<% cached 'database', $LastEdited %> 
-		<!-- that updates every time the record changes. -->
-	<% end_cached %>
-	
-	<% cached 'loginblock', $CurrentMember.ID %>
-		<!-- cached unique to the user. i.e for user 2, they will see a different cache to user 1 -->
-	<% end_cached %>
+    <% cached 'database', $LastEdited %> 
+        <!-- that updates every time the record changes. -->
+    <% end_cached %>
+    
+    <% cached 'loginblock', $CurrentMember.ID %>
+        <!-- cached unique to the user. i.e for user 2, they will see a different cache to user 1 -->
+    <% end_cached %>
 
-	<% cached 'loginblock', $LastEdited, $CurrentMember.isAdmin %>
-		<!-- recached when block object changes, and if the user is admin -->
-	<% end_cached %>
+    <% cached 'loginblock', $LastEdited, $CurrentMember.isAdmin %>
+        <!-- recached when block object changes, and if the user is admin -->
+    <% end_cached %>
 ```
 
 An additional global key is incorporated in the cache lookup. The default value for this is 
@@ -50,8 +50,8 @@ user does not influence your template content, you can update this key as below;
 
 ```yaml
 
-	SilverStripe\View\SSViewer:
-		global_key: '$CurrentReadingMode, $Locale'
+    SilverStripe\View\SSViewer:
+        global_key: '$CurrentReadingMode, $Locale'
 ```
 
 ## Aggregates
@@ -66,7 +66,7 @@ otherwise. By using aggregates, we do that like this:
 
 ```ss
 
-	<% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
+    <% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
 ```
 
 The cache for this will update whenever a page is added, removed or edited.
@@ -77,7 +77,7 @@ or edited
 
 ```ss
 
-	<% cached 'categorylist', $List('Category').max('LastEdited'), $List('Category').count() %>
+    <% cached 'categorylist', $List('Category').max('LastEdited'), $List('Category').count() %>
 ```
 
 <div class="notice" markdown="1">
@@ -98,17 +98,17 @@ For example, a block that shows a collection of rotating slides needs to update 
 
 
 ```php
-	public function SliderCacheKey() 
-	{
-		$fragments = [
-			'Page-Slides',
-			$this->ID,
-			// identify which objects are in the list and their sort order
-			implode('-', $this->Slides()->Column('ID')),
-			$this->Slides()->max('LastEdited')
-		];
-		return implode('-_-', $fragments);
-	}
+    public function SliderCacheKey() 
+    {
+        $fragments = [
+            'Page-Slides',
+            $this->ID,
+            // identify which objects are in the list and their sort order
+            implode('-', $this->Slides()->Column('ID')),
+            $this->Slides()->max('LastEdited')
+        ];
+        return implode('-_-', $fragments);
+    }
 
 ```
 
@@ -117,7 +117,7 @@ Then reference that function in the cache key:
 
 ```ss
 
-	<% cached $SliderCacheKey %>
+    <% cached $SliderCacheKey %>
 ```
 
 The example above would work for both a has_many and many_many relationship.
@@ -139,7 +139,7 @@ For instance, if we show some blog statistics, but are happy having them be slig
 
 ```ss
 
-	<% cached 'blogstatistics', $Blog.ID %>
+    <% cached 'blogstatistics', $Blog.ID %>
 ```
 
 which will invalidate after the cache lifetime expires. If you need more control than that (cache lifetime is
@@ -147,10 +147,10 @@ configurable only on a site-wide basis), you could add a special function to you
 
 
 ```php
-	public function BlogStatisticsCounter() 
-	{
-	    return (int)(time() / 60 / 5); // Returns a new number every five minutes
-	}
+    public function BlogStatisticsCounter() 
+    {
+        return (int)(time() / 60 / 5); // Returns a new number every five minutes
+    }
 ```
 
  
@@ -159,7 +159,7 @@ and then use it in the cache key
 
 ```ss
 
-	<% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
+    <% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
 ```
 
 ## Cache block conditionals
@@ -174,7 +174,7 @@ heavy load:
 
 ```ss
 
-	<% cached 'blogstatistics', $Blog.ID if $HighLoad %>
+    <% cached 'blogstatistics', $Blog.ID if $HighLoad %>
 ```
 
 By adding a `HighLoad` function to your `PageController`, you could enable or disable caching dynamically.
@@ -185,7 +185,7 @@ To cache the contents of a page for all anonymous users, but dynamically calcula
 
 ```ss
 
-	<% cached unless $CurrentUser %>
+    <% cached unless $CurrentUser %>
 ```
 
 ## Uncached
@@ -197,7 +197,7 @@ particular cache block by changing just the tag, leaving the key and conditional
 
 ```ss
 
-	<% uncached %>
+    <% uncached %>
 ```
 
 ## Nested cache blocks
@@ -213,15 +213,15 @@ An example:
 
 ```ss
 
-	<% cached $LastEdited %>
-	  Our wonderful site
-	
-	  <% cached $Member.ID %>
-	    Welcome $Member.Name
-	  <% end_cached %>
-	
-	  $ASlowCalculation
-	<% end_cached %>
+    <% cached $LastEdited %>
+      Our wonderful site
+    
+      <% cached $Member.ID %>
+        Welcome $Member.Name
+      <% end_cached %>
+    
+      $ASlowCalculation
+    <% end_cached %>
 ```
 
 This will cache the entire outer section until the next time the page is edited, but will display a different welcome
@@ -233,15 +233,15 @@ could also write the last example as:
 
 ```ss
 
-	<% cached $LastEdited %>
-	  Our wonderful site
-	
-	  <% uncached %>
-	    Welcome $Member.Name
-	  <% end_uncached %>
-	
-	  $ASlowCalculation
-	<% end_cached %>
+    <% cached $LastEdited %>
+      Our wonderful site
+    
+      <% uncached %>
+        Welcome $Member.Name
+      <% end_uncached %>
+    
+      $ASlowCalculation
+    <% end_cached %>
 ```
 
 <div class="warning" markdown="1">
@@ -254,15 +254,15 @@ Failing example:
 
 ```ss
 
-	<% cached $LastEdited %>
-	
-	  <% loop $Children %>
-	    <% cached $LastEdited %>
-	      $Name
-	    <% end_cached %>
-	  <% end_loop %>
-	
-	<% end_cached %>
+    <% cached $LastEdited %>
+    
+      <% loop $Children %>
+        <% cached $LastEdited %>
+          $Name
+        <% end_cached %>
+      <% end_loop %>
+    
+    <% end_cached %>
 ```
 
 Can be re-written as:
@@ -270,15 +270,15 @@ Can be re-written as:
 
 ```ss
 
-	<% cached $LastEdited %>
-	
-	  <% cached $AllChildren.max('LastEdited') %>
-	    <% loop $Children %>
-	      $Name
-	    <% end_loop %>
-	  <% end_cached %>
-	
-	<% end_cached %>
+    <% cached $LastEdited %>
+    
+      <% cached $AllChildren.max('LastEdited') %>
+        <% loop $Children %>
+          $Name
+        <% end_loop %>
+      <% end_cached %>
+    
+    <% end_cached %>
 ```
 
 Or:
@@ -286,13 +286,13 @@ Or:
 
 ```ss
 
-	<% cached $LastEdited %>
-		(other code)
-	<% end_cached %>
-	
-	<% loop $Children %>
-		<% cached $LastEdited %>
-		  $Name
-		<% end_cached %>
-	<% end_loop %>
+    <% cached $LastEdited %>
+        (other code)
+    <% end_cached %>
+    
+    <% loop $Children %>
+        <% cached $LastEdited %>
+          $Name
+        <% end_cached %>
+    <% end_loop %>
 ```

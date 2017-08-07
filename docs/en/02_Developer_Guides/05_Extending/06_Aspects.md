@@ -47,31 +47,31 @@ used.
 
 
 ```php
-	class MySQLWriteDbAspect implements BeforeCallAspect 
-	{
+    class MySQLWriteDbAspect implements BeforeCallAspect 
+    {
 
-		/**
-		 * @var MySQLDatabase
-		 */
-		public $writeDb;
-		
-		public $writeQueries = [
-			'insert','update','delete','replace'
-		];
+        /**
+         * @var MySQLDatabase
+         */
+        public $writeDb;
+        
+        public $writeQueries = [
+            'insert','update','delete','replace'
+        ];
 
-		public function beforeCall($proxied, $method, $args, &$alternateReturn) 
-		{
-			if (isset($args[0])) {
-				$sql = $args[0];
-				$code = isset($args[1]) ? $args[1] : E_USER_ERROR;
+        public function beforeCall($proxied, $method, $args, &$alternateReturn) 
+        {
+            if (isset($args[0])) {
+                $sql = $args[0];
+                $code = isset($args[1]) ? $args[1] : E_USER_ERROR;
 
-				if (in_array(strtolower(substr($sql,0,strpos($sql,' '))), $this->writeQueries)) {
-					$alternateReturn = $this->writeDb->query($sql, $code);
-					return false;
-				}
-			}
-		}
-	}
+                if (in_array(strtolower(substr($sql,0,strpos($sql,' '))), $this->writeQueries)) {
+                    $alternateReturn = $this->writeDb->query($sql, $code);
+                    return false;
+                }
+            }
+        }
+    }
 
 ```
 
@@ -83,14 +83,14 @@ object that's made use of above.
 
 ```yml
 
-	WriteMySQLDatabase:
-	  class: MySQLDatabase
-	  constructor:
-	    - type: MySQLDatabase
-	      server: write.hostname.db
-	      username: user
-	      password: pass
-	      database: write_database
+    WriteMySQLDatabase:
+      class: MySQLDatabase
+      constructor:
+        - type: MySQLDatabase
+          server: write.hostname.db
+          username: user
+          password: pass
+          database: write_database
 ```
 
 This means that whenever something asks the [Injector](api:SilverStripe\Core\Injector\Injector) for the `WriteMySQLDatabase` object, it'll receive an object 
@@ -103,9 +103,9 @@ Next, this should be bound into an instance of the `Aspect` class
 
 ```yml
 
-	MySQLWriteDbAspect:
-	  properties:
-	    writeDb: %$WriteMySQLDatabase
+    MySQLWriteDbAspect:
+      properties:
+        writeDb: %$WriteMySQLDatabase
 ```
 
 Next, we need to define the database connection that will be used for all non-write queries
@@ -113,14 +113,14 @@ Next, we need to define the database connection that will be used for all non-wr
 **mysite/_config/app.yml**
 ```yml
 
-	ReadMySQLDatabase:
-	  class: MySQLDatabase
-	  constructor:
-	    - type: MySQLDatabase
-	    server: slavecluster.hostname.db
-	    username: user
-	    password: pass
-	    database: read_database
+    ReadMySQLDatabase:
+      class: MySQLDatabase
+      constructor:
+        - type: MySQLDatabase
+        server: slavecluster.hostname.db
+        username: user
+        password: pass
+        database: read_database
 ```
 
 The final piece that ties everything together is the [AopProxyService](api:SilverStripe\Core\Injector\AopProxyService) instance that will be used as the replacement
@@ -129,13 +129,13 @@ object when the framework creates the database connection.
 **mysite/_config/app.yml**
 ```yml
 
-	MySQLDatabase:
-	  class: AopProxyService
-	  properties:
-	    proxied: %$ReadMySQLDatabase
-	    beforeCall:
-	      query: 
-	        - %$MySQLWriteDbAspect
+    MySQLDatabase:
+      class: AopProxyService
+      properties:
+        proxied: %$ReadMySQLDatabase
+        beforeCall:
+          query: 
+            - %$MySQLWriteDbAspect
 ```
 
 The two important parts here are in the `properties` declared for the object.
@@ -149,33 +149,33 @@ Overall configuration for this would look as follows
 **mysite/_config/app.yml**
 ```yml
 
-	Injector:
-	  ReadMySQLDatabase:
-	    class: MySQLDatabase
-	    constructor:
-	      - type: MySQLDatabase
-	        server: slavecluster.hostname.db
-	        username: user
-	        password: pass
-	        database: read_database
-	  MySQLWriteDbAspect:
-	    properties:
-	      writeDb: %$WriteMySQLDatabase
-	  WriteMySQLDatabase:
-	    class: MySQLDatabase
-	    constructor:
-	      - type: MySQLDatabase
-	        server: write.hostname.db
-	        username: user
-	        password: pass
-	        database: write_database
-	  MySQLDatabase:
-	    class: AopProxyService
-	    properties:
-	      proxied: %$ReadMySQLDatabase
-	      beforeCall:
-	        query: 
-	          - %$MySQLWriteDbAspect
+    Injector:
+      ReadMySQLDatabase:
+        class: MySQLDatabase
+        constructor:
+          - type: MySQLDatabase
+            server: slavecluster.hostname.db
+            username: user
+            password: pass
+            database: read_database
+      MySQLWriteDbAspect:
+        properties:
+          writeDb: %$WriteMySQLDatabase
+      WriteMySQLDatabase:
+        class: MySQLDatabase
+        constructor:
+          - type: MySQLDatabase
+            server: write.hostname.db
+            username: user
+            password: pass
+            database: write_database
+      MySQLDatabase:
+        class: AopProxyService
+        properties:
+          proxied: %$ReadMySQLDatabase
+          beforeCall:
+            query: 
+              - %$MySQLWriteDbAspect
 ```
 
 ## Changing what a method returns
@@ -184,9 +184,9 @@ One major feature of an `Aspect` is the ability to modify what is returned from 
 As seen in the above example, the `beforeCall` method modifies the `&$alternateReturn` variable, and returns `false` 
 after doing so. 
 ```php
-	$alternateReturn = $this->writeDb->query($sql, $code);
+    $alternateReturn = $this->writeDb->query($sql, $code);
 
-	return false;
+    return false;
 ```
 
 By returning `false` from the `beforeCall()` method, the wrapping proxy class will_not_ call any additional `beforeCall`

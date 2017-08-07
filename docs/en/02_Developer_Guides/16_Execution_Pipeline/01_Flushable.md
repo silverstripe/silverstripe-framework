@@ -20,31 +20,31 @@ This example uses [Cache](api:Cache) in some custom code, and the same cache is 
 
 
 ```php
-	use SilverStripe\ORM\DataObject;
-	use SilverStripe\Core\Injector\Injector;
-	use SilverStripe\Core\Flushable;
-	use Psr\SimpleCache\CacheInterface;
+    use SilverStripe\ORM\DataObject;
+    use SilverStripe\Core\Injector\Injector;
+    use SilverStripe\Core\Flushable;
+    use Psr\SimpleCache\CacheInterface;
 
-	class MyClass extends DataObject implements Flushable 
-	{
-	
-		public static function flush() 
-		{
-			Injector::inst()->get(CacheInterface::class . '.mycache')->clear();
-		}
-	
-		public function MyCachedContent() 
-		{
-			$cache = Injector::inst()->get(CacheInterface::class . '.mycache')
-			$something = $cache->get('mykey');
-			if(!$something) {
-				$something = 'value to be cached';
-				$cache->set('mykey', $something);
-			}
-			return $something;
-		}
-	
-	}
+    class MyClass extends DataObject implements Flushable 
+    {
+    
+        public static function flush() 
+        {
+            Injector::inst()->get(CacheInterface::class . '.mycache')->clear();
+        }
+    
+        public function MyCachedContent() 
+        {
+            $cache = Injector::inst()->get(CacheInterface::class . '.mycache')
+            $something = $cache->get('mykey');
+            if(!$something) {
+                $something = 'value to be cached';
+                $cache->set('mykey', $something);
+            }
+            return $something;
+        }
+    
+    }
 ```
 
 ### Using with filesystem
@@ -54,18 +54,18 @@ useful in an example like `GD` or `Imagick` generating resampled images, but we 
 flush so they are re-created on demand.
 
 ```php
-	use SilverStripe\ORM\DataObject;
-	use SilverStripe\Core\Flushable;
+    use SilverStripe\ORM\DataObject;
+    use SilverStripe\Core\Flushable;
 
-	class MyClass extends DataObject implements Flushable 
-	{
-	
-		public static function flush() 
-		{
-			foreach(glob(ASSETS_PATH . '/_tempfiles/*.jpg') as $file) {
-				unlink($file);
-			}
-		}
-	
-	}
+    class MyClass extends DataObject implements Flushable 
+    {
+    
+        public static function flush() 
+        {
+            foreach(glob(ASSETS_PATH . '/_tempfiles/*.jpg') as $file) {
+                unlink($file);
+            }
+        }
+    
+    }
 ```

@@ -22,16 +22,16 @@ The `SecurityToken` automatically added looks something like:
 
 
 ```php
-	$form = new Form(..);
-	echo $form->getSecurityToken()->getValue();
+    $form = new Form(..);
+    echo $form->getSecurityToken()->getValue();
 
-	// 'c443076989a7f24cf6b35fe1360be8683a753e2c'
+    // 'c443076989a7f24cf6b35fe1360be8683a753e2c'
 ```
 
 This token value is passed through the rendered Form HTML as a [HiddenField](api:SilverStripe\Forms\HiddenField).
 ```html
 
-	<input type="hidden" name="SecurityID" value="c443076989a7f24cf6b35fe1360be8683a753e2c" class="hidden"  />
+    <input type="hidden" name="SecurityID" value="c443076989a7f24cf6b35fe1360be8683a753e2c" class="hidden"  />
 ```
 
 The token should be present whenever a operation has a side effect such as a `POST` operation.
@@ -41,8 +41,8 @@ normally require a security token).
 
 
 ```php
-	$form = new Form(..);
-	$form->disableSecurityToken();
+    $form = new Form(..);
+    $form->disableSecurityToken();
 ```
 
 <div class="alert" markdown="1">
@@ -58,13 +58,13 @@ application errors or edge cases. If you need to disable this setting follow the
 
 
 ```php
-	$form = new Form(..);
+    $form = new Form(..);
 
-	$form->setFormMethod('POST');
-	$form->setStrictFormMethodCheck(false);
+    $form->setFormMethod('POST');
+    $form->setStrictFormMethodCheck(false);
 
-	// or alternative short notation..
-	$form->setFormMethod('POST', false);
+    // or alternative short notation..
+    $form->setFormMethod('POST', false);
 ```
 
 ## Spam and Bot Attacks
