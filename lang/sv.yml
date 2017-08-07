@@ -1,6 +1,4 @@
 sv:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Ogiltig förfrågan'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nej
     YESANSWER: Ja
@@ -72,8 +70,6 @@ sv:
     IsNullLabel: 'Är NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Var god ange ett giltigt telefonnummer'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -93,17 +89,11 @@ sv:
     ERRORNOTADMIN: 'Den användaren är inte administratör'
     ERRORNOTREC: 'Användarnamnet / lösenordet hittas inte'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Glömt lösenord?'
-    BUTTONLOGIN: 'Logga in igen'
-    BUTTONLOGOUT: 'Logga ut'
     PASSWORDEXPIRED: '<p>Ditt lösenard har gått ut. <a target="_top" href="{link}">Vänligen ange ett nytt.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ogiltig användare. <a target="_top" href="{link}">Vänligen ange dina inloggnings-uppgifter igen</a> för att fortsätta.</p>'
-    LoginMessage: '<p>Om du har osparade ändringar kan du fortsätta där du slutade genom att logga in igen nedan.</p>'
     SUCCESS: Framgång
     SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
-    TimedOutTitleAnonymous: 'Din session har upphört.'
-    TimedOutTitleMember: 'Hej {name}!<br />Din session har upphört.'
   SilverStripe\Security\Group:
     AddRole: 'Lägg till roll för den här gruppen'
     Code: Gruppkod
@@ -130,7 +120,6 @@ sv:
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
-    DefaultAdminFirstname: standard
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Det nya lösenordet kan inte vara tomt, vänligen försök igen'
     ENTEREMAIL: 'Ange en e-postadress för att få en återställningslänk för lösenordet.'
@@ -142,7 +131,6 @@ sv:
     INTERFACELANG: Gränssnittsspråk
     LOGGEDINAS: 'Du är inloggad som {name}.'
     NEWPASSWORD: 'Nytt lösenord'
-    NoPassword: 'Det finns inget lösenord för den här medlemmen'
     PASSWORD: Lösenord
     PASSWORDEXPIRED: 'Ditt lösenord har gått ut. Vänligen ange ett nytt.'
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'

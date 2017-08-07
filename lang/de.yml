@@ -1,6 +1,4 @@
 de:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Ungültige Anfrage'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nein
     YESANSWER: Ja
@@ -27,7 +25,6 @@ de:
   SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Ihre Sitzung ist abgelaufen. Bitte schicken Sie das Formular erneut ab.'
     CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
-    VALIDATIONCREDIT: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer korrekt eingegeben haben'
     VALIDATIONPASSWORDSDONTMATCH: 'Die Passwörter stimmen nicht überein'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwortfelder dürfen nicht leer sein'
     VALIDATIONSTRONGPASSWORD: 'Passwörter müssen mindestens eine Zahl und ein alphanumerisches Zeichen enthalten'
@@ -66,27 +63,6 @@ de:
     Save: Speichern
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Bearbeiten
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Sie haben keine Berechtigungen, den Inhalt dieser Seite zu sehen.'
-    ANCHORSPAGENOTFOUND: 'Zielseite nicht gefunden'
-    CAPTIONTEXT: Beschriftungstext
-    CSSCLASS: 'Ausrichtung / Stil'
-    CSSCLASSCENTER: 'Zentriert, selbstständig'
-    CSSCLASSLEFT: 'Links, mit umfließendem Text'
-    CSSCLASSLEFTALONE: 'Links, alleinstehend'
-    CSSCLASSRIGHT: 'Rechts, mit umfließendem Text'
-    IMAGEALT: 'Alternativtext (alt)'
-    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
-    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht angezeigt werden kann.'
-    IMAGEDIMENSIONS: Dimensionen
-    IMAGEHEIGHTPX: Höhe
-    IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
-    IMAGETITLETEXT: 'Titeltext (Tooltip)'
-    IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
-    IMAGEWIDTHPX: Breite
-    URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ERROR_ABSOLUTE: 'Nur absolute URLs können eingebettet werden'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -94,8 +70,6 @@ de:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   SilverStripe\ORM\DataObject:
@@ -118,17 +92,11 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Der  Nutzername oder das Passwort wurden nicht erkannt'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Passwort vergessen?'
-    BUTTONLOGIN: 'Wieder einloggen'
-    BUTTONLOGOUT: Abmelden
     PASSWORDEXPIRED: '<p>Ihr Passwort ist abgelaufen. <a target="_top" href="{link}">Bitte wählen Sie ein neues Passwort.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ungültiger Benutzer. <a target="_top" href="{link}">Bitte melden Sie sich hier an</a> um fortzufahren.</p>'
-    LoginMessage: '<p>Wenn Sie ungespeicherte Arbeiten haben, können Sie wieder weiterarbeiten indem Sie sich unterhalb einloggen.</p>'
     SUCCESS: Erfolg
     SUCCESSCONTENT: '<p>Login erfolgreich. Falls Sie nicht automatisch weitergeleitet werden, bitte <a target="_top" href="{link}">hier klicken</a></p>'
-    TimedOutTitleAnonymous: 'Ihre Sitzung ist abgelaufen.'
-    TimedOutTitleMember: 'Hallo {name}!<br />Ihre Sitzung ist abgelaufen.'
   SilverStripe\Security\Group:
     AddRole: 'Rolle zur Gruppe hinzufügen'
     Code: 'Gruppen Code'
@@ -160,7 +128,6 @@ de:
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
     CURRENT_PASSWORD: 'Derzeitiges Passwort'
-    DefaultAdminFirstname: Standardadmin
     EDIT_PASSWORD: 'Neues Passwort'
     EMAIL: E-Mail
     EMPTYNEWPASSWORD: 'Das neue Passwort darf nicht leer sein. Bitte versuchen Sie es erneut.'
@@ -174,7 +141,6 @@ de:
     KEEPMESIGNEDIN: 'Eingeloggt bleiben'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
-    NoPassword: 'Dieser Benutzer hat kein Passwort.'
     PASSWORD: Passwort
     PASSWORDEXPIRED: 'Ihr Passwort ist abgelaufen. Bitte wählen Sie ein neues Passwort.'
     PLURALNAME: Benutzer

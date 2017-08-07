@@ -7,8 +7,6 @@ ms:
     VALIDATIONPASSWORDSDONTMATCH: 'Kata-kata laluan tidak sepadan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Kata laluan tidak boleh dibiarkan kosong'
     VALIDATOR: Pengesah
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Sila isikan nombor telefon yang sah'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Maukkan ID pengguna dan katalaluan'
     ERRORNOTADMIN: 'Pengguna ini bukan pentadbir.'

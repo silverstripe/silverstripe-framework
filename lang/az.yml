@@ -18,8 +18,6 @@ az:
     FIELDLABELCURRENCY: Valyuta
   SilverStripe\Forms\NullableField:
     IsNullLabel: Boşdur
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: İstənilən
   SilverStripe\ORM\FieldType\DBEnum:
@@ -47,7 +45,6 @@ az:
     BUTTONLOSTPASSWORD: 'Parol yaddan çıxıb.'
     CONFIRMNEWPASSWORD: 'Yeni parolun təsdiqi'
     CONFIRMPASSWORD: 'Parolu təsdiqlə'
-    DefaultAdminFirstname: 'Əsas admin'
     EMAIL: E-poçt
     EMPTYNEWPASSWORD: 'Yeni şifrə boş ola bilməz, təkrar edin. '
     ENTEREMAIL: 'Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin.'

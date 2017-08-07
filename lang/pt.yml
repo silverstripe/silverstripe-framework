@@ -32,8 +32,6 @@ pt:
     FIELDLABELCURRENCY: Moeda
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'é Vazio'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor insira um número de telefone válido'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualquer
   SilverStripe\ORM\FieldType\DBEnum:
@@ -63,7 +61,6 @@ pt:
     BUTTONLOSTPASSWORD: 'Recuperar Password'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
     CONFIRMPASSWORD: 'Confirmar Password'
-    DefaultAdminFirstname: 'Administrador por Omissão'
     EMPTYNEWPASSWORD: 'A password não pode ser vazia, tente novamente.'
     ENTEREMAIL: 'Por favor introduza um endereço de email para obter uma ligação para o reinício da palavra-chave. '
     ERRORNEWPASSWORD: 'As passwords novas não coincidem, por favor tente novamente'

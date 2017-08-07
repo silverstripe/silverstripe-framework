@@ -1,6 +1,4 @@
 nb:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Ugyldig forespørsel'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
@@ -64,8 +62,6 @@ nb:
     IsNullLabel: 'Er tom'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Vennligst skriv inn et gyldig telefonnummer'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -108,7 +104,6 @@ nb:
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
     CONFIRMNEWPASSWORD: 'Bekreft nytt passord'
     CONFIRMPASSWORD: 'Bekreft passord'
-    DefaultAdminFirstname: 'Standard Admin'
     EMAIL: Epost
     EMPTYNEWPASSWORD: 'Det nye passordet kan ikke være tomt, vennligst prøv igjen'
     ENTEREMAIL: 'Vennligst skriv en epostadresse så du kan bli tilsendt en lenke til å nullstille passord.'
@@ -120,7 +115,6 @@ nb:
     INTERFACELANG: 'Språk på grensesnitt'
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
-    NoPassword: 'Det finnes ikke noe passord for dette medlemmet.'
     PASSWORD: Passord
     SUBJECTPASSWORDCHANGED: 'Passordet ditt har blitt endret'
     SUBJECTPASSWORDRESET: 'Lenke for nullstilling av passord'

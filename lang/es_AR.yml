@@ -19,8 +19,6 @@ es_AR:
     FIELDLABELCURRENCY: Moneda
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es nulo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor ingresa un número telefónico válido'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
   SilverStripe\ORM\FieldType\DBEnum:
@@ -50,7 +48,6 @@ es_AR:
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
-    DefaultAdminFirstname: 'Administrador por defecto'
     EMAIL: 'Dirección Email'
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtelo nuevamente'
     ENTEREMAIL: 'Por favor ingrese una dirección email para obtener un enlace de renovación de la contraseña'

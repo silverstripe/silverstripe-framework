@@ -1,4 +1,6 @@
 en:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: unknown
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
@@ -17,6 +19,8 @@ en:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Unknown
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -253,8 +257,6 @@ en:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     NoPassword: 'There is no password on this member.'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'E-mail &amp; Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Member Passwords'
     PLURALS:

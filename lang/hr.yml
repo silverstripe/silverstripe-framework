@@ -1,6 +1,4 @@
 hr:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Neispravan zahtjev'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
@@ -39,14 +37,8 @@ hr:
     Save: Spremi
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    IMAGEDIMENSIONS: Dimenzije
-    IMAGEHEIGHTPX: Visina
-    IMAGEWIDTHPX: 'Širina'
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Molim unesite ispravan telefonski broj'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Bilo koji'
     NOANSWER: Ne
@@ -61,12 +53,8 @@ hr:
     ENTERINFO: 'Unesite korisničko ime i lozinu'
     ERRORNOTADMIN: 'Korisnik nije administrator'
     ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
-  SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Zaboravljena lozinka?'
   SilverStripe\Security\CMSSecurity:
     SUCCESS: Uspjeh
-    TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
-    TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
   SilverStripe\Security\Group:
     Code: 'Krupni kod'
     DefaultGroupTitleAdministrators: Administratori
@@ -88,7 +76,6 @@ hr:
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
     CONFIRMPASSWORD: 'Potvrdi lozinku'
     CURRENT_PASSWORD: 'Trenutna lozinka'
-    DefaultAdminFirstname: 'Zadani administrator'
     EDIT_PASSWORD: 'Nova lozinka'
     EMAIL: Email
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'

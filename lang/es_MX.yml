@@ -1,6 +1,4 @@
 es_MX:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   SilverStripe\Forms\DateField:
@@ -43,8 +41,6 @@ es_MX:
     IsNullLabel: 'Es Nulo'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor ingresa un número telefónico válido'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -81,7 +77,6 @@ es_MX:
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
-    DefaultAdminFirstname: 'Administrador Predeterminado'
     EMAIL: 'Correo electrónico'
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
     ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'

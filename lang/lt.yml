@@ -1,6 +1,4 @@
 lt:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Klaidinga užklausa'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Taip
@@ -70,8 +68,6 @@ lt:
     IsNullLabel: Tuščias
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Įveskite teisingą telefono numerį'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,17 +87,11 @@ lt:
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
-    BUTTONLOGIN: Prisijungti
-    BUTTONLOGOUT: Atsijungti
     PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
-    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
     SUCCESS: Sėkmingai
     SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
-    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
-    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
   SilverStripe\Security\Group:
     AddRole: 'Pridėti rolę šiai grupei'
     Code: 'Grupės kodas'
@@ -128,7 +118,6 @@ lt:
     BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
     CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
-    DefaultAdminFirstname: 'Pagrindinis administratorius'
     EMAIL: 'E. paštas'
     EMPTYNEWPASSWORD: 'Naujas slaptažodis negali būti tuščias, bandykite iš naujo'
     ENTEREMAIL: 'Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą.'
@@ -140,7 +129,6 @@ lt:
     INTERFACELANG: Kalba
     LOGGEDINAS: 'Prisijungėte kaip {name}.'
     NEWPASSWORD: 'Naujas slaptažodis'
-    NoPassword: 'Šis vartotojas neturi slaptažodžio.'
     PASSWORD: Slaptažodis
     PASSWORDEXPIRED: 'Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują.'
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'

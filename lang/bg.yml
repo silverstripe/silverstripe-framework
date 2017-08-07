@@ -9,8 +9,6 @@ bg:
     CHANGEPASSWORDTEXT1: 'Променихте паролата си за'
     CHANGEPASSWORDTEXT3: 'Променете паролата'
     HELLO: Здравей
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Грешна заявка'
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Здравей
     TEXT1: 'Това е Вашият'
@@ -56,7 +54,6 @@ bg:
     BAD_METHOD: 'Тази форма изисква {method} заявка'
     CSRF_EXPIRED_MESSAGE: 'Вашата сесия е изтекла. Моля, изпратете формата отново.'
     CSRF_FAILED_MESSAGE: 'Възникна технически проблем. Върнете се стъпка назад, презаредете страницата и опитайте отново.'
-    VALIDATIONCREDIT: 'Моля, уверете се, че сте въвели номера на кредитната си карта коректно.'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
     VALIDATIONSTRONGPASSWORD: 'Паролите трябва да съдържат поне една цифра и една буква.'
@@ -103,51 +100,6 @@ bg:
     OF: от
     Page: Страница
     View: 'Преглед на'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Нямате достъп до съдържанието на страницата.'
-    ANCHORSPAGENOTFOUND: 'Страницата не беше намерена.'
-    CAPTIONTEXT: Описание
-    CSSCLASS: 'Подравняване / стил'
-    CSSCLASSCENTER: 'Центрирано, самостоятелно.'
-    CSSCLASSLEFT: 'В ляво, с текст, който се излива около него.'
-    CSSCLASSLEFTALONE: 'В ляво, самостоятелно.'
-    CSSCLASSRIGHT: 'В дясно, с текст, който се излива около него.'
-    IMAGEALT: 'Алтернативен текст (alt)'
-    IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
-    IMAGEALTTEXTDESC: 'Вижда се на екранните четци или ако картинката не може да бъде показана'
-    IMAGEDIMENSIONS: 'Размери'
-    IMAGEHEIGHTPX: Височина
-    IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
-    IMAGETITLETEXT: 'Описание (tooltip)'
-    IMAGETITLETEXTDESC: 'Допълнителна информация към изображението'
-    IMAGEWIDTHPX: Широчина
-    URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиа ресурс.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_File:
-    CREATED: Създаден
-    LASTEDIT: 'Последно променен'
-    SIZE: 'Големина на файла'
-    TYPE: 'Тип на файла'
-    URL: URL
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image:
-    HEIGHT: Височина
-    WIDTH: Широчина
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ANCHORVALUE: Котва
-    EMAIL: 'Email адрес'
-    FILE: Файл
-    LINK: 'Вмъкни препратка'
-    LINKANCHOR: 'Котва на тази страница'
-    LINKDESCR: 'Описание на препратка'
-    LINKDETAILS: 'Подробности за препратка'
-    LINKEMAIL: 'Връзка към Email'
-    LINKEXTERNAL: 'Препратка към друг уебсайт'
-    LINKFILE: 'Връзка за сваляна на файл'
-    LINKINTERNAL: 'Препратка към страница от сайта'
-    LINKOPENNEWWIN: 'Да се отвори ли препратката в нов прозорец?'
-    LINKTO: 'Тип на връзката'
-    PAGE: Страница
-    SUBJECT: 'Тема на Email'
-    URL: URL
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
@@ -158,8 +110,6 @@ bg:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Моля, въведете валиден телефонен номер'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   SilverStripe\ORM\DataObject:
@@ -208,10 +158,6 @@ bg:
     ERRORNOTADMIN: 'Този потребител не е администратор.'
     ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
   SilverStripe\Security\CMSMemberLoginForm:
-    AUTHENTICATORNAME: 'Форма за вход в CMS'
-    BUTTONFORGOTPASSWORD: 'Забравена парола?'
-    BUTTONLOGIN: 'Влез обратно'
-    BUTTONLOGOUT: 'Изход'
     PASSWORDEXPIRED: '<p>Паролата ви е изтекла. <a target="_top" href="{link}">Моля, изберете друга.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Невалиден потребител. <a target="_top" href="{link}">Моля, потвърдете регистрацията си тук, </a> за да продължите.</p>'
@@ -221,7 +167,7 @@ bg:
     SUCCESSCONTENT: '<p>Успешно влизане. Ако страницата не се зареди автоматично, <a target="_top" href="{link}">кликнете тук</a></p>'
     SUCCESS_TITLE: 'Успешно влизане'
   SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Администратор'
+    DefaultAdminFirstname: Администратор
   SilverStripe\Security\Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
@@ -267,7 +213,6 @@ bg:
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
     CURRENT_PASSWORD: 'Настояща парола'
-    DefaultAdminFirstname: Администратор
     EDIT_PASSWORD: 'Нова парола'
     EMAIL: Еmail
     EMPTYNEWPASSWORD: 'Не е въведена нова парола'
@@ -281,7 +226,6 @@ bg:
     KEEPMESIGNEDIN: 'Нека да остана логнат'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
-    NoPassword: 'Този потребител няма парола.'
     PASSWORD: Парола
     PASSWORDEXPIRED: 'Паролата ви е изтекла. Моля, изберете друга.'
     PLURALNAME: Потребители
@@ -305,7 +249,7 @@ bg:
     AUTHENTICATORNAME: 'Форма за вход в CMS'
     BUTTONFORGOTPASSWORD: 'Забравена парола'
     BUTTONLOGIN: 'Влизане обратно'
-    BUTTONLOGOUT: 'Излизане'
+    BUTTONLOGOUT: Излизане
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Предоставените данни не са коректни. Моля, опитайте отново.'
     NoPassword: 'Този потребител няма парола.'

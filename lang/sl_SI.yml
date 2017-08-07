@@ -1,6 +1,4 @@
 sl_SI:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Neveljavna zahteva'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
@@ -38,17 +36,6 @@ sl_SI:
     Save: Shrani
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
-    ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
-    CAPTIONTEXT: Napis
-    CSSCLASS: 'Poravnava / stil'
-    IMAGEALT: 'Alternativni tekst (alt)'
-    IMAGEALTTEXT: 'Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati'
-    IMAGEDIMENSIONS: Dimenzije
-    IMAGEHEIGHTPX: Višina
-    IMAGETITLETEXT: 'Naslov (namig)'
-    IMAGEWIDTHPX: 'Širina'
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
@@ -58,13 +45,6 @@ sl_SI:
     ENTERINFO: 'Prosimo vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Ta uporabnik ni administrator.'
     ERRORNOTREC: 'Uporabniško ime ali geslo je neveljavno'
-  SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pozabljeno geslo?'
-    BUTTONLOGIN: 'Ponovna prijava'
-    BUTTONLOGOUT: Odjava
-  SilverStripe\Security\CMSSecurity:
-    TimedOutTitleAnonymous: 'Vaša seja je potekla.'
-    TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
   SilverStripe\Security\Group:
     AddRole: 'Dodaj vlogo za to skupino'
     DefaultGroupTitleAdministrators: Administratorji
@@ -83,7 +63,6 @@ sl_SI:
     KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
-    NoPassword: 'Uporabnik nima nastavljenega gesla.'
     PASSWORD: Geslo
     SUBJECTPASSWORDCHANGED: 'Vaše geslo je bilo posodobljeno'
     SURNAME: Priimek

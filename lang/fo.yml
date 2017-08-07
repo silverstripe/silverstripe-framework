@@ -13,8 +13,6 @@ fo:
     NONE: einki
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Útles til CSV'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
     ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'

@@ -9,8 +9,6 @@ it:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT3: 'Cambia password'
     HELLO: Salve
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Richiesta non valida'
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Salve
     TEXT1: 'Questa è la tua'
@@ -53,7 +51,6 @@ it:
     BAD_METHOD: 'Questa form deve essere inviata in {method}'
     CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
     CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
-    VALIDATIONCREDIT: 'Assicurati che il numero di carta di credito sia inserito correttamente'
     VALIDATIONPASSWORDSDONTMATCH: 'Le password non corrispondono'
     VALIDATIONPASSWORDSNOTEMPTY: 'Le password non possono essere vuote'
     VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
@@ -100,57 +97,6 @@ it:
     OF: di
     Page: Pagina
     View: Visualizza
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
-    ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
-    CAPTIONTEXT: 'Didascalia di testo'
-    CSSCLASS: 'Allineamento / stile'
-    CSSCLASSCENTER: 'Centrato, su se stesso.'
-    CSSCLASSLEFT: 'Sulla sinistra, con il testo attorno.'
-    CSSCLASSLEFTALONE: 'Sulla sinistra, da sola.'
-    CSSCLASSRIGHT: 'Sulla destra, con il testo attorno.'
-    IMAGEALT: 'Testo alternativo (alt)'
-    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato nel caso l''immagine non possa essere visualizzata'
-    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
-    IMAGEDIMENSIONS: Dimensioni
-    IMAGEHEIGHTPX: Altezza
-    IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
-    IMAGETITLETEXT: 'Titolo (tooltip)'
-    IMAGETITLETEXTDESC: 'Per informazioni aggiuntive sull''immagine'
-    IMAGEWIDTHPX: Larghezza
-    URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_File:
-    CREATED: 'Prima caricata'
-    LASTEDIT: 'Ultima modificata'
-    SIZE: 'Dimensione file'
-    TYPE: 'Tipo di file'
-    URL: URL
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image:
-    HEIGHT: Altezza
-    WIDTH: Larghezza
-  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
-    ANCHORVALUE: Ancora
-    EMAIL: 'Indirizzo email'
-    ERROR_ABSOLUTE: 'Possono essere incorporati solo URL assoluti'
-    ERROR_HOSTNAME: 'L''hostname di questo file non è incluso nella whitelist'
-    ERROR_ID: 'Sono necessari entrambi i parametri "ID" e "FileURL" per identificare il file'
-    ERROR_NOTFOUND: 'Impossibile trovare il file da visualizzare'
-    ERROR_OEMBED_REMOTE: 'L''incorporamento è consentito solo con file remoti'
-    ERROR_SCHEME: 'Lo schema di questo file non è incluso nella whitelist'
-    FILE: File
-    LINK: 'Inserisci Link'
-    LINKANCHOR: 'Link ad un''ancora su questa pagina'
-    LINKDESCR: 'Descrizione del link'
-    LINKDETAILS: 'Dettagli link'
-    LINKEMAIL: 'Link ad un indirizzo email'
-    LINKEXTERNAL: 'Link a un altro sito'
-    LINKFILE: 'Link per scaricare un file'
-    LINKINTERNAL: 'Link ad una pagina di questo sito'
-    LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
-    LINKTO: 'Tipo di link'
-    PAGE: Pagina
-    SUBJECT: 'Oggetto email'
-    URL: URL
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
@@ -161,8 +107,6 @@ it:
     IsNullLabel: 'è nullo.'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Per favore inserisci un numero di telefono valido'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
   SilverStripe\ORM\DataObject:
@@ -211,18 +155,11 @@ it:
     ERRORNOTADMIN: 'Questo utente non è amministratore.'
     ERRORNOTREC: 'Nome utente / password non riconosciuti'
   SilverStripe\Security\CMSMemberLoginForm:
-    AUTHENTICATORNAME: 'Form di Login Utente CMS'
-    BUTTONFORGOTPASSWORD: 'Password dimenticata?'
-    BUTTONLOGIN: 'Accedi nuovamente'
-    BUTTONLOGOUT: Scollegati
     PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
-    LoginMessage: '<p>Se hai del lavoro non salvato puo tornare a dove eri accedendo nuovamente da qui sotto.</p>'
     SUCCESS: Successo
     SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
-    TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
-    TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
   SilverStripe\Security\Group:
     AddRole: 'Aggiungi un ruolo per questo gruppo'
     Code: 'Codice gruppo'
@@ -267,7 +204,6 @@ it:
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
     CURRENT_PASSWORD: 'Password Attuale'
-    DefaultAdminFirstname: 'Amministratore Predefinito'
     EDIT_PASSWORD: 'Nuova password'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
@@ -281,7 +217,6 @@ it:
     KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
-    NoPassword: 'Manca la password per questo utente.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti

@@ -1,6 +1,4 @@
 sr_RS@latin:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Pogrešan zahtev'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Lozinka mora sadržati najmanje {min} znakova.'
     BETWEEN: 'Lozinka mora sadržati najmanje {min}, a najviše {max} znakova.'
@@ -64,8 +62,6 @@ sr_RS@latin:
     IsNullLabel: 'je Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nije broj. Samo brojevi mogu biti prihvaćeni za ovo polje'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Unesite ispravan broj telefona'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -108,7 +104,6 @@ sr_RS@latin:
     BUTTONLOSTPASSWORD: 'Zaboravio sam lozinku'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
     CONFIRMPASSWORD: 'Potvrdite lozinku'
-    DefaultAdminFirstname: 'Podrazumevani administrator'
     EMAIL: E-pošta
     EMPTYNEWPASSWORD: 'Nova lozinka ne može biti prazna. Pokušajte ponovo.'
     ENTEREMAIL: 'Unesite adresu e-pošte da bi ste dobili link za resetovanje lozinke.'
@@ -120,7 +115,6 @@ sr_RS@latin:
     INTERFACELANG: 'Jezik interfejsa'
     LOGGEDINAS: 'Prijavljeni ste kao {name}.'
     NEWPASSWORD: 'Nova lozinka'
-    NoPassword: 'Ne postoji lozinka za tog člana.'
     PASSWORD: Lozinka
     SUBJECTPASSWORDCHANGED: 'Vaša lozinka je promenjena'
     SUBJECTPASSWORDRESET: 'Link za resetovanje Vaše lozinke'

@@ -6,8 +6,6 @@ zh_CN:
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: '（密码相互不匹配）'
     VALIDATIONPASSWORDSNOTEMPTY: '密码不能空白'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: '请输入有效电话号码'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: '请输入用户名和密码'
     ERRORNOTADMIN: 此用户没有管理员权限。

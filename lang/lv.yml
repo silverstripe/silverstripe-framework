@@ -21,8 +21,6 @@ lv:
     FIELDLABELCURRENCY: Valūta
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Ir Null'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jebkurš
   SilverStripe\ORM\FieldType\DBEnum:
@@ -51,7 +49,6 @@ lv:
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
     CONFIRMPASSWORD: 'Apstiprināt paroli'
-    DefaultAdminFirstname: 'Noklusējuma administrators'
     EMAIL: E-pasts
     EMPTYNEWPASSWORD: 'Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz'
     ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'

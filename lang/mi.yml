@@ -1,6 +1,4 @@
 mi:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Tono muhu'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Kia {min} pūāhua i te iti rawa te roa o ngā kupuhipa.'
     BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
@@ -64,8 +62,6 @@ mi:
     IsNullLabel: 'He Kore Tēnei'
   SilverStripe\Forms\NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Tāurua he tau waea tika'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -107,7 +103,6 @@ mi:
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
     CONFIRMPASSWORD: 'Whakaū Kupuhipa'
-    DefaultAdminFirstname: 'Kaiwhakahaere Taunoa'
     EMAIL: Īmēra
     EMPTYNEWPASSWORD: 'Kāore e whakaaetia kia piako te kupuhipa hōu, ngana anō'
     ENTEREMAIL: 'Tāurua he wāhitau īmēra kia whiwhi i te hono tautuhi kupuhipa anō.'
@@ -119,7 +114,6 @@ mi:
     INTERFACELANG: 'Reo Atanga'
     LOGGEDINAS: 'Kua takiuru koe hei {name}.'
     NEWPASSWORD: 'Kupuhipa Hōu'
-    NoPassword: 'Kāore he kupuhipa i tēnei mema.'
     PASSWORD: Kupuhipa
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'

@@ -33,8 +33,6 @@ gl_ES:
     FIELDLABELCURRENCY: Moeda
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'É Nulo'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Por favor insire un número de teléfono válido'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ningún
   SilverStripe\ORM\FieldType\DBEnum:
@@ -64,7 +62,6 @@ gl_ES:
     BUTTONLOSTPASSWORD: 'Perdín o meu contrasinal'
     CONFIRMNEWPASSWORD: 'Confirmar Novo Contrasinal'
     CONFIRMPASSWORD: 'Confirmar Contrasinal'
-    DefaultAdminFirstname: 'Administrador por Defecto'
     EMAIL: Correo-e
     EMPTYNEWPASSWORD: 'O novo contrasinal non pode ser baleiro, por favor téntao de novo'
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'

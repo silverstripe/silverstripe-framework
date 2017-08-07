@@ -1,6 +1,4 @@
 ar:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'طلب غير صحيح'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
@@ -62,8 +60,6 @@ ar:
     IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -106,7 +102,6 @@ ar:
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
-    DefaultAdminFirstname: 'المدير الافتراضي'
     EMAIL: 'البريد الإلكتروني'
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
@@ -118,7 +113,6 @@ ar:
     INTERFACELANG: 'لغة الواجهة'
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
-    NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
     PASSWORD: 'رقم المرور'
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'

@@ -1,6 +1,4 @@
 th:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: การร้องขอไม่ถูกต้อง
   SilverStripe\Forms\ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
@@ -45,8 +43,6 @@ th:
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: จำนวน
     FIELDLABELCURRENCY: สกุลเงิน
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: ใดๆ
   SilverStripe\ORM\FieldType\DBEnum:
@@ -78,7 +74,6 @@ th:
     BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
     CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
     CONFIRMPASSWORD: ยืนยันรหัสผ่าน
-    DefaultAdminFirstname: ผู้ดูแลที่กำหนดไว้เริ่มต้น
     EMAIL: อีเมล
     ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
     ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'

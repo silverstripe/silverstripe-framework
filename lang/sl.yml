@@ -1,6 +1,4 @@
 sl:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Napačna zahteva'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
@@ -62,8 +60,6 @@ sl:
     IsNullLabel: 'Prazno polje'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Vpišite veljavno telefonsko številko'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -103,7 +99,6 @@ sl:
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
     CONFIRMPASSWORD: 'Potrdi geslo'
-    DefaultAdminFirstname: 'Privzeti administrator'
     EMAIL: E-naslov
     EMPTYNEWPASSWORD: 'Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno.'
     ENTEREMAIL: 'Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla.'
@@ -114,7 +109,6 @@ sl:
     INTERFACELANG: Jezik
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
-    NoPassword: 'Za tega člana ni gesla'
     PASSWORD: Geslo
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'

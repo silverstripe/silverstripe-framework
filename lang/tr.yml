@@ -23,8 +23,6 @@ tr:
     Delete: Sil
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Boş değer'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Herhangi
     NOANSWER: Hayır
@@ -51,7 +49,6 @@ tr:
     BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
     CONFIRMPASSWORD: 'Şifreyi Onayla'
-    DefaultAdminFirstname: 'Varsayılan Yönetici'
     EMAIL: Eposta
     ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
     ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'

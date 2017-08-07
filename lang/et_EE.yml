@@ -1,6 +1,4 @@
 et_EE:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Sobimatu taotlus'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Jah
@@ -63,8 +61,6 @@ et_EE:
     IsNullLabel: 'On tühi'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ei ole number, sellele väljale võib sisestada ainult numbreid'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Sisestage kehtiv telefoninumber'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -105,7 +101,6 @@ et_EE:
     BUTTONLOSTPASSWORD: 'Kaotasin oma parooli'
     CONFIRMNEWPASSWORD: 'Kinnita uus parool'
     CONFIRMPASSWORD: 'Kinnita parool'
-    DefaultAdminFirstname: Vaikeadministraator
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Uue parooli väli ei saa olla tühi. Proovige uuesti'
     ENTEREMAIL: 'Palun sisesta email, et saada paooli tühistamise link'

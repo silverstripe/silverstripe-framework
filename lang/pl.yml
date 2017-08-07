@@ -1,6 +1,4 @@
 pl:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Nieprawidłowe żądanie'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hasła muszą mieć przynajmniej {min} znaków.'
     BETWEEN: 'Hasła muszą mieć długość pomiędzy {min} a {max} znaków.'
@@ -64,8 +62,6 @@ pl:
     IsNullLabel: 'Jest Pusty'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Wprowadź poprawny numer telefonu'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -108,7 +104,6 @@ pl:
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
-    DefaultAdminFirstname: 'Domyślny administrator'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nowe hasło nie może być puste, spróbuj ponownie.'
     ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać link do zmiany hasła.'
@@ -120,7 +115,6 @@ pl:
     INTERFACELANG: 'Język interfejsu'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
-    NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
     PASSWORD: Hasło
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'

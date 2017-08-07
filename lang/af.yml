@@ -1,6 +1,4 @@
 af:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Ongeldige versoek'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
   SilverStripe\Forms\CurrencyField:
@@ -54,8 +52,6 @@ af:
     FIELDLABELCURRENCY: 'Geld eenheid'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,7 +87,6 @@ af:
     BUTTONLOSTPASSWORD: 'Ek het my wagwoord verloor'
     CONFIRMNEWPASSWORD: 'Bevestig Nuwe Wagwoord'
     CONFIRMPASSWORD: 'Bevestig wagwoord'
-    DefaultAdminFirstname: 'Verstek Admin'
     EMAIL: Epos
     EMPTYNEWPASSWORD: 'Die nuwe wagwoord kan nie leeg wees nie. Probeer asseblief weer'
     ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'

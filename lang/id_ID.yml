@@ -1,6 +1,4 @@
 id_ID:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 'Permintaan tidak valid'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Tidak
     YESANSWER: Ya
@@ -70,8 +68,6 @@ id_ID:
     IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Mohon isikan nomer telpon yang benar'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -91,17 +87,11 @@ id_ID:
     ERRORNOTADMIN: 'Pengguna tersebut bukan pengelola.'
     ERRORNOTREC: 'Nama pengguna dan kata kunci tidak dikenal'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Lupa kata kunci?'
-    BUTTONLOGIN: 'Masuk kembali'
-    BUTTONLOGOUT: Keluar
     PASSWORDEXPIRED: '<p>Kata kunci Anda telah kadaluarsa. <a target="_top" href="{link}">Mohon buat yang baru.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Pengguna tidak dikenal. <a target="_top" href="{link}">Mohon otentikasi ulang di sini</a> untuk melanjutkan.</p>'
-    LoginMessage: '<p>Jika ada pekerjaan yang belum tersimpan, Anda dapat kembali dengan masuk di sini.</p>'
     SUCCESS: Berhasil
     SUCCESSCONTENT: '<p>Berhasil masuk. Jika tidak secara otomatis diarahkan, klik <a target="_top" href="{link}">di sini</a></p>'
-    TimedOutTitleAnonymous: 'Sesi Anda sudah habis.'
-    TimedOutTitleMember: 'Hai {name}!<br />Sesi Anda sudah habis.'
   SilverStripe\Security\Group:
     AddRole: 'Tambahkan peran untuk kelompok ini'
     Code: 'Kode Kelompok'
@@ -128,7 +118,6 @@ id_ID:
     BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
     CONFIRMPASSWORD: 'Konfirmasi Kata Kunci'
-    DefaultAdminFirstname: 'Pengelola Utama'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Kata kunci baru tidak boleh kosong, mohon coba lagi'
     ENTEREMAIL: 'Mohon isikan alamat email untuk menerima tautan penggantian kata kunci.'
@@ -140,7 +129,6 @@ id_ID:
     INTERFACELANG: 'Bahasa Antarmuka'
     LOGGEDINAS: 'Anda masuk sebagai {name}.'
     NEWPASSWORD: 'Kata Kunci Baru'
-    NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
     PASSWORD: 'Kata kunci'
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'

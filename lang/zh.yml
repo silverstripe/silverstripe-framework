@@ -1,6 +1,4 @@
 zh:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: '无效请求'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 不是
     YESANSWER: 是
@@ -69,8 +67,6 @@ zh:
     IsNullLabel: 为空
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: '请输入一个有效的电话号码'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -90,17 +86,11 @@ zh:
     ERRORNOTADMIN: 那个用户不是一名管理员。
     ERRORNOTREC: '那个用户名 / 密码无法被辨认'
   SilverStripe\Security\CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: '忘记密码？'
-    BUTTONLOGIN: 重新登录
-    BUTTONLOGOUT: 登出
     PASSWORDEXPIRED: '<p>您的密码已过期。 <a target="_top" href="{link}">请选择一个新的。</a></ P>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>用户已无效。 <a target="_top" href="{link}">请在此继续重新进行身份验证</a>。</ p>'
-    LoginMessage: '<p>如果您有任何未保存的工作，你可以重新登录以回到你未保存的地方。</p>'
     SUCCESS: 成功
     SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
-    TimedOutTitleAnonymous: '你的登陆超时已过期。'
-    TimedOutTitleMember: '你好{name}!<br />你的登陆超时已过期。'
   SilverStripe\Security\Group:
     AddRole: '在这个小组中添加一个角色'
     Code: '小组代码'
@@ -127,7 +117,6 @@ zh:
     BUTTONLOSTPASSWORD: '我丢失了密码'
     CONFIRMNEWPASSWORD: '确认新密码'
     CONFIRMPASSWORD: '确认密码'
-    DefaultAdminFirstname: 默认管理员
     EMAIL: 电子邮件
     EMPTYNEWPASSWORD: '新密码不能为空，请重试'
     ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
@@ -139,7 +128,6 @@ zh:
     INTERFACELANG: 界面语言
     LOGGEDINAS: '您以 {name} 身份登录。'
     NEWPASSWORD: '新密码'
-    NoPassword: '该成员无密码'
     PASSWORD: '密码'
     PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
     SUBJECTPASSWORDCHANGED: '您的密码已更改'

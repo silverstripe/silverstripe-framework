@@ -1,6 +1,4 @@
 ja:
-  SilverStripe\Control\Director:
-    INVALID_REQUEST: 不正なリクエスト
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'パスワードは少なくとも {min} 文字の長さが必要です。'
     BETWEEN: 'パスワードは {min} から {max} までの長さでなければならない。'
@@ -30,7 +28,7 @@ ja:
     Filter: フィルタ
     FilterBy: によってフィルター
     Find: 探す
-    LinkExisting: '既存のリンク'
+    LinkExisting: 既存のリンク
     NewRecord: '新しい{type}'
     NoItemsFound: '項目が見つかりませんでした'
     PRINTEDAT: で印刷
@@ -62,8 +60,6 @@ ja:
     IsNullLabel: NULLである
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: '電話番号を入力してください'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -105,7 +101,6 @@ ja:
     BUTTONLOSTPASSWORD: パスワードを紛失
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
-    DefaultAdminFirstname: '初期管理者'
     EMAIL: メールアドレス
     EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
     ENTEREMAIL: 'パスワードをリセットするためにメールアドレスを入力してください。'
@@ -117,7 +112,6 @@ ja:
     INTERFACELANG: 画面言語
     LOGGEDINAS: '{name}としてログインしています。'
     NEWPASSWORD: 新しいパスワード
-    NoPassword: このメンバーにはパスワードはありません。
     PASSWORD: パスワード
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。
     SUBJECTPASSWORDRESET: パスワード再発行

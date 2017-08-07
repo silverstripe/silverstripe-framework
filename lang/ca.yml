@@ -16,8 +16,6 @@ ca:
     NONE: cap
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exporta a CSV'
-  SilverStripe\Forms\PhoneNumberField:
-    VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
     ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
