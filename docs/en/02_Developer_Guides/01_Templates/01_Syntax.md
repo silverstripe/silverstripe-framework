@@ -600,4 +600,4 @@ for adding notes for other developers but for things you don't want published in
 ## API Documentation
 
 * [SSViewer](api:SilverStripe\View\SSViewer)
-* [SS_TemplateManifest](api:SS_TemplateManifest)
+* [ThemeManifest](api:SilverStripe\View\ThemeManifest)

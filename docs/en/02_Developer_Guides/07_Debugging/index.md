@@ -29,6 +29,5 @@ The [Debug](api:SilverStripe\Dev\Debug) class contains a number of static utilit
 
 ## API Documentation
 
-* [SS_Log](api:SS_Log)
 * [Backtrace](api:SilverStripe\Dev\Backtrace)
 * [Debug](api:SilverStripe\Dev\Debug)

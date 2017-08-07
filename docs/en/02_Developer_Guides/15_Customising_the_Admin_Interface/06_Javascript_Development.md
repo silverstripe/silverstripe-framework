@@ -311,13 +311,11 @@ Example: Add a 'loading' classname to all pressed buttons
 jQuery is based around collections of DOM elements, the library functions typically handle multiple elements (where it
 makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQuery().each()` call.
 
-Example: ComplexTableField implements a paginated table with a pop-up for displaying
-
 
 ```js
 
-	$('div.ComplexTableField').each(function() {
-	  // This is the over code for the tr elements inside a ComplexTableField.
+	$('div.MyGridField').each(function() {
+	  // This is the over code for the tr elements inside a GridField.
 	  $(this).find('tr').hover(
 	    // ...
 	  );

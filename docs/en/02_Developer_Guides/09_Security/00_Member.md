@@ -8,23 +8,6 @@ The [Member](api:SilverStripe\Security\Member) class is used to represent user a
  
 ## Testing For Logged In Users
 
-The [Member](api:SilverStripe\Security\Member) class comes with 2 static methods for getting information about the current logged in user.
-
-**Member::currentUserID()**
-
-Retrieves the ID (int) of the current logged in member.  Returns *0* if user is not logged in.  Much lighter than the
-next method for testing if you just need to test.
-
-
-```php
-	// Is a member logged in?
-	if( Member::currentUserID() ) {
-		// Yes!
-	} else {
-		// No!
-	}
-```
-
 **Security::getCurrentUser()**
 
 Returns the full *Member* Object for the current user, returns *null* if user is not logged in.

@@ -140,7 +140,7 @@ we added a `SayHi` method which is unique to our extension.
 
 If the `Extension` needs to modify an existing method it's a little trickier. It requires that the method you want to
 customise has provided an *Extension Hook* in the place where you want to modify the data. An *Extension Hook* is done 
-through the [Object::extend()](api:Object::extend()) method.
+through the `extend()` method of the [Extensible](api:SilverStripe\Core\Extensible) trait.
 
 **framework/security/Member.php**
 
@@ -256,8 +256,8 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 ## Checking to see if an Object has an Extension
 
-To see what extensions are currently enabled on an object, use [Object::getExtensionInstances()](api:Object::getExtensionInstances()) and 
-[Object::hasExtension()](api:Object::hasExtension())
+To see what extensions are currently enabled on an object, use the [getExtensionInstances()](api:SilverStripe\Core\Extensible::getExtensionInstances()) and 
+[hasExtension()](api:SilverStripe\Core\Extensible::hasExtension()) methods of the [Extensible](api:SilverStripe\Core\Extensible) trait.
 ```php
 	$member = Security::getCurrentUser();
 
@@ -268,10 +268,10 @@ To see what extensions are currently enabled on an object, use [Object::getExten
 	}
 ```
 
-## Object extension injection points
+## Extension injection points
 
-`Object` has two additional methods, `beforeExtending` and `afterExtending`, each of which takes a method name and a 
-callback to be executed immediately before and after `Object::extend()` is called on extensions.
+`Extensible` has two additional methods, `beforeExtending` and `afterExtending`, each of which takes a method name and a 
+callback to be executed immediately before and after `extend()` is called on extensions.
 
 This is useful in many cases where working with modules such as `Translatable` which operate on `DataObject` fields 
 that must exist in the `FieldList` at the time that `$this->extend('UpdateCMSFields')` is called.
@@ -324,7 +324,6 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 ## Related Documentaion
 
 * [Injector](injector/)
-* [Object::useCustomClass](api:Object::useCustomClass)
 
 ## API Documentation
 

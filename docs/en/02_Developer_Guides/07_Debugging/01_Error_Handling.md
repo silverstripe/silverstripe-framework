@@ -14,7 +14,7 @@ For informational and debug logs, you can use the Logger directly. The Logger is
 can be accessed via the `Injector`:
 
 ```php
-Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Member::currentUserID());
+Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Security::getCurrentUser()->ID);
 Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
 ```
 

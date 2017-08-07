@@ -71,7 +71,7 @@ JavaScript in a separate file and instead load, via search and replace, several 
 
 ```php
 $vars = [
-    "MemberID" => Member::currentUserID(),
+    "MemberID" => Security::getCurrentUser()->ID,
 ];
 
 Requirements::javascriptTemplate("<my-module-dir>/javascript/some_file.js", $vars);
