@@ -252,10 +252,30 @@ assign a reference to that service.
 	:::yaml
 	Injector:
 	  JSONServiceDefinition:
+	    class: JSONServiceImplementor
 	    properties:
 	      Serialiser: JSONSerialiser
 	  GZIPJSONProvider: %$JSONServiceDefinition
 
+
+`Injector::inst()->get('GZIPJSONProvider')` will then be an instance of `JSONServiceImplementor` with the injected
+properties.
+
+It is important here to note that the 'class' property of the parent service will be inherited directly as well.
+If class is not specified, then the class will be inherited from the outer service name, not the inner service name.
+
+For example with this config:
+
+    :::yaml
+	Injector:
+	  Connector:
+	    properties:
+	      AsString: true
+	  ServiceConnector: %$Connector
+
+
+Both `Connector` and `ServiceConnector` will have the `AsString` property set to true, but the resulting
+instances will be classes which match their respective service names, due to the lack of a `class` specification. 
 
 ## Testing with Injector
 
