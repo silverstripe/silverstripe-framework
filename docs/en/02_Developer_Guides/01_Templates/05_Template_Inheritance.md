@@ -30,24 +30,14 @@ As we've added a new file, make sure you flush your SilverStripe cache by visiti
 Template inheritance works on more than email templates. All files within the `templates` directory including `includes`, 
 `layout` or anything else from core (or add-on's) template directory can be overridden by being located inside your 
 `mysite/templates` directory. SilverStripe keeps an eye on what templates have been overridden and the location of the
-correct template through a [SS_TemplateManifest](api:SS_TemplateManifest).
+correct template through a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader).
 
-## Template Manifest
+## ThemeResourceLoader
 
-The location of each template and the hierarchy of what template to use is stored within a [SS_TemplateManifest](api:SS_TemplateManifest) 
-instance. This is a serialized object containing a map of template names, paths and other meta data for each template 
-and is cached in your applications `TEMP_FOLDER` for performance. For SilverStripe to find the `GenericEmail` template 
-it does not check all your `template` folders on the fly, it simply asks the `manifest`. 
-
-The manifest is created whenever you flush your SilverStripe cache by appending `?flush=1` to any SilverStripe URL. For
-example by visiting `http://yoursite.com/?flush=1`. When your include the `flush=1` flag, the manifest class will search 
-your entire project for the appropriate `.ss` files located in `template` directory and save that information for later.
-
-<div class="warning">
-Whenever you add or remove template files, rebuild the manifest by visiting `http://yoursite.com/?flush=1`. You can 
-flush the cache from any page, (.com/home?flush=1, .com/admin?flush=1, etc.). Flushing the cache can be slow, so you 
-only need to do it when you're developing new templates.
-</div>
+The location of each template and the hierarchy of what template to use is stored within a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader) 
+instance. This is a serialized object containing a map of [ThemeManifest](api:SilverStripe\View\ThemeManifest) instances. For SilverStripe to find the `GenericEmail` template 
+it does not check all your `template` folders on the fly, it simply asks the manifests. The manifests are created and added to the loader when the 
+[kernel](api:SilverStripe\Core\CoreKernel) is instantiated.
 
 ## Template Priority
 

@@ -197,12 +197,12 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 To override the `$dependency` declaration for a class, define the following configuration file.
 
 **mysite/_config/app.yml**
-
+```yml
 	MyController:
 	  dependencies:
 		textProperty: a string value
 		permissions: %$PermissionService
-
+```
 ## Managed objects
 
 Simple dependencies can be specified by the `$dependencies`, but more complex configurations are possible by specifying 
@@ -281,8 +281,8 @@ named services, which may not be actual classes, and thus should not behave as t
 
 Thus if you want an object to have the injected dependencies of a service of another name, you must
 assign a reference to that service.
-```yaml
 
+```yaml
 	Injector:
 	  JSONServiceDefinition:
 	    class: JSONServiceImplementor
@@ -299,13 +299,13 @@ If class is not specified, then the class will be inherited from the outer servi
 
 For example with this config:
 
-    :::yaml
+```yml
 	Injector:
 	  Connector:
 	    properties:
 	      AsString: true
 	  ServiceConnector: %$Connector
-
+```
 
 Both `Connector` and `ServiceConnector` will have the `AsString` property set to true, but the resulting
 instances will be classes which match their respective service names, due to the lack of a `class` specification. 

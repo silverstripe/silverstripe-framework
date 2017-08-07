@@ -9,7 +9,6 @@ By default, the storage mechanism chooses the most performant adapter available
 The most common caches are manifests of various resources: 
 
  * PHP class locations ([ClassManifest](api:SilverStripe\Core\Manifest\ClassManifest))
- * Template file locations and compiled templates ([SS_TemplateManifest](api:SS_TemplateManifest))
  * Configuration settings from YAML files ([ConfigManifest](api:ConfigManifest))
  * Language files ([i18n](api:SilverStripe\i18n\i18n))
 
