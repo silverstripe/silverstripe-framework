@@ -161,7 +161,8 @@ _my-module/js/src/ConfirmingFormAction.js_
 import React from 'react';
 
 export default (FormAction) => {
-  class ConfirmingFormAction extends React.Component {
+ class ConfirmingFormAction extends React.Component 
+ {
     constructor(props) {
       super(props);
       this.state = { confirming: false };

@@ -180,23 +180,23 @@ Full example of composer.json with the SSAutoGitIgnore installed and enabled
 
 ```json
 {
-	"name": "silverstripe/installer",
-	"description": "The SilverStripe Framework Installer",
-	"require": {
-		"php": ">=5.5.0",
-		"silverstripe/cms": "^4.0",
-		"silverstripe/framework": "^4.0",
-		"silverstripe-themes/simple": "~3.2.0"
-	},
-	"require-dev": {
-		"silverstripe/docsviewer": "^3.0",
-		"gdmedia/ss-auto-git-ignore": "^1.0"
-	},
-	"scripts": {
-		"post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true
+    "name": "silverstripe/installer",
+    "description": "The SilverStripe Framework Installer",
+    "require": {
+        "php": ">=5.5.0",
+        "silverstripe/cms": "^4.0",
+        "silverstripe/framework": "^4.0",
+        "silverstripe-themes/simple": "~3.2.0"
+    },
+    "require-dev": {
+        "silverstripe/docsviewer": "^3.0",
+        "gdmedia/ss-auto-git-ignore": "^1.0"
+    },
+    "scripts": {
+        "post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
 ```
 

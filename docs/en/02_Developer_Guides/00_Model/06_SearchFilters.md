@@ -16,18 +16,20 @@ you can put on field names to change this behavior. These are represented as `Se
 
 An example of a `SearchFilter` in use:
 	
-	:::php
-	// fetch any player that starts with a S
-	$players = Player::get()->filter(array(
-		'FirstName:StartsWith' => 'S',
-		'PlayerNumber:GreaterThan' => '10'
-	));
+```php
+    // fetch any player that starts with a S
+    $players = Player::get()->filter([
+        'FirstName:StartsWith' => 'S',
+        'PlayerNumber:GreaterThan' => '10'
+    ]);
 
-	// to fetch any player that's name contains the letter 'z'
-	$players = Player::get()->filterAny(array(
-		'FirstName:PartialMatch' => 'z',
-		'LastName:PartialMatch' => 'z'
-	));
+    // to fetch any player that's name contains the letter 'z'
+    $players = Player::get()->filterAny([
+        'FirstName:PartialMatch' => 'z',
+        'LastName:PartialMatch' => 'z'
+    ]);
+
+```
 
 Developers can define their own [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter) if needing to extend the ORM filter and exclude behaviors.
 
@@ -41,23 +43,26 @@ within the `DataListFilter.` prefixed namespace. New filters can be registered u
 config:
 
 
-	:::yaml
-	SilverStripe\Core\Injector\Injector:
-	  DataListFilter.CustomMatch:
-	    class: MyVendor/Search/CustomMatchFilter
+```yaml
 
+    SilverStripe\Core\Injector\Injector:
+      DataListFilter.CustomMatch:
+        class: MyVendor/Search/CustomMatchFilter
+```
 
 The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName:StartsWith:nocase' => 'S'
-	));
+```php
+    $players = Player::get()->filter([
+        'FirstName:StartsWith:nocase' => 'S'
+    ]);
 
-	// use :not to perform a converse operation to filter anything but a 'W'
-	$players = Player::get()->filter(array(
-		'FirstName:StartsWith:not' => 'W'
-	));
+    // use :not to perform a converse operation to filter anything but a 'W'
+    $players = Player::get()->filter([
+        'FirstName:StartsWith:not' => 'W'
+    ]);
+
+```
 
 ## API Documentation
 

@@ -16,39 +16,50 @@ name, and normally they all exist under the `Root` [TabSet](api:SilverStripe\For
 
 <div class="notice" markdown="1">
 [TabSet](api:SilverStripe\Forms\TabSet) instances can contain child [Tab](api:SilverStripe\Forms\Tab) and further [TabSet](api:SilverStripe\Forms\TabSet) instances, however the CMS UI will only 
-display up to two levels of tabs in the interface. If you want to group data further than that, try [ToggleField](api:ToggleField).
+display up to two levels of tabs in the interface.
 </div>
 
 ## Adding a field to a tab
 
-	:::php
-	$fields->addFieldToTab('Root.Main', new TextField(..));
+
+```php
+    $fields->addFieldToTab('Root.Main', new TextField(..));
+```
 
 ## Removing a field from a tab
-	
-	:::php
-	$fields->removeFieldFromTab('Root.Main', 'Content');
+
+
+```php
+    $fields->removeFieldFromTab('Root.Main', 'Content');
+```
 
 ## Creating a new tab
 
-	:::php
-	$fields->addFieldToTab('Root.MyNewTab', new TextField(..));
+
+```php
+    $fields->addFieldToTab('Root.MyNewTab', new TextField(..));
+```
 
 ## Moving a field between tabs
 
-	:::php
-	$content = $fields->dataFieldByName('Content');
 
-	$fields->removeFieldFromTab('Root.Main', 'Content');
-	$fields->addFieldToTab('Root.MyContent', $content);
+```php
+    $content = $fields->dataFieldByName('Content');
+
+    $fields->removeFieldFromTab('Root.Main', 'Content');
+    $fields->addFieldToTab('Root.MyContent', $content);
+```
 
 ## Add multiple fields at once
 
-	:::php
-	$fields->addFieldsToTab('Root.Content', array(
-		TextField::create('Name'),
-		TextField::create('Email')
-	));
+
+```php
+    $fields->addFieldsToTab('Root.Content', [
+        TextField::create('Name'),
+        TextField::create('Email')
+    ]);
+
+```
 
 ## API Documentation
 

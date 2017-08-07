@@ -16,33 +16,35 @@ A basic usage of a module for 3.1 that requires the CMS would look similar to
 this:
 
 **mycustommodule/composer.json**
-	:::js
-	{
-	  "name": "your-vendor-name/module-name",
-	  "description": "One-liner describing your module",
-	  "type": "silverstripe-module",
-	  "homepage": "http://github.com/your-vendor-name/module-name",
-	  "keywords": ["silverstripe", "some-tag", "some-other-tag"],
-	  "license": "BSD-3-Clause",
-	  "authors": [
-	    {"name": "Your Name","email": "your@email.com"}
-	  ],
-	  "support": {
-	    "issues": "http://github.com/your-vendor-name/module-name/issues"
-	  },
-	  "require": {
-	    "silverstripe/cms": "~3.1",
-	    "silverstripe/framework": "~3.1"
-	  },
-	  "extra": {
-	    "installer-name": "module-name",
-	    "screenshots": [
-	      "relative/path/screenshot1.png",
-	      "http://myhost.com/screenshot2.png"
-	    ]
-	  }
-	}
 
+```js
+
+    {
+      "name": "your-vendor-name/module-name",
+      "description": "One-liner describing your module",
+      "type": "silverstripe-module",
+      "homepage": "http://github.com/your-vendor-name/module-name",
+      "keywords": ["silverstripe", "some-tag", "some-other-tag"],
+      "license": "BSD-3-Clause",
+      "authors": [
+        {"name": "Your Name","email": "your@email.com"}
+      ],
+      "support": {
+        "issues": "http://github.com/your-vendor-name/module-name/issues"
+      },
+      "require": {
+        "silverstripe/cms": "~3.1",
+        "silverstripe/framework": "~3.1"
+      },
+      "extra": {
+        "installer-name": "module-name",
+        "screenshots": [
+          "relative/path/screenshot1.png",
+          "http://myhost.com/screenshot2.png"
+        ]
+      }
+    }
+```
 
 Once your module is published online with a service like Github.com or Bitbucket.com, submit the repository to 
 [Packagist](https://packagist.org/) to have the module accessible to developers. It'll automatically get picked

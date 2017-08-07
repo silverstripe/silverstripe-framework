@@ -12,25 +12,29 @@ output the result of the [DBHtmlText::FirstParagraph()](api:SilverStripe\ORM\Fie
 
 **mysite/code/Page.ss**
 
-	:::ss
-	$Content.FirstParagraph
-	<!-- returns the result of HtmlText::FirstParagragh() -->
+```ss
 
-	$LastEdited.Format("d/m/Y")
-	<!-- returns the result of SS_Datetime::Format("d/m/Y") -->
+    $Content.FirstParagraph
+    <!-- returns the result of HtmlText::FirstParagragh() -->
+
+    $LastEdited.Format("d/m/Y")
+    <!-- returns the result of SS_Datetime::Format("d/m/Y") -->
+```
 
 Any public method from the object in scope can be called within the template. If that method returns another 
 `ViewableData` instance, you can chain the method calls.
 
-	:::ss
-	$Content.FirstParagraph.NoHTML
-	<!-- "First Paragraph" -->
+```ss
 
-	<p>Copyright {$Now.Year}</p>
-	<!-- "Copyright 2014" -->
+    $Content.FirstParagraph.NoHTML
+    <!-- "First Paragraph" -->
 
-	<div class="$URLSegment.LowerCase">
-	<!-- <div class="about-us"> -->
+    <p>Copyright {$Now.Year}</p>
+    <!-- "Copyright 2014" -->
+
+    <div class="$URLSegment.LowerCase">
+    <!-- <div class="about-us"> -->
+```
 
 <div class="notice" markdown="1">
 See the API documentation for [DBHtmlText](api:SilverStripe\ORM\FieldType\DBHtmlText), [FieldType](api:SilverStripe\ORM\FieldType), [DBText](api:SilverStripe\ORM\FieldType\DBText) for all the methods you can use to format 
@@ -43,22 +47,25 @@ When rendering an object to the template such as `$Me` the `forTemplate` method 
 provide default template for an object.
 
 **mysite/code/Page.php**
-	
-	:::php
-	<?php
+```php
+    use SilverStripe\CMS\Model\SiteTree;
 
-	class Page extends SiteTree {
+    class Page extends SiteTree 
+    {
 
-		public function forTemplate() {
-			return "Page: ". $this->Title;
-		}
-	}
+        public function forTemplate() 
+        {
+            return "Page: ". $this->Title;
+        }
+    }
+```
 
 **mysite/templates/Page.ss**
-	
-	:::ss
-	$Me
-	<!-- returns Page: Home -->
+```ss
+
+    $Me
+    <!-- returns Page: Home -->
+```
 
 ## Casting
 
@@ -66,19 +73,23 @@ Methods which return data to the template should either return an explicit objec
 content that method sends back, or, provide a type in the `$casting` array for the object. When rendering that method 
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
-	:::php
-	<?php
+```php
+    use SilverStripe\CMS\Model\SiteTree;
 
-	class Page extends SiteTree {
+    class Page extends SiteTree 
+    {
 
-		private static $casting = array(
-			'MyCustomMethod' => 'HTMLText' 
-		);
+        private static $casting = [
+            'MyCustomMethod' => 'HTMLText' 
+        ];
 
-		public function MyCustomMethod() {
-			return "<h1>This is my header</h1>";
-		}
-	}
+        public function MyCustomMethod() 
+        {
+            return "<h1>This is my header</h1>";
+        }
+    }
+
+```
 
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
 accordingly. 

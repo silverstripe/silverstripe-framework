@@ -8,34 +8,36 @@ to ensure that it works as it should. A simple example would be to test the resu
 
 **mysite/code/Page.php**
 
-	:::php
-	<?php
 
+```php
+    
     use SilverStripe\CMS\Model\SiteTree;
 
-	class Page extends SiteTree
+    class Page extends SiteTree
     {
-		public static function MyMethod()
+        public static function MyMethod()
         {
-			return (1 + 1);
-		}
-	}
+            return (1 + 1);
+        }
+    }
+```
 
 **mysite/tests/PageTest.php**
 
-	:::php
-	<?php
-    
+
+```php
+        
     use Page;
     use SilverStripe\Dev\SapphireTest;
 
-	class PageTest extends SapphireTest
+    class PageTest extends SapphireTest
     {
-		public function testMyMethod()
+        public function testMyMethod()
         {
-			$this->assertEquals(2, Page::MyMethod());
-		}
-	}
+            $this->assertEquals(2, Page::MyMethod());
+        }
+    }
+```
 
 <div class="info" markdown="1">
 Tests for your application should be stored in the `mysite/tests` directory. Test cases for add-ons should be stored in 
@@ -84,24 +86,27 @@ needs.
 
 **phpunit.xml**
 
-	:::xml
-	<phpunit bootstrap="framework/tests/bootstrap.php" colors="true">
-		<testsuite name="Default">
-			<directory>mysite/tests</directory>
-			<directory>cms/tests</directory>
-			<directory>framework/tests</directory>
-		</testsuite>
-		
-		<listeners>
-			<listener class="SS_TestListener" file="framework/dev/TestListener.php" />
-		</listeners>
-		
-		<groups>
-			<exclude>
-				<group>sanitychecks</group>
-			</exclude>
-		</groups>
-	</phpunit>
+
+```xml
+
+    <phpunit bootstrap="framework/tests/bootstrap.php" colors="true">
+        <testsuite name="Default">
+            <directory>mysite/tests</directory>
+            <directory>cms/tests</directory>
+            <directory>framework/tests</directory>
+        </testsuite>
+        
+        <listeners>
+            <listener class="SS_TestListener" file="framework/dev/TestListener.php" />
+        </listeners>
+        
+        <groups>
+            <exclude>
+                <group>sanitychecks</group>
+            </exclude>
+        </groups>
+    </phpunit>
+```
 
 ### setUp() and tearDown()
 
@@ -109,66 +114,69 @@ In addition to loading data through a [Fixture File](fixtures), a test case may 
 run before each test method. For this, use the PHPUnit `setUp` and `tearDown` methods. These are run at the start and 
 end of each test.
 
-	:::php
-	<?php
 
+```php
+    
     use SilverStripe\Core\Config\Config;
     use SilverStripe\Dev\SapphireTest;
 
-	class PageTest extends SapphireTest
+    class PageTest extends SapphireTest
     {
-		function setUp()
+        function setUp()
         {
-			parent::setUp();
+            parent::setUp();
 
-			// create 100 pages
-			for ($i = 0; $i < 100; $i++) {
-				$page = new Page(array('Title' => "Page $i"));
-				$page->write();
-				$page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
-			}
+            // create 100 pages
+            for ($i = 0; $i < 100; $i++) {
+                $page = new Page(['Title' => "Page $i"]);
+                $page->write();
+                $page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+            }
 
-			// set custom configuration for the test.
-			Config::inst()->update('Foo', 'bar', 'Hello!');
-		}
+            // set custom configuration for the test.
+            Config::inst()->update('Foo', 'bar', 'Hello!');
+        }
 
-		public function testMyMethod()
+        public function testMyMethod()
         {
-			// ..
-		}
+            // ..
+        }
 
-		public function testMySecondMethod()
+        public function testMySecondMethod()
         {
-			// ..
-		}
-	}
+            // ..
+        }
+    }
+
+```
 
 `tearDownAfterClass` and `setUpBeforeClass` can be used to run code just once for the file rather than before and after 
 each individual test case. Remember to class the parent method in each method to ensure the core boot-strapping of tests
 takes place.
 
-	:::php
-	<?php
 
+```php
+        
     use SilverStripe\Dev\SapphireTest;
-	
-	class PageTest extends SapphireTest
+    
+    class PageTest extends SapphireTest
     {
-		public static function setUpBeforeClass()
+        public static function setUpBeforeClass()
         {
-			parent::setUpBeforeClass();
+            parent::setUpBeforeClass();
 
-			// ..
-		}
+            // ..
+        }
 
-		public static function tearDownAfterClass()
+        public static function tearDownAfterClass()
         {
-			parent::tearDownAfterClass();
+            parent::tearDownAfterClass();
 
-			// ..
-		}
-	}
-	
+            // ..
+        }
+    }
+```
+
 ### Config and Injector Nesting
 
 A powerful feature of both [`Config`](/developer_guides/configuration/configuration/) and [`Injector`](/developer_guides/extending/injector/) is the ability to "nest" them so that you can make changes that can easily be discarded without having to manage previous values.
@@ -179,24 +187,26 @@ If you need to make changes to `Config` (or `Injector`) for each test (or the wh
 
 It's important to remember that the `parent::setUp();` functions will need to be called first to ensure the nesting feature works as expected.
 
-	:::php
-	public static function setUpBeforeClass()
+
+```php
+    public static function setUpBeforeClass()
     {
-		parent::setUpBeforeClass();
-		//this will remain for the whole suite and be removed for any other tests
-		Config::inst()->update('ClassName', 'var_name', 'var_value');
-	}
-	
-	public function testFeatureDoesAsExpected()
+        parent::setUpBeforeClass();
+        //this will remain for the whole suite and be removed for any other tests
+        Config::inst()->update('ClassName', 'var_name', 'var_value');
+    }
+    
+    public function testFeatureDoesAsExpected()
     {
-		//this will be reset to 'var_value' at the end of this test function
-		Config::inst()->update('ClassName', 'var_name', 'new_var_value');
-	}
-	
-	public function testAnotherFeatureDoesAsExpected()
+        //this will be reset to 'var_value' at the end of this test function
+        Config::inst()->update('ClassName', 'var_name', 'new_var_value');
+    }
+    
+    public function testAnotherFeatureDoesAsExpected()
     {
-		Config::inst()->get('ClassName', 'var_name'); // this will be 'var_value'
-	}
+        Config::inst()->get('ClassName', 'var_name'); // this will be 'var_value'
+    }
+```
 
 ## Related Documentation
 

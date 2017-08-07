@@ -15,21 +15,28 @@ functionality. It is usually added through the [DataObject::getCMSFields()](api:
 
 **mysite/code/MyObject.php**
 
-	:::php
-	<?php
 
-	class MyObject extends DataObject {
-		
-		private static $db = array(
-			'Content' => 'HTMLText'
-		);
-		
-		public function getCMSFields() {
-			return new FieldList(
-				new HTMLEditorField('Content')
-			);
-		}
-	}
+```php
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+    use SilverStripe\ORM\DataObject;
+
+    class MyObject extends DataObject 
+    {
+        
+        private static $db = [
+            'Content' => 'HTMLText'
+        ];
+        
+        public function getCMSFields() 
+        {
+            return new FieldList(
+                new HTMLEditorField('Content')
+            );
+        }
+    }
+
+```
 
 ### Specify which configuration to use
 
@@ -42,20 +49,29 @@ will use the configuration with the name 'myConfig'.
 You can also specify which [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) to use on a per field basis via the construct argument.
 This is particularly useful if you need different configurations for multiple [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField) on the same page or form.
 
-	:::php
-	class MyObject extends DataObject {
-		private static $db = array(
-			'Content' => 'HTMLText',
-			'OtherContent' => 'HTMLText'
-		);
-		
-		public function getCMSFields() {
-			return new FieldList(array(
-				new HTMLEditorField('Content'),
-				new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
-			));
-		}
-	}
+
+```php
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+    use SilverStripe\ORM\DataObject;
+
+    class MyObject extends DataObject 
+    {
+        private static $db = [
+            'Content' => 'HTMLText',
+            'OtherContent' => 'HTMLText'
+        ];
+        
+        public function getCMSFields() 
+        {
+            return new FieldList([
+                new HTMLEditorField('Content'),
+                new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
+            ]);
+        }
+    }
+
+```
 
 In the above example, the 'Content' field will use the default 'cms' config while 'OtherContent' will be using 'myConfig'.
 
@@ -85,8 +101,10 @@ You can add plugins to the editor using the Framework's [HtmlEditorConfig::enabl
 transparently generate the relevant underlying TinyMCE code.
 
 **mysite/_config.php**
-	:::php
-	HtmlEditorConfig::get('cms')->enablePlugins('media');
+
+```php
+    HtmlEditorConfig::get('cms')->enablePlugins('media');
+```
 
 <div class="notice" markdown="1">
 This utilities the TinyMCE's `PluginManager::load` function under the hood (check the 
@@ -98,14 +116,18 @@ Plugins and advanced themes can provide additional buttons that can be added (or
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
 
 **mysite/_config.php**
-	:::php
-	HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
+
+```php
+    HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
+```
 
 Buttons can also be removed:
 
 **mysite/_config.php**
-	:::php
-	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
+
+```php
+    HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
+```
 
 <div class="notice" markdown="1">
 Internally [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
@@ -123,19 +145,21 @@ tags](http://www.tinymce.com/wiki.php/Configuration:extended_valid_elements) - t
 from the HTML source by the editor.
 
 **mysite/_config.php**
-	:::php
-	// Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
-	HtmlEditorConfig::get('cms')->setOption(
-		'extended_valid_elements',
-		'img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|usemap],' .
-		'iframe[src|name|width|height|title|align|allowfullscreen|frameborder|marginwidth|marginheight|scrolling],' .
-		'object[classid|codebase|width|height|data|type],' .
-		'embed[src|type|pluginspage|width|height|autoplay],' .
-		'param[name|value],' .
-		'map[class|name|id],' .
-		'area[shape|coords|href|target|alt],' .
-		'ol[start|type]'
-	);
+
+```php
+    // Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
+    HtmlEditorConfig::get('cms')->setOption(
+        'extended_valid_elements',
+        'img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|usemap],' .
+        'iframe[src|name|width|height|title|align|allowfullscreen|frameborder|marginwidth|marginheight|scrolling],' .
+        'object[classid|codebase|width|height|data|type],' .
+        'embed[src|type|pluginspage|width|height|autoplay],' .
+        'param[name|value],' .
+        'map[class|name|id],' .
+        'area[shape|coords|href|target|alt],' .
+        'ol[start|type]'
+    );
+```
 
 <div class="notice" markdown="1">
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
@@ -148,8 +172,11 @@ It is also possible to add custom plugins to TinyMCE, for example toolbar button
 You can enable them through [HtmlEditorConfig::enablePlugins()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()):
 
 **mysite/_config.php**
-	:::php
-	HtmlEditorConfig::get('cms')->enablePlugins(array('myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js'));
+
+```php
+    HtmlEditorConfig::get('cms')->enablePlugins(['myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js']);
+
+```
 
 You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) from the TinyMCE documentation.
 
@@ -200,8 +227,10 @@ defaults to the stricter 'xhtml' setting, for example rendering self closing tag
 
 In case you want to adhere to HTML4 instead, use the following configuration:
 
-	:::php
-	HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
+
+```php
+    HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
+```
 
 By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it will strip out HTML5 tags like 
 `<article>` or `<figure>`. If you plan to use those, add them to the 
@@ -223,17 +252,26 @@ back and forth between a content representation the editor can understand, prese
 
 Example: Remove field for "image captions"
 
-	:::php
-	// File: mysite/code/MyToolbarExtension.php
-	class MyToolbarExtension extends Extension {
-		public function updateFieldsForImage(&$fields, $url, $file) {
-			$fields->removeByName('CaptionText');
-		}
-	}
 
-	:::php
-	// File: mysite/_config.php
-	ModalController::add_extension('MyToolbarExtension');
+```php
+    use SilverStripe\Core\Extension;
+
+    // File: mysite/code/MyToolbarExtension.php
+    class MyToolbarExtension extends Extension 
+    {
+        public function updateFieldsForImage(&$fields, $url, $file) 
+        {
+            $fields->removeByName('CaptionText');
+        }
+    }
+```
+
+
+
+```php
+    // File: mysite/_config.php
+    ModalController::add_extension('MyToolbarExtension');
+```
 
 Adding functionality is a bit more advanced, you'll most likely
 need to add some fields to the PHP forms, as well as write some
@@ -258,22 +296,31 @@ encapsulated in the [ModalController](api:SilverStripe\Admin\ModalController) cl
 In the CMS, those dialogs are automatically instantiate, but in your own interfaces outside
 of the CMS you have to take care of instantiate yourself:
 
-	:::php
-	// File: mysite/code/MyController.php
-	class MyObjectController extends Controller {
-		public function Modals() {
-			return ModalController::create($this, "Modals");
-		}
-	}
+
+```php
+    use SilverStripe\Admin\ModalController;
+    use SilverStripe\Control\Controller;
+
+    // File: mysite/code/MyController.php
+    class MyObjectController extends Controller 
+    {
+        public function Modals() 
+        {
+            return ModalController::create($this, "Modals");
+        }
+    }
+```
 
 Note: The dialogs rely on CMS-access, e.g. for uploading and browsing files,
 so this is considered advanced usage of the field.
 
-	:::php
-	// File: mysite/_config.php
-	HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
-	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
-	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');
+
+```php
+    // File: mysite/_config.php
+    HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
+    HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
+    HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');
+```
 
 ### Developing a wrapper to use a different WYSIWYG editors with HTMLEditorField
 
@@ -293,17 +340,24 @@ Most modern browsers support it, although Internet Explorer only has limited
 support in IE10. Alternatively, you can use the PSpell PHP module for server side checks.
 Assuming you have the module installed, here's how you enable its use in `mysite/_config.php`:
 
-	:::php
-	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
-	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
-	HtmlEditorConfig::get('cms')->setOption(
-		'spellchecker_rpc_url', 
-		THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
-	);
-	HtmlEditorConfig::get('cms')->setOption('browser_spellcheck', false);
+
+```php
+    HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
+    HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
+    HtmlEditorConfig::get('cms')->setOption(
+        'spellchecker_rpc_url', 
+        THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
+    );
+    HtmlEditorConfig::get('cms')->setOption('browser_spellcheck', false);
+```
 
 Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecker/config.php`:
 
-	:::php
-	// ...
-	$config['general.engine'] = 'PSpell';
+
+```php
+    
+    // ...
+    $config['general.engine'] = 'PSpell';
+```
+
+

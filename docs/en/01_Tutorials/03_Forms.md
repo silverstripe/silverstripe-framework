@@ -32,7 +32,7 @@ use SilverStripe\Forms\TextField;
 
 class HomePageController extends PageController
 {
-    private static $allowed_actions = array('BrowserPollForm');
+    private static $allowed_actions = ['BrowserPollForm'];
 
     // ...
 
@@ -41,14 +41,14 @@ class HomePageController extends PageController
         // Create fields
         $fields = new FieldList(
             new TextField('Name'),
-            new OptionsetField('Browser', 'Your Favourite Browser', array(
+            new OptionsetField('Browser', 'Your Favourite Browser', [
                 'Firefox' => 'Firefox',
                 'Chrome' => 'Chrome',
                 'Internet Explorer' => 'Internet Explorer',
                 'Safari' => 'Safari',
                 'Opera' => 'Opera',
                 'Lynx' => 'Lynx'
-            ))
+            ])
         );
 
         // Create actions
@@ -62,6 +62,7 @@ class HomePageController extends PageController
     // ...
 }
 // ...
+
 ```
 
 Let's step through this code.
@@ -70,15 +71,16 @@ Let's step through this code.
 // Create fields
 $fields = new FieldList(
     new TextField('Name'),
-    new OptionsetField('Browser', 'Your Favourite Browser', array(
+    new OptionsetField('Browser', 'Your Favourite Browser', [
         'Firefox' => 'Firefox',
         'Chrome' => 'Chrome',
         'Internet Explorer' => 'Internet Explorer',
         'Safari' => 'Safari',
         'Opera' => 'Opera',
         'Lynx' => 'Lynx'
-    ))
+    ])
 );
+
 ```
 
 First we create our form fields.
@@ -192,17 +194,16 @@ If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we sa
 **mysite/code/BrowserPollSubmission.php**
 
 ```php
-<?php
-
 use SilverStripe\ORM\DataObject;
 
 class BrowserPollSubmission extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Name' => 'Text',
         'Browser' => 'Text'
-    );
+    ];
 }
+
 ```
 If we then rebuild the database ([http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build)), we will see that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePageController*:
 
@@ -215,7 +216,8 @@ use PageController;
 class HomePageController extends PageController
 {
     // ...
-    public function doBrowserPoll($data, $form) {
+    public function doBrowserPoll($data, $form) 
+    {
         $submission = new BrowserPollSubmission();
         $form->saveInto($submission);
         $submission->write();
@@ -265,6 +267,9 @@ We can do this using a session variable. The [Session](api:SilverStripe\Control\
 **mysite/code/HomePageController.php**
 
 ```php
+use SilverStripe\Control\Session;
+use PageController;
+
 // ...
 class HomePageController extends PageController
 {
@@ -274,7 +279,7 @@ class HomePageController extends PageController
         $submission = new BrowserPollSubmission();
         $form->saveInto($submission);
         $submission->write();
-        Session::set('BrowserPollVoted', true);
+        $this->getRequest()->getSession()->set('BrowserPollVoted', true);
         return $this->redirectBack();
     }
 }
@@ -284,13 +289,15 @@ Then we simply need to check if the session variable has been set in 'BrowserPol
 it is.
 
 ```php
+use PageController;
+
 // ...
 class HomePageController extends PageController
 {
     // ...
     public function BrowserPollForm()
     {
-        if (SilverStripe\Control\Session::get('BrowserPollVoted')) {
+        if ($this->getRequest()->getSession()->get('BrowserPollVoted')) {
             return false;
         }
         // ...
@@ -324,13 +331,14 @@ public function BrowserPollResults()
     $list = new ArrayList();
     foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
         $percentage = (int) ($browserSubmissions->Count() / $total * 100);
-        $list->push(new ArrayData(array(
+        $list->push(new ArrayData([
             'Browser' => $browserName,
             'Percentage' => $percentage
-        )));
+        ]));
     }
     return $list;
 }
+
 ```
 This code introduces a few new concepts, so let's step through it.
 
@@ -349,11 +357,12 @@ We get the total number of submissions, which is needed to calculate the percent
 $list = new ArrayList();
 foreach ($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
     $percentage = (int) ($browserSubmissions->Count() / $total * 100);
-    $list->push(new ArrayData(array(
+    $list->push(new ArrayData([
         'Browser' => $browserName,
         'Percentage' => $percentage
-    )));
+    ]));
 }
+
 ```
 
 Now we create an empty [ArrayList](api:SilverStripe\ORM\ArrayList) to hold the data we'll pass to the template. Its similar to [DataList](api:SilverStripe\ORM\DataList), but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field.

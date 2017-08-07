@@ -18,12 +18,14 @@ For instance, in order to write an asset to a protected location you can use the
 config option:
 
 
-    :::php
-    $store = singleton(AssetStore::class);
-    $store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, array(
-        'visibility' => AssetStore::VISIBILITY_PROTECTED
-    ));
 
+```php
+    $store = singleton(AssetStore::class);
+    $store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, [
+        'visibility' => AssetStore::VISIBILITY_PROTECTED
+    ]);
+
+```
 
 ## User access control
 
@@ -36,7 +38,9 @@ An automated system will, in most cases, handle this whitelisting for you. Calls
 will automatically whitelist access to that file for the current user. Using this as a guide, you can easily
 control access to embedded assets at a template level.
 
-    :::ss
+
+```ss
+
     <ul class="files">
         <% loop $File %>
             <% if $canView %>
@@ -46,6 +50,7 @@ control access to embedded assets at a template level.
             <% end_if %>
         <% end_loop >
     </ul>
+```
 
 Users who are able to guess the value of $URL will not be able to access those urls without being
 authorised by this code.
@@ -58,9 +63,14 @@ authorised users, the following should be considered:
   file via PHP for the current user instead, by using the following code to grant access.
 
 
-    :::php
-    class PageController extends ContentController {
-        public function init() {
+
+```php
+ use SilverStripe\CMS\Controllers\ContentController;
+
+ class PageController extends ContentController 
+ {
+        public function init() 
+        {
             parent::init();
             // Whitelist any protected files on this page for the current user
             foreach($this->Files() as $file) {
@@ -70,6 +80,7 @@ authorised users, the following should be considered:
             }
         }
     }
+```
 
 * If a user does not have access to a file, you can still generate the URL but suppress the default
   permission whitelist by invoking the getter as a method, but pass in a falsey value as a parameter.
@@ -87,9 +98,14 @@ authorised users, the following should be considered:
   the `revokeFile` method.
 
 
-    :::php
-    class PageController extends ContentController {
-        public function init() {
+
+```php
+ use SilverStripe\CMS\Controllers\ContentController;
+
+ class PageController extends ContentController 
+ {
+        public function init() 
+        {
             parent::init();
             // Whitelist any protected files on this page for the current user
             foreach($this->Files() as $file) {
@@ -102,7 +118,7 @@ authorised users, the following should be considered:
             }
         }
     }
-
+```
 
 ## Controlling asset visibility
 
@@ -118,22 +134,25 @@ public facing area.
 E.g.
 
 
-    :::php
-    $object->MyFile->setFromLocalFile($tmpFile['Path'], $filename, null, null, array(
-        'visibility' => AssetStore::VISIBILITY_PROTECTED
-    ));
 
+```php
+    $object->MyFile->setFromLocalFile($tmpFile['Path'], $filename, null, null, [
+        'visibility' => AssetStore::VISIBILITY_PROTECTED
+    ]);
+
+```
 
 You can also adjust the visibility of any existing file to either public or protected.
 
 
-    :::
+
+```php
     // This will make the file available only when a user calls `->grant()`
     $object->SecretFile->protectFile();
     
     // This file will be available to everyone with the URL
     $object->PublicFile->publishFile();
-
+```
 
 <div class="notice" markdown="1">
 One thing to note is that all variants of a single file will be treated as
@@ -157,7 +176,7 @@ in the protected store, awaiting publishing.
 Internally your folder structure would look something like:
 
 
-    :::
+```
     assets/
         .htaccess
         .protected/
@@ -166,7 +185,7 @@ Internally your folder structure would look something like:
                 NewCompanyLogo.gif
         33be1b95cb/
             OldCompanyLogo.gif
-
+```
 
 The urls for these two files, however, do not reflect the physical structure directly.
 
@@ -181,15 +200,16 @@ will be moved to `assets/a870de278b/NewCompanyLogo.gif`, and will be served dire
 the web server, bypassing the need for additional PHP requests.
 
 
-    :::php
+
+```php
     $store = singleton(AssetStore::class);
     $store->publish('NewCompanyLogo.gif', 'a870de278b475cb75f5d9f451439b2d378e13af1');
-
+```
 
 After this the filesystem will now look like below:
 
 
-    :::
+```
     assets/
         .htaccess
         .protected/
@@ -198,7 +218,7 @@ After this the filesystem will now look like below:
             OldCompanyLogo.gif
         a870de278b/
             NewCompanyLogo.gif
-
+```
 
 ## Performance considerations
 
@@ -234,23 +254,22 @@ root altogether.
 For instance, given your web root is in the folder `/sites/mysite/www`, you can tell the asset store
 to put protected files into `/sites/mysite/protected` with the below `.env` setting:
 
-
+```
     SS_PROTECTED_ASSETS_PATH="/sites/mysite/protected"
-
+```
 
 ### Configuring: File types
 
 In addition to configuring file locations, it's also important to ensure that you have allowed the
 appropriate file extensions for your instance. This can be done by setting the `File.allowed_extensions`
 config.
+```yaml
 
-
-	:::yaml
-	File: 
-	  allowed_extensions: 
-	    - 7zip 
-	    - xzip
-
+    File: 
+      allowed_extensions: 
+        - 7zip 
+        - xzip
+```
 
 <div class="warning" markdown="1">
 Any file not included in this config, or in the default list of extensions, will be blocked from
@@ -268,11 +287,13 @@ When a protected file is served it will also be transmitted with all headers def
 You can customise this with the below config:
 
 
-    :::yaml
+
+```yaml
+
     SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
       file_response_headers:
         Pragma: 'no-cache'
-
+```
 
 ### Configuring: Archive behaviour
 
@@ -294,22 +315,29 @@ config to true on that class. Note that this feature only works with dataobjects
 the `Versioned` extension.
 
 
-    :::php
-    class MyVersiondObject extends DataObject {
+
+```php
+ use SilverStripe\ORM\DataObject;
+
+ class MyVersiondObject extends DataObject 
+ {
         /** Ensure assets are archived along with the DataObject */
         private static $keep_archived_assets = true;
         /** Versioned */
-        private static $extensions = array('Versioned');
+        private static $extensions = ['Versioned'];
     }
 
+```
 
 The extension can also be globally disabled by removing it at the root level:
 
 
-    :::yaml
+
+```yaml
+
     DataObject:
       AssetControl: null
-
+```
 
 ### Configuring: Web server settings
 
@@ -330,12 +358,12 @@ In order to ensure that public files are served correctly, you should check that
 .htaccess bypasses PHP requests for files that do exist. The default template
 (declared by `Assets_HTAccess.ss`) has the following section, which may be customised in your project:
 
-
+```
     # Non existant files passed to requesthandler
     RewriteCond %{REQUEST_URI} ^(.*)$
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule .* ../framework/main.php?url=%1 [QSA]
-
+```
 
 You will need to ensure that your core apache configuration has the necessary `AllowOverride`
 settings to support the local .htaccess file.
@@ -348,7 +376,7 @@ while ensuring non-existent files are processed via the Framework.
 
 The default rule for IIS is as below (only partial configuration displayed):
 
-
+```
     <rule name="Protected and 404 File rewrite" stopProcessing="true">
         <match url="^(.*)$" />
         <conditions>
@@ -356,7 +384,7 @@ The default rule for IIS is as below (only partial configuration displayed):
         </conditions>
         <action type="Rewrite" url="../framework/main.php?url={R:1}" appendQueryString="true" />
     </rule>
-
+```
 
 You will need to make sure that the `allowOverride` property of your root web.config is not set
 to false, to allow these to take effect.
@@ -370,9 +398,9 @@ For instance, this will allow your nginx site to serve files directly, while ens
 dynamic requests are processed via the Framework:
 
 
-    :::
+```
     location ^~ /assets/ {
         sendfile on;
         try_files $uri /framework/main.php?url=$uri&$query_string;
     }
-
+```

@@ -4,47 +4,67 @@ In this how-to, we'll explain how to set up a specific page type
 holding a contact form, which submits a message via email.
 Let's start by defining a new `ContactPage` page type:
 
-	:::php
-	<?php
-	class ContactPage extends Page {
-	}
-	class ContactPageController extends PageController {
-		private static $allowed_actions = array('Form');
-		public function Form() { 
-			$fields = new FieldList( 
-				new TextField('Name'), 
-				new EmailField('Email'), 
-				new TextareaField('Message')
-			); 
-			$actions = new FieldList( 
-				new FormAction('submit', 'Submit') 
-			); 
-			return new Form($this, 'Form', $fields, $actions); 
-		}
-	}
+
+```php
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\TextField;
+    use SilverStripe\Forms\EmailField;
+    use SilverStripe\Forms\TextareaField;
+    use SilverStripe\Forms\FormAction;
+    use SilverStripe\Forms\Form;
+    use Page;
+    use PageController;
+
+    class ContactPage extends Page 
+    {
+    }
+    class ContactPageController extends PageController 
+    {
+        private static $allowed_actions = ['Form'];
+        public function Form() 
+        { 
+            $fields = new FieldList( 
+                new TextField('Name'), 
+                new EmailField('Email'), 
+                new TextareaField('Message')
+            ); 
+            $actions = new FieldList( 
+                new FormAction('submit', 'Submit') 
+            ); 
+            return new Form($this, 'Form', $fields, $actions); 
+        }
+    }
+
+```
 
 To create a form, we instanciate a `Form` object on a function on our page controller. We'll call this function `Form()`. You're free to choose this name, but it's standard practice to name the function `Form()` if there's only a single form on the page.
 
 There's quite a bit in this function, so we'll step through one piece at a time.
 
-	:::php
-	$fields = new FieldList(
-		new TextField('Name'),
-		new EmailField('Email'),
-		new TextareaField('Message')
-	);
+
+```php
+    $fields = new FieldList(
+        new TextField('Name'),
+        new EmailField('Email'),
+        new TextareaField('Message')
+    );
+```
 
 First we create all the fields we want in the contact form, and put them inside a FieldList. You can find a list of form fields available on the [FormField](api:SilverStripe\Forms\FormField) page.
 
-	:::php
-	$actions = FieldList(
-		new FormAction('submit', 'Submit')
-	);
+
+```php
+    $actions = FieldList(
+        new FormAction('submit', 'Submit')
+    );
+```
 
 We then create a [FieldList](api:SilverStripe\Forms\FieldList) of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
 
-	:::php
-	return new Form($this, 'Form', $fields, $actions);
+
+```php
+    return new Form($this, 'Form', $fields, $actions);
+```
 
 Finally we create the `Form` object and return it. The first argument is the controller that the form is on – this is almost always $this. The second argument is the name of the form – this has to be the same as the name of the function that creates the form, so we've used 'Form'. The third and fourth arguments are the fields and actions we created earlier.
 
@@ -60,31 +80,40 @@ If you now create a ContactPage in the CMS (making sure you have rebuilt the dat
 
 Now that we have a contact form, we need some way of collecting the data submitted. We do this by creating a function on the controller with the same name as the form action. In this case, we create the function 'submit' on the ContactPage_Controller class.
 
-	:::php
-	class ContactPageController extends PageController {
-		private static $allowed_actions = array('Form');
-		public function Form() {
-			// ...
-		}
-		public function submit($data, $form) { 
-			$email = new Email(); 
-			 
-			$email->setTo('siteowner@mysite.com'); 
-			$email->setFrom($data['Email']); 
-			$email->setSubject("Contact Message from {$data["Name"]}"); 
-			 
-			$messageBody = " 
-				<p><strong>Name:</strong> {$data['Name']}</p> 
-				<p><strong>Message:</strong> {$data['Message']}</p> 
-			"; 
-			$email->setBody($messageBody); 
-			$email->send(); 
-			return array(
-				'Content' => '<p>Thank you for your feedback.</p>',
-				'Form' => ''
-			);
-		}
-	}
+
+```php
+    use SilverStripe\Control\Email\Email;
+    use PageController;
+
+    class ContactPageController extends PageController 
+    {
+        private static $allowed_actions = ['Form'];
+        public function Form() 
+        {
+            // ...
+        }
+        public function submit($data, $form) 
+        { 
+            $email = new Email(); 
+             
+            $email->setTo('siteowner@mysite.com'); 
+            $email->setFrom($data['Email']); 
+            $email->setSubject("Contact Message from {$data["Name"]}"); 
+             
+            $messageBody = " 
+                <p><strong>Name:</strong> {$data['Name']}</p> 
+                <p><strong>Message:</strong> {$data['Message']}</p> 
+            "; 
+            $email->setBody($messageBody); 
+            $email->send(); 
+            return [
+                'Content' => '<p>Thank you for your feedback.</p>',
+                'Form' => ''
+            ];
+        }
+    }
+
+```
 
 <div class="hint" markdown="1">
 	Caution: This form is prone to abuse by spammers,
@@ -106,12 +135,15 @@ All forms have some basic validation built in – email fields will only let the
 
 The framework comes with a predefined validator called [RequiredFields](api:SilverStripe\Forms\RequiredFields), which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
 
-	:::php
-	public function Form() { 
-		// ...
-		$validator = new RequiredFields('Name', 'Message');
-		return new Form($this, 'Form', $fields, $actions, $validator); 
-	}
+
+```php
+    public function Form() 
+    { 
+        // ...
+        $validator = new RequiredFields('Name', 'Message');
+        return new Form($this, 'Form', $fields, $actions, $validator); 
+    }
+```
 
 We've created a RequiredFields object, passing the name of the fields we want to be required. The validator we have created is then passed as the fifth argument of the form constructor. If we now try to submit the form without filling out the required fields, JavaScript validation will kick in, and the user will be presented with a message about the missing fields. If the user has JavaScript disabled, PHP validation will kick in when the form is submitted, and the user will be redirected back to the Form with messages about their missing fields.
 

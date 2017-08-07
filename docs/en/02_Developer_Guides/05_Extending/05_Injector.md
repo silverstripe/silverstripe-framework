@@ -18,108 +18,128 @@ Some of the goals of dependency injection are:
 
 The following sums up the simplest usage of the `Injector` it creates a new object of type `MyClassName` through `create`
 
-	:::php
-	$object = Injector::inst()->create('MyClassName');
+
+```php
+    $object = Injector::inst()->create('MyClassName');
+```
 
 The benefit of constructing objects through this syntax is `ClassName` can be swapped out using the 
 [Configuration API](../configuration) by developers.
 
-**mysite/_config/app.yml**
-	
-	:::yml
-	Injector:
-	  MyClassName:
-	    class: MyBetterClassName
+**mysite/_config/app.yml**	
+
+```yml
+
+    Injector:
+      MyClassName:
+        class: MyBetterClassName
+```
 
 Repeated calls to `create()` create a new object each time.
 
-	:::php
-	$object = Injector::inst()->create('MyClassName');
-	$object2 = Injector::inst()->create('MyClassName');
 
-	echo $object !== $object2;
+```php
+    $object = Injector::inst()->create('MyClassName');
+    $object2 = Injector::inst()->create('MyClassName');
 
-	// returns true;
+    echo $object !== $object2;
+
+    // returns true;
+```
 
 ## Singleton Pattern
 
 The `Injector` API can be used for the singleton pattern through `get()`. Subsequent calls to `get` return the same 
 object instance as the first call.
 
-	:::php
-	// sets up MyClassName as a singleton
-	$object = Injector::inst()->get('MyClassName');
-	$object2 = Injector::inst()->get('MyClassName');
 
-	echo ($object === $object2);
+```php
+    // sets up MyClassName as a singleton
+    $object = Injector::inst()->get('MyClassName');
+    $object2 = Injector::inst()->get('MyClassName');
 
-	// returns true;
+    echo ($object === $object2);
+
+    // returns true;
+```
 
 ## Dependencies
 
 The `Injector` API can be used to define the types of `$dependencies` that an object requires.
 
-	:::php 
-	<?php
 
-	class MyController extends Controller {
-	
-		// both of these properties will be automatically
-		// set by the injector on object creation
-		public $permissions;
-		public $textProperty;
-	
-		// we declare the types for each of the properties on the object. Anything we pass in via the Injector API must
-		// match these data types.
-		static $dependencies = array(
-			'textProperty'		=> 'a string value',
-			'permissions'		=> '%$PermissionService',
-		);
-	}
+```php
+    use SilverStripe\Control\Controller;
+
+    class MyController extends Controller 
+    {
+    
+        // both of these properties will be automatically
+        // set by the injector on object creation
+        public $permissions;
+        public $textProperty;
+    
+        // we declare the types for each of the properties on the object. Anything we pass in via the Injector API must
+        // match these data types.
+        static $dependencies = [
+            'textProperty'        => 'a string value',
+            'permissions'        => '%$PermissionService',
+        ];
+    }
+
+```
 
 When creating a new instance of `MyController` the dependencies on that class will be met.
 
-	:::php
-	$object = Injector::inst()->get('MyController');
-	
-	echo ($object->permissions instanceof PermissionService);
-	// returns true;
 
-	echo (is_string($object->textProperty));
-	// returns true;
+```php
+    $object = Injector::inst()->get('MyController');
+    
+    echo ($object->permissions instanceof PermissionService);
+    // returns true;
+
+    echo (is_string($object->textProperty));
+    // returns true;
+```
 
 The [Configuration YAML](../configuration) does the hard work of configuring those `$dependencies` for us.
 
-**mysite/_config/app.yml**
-	
-	:::yml
-	Injector:
-	  PermissionService:
-	    class: MyCustomPermissionService
-	  MyController
-	    properties:
-	      textProperty: 'My Text Value'
+**mysite/_config/app.yml**	
+
+```yml
+
+    Injector:
+      PermissionService:
+        class: MyCustomPermissionService
+      MyController
+        properties:
+          textProperty: 'My Text Value'
+```
 
 Now the dependencies will be replaced with our configuration.
 
-	:::php
-	$object = Injector::inst()->get('MyController');
-	
-	echo ($object->permissions instanceof MyCustomPermissionService);
-	// returns true;
 
-	echo ($object->textProperty == 'My Text Value');
-	// returns true;
+```php
+    $object = Injector::inst()->get('MyController');
+    
+    echo ($object->permissions instanceof MyCustomPermissionService);
+    // returns true;
+
+    echo ($object->textProperty == 'My Text Value');
+    // returns true;
+```
 
 As well as properties, method calls can also be specified:
 
-	:::yml
-	Injector:
-	  Logger:
-	    class: Monolog\Logger
-	    calls:
-	      - [ pushHandler, [ %$DefaultHandler ] ]
 
+```yml
+
+    Injector:
+      Logger:
+        class: Monolog\Logger
+        calls:
+          - [ pushHandler, [ %$DefaultHandler ] ]
+```
 
 ## Using constants as variables
 
@@ -146,37 +166,43 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 
 **mysite/_config/app.yml**
 
-	:::yml
-	Injector:
-	  MyService:
-	    factory: MyFactory
+
+```yml
+
+    Injector:
+      MyService:
+        factory: MyFactory
+```
 
 **mysite/code/MyFactory.php**
 
-	:::php
-	<?php
 
-	class MyFactory implements SilverStripe\Core\Injector\Factory {
+```php
+    class MyFactory implements SilverStripe\Core\Injector\Factory 
+    {
 
-		public function create($service, array $params = array()) {
-			return new MyServiceImplementation();
-		}
-	}
+        public function create($service, array $params = []) 
+        {
+            return new MyServiceImplementation();
+        }
+    }
 
-	// Will use MyFactoryImplementation::create() to create the service instance.
-	$instance = Injector::inst()->get('MyService');
+    // Will use MyFactoryImplementation::create() to create the service instance.
+    $instance = Injector::inst()->get('MyService');
+
+```
 
 ## Dependency overrides
 
 To override the `$dependency` declaration for a class, define the following configuration file.
 
 **mysite/_config/app.yml**
-
-	MyController:
-	  dependencies:
-		textProperty: a string value
-		permissions: %$PermissionService
-
+```yml
+    MyController:
+      dependencies:
+        textProperty: a string value
+        permissions: %$PermissionService
+```
 ## Managed objects
 
 Simple dependencies can be specified by the `$dependencies`, but more complex configurations are possible by specifying 
@@ -187,50 +213,58 @@ runtime.
 
 Assuming a class structure such as
 
-	:::php
-	<?php
 
-	class RestrictivePermissionService {
-		private $database;
+```php
+    class RestrictivePermissionService 
+    {
+        private $database;
 
-		public function setDatabase($d) {	
-			$this->database = $d;
-		}
-	}
-	
-	class MySQLDatabase {
-		private $username;
-		private $password;
-		
-		public function __construct($username, $password) {
-			$this->username = $username;
-			$this->password = $password;
-		}
-	}
+        public function setDatabase($d) 
+        {    
+            $this->database = $d;
+        }
+    }
+    class MySQLDatabase 
+    {
+        private $username;
+        private $password;
+        
+        public function __construct($username, $password) 
+        {
+            $this->username = $username;
+            $this->password = $password;
+        }
+    }
+```
 
 And the following configuration..
 
-	:::yml
-	name: MyController
-	---
-	MyController:
-	  dependencies:
-	    permissions: %$PermissionService
-	Injector:
-	  PermissionService:
-	    class: RestrictivePermissionService
-	    properties:
-	      database: %$MySQLDatabase
-	  MySQLDatabase
-	    constructor:
-	      0: 'dbusername'
-	      1: 'dbpassword'
+
+```yml
+
+    name: MyController
+    ---
+    MyController:
+      dependencies:
+        permissions: %$PermissionService
+    Injector:
+      PermissionService:
+        class: RestrictivePermissionService
+        properties:
+          database: %$MySQLDatabase
+      MySQLDatabase
+        constructor:
+          0: 'dbusername'
+          1: 'dbpassword'
+```
 
 Calling..
 
-	:::php
-	// sets up ClassName as a singleton
-	$controller = Injector::inst()->get('MyController');
+
+```php
+    // sets up ClassName as a singleton
+    $controller = Injector::inst()->get('MyController');
+```
 
 Would setup the following
 
@@ -248,15 +282,14 @@ named services, which may not be actual classes, and thus should not behave as t
 Thus if you want an object to have the injected dependencies of a service of another name, you must
 assign a reference to that service.
 
-
-	:::yaml
-	Injector:
-	  JSONServiceDefinition:
-	    class: JSONServiceImplementor
-	    properties:
-	      Serialiser: JSONSerialiser
-	  GZIPJSONProvider: %$JSONServiceDefinition
-
+```yaml
+    Injector:
+      JSONServiceDefinition:
+        class: JSONServiceImplementor
+        properties:
+          Serialiser: JSONSerialiser
+      GZIPJSONProvider: %$JSONServiceDefinition
+```
 
 `Injector::inst()->get('GZIPJSONProvider')` will then be an instance of `JSONServiceImplementor` with the injected
 properties.
@@ -266,13 +299,13 @@ If class is not specified, then the class will be inherited from the outer servi
 
 For example with this config:
 
-    :::yaml
-	Injector:
-	  Connector:
-	    properties:
-	      AsString: true
-	  ServiceConnector: %$Connector
-
+```yml
+    Injector:
+      Connector:
+        properties:
+          AsString: true
+      ServiceConnector: %$Connector
+```
 
 Both `Connector` and `ServiceConnector` will have the `AsString` property set to true, but the resulting
 instances will be classes which match their respective service names, due to the lack of a `class` specification. 
@@ -284,20 +317,21 @@ which may be later discarded, reverting the application to the original state. T
 
 This is useful when writing test cases, as certain services may be necessary to override for a single method call.
 
-	:::php
-	// Setup default service
-	Injector::inst()->registerService(new LiveService(), 'ServiceName');
 
-	// Test substitute service temporarily
-	Injector::nest();
+```php
+    // Setup default service
+    Injector::inst()->registerService(new LiveService(), 'ServiceName');
 
-	Injector::inst()->registerService(new TestingService(), 'ServiceName');
-	$service = Injector::inst()->get('ServiceName');
-	// ... do something with $service
+    // Test substitute service temporarily
+    Injector::nest();
 
-	// revert changes
-	Injector::unnest();
+    Injector::inst()->registerService(new TestingService(), 'ServiceName');
+    $service = Injector::inst()->get('ServiceName');
+    // ... do something with $service
 
+    // revert changes
+    Injector::unnest();
+```
 
 ## API Documentation
 

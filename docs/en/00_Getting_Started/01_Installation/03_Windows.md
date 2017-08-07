@@ -66,10 +66,10 @@ Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/cu
 
 ```
 <IfModule mod_rewrite.c>
-	# Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
-	<IfModule mod_dir.c>
-    	DirectoryIndex disabled
-	</IfModule>
+    # Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
+    <IfModule mod_dir.c>
+        DirectoryIndex disabled
+    </IfModule>
 # ------ #
 </IfModule>
 ```

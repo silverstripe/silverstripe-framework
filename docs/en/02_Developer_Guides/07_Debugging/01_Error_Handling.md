@@ -14,7 +14,7 @@ For informational and debug logs, you can use the Logger directly. The Logger is
 can be accessed via the `Injector`:
 
 ```php
-Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Member::currentUserID());
+Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Security::getCurrentUser()->ID);
 Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
 ```
 
@@ -59,6 +59,8 @@ approach is to use depedency injection to pass the logger in for you. The [Injec
 can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
 
 ```php
+use SilverStripe\Control\Controller;
+
 class MyController extends Controller
 {
     private static $dependencies = [

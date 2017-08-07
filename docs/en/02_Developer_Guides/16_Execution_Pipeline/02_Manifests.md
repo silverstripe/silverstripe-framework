@@ -53,9 +53,9 @@ excluded from manifests by creating a blank `_manifest_exclude` file in the modu
 By default, the finder implementation will exclude any classes stored in files within
 a `tests/` folder, unless tests are executed.
 
-## Template Manifest
+## Theme Manifests
 
-The [SS_TemplateManifest](api:SS_TemplateManifest) class builds a manifest of all templates present in a directory,
+The [ThemeManifest](api:SilverStripe\View\ThemeManifest) class builds a manifest of all templates present in a directory,
 in both modules and themes. Templates in `tests/` folders are automatically excluded.
 The chapter on [template inheritance](../templates/template_inheritance) provides more details
 on its operation.

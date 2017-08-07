@@ -16,11 +16,11 @@ name in the `mysite/templates/email` folder or in the `themes/your_theme/templat
 
 **mysite/templates/email/GenericEmail.ss**
 	
-	:::ss
+```ss
 	$Body
 
 	<p>Thanks from Bob's Fantasy Football League.</p>
-
+```
 All emails going out of our application will have the footer `Thanks from Bob's Fantasy Football Leaguee` added.
 
 <div class="alert" markdown="1">
@@ -30,24 +30,14 @@ As we've added a new file, make sure you flush your SilverStripe cache by visiti
 Template inheritance works on more than email templates. All files within the `templates` directory including `includes`, 
 `layout` or anything else from core (or add-on's) template directory can be overridden by being located inside your 
 `mysite/templates` directory. SilverStripe keeps an eye on what templates have been overridden and the location of the
-correct template through a [SS_TemplateManifest](api:SS_TemplateManifest).
+correct template through a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader).
 
-## Template Manifest
+## ThemeResourceLoader
 
-The location of each template and the hierarchy of what template to use is stored within a [SS_TemplateManifest](api:SS_TemplateManifest) 
-instance. This is a serialized object containing a map of template names, paths and other meta data for each template 
-and is cached in your applications `TEMP_FOLDER` for performance. For SilverStripe to find the `GenericEmail` template 
-it does not check all your `template` folders on the fly, it simply asks the `manifest`. 
-
-The manifest is created whenever you flush your SilverStripe cache by appending `?flush=1` to any SilverStripe URL. For
-example by visiting `http://yoursite.com/?flush=1`. When your include the `flush=1` flag, the manifest class will search 
-your entire project for the appropriate `.ss` files located in `template` directory and save that information for later.
-
-<div class="warning">
-Whenever you add or remove template files, rebuild the manifest by visiting `http://yoursite.com/?flush=1`. You can 
-flush the cache from any page, (.com/home?flush=1, .com/admin?flush=1, etc.). Flushing the cache can be slow, so you 
-only need to do it when you're developing new templates.
-</div>
+The location of each template and the hierarchy of what template to use is stored within a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader) 
+instance. This is a serialized object containing a map of [ThemeManifest](api:SilverStripe\View\ThemeManifest) instances. For SilverStripe to find the `GenericEmail` template 
+it does not check all your `template` folders on the fly, it simply asks the manifests. The manifests are created and added to the loader when the 
+[kernel](api:SilverStripe\Core\CoreKernel) is instantiated.
 
 ## Template Priority
 
@@ -112,33 +102,33 @@ footer and navigation will remain the same and we don't want to replicate this w
 `$Layout` function allows us to define the child template area which can be overridden.
 
 **mysite/templates/Page.ss**
+```ss
+    <html>
+    <head>
+        ..
+    </head>
+    
+    <body>
+        <% include Header %>
+        <% include Navigation %>
 
-	<html>
-	<head>
-		..
-	</head>
-	
-	<body>
-		<% include Header %>
-		<% include Navigation %>
+        $Layout
 
-		$Layout
-
-		<% include Footer %>
-	</body>
-
+        <% include Footer %>
+    </body>
+``
 **mysite/templates/Layout/Page.ss**
-
+```ss
 	<p>You are on a $Title page</p>
 
 	$Content
-
+```
 **mysite/templates/Layout/HomePage.ss**
-
+```ss
 	<h1>This is the homepage!</h1>
 
 	<blink>Hi!</blink>
-
+```
 
 If your classes have in a namespace, the Layout folder will be a found inside of the appropriate namespace folder.
 

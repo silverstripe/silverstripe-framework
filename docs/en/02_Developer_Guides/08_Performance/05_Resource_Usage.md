@@ -23,7 +23,9 @@ SilverStripe can request more resources through `Environment::increaseMemoryLimi
 `Environment::increaseTimeLimitTo()` functions.
 </div>
 
-	:::php
-	public function myBigFunction() {
-		Environment::increaseTimeLimitTo(400);
-	}
+```php
+    public function myBigFunction() 
+    {
+        Environment::increaseTimeLimitTo(400);
+    }
+```

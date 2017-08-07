@@ -19,8 +19,6 @@ will deliberately return a different response, e.g. an error response or a redir
 **mysite/code/CustomMiddleware.php**
 
 ```php
-<?php
-
 use SilverStripe\Control\Middleware\HTTPMiddleware
 use SilverStripe\Control\HTTPRequest;
 
