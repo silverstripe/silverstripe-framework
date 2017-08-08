@@ -472,7 +472,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function getCurrentAbsolutePath() {
 		$filename = self::$test_class_manifest->getItemPath(get_class($this));
-		if(!$filename) throw new LogicException("getItemPath returned null for " . get_class($this));
+		if(!$filename) throw new LogicException("getItemPath returned null for " . get_class($this)
+			. ". Try adding flush=1 to the test run.");
 		return dirname($filename);
 	}
 
