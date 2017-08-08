@@ -267,6 +267,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     protected $unsavedRelations;
 
     /**
+     * List of relations that should be cascade deleted, similar to `owns`
+     * Note: This will trigger delete on many_many objects, not only the mapping table.
+     * For many_many through you can specify the components you want to delete separately
+     * (many_many or has_many sub-component)
+     *
+     * @config
+     * @var array
+     */
+    private static $cascade_deletes = [];
+
+    /**
      * Get schema object
      *
      * @return DataObjectSchema
@@ -1044,6 +1055,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Find all objects that will be cascade deleted if this object is deleted
+     *
+     * Notes:
+     *   - If this object is versioned, objects will only be searched in the same stage as the given record.
+     *   - This will only be useful prior to deletion, as post-deletion this record will no longer exist.
+     *
+     * @param bool $recursive True if recursive
+     * @param ArrayList $list Optional list to add items to
+     * @return ArrayList list of objects
+     */
+    public function findCascadeDeletes($recursive = true, $list = null)
+    {
+        // Find objects in these relationships
+        return $this->findRelatedObjects('cascade_deletes', $recursive, $list);
+    }
+
+    /**
      * Event handler called before deleting from the database.
      * You can overload this to clean up or otherwise process data before delete this
      * record.  Don't forget to call parent::onBeforeDelete(), though!
@@ -1056,6 +1084,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         $dummy = null;
         $this->extend('onBeforeDelete', $dummy);
+
+        // Cascade deletes
+        $deletes = $this->findCascadeDeletes(false);
+        foreach ($deletes as $delete) {
+            $delete->delete();
+        }
     }
 
     protected function onAfterDelete()
@@ -3679,5 +3713,106 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $this->record[$alias] = $object;
         }
         return $this;
+    }
+
+    /**
+     * Find objects in the given relationships, merging them into the given list
+     *
+     * @param string $source Config property to extract relationships from
+     * @param bool $recursive True if recursive
+     * @param ArrayList $list If specified, items will be added to this list. If not, a new
+     * instance of ArrayList will be constructed and returned
+     * @return ArrayList The list of related objects
+     */
+    public function findRelatedObjects($source, $recursive = true, $list = null)
+    {
+        if (!$list) {
+            $list = new ArrayList();
+        }
+
+        // Skip search for unsaved records
+        if (!$this->isInDB()) {
+            return $list;
+        }
+
+        $relationships = $this->config()->get($source) ?: [];
+        foreach ($relationships as $relationship) {
+            // Warn if invalid config
+            if (!$this->hasMethod($relationship)) {
+                trigger_error(sprintf(
+                    "Invalid %s config value \"%s\" on object on class \"%s\"",
+                    $source,
+                    $relationship,
+                    get_class($this)
+                ), E_USER_WARNING);
+                continue;
+            }
+
+            // Inspect value of this relationship
+            $items = $this->{$relationship}();
+
+            // Merge any new item
+            $newItems = $this->mergeRelatedObjects($list, $items);
+
+            // Recurse if necessary
+            if ($recursive) {
+                foreach ($newItems as $item) {
+                    /** @var DataObject $item */
+                    $item->findRelatedObjects($source, true, $list);
+                }
+            }
+        }
+        return $list;
+    }
+
+    /**
+     * Helper method to merge owned/owning items into a list.
+     * Items already present in the list will be skipped.
+     *
+     * @param ArrayList $list Items to merge into
+     * @param mixed $items List of new items to merge
+     * @return ArrayList List of all newly added items that did not already exist in $list
+     */
+    public function mergeRelatedObjects($list, $items)
+    {
+        $added = new ArrayList();
+        if (!$items) {
+            return $added;
+        }
+        if ($items instanceof DataObject) {
+            $items = [$items];
+        }
+
+        /** @var DataObject $item */
+        foreach ($items as $item) {
+            $this->mergeRelatedObject($list, $added, $item);
+        }
+        return $added;
+    }
+
+    /**
+     * Merge single object into a list, but ensures that existing objects are not
+     * re-added.
+     *
+     * @param ArrayList $list Global list
+     * @param ArrayList $added Additional list to insert into
+     * @param DataObject $item Item to add
+     */
+    protected function mergeRelatedObject($list, $added, $item)
+    {
+        // Identify item
+        $itemKey = get_class($item) . '/' . $item->ID;
+
+        // Write if saved, versioned, and not already added
+        if ($item->isInDB() && !isset($list[$itemKey])) {
+            $list[$itemKey] = $item;
+            $added[$itemKey] = $item;
+        }
+
+        // Add joined record (from many_many through) automatically
+        $joined = $item->getJoin();
+        if ($joined) {
+            $this->mergeRelatedObject($list, $added, $joined);
+        }
     }
 }
