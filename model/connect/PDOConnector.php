@@ -181,7 +181,7 @@ class PDOConnector extends DBConnector {
 				}
 
 				// use default cipher if not provided
-				$options[PDO::MYSQL_ATTR_SSL_CIPHER] = $parameters['ssl_cipher'] ?: Config::inst()->get('PDOConnector', 'ssl_cipher_default');
+				$options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : Config::inst()->get('PDOConnector', 'ssl_cipher_default');
 
 			}
 
