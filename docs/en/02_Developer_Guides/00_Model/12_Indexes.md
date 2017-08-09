@@ -71,6 +71,11 @@ support the following:
     }
 ```
 
+<div class="alert" markdown="1">
+Please note that if you have previously used the removed `value` key to define an index's contents, SilverStripe will
+now throw an error. Use `columns` instead.
+</div>
+
 ## Complex/Composite Indexes
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 
 composite index, define the fields in the index order as a comma separated list. 
