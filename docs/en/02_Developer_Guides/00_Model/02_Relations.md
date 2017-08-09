@@ -406,6 +406,32 @@ the best way to think about it is that the object where the relationship will be
 Product => Categories, the `Product` should contain the `many_many`, because it is much
 more likely that the user will select Categories for a Product than vice-versa.
 
+## Cascading deletions
+
+Relationships between objects can cause cascading deletions, if necessary, through configuration of the
+`cascade_deletes` config on the parent class.
+
+```php
+class ParentObject extends DataObject {
+    private static $has_one = [
+        'Child' => ChildObject::class,
+    ];
+    private static $cascade_deletes = [
+        'Child',
+    ];
+}
+class ChildObject extends DataObject {
+}
+```
+
+In this example, when the Parent object is deleted, the Child specified by the has_one relation will also
+be deleted. Note that all relation types (has_many, many_many, belongs_many_many, belongs_to, and has_one)
+are supported, as are methods that return lists of objects but do not correspond to a physical database relation.
+
+If your object is versioned, cascade_deletes will also act as "cascade unpublish", such that any unpublish
+on a parent object will trigger unpublish on the child, similarly to how `owns` causes triggered publishing.
+See the [versioning docs](/developer_guides/versioning) for more information on ownership.
+
 ## Adding relations
 
 Adding new items to a relations works the same, regardless if you're editing a **has_many** or a **many_many**. They are 

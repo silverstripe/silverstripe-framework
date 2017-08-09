@@ -1,0 +1,39 @@
+SilverStripe\ORM\Tests\CascadeDeleteTest\GrandChildObject:
+  grandchild1:
+    Title: 'Grandchild 1'
+  grandchild2:
+    Title: 'Grandchild 2'
+  grandchild3:
+    Title: 'Grandchild 3'
+
+SilverStripe\ORM\Tests\CascadeDeleteTest\RelatedObject:
+  related1:
+    Title: 'Related 1'
+  related2:
+    Title: 'Related 2'
+  related3:
+    Title: 'Related 3'
+
+SilverStripe\ORM\Tests\CascadeDeleteTest\ParentObject:
+  parent1:
+    Title: 'Parent 1'
+  parent2:
+    Title: 'Parent 2'
+  parent3:
+    Title: 'Parent 3'
+
+SilverStripe\ORM\Tests\CascadeDeleteTest\ChildObject:
+  child1:
+    Title: 'Child 1'
+    Parent: =>SilverStripe\ORM\Tests\CascadeDeleteTest\ParentObject.parent1
+    Related: =>SilverStripe\ORM\Tests\CascadeDeleteTest\RelatedObject.related1
+    Children:
+      - =>SilverStripe\ORM\Tests\CascadeDeleteTest\GrandChildObject.grandchild1
+      - =>SilverStripe\ORM\Tests\CascadeDeleteTest\GrandChildObject.grandchild2
+  child2:
+    Title: 'Child 2'
+    Parent: =>SilverStripe\ORM\Tests\CascadeDeleteTest\ParentObject.parent2
+    Related: =>SilverStripe\ORM\Tests\CascadeDeleteTest\RelatedObject.related2
+    Children:
+      - =>SilverStripe\ORM\Tests\CascadeDeleteTest\GrandChildObject.grandchild2
+      - =>SilverStripe\ORM\Tests\CascadeDeleteTest\GrandChildObject.grandchild3
