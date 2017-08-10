@@ -68,7 +68,6 @@ class HTMLEditorFieldTest extends FunctionalTest
             'base_dir',
             'silverstripe/framework: tests/php/Forms/HTMLEditor/TinyMCECombinedGeneratorTest/tinymce'
         );
-        HtmlEditorField::config()->set('use_gzip', false);
 
         // Test special characters
         $inputText = "These are some unicodes: ä, ö, & ü";

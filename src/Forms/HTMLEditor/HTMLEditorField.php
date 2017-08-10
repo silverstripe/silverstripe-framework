@@ -29,14 +29,6 @@ class HTMLEditorField extends TextareaField
     protected $schemaComponent = 'HtmlEditorField';
 
     /**
-     * Use TinyMCE's GZIP compressor
-     *
-     * @config
-     * @var bool
-     */
-    private static $use_gzip = true;
-
-    /**
      * @config
      * @var string Default alignment for Images and Media. Options: leftAlone|center|left|right
      */

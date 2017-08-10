@@ -31,29 +31,6 @@ class TinyMCEGZIPGenerator implements TinyMCEScriptGenerator
      */
     public function getScriptURL(TinyMCEConfig $config)
     {
-        // If gzip is disabled just return core script url
-        $useGzip = HTMLEditorField::config()->get('use_gzip');
-        if (!$useGzip) {
-            return Controller::join_links($config->getTinyMCEResourceURL(), 'tinymce.min.js');
-        }
-
-        // tinyMCE JS requirement - use the original module path,
-        // don't assume the PHP file is copied alongside the resources
-        $gzipPath = $config->getTinyMCEResourcePath() . '/tiny_mce_gzip.php';
-        if (!file_exists($gzipPath)) {
-            throw new Exception("HTMLEditorField.use_gzip enabled, but file $gzipPath does not exist!");
-        }
-
-        require_once $gzipPath;
-
-        $tag = TinyMCE_Compressor::renderTag(array(
-            'url' => $config->getTinyMCEResourceURL() . '/tiny_mce_gzip.php',
-            'plugins' => implode(',', $config->getInternalPlugins()),
-            'themes' => $config->getTheme(),
-            'languages' => $config->getOption('language')
-        ), true);
-        preg_match('/src="([^"]*)"/', $tag, $matches);
-
-        return html_entity_decode($matches[1]);
+        return Controller::join_links($config->getTinyMCEResourceURL(), 'tinymce.min.js');
     }
 }
