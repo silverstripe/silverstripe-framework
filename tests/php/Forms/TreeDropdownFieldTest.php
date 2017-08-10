@@ -15,6 +15,31 @@ class TreeDropdownFieldTest extends SapphireTest
 
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
 
+    public function testSchemaStateDefaults()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
+        $folder = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
+    
+        $schema = $field->getSchemaStateDefaults();
+        $this->assertFalse(isset($schema['data']['valueObject']));
+        
+        $field->setValue($folder->ID);
+    
+        $schema = $field->getSchemaStateDefaults();
+        $this->assertEquals($folder->ID, $schema['data']['valueObject']['id']);
+        $this->assertTrue(isset($schema['data']['valueObject']));
+        $this->assertFalse($schema['data']['showSelectedPath']);
+        $this->assertEquals('', $schema['data']['valueObject']['titlePath']);
+        
+        $field->setShowSelectedPath(true);
+        $schema = $field->getSchemaStateDefaults();
+        $this->assertTrue($schema['data']['showSelectedPath']);
+        $this->assertEquals(
+            'FileTest-folder1/FileTest-folder1-subfolder1/',
+            $schema['data']['valueObject']['titlePath']
+        );
+    }
+    
     public function testTreeSearchJson()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
