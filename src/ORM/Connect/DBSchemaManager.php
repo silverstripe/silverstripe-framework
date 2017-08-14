@@ -558,8 +558,18 @@ abstract class DBSchemaManager
     protected function convertIndexSpec($indexSpec)
     {
         // Return already converted spec
-        if (!is_array($indexSpec) || !array_key_exists('type', $indexSpec) || !array_key_exists('columns', $indexSpec) || !is_array($indexSpec['columns'])) {
-            throw new \InvalidArgumentException(sprintf('argument to convertIndexSpec must be correct indexSpec, %s given', var_export($indexSpec, true)));
+        if (!is_array($indexSpec)
+            || !array_key_exists('type', $indexSpec)
+            || !array_key_exists('columns', $indexSpec)
+            || !is_array($indexSpec['columns'])
+            || array_key_exists('value', $indexSpec)
+        ) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'argument to convertIndexSpec must be correct indexSpec, %s given',
+                    var_export($indexSpec, true)
+                )
+            );
         }
 
         // Combine elements into standard string format

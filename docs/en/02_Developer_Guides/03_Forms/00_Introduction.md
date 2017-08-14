@@ -14,7 +14,8 @@ See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of c
 
 Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
 
-    :::php
+
+```php
     $form = new Form(
         $controller, // the Controller to render this form on 
         $name, // name of the method that returns this form on the controller
@@ -22,14 +23,13 @@ Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
         FieldList $actions, // list of FormAction instances
         $required // optional use of RequiredFields object
     );
+```
 
 In practice, this looks like:
 
 **mysite/code/Page.php**
 
 ```php
-<?php
-
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -39,9 +39,9 @@ use SilverStripe\Forms\TextField;
 
 class PageController extends ContentController
 {   
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'HelloForm'
-    );
+    ];
     
     public function HelloForm()
     {
@@ -67,6 +67,7 @@ class PageController extends ContentController
         return $this->redirectBack();
     }
 }
+
 ```
 
 **mysite/templates/Page.ss**
@@ -91,9 +92,10 @@ Because the `HelloForm()` method will be the location the user is taken to, it n
 controller action. To grant it access through URLs, we add it to the `$allowed_actions` array.
 
 ```php
-private static $allowed_actions = array(
+private static $allowed_actions = [
     'HelloForm'
-);
+];
+
 ```
 
 <div class="notice" markdown="1">
@@ -276,8 +278,6 @@ The `$action` method takes two arguments:
  * `$form` the submitted [Form](api:SilverStripe\Forms\Form) instance.
 
 ```php
-<?php
-
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -287,9 +287,9 @@ use SilverStripe\Forms\TextField;
 
 class PageController extends ContentController
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'MyForm'
-    );
+    ];
 
     public function MyForm()
     {
@@ -323,6 +323,7 @@ class PageController extends ContentController
         return $this->redirectBack();
     }
 }
+
 ```
 
 ## Validation
@@ -334,12 +335,13 @@ validating its' own data value.
 For more information, see the [Form Validation](validation) documentation.
 
 ```php
-$validator = new SilverStripe\Forms\RequiredFields(array(
+$validator = new SilverStripe\Forms\RequiredFields([
     'Name',
     'Email'
-));
+]);
 
 $form = new Form($this, 'MyForm', $fields, $actions, $validator);
+
 ```
 
 ## API Documentation

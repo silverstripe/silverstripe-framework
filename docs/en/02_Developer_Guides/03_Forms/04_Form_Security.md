@@ -20,25 +20,30 @@ website.
 
 The `SecurityToken` automatically added looks something like:
 
-	:::php
-	$form = new Form(..);
-	echo $form->getSecurityToken()->getValue();
 
-	// 'c443076989a7f24cf6b35fe1360be8683a753e2c'
+```php
+    $form = new Form(..);
+    echo $form->getSecurityToken()->getValue();
+
+    // 'c443076989a7f24cf6b35fe1360be8683a753e2c'
+```
 
 This token value is passed through the rendered Form HTML as a [HiddenField](api:SilverStripe\Forms\HiddenField).
-	
-	:::html
-	<input type="hidden" name="SecurityID" value="c443076989a7f24cf6b35fe1360be8683a753e2c" class="hidden"  />
+```html
+
+    <input type="hidden" name="SecurityID" value="c443076989a7f24cf6b35fe1360be8683a753e2c" class="hidden"  />
+```
 
 The token should be present whenever a operation has a side effect such as a `POST` operation.
 
 It can be safely disabled for `GET` requests as long as it does not modify the database (i.e a search form does not 
 normally require a security token).
 
-	:::php
-	$form = new Form(..);
-	$form->disableSecurityToken();
+
+```php
+    $form = new Form(..);
+    $form->disableSecurityToken();
+```
 
 <div class="alert" markdown="1">
 Do not disable the SecurityID for forms that perform some modification to the users session. This will open your 
@@ -51,14 +56,16 @@ To reduce attack exposure forms are limited, by default, to the intended HTTP ve
 this check, forms that rely on `GET` can be submitted via `POST` or `PUT` or vice-versa potentially leading to 
 application errors or edge cases. If you need to disable this setting follow the below example:
 
-	:::php
-	$form = new Form(..);
 
-	$form->setFormMethod('POST');
-	$form->setStrictFormMethodCheck(false);
+```php
+    $form = new Form(..);
 
-	// or alternative short notation..
-	$form->setFormMethod('POST', false);
+    $form->setFormMethod('POST');
+    $form->setStrictFormMethodCheck(false);
+
+    // or alternative short notation..
+    $form->setFormMethod('POST', false);
+```
 
 ## Spam and Bot Attacks
 

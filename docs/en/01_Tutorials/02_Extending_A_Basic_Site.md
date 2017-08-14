@@ -49,7 +49,7 @@ presentation of our website.
 
 ### Controller
 
-Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from [ContentController](api:SilverStripe\CMS\Controllers\ContentController). Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "Page_Controller" that is subclassed.
+Each page type also has a **"controller"**. The controller contains all the code used to manipulate our data before it is rendered. For example, suppose we were making an auction site, and we only wanted to display the auctions closing in the next ten minutes. We would implement this logic in the controller. The controller for a page should inherit from [ContentController](api:SilverStripe\CMS\Controllers\ContentController). Just as we create a "Page" data object and subclass it for the rest of the site, we also create a "PageController" that is subclassed.
 
 
 Creating a new page type requires creating each of these three elements. We will then have full control over presentation, the database, and editable CMS fields. 
@@ -63,16 +63,27 @@ A more in-depth introduction of Model-View-Controller can be found
 
 To create a News section we'll need two new page types. The first one is obvious: we need an *ArticlePage* page type. The second is a little less obvious: we need an *ArticleHolder* page type to contain our article pages.
 
-We'll start with the *ArticlePage* page type. First we create the model, a class called "ArticlePage". We put the *ArticlePage* class into a file called "ArticlePage.php" inside *mysite/code*. All other classes relating to *ArticlePage* should be placed within "ArticlePage.php", this includes our controller (*ArticlePage_Controller*). 
+We'll start with the *ArticlePage* page type. First we create the model, a class called "ArticlePage". We put the *ArticlePage* class into a file called "ArticlePage.php" inside *mysite/code*. All other classes relating to *ArticlePage* should be placed within "ArticlePage.php", this includes our controller (*ArticlePageController*). 
 
 **mysite/code/ArticlePage.php**
 
-	:::php
-	<?php
-	class ArticlePage extends Page {
-	}
-	class ArticlePage_Controller extends Page_Controller {
-	}
+```php
+        use Page;
+
+    class ArticlePage extends Page 
+    {
+    
+    }
+```	
+**mysite/code/ArticlePageController.php**	
+```php
+        use PageController;
+
+    class ArticlePageController extends PageController 
+    {
+    
+    }
+```	
 	 
 
 
@@ -83,14 +94,23 @@ Let's create the *ArticleHolder* page type.
 
 **mysite/code/ArticleHolder.php**
 
-	:::php
-	<?php
-	class ArticleHolder extends Page {
-		private static $allowed_children = array('ArticlePage');
-	}
-	class ArticleHolder_Controller extends Page_Controller {
-	}
+```php
+        use Page;
 
+    class ArticleHolder extends Page 
+    {
+        private static $allowed_children = ['ArticlePage'];
+    }
+```
+**mysite/code/ArticleHolderController.php**
+```php    
+        use PageController; 
+
+    class ArticleHolderController extends PageController 
+    {
+    
+    }
+```
 
 Here we have done something interesting: the *$allowed_children* field. This is one of a number of static fields we can define to change the properties of a page type. The *$allowed_children* field is an array of page types that are allowed
 to be children of the page in the site tree. As we only want **news articles** in the news section, we only want pages of the type *ArticlePage* as children. We can enforce this in the CMS by setting the *$allowed_children* field within this class.
@@ -111,17 +131,19 @@ Now that we have an *ArticlePage* page type, let's make it a little more useful.
 the $db array to add extra fields to the database. It would be nice to know when each article was posted, and who posted
 it. Add a *$db* property definition in the *ArticlePage* class:
 
-	:::php
-	<?php
-	class ArticlePage extends Page {
-		private static $db = array(
-			'Date' => 'Date',
-			'Author' => 'Text'
-		);
-	
-		// .....
-	}
+```php
+        use Page;
 
+    class ArticlePage extends Page 
+    {
+        private static $db = [
+            'Date' => 'Date',
+            'Author' => 'Text'
+        ];
+    
+        // .....
+    }
+```
 
 Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See ["data types and casting"](/developer_guides/model/data_types_and_casting) for a complete list of types.
 
@@ -134,39 +156,44 @@ When we rebuild the database, we will see that the *ArticlePage* table has been 
 
 To add our new fields to the CMS we have to override the *getCMSFields()* method, which is called by the CMS when it creates the form to edit a page. Add the method to the *ArticlePage* class.
 
-	:::php
-	<?php
-	class ArticlePage extends Page {
-		// ...
-		
-		public function getCMSFields() {
-			$fields = parent::getCMSFields();
-			
-			$dateField = new DateField('Date');
-			$dateField->setConfig('showcalendar', true);
-			$fields->addFieldToTab('Root.Main', $dateField, 'Content');
-			$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
-			
-			return $fields;
-		}
-	}
-	
-	// ...
+```php
+        use Page;
 
+    class ArticlePage extends Page 
+    {
+        // ...
+        
+        public function getCMSFields() 
+        {
+            $fields = parent::getCMSFields();
+            
+            $dateField = new DateField('Date');
+            $dateField->setConfig('showcalendar', true);
+            $fields->addFieldToTab('Root.Main', $dateField, 'Content');
+            $fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
+            
+            return $fields;
+        }
+    }
+    
+    // ...
 
+```
 
 Let's walk through this method.
 
-	:::php
-	$fields = parent::getCMSFields();
+```php
+    $fields = parent::getCMSFields();
+```	
 
 
 Firstly, we get the fields from the parent class; we want to add fields, not replace them. The *$fields* variable
 returned is a [FieldList](api:SilverStripe\Forms\FieldList) object.
 
-	:::php
-	$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
-	$fields->addFieldToTab('Root.Main', new DateField('Date'), 'Content');
+```php
+    $fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
+    $fields->addFieldToTab('Root.Main', new DateField('Date'), 'Content');
+```	
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
@@ -180,8 +207,9 @@ would create a new tab called "New Tab", and a single "Author" textfield inside.
 We have added two fields: A simple [TextField](api:SilverStripe\Forms\TextField) and a [DateField](api:SilverStripe\Forms\DateField). 
 There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/field_types/common_subclasses).
 
-	:::php
-	return $fields;
+```php
+    return $fields;
+```	
 
 
 Finally, we return the fields to the CMS. If we flush the cache (by adding ?flush=1 at the end of the URL), we will be able to edit the fields in the CMS.
@@ -198,44 +226,52 @@ This makes it confusing and doesn't give the user much help when adding a date.
 To make the date field a bit more user friendly, you can add a dropdown calendar, set the date format and add a better title. By default,
 the date field will have the date format defined by your locale.
 
-	:::php
-	<?php
-	class ArticlePage extends Page {
-	
-	// .....
-	
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		
-		$dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
-		$dateField->setConfig('showcalendar', true);
-		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
-        	
-		$fields->addFieldToTab('Root.Main', $dateField, 'Content');
-		$fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
+```php
+        use Page;
 
-		return $fields;
-	}
+    class ArticlePage extends Page 
+    {
+    
+        // .....
+    
+        public function getCMSFields() 
+        {
+            $fields = parent::getCMSFields();
+            
+            $dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
+            $dateField->setConfig('showcalendar', true);
+            $dateField->setConfig('dateformat', 'dd/MM/YYYY');
+                
+            $fields->addFieldToTab('Root.Main', $dateField, 'Content');
+            $fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
+
+            return $fields;
+        }
+```
 
 Let's walk through these changes.
 
-	:::php
-	$dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
+```php
+    $dateField = new DateField('Date', 'Article Date (for example: 20/12/2010)');
+```	
 
 *$dateField* is declared in order to change the configuration of the DateField.
 
-	:::php
-	$dateField->setConfig('showcalendar', true);
+```php
+    $dateField->setConfig('showcalendar', true);
+```	
 
 By enabling *showCalendar* you show a calendar overlay when clicking on the field. 
 
-	:::php
-	$dateField->setConfig('dateformat', 'dd/MM/YYYY');
+```php
+    $dateField->setConfig('dateformat', 'dd/MM/YYYY');
+```	
 
 *dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the [DBDateField](api:SilverStripe\ORM\FieldType\DBDateField) documentation for more configuration options.
 
-	:::php
-	$fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
+```php
+    $fields->addFieldToTab('Root.Main', new TextField('Author', 'Author Name'), 'Content');
+```	
 
 By default the field name *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title, add the new title as the second argument.
 
@@ -250,22 +286,22 @@ page layout.
 ### ArticlePage Template
 First, the template for displaying a single article:
 
-**themes/simple/templates/Layout/ArticlePage.ss**
+**themes/simple/templates/Layout/ArticlePage.ss**
 
 
-	:::ss
-	<% include SideBar %>
-	<div class="content-container unit size3of4 lastUnit">
-		<article>
-			<h1>$Title</h1>
-			<div class="news-details">
-				<p>Posted on $Date.Nice by $Author</p>
-			</div>
-			<div class="content">$Content</div>
-		</article>
-			$Form
-	</div>
-
+```ss
+    <% include SideBar %>
+    <div class="content-container unit size3of4 lastUnit">
+        <article>
+            <h1>$Title</h1>
+            <div class="news-details">
+                <p>Posted on $Date.Nice by $Author</p>
+            </div>
+            <div class="content">$Content</div>
+        </article>
+            $Form
+    </div>
+```
 
 Most of the code is just like the regular Page.ss, we include an informational div with the date and the author of the Article.
 
@@ -286,24 +322,24 @@ We'll now create a template for the article holder. We want our news section to 
 
 **themes/simple/templates/Layout/ArticleHolder.ss**
 
-	:::ss
-	<% include SideBar %>
-	<div class="content-container unit size3of4 lastUnit">  
-		<article>
-			<h1>$Title</h1>
-			$Content        
-			<div class="content">$Content</div>
-		</article>
-		<% loop $Children %>
-			<article>
-				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
-				<p>$Content.FirstParagraph</p>
-				<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
-			</article>
-		<% end_loop %>
-			$Form
-	</div>
-
+```ss
+    <% include SideBar %>
+    <div class="content-container unit size3of4 lastUnit">  
+        <article>
+            <h1>$Title</h1>
+            $Content        
+            <div class="content">$Content</div>
+        </article>
+        <% loop $Children %>
+            <article>
+                <h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+                <p>$Content.FirstParagraph</p>
+                <a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+            </article>
+        <% end_loop %>
+            $Form
+    </div>
+```
 
 Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText) field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
 
@@ -320,38 +356,39 @@ Cut the code between "loop Children" in *ArticleHolder.ss** and replace it with 
 
 **themes/simple/templates/Layout/ArticleHolder.ss**
 
-	:::ss
-	...
-	<% loop $Children %>
-		<% include ArticleTeaser %>
-	<% end_loop %>
-	...
-
+```ss
+    ...
+    <% loop $Children %>
+        <% include ArticleTeaser %>
+    <% end_loop %>
+    ...
+```
 Paste the code that was in ArticleHolder into a new include file called ArticleTeaser.ss:
 
 **themes/simple/templates/Includes/ArticleTeaser.ss**
 
-	:::ss
-	<article>
-		<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
-		<p>$Content.FirstParagraph</p>
-		<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
-	</article>
-		
+```ss
+    <article>
+        <h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+        <p>$Content.FirstParagraph</p>
+        <a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+    </article>
+```
+
 ### Changing the icons of pages in the CMS
 
 Now let's make a purely cosmetic change that nevertheless helps to make the information presented in the CMS clearer.
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
-	:::php
-	private static $icon = "cms/images/treeicons/news-file.gif";
-
+```php
+    private static $icon = "cms/images/treeicons/news-file.gif";
+```
 
 And this one to the *HomePage* class:
 
-	:::php
-	private static $icon = "cms/images/treeicons/home-file.png";
-
+```php
+    private static $icon = "cms/images/treeicons/home-file.png";
+```
 
 This will change the icons for the pages in the CMS. 
 
@@ -363,30 +400,31 @@ Note: The `news-file` icon may not exist in a default SilverStripe installation.
 
 ## Showing the latest news on the homepage
 
-It would be nice to greet page visitors with a summary of the latest news when they visit the homepage. This requires a little more code though - the news articles are not direct children of the homepage, so we can't use the *Children* control. We can get the data for news articles by implementing our own function in *HomePage_Controller*.
+It would be nice to greet page visitors with a summary of the latest news when they visit the homepage. This requires a little more code though - the news articles are not direct children of the homepage, so we can't use the *Children* control. We can get the data for news articles by implementing our own function in *HomePageController*.
 
 **mysite/code/HomePage.php**
 
-	:::php
-	// ...
-	public function LatestNews($num=5) {
-		$holder = ArticleHolder::get()->First();
-		return ($holder) ? ArticlePage::get()->filter('ParentID', $holder->ID)->sort('Date DESC')->limit($num) : false;
-	}
-
+```php
+    // ...
+    public function LatestNews($num=5) 
+    {
+        $holder = ArticleHolder::get()->First();
+        return ($holder) ? ArticlePage::get()->filter('ParentID', $holder->ID)->sort('Date DESC')->limit($num) : false;
+    }
+```
 
 This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model and ORM](/developer_guides/model/data_model_and_orm) documentation for details. We can reference this function as a page control in our *HomePage* template:
 
 **themes/simple/templates/Layout/Homepage.ss**
 
-	:::ss
-	<!-- ... -->
-	<div class="content">$Content</div>
-	</article>
-	<% loop $LatestNews %>
-		<% include ArticleTeaser %>
-	<% end_loop %>
-
+```ss
+    <!-- ... -->
+    <div class="content">$Content</div>
+    </article>
+    <% loop $LatestNews %>
+        <% include ArticleTeaser %>
+    <% end_loop %>
+```
 
 When SilverStripe comes across a variable or page control it doesn't recognize, it first passes control to the controller. If the controller doesn't have a function for the variable or page control, it then passes control to the data object. If it has no matching functions, it then searches its database fields. Failing that it will return nothing.
 
@@ -398,23 +436,24 @@ The controller for a page is only created when page is actually visited, while t
 
 ## Creating a RSS feed
 
-An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) class to do all the hard work for us. Add the following in the *ArticleHolder_Controller* class:
+An RSS feed is something that no news section should be without. SilverStripe makes it easy to create RSS feeds by providing an [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) class to do all the hard work for us. Add the following in the *ArticleHolderController* class:
 
 **mysite/code/ArticleHolder.php**
 
-	:::php
-	private static $allowed_actions = array( 
-		'rss' 
-	);
+```php
+    private static $allowed_actions = [
+        'rss' 
+    ];
 
-	public function rss() {
-		$rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
-		return $rss->outputToBrowser();
-	}
-
+    public function rss() 
+    {
+        $rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
+        return $rss->outputToBrowser();
+    }
+```
 
 Ensure that when you have input the code to implement an RSS feed; flush the webpage afterwards
-(add ?flush=all on the end of your URL). This is because allowed_actions has changed.
+(add `?flush=1` on the end of your URL). This is because `allowed_actions` has changed.
 
 This function creates an RSS feed of all the news articles, and outputs it to the browser. If we go to [http://localhost/your_site_name/news/rss](http://localhost/your_site_name/news/rss) we should see our RSS feed. When there is more to a URL after a page's base URL, "rss" in this case, SilverStripe will call the function with that name on the controller if it exists.
 
@@ -422,16 +461,17 @@ Depending on your browser, you should see something like the picture below. If y
 
 ![](../_images/tutorial2_rss-feed.jpg)
 
-Now all we need is to let the user know that our RSS feed exists. Add this function to *ArticleHolder_Controller*:
+Now all we need is to let the user know that our RSS feed exists. Add this function to *ArticleHolderController*:
 
 **mysite/code/ArticleHolder.php**
 
-	:::php
-	public function init() {
-		RSSFeed::linkToFeed($this->Link() . "rss");	
-		parent::init();
-	}
-
+```php
+    public function init() 
+    {
+        RSSFeed::linkToFeed($this->Link() . "rss");    
+        parent::init();
+    }
+```
 
 This automatically generates a link-tag in the header of our template. The *init* function is then called on the parent class to ensure any initialization the parent would have done if we hadn't overridden the *init* function is still called. Depending on your browser, you can see the RSS feed link in the address bar.
 
@@ -441,45 +481,65 @@ Now that we have a complete news section, let's take a look at the staff section
 
 **mysite/code/StaffHolder.php**
 
-	:::php
-	<?php
-	
-	class StaffHolder extends Page {
-		private static $db = array();
-		private static $has_one = array();
-		private static $allowed_children = array('StaffPage');
-	}
-	
-	class StaffHolder_Controller extends Page_Controller {
-		
-	}
+```php
+        use Page;
 
+    class StaffHolder extends Page 
+    {
+        private static $db = [];
+        private static $has_one = [];
+        private static $allowed_children = [StaffPage::class];
+    }
+```
+
+**mysite/code/StaffHolderController.php**
+
+```php
+        use PageController;
+
+    class StaffHolderController extends PageController 
+    {
+        
+    }
+```
 
 Nothing here should be new. The *StaffPage* page type is more interesting though. Each staff member has a portrait image. We want to make a permanent connection between this image and the specific *StaffPage* (otherwise we could simply insert an image in the *$Content* field).
 
 **mysite/code/StaffPage.php**
 
-	:::php
-	<?php
-	class StaffPage extends Page {
-		private static $db = array(
-		);
-		private static $has_one = array(
-			'Photo' => 'Image'
-		);
-		
-		public function getCMSFields() {
-			$fields = parent::getCMSFields();
-			
-			$fields->addFieldToTab("Root.Images", new UploadField('Photo'));
-			
-			return $fields;
-		}
-	}
-	
-	class StaffPage_Controller extends Page_Controller {
-	}
+```php
+        use SilverStripe\AssetAdmin\Forms\UploadField;
+    use SilverStripe\Assets\Image;
 
+    class StaffPage extends Page 
+    {
+        private static $db = [];
+
+        private static $has_one = [
+            'Photo' => Image::class
+        ];
+        
+        public function getCMSFields() 
+        {
+            $fields = parent::getCMSFields();
+            
+            $fields->addFieldToTab("Root.Images", new UploadField('Photo'));
+            
+            return $fields;
+        }
+    }
+```
+
+**mysite/code/StaffPageController.php**
+
+```php
+        use PageController;
+    
+    class StaffPageController extends PageController 
+    {
+    
+    }
+```
 
 Instead of adding our *Image* as a field in *$db*, we have used the *$has_one* array. This is because an *Image* is not a simple database field like all the fields we have seen so far, but has its own database table. By using the *$has_one* array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective *Image* in the *StaffPage* table.
 
@@ -501,25 +561,26 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 
 **themes/simple/templates/Layout/StaffHolder.ss**
 
-	:::ss
-	<% include SideBar %>
-	<div class="content-container unit size3of4 lastUnit">
-		<article>
-			<h1>$Title</h1>
-			$Content        
-			<div class="content">$Content</div>
-		</article>
-		<% loop $Children %>
-			<article>
-				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
-				$Photo.ScaleWidth(150)
-				<p>$Content.FirstParagraph</p>
-				<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
-			</article>
-		<% end_loop %>
-			$Form
-	</div>
+```ss
+    <% include SideBar %>
+    <div class="content-container unit size3of4 lastUnit">
+        <article>
+            <h1>$Title</h1>
+            $Content        
+            <div class="content">$Content</div>
+        </article>
+        <% loop $Children %>
+            <article>
+                <h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+                $Photo.ScaleWidth(150)
+                <p>$Content.FirstParagraph</p>
+                <a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+            </article>
+        <% end_loop %>
+            $Form
+    </div>
 
+```
 
 This template is very similar to the *ArticleHolder* template. The *ScaleWidth* method of the [Image](api:SilverStripe\Assets\Image) class
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
@@ -531,17 +592,18 @@ The *StaffPage* template is also very straight forward.
 
 **themes/simple/templates/Layout/StaffPage.ss**
 
-	:::ss
-	<% include SideBar %>
-	<div class="content-container unit size3of4 lastUnit">
-		<article>
-			<h1>$Title</h1>
-			<div class="content">
-				$Photo.ScaleWidth(433)
-				$Content</div>
-		</article>
-			$Form
-	</div>
+```ss
+    <% include SideBar %>
+    <div class="content-container unit size3of4 lastUnit">
+        <article>
+            <h1>$Title</h1>
+            <div class="content">
+                $Photo.ScaleWidth(433)
+                $Content</div>
+        </article>
+            $Form
+    </div>
+```
 
 Here we use the *ScaleWidth* method to get a different sized image from the same source image. You should now have
 a complete staff section.

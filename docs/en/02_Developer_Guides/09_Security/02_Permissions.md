@@ -38,11 +38,12 @@ class PageController implements PermissionProvider
 
     public function providePermissions()
     {
-        return array(
+        return [
             'VIEW_SITE' => 'Access the site'
-        );
+        ];
     }
 }
+
 ```
 
 

@@ -11,36 +11,41 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 
 **mysite/code/Page.php**
 
-	:::php
-	<?php
 
-	public function SearchForm() {
-		$fields = new FieldList(
-			TextField::create('q')
-		);
+```php
+    
+    public function SearchForm() 
+    {
+        $fields = new FieldList(
+            TextField::create('q')
+        );
 
-		$actions = new FieldList(
-			FormAction::create('doSearch', 'Search')
-		);
+        $actions = new FieldList(
+            FormAction::create('doSearch', 'Search')
+        );
 
-		$form = new Form($this, 'SearchForm', $fields, $actions);
-		$form->setTemplate('SearchForm');
+        $form = new Form($this, 'SearchForm', $fields, $actions);
+        $form->setTemplate('SearchForm');
 
-		return $form;
-	}
+        return $form;
+    }
+```
 
 **mysite/templates/Includes/SearchForm.ss**
 
-	:::ss
-	<form $FormAttributes>
-		<fieldset>
-			$Fields.dataFieldByName(q)
-		</fieldset>
-		
-		<div class="Actions">
-			<% loop $Actions %>$Field<% end_loop %>
-		</div>
-	</form>
+
+```ss
+
+    <form $FormAttributes>
+        <fieldset>
+            $Fields.dataFieldByName(q)
+        </fieldset>
+        
+        <div class="Actions">
+            <% loop $Actions %>$Field<% end_loop %>
+        </div>
+    </form>
+```
 
 `SearchForm.ss` will be executed within the scope of the `Form` object so has access to any of the methods and 
 properties on [Form](api:SilverStripe\Forms\Form) such as `$Fields` and `$Actions`. 

@@ -8,20 +8,24 @@ summary: Reduce rendering time with cached templates and understand the limitati
 All functions that provide data to templates must have no side effects, as the value is cached after first access. For 
 example, this controller method will not behave as you might imagine.
 
-	:::php
-	private $counter = 0;
+```php
+    private $counter = 0;
 
-	public function Counter() {
-	    $this->counter += 1;
+    public function Counter() 
+    {
+        $this->counter += 1;
 
-	    return $this->counter;
-	}
+        return $this->counter;
+    }
+```
 
 
-	:::ss
-	$Counter, $Counter, $Counter
+```ss
 
-	// returns 1, 1, 1
+    $Counter, $Counter, $Counter
+
+    // returns 1, 1, 1
+```
 
 When we render `$Counter` to the template we would expect the value to increase and output `1, 2, 3`. However, as 
 `$Counter` is cached at the first access, the value of `1` is saved.
@@ -32,7 +36,11 @@ When we render `$Counter` to the template we would expect the value to increase 
 Partial caching is a feature that allows the caching of just a portion of a page. Instead of fetching the required data
 from the database to display, the contents of the area are fetched from a [cache backend](../performance/caching).
 
-	:::ss
-	<% cached 'MyCachedContent', LastEdited %>
-		$Title
-	<% end_cached %>
+```ss
+
+    <% cached 'MyCachedContent', LastEdited %>
+        $Title
+    <% end_cached %>
+```
+
+

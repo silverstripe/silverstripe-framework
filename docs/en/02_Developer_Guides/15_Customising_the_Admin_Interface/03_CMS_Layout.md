@@ -21,8 +21,11 @@ children setting sizes and positions, which in turn requires redrawing of some o
 
 The easiest way to update the layout of the CMS is to call `redraw` on the top-level `.cms-container` element.
 
-	:::js
-	$('.cms-container').redraw();
+
+```js
+
+    $('.cms-container').redraw();
+```
 
 This causes the framework to:
 
@@ -60,13 +63,16 @@ Call `redraw` on `.cms-container` to re-layout the CMS.
 Layout manager will automatically apply algorithms to the children of `.cms-container` by inspecting the
 `data-layout-type` attribute. Let's take the content toolbar as an example of a second-level layout application:
 
-	:::html
-	<div class="cms-content-tools west cms-panel cms-panel-layout"
-		data-expandOnClick="true"
-		data-layout-type="border"
-		id="cms-content-tools-CMSMain">
-		<%-- content utilising border's north, south, east, west and center classes --%>
-	</div>
+
+```html
+
+    <div class="cms-content-tools west cms-panel cms-panel-layout"
+        data-expandOnClick="true"
+        data-layout-type="border"
+        id="cms-content-tools-CMSMain">
+        <%-- content utilising border's north, south, east, west and center classes --%>
+    </div>
+```
 
 For detailed discussion on available algorithms refer to
 [jLayout algorithms](https://github.com/bramstein/jlayout#layout-algorithms).
@@ -104,8 +110,11 @@ by the algorithm that are initially taken from the `LeftAndMain::LayoutOptions` 
 
 Use provided factory method to generate algorithm instances.
 
-	:::js
-	jLayout.threeColumnCompressor(<column-spec-object>, <options-object>);
+
+```js
+
+    jLayout.threeColumnCompressor(<column-spec-object>, <options-object>);
+```
 
 The parameters are as follows:
 

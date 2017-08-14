@@ -16,27 +16,34 @@ By default, all `DataObject` subclasses can only be edited, created and viewed b
 code.
 </div>
 
-	:::php
-	<?php
+```php
+    use SilverStripe\Security\Permission;
+    use SilverStripe\ORM\DataObject;
 
-	class MyDataObject extends DataObject {
-	
-		public function canView($member = null) {
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+    class MyDataObject extends DataObject 
+    {
+    
+        public function canView($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canEdit($member = null) {
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+        public function canEdit($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canDelete($member = null) {
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
+        public function canDelete($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
 
-		public function canCreate($member = null) {
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
-	}
+        public function canCreate($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+        }
+    }
+```
 
 <div class="alert" markdown="1">
 These checks are not enforced on low-level ORM operations such as `write()` or `delete()`, but rather rely on being 

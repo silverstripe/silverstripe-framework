@@ -18,25 +18,34 @@ this defines the actions that need to be executed on a flush request.
 
 This example uses [Cache](api:Cache) in some custom code, and the same cache is cleaned on flush:
 
-	:::php
-	<?php
-	class MyClass extends DataObject implements Flushable {
-	
-		public static function flush() {
-			Cache::factory('mycache')->clean(Zend_Cache::CLEANING_MODE_ALL);
-		}
-	
-		public function MyCachedContent() {
-			$cache = Cache::factory('mycache')
-			$something = $cache->load('mykey');
-			if(!$something) {
-				$something = 'value to be cached';
-				$cache->save($something, 'mykey');
-			}
-			return $something;
-		}
-	
-	}
+
+```php
+    use SilverStripe\ORM\DataObject;
+    use SilverStripe\Core\Injector\Injector;
+    use SilverStripe\Core\Flushable;
+    use Psr\SimpleCache\CacheInterface;
+
+    class MyClass extends DataObject implements Flushable 
+    {
+    
+        public static function flush() 
+        {
+            Injector::inst()->get(CacheInterface::class . '.mycache')->clear();
+        }
+    
+        public function MyCachedContent() 
+        {
+            $cache = Injector::inst()->get(CacheInterface::class . '.mycache')
+            $something = $cache->get('mykey');
+            if(!$something) {
+                $something = 'value to be cached';
+                $cache->set('mykey', $something);
+            }
+            return $something;
+        }
+    
+    }
+```
 
 ### Using with filesystem
 
@@ -44,15 +53,19 @@ Another example, some temporary files are created in a directory in assets, and 
 useful in an example like `GD` or `Imagick` generating resampled images, but we want to delete any cached images on
 flush so they are re-created on demand.
 
-	:::php
-	<?php
-	class MyClass extends DataObject implements Flushable {
-	
-		public static function flush() {
-			foreach(glob(ASSETS_PATH . '/_tempfiles/*.jpg') as $file) {
-				unlink($file);
-			}
-		}
-	
-	}
+```php
+    use SilverStripe\ORM\DataObject;
+    use SilverStripe\Core\Flushable;
 
+    class MyClass extends DataObject implements Flushable 
+    {
+    
+        public static function flush() 
+        {
+            foreach(glob(ASSETS_PATH . '/_tempfiles/*.jpg') as $file) {
+                unlink($file);
+            }
+        }
+    
+    }
+```

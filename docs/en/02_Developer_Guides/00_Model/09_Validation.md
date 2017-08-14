@@ -21,26 +21,30 @@ write, and respond appropriately if it isn't.
 
 The return value of `validate()` is a [ValidationResult](api:SilverStripe\ORM\ValidationResult) object.
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class MyObject extends DataObject {
+    class MyObject extends DataObject 
+    {
 
-		private static $db = array(
-			'Country' => 'Varchar',
-			'Postcode' => 'Varchar'
-		);
+        private static $db = [
+            'Country' => 'Varchar',
+            'Postcode' => 'Varchar'
+        ];
 
-		public function validate() {
-			$result = parent::validate();
+        public function validate() 
+        {
+            $result = parent::validate();
 
-			if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {
-				$result->error('Need five digits for German postcodes');
-			}
+            if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {
+                $result->error('Need five digits for German postcodes');
+            }
 
-			return $result;
-		}
-	}
+            return $result;
+        }
+    }
+
+```
 
 ## API Documentation
 

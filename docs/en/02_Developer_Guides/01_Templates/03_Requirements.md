@@ -15,10 +15,12 @@ The `Requirements` class can work with arbitrary file paths.
 
 **<my-module-dir>/templates/SomeTemplate.ss**
 
-	:::ss
-	<% require css("<my-module-dir>/css/some_file.css") %>
-	<% require themedCSS("some_themed_file") %>
-	<% require javascript("<my-module-dir>/javascript/some_file.js") %>
+```ss
+
+    <% require css("<my-module-dir>/css/some_file.css") %>
+    <% require themedCSS("some_themed_file") %>
+    <% require javascript("<my-module-dir>/javascript/some_file.js") %>
+```
 
 <div class="alert" markdown="1">
 Requiring assets from the template is restricted compared to the PHP API.
@@ -30,8 +32,6 @@ It is common practice to include most Requirements either in the *init()*-method
 as close to rendering as possible (e.g. in [FormField](api:SilverStripe\Forms\FormField)).
 
 ```php
-<?php
-
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 
@@ -71,7 +71,7 @@ JavaScript in a separate file and instead load, via search and replace, several 
 
 ```php
 $vars = [
-    "MemberID" => Member::currentUserID(),
+    "MemberID" => Security::getCurrentUser()->ID,
 ];
 
 Requirements::javascriptTemplate("<my-module-dir>/javascript/some_file.js", $vars);
@@ -97,11 +97,11 @@ You can also use the second argument to add the 'async' and/or 'defer attributes
 
 ```php
 Requirements::javascript(
-	"<my-module-dir>/javascript/some_file.js", 
-	[
-		"async" => true,
-		"defer" => true,
-	]
+    "<my-module-dir>/javascript/some_file.js", 
+    [
+        "async" => true,
+        "defer" => true,
+    ]
 );
 ```
 
@@ -281,13 +281,13 @@ class MyMinifier implements Requirements_Minifier
      * @param string $type Either js or css
      * @param string $filename Name of file to display in case of error
      * @return string minified content
-     */	
-	public function minify ($content, $type, $fileName)
-	{
-		// Minify $content;
+     */    
+    public function minify ($content, $type, $fileName)
+    {
+        // Minify $content;
 
-		return $minifiedContent;
-	}
+        return $minifiedContent;
+    }
 }
 ```
 

@@ -39,41 +39,38 @@ Let's create the `Student` and `Project` objects.
 **mysite/code/Student.php**
 
 ```php
-<?php
-
 use SilverStripe\ORM\DataObject;
 
 class Student extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'University' => 'Varchar',
-    );
-    private static $has_one = array(
+    ];
+    private static $has_one = [
         'Project' => 'Project'
-    );  
+    ];  
 }
+
 ```
 
 **mysite/code/Project.php**
 
 ```php
-<?php
-
 use Page;
 
 class Project extends Page
 {
-    private static $has_many = array(
+    private static $has_many = [
         'Students' => 'Student'
-    );
+    ];
 }
+
 ```
 
 **mysite/code/ProjectController.php**
 
 ```php
-<?php
 use PageController;
 
 class ProjectController extends PageController
@@ -116,22 +113,20 @@ The restriction is enforced through the `$allowed_children` directive.
 **mysite/code/ProjectsHolder.php**
 
 ```php
-<?php
-
 use Page;
 
-class ProjectsHolder extends Page {
-    private static $allowed_children = array(
+class ProjectsHolder extends Page 
+{
+    private static $allowed_children = [
         'Project'
-    );
+    ];
 }
+
 ```
 
 **mysite/code/ProjectsHolderController.php
 
 ```php
-<?php
-
 use PageController;
 
 class ProjectsHolderController extends PageController
@@ -164,8 +159,6 @@ All customization to fields for a page type are managed through a method called
 **mysite/code/Project.php**
 
 ```php
-<?php
-
 use Page;
 use SilverStripe\Forms\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
@@ -182,10 +175,10 @@ class Project extends Page
         // Set the names and data for our gridfield columns
         $config
             ->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns')
-            ->setDisplayFields(array(
+            ->setDisplayFields([
                 'Name' => 'Name',
                 'Project.Title'=> 'Project' // Retrieve from a has-one relationship
-            )); 
+            ]); 
         // Create a gridfield to hold the student relationship    
         $studentsField = new GridField(
             'Students', // Field name
@@ -198,6 +191,7 @@ class Project extends Page
         return $fields;
     }
 }
+
 ```
 
 This creates a tabular field, which lists related student records, one row at a time.
@@ -246,35 +240,33 @@ The first step is to create the `Mentor` object and set the relation with the `P
 **mysite/code/Mentor.php**
 
 ```php
-<?php
-
 use SilverStripe\ORM\DataObject;
 
 class Mentor extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
-    );
-    private static $belongs_many_many = array(
+    ];
+    private static $belongs_many_many = [
         'Projects' => 'Project'
-    );
+    ];
 }
+
 ```
 
 **mysite/code/Project.php**
 
 ```php
-<?php
-
 use Page;
 
 class Project extends Page
 {
     // ...
-    private static $many_many = array(
+    private static $many_many = [
         'Mentors' => 'Mentor'
-    );
+    ];
 }
+
 ```
 
 This code will create a relationship between the `Project` table and the `Mentor` table by storing the ids of the respective `Project` and `Mentor` in a another table named "Project_Mentors"
@@ -288,8 +280,6 @@ to configure it a bit differently.
 **mysite/code/Project.php**
 
 ```php
-<?php
-
 use Page;
 use SilverStripe\Forms\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;

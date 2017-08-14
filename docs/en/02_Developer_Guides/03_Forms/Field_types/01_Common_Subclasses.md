@@ -18,7 +18,6 @@ on the SilverStripe API documentation.
 ## Actions
 
  * [FormAction](api:SilverStripe\Forms\FormAction): Button element for forms, both for `<input type="submit">` and `<button>`.
- * [ResetFormAction](api:ResetFormAction): Action that clears all fields on a form.
 
 ## Formatted input
 
@@ -53,7 +52,6 @@ doesn't necessarily have any visible styling.
 ## Relations
 
  * [CheckboxSetField](api:SilverStripe\Forms\CheckboxSetField): Displays a set of checkboxes as a logical group.
- * [TableField](api:TableField): In-place editing of tabular data.
  * [TreeDropdownField](api:SilverStripe\Forms\TreeDropdownField): Dropdown-like field that allows you to select an item from a hierarchical AJAX-expandable tree.
  * [TreeMultiselectField](api:SilverStripe\Forms\TreeMultiselectField): Represents many-many joins using a tree selector shown in a dropdown-like element
  * [GridField](api:SilverStripe\Forms\GridField\GridField): Displays a [SS_List](api:SilverStripe\ORM\SS_List) in a tabular format. Versatile base class which can be configured to allow editing, sorting, etc.

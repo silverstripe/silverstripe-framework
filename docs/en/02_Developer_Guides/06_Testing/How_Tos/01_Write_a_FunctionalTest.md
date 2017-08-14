@@ -9,42 +9,47 @@ response and modify the session within a test.
 
 **mysite/tests/HomePageTest.php**
 
-	:::php
-	<?php
 
-	class HomePageTest extends FunctionalTest {
+```php
+    use SilverStripe\Security\Member;
 
-		/**
-		 * Test generation of the view
-		 */
-		public function testViewHomePage() {
-			$page = $this->get('home/');
+    class HomePageTest extends FunctionalTest 
+    {
 
-			// Home page should load..
-			$this->assertEquals(200, $page->getStatusCode());
+        /**
+         * Test generation of the view
+         */
+        public function testViewHomePage() 
+        {
+            $page = $this->get('home/');
 
-			// We should see a login form
-			$login = $this->submitForm("LoginFormID", null, array(
-				'Email' => 'test@test.com',
-				'Password' => 'wrongpassword'
-			));
+            // Home page should load..
+            $this->assertEquals(200, $page->getStatusCode());
 
-			// wrong details, should now see an error message
-			$this->assertExactHTMLMatchBySelector("#LoginForm p.error", array(
-				"That email address is invalid."
-			));
+            // We should see a login form
+            $login = $this->submitForm("LoginFormID", null, [
+                'Email' => 'test@test.com',
+                'Password' => 'wrongpassword'
+            ]);
 
-			// If we login as a user we should see a welcome message
-			$me = Member::get()->first();
+            // wrong details, should now see an error message
+            $this->assertExactHTMLMatchBySelector("#LoginForm p.error", [
+                "That email address is invalid."
+            ]);
 
-			$this->logInAs($me);
-			$page = $this->get('home/');
+            // If we login as a user we should see a welcome message
+            $me = Member::get()->first();
 
-			$this->assertExactHTMLMatchBySelector("#Welcome", array(
-				'Welcome Back'
-			));
-		}
-	}
+            $this->logInAs($me);
+            $page = $this->get('home/');
+
+            $this->assertExactHTMLMatchBySelector("#Welcome", [
+                'Welcome Back'
+            ]);
+        }
+    }
+
+```
 
 ## Related Documentation
 

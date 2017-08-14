@@ -22,14 +22,15 @@ instance with a template name or an array of templates to render.
 **mysite/code/Page.php**
 
 ```php
-$arrayData = new SilverStripe/View/ArrayData(array(
+$arrayData = new SilverStripe\View\ArrayData([
     'Name' => 'John',
     'Role' => 'Head Coach'
-));
+]);
 
 echo $arrayData->renderWith('Coach_Message');
 
 // returns "<strong>John</strong> is the Head Coach on our team."
+
 ```
 
 <div class="info" markdown="1">
@@ -38,22 +39,21 @@ includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:Silv
 </div>
 
 ```php
-$controller->renderWith(array('MyController', 'MyBaseController'));
+$controller->renderWith(['MyController', 'MyBaseController']);
 
 SilverStripe\Security\Security::getCurrentUser()->renderWith('Member_Profile');
+
 ```
 
 `renderWith` can be used to override the default template process. For instance, to provide an ajax version of a 
 template.
 
 ```php
-<?php
-
 use SilverStripe\CMS\Controllers\ContentController;
 
 class PageController extends ContentController
 {
-    private static $allowed_actions = array('iwantmyajax');
+    private static $allowed_actions = ['iwantmyajax'];
 
     public function iwantmyajax()
     {
@@ -64,13 +64,13 @@ class PageController extends ContentController
         }
     }
 }
+
 ```
 
 Any data you want to render into the template that does not extend `ViewableData` should be wrapped in an object that
 does, such as `ArrayData` or `ArrayList`.
 
 ```php
-<?php
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Control\Director;
@@ -83,18 +83,19 @@ class PageController extends ContentController
     {
         if (Director::is_ajax()) {
             $experience = new ArrayList();
-            $experience->push(new ArrayData(array(
+            $experience->push(new ArrayData([
                 'Title' => 'First Job'
-            )));
+            ]));
 
-            return $this->customise(new ArrayData(array(
+            return $this->customise(new ArrayData([
                 'Name' => 'John',
                 'Role' => 'Head Coach',
                 'Experience' => $experience
-            )))->renderWith('AjaxTemplate');
+            ]))->renderWith('AjaxTemplate');
         } else {
             return $this->httpError(404);
         }
     }
 }
+
 ```

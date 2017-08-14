@@ -8,37 +8,43 @@ see the [Fixtures](../fixtures) documentation.
 In this how to we'll use a `FixtureFactory` and a custom blue print for giving us a shortcut for creating new objects
 with information that we need.
 
-	:::php
-	class MyObjectTest extends SapphireTest {
 
-		protected $factory;
+```php
+    use SilverStripe\Core\Injector\Injector;
 
-		function __construct() {
-			parent::__construct();
+    class MyObjectTest extends SapphireTest 
+    {
 
-			$factory = Injector::inst()->create('FixtureFactory');
+        protected $factory;
 
-			// Defines a "blueprint" for new objects
-			$factory->define('MyObject', array(
-				'MyProperty' => 'My Default Value'
-			));
+        function __construct() {
+            parent::__construct();
 
-			$this->factory = $factory;
-		}
+            $factory = Injector::inst()->create('FixtureFactory');
 
-		function testSomething() {
-			$MyObjectObj = $this->factory->createObject(
-				'MyObject',
-				array('MyOtherProperty' => 'My Custom Value')
-			);
+            // Defines a "blueprint" for new objects
+            $factory->define('MyObject', [
+                'MyProperty' => 'My Default Value'
+            ]);
 
-			echo $MyObjectObj->MyProperty;
-			// returns "My Default Value"
+            $this->factory = $factory;
+        }
 
-			echo $myPageObj->MyOtherProperty;
-			// returns "My Custom Value"
-		}
-	}
+        function testSomething() {
+            $MyObjectObj = $this->factory->createObject(
+                'MyObject',
+                ['MyOtherProperty' => 'My Custom Value']
+            );
+
+            echo $MyObjectObj->MyProperty;
+            // returns "My Default Value"
+
+            echo $myPageObj->MyOtherProperty;
+            // returns "My Custom Value"
+        }
+    }
+
+```
 
 ## Related Documentation
 

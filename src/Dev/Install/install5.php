@@ -138,6 +138,18 @@ if (isset($_REQUEST['db'])) {
             "password" => getenv('SS_DATABASE_PASSWORD') ?: "",
             "database" => $_REQUEST['db'][$type]['database'],
         );
+
+        // Set SSL parameters if they exist
+        if (getenv('SS_DATABASE_SSL_KEY') && getenv('SS_DATABASE_SSL_CERT')) {
+            $databaseConfig['ssl_key'] = getenv('SS_DATABASE_SSL_KEY');
+            $databaseConfig['ssl_cert'] = getenv('SS_DATABASE_SSL_CERT');
+        }
+        if (getenv('SS_DATABASE_SSL_CA')) {
+            $databaseConfig['ssl_ca'] = getenv('SS_DATABASE_SSL_CA');
+        }
+        if (getenv('SS_DATABASE_SSL_CIPHER')) {
+            $databaseConfig['ssl_ca'] = getenv('SS_DATABASE_SSL_CIPHER');
+        }
     } else {
         // Normal behaviour without the environment
         $databaseConfig = $_REQUEST['db'][$type];

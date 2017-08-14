@@ -24,20 +24,22 @@ this index is present on the associative entity).
 Indexes are represented on a `DataObject` through the `DataObject::$indexes` array which maps index names to a 
 descriptor. There are several supported notations:
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class MyObject extends DataObject {
+    class MyObject extends DataObject 
+    {
 
-		private static $indexes = [
-			'<column-name>' => true,
-			'<index-name>' => [
-				'type' => '<type>', 
-				'columns' => ['<column-name>', '<other-column-name>'],
-			],
-			'<index-name>' => ['<column-name>', '<other-column-name>'],
-		];
-	}
+        private static $indexes = [
+            '<column-name>' => true,
+            '<index-name>' => [
+                'type' => '<type>', 
+                'columns' => ['<column-name>', '<other-column-name>'],
+            ],
+            '<index-name>' => ['<column-name>', '<other-column-name>'],
+        ];
+    }
+```
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
 we recommend building the index to suite the requirements of your data.
@@ -52,20 +54,27 @@ support the following:
 
 **mysite/code/MyTestObject.php**
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class MyTestObject extends DataObject {
+    class MyTestObject extends DataObject 
+    {
 
-		private static $db = [
-			'MyField' => 'Varchar',
-			'MyOtherField' => 'Varchar',
-		];
+        private static $db = [
+            'MyField' => 'Varchar',
+            'MyOtherField' => 'Varchar',
+        ];
 
-		private static $indexes = [
-			'MyIndexName' => ['MyField', 'MyOtherField'],
-		];
-	}
+        private static $indexes = [
+            'MyIndexName' => ['MyField', 'MyOtherField'],
+        ];
+    }
+```
+
+<div class="alert" markdown="1">
+Please note that if you have previously used the removed `value` key to define an index's contents, SilverStripe will
+now throw an error. Use `columns` instead.
+</div>
 
 ## Complex/Composite Indexes
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 

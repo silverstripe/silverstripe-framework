@@ -70,6 +70,13 @@ class TreeDropdownField extends FormField
     );
 
     /**
+     * @config
+     * @var int
+     * @see {@link Hierarchy::$node_threshold_total}.
+     */
+    private static $node_threshold_total = 30;
+
+    /**
      * @var string
      */
     protected $emptyString = null;
@@ -488,7 +495,12 @@ class TreeDropdownField extends FormField
         }
 
         // Create marking set
-        $markingSet = MarkedSet::create($obj, $this->getChildrenMethod(), $this->getNumChildrenMethod(), 30);
+        $markingSet = MarkedSet::create(
+            $obj,
+            $this->getChildrenMethod(),
+            $this->getNumChildrenMethod(),
+            $this->config()->get('node_threshold_total')
+        );
 
         // Set filter on searched nodes
         if ($this->getFilterFunction() || $this->search) {

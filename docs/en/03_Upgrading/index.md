@@ -15,8 +15,8 @@ For projects managed through Composer, update the version number of `framework` 
 
 ```json
 "require": {
-	"silverstripe/framework": "^4.0",
-	"silverstripe/cms": "^4.0"
+    "silverstripe/framework": "^4.0",
+    "silverstripe/cms": "^4.0"
 }
 ```
 

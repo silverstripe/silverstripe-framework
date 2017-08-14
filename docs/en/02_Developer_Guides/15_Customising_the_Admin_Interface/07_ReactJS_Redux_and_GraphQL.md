@@ -23,19 +23,19 @@ React's job is to render UI. Its UI elements are known as "components" and repre
 
 ```js
 <PhotoItem size={200} caption="Angkor Wat" onSelect={openLightbox}>
-	<img src="path/to/image.jpg" />
+    <img src="path/to/image.jpg" />
 </PhotoItem>
 ```
 
 Might actually render HTML that looks like this:
 ```html
 <div class="photo-item">
-	<div class="photo" style="width:200px;height:200px;">
-		<img src="path/to/image.jpg">
-	</div>
-	<div class="photo-caption">
-		<h3><a>Angkor Wat/a></h3>
-	</div>
+    <div class="photo" style="width:200px;height:200px;">
+        <img src="path/to/image.jpg">
+    </div>
+    <div class="photo-caption">
+        <h3><a>Angkor Wat/a></h3>
+    </div>
 </div>
 ```
 
@@ -91,18 +91,18 @@ engine.
 
 ```
 query GetUser($ID: Int!) {
-	user {
-		name
-		email
-		blogPosts {
-			title
-			comments(Limit: 5) {
-				author
-				comment
-			}
-		}
+    user {
+        name
+        email
+        blogPosts {
+            title
+            comments(Limit: 5) {
+                author
+                comment
+            }
+        }
 
-	}
+    }
 }
 ```
 
@@ -110,21 +110,21 @@ The above query is almost self-descriptive. It gets a user by ID, returns his or
 
 ```js
 {
-	"user": {
-		"name": "Test user",
-		"email": "me@example.com",
-		"blogPosts": [
-			{
-				"title": "How to be awesome at GraphQL",
-				"comments": [
-					{
-						"author": "Uncle Cheese",
-						"comment": "Nice stuff, bro"
-					}
-				]
-			}
-		]
-	}
+    "user": {
+        "name": "Test user",
+        "email": "me@example.com",
+        "blogPosts": [
+            {
+                "title": "How to be awesome at GraphQL",
+                "comments": [
+                    {
+                        "author": "Uncle Cheese",
+                        "comment": "Nice stuff, bro"
+                    }
+                ]
+            }
+        ]
+    }
 }
 ```
 
@@ -176,10 +176,10 @@ Where `next()` is the next customisation in the "chain" of middleware. Before in
 ```js
 import thirdPartyLogger from 'third-party-logger';
 const addLoggingMiddleware = (next) => (error) => {
-	if (error.type === LoggingService.CRITICAL) {
-		thirdpartyLogger.send(error.message);
-	}
-	return next(error);
+    if (error.type === LoggingService.CRITICAL) {
+        thirdpartyLogger.send(error.message);
+    }
+    return next(error);
 }
 ```
 
@@ -198,18 +198,18 @@ import LoggingService from './LoggingService';
 import thirdPartyLogger from 'third-party-logger';
 
 const addLoggingMiddleware = (next) => (error) => {
-	// Critical errors go to a thirdparty service
-	if (error.type === LoggingService.CRITICAL) {
-		thirdPartyLogger.send(error.message);
-	}
-	// Other errors get logged, but not to our thirdparty
-	else if (error.type === LoggingService.ERROR) {
-		next(error);
-	} 
-	// Minor errors are ignored
-	else {
-		// Do nothing!
-	}
+    // Critical errors go to a thirdparty service
+    if (error.type === LoggingService.CRITICAL) {
+        thirdPartyLogger.send(error.message);
+    }
+    // Other errors get logged, but not to our thirdparty
+    else if (error.type === LoggingService.ERROR) {
+        next(error);
+    } 
+    // Minor errors are ignored
+    else {
+        // Do nothing!
+    }
 }
 ```
 
@@ -253,12 +253,12 @@ __someone-elses-module/js/main.js__
 
 ```js
 Injector.transform(
-	'my-transformation',
-	(updater) => {
-		updater.component('MyComponent', MyCustomComponent);
-		updater.reducer('myCustom', MyCustomReducer);
+    'my-transformation',
+    (updater) => {
+        updater.component('MyComponent', MyCustomComponent);
+        updater.reducer('myCustom', MyCustomReducer);
 
-	}
+    }
 );
 
 ```
@@ -296,13 +296,13 @@ __my-module/js/main.js__
 
 ```js
 Injector.transform(
-	'my-transformation',
-	(updater) => {
-		updater.component('MyComponent', MyCustomComponent);
-		updater.reducer('myCustom', MyCustomReducer);
+    'my-transformation',
+    (updater) => {
+        updater.component('MyComponent', MyCustomComponent);
+        updater.reducer('myCustom', MyCustomReducer);
 
-	},
-	{ after: 'another-module' }
+    },
+    { after: 'another-module' }
 );
 
 ```
@@ -349,17 +349,17 @@ Likewise, services can be applied for specific contexts.
 
 ```js
 Injector.transform('my-transform', (updater) => {
-	// Applies to all text fields in AssetAdmin
-	updater.component('TextField.AssetAdmin', MyTextField);
+    // Applies to all text fields in AssetAdmin
+    updater.component('TextField.AssetAdmin', MyTextField);
 
-	// Applies to all text fields in AssetAdmin editform
-	updater.component('TextField.AssetAdmin.FileEditForm', MyTextField);
+    // Applies to all text fields in AssetAdmin editform
+    updater.component('TextField.AssetAdmin.FileEditForm', MyTextField);
 
-	// Applies to any textfield named "Title" in AssetAdmin
-	updater.component('TextField.AssetAdmin.*.Title', MyTextField);
+    // Applies to any textfield named "Title" in AssetAdmin
+    updater.component('TextField.AssetAdmin.*.Title', MyTextField);
 
-	// Applies to any textfield named "Title" in any admin
-	updater.component('TextField.*.*.Title', MyTextField);
+    // Applies to any textfield named "Title" in any admin
+    updater.component('TextField.*.*.Title', MyTextField);
 })
 ```
 
@@ -379,16 +379,16 @@ Using the `PhotoItem` example above, let's create a customised `PhotoItem` that 
 
 ```js
 const enhancedPhoto = (PhotoItem) => (props) => {
-	const badge = props.isNew ? 
-	  <div className="badge">New!</div> : 
-	  null;
+    const badge = props.isNew ? 
+      <div className="badge">New!</div> : 
+      null;
 
-	return (
-		<div>
-			{badge}
-			<PhotoItem {...props} />
-		</div>
-	);
+    return (
+        <div>
+            {badge}
+            <PhotoItem {...props} />
+        </div>
+    );
 }
 
 const EnhancedPhotoItem = enhancedPhoto(PhotoItem);
@@ -401,21 +401,21 @@ function.
 
 ```js
 const enhancedPhoto = (PhotoItem) => {
-	return class EnhancedPhotoItem extends React.Component {
-		render() {
-			const badge = this.props.isNew ? 
-			  <div className="badge">New!</div> : 
-			  null;
+    return class EnhancedPhotoItem extends React.Component {
+        render() {
+            const badge = this.props.isNew ? 
+              <div className="badge">New!</div> : 
+              null;
 
-			return (
-				<div>
-					{badge}
-					<PhotoItem {...this.props} />
-				</div>
-			);
+            return (
+                <div>
+                    {badge}
+                    <PhotoItem {...this.props} />
+                </div>
+            );
 
-		}
-	}
+        }
+    }
 }
 ```
 
@@ -450,7 +450,9 @@ __my-module/js/components/Gallery.js__
 import React from 'react';
 import { inject } from 'lib/Injector';
 
-class Gallery extends React.Component {
+class Gallery extends React.Component 
+
+{
   render() {
     const { SearchComponent, ItemComponent } = this.props;
     return (
@@ -482,7 +484,8 @@ declare them in `inject()`. In cases like this, use `withInjector()`. This highe
 component puts the `Injector` instance in `context`.
 
 ```js
-class MyGallery extends React.Component {
+class MyGallery extends React.Component 
+{
   render () {
     <div>
       {this.props.items.map(item => {
@@ -506,17 +509,17 @@ Most behavioural and aesthetic customisations will happen via a mutation of the 
 
 ```js
 Injector.transform(
-	'my-custom-form',
-	(updater) => {
-		updater.form.alterSchema(
-			'AssetAdmin.*',
-			(form) =>
+    'my-custom-form',
+    (updater) => {
+        updater.form.alterSchema(
+            'AssetAdmin.*',
+            (form) =>
         form.updateField('Title', {
             myCustomProp: true
         })
         .getState()
-		)
-	}
+        )
+    }
 );
 ```
 

@@ -19,19 +19,21 @@ Let's look at a simple example:
 
 **mysite/code/Player.php**
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject {
+    class Player extends DataObject 
+    {
 
-		private static $db = array(
-			'PlayerNumber' => 'Int',
-			'FirstName' => 'Varchar(255)',
-			'LastName' => 'Text',
-			'Birthday' => 'Date'
-		);
-	}
+        private static $db = [
+            'PlayerNumber' => 'Int',
+            'FirstName' => 'Varchar(255)',
+            'LastName' => 'Text',
+            'Birthday' => 'Date'
+        ];
+    }
 
+```
 
 This `Player` class definition will create a database table `Player` with columns for `PlayerNumber`, `FirstName` and 
 so on. After writing this class, we need to regenerate the database schema.
@@ -76,18 +78,21 @@ system. Instead, it will generate a new `ID` by adding 1 to the current maximum 
 
 **mysite/code/Player.php**
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject {
+    class Player extends DataObject 
+    {
 
-		private static $db = array(
-			'PlayerNumber' => 'Int',
-			'FirstName' => 'Varchar(255)',
-			'LastName' => 'Text',
-			'Birthday' => 'Date'
-		);
-	}
+        private static $db = [
+            'PlayerNumber' => 'Int',
+            'FirstName' => 'Varchar(255)',
+            'LastName' => 'Text',
+            'Birthday' => 'Date'
+        ];
+    }
+
+```
 
 Generates the following `SQL`.
 
@@ -109,13 +114,15 @@ Generates the following `SQL`.
 
 A new instance of a [DataObject](api:SilverStripe\ORM\DataObject) can be created using the `new` syntax.
 	
-	:::php
-	$player = new Player();
+```php
+    $player = new Player();
+```
 
 Or, a better way is to use the `create` method.
 
-	:::php
-	$player = Player::create();
+```php
+    $player = Player::create();
+```
 
 <div class="notice" markdown='1'>
 Using the `create()` method provides chainability, which can add elegance and brevity to your code, e.g. `Player::create()->write()`. More importantly, however, it will look up the class in the [Injector](../extending/injector) so that the class can be overriden by [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection).
@@ -125,49 +132,55 @@ Using the `create()` method provides chainability, which can add elegance and br
 Database columns and properties can be set as class properties on the object. The SilverStripe ORM handles the saving
 of the values through a custom `__set()` method.
 
-	:::php
-	$player->FirstName = "Sam";
-	$player->PlayerNumber = 07;
+```php
+    $player->FirstName = "Sam";
+    $player->PlayerNumber = 07;
+```
 
 To save the `DataObject` to the database, use the `write()` method. The first time `write()` is called, an `ID` will be
 set.
 	
-	:::php
-	$player->write();
+```php
+    $player->write();
+```
 
 For convenience, the `write()` method returns the record's ID. This is particularly useful when creating new records.
 
-	:::php
-	$player = Player::create();
-	$id = $player->write();
+```php
+    $player = Player::create();
+    $id = $player->write();
+```
 
 ## Querying Data
 
 With the `Player` class defined we can query our data using the `ORM` or Object-Relational Model. The `ORM` provides 
 shortcuts and methods for fetching, sorting and filtering data from our database.
 
-	:::php
-	$players = Player::get();
-	// returns a `DataList` containing all the `Player` objects.
+```php
+    $players = Player::get();
+    // returns a `DataList` containing all the `Player` objects.
 
-	$player = Player::get()->byID(2);
-	// returns a single `Player` object instance that has the ID of 2.
+    $player = Player::get()->byID(2);
+    // returns a single `Player` object instance that has the ID of 2.
 
-	echo $player->ID;
-	// returns the players 'ID' column value
+    echo $player->ID;
+    // returns the players 'ID' column value
 
-	echo $player->dbObject('LastEdited')->Ago();
-	// calls the `Ago` method on the `LastEdited` property.
+    echo $player->dbObject('LastEdited')->Ago();
+    // calls the `Ago` method on the `LastEdited` property.
+```
 
 The `ORM` uses a "fluent" syntax, where you specify a query by chaining together different methods.  Two common methods 
 are `filter()` and `sort()`:
 
-	:::php
-	$members = Player::get()->filter(array(
-		'FirstName' => 'Sam'
-	))->sort('Surname');
+```php
+    $members = Player::get()->filter([
+        'FirstName' => 'Sam'
+    ])->sort('Surname');
 
-	// returns a `DataList` containing all the `Player` records that have the `FirstName` of 'Sam'
+    // returns a `DataList` containing all the `Player` records that have the `FirstName` of 'Sam'
+
+```
 
 <div class="info" markdown="1">
 Provided `filter` values are automatically escaped and do not require any escaping.
@@ -180,47 +193,52 @@ The `ORM` doesn't actually execute the [SQLSelect](api:SilverStripe\ORM\Queries\
 It's smart enough to generate a single efficient query at the last moment in time without needing to post-process the 
 result set in PHP. In `MySQL` the query generated by the ORM may look something like this
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName' => 'Sam'
-	));
+```php
+    $players = Player::get()->filter([
+        'FirstName' => 'Sam'
+    ]);
 
-	$players = $players->sort('Surname');
+    $players = $players->sort('Surname');
 
-	// executes the following single query
-	// SELECT * FROM Player WHERE FirstName = 'Sam' ORDER BY Surname
+    // executes the following single query
+    // SELECT * FROM Player WHERE FirstName = 'Sam' ORDER BY Surname
 
+```
 
 This also means that getting the count of a list of objects will be done with a single, efficient query.
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName' => 'Sam'
-	))->sort('Surname');
-	
-	// This will create an single SELECT COUNT query
-	// SELECT COUNT(*) FROM Player WHERE FirstName = 'Sam'
-	echo $players->Count();
-	
+```php
+    $players = Player::get()->filter([
+        'FirstName' => 'Sam'
+    ])->sort('Surname');
+    
+    // This will create an single SELECT COUNT query
+    // SELECT COUNT(*) FROM Player WHERE FirstName = 'Sam'
+    echo $players->Count();
+
+```
+
 ## Looping over a list of objects
 
 `get()` returns a `DataList` instance. You can loop over `DataList` instances in both PHP and templates.
 	
-	:::php
-	$players = Player::get();
+```php
+    $players = Player::get();
 
-	foreach($players as $player) {
-		echo $player->FirstName;
-	}
+    foreach($players as $player) {
+        echo $player->FirstName;
+    }
+```
 
 Notice that we can step into the loop safely without having to check if `$players` exists. The `get()` call is robust, and will at worst return an empty `DataList` object. If you do want to check if the query returned any records, you can use the `exists()` method, e.g.
 
-	:::php
-	$players = Player::get();
+```php
+    $players = Player::get();
 
-	if($players->exists()) {
-		// do something here
-	}
+    if($players->exists()) {
+        // do something here
+    }
+```
 
 See the [Lists](lists) documentation for more information on dealing with [SS_List](api:SilverStripe\ORM\SS_List) instances.
 
@@ -229,60 +247,68 @@ See the [Lists](lists) documentation for more information on dealing with [SS_Li
 There are a couple of ways of getting a single DataObject from the ORM. If you know the ID number of the object, you 
 can use `byID($id)`:
 
-	:::php
-	$player = Player::get()->byID(5);
+```php
+    $player = Player::get()->byID(5);
+```
 
 `get()` returns a [DataList](api:SilverStripe\ORM\DataList) instance. You can use operations on that to get back a single record.
 
-	:::php
-	$players = Player::get();
+```php
+    $players = Player::get();
 
-	$first = $players->first();
-	$last = $players->last();
+    $first = $players->first();
+    $last = $players->last();
+```
 
 ## Sorting
 
 If would like to sort the list by `FirstName` in a ascending way (from A to Z).
 
-	:::php
-	 // Sort can either be Ascending (ASC) or Descending (DESC)
-	$players = Player::get()->sort('FirstName', 'ASC');
+```php
+     // Sort can either be Ascending (ASC) or Descending (DESC)
+    $players = Player::get()->sort('FirstName', 'ASC');
 
-	 // Ascending is implied
-	$players = Player::get()->sort('FirstName');
+     // Ascending is implied
+    $players = Player::get()->sort('FirstName');
+```
 
 To reverse the sort
 
-	:::php
-	$players = Player::get()->sort('FirstName', 'DESC');
+```php
+    $players = Player::get()->sort('FirstName', 'DESC');
 
-	// or..
-	$players = Player::get()->sort('FirstName', 'ASC')->reverse();
+    // or..
+    $players = Player::get()->sort('FirstName', 'ASC')->reverse();
+```
 
 However you might have several entries with the same `FirstName` and would like to sort them by `FirstName` and 
 `LastName`
 
-	:::php
-	$players = Players::get()->sort(array(
-		'FirstName' => 'ASC',
-		'LastName'=>'ASC'
-	));
+```php
+    $players = Players::get()->sort([
+        'FirstName' => 'ASC',
+        'LastName'=>'ASC'
+    ]);
+
+```
 
 You can also sort randomly. Using the `DB` class, you can get the random sort method per database type.
 
-	:::php
-	$random = DB::get_conn()->random(); 
-	$players = Player::get()->sort($random)
-	
+```php
+    $random = DB::get_conn()->random(); 
+    $players = Player::get()->sort($random)
+```
 
 ## Filtering Results
 
 The `filter()` method filters the list of objects that gets returned.
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName' => 'Sam'
-	));
+```php
+    $players = Player::get()->filter([
+        'FirstName' => 'Sam'
+    ]);
+
+```
 
 Each element of the array specifies a filter.  You can specify as many filters as you like, and they **all** must be 
 true for the record to be included in the result.
@@ -292,69 +318,82 @@ value that you want to filter to.
 
 So, this would return only those players called "Sam Minnée".
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName' => 'Sam',
-		'LastName' => 'Minnée',
-	));
+```php
+    $players = Player::get()->filter([
+        'FirstName' => 'Sam',
+        'LastName' => 'Minnée',
+    ]);
 
-	// SELECT * FROM Player WHERE FirstName = 'Sam' AND LastName = 'Minnée'
+    // SELECT * FROM Player WHERE FirstName = 'Sam' AND LastName = 'Minnée'
+
+```
 
 There is also a shorthand way of getting Players with the FirstName of Sam.
 
-	:::php
-	$players = Player::get()->filter('FirstName', 'Sam');
+```php
+    $players = Player::get()->filter('FirstName', 'Sam');
+```
 
 Or if you want to find both Sam and Sig.
 
-	:::php
-	$players = Player::get()->filter(
-		'FirstName', array('Sam', 'Sig')
-	);
+```php
+    $players = Player::get()->filter(
+        'FirstName', ['Sam', 'Sig']
+    );
 
-	// SELECT * FROM Player WHERE FirstName IN ('Sam', 'Sig')
+    // SELECT * FROM Player WHERE FirstName IN ('Sam', 'Sig')
+
+```
 
 You can use [SearchFilters](searchfilters) to add additional behavior to your `filter` command rather than an 
 exact match.
 
-	:::php
-	$players = Player::get()->filter(array(
-		'FirstName:StartsWith' => 'S'
-		'PlayerNumber:GreaterThan' => '10'
-	));
+```php
+    $players = Player::get()->filter([
+        'FirstName:StartsWith' => 'S'
+        'PlayerNumber:GreaterThan' => '10'
+    ]);
+
+```
 
 ### filterAny
 
 Use the `filterAny()` method to match multiple criteria non-exclusively (with an "OR" disjunctive), 
 
-	:::php
-	$players = Player::get()->filterAny(array(
-		'FirstName' => 'Sam',
-		'Age' => 17,
-	));
+```php
+    $players = Player::get()->filterAny([
+        'FirstName' => 'Sam',
+        'Age' => 17,
+    ]);
 
-	// SELECT * FROM Player WHERE ("FirstName" = 'Sam' OR "Age" = '17')
+    // SELECT * FROM Player WHERE ("FirstName" = 'Sam' OR "Age" = '17')
+
+```
 
 You can combine both conjunctive ("AND") and disjunctive ("OR") statements.
 
-	:::php
-	$players = Player::get()
-		->filter(array(
-			'LastName' => 'Minnée'
-		))
-		->filterAny(array(
-			'FirstName' => 'Sam',
-			'Age' => 17,
-		));
-	// SELECT * FROM Player WHERE ("LastName" = 'Minnée' AND ("FirstName" = 'Sam' OR "Age" = '17'))
+```php
+    $players = Player::get()
+        ->filter([
+            'LastName' => 'Minnée'
+        ])
+        ->filterAny([
+            'FirstName' => 'Sam',
+            'Age' => 17,
+        ]);
+    // SELECT * FROM Player WHERE ("LastName" = 'Minnée' AND ("FirstName" = 'Sam' OR "Age" = '17'))
+
+```
 
 You can use [SearchFilters](searchfilters) to add additional behavior to your `filterAny` command.
 
-	:::php
-	$players = Player::get()->filterAny(array(
-		'FirstName:StartsWith' => 'S'
-		'PlayerNumber:GreaterThan' => '10'
-	));
+```php
+    $players = Player::get()->filterAny([
+        'FirstName:StartsWith' => 'S'
+        'PlayerNumber:GreaterThan' => '10'
+    ]);
+
+```
 
 ### Filtering by null values
 
@@ -366,46 +405,49 @@ checks to ensure that exclusion filters behave predictably.
 For instance, the below code will select only values that do not match the given value, including nulls.
 
 
-	:::php
-	$players = Player::get()->filter('FirstName:not', 'Sam');
-	// ... WHERE "FirstName" != 'Sam' OR "FirstName" IS NULL
-	// Returns rows with any value (even null) other than Sam
-
+```php
+    $players = Player::get()->filter('FirstName:not', 'Sam');
+    // ... WHERE "FirstName" != 'Sam' OR "FirstName" IS NULL
+    // Returns rows with any value (even null) other than Sam
+```
 
 If null values should be excluded, include the null in your check.
 
 
-	:::php
-	$players = Player::get()->filter('FirstName:not', array('Sam', null));
-	// ... WHERE "FirstName" != 'Sam' AND "FirstName" IS NOT NULL
-	// Only returns non-null values for "FirstName" that aren't Sam.
-	// Strictly the IS NOT NULL isn't necessary, but is included for explicitness
+```php
+    $players = Player::get()->filter('FirstName:not', ['Sam', null]);
+    // ... WHERE "FirstName" != 'Sam' AND "FirstName" IS NOT NULL
+    // Only returns non-null values for "FirstName" that aren't Sam.
+    // Strictly the IS NOT NULL isn't necessary, but is included for explicitness
 
+```
 
 It is also often useful to filter by all rows with either empty or null for a given field.
 
 
-	:::php
-	$players = Player::get()->filter('FirstName', array(null, ''));
-	// ... WHERE "FirstName" == '' OR "FirstName" IS NULL
-	// Returns rows with FirstName which is either empty or null
+```php
+    $players = Player::get()->filter('FirstName', [null, '']);
+    // ... WHERE "FirstName" == '' OR "FirstName" IS NULL
+    // Returns rows with FirstName which is either empty or null
+
+```
 
 ### Filtering by aggregates
 
 You can use aggregate expressions in your filters, as well.
 
 ```php
-	// get the teams that have more than 10 players
-	$teams = Team::get()->filter('Players.Count():GreaterThan', 10);
+    // get the teams that have more than 10 players
+    $teams = Team::get()->filter('Players.Count():GreaterThan', 10);
 
-	// get the teams with at least one player who has scored 5 or more points
-	$teams = Team::get()->filter('Players.Min(PointsScored):GreaterThanOrEqual', 5);
+    // get the teams with at least one player who has scored 5 or more points
+    $teams = Team::get()->filter('Players.Min(PointsScored):GreaterThanOrEqual', 5);
 
-	// get the teams with players who are averaging more than 15 points
-	$teams = Team::get()->filter('Players.Avg(PointsScored):GreaterThan', 15);
+    // get the teams with players who are averaging more than 15 points
+    $teams = Team::get()->filter('Players.Avg(PointsScored):GreaterThan', 15);
 
-	// get the teams whose players have scored less than 300 points combined
-	$teams = Team::get()->filter('Players.Sum(PointsScored):LessThan', 300);
+    // get the teams whose players have scored less than 300 points combined
+    $teams = Team::get()->filter('Players.Sum(PointsScored):LessThan', 300);
 ```
 
 ### filterByCallback
@@ -424,84 +466,98 @@ for each record, if the callback returns true, this record will be added to the 
 
 The below example will get all `Players` aged over 10.
 
-	:::php
-	$players = Player::get()->filterByCallback(function($item, $list) {
-		return ($item->Age() > 10);
-	});
+```php
+    $players = Player::get()->filterByCallback(function($item, $list) {
+        return ($item->Age() > 10);
+    });
+```
 
 ### Exclude
 
 The `exclude()` method is the opposite to the filter in that it removes entries from a list.
 
-	:::php
-	$players = Player::get()->exclude('FirstName', 'Sam');
+```php
+    $players = Player::get()->exclude('FirstName', 'Sam');
 
-	// SELECT * FROM Player WHERE FirstName != 'Sam'
+    // SELECT * FROM Player WHERE FirstName != 'Sam'
+```
 
 Remove both Sam and Sig..
 
-	:::php
-	$players = Player::get()->exclude(
-		'FirstName', array('Sam','Sig')
-	);
+```php
+    $players = Player::get()->exclude(
+        'FirstName', ['Sam','Sig']
+    );
+
+```
 
 `Exclude` follows the same pattern as filter, so for removing only Sam Minnée from the list:
 
-	:::php
-	$players = Player::get()->exclude(array(
-		'FirstName' => 'Sam',
-		'Surname' => 'Minnée',
-	));
+```php
+    $players = Player::get()->exclude([
+        'FirstName' => 'Sam',
+        'Surname' => 'Minnée',
+    ]);
+
+```
 
 And removing Sig and Sam with that are either age 17 or 43.
 
-	:::php
-	$players = Player::get()->exclude(array(
-		'FirstName' => array('Sam', 'Sig'),
-		'Age' => array(17, 43)
-	));
+```php
+    $players = Player::get()->exclude([
+        'FirstName' => ['Sam', 'Sig'],
+        'Age' => [17, 43]
+    ]);
 
-	// SELECT * FROM Player WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '43'));
+    // SELECT * FROM Player WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '43'));
+
+```
 
 You can use [SearchFilters](searchfilters) to add additional behavior to your `exclude` command.
 
-	:::php
-	$players = Player::get()->exclude(array(
-		'FirstName:EndsWith' => 'S'
-		'PlayerNumber:LessThanOrEqual' => '10'
-	));
+```php
+    $players = Player::get()->exclude([
+        'FirstName:EndsWith' => 'S'
+        'PlayerNumber:LessThanOrEqual' => '10'
+    ]);
+
+```
 
 ### Subtract
 
 You can subtract entries from a [DataList](api:SilverStripe\ORM\DataList) by passing in another DataList to `subtract()`
 
-	:::php
-	$sam = Player::get()->filter('FirstName', 'Sam');
-	$players = Player::get();
+```php
+    $sam = Player::get()->filter('FirstName', 'Sam');
+    $players = Player::get();
 
-	$noSams = $players->subtract($sam);
+    $noSams = $players->subtract($sam);
+```
 
 Though for the above example it would probably be easier to use `filter()` and `exclude()`. A better use case could be 
 when you want to find all the members that does not exist in a Group.
 
-	:::php
-	// ... Finding all members that does not belong to $group.
-	$otherMembers = Member::get()->subtract($group->Members());
+```php
+    // ... Finding all members that does not belong to $group.
+    $otherMembers = Member::get()->subtract($group->Members());
+```
 
 ### Limit
 
 You can limit the amount of records returned in a DataList by using the `limit()` method.
 
-	:::php
-	$members = Member::get()->limit(5);
-	
+```php
+    $members = Member::get()->limit(5);
+```
+
 `limit()` accepts two arguments, the first being the amount of results you want returned, with an optional second 
 parameter to specify the offset, which allows you to tell the system where to start getting the results from. The 
 offset, if not provided as an argument, will default to 0.
 
-	:::php
-	// Return 10 members with an offset of 4 (starting from the 5th result).
-	$members = Member::get()->sort('Surname')->limit(10, 4);
+```php
+    // Return 10 members with an offset of 4 (starting from the 5th result).
+    $members = Member::get()->sort('Surname')->limit(10, 4);
+```
 
 <div class="alert">
 Note that the `limit` argument order is different from a MySQL LIMIT clause.
@@ -516,12 +572,13 @@ slashes in table names, it is necessary to provide an alternate mapping.
 For instance, the below model will be stored in the table name `BannerImage`
 
 
-	:::php
-	namespace SilverStripe\BannerManager;
-	class BannerImage extends \DataObject {
-		private static $table_name = 'BannerImage';
-	}
-
+```php
+    namespace SilverStripe\BannerManager;
+    class BannerImage extends \DataObject 
+    {
+        private static $table_name = 'BannerImage';
+    }
+```
 
 Note that any model class which does not explicitly declare a `table_name` config option will have a name
 automatically generated for them. In the above case, the table name would have been
@@ -550,15 +607,16 @@ For example, if running a query against a particular model, you will need to ens
 table and column.
 
 
-	:::php
-	public function countDuplicates($model, $fieldToCheck) {
-		$table = DataObject::getSchema()->tableForField($model, $field);
-		$query = new SQLSelect();
-		$query->setFrom("\"{$table}\"");
-		$query->setWhere(["\"{$table}\".\"{$field}\"" => $model->$fieldToCheck]);
-		return $query->count();
-	}
-
+```php
+    public function countDuplicates($model, $fieldToCheck) 
+    {
+        $table = DataObject::getSchema()->tableForField($model, $field);
+        $query = new SQLSelect();
+        $query->setFrom("\"{$table}\"");
+        $query->setWhere(["\"{$table}\".\"{$field}\"" => $model->$fieldToCheck]);
+        return $query->count();
+    }
+```
 
 ### Raw SQL
 
@@ -576,8 +634,9 @@ you need it to, you may also consider extending the ORM with new data types or f
 
 You can specify a WHERE clause fragment (that will be combined with other filters using AND) with the `where()` method:
 
-	:::php
-	$members = Member::get()->where("\"FirstName\" = 'Sam'")
+```php
+    $members = Member::get()->where("\"FirstName\" = 'Sam'")
+```
 
 #### Joining Tables
 
@@ -587,14 +646,15 @@ You can specify a join with the `innerJoin` and `leftJoin` methods.  Both of the
  * The filter clause for the join.
  * An optional alias.
 
-	:::php
-	// Without an alias
-	$members = Member::get()
-		->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+```php
+    // Without an alias
+    $members = Member::get()
+        ->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 
-	$members = Member::get()
-		->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "Rel");
-	
+    $members = Member::get()
+        ->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "Rel");
+```
+
 <div class="alert" markdown="1">
 Passing a *$join* statement to will filter results further by the JOINs performed against the foreign table. It will 
 **not** return the additionally joined data.
@@ -605,15 +665,18 @@ Passing a *$join* statement to will filter results further by the JOINs performe
 Define the default values for all the `$db` fields. This example sets the "Status"-column on Player to "Active" 
 whenever a new object is created.
 
-	:::php
-	<?php
+```php
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject {
+    class Player extends DataObject 
+    {
 
-		private static $defaults = array(
-			"Status" => 'Active',
-		);
-	}
+        private static $defaults = [
+            "Status" => 'Active',
+        ];
+    }
+
+```
 
 <div class="notice" markdown='1'>
 Note: Alternatively you can set defaults directly in the database-schema (rather than the object-model). See 
@@ -629,42 +692,49 @@ time.
 
 For example, suppose we have the following set of classes:
 
-	:::php
-	<?php
+```php
+    use SilverStripe\CMS\Model\SiteTree;
+    use Page;
 
-	class Page extends SiteTree {
+    class Page extends SiteTree 
+    {
 
-	}
+    }
+    class NewsPage extends Page 
+    {
 
-	class NewsPage extends Page {
+        private static $db = [
+            'Summary' => 'Text'
+        ];
+    }
 
-		private static $db = array(
-			'Summary' => 'Text'
-		);
-	}
+```
 
 The data for the following classes would be stored across the following tables:
 
-	:::yml
-	SiteTree:
-		- ID: Int
-		- ClassName: Enum('SiteTree', 'Page', 'NewsPage')
-		- Created: Datetime
-		- LastEdited: Datetime
-		- Title: Varchar
-		- Content: Text
-	NewsPage:
-		- ID: Int
-		- Summary: Text
+```yml
+
+    SiteTree:
+        - ID: Int
+        - ClassName: Enum('SiteTree', 'Page', 'NewsPage')
+        - Created: Datetime
+        - LastEdited: Datetime
+        - Title: Varchar
+        - Content: Text
+    NewsPage:
+        - ID: Int
+        - Summary: Text
+```
 
 Accessing the data is transparent to the developer.
 
-	:::php
-	$news = NewsPage::get();
+```php
+    $news = NewsPage::get();
 
-	foreach($news as $article) {
-		echo $article->Title;
-	}
+    foreach($news as $article) {
+        echo $article->Title;
+    }
+```
 
 The way the ORM stores the data is this:
 

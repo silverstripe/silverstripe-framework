@@ -19,37 +19,45 @@ a category.
 
 **mysite/code/Product.php**
 
-	:::php
-	<?php
 
-	class Product extends DataObject {
+```php
+    use SilverStripe\ORM\DataObject;
 
-		private static $db = array(
-			'Name' => 'Varchar',
-			'ProductCode' => 'Varchar',
-			'Price' => 'Currency'
-		);
+    class Product extends DataObject 
+    {
 
-		private static $has_one = array(
-			'Category' => 'Category'
-		);
-	}
+        private static $db = [
+            'Name' => 'Varchar',
+            'ProductCode' => 'Varchar',
+            'Price' => 'Currency'
+        ];
+
+        private static $has_one = [
+            'Category' => 'Category'
+        ];
+    }
+
+```
 
 **mysite/code/Category.php**
 
-	:::php
-	<?php
 
-	class Category extends DataObject {
+```php
+    use SilverStripe\ORM\DataObject;
 
-		private static $db = array(
-			'Title' => 'Text'
-		);
+    class Category extends DataObject 
+    {
 
-		private static $has_many = array(
-			'Products' => 'Product'
-		);
-	}
+        private static $db = [
+            'Title' => 'Text'
+        ];
+
+        private static $has_many = [
+            'Products' => 'Product'
+        ];
+    }
+
+```
 
 To create your own `ModelAdmin`, simply extend the base class, and edit the `$managed_models` property with the list of
 DataObject's you want to scaffold an interface for. The class can manage multiple models in parallel, if required.
@@ -58,20 +66,24 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 **mysite/code/MyAdmin.php**
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
+```php
+    use SilverStripe\Admin\ModelAdmin;
 
-		private static $managed_models = array(
-			'Product',
-			'Category'
-		);
+    class MyAdmin extends ModelAdmin 
+    {
 
-		private static $url_segment = 'products';
+        private static $managed_models = [
+            'Product',
+            'Category'
+        ];
 
-		private static $menu_title = 'My Product Admin';
-	}
+        private static $url_segment = 'products';
+
+        private static $menu_title = 'My Product Admin';
+    }
+
+```
 
 This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
 users will be able to upload and manage `Product` and `Category` instances through http://yoursite.com/admin/products.
@@ -96,26 +108,34 @@ permissions by default. For most cases, less restrictive checks make sense, e.g.
 
 **mysite/code/Category.php**
 
-	:::php
-	<?php
 
-	class Category extends DataObject {
-	  // ...
-		public function canView($member = null) {
-			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
-		}
+```php
+    use SilverStripe\Security\Permission;
+    use SilverStripe\ORM\DataObject;
 
-		public function canEdit($member = null) {
-			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
-		}
+    class Category extends DataObject 
+    {
+      // ...
+        public function canView($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        }
 
-		public function canDelete($member = null) {
-			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
-		}
+        public function canEdit($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        }
 
-		public function canCreate($member = null) {
-			return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
-		}
+        public function canDelete($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        }
+
+        public function canCreate($member = null) 
+        {
+            return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        }
+```
 
 ## Searching Records
 
@@ -129,16 +149,20 @@ class (see [SearchContext](../search/searchcontext) docs for details).
 
 **mysite/code/Product.php**
 
-	:::php
-	<?php
 
-	class Product extends DataObject {
+```php
+    use SilverStripe\ORM\DataObject;
 
-	   private static $searchable_fields = array(
-	      'Name',
-	      'ProductCode'
-	   );
-	}
+    class Product extends DataObject 
+    {
+
+       private static $searchable_fields = [
+          'Name',
+          'ProductCode'
+       ];
+    }
+
+```
 
 <div class="hint" markdown="1">
 [SearchContext](../search/searchcontext) documentation has more information on providing the search functionality.
@@ -152,20 +176,24 @@ model class, where you can add or remove columns. To change the title, use [Data
 
 **mysite/code/Product.php**
 
-	:::php
-	<?php
 
-	class Product extends DataObject {
+```php
+    use SilverStripe\ORM\DataObject;
 
-	   private static $field_labels = array(
-	      'Price' => 'Cost' // renames the column to "Cost"
-	   );
+    class Product extends DataObject 
+    {
 
-	   private static $summary_fields = array(
-	      'Name',
-	      'Price'
-	   );
-	}
+       private static $field_labels = [
+          'Price' => 'Cost' // renames the column to "Cost"
+       ];
+
+       private static $summary_fields = [
+          'Name',
+          'Price'
+       ];
+    }
+
+```
 
 The results list are retrieved from [SearchContext::getResults()](api:SilverStripe\ORM\Search\SearchContext::getResults()), based on the parameters passed through the search
 form. If no search parameters are given, the results will show every record. Results are a [DataList](api:SilverStripe\ORM\DataList) instance, so
@@ -175,116 +203,138 @@ For example, we might want to exclude all products without prices in our sample 
 
 **mysite/code/MyAdmin.php**
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
+```php
+    use SilverStripe\Admin\ModelAdmin;
 
-		public function getList() {
-			$list = parent::getList();
+    class MyAdmin extends ModelAdmin 
+    {
 
-			// Always limit by model class, in case you're managing multiple
-			if($this->modelClass == 'Product') {
-				$list = $list->exclude('Price', '0');
-			}
+        public function getList() 
+        {
+            $list = parent::getList();
 
-			return $list;
-		}
-	}
+            // Always limit by model class, in case you're managing multiple
+            if($this->modelClass == 'Product') {
+                $list = $list->exclude('Price', '0');
+            }
+
+            return $list;
+        }
+    }
+```
 
 You can also customize the search behavior directly on your `ModelAdmin` instance. For example, we might want to have a
 checkbox which limits search results to expensive products (over $100).
 
 **mysite/code/MyAdmin.php**
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
+```php
+    use SilverStripe\Forms\CheckboxField;
+    use SilverStripe\Admin\ModelAdmin;
 
-		public function getSearchContext() {
-			$context = parent::getSearchContext();
+    class MyAdmin extends ModelAdmin 
+    {
 
-			if($this->modelClass == 'Product') {
-				$context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
-			}
+        public function getSearchContext() 
+        {
+            $context = parent::getSearchContext();
 
-			return $context;
-		}
+            if($this->modelClass == 'Product') {
+                $context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
+            }
 
-		public function getList() {
-			$list = parent::getList();
+            return $context;
+        }
 
-			$params = $this->getRequest()->requestVar('q'); // use this to access search parameters
+        public function getList() 
+        {
+            $list = parent::getList();
 
-			if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
-				$list = $list->exclude('Price:LessThan', '100');
-			}
+            $params = $this->getRequest()->requestVar('q'); // use this to access search parameters
 
-			return $list;
-		}
-	}
+            if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
+                $list = $list->exclude('Price:LessThan', '100');
+            }
+
+            return $list;
+        }
+    }
+```
 
 To alter how the results are displayed (via [GridField](api:SilverStripe\Forms\GridField\GridField)), you can also overload the `getEditForm()` method. For
 example, to add a new component.
 
 **mysite/code/MyAdmin.php**
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
+```php
+    use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+    use SilverStripe\Admin\ModelAdmin;
 
-		private static $managed_models = array(
-			'Product',
-			'Category'
-		);
+    class MyAdmin extends ModelAdmin 
+    {
 
-		// ...
-		public function getEditForm($id = null, $fields = null) {
-			$form = parent::getEditForm($id, $fields);
+        private static $managed_models = [
+            'Product',
+            'Category'
+        ];
 
-			// $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
-			// is managed by this ModelAdmin, the GridField for it will also be named 'Product'
+        // ...
+        public function getEditForm($id = null, $fields = null) 
+        {
+            $form = parent::getEditForm($id, $fields);
 
-			$gridFieldName = $this->sanitiseClassName($this->modelClass);
-			$gridField = $form->Fields()->fieldByName($gridFieldName);
+            // $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
+            // is managed by this ModelAdmin, the GridField for it will also be named 'Product'
 
-			// modify the list view.
-			$gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+            $gridFieldName = $this->sanitiseClassName($this->modelClass);
+            $gridField = $form->Fields()->fieldByName($gridFieldName);
 
-			return $form;
-		}
-	}
+            // modify the list view.
+            $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+
+            return $form;
+        }
+    }
+
+```
 
 The above example will add the component to all `GridField`s (of all managed models). Alternatively we can also add it
 to only one specific `GridField`:
 
 **mysite/code/MyAdmin.php**
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
+```php
+    use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+    use SilverStripe\Admin\ModelAdmin;
 
-		private static $managed_models = array(
-			'Product',
-			'Category'
-		);
+    class MyAdmin extends ModelAdmin 
+    {
 
-		public function getEditForm($id = null, $fields = null) {
-			$form = parent::getEditForm($id, $fields);
+        private static $managed_models = [
+            'Product',
+            'Category'
+        ];
 
-			$gridFieldName = 'Product';
-			$gridField = $form->Fields()->fieldByName($gridFieldName);
+        public function getEditForm($id = null, $fields = null) 
+        {
+            $form = parent::getEditForm($id, $fields);
 
-			if ($gridField) {
-				$gridField->getConfig()->addComponent(new GridFieldFilterHeader());
-			}
+            $gridFieldName = 'Product';
+            $gridField = $form->Fields()->fieldByName($gridFieldName);
 
-			return $form;
-		}
-	}
+            if ($gridField) {
+                $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+            }
+
+            return $form;
+        }
+    }
+
+```
 
 ## Data Import
 
@@ -302,21 +352,25 @@ This is handled through the [GridFieldExportButton](api:SilverStripe\Forms\GridF
 
 To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
-	:::php
-	<?php
 
-	class MyAdmin extends ModelAdmin {
-		// ...
+```php
+    use SilverStripe\Admin\ModelAdmin;
 
-		public function getExportFields() {
-			return array(
-				'Name' => 'Name',
-				'ProductCode' => 'Product Code',
-				'Category.Title' => 'Category'
-			);
-		}
-	}
+    class MyAdmin extends ModelAdmin 
+    {
+        // ...
 
+        public function getExportFields() 
+        {
+            return [
+                'Name' => 'Name',
+                'ProductCode' => 'Product Code',
+                'Category.Title' => 'Category'
+            ];
+        }
+    }
+
+```
 
 ## Related Documentation
 

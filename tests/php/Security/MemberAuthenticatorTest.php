@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -42,7 +43,6 @@ class MemberAuthenticatorTest extends SapphireTest
             $this->defaultUsername = null;
             $this->defaultPassword = null;
         }
-        DefaultAdminService::clearDefaultAdmin();
         DefaultAdminService::setDefaultAdmin('admin', 'password');
     }
 
@@ -147,6 +147,37 @@ class MemberAuthenticatorTest extends SapphireTest
             _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
             $messages[0]['message']
         );
+    }
+
+    public function testExpiredTempID()
+    {
+        DefaultAdminService::clearDefaultAdmin();
+
+        $authenticator = new CMSMemberAuthenticator();
+
+        // Make member with expired TempID
+        $member = new Member();
+        $member->Email = 'test1@test.com';
+        $member->PasswordEncryption = "sha1";
+        $member->Password = "mypassword";
+        $member->TempIDExpired = '2016-05-22 00:00:00';
+        $member->write();
+        Injector::inst()->get(IdentityStore::class)->logIn($member, true);
+
+        $tempID = $member->TempIDHash;
+
+        DBDatetime::set_mock_now('2016-05-29 00:00:00');
+
+        $this->assertNotEmpty($tempID);
+        $this->assertFalse(DefaultAdminService::hasDefaultAdmin());
+
+        $result = $authenticator->authenticate(array(
+            'tempid' => $tempID,
+            'Password' => 'notmypassword'
+        ), Controller::curr()->getRequest(), $validationResult);
+
+        $this->assertNull($result);
+        $this->assertFalse($validationResult->isValid());
     }
 
     /**
