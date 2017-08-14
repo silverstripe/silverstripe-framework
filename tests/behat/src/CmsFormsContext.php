@@ -352,5 +352,4 @@ JS;
         // Destroy cookie to detach session
         $this->getMainContext()->getSession()->setCookie('PHPSESSID', null);
     }
-
 }
