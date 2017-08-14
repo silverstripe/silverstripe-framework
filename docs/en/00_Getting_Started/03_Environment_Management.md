@@ -85,3 +85,8 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_MANIFESTCACHE` | The manifest cache to use (defaults to file based caching). Must be a CacheInterface or CacheFactory class name |
 | `SS_IGNORE_DOT_ENV` | If set the .env file will be ignored. This is good for live to mitigate any performance implications of loading the .env file |
 | `SS_BASE_URL` | The url to use when it isn't determinable by other means (eg: for CLI commands) |
+| `SS_CONFIGSTATICMANIFEST` | Set to `SS_ConfigStaticManifest_Reflection` to use the Silverstripe 4 Reflection config manifest (speed improvement during dev/build and ?flush) |
+| `SS_DATABASE_SSL_KEY` | Absolute path to SSL key file |
+| `SS_DATABASE_SSL_CERT` | Absolute path to SSL certificate file |
+| `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
+| `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |

@@ -440,7 +440,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
-            throw new LogicException("getItemPath returned null for " . static::class);
+            throw new LogicException("getItemPath returned null for " . static::class
+                . ". Try adding flush=1 to the test run.");
         }
         return dirname($filename);
     }

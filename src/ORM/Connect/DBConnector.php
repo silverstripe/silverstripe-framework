@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\View\Parsers\SQLFormatter;
 
 /**
@@ -10,6 +11,8 @@ use SilverStripe\View\Parsers\SQLFormatter;
  */
 abstract class DBConnector
 {
+
+    use Configurable;
 
     /**
      * List of operations to treat as write
