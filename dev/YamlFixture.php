@@ -1,7 +1,5 @@
 <?php
 
-require_once 'thirdparty/spyc/spyc.php';
-
 /**
  * Uses the Spyc library to parse a YAML document (see http://yaml.org).
  * YAML is a simple markup languages that uses tabs and colons instead of the more verbose XML tags,

@@ -51,6 +51,13 @@ class TreeDropdownField extends FormField {
 	);
 
 	/**
+	 * @config
+	 * @var int
+	 * @see {@link Hierarchy::$node_threshold_total}.
+	 */
+	private static $node_threshold_total = 30;
+
+	/**
 	 * @ignore
 	 */
 	protected $sourceObject, $keyField, $labelField, $filterCallback,
@@ -337,7 +344,7 @@ class TreeDropdownField extends FormField {
 		}
 
 		// main node leaf limit configuration
-		$nodeCountThreshold = 30;
+		$nodeCountThreshold = Config::inst()->get('TreeDropdownField', 'node_threshold_total');
 		$obj->markPartialTree(
 			$nodeCountThreshold, $context = null,
 			$this->childrenMethod, $this->numChildrenMethod, $filteredIds

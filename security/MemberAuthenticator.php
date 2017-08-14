@@ -161,9 +161,10 @@ class MemberAuthenticator extends Authenticator {
 		// when we can rehash passwords to a different hashing algorithm,
 		// bulk-migration doesn't work due to the nature of hashing.
 		// See PasswordEncryptor_LegacyPHPHash class.
-		if($success && $member && isset(self::$migrate_legacy_hashes[$member->PasswordEncryption])) {
+		$migrateLegacyHashes = self::config()->migrate_legacy_hashes;
+		if($success && $member && isset($migrateLegacyHashes[$member->PasswordEncryption])) {
 			$member->Password = $data['Password'];
-			$member->PasswordEncryption = self::$migrate_legacy_hashes[$member->PasswordEncryption];
+			$member->PasswordEncryption = $migrateLegacyHashes[$member->PasswordEncryption];
 			$member->write();
 		}
 
