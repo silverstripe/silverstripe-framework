@@ -807,8 +807,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     if ($relObj->$relation() instanceof DataObject) {
                         $parentObj = $relObj;
                         $relObj = $relObj->$relation();
-                        // If the intermediate relationship objects have been created, then write them
-                        if ($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
+                        // If the intermediate relationship objects haven't been created, then write them
+                        if ($i<sizeof($relations)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
                             $relObj->write();
                             $relatedFieldName = $relation."ID";
                             $parentObj->$relatedFieldName = $relObj->ID;
