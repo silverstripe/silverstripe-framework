@@ -418,7 +418,7 @@ class DiffEngine
         $i = 0;
         $j = 0;
 
-        assert('sizeof($lines) == sizeof($changed)');
+        assert(sizeof($lines) == sizeof($changed));
         $len = sizeof($lines);
         $other_len = sizeof($other_changed);
 
@@ -438,7 +438,7 @@ class DiffEngine
                 $j++;
 
             while ($i < $len && !$changed[$i]) {
-                assert('$j < $other_len && ! $other_changed[$j]');
+                assert($j < $other_len && ! $other_changed[$j]);
                 $i++;
                 $j++;
                 while ($j < $other_len && $other_changed[$j])
@@ -471,10 +471,10 @@ class DiffEngine
                     $changed[--$i] = false;
                     while ($start > 0 && $changed[$start - 1])
                         $start--;
-                    assert('$j > 0');
+                    assert($j > 0);
                     while ($other_changed[--$j])
                         continue;
-                    assert('$j >= 0 && !$other_changed[$j]');
+                    assert($j >= 0 && !$other_changed[$j]);
                 }
 
                 /*
@@ -497,7 +497,7 @@ class DiffEngine
                     while ($i < $len && $changed[$i])
                         $i++;
 
-                    assert('$j < $other_len && ! $other_changed[$j]');
+                    assert($j < $other_len && ! $other_changed[$j]);
                     $j++;
                     if ($j < $other_len && $other_changed[$j]) {
                         $corresponding = $i;
@@ -514,10 +514,10 @@ class DiffEngine
             while ($corresponding < $i) {
                 $changed[--$start] = 1;
                 $changed[--$i] = 0;
-                assert('$j > 0');
+                assert($j > 0);
                 while ($other_changed[--$j])
                     continue;
-                assert('$j >= 0 && !$other_changed[$j]');
+                assert($j >= 0 && !$other_changed[$j]);
             }
         }
     }
