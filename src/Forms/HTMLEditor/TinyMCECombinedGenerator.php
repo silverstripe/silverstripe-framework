@@ -78,8 +78,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
     {
         $tinymceDir = $config->getTinyMCEPath();
 
-        // Core JS file
-        $files = [ $tinymceDir . '/tinymce' ];
+        $files = [ ];
 
         // Add core languages
         $language = $config->getOption('language');
@@ -137,18 +136,43 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
             return null;
         }, $files));
 
-        // Set base URL for where tinymce is loaded from
-        $buffer = "var tinyMCEPreInit={base:'" . Convert::raw2js($tinymceDir) . "',suffix:'.min'};\n";
+        $libContent = $this->getFileContents(Director::baseFolder() . '/' . $tinymceDir . '/tinymce.min.js');
+
+        // Register vars for config
+        $baseDirJS = Convert::raw2js(Director::absoluteBaseURL());
+        $buffer = [];
+        $buffer[] = <<<SCRIPT
+(function() {
+  var baseTag = window.document.getElementsByTagName('base');
+  var baseURL = baseTag.length ? baseTag[0].baseURI : '$baseDirJS';
+SCRIPT;
+        $buffer[] = <<<SCRIPT
+(function() {
+  // Avoid double-registration
+  if (window.tinymce) {
+    return;
+  }
+
+  var tinyMCEPreInit = {
+    base: baseURL,
+    suffix: '.min',
+  };
+  $libContent
+})();
+SCRIPT;
 
         // Load all tinymce script files into buffer
         foreach ($files as $file) {
-            $buffer .= $this->getFileContents(Director::baseFolder() . '/' . $file) . "\n";
+            $buffer[] = $this->getFileContents(Director::baseFolder() . '/' . $file);
         }
 
+        $filesList = Convert::raw2js(implode(',', $files));
         // Mark all themes, plugins and languages as done
-        $buffer .= 'tinymce.each("' . Convert::raw2js(implode(',', $files)) . '".split(","),function(f){tinymce.ScriptLoader.markDone(f);});';
+        $buffer[] = "window.tinymce.each('$filesList'.split(','),".
+            "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
 
-        return $buffer . "\n";
+        $buffer[] = '})();';
+        return implode("\n", $buffer) . "\n";
     }
 
 
