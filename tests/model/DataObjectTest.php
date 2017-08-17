@@ -357,6 +357,23 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(1, $players->limit(5, 3)->count());
 	}
 
+	public function testWriteNoChangesDoesntUpdateLastEdited() {
+		// set mock now so we can be certain of LastEdited time for our test
+		SS_Datetime::set_mock_now('2017-01-01 00:00:00');
+		$obj = new DataObjectTest_Player();
+		$obj->FirstName = 'Test';
+		$obj->Surname = 'Plater';
+		$obj->Email = 'test.player@example.com';
+		$obj->write();
+		$writtenObj = DataObjectTest_Player::get()->byID($obj->ID);
+		$this->assertEquals('2017-01-01 00:00:00', $writtenObj->LastEdited);
+
+		// set mock now so we get a new LastEdited if, for some reason, it's updated
+		SS_Datetime::set_mock_now('2017-02-01 00:00:00');
+		$writtenObj->write();
+		$this->assertEquals('2017-01-01 00:00:00', $writtenObj->LastEdited);
+	}
+
 	/**
 	 * Test writing of database columns which don't correlate to a DBField,
 	 * e.g. all relation fields on has_one/has_many like "ParentID".
