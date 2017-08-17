@@ -1349,6 +1349,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Check changes exist, abort if there are none
         $hasChanges = $this->updateChanges($isNewRecord);
         if ($hasChanges || $forceWrite || $isNewRecord) {
+            // Ensure Created and LastEdited are populated
+            if (!isset($this->record['Created'])) {
+                $this->record['Created'] = $now;
+            }
+            $this->record['LastEdited'] = $now;
+            
             // New records have their insert into the base data table done first, so that they can pass the
             // generated primary key on to the rest of the manipulation
             $baseTable = $this->baseTable();
@@ -1369,12 +1375,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // Used by DODs to clean up after themselves, eg, Versioned
             $this->invokeWithExtensions('onAfterSkippedWrite');
         }
-
-        // Ensure Created and LastEdited are populated
-        if (!isset($this->record['Created'])) {
-            $this->record['Created'] = $now;
-        }
-        $this->record['LastEdited'] = $now;
 
         // Write relations as necessary
         if ($writeComponents) {

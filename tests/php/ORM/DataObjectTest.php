@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -14,6 +15,7 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\ViewableData;
 use stdClass;
@@ -447,6 +449,29 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(0, $players->limit(20, 20)->count());
         $this->assertEquals(2, $players->limit(2, 0)->count());
         $this->assertEquals(1, $players->limit(5, 3)->count());
+    }
+
+    public function testWriteNoChangesDoesntUpdateLastEdited()
+    {
+        // set mock now so we can be certain of LastEdited time for our test
+        DBDatetime::set_mock_now('2017-01-01 00:00:00');
+        $obj = new Player();
+        $obj->FirstName = 'Test';
+        $obj->Surname = 'Plater';
+        $obj->Email = 'test.player@example.com';
+        $obj->write();
+        $this->assertEquals('2017-01-01 00:00:00', $obj->LastEdited);
+        $writtenObj = Player::get()->byID($obj->ID);
+        $this->assertEquals('2017-01-01 00:00:00', $writtenObj->LastEdited);
+
+        // set mock now so we get a new LastEdited if, for some reason, it's updated
+        DBDatetime::set_mock_now('2017-02-01 00:00:00');
+        $writtenObj->write();
+        $this->assertEquals('2017-01-01 00:00:00', $writtenObj->LastEdited);
+        $this->assertEquals($obj->ID, $writtenObj->ID);
+
+        $reWrittenObj = Player::get()->byID($writtenObj->ID);
+        $this->assertEquals('2017-01-01 00:00:00', $reWrittenObj->LastEdited);
     }
 
     /**
