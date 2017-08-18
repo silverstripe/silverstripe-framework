@@ -36,6 +36,11 @@ matrix:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_COVERAGE_TEST=framework
+    - php: 7.2
+      env:
+        - DB=MYSQL
+        - PDO=1
+        - PHPUNIT_TEST=framework
     - php: 7.0
       env:
        - DB=MYSQL
@@ -54,7 +59,7 @@ before_script:
   - export CORE_RELEASE=$TRAVIS_BRANCH
   - printf "\n" | pecl install imagick
   - phpenv rehash
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || true
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 # Temporarily update to 1.5.x-dev of composer
