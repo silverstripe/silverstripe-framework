@@ -9,6 +9,8 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -66,7 +68,13 @@ class HTMLEditorFieldTest extends FunctionalTest
     public function testCasting()
     {
         // Shim TinyMCE so silverstripe/admin doesn't have to be installed
-        TinyMCEConfig::config()->set('base_dir', 'test');
+        $framework = ModuleLoader::getModule('silverstripe/framework');
+        TinyMCEConfig::config()->set(
+            'base_dir',
+            $framework->getRelativeResourcePath(
+                'tests/php/Forms/HTMLEditor/TinyMCECombinedGeneratorTest/tinymce'
+            )
+        );
         HtmlEditorField::config()->set('use_gzip', false);
 
         // Test special characters
