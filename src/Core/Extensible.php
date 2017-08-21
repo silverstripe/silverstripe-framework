@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -18,7 +17,19 @@ use SilverStripe\View\ViewableData;
  */
 trait Extensible
 {
-    use CustomMethods;
+    use CustomMethods {
+        getExtraMethodConfig as getCustomMethodsConfig;
+    }
+
+    protected function getExtraMethodConfig($method)
+    {
+        $config = $this->getCustomMethodsConfig($method);
+        // Ensure extension instances are populated before being accessed
+        if (isset($config['property']) && $config['property'] === 'extension_instances') {
+            $this->getExtensionInstances();
+        }
+        return $config;
+    }
 
     /**
      * An array of extension names and parameters to be applied to this object upon construction.
@@ -54,9 +65,9 @@ trait Extensible
     );
 
     /**
-     * @var Extension[] all current extension instances.
+     * @var Extension[] all current extension instances, or null if not declared yet.
      */
-    protected $extension_instances = array();
+    protected $extension_instances = null;
 
     /**
      * List of callbacks to call prior to extensions having extend called on them,
@@ -112,32 +123,14 @@ trait Extensible
 
     protected function constructExtensions()
     {
-        $class = static::class;
-
         // Register this trait as a method source
         $this->registerExtraMethodCallback('defineExtensionMethods', function () {
             $this->defineExtensionMethods();
         });
 
-        // Setup all extension instances for this instance
-        foreach (ClassInfo::ancestry($class) as $class) {
-            if (in_array($class, self::$unextendable_classes)) {
-                continue;
-            }
-            $extensions = Config::inst()->get($class, 'extensions', true);
-
-            if ($extensions) {
-                foreach ($extensions as $extension) {
-                    $instance = Injector::inst()->create($extension);
-                    $instance->setOwner(null, $class);
-                    $this->extension_instances[get_class($instance)] = $instance;
-                }
-            }
-        }
-
-        if (!isset(self::$classes_constructed[$class])) {
+        if (!isset(self::$classes_constructed[static::class])) {
             $this->defineMethods();
-            self::$classes_constructed[$class] = true;
+            self::$classes_constructed[static::class] = true;
         }
     }
 
@@ -150,10 +143,9 @@ trait Extensible
      */
     protected function defineExtensionMethods()
     {
-        if (!empty($this->extension_instances)) {
-            foreach (array_keys($this->extension_instances) as $key) {
-                $this->addMethodsFrom('extension_instances', $key);
-            }
+        $extensions = $this->getExtensionInstances();
+        foreach (array_keys($extensions) as $key) {
+            $this->addMethodsFrom('extension_instances', $key);
         }
     }
 
@@ -473,16 +465,14 @@ trait Extensible
             $this->beforeExtendCallbacks[$method] = array();
         }
 
-        if ($this->extension_instances) {
-            foreach ($this->extension_instances as $instance) {
-                if (method_exists($instance, $method)) {
-                    $instance->setOwner($this);
-                    $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
-                    if ($value !== null) {
-                        $values[] = $value;
-                    }
-                    $instance->clearOwner();
+        foreach ($this->getExtensionInstances() as $instance) {
+            if (method_exists($instance, $method)) {
+                $instance->setOwner($this);
+                $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                if ($value !== null) {
+                    $values[] = $value;
                 }
+                $instance->clearOwner();
             }
         }
 
@@ -509,10 +499,10 @@ trait Extensible
      */
     public function getExtensionInstance($extension)
     {
-        if ($this->hasExtension($extension)) {
-            return $this->extension_instances[$extension];
-        }
-        return null;
+        $instances = $this->getExtensionInstances();
+        return isset($instances[$extension])
+            ? $instances[$extension]
+            : null;
     }
 
     /**
@@ -531,7 +521,8 @@ trait Extensible
      */
     public function hasExtension($extension)
     {
-        return isset($this->extension_instances[$extension]);
+        $instances = $this->getExtensionInstances();
+        return isset($instances[$extension]);
     }
 
     /**
@@ -539,10 +530,33 @@ trait Extensible
      * See {@link get_extensions()} to get all applied extension classes
      * for this class (not the instance).
      *
-     * @return array Map of {@link DataExtension} instances, keyed by classname.
+     * This method also provides lazy-population of the extension_instances property.
+     *
+     * @return Extension[] Map of {@link DataExtension} instances, keyed by classname.
      */
     public function getExtensionInstances()
     {
+        if (isset($this->extension_instances)) {
+            return $this->extension_instances;
+        }
+
+        // Setup all extension instances for this instance
+        $this->extension_instances = [];
+        foreach (ClassInfo::ancestry(static::class) as $class) {
+            if (in_array($class, self::$unextendable_classes)) {
+                continue;
+            }
+            $extensions = Config::inst()->get($class, 'extensions', true);
+
+            if ($extensions) {
+                foreach ($extensions as $extension) {
+                    $instance = Injector::inst()->create($extension);
+                    $instance->setOwner(null, $class);
+                    $this->extension_instances[get_class($instance)] = $instance;
+                }
+            }
+        }
+
         return $this->extension_instances;
     }
 }
