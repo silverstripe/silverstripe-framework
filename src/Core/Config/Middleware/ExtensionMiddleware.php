@@ -8,6 +8,8 @@ use SilverStripe\Config\MergeStrategy\Priority;
 use SilverStripe\Config\Middleware\Middleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
+use SilverStripe\ORM\DataExtension;
 
 class ExtensionMiddleware implements Middleware
 {
@@ -61,6 +63,14 @@ class ExtensionMiddleware implements Middleware
 
             // Check class hierarchy from root up
             foreach (ClassInfo::ancestry($extensionClass) as $extensionClassParent) {
+                // Skip base classes
+                switch ($extensionClassParent) {
+                    case Extension::class:
+                    case DataExtension::class:
+                        continue 2;
+                    default:
+                        // continue
+                }
                 // Merge config from extension
                 $extensionConfig = Config::inst()->get($extensionClassParent, null, true);
                 if ($extensionConfig) {
