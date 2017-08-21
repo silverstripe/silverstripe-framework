@@ -49,7 +49,6 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     {
         $this->targetFragment = $targetFragment;
         $this->printColumns = $printColumns;
-        $this->constructExtensions();
     }
 
     /**

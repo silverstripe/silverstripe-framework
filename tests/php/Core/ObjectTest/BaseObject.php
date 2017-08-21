@@ -15,6 +15,5 @@ class BaseObject implements TestOnly
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 }

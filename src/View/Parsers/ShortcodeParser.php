@@ -26,7 +26,6 @@ class ShortcodeParser
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     public function img_shortcode($attrs)

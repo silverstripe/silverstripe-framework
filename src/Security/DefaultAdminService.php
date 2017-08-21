@@ -37,7 +37,6 @@ class DefaultAdminService
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     /**

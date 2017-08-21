@@ -6,29 +6,18 @@ use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
  * Allows an object to have extensions applied to it.
- *
- * Bootstrap by calling $this->constructExtensions() in your class constructor.
- *
- * Requires CustomMethods trait
  */
 trait Extensible
 {
     use CustomMethods {
-        getExtraMethodConfig as getCustomMethodsConfig;
-    }
-
-    protected function getExtraMethodConfig($method)
-    {
-        $config = $this->getCustomMethodsConfig($method);
-        // Ensure extension instances are populated before being accessed
-        if (isset($config['property']) && $config['property'] === 'extension_instances') {
-            $this->getExtensionInstances();
-        }
-        return $config;
+        defineMethods as defineMethodsCustom;
     }
 
     /**
@@ -51,8 +40,6 @@ trait Extensible
      * @config
      */
     private static $extensions = [];
-
-    private static $classes_constructed = array();
 
     /**
      * Classes that cannot be extended
@@ -121,17 +108,20 @@ trait Extensible
         $this->afterExtendCallbacks[$method][] = $callback;
     }
 
+    /**
+     * @deprecated 4.0..5.0 Extensions and methods are now lazy-loaded
+     */
     protected function constructExtensions()
     {
-        // Register this trait as a method source
-        $this->registerExtraMethodCallback('defineExtensionMethods', function () {
-            $this->defineExtensionMethods();
-        });
+        Deprecation::notice('5.0', 'constructExtensions does not need to be invoked and will be removed in 5.0');
+    }
 
-        if (!isset(self::$classes_constructed[static::class])) {
-            $this->defineMethods();
-            self::$classes_constructed[static::class] = true;
-        }
+    protected function defineMethods()
+    {
+        $this->defineMethodsCustom();
+
+        // Define extension methods
+        $this->defineExtensionMethods();
     }
 
     /**
@@ -139,16 +129,26 @@ trait Extensible
      * All these methods can then be called directly on the instance (transparently
      * mapped through {@link __call()}), or called explicitly through {@link extend()}.
      *
-     * @uses addMethodsFrom()
+     * @uses addCallbackMethod()
      */
     protected function defineExtensionMethods()
     {
         $extensions = $this->getExtensionInstances();
-        foreach (array_keys($extensions) as $key) {
-            $this->addMethodsFrom('extension_instances', $key);
+        foreach ($extensions as $extensionClass => $extensionInstance) {
+            foreach ($this->findMethodsFromExtension($extensionInstance) as $method) {
+                $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
+                    /** @var Extensible $inst */
+                    $extension = $inst->getExtensionInstance($extensionClass);
+                    $extension->setOwner($inst);
+                    try {
+                        return call_user_func_array([$extension, $method], $args);
+                    } finally {
+                        $extension->clearOwner();
+                    }
+                });
+            }
         }
     }
-
 
     /**
      * Add an extension to a specific class.
@@ -202,7 +202,6 @@ trait Extensible
 
         if ($subclasses) {
             foreach ($subclasses as $subclass) {
-                unset(self::$classes_constructed[$subclass]);
                 unset(self::$extra_methods[$subclass]);
             }
         }
@@ -215,8 +214,8 @@ trait Extensible
         Injector::inst()->unregisterNamedObject($class);
 
         // load statics now for DataObject classes
-        if (is_subclass_of($class, 'SilverStripe\\ORM\\DataObject')) {
-            if (!is_subclass_of($extensionClass, 'SilverStripe\\ORM\\DataExtension')) {
+        if (is_subclass_of($class, DataObject::class)) {
+            if (!is_subclass_of($extensionClass, DataExtension::class)) {
                 user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
             }
         }
@@ -272,7 +271,6 @@ trait Extensible
         $subclasses[] = $class;
         if ($subclasses) {
             foreach ($subclasses as $subclass) {
-                unset(self::$classes_constructed[$subclass]);
                 unset(self::$extra_methods[$subclass]);
             }
         }
@@ -468,11 +466,14 @@ trait Extensible
         foreach ($this->getExtensionInstances() as $instance) {
             if (method_exists($instance, $method)) {
                 $instance->setOwner($this);
-                $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                try {
+                    $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                } finally {
+                    $instance->clearOwner();
+                }
                 if ($value !== null) {
                     $values[] = $value;
                 }
-                $instance->clearOwner();
             }
         }
 

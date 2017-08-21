@@ -108,7 +108,6 @@ class Director implements TemplateGlobalProvider
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     /**

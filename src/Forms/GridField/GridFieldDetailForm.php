@@ -84,7 +84,6 @@ class GridFieldDetailForm implements GridField_URLHandler
     public function __construct($name = 'DetailForm')
     {
         $this->name = $name;
-        $this->constructExtensions();
     }
 
     /**

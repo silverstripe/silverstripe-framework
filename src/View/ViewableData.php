@@ -85,7 +85,6 @@ class ViewableData implements IteratorAggregate
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
