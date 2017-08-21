@@ -38,7 +38,6 @@ class GridFieldConfig
     public function __construct()
     {
         $this->components = new ArrayList();
-        $this->constructExtensions();
     }
 
     /**

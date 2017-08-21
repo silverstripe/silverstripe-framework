@@ -4,10 +4,8 @@ namespace SilverStripe\Core\Tests;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Tests\ObjectTest\BaseObject;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;
@@ -54,7 +52,7 @@ class ObjectTest extends SapphireTest
         $objs[] = new ObjectTest\T2();
 
         // All these methods should exist and return true
-        $trueMethods = array('testMethod','otherMethod','someMethod','t1cMethod','normalMethod');
+        $trueMethods = array('testMethod','otherMethod','someMethod','t1cMethod','normalMethod', 'failoverCallback');
 
         foreach ($objs as $i => $obj) {
             foreach ($trueMethods as $method) {

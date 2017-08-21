@@ -23,6 +23,9 @@ class T2 extends BaseObject
         $this->addMethodsFrom('failover');
         $this->addMethodsFrom('failoverArr', 0);
         $this->addMethodsFrom('failoverArr', 1);
+        $this->addCallbackMethod('failoverCallback', function ($inst, $args) {
+            return true;
+        });
     }
 
     public function wrappedMethod($val)

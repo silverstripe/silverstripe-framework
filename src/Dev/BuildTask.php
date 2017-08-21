@@ -22,7 +22,6 @@ abstract class BuildTask
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     /**

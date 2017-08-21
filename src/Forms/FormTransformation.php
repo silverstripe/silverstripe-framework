@@ -28,7 +28,6 @@ class FormTransformation
 
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     public function transform(FormField $field)
