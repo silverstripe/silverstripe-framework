@@ -171,7 +171,7 @@ class DataQuery
         $this->query = new SQLSelect(array());
         $this->query->setDistinct(true);
 
-        if ($sort = singleton($this->dataClass)->stat('default_sort')) {
+        if ($sort = singleton($this->dataClass)->config()->get('default_sort')) {
             $this->sort($sort);
         }
 

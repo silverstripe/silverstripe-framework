@@ -580,7 +580,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     public function defaultSearchFilter($name = null)
     {
         $name = ($name) ? $name : $this->name;
-        $filterClass = $this->stat('default_search_filter_class');
+        $filterClass = $this->config()->get('default_search_filter_class');
         return Injector::inst()->create($filterClass, $name);
     }
 

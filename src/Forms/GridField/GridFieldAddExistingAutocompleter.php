@@ -329,7 +329,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $obj = DataObject::singleton($dataClass);
         $fields = null;
         if ($fieldSpecs = $obj->searchableFields()) {
-            $customSearchableFields = $obj->stat('searchable_fields');
+            $customSearchableFields = $obj->config()->get('searchable_fields');
             foreach ($fieldSpecs as $name => $spec) {
                 if (is_array($spec) && array_key_exists('filter', $spec)) {
                     // The searchableFields() spec defaults to PartialMatch,

@@ -547,7 +547,7 @@ class Security extends Controller implements TemplateGlobalProvider
     protected function getResponseController($title)
     {
         // Use the default setting for which Page to use to render the security page
-        $pageClass = $this->stat('page_class');
+        $pageClass = $this->config()->get('page_class');
         if (!$pageClass || !class_exists($pageClass)) {
             return $this;
         }
@@ -1026,7 +1026,7 @@ class Security extends Controller implements TemplateGlobalProvider
             [
                 "Security_{$action}",
                 "Security",
-                $this->stat("template_main"),
+                $this->config()->get("template_main"),
                 "BlankPage"
             ]
         );
