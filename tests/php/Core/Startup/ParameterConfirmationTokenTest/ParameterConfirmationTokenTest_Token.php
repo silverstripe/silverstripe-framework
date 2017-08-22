@@ -15,4 +15,9 @@ class ParameterConfirmationTokenTest_Token extends ParameterConfirmationToken im
     {
         return parent::currentURL();
     }
+
+    public function redirectURL()
+    {
+        return parent::redirectURL();
+    }
 }
