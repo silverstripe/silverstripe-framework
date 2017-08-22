@@ -665,11 +665,11 @@ class Injector implements ContainerInterface
 
         // now, use any cached information about what properties this object type has
         // and set based on name resolution
-        if (!$mapping) {
-            if ($this->autoScanProperties) {
-                // we use an object to prevent array copies if/when passed around
-                $mapping = new ArrayObject();
+        if ($mapping === null) {
+            // we use an object to prevent array copies if/when passed around
+            $mapping = new ArrayObject();
 
+            if ($this->autoScanProperties) {
                 // This performs public variable based injection
                 $robj = new ReflectionObject($object);
                 $properties = $robj->getProperties();
@@ -704,34 +704,50 @@ class Injector implements ContainerInterface
                         }
                     }
                 }
-
-                // we store the information about what needs to be injected for objects of this
-                // type here
-                $this->injectMap[get_class($object)] = $mapping;
             }
-        } else {
-            foreach ($mapping as $prop => $spec) {
-                if ($spec['type'] == 'property') {
-                    $value = $this->get($spec['name']);
-                    $object->$prop = $value;
-                } else {
-                    $method = $prop;
-                    $value = $this->get($spec['name']);
-                    $object->$method($value);
+
+            $injections = Config::inst()->get(get_class($object), 'dependencies');
+            // If the type defines some injections, set them here
+            if ($injections && count($injections)) {
+                foreach ($injections as $property => $value) {
+                    // we're checking empty in case it already has a property at this name
+                    // this doesn't catch privately set things, but they will only be set by a setter method,
+                    // which should be responsible for preventing further setting if it doesn't want it.
+                    if (empty($object->$property)) {
+                        $convertedValue = $this->convertServiceProperty($value);
+                        $this->setObjectProperty($object, $property, $convertedValue);
+                        $mapping[$property] = array('service' => $value, 'type' => 'service');
+                    }
                 }
             }
-        }
 
-        $injections = Config::inst()->get(get_class($object), 'dependencies');
-        // If the type defines some injections, set them here
-        if ($injections && count($injections)) {
-            foreach ($injections as $property => $value) {
-                // we're checking empty in case it already has a property at this name
-                // this doesn't catch privately set things, but they will only be set by a setter method,
-                // which should be responsible for preventing further setting if it doesn't want it.
-                if (empty($object->$property)) {
-                    $value = $this->convertServiceProperty($value);
-                    $this->setObjectProperty($object, $property, $value);
+            // we store the information about what needs to be injected for objects of this
+            // type here
+            $this->injectMap[$objtype] = $mapping;
+        } else {
+            foreach ($mapping as $prop => $propSpec) {
+                switch ($propSpec['type']) {
+                    case 'property':
+                        $value = $this->get($propSpec['name']);
+                        $object->$prop = $value;
+                        break;
+
+
+                    case 'method':
+                        $method = $prop;
+                        $value = $this->get($propSpec['name']);
+                        $object->$method($value);
+                        break;
+
+                    case 'service':
+                        if (empty($object->$prop)) {
+                            $value = $this->convertServiceProperty($propSpec['service']);
+                            $this->setObjectProperty($object, $prop, $value);
+                        }
+                        break;
+
+                    default:
+                        throw new \LogicException("Bad mapping type: " . $propSpec['type']);
                 }
             }
         }
