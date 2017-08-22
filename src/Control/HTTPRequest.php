@@ -809,7 +809,7 @@ class HTTPRequest implements ArrayAccess
     public function getAcceptMimetypes($includeQuality = false)
     {
         $mimetypes = array();
-        $mimetypesWithQuality = explode(',', $this->getHeader('Accept'));
+        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('Accept'));
         foreach ($mimetypesWithQuality as $mimetypeWithQuality) {
             $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
         }
