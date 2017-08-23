@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM;
 
+use BadMethodCallException;
 use InvalidArgumentException;
-use LogicException;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -31,6 +31,19 @@ class DB
      */
     const USE_ANSI_SQL = true;
 
+    /**
+     * Session key for alternative database name
+     */
+    const ALT_DB_KEY = 'alternativeDatabaseName';
+
+    /**
+     * Allow alternative DB to be disabled.
+     * Necessary for DB backed session store to work.
+     *
+     * @config
+     * @var bool
+     */
+    private static $alternative_database_enabled = true;
 
     /**
      * The global database connection.
@@ -171,90 +184,78 @@ class DB
      *
      * Note that the database will be set on the next request.
      * Set it to null to revert to the main database.
+     *
      * @param string $name
      */
     public static function set_alternative_database_name($name = null)
     {
+        // Ignore if disabled
+        if (!Config::inst()->get(static::class, 'alternative_database_enabled')) {
+            return;
+        }
         // Skip if CLI
         if (Director::is_cli()) {
             return;
         }
+        // Validate name
+        if ($name && !self::valid_alternative_database_name($name)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid alternative database name: "%s"',
+                $name
+            ));
+        }
+
+        // Set against session
+        if (!Injector::inst()->has(HTTPRequest::class)) {
+            return;
+        }
+        /** @var HTTPRequest $request */
+        $request = Injector::inst()->get(HTTPRequest::class);
         if ($name) {
-            if (!self::valid_alternative_database_name($name)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Invalid alternative database name: "%s"',
-                    $name
-                ));
-            }
-
-            $key = Config::inst()->get('SilverStripe\\Security\\Security', 'token');
-            if (!$key) {
-                throw new LogicException('"Security.token" not found, run "sake dev/generatesecuretoken"');
-            }
-            if (!function_exists('mcrypt_encrypt')) {
-                throw new LogicException('DB::set_alternative_database_name() requires the mcrypt PHP extension');
-            }
-
-            $key = md5($key); // Ensure key is correct length for chosen cypher
-            $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CFB);
-            $iv = mcrypt_create_iv($ivSize);
-            $encrypted = mcrypt_encrypt(
-                MCRYPT_RIJNDAEL_256,
-                $key,
-                $name,
-                MCRYPT_MODE_CFB,
-                $iv
-            );
-
-            // Set to browser session lifetime, and restricted to HTTP access only
-            Cookie::set("alternativeDatabaseName", base64_encode($encrypted), 0, null, null, false, true);
-            Cookie::set("alternativeDatabaseNameIv", base64_encode($iv), 0, null, null, false, true);
+            $request->getSession()->set(self::ALT_DB_KEY, $name);
         } else {
-            Cookie::force_expiry("alternativeDatabaseName", null, null, false, true);
-            Cookie::force_expiry("alternativeDatabaseNameIv", null, null, false, true);
+            $request->getSession()->clear(self::ALT_DB_KEY);
         }
     }
 
     /**
      * Get the name of the database in use
+     *
+     * @return string|false Name of temp database, or false if not set
      */
     public static function get_alternative_database_name()
     {
-        $name = Cookie::get("alternativeDatabaseName");
-        $iv = Cookie::get("alternativeDatabaseNameIv");
-
-        if ($name) {
-            $key = Config::inst()->get('SilverStripe\\Security\\Security', 'token');
-            if (!$key) {
-                throw new LogicException('"Security.token" not found, run "sake dev/generatesecuretoken"');
-            }
-            if (!function_exists('mcrypt_encrypt')) {
-                throw new LogicException('DB::set_alternative_database_name() requires the mcrypt PHP extension');
-            }
-            $key = md5($key); // Ensure key is correct length for chosen cypher
-            $decrypted = mcrypt_decrypt(
-                MCRYPT_RIJNDAEL_256,
-                $key,
-                base64_decode($name),
-                MCRYPT_MODE_CFB,
-                base64_decode($iv)
-            );
-            return (self::valid_alternative_database_name($decrypted)) ? $decrypted : false;
-        } else {
+        // Ignore if disabled
+        if (!Config::inst()->get(static::class, 'alternative_database_enabled')) {
             return false;
         }
+        // Skip if CLI
+        if (Director::is_cli()) {
+            return false;
+        }
+        if (!Injector::inst()->has(HTTPRequest::class)) {
+            return null;
+        }
+        /** @var HTTPRequest $request */
+        $request = Injector::inst()->get(HTTPRequest::class);
+        $name = $request->getSession()->get(self::ALT_DB_KEY);
+        if (self::valid_alternative_database_name($name)) {
+            return $name;
+        }
+
+        return false;
     }
 
     /**
      * Determines if the name is valid, as a security
      * measure against setting arbitrary databases.
      *
-     * @param  String $name
-     * @return Boolean
+     * @param string $name
+     * @return bool
      */
     public static function valid_alternative_database_name($name)
     {
-        if (Director::isLive()) {
+        if (Director::isLive() || empty($name)) {
             return false;
         }
 

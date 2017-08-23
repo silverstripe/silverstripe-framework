@@ -120,15 +120,6 @@ class Security extends Controller implements TemplateGlobalProvider
     private static $default_message_set;
 
     /**
-     * Random secure token, can be used as a crypto key internally.
-     * Generate one through 'sake dev/generatesecuretoken'.
-     *
-     * @config
-     * @var String
-     */
-    private static $token;
-
-    /**
      * The default login URL
      *
      * @config
