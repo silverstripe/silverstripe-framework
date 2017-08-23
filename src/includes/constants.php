@@ -2,7 +2,6 @@
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-use SilverStripe\Control\Util\IPUtils;
 use SilverStripe\Core\TempFolder;
 
 /**
@@ -18,14 +17,14 @@ use SilverStripe\Core\TempFolder;
  *   See Director::baseFolder(). Can be overwritten by Config::modify()->set(Director::class, 'alternate_base_folder', ).
  * - TEMP_FOLDER: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
  *   See getTempFolder(). No trailing slash.
+ * - ASSETS_DIR: Dir for assets folder. e.g. "assets"
+ * - ASSETS_PATH: Full path to assets folder. e.g. "/var/www/my-webroot/assets"
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
  * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
  * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
- * - TRUSTED_PROXY: true or false, depending on whether the X-Forwarded-* HTTP
- *   headers from the given client are trustworthy (e.g. from a reverse proxy).
  */
 
 require_once __DIR__ . '/functions.php';

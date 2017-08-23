@@ -78,6 +78,9 @@ before_script:
 # Bootstrap dependencies
   - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then php ./cms/tests/bootstrap/mysite.php; fi
 
+# Log constants to CI for debugging purposes
+  - php ./tests/dump_constants.php
+
 # Start behat services
   - if [[ $BEHAT_TEST ]]; then echo 'SS_BASE_URL=http://localhost:8080/' >> .env; fi
   - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
