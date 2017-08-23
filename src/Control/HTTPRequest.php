@@ -6,6 +6,7 @@ use ArrayAccess;
 use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayLib;
 
 /**
@@ -895,5 +896,20 @@ class HTTPRequest implements ArrayAccess
     {
         $this->session = $session;
         return $this;
+    }
+
+    /**
+     * Return injector-registered current request, if one exists
+     *
+     * @return static
+     */
+    public static function inst()
+    {
+        // Ensure we only use a registered HTTPRequest and don't
+        // incidentally construct a singleton
+        if (Injector::inst()->has(static::class)) {
+            return Injector::inst()->get(static::class);
+        }
+        return null;
     }
 }
