@@ -82,8 +82,8 @@ if (!defined('BASE_URL')) {
             $urlSegmentToRemove = substr($path, strlen(BASE_PATH));
             if (substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
                 $baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
-                // Normalise slashes to '/' and rtrim('/')
-                return rtrim(str_replace('\\', '/', $baseURL), '/');
+                // ltrim('.'), normalise slashes to '/', and rtrim('/')
+                return rtrim(str_replace('\\', '/', ltrim($baseURL, '.')), '/');
             }
         }
 
