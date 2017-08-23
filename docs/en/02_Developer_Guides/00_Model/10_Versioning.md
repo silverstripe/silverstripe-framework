@@ -21,15 +21,15 @@ also track versioned history.
 
 
 ```php
-    use SilverStripe\Versioned\Versioned;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DataObject;
 
-    class MyStagedModel extends DataObject 
-    {
-        private static $extensions = [
-            Versioned::class
-        ];
-    }
+class MyStagedModel extends DataObject 
+{
+    private static $extensions = [
+        Versioned::class
+    ];
+}
 ```
 
 Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
@@ -37,14 +37,14 @@ can be specified by setting the constructor argument to "Versioned"
 
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class VersionedModel extends DataObject 
-    {
-        private static $extensions = [
-            "SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
-        ];
-    }
+class VersionedModel extends DataObject 
+{
+    private static $extensions = [
+        "SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
+    ];
+}
 ```
 
 <div class="notice" markdown="1">
@@ -56,6 +56,49 @@ The extension is automatically applied to `SiteTree` class. For more information
 Versioning only works if you are adding the extension to the base class. That is, the first subclass
 of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
 </div>
+
+## Versioned gridfield extension
+
+By default the versioned module includes a `VersionedGridfieldDetailForm` that can extend gridfield
+with versioning support for models.
+
+You can enable this on a per-model basis using the following code:
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+class MyBanner extends DataObject {
+    private static $extensions = [
+        Versioned::class,
+    ];
+    private static $versioned_gridfield_extensions = true;
+}
+```
+
+This can be manually enabled for a single gridfield, alternatively, by setting the following option on the
+GridFieldDetailForm component.
+
+```php
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Versioned\VersionedGridFieldItemRequest;
+class Page extends SiteTree
+{
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $config = GridFieldConfig_RelationEditor::create();
+        $config
+            ->getComponentByType(GridFieldDetailForm::class)
+            ->setItemRequestClass(VersionedGridFieldItemRequest::class);
+        $gridField = GridField::create('Items', 'Items', $this->Items(), $config);
+        $fields->addFieldToTab('Root.Items', $gridField);
+        return $fields;
+    }
+}
+```
 
 ## Database Structure
 
@@ -87,13 +130,13 @@ By default, all records are retrieved from the "Draft" stage (so the `MyRecord` 
 explicitly request a certain stage through various getters on the `Versioned` class.
 
 ```php
-    // Fetching multiple records
-    $stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
-    $liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
+// Fetching multiple records
+$stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
+$liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
 
-    // Fetching a single record
-    $stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
-    $liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
+// Fetching a single record
+$stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
+$liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
 ```
 
 ### Historical Versions
@@ -102,7 +145,7 @@ The above commands will just retrieve the latest version of its respective stage
 in the `<class>_versions` tables.
 
 ```php
-    $historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
+$historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
 ```
 
 <div class="alert" markdown="1">
@@ -115,9 +158,9 @@ objects, which expose the same database information as a `DataObject`, but also 
 a record was published.
 	
 ```php
-    $record = MyRecord::get()->byID(99); // stage doesn't matter here
-    $versions = $record->allVersions();
-    echo $versions->First()->Version; // instance of Versioned_Version
+$record = MyRecord::get()->byID(99); // stage doesn't matter here
+$versions = $record->allVersions();
+echo $versions->First()->Version; // instance of Versioned_Version
 ```
 
 ### Writing Versions and Changing Stages
@@ -141,21 +184,21 @@ done via one of several ways:
    See "DataObject ownership" for reference on dependant objects.
 
 ```php
-    $record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
-    $record->MyField = 'changed';
-    // will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
-    // and write a row to `MyRecord_versions`.
-    $record->write(); 
-    // will copy the saved record information to the `MyRecord_Live` table
-    $record->publishRecursive();
+$record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
+$record->MyField = 'changed';
+// will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
+// and write a row to `MyRecord_versions`.
+$record->write(); 
+// will copy the saved record information to the `MyRecord_Live` table
+$record->publishRecursive();
 ```
 
 Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
 
 ```php
-    $record = MyRecord::get()->byID(99); // stage doesn't matter here
-    // will remove the row from the `MyRecord_Live` table
-    $record->deleteFromStage(Versioned::LIVE);
+$record = MyRecord::get()->byID(99); // stage doesn't matter here
+// will remove the row from the `MyRecord_Live` table
+$record->deleteFromStage(Versioned::LIVE);
 ```
 
 ### Forcing the Current Stage
@@ -164,11 +207,11 @@ The current stage is stored as global state on the object. It is usually modifie
 is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
 ```php
-    $origMode = Versioned::get_reading_mode(); // save current mode
-    $obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
-    Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
-    $obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
-    Versioned::set_reading_mode($origMode); // reset current mode
+$origMode = Versioned::get_reading_mode(); // save current mode
+$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
+Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
+$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
+Versioned::set_reading_mode($origMode); // reset current mode
 ```
 
 ### DataObject ownership
@@ -191,33 +234,32 @@ without requiring any custom code.
 
 
 ```php
-    use SilverStripe\Versioned\Versioned;
-    use SilverStripe\Assets\Image;
-    use Page;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\Assets\Image;
+use Page;
 
-    class MyPage extends Page 
-    {
-        private static $has_many = [
-            'Banners' => Banner::class
-        ];
-        private static $owns = [
-            'Banners'
-        ];
-    }
-    class Banner extends Page 
-    {
-        private static $extensions = [
-            Versioned::class
-        ];
-        private static $has_one = [
-            'Parent' => MyPage::class,
-            'Image' => Image::class,
-        ];
-        private static $owns = [
-            'Image'
-        ];
-    }
-
+class MyPage extends Page 
+{
+    private static $has_many = [
+        'Banners' => Banner::class
+    ];
+    private static $owns = [
+        'Banners'
+    ];
+}
+class Banner extends Page 
+{
+    private static $extensions = [
+        Versioned::class
+    ];
+    private static $has_one = [
+        'Parent' => MyPage::class,
+        'Image' => Image::class,
+    ];
+    private static $owns = [
+        'Image'
+    ];
+}
 ```
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
@@ -236,36 +278,35 @@ that can be used to traverse between each, and then by ensuring you configure bo
 E.g.
 
 ```php
-    use SilverStripe\Versioned\Versioned;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DataObject;
 
-    class MyParent extends DataObject 
+class MyParent extends DataObject 
+{
+    private static $extensions = [
+        Versioned::class
+    ];
+    private static $owns = [
+        'ChildObjects'
+    ];
+    public function ChildObjects() 
     {
-        private static $extensions = [
-            Versioned::class
-        ];
-        private static $owns = [
-            'ChildObjects'
-        ];
-        public function ChildObjects() 
-        {
-            return MyChild::get();
-        }
+        return MyChild::get();
     }
-    class MyChild extends DataObject 
+}
+class MyChild extends DataObject 
+{
+    private static $extensions = [
+        Versioned::class
+    ];
+    private static $owned_by = [
+        'Parent'
+    ];
+    public function Parent() 
     {
-        private static $extensions = [
-            Versioned::class
-        ];
-        private static $owned_by = [
-            'Parent'
-        ];
-        public function Parent() 
-        {
-            return MyParent::get()->first();
-        }
+        return MyParent::get()->first();
     }
-
+}
 ```
 
 #### DataObject Ownership in HTML Content
@@ -286,7 +327,7 @@ smaller modifications of the generated `DataList` objects.
 Example: Get the first 10 live records, filtered by creation date:
 
 ```php
-    $records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
+$records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
 ```
 
 ### Permissions
@@ -310,30 +351,29 @@ Versioned object visibility can be customised in one of the following ways by ed
 E.g.
 
 ```php
- use SilverStripe\Versioned\Versioned;
- use SilverStripe\Security\Permission;
- use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataObject;
 
- class MyObject extends DataObject 
- {
-        private static $extensions = [
-            Versioned::class,
-        ];
-        
-        public function canViewVersioned($member = null) 
-        {
-            // Check if site is live
-            $mode = $this->getSourceQueryParam("Versioned.mode");
-            $stage = $this->getSourceQueryParam("Versioned.stage");
-            if ($mode === 'Stage' && $stage === 'Live') {
-                return true;
-            }
-            
-            // Only admins can view non-live objects
-            return Permission::checkMember($member, 'ADMIN');
+class MyObject extends DataObject 
+{
+    private static $extensions = [
+        Versioned::class,
+    ];
+    
+    public function canViewVersioned($member = null) 
+    {
+        // Check if site is live
+        $mode = $this->getSourceQueryParam("Versioned.mode");
+        $stage = $this->getSourceQueryParam("Versioned.stage");
+        if ($mode === 'Stage' && $stage === 'Live') {
+            return true;
         }
+        
+        // Only admins can view non-live objects
+        return Permission::checkMember($member, 'ADMIN');
     }
-
+}
 ```
 
 If you want to control permissions of an object in an extension, you can also use
@@ -348,16 +388,16 @@ only be invoked if the object is in a non-published state.
 E.g.
 
 ```php
- use SilverStripe\Security\Permission;
- use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataExtension;
 
- class MyObjectExtension extends DataExtension 
- {
-        public function canViewNonLive($member = null) 
-        {
-            return Permission::check($member, 'DRAFT_STATUS');
-        }
+class MyObjectExtension extends DataExtension 
+{
+    public function canViewNonLive($member = null) 
+    {
+        return Permission::check($member, 'DRAFT_STATUS');
     }
+}
 ```
 
 If none of the above checks are overridden, visibility will be determined by the 
@@ -366,17 +406,16 @@ permissions in the `TargetObject.non_live_permissions` config.
 E.g.
 
 ```php
- use SilverStripe\Versioned\Versioned;
- use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DataObject;
 
- class MyObject extends DataObject 
- {
-        private static $extensions = [
-            Versioned::class,
-        ];
-        private static $non_live_permissions = ['ADMIN'];
-    }
-
+class MyObject extends DataObject 
+{
+    private static $extensions = [
+        Versioned::class,
+    ];
+    private static $non_live_permissions = ['ADMIN'];
+}
 ```
 
 Versioned applies no additional permissions to `canEdit` or `canCreate`, and such
@@ -395,11 +434,11 @@ to force a specific stage, we recommend the `Controller->init()` method for this
 
 **mysite/code/MyController.php**
 ```php
-    public function init() 
-    {
-        parent::init();
-        Versioned::set_stage(Versioned::DRAFT);
-    }
+public function init() 
+{
+    parent::init();
+    Versioned::set_stage(Versioned::DRAFT);
+}
 ```
 
 ### Controllers
