@@ -652,7 +652,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function singular_name()
     {
-        $name = $this->stat('singular_name');
+        $name = $this->config()->get('singular_name');
         if ($name) {
             return $name;
         }
@@ -688,7 +688,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function plural_name()
     {
-        if ($name = $this->stat('plural_name')) {
+        if ($name = $this->config()->get('plural_name')) {
             return $name;
         }
         $name = $this->singular_name();
@@ -1354,7 +1354,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $this->record['Created'] = $now;
             }
             $this->record['LastEdited'] = $now;
-            
+
             // New records have their insert into the base data table done first, so that they can pass the
             // generated primary key on to the rest of the manipulation
             $baseTable = $this->baseTable();
@@ -3083,7 +3083,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $fields,
                 $indexes,
                 $hasAutoIncPK,
-                $this->stat('create_table_options'),
+                $this->config()->get('create_table_options'),
                 $extensions
             );
         } else {
@@ -3173,7 +3173,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function searchableFields()
     {
         // can have mixed format, need to make consistent in most verbose form
-        $fields = $this->stat('searchable_fields');
+        $fields = $this->config()->get('searchable_fields');
         $labels = $this->fieldLabels();
 
         // fallback to summary fields (unless empty array is explicitly specified)
@@ -3221,7 +3221,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 //   'title' => 'My Title', // optional
                 // ))
                 $rewrite[$identifer] = array_merge(
-                    array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
+                    array('filter' => $this->relObject($identifer)->config()->get('default_search_filter_class')),
                     (array)$specOrName
                 );
             } else {
@@ -3275,7 +3275,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $cacheKey = static::class . '_' . $includerelations;
 
         if (!isset(self::$_cache_field_labels[$cacheKey])) {
-            $customLabels = $this->stat('field_labels');
+            $customLabels = $this->config()->get('field_labels');
             $autoLabels = array();
 
             // get all translated static properties as defined in i18nCollectStatics()
@@ -3336,7 +3336,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function summaryFields()
     {
-        $fields = $this->stat('summary_fields');
+        $fields = $this->config()->get('summary_fields');
 
         // if fields were passed in numeric array,
         // convert to an associative array

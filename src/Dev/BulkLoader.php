@@ -201,7 +201,7 @@ abstract class BulkLoader extends ViewableData
      */
     public function Title()
     {
-        $title = $this->stat('title');
+        $title = $this->config()->get('title');
         return $title ?: static::class;
     }
 

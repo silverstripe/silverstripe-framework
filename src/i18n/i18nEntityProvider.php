@@ -35,7 +35,7 @@ interface i18nEntityProvider
      *   public function provideI18nEntities()
      *   {
      *     $entities = [];
-     *     foreach($this->stat('my_static_array) as $key => $value) {
+     *     foreach($this->config()->get('my_static_array) as $key => $value) {
      *       $entities["MyTestClass.my_static_array_{$key}"] = $value;
      *     }
      *     $entities["MyTestClass.PLURALS"] = [
