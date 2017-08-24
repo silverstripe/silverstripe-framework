@@ -233,11 +233,17 @@ class DB
         if (Director::is_cli()) {
             return false;
         }
+        // Skip if there's no request object yet
         if (!Injector::inst()->has(HTTPRequest::class)) {
             return null;
         }
         /** @var HTTPRequest $request */
         $request = Injector::inst()->get(HTTPRequest::class);
+        // Skip if the session hasn't been started
+        if (!$request->getSession()->isStarted()) {
+            return null;
+        }
+
         $name = $request->getSession()->get(self::ALT_DB_KEY);
         if (self::valid_alternative_database_name($name)) {
             return $name;
