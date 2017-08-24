@@ -373,4 +373,15 @@ class FormFieldTest extends SapphireTest
             $schema['message']['value']
         );
     }
+
+    public function testHasClass()
+    {
+        $field = new FormField('Test');
+        $field->addExtraClass('foo BAr cool-banana');
+
+        $this->assertTrue($field->hasClass('foo'));
+        $this->assertTrue($field->hasClass('bAr'));
+        $this->assertFalse($field->hasClass('banana'));
+        $this->assertTrue($field->hasClass('cool-BAnana'));
+    }
 }
