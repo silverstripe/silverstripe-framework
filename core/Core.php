@@ -124,7 +124,7 @@ $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigYamlManifest($configManifest);
 
 // Load template manifest
-SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+SS_TemplateLoader::instance()->pushManifest(Injector::inst()->create('SS_TemplateManifest',
 	BASE_PATH, project(), false, $flush
 ));
 
