@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use function GuzzleHttp\Psr7\parse_query;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -34,11 +35,18 @@ class ParameterConfirmationToken
     protected $request = null;
 
     /**
-     * The parameter given
+     * The parameter given in the main request
      *
      * @var string|null The string value, or null if not provided
      */
     protected $parameter = null;
+
+    /**
+     * The parameter given in the backURL
+     *
+     * @var string|null
+     */
+    protected $parameterBackURL = null;
 
     /**
      * The validated and checked token for this parameter
@@ -106,12 +114,36 @@ class ParameterConfirmationToken
 
         // Store the parameter value
         $this->parameter = $request->getVar($parameterName);
+        $this->parameterBackURL = $this->backURLToken($request);
 
         // If the token provided is valid, mark it as such
         $token = $request->getVar($parameterName.'token');
         if ($this->checkToken($token)) {
             $this->token = $token;
         }
+    }
+
+    /**
+     * Check if this token exists in the BackURL
+     *
+     * @param HTTPRequest $request
+     * @return string Value of token in backurl, or null if not in backurl
+     */
+    protected function backURLToken(HTTPRequest $request)
+    {
+        $backURL = $request->getVar('BackURL');
+        if (!strstr($backURL, '?')) {
+            return null;
+        }
+
+        // Filter backURL if it contains the given request parameter
+        list(,$query) = explode('?', $backURL);
+        $queryArgs = parse_query($query);
+        $name = $this->getName();
+        if (isset($queryArgs[$name])) {
+            return $queryArgs[$name];
+        }
+        return null;
     }
 
     /**
@@ -136,6 +168,16 @@ class ParameterConfirmationToken
     }
 
     /**
+     * Is the parmeter requested in a BackURL param?
+     *
+     * @return bool
+     */
+    public function existsInReferer()
+    {
+        return $this->parameterBackURL !== null;
+    }
+
+    /**
      * Is the necessary token provided for this parameter?
      * A value must be provided for the token
      *
@@ -157,6 +199,18 @@ class ParameterConfirmationToken
     }
 
     /**
+     * Check if this token is provided either in the backurl, or directly,
+     * but without a token
+     *
+     * @return bool
+     */
+    public function reloadRequiredIfError()
+    {
+        // Don't reload if token exists
+        return $this->reloadRequired() || $this->existsInReferer();
+    }
+
+    /**
      * Suppress the current parameter by unsetting it from $_GET
      */
     public function suppress()
@@ -167,14 +221,18 @@ class ParameterConfirmationToken
     /**
      * Determine the querystring parameters to include
      *
+     * @param bool $includeToken Include the token value as well?
      * @return array List of querystring parameters with name and token parameters
      */
-    public function params()
+    public function params($includeToken = true)
     {
-        return array(
+        $params = array(
             $this->parameterName => $this->parameter,
-            $this->parameterName.'token' => $this->genToken()
         );
+        if ($includeToken) {
+            $params[$this->parameterName . 'token'] = $this->genToken();
+        }
+        return $params;
     }
 
     /**
@@ -191,18 +249,33 @@ class ParameterConfirmationToken
     }
 
     /**
+     * Get redirection URL
+     *
+     * @return string
+     */
+    protected function redirectURL()
+    {
+        // If url is encoded via BackURL, defer to home page (prevent redirect to form action)
+        if ($this->existsInReferer() && !$this->parameterProvided()) {
+            $url = BASE_URL ?: '/';
+            $params = $this->params();
+        } else {
+            $url = $this->currentURL();
+            $params = array_merge($this->request->getVars(), $this->params());
+        }
+
+        // Merge get params with current url
+        return Controller::join_links($url, '?' . http_build_query($params));
+    }
+
+    /**
      * Forces a reload of the request with the token included
      *
      * @return HTTPResponse
      */
     public function reloadWithToken()
     {
-        // Merge get params with current url
-        $params = array_merge($this->request->getVars(), $this->params());
-        $location = Controller::join_links(
-            $this->currentURL(),
-            '?'.http_build_query($params)
-        );
+        $location = $this->redirectURL();
         $locationJS = Convert::raw2js($location);
         $locationATT = Convert::raw2att($location);
         $body = <<<HTML
@@ -231,7 +304,7 @@ HTML;
         foreach ($keys as $key) {
             $token = new ParameterConfirmationToken($key, $request);
             // Validate this token
-            if ($token->reloadRequired()) {
+            if ($token->reloadRequired() || $token->reloadRequiredIfError()) {
                 $token->suppress();
                 $target = $token;
             }

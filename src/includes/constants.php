@@ -75,6 +75,13 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', call_user_func(function () {
+        // Prefer explicitly provided SS_BASE_URL
+        $base = getenv('SS_BASE_URL');
+        if ($base) {
+            // Strip relative path from SS_BASE_URL
+            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+        }
+
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
         // This tends not to work on CLI
         $path = realpath($_SERVER['SCRIPT_FILENAME']);
@@ -85,13 +92,6 @@ if (!defined('BASE_URL')) {
                 // ltrim('.'), normalise slashes to '/', and rtrim('/')
                 return rtrim(str_replace('\\', '/', ltrim($baseURL, '.')), '/');
             }
-        }
-
-        // Fall back to SS_BASE_URL
-        $base = getenv('SS_BASE_URL');
-        if ($base) {
-            // Strip relative path from SS_BASE_URL
-            return rtrim(parse_url($base, PHP_URL_PATH), '/');
         }
 
         // Assume no base_url
