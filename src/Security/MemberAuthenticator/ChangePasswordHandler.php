@@ -3,12 +3,15 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use Psr\Container\NotFoundExceptionInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -195,6 +198,8 @@ class ChangePasswordHandler extends RequestHandler
      * @param array $data The user submitted data
      * @param ChangePasswordForm $form
      * @return HTTPResponse
+     * @throws ValidationException
+     * @throws NotFoundExceptionInterface
      */
     public function doChangePassword(array $data, $form)
     {
@@ -272,13 +277,12 @@ class ChangePasswordHandler extends RequestHandler
         $member->AutoLoginExpired = DBDatetime::create()->now();
         $member->write();
 
-        if ($member->canLogIn()) {
+        if ($member->canLogin()) {
             /** @var IdentityStore $identityStore */
             $identityStore = Injector::inst()->get(IdentityStore::class);
             $identityStore->logIn($member, false, $this->getRequest());
         }
 
-        // TODO Add confirmation message to login redirect
         $session->clear('AutoLoginHash');
 
         // Redirect to backurl
@@ -290,6 +294,10 @@ class ChangePasswordHandler extends RequestHandler
             return $this->redirect($backURL);
         }
 
+        $backURL = Security::config()->get('default_reset_password_dest');
+        if ($backURL) {
+            return $this->redirect($backURL);
+        }
         // Redirect to default location - the login form saying "You are logged in as..."
         $url = Security::singleton()->Link('login');
 
