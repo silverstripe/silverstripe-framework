@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\Connect\DatabaseException;
 
 class AuthenticationMiddleware implements HTTPMiddleware
 {
@@ -44,17 +45,17 @@ class AuthenticationMiddleware implements HTTPMiddleware
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
-        if (Security::database_is_ready()) {
-            try {
-                $this
-                    ->getAuthenticationHandler()
-                    ->authenticateRequest($request);
-            } catch (ValidationException $e) {
-                return new HTTPResponse(
-                    "Bad log-in details: " . $e->getMessage(),
-                    400
-                );
-            }
+        try {
+            $this
+                ->getAuthenticationHandler()
+                ->authenticateRequest($request);
+        } catch (ValidationException $e) {
+            return new HTTPResponse(
+                "Bad log-in details: " . $e->getMessage(),
+                400
+            );
+        } catch (DatabaseException $e) {
+            // Database isn't ready, carry on.
         }
 
         return $delegate($request);
