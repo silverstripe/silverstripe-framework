@@ -704,25 +704,24 @@ class Requirements_Backend
      */
     public function clear($fileOrID = null)
     {
-        if ($fileOrID) {
-            foreach (array('javascript', 'css', 'customScript', 'customCSS', 'customHeadTags') as $type) {
+        $types = [
+            'javascript',
+            'css',
+            'customScript',
+            'customCSS',
+            'customHeadTags',
+            'combinedFiles',
+        ];
+        foreach ($types as $type) {
+            if ($fileOrID) {
                 if (isset($this->{$type}[$fileOrID])) {
                     $this->disabled[$type][$fileOrID] = $this->{$type}[$fileOrID];
                     unset($this->{$type}[$fileOrID]);
                 }
+            } else {
+                $this->disabled[$type] = $this->{$type};
+                $this->{$type} = [];
             }
-        } else {
-            $this->disabled['javascript'] = $this->javascript;
-            $this->disabled['css'] = $this->css;
-            $this->disabled['customScript'] = $this->customScript;
-            $this->disabled['customCSS'] = $this->customCSS;
-            $this->disabled['customHeadTags'] = $this->customHeadTags;
-
-            $this->javascript = array();
-            $this->css = array();
-            $this->customScript = array();
-            $this->customCSS = array();
-            $this->customHeadTags = array();
         }
     }
 
@@ -731,11 +730,17 @@ class Requirements_Backend
      */
     public function restore()
     {
-        $this->javascript = $this->disabled['javascript'];
-        $this->css = $this->disabled['css'];
-        $this->customScript = $this->disabled['customScript'];
-        $this->customCSS = $this->disabled['customCSS'];
-        $this->customHeadTags = $this->disabled['customHeadTags'];
+        $types = [
+            'javascript',
+            'css',
+            'customScript',
+            'customCSS',
+            'customHeadTags',
+            'combinedFiles',
+        ];
+        foreach ($types as $type) {
+            $this->{$type} = $this->disabled[$type];
+        }
     }
 
     /**
