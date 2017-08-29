@@ -1057,11 +1057,42 @@ after'
 
         $this->assertEquals(
             "tests:( NamespaceInclude\n )",
+            $this->render('tests:( <% include Namespace\\NamespaceInclude %> )', $data),
+            'Escaped backslashes work for namespace references in includes'
+        );
+
+        $this->assertEquals(
+            "tests:( NamespaceInclude\n )",
             $this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
             'Forward slashes work for namespace references in includes'
         );
     }
 
+    /**
+     * Test search for includes fallback to non-includes folder
+     */
+    public function testIncludeFallbacks()
+    {
+        $data = new ArrayData([]);
+
+        $this->assertEquals(
+            "tests:( Namespace/Includes/IncludedTwice.ss\n )",
+            $this->render('tests:( <% include Namespace\\IncludedTwice %> )', $data),
+            'Prefer Includes in the Includes folder'
+        );
+
+        $this->assertEquals(
+            "tests:( Namespace/Includes/IncludedOnceSub.ss\n )",
+            $this->render('tests:( <% include Namespace\\IncludedOnceSub %> )', $data),
+            'Includes in only Includes folder can be found'
+        );
+
+        $this->assertEquals(
+            "tests:( Namespace/IncludedOnceBase.ss\n )",
+            $this->render('tests:( <% include Namespace\\IncludedOnceBase %> )', $data),
+            'Includes outside of Includes folder can be found'
+        );
+    }
 
     public function testRecursiveInclude()
     {
