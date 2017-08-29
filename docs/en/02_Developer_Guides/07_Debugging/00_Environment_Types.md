@@ -4,22 +4,8 @@ summary: Configure your SilverStripe environment to define how your web applicat
 # Environment Types
 
 SilverStripe knows three different environment types (or "modes"). Each of the modes gives you different tools
-and behaviors. The environment is managed either through a [YML configuration file](../configuration) or in a 
+and behaviors. The environment is managed either through an 
 [environment configuration file](../../getting_started/environment_management).
-
-The definition of setting an environment type in a `mysite/_config/app.yml` looks like
-
-
-```yml
-
-    SilverStripe\Control\Director:
-      environment_type: 'dev'
-```
-
-The definition of setting an environment type in a `.env` file looks like
-```
-    SS_ENVIRONMENT_TYPE="dev"
-```
 The three environment types you can set are `dev`, `test` and `live`.
 
 ### Dev
