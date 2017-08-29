@@ -4,7 +4,7 @@ summary: Configure your SilverStripe environment to define how your web applicat
 # Environment Types
 
 SilverStripe knows three different environment types (or "modes"). Each of the modes gives you different tools
-and behaviors. The environment is managed either through an 
+and behaviors. The environment is managed by the `SS_ENVIRONMENT_TYPE` variable through an 
 [environment configuration file](../../getting_started/environment_management).
 The three environment types you can set are `dev`, `test` and `live`.
 
