@@ -222,7 +222,7 @@ class DBText extends DBString
                         // Maintain case of original string
                         $summary = preg_replace(
                             '/' . preg_quote($stringPiece, '/') . '/i',
-                            '<span class="highlight">$0</span>',
+                            '<mark>$0</mark>',
                             $summary
                         );
                     }
