@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Install;
 
+use Dotenv\Dotenv;
 use Exception;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
@@ -15,7 +16,6 @@ use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\Security;
 
 /**
- * SilverStripe CMS SilverStripe\Dev\Install\Installer
  * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
  */
 class Installer extends InstallRequirements
@@ -67,41 +67,17 @@ class Installer extends InstallRequirements
         // Render header
         $this->installHeader();
 
-        $webserver = $this->findWebserver();
         $isIIS = $this->isIIS();
         $isApache = $this->isApache();
 
         flush();
 
-        if (isset($config['stats'])) {
-            if (file_exists(FRAMEWORK_PATH . '/silverstripe_version')) {
-                $silverstripe_version = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
-            } else {
-                $silverstripe_version = "unknown";
-            }
-
-            $phpVersion = urlencode(phpversion());
-            $encWebserver = urlencode($webserver);
-            $dbType = $config['db']['type'];
-
-            // Try to determine the database version from the helper
-            $databaseVersion = $config['db']['type'];
-            $helper = $this->getDatabaseConfigurationHelper($dbType);
-            if ($helper && method_exists($helper, 'getDatabaseVersion')) {
-                $versionConfig = $config['db'][$dbType];
-                $versionConfig['type'] = $dbType;
-                $databaseVersion = urlencode($dbType . ': ' . $helper->getDatabaseVersion($versionConfig));
-            }
-
-            $url = "http://ss2stat.silverstripe.com/Installation/add?SilverStripe=$silverstripe_version&PHP=$phpVersion&Database=$databaseVersion&WebServer=$encWebserver";
-
-            if (isset($_SESSION['StatsID']) && $_SESSION['StatsID']) {
-                $url .= '&ID=' . $_SESSION['StatsID'];
-            }
-
-            @$_SESSION['StatsID'] = file_get_contents($url);
+        // Send install stats
+        if (!empty($config['stats'])) {
+            $this->sendInstallStats($config);
         }
 
+        // Cleanup _config.php
         if (file_exists('mysite/_config.php')) {
             // Truncate the contents of _config instead of deleting it - we can't re-create it because Windows handles permissions slightly
             // differently to UNIX based filesystems - it takes the permissions from the parent directory instead of retaining them
@@ -109,69 +85,12 @@ class Installer extends InstallRequirements
             fclose($fh);
         }
 
-        // Escape user input for safe insertion into PHP file
-        $theme = isset($_POST['template']) ? addcslashes($_POST['template'], "\'") : 'simple';
-        $locale = isset($_POST['locale']) ? addcslashes($_POST['locale'], "\'") : 'en_US';
-        $type = addcslashes($config['db']['type'], "\'");
-        $dbConfig = $config['db'][$type];
-        foreach ($dbConfig as &$configValue) {
-            $configValue = addcslashes($configValue, "\\\'");
-        }
-        if (!isset($dbConfig['path'])) {
-            $dbConfig['path'] = '';
-        }
-        if (!$dbConfig) {
-            echo "<p style=\"color: red\">Bad config submitted</p><pre>";
-            print_r($config);
-            echo "</pre>";
-            die();
-        }
+        // Write all files
+        $this->writeConfigPHP($config);
+        $this->writeConfigYaml($config);
+        $this->writeConfigEnv($config);
 
-        // Write the config file
-        global $usingEnv;
-        if ($usingEnv) {
-            $this->statusMessage("Setting up 'mysite/_config.php' for use with environment variables...");
-            $this->writeToFile("mysite/_config.php", "<?php\n ");
-        } else {
-            $this->statusMessage("Setting up 'mysite/_config.php'...");
-            // Create databaseConfig
-            $lines = array(
-                $lines[] = "    'type' => '$type'"
-            );
-            foreach ($dbConfig as $key => $value) {
-                $lines[] = "    '{$key}' => '$value'";
-            }
-            $databaseConfigContent = implode(",\n", $lines);
-            $this->writeToFile("mysite/_config.php", <<<PHP
-<?php
-
-use SilverStripe\\ORM\\DB;
-
-DB::setConfig([
-{$databaseConfigContent}
-]);
-
-PHP
-            );
-        }
-
-        $this->statusMessage("Setting up 'mysite/_config/theme.yml'");
-        $this->writeToFile("mysite/_config/theme.yml", <<<YML
----
-Name: mytheme
----
-# YAML configuration for SilverStripe
-# See http://doc.silverstripe.org/framework/en/topics/configuration
-# Caution: Indentation through two spaces, not tabs
-SilverStripe\\View\\SSViewer:
-  themes:
-    - '$theme'
-    - '\$default'
-SilverStripe\\i18n\\i18n:
-  default_locale: '$locale'
-YML
-        );
-
+        // Write other stuff
         if (!$this->checkModuleExists('cms')) {
             $this->writeToFile("mysite/code/RootURLController.php", <<<PHP
 <?php
@@ -192,10 +111,8 @@ PHP
         // Write the appropriate web server configuration file for rewriting support
         if ($this->hasRewritingCapability()) {
             if ($isApache) {
-                $this->statusMessage("Setting up '.htaccess' file...");
                 $this->createHtaccess();
             } elseif ($isIIS) {
-                $this->statusMessage("Setting up 'web.config' file...");
                 $this->createWebConfig();
             }
         }
@@ -282,18 +199,187 @@ HTML;
         return $this->errors;
     }
 
+    /**
+     * Write all .env files
+     *
+     * @param $config
+     */
+    protected function writeConfigEnv($config)
+    {
+        if (!$config['usingEnv']) {
+            return;
+        }
+
+        $path = $this->getBaseDir() . '.env';
+        $vars = [];
+
+        // Retain existing vars
+        // Note: vars with # or " in them are discarded
+        if (file_exists($path)) {
+            $env = new Dotenv($this->getBaseDir());
+            foreach ($env->load() as $line) {
+                if (preg_match('/^(?<key>\w+)\s*=\s*("?)(?<value>[^"#]*)("?)$/', $line, $matches)) {
+                    $vars[$matches['key']] = $matches['value'];
+                }
+            }
+        }
+
+        // Set base URL
+        if (!isset($vars['SS_BASE_URL']) && isset($_SERVER['HTTP_HOST'])) {
+            $vars['SS_BASE_URL'] = 'http://' . $_SERVER['HTTP_HOST'] . BASE_URL;
+        }
+
+        // Set DB env
+        if (empty($config['db']['database'])) {
+            $vars['SS_DATABASE_CHOOSE_NAME'] = true;
+        } else {
+            $vars['SS_DATABASE_NAME'] = $config['db']['database'];
+        }
+        $vars['SS_DATABASE_CLASS'] = $config['db']['type'];
+        if (isset($config['db']['server'])) {
+            $vars['SS_DATABASE_SERVER'] = $config['db']['server'];
+        }
+        if (isset($config['db']['username'])) {
+            $vars['SS_DATABASE_USERNAME'] = $config['db']['username'];
+        }
+        if (isset($config['db']['password'])) {
+            $vars['SS_DATABASE_PASSWORD'] = $config['db']['password'];
+        }
+        if (isset($config['db']['path'])) {
+            $vars['SS_DATABASE_PATH'] = $config['db']['path'];
+            // sqlite compat
+            $vars['SS_SQLITE_DATABASE_PATH'] = $config['db']['path'];
+        }
+        if (isset($config['db']['key'])) {
+            $vars['SS_DATABASE_KEY'] = $config['db']['key'];
+            // sqlite compat
+            $vars['SS_SQLITE_DATABASE_KEY'] = $config['db']['key'];
+        }
+
+        // Write all env vars
+        $lines = [
+            '# Generated by SilverStripe Installer'
+        ];
+        ksort($vars);
+        foreach ($vars as $key => $value) {
+            $lines[] = $key.'="'.addcslashes($value, '"').'"';
+        }
+
+        $this->writeToFile('.env', implode("\n", $lines));
+
+        // Re-load env vars for installer access
+        $path = $this->getBaseDir();
+        (new Dotenv($path))->load();
+    }
+
+    /**
+     * Write all *.php files
+     *
+     * @param array $config
+     */
+    protected function writeConfigPHP($config)
+    {
+        if ($config['usingEnv']) {
+            $this->writeToFile("mysite/_config.php", "<?php\n ");
+            return;
+        }
+
+        // Create databaseConfig
+        $lines = [];
+        foreach ($config['db'] as $key => $value) {
+            $lines[] = sprintf(
+                "    '%s' => '%s'",
+                addslashes($key),
+                addslashes($value)
+            );
+        }
+        $databaseConfigContent = implode(",\n", $lines);
+        $this->writeToFile("mysite/_config.php", <<<PHP
+<?php
+
+use SilverStripe\\ORM\\DB;
+
+DB::setConfig([
+{$databaseConfigContent}
+]);
+
+PHP
+        );
+    }
+
+    /**
+     * Write yml files
+     *
+     * @param array $config
+     */
+    protected function writeConfigYaml($config)
+    {
+        // Escape user input for safe insertion into PHP file
+        $locale = $this->ymlString($config['locale']);
+
+        // Set either specified, or no theme
+        if ($config['theme'] && $config['theme'] !== 'tutorial') {
+            $theme = $this->ymlString($config['theme']);
+            $themeYML = <<<YML
+    - '$theme'
+    - '\$default'
+YML;
+        } else {
+            $themeYML = <<<YML
+    - '\$default'
+YML;
+        }
+
+        // Write theme.yml
+        $this->writeToFile("mysite/_config/theme.yml", <<<YML
+---
+Name: mytheme
+---
+SilverStripe\\View\\SSViewer:
+  themes:
+$themeYML
+SilverStripe\\i18n\\i18n:
+  default_locale: '$locale'
+YML
+        );
+    }
+
+    /**
+     * Escape yml string
+     *
+     * @param string $string
+     * @return mixed
+     */
+    protected function ymlString($string)
+    {
+        // just escape single quotes using ''
+        return str_replace("'", "''", $string);
+    }
+
+    /**
+     * Write file to given location
+     *
+     * @param $filename
+     * @param $content
+     * @return bool
+     */
     public function writeToFile($filename, $content)
     {
         $base = $this->getBaseDir();
         $this->statusMessage("Setting up $base$filename");
 
         if ((@$fh = fopen($base . $filename, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
+            // Set permissions to writable
+            @chmod($base . $filename, 0775);
             return true;
         }
         $this->error("Couldn't write to file $base$filename");
         return false;
     }
 
+    /**
+     * Ensure root .htaccess is setup
+     */
     public function createHtaccess()
     {
         $start = "### SILVERSTRIPE START ###\n";
@@ -473,18 +559,6 @@ TEXT;
 HTML;
     }
 
-    public function var_export_array_nokeys($array)
-    {
-        $retval = "array(\n";
-        foreach ($array as $item) {
-            $retval .= "\t'";
-            $retval .= trim($item);
-            $retval .= "',\n";
-        }
-        $retval .= ")";
-        return $retval;
-    }
-
     /**
      * Show an installation status message.
      * The output differs depending on whether this is CLI or web based
@@ -495,5 +569,30 @@ HTML;
     {
         echo "<li>$msg</li>\n";
         flush();
+    }
+
+    /**
+     * @param $config
+     */
+    protected function sendInstallStats($config)
+    {
+        // Try to determine the database version from the helper
+        $dbType = $config['db']['type'];
+        $helper = $this->getDatabaseConfigurationHelper($dbType);
+        if ($helper) {
+            $databaseVersion = $dbType . ': ' . $helper->getDatabaseVersion($config['db']);
+        } else {
+            $databaseVersion = $dbType;
+        }
+
+        $args = http_build_query(array_filter([
+            'SilverStripe' => $config['version'],
+            'PHP' => phpversion(),
+            'Database' => $databaseVersion,
+            'WebServer' => $this->findWebserver(),
+            'ID' => empty($_SESSION['StatsID']) ? null : $_SESSION['StatsID']
+        ]));
+        $url = "http://ss2stat.silverstripe.com/Installation/add?{$args}";
+        @$_SESSION['StatsID'] = file_get_contents($url);
     }
 }

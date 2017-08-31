@@ -10,15 +10,13 @@
  ************************************************************************************/
 
 /**
- * PHP version check. Make sure we've got at least PHP 5.5.0 in the most friendly way possible
+ * PHP version check. Make sure we've got at least PHP 5.6.0 in the most friendly way possible
  */
-define('FRAMEWORK_NAME', 'framework');
-
-if (version_compare(phpversion(), '5.5.0', '<')) {
+if (version_compare(phpversion(), '5.6.0', '<')) {
     header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
     echo str_replace(
-        array('$PHPVersion', 'sapphire'),
-        array(phpversion(), FRAMEWORK_NAME),
+        '$PHPVersion',
+        phpversion(),
         file_get_contents(__DIR__ . "/php5-required.html")
     );
     die();

@@ -223,7 +223,7 @@ class DatabaseAdmin extends Controller
             // Assumes database class is like "MySQLDatabase" or "MSSQLDatabase" (suffixed with "Database")
             $dbType = substr(get_class($conn), 0, -8);
             $dbVersion = $conn->getVersion();
-            $databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->getSelectedDatabase() : "";
+            $databaseName = $conn->getSelectedDatabase();
 
             if (Director::is_cli()) {
                 echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);

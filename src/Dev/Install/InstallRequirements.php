@@ -50,17 +50,22 @@ class InstallRequirements
             return false;
         }
 
+        $path = empty($databaseConfig['path']) ? null : $databaseConfig['path'];
+        $server = empty($databaseConfig['server']) ? null : $databaseConfig['server'];
+
         // Check if the server is available
-        $usePath = !empty($databaseConfig['path']) && empty($databaseConfig['server']);
+        $usePath = $path && empty($server);
         if (!$this->requireDatabaseServer(
             $databaseConfig,
             array(
                 "Database Configuration",
                 "Database server",
                 $usePath
-                    ? "I couldn't write to path '$databaseConfig[path]'"
-                    : "I couldn't find a database server on '$databaseConfig[server]'",
-                $usePath ? $databaseConfig['path'] : $databaseConfig['server']
+                    ? "I couldn't write to path '{$path}'"
+                    : "I couldn't find a database server on '{$server}'",
+                $usePath
+                    ? $path
+                    : $server
             )
         )
         ) {
