@@ -137,8 +137,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_classname = null;
 
     /**
-     * True if this DataObject has been destroyed.
-     * @var boolean
+     * @deprecated 4.0..5.0
+     * @var bool
      */
     public $destroyed = false;
 
@@ -386,8 +386,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function destroy()
     {
-        //$this->destroyed = true;
-        gc_collect_cycles();
         $this->flushCache(false);
     }
 
@@ -2868,12 +2866,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
         $cacheKey = md5(var_export($cacheComponents, true));
 
-        // Flush destroyed items out of the cache
-        if ($cache && isset(self::$_cache_get_one[$callerClass][$cacheKey])
-                && self::$_cache_get_one[$callerClass][$cacheKey] instanceof DataObject
-                && self::$_cache_get_one[$callerClass][$cacheKey]->destroyed) {
-            self::$_cache_get_one[$callerClass][$cacheKey] = false;
-        }
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
             $dl = DataObject::get($callerClass)->where($filter)->sort($orderby);

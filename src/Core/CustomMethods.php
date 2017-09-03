@@ -61,9 +61,11 @@ trait CustomMethods
                 return $config['callback']($this, $arguments);
             }
             case isset($config['property']) : {
-                $obj = $config['index'] !== null ?
-                    $this->{$config['property']}[$config['index']] :
-                    $this->{$config['property']};
+                $property = $config['property'];
+                $index = $config['index'];
+                $obj = $index !== null ?
+                    $this->{$property}[$index] :
+                    $this->{$property};
 
                 if ($obj) {
                     if (!empty($config['callSetOwnerFirst'])) {
@@ -78,16 +80,10 @@ trait CustomMethods
                     return $retVal;
                 }
 
-                if (!empty($this->destroyed)) {
-                    throw new BadMethodCallException(
-                        "Object->__call(): attempt to call $method on a destroyed $class object"
-                    );
-                } else {
-                    throw new BadMethodCallException(
-                        "Object->__call(): $class cannot pass control to $config[property]($config[index])."
-                        . ' Perhaps this object was mistakenly destroyed?'
-                    );
-                }
+                throw new BadMethodCallException(
+                    "Object->__call(): {$class} cannot pass control to {$property}({$index})."
+                    . ' Perhaps this object was mistakenly destroyed?'
+                );
             }
             case isset($config['wrap']): {
                 array_unshift($arguments, $config['method']);
