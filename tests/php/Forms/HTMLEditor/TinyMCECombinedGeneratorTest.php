@@ -37,7 +37,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');
         $c->setOption('language', 'en');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
+        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(
             array(
                 'plugin1' => 'mycode/plugin1.js', //
@@ -100,7 +100,7 @@ EOS
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');
         $c->setOption('language', 'en');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
+        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(['plugin1' => 'mycode/plugin1.js']);
         HTMLEditorConfig::set_config('testconfig', $c);
 
