@@ -40,6 +40,7 @@ To extend the options available in the panel, define your own fields via a [Data
 
 
 ```php
+    use SilverStripe\Forms\FieldList;
     use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
     use SilverStripe\ORM\DataExtension;
 
