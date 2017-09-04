@@ -605,6 +605,26 @@ class TreeDropdownField extends FormField
         $callback = $this->getDisableFunction();
         return $callback && call_user_func($callback, $node);
     }
+    
+    /**
+     * Attributes to be given for this field type
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $attributes = array(
+            'class' => $this->extraClass(),
+            'id' => $this->ID(),
+            'data-schema' => json_encode($this->getSchemaData()),
+            'data-state' => json_encode($this->getSchemaState()),
+        );
+        
+        $attributes = array_merge($attributes, $this->attributes);
+        
+        $this->extend('updateAttributes', $attributes);
+        
+        return $attributes;
+    }
 
     /**
      * @param string $field
