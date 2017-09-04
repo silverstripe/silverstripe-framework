@@ -29,7 +29,7 @@ class ArrayData extends ViewableData
      * @param object|array $value An associative array, or an object with simple properties.
      * Converts object properties to keys of an associative array.
      */
-    public function __construct($value)
+    public function __construct($value = [])
     {
         if (is_object($value)) {
             $this->array = get_object_vars($value);
