@@ -295,21 +295,21 @@ class DBHTMLTextTest extends SapphireTest
                 'This is some text. It is a test',
                 20,
                 'test',
-                '... text. It is a <span class="highlight">test</span>'
+                '... text. It is a <mark>test</mark>'
             ],
             [
                 // Retains case of original string
                 'This is some test text. Test test what if you have multiple keywords.',
                 50,
                 'some test',
-                'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
-                . ' <span class="highlight">Test</span> <span class="highlight">test</span> what if you have...'
+                'This is <mark>some</mark> <mark>test</mark> text.'
+                . ' <mark>Test</mark> <mark>test</mark> what if you have...'
             ],
             [
                 'Here is some text &amp; HTML included',
                 20,
                 'html',
-                '... text &amp; <span class="highlight">HTML</span> inc...'
+                '... text &amp; <mark>HTML</mark> inc...'
             ],
             [
                 'A dog ate a cat while looking at a Foobar',
@@ -323,16 +323,16 @@ class DBHTMLTextTest extends SapphireTest
                 100,
                 'ate',
                 // it should highlight 3 letters or more.
-                'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+                'A dog <mark>ate</mark> a cat while looking at a Foobar',
             ],
 
             // HTML Content is plain-textified, and incorrect tags removed
             [
-                '<p>A dog ate a cat while <span class="highlight">looking</span> at a Foobar</p>',
+                '<p>A dog ate a cat while <mark>looking</mark> at a Foobar</p>',
                 100,
                 'ate',
                 // it should highlight 3 letters or more.
-                'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+                'A dog <mark>ate</mark> a cat while looking at a Foobar',
             ]
         ];
     }
@@ -586,7 +586,7 @@ class DBHTMLTextTest extends SapphireTest
             $field->FirstParagraph()
         );
         $this->assertEquals(
-            'Replaced <span class="highlight">short</span> <span class="highlight">code</span> with this. home',
+            'Replaced <mark>short</mark> <mark>code</mark> with this. home',
             $field->ContextSummary(500, 'short code')
         );
 

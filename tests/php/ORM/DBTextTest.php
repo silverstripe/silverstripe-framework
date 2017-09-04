@@ -214,21 +214,21 @@ class DBTextTest extends SapphireTest
                 'This is some text. It is a test',
                 20,
                 'test',
-                '... text. It is a <span class="highlight">test</span>'
+                '... text. It is a <mark>test</mark>'
             ],
             [
                 // Retains case of original string
                 'This is some test text. Test test what if you have multiple keywords.',
                 50,
                 'some test',
-                'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
-                . ' <span class="highlight">Test</span> <span class="highlight">test</span> what if you have...'
+                'This is <mark>some</mark> <mark>test</mark> text.'
+                . ' <mark>Test</mark> <mark>test</mark> what if you have...'
             ],
             [
                 'Here is some text & HTML included',
                 20,
                 'html',
-                '... text &amp; <span class="highlight">HTML</span> inc...'
+                '... text &amp; <mark>HTML</mark> inc...'
             ],
             [
                 'A dog ate a cat while looking at a Foobar',
@@ -242,7 +242,7 @@ class DBTextTest extends SapphireTest
                 100,
                 'ate',
                 // it should highlight 3 letters or more.
-                'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+                'A dog <mark>ate</mark> a cat while looking at a Foobar',
             ]
         ];
     }

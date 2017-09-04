@@ -175,7 +175,7 @@ class DBText extends DBString
      *
      * @param int $characters Number of characters in the summary
      * @param string $keywords Supplied string ("keywords"). Will fall back to 'Search' querystring arg.
-     * @param bool $highlight Add a highlight <span> element around search query?
+     * @param bool $highlight Add a highlight <mark> element around search query?
      * @param string $prefix Prefix text
      * @param string $suffix Suffix text
      * @return string HTML string with context
