@@ -73,10 +73,15 @@ class MySQLiConnector extends DBConnector
         $selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
 
         // Connection charset and collation
-        $connCharset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_charset');
-        $connCollation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_collation');
+        $connCharset = $this->config()->get('connection_charset');
+        $connCollation = $this->config()->get('connection_collation');
 
         $this->dbConn = mysqli_init();
+
+        // Use native types (MysqlND only)
+        if (defined('MYSQLI_OPT_INT_AND_FLOAT_NATIVE')) {
+            $this->dbConn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
+        }
 
         // Set SSL parameters if they exist. All parameters are required.
         if (array_key_exists('ssl_key', $parameters) &&

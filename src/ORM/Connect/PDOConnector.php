@@ -15,6 +15,8 @@ class PDOConnector extends DBConnector
 
     /**
      * Should ATTR_EMULATE_PREPARES flag be used to emulate prepared statements?
+     * Note: Set this to `null` via config to prevent this value being assigned
+     * (will be left as DB default).
      *
      * @config
      * @var boolean
@@ -102,11 +104,11 @@ class PDOConnector extends DBConnector
     /**
      * Is PDO running in emulated mode
      *
-     * @return boolean
+     * @return bool|null Boolean flag if assigned a value, or null if left unassigned
      */
     public static function is_emulate_prepare()
     {
-        return Config::inst()->get('SilverStripe\ORM\Connect\PDOConnector', 'emulate_prepare');
+        return static::config()->get('emulate_prepare');
     }
 
     public function connect($parameters, $selectDB = false)
@@ -193,9 +195,14 @@ class PDOConnector extends DBConnector
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : self::config()->get('ssl_cipher_default');
         }
 
-        if (self::is_emulate_prepare()) {
-            $options[PDO::ATTR_EMULATE_PREPARES] = true;
+        // Set emulate prepares (unless null / default)
+        $isEmulatePrepares = self::is_emulate_prepare();
+        if (isset($isEmulatePrepares)) {
+            $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
         }
+
+        // Disable stringified fetches
+        $options[PDO::ATTR_STRINGIFY_FETCHES] = false;
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
