@@ -238,27 +238,29 @@ class PermissionCheckboxSetField extends FormField
                     }
 
                     $inheritMessage = '<small>' . $inheritMessage . '</small>';
-                    $icon = ($checked) ? 'check-mark-circle' : 'cancel-circled';
-
-                    // Inherited codes are shown as a gray x
-                    if (Permission::check('ADMIN') && $code != 'ADMIN') {
-                        $icon = 'disable-circled';
-                    }
 
                     // If the field is readonly, add a span that will replace the disabled checkbox input
                     if ($this->readonly) {
+                        $icon = ($checked) ? 'check-mark-circle' : 'cancel-circled';
+                        $record = $this->form->getRecord();
+                        // Inherited codes are shown as a gray x
+                        if ($record && $record instanceof Member &&
+                            Permission::checkMember($record, 'ADMIN') && $code != 'ADMIN') {
+                            $icon = 'plus-circled';
+                        }
+    
                         $options .= "<li class=\"$extraClass\">"
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
                             . "<label {$title}for=\"$itemID\">"
                             . "<span class=\"font-icon-$icon\"></span>"
-                            . "$value$inheritMessage</label>"
+                            . "{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     } else {
                         $options .= "<li class=\"$extraClass\">"
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
-                            . "<label {$title}for=\"$itemID\">$value$inheritMessage</label>"
+                            . "<label {$title}for=\"$itemID\">{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     }
                 }
