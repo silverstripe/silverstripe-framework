@@ -90,7 +90,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
         }
 
         return array(
-            $this->targetFragment => '<p class="grid-csv-button">'. $button->Field() . '</p>'
+            $this->targetFragment => $button->Field()
         );
     }
 
