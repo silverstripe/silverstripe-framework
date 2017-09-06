@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use InvalidArgumentException;
@@ -466,6 +467,21 @@ class Convert
         $f = URLSegmentFilter::create();
         return $f->filter($title);
     }
+
+    /**
+     * Convert a string (normally a title) to a string suitable for using
+     * as a filename. Uses {@link FileNameFilter}.
+     *
+     * @param string
+     * @return string
+     */
+    public static function raw2filename($title)
+    {
+        $f = FileNameFilter::create();
+        return $f->filter($title);
+    }
+
+
 
     /**
      * Normalises newline sequences to conform to (an) OS specific format.
