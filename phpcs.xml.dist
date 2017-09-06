@@ -19,6 +19,9 @@
 		<exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />
 	</rule>
 
+	<!-- include php files only -->
+    <arg name="extensions" value="php,lib,inc,php5"/>
+
 	<!-- PHP-PEG generated file not intended for human consumption -->
 	<exclude-pattern>*/SSTemplateParser.php$</exclude-pattern>
     <exclude-pattern>*/_fakewebroot/*</exclude-pattern>
