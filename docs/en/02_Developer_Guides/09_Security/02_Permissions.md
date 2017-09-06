@@ -47,8 +47,8 @@ class PageController implements PermissionProvider
 ```
 
 
-This can then be used to add a dropdown for permission codes to the security panel.  Permission::get_all_codes() will be
-a helper method that will call providePermissions() on every applicable class, and collate the resuls into a single
+This can then be used to add a dropdown for permission codes to the security panel.  `Permission::get_all_codes()` will be
+a helper method that will call `providePermissions()` on every applicable class, and collate the resuls into a single
 dropdown.
 
 ## Default use
@@ -60,8 +60,6 @@ By default, permissions are used in the following way:
     * If not logged in, the 'View' permissions must be 'anyone logged in' for a page to be displayed in a menu
     * If logged in, you must be allowed to view a page for it to be displayed in a menu
 
-**NOTE:** Should the canView() method on SiteTree  be updated to call Permission::check("SITETREE_VIEW", $this->ID)?
-Making this work well is a subtle business and should be discussed with a few developers.
 
 ## Setting up permissions
 
