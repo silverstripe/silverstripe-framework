@@ -78,8 +78,14 @@ if (!defined('BASE_URL')) {
         // Prefer explicitly provided SS_BASE_URL
         $base = getenv('SS_BASE_URL');
         if ($base) {
-            // Strip relative path from SS_BASE_URL
-            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+            $urlParts = parse_url($base);
+            // If the protocol is defined, we need 'host'
+            if (array_key_exists('host', $urlParts)) {
+                return rtrim($urlParts['host'], '/');
+            // If the protocol is NOT defined, we need 'path'
+            } elseif (array_key_exists('path', $urlParts)) {
+                return rtrim($urlParts['path'], '/');
+            }
         }
 
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
