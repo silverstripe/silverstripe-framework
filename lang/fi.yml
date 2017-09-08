@@ -1,4 +1,6 @@
 fi:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: tuntematon
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Mitat
     EDIT: Muokkaa
@@ -17,6 +19,8 @@ fi:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
     REQUEST_ABORTED: 'Pyyntö keskeytetty'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Tuntematon
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -253,8 +257,6 @@ fi:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'Sähköposti & Salasana'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Käyttäjän salasanat'
     PLURALS:
@@ -313,6 +315,7 @@ fi:
     ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
     ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään jotta voit vaihtaa salasanasi.'
     LOGIN: 'Kirjaudu sisään'
+    LOGOUT: 'Kirjaudu ulos'
     LOSTPASSWORDHEADER: 'Unohtunut salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
     NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'

@@ -253,8 +253,6 @@ bg:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Предоставените данни не са коректни. Моля, опитайте отново.'
     NoPassword: 'Този потребител няма парола.'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'Email и парола'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Потребителски пароли'
     PLURALS:
