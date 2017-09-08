@@ -55,6 +55,7 @@ class FormSchemaTest extends SapphireTest
                     'message' => null,
                     'data' => [],
                     'name' => 'SecurityID',
+                    'required' => false,
                 ]
             ],
             'messages' => [],
@@ -82,6 +83,7 @@ class FormSchemaTest extends SapphireTest
                     'data' => [],
                     'message' => null,
                     'name' => 'SecurityID',
+                    'required' => false,
                 ]
             ],
             'messages' => [[
@@ -122,6 +124,7 @@ class FormSchemaTest extends SapphireTest
                     ],
                     'data' => [],
                     'name' => 'Title',
+                    'required' => true,
                 ],
                 [
                     'id' => 'Form_TestForm_SecurityID',
@@ -129,6 +132,7 @@ class FormSchemaTest extends SapphireTest
                     'message' => null,
                     'data' => [],
                     'name' => 'SecurityID',
+                    'required' => false,
                 ]
             ],
             'messages' => [],
