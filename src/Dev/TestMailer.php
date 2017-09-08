@@ -88,8 +88,8 @@ class TestMailer implements Mailer
      * @param string $from
      * @param string $subject
      * @param string $content
-     * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
-     *               'customHeaders', 'htmlContent', 'inlineImages'
+     * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
+     *               'HtmlContent'
      */
     public function findEmail($to, $from = null, $subject = null, $content = null)
     {
@@ -103,7 +103,7 @@ class TestMailer implements Mailer
         foreach ($this->emailsSent as $email) {
             $matched = true;
 
-            foreach (array('To','From','Subject','Content') as $field) {
+            foreach (array('To', 'From', 'Subject', 'Content') as $field) {
                 if ($value = $compare[$field]) {
                     if ($value[0] == '/') {
                         $matched = preg_match($value, $email[$field]);
