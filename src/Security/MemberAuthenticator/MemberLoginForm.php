@@ -180,13 +180,16 @@ class MemberLoginForm extends BaseLoginForm
     protected function getFormActions()
     {
         $actions = FieldList::create(
-            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
+            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in"))
+        );
+
+        if (Security::config()->get('enable_lost_password')) {
             LiteralField::create(
                 'forgotPassword',
                 '<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
                 . _t('SilverStripe\\Security\\Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
-            )
-        );
+            );
+        }
 
         return $actions;
     }
