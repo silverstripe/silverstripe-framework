@@ -1,6 +1,6 @@
 language: php
 
-dist: precise
+dist: trusty
 
 sudo: false
 
@@ -16,8 +16,13 @@ addons:
 env:
   global:
     - COMPOSER_ROOT_VERSION=4.0.x-dev
-    - DISPLAY=":99"
-    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+    - DISPLAY=:99.0
+    - XVFBARGS=":99.0 -ac -screen 0 1024x768x16"
+
+_browsers:
+  firefox: &firefox-esr
+    addons:
+      firefox: latest-esr
 
 matrix:
   fast_finish: true
@@ -45,6 +50,7 @@ matrix:
       env:
        - DB=MYSQL
        - BEHAT_TEST=framework
+      <<: *firefox-esr
     - php: 7.0
       env:
         - DB=MYSQL
@@ -53,6 +59,7 @@ matrix:
       env:
         - DB=MYSQL
         - BEHAT_TEST=cms
+      <<: *firefox-esr
 
 before_script:
 # Init PHP
@@ -84,6 +91,10 @@ before_script:
   - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
   - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
   - if [[ $BEHAT_TEST ]]; then (vendor/bin/selenium-server-standalone > artifacts/selenium.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST ]]; then export GECKODRIVER_DOWNLOAD=`curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest' | python -c "import sys, json; r = json.load(sys.stdin); print([a for a in r['assets'] if 'linux64' in a['name']][0]['browser_download_url']);"`; fi
+  - if [[ $BEHAT_TEST ]]; then curl -L -o geckodriver.tar.gz $GECKODRIVER_DOWNLOAD; fi
+  - if [[ $BEHAT_TEST ]]; then gunzip -c geckodriver.tar.gz | tar xopf -; fi
+  - if [[ $BEHAT_TEST ]]; then chmod +x geckodriver && export PATH=`pwd`/geckodriver:$PATH; fi
   - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
   - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
 
