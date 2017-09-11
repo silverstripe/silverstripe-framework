@@ -941,9 +941,9 @@ class ArrayListTest extends SapphireTest
     {
         $list = new ArrayList(
             array(
-            array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
+            $steve = array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
             array('Name' => 'Bob', 'ID' => 2, 'Age' => 18),
-            array('Name' => 'Clair', 'ID' => 2, 'Age' => 21),
+            $clair = array('Name' => 'Clair', 'ID' => 2, 'Age' => 21),
             array('Name' => 'Oscar', 'ID' => 2, 'Age' => 52),
             array('Name' => 'Mike', 'ID' => 3, 'Age' => 43)
             )
@@ -955,13 +955,9 @@ class ArrayListTest extends SapphireTest
             }
         );
 
-        $expected = array(
-            new ArrayData(array('Name' => 'Steve', 'ID' => 1, 'Age' => 21)),
-            new ArrayData(array('Name' => 'Clair', 'ID' => 2, 'Age' => 21)),
-        );
-
         $this->assertEquals(2, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Clair');
+        $this->assertEquals($steve, $list[0]->toMap(), 'List should only contain Steve and Clair');
+        $this->assertEquals($clair, $list[1]->toMap(), 'List should only contain Steve and Clair');
         $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
     }
 

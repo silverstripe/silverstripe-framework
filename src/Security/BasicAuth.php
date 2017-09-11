@@ -10,6 +10,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
+use SilverStripe\ORM\Connect\DatabaseException;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -72,7 +73,7 @@ class BasicAuth
         $permissionCode = null,
         $tryUsingSessionLogin = true
     ) {
-        if (!Security::database_is_ready() || (Director::is_cli() && static::config()->get('ignore_cli'))) {
+        if ((Director::is_cli() && static::config()->get('ignore_cli'))) {
             return true;
         }
 
@@ -94,19 +95,24 @@ class BasicAuth
 
         $member = null;
 
-        if ($request->getHeader('PHP_AUTH_USER') && $request->getHeader('PHP_AUTH_PW')) {
-            /** @var MemberAuthenticator $authenticator */
-            $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::LOGIN);
+        try {
+            if ($request->getHeader('PHP_AUTH_USER') && $request->getHeader('PHP_AUTH_PW')) {
+                /** @var MemberAuthenticator $authenticator */
+                $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::LOGIN);
 
-            foreach ($authenticators as $name => $authenticator) {
-                $member = $authenticator->authenticate([
-                    'Email' => $request->getHeader('PHP_AUTH_USER'),
-                    'Password' => $request->getHeader('PHP_AUTH_PW'),
-                ], $request);
-                if ($member instanceof Member) {
-                    break;
+                foreach ($authenticators as $name => $authenticator) {
+                    $member = $authenticator->authenticate([
+                        'Email' => $request->getHeader('PHP_AUTH_USER'),
+                        'Password' => $request->getHeader('PHP_AUTH_PW'),
+                    ], $request);
+                    if ($member instanceof Member) {
+                        break;
+                    }
                 }
             }
+        } catch (DatabaseException $e) {
+            // Database isn't ready, let people in
+            return true;
         }
 
         if ($member instanceof Member) {

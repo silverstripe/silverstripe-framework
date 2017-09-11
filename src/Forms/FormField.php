@@ -1247,17 +1247,16 @@ class FormField extends RequestHandler
     }
 
     /**
+     * Returns whether the current field has the given class added
+     *
      * @param string $class
      *
-     * @return int
+     * @return bool
      */
     public function hasClass($class)
     {
-        $patten = '/' . strtolower($class) . '/i';
-
-        $subject = strtolower(static::class . ' ' . $this->extraClass());
-
-        return preg_match($patten, $subject);
+        $classes = explode(' ', strtolower($this->extraClass()));
+        return in_array(strtolower(trim($class)), $classes);
     }
 
     /**

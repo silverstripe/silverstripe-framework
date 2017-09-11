@@ -236,8 +236,6 @@ eo:
     db_LockedOutUntil: 'Elŝlosita ĝis'
     db_Password: Pasvorto
     db_PasswordExpiry: 'Pasvorta Limdato'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'Retpoŝto &amp; Pasvorto'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Membraj pasvortoj'
     PLURALS:

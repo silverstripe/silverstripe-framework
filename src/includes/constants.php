@@ -2,7 +2,6 @@
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-use SilverStripe\Control\Util\IPUtils;
 use SilverStripe\Core\TempFolder;
 
 /**
@@ -18,14 +17,14 @@ use SilverStripe\Core\TempFolder;
  *   See Director::baseFolder(). Can be overwritten by Config::modify()->set(Director::class, 'alternate_base_folder', ).
  * - TEMP_FOLDER: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
  *   See getTempFolder(). No trailing slash.
+ * - ASSETS_DIR: Dir for assets folder. e.g. "assets"
+ * - ASSETS_PATH: Full path to assets folder. e.g. "/var/www/my-webroot/assets"
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
  * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
  * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
- * - TRUSTED_PROXY: true or false, depending on whether the X-Forwarded-* HTTP
- *   headers from the given client are trustworthy (e.g. from a reverse proxy).
  */
 
 require_once __DIR__ . '/functions.php';
@@ -76,6 +75,13 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', call_user_func(function () {
+        // Prefer explicitly provided SS_BASE_URL
+        $base = getenv('SS_BASE_URL');
+        if ($base) {
+            // Strip relative path from SS_BASE_URL
+            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+        }
+
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
         // This tends not to work on CLI
         $path = realpath($_SERVER['SCRIPT_FILENAME']);
@@ -83,16 +89,9 @@ if (!defined('BASE_URL')) {
             $urlSegmentToRemove = substr($path, strlen(BASE_PATH));
             if (substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
                 $baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
-                // Normalise slashes to '/' and rtrim('/')
-                return rtrim(str_replace('\\', '/', $baseURL), '/');
+                // ltrim('.'), normalise slashes to '/', and rtrim('/')
+                return rtrim(str_replace('\\', '/', ltrim($baseURL, '.')), '/');
             }
-        }
-
-        // Fall back to SS_BASE_URL
-        $base = getenv('SS_BASE_URL');
-        if ($base) {
-            // Strip relative path from SS_BASE_URL
-            return rtrim(parse_url($base, PHP_URL_PATH), '/');
         }
 
         // Assume no base_url

@@ -4,6 +4,7 @@ namespace SilverStripe\Core;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Allows an object to declare a set of custom methods
@@ -16,7 +17,7 @@ trait CustomMethods
      *
      * @var array
      */
-    protected static $extra_methods = array();
+    protected static $extra_methods = [];
 
     /**
      * Name of methods to invoke by defineMethods for this instance
@@ -48,10 +49,6 @@ trait CustomMethods
         // If the method cache was cleared by an an Object::add_extension() / Object::remove_extension()
         // call, then we should rebuild it.
         $class = static::class;
-        if (!array_key_exists($class, self::$extra_methods)) {
-            $this->defineMethods();
-        }
-
         $config = $this->getExtraMethodConfig($method);
         if (empty($config)) {
             throw new BadMethodCallException(
@@ -60,10 +57,15 @@ trait CustomMethods
         }
 
         switch (true) {
+            case isset($config['callback']): {
+                return $config['callback']($this, $arguments);
+            }
             case isset($config['property']) : {
-                $obj = $config['index'] !== null ?
-                    $this->{$config['property']}[$config['index']] :
-                    $this->{$config['property']};
+                $property = $config['property'];
+                $index = $config['index'];
+                $obj = $index !== null ?
+                    $this->{$property}[$index] :
+                    $this->{$property};
 
                 if ($obj) {
                     if (!empty($config['callSetOwnerFirst'])) {
@@ -78,29 +80,24 @@ trait CustomMethods
                     return $retVal;
                 }
 
-                if (!empty($this->destroyed)) {
-                    throw new BadMethodCallException(
-                        "Object->__call(): attempt to call $method on a destroyed $class object"
-                    );
-                } else {
-                    throw new BadMethodCallException(
-                        "Object->__call(): $class cannot pass control to $config[property]($config[index])."
-                        . ' Perhaps this object was mistakenly destroyed?'
-                    );
-                }
+                throw new BadMethodCallException(
+                    "Object->__call(): {$class} cannot pass control to {$property}({$index})."
+                    . ' Perhaps this object was mistakenly destroyed?'
+                );
             }
-            case isset($config['wrap']):
+            case isset($config['wrap']): {
                 array_unshift($arguments, $config['method']);
                 return call_user_func_array(array($this, $config['wrap']), $arguments);
-
-                case isset($config['function']):
+            }
+            case isset($config['function']): {
                 return $config['function']($this, $arguments);
-
-                default:
+            }
+            default: {
                 throw new BadMethodCallException(
                     "Object->__call(): extra method $method is invalid on $class:"
-                        . var_export($config, true)
+                    . var_export($config, true)
                 );
+            }
         }
     }
 
@@ -156,9 +153,13 @@ trait CustomMethods
      */
     protected function getExtraMethodConfig($method)
     {
-        $class = static::class;
-        if (isset(self::$extra_methods[$class][strtolower($method)])) {
-            return self::$extra_methods[$class][strtolower($method)];
+        // Lazy define methods
+        if (!isset(self::$extra_methods[static::class])) {
+            $this->defineMethods();
+        }
+
+        if (isset(self::$extra_methods[static::class][strtolower($method)])) {
+            return self::$extra_methods[static::class][strtolower($method)];
         }
         return null;
     }
@@ -228,9 +229,16 @@ trait CustomMethods
 
         $methods = $this->findMethodsFromExtension($extension);
         if ($methods) {
+            if ($extension instanceof Extension) {
+                Deprecation::notice(
+                    '5.0',
+                    'Register custom methods from extensions with addCallbackMethod.'
+                    . ' callSetOwnerFirst will be removed in 5.0'
+                );
+            }
             $methodInfo = array(
                 'property' => $property,
-                'index'    => $index,
+                'index' => $index,
                 'callSetOwnerFirst' => $extension instanceof Extension,
             );
 
@@ -287,10 +295,23 @@ trait CustomMethods
      */
     protected function addWrapperMethod($method, $wrap)
     {
-        $class = static::class;
-        self::$extra_methods[$class][strtolower($method)] = array (
-            'wrap'   => $wrap,
+        self::$extra_methods[static::class][strtolower($method)] = array(
+            'wrap' => $wrap,
             'method' => $method
         );
+    }
+
+    /**
+     * Add callback as a method.
+     *
+     * @param string $method Name of method
+     * @param callable $callback Callback to invoke.
+     * Note: $this is passed as first parameter to this callback and then $args as array
+     */
+    protected function addCallbackMethod($method, $callback)
+    {
+        self::$extra_methods[static::class][strtolower($method)] = [
+            'callback' => $callback,
+        ];
     }
 }

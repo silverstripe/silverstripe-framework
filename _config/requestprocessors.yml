@@ -11,12 +11,12 @@ SilverStripe\Core\Injector\Injector:
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
         RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
         FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
-  SilverStripe\Control\AllowedHostsMiddleware:
+  SilverStripe\Control\Middleware\AllowedHostsMiddleware:
     properties:
-      AllowedHosts: "`SS_ALLOWED_HOSTS`"
-  SilverStripe\Control\TrustedProxyMiddleware:
+      AllowedHosts: '`SS_ALLOWED_HOSTS`'
+  SilverStripe\Control\Middleware\TrustedProxyMiddleware:
     properties:
-      TrustedProxyIPs: "`SS_TRUSTED_PROXY_IPS`"
+      TrustedProxyIPs: '`SS_TRUSTED_PROXY_IPS`'
 ---
 Name: errorrequestprocessors
 After:

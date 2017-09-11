@@ -195,11 +195,14 @@ PHP
         $val1 = 'test test 123';
         $this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
 
-        $val1 = 'test[test][123]';
-        $this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
+        $val2 = 'test[test][123]';
+        $this->assertEquals('test_test_123', Convert::raw2htmlid($val2));
 
-        $val1 = '[test[[test]][123]]';
-        $this->assertEquals('test_test_123', Convert::raw2htmlid($val1));
+        $val3 = '[test[[test]][123]]';
+        $this->assertEquals('test_test_123', Convert::raw2htmlid($val3));
+
+        $val4 = 'A\\Namespaced\\Class';
+        $this->assertEquals('A_Namespaced_Class', Convert::raw2htmlid($val4));
     }
 
     /**

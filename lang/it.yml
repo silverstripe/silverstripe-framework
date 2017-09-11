@@ -236,8 +236,6 @@ it:
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'E-mail &amp; Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     PLURALS:

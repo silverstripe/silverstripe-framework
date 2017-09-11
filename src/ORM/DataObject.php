@@ -137,8 +137,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_classname = null;
 
     /**
-     * True if this DataObject has been destroyed.
-     * @var boolean
+     * @deprecated 4.0..5.0
+     * @var bool
      */
     public $destroyed = false;
 
@@ -386,8 +386,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function destroy()
     {
-        //$this->destroyed = true;
-        gc_collect_cycles();
         $this->flushCache(false);
     }
 
@@ -652,7 +650,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function singular_name()
     {
-        $name = $this->stat('singular_name');
+        $name = $this->config()->get('singular_name');
         if ($name) {
             return $name;
         }
@@ -688,7 +686,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function plural_name()
     {
-        if ($name = $this->stat('plural_name')) {
+        if ($name = $this->config()->get('plural_name')) {
             return $name;
         }
         $name = $this->singular_name();
@@ -807,8 +805,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     if ($relObj->$relation() instanceof DataObject) {
                         $parentObj = $relObj;
                         $relObj = $relObj->$relation();
-                        // If the intermediate relationship objects have been created, then write them
-                        if ($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
+                        // If the intermediate relationship objects haven't been created, then write them
+                        if ($i<sizeof($relations)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
                             $relObj->write();
                             $relatedFieldName = $relation."ID";
                             $parentObj->$relatedFieldName = $relObj->ID;
@@ -1349,6 +1347,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Check changes exist, abort if there are none
         $hasChanges = $this->updateChanges($isNewRecord);
         if ($hasChanges || $forceWrite || $isNewRecord) {
+            // Ensure Created and LastEdited are populated
+            if (!isset($this->record['Created'])) {
+                $this->record['Created'] = $now;
+            }
+            $this->record['LastEdited'] = $now;
+
             // New records have their insert into the base data table done first, so that they can pass the
             // generated primary key on to the rest of the manipulation
             $baseTable = $this->baseTable();
@@ -1369,12 +1373,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // Used by DODs to clean up after themselves, eg, Versioned
             $this->invokeWithExtensions('onAfterSkippedWrite');
         }
-
-        // Ensure Created and LastEdited are populated
-        if (!isset($this->record['Created'])) {
-            $this->record['Created'] = $now;
-        }
-        $this->record['LastEdited'] = $now;
 
         // Write relations as necessary
         if ($writeComponents) {
@@ -2868,12 +2866,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
         $cacheKey = md5(var_export($cacheComponents, true));
 
-        // Flush destroyed items out of the cache
-        if ($cache && isset(self::$_cache_get_one[$callerClass][$cacheKey])
-                && self::$_cache_get_one[$callerClass][$cacheKey] instanceof DataObject
-                && self::$_cache_get_one[$callerClass][$cacheKey]->destroyed) {
-            self::$_cache_get_one[$callerClass][$cacheKey] = false;
-        }
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
             $dl = DataObject::get($callerClass)->where($filter)->sort($orderby);
@@ -3083,7 +3075,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $fields,
                 $indexes,
                 $hasAutoIncPK,
-                $this->stat('create_table_options'),
+                $this->config()->get('create_table_options'),
                 $extensions
             );
         } else {
@@ -3173,7 +3165,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function searchableFields()
     {
         // can have mixed format, need to make consistent in most verbose form
-        $fields = $this->stat('searchable_fields');
+        $fields = $this->config()->get('searchable_fields');
         $labels = $this->fieldLabels();
 
         // fallback to summary fields (unless empty array is explicitly specified)
@@ -3221,7 +3213,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 //   'title' => 'My Title', // optional
                 // ))
                 $rewrite[$identifer] = array_merge(
-                    array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
+                    array('filter' => $this->relObject($identifer)->config()->get('default_search_filter_class')),
                     (array)$specOrName
                 );
             } else {
@@ -3275,7 +3267,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $cacheKey = static::class . '_' . $includerelations;
 
         if (!isset(self::$_cache_field_labels[$cacheKey])) {
-            $customLabels = $this->stat('field_labels');
+            $customLabels = $this->config()->get('field_labels');
             $autoLabels = array();
 
             // get all translated static properties as defined in i18nCollectStatics()
@@ -3336,7 +3328,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function summaryFields()
     {
-        $fields = $this->stat('summary_fields');
+        $fields = $this->config()->get('summary_fields');
 
         // if fields were passed in numeric array,
         // convert to an associative array

@@ -107,8 +107,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         $uidAndToken = Cookie::get($this->getTokenCookieName());
         $deviceID = Cookie::get($this->getDeviceCookieName());
 
-        // @todo Consider better placement of database_is_ready test
-        if ($deviceID === null || strpos($uidAndToken, ':') === false || !Security::database_is_ready()) {
+        if ($deviceID === null || strpos($uidAndToken, ':') === false) {
             return null;
         }
 

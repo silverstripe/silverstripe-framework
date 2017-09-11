@@ -29,7 +29,8 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $get['parameterconfirmationtokentest_nulltokentoken'] = null;
         $get['parameterconfirmationtokentest_emptytoken'] = '1';
         $get['parameterconfirmationtokentest_emptytokentoken'] = '';
-        $this->request = new HTTPRequest('GET', '/', $get);
+        $get['BackURL'] = 'page?parameterconfirmationtokentest_backtoken=1';
+        $this->request = new HTTPRequest('GET', 'anotherpage', $get);
         $this->request->setSession(new Session([]));
     }
 
@@ -41,6 +42,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam', $this->request);
         $nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken', $this->request);
         $emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken', $this->request);
+        $backToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_backtoken', $this->request);
 
         // Check parameter
         $this->assertTrue($withoutToken->parameterProvided());
@@ -49,6 +51,16 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $this->assertFalse($withoutParameter->parameterProvided());
         $this->assertTrue($nullToken->parameterProvided());
         $this->assertTrue($emptyToken->parameterProvided());
+        $this->assertFalse($backToken->parameterProvided());
+
+        // Check backurl
+        $this->assertFalse($withoutToken->existsInReferer());
+        $this->assertFalse($emptyParameter->existsInReferer());  // even if empty, it's still provided
+        $this->assertFalse($withToken->existsInReferer());
+        $this->assertFalse($withoutParameter->existsInReferer());
+        $this->assertFalse($nullToken->existsInReferer());
+        $this->assertFalse($emptyToken->existsInReferer());
+        $this->assertTrue($backToken->existsInReferer());
 
         // Check token
         $this->assertFalse($withoutToken->tokenProvided());
@@ -57,6 +69,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $this->assertFalse($withoutParameter->tokenProvided());
         $this->assertFalse($nullToken->tokenProvided());
         $this->assertFalse($emptyToken->tokenProvided());
+        $this->assertFalse($backToken->tokenProvided());
 
         // Check if reload is required
         $this->assertTrue($withoutToken->reloadRequired());
@@ -65,6 +78,25 @@ class ParameterConfirmationTokenTest extends SapphireTest
         $this->assertFalse($withoutParameter->reloadRequired());
         $this->assertTrue($nullToken->reloadRequired());
         $this->assertTrue($emptyToken->reloadRequired());
+        $this->assertFalse($backToken->reloadRequired());
+
+        // Check if a reload is required in case of error
+        $this->assertTrue($withoutToken->reloadRequiredIfError());
+        $this->assertTrue($emptyParameter->reloadRequiredIfError());
+        $this->assertFalse($withToken->reloadRequiredIfError());
+        $this->assertFalse($withoutParameter->reloadRequiredIfError());
+        $this->assertTrue($nullToken->reloadRequiredIfError());
+        $this->assertTrue($emptyToken->reloadRequiredIfError());
+        $this->assertTrue($backToken->reloadRequiredIfError());
+
+        // Check redirect url
+        $home = (BASE_URL ?: '/') . '?';
+        $current = Controller::join_links(BASE_URL, '/', 'anotherpage'). '?';
+        $this->assertStringStartsWith($current, $withoutToken->redirectURL());
+        $this->assertStringStartsWith($current, $emptyParameter->redirectURL());
+        $this->assertStringStartsWith($current, $nullToken->redirectURL());
+        $this->assertStringStartsWith($current, $emptyToken->redirectURL());
+        $this->assertStringStartsWith($home, $backToken->redirectURL());
 
         // Check suppression
         $this->assertEquals('value', $this->request->getVar('parameterconfirmationtokentest_notoken'));
@@ -90,6 +122,25 @@ class ParameterConfirmationTokenTest extends SapphireTest
             $this->request
         );
         $this->assertEmpty($token);
+
+        // Test backurl token
+        $token = ParameterConfirmationToken::prepare_tokens(
+            [ 'parameterconfirmationtokentest_backtoken' ],
+            $this->request
+        );
+        $this->assertEquals('parameterconfirmationtokentest_backtoken', $token->getName());
+    }
+
+    public function dataProviderURLs()
+    {
+        return [
+            [''],
+            ['/'],
+            ['bar'],
+            ['bar/'],
+            ['/bar'],
+            ['/bar/'],
+        ];
     }
 
     /**
@@ -97,18 +148,18 @@ class ParameterConfirmationTokenTest extends SapphireTest
      *
      * There should always be exactly one slash between each part in the result, and any trailing slash
      * should be preserved.
+     *
+     * @dataProvider dataProviderURLs
      */
-    public function testCurrentAbsoluteURLHandlesSlashes()
+    public function testCurrentAbsoluteURLHandlesSlashes($url)
     {
+        $this->request->setUrl($url);
+
         $token = new ParameterConfirmationTokenTest_Token(
             'parameterconfirmationtokentest_parameter',
             $this->request
         );
-
-        foreach (array('', '/', 'bar', 'bar/', '/bar', '/bar/') as $url) {
-            $this->request->setUrl($url);
-            $expected = rtrim(Controller::join_links(BASE_URL, '/', $url), '/') ?: '/';
-            $this->assertEquals($expected, $token->currentURL(), "Invalid redirect for request url $url");
-        }
+        $expected = rtrim(Controller::join_links(BASE_URL, '/', $url), '/') ?: '/';
+        $this->assertEquals($expected, $token->currentURL(), "Invalid redirect for request url $url");
     }
 }

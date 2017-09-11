@@ -49,7 +49,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
 
                 try {
                     // Check if a token is requesting a redirect
-                    if ($reloadToken) {
+                    if ($reloadToken && $reloadToken->reloadRequired()) {
                         $result = $this->safeReloadWithToken($request, $reloadToken);
                     } else {
                         // If no reload necessary, process application
@@ -61,7 +61,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
             })
             // Finally if a token was requested but there was an error while figuring out if it's allowed, do it anyway
             ->thenIfErrored(function () use ($reloadToken) {
-                if ($reloadToken) {
+                if ($reloadToken && $reloadToken->reloadRequiredIfError()) {
                     $result = $reloadToken->reloadWithToken();
                     $result->output();
                 }
@@ -87,14 +87,20 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
         $request->getSession()->init($request);
 
         // Request with ErrorDirector
-        $result = ErrorDirector::singleton()->handleRequestWithToken($request, $reloadToken, $this->getApplication()->getKernel());
+        $result = ErrorDirector::singleton()->handleRequestWithToken(
+            $request,
+            $reloadToken,
+            $this->getApplication()->getKernel()
+        );
         if ($result) {
             return $result;
         }
 
         // Fail and redirect the user to the login page
+        $params = array_merge($request->getVars(), $reloadToken->params(false));
+        $backURL = $request->getURL(). '?' . http_build_query($params);
         $loginPage = Director::absoluteURL(Security::config()->get('login_url'));
-        $loginPage .= "?BackURL=" . urlencode($request->getURL());
+        $loginPage .= "?BackURL=" . urlencode($backURL);
         $result = new HTTPResponse();
         $result->redirect($loginPage);
         return $result;

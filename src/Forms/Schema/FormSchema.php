@@ -66,7 +66,7 @@ class FormSchema
         $return = ['id' => $schemaID];
 
         // Default to schema if not set
-        if ($form && ($wantSchema || empty($schemaParts))) {
+        if ($form && ($wantSchema || empty($schemaParts) || $auto)) {
             $return['schema'] = $this->getSchema($form);
         }
 

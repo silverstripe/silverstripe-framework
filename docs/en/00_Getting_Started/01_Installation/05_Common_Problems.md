@@ -12,14 +12,8 @@ detailed error messages for security reasons. You'll typically need to get your 
 information.
 
 If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL to temporarily set your browsing session into
-"dev mode". If you can't log-in in the first place because of the error, add this directive to your `mysite/_config/config.yml`
-(don't forget to remove it afterwards!):
-
-```yml
-	Director:
-	  # temporary debugging statement
-	  environment_type: 'dev'
-```
+"dev mode". If you can't log-in in the first place because of the error, please
+configure an `SS_ENVIRONMENT_TYPE` through [environment-management] (don't forget to remove it afterwards!).
 
 <div class="warning" markdown='1'>
 On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly
@@ -88,7 +82,35 @@ needs to create/have write-access to:
  * The main installation directory (for creating .htaccess file and assets directory)
  * The mysite folder (to create _config.php)
  * After the install, the assets directory is the only directory that needs write access.
- * Image thumbnails will not show in the CMS if permission is not given 
+ * Image thumbnails will not show in the CMS if permission is not given
+ 
+If you are running on a server instance where users other than the webserver user will need
+read / write access to files in the assets folder, then you will need to adjust the
+permissions of the filesystem to a more permissive setting.
+
+By default private files and `.htaccess` are written with permission `0600`.
+You could enable other users to access these files with the below config.
+Note: Please adjust the values below to those appropriate for your server configuration:
+
+*mysite/_config/assetperms.yml*
+
+```yaml
+---
+Name: myassetperms
+---
+SilverStripe\Assets\Flysystem\AssetAdapter:
+  file_permissions:
+    file:
+      public: 0644
+      private: 0644
+    dir:
+      public: 0755
+      private: 0755
+```
+
+For more information on understanding and determining file permissions, please see
+[wikipedia](https://en.wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions)
+on unix permissions.
 
 ## I have whitespace before my HTML output, triggering quirks mode or preventing cookies from being set
 

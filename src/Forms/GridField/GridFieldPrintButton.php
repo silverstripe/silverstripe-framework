@@ -49,7 +49,6 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     {
         $this->targetFragment = $targetFragment;
         $this->printColumns = $printColumns;
-        $this->constructExtensions();
     }
 
     /**
@@ -72,7 +71,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $button->addExtraClass('font-icon-print btn btn-secondary');
 
         return array(
-            $this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
+            $this->targetFragment =>  $button->Field(),
         );
     }
 

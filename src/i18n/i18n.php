@@ -350,7 +350,10 @@ class i18n implements TemplateGlobalProvider
      */
     public static function get_locale()
     {
-        return self::$current_locale ?: i18n::config()->uninherited('default_locale');
+        if (!self::$current_locale) {
+            self::$current_locale = i18n::config()->uninherited('default_locale');
+        }
+        return self::$current_locale;
     }
 
     /**

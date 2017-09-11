@@ -15,5 +15,5 @@ use SilverStripe\View\Parsers\ShortcodeParser;
 ShortcodeParser::get('default')
     ->register('embed', [EmbedShortcodeProvider::class, 'handle_shortcode']);
 
-// If you don't want to see deprecation errors for the new APIs, change this to 3.2.0-dev.
-Deprecation::notification_version('3.2.0');
+// Set to 5.0.0 to show APIs marked for removal at that version
+Deprecation::notification_version('4.0.0');

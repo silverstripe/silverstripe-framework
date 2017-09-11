@@ -6,19 +6,19 @@ use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
  * Allows an object to have extensions applied to it.
- *
- * Bootstrap by calling $this->constructExtensions() in your class constructor.
- *
- * Requires CustomMethods trait
  */
 trait Extensible
 {
-    use CustomMethods;
+    use CustomMethods {
+        defineMethods as defineMethodsCustom;
+    }
 
     /**
      * An array of extension names and parameters to be applied to this object upon construction.
@@ -41,8 +41,6 @@ trait Extensible
      */
     private static $extensions = [];
 
-    private static $classes_constructed = array();
-
     /**
      * Classes that cannot be extended
      *
@@ -54,9 +52,9 @@ trait Extensible
     );
 
     /**
-     * @var Extension[] all current extension instances.
+     * @var Extension[] all current extension instances, or null if not declared yet.
      */
-    protected $extension_instances = array();
+    protected $extension_instances = null;
 
     /**
      * List of callbacks to call prior to extensions having extend called on them,
@@ -110,35 +108,20 @@ trait Extensible
         $this->afterExtendCallbacks[$method][] = $callback;
     }
 
+    /**
+     * @deprecated 4.0..5.0 Extensions and methods are now lazy-loaded
+     */
     protected function constructExtensions()
     {
-        $class = static::class;
+        Deprecation::notice('5.0', 'constructExtensions does not need to be invoked and will be removed in 5.0');
+    }
 
-        // Register this trait as a method source
-        $this->registerExtraMethodCallback('defineExtensionMethods', function () {
-            $this->defineExtensionMethods();
-        });
+    protected function defineMethods()
+    {
+        $this->defineMethodsCustom();
 
-        // Setup all extension instances for this instance
-        foreach (ClassInfo::ancestry($class) as $class) {
-            if (in_array($class, self::$unextendable_classes)) {
-                continue;
-            }
-            $extensions = Config::inst()->get($class, 'extensions', true);
-
-            if ($extensions) {
-                foreach ($extensions as $extension) {
-                    $instance = Injector::inst()->create($extension);
-                    $instance->setOwner(null, $class);
-                    $this->extension_instances[get_class($instance)] = $instance;
-                }
-            }
-        }
-
-        if (!isset(self::$classes_constructed[$class])) {
-            $this->defineMethods();
-            self::$classes_constructed[$class] = true;
-        }
+        // Define extension methods
+        $this->defineExtensionMethods();
     }
 
     /**
@@ -146,17 +129,26 @@ trait Extensible
      * All these methods can then be called directly on the instance (transparently
      * mapped through {@link __call()}), or called explicitly through {@link extend()}.
      *
-     * @uses addMethodsFrom()
+     * @uses addCallbackMethod()
      */
     protected function defineExtensionMethods()
     {
-        if (!empty($this->extension_instances)) {
-            foreach (array_keys($this->extension_instances) as $key) {
-                $this->addMethodsFrom('extension_instances', $key);
+        $extensions = $this->getExtensionInstances();
+        foreach ($extensions as $extensionClass => $extensionInstance) {
+            foreach ($this->findMethodsFromExtension($extensionInstance) as $method) {
+                $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
+                    /** @var Extensible $inst */
+                    $extension = $inst->getExtensionInstance($extensionClass);
+                    $extension->setOwner($inst);
+                    try {
+                        return call_user_func_array([$extension, $method], $args);
+                    } finally {
+                        $extension->clearOwner();
+                    }
+                });
             }
         }
     }
-
 
     /**
      * Add an extension to a specific class.
@@ -210,7 +202,6 @@ trait Extensible
 
         if ($subclasses) {
             foreach ($subclasses as $subclass) {
-                unset(self::$classes_constructed[$subclass]);
                 unset(self::$extra_methods[$subclass]);
             }
         }
@@ -223,8 +214,8 @@ trait Extensible
         Injector::inst()->unregisterNamedObject($class);
 
         // load statics now for DataObject classes
-        if (is_subclass_of($class, 'SilverStripe\\ORM\\DataObject')) {
-            if (!is_subclass_of($extensionClass, 'SilverStripe\\ORM\\DataExtension')) {
+        if (is_subclass_of($class, DataObject::class)) {
+            if (!is_subclass_of($extensionClass, DataExtension::class)) {
                 user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
             }
         }
@@ -280,7 +271,6 @@ trait Extensible
         $subclasses[] = $class;
         if ($subclasses) {
             foreach ($subclasses as $subclass) {
-                unset(self::$classes_constructed[$subclass]);
                 unset(self::$extra_methods[$subclass]);
             }
         }
@@ -473,15 +463,16 @@ trait Extensible
             $this->beforeExtendCallbacks[$method] = array();
         }
 
-        if ($this->extension_instances) {
-            foreach ($this->extension_instances as $instance) {
-                if (method_exists($instance, $method)) {
-                    $instance->setOwner($this);
+        foreach ($this->getExtensionInstances() as $instance) {
+            if (method_exists($instance, $method)) {
+                $instance->setOwner($this);
+                try {
                     $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
-                    if ($value !== null) {
-                        $values[] = $value;
-                    }
+                } finally {
                     $instance->clearOwner();
+                }
+                if ($value !== null) {
+                    $values[] = $value;
                 }
             }
         }
@@ -509,10 +500,10 @@ trait Extensible
      */
     public function getExtensionInstance($extension)
     {
-        if ($this->hasExtension($extension)) {
-            return $this->extension_instances[$extension];
-        }
-        return null;
+        $instances = $this->getExtensionInstances();
+        return isset($instances[$extension])
+            ? $instances[$extension]
+            : null;
     }
 
     /**
@@ -531,7 +522,8 @@ trait Extensible
      */
     public function hasExtension($extension)
     {
-        return isset($this->extension_instances[$extension]);
+        $instances = $this->getExtensionInstances();
+        return isset($instances[$extension]);
     }
 
     /**
@@ -539,10 +531,33 @@ trait Extensible
      * See {@link get_extensions()} to get all applied extension classes
      * for this class (not the instance).
      *
-     * @return array Map of {@link DataExtension} instances, keyed by classname.
+     * This method also provides lazy-population of the extension_instances property.
+     *
+     * @return Extension[] Map of {@link DataExtension} instances, keyed by classname.
      */
     public function getExtensionInstances()
     {
+        if (isset($this->extension_instances)) {
+            return $this->extension_instances;
+        }
+
+        // Setup all extension instances for this instance
+        $this->extension_instances = [];
+        foreach (ClassInfo::ancestry(static::class) as $class) {
+            if (in_array($class, self::$unextendable_classes)) {
+                continue;
+            }
+            $extensions = Config::inst()->get($class, 'extensions', true);
+
+            if ($extensions) {
+                foreach ($extensions as $extension) {
+                    $instance = Injector::inst()->create($extension);
+                    $instance->setOwner(null, $class);
+                    $this->extension_instances[get_class($instance)] = $instance;
+                }
+            }
+        }
+
         return $this->extension_instances;
     }
 }

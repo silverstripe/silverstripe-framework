@@ -8,17 +8,18 @@ The [Member](api:SilverStripe\Security\Member) class is used to represent user a
  
 ## Testing For Logged In Users
 
+The [api:Security] class comes with a static method for getting information about the current logged in user.
+
 **Security::getCurrentUser()**
 
-Returns the full *Member* Object for the current user, returns *null* if user is not logged in.
-
+Retrieves the current logged in member.  Returns *null* if user is not logged in, otherwise, the Member object is returned.  
 
 ```php
-    if( $member = Security::getCurrentUser() ) {
-        // Work with $member
-    } else {
-        // Do non-member stuff
-    }
+	if( $member = Security::getCurrentUser() ) {
+		// Work with $member
+	} else {
+		// Do non-member stuff
+	}
 ```
 
 ## Subclassing
@@ -30,28 +31,25 @@ This is the least desirable way of extending the [Member](api:SilverStripe\Secur
 
 You can define subclasses of [Member](api:SilverStripe\Security\Member) to add extra fields or functionality to the built-in membership system.
 
-
 ```php
-    use SilverStripe\Security\Member;
-
-    class MyMember extends Member 
-    {
-        private static $db = [
-            "Age" => "Int",
-            "Address" => "Text",
-        ];
-    }
-
+class MyMember extends Member {
+    private static $db = array(
+        "Age" => "Int",
+        "Address" => "Text",
+    );
+}
 ```
 
-To ensure that all new members are created using this class, put it in `Injector`.
+To ensure that all new members are created using this class, put a call to [api:Injector] in
+`(project)/_config/_config.yml`:
 
-
-```yaml
+```yml
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Security\Member:
-    class: My\Project\MyMember
+    SilverStripe\Security\Member:
+        class: MyVendor\MyNamespace\MyMemberClass
 ```
+
+Note that if you want to look this class-name up, you can call `Injector::inst()->get('Member')->ClassName`
 
 ## Overloading getCMSFields()
 
@@ -59,25 +57,22 @@ If you overload the built-in public function getCMSFields(), then you can change
 details in the newsletter system.  This function returns a [FieldList](api:SilverStripe\Forms\FieldList) object.  You should generally start by calling
 parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\FieldList) from there.
 
-
 ```php
-    public function getCMSFields() 
-    {
-        $fields = parent::getCMSFields();
-        $fields->insertBefore("HTMLEmail", new TextField("Age"));
-        $fields->removeByName("JobTitle");
-        $fields->removeByName("Organisation");
-        return $fields;
-    }
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->insertBefore("HTMLEmail", new TextField("Age"));
+		$fields->removeByName("JobTitle");
+		$fields->removeByName("Organisation");
+		return $fields;
+	}
 ```
 
 ## Extending Member or DataObject?
 
-Basic rule: Class [Member](api:SilverStripe\Security\Member) should just be extended for entities who have some kind of login.
-If you have different types of [Member](api:SilverStripe\Security\Member)s in the system, you have to make sure that those with login-capabilities have
-unique email-addresses (as this is used for login-credentials). 
-For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [Member](api:SilverStripe\Security\Member) to avoid conflicts
-with the Member-database. This enables us to have a different subclass of [Member](api:SilverStripe\Security\Member) for an email-address with login-data,
+Basic rule: Class [api:Member] should just be extended for entities who have some kind of login.
+If you have different types of [api:Member]s in the system, you have to make sure that those with login-capabilities a unique field to be used for the login.
+For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [api:Member] to avoid conflicts
+with the Member-database. This enables us to have a different subclass of [api:Member] for an email-address with login-data,
 and another subclass for the same email-address in the address-database.
 
 ## Member Role Extension
@@ -86,12 +81,10 @@ Using inheritance to add extra behaviour or data fields to a member is limiting,
 class. A better way is to use role extensions to add this behaviour. Add the following to your
 `[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
 
-
 ```yml
-
-    Member:
-      extensions:
-        - MyMemberExtension
+SilverStripe\Security\Member:
+  extensions:
+    - MyMemberExtension
 ```
 
 A role extension is simply a subclass of [DataExtension](api:SilverStripe\ORM\DataExtension) that is designed to be used to add behaviour to [Member](api:SilverStripe\Security\Member). 
@@ -100,35 +93,35 @@ things, you should add appropriate [Permission::checkMember()](api:SilverStripe\
 
 
 ```php
-    use SilverStripe\Security\Permission;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+    /**
+
+    * Modify the field set to be displayed in the CMS detail pop-up
+    */
+    public function updateCMSFields(FieldList $currentFields) 
     {
-      /**
-    
-       * Modify the field set to be displayed in the CMS detail pop-up
-       */
-      public function updateCMSFields(FieldList $currentFields) 
-      {
         // Only show the additional fields on an appropriate kind of use 
         if(Permission::checkMember($this->owner->ID, "VIEW_FORUM")) {
-          // Edit the FieldList passed, adding or removing fields as necessary
+            // Edit the FieldList passed, adding or removing fields as necessary
         }
-      }
-    
-        // define additional properties
-        private static $db = []; 
-        private static $has_one = []; 
-        private static $has_many = []; 
-        private static $many_many = []; 
-        private static $belongs_many_many = []; 
-    
-      public function somethingElse() 
-      {
-        // You can add any other methods you like, which you can call directly on the member object.
-      }
     }
+
+    // define additional properties
+    private static $db = []; 
+    private static $has_one = []; 
+    private static $has_many = []; 
+    private static $many_many = []; 
+    private static $belongs_many_many = []; 
+
+    public function somethingElse() 
+    {
+        // You can add any other methods you like, which you can call directly on the member object.
+    }
+}
 
 ```
 
@@ -165,18 +158,19 @@ E.g.
  use SilverStripe\Security\Member;
  use SilverStripe\Dev\BuildTask;
 
-    class CleanRecordsTask extends BuildTask
+class CleanRecordsTask extends BuildTask
+{
+    public function run($request)
     {
-        public function run($request)
-        {
-            if (!Director::is_cli()) {
-                throw new BadMethodCallException('This task only runs on CLI');
-            }
-            $admin = Security::findAnAdministrator();
-            Member::actAs($admin, function() {
-                DataRecord::get()->filter('Dirty', true)->removeAll();
-            });
+        if (!Director::is_cli()) {
+            throw new BadMethodCallException('This task only runs on CLI');
         }
+        $admin = Security::findAnAdministrator();
+        Member::actAs($admin, function() {
+            DataRecord::get()->filter('Dirty', true)->removeAll();
+        });
+    }
+}
 ```
 
 ## API Documentation

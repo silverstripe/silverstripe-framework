@@ -195,7 +195,13 @@ class TreeDropdownField extends FormField
      * @var array
      */
     protected $searchExpanded = [];
-
+    
+    /**
+     * Show full path for selected options, only applies for single select
+     * @var bool
+     */
+    protected $showSelectedPath = false;
+    
     /**
      * CAVEAT: for search to work properly $labelField must be a database field,
      * or you need to setSearchFunction.
@@ -599,6 +605,26 @@ class TreeDropdownField extends FormField
         $callback = $this->getDisableFunction();
         return $callback && call_user_func($callback, $node);
     }
+    
+    /**
+     * Attributes to be given for this field type
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $attributes = array(
+            'class' => $this->extraClass(),
+            'id' => $this->ID(),
+            'data-schema' => json_encode($this->getSchemaData()),
+            'data-state' => json_encode($this->getSchemaState()),
+        );
+        
+        $attributes = array_merge($attributes, $this->attributes);
+        
+        $this->extend('updateAttributes', $attributes);
+        
+        return $attributes;
+    }
 
     /**
      * @param string $field
@@ -829,15 +855,28 @@ class TreeDropdownField extends FormField
     public function getSchemaStateDefaults()
     {
         $data = parent::getSchemaStateDefaults();
+        /** @var Hierarchy|DataObject $record */
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
 
         // Ensure cache is keyed by last modified date of the underlying list
         $data['data']['cacheKey'] = DataList::create($this->getSourceObject())->max('LastEdited');
+        $data['data']['showSelectedPath'] = $this->getShowSelectedPath();
         if ($record) {
+            $titlePath = '';
+            
+            if ($this->getShowSelectedPath()) {
+                $ancestors = $record->getAncestors(true)->reverse();
+                
+                foreach ($ancestors as $parent) {
+                    $title = $parent->obj($this->getTitleField())->getValue();
+                    $titlePath .= $title .'/';
+                }
+            }
             $data['data']['valueObject'] = [
                 'id' => $record->obj($this->getKeyField())->getValue(),
                 'title' => $record->obj($this->getTitleField())->getValue(),
                 'treetitle' => $record->obj($this->getLabelField())->getSchemaValue(),
+                'titlePath' => $titlePath,
             ];
         }
 
@@ -907,5 +946,23 @@ class TreeDropdownField extends FormField
             ['name' => $item->i18n_singular_name()]
         );
         return $emptyString;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getShowSelectedPath()
+    {
+        return $this->showSelectedPath;
+    }
+    
+    /**
+     * @param bool $showSelectedPath
+     * @return TreeDropdownField
+     */
+    public function setShowSelectedPath($showSelectedPath)
+    {
+        $this->showSelectedPath = $showSelectedPath;
+        return $this;
     }
 }

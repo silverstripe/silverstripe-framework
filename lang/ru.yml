@@ -273,8 +273,6 @@ ru:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Вы указали неверные данные. Попробуйте ещё раз.'
     NoPassword: 'У этого пользователя отсутствует пароль.'
-  SilverStripe\Security\MemberLoginForm:
-    AUTHENTICATORNAME: 'Email и пароль'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: Пароли
     PLURALS:

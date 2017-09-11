@@ -22,12 +22,8 @@ use SilverStripe\View\TemplateGlobalProvider;
  * The most important part of director is {@link Director::handleRequest()}, which is passed an HTTPRequest and will
  * execute the appropriate controller.
  *
- * Director also has a number of static methods that provide information about the environment, such as
- * {@link Director::$environment_type}.
- *
  * @see Director::handleRequest()
  * @see Director::$rules
- * @see Director::$environment_type
  * @skipUpgrade
  */
 class Director implements TemplateGlobalProvider
@@ -98,17 +94,8 @@ class Director implements TemplateGlobalProvider
      */
     private static $default_base_url = '`SS_BASE_URL`';
 
-    /**
-     * Assigned environment type
-     *
-     * @internal
-     * @var string
-     */
-    protected static $environment_type;
-
     public function __construct()
     {
-        $this->constructExtensions();
     }
 
     /**

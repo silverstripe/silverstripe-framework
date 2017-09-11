@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests\HTMLEditor;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
@@ -36,7 +37,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');
         $c->setOption('language', 'en');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
+        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(
             array(
                 'plugin1' => 'mycode/plugin1.js', //
@@ -59,7 +60,10 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
             "Filename for config: " . json_encode($c->getAttributes()) . " should match expected value"
         );
         $content = $generator->generateContent($c);
-        $this->assertStringStartsWith("var tinyMCEPreInit={base:'tinymce',suffix:'.min'};\n", $content);
+        $this->assertContains(
+            "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir/';\n",
+            $content
+        );
         // Main script file
         $this->assertContains("/* tinymce.js */\n", $content);
         // Locale file
@@ -81,10 +85,9 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $this->assertContains("/* testtheme/langs/en.js */\n", $content);
 
         // Register done scripts
-        $this->assertStringEndsWith(
+        $this->assertContains(
             <<<EOS
-tinymce.each("tinymce/tinymce.js,tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js".split(","),function(f){tinymce.ScriptLoader.markDone(f);});
-
+tinymce.each('tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),function(f){tinymce.ScriptLoader.markDone(baseURL+f);});
 EOS
             ,
             $content
@@ -97,7 +100,7 @@ EOS
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');
         $c->setOption('language', 'en');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss');
+        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(['plugin1' => 'mycode/plugin1.js']);
         HTMLEditorConfig::set_config('testconfig', $c);
 

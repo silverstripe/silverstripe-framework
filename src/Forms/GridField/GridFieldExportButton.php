@@ -66,7 +66,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
         return array(
-            $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
+            $this->targetFragment => $button->Field()
         );
     }
 

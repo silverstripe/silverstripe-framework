@@ -37,70 +37,12 @@ if (function_exists('session_start') && !session_id()) {
 }
 
 // require composers autoloader
-require __DIR__ . '/../../includes/autoload.php';
+require_once __DIR__ . '/../../includes/autoload.php';
 
-$usingEnv = !empty($_REQUEST['useEnv']);
+$usingEnv = empty($_POST) || !empty($_REQUEST['useEnv']);
 
 // Set default locale, but try and sniff from the user agent
-$defaultLocale = 'en_US';
-$locales = array(
-    'af_ZA' => 'Afrikaans (South Africa)',
-    'ar_EG' => 'Arabic (Egypt)',
-    'hy_AM' => 'Armenian (Armenia)',
-    'ast_ES' => 'Asturian (Spain)',
-    'az_AZ' => 'Azerbaijani (Azerbaijan)',
-    'bs_BA' => 'Bosnian (Bosnia and Herzegovina)',
-    'bg_BG' => 'Bulgarian (Bulgaria)',
-    'ca_ES' => 'Catalan (Spain)',
-    'zh_CN' => 'Chinese (China)',
-    'zh_TW' => 'Chinese (Taiwan)',
-    'hr_HR' => 'Croatian (Croatia)',
-    'cs_CZ' => 'Czech (Czech Republic)',
-    'da_DK' => 'Danish (Denmark)',
-    'nl_NL' => 'Dutch (Netherlands)',
-    'en_GB' => 'English (United Kingdom)',
-    'en_US' => 'English (United States)',
-    'eo_XX' => 'Esperanto',
-    'et_EE' => 'Estonian (Estonia)',
-    'fo_FO' => 'Faroese (Faroe Islands)',
-    'fi_FI' => 'Finnish (Finland)',
-    'fr_FR' => 'French (France)',
-    'de_DE' => 'German (Germany)',
-    'el_GR' => 'Greek (Greece)',
-    'he_IL' => 'Hebrew (Israel)',
-    'hu_HU' => 'Hungarian (Hungary)',
-    'is_IS' => 'Icelandic (Iceland)',
-    'id_ID' => 'Indonesian (Indonesia)',
-    'it_IT' => 'Italian (Italy)',
-    'ja_JP' => 'Japanese (Japan)',
-    'km_KH' => 'Khmer (Cambodia)',
-    'lc_XX' => 'LOLCAT',
-    'lv_LV' => 'Latvian (Latvia)',
-    'lt_LT' => 'Lithuanian (Lithuania)',
-    'ms_MY' => 'Malay (Malaysia)',
-    'mi_NZ' => 'Maori (New Zealand)',
-    'ne_NP' => 'Nepali (Nepal)',
-    'nb_NO' => 'Norwegian',
-    'fa_IR' => 'Persian (Iran)',
-    'pl_PL' => 'Polish (Poland)',
-    'pt_BR' => 'Portuguese (Brazil)',
-    'pa_IN' => 'Punjabi (India)',
-    'ro_RO' => 'Romanian (Romania)',
-    'ru_RU' => 'Russian (Russia)',
-    'sr_RS' => 'Serbian (Serbia)',
-    'si_LK' => 'Sinhalese (Sri Lanka)',
-    'sk_SK' => 'Slovak (Slovakia)',
-    'sl_SI' => 'Slovenian (Slovenia)',
-    'es_AR' => 'Spanish (Argentina)',
-    'es_MX' => 'Spanish (Mexico)',
-    'es_ES' => 'Spanish (Spain)',
-    'sv_SE' => 'Swedish (Sweden)',
-    'th_TH' => 'Thai (Thailand)',
-    'tr_TR' => 'Turkish (Turkey)',
-    'uk_UA' => 'Ukrainian (Ukraine)',
-    'uz_UZ' => 'Uzbek (Uzbekistan)',
-    'vi_VN' => 'Vietnamese (Vietnam)',
-);
+$locale = isset($_POST['locale']) ? $_POST['locale'] : 'en_US';
 
 // Discover which databases are available
 DatabaseAdapterRegistry::autodiscover();
@@ -112,112 +54,18 @@ foreach ($databaseClasses as $class => $details) {
     $databaseClasses[$class]['hasModule'] = !empty($helper);
 }
 
-// Load database config
-/** @skipUpgrade */
-if (isset($_REQUEST['db'])) {
-    if (isset($_REQUEST['db']['type'])) {
-        $type = $_REQUEST['db']['type'];
-    } else {
-        if ($type = getenv('SS_DATABASE_CLASS')) {
-            $_REQUEST['db']['type'] = $type;
-        } elseif ($databaseClasses['MySQLPDODatabase']['supported']) {
-            $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
-        } elseif ($databaseClasses['MySQLDatabase']['supported']) {
-            $type = $_REQUEST['db']['type'] = 'MySQLDatabase';
-        } else {
-            // handle error
-        }
-    }
-
-    // Disabled inputs don't submit anything - we need to use the environment (except the database name)
-    if ($usingEnv) {
-        $_REQUEST['db'][$type] = $databaseConfig = array(
-            "type" => getenv('SS_DATABASE_CLASS') ?: $type,
-            "server" => getenv('SS_DATABASE_SERVER') ?: "localhost",
-            "username" => getenv('SS_DATABASE_USERNAME') ?: "root",
-            "password" => getenv('SS_DATABASE_PASSWORD') ?: "",
-            "database" => $_REQUEST['db'][$type]['database'],
-        );
-
-        // Set SSL parameters if they exist
-        if (getenv('SS_DATABASE_SSL_KEY') && getenv('SS_DATABASE_SSL_CERT')) {
-            $databaseConfig['ssl_key'] = getenv('SS_DATABASE_SSL_KEY');
-            $databaseConfig['ssl_cert'] = getenv('SS_DATABASE_SSL_CERT');
-        }
-        if (getenv('SS_DATABASE_SSL_CA')) {
-            $databaseConfig['ssl_ca'] = getenv('SS_DATABASE_SSL_CA');
-        }
-        if (getenv('SS_DATABASE_SSL_CIPHER')) {
-            $databaseConfig['ssl_ca'] = getenv('SS_DATABASE_SSL_CIPHER');
-        }
-    } else {
-        // Normal behaviour without the environment
-        $databaseConfig = $_REQUEST['db'][$type];
-        $databaseConfig['type'] = $type;
-    }
-} else {
-    if ($type = getenv('SS_DATABASE_CLASS')) {
-        $_REQUEST['db']['type'] = $type;
-    } elseif ($databaseClasses['MySQLPDODatabase']['supported']) {
-        $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
-    } elseif ($databaseClasses['MySQLDatabase']['supported']) {
-        $type = $_REQUEST['db']['type'] = 'MySQLDatabase';
-    } else {
-        // handle error
-    }
-    $_REQUEST['db'][$type] = $databaseConfig = array(
-        "type" => $type,
-        "server" => getenv('SS_DATABASE_SERVER') ?: "localhost",
-        "username" => getenv('SS_DATABASE_USERNAME') ?: "root",
-        "password" => getenv('SS_DATABASE_PASSWORD') ?: "",
-        "database" => isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : "SS_mysite",
-    );
-}
-
-if (isset($_REQUEST['admin'])) {
-    // Disabled inputs don't submit anything - we need to use the environment (except the database name)
-    if ($usingEnv) {
-        $_REQUEST['admin'] = $adminConfig = array(
-            'username' => getenv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
-            'password' => getenv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
-        );
-    } else {
-        $adminConfig = $_REQUEST['admin'];
-    }
-} else {
-    $_REQUEST['admin'] = $adminConfig = array(
-        'username' => getenv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
-        'password' => getenv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
-    );
-}
-
-$alreadyInstalled = false;
-if (file_exists('mysite/_config.php')) {
-    // Find the $database variable in the relevant config file without having to execute the config file
-    if (preg_match("/\\\$database\s*=\s*[^\n\r]+[\n\r]/", file_get_contents("mysite/_config.php"), $parts)) {
-        eval($parts[0]);
-        if (!empty($database)) {
-            $alreadyInstalled = true;
-        }
-        // Assume that if $databaseConfig is defined in mysite/_config.php, then a non-environment-based installation has
-        // already gone ahead
-    } elseif (preg_match(
-        "/\\\$databaseConfig\s*=\s*[^\n\r]+[\n\r]/",
-        file_get_contents("mysite/_config.php"),
-        $parts
-    )) {
-        $alreadyInstalled = true;
-    }
-}
-
-if (file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
-    $silverstripe_version = file_get_contents(FRAMEWORK_NAME . '/silverstripe_version');
-} else {
-    $silverstripe_version = "unknown";
-}
+// Build config from config / environment / request
+$config = new InstallConfig();
+$databaseConfig = $config->getDatabaseConfig($_REQUEST, $databaseClasses);
+$adminConfig = $config->getAdminConfig($_REQUEST);
+$alreadyInstalled = $config->alreadyInstalled();
+$silverstripe_version = $config->getFrameworkVersion();
+$sendStats = $config->canSendStats($_REQUEST);
+$locales = $config->getLocales();
+$theme = $config->getTheme($_REQUEST);
 
 // Check requirements
-$req = new InstallRequirements($originalIni);
+$req = new InstallRequirements();
 $req->check();
 
 if ($req->isIIS()) {
@@ -256,10 +104,18 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
     exit(1);
 }
 
+// Path to client resources
+$clientPath = (FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '') . 'src/Dev/Install/client';
+
+
 // config-form.html vars (placeholder to prevent deletion)
 [
-    $defaultLocale,
+    $theme,
+    $clientPath,
+    $adminConfig,
+    $usingEnv,
     $silverstripe_version,
+    $locale,
     $locales,
     $webserverConfigFile,
     $hasErrorOtherThanDatabase,
@@ -267,28 +123,26 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
     $phpIniLocation
 ];
 
-if ((isset($_REQUEST['go']) || $installFromCli)
+// If already installed, ensure the user clicked "reinstall"
+$expectedArg = $alreadyInstalled ? 'reinstall' : 'go';
+if ((isset($_REQUEST[$expectedArg]) || $installFromCli)
     && !$req->hasErrors()
     && !$dbReq->hasErrors()
     && $adminConfig['username']
     && $adminConfig['password']
 ) {
     // Confirm before reinstalling
-    if (!$installFromCli && $alreadyInstalled) {
-        include(__DIR__ . '/config-form.html');
-    } else {
-        $inst = new Installer();
-        if ($_REQUEST) {
-            $inst->install($_REQUEST);
-        } else {
-            $inst->install(array(
-                'db' => $databaseConfig,
-                'admin' => $adminConfig,
-            ));
-        }
-    }
-
-// Show the config form
+    $inst = new Installer();
+    $inst->install([
+        'usingEnv' => $usingEnv,
+        'locale' => $locale,
+        'theme' => $theme,
+        'version' => $silverstripe_version,
+        'db' => $databaseConfig,
+        'admin' => $adminConfig,
+        'stats' => $sendStats,
+    ]);
+    // Show the config form
 } else {
     include(__DIR__ . '/config-form.html');
 }

@@ -132,7 +132,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             'addto'
         );
         $addAction->setAttribute('data-icon', 'chain--plus');
-        $addAction->addExtraClass('btn btn-secondary-outline font-icon-link action_gridfield_relationadd');
+        $addAction->addExtraClass('btn btn-outline-secondary font-icon-link action_gridfield_relationadd');
 
         // If an object is not found, disable the action
         if (!is_int($gridField->State->GridFieldAddRelation(null))) {
@@ -329,7 +329,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $obj = DataObject::singleton($dataClass);
         $fields = null;
         if ($fieldSpecs = $obj->searchableFields()) {
-            $customSearchableFields = $obj->stat('searchable_fields');
+            $customSearchableFields = $obj->config()->get('searchable_fields');
             foreach ($fieldSpecs as $name => $spec) {
                 if (is_array($spec) && array_key_exists('filter', $spec)) {
                     // The searchableFields() spec defaults to PartialMatch,

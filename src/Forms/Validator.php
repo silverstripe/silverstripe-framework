@@ -21,7 +21,6 @@ abstract class Validator
     public function __construct()
     {
         $this->resetResult();
-        $this->constructExtensions();
     }
 
     /**
