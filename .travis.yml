@@ -1,8 +1,6 @@
 language: php
 
-dist: precise
-
-sudo: false
+dist: trusty
 
 addons:
   apt:
