@@ -1,13 +1,12 @@
 language: php
 
-dist: precise
-
-sudo: false
+dist: trusty
 
 addons:
   apt:
     packages:
       - tidy
+  firefox: "31.0"
 
 matrix:
   include:
