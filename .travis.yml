@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
       - tidy
+  firefox: "31.0"
 
 matrix:
   include:
