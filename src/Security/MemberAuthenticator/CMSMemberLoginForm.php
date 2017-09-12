@@ -99,7 +99,7 @@ class CMSMemberLoginForm extends MemberLoginForm
             LiteralField::create(
                 'forgotPassword',
                 sprintf(
-                    '<p class="cms-security__container__form__forgotPassword"><a href="%s" target="_top">%s</a></p>',
+                    '<a href="%s" class="cms-security__container__form__forgotPassword btn btn-secondary" target="_top">%s</a>',
                     $this->getExternalLink('lostpassword'),
                     _t(__CLASS__.'.BUTTONFORGOTPASSWORD', "Forgot password")
                 )
