@@ -81,6 +81,25 @@ class SSViewerTest extends SapphireTest
     }
 
     /**
+     * Tests for themes helper functions, ensuring they behave as defined in the RFC at
+     * https://github.com/silverstripe/silverstripe-framework/issues/5604
+     */
+    public function testThemesHelpers()
+    {
+        // Test set_themes()
+        SSViewer::set_themes(['mytheme', '$default']);
+        $this->assertEquals(['mytheme', '$default'], SSViewer::get_themes());
+
+        // Ensure add_themes() prepends
+        SSViewer::add_themes(['my_more_important_theme']);
+        $this->assertEquals(['my_more_important_theme', 'mytheme', '$default'], SSViewer::get_themes());
+
+        // Ensure add_themes() on theme already in cascade promotes it to the top
+        SSViewer::add_themes(['mytheme']);
+        $this->assertEquals(['mytheme', 'my_more_important_theme', '$default'], SSViewer::get_themes());
+    }
+
+    /**
      * Test that a template without a <head> tag still renders.
      */
     public function testTemplateWithoutHeadRenders()
