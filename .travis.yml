@@ -1,8 +1,6 @@
 language: php
 
-dist: precise
-
-sudo: false
+dist: trusty
 
 cache:
   directories:
@@ -12,6 +10,7 @@ addons:
   apt:
     packages:
       - tidy
+  firefox: "31.0"
 
 env:
   global:
