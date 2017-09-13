@@ -19,6 +19,16 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldEditButton implements GridField_ColumnProvider
 {
+    /**
+     * HTML classes to be added to GridField edit buttons
+     *
+     * @var string[]
+     */
+    protected $extraClass = [
+        'grid-field__icon-action--hidden-on-hover' => true,
+        'font-icon-edit' => true,
+        'btn--icon-large' => true
+    ];
 
     /**
      * Add a column 'Delete'
@@ -95,11 +105,48 @@ class GridFieldEditButton implements GridField_ColumnProvider
         // which can make the form readonly if no edit permissions are available.
 
         $data = new ArrayData(array(
-            'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
+            'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit'),
+            'ExtraClass' => $this->getExtraClass()
         ));
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);
+    }
+
+    /**
+     * Get the extra HTML classes to add for edit buttons
+     *
+     * @return string
+     */
+    public function getExtraClass()
+    {
+        return implode(' ', array_keys($this->extraClass));
+    }
+
+    /**
+     * Add an extra HTML class
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function addExtraClass($class)
+    {
+        $this->extraClass[$class] = true;
+
+        return $this;
+    }
+
+    /**
+     * Remove an HTML class
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function removeExtraClass($class)
+    {
+        unset($this->extraClass[$class]);
+
+        return $this;
     }
 
     /**
