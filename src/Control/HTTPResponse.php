@@ -85,13 +85,13 @@ class HTTPResponse
     protected $statusDescription = "OK";
 
     /**
-     * HTTP Headers like "Content-Type: text/xml"
+     * HTTP Headers like "content-type: text/xml"
      *
      * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
      * @var array
      */
     protected $headers = array(
-        "Content-Type" => "text/html; charset=utf-8",
+        "content-type" => "text/html; charset=utf-8",
     );
 
     /**
@@ -200,12 +200,13 @@ class HTTPResponse
     /**
      * Add a HTTP header to the response, replacing any header of the same name.
      *
-     * @param string $header Example: "Content-Type"
+     * @param string $header Example: "content-type"
      * @param string $value Example: "text/xml"
      * @return $this
      */
     public function addHeader($header, $value)
     {
+        $header = strtolower($header);
         $this->headers[$header] = $value;
         return $this;
     }
@@ -218,6 +219,7 @@ class HTTPResponse
      */
     public function getHeader($header)
     {
+        $header = strtolower($header);
         if (isset($this->headers[$header])) {
             return $this->headers[$header];
         }
@@ -241,6 +243,7 @@ class HTTPResponse
      */
     public function removeHeader($header)
     {
+        strtolower($header);
         unset($this->headers[$header]);
         return $this;
     }
@@ -257,7 +260,7 @@ class HTTPResponse
             $code = 302;
         }
         $this->setStatusCode($code);
-        $this->addHeader('Location', $dest);
+        $this->addHeader('location', $dest);
         return $this;
     }
 
@@ -285,7 +288,7 @@ class HTTPResponse
     protected function htmlRedirect()
     {
         $headersSent = headers_sent($file, $line);
-        $location = $this->getHeader('Location');
+        $location = $this->getHeader('location');
         $url = Director::absoluteURL($location);
         $urlATT = Convert::raw2htmlatt($url);
         $urlJS = Convert::raw2js($url);
