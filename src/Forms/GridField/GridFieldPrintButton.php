@@ -9,10 +9,9 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
@@ -67,8 +66,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
             'print',
             null
         );
+        $button->setForm($gridField->getForm());
 
-        $button->addExtraClass('font-icon-print btn btn-secondary');
+        $button->addExtraClass('font-icon-print grid-print-button btn btn-secondary');
 
         return array(
             $this->targetFragment =>  $button->Field(),
