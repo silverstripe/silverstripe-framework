@@ -1583,6 +1583,7 @@ class FormField extends RequestHandler
             'value' => $this->Value(),
             'message' => $this->getSchemaMessage(),
             'data' => [],
+            'required' => $this->Required(),
         ];
 
         return $state;
