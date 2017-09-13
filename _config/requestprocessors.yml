@@ -17,6 +17,12 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Middleware\TrustedProxyMiddleware:
     properties:
       TrustedProxyIPs: '`SS_TRUSTED_PROXY_IPS`'
+  RateLimitedSecurityController:
+    class: SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter
+    properties:
+      RequestHandler: '%$SilverStripe\Security\Security'
+      Middlewares:
+        - '%$SilverStripe\Control\Middleware\RateLimitMiddleware'
 ---
 Name: errorrequestprocessors
 After:

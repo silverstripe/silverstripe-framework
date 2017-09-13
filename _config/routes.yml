@@ -11,7 +11,7 @@ After:
 ---
 SilverStripe\Control\Director:
   rules:
-    'Security//$Action/$ID/$OtherID': SilverStripe\Security\Security
+    'Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'
     'CMSSecurity//$Action/$ID/$OtherID': SilverStripe\Security\CMSSecurity
     'dev': SilverStripe\Dev\DevelopmentAdmin
     'interactive': SilverStripe\Dev\SapphireREPL

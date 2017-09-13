@@ -1090,7 +1090,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public static function getExtraControllers()
     {
-        return static::$extra_controllers;
+        return array_merge([Security::class], static::$extra_controllers);
     }
 
     /**

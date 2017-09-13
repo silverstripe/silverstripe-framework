@@ -18,3 +18,7 @@ SilverStripe\Core\Injector\Injector:
       factory: SilverStripe\Core\Cache\CacheFactory
       constructor:
         namespace: "VersionProvider_composerlock"
+  Psr\SimpleCache\CacheInterface.RateLimiter:
+      factory: SilverStripe\Core\Cache\CacheFactory
+      constructor:
+        namespace: 'ratelimiter'
