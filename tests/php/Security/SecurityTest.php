@@ -724,7 +724,9 @@ class SecurityTest extends FunctionalTest
         $result = $method->invoke($security, 'Page');
 
         // Ensure page shares the same controller as security
-        $this->assertInstanceOf(PageController::class, $result);
+        $securityClass = Config::inst()->get(Security::class, 'page_class');
+        $securityPage = new $securityClass();
+        $this->assertInstanceOf($securityPage->getControllerName(), $result);
         $this->assertEquals($request, $result->getRequest());
     }
 
