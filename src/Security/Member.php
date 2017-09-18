@@ -242,6 +242,19 @@ class Member extends DataObject
     private static $temp_id_lifetime = 259200;
 
     /**
+     * Default lifetime of auto login token.
+     *
+     * This is the maximum allowed period between a user requesting a password reset link and using it to reset
+     * their password.
+     *
+     * Defaults to 2 days.
+     *
+     * @config
+     * @var int Lifetime in seconds
+     */
+    private static $auto_login_token_lifetime = 172800;
+
+    /**
      * Ensure the locale is set to something sensible by default.
      */
     public function populateDefaults()
@@ -558,14 +571,24 @@ class Member extends DataObject
      * Generate an auto login token which can be used to reset the password,
      * at the same time hashing it and storing in the database.
      *
-     * @param int $lifetime The lifetime of the auto login hash in days (by default 2 days)
-     *
-     * @returns string Token that should be passed to the client (but NOT persisted).
-     *
-     * @todo Make it possible to handle database errors such as a "duplicate key" error
+     * @param int|null $lifetime DEPRECATED: The lifetime of the auto login hash in days. Overrides
+     *                           the Member.auto_login_token_lifetime config value
+     * @return string Token that should be passed to the client (but NOT persisted).
      */
-    public function generateAutologinTokenAndStoreHash($lifetime = 2)
+    public function generateAutologinTokenAndStoreHash($lifetime = null)
     {
+        if ($lifetime !== null) {
+            Deprecation::notice(
+                '5.0',
+                'Passing a $lifetime to Member::generateAutologinTokenAndStoreHash() is deprecated,
+                    use the Member.auto_login_token_lifetime config setting instead',
+                Deprecation::SCOPE_GLOBAL
+            );
+            $lifetime = (86400 * $lifetime); // Method argument is days, convert to seconds
+        } else {
+            $lifetime = $this->config()->auto_login_token_lifetime;
+        }
+
         do {
             $generator = new RandomGenerator();
             $token = $generator->randomToken();
@@ -575,7 +598,7 @@ class Member extends DataObject
         )));
 
         $this->AutoLoginHash = $hash;
-        $this->AutoLoginExpired = date('Y-m-d H:i:s', time() + (86400 * $lifetime));
+        $this->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
 
         $this->write();
 
