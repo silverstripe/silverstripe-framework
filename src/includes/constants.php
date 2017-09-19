@@ -72,6 +72,20 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
     });
 }
 
+// Validate SS_BASE_URL is absolute
+if (getenv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', getenv('SS_BASE_URL'))) {
+    call_user_func(function () {
+        $base = getenv('SS_BASE_URL');
+        user_error(
+            "SS_BASE_URL should be an absolute url with protocol "
+            . "(http://$base) or without protocol (//$base)",
+            E_USER_WARNING
+        );
+        // Treat as protocol-less absolute url
+        $base = '//' . $base;
+        putenv("SS_BASE_URL=$base");
+    });
+}
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', call_user_func(function () {
