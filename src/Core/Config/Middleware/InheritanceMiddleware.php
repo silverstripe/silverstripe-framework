@@ -31,6 +31,7 @@ class InheritanceMiddleware implements Middleware
             $nextConfig = $next($nextClass, $excludeMiddleware);
             $config = Priority::mergeArray($nextConfig, $config);
         }
+
         return $config;
     }
 }

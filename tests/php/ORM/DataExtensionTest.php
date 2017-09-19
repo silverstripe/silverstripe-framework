@@ -2,13 +2,9 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Assets\Tests\FileMigrationHelperTest\Extension;
-use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
-use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 
 class DataExtensionTest extends SapphireTest
@@ -207,9 +203,7 @@ class DataExtensionTest extends SapphireTest
 
     public function testExtensionAllMethodNamesHasOwner()
     {
-        /**
- * @var DataExtensionTest\MyObject $do
-*/
+        /** @var DataExtensionTest\MyObject $do */
         $do = DataExtensionTest\MyObject::create();
 
         $this->assertTrue($do->hasMethod('getTestValueWith_MyObject'));

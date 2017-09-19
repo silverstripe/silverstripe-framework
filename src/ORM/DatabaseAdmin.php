@@ -167,7 +167,7 @@ class DatabaseAdmin extends Controller
      */
     public function buildDefaults()
     {
-        $dataClasses = ClassInfo::subclassesFor('SilverStripe\ORM\DataObject');
+        $dataClasses = ClassInfo::subclassesFor(DataObject::class);
         array_shift($dataClasses);
 
         if (!Director::is_cli()) {
@@ -260,7 +260,7 @@ class DatabaseAdmin extends Controller
         }
 
         // Build the database.  Most of the hard work is handled by DataObject
-        $dataClasses = ClassInfo::subclassesFor('SilverStripe\ORM\DataObject');
+        $dataClasses = ClassInfo::subclassesFor(DataObject::class);
         array_shift($dataClasses);
 
         if (!$quiet) {

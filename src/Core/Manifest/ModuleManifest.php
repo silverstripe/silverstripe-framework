@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use LogicException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 
@@ -49,6 +50,22 @@ class ModuleManifest
      * @var Module[]
      */
     protected $modules = [];
+
+    /**
+     * List of modules sorted by priority
+     *
+     * @config
+     * @var array
+     */
+    private static $module_priority = [];
+
+    /**
+     * Project name
+     *
+     * @config
+     * @var string
+     */
+    private static $project = null;
 
     /**
      * Adds a path as a module
@@ -244,6 +261,7 @@ class ModuleManifest
     {
         $order = static::config()->uninherited('module_priority');
         $project = static::config()->get('project');
+
         /* @var PrioritySorter $sorter */
         $sorter = Injector::inst()->createWithArgs(
             PrioritySorter::class . '.modulesorter',
