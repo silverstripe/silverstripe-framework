@@ -50,42 +50,6 @@ class SSViewer implements Flushable
 
     /**
      * @config
-     * @var boolean $source_file_comments
-     */
-    private static $source_file_comments = false;
-
-    /**
-     * @ignore
-     */
-    private static $template_cache_flushed = false;
-
-    /**
-     * @ignore
-     */
-    private static $cacheblock_cache_flushed = false;
-
-    /**
-     * @var array $templates List of templates to select from
-     */
-    protected $templates = null;
-
-    /**
-     * @var string $chosen Absolute path to chosen template file
-     */
-    protected $chosen = null;
-
-    /**
-     * @var array Templates to use when looking up 'Layout' or 'Content'
-     */
-    protected $subTemplates = null;
-
-    /**
-     * @var boolean
-     */
-    protected $rewriteHashlinks = true;
-
-    /**
-     * @config
      * @var string A list (highest priority first) of themes to use
      * Only used when {@link $theme_enabled} is set to TRUE.
      */
@@ -110,6 +74,61 @@ class SSViewer implements Flushable
     private static $theme_enabled = true;
 
     /**
+     * Default prepended cache key for partial caching
+     *
+     * @config
+     * @var string
+     */
+    private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
+
+    /**
+     * @config
+     * @var boolean $source_file_comments
+     */
+    private static $source_file_comments = false;
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $rewrite_hash_links = true;
+
+    /**
+     * @ignore
+     */
+    private static $template_cache_flushed = false;
+
+    /**
+     * @ignore
+     */
+    private static $cacheblock_cache_flushed = false;
+
+    /**
+     * @var array $topLevel List of items being processed
+     */
+    protected static $topLevel = [];
+
+    /**
+     * @var array $templates List of templates to select from
+     */
+    protected $templates = null;
+
+    /**
+     * @var string $chosen Absolute path to chosen template file
+     */
+    protected $chosen = null;
+
+    /**
+     * @var array Templates to use when looking up 'Layout' or 'Content'
+     */
+    protected $subTemplates = null;
+
+    /**
+     * @var boolean
+     */
+    protected $rewriteHashlinks = true;
+
+    /**
      * @var boolean
      */
     protected $includeRequirements = true;
@@ -119,13 +138,42 @@ class SSViewer implements Flushable
      */
     protected $parser;
 
-    /*
-	 * Default prepended cache key for partial caching
-	 *
-	 * @var string
-	 * @config
-	 */
-    private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
+    /**
+     * @var CacheInterface
+     */
+    protected $partialCacheStore = null;
+
+    /**
+     * @param string|array $templates If passed as a string with .ss extension, used as the "main" template.
+     *  If passed as an array, it can be used for template inheritance (first found template "wins").
+     *  Usually the array values are PHP class names, which directly correlate to template names.
+     *  <code>
+     *  array('MySpecificPage', 'MyPage', 'Page')
+     *  </code>
+     * @param TemplateParser $parser
+     */
+    public function __construct($templates, TemplateParser $parser = null)
+    {
+        if ($parser) {
+            $this->setParser($parser);
+        }
+
+        $this->setTemplate($templates);
+
+        if (!$this->chosen) {
+            $message = 'None of the following templates could be found: ';
+            $message .= print_r($templates, true);
+
+            $themes = self::get_themes();
+            if (!$themes) {
+                $message .= ' (no theme in use)';
+            } else {
+                $message .= ' in themes "' . print_r($themes, true) . '"';
+            }
+
+            user_error($message, E_USER_WARNING);
+        }
+    }
 
     /**
      * Triggered early in the request when someone requests a flush.
@@ -163,6 +211,11 @@ class SSViewer implements Flushable
         SSViewer::config()->set('themes', $themes);
     }
 
+    /**
+     * Add to the list of active themes to apply
+     *
+     * @param array $themes
+     */
     public static function add_themes($themes = [])
     {
         $currentThemes = SSViewer::get_themes();
@@ -171,6 +224,11 @@ class SSViewer implements Flushable
         SSViewer::set_themes(array_values(array_unique($finalThemes)));
     }
 
+    /**
+     * Get the list of active themes
+     *
+     * @return array
+     */
     public static function get_themes()
     {
         $default = [self::DEFAULT_THEME];
@@ -223,7 +281,8 @@ class SSViewer implements Flushable
                 'SSViewer::get_templates_by_class() expects a valid class name as its first parameter.'
             );
         }
-        $templates = array();
+
+        $templates = [];
         $classes = array_reverse(ClassInfo::ancestry($classOrObject));
         foreach ($classes as $class) {
             $template = $class . $suffix;
@@ -239,41 +298,26 @@ class SSViewer implements Flushable
                 break;
             }
         }
+
         return $templates;
     }
 
     /**
-     * @param string|array $templates If passed as a string with .ss extension, used as the "main" template.
-     *  If passed as an array, it can be used for template inheritance (first found template "wins").
-     *  Usually the array values are PHP class names, which directly correlate to template names.
-     *  <code>
-     *  array('MySpecificPage', 'MyPage', 'Page')
-     *  </code>
-     * @param TemplateParser $parser
+     * Get the current item being processed
+     *
+     * @return ViewableData
      */
-    public function __construct($templates, TemplateParser $parser = null)
+    public static function topLevel()
     {
-        if ($parser) {
-            $this->setParser($parser);
+        if (SSViewer::$topLevel) {
+            return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
         }
-
-        $this->setTemplate($templates);
-
-        if (!$this->chosen) {
-            $message = 'None of the following templates could be found: ';
-            $message .= print_r($templates, true);
-
-            $themes = self::get_themes();
-            if (!$themes) {
-                $message .= ' (no theme in use)';
-            } else {
-                $message .= ' in themes "' . print_r($themes, true) . '"';
-            }
-
-            user_error($message, E_USER_WARNING);
-        }
+        return null;
     }
 
+    /**
+     * @param string|array $templates
+     */
     public function setTemplate($templates)
     {
         $this->templates = $templates;
@@ -328,22 +372,6 @@ class SSViewer implements Flushable
     }
 
     /**
-     * @config
-     * @var boolean
-     */
-    private static $rewrite_hash_links = true;
-
-    protected static $topLevel = array();
-
-    public static function topLevel()
-    {
-        if (SSViewer::$topLevel) {
-            return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
-        }
-        return null;
-    }
-
-    /**
      * Call this to disable rewriting of <a href="#xxx"> links.  This is useful in Ajax applications.
      * It returns the SSViewer objects, so that you can call new SSViewer("X")->dontRewriteHashlinks()->process();
      */
@@ -354,6 +382,9 @@ class SSViewer implements Flushable
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function exists()
     {
         return $this->chosen;
@@ -362,7 +393,6 @@ class SSViewer implements Flushable
     /**
      * @param string $identifier A template name without '.ss' extension or path
      * @param string $type The template type, either "main", "Includes" or "Layout"
-     *
      * @return string Full system path to a template file
      */
     public static function getTemplateFileByType($identifier, $type = null)
@@ -411,11 +441,6 @@ class SSViewer implements Flushable
     }
 
     /**
-     * @var CacheInterface
-     */
-    protected $partialCacheStore = null;
-
-    /**
      * Set the cache object to use when storing / retrieving partial cache blocks.
      *
      * @param CacheInterface $cache
@@ -432,7 +457,11 @@ class SSViewer implements Flushable
      */
     public function getPartialCacheStore()
     {
-        return $this->partialCacheStore ? $this->partialCacheStore : Injector::inst()->get(CacheInterface::class . '.cacheblock');
+        if ($this->partialCacheStore) {
+            return $this->partialCacheStore;
+        }
+
+        return Injector::inst()->get(CacheInterface::class . '.cacheblock');
     }
 
     /**
@@ -504,7 +533,7 @@ class SSViewer implements Flushable
         $template = $this->chosen;
 
         $cacheFile = TEMP_FOLDER . "/.cache"
-            . str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
+            . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
         $lastEdited = filemtime($template);
 
         if (!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
@@ -516,11 +545,11 @@ class SSViewer implements Flushable
             fclose($fh);
         }
 
-        $underlay = array('I18NNamespace' => basename($template));
+        $underlay = ['I18NNamespace' => basename($template)];
 
         // Makes the rendered sub-templates available on the parent item,
         // through $Content and $Layout placeholders.
-        foreach (array('Content', 'Layout') as $subtemplate) {
+        foreach (['Content', 'Layout'] as $subtemplate) {
             // Detect sub-template to use
             $sub = $this->getSubtemplateFor($subtemplate);
             if (!$sub) {
@@ -557,7 +586,9 @@ class SSViewer implements Flushable
         if ($this->rewriteHashlinks && $rewrite) {
             if (strpos($output, '<base') !== false) {
                 if ($rewrite === 'php') {
-                    $thisURLRelativeToBase = "<?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace(\"/^(\\\\/)+/\", \"/\", \$_SERVER['REQUEST_URI'])); ?>";
+                    $thisURLRelativeToBase = <<<PHP
+<?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace("/^(\\\\/)+/", "/", \$_SERVER['REQUEST_URI'])); ?>
+PHP;
                 } else {
                     $thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI']));
                 }
@@ -642,6 +673,12 @@ class SSViewer implements Flushable
         return $v->process($data, $arguments);
     }
 
+    /**
+     * Parse given template contents
+     *
+     * @param string $content The template contents
+     * @param string $template The template file name
+     */
     public function parseTemplateContent($content, $template = "")
     {
         return $this->getParser()->compileString(
@@ -654,6 +691,8 @@ class SSViewer implements Flushable
     /**
      * Returns the filenames of the template that will be rendered.  It is a map that may contain
      * 'Content' & 'Layout', and will have to contain 'main'
+     *
+     * @return array
      */
     public function templates()
     {
