@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Tests;
 
 use ReflectionException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
@@ -11,8 +12,6 @@ use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
 use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
 use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
 use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
@@ -50,22 +49,19 @@ class ClassInfoTest extends SapphireTest
 
     public function testSubclassesFor()
     {
+        $subclasses = [
+            'silverstripe\\core\\tests\\classinfotest\\baseclass' => BaseClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\childclass' => ChildClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\grandchildclass' => GrandChildClass::class,
+        ];
         $this->assertEquals(
-            array(
-                BaseClass::class => BaseClass::class,
-                ChildClass::class => ChildClass::class,
-                GrandChildClass::class => GrandChildClass::class
-            ),
+            $subclasses,
             ClassInfo::subclassesFor(BaseClass::class),
             'ClassInfo::subclassesFor() returns only direct subclasses and doesnt include base class'
         );
         ClassInfo::reset_db_cache();
         $this->assertEquals(
-            array(
-                BaseClass::class => BaseClass::class,
-                ChildClass::class => ChildClass::class,
-                GrandChildClass::class => GrandChildClass::class
-            ),
+            $subclasses,
             ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass'),
             'ClassInfo::subclassesFor() is acting in a case sensitive way when it should not'
         );
@@ -96,17 +92,24 @@ class ClassInfoTest extends SapphireTest
 
     public function testClassesForFolder()
     {
-        //$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
-        //$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
-
         $classes = ClassInfo::classes_for_folder(ltrim(FRAMEWORK_DIR . '/tests', '/'));
-        $this->assertContains(
+        $this->assertArrayHasKey(
             'silverstripe\\core\\tests\\classinfotest',
             $classes,
             'ClassInfo::classes_for_folder() returns classes matching the filename'
         );
         $this->assertContains(
+            ClassInfoTest::class,
+            $classes,
+            'ClassInfo::classes_for_folder() returns classes matching the filename'
+        );
+        $this->assertArrayHasKey(
             'silverstripe\\core\\tests\\classinfotest\\baseclass',
+            $classes,
+            'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
+        );
+        $this->assertContains(
+            BaseClass::class,
             $classes,
             'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
         );
@@ -118,12 +121,12 @@ class ClassInfoTest extends SapphireTest
     public function testAncestry()
     {
         $ancestry = ClassInfo::ancestry(ChildClass::class);
-        $expect = ArrayLib::valuekey([
-            ViewableData::class,
-            DataObject::class,
-            BaseClass::class,
-            ChildClass::class,
-        ]);
+        $expect = [
+            'silverstripe\\view\\viewabledata' => ViewableData::class,
+            'silverstripe\\orm\\dataobject' => DataObject::class,
+            'silverstripe\\core\tests\classinfotest\\baseclass' => BaseClass::class,
+            'silverstripe\\core\tests\classinfotest\\childclass' => ChildClass::class,
+        ];
         $this->assertEquals($expect, $ancestry);
 
         ClassInfo::reset_db_cache();
@@ -135,7 +138,9 @@ class ClassInfoTest extends SapphireTest
         ClassInfo::reset_db_cache();
         $ancestry = ClassInfo::ancestry(ChildClass::class, true);
         $this->assertEquals(
-            array(BaseClass::class => BaseClass::class),
+            [
+                'silverstripe\\core\tests\classinfotest\\baseclass' => BaseClass::class
+            ],
             $ancestry,
             '$tablesOnly option excludes memory-only inheritance classes'
         );
@@ -146,13 +151,12 @@ class ClassInfoTest extends SapphireTest
      */
     public function testDataClassesFor()
     {
-        $expect = array(
-            BaseDataClass::class => BaseDataClass::class,
-            HasFields::class     => HasFields::class,
-            WithRelation::class => WithRelation::class,
-            WithCustomTable::class => WithCustomTable::class,
-        );
-
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\basedataclass' => BaseDataClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\hasfields' => HasFields::class,
+            'silverstripe\\core\\tests\\classinfotest\\withrelation' => WithRelation::class,
+            'silverstripe\\core\\tests\\classinfotest\\withcustomtable' => WithCustomTable::class,
+        ];
         $classes = array(
             BaseDataClass::class,
             NoFields::class,
@@ -166,10 +170,10 @@ class ClassInfoTest extends SapphireTest
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
 
-        $expect = array(
-            BaseDataClass::class => BaseDataClass::class,
-            HasFields::class     => HasFields::class,
-        );
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\basedataclass' => BaseDataClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\hasfields' => HasFields::class,
+        ];
 
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));

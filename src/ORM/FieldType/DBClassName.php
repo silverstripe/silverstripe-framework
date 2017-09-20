@@ -129,8 +129,9 @@ class DBClassName extends DBEnum
     public function getEnum()
     {
         $classNames = ClassInfo::subclassesFor($this->getBaseClass());
-        unset($classNames[DataObject::class]);
-        return $classNames;
+        $dataobject = strtolower(DataObject::class);
+        unset($classNames[$dataobject]);
+        return array_values($classNames);
     }
 
     /**

@@ -116,7 +116,7 @@ class ContentNegotiator
                 $chosenFormat = "xhtml";
             } else {
                 foreach ($mimes as $format => $mime) {
-                    $regExp = '/' . str_replace(array('+','/'), array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+                    $regExp = '/' . str_replace(array('+', '/'), array('\+', '\/'), $mime) . '(;q=(\d+\.\d+))?/i';
                     if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
                         $preference = isset($matches[2]) ? $matches[2] : 1;
                         if (!isset($q[$preference])) {
@@ -130,7 +130,7 @@ class ContentNegotiator
                     krsort($q);
                     $chosenFormat = reset($q);
                 } else {
-                    $chosenFormat = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'default_format');
+                    $chosenFormat = Config::inst()->get(static::class, 'default_format');
                 }
             }
         }
@@ -202,7 +202,7 @@ class ContentNegotiator
         $response->addHeader("Vary", "Accept");
 
         $content = $response->getBody();
-        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml' );
+        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml');
 
         // Fix base tag
         $content = preg_replace(
@@ -212,7 +212,11 @@ class ContentNegotiator
         );
 
         $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
-        $content = str_replace(array('/>','xml:lang','application/xhtml+xml'), array('>','lang','text/html'), $content);
+        $content = str_replace(
+            array('/>', 'xml:lang', 'application/xhtml+xml'),
+            array('>', 'lang', 'text/html'),
+            $content
+        );
 
         // Only replace the doctype in templates with the xml header
         if ($hasXMLHeader) {

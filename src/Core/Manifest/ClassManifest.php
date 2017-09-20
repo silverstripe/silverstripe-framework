@@ -19,6 +19,8 @@ use SilverStripe\Dev\TestOnly;
  *   - Class and interface names and paths.
  *   - All direct and indirect descendants of a class.
  *   - All implementors of an interface.
+ *
+ * To be consistent; In general all array keys are lowercase, and array values are correct-case
  */
 class ClassManifest
 {
@@ -51,21 +53,51 @@ class ClassManifest
     protected $cacheKey;
 
     /**
-     * Map of classes to paths
+     * Array of properties to cache
+     *
+     * @var array
+     */
+    protected $serialisedProperties = [
+        'classes',
+        'classNames',
+        'descendants',
+        'interfaces',
+        'interfaceNames',
+        'implementors',
+        'traits',
+        'traitNames',
+    ];
+
+    /**
+     * Map of lowercase class names to paths
      *
      * @var array
      */
     protected $classes = array();
 
     /**
+     * Map of lowercase class names to case-correct names
+     *
+     * @var array
+     */
+    protected $classNames = [];
+
+    /**
      * List of root classes with no parent class
+     * Keys are lowercase, values are correct case.
+     *
+     * Note: Only used while regenerating cache
      *
      * @var array
      */
     protected $roots = array();
 
     /**
-     * List of direct children for any class
+     * List of direct children for any class.
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
+     *
+     * Note: Only used while regenerating cache
      *
      * @var array
      */
@@ -73,31 +105,49 @@ class ClassManifest
 
     /**
      * List of descendents for any class (direct + indirect children)
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
      *
      * @var array
      */
     protected $descendants = array();
 
     /**
-     * List of interfaces and paths to those files
+     * Map of lowercase interface name to path those files
      *
      * @var array
      */
-    protected $interfaces = array();
+    protected $interfaces = [];
+
+    /**
+     * Map of lowercase interface name to proper case
+     *
+     * @var array
+     */
+    protected $interfaceNames = [];
 
     /**
      * List of direct implementors of any interface
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
      *
      * @var array
      */
     protected $implementors = array();
 
     /**
-     * Map of traits to paths
+     * Map of lowercase trait names to paths
      *
      * @var array
      */
-    protected $traits = array();
+    protected $traits = [];
+
+    /**
+     * Map of lowercase trait names to proper case
+     *
+     * @var array
+     */
+    protected $traitNames = [];
 
     /**
      * PHP Parser for parsing found files
@@ -141,20 +191,22 @@ class ClassManifest
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
-                CacheInterface::class.'.classmanifest',
-                [ 'namespace' => 'classmanifest' . ($includeTests ? '_tests' : '') ]
+                CacheInterface::class . '.classmanifest',
+                ['namespace' => 'classmanifest' . ($includeTests ? '_tests' : '')]
             );
         }
 
-        if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
-            $this->classes = $data['classes'];
-            $this->descendants = $data['descendants'];
-            $this->interfaces = $data['interfaces'];
-            $this->implementors = $data['implementors'];
-            $this->traits = $data['traits'];
-        } else {
-            $this->regenerate($includeTests);
+        // Check if cache is safe to use
+        if (!$forceRegen
+            && $this->cache
+            && ($data = $this->cache->get($this->cacheKey))
+            && $this->loadState($data)
+        ) {
+            return;
         }
+
+        // Build
+        $this->regenerate($includeTests);
     }
 
     /**
@@ -171,6 +223,11 @@ class ClassManifest
         return $this->parser;
     }
 
+    /**
+     * Get node traverser for parsing class files
+     *
+     * @return NodeTraverser
+     */
     public function getTraverser()
     {
         if (!$this->traverser) {
@@ -182,6 +239,11 @@ class ClassManifest
         return $this->traverser;
     }
 
+    /**
+     * Get visitor for parsing class files
+     *
+     * @return ClassManifestVisitor
+     */
     public function getVisitor()
     {
         if (!$this->visitor) {
@@ -200,15 +262,35 @@ class ClassManifest
      */
     public function getItemPath($name)
     {
-        $name = strtolower($name);
-
+        $lowerName = strtolower($name);
         foreach ([
-            $this->classes,
-            $this->interfaces,
-            $this->traits
-        ] as $source) {
-            if (isset($source[$name]) && file_exists($source[$name])) {
-                return $source[$name];
+             $this->classes,
+             $this->interfaces,
+             $this->traits,
+         ] as $source) {
+            if (isset($source[$lowerName]) && file_exists($source[$lowerName])) {
+                return $source[$lowerName];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Return correct case name
+     *
+     * @param string $name
+     * @return string Correct case name
+     */
+    public function getItemName($name)
+    {
+        $lowerName = strtolower($name);
+        foreach ([
+             $this->classNames,
+             $this->interfaceNames,
+             $this->traitNames,
+         ] as $source) {
+            if (isset($source[$lowerName])) {
+                return $source[$lowerName];
             }
         }
         return null;
@@ -225,23 +307,33 @@ class ClassManifest
     }
 
     /**
-     * Returns a lowercase array of all the class names in the manifest.
+     * Returns a map of lowercase class names to proper class names in the manifest
      *
      * @return array
      */
     public function getClassNames()
     {
-        return array_keys($this->classes);
+        return $this->classNames;
     }
 
     /**
-     * Returns a lowercase array of all trait names in the manifest
+     * Returns a map of lowercased trait names to file paths.
+     *
+     * @return array
+     */
+    public function getTraits()
+    {
+        return $this->traits;
+    }
+
+    /**
+     * Returns a map of lowercase trait names to proper trait names in the manifest
      *
      * @return array
      */
     public function getTraitNames()
     {
-        return array_keys($this->traits);
+        return $this->traitNames;
     }
 
     /**
@@ -268,12 +360,11 @@ class ClassManifest
         }
 
         $lClass = strtolower($class);
-
         if (array_key_exists($lClass, $this->descendants)) {
             return $this->descendants[$lClass];
-        } else {
-            return array();
         }
+
+        return [];
     }
 
     /**
@@ -284,6 +375,16 @@ class ClassManifest
     public function getInterfaces()
     {
         return $this->interfaces;
+    }
+
+    /**
+     * Return map of lowercase interface names to proper case names in the manifest
+     *
+     * @return array
+     */
+    public function getInterfaceNames()
+    {
+        return $this->interfaceNames;
     }
 
     /**
@@ -301,15 +402,14 @@ class ClassManifest
      * Returns an array containing the class names that implement a certain
      * interface.
      *
-     * @param  string $interface
+     * @param string $interface
      * @return array
      */
     public function getImplementorsOf($interface)
     {
-        $interface = strtolower($interface);
-
-        if (array_key_exists($interface, $this->implementors)) {
-            return $this->implementors[$interface];
+        $lowerInterface = strtolower($interface);
+        if (array_key_exists($lowerInterface, $this->implementors)) {
+            return $this->implementors[$lowerInterface];
         } else {
             return array();
         }
@@ -334,21 +434,16 @@ class ClassManifest
      */
     public function regenerate($includeTests)
     {
-        $resets = array(
-            'classes', 'roots', 'children', 'descendants', 'interfaces',
-            'implementors', 'traits'
-        );
-
         // Reset the manifest so stale info doesn't cause errors.
-        foreach ($resets as $reset) {
-            $this->$reset = array();
-        }
+        $this->loadState([]);
+        $this->roots = [];
+        $this->children = [];
 
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
-            'name_regex'    => '/^[^_].*\\.php$/',
-            'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
-            'ignore_tests'  => !$includeTests,
+            'name_regex' => '/^[^_].*\\.php$/',
+            'ignore_files' => array('index.php', 'main.php', 'cli-script.php'),
+            'ignore_tests' => !$includeTests,
             'file_callback' => function ($basename, $pathname) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
@@ -360,23 +455,21 @@ class ClassManifest
         }
 
         if ($this->cache) {
-            $data = array(
-                'classes'      => $this->classes,
-                'descendants'  => $this->descendants,
-                'interfaces'   => $this->interfaces,
-                'implementors' => $this->implementors,
-                'traits'       => $this->traits,
-            );
+            $data = $this->getState();
             $this->cache->set($this->cacheKey, $data);
         }
     }
 
+    /**
+     * Visit a file to inspect for classes, interfaces and traits
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param bool $includeTests
+     * @throws Exception
+     */
     public function handleFile($basename, $pathname, $includeTests)
     {
-        $classes    = null;
-        $interfaces = null;
-        $traits = null;
-
         // The results of individual file parses are cached, since only a few
         // files will have changed and TokenisedRegularExpression is quite
         // slow. A combination of the file name and file contents hash are used,
@@ -384,6 +477,7 @@ class ClassManifest
         $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
         // Attempt to load from cache
+        // Note: $classes, $interfaces and $traits arrays have correct-case keys, not lowercase
         $changed = false;
         if ($this->cache
             && ($data = $this->cache->get($key))
@@ -409,64 +503,64 @@ class ClassManifest
             $traits = $this->getVisitor()->getTraits();
         }
 
-        // Merge this data into the global list
+        // Merge raw class data into global list
         foreach ($classes as $className => $classInfo) {
-            $extends = !empty($classInfo['extends'])
-                ? array_map('strtolower', $classInfo['extends'])
-                : [];
-            $implements = !empty($classInfo['interfaces'])
-                ? array_map('strtolower', $classInfo['interfaces'])
-                : [];
-            $lowercaseName = strtolower($className);
-            if (array_key_exists($lowercaseName, $this->classes)) {
+            $lowerClassName = strtolower($className);
+            if (array_key_exists($lowerClassName, $this->classes)) {
                 throw new Exception(sprintf(
                     'There are two files containing the "%s" class: "%s" and "%s"',
                     $className,
-                    $this->classes[$lowercaseName],
+                    $this->classes[$lowerClassName],
                     $pathname
                 ));
             }
 
             // Skip if implements TestOnly, but doesn't include tests
-            if (!$includeTests
-                && $implements
-                && in_array(strtolower(TestOnly::class), $implements)
-            ) {
+            $lowerInterfaces = array_map('strtolower', $classInfo['interfaces']);
+            if (!$includeTests && in_array(strtolower(TestOnly::class), $lowerInterfaces)) {
                 $changed = true;
                 unset($classes[$className]);
                 continue;
             }
 
-            $this->classes[$lowercaseName] = $pathname;
+            $this->classes[$lowerClassName] = $pathname;
+            $this->classNames[$lowerClassName] = $className;
 
-            if ($extends) {
-                foreach ($extends as $ancestor) {
-                    if (!isset($this->children[$ancestor])) {
-                        $this->children[$ancestor] = array($className);
-                    } else {
-                        $this->children[$ancestor][] = $className;
+            // Add to children
+            if ($classInfo['extends']) {
+                foreach ($classInfo['extends'] as $ancestor) {
+                    $lowerAncestor = strtolower($ancestor);
+                    if (!isset($this->children[$lowerAncestor])) {
+                        $this->children[$lowerAncestor] = [];
                     }
+                    $this->children[$lowerAncestor][$lowerClassName] = $className;
                 }
             } else {
-                $this->roots[] = $className;
+                $this->roots[$lowerClassName] = $className;
             }
 
-            if ($implements) {
-                foreach ($implements as $interface) {
-                    if (!isset($this->implementors[$interface])) {
-                        $this->implementors[$interface] = array($className);
-                    } else {
-                        $this->implementors[$interface][] = $className;
-                    }
+            // Load interfaces
+            foreach ($classInfo['interfaces'] as $interface) {
+                $lowerInterface = strtolower($interface);
+                if (!isset($this->implementors[$lowerInterface])) {
+                    $this->implementors[$lowerInterface] = [];
                 }
+                $this->implementors[$lowerInterface][$lowerClassName] = $className;
             }
         }
 
+        // Merge all found interfaces into list
         foreach ($interfaces as $interfaceName => $interfaceInfo) {
-            $this->interfaces[strtolower($interfaceName)] = $pathname;
+            $lowerInterface = strtolower($interfaceName);
+            $this->interfaces[$lowerInterface] = $pathname;
+            $this->interfaceNames[$lowerInterface] = $interfaceName;
         }
+
+        // Merge all traits
         foreach ($traits as $traitName => $traitInfo) {
-            $this->traits[strtolower($traitName)] = $pathname;
+            $lowerTrait = strtolower($traitName);
+            $this->traits[$lowerTrait] = $pathname;
+            $this->traitNames[$lowerTrait] = $traitName;
         }
 
         // Save back to cache if configured
@@ -489,23 +583,57 @@ class ClassManifest
      */
     protected function coalesceDescendants($class)
     {
-        $lClass = strtolower($class);
-
-        if (array_key_exists($lClass, $this->children)) {
-            $this->descendants[$lClass] = array();
-
-            foreach ($this->children[$lClass] as $class) {
-                $this->descendants[$lClass] = array_merge(
-                    $this->descendants[$lClass],
-                    array($class),
-                    $this->coalesceDescendants($class)
-                );
-            }
-
-            return $this->descendants[$lClass];
-        } else {
-            return array();
+        // Reset descendents to immediate children initially
+        $lowerClass = strtolower($class);
+        if (empty($this->children[$lowerClass])) {
+            return [];
         }
+
+        // Coalasce children into descendent list
+        $this->descendants[$lowerClass] = $this->children[$lowerClass];
+        foreach ($this->children[$lowerClass] as $childClass) {
+            // Merge all nested descendants
+            $this->descendants[$lowerClass] = array_merge(
+                $this->descendants[$lowerClass],
+                $this->coalesceDescendants($childClass)
+            );
+        }
+        return $this->descendants[$lowerClass];
+    }
+
+    /**
+     * Reload state from given cache data
+     *
+     * @param array $data
+     * @return bool True if cache was valid and successfully loaded
+     */
+    protected function loadState($data)
+    {
+        $success = true;
+        foreach ($this->serialisedProperties as $property) {
+            if (!isset($data[$property]) || !is_array($data[$property])) {
+                $success = false;
+                $value = [];
+            } else {
+                $value = $data[$property];
+            }
+            $this->$property = $value;
+        }
+        return $success;
+    }
+
+    /**
+     * Load current state into an array of data
+     *
+     * @return array
+     */
+    protected function getState()
+    {
+        $data = [];
+        foreach ($this->serialisedProperties as $property) {
+            $data[$property] = $this->$property;
+        }
+        return $data;
     }
 
     /**
@@ -516,6 +644,9 @@ class ClassManifest
      */
     protected function validateItemCache($data)
     {
+        if (!$data || !is_array($data)) {
+            return false;
+        }
         foreach (['classes', 'interfaces', 'traits'] as $key) {
             // Must be set
             if (!isset($data[$key])) {

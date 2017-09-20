@@ -112,8 +112,9 @@ class CoreConfigFactory
     public function buildStaticTransformer()
     {
         return new PrivateStaticTransformer(function () {
-            $classes = ClassLoader::inst()->getManifest()->getClasses();
-            return array_keys($classes);
+            return ClassLoader::inst()
+                ->getManifest()
+                ->getClassNames();
         });
     }
 
