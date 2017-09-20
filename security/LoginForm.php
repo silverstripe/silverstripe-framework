@@ -44,5 +44,15 @@ abstract class LoginForm extends Form {
 		return $authClass::get_name();
 	}
 
+	public function setAuthenticatorClass($class)
+	{
+		$this->authenticator_class = $class;
+		$authenticatorField = $this->Fields()->dataFieldByName('AuthenticationMethod');
+		if ($authenticatorField) {
+			$authenticatorField->setValue($class);
+		}
+		return $this;
+	}
+
 }
 
