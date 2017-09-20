@@ -150,6 +150,10 @@ class MemberAuthenticator extends Authenticator {
 	 * @see Security::setDefaultAdmin()
 	 */
 	public static function authenticate($data, Form $form = null) {
+		// minimum execution time for authenticating a member
+		$minExecTime = LoginForm::config()->min_auth_time / 1000;
+		$startTime = microtime(true);
+
 		// Find authenticated member
 		$member = static::authenticate_member($data, $form, $success);
 
@@ -169,6 +173,11 @@ class MemberAuthenticator extends Authenticator {
 		}
 
 		if($success) Session::clear('BackURL');
+
+		$waitFor = $minExecTime - (microtime(true) - $startTime);
+		if ($waitFor > 0) {
+			usleep($waitFor * 1000000);
+		}
 
 		return $success ? $member : null;
 	}
