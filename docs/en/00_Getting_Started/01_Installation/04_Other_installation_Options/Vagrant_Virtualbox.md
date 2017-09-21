@@ -51,7 +51,7 @@ This defines what pre-built Operating System the vagrant machine will be using. 
 
 We've chosen to use `RHEL7.0`, but you can easily change it to suit your needs.
 ```ruby
-config.vm.box = "box-cutter/centos70"
+config.vm.box = "box-cutter/centos73"
 ```
 
 *Important*: Because this is redhat, the shell commands used later on will be using `yum install` instead of `apt-get install` for Debian based boxes.
