@@ -1,0 +1,1 @@
+/* mymodule/file.js */

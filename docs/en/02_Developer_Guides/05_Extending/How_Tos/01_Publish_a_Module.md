@@ -17,38 +17,86 @@ this:
 
 **mycustommodule/composer.json**
 
-```js
-
-    {
-      "name": "your-vendor-name/module-name",
-      "description": "One-liner describing your module",
-      "type": "silverstripe-module",
-      "homepage": "http://github.com/your-vendor-name/module-name",
-      "keywords": ["silverstripe", "some-tag", "some-other-tag"],
-      "license": "BSD-3-Clause",
-      "authors": [
-        {"name": "Your Name","email": "your@email.com"}
-      ],
-      "support": {
-        "issues": "http://github.com/your-vendor-name/module-name/issues"
-      },
-      "require": {
-        "silverstripe/cms": "~3.1",
-        "silverstripe/framework": "~3.1"
-      },
-      "extra": {
-        "installer-name": "module-name",
-        "screenshots": [
-          "relative/path/screenshot1.png",
-          "http://myhost.com/screenshot2.png"
-        ]
-      }
-    }
+```json
+{
+  "name": "your-vendor-name/module-name",
+  "description": "One-liner describing your module",
+  "type": "silverstripe-module",
+  "homepage": "http://github.com/your-vendor-name/module-name",
+  "keywords": ["silverstripe", "some-tag", "some-other-tag"],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {"name": "Your Name","email": "your@email.com"}
+  ],
+  "support": {
+    "issues": "http://github.com/your-vendor-name/module-name/issues"
+  },
+  "require": {
+    "silverstripe/cms": "^4",
+    "silverstripe/framework": "^4"
+  },
+  "extra": {
+    "installer-name": "module-name",
+    "screenshots": [
+      "relative/path/screenshot1.png",
+      "http://myhost.com/screenshot2.png"
+    ]
+  }
+}
 ```
 
 Once your module is published online with a service like Github.com or Bitbucket.com, submit the repository to 
 [Packagist](https://packagist.org/) to have the module accessible to developers. It'll automatically get picked
 up by [addons.silverstripe.org](http://addons.silverstripe.org/) website.
+
+## Vendor modules
+
+By default `silverstripe-module` type libraries are installed to the root web folder, however a new type
+`silverstripe-vendormodule` allows you to publish your module to the vendor directory.
+
+The below is an example of a vendor module composer.json:
+
+```json
+{
+    "name": "tractorcow/test-vendor-module",
+    "description": "Test module for silverstripe/vendor-plugin",
+    "type": "silverstripe-vendormodule",
+    "require": {
+        "silverstripe/vendor-plugin": "^1.0",
+        "silverstripe/cms": "^4.0"
+    },
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "psr-4": {
+            "TractorCow\\TestVendorModule\\": "src/"
+        }
+    },
+    "extra": {
+        "expose": [
+            "client"
+        ]
+    },
+    "minimum-stability": "dev"
+}
+```
+
+Note that these modules have the following distinct characteristics:
+
+ - Library type is `silverstripe-vendormodule`
+ - Any folder which should be exposed to the public webroot must be declared in the `extra.expose` config.
+   These paths will be automatically rewritten to public urls which don't directly serve files from the `vendor`
+   folder. For instance, `vendor/tractorcow/test-vendor-module/client` will be rewritten to
+   `resources/tractorcow/test-vendor-module/client`.
+ - Any module which uses the folder expose feature must require `silverstripe/vendor-plugin` in order to
+   support automatic rewriting and linking. For more information on this plugin you can see the
+   [silverstripe/vendor-plugin github page](https://github.com/silverstripe/vendor-plugin).
+
+Linking to resources in vendor modules uses exactly the same syntax as non-vendor modules. For example,
+this is how you would require a script in this module:
+
+```php
+Requirements::javascript('tractorcow/test-vendor-module:client/js/script.js');
+```
 
 ## Releasing versions
 

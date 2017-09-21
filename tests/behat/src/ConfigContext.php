@@ -120,7 +120,7 @@ class ConfigContext implements Context
         $project = ModuleManifest::config()->get('project') ?: 'mysite';
         $mysite = ModuleLoader::getModule($project);
         assertNotNull($mysite, 'Project exists');
-        $destPath = $mysite->getResourcePath("_config/{$filename}");
+        $destPath = $mysite->getResource("_config/{$filename}")->getPath();
         assertFileNotExists($destPath, "Config file {$filename} hasn't aleady been loaded");
 
         // Load
