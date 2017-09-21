@@ -474,6 +474,8 @@ class SSViewer implements Flushable
         $scope = new SSViewer_DataPresenter($item, $overlay, $underlay, $inheritedScope);
         $val = '';
 
+        // Placeholder for values exposed to $cacheFile
+        [$cache, $scope, $val];
         include($cacheFile);
 
         return $val;
@@ -519,26 +521,26 @@ class SSViewer implements Flushable
         // Makes the rendered sub-templates available on the parent item,
         // through $Content and $Layout placeholders.
         foreach (array('Content', 'Layout') as $subtemplate) {
-            $sub = null;
-            if (isset($this->subTemplates[$subtemplate])) {
-                $sub = $this->subTemplates[$subtemplate];
-            } elseif (!is_array($this->templates)) {
-                $sub = ['type' => $subtemplate, $this->templates];
-            } elseif (!array_key_exists('type', $this->templates) || !$this->templates['type']) {
-                $sub = array_merge($this->templates, ['type' => $subtemplate]);
+            // Detect sub-template to use
+            $sub = $this->getSubtemplateFor($subtemplate);
+            if (!$sub) {
+                continue;
             }
 
-            if ($sub) {
+            // Create lazy-evaluated underlay for this subtemplate
+            $underlay[$subtemplate] = function () use ($item, $arguments, $sub) {
                 $subtemplateViewer = clone $this;
                 // Disable requirements - this will be handled by the parent template
                 $subtemplateViewer->includeRequirements(false);
                 // Select the right template
                 $subtemplateViewer->setTemplate($sub);
 
+                // Render if available
                 if ($subtemplateViewer->exists()) {
-                    $underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+                    return $subtemplateViewer->process($item, $arguments);
                 }
-            }
+                return null;
+            };
         }
 
         $output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay, $inheritedScope);
@@ -564,7 +566,44 @@ class SSViewer implements Flushable
             }
         }
 
-        return DBField::create_field('HTMLFragment', $output);
+        /** @var DBHTMLText $html */
+        $html = DBField::create_field('HTMLFragment', $output);
+        return $html;
+    }
+
+    /**
+     * Get the appropriate template to use for the named sub-template, or null if none are appropriate
+     *
+     * @param string $subtemplate Sub-template to use
+     *
+     * @return array|null
+     */
+    protected function getSubtemplateFor($subtemplate)
+    {
+        // Get explicit subtemplate name
+        if (isset($this->subTemplates[$subtemplate])) {
+            return $this->subTemplates[$subtemplate];
+        }
+
+        // Don't apply sub-templates if type is already specified (e.g. 'Includes')
+        if (isset($this->templates['type'])) {
+            return null;
+        }
+
+        // Filter out any other typed templates as we can only add, not change type
+        $templates = array_filter(
+            (array)$this->templates,
+            function ($template) {
+                return !isset($template['type']);
+            }
+        );
+        if (empty($templates)) {
+            return null;
+        }
+
+        // Set type to subtemplate
+        $templates['type'] = $subtemplate;
+        return $templates;
     }
 
     /**

@@ -4,7 +4,7 @@ namespace SilverStripe\View;
 
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
@@ -15,12 +15,25 @@ use SilverStripe\Core\Injector\Injector;
  */
 class SSViewer_DataPresenter extends SSViewer_Scope
 {
-
+    /**
+     * List of global property providers
+     *
+     * @internal
+     * @var TemplateGlobalProvider[]|null
+     */
     private static $globalProperties = null;
+
+    /**
+     * List of global iterator providers
+     *
+     * @internal
+     * @var TemplateIteratorProvider[]|null
+     */
     private static $iteratorProperties = null;
 
     /**
      * Overlay variables. Take precedence over anything from the current scope
+     *
      * @var array|null
      */
     protected $overlay;
@@ -117,85 +130,29 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     public function getInjectedValue($property, $params, $cast = true)
     {
-        $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-
-        // Find the source of the value
-        $source = null;
-
-        // Check for a presenter-specific override
-        if (array_key_exists($property, $this->overlay)) {
-            $source = array('value' => $this->overlay[$property]);
-        } // Check if the method to-be-called exists on the target object - if so, don't check any further
-        // injection locations
-        else {
-            if (isset($on->$property) || method_exists($on, $property)) {
-                $source = null;
-            } // Check for a presenter-specific override
-            else {
-                if (array_key_exists($property, $this->underlay)) {
-                    $source = array('value' => $this->underlay[$property]);
-                } // Then for iterator-specific overrides
-                else {
-                    if (array_key_exists($property, self::$iteratorProperties)) {
-                        $source = self::$iteratorProperties[$property];
-                        if ($this->itemIterator) {
-                            // Set the current iterator position and total (the object instance is the first item in
-                            // the callable array)
-                            $source['implementer']->iteratorProperties(
-                                $this->itemIterator->key(),
-                                $this->itemIteratorTotal
-                            );
-                        } else {
-                            // If we don't actually have an iterator at the moment, act like a list of length 1
-                            $source['implementer']->iteratorProperties(0, 1);
-                        }
-                    } // And finally for global overrides
-                    else {
-                        if (array_key_exists($property, self::$globalProperties)) {
-                            $source = self::$globalProperties[$property];  //get the method call
-                        }
-                    }
-                }
-            }
+        // Get source for this value
+        $source = $this->getValueSource($property);
+        if (!$source) {
+            return null;
         }
 
-        if ($source) {
-            $res = array();
-
-            // Look up the value - either from a callable, or from a directly provided value
-            if (isset($source['callable'])) {
-                $res['value'] = call_user_func_array($source['callable'], $params);
-            } elseif (isset($source['value'])) {
-                $res['value'] = $source['value'];
-            } else {
-                throw new InvalidArgumentException("Injected property $property does't have a value or callable " .
-                    "value source provided");
-            }
-
-            // If we want to provide a casted object, look up what type object to use
-            if ($cast) {
-                // If the handler returns an object, then we don't need to cast.
-                if (is_object($res['value'])) {
-                    $res['obj'] = $res['value'];
-                } else {
-                    // Get the object to cast as
-                    $casting = isset($source['casting']) ? $source['casting'] : null;
-
-                    // If not provided, use default
-                    if (!$casting) {
-                        $casting = ViewableData::config()->uninherited('default_cast');
-                    }
-
-                    $obj = Injector::inst()->get($casting, false, array($property));
-                    $obj->setValue($res['value']);
-
-                    $res['obj'] = $obj;
-                }
-            }
-
-            return $res;
+        // Look up the value - either from a callable, or from a directly provided value
+        $res = [];
+        if (isset($source['callable'])) {
+            $res['value'] = call_user_func_array($source['callable'], $params);
+        } elseif (isset($source['value'])) {
+            $res['value'] = $source['value'];
+        } else {
+            throw new InvalidArgumentException(
+                "Injected property $property does't have a value or callable value source provided"
+            );
         }
-        return null;
+
+        // If we want to provide a casted object, look up what type object to use
+        if ($cast) {
+            $res['obj'] = $this->castValue($res['value'], $source);
+        }
+        return $res;
     }
 
     /**
@@ -204,6 +161,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * "up" in the stack (hence upIndex), rather than the current item, because
      * SSViewer_Scope::obj() has already been called and pushed the new item to
      * the stack by this point
+     *
      * @return SSViewer_Scope
      */
     public function pushScope()
@@ -226,6 +184,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * Now that we're going to jump up an item in the item stack, we need to
      * restore the overlay that was previously stored against the next item "up"
      * in the stack from the current one
+     *
      * @return SSViewer_Scope
      */
     public function popScope()
@@ -275,7 +234,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             }
         }
 
-        return parent::obj($name, $arguments, $cache, $cacheName);
+        parent::obj($name, $arguments, $cache, $cacheName);
+        return $this;
     }
 
     public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
@@ -315,5 +275,111 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         } else {
             return parent::__call($name, $arguments);
         }
+    }
+
+    /**
+     * Evaluate a template override
+     *
+     * @param string $property Name of override requested
+     * @param array $overrides List of overrides available
+     * @return null|array Null if not provided, or array with 'value' or 'callable' key
+     */
+    protected function processTemplateOverride($property, $overrides)
+    {
+        if (!isset($overrides[$property])) {
+            return null;
+        }
+
+        // Detect override type
+        $override = $overrides[$property];
+
+        // Late-evaluate this value
+        if (is_callable($override)) {
+            $override = $override();
+
+            // Late override may yet return null
+            if (!isset($override)) {
+                return null;
+            }
+        }
+
+        return [ 'value' => $override ];
+    }
+
+    /**
+     * Determine source to use for getInjectedValue
+     *
+     * @param string $property
+     * @return array|null
+     */
+    protected function getValueSource($property)
+    {
+        // Check for a presenter-specific override
+        $overlay = $this->processTemplateOverride($property, $this->overlay);
+        if (isset($overlay)) {
+            return $overlay;
+        }
+
+        // Check if the method to-be-called exists on the target object - if so, don't check any further
+        // injection locations
+        $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        if (isset($on->$property) || method_exists($on, $property)) {
+            return null;
+        }
+
+        // Check for a presenter-specific override
+        $underlay = $this->processTemplateOverride($property, $this->underlay);
+        if (isset($underlay)) {
+            return $underlay;
+        }
+
+        // Then for iterator-specific overrides
+        if (array_key_exists($property, self::$iteratorProperties)) {
+            $source = self::$iteratorProperties[$property];
+            /** @var TemplateIteratorProvider $implementer */
+            $implementer = $source['implementer'];
+            if ($this->itemIterator) {
+                // Set the current iterator position and total (the object instance is the first item in
+                // the callable array)
+                $implementer->iteratorProperties(
+                    $this->itemIterator->key(),
+                    $this->itemIteratorTotal
+                );
+            } else {
+                // If we don't actually have an iterator at the moment, act like a list of length 1
+                $implementer->iteratorProperties(0, 1);
+            }
+            return $source;
+        }
+
+        // And finally for global overrides
+        if (array_key_exists($property, self::$globalProperties)) {
+            return self::$globalProperties[$property];  //get the method call
+        }
+
+        // No value
+        return null;
+    }
+
+    /**
+     * Ensure the value is cast safely
+     *
+     * @param mixed $value
+     * @param array $source
+     * @return DBField
+     */
+    protected function castValue($value, $source)
+    {
+        // Already cast
+        if (is_object($value)) {
+            return $value;
+        }
+
+        // Get provided or default cast
+        $casting = empty($source['casting'])
+            ? ViewableData::config()->uninherited('default_cast')
+            : $source['casting'];
+
+        return DBField::create_field($casting, $value);
     }
 }
