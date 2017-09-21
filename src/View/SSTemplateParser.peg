@@ -1213,7 +1213,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         // TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
         // non-dynamically calculated
         $code = <<<'EOC'
-(\SilverStripe\View\SSViewer::config()->get('rewrite_hash_links')
+(\SilverStripe\View\SSViewer::getRewriteHashLinksDefault()
     ? \SilverStripe\Core\Convert::raw2att( preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI'] ) )
     : "")
 EOC;

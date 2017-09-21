@@ -635,7 +635,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
 
         // Themed editor.css
-        $themes = $this->config()->get('user_themes') ?: SSViewer::get_themes();
+        $themes = HTMLEditorConfig::getThemes() ?: SSViewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
             $editor[] = Director::absoluteURL($themedEditor);

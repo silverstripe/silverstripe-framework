@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\ClassInfo;
 use Psr\SimpleCache\CacheInterface;
@@ -49,27 +50,40 @@ class SSViewer implements Flushable
     const DEFAULT_THEME = '$default';
 
     /**
-     * @config
-     * @var string A list (highest priority first) of themes to use
+     * A list (highest priority first) of themes to use
      * Only used when {@link $theme_enabled} is set to TRUE.
+     *
+     * @config
+     * @var string
      */
     private static $themes = [];
 
     /**
+     * Overridden value of $themes config
+     *
+     * @var array
+     */
+    protected static $current_themes = null;
+
+    /**
+     * The used "theme", which usually consists of templates, images and stylesheets.
+     * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
+     *
      * @deprecated 4.0..5.0
      * @config
-     * @var string The used "theme", which usually consists of templates, images and stylesheets.
-     * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
+     * @var string
      */
     private static $theme = null;
 
     /**
-     * @config
-     * @var boolean Use the theme. Set to FALSE in order to disable themes,
+     * Use the theme. Set to FALSE in order to disable themes,
      * which can be useful for scenarios where theme overrides are temporarily undesired,
      * such as an administrative interface separate from the website theme.
      * It retains the theme settings to be re-enabled, for example when a website content
      * needs to be rendered from within this administrative interface.
+     *
+     * @config
+     * @var bool
      */
     private static $theme_enabled = true;
 
@@ -83,53 +97,75 @@ class SSViewer implements Flushable
 
     /**
      * @config
-     * @var boolean $source_file_comments
+     * @var bool
      */
     private static $source_file_comments = false;
 
     /**
+     * Set if hash links should be rewritten
+     *
      * @config
-     * @var boolean
+     * @var bool
      */
     private static $rewrite_hash_links = true;
 
     /**
+     * Overridden value of rewrite_hash_links config
+     *
+     * @var bool
+     */
+    protected static $current_rewrite_hash_links = null;
+
+    /**
+     * Instance variable to disable rewrite_hash_links (overrides global default)
+     * Leave null to use global state.
+     *
+     * @var bool|null
+     */
+    protected $rewriteHashlinks = null;
+
+    /**
+     * @internal
      * @ignore
      */
     private static $template_cache_flushed = false;
 
     /**
+     * @internal
      * @ignore
      */
     private static $cacheblock_cache_flushed = false;
 
     /**
-     * @var array $topLevel List of items being processed
+     * List of items being processed
+     *
+     * @var array
      */
     protected static $topLevel = [];
 
     /**
-     * @var array $templates List of templates to select from
+     * List of templates to select from
+     *
+     * @var array
      */
     protected $templates = null;
 
     /**
-     * @var string $chosen Absolute path to chosen template file
+     * Absolute path to chosen template file
+     *
+     * @var string
      */
     protected $chosen = null;
 
     /**
-     * @var array Templates to use when looking up 'Layout' or 'Content'
+     * Templates to use when looking up 'Layout' or 'Content'
+     *
+     * @var array
      */
     protected $subTemplates = null;
 
     /**
-     * @var boolean
-     */
-    protected $rewriteHashlinks = true;
-
-    /**
-     * @var boolean
+     * @var bool
      */
     protected $includeRequirements = true;
 
@@ -316,6 +352,55 @@ class SSViewer implements Flushable
     }
 
     /**
+     * Check if rewrite hash links are enabled on this instance
+     *
+     * @return bool
+     */
+    public function getRewriteHashLinks()
+    {
+        if (isset($this->rewriteHashlinks)) {
+            return $this->rewriteHashlinks;
+        }
+        return static::getRewriteHashLinksDefault();
+    }
+
+    /**
+     * Set if hash links are rewritten for this instance
+     *
+     * @param bool $rewrite
+     * @return $this
+     */
+    public function setRewriteHashLinks($rewrite)
+    {
+        $this->rewriteHashlinks = $rewrite;
+        return $this;
+    }
+
+    /**
+     * Get default value for rewrite hash links for all modules
+     *
+     * @return bool
+     */
+    public static function getRewriteHashLinksDefault()
+    {
+        // Check if config overridden
+        if (isset(self::$current_rewrite_hash_links)) {
+            return self::$current_rewrite_hash_links;
+        }
+        return Config::inst()->get(static::class, 'rewrite_hash_links');
+    }
+
+    /**
+     * Set default rewrite hash links
+     *
+     * @param bool $rewrite
+     */
+    public static function setRewriteHashLinksDefault($rewrite)
+    {
+        self::$current_rewrite_hash_links = $rewrite;
+    }
+
+    /**
      * @param string|array $templates
      */
     public function setTemplate($templates)
@@ -364,7 +449,7 @@ class SSViewer implements Flushable
      *
      * @param array|string $templates
      *
-     * @return boolean
+     * @return bool
      */
     public static function hasTemplate($templates)
     {
@@ -374,11 +459,12 @@ class SSViewer implements Flushable
     /**
      * Call this to disable rewriting of <a href="#xxx"> links.  This is useful in Ajax applications.
      * It returns the SSViewer objects, so that you can call new SSViewer("X")->dontRewriteHashlinks()->process();
+     *
+     * @return $this
      */
     public function dontRewriteHashlinks()
     {
-        $this->rewriteHashlinks = false;
-        SSViewer::config()->update('rewrite_hash_links', false);
+        $this->setRewriteHashLinks(false);
         return $this;
     }
 
@@ -467,7 +553,7 @@ class SSViewer implements Flushable
     /**
      * Flag whether to include the requirements in this response.
      *
-     * @param boolean
+     * @param bool
      */
     public function includeRequirements($incl = true)
     {
@@ -528,6 +614,11 @@ class SSViewer implements Flushable
      */
     public function process($item, $arguments = null, $inheritedScope = null)
     {
+        // Set hashlinks and temporarily modify global state
+        $rewrite = $this->getRewriteHashLinks();
+        $origRewriteDefault = static::getRewriteHashLinksDefault();
+        static::setRewriteHashLinksDefault($rewrite);
+
         SSViewer::$topLevel[] = $item;
 
         $template = $this->chosen;
@@ -581,9 +672,7 @@ class SSViewer implements Flushable
         array_pop(SSViewer::$topLevel);
 
         // If we have our crazy base tag, then fix # links referencing the current page.
-
-        $rewrite = SSViewer::config()->uninherited('rewrite_hash_links');
-        if ($this->rewriteHashlinks && $rewrite) {
+        if ($rewrite) {
             if (strpos($output, '<base') !== false) {
                 if ($rewrite === 'php') {
                     $thisURLRelativeToBase = <<<PHP
@@ -599,6 +688,9 @@ PHP;
 
         /** @var DBHTMLText $html */
         $html = DBField::create_field('HTMLFragment', $output);
+
+        // Reset global state
+        static::setRewriteHashLinksDefault($origRewriteDefault);
         return $html;
     }
 
@@ -678,6 +770,7 @@ PHP;
      *
      * @param string $content The template contents
      * @param string $template The template file name
+     * @return string
      */
     public function parseTemplateContent($content, $template = "")
     {

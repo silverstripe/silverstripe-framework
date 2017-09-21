@@ -42,9 +42,9 @@ Or, a better way is to call this just for the rendering phase of this particular
 ```php
 	public function RenderCustomTemplate() 
 	{
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);
+		SSViewer::setRewriteHashLinks(false);
 		$html = $this->renderWith('MyCustomTemplate');
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
+		SSViewer::setRewriteHashLinks(true);
 
 		return $html;
 	}
