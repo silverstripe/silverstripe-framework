@@ -30,8 +30,8 @@ to automatically download the required files from GitHub and other repositories.
 
 In order to install Composer, we need to let the system know where to find the PHP executable.
 Open or create the `~/.bash_profile` file in your home folder, then add the following line:
-`export PATH=/Applications/MAMP/bin/php/php5.5.22/bin:$PATH`
-You'll need to adjust the PHP version number (`php5.5.22`). The currently running PHP version is shown on `http://localhost:8888/MAMP/index.php?page=phpinfo`.
+`export PATH=/Applications/MAMP/bin/php/php7.0.20/bin:$PATH`
+You'll need to adjust the PHP version number (`php7.0.20`). The currently running PHP version is shown on `http://localhost:8888/MAMP/index.php?page=phpinfo`.
 Run `source ~/.bash_profile` for the changes to take effect. You can verify that the correct executable
 is used by running `which php`. It should show the path to MAMP from above.
 
