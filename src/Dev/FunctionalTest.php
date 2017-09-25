@@ -4,6 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
@@ -12,6 +13,7 @@ use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
 use PHPUnit_Framework_AssertionFailedError;
 use SimpleXMLElement;
@@ -161,6 +163,9 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function get($url, $session = null, $headers = null, $cookies = null)
     {
         $this->cssParser = null;
+        if (Versioned::get_stage() === Versioned::DRAFT) {
+            $url = HTTP::setGetVar('stage', Versioned::DRAFT, $url);
+        }
         $response = $this->mainSession->get($url, $session, $headers, $cookies);
         if ($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
             $response = $this->mainSession->followRedirection();
@@ -411,11 +416,9 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function useDraftSite($enabled = true)
     {
         if ($enabled) {
-            $this->session()->set('readingMode', 'Stage.Stage');
-            $this->session()->set('unsecuredDraftSite', true);
+            Versioned::set_stage(Versioned::DRAFT);
         } else {
-            $this->session()->set('readingMode', 'Stage.Live');
-            $this->session()->set('unsecuredDraftSite', false);
+            Versioned::set_stage(Versioned::LIVE);
         }
     }
 
