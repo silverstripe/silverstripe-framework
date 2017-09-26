@@ -150,7 +150,7 @@ PHP
             $adminMember = DefaultAdminService::singleton()
                 ->findOrCreateAdmin(
                     $username,
-                    _t(DefaultAdminService::class . '.DefaultAdminFirstname', 'Default Admin')
+                    _t('SilverStripe\\Security\\DefaultAdminService.DefaultAdminFirstname', 'Default Admin')
                 );
             $adminMember->Email = $username;
             $adminMember->Password = $password;
