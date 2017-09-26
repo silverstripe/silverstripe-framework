@@ -105,11 +105,6 @@ class FunctionalTest extends SapphireTest implements TestOnly
         // Flush user
         $this->logOut();
 
-        // Switch to draft site, if necessary
-        if (static::get_use_draft_site()) {
-            $this->useDraftSite();
-        }
-
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
         BasicAuth::protect_entire_site(false);
@@ -163,7 +158,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function get($url, $session = null, $headers = null, $cookies = null)
     {
         $this->cssParser = null;
-        if (Versioned::get_stage() === Versioned::DRAFT) {
+        if (self::get_use_draft_site()) {
             $url = HTTP::setGetVar('stage', Versioned::DRAFT, $url);
         }
         $response = $this->mainSession->get($url, $session, $headers, $cookies);
