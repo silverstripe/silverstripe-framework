@@ -9,6 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * Tests for the {@link SilverStripe\ORM\PaginatedList} class.
@@ -330,6 +331,19 @@ class PaginatedListTest extends SapphireTest
         $this->assertContains('start=0', $list->FirstLink());
     }
 
+    public function testFirstLinkContainsCurrentGetParameters() {
+        $request = new HTTPRequest(
+            'GET',
+            'http://coolsite.com/my-cool-page',
+            ['awesomeness' => 'nextLevel', 'start' => 20]
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        $this->assertEquals($list->FirstLink(), 'http://coolsite.com/my-cool-page?awesomeness=nextLevel&start=0');
+    }
+
     public function testLastLink()
     {
         $list = new PaginatedList(new ArrayList());
@@ -340,6 +354,19 @@ class PaginatedListTest extends SapphireTest
         // Disable paging
         $list->setPageLength(0);
         $this->assertContains('start=0', $list->LastLink());
+    }
+
+    public function testLastLinkContainsCurrentGetParameters() {
+        $request = new HTTPRequest(
+            'GET',
+            'http://coolsite.com/my-cool-page',
+            ['awesomeness' => 'nextLevel']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        $this->assertEquals($list->LastLink(), 'http://coolsite.com/my-cool-page?awesomeness=nextLevel&start=40');
     }
 
     public function testNextLink()
@@ -363,6 +390,19 @@ class PaginatedListTest extends SapphireTest
         $this->assertNull($list->NextLink());
     }
 
+    public function testNextLinkContainsCurrentGetParameters() {
+        $request = new HTTPRequest(
+            'GET',
+            'http://coolsite.com/my-cool-page',
+            ['awesomeness' => 'nextLevel']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        $this->assertEquals($list->NextLink(), 'http://coolsite.com/my-cool-page?awesomeness=nextLevel&start=10');
+    }
+
     public function testPrevLink()
     {
         $list = new PaginatedList(new ArrayList());
@@ -379,5 +419,18 @@ class PaginatedListTest extends SapphireTest
         // Disable paging
         $list->setPageLength(0);
         $this->assertNull($list->PrevLink());
+    }
+
+    public function testPrevLinkContainsCurrentGetParameters() {
+        $request = new HTTPRequest(
+            'GET',
+            'http://coolsite.com/my-cool-page',
+            ['awesomeness' => 'nextLevel', 'start' => '30']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        $this->assertEquals($list->PrevLink(), 'http://coolsite.com/my-cool-page?awesomeness=nextLevel&start=20');
     }
 }
