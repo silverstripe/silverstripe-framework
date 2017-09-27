@@ -16,6 +16,9 @@ class DataProvider implements TestOnly
         ['FirstName' => 'Sam', 'Surname' => 'Minnee']
     ];
 
+    /**
+     * @return array
+     */
     public static function provideEqualListsWithEmptyList()
     {
         return array_merge(
@@ -71,6 +74,9 @@ class DataProvider implements TestOnly
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function provideNonEqualLists()
     {
 
@@ -113,6 +119,9 @@ class DataProvider implements TestOnly
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function provideNotContainingList()
     {
         return [
@@ -146,6 +155,9 @@ class DataProvider implements TestOnly
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function provideAllMatchingList()
     {
         $list = [
@@ -159,6 +171,9 @@ class DataProvider implements TestOnly
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function provideNotMatchingList()
     {
         $list = [
