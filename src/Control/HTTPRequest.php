@@ -775,6 +775,14 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
+     * @return string Return the host from the request
+     */
+    public function getHost()
+    {
+        return $this->getHeader('host');
+    }
+
+    /**
      * Returns the client IP address which originated this request.
      *
      * @return string

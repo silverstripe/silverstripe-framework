@@ -18,3 +18,13 @@ SilverStripe\Control\Director:
     'InstallerTest//$Action/$ID/$OtherID': SilverStripe\Dev\InstallerTest
     'SapphireInfo//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireInfo
     'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL
+---
+Name: security-limited
+After:
+  - '#rootroutes'
+Except:
+  environment: dev
+---
+SilverStripe\Control\Director:
+  rules:
+    'Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'

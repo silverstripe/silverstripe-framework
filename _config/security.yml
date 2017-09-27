@@ -19,7 +19,7 @@ SilverStripe\Core\Injector\Injector:
 ---
 Name: coresecurity
 After:
-  - requestprocessors
+  - '#requestprocessors'
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
