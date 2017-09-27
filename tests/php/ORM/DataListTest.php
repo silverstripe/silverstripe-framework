@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\ORM\DataList;
@@ -88,9 +89,11 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testSubtractBadDataclassThrowsException()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $teamsComments = TeamComment::get();
         $teams = Team::get();
         $teamsComments->subtract($teams);
@@ -579,12 +582,12 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Phil', $list->last()->Name);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player
+     */
     public function testSortInvalidParameters()
     {
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            'Fans is not a linear relation on model '.Player::class
-        );
         $list = Team::get();
         $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
     }
@@ -747,23 +750,24 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
     }
 
+    /**
+     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
+     * @expectedExceptionMessage Class DataListFilter.Bogus does not exist
+     */
     public function testSimpleFilterWithNonExistingComparisator()
     {
-        $this->setExpectedException(
-            InjectorNotFoundException::class,
-            'Class DataListFilter.Bogus does not exist'
-        );
         $list = TeamComment::get();
         $list->filter('Comment:Bogus', 'team comment');
     }
 
+    /**
+     * Invalid modifiers are treated as failed filter construction
+     *
+     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
+     * @expectedExceptionMessage Class DataListFilter.invalidmodifier does not exist
+     */
     public function testInvalidModifier()
     {
-        // Invalid modifiers are treated as failed filter construction
-        $this->setExpectedException(
-            InjectorNotFoundException::class,
-            'Class DataListFilter.invalidmodifier does not exist'
-        );
         $list = TeamComment::get();
         $list->filter('Comment:invalidmodifier', 'team comment');
     }
@@ -870,21 +874,21 @@ class DataListTest extends SapphireTest
 
         // grand child can be found from parent
         $found = Bracket::get()->filter('Next.Next.Title', $final1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => $semifinal1->Title]],
             $found
         );
 
         // grand child can be found from child
         $found = Bracket::get()->filter('Next.Title', $prefinal1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => $semifinal1->Title]],
             $found
         );
 
         // child can be found from parent
         $found = Bracket::get()->filter('Next.Title', $final1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => $prefinal1->Title],
                 ['Title' => $prefinal2->Title]
@@ -895,7 +899,7 @@ class DataListTest extends SapphireTest
         // Complex filter, get brackets where the following bracket was won by team 1
         // Note: Includes results from multiple levels
         $found = Bracket::get()->filter('Next.Winner.Title', $team2->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => $prefinal1->Title],
                 ['Title' => $prefinal2->Title],
@@ -1058,12 +1062,12 @@ class DataListTest extends SapphireTest
         $this->assertEquals('007', $list->first()->ShirtNumber);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage MascotAnimal is not a relation on model SilverStripe\ORM\Tests\DataObjectTest\Team
+     */
     public function testFilterOnInvalidRelation()
     {
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            "MascotAnimal is not a relation on model ".Team::class
-        );
         // Filter on missing relation 'MascotAnimal'
         Team::get()
             ->filter('MascotAnimal.Name', 'Richard')
@@ -1093,7 +1097,7 @@ class DataListTest extends SapphireTest
 
         // Filter by null email
         $nullEmails = $list->filter('Email', null);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Stephen',
@@ -1107,7 +1111,7 @@ class DataListTest extends SapphireTest
 
         // Filter by non-null
         $nonNullEmails = $list->filter('Email:not', null);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1126,7 +1130,7 @@ class DataListTest extends SapphireTest
 
         // Filter by empty only
         $emptyOnly = $list->filter('Email', '');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Hamish',
@@ -1138,7 +1142,7 @@ class DataListTest extends SapphireTest
         // Non-empty only. This should include null values, since ExactMatchFilter works around
         // the caveat that != '' also excludes null values in ANSI SQL-92 behaviour.
         $nonEmptyOnly = $list->filter('Email:not', '');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1160,7 +1164,7 @@ class DataListTest extends SapphireTest
 
         // Filter by many including null, empty string, and non-empty
         $items1 = $list->filter('Email', array(null, '', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1181,7 +1185,7 @@ class DataListTest extends SapphireTest
 
         // Filter exclusion of above list
         $items2 = $list->filter('Email:not', array(null, '', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1193,7 +1197,7 @@ class DataListTest extends SapphireTest
 
         // Filter by many including empty string and non-empty
         $items3 = $list->filter('Email', array('', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1209,7 +1213,7 @@ class DataListTest extends SapphireTest
         // Filter by many including empty string and non-empty
         // This also relies no the workaround for null comparison as in the $nonEmptyOnly test
         $items4 = $list->filter('Email:not', array('', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1233,7 +1237,7 @@ class DataListTest extends SapphireTest
             'Email' => null
             )
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1251,7 +1255,7 @@ class DataListTest extends SapphireTest
 
         // Filter by null or empty values
         $items6 = $list->filter('Email', array(null, ''));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Stephen',
@@ -1528,13 +1532,12 @@ class DataListTest extends SapphireTest
 
     /**
      * Test exact match filter with empty array items
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set
      */
     public function testEmptyFilter()
     {
-        $this->setExpectedException(
-            "InvalidArgumentException",
-            'Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set'
-        );
         $list = TeamComment::get();
         $list->exclude('Name', array());
     }

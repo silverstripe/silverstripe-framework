@@ -183,7 +183,7 @@ class DataObjectDuplicationTest extends SapphireTest
         // Duplcating $child should only duplicate grandchild
         $childDuplicate = $child->duplicate(true, 'many_many');
         $this->assertEquals(0, $childDuplicate->Parents()->count());
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => 'GrandChild']],
             $childDuplicate->Children()
         );
@@ -191,18 +191,18 @@ class DataObjectDuplicationTest extends SapphireTest
         // Duplicate belongs_many_many only
         $belongsDuplicate = $child->duplicate(true, 'belongs_many_many');
         $this->assertEquals(0, $belongsDuplicate->Children()->count());
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => 'Parent']],
             $belongsDuplicate->Parents()
         );
 
         // Duplicate all
         $allDuplicate = $child->duplicate(true, true);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => 'Parent']],
             $allDuplicate->Parents()
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => 'GrandChild']],
             $allDuplicate->Children()
         );
@@ -218,14 +218,14 @@ class DataObjectDuplicationTest extends SapphireTest
         $three = new DataObjectDuplicationTest\Class3();
         $three->text = "Test Text 3";
         $one->threes()->add($three);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['text' => 'Test Text 3']],
             $one->threes()
         );
         // Test duplicate
         $dupe = $one->duplicate(false, true);
         $this->assertEquals('Test Text 1', $dupe->text);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['text' => 'Test Text 3']],
             $dupe->threes()
         );

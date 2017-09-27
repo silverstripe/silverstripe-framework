@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use Psr\Log\InvalidArgumentException;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -123,10 +124,11 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getModelClass
+     *
+     * @expectedException \LogicException
      */
     public function testGridFieldModelClassThrowsException()
     {
-        $this->setExpectedException('LogicException');
         $obj = new GridField('testfield', 'testfield', ArrayList::create());
         $obj->getModelClass();
     }
@@ -247,10 +249,11 @@ class GridFieldTest extends SapphireTest
     /**
      * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnContentBadArguments()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
@@ -293,10 +296,11 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnAttributesBadArguments()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
@@ -307,9 +311,11 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnAttributes($list->first(), 'Non-existing');
     }
 
+    /**
+     * @expectedException \LogicException
+     */
     public function testGetColumnAttributesBadResponseFromComponent()
     {
-        $this->setExpectedException('LogicException');
         $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
@@ -338,10 +344,11 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
+     *
+     * @expectedException \LogicException
      */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
-        $this->setExpectedException('LogicException');
         $list = new ArrayList(
             array(
             new Member(array("ID" => 1, "Email" => "test@example.org"))
@@ -354,10 +361,11 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnMetadataBadArguments()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $list = ArrayList::create();
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
@@ -366,10 +374,11 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::handleAction
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testHandleActionBadArgument()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $obj = new GridField('testfield', 'testfield');
         $obj->handleAlterAction('prft', array(), array());
     }
@@ -506,6 +515,8 @@ class GridFieldTest extends SapphireTest
 
     /**
      * Test that circular dependencies throw an exception
+     *
+     * @expectedException \LogicException
      */
     public function testGridFieldCustomFragmentsCircularDependencyThrowsException()
     {
@@ -534,7 +545,6 @@ class GridFieldTest extends SapphireTest
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
-        $this->setExpectedException('LogicException');
         $field->FieldHolder();
     }
 
