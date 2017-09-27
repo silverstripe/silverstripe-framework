@@ -105,23 +105,26 @@ class PaginatedListTest extends SapphireTest
 
         $this->assertListEquals(
             array(array('Num' => 1), array('Num' => 2)),
-            $list->getIterator()
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(2);
         $this->assertListEquals(
             array(array('Num' => 3), array('Num' => 4)),
-            $list->getIterator()
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(3);
         $this->assertListEquals(
             array(array('Num' => 5)),
-            $list->getIterator()
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(999);
-        $this->assertListEquals(array(), $list->getIterator());
+        $this->assertListEquals(
+            array(),
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+        );
 
         // Test disabled paging
         $list->setPageLength(0);
@@ -134,7 +137,7 @@ class PaginatedListTest extends SapphireTest
                 array('Num' => 4),
                 array('Num' => 5),
             ],
-            $list->getIterator()
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         // Test with dataobjectset
