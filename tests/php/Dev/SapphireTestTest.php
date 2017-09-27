@@ -56,15 +56,33 @@ class SapphireTestTest extends SapphireTest
      */
     public function testAssertListAllMatch()
     {
-
+        $this->markTestIncomplete();
     }
 
     /**
+     * @dataProvider provideEqualLists
+     *
+     * @param $matches
+     * @param $itemsForList
      * @testdox Has assertion assertListContains
      */
-    public function testAssertListContains()
+    public function testAssertListContains($matches, $itemsForList)
     {
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
 
+        $this->assertListContains($matches, $list);
+    }
+
+    public function testAssertListContainsFailsIfListDoesNotContainMatch()
+    {
+        $this->markTestIncomplete();
     }
 
     /**
@@ -72,7 +90,7 @@ class SapphireTestTest extends SapphireTest
      */
     public function testAssertNotListContains()
     {
-
+        $this->markTestIncomplete();
     }
 
     public function provideEqualLists()
