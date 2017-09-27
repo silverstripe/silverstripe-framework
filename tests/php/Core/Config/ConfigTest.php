@@ -33,6 +33,7 @@ class ConfigTest extends SapphireTest
 
     public function testUpdateStatic()
     {
+        // Test base state
         $this->assertEquals(
             ['test_1'],
             Config::inst()->get(ConfigTest\First::class, 'first')
@@ -46,7 +47,7 @@ class ConfigTest extends SapphireTest
         );
         $this->assertEquals(
             [ 'test_2' ],
-            Config::inst()->get(ConfigTest\Second::class, 'first', true)
+            Config::inst()->get(ConfigTest\Second::class, 'first', Config::UNINHERITED)
         );
         $this->assertEquals(
             [
@@ -61,58 +62,107 @@ class ConfigTest extends SapphireTest
             Config::inst()->get(ConfigTest\Third::class, 'first', true)
         );
 
+        // Modify first param
         Config::modify()->merge(ConfigTest\First::class, 'first', array('test_1_2'));
         Config::modify()->merge(ConfigTest\Third::class, 'first', array('test_3_2'));
         Config::modify()->merge(ConfigTest\Fourth::class, 'first', array('test_4'));
 
+        // Check base class
         $this->assertEquals(
             ['test_1', 'test_1_2'],
             Config::inst()->get(ConfigTest\First::class, 'first')
         );
         $this->assertEquals(
             ['test_1', 'test_1_2'],
-            Config::inst()->get(ConfigTest\First::class, 'first', true)
+            Config::inst()->get(ConfigTest\First::class, 'first', Config::UNINHERITED)
+        );
+        $this->assertEquals(
+            ['test_1'],
+            Config::inst()->get(ConfigTest\First::class, 'first', Config::NO_DELTAS)
+        );
+        $this->assertEquals(
+            ['test_1'],
+            Config::inst()->get(ConfigTest\First::class, 'first', Config::NO_DELTAS | Config::UNINHERITED)
         );
 
+        // Modify second param
         Config::modify()->merge(ConfigTest\Fourth::class, 'second', array('test_4'));
         Config::modify()->merge(ConfigTest\Third::class, 'second', array('test_3_2'));
 
+        // Check fourth class
         $this->assertEquals(
             ['test_1', 'test_3', 'test_3_2', 'test_4'],
             Config::inst()->get(ConfigTest\Fourth::class, 'second')
         );
         $this->assertEquals(
             ['test_4'],
-            Config::inst()->get(ConfigTest\Fourth::class, 'second', true)
+            Config::inst()->get(ConfigTest\Fourth::class, 'second', Config::UNINHERITED)
         );
+        $this->assertEquals(
+            ['test_1', 'test_3'],
+            Config::inst()->get(ConfigTest\Fourth::class, 'second', Config::NO_DELTAS)
+        );
+        $this->assertEquals(
+            null,
+            Config::inst()->get(ConfigTest\Fourth::class, 'second', Config::NO_DELTAS | Config::UNINHERITED)
+        );
+
+        // Check third class
         $this->assertEquals(
             ['test_1', 'test_3', 'test_3_2'],
             Config::inst()->get(ConfigTest\Third::class, 'second')
         );
         $this->assertEquals(
             ['test_3', 'test_3_2'],
-            Config::inst()->get(ConfigTest\Third::class, 'second', true)
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::UNINHERITED)
+        );
+        $this->assertEquals(
+            ['test_1', 'test_3'],
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::NO_DELTAS)
+        );
+        $this->assertEquals(
+            ['test_3'],
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::NO_DELTAS | Config::UNINHERITED)
         );
 
+        // Test remove()
         Config::modify()->remove(ConfigTest\Third::class, 'second');
+
+        // Check third class ->get()
         $this->assertEquals(
-            ['test_1'],
+            null,
             Config::inst()->get(ConfigTest\Third::class, 'second')
         );
-        $this->assertTrue(
-            Config::inst()->exists(ConfigTest\Third::class, 'second')
+        $this->assertEquals(
+            ['test_1', 'test_3'],
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::NO_DELTAS)
         );
         $this->assertEquals(
             null,
-            Config::inst()->get(ConfigTest\Third::class, 'second', true)
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::UNINHERITED)
+        );
+
+        // Check ->exists()
+        $this->assertFalse(
+            Config::inst()->exists(ConfigTest\Third::class, 'second')
         );
         $this->assertFalse(
-            Config::inst()->exists(ConfigTest\Third::class, 'second', true)
+            Config::inst()->exists(ConfigTest\Third::class, 'second', Config::UNINHERITED)
         );
+        $this->assertTrue(
+            Config::inst()->exists(ConfigTest\Third::class, 'second', Config::NO_DELTAS)
+        );
+
+        // Test merge()
         Config::modify()->merge(ConfigTest\Third::class, 'second', ['test_3_2']);
         $this->assertEquals(
-            ['test_1', 'test_3_2'],
+            ['test_3_2'],
             Config::inst()->get(ConfigTest\Third::class, 'second')
+        );
+        // No-deltas omits both above ->remove() as well as ->merge()
+        $this->assertEquals(
+            ['test_1', 'test_3'],
+            Config::inst()->get(ConfigTest\Third::class, 'second', Config::NO_DELTAS)
         );
     }
 
