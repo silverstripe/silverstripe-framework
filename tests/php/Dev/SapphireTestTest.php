@@ -10,6 +10,9 @@ use SilverStripe\Security\Permission;
 class SapphireTestTest extends SapphireTest
 {
 
+    /**
+     * @return array
+     */
     public function provideResolveFixturePath()
     {
         return [
@@ -52,15 +55,45 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideAllMatchingList()
+     *
+     * @param $match
+     * @param $itemsForList
      * @testdox Has assertion assertListAllMatch
      */
-    public function testAssertListAllMatch()
+    public function testAssertListAllMatch($match, $itemsForList)
     {
-        $this->markTestIncomplete();
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+
+        $this->assertListAllMatch($match, $list);
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualLists
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotMatchingList()
+     *
+     * @param $match
+     * @param $itemsForList
+     *
+     * @testdox assertion assertListAllMatch fails when not all items are matching
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
+    {
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+
+        $this->assertListAllMatch($match, $list);
+    }
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
      *
      * @param $matches
      * @param $itemsForList
@@ -104,16 +137,51 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
+     *
      * @testdox Has assertion assertNotListContains
+     *
+     * @param $matches
+     * @param $itemsForList
      */
-    public function testAssertNotListContains()
+    public function testAssertNotListContains($matches, $itemsForList)
     {
-        $this->markTestIncomplete();
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+
+        $this->assertNotListContains($matches, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualLists
+     *
+     * @param $matches
+     * @param $itemsForList
+
+     * @testdox assertion assertNotListContains throws a exception when a matching item is found in the list
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertNotListContainsFailsWhenListContainsAMatch($matches, $itemsForList)
+    {
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+
+        $this->assertNotListContains($matches, $list);
     }
 
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualLists
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
      * @testdox Has assertion assertListEquals
      *
      * @param $matches

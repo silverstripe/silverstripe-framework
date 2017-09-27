@@ -16,13 +16,25 @@ class DataProvider implements TestOnly
         ['FirstName' => 'Sam', 'Surname' => 'Minnee']
     ];
 
+    public static function provideEqualListsWithEmptyList()
+    {
+        return array_merge(
+            [ //empty list
+                [
+                    [],
+                    []
+                ]
+            ],
+            self::provideEqualLists()
+        );
+    }
+
+    /**
+     * @return array
+     */
     public static function provideEqualLists()
     {
         return [
-            [ //empty list
-                [],
-                []
-            ],
             [
                 [ //one param
                     ['FirstName' => 'Ingo']
@@ -101,7 +113,6 @@ class DataProvider implements TestOnly
         ];
     }
 
-
     public static function provideNotContainingList()
     {
         return [
@@ -132,6 +143,31 @@ class DataProvider implements TestOnly
                 ],
                 self::$twoItemList
             ],
+        ];
+    }
+
+    public static function provideAllMatchingList()
+    {
+        $list = [
+            ['FirstName' => 'Ingo', 'Surname' => 'Schommer', 'Locale' => 'en_US'],
+            ['FirstName' => 'Sam', 'Surname' => 'Minnee', 'Locale' => 'en_US']
+        ];
+
+        return [
+            [[], $list], //empty match
+            [['Locale' => 'en_US'], $list] //all items have this field set
+        ];
+    }
+
+    public static function provideNotMatchingList()
+    {
+        $list = [
+            ['FirstName' => 'Ingo', 'Surname' => 'Schommer', 'Locale' => 'en_US'],
+            ['FirstName' => 'Sam', 'Surname' => 'Minnee', 'Locale' => 'en_US']
+        ];
+
+        return [
+            [['FirstName' => 'Ingo'], $list] //not all items have this field set
         ];
     }
 }
