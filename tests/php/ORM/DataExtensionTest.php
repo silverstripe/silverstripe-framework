@@ -270,6 +270,9 @@ class DataExtensionTest extends SapphireTest
 
     /**
      * Test setOwner behaviour
+     *
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage clearOwner() called more than setOwner()
      */
     public function testSetOwner()
     {
@@ -297,7 +300,6 @@ class DataExtensionTest extends SapphireTest
         $this->assertNull($extension->getOwner());
 
         // Another clearOwner should error
-        $this->setExpectedException("BadMethodCallException", "clearOwner() called more than setOwner()");
         $extension->clearOwner();
     }
 }

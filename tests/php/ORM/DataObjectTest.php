@@ -1259,10 +1259,13 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
     }
 
+
+    /**
+     * @expectedException \SilverStripe\ORM\ValidationException
+     */
     public function testWritingInvalidDataObjectThrowsException()
     {
         $validatedObject = new DataObjectTest\ValidatedObject();
-        $this->setExpectedException(ValidationException::class);
         $validatedObject->write();
     }
 
@@ -1320,6 +1323,10 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    /**
+     * @expectedException \ReflectionException
+     * @expectedExceptionMessage Class ThisIsntADataObject does not exist
+     */
     public function testHasOwnTable()
     {
         $schema = DataObject::getSchema();
@@ -1339,7 +1346,6 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($schema->classHasTable(ViewableData::class));
 
         // Invalid class
-        $this->setExpectedException(ReflectionException::class, 'Class ThisIsntADataObject does not exist');
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
     }
 
@@ -1405,27 +1411,37 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithArray()
     {
         Config::modify()->merge(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
         Config::modify()->set(DataObjectTest\Team::class, 'has_many', array(0 => DataObjectTest\Player::class));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
         Config::modify()->merge(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Controller is not a valid subclass of DataObject
+     */
     public function testNewClassInstance()
     {
         $dataObject = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
@@ -1448,7 +1464,6 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
 
         // Test invalid classes fail
-        $this->setExpectedException('InvalidArgumentException', "Controller is not a valid subclass of DataObject");
         /**
  * @skipUpgrade
 */
@@ -2071,6 +2086,9 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testLateStaticBindingStyle()
     {
         // Confirm that DataObjectTest_Player::get() operates as excepted
@@ -2078,14 +2096,15 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\Player::class, DataObjectTest\Player::get()->first());
 
         // You can't pass arguments to LSB syntax - use the DataList methods instead.
-        $this->setExpectedException('InvalidArgumentException');
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testBrokenLateStaticBindingStyle()
     {
         // If you call DataObject::get() you have to pass a first argument
-        $this->setExpectedException('InvalidArgumentException');
         DataObject::get();
     }
 

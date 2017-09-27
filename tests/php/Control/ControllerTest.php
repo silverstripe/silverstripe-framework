@@ -292,9 +292,12 @@ class ControllerTest extends FunctionalTest
         Security::setCurrentUser(null);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid allowed_action '*'
+     */
     public function testWildcardAllowedActions()
     {
-        $this->setExpectedException(InvalidArgumentException::class, "Invalid allowed_action '*'");
         $this->get('AccessWildcardSecuredController');
     }
 

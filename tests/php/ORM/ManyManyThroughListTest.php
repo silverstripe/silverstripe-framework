@@ -139,6 +139,8 @@ class ManyManyThroughListTest extends SapphireTest
 
     /**
      * Test validation
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testValidateModelValidatesJoinType()
     {
@@ -149,7 +151,7 @@ class ManyManyThroughListTest extends SapphireTest
             ManyManyThroughListTest\JoinObject::class => 'Text'
             ]
         );
-        $this->setExpectedException(InvalidArgumentException::class);
+
         DataObject::getSchema()->manyManyComponent(ManyManyThroughListTest\TestObject::class, 'Items');
     }
 
