@@ -190,13 +190,14 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function set_mock_now($datetime)
     {
-        if ($datetime instanceof DBDatetime) {
-            self::$mock_now = $datetime;
-        } elseif (is_string($datetime)) {
-            self::$mock_now = DBField::create_field('Datetime', $datetime);
-        } else {
-            throw new InvalidArgumentException('DBDatetime::set_mock_now(): Wrong format: ' . $datetime);
+        if (!$datetime instanceof DBDatetime) {
+            $value = $datetime;
+            $datetime = DBField::create_field('Datetime', $datetime);
+            if ($datetime === false) {
+                throw new InvalidArgumentException('DBDatetime::set_mock_now(): Wrong format: ' . $value);
+            }
         }
+        self::$mock_now = $datetime;
     }
 
     /**

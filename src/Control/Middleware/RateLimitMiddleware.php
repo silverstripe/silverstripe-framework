@@ -27,17 +27,24 @@ class RateLimitMiddleware implements HTTPMiddleware
     private $decay = 1;
 
     /**
+     * @var RateLimiter|null
+     */
+    private $rateLimiter;
+
+    /**
      * @param HTTPRequest $request
      * @param callable $delegate
      * @return HTTPResponse
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
-        $limiter = RateLimiter::create(
-            $this->getKeyFromRequest($request),
-            $this->getMaxAttempts(),
-            $this->getDecay()
-        );
+        if (!$limiter = $this->getRateLimiter()) {
+            $limiter = RateLimiter::create(
+                $this->getKeyFromRequest($request),
+                $this->getMaxAttempts(),
+                $this->getDecay()
+            );
+        }
         if ($limiter->canAccess()) {
             $limiter->hit();
             $response = $delegate($request);
@@ -139,5 +146,23 @@ class RateLimitMiddleware implements HTTPMiddleware
     public function getDecay()
     {
         return $this->decay;
+    }
+
+    /**
+     * @param RateLimiter $rateLimiter
+     * @return $this
+     */
+    public function setRateLimiter($rateLimiter)
+    {
+        $this->rateLimiter = $rateLimiter;
+        return $this;
+    }
+
+    /**
+     * @return RateLimiter|null
+     */
+    public function getRateLimiter()
+    {
+        return $this->rateLimiter;
     }
 }
