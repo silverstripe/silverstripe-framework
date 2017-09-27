@@ -136,7 +136,7 @@ class ContentNegotiator
         }
 
         $negotiator = new ContentNegotiator();
-        $negotiator->$chosenFormat( $response );
+        $negotiator->$chosenFormat($response);
     }
 
     /**

@@ -64,5 +64,4 @@ class RateLimitMiddlewareTest extends FunctionalTest
         $this->assertEquals(60, $response->getHeader('retry-after'));
         $this->assertNotEquals('Success', $response->getBody());
     }
-
 }

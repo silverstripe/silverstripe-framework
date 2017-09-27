@@ -60,7 +60,6 @@ class RateLimiterTest extends SapphireTest
         $this->assertEquals(0, $rateLimiter->getNumAttemptsRemaining());
         $rateLimiter->hit();
         $this->assertEquals(0, $rateLimiter->getNumAttemptsRemaining());
-
     }
 
     public function testGetTimeToReset()
@@ -125,5 +124,4 @@ class RateLimiterTest extends SapphireTest
         $rateLimiter->hit();
         $this->assertFalse($rateLimiter->canAccess());
     }
-
 }
