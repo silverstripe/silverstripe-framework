@@ -103,30 +103,30 @@ class PaginatedListTest extends SapphireTest
         );
         $list->setPageLength(2);
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(array('Num' => 1), array('Num' => 2)),
             $list->getIterator()
         );
 
         $list->setCurrentPage(2);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(array('Num' => 3), array('Num' => 4)),
             $list->getIterator()
         );
 
         $list->setCurrentPage(3);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(array('Num' => 5)),
             $list->getIterator()
         );
 
         $list->setCurrentPage(999);
-        $this->assertDOSEquals(array(), $list->getIterator());
+        $this->assertListEquals(array(), $list->getIterator());
 
         // Test disabled paging
         $list->setPageLength(0);
         $list->setCurrentPage(1);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 array('Num' => 1),
                 array('Num' => 2),
@@ -168,21 +168,21 @@ class PaginatedListTest extends SapphireTest
             array('PageNum' => 4),
             array('PageNum' => 5),
         );
-        $this->assertDOSEquals($expectAll, $list->Pages());
+        $this->assertListEquals($expectAll, $list->Pages());
 
         $expectLimited = array(
             array('PageNum' => 2),
             array('PageNum' => 3, 'CurrentBool' => true),
             array('PageNum' => 4),
         );
-        $this->assertDOSEquals($expectLimited, $list->Pages(3));
+        $this->assertListEquals($expectLimited, $list->Pages(3));
 
         // Disable paging
         $list->setPageLength(0);
         $expectAll = array(
             array('PageNum' => 1, 'CurrentBool' => true),
         );
-        $this->assertDOSEquals($expectAll, $list->Pages());
+        $this->assertListEquals($expectAll, $list->Pages());
     }
 
     public function testPaginationSummary()
@@ -204,14 +204,14 @@ class PaginatedListTest extends SapphireTest
             array('PageNum' => null),
             array('PageNum' => 25),
         );
-        $this->assertDOSEquals($expect, $list->PaginationSummary(4));
+        $this->assertListEquals($expect, $list->PaginationSummary(4));
 
         // Disable paging
         $list->setPageLength(0);
         $expect = array(
             array('PageNum' => 1, 'CurrentBool' => true)
         );
-        $this->assertDOSEquals($expect, $list->PaginationSummary(4));
+        $this->assertListEquals($expect, $list->PaginationSummary(4));
     }
 
     public function testLimitItems()

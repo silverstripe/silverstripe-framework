@@ -22,14 +22,14 @@ class CascadeDeleteTest extends SapphireTest
     {
         /** @var CascadeDeleteTest\ChildObject $child1 */
         $child1 = $this->objFromFixture(CascadeDeleteTest\ChildObject::class, 'child1');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 [ 'Title' => 'Grandchild 1'],
                 [ 'Title' => 'Grandchild 2'],
             ],
             $child1->findCascadeDeletes(true)
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 [ 'Title' => 'Grandchild 1'],
                 [ 'Title' => 'Grandchild 2'],
@@ -39,7 +39,7 @@ class CascadeDeleteTest extends SapphireTest
 
         /** @var CascadeDeleteTest\ParentObject $parent1 */
         $parent1 = $this->objFromFixture(CascadeDeleteTest\ParentObject::class, 'parent1');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 [ 'Title' => 'Child 1'],
                 [ 'Title' => 'Grandchild 1'],
@@ -47,7 +47,7 @@ class CascadeDeleteTest extends SapphireTest
             ],
             $parent1->findCascadeDeletes(true)
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 [ 'Title' => 'Child 1'],
             ],
@@ -65,7 +65,7 @@ class CascadeDeleteTest extends SapphireTest
         $this->assertNotEmpty($this->objFromFixture(CascadeDeleteTest\ParentObject::class, 'parent1'));
 
         // Related objects never deleted
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Related 1'],
                 ['Title' => 'Related 2'],
@@ -75,7 +75,7 @@ class CascadeDeleteTest extends SapphireTest
         );
 
         // Ensure only remaining grandchild are those outside the relation
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Grandchild 3'],
             ],
@@ -90,13 +90,13 @@ class CascadeDeleteTest extends SapphireTest
         $parent1->delete();
 
         // Ensure affected cascading tables have expected content
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Child 2'],
             ],
             CascadeDeleteTest\ChildObject::get()
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Grandchild 3'],
             ],
@@ -104,7 +104,7 @@ class CascadeDeleteTest extends SapphireTest
         );
 
         // Related objects never deleted
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Related 1'],
                 ['Title' => 'Related 2'],
@@ -116,7 +116,7 @@ class CascadeDeleteTest extends SapphireTest
         // Ensure that other parents which share cascade deleted objects have the correct result
         /** @var CascadeDeleteTest\ChildObject $child2 */
         $child2 = $this->objFromFixture(CascadeDeleteTest\ChildObject::class, 'child2');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Grandchild 3'],
             ],

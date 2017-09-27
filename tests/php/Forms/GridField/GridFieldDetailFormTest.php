@@ -176,7 +176,7 @@ class GridFieldDetailFormTest extends FunctionalTest
             ->filter('Name', 'My Group')
             ->sort('Name')
             ->First();
-        $this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
+        $this->assertListContains(array(array('Surname' => 'Baggins')), $group->People());
     }
 
     public function testEditFormWithManyMany()

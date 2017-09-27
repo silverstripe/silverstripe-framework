@@ -119,7 +119,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $parser = new CSSContentParser($response->getBody());
         $items = $parser->getBySelector('.grid-field .ss-gridfield-items .ss-gridfield-item');
         $this->assertEquals(2, count($items));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('ID' => (int)$items[0]['data-id']),
             array('ID' => (int)$items[1]['data-id']),

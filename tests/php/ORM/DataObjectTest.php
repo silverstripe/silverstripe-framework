@@ -517,10 +517,10 @@ class DataObjectTest extends SapphireTest
         ];
 
         // Test the IDs on the DataObjects are set correctly
-        $this->assertDOSEquals($team1Comments, $team1->Comments());
+        $this->assertListEquals($team1Comments, $team1->Comments());
 
         // Test that has_many can be infered from the has_one via getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             $team1Comments,
             $team1->inferReciprocalComponent(DataObjectTest\TeamComment::class, 'Team')
         );
@@ -1493,7 +1493,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
         // Test that belongs_many_many can be infered from with getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Name' => 'Company corp'],
                 ['Name' => 'Team co.'],
@@ -1502,7 +1502,7 @@ class DataObjectTest extends SapphireTest
         );
 
         // Test that many_many can be infered from getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Team 1'],
                 ['Title' => 'Team 2'],
@@ -1902,7 +1902,7 @@ class DataObjectTest extends SapphireTest
 
         // Test belongs_to can be infered via getNonReciprocalComponent
         // Note: Will be returned as has_many since the belongs_to is ignored.
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Name' => 'New Company']],
             $ceo->inferReciprocalComponent(DataObjectTest\Company::class, 'CEO')
         );

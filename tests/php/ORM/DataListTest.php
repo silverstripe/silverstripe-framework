@@ -870,21 +870,21 @@ class DataListTest extends SapphireTest
 
         // grand child can be found from parent
         $found = Bracket::get()->filter('Next.Next.Title', $final1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => $semifinal1->Title]],
             $found
         );
 
         // grand child can be found from child
         $found = Bracket::get()->filter('Next.Title', $prefinal1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => $semifinal1->Title]],
             $found
         );
 
         // child can be found from parent
         $found = Bracket::get()->filter('Next.Title', $final1->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => $prefinal1->Title],
                 ['Title' => $prefinal2->Title]
@@ -895,7 +895,7 @@ class DataListTest extends SapphireTest
         // Complex filter, get brackets where the following bracket was won by team 1
         // Note: Includes results from multiple levels
         $found = Bracket::get()->filter('Next.Winner.Title', $team2->Title);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => $prefinal1->Title],
                 ['Title' => $prefinal2->Title],
@@ -1093,7 +1093,7 @@ class DataListTest extends SapphireTest
 
         // Filter by null email
         $nullEmails = $list->filter('Email', null);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Stephen',
@@ -1107,7 +1107,7 @@ class DataListTest extends SapphireTest
 
         // Filter by non-null
         $nonNullEmails = $list->filter('Email:not', null);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1126,7 +1126,7 @@ class DataListTest extends SapphireTest
 
         // Filter by empty only
         $emptyOnly = $list->filter('Email', '');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Hamish',
@@ -1138,7 +1138,7 @@ class DataListTest extends SapphireTest
         // Non-empty only. This should include null values, since ExactMatchFilter works around
         // the caveat that != '' also excludes null values in ANSI SQL-92 behaviour.
         $nonEmptyOnly = $list->filter('Email:not', '');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1160,7 +1160,7 @@ class DataListTest extends SapphireTest
 
         // Filter by many including null, empty string, and non-empty
         $items1 = $list->filter('Email', array(null, '', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1181,7 +1181,7 @@ class DataListTest extends SapphireTest
 
         // Filter exclusion of above list
         $items2 = $list->filter('Email:not', array(null, '', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1193,7 +1193,7 @@ class DataListTest extends SapphireTest
 
         // Filter by many including empty string and non-empty
         $items3 = $list->filter('Email', array('', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Damian',
@@ -1209,7 +1209,7 @@ class DataListTest extends SapphireTest
         // Filter by many including empty string and non-empty
         // This also relies no the workaround for null comparison as in the $nonEmptyOnly test
         $items4 = $list->filter('Email:not', array('', 'damian@thefans.com'));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1233,7 +1233,7 @@ class DataListTest extends SapphireTest
             'Email' => null
             )
         );
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Richard',
@@ -1251,7 +1251,7 @@ class DataListTest extends SapphireTest
 
         // Filter by null or empty values
         $items6 = $list->filter('Email', array(null, ''));
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array(
                 'Name' => 'Stephen',
