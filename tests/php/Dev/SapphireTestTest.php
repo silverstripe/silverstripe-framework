@@ -80,9 +80,27 @@ class SapphireTestTest extends SapphireTest
         $this->assertListContains($matches, $list);
     }
 
-    public function testAssertListContainsFailsIfListDoesNotContainMatch()
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
+     * @testdox assertion assertListEquals fails on non equal Lists
+     *
+     * @param $matches
+     * @param $itemsForList array
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListContainsFailsIfListDoesNotContainMatch($matches, $itemsForList)
     {
-        $this->markTestIncomplete();
+        //generate List as this is not possible in dataProvider
+        $list = ArrayList::create();
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+
+        $this->assertListContains($matches, $list);
     }
 
     /**

@@ -61,7 +61,7 @@ class DataProvider implements TestOnly
         ];
     }
 
-    public function provideNonEqualLists()
+    public static function provideNonEqualLists()
     {
         $oneItemList = [
             ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
@@ -108,4 +108,44 @@ class DataProvider implements TestOnly
         ];
     }
 
+
+    public static function provideNotContainingList()
+    {
+        $oneItemList = [
+            ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
+        ];
+        $twoItemList = [
+            ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+            ['FirstName' => 'Sam', 'Surname' => 'Minnee']
+        ];
+
+        return [
+            [ //empty list
+                [
+                    ['FirstName' => 'Ingo']
+                ],
+                []
+            ],
+            [
+                [ //one item expected
+                    ['FirstName' => 'Sam']
+                ]
+                , $oneItemList
+            ],
+            [
+                [ //two params wrong
+                    ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
+                    ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX']
+                ],
+                $twoItemList
+            ],
+            [
+                [ //mixed
+                    ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
+                    ['FirstName' => 'Dan']
+                ],
+                $twoItemList
+            ],
+        ];
+    }
 }
