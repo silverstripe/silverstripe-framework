@@ -594,24 +594,24 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $dataObjectSet The {@link SS_List} to test.
+     * @param SS_List $list The {@link SS_List} to test.
      *
      * Examples
      * --------
      * Check that $members includes an entry with Email = sam@example.com:
-     *      $this->assertDOSContains(array('Email' => '...@example.com'), $members);
+     *      $this->assertListContains(['Email' => '...@example.com'], $members);
      *
      * Check that $members includes entries with Email = sam@example.com and with
      * Email = ingo@example.com:
-     *      $this->assertDOSContains(array(
-     *         array('Email' => '...@example.com'),
-     *         array('Email' => 'i...@example.com'),
-     *      ), $members);
+     *      $this->assertListContains([
+     *         ['Email' => '...@example.com'],
+     *         ['Email' => 'i...@example.com'],
+     *      ], $members);
      */
-    public function assertDOSContains($matches, $dataObjectSet)
+    public function assertListContains($matches, $list)
     {
         $extracted = array();
-        foreach ($dataObjectSet as $object) {
+        foreach ($list as $object) {
             /** @var DataObject $object */
             $extracted[] = $object->toMap();
         }
@@ -632,33 +632,45 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 $matched,
                 "Failed asserting that the SS_List contains an item matching "
                 . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                . $this->DOSSummaryForMatch($dataObjectSet, $match)
+                . $this->ListSummaryForMatch($list, $match)
             );
         }
     }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
+     *
+     * @param $matches
+     * @param $dataObjectSet
+     */
+    public function assertDOSContains($matches, $dataObjectSet) {
+        Deprecation::notice('5.0', 'Use assertListContains() instead');
+        return $this->assertListContains($matches, $dataObjectSet);
+    }
+
     /**
      * Asserts that no items in a given list appear in the given dataobject list
      *
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $dataObjectSet The {@link SS_List} to test.
+     * @param SS_List $list The {@link SS_List} to test.
      *
      * Examples
      * --------
      * Check that $members doesn't have an entry with Email = sam@example.com:
-     *      $this->assertNotDOSContains(array('Email' => '...@example.com'), $members);
+     *      $this->assertNotListContains(['Email' => '...@example.com'], $members);
      *
      * Check that $members doesn't have entries with Email = sam@example.com and with
      * Email = ingo@example.com:
-     *      $this->assertNotDOSContains(array(
-     *         array('Email' => '...@example.com'),
-     *         array('Email' => 'i...@example.com'),
-     *      ), $members);
+     *      $this->assertNotListContains([
+     *          ['Email' => '...@example.com'],
+     *          ['Email' => 'i...@example.com'],
+     *      ], $members);
      */
-    public function assertNotDOSContains($matches, $dataObjectSet)
+    public function assertNotListContains($matches, SS_List $list)
     {
         $extracted = array();
-        foreach ($dataObjectSet as $object) {
+        foreach ($list as $object) {
             /** @var DataObject $object */
             $extracted[] = $object->toMap();
         }
@@ -682,6 +694,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
+     * @deprecated 4.0.0:5.0.0 Use assertNotListContains() instead
+     *
+     * @param $matches
+     * @param $dataObjectSet
+     */
+    public function assertNotDOSContains($matches, $dataObjectSet) {
+        Deprecation::notice('5.0', 'Use assertNotListContains() instead');
+        return $this->assertNotListContains($matches, $dataObjectSet);
+    }
+
+    /**
      * Assert that the given {@link SS_List} includes only DataObjects matching the given
      * key-value pairs.  Each match must correspond to 1 distinct record.
      *
@@ -689,21 +712,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * --------
      * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't
      * matter:
-     *     $this->assertDOSEquals(array(
-     *        array('FirstName' =>'Sam', 'Surname' => 'Minnee'),
-     *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'),
-     *      ), $members);
+     *     $this->assertListEquals([
+     *        '[FirstName' =>'Sam', 'Surname' => 'Minnee'],
+     *        ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+     *      ], $members);
      *
      * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param mixed $dataObjectSet The {@link SS_List} to test.
+     * @param mixed $list The {@link SS_List} to test.
      */
-    public function assertDOSEquals($matches, $dataObjectSet)
+    public function assertListEquals($matches, SS_List $list)
     {
         // Extract dataobjects
         $extracted = array();
-        if ($dataObjectSet) {
-            foreach ($dataObjectSet as $object) {
+        if ($list) {
+            foreach ($list as $object) {
                 /** @var DataObject $object */
                 $extracted[] = $object->toMap();
             }
@@ -727,12 +750,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                     $matched,
                     "Failed asserting that the SS_List contains an item matching "
                     . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                    . $this->DOSSummaryForMatch($dataObjectSet, $match)
+                    . $this->ListSummaryForMatch($list, $match)
                 );
             }
         }
 
-        // If we have leftovers than the DOS has extra data that shouldn't be there
+        // If we have leftovers than the List has extra data that shouldn't be there
         $this->assertTrue(
             (count($extracted) == 0),
             // If we didn't break by this point then we couldn't find a match
@@ -742,21 +765,35 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
+     * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
+     *
+     * @param $matches
+     * @param SS_List $dataObjectSet
+     */
+    public function assertDOSEquals($matches, $dataObjectSet)
+    {
+        Deprecation::notice('5.0', 'Use assertListEquals() instead');
+        return $this->assertListEquals($matches, $dataObjectSet);
+    }
+
+
+
+    /**
      * Assert that the every record in the given {@link SS_List} matches the given key-value
      * pairs.
      *
      * Example
      * --------
      * Check that every entry in $members has a Status of 'Active':
-     *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members);
+     *     $this->assertListAllMatch(['Status' => 'Active'], $members);
      *
      * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
-     * @param mixed $dataObjectSet The {@link SS_List} to test.
+     * @param mixed $list The {@link SS_List} to test.
      */
-    public function assertDOSAllMatch($match, $dataObjectSet)
+    public function assertListAllMatch($match, SS_List $list)
     {
         $extracted = array();
-        foreach ($dataObjectSet as $object) {
+        foreach ($list as $object) {
             /** @var DataObject $object */
             $extracted[] = $object->toMap();
         }
@@ -768,6 +805,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 . var_export($match, true) . ": " . var_export($item, true)
             );
         }
+    }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
+     *
+     * @param $match
+     * @param SS_List $dataObjectSet
+     */
+    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
+    {
+        Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
+        return $this->assertListAllMatch($match, $dataObjectSet);
     }
 
     /**
@@ -854,7 +903,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * Helper function for the DOS matchers
+     * Helper function for the List matchers
      *
      * @param array $item
      * @param array $match
@@ -871,16 +920,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * Helper function for the DOS matchers
+     * Helper function for the List matchers
      *
-     * @param SS_List|array $dataObjectSet
+     * @param SS_List|array $list
      * @param array $match
      * @return string
      */
-    private function DOSSummaryForMatch($dataObjectSet, $match)
+    private function ListSummaryForMatch($list, $match)
     {
         $extracted = array();
-        foreach ($dataObjectSet as $item) {
+        foreach ($list as $item) {
             $extracted[] = array_intersect_key($item->toMap(), $match);
         }
         return var_export($extracted, true);
