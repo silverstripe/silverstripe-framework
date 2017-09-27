@@ -3,11 +3,14 @@
 namespace SilverStripe\Core\Cache;
 
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 class RateLimiter
 {
+    use Injectable;
+
     /**
      * @var CacheInterface
      */
@@ -24,7 +27,7 @@ class RateLimiter
     private $maxAttempts;
 
     /**
-     * @var int How long the rate limit lasts for
+     * @var int How long the rate limit lasts for in minutes
      */
     private $decay;
 

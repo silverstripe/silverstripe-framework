@@ -5,12 +5,26 @@ namespace SilverStripe\Control\Middleware;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Cache\RateLimiter;
-use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Security;
 
 class RateLimitMiddleware implements HTTPMiddleware
 {
+
+    /**
+     * @var string Optional extra data to add to request key generation
+     */
+    private $extraKey;
+
+    /**
+     * @var int Maximum number of attempts within the decay period
+     */
+    private $maxAttempts = 10;
+
+    /**
+     * @var int The decay period (in minutes)
+     */
+    private $decay = 1;
 
     /**
      * @param HTTPRequest $request
@@ -19,7 +33,11 @@ class RateLimitMiddleware implements HTTPMiddleware
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
-        $limiter = new RateLimiter($this->getKeyFromRequest($request), 10, 1);
+        $limiter = RateLimiter::create(
+            $this->getKeyFromRequest($request),
+            $this->getMaxAttempts(),
+            $this->getDecay()
+        );
         if ($limiter->canAccess()) {
             $limiter->hit();
             $response = $delegate($request);
@@ -36,11 +54,14 @@ class RateLimitMiddleware implements HTTPMiddleware
      */
     protected function getKeyFromRequest($request)
     {
-        $domain = parse_url($request->getURL(), PHP_URL_HOST);
+        $key = $this->getExtraKey() ? $this->getExtraKey() . '-' : '';
+        $key .= $request->getHost() . '-';
         if ($currentUser = Security::getCurrentUser()) {
-            return md5($domain . '-' . $currentUser->ID);
+            $key .= $currentUser->ID;
+        } else {
+            $key .= $request->getIP();
         }
-        return md5($domain . '-' . $request->getIP());
+        return md5($key);
     }
 
     /**
@@ -48,11 +69,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      */
     protected function getErrorHTTPResponse()
     {
-        $response = null;
-        if (class_exists(ErrorPage::class)) {
-            $response = ErrorPage::response_for(429);
-        }
-        return $response ?: new HTTPResponse('<h1>429 - Too many requests</h1>', 429);
+        return HTTPResponse::create('<h1>429 - Too many requests</h1>', 429);
     }
 
     /**
@@ -68,5 +85,59 @@ class RateLimitMiddleware implements HTTPMiddleware
         if ($remaining <= 0) {
             $response->addHeader('Retry-After', $ttl);
         }
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     */
+    public function setExtraKey($key)
+    {
+        $this->extraKey = $key;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtraKey()
+    {
+        return $this->extraKey;
+    }
+
+    /**
+     * @param int $maxAttempts
+     * @return $this
+     */
+    public function setMaxAttempts($maxAttempts)
+    {
+        $this->maxAttempts = $maxAttempts;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxAttempts()
+    {
+        return $this->maxAttempts;
+    }
+
+    /**
+     * @param int $decay Time in minutes
+     * @return $this
+     */
+    public function setDecay($decay)
+    {
+        $this->decay = $decay;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDecay()
+    {
+        return $this->decay;
     }
 }

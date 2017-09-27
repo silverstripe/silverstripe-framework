@@ -11,10 +11,18 @@ After:
 ---
 SilverStripe\Control\Director:
   rules:
-    'Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'
+    'Security//$Action/$ID/$OtherID': SilverStripe\Security\Security
     'CMSSecurity//$Action/$ID/$OtherID': SilverStripe\Security\CMSSecurity
     'dev': SilverStripe\Dev\DevelopmentAdmin
     'interactive': SilverStripe\Dev\SapphireREPL
     'InstallerTest//$Action/$ID/$OtherID': SilverStripe\Dev\InstallerTest
     'SapphireInfo//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireInfo
     'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL
+---
+Name: security-limited
+Except:
+  environment: dev
+---
+SilverStripe\Control\Director:
+  rules:
+    'Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'
