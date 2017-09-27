@@ -34,7 +34,7 @@ SilverStripe\Security\Member:
   securityadmin:
     Groups: =>SilverStripe\Security\Group.securityadmins
 
-SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode:
+SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode:
   about:
     Title: About Us
     CanEditType: OnlyTheseUsers
@@ -42,32 +42,32 @@ SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode:
   about-staff:
     Title: Staff
     CanEditType: Inherit
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.about
   about-staff-ceo:
     Title: CEO
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about-staff
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.about-staff
   about-staffduplicate:
     Title: Staff
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.about
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.about
   products:
     Title: Products
     CanEditType: OnlyTheseUsers
     EditorGroups: =>SilverStripe\Security\Group.editors
   products-product1:
     Title: 1.1 Test Product
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.products
     CanEditType: Inherit
   products-product2:
     Title: Another Product
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.products
     CanEditType: Inherit
   products-product3:
     Title: Another Product
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.products
     CanEditType: Inherit
   products-product4:
     Title: Another Product
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.products
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.products
     CanEditType: OnlyTheseUsers
     EditorGroups: =>SilverStripe\Security\Group.admins
   history:
@@ -77,21 +77,21 @@ SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode:
   history-gallery:
     Title: Gallery
     CanViewType: Inherit
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.history
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.history
   contact:
     Title: Contact Us
     CanViewType: Anyone
   contact-form:
     Title: Send us a message
     CanViewType: Inherit
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.contact
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.contact
   secret:
     Title: Secret
     CanViewType: LoggedInUsers
   secret-nested:
     Title: Nested
     CanViewType: Inherit
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.secret
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.secret
   protected:
     Title: Protected
     CanViewType: OnlyTheseUsers
@@ -99,4 +99,4 @@ SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode:
   protected-child:
     Title: Child
     CanViewType: Inherit
-    Parent: =>SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode.protected
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.protected
