@@ -7,17 +7,17 @@ use SilverStripe\Dev\TestOnly;
 
 class DataProvider implements TestOnly
 {
+    protected static $oneItemList = [
+        ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
+    ];
+
+    protected static $twoItemList = [
+        ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+        ['FirstName' => 'Sam', 'Surname' => 'Minnee']
+    ];
 
     public static function provideEqualLists()
     {
-        $oneItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
-        ];
-        $twoItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-            ['FirstName' => 'Sam', 'Surname' => 'Minnee']
-        ];
-
         return [
             [ //empty list
                 [],
@@ -26,50 +26,41 @@ class DataProvider implements TestOnly
             [
                 [ //one param
                     ['FirstName' => 'Ingo']
-                ]
-                ,
-                $oneItemList
+                ],
+                self::$oneItemList
             ],
             [
                 [ //two params
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
                 ],
-                $oneItemList
+                self::$oneItemList
             ],
             [ //only one param
                 [
                     ['FirstName' => 'Ingo'],
                     ['FirstName' => 'Sam']
-                ]
-                ,
-                $twoItemList
+                ],
+                self::$twoItemList
             ],
             [
                 [ //two params
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'Minnee']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
             [
                 [ //mixed
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
         ];
     }
 
     public static function provideNonEqualLists()
     {
-        $oneItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
-        ];
-        $twoItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-            ['FirstName' => 'Sam', 'Surname' => 'Minnee']
-        ];
 
         return [
             [ //empty list
@@ -82,28 +73,30 @@ class DataProvider implements TestOnly
                 [ //one item expected
                     ['FirstName' => 'Ingo']
                 ]
-                , $twoItemList
+                ,
+                self::$twoItemList
             ],
             [ //one item with wrong param
                 [
                     ['FirstName' => 'IngoXX'],
                     ['FirstName' => 'Sam']
                 ]
-                , $twoItemList
+                ,
+                self::$twoItemList
             ],
             [
                 [ //two params wrong
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
             [
                 [ //mixed
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
                     ['FirstName' => 'Dan']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
         ];
     }
@@ -111,14 +104,6 @@ class DataProvider implements TestOnly
 
     public static function provideNotContainingList()
     {
-        $oneItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
-        ];
-        $twoItemList = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-            ['FirstName' => 'Sam', 'Surname' => 'Minnee']
-        ];
-
         return [
             [ //empty list
                 [
@@ -130,21 +115,22 @@ class DataProvider implements TestOnly
                 [ //one item expected
                     ['FirstName' => 'Sam']
                 ]
-                , $oneItemList
+                ,
+                self::$oneItemList
             ],
             [
                 [ //two params wrong
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
             [
                 [ //mixed
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
                     ['FirstName' => 'Dan']
                 ],
-                $twoItemList
+                self::$twoItemList
             ],
         ];
     }
