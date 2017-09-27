@@ -713,7 +713,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't
      * matter:
      *     $this->assertListEquals([
-     *        '[FirstName' =>'Sam', 'Surname' => 'Minnee'],
+     *        ['FirstName' =>'Sam', 'Surname' => 'Minnee'],
      *        ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
      *      ], $members);
      *
