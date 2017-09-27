@@ -244,7 +244,7 @@ class SSViewer implements Flushable
      */
     public static function set_themes($themes = [])
     {
-        SSViewer::config()->set('themes', $themes);
+        static::$current_themes = $themes;
     }
 
     /**
@@ -257,7 +257,7 @@ class SSViewer implements Flushable
         $currentThemes = SSViewer::get_themes();
         $finalThemes = array_merge($themes, $currentThemes);
         // array_values is used to ensure sequential array keys as array_unique can leave gaps
-        SSViewer::set_themes(array_values(array_unique($finalThemes)));
+        static::set_themes(array_values(array_unique($finalThemes)));
     }
 
     /**
@@ -274,8 +274,12 @@ class SSViewer implements Flushable
         }
 
         // Explicit list is assigned
-        if ($list = SSViewer::config()->uninherited('themes')) {
-            return $list;
+        $themes = static::$current_themes;
+        if (!isset($themes)) {
+            $themes = SSViewer::config()->uninherited('themes');
+        }
+        if ($themes) {
+            return $themes;
         }
 
         // Support legacy behaviour
@@ -384,8 +388,8 @@ class SSViewer implements Flushable
     public static function getRewriteHashLinksDefault()
     {
         // Check if config overridden
-        if (isset(self::$current_rewrite_hash_links)) {
-            return self::$current_rewrite_hash_links;
+        if (isset(static::$current_rewrite_hash_links)) {
+            return static::$current_rewrite_hash_links;
         }
         return Config::inst()->get(static::class, 'rewrite_hash_links');
     }
@@ -397,7 +401,7 @@ class SSViewer implements Flushable
      */
     public static function setRewriteHashLinksDefault($rewrite)
     {
-        self::$current_rewrite_hash_links = $rewrite;
+        static::$current_rewrite_hash_links = $rewrite;
     }
 
     /**
@@ -464,8 +468,7 @@ class SSViewer implements Flushable
      */
     public function dontRewriteHashlinks()
     {
-        $this->setRewriteHashLinks(false);
-        return $this;
+        return $this->setRewriteHashLinks(false);
     }
 
     /**

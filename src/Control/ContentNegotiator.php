@@ -105,10 +105,10 @@ class ContentNegotiator
      */
     public static function getEnabled()
     {
-        if (!isset(self::$current_enabled)) {
-            self::$current_enabled = ContentNegotiator::config()->get('enabled');
+        if (isset(static::$current_enabled)) {
+            return static::$current_enabled;
         }
-        return self::$current_enabled;
+        return Config::inst()->get(static::class, 'enabled');
     }
     
     /**
@@ -118,9 +118,7 @@ class ContentNegotiator
      */
     public static function setEnabled($enabled)
     {
-        if (isset($enabled)) {
-            self::$current_enabled = $enabled;
-        }
+        static::$current_enabled = $enabled;
     }
 
     /**

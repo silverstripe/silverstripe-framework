@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 
@@ -109,10 +110,10 @@ abstract class HTMLEditorConfig
      */
     public static function getThemes()
     {
-        if (!isset(self::$current_themes)) {
-            self::$current_themes = self::config()->get('user_themes');
+        if (isset(static::$current_themes)) {
+            return static::$current_themes;
         }
-        return self::$current_themes;
+        return Config::inst()->get(static::class, 'user_themes');
     }
     
     /**
@@ -122,9 +123,7 @@ abstract class HTMLEditorConfig
      */
     public static function setThemes($themes)
     {
-        if (isset($themes)) {
-            self::$current_themes = $themes;
-        }
+        static::$current_themes = $themes;
     }
     
     /**
