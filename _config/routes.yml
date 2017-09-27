@@ -20,6 +20,8 @@ SilverStripe\Control\Director:
     'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL
 ---
 Name: security-limited
+After:
+  - '#rootroutes'
 Except:
   environment: dev
 ---

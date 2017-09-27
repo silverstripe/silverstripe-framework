@@ -32,7 +32,7 @@ SilverStripe\Core\Injector\Injector:
 ---
 Name: errorrequestprocessors
 After:
-  - requestprocessors
+  - '#requestprocessors'
 ---
 SilverStripe\Core\Injector\Injector:
   # Note: If Director config changes, take note it will affect this config too
