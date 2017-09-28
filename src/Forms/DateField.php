@@ -73,26 +73,12 @@ class DateField extends TextField
     protected $dateFormat = null;
 
     /**
-     * Set if js calendar should popup
-     *
-     * @var bool
-     */
-    protected $showCalendar = false;
-
-    /**
      * Length of this date (full, short, etc).
      *
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      * @var int
      */
     protected $dateLength = null;
-
-    /**
-     * Override locale for client side.
-     *
-     * @var string
-     */
-    protected $clientLocale = null;
 
     protected $inputType = 'date';
 
