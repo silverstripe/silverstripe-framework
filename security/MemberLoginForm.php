@@ -294,6 +294,10 @@ JS;
 	 * @param array $data Submitted data
 	 */
 	public function forgotPassword($data) {
+		// minimum execution time for authenticating a member
+		$minExecTime = self::config()->min_auth_time / 1000;
+		$startTime = microtime(true);
+
 		// Ensure password is given
 		if(empty($data['Email'])) {
 			$this->sessionMessage(
@@ -311,10 +315,8 @@ JS;
 		// Allow vetoing forgot password requests
 		$results = $this->extend('forgotPassword', $member);
 		if($results && is_array($results) && in_array(false, $results, true)) {
-			return $this->controller->redirect('Security/lostpassword');
-		}
-
-		if($member) {
+			$this->controller->redirect('Security/lostpassword');
+		} elseif ($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
 			$e = Member_ForgotPasswordEmail::create();
@@ -337,6 +339,10 @@ JS;
 			);
 
 			$this->controller->redirect('Security/lostpassword');
+		}
+		$waitFor = $minExecTime - (microtime(true) - $startTime);
+		if ($waitFor > 0) {
+			usleep($waitFor * 1000000);
 		}
 	}
 

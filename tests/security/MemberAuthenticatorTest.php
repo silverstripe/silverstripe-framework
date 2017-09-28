@@ -259,4 +259,10 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$this->assertTrue($member->isLockedOut());
 		$this->assertFalse($member->canLogIn()->valid());
 	}
+
+	public function testDefaultAuthenticatorWontReturnIfDisabled()
+	{
+		Authenticator::unregister('MemberAuthenticator');
+		$this->assertNotEquals('MemberAuthenticator', Authenticator::get_default_authenticator());
+	}
 }
