@@ -39,35 +39,29 @@ class ContentNegotiator
 
     /**
      * @config
-     *
      * @var string
      */
     private static $content_type = '';
 
     /**
      * @config
-     *
      * @var string
      */
     private static $encoding = 'utf-8';
 
     /**
      * @config
-     *
      * @var bool
      */
     private static $enabled = false;
-    
+
     /**
-     * @config
-     *
      * @var bool
      */
     protected static $current_enabled = null;
 
     /**
      * @config
-     *
      * @var string
      */
     private static $default_format = 'html';
@@ -97,7 +91,7 @@ class ContentNegotiator
             return (substr($response->getBody(), 0, 5) == '<' . '?xml');
         }
     }
-    
+
     /**
      * Gets the current enabled status, if it is not set this will fallback to config
      *
@@ -110,7 +104,7 @@ class ContentNegotiator
         }
         return Config::inst()->get(static::class, 'enabled');
     }
-    
+
     /**
      * Sets the current enabled status
      *
