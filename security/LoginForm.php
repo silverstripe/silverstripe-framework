@@ -18,8 +18,17 @@ abstract class LoginForm extends Form {
 	 * form.
 	 * @var string
 	 */
-
 	protected $authenticator_class;
+
+	/**
+	 * The minimum amount of time authenticating is allowed to take in milliseconds.
+	 *
+	 * Protects against timing enumeration attacks
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $min_auth_time = 350;
 
 	/**
 	 * Get the authenticator instance
@@ -42,6 +51,16 @@ abstract class LoginForm extends Form {
 	public function getAuthenticatorName() {
 		$authClass = $this->authenticator_class;
 		return $authClass::get_name();
+	}
+
+	public function setAuthenticatorClass($class)
+	{
+		$this->authenticator_class = $class;
+		$authenticatorField = $this->Fields()->dataFieldByName('AuthenticationMethod');
+		if ($authenticatorField) {
+			$authenticatorField->setValue($class);
+		}
+		return $this;
 	}
 
 }
