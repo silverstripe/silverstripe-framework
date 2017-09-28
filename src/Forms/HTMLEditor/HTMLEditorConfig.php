@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 
@@ -58,6 +59,13 @@ abstract class HTMLEditorConfig
      * @var array
      */
     private static $user_themes = [];
+    
+    /**
+     * List of the current themes set for this config
+     *
+     * @var array
+     */
+    protected static $current_themes = null;
 
     /**
      * Get the HTMLEditorConfig object for the given identifier. This is a correct way to get an HTMLEditorConfig
@@ -95,7 +103,29 @@ abstract class HTMLEditorConfig
         }
         return $config;
     }
-
+    
+    /**
+     * Gets the current themes, if it is not set this will fallback to config
+     * @return array
+     */
+    public static function getThemes()
+    {
+        if (isset(static::$current_themes)) {
+            return static::$current_themes;
+        }
+        return Config::inst()->get(static::class, 'user_themes');
+    }
+    
+    /**
+     * Sets the current theme
+     *
+     * @param array $themes
+     */
+    public static function setThemes($themes)
+    {
+        static::$current_themes = $themes;
+    }
+    
     /**
      * Set the currently active configuration object. Note that the existing active
      * config will not be renamed to the new identifier.

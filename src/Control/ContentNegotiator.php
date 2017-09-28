@@ -39,28 +39,29 @@ class ContentNegotiator
 
     /**
      * @config
-     *
      * @var string
      */
     private static $content_type = '';
 
     /**
      * @config
-     *
      * @var string
      */
     private static $encoding = 'utf-8';
 
     /**
      * @config
-     *
      * @var bool
      */
     private static $enabled = false;
 
     /**
+     * @var bool
+     */
+    protected static $current_enabled = null;
+
+    /**
      * @config
-     *
      * @var string
      */
     private static $default_format = 'html';
@@ -84,11 +85,34 @@ class ContentNegotiator
             return false;
         }
 
-        if (static::config()->get('enabled')) {
+        if (ContentNegotiator::getEnabled()) {
             return true;
         } else {
             return (substr($response->getBody(), 0, 5) == '<' . '?xml');
         }
+    }
+
+    /**
+     * Gets the current enabled status, if it is not set this will fallback to config
+     *
+     * @return bool
+     */
+    public static function getEnabled()
+    {
+        if (isset(static::$current_enabled)) {
+            return static::$current_enabled;
+        }
+        return Config::inst()->get(static::class, 'enabled');
+    }
+
+    /**
+     * Sets the current enabled status
+     *
+     * @param bool $enabled
+     */
+    public static function setEnabled($enabled)
+    {
+        static::$current_enabled = $enabled;
     }
 
     /**

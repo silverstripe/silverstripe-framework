@@ -1679,7 +1679,7 @@ after'
 
     public function testRewriteHashlinks()
     {
-        SSViewer::config()->update('rewrite_hash_links', true);
+        SSViewer::setRewriteHashLinksDefault(true);
 
         $_SERVER['HTTP_HOST'] = 'www.mysite.com';
         $_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
@@ -1744,7 +1744,7 @@ after'
 
     public function testRewriteHashlinksInPhpMode()
     {
-        SSViewer::config()->update('rewrite_hash_links', 'php');
+        SSViewer::setRewriteHashLinksDefault('php');
 
         $tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
 
