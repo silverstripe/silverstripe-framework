@@ -540,7 +540,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
      *               'HtmlContent'
      */
-    public function findEmail($to, $from = null, $subject = null, $content = null)
+    public static function findEmail($to, $from = null, $subject = null, $content = null)
     {
         /** @var Mailer $mailer */
         $mailer = Injector::inst()->get(Mailer::class);
@@ -559,9 +559,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $subject
      * @param string $content
      */
-    public function assertEmailSent($to, $from = null, $subject = null, $content = null)
+    public static function assertEmailSent($to, $from = null, $subject = null, $content = null)
     {
-        $found = (bool)$this->findEmail($to, $from, $subject, $content);
+        $found = (bool)static::findEmail($to, $from, $subject, $content);
 
         $infoParts = "";
         $withParts = array();
@@ -581,7 +581,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $infoParts .= " with " . implode(" and ", $withParts);
         }
 
-        $this->assertTrue(
+        static::assertTrue(
             $found,
             "Failed asserting that an email was sent$infoParts."
         );
@@ -608,7 +608,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *         ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public function assertListContains($matches, $list)
+    public static function assertListContains($matches, $list)
     {
         $extracted = array();
         foreach ($list as $object) {
@@ -619,7 +619,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         foreach ($matches as $match) {
             $matched = false;
             foreach ($extracted as $i => $item) {
-                if ($this->dataObjectArrayMatch($item, $match)) {
+                if (static::dataObjectArrayMatch($item, $match)) {
                     // Remove it from $extracted so that we don't get duplicate mapping.
                     unset($extracted[$i]);
                     $matched = true;
@@ -628,11 +628,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             }
 
             // We couldn't find a match - assertion failed
-            $this->assertTrue(
+            static::assertTrue(
                 $matched,
                 "Failed asserting that the SS_List contains an item matching "
                 . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                . $this->ListSummaryForMatch($list, $match)
+                . static::ListSummaryForMatch($list, $match)
             );
         }
     }
@@ -643,9 +643,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param $dataObjectSet
      */
-    public function assertDOSContains($matches, $dataObjectSet) {
+    public static function assertDOSContains($matches, $dataObjectSet) {
         Deprecation::notice('5.0', 'Use assertListContains() instead');
-        return $this->assertListContains($matches, $dataObjectSet);
+        return static::assertListContains($matches, $dataObjectSet);
     }
 
     /**
@@ -667,7 +667,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *          ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public function assertNotListContains($matches, SS_List $list)
+    public static function assertNotListContains($matches, SS_List $list)
     {
         $extracted = array();
         foreach ($list as $object) {
@@ -678,14 +678,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $matched = [];
         foreach ($matches as $match) {
             foreach ($extracted as $i => $item) {
-                if ($this->dataObjectArrayMatch($item, $match)) {
+                if (static::dataObjectArrayMatch($item, $match)) {
                     $matched[] = $extracted[$i];
                     break;
                 }
             }
 
             // We couldn't find a match - assertion failed
-            $this->assertEmpty(
+            static::assertEmpty(
                 $matched,
                 "Failed asserting that the SS_List dosn't contain a set of objects. "
                 . "Found objects were: " . var_export($matched, true)
@@ -699,9 +699,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param $dataObjectSet
      */
-    public function assertNotDOSContains($matches, $dataObjectSet) {
+    public static function assertNotDOSContains($matches, $dataObjectSet) {
         Deprecation::notice('5.0', 'Use assertNotListContains() instead');
-        return $this->assertNotListContains($matches, $dataObjectSet);
+        return static::assertNotListContains($matches, $dataObjectSet);
     }
 
     /**
@@ -721,7 +721,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * either pass a single pattern or an array of patterns.
      * @param mixed $list The {@link SS_List} to test.
      */
-    public function assertListEquals($matches, SS_List $list)
+    public static function assertListEquals($matches, SS_List $list)
     {
         // Extract dataobjects
         $extracted = array();
@@ -737,7 +737,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             foreach ($matches as $match) {
                 $matched = false;
                 foreach ($extracted as $i => $item) {
-                    if ($this->dataObjectArrayMatch($item, $match)) {
+                    if (static::dataObjectArrayMatch($item, $match)) {
                         // Remove it from $extracted so that we don't get duplicate mapping.
                         unset($extracted[$i]);
                         $matched = true;
@@ -746,17 +746,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 }
 
                 // We couldn't find a match - assertion failed
-                $this->assertTrue(
+                static::assertTrue(
                     $matched,
                     "Failed asserting that the SS_List contains an item matching "
                     . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                    . $this->ListSummaryForMatch($list, $match)
+                    . static::ListSummaryForMatch($list, $match)
                 );
             }
         }
 
         // If we have leftovers than the List has extra data that shouldn't be there
-        $this->assertTrue(
+        static::assertTrue(
             (count($extracted) == 0),
             // If we didn't break by this point then we couldn't find a match
             "Failed asserting that the SS_List contained only the given items, the "
@@ -770,10 +770,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param SS_List $dataObjectSet
      */
-    public function assertDOSEquals($matches, $dataObjectSet)
+    public static function assertDOSEquals($matches, $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListEquals() instead');
-        return $this->assertListEquals($matches, $dataObjectSet);
+        return static::assertListEquals($matches, $dataObjectSet);
     }
 
 
@@ -790,7 +790,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
      * @param mixed $list The {@link SS_List} to test.
      */
-    public function assertListAllMatch($match, SS_List $list)
+    public static function assertListAllMatch($match, SS_List $list)
     {
         $extracted = array();
         foreach ($list as $object) {
@@ -799,8 +799,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         }
 
         foreach ($extracted as $i => $item) {
-            $this->assertTrue(
-                $this->dataObjectArrayMatch($item, $match),
+            static::assertTrue(
+                static::dataObjectArrayMatch($item, $match),
                 "Failed asserting that the the following item matched "
                 . var_export($match, true) . ": " . var_export($item, true)
             );
@@ -813,10 +813,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $match
      * @param SS_List $dataObjectSet
      */
-    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
+    public static function assertDOSAllMatch($match, SS_List $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
-        return $this->assertListAllMatch($match, $dataObjectSet);
+        return static::assertListAllMatch($match, $dataObjectSet);
     }
 
     /**
@@ -826,7 +826,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $sql
      * @return string The cleaned and normalised SQL string
      */
-    protected function normaliseSQL($sql)
+    protected static function normaliseSQL($sql)
     {
         return trim(preg_replace('/\s+/m', ' ', $sql));
     }
@@ -842,7 +842,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $canonicalize
      * @param boolean $ignoreCase
      */
-    public function assertSQLEquals(
+    public static function assertSQLEquals(
         $expectedSQL,
         $actualSQL,
         $message = '',
@@ -852,10 +852,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $ignoreCase = false
     ) {
         // Normalise SQL queries to remove patterns of repeating whitespace
-        $expectedSQL = $this->normaliseSQL($expectedSQL);
-        $actualSQL = $this->normaliseSQL($actualSQL);
+        $expectedSQL = static::normaliseSQL($expectedSQL);
+        $actualSQL = static::normaliseSQL($actualSQL);
 
-        $this->assertEquals($expectedSQL, $actualSQL, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
+        static::assertEquals($expectedSQL, $actualSQL, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
     }
 
     /**
@@ -867,17 +867,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $ignoreCase
      * @param boolean $checkForObjectIdentity
      */
-    public function assertSQLContains(
+    public static function assertSQLContains(
         $needleSQL,
         $haystackSQL,
         $message = '',
         $ignoreCase = false,
         $checkForObjectIdentity = true
     ) {
-        $needleSQL = $this->normaliseSQL($needleSQL);
-        $haystackSQL = $this->normaliseSQL($haystackSQL);
+        $needleSQL = static::normaliseSQL($needleSQL);
+        $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        $this->assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -889,17 +889,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $ignoreCase
      * @param boolean $checkForObjectIdentity
      */
-    public function assertSQLNotContains(
+    public static function assertSQLNotContains(
         $needleSQL,
         $haystackSQL,
         $message = '',
         $ignoreCase = false,
         $checkForObjectIdentity = true
     ) {
-        $needleSQL = $this->normaliseSQL($needleSQL);
-        $haystackSQL = $this->normaliseSQL($haystackSQL);
+        $needleSQL = static::normaliseSQL($needleSQL);
+        $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        $this->assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -909,7 +909,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param array $match
      * @return bool
      */
-    private function dataObjectArrayMatch($item, $match)
+    private static function dataObjectArrayMatch($item, $match)
     {
         foreach ($match as $k => $v) {
             if (!array_key_exists($k, $item) || $item[$k] != $v) {
@@ -926,7 +926,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param array $match
      * @return string
      */
-    private function ListSummaryForMatch($list, $match)
+    private static function ListSummaryForMatch($list, $match)
     {
         $extracted = array();
         foreach ($list as $item) {
