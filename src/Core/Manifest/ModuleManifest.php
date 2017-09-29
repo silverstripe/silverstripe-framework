@@ -5,7 +5,6 @@ namespace SilverStripe\Core\Manifest;
 use LogicException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 
@@ -171,49 +170,22 @@ class ModuleManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
             'min_depth' => 0,
-            'name_regex' => '/(^|[\/\\\\])_config.php$/',
             'ignore_tests' => !$includeTests,
-            'file_callback' => array($this, 'addSourceConfigFile'),
-            // Cannot be max_depth: 1 due to "/framework/admin/_config.php"
-            'max_depth' => 2
+            'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
+                if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
+                    $this->addModule($pathname);
+                }
+            }
         ));
         $finder->find($this->base);
 
-        $finder = new ManifestFileFinder();
-        $finder->setOptions(array(
-            'name_regex' => '/\.ya?ml$/',
-            'ignore_tests' => !$includeTests,
-            'file_callback' => array($this, 'addYAMLConfigFile'),
-            'max_depth' => 2
-        ));
-        $finder->find($this->base);
+        // Include root itself if module
+        if ($finder->isDirectoryModule(basename($this->base), $this->base, 0)) {
+            $this->addModule($this->base);
+        }
 
         if ($this->cache) {
             $this->cache->set($this->cacheKey, $this->modules);
-        }
-    }
-
-    /**
-     * Record finding of _config.php file
-     *
-     * @param string $basename
-     * @param string $pathname
-     */
-    public function addSourceConfigFile($basename, $pathname)
-    {
-        $this->addModule(dirname($pathname));
-    }
-
-    /**
-     * Handle lookup of _config/*.yml file
-     *
-     * @param string $basename
-     * @param string $pathname
-     */
-    public function addYAMLConfigFile($basename, $pathname)
-    {
-        if (preg_match('{/([^/]+)/_config/}', $pathname, $match)) {
-            $this->addModule(dirname(dirname($pathname)));
         }
     }
 

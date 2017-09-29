@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
@@ -37,6 +38,7 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         // Fake project root
         $this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
+        Director::config()->set('alternate_base_folder', $this->base);
         ModuleManifest::config()->set('module_priority', ['$project', '$other_modules']);
         ModuleManifest::config()->set('project', 'myproject');
 
@@ -87,8 +89,8 @@ class ThemeResourceLoaderTest extends SapphireTest
             $this->loader->findTemplate(
                 'NestedThemePage',
                 [
-                'silverstripe/module:subtheme',
-                '$default'
+                    'silverstripe/module:subtheme',
+                    '$default'
                 ]
             )
         );
@@ -99,7 +101,7 @@ class ThemeResourceLoaderTest extends SapphireTest
             $this->loader->findTemplate(
                 'NestedThemePage',
                 [
-                'silverstripe/module:subtheme',
+                    'silverstripe/module:subtheme',
                 ]
             )
         );
@@ -166,8 +168,8 @@ class ThemeResourceLoaderTest extends SapphireTest
             "$this->base/themes/theme/templates/Page.ss",
             $this->loader->findTemplate(
                 [
-                "$this->base/themes/theme/templates/Page.ss",
-                "Page"
+                    "$this->base/themes/theme/templates/Page.ss",
+                    "Page"
                 ],
                 ['theme']
             )
@@ -178,8 +180,8 @@ class ThemeResourceLoaderTest extends SapphireTest
             "$this->base/themes/theme/templates/Page.ss",
             $this->loader->findTemplate(
                 [
-                "$this->base/themes/theme/templates/NotAPage.ss",
-                "$this->base/themes/theme/templates/Page.ss",
+                    "$this->base/themes/theme/templates/NotAPage.ss",
+                    "$this->base/themes/theme/templates/Page.ss",
                 ],
                 ['theme']
             )
@@ -309,5 +311,70 @@ class ThemeResourceLoaderTest extends SapphireTest
         foreach ($templates as $template) {
             unlink($template);
         }
+    }
+
+    public function providerTestGetPath()
+    {
+        return [
+            // Legacy theme
+            [
+                'theme',
+                'themes/theme',
+            ],
+            // Module themes
+            [
+                'silverstripe/vendormodule:vendortheme',
+                'vendor/silverstripe/vendormodule/themes/vendortheme',
+            ],
+            [
+                'module:subtheme',
+                'module/themes/subtheme',
+            ],
+            // Module absolute paths
+            [
+                'silverstripe/vendormodule:/themes/vendortheme',
+                'vendor/silverstripe/vendormodule/themes/vendortheme',
+            ],
+            [
+                'module:/themes/subtheme',
+                'module/themes/subtheme',
+            ],
+            // Module root directory
+            [
+                'silverstripe/vendormodule:/',
+                'vendor/silverstripe/vendormodule',
+            ],
+            [
+                'silverstripe/vendormodule:',
+                'vendor/silverstripe/vendormodule',
+            ],
+            [
+                'silverstripe/vendormodule',
+                'vendor/silverstripe/vendormodule',
+            ],
+            [
+                'module:',
+                'module',
+            ],
+            // Absolute paths
+            [
+                '/vendor/silverstripe/vendormodule/themes/vendortheme',
+                'vendor/silverstripe/vendormodule/themes/vendortheme',
+            ],
+            [
+                '/module/themes/subtheme',
+                'module/themes/subtheme'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestGetPath
+     * @param string $name Theme identifier
+     * @param string $path Path to theme
+     */
+    public function testGetPath($name, $path)
+    {
+        $this->assertEquals($path, $this->loader->getPath($name));
     }
 }

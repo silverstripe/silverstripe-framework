@@ -10,16 +10,23 @@ use SilverStripe\Dev\SapphireTest;
  */
 class ManifestFileFinderTest extends SapphireTest
 {
-
-    protected $base;
+    protected $defaultBase;
 
     public function __construct()
     {
-        $this->defaultBase = dirname(__FILE__) . '/fixtures/manifestfilefinder';
+        $this->defaultBase = __DIR__ . '/fixtures/manifestfilefinder';
         parent::__construct();
     }
 
-    public function assertFinderFinds($finder, $base, $expect, $message = null)
+    /**
+     * Test that the finder can find the given files
+     *
+     * @param ManifestFileFinder $finder
+     * @param string $base
+     * @param array $expect
+     * @param string $message
+     */
+    public function assertFinderFinds(ManifestFileFinder $finder, $base, $expect, $message = null)
     {
         if (!$base) {
             $base = $this->defaultBase;
@@ -45,9 +52,10 @@ class ManifestFileFinderTest extends SapphireTest
         $this->assertFinderFinds(
             $finder,
             null,
-            array(
-            'module/module.txt'
-            )
+            [
+                'module/module.txt',
+                'vendor/myvendor/thismodule/module.txt',
+            ]
         );
     }
 
@@ -60,11 +68,14 @@ class ManifestFileFinderTest extends SapphireTest
         $this->assertFinderFinds(
             $finder,
             null,
-            array(
-            'module/module.txt',
-            'module/tests/tests.txt',
-            'module/code/tests/tests2.txt'
-            )
+            [
+                'module/module.txt',
+                'module/tests/tests.txt',
+                'module/code/tests/tests2.txt',
+                'vendor/myvendor/thismodule/module.txt',
+                'vendor/myvendor/thismodule/tests/tests.txt',
+                'vendor/myvendor/thismodule/code/tests/tests2.txt',
+            ]
         );
     }
 
@@ -77,10 +88,11 @@ class ManifestFileFinderTest extends SapphireTest
         $this->assertFinderFinds(
             $finder,
             null,
-            array(
-            'module/module.txt',
-            'themes/themes.txt'
-            )
+            [
+                'module/module.txt',
+                'themes/themes.txt',
+                'vendor/myvendor/thismodule/module.txt',
+            ]
         );
     }
 
@@ -90,10 +102,8 @@ class ManifestFileFinderTest extends SapphireTest
 
         $this->assertFinderFinds(
             $finder,
-            dirname(__FILE__) . '/fixtures/manifestfilefinder_rootconfigfile',
-            array(
-                'code/code.txt',
-            )
+            __DIR__ . '/fixtures/manifestfilefinder_rootconfigfile',
+            [ 'code/code.txt' ]
         );
     }
 
@@ -103,11 +113,11 @@ class ManifestFileFinderTest extends SapphireTest
 
         $this->assertFinderFinds(
             $finder,
-            dirname(__FILE__) . '/fixtures/manifestfilefinder_rootconfigfolder',
-            array(
+            __DIR__ . '/fixtures/manifestfilefinder_rootconfigfolder',
+            [
                 '_config/config.yml',
                 'code/code.txt',
-            )
+            ]
         );
     }
 }

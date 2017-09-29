@@ -31,9 +31,10 @@ class ModuleManifestTest extends SapphireTest
         $modules = $this->manifest->getModules();
         $this->assertEquals(
             [
-                'silverstripe/root-module',
                 'module',
                 'silverstripe/awesome-module',
+                'silverstripe/modulec',
+                'silverstripe/root-module',
             ],
             array_keys($modules)
         );
@@ -71,32 +72,37 @@ class ModuleManifestTest extends SapphireTest
         $this->assertEquals('moduleb', $module->getRelativePath());
     }
 
-    /*
-     * Note: Tests experimental API
-     * @internal
-     */
     public function testGetResourcePath()
     {
-        $module = $this->manifest->getModule('moduleb');
-        $this->assertTrue($module->hasResource('composer.json'));
-        $this->assertFalse($module->hasResource('package.json'));
+        // Root module
+        $moduleb = $this->manifest->getModule('moduleb');
+        $this->assertTrue($moduleb->getResource('composer.json')->exists());
+        $this->assertFalse($moduleb->getResource('package.json')->exists());
         $this->assertEquals(
             'moduleb/composer.json',
-            $module->getRelativeResourcePath('composer.json')
+            $moduleb->getResource('composer.json')->getRelativePath()
         );
     }
 
-    /*
-     * Note: Tests experimental API
-     * @internal
-     */
+    public function testGetResourcePathsInVendor()
+    {
+        // Vendor module
+        $modulec = $this->manifest->getModule('silverstripe/modulec');
+        $this->assertTrue($modulec->getResource('composer.json')->exists());
+        $this->assertFalse($modulec->getResource('package.json')->exists());
+        $this->assertEquals(
+            'vendor/silverstripe/modulec/composer.json',
+            $modulec->getResource('composer.json')->getRelativePath()
+        );
+    }
+
     public function testGetResourcePathOnRoot()
     {
         $module = $this->manifest->getModule('silverstripe/root-module');
-        $this->assertTrue($module->hasResource('composer.json'));
+        $this->assertTrue($module->getResource('composer.json')->exists());
         $this->assertEquals(
             'composer.json',
-            $module->getRelativeResourcePath('composer.json')
+            $module->getResource('composer.json')->getRelativePath()
         );
     }
 }

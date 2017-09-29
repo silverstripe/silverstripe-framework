@@ -32,39 +32,51 @@ class ClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest      = new ClassManifest($this->base);
+        $this->manifest = new ClassManifest($this->base);
         $this->manifest->init(false);
         $this->manifestTests = new ClassManifest($this->base);
         $this->manifestTests->init(true);
     }
 
-    public function testGetItemPath()
+    /**
+     * @return array
+     */
+    public function providerTestGetItemPath()
     {
-        $expect = array(
-            'CLASSA'     => 'module/classes/ClassA.php',
-            'ClassA'     => 'module/classes/ClassA.php',
-            'classa'     => 'module/classes/ClassA.php',
-            'INTERFACEA' => 'module/interfaces/InterfaceA.php',
-            'InterfaceA' => 'module/interfaces/InterfaceA.php',
-            'interfacea' => 'module/interfaces/InterfaceA.php',
-            'TestTraitA' => 'module/traits/TestTraitA.php',
-            'TestNamespace\Testing\TestTraitB' => 'module/traits/TestTraitB.php'
-        );
+        return [
+            ['CLASSA', 'module/classes/ClassA.php'],
+            ['ClassA', 'module/classes/ClassA.php'],
+            ['classa', 'module/classes/ClassA.php'],
+            ['INTERFACEA', 'module/interfaces/InterfaceA.php'],
+            ['InterfaceA', 'module/interfaces/InterfaceA.php'],
+            ['interfacea', 'module/interfaces/InterfaceA.php'],
+            ['TestTraitA', 'module/traits/TestTraitA.php'],
+            ['TestNamespace\\Testing\\TestTraitB', 'module/traits/TestTraitB.php'],
+            ['VendorClassA', 'vendor/silverstripe/modulec/code/VendorClassA.php'],
+            ['VendorTraitA', 'vendor/silverstripe/modulec/code/VendorTraitA.php'],
+        ];
+    }
 
-        foreach ($expect as $name => $path) {
-            $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
-        }
+    /**
+     * @dataProvider providerTestGetItemPath
+     * @param string $name
+     * @param string $path
+     */
+    public function testGetItemPath($name, $path)
+    {
+        $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
     }
 
     public function testGetClasses()
     {
-        $expect = array(
-            'classa'                   => "{$this->base}/module/classes/ClassA.php",
-            'classb'                   => "{$this->base}/module/classes/ClassB.php",
-            'classc'                   => "{$this->base}/module/classes/ClassC.php",
-            'classd'                   => "{$this->base}/module/classes/ClassD.php",
-            'classe'                   => "{$this->base}/module/classes/ClassE.php",
-        );
+        $expect = [
+            'classa' => "{$this->base}/module/classes/ClassA.php",
+            'classb' => "{$this->base}/module/classes/ClassB.php",
+            'classc' => "{$this->base}/module/classes/ClassC.php",
+            'classd' => "{$this->base}/module/classes/ClassD.php",
+            'classe' => "{$this->base}/module/classes/ClassE.php",
+            'vendorclassa' => "{$this->base}/vendor/silverstripe/modulec/code/VendorClassA.php",
+        ];
         $this->assertEquals($expect, $this->manifest->getClasses());
     }
 
@@ -77,6 +89,7 @@ class ClassManifestTest extends SapphireTest
                 'classc' => 'ClassC',
                 'classd' => 'ClassD',
                 'classe' => 'ClassE',
+                'vendorclassa' => 'VendorClassA',
             ],
             $this->manifest->getClassNames()
         );
@@ -85,10 +98,11 @@ class ClassManifestTest extends SapphireTest
     public function testGetTraitNames()
     {
         $this->assertEquals(
-            array(
+            [
                 'testtraita' => 'TestTraitA',
-                'testnamespace\testing\testtraitb' => 'TestNamespace\Testing\TestTraitB',
-            ),
+                'testnamespace\\testing\\testtraitb' => 'TestNamespace\\Testing\\TestTraitB',
+                'vendortraita' => 'VendorTraitA',
+            ],
             $this->manifest->getTraitNames()
         );
     }
