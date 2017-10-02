@@ -50,4 +50,9 @@ class First extends Config implements TestOnly
      */
     private static $default_zero = 0;
     public static $default_emtpy_string = '';
+
+    private static $default_array = [
+        'default_true' => true,
+        'default_false' => false
+    ];
 }

@@ -145,6 +145,42 @@ class ConfigTest extends SapphireTest
         $this->assertNull(Config::inst()->get(ConfigTest\First::class, 'nullable'));
         Config::modify()->merge(ConfigTest\First::class, 'nullable', 'value');
         $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'nullable'));
+
+        // arrays of false-y
+        $array = Config::inst()->get(ConfigTest\First::class, 'default_array');
+        $this->assertTrue($array['default_true']);
+        $this->assertFalse($array['default_false']);
+
+        Config::modify()->merge(ConfigTest\First::class, 'default_array', [
+            'default_true' => false
+        ]);
+
+        $array = Config::inst()->get(ConfigTest\First::class, 'default_array');
+        $this->assertFalse($array['default_true']);
+        $this->assertFalse($array['default_false']);
+
+        Config::modify()->merge(ConfigTest\First::class, 'default_array', [
+            'default_false' => true
+        ]);
+
+        $array = Config::inst()->get(ConfigTest\First::class, 'default_array');
+        $this->assertFalse($array['default_true']);
+        $this->assertTrue($array['default_false']);
+
+        // set the value we manually set to false, back to true
+        Config::modify()->merge(ConfigTest\First::class, 'default_array', [
+            'default_true' => true
+        ]);
+
+        $array = Config::inst()->get(ConfigTest\First::class, 'default_array');
+        $this->assertTrue($array['default_true']);
+
+        // missing statics
+        Config::modify()->merge(ConfigTest\First::class, 'missing_static', true);
+        $this->assertTrue(Config::inst()->get(ConfigTest\First::class, 'missing_static'));
+
+        Config::modify()->merge(ConfigTest\First::class, 'missing_static', false);
+        $this->assertFalse(Config::inst()->get(ConfigTest\First::class, 'missing_static'));
     }
 
     public function testSetsFalsyDefaults()
@@ -271,5 +307,35 @@ class ConfigTest extends SapphireTest
         $this->assertFalse(isset($config->bar));
         $this->assertTrue(empty($config->bar));
         $this->assertNull($config->bar);
+    }
+
+    public function testUpdateOnExtension()
+    {
+        $base = new ConfigTest\BaseObject();
+        $values = $base->config()->config_array;
+
+        $this->assertArrayHasKey('foo', $values);
+        $this->assertEquals('foo', $values['foo']);
+
+        $this->assertTrue($base->config()->config_value);
+
+        // try to update the default values on the extension
+        Config::modify()->merge(ConfigTest\BaseObject::class, 'config_array', [
+            'foo' => 'update foo value',
+            'bar' => 'bar'
+        ]);
+
+        $base = new ConfigTest\BaseObject();
+        $values = $base->config()->config_array;
+
+        $this->assertArrayHasKey('foo', $values);
+        $this->assertArrayHasKey('bar', $values);
+
+        $this->assertEquals('update foo value', $values['foo']);
+
+        Config::modify()->merge(ConfigTest\BaseObject::class, 'config_value', false);
+
+        $base = new ConfigTest\BaseObject();
+        $this->assertFalse($base->config()->config_value);
     }
 }
