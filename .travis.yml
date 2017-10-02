@@ -17,6 +17,8 @@ env:
     - COMPOSER_ROOT_VERSION=4.0.x-dev
     - DISPLAY=":99"
     - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+    - SS_BASE_URL="http://localhost:8080/"
+    - SS_ENVIRONMENT_TYPE="dev"
 
 matrix:
   fast_finish: true
@@ -78,7 +80,6 @@ before_script:
   - php ./tests/dump_constants.php
 
 # Start behat services
-  - if [[ $BEHAT_TEST ]]; then echo 'SS_BASE_URL=http://localhost:8080/' >> .env; fi
   - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
   - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
   - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
