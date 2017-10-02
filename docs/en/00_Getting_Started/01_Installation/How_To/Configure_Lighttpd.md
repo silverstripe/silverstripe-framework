@@ -15,7 +15,7 @@ Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 	    static-file.exclude-extensions += ( ".ss" )
 	
 	    # Deny access to SilverStripe command-line interface
-	    $HTTP["url"] =~ "^/framework/cli-script.php" {
+	    $HTTP["url"] =~ "^/vendor/silverstripe/framework/cli-script.php" {
 	       url.access-deny = ( "" )
 	    }
 	
@@ -27,11 +27,11 @@ Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 	    # Rewrite URLs so they are nicer
 	    url.rewrite-once = (
 	       "^/.*\.[A-Za-z0-9]+.*?$" => "$0",
-	       "^/(.*?)(\?|$)(.*)" => "/framework/main.php?url=$1&$3"
+	       "^/(.*?)(\?|$)(.*)" => "/vendor/silverstripe/framework/main.php?url=$1&$3"
 	    )
 	
 	    # Show SilverStripe error page
-	    server.error-handler-404 = "/framework/main.php" 
+	    server.error-handler-404 = "/vendor/silverstripe/framework/main.php" 
 	}
 
 
@@ -53,14 +53,14 @@ of Silverstripe on the same host, you can use something like this (be warned, it
 	   url.rewrite-once = (
 	      "(?i)(/copy1/.*\.([A-Za-z0-9]+))(.*?)$" => "$0",
 	      "(?i)(/copy2/.*\.([A-Za-z0-9]+))(.*?)$" => "$0",
-	      "^/copy1/(.*?)(\?|$)(.*)" => "/copy1/framework/main.php?url=$1&$3",
-	      "^/copy2/(.*?)(\?|$)(.*)" => "/copy2/framework/main.php?url=$1&$3"
+	      "^/copy1/(.*?)(\?|$)(.*)" => "/copy1/vendor/silverstripe/framework/main.php?url=$1&$3",
+	      "^/copy2/(.*?)(\?|$)(.*)" => "/copy2/vendor/silverstripe/framework/main.php?url=$1&$3"
 	   )
 	   $HTTP["url"] =~ "^/copy1/" {
-	      server.error-handler-404 = "/copy1/framework/main.php"
+	      server.error-handler-404 = "/copy1/vendor/silverstripe/framework/main.php"
 	   }
 	   $HTTP["url"] =~ "^/copy2/" {
-	      server.error-handler-404 = "/copy2/framework/main.php"
+	      server.error-handler-404 = "/copy2/vendor/silverstripe/framework/main.php"
 	   }
 	}
 

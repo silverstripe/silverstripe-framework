@@ -438,16 +438,26 @@ ErrorDocument 500 /assets/error-500.html
     $baseClause
     $cgiClause
 
+    # Deny access to vendor, unless you're requesting main.php
+	RewriteCond %{REQUEST_URI} !^/vendor/silverstripe/framework/main\.php
+	RewriteRule ^vendor(/|$) - [F,L,NC]s
+
+	# Deny access to potentially sensitive files and folders
+	RewriteRule ^\.env - [F,L,NC]
+	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+	RewriteRule composer\.(json|lock) - [F,L,NC]
+	RewriteRule (error|silverstripe|debug)\.log - [F,L,NC]
+
     # Deny access to potentially sensitive files and folders
-    RewriteRule ^vendor(/|$) - [F,L,NC]
     RewriteRule silverstripe-cache(/|$) - [F,L,NC]
     RewriteRule composer\.(json|lock) - [F,L,NC]
 
     # Process through SilverStripe if no file with the requested name exists.
-    # Pass through the original path as a query parameter, and retain the existing parameters.
-    RewriteCond %{REQUEST_URI} ^(.*)$
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule .* framework/main.php?url=%1 [QSA]
+	# Pass through the original path as a query parameter, and retain the existing parameters.
+	# Try finding framework in the vendor folder first
+	RewriteCond %{REQUEST_URI} ^(.*)$
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule .* vendor/silverstripe/framework/main.php?url=%1 [QSA]
 </IfModule>
 TEXT;
 
@@ -502,8 +512,9 @@ TEXT;
                     <match url="^(.*)$" />
                     <conditions>
                         <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="vendor/silverstripe/framework/main.php" matchType="IsFile" />
                     </conditions>
-                    <action type="Rewrite" url="framework/main.php?url={R:1}" appendQueryString="true" />
+                    <action type="Rewrite" url="vendor/silverstripe/framework/main.php?url={R:1}" appendQueryString="true" />
                 </rule>
             </rules>
         </rewrite>

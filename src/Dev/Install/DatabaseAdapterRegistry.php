@@ -110,26 +110,36 @@ class DatabaseAdapterRegistry
     }
 
     /**
-     * Detects all _register_database.php files and invokes them
+     * Detects all _register_database.php files and invokes them.
+     * Searches through vendor/ folder only,
+     * does not support "legacy" folder location in webroot
      */
     public static function autodiscover()
     {
-        foreach (glob(__DIR__ . '/../../../../*', GLOB_ONLYDIR) as $directory) {
-            if (file_exists($directory . '/_register_database.php')) {
-                include_once($directory . '/_register_database.php');
+        // Search through all composer packages in vendor
+        foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
+            foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
+                if (file_exists($directory . '/_register_database.php')) {
+                    include_once($directory . '/_register_database.php');
+                }
             }
         }
     }
 
     /**
      * Detects all _configure_database.php files and invokes them
-     * Called by ConfigureFromEnv.php
+     * Called by ConfigureFromEnv.php.
+     * Searches through vendor/ folder only,
+     * does not support "legacy" folder location in webroot
      */
     public static function autoconfigure()
     {
-        foreach (glob(__DIR__ . '/../../../../*', GLOB_ONLYDIR) as $directory) {
-            if (file_exists($directory . '/_configure_database.php')) {
-                include_once($directory . '/_configure_database.php');
+        // Search through all composer packages in vendor
+        foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
+            foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
+                if (file_exists($directory . '/_configure_database.php')) {
+                    include_once($directory . '/_configure_database.php');
+                }
             }
         }
     }

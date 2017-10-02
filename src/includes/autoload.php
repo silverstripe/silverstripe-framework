@@ -5,11 +5,9 @@ call_user_func(function () {
     $candidates = [
         // module in vendor
         __DIR__ . '/../../../../autoload.php',
-        // module in webroot
+        // module itself is webroot (usually during CI installs)
         __DIR__ . '/../../vendor/autoload.php',
-        // module in webroot
-        __DIR__ . '/../../../vendor/autoload.php',
-        // module is webroot (usually during CI installs)
+        // fallback
         getcwd() . '/vendor/autoload.php',
     ];
     foreach ($candidates as $candidate) {
