@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tasks;
 
+use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\FileMigrationHelper;
 use SilverStripe\Dev\BuildTask;
@@ -21,11 +22,23 @@ class MigrateFileTask extends BuildTask
 
     public function run($request)
     {
+        if (!class_exists(FileMigrationHelper::class)) {
+            DB::alteration_message("No file migration helper detected", "notice");
+            return;
+        }
+
         $migrated = FileMigrationHelper::singleton()->run();
         if ($migrated) {
             DB::alteration_message("{$migrated} File DataObjects upgraded", "changed");
         } else {
             DB::alteration_message("No File DataObjects need upgrading", "notice");
         }
+
+        if (!class_exists(ImageThumbnailHelper::class)) {
+            DB::alteration_message("No image thumbnail helper detected", "notice");
+            return;
+        }
+
+        ImageThumbnailHelper::singleton()->run();
     }
 }
