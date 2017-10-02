@@ -34,7 +34,7 @@ class Installer extends InstallRequirements
             <meta charset="utf-8"/>
             <title>Installing SilverStripe...</title>
             <link rel="stylesheet" type="text/css"
-                  href="framework/src/Dev/Install/client/styles/install.css"/>
+                  href="resources/silverstripe/framework/src/Dev/Install/client/styles/install.css"/>
             <script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
         </head>
         <body>
@@ -439,25 +439,26 @@ ErrorDocument 500 /assets/error-500.html
     $cgiClause
 
     # Deny access to vendor, unless you're requesting main.php
-	RewriteCond %{REQUEST_URI} !^/vendor/silverstripe/framework/main\.php
-	RewriteRule ^vendor(/|$) - [F,L,NC]s
+    # Not restricting to the start of the path to support RewriteBase
+    RewriteCond %{REQUEST_URI} !/vendor/silverstripe/framework/main\.php
+    RewriteRule ^vendor(/|$) - [F,L,NC]
 
-	# Deny access to potentially sensitive files and folders
-	RewriteRule ^\.env - [F,L,NC]
-	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
-	RewriteRule composer\.(json|lock) - [F,L,NC]
-	RewriteRule (error|silverstripe|debug)\.log - [F,L,NC]
+    # Deny access to potentially sensitive files and folders
+    RewriteRule ^\.env - [F,L,NC]
+    RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+    RewriteRule composer\.(json|lock) - [F,L,NC]
+    RewriteRule (error|silverstripe|debug)\.log - [F,L,NC]
 
     # Deny access to potentially sensitive files and folders
     RewriteRule silverstripe-cache(/|$) - [F,L,NC]
     RewriteRule composer\.(json|lock) - [F,L,NC]
 
     # Process through SilverStripe if no file with the requested name exists.
-	# Pass through the original path as a query parameter, and retain the existing parameters.
-	# Try finding framework in the vendor folder first
-	RewriteCond %{REQUEST_URI} ^(.*)$
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* vendor/silverstripe/framework/main.php?url=%1 [QSA]
+    # Pass through the original path as a query parameter, and retain the existing parameters.
+    # Try finding framework in the vendor folder first
+    RewriteCond %{REQUEST_URI} ^(.*)$
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule .* vendor/silverstripe/framework/main.php?url=%1 [QSA]
 </IfModule>
 TEXT;
 

@@ -199,7 +199,7 @@ class InstallRequirements
         ));
 
         // Check that we can identify the root folder successfully
-        $this->requireFile('framework/src/Dev/Install/config-form.html', array(
+        $this->requireFile('vendor/silverstripe/framework/src/Dev/Install/config-form.html', array(
             "File permissions",
             "Does the webserver know where files are stored?",
             "The webserver isn't letting me identify where files are stored.",
@@ -211,9 +211,9 @@ class InstallRequirements
             "mysite/ directory exists?",
             ''
         ));
-        $this->requireModule('framework', array(
+        $this->requireModule('vendor/silverstripe/framework', array(
             "File permissions",
-            "framework/ directory exists?",
+            "vendor/silverstripe/framework/ directory exists?",
             '',
         ));
 
