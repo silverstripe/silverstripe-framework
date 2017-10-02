@@ -567,7 +567,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEPath());
+        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEResourcePath());
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
@@ -682,6 +682,26 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
+     * Returns the base path to TinyMCE resources (which could be different from the original tinymce
+     * location in the module).
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getTinyMCEResourcePath()
+    {
+        $configDir = static::config()->get('base_dir');
+        if ($configDir) {
+            return $this->resolvePath($configDir, true);
+        }
+
+        throw new Exception(sprintf(
+            'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
+            __CLASS__
+        ));
+    }
+
+    /**
      * @return string
      * @throws Exception
      */
@@ -712,14 +732,20 @@ class TinyMCEConfig extends HTMLEditorConfig
      * Expand resource path to a relative filesystem path
      *
      * @param string $path
+     * @param boolean $useResourcePath The resource path can be different than the original tinymce location.
      * @return string
      */
-    protected function resolvePath($path)
+    protected function resolvePath($path, $useResourcePath = false)
     {
         if (preg_match('#(?<module>[^/]+/[^/]+)\s*:\s*(?<path>[^:]+)#', $path, $results)) {
             $module = ModuleLoader::getModule($results['module']);
             if ($module) {
-                return $module->getRelativeResourcePath($results['path']);
+                if ($useResourcePath) {
+                    return $module->getResource($results['path'])->getURL();
+                } else {
+                    return $module->getResource($results['path'])->getRelativePath();
+                }
+
             }
         }
         return $path;
