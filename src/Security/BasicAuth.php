@@ -8,9 +8,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -24,6 +23,16 @@ use SilverStripe\ORM\Connect\DatabaseException;
 class BasicAuth
 {
     use Configurable;
+
+    /**
+     * Env var to set to enable basic auth
+     */
+    const USE_BASIC_AUTH = 'SS_USE_BASIC_AUTH';
+
+    /**
+     * Default permission code
+     */
+    const AUTH_PERMISSION = 'ADMIN';
 
     /**
      * @config
@@ -179,10 +188,10 @@ class BasicAuth
      * regular log-in form. This can be useful for test sites, where you want to hide the site
      * away from prying eyes, but still be able to test the regular log-in features of the site.
      *
-     * If you are including conf/ConfigureFromEnv.php in your _config.php file, you can also enable
-     * this feature by adding this line to your .env:
+     * You can also enable this feature by adding this line to your .env. Set this to a permission
+     * code you wish to require.
      *
-     * SS_USE_BASIC_AUTH=1
+     * SS_USE_BASIC_AUTH=ADMIN
      *
      * @param boolean $protect Set this to false to disable protection.
      * @param string $code {@link Permission} code that is required from the user.
@@ -190,7 +199,7 @@ class BasicAuth
      *  of the permission codes a user has.
      * @param string $message
      */
-    public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null)
+    public static function protect_entire_site($protect = true, $code = self::AUTH_PERMISSION, $message = null)
     {
         static::config()
             ->set('entire_site_protected', $protect)
@@ -211,13 +220,27 @@ class BasicAuth
     {
         $config = static::config();
         $request = Controller::curr()->getRequest();
+
+        // Check if site is protected
         if ($config->get('entire_site_protected')) {
-            static::requireLogin(
-                $request,
-                $config->get('entire_site_protected_message'),
-                $config->get('entire_site_protected_code'),
-                false
-            );
+            $permissionCode = $config->get('entire_site_protected_code');
+        } elseif (getenv(self::USE_BASIC_AUTH)) {
+            // Convert legacy 1 / true to ADMIN permissions
+            $permissionCode = getenv(self::USE_BASIC_AUTH);
+            if (!is_string($permissionCode) || is_numeric($permissionCode)) {
+                $permissionCode = self::AUTH_PERMISSION;
+            }
+        } else {
+            // Not enabled
+            return;
         }
+
+        // Require login
+        static::requireLogin(
+            $request,
+            $config->get('entire_site_protected_message'),
+            $permissionCode,
+            false
+        );
     }
 }
