@@ -12,8 +12,8 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
-use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
@@ -401,7 +401,7 @@ class Requirements_Backend
      */
     public function javascript($file, $options = array())
     {
-        $file = $this->parseModuleResourceReference($file);
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
         // Get type
         $type = null;
@@ -626,32 +626,11 @@ class Requirements_Backend
      */
     public function css($file, $media = null)
     {
-        $file = $this->parseModuleResourceReference($file);
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
         $this->css[$file] = array(
             "media" => $media
         );
-    }
-
-    /**
-     * Convert a file of the form "vendor/package:resource" into a BASE_PATH-relative file
-     * For other files, reutrn original value
-     *
-     * @param string $file
-     * @return string
-     */
-    protected function parseModuleResourceReference($file)
-    {
-        // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
-        if (preg_match('#([^\/\/][^ /]*\/[^ /]*) *: *([^ ]*)#', $file, $matches)) {
-            list(, $module, $resource) = $matches;
-            $moduleObj = ModuleLoader::getModule($module);
-            if (!$moduleObj) {
-                throw new \InvalidArgumentException("Can't find module '$module'");
-            }
-            return $moduleObj->getRelativeResourcePath($resource);
-        }
-        return $file;
     }
 
     /**
@@ -1462,7 +1441,7 @@ MESSAGE
         if ($path) {
             $this->css($path, $media);
         } else {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "The css file doesn't exist. Please check if the file $name.css exists in any context or search for "
                 . "themedCSS references calling this file in your templates."
             );
@@ -1490,7 +1469,7 @@ MESSAGE
             }
             $this->javascript($path, $opts);
         } else {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "The javascript file doesn't exist. Please check if the file $name.js exists in any "
                 . "context or search for themedJavascript references calling this file in your templates."
             );

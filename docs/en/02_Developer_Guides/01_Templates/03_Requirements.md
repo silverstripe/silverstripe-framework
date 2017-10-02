@@ -369,6 +369,26 @@ If the Javascript files are preferred to be placed in the `<head>` tag rather th
 Requirements::set_write_js_to_body(false);
 ```
 
+## Direct resource urls
+
+In templates you can use the `$resourcePath()` or `$resourceURL()` helper methods to inject links to
+resources directly. If you want to link to resources within a specific module you can use 
+the `vendor/module:some/path/to/file.jpg` syntax.
+
+E.g.
+
+```ss
+<div class="loading">
+    <img src="$resourceURL('silverstripe/admin:client/dist/images/spinner.gif')" />
+</div>
+```
+
+In PHP you can directly resolve these urls using the `ModuleResourceLoader` helper.
+
+```php
+$file = ModuleResourceLoader::singleton()
+  ->resolveURL('silverstripe/admin:client/dist/images/spinner.gif');
+```
 
 ## API Documentation
 

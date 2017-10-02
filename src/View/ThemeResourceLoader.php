@@ -3,7 +3,6 @@
 namespace SilverStripe\View;
 
 use InvalidArgumentException;
-use RuntimeException;
 use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
@@ -279,6 +278,7 @@ class ThemeResourceLoader
      *
      * @param string $resource A file path relative to the root folder of a theme
      * @param array $themes An order listed of themes to search
+     * @return string
      */
     public function findThemedResource($resource, $themes)
     {
