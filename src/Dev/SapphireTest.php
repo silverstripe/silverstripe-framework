@@ -632,7 +632,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 $matched,
                 "Failed asserting that the SS_List contains an item matching "
                 . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                . static::ListSummaryForMatch($list, $match)
+                . static::listSummaryForMatch($list, $match)
             );
         }
     }
@@ -643,7 +643,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param $dataObjectSet
      */
-    public static function assertDOSContains($matches, $dataObjectSet) {
+    public function assertDOSContains($matches, $dataObjectSet) {
         Deprecation::notice('5.0', 'Use assertListContains() instead');
         return static::assertListContains($matches, $dataObjectSet);
     }
@@ -687,7 +687,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             // We couldn't find a match - assertion failed
             static::assertEmpty(
                 $matched,
-                "Failed asserting that the SS_List dosn't contain a set of objects. "
+                "Failed asserting that the SS_List doesn't contain a set of objects. "
                 . "Found objects were: " . var_export($matched, true)
             );
         }
@@ -750,7 +750,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                     $matched,
                     "Failed asserting that the SS_List contains an item matching "
                     . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                    . static::ListSummaryForMatch($list, $match)
+                    . static::listSummaryForMatch($list, $match)
                 );
             }
         }
@@ -770,7 +770,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param SS_List $dataObjectSet
      */
-    public static function assertDOSEquals($matches, $dataObjectSet)
+    public function assertDOSEquals($matches, $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListEquals() instead');
         return static::assertListEquals($matches, $dataObjectSet);
@@ -813,7 +813,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $match
      * @param SS_List $dataObjectSet
      */
-    public static function assertDOSAllMatch($match, SS_List $dataObjectSet)
+    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
         return static::assertListAllMatch($match, $dataObjectSet);
@@ -926,7 +926,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param array $match
      * @return string
      */
-    private static function ListSummaryForMatch($list, $match)
+    private static function listSummaryForMatch($list, $match)
     {
         $extracted = array();
         foreach ($list as $item) {
