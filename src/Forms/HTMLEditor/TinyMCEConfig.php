@@ -9,6 +9,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
@@ -630,7 +631,9 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editorCSSFiles = $this->config()->get('editor_css');
         if ($editorCSSFiles) {
             foreach ($editorCSSFiles as $editorCSS) {
-                $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+                $path = ModuleResourceLoader::singleton()
+                    ->resolveURL($editorCSS);
+                $editor[] = Director::absoluteURL($path);
             }
         }
 
@@ -692,7 +695,8 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return $this->resolvePath($configDir, true);
+            return ModuleResourceLoader::singleton()
+                ->resolveURL($configDir);
         }
 
         throw new Exception(sprintf(
@@ -709,7 +713,8 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return $this->resolvePath($configDir);
+            return ModuleResourceLoader::singleton()
+                ->resolveURL($configDir);
         }
 
         throw new Exception(sprintf(
@@ -726,28 +731,5 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
-    }
-
-    /**
-     * Expand resource path to a relative filesystem path
-     *
-     * @param string $path
-     * @param boolean $useResourcePath The resource path can be different than the original tinymce location.
-     * @return string
-     */
-    protected function resolvePath($path, $useResourcePath = false)
-    {
-        if (preg_match('#(?<module>[^/]+/[^/]+)\s*:\s*(?<path>[^:]+)#', $path, $results)) {
-            $module = ModuleLoader::getModule($results['module']);
-            if ($module) {
-                if ($useResourcePath) {
-                    return $module->getResource($results['path'])->getURL();
-                } else {
-                    return $module->getResource($results['path'])->getRelativePath();
-                }
-
-            }
-        }
-        return $path;
     }
 }
