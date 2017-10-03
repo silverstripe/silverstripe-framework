@@ -71,7 +71,7 @@ class DeprecationTest extends SapphireTest
     public function testMatchingModuleNotifcationVersionAffectsNotice()
     {
         Deprecation::notification_version('1.0.0');
-        Deprecation::notification_version('3.0.0', FRAMEWORK_DIR);
+        Deprecation::notification_version('3.0.0', 'silverstripe/framework');
         $this->callThatOriginatesFromFramework();
     }
 
