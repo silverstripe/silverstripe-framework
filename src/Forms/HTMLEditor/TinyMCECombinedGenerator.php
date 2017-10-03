@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  * Generates tinymce config using a combined file generated via a standard
@@ -90,9 +91,11 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
         foreach ($config->getPlugins() as $plugin => $path) {
             // Add external plugin
             if ($path) {
-                // Convert URLS to relative paths
-                if (Director::is_absolute_url($path) || strpos($path, '/') === 0) {
-                    // De-absolute site urls
+                if ($path instanceof ModuleResource) {
+                    // Resolve path / url later
+                    $files[] = $path;
+                } elseif (Director::is_absolute_url($path) || strpos($path, '/') === 0) {
+                    // Convert URLS to relative paths
                     $path = Director::makeRelative($path);
                     if ($path) {
                         $files[] = $path;
@@ -122,6 +125,9 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 
         // Process source files
         $files = array_filter(array_map(function ($file) {
+            if ($file instanceof ModuleResource) {
+                return $file;
+            }
             // Prioritise preferred paths
             $paths = [
                 $file,
@@ -162,11 +168,25 @@ SCRIPT;
 SCRIPT;
 
         // Load all tinymce script files into buffer
-        foreach ($files as $file) {
-            $buffer[] = $this->getFileContents(Director::baseFolder() . '/' . $file);
+        foreach ($files as $path) {
+            if ($path instanceof ModuleResource) {
+                $path = $path->getPath();
+            } else {
+                $path = Director::baseFolder() . '/' . $path;
+            }
+            $buffer[] = $this->getFileContents($path);
         }
 
-        $filesList = Convert::raw2js(implode(',', $files));
+        // Generate urls for all files
+        $fileURLS = array_map(function ($path) {
+            if ($path instanceof ModuleResource) {
+                return $path->getURL();
+            }
+            return $path;
+        }, $files);
+
+        // Join list of paths
+        $filesList = Convert::raw2js(implode(',', $fileURLS));
         // Mark all themes, plugins and languages as done
         $buffer[] = "window.tinymce.each('$filesList'.split(','),".
             "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
@@ -174,7 +194,6 @@ SCRIPT;
         $buffer[] = '})();';
         return implode("\n", $buffer) . "\n";
     }
-
 
     /**
      * Returns the contents of the script file if it exists and removes the UTF-8 BOM header if it exists.

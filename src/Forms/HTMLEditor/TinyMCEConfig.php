@@ -353,6 +353,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *  - null - Will be treated as a stardard plugin in the standard location
      *  - relative path - Will be treated as a relative url
      *  - absolute url - Some url to an external plugin
+     *  - An instance of ModuleResource object containing the plugin
      *
      * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
@@ -395,7 +396,8 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Gets the list of all enabled plugins as an associative array.
-     * Array keys are the plugin names, and values are potentially the plugin location
+     * Array keys are the plugin names, and values are potentially the plugin location,
+     * or ModuleResource object
      *
      * @return array
      */
