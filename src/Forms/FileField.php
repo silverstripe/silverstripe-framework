@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Assets\File;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\Assets\File;
 
 /**
  * Represents a file type which can be added to a form.
@@ -83,6 +84,43 @@ class FileField extends FormField implements FileHandleField
         ));
 
         return parent::Field($properties);
+    }
+
+    public function getAttributes()
+    {
+        $attributes = parent::getAttributes();
+
+        $accept = $this->getAcceptFileTypes();
+        if ($accept) {
+            $attributes = array_merge(['accept' => implode(',', $accept)], $attributes);
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Returns a list of file extensions (and corresponding mime types) that will be accepted
+     *
+     * @return array
+     */
+    protected function getAcceptFileTypes()
+    {
+        $extensions = $this->getValidator()->getAllowedExtensions();
+        if (!$extensions) {
+            return [];
+        }
+
+        $accept = [];
+        $mimeTypes = HTTP::config()->uninherited('MimeTypes');
+        foreach ($extensions as $extension) {
+            $accept[] = ".{$extension}";
+            // Check for corresponding mime type
+            if (isset($mimeTypes[$extension])) {
+                $accept[] = $mimeTypes[$extension];
+            }
+        }
+
+        return array_unique($accept);
     }
 
     /**

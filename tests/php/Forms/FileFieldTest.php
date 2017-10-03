@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use ReflectionMethod;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FileField;
@@ -11,7 +12,6 @@ use SilverStripe\Forms\RequiredFields;
 
 class FileFieldTest extends FunctionalTest
 {
-
     /**
      * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well
      *
@@ -37,6 +37,24 @@ class FileFieldTest extends FunctionalTest
         $fileField->setValue($fileFieldValue);
 
         $this->assertTrue($form->validationResult()->isValid());
+    }
+
+    /**
+     * @skipUpgrade
+     */
+    public function testGetAcceptFileTypes()
+    {
+        $field = new FileField('image', 'Image');
+        $field->setAllowedExtensions('jpg', 'png');
+
+        $method = new ReflectionMethod($field, 'getAcceptFileTypes');
+        $method->setAccessible(true);
+        $allowed = $method->invoke($field);
+
+        $expected = ['.jpg', '.png', 'image/jpeg', 'image/png'];
+        foreach ($expected as $extensionOrMime) {
+            $this->assertContains($extensionOrMime, $allowed);
+        }
     }
 
     /**
