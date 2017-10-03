@@ -1680,8 +1680,10 @@ class Member extends DataObject
     }
 
     /**
-     * Change password. This will cause rehashing according to
-     * the `PasswordEncryption` property.
+     * Change password. This will cause rehashing according to the `PasswordEncryption` property. This method will
+     * allow extensions to perform actions and augment the validation result if required before the password is written
+     * and can check it after the write also. Note that the onAfterChangePassword extension point receives a clone of
+     * the validation result which cannot be modified.
      *
      * @param string $password Cleartext password
      * @return ValidationResult
@@ -1691,10 +1693,14 @@ class Member extends DataObject
         $this->Password = $password;
         $valid = $this->validate();
 
+        $this->extend('onBeforeChangePassword', $password, $valid);
+
         if ($valid->isValid()) {
             $this->AutoLoginHash = null;
             $this->write();
         }
+
+        $this->extend('onAfterChangePassword', $password, $valid);
 
         return $valid;
     }

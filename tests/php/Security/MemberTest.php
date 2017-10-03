@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -1461,5 +1462,21 @@ class MemberTest extends FunctionalTest
             });
         });
         $this->assertEmpty($member);
+    }
+
+    public function testChangePasswordWithExtensionsThatModifyValidationResult()
+    {
+        // Default behaviour
+        $member = $this->objFromFixture(Member::class, 'admin');
+        $result = $member->changePassword('my-secret-new-password');
+        $this->assertInstanceOf(ValidationResult::class, $result);
+        $this->assertTrue($result->isValid());
+
+        // With an extension added
+        Member::add_extension(MemberTest\ExtendedChangePasswordExtension::class);
+        $member = $this->objFromFixture(Member::class, 'admin');
+        $result = $member->changePassword('my-second-secret-password');
+        $this->assertInstanceOf(ValidationResult::class, $result);
+        $this->assertFalse($result->isValid());
     }
 }
