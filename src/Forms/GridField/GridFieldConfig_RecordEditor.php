@@ -21,6 +21,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
         $this->addComponent($sort = new GridFieldSortableHeader());
         $this->addComponent($filter = new GridFieldFilterHeader());
         $this->addComponent(new GridFieldDataColumns());
+        $this->addComponent(new GridFieldVersionedState());
         $this->addComponent(new GridFieldEditButton());
         $this->addComponent(new GridFieldDeleteAction());
         $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
