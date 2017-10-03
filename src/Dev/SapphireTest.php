@@ -18,6 +18,7 @@ use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
@@ -831,22 +832,24 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
      * @param mixed $list The {@link SS_List} to test.
+     * @param string $message
      */
-    public static function assertListAllMatch($match, SS_List $list)
+    public static function assertListAllMatch($match, SS_List $list, $message = '')
     {
-        $extracted = array();
-        foreach ($list as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        foreach ($extracted as $i => $item) {
-            static::assertTrue(
-                static::dataObjectArrayMatch($item, $match),
-                "Failed asserting that the the following item matched "
-                . var_export($match, true) . ": " . var_export($item, true)
+        if (!is_array($match)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
             );
         }
+
+        static::assertThat(
+            $list,
+            new SSListContainsOnly(
+                $match
+            ),
+            $message
+        );
     }
 
     /**
