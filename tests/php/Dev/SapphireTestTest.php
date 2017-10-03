@@ -38,6 +38,9 @@ class SapphireTestTest extends SapphireTest
         );
     }
 
+    /**
+     * @useDatabase
+     */
     public function testActWithPermission()
     {
         $this->logOut();
@@ -51,6 +54,9 @@ class SapphireTestTest extends SapphireTest
         });
     }
 
+    /**
+     * @useDatabase
+     */
     public function testCreateMemberWithPermission()
     {
         $this->assertCount(0, Member::get()->filter(['Email' => 'TESTPERM@example.org']));

@@ -242,7 +242,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $fixtureFiles = $this->getFixturePaths();
 
         // Set up fixture
-        if ($fixtureFiles || $this->usesDatabase) {
+        if ($this->setupDatabaseForCurrentTest($fixtureFiles)) {
             if (!static::$tempDB->isUsed()) {
                 static::$tempDB->build();
             }
@@ -278,6 +278,48 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         Email::config()->remove('send_all_emails_from');
         Email::config()->remove('cc_all_emails_to');
         Email::config()->remove('bcc_all_emails_to');
+    }
+
+
+
+    /**
+     * Helper method to determine if the current test should enable a test database
+     *
+     * @param $fixtureFiles
+     * @return bool
+     */
+    protected function setupDatabaseForCurrentTest($fixtureFiles): bool
+    {
+        $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
+
+        return ($databaseEnabledByDefault && !$this->currentTestDisablesDatabase())
+            || $this->currentTestEnablesDatabase();
+    }
+
+    /**
+     * Helper method to check, if the current test uses the database.
+     * This can be switched on with the annotation "@useDatabase"
+     *
+     * @return bool
+     */
+    protected function currentTestEnablesDatabase() {
+        $annotations = $this->getAnnotations();
+
+        return array_key_exists('useDatabase', $annotations['method'])
+            && $annotations['method']['useDatabase'][0] !== 'false';
+    }
+
+    /**
+     * Helper method to check, if the current test uses the database.
+     * This can be switched on with the annotation "@useDatabase false"
+     *
+     * @return bool
+     */
+    protected function currentTestDisablesDatabase() {
+        $annotations = $this->getAnnotations();
+
+        return array_key_exists('useDatabase', $annotations['method'])
+            && $annotations['method']['useDatabase'][0] === 'false';
     }
 
     /**
