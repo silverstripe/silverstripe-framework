@@ -1323,10 +1323,6 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \ReflectionException
-     * @expectedExceptionMessage Class ThisIsntADataObject does not exist
-     */
     public function testHasOwnTable()
     {
         $schema = DataObject::getSchema();
@@ -1346,6 +1342,9 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($schema->classHasTable(ViewableData::class));
 
         // Invalid class
+        $this->expectException(ReflectionException::class);
+        $this->expectExceptionMessage('Class ThisIsntADataObject does not exist');
+
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
     }
 
@@ -1438,10 +1437,6 @@ class DataObjectTest extends SapphireTest
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Controller is not a valid subclass of DataObject
-     */
     public function testNewClassInstance()
     {
         $dataObject = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
@@ -1464,6 +1459,8 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
 
         // Test invalid classes fail
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
         /**
  * @skipUpgrade
 */
@@ -2086,9 +2083,6 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testLateStaticBindingStyle()
     {
         // Confirm that DataObjectTest_Player::get() operates as excepted
@@ -2096,6 +2090,8 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\Player::class, DataObjectTest\Player::get()->first());
 
         // You can't pass arguments to LSB syntax - use the DataList methods instead.
+        $this->expectException(InvalidArgumentException::class);
+
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 

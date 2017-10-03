@@ -71,10 +71,6 @@ PHP;
         );
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error_Notice
-     * @expectedExceptionMessage Missing localisation default for key i18nTestModule.INJECTIONS_3
-     */
     public function testCollectFromNewTemplateSyntaxUsingParserSubclass()
     {
         $c = i18nTextCollector::create();
@@ -118,6 +114,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
+
         $c->collectFromTemplate($html, null, $mymodule);
     }
 
@@ -151,10 +150,6 @@ SS;
         );
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error_Notice
-     * @expectedExceptionMessage Missing localisation default for key Test.PRIOANDCOMMENT
-     */
     public function testCollectFromTemplateAdvanced()
     {
         $c = i18nTextCollector::create();
@@ -194,6 +189,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
+
         $c->collectFromTemplate($html, 'Test', $mymodule);
     }
 
@@ -372,9 +370,6 @@ PHP;
 
     /**
      * Test extracting entities from the new _t method signature
-     *
-     * @expectedException PHPUnit_Framework_Error_Notice
-     * @expectedExceptionMessage Missing localisation default for key i18nTestModule.INJECTIONS4
      */
     public function testCollectFromCodeNewSignature()
     {
@@ -422,6 +417,9 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
+
         $php = <<<PHP
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 PHP;

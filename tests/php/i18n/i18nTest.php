@@ -242,10 +242,6 @@ class i18nTest extends SapphireTest
         i18n::set_locale($oldLocale);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Injection must be an associative array
-     */
     public function testNewTMethodSignature()
     {
         /** @var SymfonyMessageProvider $provider */
@@ -300,6 +296,9 @@ class i18nTest extends SapphireTest
         );
 
         // Passing in non-associative arrays for placeholders is now an error
+        $this->expectExceptionMessage(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Injection must be an associative array');
+
         i18n::_t(
             $entity, // has {name} placeholders
             $default,
