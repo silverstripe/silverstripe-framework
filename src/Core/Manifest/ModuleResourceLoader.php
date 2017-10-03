@@ -84,7 +84,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
     protected function resolveModuleResource($resource)
     {
         // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
-        if (!preg_match('#(?<module>[^/: ]*/[^/: ]*) *: *(?<resource>[^ ]*)#', $resource, $matches)) {
+        if (!preg_match('#^ *(?<module>[^/: ]+/[^/: ]+) *: *(?<resource>[^ ]*)$#', $resource, $matches)) {
             return null;
         }
         $module = $matches['module'];
