@@ -134,16 +134,16 @@ class SapphireTestTest extends SapphireTest
     /**
      * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
      *
-     * @testdox Has assertion assertNotListContains
+     * @testdox Has assertion assertListNotContains
      *
      * @param $matches
      * @param $itemsForList
      */
-    public function testAssertNotListContains($matches, $itemsForList)
+    public function testAssertListNotContains($matches, $itemsForList)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
 
-        $this->assertNotListContains($matches, $list);
+        $this->assertListNotContains($matches, $list);
     }
 
     /**
@@ -151,18 +151,18 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $matches
      * @param $itemsForList
-     * @testdox assertion assertNotListContains throws a exception when a matching item is found in the list
+     * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
      *
      * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
-    public function testAssertNotListContainsFailsWhenListContainsAMatch($matches, $itemsForList)
+    public function testAssertListNotContainsFailsWhenListContainsAMatch($matches, $itemsForList)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
         $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
         $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
         $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
 
-        $this->assertNotListContains($matches, $list);
+        $this->assertListNotContains($matches, $list);
     }
 
 

@@ -700,16 +700,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Examples
      * --------
      * Check that $members doesn't have an entry with Email = sam@example.com:
-     *      $this->assertNotListContains(['Email' => '...@example.com'], $members);
+     *      $this->assertListNotContains(['Email' => '...@example.com'], $members);
      *
      * Check that $members doesn't have entries with Email = sam@example.com and with
      * Email = ingo@example.com:
-     *      $this->assertNotListContains([
+     *      $this->assertListNotContains([
      *          ['Email' => '...@example.com'],
      *          ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertNotListContains($matches, SS_List $list)
+    public static function assertListNotContains($matches, SS_List $list)
     {
         $extracted = array();
         foreach ($list as $object) {
@@ -736,14 +736,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use assertNotListContains() instead
+     * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
      *
      * @param $matches
      * @param $dataObjectSet
      */
     public static function assertNotDOSContains($matches, $dataObjectSet) {
-        Deprecation::notice('5.0', 'Use assertNotListContains() instead');
-        return static::assertNotListContains($matches, $dataObjectSet);
+        Deprecation::notice('5.0', 'Use assertListNotContains() instead');
+        return static::assertListNotContains($matches, $dataObjectSet);
     }
 
     /**
