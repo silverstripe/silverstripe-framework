@@ -6,12 +6,12 @@ SilverStripe can call [Controllers](../controllers) through a command line inter
 web browser. This functionality can be used to automate tasks with cron jobs, run unit tests, or anything else that 
 needs to interface over the command line.
 
-The main entry point for any command line execution is `framework/cli-script.php`. For example, to run a database 
-rebuild from the command line, use this command:
+The main entry point for any command line execution is `cli-script.php` in the framework module.
+For example, to run a database rebuild from the command line, use this command:
 ```bash
 
     cd your-webroot/
-    php framework/cli-script.php dev/build
+    php vendor/bin/framework/cli-script.php dev/build
 ```
 
 <div class="notice">

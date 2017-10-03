@@ -201,16 +201,16 @@ class HTTPTest extends FunctionalTest
      */
     public function testGetMimeType()
     {
-        $this->assertEquals('text/plain', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.csv'));
-        $this->assertEquals('image/gif', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.gif'));
-        $this->assertEquals('text/html', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.html'));
-        $this->assertEquals('image/jpeg', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.jpg'));
-        $this->assertEquals('image/png', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.png'));
+        $this->assertEquals('text/plain', HTTP::get_mime_type('file.csv'));
+        $this->assertEquals('image/gif', HTTP::get_mime_type('file.gif'));
+        $this->assertEquals('text/html', HTTP::get_mime_type('file.html'));
+        $this->assertEquals('image/jpeg', HTTP::get_mime_type('file.jpg'));
+        $this->assertEquals('image/png', HTTP::get_mime_type('file.png'));
         $this->assertEquals(
             'image/vnd.adobe.photoshop',
-            HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd')
+            HTTP::get_mime_type('file.psd')
         );
-        $this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
+        $this->assertEquals('audio/x-wav', HTTP::get_mime_type('file.wav'));
     }
 
     /**

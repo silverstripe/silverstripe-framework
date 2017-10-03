@@ -344,25 +344,25 @@ The extension can also be globally disabled by removing it at the root level:
 If the default server configuration is not appropriate for your specific environment, then you can
 further customise the .htaccess or web.config by editing one or more of the below:
 
-* `Assets_HTAccess.ss`: Template for public permissions on the Apache server.
-* `Assets_WebConfig.ss`: Template for public permissions on the IIS server.
-* `Protected_HTAccess.ss`: Template for the protected store on the Apache server (should deny all requests).
-* `Protected_WebConfig.ss`: Template for the protected store on the IIS server (should deny all requests).
+* `PublicAssetAdapter_HTAccess.ss`: Template for public permissions on the Apache server.
+* `PublicAssetAdapter_WebConfig.ss`: Template for public permissions on the IIS server.
+* `ProtectedAssetAdapter_HTAccess.ss`: Template for the protected store on the Apache server (should deny all requests).
+* `ProtectedAssetAdapter_WebConfig.ss`: Template for the protected store on the IIS server (should deny all requests).
 
 Each of these files will be regenerated on ?flush, so it is important to ensure that these files are
 overridden at the template level, not via manually generated configuration files.
 
 #### Configuring Web Server: Apache server
 
-In order to ensure that public files are served correctly, you should check that your ./assets
-.htaccess bypasses PHP requests for files that do exist. The default template
-(declared by `Assets_HTAccess.ss`) has the following section, which may be customised in your project:
+In order to ensure that public files are served correctly, you should check that your `assets/.htaccess`
+bypasses PHP requests for files that do exist. The default template
+(declared by `PublicAssetAdapter_HTAccess.ss`) has the following section, which may be customised in your project:
 
 ```
-    # Non existant files passed to requesthandler
-    RewriteCond %{REQUEST_URI} ^(.*)$
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule .* ../framework/main.php?url=%1 [QSA]
+# Non existant files passed to requesthandler
+RewriteCond %{REQUEST_URI} ^(.*)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* ../vendor/silverstripe/framework/main.php?url=%1 [QSA]
 ```
 
 You will need to ensure that your core apache configuration has the necessary `AllowOverride`
@@ -377,13 +377,14 @@ while ensuring non-existent files are processed via the Framework.
 The default rule for IIS is as below (only partial configuration displayed):
 
 ```
-    <rule name="Protected and 404 File rewrite" stopProcessing="true">
-        <match url="^(.*)$" />
-        <conditions>
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-        </conditions>
-        <action type="Rewrite" url="../framework/main.php?url={R:1}" appendQueryString="true" />
-    </rule>
+<rule name="Secure and 404 File rewrite" stopProcessing="true">
+    <match url="^(.*)$" />
+    <conditions>
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="../vendor/silverstripe/framework/main.php" matchType="IsFile" />
+    </conditions>
+    <action type="Rewrite" url="../vendor/silverstripe/framework/main.php?url={R:1}" appendQueryString="true" />
+</rule>
 ```
 
 You will need to make sure that the `allowOverride` property of your root web.config is not set
@@ -401,6 +402,6 @@ dynamic requests are processed via the Framework:
 ```
     location ^~ /assets/ {
         sendfile on;
-        try_files $uri /framework/main.php?url=$uri&$query_string;
+        try_files $uri vendor/silverstripe/framework/main.php?url=$uri&$query_string;
     }
 ```

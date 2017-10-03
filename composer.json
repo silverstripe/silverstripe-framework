@@ -1,6 +1,6 @@
 {
     "name": "silverstripe/framework",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "The SilverStripe framework",
     "homepage": "http://silverstripe.org",
     "license": "BSD-3-Clause",
@@ -44,7 +44,8 @@
         "ext-hash": "*",
         "ext-session": "*",
         "psr/container-implementation": "1.0.0",
-        "psr/container": "1.0.0"
+        "psr/container": "1.0.0",
+        "silverstripe/vendor-plugin": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
@@ -60,7 +61,12 @@
         "branch-alias": {
             "4.x-dev": "4.0.x-dev",
             "dev-master": "5.x-dev"
-        }
+        },
+        "expose": [
+            "client/images",
+            "client/styles",
+            "src/Dev/Install/client"
+        ]
     },
     "autoload": {
         "psr-4": {

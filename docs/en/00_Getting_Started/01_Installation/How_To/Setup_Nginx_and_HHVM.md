@@ -48,7 +48,7 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 	fastcgi_buffers 4 32k;
 	
 	location / {
-		try_files $uri /framework/main.php?url=$uri&$query_string;
+		try_files $uri /vendor/silverstripe/framework/main.php?url=$uri&$query_string;
 	}
 	
 	error_page 404 /assets/error-404.html;

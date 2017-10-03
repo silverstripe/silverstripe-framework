@@ -9,6 +9,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
@@ -352,6 +353,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *  - null - Will be treated as a stardard plugin in the standard location
      *  - relative path - Will be treated as a relative url
      *  - absolute url - Some url to an external plugin
+     *  - An instance of ModuleResource object containing the plugin
      *
      * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
@@ -394,7 +396,8 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Gets the list of all enabled plugins as an associative array.
-     * Array keys are the plugin names, and values are potentially the plugin location
+     * Array keys are the plugin names, and values are potentially the plugin location,
+     * or ModuleResource object
      *
      * @return array
      */
@@ -567,7 +570,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEPath());
+        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEResourcePath());
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
@@ -630,7 +633,9 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editorCSSFiles = $this->config()->get('editor_css');
         if ($editorCSSFiles) {
             foreach ($editorCSSFiles as $editorCSS) {
-                $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+                $path = ModuleResourceLoader::singleton()
+                    ->resolveURL($editorCSS);
+                $editor[] = Director::absoluteURL($path);
             }
         }
 
@@ -682,6 +687,27 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
+     * Returns the base path to TinyMCE resources (which could be different from the original tinymce
+     * location in the module).
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getTinyMCEResourcePath()
+    {
+        $configDir = static::config()->get('base_dir');
+        if ($configDir) {
+            return ModuleResourceLoader::singleton()
+                ->resolveURL($configDir);
+        }
+
+        throw new Exception(sprintf(
+            'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
+            __CLASS__
+        ));
+    }
+
+    /**
      * @return string
      * @throws Exception
      */
@@ -689,7 +715,8 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return $this->resolvePath($configDir);
+            return ModuleResourceLoader::singleton()
+                ->resolveURL($configDir);
         }
 
         throw new Exception(sprintf(
@@ -706,22 +733,5 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
-    }
-
-    /**
-     * Expand resource path to a relative filesystem path
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function resolvePath($path)
-    {
-        if (preg_match('#(?<module>[^/]+/[^/]+)\s*:\s*(?<path>[^:]+)#', $path, $results)) {
-            $module = ModuleLoader::getModule($results['module']);
-            if ($module) {
-                return $module->getRelativeResourcePath($results['path']);
-            }
-        }
-        return $path;
     }
 }

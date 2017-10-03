@@ -104,8 +104,8 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
     exit(1);
 }
 
-// Path to client resources
-$clientPath = (FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '') . 'src/Dev/Install/client';
+// Path to client resources (copied through silverstripe/vendor-plugin)
+$clientPath = 'resources/silverstripe/framework/src/Dev/Install/client';
 
 
 // config-form.html vars (placeholder to prevent deletion)

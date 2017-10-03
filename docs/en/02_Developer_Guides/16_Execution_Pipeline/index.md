@@ -54,12 +54,12 @@ If no file can be directly matched, control is handed off to `framework/main.php
 		RewriteRule silverstripe-cache(/|$) - [F,L,NC]
 		RewriteRule composer\.(json|lock) - [F,L,NC]
 
-		# Process through SilverStripe if no file with the requested name exists.
-		# Pass through the original path as a query parameter, and retain the existing parameters.
+		# Non existant files passed to requesthandler
+		# Try finding the module in the vendor folder first
 		RewriteCond %{REQUEST_URI} ^(.*)$
 		RewriteCond %{REQUEST_FILENAME} !-f
-		RewriteRule .* framework/main.php?url=%1 [QSA]
-
+		RewriteRule .* ../vendor/silverstripe/framework/main.php?url=%1 [QSA]
+		
 		# If requesting the main script directly, rewrite to the installer
 		RewriteCond %{REQUEST_URI} ^(.*)/framework/main.php$
 		RewriteCond %{REQUEST_FILENAME} !-f
@@ -86,7 +86,7 @@ tasks silently in the background.
    [configuration file](/getting_started/environment_management) in the webroot.
   * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`)
 
-All requests go through `framework/main.php`, which sets up the core [Kernel](api:SilverStripe\Core\Kernel) and [HTTPApplication](api:SilverStripe\Control\HTTPApplication)
+All requests go through `main.php`, which sets up the core [Kernel](api:SilverStripe\Core\Kernel) and [HTTPApplication](api:SilverStripe\Control\HTTPApplication)
 objects. See [/developer_guides/execution_pipeline/app_object_and_kernel] for details on this.
 The main process follows:
 

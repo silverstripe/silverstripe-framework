@@ -9,6 +9,8 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
@@ -217,12 +219,8 @@ class DebugView
             'UTF-8'
         );
 
-        $debugCSS = Controller::join_links(
-            Director::absoluteBaseURL(),
-            FRAMEWORK_DIR,
-            'client/styles/debug.css'
-        );
-
+        $debugCSS = ModuleResourceLoader::singleton()
+            ->resolveURL('silverstripe/framework:client/styles/debug.css');
         $output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';
         $output .= '<link rel="stylesheet" type="text/css" href="'. $debugCSS .'" />';
         $output .= '</head>';

@@ -33,10 +33,11 @@ class TinyMCEGZIPGenerator implements TinyMCEScriptGenerator
         // If gzip is disabled just return core script url
         $useGzip = HTMLEditorField::config()->get('use_gzip');
         if (!$useGzip) {
-            return $config->getTinyMCEPath() . '/tinymce.min.js';
+            return $config->getTinyMCEResourcePath() . '/tinymce.min.js';
         }
 
-        // tinyMCE JS requirement
+        // tinyMCE JS requirement - use the original module path,
+        // don't assume the PHP file is copied alongside the resources
         $gzipPath = BASE_PATH . '/' . $config->getTinyMCEPath() . '/tiny_mce_gzip.php';
         if (!file_exists($gzipPath)) {
             throw new Exception("HTMLEditorField.use_gzip enabled, but file $gzipPath does not exist!");
