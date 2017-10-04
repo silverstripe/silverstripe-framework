@@ -48,7 +48,7 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 	fastcgi_buffers 4 32k;
 	
 	location / {
-		try_files $uri /vendor/silverstripe/framework/main.php?url=$uri&$query_string;
+		try_files $uri /index.php?$query_string;
 	}
 	
 	error_page 404 /assets/error-404.html;
@@ -87,7 +87,7 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 		deny all;
 	}
 
-The above script passes all non-static file requests to `/framework/main.php` in the webroot which relies on
+The above script passes all non-static file requests to `/index.php` in the webroot which relies on
 `hhvm.conf` being included prior so that php requests are handled.
 
 Now in your nginx `server` configuration you can then include the `hhvm.conf` and `silverstripe.conf` files

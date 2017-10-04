@@ -65,56 +65,29 @@ The role of the application is to:
 The HTTPApplication provides a specialised application implementation for handling HTTP Requests.
 This class provides basic support for HTTP Middleware, such as [ErrorControlChainMiddleware](api:SilverStripe\Core\Startup\ErrorControlChainMiddleware).
 
-`main.php` contains the default application implementation.
+The `index.php` file in your project root contains the default application implementation.
+You can customise it as required.
 
 
 ```php
-        
-    use SilverStripe\Control\HTTPApplication;
-    use SilverStripe\Control\HTTPRequestBuilder;
-    use SilverStripe\Core\CoreKernel;
-    use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
-    
-    require __DIR__ . '/src/includes/autoload.php';
-    
-    // Build request and detect flush
-    $request = HTTPRequestBuilder::createFromEnvironment();
-    
-    // Default application
-    $kernel = new CoreKernel(BASE_PATH);
-    $app = new HTTPApplication($kernel);
-    $app->addMiddleware(new ErrorControlChainMiddleware($app));
-    $response = $app->handle($request);
-    $response->output();
-```
+<?php
 
-Users can customise their own application by coping the above to a file in `mysite/main.php`, and
-updating their `.htaccess` to point to the new file.
+use SilverStripe\Control\HTTPApplication;
+use SilverStripe\Control\HTTPRequestBuilder;
+use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
 
-    :::
-    <IfModule mod_rewrite.c>
-    # ...
-    RewriteCond %{REQUEST_URI} ^(.*)$
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule .* mysite/main.php?url=%1 [QSA]
-    # ...
-    </IfModule>
+require __DIR__ . '/vendor/autoload.php';
 
+// Build request and detect flush
+$request = HTTPRequestBuilder::createFromEnvironment();
 
-Note: This config must also be duplicated in the below template which provide asset routing:
-
-`silverstripe-assets/templates/SilverStripe/Assets/Flysystem/PublicAssetAdapter_HTAccess.ss`:
-
-
-```ss
-
-    <IfModule mod_rewrite.c>
-        # ...
-        # Non existant files passed to requesthandler
-        RewriteCond %{REQUEST_URI} ^(.*)$
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule .* ../mysite/main.php?url=%1 [QSA]
-    </IfModule>
+// Default application
+$kernel = new CoreKernel(BASE_PATH);
+$app = new HTTPApplication($kernel);
+$app->addMiddleware(new ErrorControlChainMiddleware($app));
+$response = $app->handle($request);
+$response->output();
 ```
 
 ## Custom application actions
