@@ -89,7 +89,6 @@ class SSListContains extends \PHPUnit_Framework_Constraint
         return $success;
     }
 
-
     /**
      * Returns a string representation of the object.
      *
