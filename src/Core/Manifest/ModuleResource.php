@@ -24,6 +24,13 @@ class ModuleResource
     protected $relativePath = null;
 
     /**
+     * Nested resources for this parent resource
+     *
+     * @var ModuleResource[]
+     */
+    protected $resources = [];
+
+    /**
      * ModuleResource constructor.
      *
      * @param Module $module
@@ -78,7 +85,7 @@ class ModuleResource
     {
         /** @var ResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
-        return $generator->urlForResource($this->getRelativePath());
+        return $generator->urlForResource($this);
     }
 
     /**
@@ -117,5 +124,26 @@ class ModuleResource
     public function getModule()
     {
         return $this->module;
+    }
+
+    /**
+     * Get nested resource relative to this.
+     * Note: Doesn't support `..` or `.` relative syntax
+     *
+     * @param string $path
+     * @return ModuleResource
+     */
+    public function getRelativeResource($path)
+    {
+        // Check cache
+        $path = trim($path, Module::TRIM_CHARS);
+        if (isset($this->resources[$path])) {
+            return $this->resources[$path];
+        }
+
+        // Build new relative path
+        $relativeBase = rtrim($this->relativePath, Module::TRIM_CHARS);
+        $relativePath = "{$relativeBase}/{$path}";
+        return $this->resources[$path] = new ModuleResource($this->getModule(), $relativePath);
     }
 }
