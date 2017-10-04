@@ -47,10 +47,6 @@ class ViewableDataContains extends \PHPUnit_Framework_Constraint
         $success = true;
 
         foreach ($this->match as $fieldName => $value) {
-            if (!$other->hasField($fieldName)) {
-                $success = false;
-                break;
-            }
             if ($other->getField($fieldName) != $value) {
                 $success = false;
                 break;
