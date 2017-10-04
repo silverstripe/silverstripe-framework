@@ -7,15 +7,13 @@ use SilverStripe\Dev\SSListExporter;
 use SilverStripe\View\ViewableData;
 
 /**
- * Constraint for checking if a SS_List contains only items matching the given
- * key-value pairs.  Each match must correspond to 1 distinct record.
- *
- * @todo can this be solved more elegantly using a Comparator?
+ * Constraint for checking if a SS_List contains items matching the given
+ * key-value pairs.
  *
  * Class SSListContainsOnly
  * @package SilverStripe\Dev\Constraint
  */
-class SSListContainsOnly extends \PHPUnit_Framework_Constraint
+class SSListContains extends \PHPUnit_Framework_Constraint
 {
 
     private $matches = [];
@@ -55,15 +53,11 @@ class SSListContainsOnly extends \PHPUnit_Framework_Constraint
         $success = true;
 
         foreach ($other as $item) {
-            if (!$this->checkIfItemEvaltuatesRemainingMatches($item)) {
-                $this->item_not_matching = true;
-                $success = false;
-                break;
-            }
+            $this->checkIfItemEvaltuatesRemainingMatches($item);
         }
 
         //we have remaining matches?
-        if (!$this->item_not_matching && count($this->matches) !== 0) {
+        if (count($this->matches) !== 0) {
             $success = false;
             $this->has_leftover_items = true;
         }
@@ -105,10 +99,7 @@ class SSListContainsOnly extends \PHPUnit_Framework_Constraint
      */
     public function toString()
     {
-        $stub = $this->item_not_matching
-            ? ' contains an item matching '
-            : " contained only the given items, the following items were left over:\n";
-
+        $stub = ' contains an item matching ';
 
         $matchToString = function ($key, $value) {
             return ' "' . $key . '" is "' . $value . '"';

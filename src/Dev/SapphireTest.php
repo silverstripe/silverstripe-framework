@@ -4,6 +4,7 @@ namespace SilverStripe\Dev;
 
 use Exception;
 use LogicException;
+use PHPUnit_Framework_Constraint_Not;
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Util_InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
@@ -13,12 +14,13 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\SapphireTestState;
@@ -653,33 +655,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *         ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListContains($matches, $list)
+    public static function assertListContains($matches, SS_List $list, $message = '')
     {
-        $extracted = array();
-        foreach ($list as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        foreach ($matches as $match) {
-            $matched = false;
-            foreach ($extracted as $i => $item) {
-                if (static::dataObjectArrayMatch($item, $match)) {
-                    // Remove it from $extracted so that we don't get duplicate mapping.
-                    unset($extracted[$i]);
-                    $matched = true;
-                    break;
-                }
-            }
-
-            // We couldn't find a match - assertion failed
-            static::assertTrue(
-                $matched,
-                "Failed asserting that the SS_List contains an item matching "
-                . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                . static::listSummaryForMatch($list, $match)
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
             );
         }
+
+        static::assertThat(
+            $list,
+            new SSListContains(
+                $matches
+            ),
+            $message
+        );
     }
 
     /**
@@ -712,30 +703,26 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *          ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListNotContains($matches, SS_List $list)
+    public static function assertListNotContains($matches, SS_List $list, $message = '')
     {
-        $extracted = array();
-        foreach ($list as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        $matched = [];
-        foreach ($matches as $match) {
-            foreach ($extracted as $i => $item) {
-                if (static::dataObjectArrayMatch($item, $match)) {
-                    $matched[] = $extracted[$i];
-                    break;
-                }
-            }
-
-            // We couldn't find a match - assertion failed
-            static::assertEmpty(
-                $matched,
-                "Failed asserting that the SS_List doesn't contain a set of objects. "
-                . "Found objects were: " . var_export($matched, true)
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
             );
         }
+
+        $constraint =  new PHPUnit_Framework_Constraint_Not(
+            new SSListContains(
+                $matches
+            )
+        );
+
+        static::assertThat(
+            $list,
+            $constraint,
+            $message
+        );
     }
 
     /**
