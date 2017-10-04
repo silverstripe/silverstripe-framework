@@ -16,11 +16,9 @@ use SilverStripe\View\ViewableData;
 class SSListContains extends \PHPUnit_Framework_Constraint
 {
 
-    private $matches = [];
+    protected $matches = [];
 
-    private $item_not_matching = false;
-
-    private $has_leftover_items = false;
+    protected $has_leftover_items = false;
 
     public function __construct($matches)
     {
@@ -75,7 +73,7 @@ class SSListContains extends \PHPUnit_Framework_Constraint
      * @param ViewableData $item
      * @return bool
      */
-    private function checkIfItemEvaltuatesRemainingMatches(ViewableData $item)
+    protected function checkIfItemEvaltuatesRemainingMatches(ViewableData $item)
     {
         $success = false;
         foreach ($this->matches as $key => $match) {
@@ -99,8 +97,6 @@ class SSListContains extends \PHPUnit_Framework_Constraint
      */
     public function toString()
     {
-        $stub = ' contains an item matching ';
-
         $matchToString = function ($key, $value) {
             return ' "' . $key . '" is "' . $value . '"';
         };
@@ -120,6 +116,10 @@ class SSListContains extends \PHPUnit_Framework_Constraint
             array_map($matchesToString, $this->matches));
 
 
-        return $stub . $allMatchesAsString;
+        return $this->getStubForToString() . $allMatchesAsString;
+    }
+
+    protected function getStubForToString() {
+        return ' contains an item matching ';
     }
 }

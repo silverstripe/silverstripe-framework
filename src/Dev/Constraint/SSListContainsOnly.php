@@ -15,22 +15,10 @@ use SilverStripe\View\ViewableData;
  * Class SSListContainsOnly
  * @package SilverStripe\Dev\Constraint
  */
-class SSListContainsOnly extends \PHPUnit_Framework_Constraint
+class SSListContainsOnly extends SSListContains
 {
 
-    private $matches = [];
-
     private $item_not_matching = false;
-
-    private $has_leftover_items = false;
-
-    public function __construct($matches)
-    {
-        parent::__construct();
-        $this->exporter = new SSListExporter();
-
-        $this->matches = $matches;
-    }
 
     /**
      * Evaluates the constraint for parameter $other
@@ -77,58 +65,9 @@ class SSListContainsOnly extends \PHPUnit_Framework_Constraint
         }
     }
 
-    /**
-     * @param ViewableData $item
-     * @return bool
-     */
-    private function checkIfItemEvaltuatesRemainingMatches(ViewableData $item)
-    {
-        $success = false;
-        foreach ($this->matches as $key => $match) {
-            $constraint = new ViewableDataContains($match);
-
-            if ($constraint->evaluate($item, '', true)) {
-                $success = true;
-                unset($this->matches[$key]);
-                break;
-            }
-        }
-
-        return $success;
-    }
-
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        $stub = $this->item_not_matching
-            ? ' contains an item matching '
+    protected function getStubForToString() {
+        $this->item_not_matching
+            ? parent::getStubForToString()
             : " contained only the given items, the following items were left over:\n";
-
-
-        $matchToString = function ($key, $value) {
-            return ' "' . $key . '" is "' . $value . '"';
-        };
-
-        $matchesToString = function ($matches) use ($matchToString) {
-            $matchesAsString = implode(' and ', array_map(
-                $matchToString,
-                array_keys($matches),
-                array_values($matches)
-            ));
-
-            return '(' . $matchesAsString . ')';
-        };
-
-        $allMatchesAsString = implode(
-            "\n or ",
-            array_map($matchesToString, $this->matches));
-
-
-        return $stub . $allMatchesAsString;
     }
 }

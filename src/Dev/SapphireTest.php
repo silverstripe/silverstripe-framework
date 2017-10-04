@@ -911,39 +911,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * Helper function for the List matchers
-     *
-     * @param array $item
-     * @param array $match
-     * @return bool
-     */
-    private static function dataObjectArrayMatch($item, $match)
-    {
-        foreach ($match as $k => $v) {
-            if (!array_key_exists($k, $item) || $item[$k] != $v) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Helper function for the List matchers
-     *
-     * @param SS_List|array $list
-     * @param array $match
-     * @return string
-     */
-    private static function listSummaryForMatch($list, $match)
-    {
-        $extracted = array();
-        foreach ($list as $item) {
-            $extracted[] = array_intersect_key($item->toMap(), $match);
-        }
-        return var_export($extracted, true);
-    }
-
-    /**
      * Start test environment
      */
     public static function start()
