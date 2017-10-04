@@ -5,6 +5,7 @@ namespace SilverStripe\Dev;
 use Exception;
 use LogicException;
 use PHPUnit_Framework_TestCase;
+use PHPUnit_Util_InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\Control\CLIRequestBuilder;
 use SilverStripe\Control\Controller;
@@ -19,6 +20,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
+use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
@@ -764,46 +766,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * either pass a single pattern or an array of patterns.
      * @param mixed $list The {@link SS_List} to test.
      */
-    public static function assertListEquals($matches, SS_List $list)
+    public static function assertListEquals($matches, SS_List $list, $message = '')
     {
-        // Extract dataobjects
-        $extracted = array();
-        if ($list) {
-            foreach ($list as $object) {
-                /** @var DataObject $object */
-                $extracted[] = $object->toMap();
-            }
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
+            );
         }
 
-        // Check all matches
-        if ($matches) {
-            foreach ($matches as $match) {
-                $matched = false;
-                foreach ($extracted as $i => $item) {
-                    if (static::dataObjectArrayMatch($item, $match)) {
-                        // Remove it from $extracted so that we don't get duplicate mapping.
-                        unset($extracted[$i]);
-                        $matched = true;
-                        break;
-                    }
-                }
-
-                // We couldn't find a match - assertion failed
-                static::assertTrue(
-                    $matched,
-                    "Failed asserting that the SS_List contains an item matching "
-                    . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                    . static::listSummaryForMatch($list, $match)
-                );
-            }
-        }
-
-        // If we have leftovers than the List has extra data that shouldn't be there
-        static::assertTrue(
-            (count($extracted) == 0),
-            // If we didn't break by this point then we couldn't find a match
-            "Failed asserting that the SS_List contained only the given items, the "
-            . "following items were left over:\n" . var_export($extracted, true)
+        static::assertThat(
+            $list,
+            new SSListContainsOnly(
+                $matches
+            ),
+            $message
         );
     }
 
@@ -818,7 +795,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         Deprecation::notice('5.0', 'Use assertListEquals() instead');
         return static::assertListEquals($matches, $dataObjectSet);
     }
-
 
 
     /**
@@ -845,7 +821,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         static::assertThat(
             $list,
-            new SSListContainsOnly(
+            new SSListContainsOnlyMatchingItems(
                 $match
             ),
             $message

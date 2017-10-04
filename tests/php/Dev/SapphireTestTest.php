@@ -86,7 +86,7 @@ class SapphireTestTest extends SapphireTest
      *
      * @testdox assertion assertListAllMatch fails when not all items are matching
      *
-     * @expectedException \PHPUnit_Framework_Error_Notice
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
     public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
     {

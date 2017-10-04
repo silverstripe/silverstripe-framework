@@ -2,25 +2,27 @@
 
 namespace SilverStripe\Dev\Constraint;
 
+use SilverStripe\Dev\SSListExporter;
 
-use PHPUnit_Util_InvalidArgumentHelper;
-
-class ViewableDataContains extends \PHPUnit_Framework_Constraint
+/**
+ * Constraint for checking if every item in a SS_List matches a given match,
+ * e.g. every Member has isActive set to true
+ *
+ * Class SSListContainsOnly
+ * @package SilverStripe\Dev\Constraint
+ */
+class SSListContainsOnlyMatchingItems extends \PHPUnit_Framework_Constraint
 {
 
     private $match = [];
+    private $constraint;
 
     public function __construct($match)
     {
         parent::__construct();
+        $this->exporter = new SSListExporter();
 
-        if (!is_array($match)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
-                1,
-                'array'
-            );
-        }
-
+        $this->constraint = new ViewableDataContains($match);
         $this->match = $match;
     }
 
@@ -40,18 +42,14 @@ class ViewableDataContains extends \PHPUnit_Framework_Constraint
      *
      * @return mixed
      *
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws PHPUnit_Framework_ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false)
     {
         $success = true;
 
-        foreach ($this->match as $fieldName => $value) {
-            if (!$other->hasField($fieldName)) {
-                $success = false;
-                break;
-            }
-            if ($other->getField($fieldName) != $value) {
+        foreach ($other as $item) {
+            if (!$this->constraint->evaluate($item, '', true)) {
                 $success = false;
                 break;
             }
@@ -66,11 +64,8 @@ class ViewableDataContains extends \PHPUnit_Framework_Constraint
         }
     }
 
-
     /**
      * Returns a string representation of the object.
-     *
-     * @todo: add representation for more than one match
      *
      * @return string
      */
