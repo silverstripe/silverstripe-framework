@@ -21,9 +21,6 @@ class HTTPRequestBuilder
         // Health-check prior to creating environment
         $req = static::createFromVariables($variables, @file_get_contents('php://input'));
 
-        // Normalise URL
-        $variables['_SERVER']['REQUEST_URI'] = $req->getURL();
-
         Environment::setVariables($variables); // Currently necessary for SSViewer, etc to work
 
         return $req;
@@ -38,7 +35,7 @@ class HTTPRequestBuilder
      */
     public static function createFromVariables(array $variables, $input)
     {
-        $url = self::getRequestUri($variables);
+        $url = $variables['_SERVER']['REQUEST_URI'];
 
         // Build request
         $request = new HTTPRequest(
@@ -130,54 +127,22 @@ class HTTPRequestBuilder
             (array)$variables['_COOKIE']
         );
 
-        return $variables;
-    }
+        // Remove query parameters (they're retained separately through $server['_GET']
+        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
 
-    /**
-     * @param array $variables
-     * @return string
-     */
-    protected static function getRequestUri(array $variables)
-    {
-        $server = $variables['_SERVER'];
-
-        $ruLen = strlen($server['REQUEST_URI']);
-        $snLen = strlen($server['SCRIPT_NAME']);
-
-        $isIIS = (strpos($server['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false);
-
-        // IIS will populate server variables using one of these two ways
-        if ($isIIS) {
-            if ($server['REQUEST_URI'] == $server['SCRIPT_NAME']) {
-                $url = "";
-            } elseif ($ruLen > $snLen && substr($server['REQUEST_URI'], 0, $snLen + 1) == ($server['SCRIPT_NAME'] . '/')) {
-                $url = substr($server['REQUEST_URI'], $snLen + 1);
-                $url = strtok($url, '?');
-            } else {
-                $url = $server['REQUEST_URI'];
-                if ($url[0] == '/') {
-                    $url = substr($url, 1);
-                }
-                $url = strtok($url, '?');
-            }
-
-        // Apache will populate the server variables this way
-        } else {
-            // Remove query parameters (they're retained separately through $server['_GET']
-            $url = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
-//            if ($ruLen > $snLen && substr($server['REQUEST_URI'], 0, $snLen + 1) == ($server['SCRIPT_NAME'] . '/')) {
-//                $url = substr($server['REQUEST_URI'], $snLen + 1);
-//                $url = strtok($url, '?');
-//            } else {
-//                $url = "";
-//            }
-        }
+        // Remove SCRIPT_NAME from url in case no rewriting is in place on the webserver.
+        // Example: index.php/admin/pages -> /admin/pages
+        $url = preg_replace('#^' . preg_quote($server['SCRIPT_NAME'], '#') . '#', '', $url);
 
         // Remove base folders from the URL if webroot is hosted in a subfolder
         if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
             $url = substr($url, strlen(BASE_URL));
         }
 
-        return $url;
+        // Normalise URI
+        $variables['_SERVER']['REQUEST_URI'] = $url;
+
+        return $variables;
     }
+
 }
