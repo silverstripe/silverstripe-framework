@@ -20,14 +20,6 @@ By default, requests will be passed through for files existing on the filesystem
 Some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files.
 If no file can be directly matched, control is handed off to `index.php`.
 
-SilverStripe can also operate without this level of rewriting, in which case
-you'll have `index.php` as part of the URL.
-
-<div class="notice" markdown="1">
-Running SilverStripe without web server based rewriting is not recommended since it
-can leave sensitive files exposed to public access (the `RewriteRule` conditions from above don't apply).
-</div>
-
 ## Bootstrap
 
 The `constants.php` file is included automatically in any project which requires silverstripe/framework.

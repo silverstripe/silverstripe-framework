@@ -881,7 +881,7 @@ class InstallRequirements
         if ($this->testApacheRewriteExists()) {
             return true;
         } else {
-            $this->warning($testDetails);
+            $this->error($testDetails);
             return false;
         }
     }

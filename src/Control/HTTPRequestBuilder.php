@@ -130,10 +130,6 @@ class HTTPRequestBuilder
         // Remove query parameters (they're retained separately through $server['_GET']
         $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
 
-        // Remove SCRIPT_NAME from url in case no rewriting is in place on the webserver.
-        // Example: index.php/admin/pages -> /admin/pages
-        $url = preg_replace('#^' . preg_quote($server['SCRIPT_NAME'], '#') . '#', '', $url);
-
         // Remove base folders from the URL if webroot is hosted in a subfolder
         if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
             $url = substr($url, strlen(BASE_URL));
@@ -144,5 +140,4 @@ class HTTPRequestBuilder
 
         return $variables;
     }
-
 }
