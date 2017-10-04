@@ -8,7 +8,7 @@ has been added to assist in migration of legacy files.
 You can run this task on the command line:
 
 ```
-$ ./framework/sake dev/tasks/MigrateFileTask
+$ ./vendor/silverstripe/framework/sake dev/tasks/MigrateFileTask
 ```
 
 This task will also support migration of existing File DataObjects to file versioning. Any
