@@ -4,7 +4,6 @@ namespace SilverStripe\Dev\Tests\SapphireTestTest;
 
 use SilverStripe\Dev\TestOnly;
 
-
 class DataProvider implements TestOnly
 {
     protected static $oneItemList = [

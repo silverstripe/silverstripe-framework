@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-
 use PHPUnit_Util_InvalidArgumentHelper;
 
 class ViewableDataContains extends \PHPUnit_Framework_Constraint

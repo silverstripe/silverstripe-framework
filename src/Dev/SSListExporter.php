@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev;
 
-
 use SebastianBergmann\Exporter\Exporter;
 use SebastianBergmann\RecursionContext\Context;
 use SilverStripe\ORM\SS_List;
@@ -10,7 +9,6 @@ use SilverStripe\View\ViewableData;
 
 class SSListExporter extends Exporter
 {
-
     protected function recursiveExport(&$value, $indentation, $processed = null)
     {
         if (!$processed) {
@@ -25,8 +23,8 @@ class SSListExporter extends Exporter
                 return $className . ' &' . $key;
             }
 
-            $list  = $value;
-            $key    = $processed->add($value);
+            $list = $value;
+            $key = $processed->add($value);
             $values = '';
 
             if ($list->count() > 0) {

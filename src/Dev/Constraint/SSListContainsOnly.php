@@ -3,8 +3,6 @@
 namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit_Framework_ExpectationFailedException;
-use SilverStripe\Dev\SSListExporter;
-use SilverStripe\View\ViewableData;
 
 /**
  * Constraint for checking if a SS_List contains only items matching the given
@@ -65,7 +63,8 @@ class SSListContainsOnly extends SSListContains
         }
     }
 
-    protected function getStubForToString() {
+    protected function getStubForToString()
+    {
         $this->item_not_matching
             ? parent::getStubForToString()
             : " contained only the given items, the following items were left over:\n";

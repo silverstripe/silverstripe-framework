@@ -307,7 +307,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool
      */
-    protected function currentTestEnablesDatabase() {
+    protected function currentTestEnablesDatabase()
+    {
         $annotations = $this->getAnnotations();
 
         return array_key_exists('useDatabase', $annotations['method'])
@@ -320,7 +321,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool
      */
-    protected function currentTestDisablesDatabase() {
+    protected function currentTestDisablesDatabase()
+    {
         $annotations = $this->getAnnotations();
 
         return array_key_exists('useDatabase', $annotations['method'])
@@ -679,7 +681,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param $dataObjectSet
      */
-    public function assertDOSContains($matches, $dataObjectSet) {
+    public function assertDOSContains($matches, $dataObjectSet)
+    {
         Deprecation::notice('5.0', 'Use assertListContains() instead');
         return static::assertListContains($matches, $dataObjectSet);
     }
@@ -731,7 +734,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $matches
      * @param $dataObjectSet
      */
-    public static function assertNotDOSContains($matches, $dataObjectSet) {
+    public static function assertNotDOSContains($matches, $dataObjectSet)
+    {
         Deprecation::notice('5.0', 'Use assertListNotContains() instead');
         return static::assertListNotContains($matches, $dataObjectSet);
     }

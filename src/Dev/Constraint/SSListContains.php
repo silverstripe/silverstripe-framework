@@ -113,13 +113,15 @@ class SSListContains extends \PHPUnit_Framework_Constraint
 
         $allMatchesAsString = implode(
             "\n or ",
-            array_map($matchesToString, $this->matches));
+            array_map($matchesToString, $this->matches)
+        );
 
 
         return $this->getStubForToString() . $allMatchesAsString;
     }
 
-    protected function getStubForToString() {
+    protected function getStubForToString()
+    {
         return ' contains an item matching ';
     }
 }
