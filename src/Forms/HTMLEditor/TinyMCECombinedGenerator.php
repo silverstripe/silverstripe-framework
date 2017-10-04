@@ -77,72 +77,54 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      */
     public function generateContent(TinyMCEConfig $config)
     {
-        $tinymceDir = $config->getTinyMCEPath();
+        $tinymceDir = $config->getTinyMCEResource();
 
-        $files = [ ];
+        // List of string / ModuleResource references to embed
+        $files = [];
 
         // Add core languages
         $language = $config->getOption('language');
         if ($language) {
-            $files[] = $tinymceDir . '/langs/' . $language;
+            $files[] = $this->resolveRelativeResource($tinymceDir, "langs/{$language}");
         }
 
         // Add plugins, along with any plugin specific lang files
         foreach ($config->getPlugins() as $plugin => $path) {
             // Add external plugin
             if ($path) {
-                if ($path instanceof ModuleResource) {
-                    // Resolve path / url later
-                    $files[] = $path;
-                } elseif (Director::is_absolute_url($path) || strpos($path, '/') === 0) {
-                    // Convert URLS to relative paths
+                // Convert URLS to relative paths
+                if (is_string($path)
+                    && (Director::is_absolute_url($path) || strpos($path, '/') === 0)
+                ) {
                     $path = Director::makeRelative($path);
-                    if ($path) {
-                        $files[] = $path;
-                    }
-                } else {
-                    // Relative URLs are safe
+                }
+                // Ensure file exists
+                if ($this->resourceExists($path)) {
                     $files[] = $path;
                 }
                 continue;
             }
 
             // Core tinymce plugin
-            $files[] = $tinymceDir . '/plugins/' . $plugin . '/plugin';
+            $files[] = $this->resolveRelativeResource($tinymceDir, "plugins/{$plugin}/plugin");
             if ($language) {
-                $files[] = $tinymceDir . '/plugins/' . $plugin . '/langs/' . $language;
+                $files[] = $this->resolveRelativeResource($tinymceDir, "plugins/{$plugin}/langs/{$language}");
             }
         }
 
         // Add themes
         $theme = $config->getTheme();
         if ($theme) {
-            $files[] = $tinymceDir . '/themes/' . $theme . '/theme';
+            $files[] = $this->resolveRelativeResource($tinymceDir, "themes/{$theme}/theme");
             if ($language) {
-                $files[] = $tinymceDir . '/themes/' . $theme . '/langs/' . $language;
+                $files[] = $this->resolveRelativeResource($tinymceDir, "themes/{$theme}/langs/{$language}");
             }
         }
 
         // Process source files
-        $files = array_filter(array_map(function ($file) {
-            if ($file instanceof ModuleResource) {
-                return $file;
-            }
-            // Prioritise preferred paths
-            $paths = [
-                $file,
-                $file . '.min.js',
-                $file . '.js',
-            ];
-            foreach ($paths as $path) {
-                if (file_exists(Director::baseFolder() . '/' . $path)) {
-                    return $path;
-                }
-            }
-            return null;
-        }, $files));
-
-        $libContent = $this->getFileContents(Director::baseFolder() . '/' . $tinymceDir . '/tinymce.min.js');
+        $files = array_filter($files);
+        $libResource = $this->resolveRelativeResource($tinymceDir, 'tinymce');
+        $libContent = $this->getFileContents($libResource);
 
         // Register vars for config
         $baseDirJS = Convert::raw2js(Director::absoluteBaseURL());
@@ -169,18 +151,14 @@ SCRIPT;
 
         // Load all tinymce script files into buffer
         foreach ($files as $path) {
-            if ($path instanceof ModuleResource) {
-                $path = $path->getPath();
-            } else {
-                $path = Director::baseFolder() . '/' . $path;
-            }
             $buffer[] = $this->getFileContents($path);
         }
 
         // Generate urls for all files
+        // Note all urls must be relative to base_dir
         $fileURLS = array_map(function ($path) {
             if ($path instanceof ModuleResource) {
-                return $path->getURL();
+                return Director::makeRelative($path->getURL());
             }
             return $path;
         }, $files);
@@ -188,7 +166,7 @@ SCRIPT;
         // Join list of paths
         $filesList = Convert::raw2js(implode(',', $fileURLS));
         // Mark all themes, plugins and languages as done
-        $buffer[] = "window.tinymce.each('$filesList'.split(','),".
+        $buffer[] = "window.tinymce.each('$filesList'.split(',')," .
             "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
 
         $buffer[] = '})();';
@@ -198,12 +176,20 @@ SCRIPT;
     /**
      * Returns the contents of the script file if it exists and removes the UTF-8 BOM header if it exists.
      *
-     * @param string $file File to load.
+     * @param string|ModuleResource $file File to load.
      * @return string File contents or empty string if it doesn't exist.
      */
     protected function getFileContents($file)
     {
-        $content = file_get_contents($file);
+        if ($file instanceof ModuleResource) {
+            $path = $file->getPath();
+        } else {
+            $path = Director::baseFolder() . '/' . $file;
+        }
+        if (!file_exists($path)) {
+            return null;
+        }
+        $content = file_get_contents($path);
 
         // Remove UTF-8 BOM
         if (substr($content, 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf)) {
@@ -259,5 +245,48 @@ SCRIPT;
     {
         $dir = dirname(static::config()->get('filename_base'));
         static::singleton()->getAssetHandler()->removeContent($dir);
+    }
+
+    /**
+     * Get relative resource for a given base and string
+     *
+     * @param ModuleResource|string $base
+     * @param string $resource
+     * @return ModuleResource|string
+     */
+    protected function resolveRelativeResource($base, $resource)
+    {
+        // Return resource path based on relative resource path
+        foreach (['', '.min.js', '.js'] as $ext) {
+            // Map resource
+            if ($base instanceof ModuleResource) {
+                $next = $base->getRelativeResource($resource . $ext);
+            } else {
+                $next = rtrim($base, '/') . '/' . $resource . $ext;
+            }
+            // Ensure resource exists
+            if ($this->resourceExists($next)) {
+                return $next;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Check if the given resource exists
+     *
+     * @param string|ModuleResource $resource
+     * @return bool
+     */
+    protected function resourceExists($resource)
+    {
+        if (!$resource) {
+            return false;
+        }
+        if ($resource instanceof ModuleResource) {
+            return $resource->exists();
+        }
+        $base = rtrim(Director::baseFolder(), '/');
+        return file_exists($base . '/' . $resource);
     }
 }

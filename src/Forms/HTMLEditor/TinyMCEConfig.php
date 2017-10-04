@@ -9,6 +9,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
@@ -282,20 +283,20 @@ class TinyMCEConfig extends HTMLEditorConfig
      *
      * @var array
      */
-    protected $buttons = array(
-        1 => array(
+    protected $buttons = [
+        1 => [
             'bold', 'italic', 'underline', 'removeformat', '|',
             'alignleft', 'aligncenter', 'alignright', 'alignjustify', '|',
             'bullist', 'numlist', 'outdent', 'indent',
-        ),
-        2 => array(
+        ],
+        2 => [
             'formatselect', '|',
             'paste', 'pastetext', '|',
             'table', 'sslink', 'unlink', '|',
             'code'
-        ),
-        3 => array()
-    );
+        ],
+        3 => []
+    ];
 
     public function getOption($key)
     {
@@ -570,13 +571,20 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEResourcePath());
+        $baseResource = $this->getTinyMCEResource();
+        if ($baseResource instanceof ModuleResource) {
+            $tinyMCEBaseURL = $baseResource->getURL();
+        } else {
+            $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $baseResource);
+        }
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
         $plugins = array();
         foreach ($this->getPlugins() as $plugin => $path) {
-            if (!$path) {
+            if ($path instanceof ModuleResource) {
+                $path = Director::absoluteURL($path->getURL());
+            } elseif (!$path) {
                 // Empty paths: Convert to urls in standard base url
                 $path = Controller::join_links(
                     $tinyMCEBaseURL,
@@ -687,18 +695,50 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
-     * Returns the base path to TinyMCE resources (which could be different from the original tinymce
+     * Returns the full filesystem path to TinyMCE resources (which could be different from the original tinymce
      * location in the module).
+     *
+     * Path will be absolute.
      *
      * @return string
      * @throws Exception
      */
     public function getTinyMCEResourcePath()
     {
+        $resource = $this->getTinyMCEResource();
+        if ($resource instanceof ModuleResource) {
+            return $resource->getPath();
+        }
+        return Director::baseFolder() . '/' . $resource;
+    }
+
+    /**
+     * Get front-end url to tinymce resources
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getTinyMCEResourceURL()
+    {
+        $resource = $this->getTinyMCEResource();
+        if ($resource instanceof ModuleResource) {
+            return $resource->getURL();
+        }
+        return $resource;
+    }
+
+    /**
+     * Get resource root for TinyMCE, either as a string or ModuleResource instance
+     * Path will be relative to BASE_PATH if string.
+     *
+     * @return ModuleResource|string
+     * @throws Exception
+     */
+    public function getTinyMCEResource()
+    {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return ModuleResourceLoader::singleton()
-                ->resolveURL($configDir);
+            return ModuleResourceLoader::singleton()->resolveResource($configDir);
         }
 
         throw new Exception(sprintf(
@@ -708,21 +748,12 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
-     * @return string
-     * @throws Exception
+     * @deprecated 4.0..5.0
      */
     public function getTinyMCEPath()
     {
-        $configDir = static::config()->get('base_dir');
-        if ($configDir) {
-            return ModuleResourceLoader::singleton()
-                ->resolveURL($configDir);
-        }
-
-        throw new Exception(sprintf(
-            'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
-            __CLASS__
-        ));
+        Deprecation::notice('5.0', 'use getTinyMCEResourcePath instead');
+        return $this->getTinyMCEResourcePath();
     }
 
     /**

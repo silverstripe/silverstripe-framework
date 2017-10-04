@@ -22,8 +22,8 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      */
     public function resolvePath($resource)
     {
-        $resourceObj = $this->resolveModuleResource($resource);
-        if ($resourceObj) {
+        $resourceObj = $this->resolveResource($resource);
+        if ($resourceObj instanceof ModuleResource) {
             return $resourceObj->getRelativePath();
         }
         return $resource;
@@ -37,8 +37,8 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      */
     public function resolveURL($resource)
     {
-        $resourceObj = $this->resolveModuleResource($resource);
-        if ($resourceObj) {
+        $resourceObj = $this->resolveResource($resource);
+        if ($resourceObj instanceof ModuleResource) {
             return $resourceObj->getURL();
         }
         return $resource;
@@ -76,16 +76,16 @@ class ModuleResourceLoader implements TemplateGlobalProvider
 
     /**
      * Return module resource for the given path, if specified as one.
-     * Returns null if not a module resource.
+     * Returns the original resource otherwise.
      *
      * @param string $resource
-     * @return ModuleResource|null
+     * @return ModuleResource|string The resource, or input string if not a module resource
      */
-    protected function resolveModuleResource($resource)
+    public function resolveResource($resource)
     {
         // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
         if (!preg_match('#^ *(?<module>[^/: ]+/[^/: ]+) *: *(?<resource>[^ ]*)$#', $resource, $matches)) {
-            return null;
+            return $resource;
         }
         $module = $matches['module'];
         $resource = $matches['resource'];

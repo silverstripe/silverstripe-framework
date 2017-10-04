@@ -188,7 +188,7 @@ class Module implements Serializable
      */
     public function getResource($path)
     {
-        $path = trim($path, '/\\');
+        $path = trim($path, self::TRIM_CHARS);
         if (isset($this->resources[$path])) {
             return $this->resources[$path];
         }
