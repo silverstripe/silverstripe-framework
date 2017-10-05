@@ -56,7 +56,6 @@ use SilverStripe\ORM\ValidationResult;
  * @property int $FailedLoginCount
  * @property string $DateFormat
  * @property string $TimeFormat
- * @property string $SetPassword Pseudo-DB field for temp storage. Not emitted to DB
  */
 class Member extends DataObject
 {
@@ -858,10 +857,6 @@ class Member extends DataObject
      */
     public function onBeforeWrite()
     {
-        if ($this->SetPassword && !$this->passwordChangesToWrite) {
-            $this->Password = $this->SetPassword;
-        }
-
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
@@ -1650,12 +1645,6 @@ class Member extends DataObject
         if (!$this->ID || $this->isChanged('Password')) {
             if ($this->Password && $validator) {
                 $valid->combineAnd($validator->validate($this->Password, $this));
-            }
-        }
-
-        if ((!$this->ID && $this->SetPassword) || $this->isChanged('SetPassword')) {
-            if ($this->SetPassword && $validator) {
-                $valid->combineAnd($validator->validate($this->SetPassword, $this));
             }
         }
 
