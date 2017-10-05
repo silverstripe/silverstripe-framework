@@ -138,6 +138,15 @@ class Security extends Controller implements TemplateGlobalProvider
     private static $logout_url = 'Security/logout';
 
     /**
+     * Enable or disable the "I've lost my password" link & functionality
+     *
+     * @config
+     *
+     * @var bool
+     */
+    private static $enable_lost_password = true;
+
+    /**
      * The default lost password URL
      *
      * @config
@@ -937,6 +946,10 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function lostpassword()
     {
+        if (!static::config()->get('enable_lost_password')) {
+            return $this->httpError(404);
+        }
+
         $handlers = [];
         $authenticators = $this->getApplicableAuthenticators(Authenticator::RESET_PASSWORD);
         /** @var Authenticator $authenticator */

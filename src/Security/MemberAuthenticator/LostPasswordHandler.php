@@ -78,6 +78,9 @@ class LostPasswordHandler extends RequestHandler
      */
     public function lostpassword()
     {
+        if (!Security::config()->get('enable_lost_password')) {
+            return $this->httpError(404);
+        }
 
         $message = _t(
             'SilverStripe\\Security\\Security.NOTERESETPASSWORD',
@@ -165,6 +168,10 @@ class LostPasswordHandler extends RequestHandler
      */
     public function forgotPassword($data, $form)
     {
+        if (!Security::config()->get('enable_lost_password')) {
+            return $this->httpError(404);
+        }
+
         // Ensure password is given
         if (empty($data['Email'])) {
             $form->sessionMessage(
