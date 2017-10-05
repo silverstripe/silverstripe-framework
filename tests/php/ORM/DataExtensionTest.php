@@ -292,7 +292,11 @@ class DataExtensionTest extends SapphireTest
         $extension->clearOwner();
         $this->assertEquals($obj1, $extension->getOwner());
 
-        // Clear original owner
+        // Clear pushed null
+        $extension->clearOwner();
+        $this->assertNull($extension->getOwner());
+
+        // Clear original null
         $extension->clearOwner();
         $this->assertNull($extension->getOwner());
 

@@ -139,8 +139,8 @@ trait Extensible
                 $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
                     /** @var Extensible $inst */
                     $extension = $inst->getExtensionInstance($extensionClass);
-                    $extension->setOwner($inst);
                     try {
+                        $extension->setOwner($inst);
                         return call_user_func_array([$extension, $method], $args);
                     } finally {
                         $extension->clearOwner();
@@ -343,6 +343,8 @@ trait Extensible
 
         foreach ($extensions as $extension) {
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
+            // Strip service name specifier
+            $extensionClass = strtok($extensionClass, '.');
             $sources[] = $extensionClass;
 
             if (!class_exists($extensionClass)) {
@@ -465,8 +467,8 @@ trait Extensible
 
         foreach ($this->getExtensionInstances() as $instance) {
             if (method_exists($instance, $method)) {
-                $instance->setOwner($this);
                 try {
+                    $instance->setOwner($this);
                     $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
                 } finally {
                     $instance->clearOwner();
@@ -551,8 +553,7 @@ trait Extensible
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
-                    $instance = Injector::inst()->create($extension);
-                    $instance->setOwner(null, $class);
+                    $instance = Injector::inst()->get($extension);
                     $this->extension_instances[get_class($instance)] = $instance;
                 }
             }

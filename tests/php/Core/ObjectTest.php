@@ -52,7 +52,14 @@ class ObjectTest extends SapphireTest
         $objs[] = new ObjectTest\T2();
 
         // All these methods should exist and return true
-        $trueMethods = array('testMethod','otherMethod','someMethod','t1cMethod','normalMethod', 'failoverCallback');
+        $trueMethods = [
+            'testMethod',
+            'otherMethod',
+            'someMethod',
+            't1cMethod',
+            'normalMethod',
+            'failoverCallback'
+        ];
 
         foreach ($objs as $i => $obj) {
             foreach ($trueMethods as $method) {
@@ -224,33 +231,33 @@ class ObjectTest extends SapphireTest
         $this->assertTrue(
             singleton(ExtensionTest::class)->hasExtension(ExtendTest1::class),
             "Extensions are detected when set on Object::\$extensions on instance hasExtension() without"
-                . " case-sensitivity"
+            . " case-sensitivity"
         );
 
         // ObjectTest_ExtendTest2 is built in via $extensions (with parameters)
         $this->assertTrue(
             ExtensionTest::has_extension(ExtendTest2::class),
             "Extensions are detected with static has_extension() when set on Object::\$extensions with"
-                . " additional parameters"
+            . " additional parameters"
         );
         $this->assertTrue(
             singleton(ExtensionTest::class)->hasExtension(ExtendTest2::class),
             "Extensions are detected with instance hasExtension() when set on Object::\$extensions with"
-                . " additional parameters"
+            . " additional parameters"
         );
         $this->assertFalse(
             ExtensionTest::has_extension(ExtendTest3::class),
             "Other extensions available in the system are not present unless explicitly added to this object"
-                . " when checking through has_extension()"
+            . " when checking through has_extension()"
         );
         $this->assertFalse(
             singleton(ExtensionTest::class)->hasExtension(ExtendTest3::class),
             "Other extensions available in the system are not present unless explicitly added to this object"
-                . " when checking through instance hasExtension()"
+            . " when checking through instance hasExtension()"
         );
 
         // ObjectTest_ExtendTest3 is added manually
-        ExtensionTest::add_extension(ExtendTest3::class .'("Param")');
+        ExtensionTest::add_extension(ExtendTest3::class . '("Param")');
         $this->assertTrue(
             ExtensionTest::has_extension(ExtendTest3::class),
             "Extensions are detected with static has_extension() when added through add_extension()"
@@ -322,7 +329,7 @@ class ObjectTest extends SapphireTest
 
     public function testRemoveExtensionWithParameters()
     {
-        ObjectTest\ExtensionRemoveTest::add_extension(ExtendTest2::class.'("MyParam")');
+        ObjectTest\ExtensionRemoveTest::add_extension(ExtendTest2::class . '("MyParam")');
 
         $this->assertTrue(
             ObjectTest\ExtensionRemoveTest::has_extension(ExtendTest2::class),
@@ -361,7 +368,7 @@ class ObjectTest extends SapphireTest
 
     public function testExtend()
     {
-        $object   = new ObjectTest\ExtendTest();
+        $object = new ObjectTest\ExtendTest();
         $argument = 'test';
 
         $this->assertEquals($object->extend('extendableMethod'), array('ExtendTest2()'));
@@ -399,17 +406,25 @@ class ObjectTest extends SapphireTest
     {
         // Simple case
         $this->assertEquals(
-            array(Versioned::class,array('Stage', 'Live')),
+            array(Versioned::class, array('Stage', 'Live')),
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage','Live')")
+        );
+        // Case with service identifier
+        $this->assertEquals(
+            [
+                Versioned::class . '.versioned',
+                ['Versioned'],
+            ],
+            ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned.versioned('Versioned')")
         );
         // String with commas
         $this->assertEquals(
-            array(Versioned::class,array('Stage,Live', 'Stage')),
+            array(Versioned::class, array('Stage,Live', 'Stage')),
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage,Live','Stage')")
         );
         // String with quotes
         $this->assertEquals(
-            array(Versioned::class,array('Stage\'Stage,Live\'Live', 'Live')),
+            array(Versioned::class, array('Stage\'Stage,Live\'Live', 'Live')),
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage\\'Stage,Live\\'Live','Live')")
         );
 
@@ -425,26 +440,36 @@ class ObjectTest extends SapphireTest
 
         // Array
         $this->assertEquals(
-            array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
+            array('Enum', array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
             ClassInfo::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
         );
         // Nested array
         $this->assertEquals(
-            array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
-                'Unsubmitted')),
+            [
+                'Enum',
+                [
+                    ['Accepted', 'Pending', 'Declined', ['UnsubmittedA', 'UnsubmittedB']],
+                    'Unsubmitted'
+                ]
+            ],
             ClassInfo::parse_class_spec(
                 "Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')"
             )
         );
         // 5.4 Shorthand Array
         $this->assertEquals(
-            array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
+            array('Enum', array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
             ClassInfo::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
         );
         // 5.4 Nested shorthand array
         $this->assertEquals(
-            array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
-                'Unsubmitted')),
+            [
+                'Enum',
+                [
+                    ['Accepted', 'Pending', 'Declined', ['UnsubmittedA', 'UnsubmittedB']],
+                    'Unsubmitted'
+                ]
+            ],
             ClassInfo::parse_class_spec(
                 "Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')"
             )

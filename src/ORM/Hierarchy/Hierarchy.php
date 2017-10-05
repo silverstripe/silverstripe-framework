@@ -23,21 +23,6 @@ use Exception;
  */
 class Hierarchy extends DataExtension
 {
-
-    /**
-     * Cache for {@see numChildren()}
-     *
-     * @var int
-     */
-    protected $_cache_numChildren = null;
-
-    /**
-     * Cache for {@see Children()}
-     *
-     * @var SS_List
-     */
-    protected $_cache_children = null;
-
     /**
      * The lower bounds for the amount of nodes to mark. If set, the logic will expand nodes until it reaches at least
      * this number, and then stops. Root nodes will always show regardless of this settting. Further nodes can be
@@ -85,6 +70,17 @@ class Hierarchy extends DataExtension
      * @config
      */
     private static $hide_from_cms_tree = array();
+
+    /**
+     * Prevent virtual page virtualising these fields
+     *
+     * @config
+     * @var array
+     */
+    private static $non_virtual_fields = [
+        '_cache_children',
+        '_cache_numChildren',
+    ];
 
     public static function get_extra_config($class, $extension, $args)
     {
@@ -176,17 +172,19 @@ class Hierarchy extends DataExtension
      */
     public function Children()
     {
-        if ($this->_cache_children) {
-            return $this->_cache_children;
+        $children = $this->owner->_cache_children;
+        if ($children) {
+            return $children;
         }
 
-        $this->_cache_children = $this
+        $children = $this
             ->owner
             ->stageChildren(false)
             ->filterByCallback(function (DataObject $record) {
                 return $record->canView();
             });
-        return $this->_cache_children;
+        $this->owner->_cache_children = $children;
+        return $children;
     }
 
     /**
@@ -268,18 +266,21 @@ class Hierarchy extends DataExtension
     public function numChildren($cache = true)
     {
         // Load if caching
-        if ($cache && isset($this->_cache_numChildren)) {
-            return $this->_cache_numChildren;
+        if ($cache) {
+            $numChildren = $this->owner->_cache_numChildren;
+            if (isset($numChildren)) {
+                return $numChildren;
+            }
         }
 
         // We call stageChildren(), because Children() has canView() filtering
-        $children = (int)$this->owner->stageChildren(true)->Count();
+        $numChildren = (int)$this->owner->stageChildren(true)->Count();
 
         // Save if caching
         if ($cache) {
-            $this->_cache_numChildren = $children;
+            $this->owner->_cache_numChildren = $numChildren;
         }
-        return $children;
+        return $numChildren;
     }
 
     /**
@@ -308,7 +309,8 @@ class Hierarchy extends DataExtension
     {
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
-        $staged = DataObject::get($this->ownerBaseClass)
+        $baseClass = $this->owner->baseClass();
+        $staged = DataObject::get($baseClass)
                 ->filter('ParentID', (int)$this->owner->ID)
                 ->exclude('ID', (int)$this->owner->ID);
         if ($hideFromHierarchy) {
@@ -374,11 +376,12 @@ class Hierarchy extends DataExtension
         if (empty($parentID)) {
             return null;
         }
-        $idSQL = $this->owner->getSchema()->sqlColumnForField($this->ownerBaseClass, 'ID');
-        return DataObject::get_one($this->ownerBaseClass, array(
-            array($idSQL => $parentID),
+        $baseClass = $this->owner->baseClass();
+        $idSQL = $this->owner->getSchema()->sqlColumnForField($baseClass, 'ID');
+        return DataObject::get_one($baseClass, [
+            [$idSQL => $parentID],
             $filter
-        ));
+        ]);
     }
 
     /**
@@ -424,13 +427,10 @@ class Hierarchy extends DataExtension
      * Flush all Hierarchy caches:
      * - Children (instance)
      * - NumChildren (instance)
-     * - Marked (global)
-     * - Expanded (global)
-     * - TreeOpened (global)
      */
     public function flushCache()
     {
-        $this->_cache_children = null;
-        $this->_cache_numChildren = null;
+        $this->owner->_cache_children = null;
+        $this->owner->_cache_numChildren = null;
     }
 }

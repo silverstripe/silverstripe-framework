@@ -30,15 +30,7 @@ abstract class Extension
     protected $owner;
 
     /**
-     * The base class that this extension was applied to; $this->owner must be one of these
-     *
-     * @var DataObject
-     */
-    protected $ownerBaseClass;
-
-    /**
-     * Ownership stack for recursive methods.
-     * Last item is current owner.
+     * Stack of all parent owners, not including current owner
      *
      * @var array
      */
@@ -63,24 +55,29 @@ abstract class Extension
     /**
      * Set the owner of this extension.
      *
-     * @param object $owner The owner object,
-     * @param string $ownerBaseClass The base class that the extension is applied to; this may be
-     * the class of owner, or it may be a parent.  For example, if Versioned was applied to SiteTree,
-     * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
-     * would be 'SiteTree'.
+     * @param object $owner The owner object
      */
-    public function setOwner($owner, $ownerBaseClass = null)
+    public function setOwner($owner)
     {
-        if ($owner) {
-            $this->ownerStack[] = $owner;
-        }
+        $this->ownerStack[] = $this->owner;
         $this->owner = $owner;
+    }
 
-        // Set ownerBaseClass
-        if ($ownerBaseClass) {
-            $this->ownerBaseClass = $ownerBaseClass;
-        } elseif (!$this->ownerBaseClass && $owner) {
-            $this->ownerBaseClass = get_class($owner);
+    /**
+     * Temporarily modify the owner. The original owner is ensured to be restored
+     *
+     * @param mixed $owner Owner to set
+     * @param callable $callback Callback to invoke
+     * @param array $args Args to pass to callback
+     * @return mixed
+     */
+    public function withOwner($owner, callable $callback, $args = [])
+    {
+        try {
+            $this->setOwner($owner);
+            return $callback(...$args);
+        } finally {
+            $this->clearOwner();
         }
     }
 
@@ -92,12 +89,7 @@ abstract class Extension
         if (empty($this->ownerStack)) {
             throw new BadMethodCallException("clearOwner() called more than setOwner()");
         }
-        array_pop($this->ownerStack);
-        if ($this->ownerStack) {
-            $this->owner = end($this->ownerStack);
-        } else {
-            $this->owner = null;
-        }
+        $this->owner = array_pop($this->ownerStack);
     }
 
     /**
@@ -120,7 +112,7 @@ abstract class Extension
      */
     public static function get_classname_without_arguments($extensionStr)
     {
-        $parts = explode('(', $extensionStr);
-        return $parts[0];
+        // Split out both args and service name
+        return strtok(strtok($extensionStr, '('), '.');
     }
 }

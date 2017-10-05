@@ -616,11 +616,7 @@ class Group extends DataObject
      */
     public function AllChildrenIncludingDeleted()
     {
-        /** @var Hierarchy $extInstance */
-        $extInstance = $this->getExtensionInstance(Hierarchy::class);
-        $extInstance->setOwner($this);
-        $children = $extInstance->AllChildrenIncludingDeleted();
-        $extInstance->clearOwner();
+        $children = parent::AllChildrenIncludingDeleted();
 
         $filteredChildren = new ArrayList();
 

@@ -194,6 +194,16 @@ class Injector implements ContainerInterface
     protected $configLocator;
 
     /**
+     * Specify a service type singleton
+     */
+    const SINGLETON = 'singleton';
+
+    /**
+     * Specif ya service type prototype
+     */
+    const PROTOTYPE = 'prototype';
+
+    /**
      * Create a new injector.
      *
      * @param array $config
@@ -584,7 +594,7 @@ class Injector implements ContainerInterface
             $type = isset($spec['type']) ? $spec['type'] : null;
         }
 
-        if ($id && (!$type || $type != 'prototype')) {
+        if ($id && (!$type || $type !== self::PROTOTYPE)) {
             // this ABSOLUTELY must be set before the object is injected.
             // This prevents circular reference errors down the line
             $this->serviceCache[$id] = $object;
@@ -827,8 +837,8 @@ class Injector implements ContainerInterface
      */
     public function getServiceName($name)
     {
-        // common case, get it overwith first
-        if (isset($this->specs[$name])) {
+        // Lazy load in spec (disable inheritance to check exact service name)
+        if ($this->getServiceSpec($name, false)) {
             return $name;
         }
 
@@ -919,10 +929,9 @@ class Injector implements ContainerInterface
      *
      * @param string $name The name of the service to retrieve. If not a registered
      * service, then a class of the given name is instantiated
-     * @param boolean $asSingleton Whether to register the created object as a singleton
-     * if no other configuration is found
-     * @param array $constructorArgs Optional set of arguments to pass as constructor arguments
-     * if this object is to be created from scratch (with $asSingleton = false)
+     * @param bool $asSingleton If set to false a new instance will be returned.
+     * If true a singleton will be returned unless the spec is type=prototype'
+     * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
      * @return mixed Instance of the specified object
      */
     public function get($name, $asSingleton = true, $constructorArgs = [])
@@ -939,70 +948,42 @@ class Injector implements ContainerInterface
     /**
      * Returns the service, or `null` if it doesnt' exist. See {@link get()} for main usage.
      *
-     * @param string $name
-     * @param boolean $asSingleton
-     * @param array $constructorArgs
-     * @return mixed|null Instance of the specified object (if it exists)
+     * @param string $name The name of the service to retrieve. If not a registered
+     * service, then a class of the given name is instantiated
+     * @param bool $asSingleton If set to false a new instance will be returned.
+     * If true a singleton will be returned unless the spec is type=prototype'
+     * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
+     * @return mixed Instance of the specified object
      */
     protected function getNamedService($name, $asSingleton = true, $constructorArgs = [])
     {
-        // Allow service names of the form "%$ServiceName"
-        if (substr($name, 0, 2) == '%$') {
-            $name = substr($name, 2);
-        }
-
         // Normalise service / args
         list($name, $constructorArgs) = $this->normaliseArguments($name, $constructorArgs);
 
-        // reassign the name as it might actually be a compound name
-        if ($serviceName = $this->getServiceName($name)) {
-            // check to see what the type of bean is. If it's a prototype,
-            // we don't want to return the singleton version of it.
-            $spec = $this->specs[$serviceName];
-            $type = isset($spec['type']) ? $spec['type'] : null;
-            // if we're explicitly a prototype OR we're not wanting a singleton
-            if (($type && $type == 'prototype') || !$asSingleton) {
-                if ($spec && $constructorArgs) {
-                    $spec['constructor'] = $constructorArgs;
-                } else {
-                    // convert any _configured_ constructor args.
-                    // we don't call this for get() calls where someone passes in
-                    // constructor args, otherwise we end up calling convertServiceParams
-                    // way too often
-                    $this->updateSpecConstructor($spec);
-                }
-                return $this->instantiate($spec, $serviceName, !$type ? 'prototype' : $type);
-            } else {
-                if (!isset($this->serviceCache[$serviceName])) {
-                    $this->updateSpecConstructor($spec);
-                    $this->instantiate($spec, $serviceName);
-                }
-                return $this->serviceCache[$serviceName];
-            }
-        }
-        $config = $this->configLocator->locateConfigFor($name);
-        if ($config) {
-            $this->load(array($name => $config));
-            if (isset($this->specs[$name])) {
-                $spec = $this->specs[$name];
-                $this->updateSpecConstructor($spec);
-                if ($constructorArgs) {
-                    $spec['constructor'] = $constructorArgs;
-                }
-                return $this->instantiate($spec, $name);
-            }
-        }
-        // If we've got this far, we're dealing with a case of a user wanting
-        // to create an object based on its name. So, we need to fake its config
-        // if the user wants it managed as a singleton service style object
-        $spec = array('class' => $name, 'constructor' => $constructorArgs);
-        if ($asSingleton) {
-            // need to load the spec in; it'll be given the singleton type by default
-            $this->load(array($name => $spec));
-            return $this->instantiate($spec, $name);
+        // Resolve name with the appropriate spec, or a suitable mock for new services
+        list($name, $spec) = $this->getServiceNamedSpec($name, $constructorArgs);
+
+        // Check if we are getting a prototype or singleton
+        $type = $asSingleton
+            ? (isset($spec['type']) ? $spec['type'] : self::SINGLETON)
+            : self::PROTOTYPE;
+
+        // Return existing instance for singletons
+        if ($type === self::SINGLETON && isset($this->serviceCache[$name])) {
+            return $this->serviceCache[$name];
         }
 
-        return $this->instantiate($spec);
+        // Update constructor args
+        if ($type === self::PROTOTYPE && $constructorArgs) {
+            // Passed in args are expected to already be normalised (no service references)
+            $spec['constructor'] = $constructorArgs;
+        } else {
+            // Resolve references in constructor args
+            $this->updateSpecConstructor($spec);
+        }
+
+        // Build instance
+        return $this->instantiate($spec, $name, $type);
     }
 
     /**
@@ -1016,6 +997,11 @@ class Injector implements ContainerInterface
      */
     protected function normaliseArguments($name, $args = [])
     {
+        // Allow service names of the form "%$ServiceName"
+        if (substr($name, 0, 2) == '%$') {
+            $name = substr($name, 2);
+        }
+
         if (strstr($name, '(')) {
             list($name, $extraArgs) = ClassInfo::parse_class_spec($name);
             if ($args) {
@@ -1025,6 +1011,61 @@ class Injector implements ContainerInterface
             }
         }
         return [ $name, $args ];
+    }
+
+    /**
+     * Get or build a named service and specification
+     *
+     * @param string $name Service name
+     * @param array $constructorArgs Optional constructor args
+     * @return array
+     */
+    protected function getServiceNamedSpec($name, $constructorArgs = [])
+    {
+        $spec = $this->getServiceSpec($name);
+        if ($spec) {
+            // Resolve to exact service name (in case inherited)
+            $name = $this->getServiceName($name);
+        } else {
+            // Late-generate config spec for non-configured spec
+            $spec = [
+                'class' => $name,
+                'constructor' => $constructorArgs,
+            ];
+        }
+        return [$name, $spec];
+    }
+
+    /**
+     * Search for spec, lazy-loading in from config locator.
+     * Falls back to parent service name if unloaded
+     *
+     * @param string $name
+     * @param bool $inherit Set to true to inherit from parent service if `.` suffixed
+     * E.g. 'Psr/Log/LoggerInterface.custom' would fail over to 'Psr/Log/LoggerInterface'
+     * @return mixed|object
+     */
+    public function getServiceSpec($name, $inherit = true)
+    {
+        if (isset($this->specs[$name])) {
+            return $this->specs[$name];
+        }
+
+        // Lazy load
+        $config = $this->configLocator->locateConfigFor($name);
+        if ($config) {
+            $this->load([$name => $config]);
+            if (isset($this->specs[$name])) {
+                return $this->specs[$name];
+            }
+        }
+
+        // Fail over to parent service if allowed
+        if (!$inherit || !strpos($name, '.')) {
+            return null;
+        }
+
+        return $this->getServiceSpec(substr($name, 0, strrpos($name, '.')));
     }
 
     /**
