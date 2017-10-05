@@ -11,7 +11,17 @@ class GridFieldVersionedState implements GridField_ColumnProvider
 {
     protected $column = null;
 
-    protected $versionedLabelFields = ['Name', 'Title'];
+    /**
+     * Fields/columns to display version states. We can specifies more than one
+     * field but states only show in the first column found.
+     */
+    protected $versionedLabelFields = ['Title'];
+
+    public function __construct($versionedLabelFields = null) {
+        if($versionedLabelFields) {
+            $this->versionedLabelFields = $versionedLabelFields;
+        }
+    }
 
     /**
      * Modify the list of columns displayed in the table.
@@ -68,7 +78,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
     {
 
         $flagContent = '';
-        $flags = $record->getStatusFlags();
+        $flags = $this->getStatusFlags($record);
         foreach ($flags as $class => $data) {
             if (is_string($data)) {
                 $data = array('text' => $data);
@@ -76,7 +86,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
             $flagContent .= sprintf(
                 "<span class=\"ss-gridfield-badge badge %s\"%s>%s</span>",
                 'status-' . Convert::raw2xml($class),
-                (isset($data['title'])) ? sprintf(' title=\\"%s\\"', Convert::raw2xml($data['title'])) : '',
+                (isset($data['title'])) ? sprintf(' title="%s"', Convert::raw2xml($data['title'])) : '',
                 Convert::raw2xml($data['text'])
             );
         }
@@ -107,5 +117,60 @@ class GridFieldVersionedState implements GridField_ColumnProvider
     public function getColumnMetadata($gridField, $columnName)
     {
         return [];
+    }
+
+
+    /**
+     * A flag provides the user with additional data about the current item
+     * status, for example a "removed from draft" status. Each item can have
+     * more than one status flag. Returns a map of a unique key to a
+     * (localized) title for the flag. The unique key can be reused as a CSS
+     * class.
+     *
+     * Example (simple):
+     *
+     * ```php
+     *   "deletedonlive" => "Deleted"
+     * ```
+     *
+     * Example (with optional title attribute):
+     *
+     * ```php
+     *   "deletedonlive" => array(
+     *      'text' => "Deleted",
+     *      'title' => 'This page has been deleted'
+     *   )
+     * ```
+     *
+     * @param bool $cached Whether to serve the fields from cache; false
+     * regenerate them
+     * @return array
+     */
+    protected function getStatusFlags($record) {
+        $flags = array();
+
+        if ($record->isOnLiveOnly()) {
+            $flags['removedfromdraft'] = array(
+                'text' => _t(__CLASS__.'.ONLIVEONLYSHORT', 'On live only'),
+                'title' => _t(__CLASS__.'.ONLIVEONLYSHORTHELP', 'Item is published, but has been deleted from draft'),
+            );
+        } elseif ($record->isArchived()) {
+            $flags['archived'] = array(
+                'text' => _t(__CLASS__.'.ARCHIVEDPAGESHORT', 'Archived'),
+                'title' => _t(__CLASS__.'.ARCHIVEDPAGEHELP', 'Item is removed from draft and live'),
+            );
+        } elseif ($record->isOnDraftOnly()) {
+            $flags['addedtodraft'] = array(
+                'text' => _t(__CLASS__.'.ADDEDTODRAFTSHORT', 'Draft'),
+                'title' => _t(__CLASS__.'.ADDEDTODRAFTHELP', "Item has not been published yet")
+            );
+        } elseif ($record->isModifiedOnDraft()) {
+            $flags['modified'] = array(
+                'text' => _t(__CLASS__.'.MODIFIEDONDRAFTSHORT', 'Modified'),
+                'title' => _t(__CLASS__.'.MODIFIEDONDRAFTHELP', 'Item has unpublished changes'),
+            );
+        }
+
+        return $flags;
     }
 }
