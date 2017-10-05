@@ -82,7 +82,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
                 $data = array('text' => $data);
             }
             $flagContent .= sprintf(
-                "<span class=\"ss-gridfield-badge badge %s\"%s>%s</span>",
+                " <span class=\"ss-gridfield-badge badge %s\"%s>%s</span>",
                 'status-' . Convert::raw2xml($class),
                 (isset($data['title'])) ? sprintf(' title="%s"', Convert::raw2xml($data['title'])) : '',
                 Convert::raw2xml($data['text'])
@@ -101,7 +101,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return [ 'data-contains-version-state' => true ];
+        return [];
     }
 
     /**
