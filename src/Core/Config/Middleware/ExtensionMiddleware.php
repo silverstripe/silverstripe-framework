@@ -6,6 +6,7 @@ use Generator;
 use InvalidArgumentException;
 use SilverStripe\Config\MergeStrategy\Priority;
 use SilverStripe\Config\Middleware\Middleware;
+use SilverStripe\Config\Middleware\MiddlewareCommon;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
@@ -14,6 +15,11 @@ use SilverStripe\ORM\DataExtension;
 class ExtensionMiddleware implements Middleware
 {
     use MiddlewareCommon;
+
+    public function __construct($disableFlag = 0)
+    {
+        $this->setDisableFlag($disableFlag);
+    }
 
     /**
      * Get config for a class
@@ -32,7 +38,7 @@ class ExtensionMiddleware implements Middleware
             return $config;
         }
 
-        foreach ($this->getExtraConfig($class, $config) as $extra) {
+        foreach ($this->getExtraConfig($class, $config, $excludeMiddleware) as $extra) {
             $config = Priority::mergeArray($extra, $config);
         }
         return $config;
@@ -43,15 +49,19 @@ class ExtensionMiddleware implements Middleware
      *
      * @param string $class
      * @param array $classConfig
+     * @param int $excludeMiddleware
      * @return Generator
      */
-    protected function getExtraConfig($class, $classConfig)
+    protected function getExtraConfig($class, $classConfig, $excludeMiddleware)
     {
-        if (empty($classConfig['extensions'])) {
+        // Note: 'extensions' config needs to come from it's own middleware call in case
+        // applied by delta middleware (e.g. Object::add_extension)
+        $extensionSourceConfig = Config::inst()->get($class, null, Config::UNINHERITED | $excludeMiddleware | $this->disableFlag);
+        if (empty($extensionSourceConfig['extensions'])) {
             return;
         }
 
-        $extensions = $classConfig['extensions'];
+        $extensions = $extensionSourceConfig['extensions'];
         foreach ($extensions as $extension) {
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             if (!class_exists($extensionClass)) {
@@ -72,7 +82,11 @@ class ExtensionMiddleware implements Middleware
                         // continue
                 }
                 // Merge config from extension
-                $extensionConfig = Config::inst()->get($extensionClassParent, null, true);
+                $extensionConfig = Config::inst()->get(
+                    $extensionClassParent,
+                    null,
+                    Config::EXCLUDE_EXTRA_SOURCES | Config::UNINHERITED
+                );
                 if ($extensionConfig) {
                     yield $extensionConfig;
                 }
