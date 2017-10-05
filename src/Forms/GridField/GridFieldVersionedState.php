@@ -1,8 +1,6 @@
 <?php
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Convert;
@@ -17,8 +15,9 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     protected $versionedLabelFields = ['Title'];
 
-    public function __construct($versionedLabelFields = null) {
-        if($versionedLabelFields) {
+    public function __construct($versionedLabelFields = null)
+    {
+        if ($versionedLabelFields) {
             $this->versionedLabelFields = $versionedLabelFields;
         }
     }
@@ -37,7 +36,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
         $model = $gridField->getModelClass();
         $isModelVersioned = $model::has_extension(Versioned::class);
 
-        if(!$isModelVersioned) {
+        if (!$isModelVersioned) {
             return;
         }
 
@@ -48,9 +47,8 @@ class GridFieldVersionedState implements GridField_ColumnProvider
 
         if (count($matchedVersionedFields) > 0) {
             $this->column = array_values($matchedVersionedFields)[0];
-        }
-        // Use first column
-        else if ($columns) {
+        } elseif ($columns) {
+            // Use first column
             $this->column = $columns[0];
         }
     }
@@ -142,11 +140,11 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      *   )
      * ```
      *
-     * @param bool $cached Whether to serve the fields from cache; false
-     * regenerate them
+     * @param DataObject $record - the record to check status for
      * @return array
      */
-    protected function getStatusFlags($record) {
+    protected function getStatusFlags($record)
+    {
         $flags = array();
 
         if ($record->isOnLiveOnly()) {
