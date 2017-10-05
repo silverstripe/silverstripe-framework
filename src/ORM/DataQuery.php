@@ -112,7 +112,7 @@ class DataQuery
      * @param string|array $fieldExpression The predicate of the condition to remove
      * (ignoring parameters). The expression will be considered a match if it's
      * contained within any other predicate.
-     * @return DataQuery Self reference
+     * @return $this
      */
     public function removeFilterOn($fieldExpression)
     {
@@ -182,9 +182,14 @@ class DataQuery
         $obj->extend('augmentDataQueryCreation', $this->query, $this);
     }
 
+    /**
+     * @param array $queriedColumns
+     * @return $this
+     */
     public function setQueriedColumns($queriedColumns)
     {
         $this->queriedColumns = $queriedColumns;
+        return $this;
     }
 
     /**
@@ -445,7 +450,7 @@ class DataQuery
     /**
      * Return the maximum value of the given field in this DataList
      *
-     * @param String $field Unquoted database column name. Will be ANSI quoted
+     * @param string $field Unquoted database column name. Will be ANSI quoted
      * automatically so must not contain double quotes.
      * @return string
      */
@@ -521,6 +526,8 @@ class DataQuery
     /**
      * Return the first row that would be returned by this full DataQuery
      * Note that this will issue a separate SELECT ... LIMIT 1 query.
+     *
+     * @return SQLSelect
      */
     public function firstRow()
     {
@@ -530,6 +537,8 @@ class DataQuery
     /**
      * Return the last row that would be returned by this full DataQuery
      * Note that this will issue a separate SELECT ... LIMIT query.
+     *
+     * @return SQLSelect
      */
     public function lastRow()
     {
@@ -631,7 +640,7 @@ class DataQuery
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
      * paramaterised queries
-     * @return DataQuery
+     * @return $this
      */
     public function where($filter)
     {
@@ -649,7 +658,7 @@ class DataQuery
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
      * paramaterised queries
-     * @return DataQuery
+     * @return $this
      */
     public function whereAny($filter)
     {
@@ -664,10 +673,10 @@ class DataQuery
      *
      * @see SQLSelect::orderby()
      *
-     * @param String $sort Column to sort on (escaped SQL statement)
-     * @param String $direction Direction ("ASC" or "DESC", escaped SQL statement)
-     * @param Boolean $clear Clear existing values
-     * @return DataQuery
+     * @param string $sort Column to sort on (escaped SQL statement)
+     * @param string $direction Direction ("ASC" or "DESC", escaped SQL statement)
+     * @param bool $clear Clear existing values
+     * @return $this
      */
     public function sort($sort = null, $direction = null, $clear = true)
     {
@@ -683,7 +692,7 @@ class DataQuery
     /**
      * Reverse order by clause
      *
-     * @return DataQuery
+     * @return $this
      */
     public function reverseSort()
     {
@@ -708,7 +717,7 @@ class DataQuery
      * Set whether this query should be distinct or not.
      *
      * @param bool $value
-     * @return DataQuery
+     * @return $this
      */
     public function distinct($value)
     {
@@ -719,9 +728,9 @@ class DataQuery
     /**
      * Add an INNER JOIN clause to this query.
      *
-     * @param String $table The unquoted table name to join to.
-     * @param String $onClause The filter for the join (escaped SQL statement)
-     * @param String $alias An optional alias name (unquoted)
+     * @param string $table The unquoted table name to join to.
+     * @param string $onClause The filter for the join (escaped SQL statement)
+     * @param string $alias An optional alias name (unquoted)
      * @param int $order A numerical index to control the order that joins are added to the query; lower order values
      * will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
@@ -1147,9 +1156,9 @@ class DataQuery
     }
 
     /**
-     * @param  String $field Select statement identifier, either the unquoted column name,
+     * @param string $field Select statement identifier, either the unquoted column name,
      * the full composite SQL statement, or the alias set through {@link SQLSelect->selectField()}.
-     * @return String The expression used to query this field via this DataQuery
+     * @return string The expression used to query this field via this DataQuery
      */
     protected function expressionForField($field)
     {
@@ -1172,8 +1181,8 @@ class DataQuery
     /**
      * Select the given field expressions.
      *
-     * @param $fieldExpression String The field to select (escaped SQL statement)
-     * @param $alias String The alias of that field (escaped SQL statement)
+     * @param string $fieldExpression String The field to select (escaped SQL statement)
+     * @param string $alias String The alias of that field (escaped SQL statement)
      */
     public function selectField($fieldExpression, $alias = null)
     {

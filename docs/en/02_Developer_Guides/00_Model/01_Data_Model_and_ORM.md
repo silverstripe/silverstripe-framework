@@ -494,11 +494,20 @@ Remove both Sam and Sig..
 `Exclude` follows the same pattern as filter, so for removing only Sam Minnée from the list:
 
 ```php
-    $players = Player::get()->exclude([
-        'FirstName' => 'Sam',
-        'Surname' => 'Minnée',
-    ]);
+	$players = Player::get()->exclude(array(
+		'FirstName' => 'Sam',
+		'Surname' => 'Minnée',
+	));
+	
+	// SELECT * FROM Player WHERE (FirstName != 'Sam' OR LastName != 'Minnée')
+```
+	
+Removing players with *either* the first name of Sam or the last name of Minnée requires multiple `->exclude` calls:
 
+```php
+	$players = Player::get()->exclude('FirstName', 'Sam')->exclude('Surname', 'Minnée');
+	
+	// SELECT * FROM Player WHERE FirstName != 'Sam' AND LastName != 'Minnée'
 ```
 
 And removing Sig and Sam with that are either age 17 or 43.
