@@ -283,7 +283,10 @@ class ChangePasswordHandler extends RequestHandler
 
         // Redirect to backurl
         $backURL = $this->getBackURL();
-        if ($backURL) {
+        if ($backURL
+            // Don't redirect back to itself
+            && $backURL !== Security::singleton()->Link('changepassword')
+        ) {
             return $this->redirect($backURL);
         }
 

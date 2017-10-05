@@ -165,23 +165,14 @@ class LostPasswordHandler extends RequestHandler
      */
     public function forgotPassword($data, $form)
     {
-        // Ensure password is given
-        if (empty($data['Email'])) {
-            $form->sessionMessage(
-                _t(
-                    'SilverStripe\\Security\\Member.ENTEREMAIL',
-                    'Please enter an email address to get a password reset link.'
-                ),
-                'bad'
-            );
-
-            return $this->redirectToLostPassword();
+        // Run a first pass validation check on the data
+        $dataValidation = $this->validateForgotPasswordData($data, $form);
+        if ($dataValidation instanceof HTTPResponse) {
+            return $dataValidation;
         }
 
-        // Find existing member
-        $field = Member::config()->get('unique_identifier_field');
         /** @var Member $member */
-        $member = Member::get()->filter([$field => $data['Email']])->first();
+        $member = $this->getMemberFromData($data);
 
         // Allow vetoing forgot password requests
         $results = $this->extend('forgotPassword', $member);
@@ -195,15 +186,45 @@ class LostPasswordHandler extends RequestHandler
             $this->sendEmail($member, $token);
         }
 
-        // Avoid information disclosure by displaying the same status,
-        // regardless wether the email address actually exists
-        $link = Controller::join_links(
-            $this->link('passwordsent'),
-            rawurlencode($data['Email']),
-            '/'
-        );
+        return $this->redirectToSuccess($data);
+    }
 
-        return $this->redirect($this->addBackURLParam($link));
+    /**
+     * Ensure that the user has provided an email address. Note that the "Email" key is specific to this
+     * implementation, but child classes can override this method to use another unique identifier field
+     * for validation.
+     *
+     * @param  array $data
+     * @param  LostPasswordForm $form
+     * @return HTTPResponse|null
+     */
+    protected function validateForgotPasswordData(array $data, LostPasswordForm $form)
+    {
+        if (empty($data['Email'])) {
+            $form->sessionMessage(
+                _t(
+                    'SilverStripe\\Security\\Member.ENTEREMAIL',
+                    'Please enter an email address to get a password reset link.'
+                ),
+                'bad'
+            );
+
+            return $this->redirectToLostPassword();
+        }
+    }
+
+    /**
+     * Load an existing Member from the provided data
+     *
+     * @param  array $data
+     * @return Member|null
+     */
+    protected function getMemberFromData(array $data)
+    {
+        if (!empty($data['Email'])) {
+            $uniqueIdentifier = Member::config()->get('unique_identifier_field');
+            return Member::get()->filter([$uniqueIdentifier => $data['Email']])->first();
+        }
     }
 
     /**
@@ -226,5 +247,22 @@ class LostPasswordHandler extends RequestHandler
             ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
             ->setTo($member->Email);
         return $email->send();
+    }
+
+    /**
+     * Avoid information disclosure by displaying the same status, regardless wether the email address actually exists
+     *
+     * @param array $data
+     * @return HTTPResponse
+     */
+    protected function redirectToSuccess(array $data)
+    {
+        $link = Controller::join_links(
+            $this->link('passwordsent'),
+            rawurlencode($data['Email']),
+            '/'
+        );
+
+        return $this->redirect($this->addBackURLParam($link));
     }
 }
