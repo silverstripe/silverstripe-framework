@@ -1024,7 +1024,8 @@ class Injector implements ContainerInterface
                 $args = $extraArgs;
             }
         }
-        return [ $name, $args ];
+        $name = trim($name);
+        return [$name, $args];
     }
 
     /**
