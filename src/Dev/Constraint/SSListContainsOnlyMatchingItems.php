@@ -7,13 +7,9 @@ use SilverStripe\Dev\SSListExporter;
 /**
  * Constraint for checking if every item in a SS_List matches a given match,
  * e.g. every Member has isActive set to true
- *
- * Class SSListContainsOnly
- * @package SilverStripe\Dev\Constraint
  */
 class SSListContainsOnlyMatchingItems extends \PHPUnit_Framework_Constraint
 {
-
     private $match = [];
     private $constraint;
 

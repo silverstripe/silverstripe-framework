@@ -7,11 +7,6 @@ use PHPUnit_Framework_ExpectationFailedException;
 /**
  * Constraint for checking if a SS_List contains only items matching the given
  * key-value pairs.  Each match must correspond to 1 distinct record.
- *
- * @todo can this be solved more elegantly using a Comparator?
- *
- * Class SSListContainsOnly
- * @package SilverStripe\Dev\Constraint
  */
 class SSListContainsOnly extends SSListContains
 {

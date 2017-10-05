@@ -9,9 +9,6 @@ use SilverStripe\View\ViewableData;
 /**
  * Constraint for checking if a SS_List contains items matching the given
  * key-value pairs.
- *
- * Class SSListContainsOnly
- * @package SilverStripe\Dev\Constraint
  */
 class SSListContains extends \PHPUnit_Framework_Constraint
 {
