@@ -255,6 +255,14 @@ class Member extends DataObject
     private static $auto_login_token_lifetime = 172800;
 
     /**
+     * Used to track whether {@link Member::changePassword} has made changed that need to be written. Used to prevent
+     * the write from calling changePassword again.
+     *
+     * @var bool
+     */
+    protected $passwordChangesToWrite = false;
+
+    /**
      * Ensure the locale is set to something sensible by default.
      */
     public function populateDefaults()
@@ -850,7 +858,7 @@ class Member extends DataObject
      */
     public function onBeforeWrite()
     {
-        if ($this->SetPassword) {
+        if ($this->SetPassword && !$this->passwordChangesToWrite) {
             $this->Password = $this->SetPassword;
         }
 
@@ -898,36 +906,11 @@ class Member extends DataObject
                 ->send();
         }
 
-        // The test on $this->ID is used for when records are initially created.
-        // Note that this only works with cleartext passwords, as we can't rehash
-        // existing passwords.
-        if ((!$this->ID && $this->Password) || $this->isChanged('Password')) {
-            //reset salt so that it gets regenerated - this will invalidate any persistent login cookies
-            // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
-            $this->Salt = '';
-            // Password was changed: encrypt the password according the settings
-            $encryption_details = Security::encrypt_password(
-                $this->Password, // this is assumed to be cleartext
-                $this->Salt,
-                ($this->PasswordEncryption) ?
-                    $this->PasswordEncryption : Security::config()->get('password_encryption_algorithm'),
-                $this
-            );
-
-            // Overwrite the Password property with the hashed value
-            $this->Password = $encryption_details['password'];
-            $this->Salt = $encryption_details['salt'];
-            $this->PasswordEncryption = $encryption_details['algorithm'];
-
-            // If we haven't manually set a password expiry
-            if (!$this->isChanged('PasswordExpiry')) {
-                // then set it for us
-                if (static::config()->get('password_expiry_days')) {
-                    $this->PasswordExpiry = date('Y-m-d', time() + 86400 * static::config()->get('password_expiry_days'));
-                } else {
-                    $this->PasswordExpiry = null;
-                }
-            }
+        // The test on $this->ID is used for when records are initially created. Note that this only works with
+        // cleartext passwords, as we can't rehash existing passwords. Checking passwordChangesToWrite prevents
+        // recursion between changePassword and this method.
+        if ((!$this->ID && $this->Password) || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
+            $this->changePassword($this->Password, false);
         }
 
         // save locale
@@ -1682,13 +1665,15 @@ class Member extends DataObject
     /**
      * Change password. This will cause rehashing according to the `PasswordEncryption` property. This method will
      * allow extensions to perform actions and augment the validation result if required before the password is written
-     * and can check it after the write also. Note that the onAfterChangePassword extension point receives a clone of
-     * the validation result which cannot be modified.
+     * and can check it after the write also.
      *
-     * @param string $password Cleartext password
+     * This method will encrypt the password prior to writing.
+     *
+     * @param string $password  Cleartext password
+     * @param bool   $write     Whether to write the member afterwards
      * @return ValidationResult
      */
-    public function changePassword($password)
+    public function changePassword($password, $write = true)
     {
         $this->Password = $password;
         $valid = $this->validate();
@@ -1697,12 +1682,55 @@ class Member extends DataObject
 
         if ($valid->isValid()) {
             $this->AutoLoginHash = null;
-            $this->write();
+
+            $this->encryptPassword();
+
+            if ($write) {
+                $this->passwordChangesToWrite = true;
+                $this->write();
+            }
         }
 
         $this->extend('onAfterChangePassword', $password, $valid);
 
         return $valid;
+    }
+
+    /**
+     * Takes a plaintext password (on the Member object) and encrypts it
+     *
+     * @return $this
+     */
+    protected function encryptPassword()
+    {
+        // reset salt so that it gets regenerated - this will invalidate any persistent login cookies
+        // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
+        $this->Salt = '';
+
+        // Password was changed: encrypt the password according the settings
+        $encryption_details = Security::encrypt_password(
+            $this->Password,
+            $this->Salt,
+            $this->PasswordEncryption ?: Security::config()->get('password_encryption_algorithm'),
+            $this
+        );
+
+        // Overwrite the Password property with the hashed value
+        $this->Password = $encryption_details['password'];
+        $this->Salt = $encryption_details['salt'];
+        $this->PasswordEncryption = $encryption_details['algorithm'];
+
+        // If we haven't manually set a password expiry
+        if (!$this->isChanged('PasswordExpiry')) {
+            // then set it for us
+            if (static::config()->get('password_expiry_days')) {
+                $this->PasswordExpiry = date('Y-m-d', time() + 86400 * static::config()->get('password_expiry_days'));
+            } else {
+                $this->PasswordExpiry = null;
+            }
+        }
+
+        return $this;
     }
 
     /**
