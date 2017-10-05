@@ -116,7 +116,7 @@ class TaskRunner extends Controller
     {
         $availableTasks = array();
 
-        $taskClasses = ClassInfo::subclassesFor('SilverStripe\\Dev\\BuildTask');
+        $taskClasses = ClassInfo::subclassesFor(BuildTask::class);
         // remove the base class
         array_shift($taskClasses);
 

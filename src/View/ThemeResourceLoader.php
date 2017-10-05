@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
@@ -95,56 +96,59 @@ class ThemeResourceLoader
     public function getPath($identifier)
     {
         $slashPos = strpos($identifier, '/');
+        $parts = explode(':', $identifier, 2);
 
         // If identifier starts with "/", it's a path from root
         if ($slashPos === 0) {
-            return substr($identifier, 1);
-        } // Otherwise if there is a "/", identifier is a vendor'ed module
-        elseif ($slashPos !== false) {
-            // Extract from <vendor>/<module>:<theme> format.
-            // <vendor> is optional, and if <theme> is omitted it defaults to the module root dir.
-            // If <theme> is included, this is the name of the directory under moduleroot/themes/
-            // which contains the theme.
-            // <module> is always the name of the install directory, not necessarily the composer name.
-            $parts = explode(':', $identifier, 2);
-
             if (count($parts) > 1) {
-                $theme = $parts[1];
-                // "module/vendor:/sub/path"
-                if ($theme[0] === '/') {
-                    $subpath = $theme;
-
-                // "module/vendor:subtheme"
-                } else {
-                    $subpath = '/themes/' . $theme;
-                }
-
-            // "module/vendor"
-            } else {
-                $subpath = '';
+                throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
+            return substr($identifier, 1);
+        }
 
-            $package = $parts[0];
-
-            // Find matching module for this package
-            $module = ModuleLoader::inst()->getManifest()->getModule($package);
-            if ($module) {
-                $modulePath = $module->getRelativePath();
-            } else {
-                // fall back to dirname
-                list(, $modulePath) = explode('/', $parts[0], 2);
-
-                // If the module is in the themes/<module>/ prefer that
-                if (is_dir(THEMES_PATH . '/' .$modulePath)) {
-                    $modulePath = THEMES_DIR . '/' . $$modulePath;
-                }
-            }
-
-            return ltrim($modulePath . $subpath, '/');
-        } // Otherwise it's a (deprecated) old-style "theme" identifier
-        else {
+        // If there is no slash / colon it's a legacy theme
+        if ($slashPos === false && count($parts) === 1) {
             return THEMES_DIR.'/'.$identifier;
         }
+
+        // Extract from <vendor>/<module>:<theme> format.
+        // <vendor> is optional, and if <theme> is omitted it defaults to the module root dir.
+        // If <theme> is included, this is the name of the directory under moduleroot/themes/
+        // which contains the theme.
+        // <module> is always the name of the install directory, not necessarily the composer name.
+
+        // Find module from first part
+        $moduleName = $parts[0];
+        $module = ModuleLoader::inst()->getManifest()->getModule($moduleName);
+        if ($module) {
+            $modulePath = $module->getRelativePath();
+        } else {
+            // If no module could be found, assume based on basename
+            // with a warning
+            if (strstr('/', $moduleName)) {
+                list(, $modulePath) = explode('/', $parts[0], 2);
+            } else {
+                $modulePath = $moduleName;
+            }
+            trigger_error("No module named {$moduleName} found. Assuming path {$modulePath}", E_USER_WARNING);
+        }
+
+        // Parse relative path for this theme within this module
+        $theme = count($parts) > 1 ? $parts[1] : '';
+        if (empty($theme)) {
+            // "module/vendor:"
+            // "module/vendor"
+            $subpath = '';
+        } elseif (strpos($theme, '/') === 0) {
+            // "module/vendor:/sub/path"
+            $subpath = rtrim($theme, '/');
+        } else {
+            // "module/vendor:subtheme"
+            $subpath = '/themes/' . $theme;
+        }
+
+        // Join module with subpath
+        return $modulePath . $subpath;
     }
 
     /**
@@ -274,6 +278,7 @@ class ThemeResourceLoader
      *
      * @param string $resource A file path relative to the root folder of a theme
      * @param array $themes An order listed of themes to search
+     * @return string
      */
     public function findThemedResource($resource, $themes)
     {

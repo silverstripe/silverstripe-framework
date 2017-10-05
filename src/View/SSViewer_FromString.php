@@ -9,9 +9,9 @@ use SilverStripe\Core\Config\Config;
  */
 class SSViewer_FromString extends SSViewer
 {
-
     /**
      * The global template caching behaviour if no instance override is specified
+     *
      * @config
      * @var bool
      */
@@ -19,6 +19,7 @@ class SSViewer_FromString extends SSViewer
 
     /**
      * The template to use
+     *
      * @var string
      */
     protected $content;
@@ -30,6 +31,10 @@ class SSViewer_FromString extends SSViewer
      */
     protected $cacheTemplate;
 
+    /**
+     * @param string $content
+     * @param TemplateParser $parser
+     */
     public function __construct($content, TemplateParser $parser = null)
     {
         if ($parser) {
@@ -39,6 +44,9 @@ class SSViewer_FromString extends SSViewer
         $this->content = $content;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function process($item, $arguments = null, $scope = null)
     {
         $hash = sha1($this->content);

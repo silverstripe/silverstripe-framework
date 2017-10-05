@@ -6,12 +6,12 @@ SilverStripe can call [Controllers](../controllers) through a command line inter
 web browser. This functionality can be used to automate tasks with cron jobs, run unit tests, or anything else that 
 needs to interface over the command line.
 
-The main entry point for any command line execution is `framework/cli-script.php`. For example, to run a database 
-rebuild from the command line, use this command:
+The main entry point for any command line execution is `cli-script.php` in the framework module.
+For example, to run a database rebuild from the command line, use this command:
 ```bash
 
     cd your-webroot/
-    php framework/cli-script.php dev/build
+    php vendor/silverstripe/framework/cli-script.php dev/build
 ```
 
 <div class="notice">
@@ -32,10 +32,10 @@ when running the command php -v, then you may not have php-cli installed so sake
 
 ### Installation
 
-`sake` can be invoked using `./framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
+`sake` can be invoked using `./vendor/silverstripe/framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
 ```
     cd your-webroot/
-    sudo ./framework/sake installsake
+    sudo ./vendor/silverstripe/framework/sake installsake
 ```
 <div class="warning">
 This currently only works on UNIX like systems, not on Windows.
@@ -139,7 +139,7 @@ Parameters can be added to the command. All parameters will be available in `$_G
 ```bash
 
     cd your-webroot/
-    php framework/cli-script.php myurl myparam=1 myotherparam=2
+    php vendor/silverstripe/framework/cli-script.php myurl myparam=1 myotherparam=2
 ```
 
 Or if you're using `sake`

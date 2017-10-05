@@ -194,7 +194,7 @@ following to your mysite/config/config.yml file:
 ```yml
 
        SilverStripe\Core\Injector\Injector:
-         SilverStripe\Assets\InterventionBackend:
+         SilverStripe\Assets\Image_Backend:
            properties:
              Quality: 90
 ```

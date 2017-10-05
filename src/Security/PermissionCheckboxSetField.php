@@ -242,7 +242,7 @@ class PermissionCheckboxSetField extends FormField
                     // If the field is readonly, add a span that will replace the disabled checkbox input
                     if ($this->readonly) {
                         $icon = ($checked) ? 'check-mark-circle' : 'cancel-circled';
-                        $record = $this->form->getRecord();
+                        $record = is_object($this->form) ? $this->form->getRecord() : false;
                         // Inherited codes are shown as a gray x
                         if ($record && $record instanceof Member &&
                             Permission::checkMember($record, 'ADMIN') && $code != 'ADMIN') {

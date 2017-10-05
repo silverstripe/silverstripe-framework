@@ -3,13 +3,13 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use ReflectionClass;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
-use ReflectionClass;
+use SilverStripe\ORM\DB;
 
 /**
  * Provides introspection information about the class tree.
@@ -20,28 +20,6 @@ use ReflectionClass;
  */
 class ClassInfo
 {
-
-    /**
-     * Wrapper for classes getter.
-     *
-     * @return array
-     */
-    public static function allClasses()
-    {
-        return ClassLoader::inst()->getManifest()->getClasses();
-    }
-
-    /**
-     * Returns true if a class or interface name exists.
-     *
-     * @param  string $class
-     * @return bool
-     */
-    public static function exists($class)
-    {
-        return class_exists($class, false) || interface_exists($class, false) || ClassLoader::inst()->getItemPath($class);
-    }
-
     /**
      * Cache for {@link hasTable()}
      *
@@ -65,12 +43,43 @@ class ClassInfo
     private static $_cache_parse = [];
 
     /**
+     * Cache for has_method_from
+     *
+     * @internal
+     * @var array
+     */
+    private static $_cache_methods = array();
+
+    /**
      * Cache for class_name
      *
      * @internal
      * @var array
      */
     private static $_cache_class_names = [];
+
+    /**
+     * Wrapper for classes getter.
+     *
+     * @return array List of all class names
+     */
+    public static function allClasses()
+    {
+        return ClassLoader::inst()->getManifest()->getClassNames();
+    }
+
+    /**
+     * Returns true if a class or interface name exists.
+     *
+     * @param string $class
+     * @return bool
+     */
+    public static function exists($class)
+    {
+        return class_exists($class, false)
+            || interface_exists($class, false)
+            || ClassLoader::inst()->getItemPath($class);
+    }
 
     /**
      * @todo Move this to SS_Database or DB
@@ -101,7 +110,7 @@ class ClassInfo
      * types that don't exist as implemented classes. By default these are excluded.
      * @return array List of subclasses
      */
-    public static function getValidSubClasses($class = 'SilverStripe\\CMS\\Model\\SiteTree', $includeUnbacked = false)
+    public static function getValidSubClasses($class = SiteTree::class, $includeUnbacked = false)
     {
         if (is_string($class) && !class_exists($class)) {
             return array();
@@ -129,29 +138,26 @@ class ClassInfo
     public static function dataClassesFor($nameOrObject)
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
-            return array();
+            return [];
         }
 
-        $result = array();
-
+        // Get all classes
         $class = self::class_name($nameOrObject);
-
         $classes = array_merge(
             self::ancestry($class),
             self::subclassesFor($class)
         );
 
-        foreach ($classes as $class) {
-            if (DataObject::getSchema()->classHasTable($class)) {
-                $result[$class] = $class;
-            }
-        }
-
-        return $result;
+        // Filter by table
+        return array_filter($classes, function ($next) {
+            return DataObject::getSchema()->classHasTable($next);
+        });
     }
 
     /**
      * @deprecated 4.0..5.0
+     * @param string $class
+     * @return string
      */
     public static function baseDataClass($class)
     {
@@ -163,19 +169,20 @@ class ClassInfo
      * Returns a list of classes that inherit from the given class.
      * The resulting array includes the base class passed
      * through the $class parameter as the first array value.
+     * Note that keys are lowercase, while the values are correct case.
      *
      * Example usage:
      * <code>
      * ClassInfo::subclassesFor('BaseClass');
      *  array(
-     *  'BaseClass' => 'BaseClass',
-     *  'ChildClass' => 'ChildClass',
-     *  'GrandChildClass' => 'GrandChildClass'
+     *  'baseclass' => 'BaseClass',
+     *  'childclass' => 'ChildClass',
+     *  'grandchildclass' => 'GrandChildClass'
      * )
      * </code>
      *
      * @param string|object $nameOrObject The classname or object
-     * @return array Names of all subclasses as an associative array.
+     * @return array List of class names with lowercase keys and correct-case values
      */
     public static function subclassesFor($nameOrObject)
     {
@@ -183,16 +190,16 @@ class ClassInfo
             return [];
         }
 
-        //normalise class case
+        // Get class names
         $className = self::class_name($nameOrObject);
-        $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
-        $result      = array($className => $className);
+        $lowerClassName = strtolower($className);
 
-        if ($descendants) {
-            return $result + ArrayLib::valuekey($descendants);
-        } else {
-            return $result;
-        }
+        // Merge with descendants
+        $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
+        return array_merge(
+            [ $lowerClassName => $className ],
+            $descendants
+        );
     }
 
     /**
@@ -211,8 +218,15 @@ class ClassInfo
 
         $key = strtolower($nameOrObject);
         if (!isset(static::$_cache_class_names[$key])) {
-            $reflection = new ReflectionClass($nameOrObject);
-            static::$_cache_class_names[$key] = $reflection->getName();
+            // Get manifest name
+            $name = ClassLoader::inst()->getManifest()->getItemName($nameOrObject);
+
+            // Use reflection for non-manifest classes
+            if (!$name) {
+                $reflection = new ReflectionClass($nameOrObject);
+                $name = $reflection->getName();
+            }
+            static::$_cache_class_names[$key] = $name;
         }
 
         return static::$_cache_class_names[$key];
@@ -224,25 +238,25 @@ class ClassInfo
      *
      * @param string|object $nameOrObject Class or object instance
      * @param bool $tablesOnly Only return classes that have a table in the db.
-     * @return array
+     * @return array List of class names with lowercase keys and correct-case values
      */
     public static function ancestry($nameOrObject, $tablesOnly = false)
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
-            return array();
+            return [];
         }
 
         $class = self::class_name($nameOrObject);
 
-        $lClass = strtolower($class);
+        $lowerClass = strtolower($class);
 
-        $cacheKey = $lClass . '_' . (string)$tablesOnly;
+        $cacheKey = $lowerClass . '_' . (string)$tablesOnly;
         $parent = $class;
         if (!isset(self::$_cache_ancestry[$cacheKey])) {
-            $ancestry = array();
+            $ancestry = [];
             do {
                 if (!$tablesOnly || DataObject::getSchema()->classHasTable($parent)) {
-                    $ancestry[$parent] = $parent;
+                    $ancestry[strtolower($parent)] = $parent;
                 }
             } while ($parent = get_parent_class($parent));
             self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
@@ -253,8 +267,8 @@ class ClassInfo
 
     /**
      * @param string $interfaceName
-     * @return array A self-keyed array of class names. Note that this is only available with Silverstripe
-     * classes and not built-in PHP classes.
+     * @return array A self-keyed array of class names with lowercase keys and correct-case values.
+     * Note that this is only available with Silverstripe classes and not built-in PHP classes.
      */
     public static function implementorsOf($interfaceName)
     {
@@ -270,28 +284,28 @@ class ClassInfo
      */
     public static function classImplements($className, $interfaceName)
     {
-        return in_array($className, self::implementorsOf($interfaceName));
+        $lowerClassName = strtolower($className);
+        $implementors = self::implementorsOf($interfaceName);
+        return isset($implementors[$lowerClassName]);
     }
 
     /**
      * Get all classes contained in a file.
-     * @uses ManifestBuilder
-     *
-     * @todo Doesn't return additional classes that only begin
-     *  with the filename, and have additional naming separated through underscores.
      *
      * @param string $filePath Path to a PHP file (absolute or relative to webroot)
-     * @return array
+     * @return array Map of lowercase class names to correct class name
      */
     public static function classes_for_file($filePath)
     {
-        $absFilePath    = Director::getAbsFile($filePath);
-        $matchedClasses = array();
-        $manifest       = ClassLoader::inst()->getManifest()->getClasses();
+        $absFilePath = Director::getAbsFile($filePath);
+        $classManifest = ClassLoader::inst()->getManifest();
+        $classes = $classManifest->getClasses();
+        $classNames = $classManifest->getClassNames();
 
-        foreach ($manifest as $class => $compareFilePath) {
-            if ($absFilePath == $compareFilePath) {
-                $matchedClasses[] = $class;
+        $matchedClasses = [];
+        foreach ($classes as $lowerClass => $compareFilePath) {
+            if (strcasecmp($absFilePath, $compareFilePath) === 0) {
+                $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
 
@@ -301,50 +315,55 @@ class ClassInfo
     /**
      * Returns all classes contained in a certain folder.
      *
-     * @todo Doesn't return additional classes that only begin
-     *  with the filename, and have additional naming separated through underscores.
-     *
      * @param string $folderPath Relative or absolute folder path
-     * @return array Array of class names
+     * @return array Map of lowercase class names to correct class name
      */
     public static function classes_for_folder($folderPath)
     {
-        $absFolderPath  = Director::getAbsFile($folderPath);
-        $matchedClasses = array();
-        $manifest       = ClassLoader::inst()->getManifest()->getClasses();
+        $absFolderPath = Director::getAbsFile($folderPath);
+        $classManifest = ClassLoader::inst()->getManifest();
+        $classes = $classManifest->getClasses();
+        $classNames = $classManifest->getClassNames();
 
-        foreach ($manifest as $class => $compareFilePath) {
+        $matchedClasses = [];
+        foreach ($classes as $lowerClass => $compareFilePath) {
             if (stripos($compareFilePath, $absFolderPath) === 0) {
-                $matchedClasses[] = $class;
+                $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
 
         return $matchedClasses;
     }
 
-    private static $method_from_cache = array();
-
+    /**
+     * Determine if the given class method is implemented at the given comparison class
+     *
+     * @param string $class Class to get methods from
+     * @param string $method Method name to lookup
+     * @param string $compclass Parent class to test if this is the implementor
+     * @return bool True if $class::$method is declared in $compclass
+     */
     public static function has_method_from($class, $method, $compclass)
     {
         $lClass = strtolower($class);
         $lMethod = strtolower($method);
         $lCompclass = strtolower($compclass);
-        if (!isset(self::$method_from_cache[$lClass])) {
-            self::$method_from_cache[$lClass] = array();
+        if (!isset(self::$_cache_methods[$lClass])) {
+            self::$_cache_methods[$lClass] = array();
         }
 
-        if (!array_key_exists($lMethod, self::$method_from_cache[$lClass])) {
-            self::$method_from_cache[$lClass][$lMethod] = false;
+        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass])) {
+            self::$_cache_methods[$lClass][$lMethod] = false;
 
             $classRef = new ReflectionClass($class);
 
             if ($classRef->hasMethod($method)) {
                 $methodRef = $classRef->getMethod($method);
-                self::$method_from_cache[$lClass][$lMethod] = $methodRef->getDeclaringClass()->getName();
+                self::$_cache_methods[$lClass][$lMethod] = $methodRef->getDeclaringClass()->getName();
             }
         }
 
-        return strtolower(self::$method_from_cache[$lClass][$lMethod]) == $lCompclass;
+        return strtolower(self::$_cache_methods[$lClass][$lMethod]) === $lCompclass;
     }
 
     /**
@@ -364,8 +383,9 @@ class ClassInfo
      */
     public static function shortName($nameOrObject)
     {
-        $reflection = new ReflectionClass($nameOrObject);
-        return $reflection->getShortName();
+        $name = static::class_name($nameOrObject);
+        $parts = explode('\\', $name);
+        return end($parts);
     }
 
     /**

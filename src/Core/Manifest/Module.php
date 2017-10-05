@@ -4,19 +4,21 @@ namespace SilverStripe\Core\Manifest;
 
 use Exception;
 use Serializable;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 class Module implements Serializable
 {
+    const TRIM_CHARS = '/\\';
+
     /**
-     * Directory
+     * Full directory path to this module with no trailing slash
      *
      * @var string
      */
     protected $path = null;
 
     /**
-     * Base folder of application
+     * Base folder of application with no trailing slash
      *
      * @var string
      */
@@ -29,10 +31,23 @@ class Module implements Serializable
      */
     protected $composerData = null;
 
+    /**
+     * Loaded resources for this module
+     *
+     * @var ModuleResource[]
+     */
+    protected $resources = [];
+
+    /**
+     * Construct a module
+     *
+     * @param string $path Absolute filesystem path to this module
+     * @param string $base base url for the application this module is installed in
+     */
     public function __construct($path, $base)
     {
-        $this->path = rtrim($path, '/\\');
-        $this->basePath = rtrim($base, '/\\');
+        $this->path = rtrim($path, self::TRIM_CHARS);
+        $this->basePath = rtrim($base, self::TRIM_CHARS);
         $this->loadComposer();
     }
 
@@ -60,6 +75,19 @@ class Module implements Serializable
             return $this->composerData['name'];
         }
         return null;
+    }
+
+    /**
+     * Get list of folders that need to be made available
+     *
+     * @return array
+     */
+    public function getExposedFolders()
+    {
+        if (isset($this->composerData['extra']['expose'])) {
+            return $this->composerData['extra']['expose'];
+        }
+        return [];
     }
 
     /**
@@ -94,7 +122,7 @@ class Module implements Serializable
     /**
      * Get base path for this module
      *
-     * @return string
+     * @return string Path with no trailing slash E.g. /var/www/module
      */
     public function getPath()
     {
@@ -105,11 +133,11 @@ class Module implements Serializable
      * Get path relative to base dir.
      * If module path is base this will be empty string
      *
-     * @return string
+     * @return string Path with trimmed slashes. E.g. vendor/silverstripe/module.
      */
     public function getRelativePath()
     {
-        return ltrim(substr($this->path, strlen($this->basePath)), '/\\');
+        return trim(substr($this->path, strlen($this->basePath)), self::TRIM_CHARS);
     }
 
     public function serialize()
@@ -120,6 +148,7 @@ class Module implements Serializable
     public function unserialize($serialized)
     {
         list($this->path, $this->basePath, $this->composerData) = json_decode($serialized, true);
+        $this->resources = [];
     }
 
     /**
@@ -152,63 +181,69 @@ class Module implements Serializable
     }
 
     /**
-     * Gets path to physical file resource relative to base directory.
-     * Directories included
+     * Get resource for this module
      *
-     * This method makes no distinction between public / local resources,
-     * which may change in the near future.
-     *
-     * @internal Experimental API and may change
-     * @param string $path File or directory path relative to module directory
-     * @return string Path relative to base directory
+     * @param string $path
+     * @return ModuleResource
+     */
+    public function getResource($path)
+    {
+        $path = trim($path, self::TRIM_CHARS);
+        if (isset($this->resources[$path])) {
+            return $this->resources[$path];
+        }
+        return $this->resources[$path] = new ModuleResource($this, $path);
+    }
+
+    /**
+     * @deprecated 4.0...5.0 Use getResource($path)->getRelativePath() instead
+     * @param string $path
+     * @return string
      */
     public function getRelativeResourcePath($path)
     {
-        $base = trim($this->getRelativePath(), '/\\');
-        $path = trim($path, '/\\');
-        return trim("{$base}/{$path}", '/\\');
+        Deprecation::notice('5.0', 'Use getResource($path)->getRelativePath() instead');
+        return $this
+            ->getResource($path)
+            ->getRelativePath();
     }
 
     /**
-     * Gets path to physical file resource relative to base directory.
-     * Directories included
-     *
-     * This method makes no distinction between public / local resources,
-     * which may change in the near future.
-     *
-     * @internal Experimental API and may change
-     * @param string $path File or directory path relative to module directory
-     * @return string Path relative to base directory
+     * @deprecated 4.0...5.0 Use ->getResource($path)->getPath() instead
+     * @param string $path
+     * @return string
      */
     public function getResourcePath($path)
     {
-        return $this->basePath . '/' . $this->getRelativeResourcePath($path);
+        Deprecation::notice('5.0', 'Use getResource($path)->getPath() instead');
+        return $this
+            ->getResource($path)
+            ->getPath();
     }
 
     /**
-     * Gets the URL for a given resource.
-     * Relies on the ModuleURLGenerator Injector service to do the heavy lifting
-     *
-     * @internal Experimental API and may change
-     * @param string $path File or directory path relative to module directory
-     * @return string URL, either domain-relative (starting with /) or absolute
+     * @deprecated 4.0...5.0 Use ->getResource($path)->getURL() instead
+     * @param string $path
+     * @return string
      */
     public function getResourceURL($path)
     {
-        return Injector::inst()
-            ->get(ResourceURLGenerator::class)
-            ->urlForResource($this->getRelativeResourcePath($path));
+        Deprecation::notice('5.0', 'Use getResource($path)->getURL() instead');
+        return $this
+            ->getResource($path)
+            ->getURL();
     }
 
     /**
-     * Check if this module has a given resource
-     *
-     * @internal Experimental API and may change
+     * @deprecated 4.0...5.0 Use ->getResource($path)->exists() instead
      * @param string $path
-     * @return bool
+     * @return string
      */
     public function hasResource($path)
     {
-        return file_exists($this->getResourcePath($path));
+        Deprecation::notice('5.0', 'Use getResource($path)->exists() instead');
+        return $this
+            ->getResource($path)
+            ->exists();
     }
 }

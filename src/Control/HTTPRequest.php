@@ -349,12 +349,14 @@ class HTTPRequest implements ArrayAccess
     /**
      * Add a HTTP header to the response, replacing any header of the same name.
      *
-     * @param string $header Example: "Content-Type"
+     * @param string $header Example: "content-type"
      * @param string $value Example: "text/xml"
      */
     public function addHeader($header, $value)
     {
+        $header = strtolower($header);
         $this->headers[$header] = $value;
+        return $this;
     }
 
     /**
@@ -373,6 +375,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getHeader($header)
     {
+        $header = strtolower($header);
         return (isset($this->headers[$header])) ? $this->headers[$header] : null;
     }
 
@@ -385,9 +388,8 @@ class HTTPRequest implements ArrayAccess
      */
     public function removeHeader($header)
     {
-        if (isset($this->headers[$header])) {
-            unset($this->headers[$header]);
-        }
+        $header = strtolower($header);
+        unset($this->headers[$header]);
         return $this;
     }
 
@@ -428,7 +430,7 @@ class HTTPRequest implements ArrayAccess
     {
         return (
             $this->requestVar('ajax') ||
-            $this->getHeader('X-Requested-With') === "XMLHttpRequest"
+            $this->getHeader('x-requested-with') === "XMLHttpRequest"
         );
     }
 
@@ -483,10 +485,10 @@ class HTTPRequest implements ArrayAccess
             $mimeType = HTTP::get_mime_type($fileName);
         }
         $response = new HTTPResponse($fileData);
-        $response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+        $response->addHeader("content-type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
         // Note a IE-only fix that inspects this header in HTTP::add_cache_headers().
-        $response->addHeader("Content-Disposition", "attachment; filename=\"" . addslashes($fileName) . "\"");
-        $response->addHeader("Content-Length", strlen($fileData));
+        $response->addHeader("content-disposition", "attachment; filename=\"" . addslashes($fileName) . "\"");
+        $response->addHeader("content-length", strlen($fileData));
 
         return $response;
     }
@@ -773,6 +775,14 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
+     * @return string Return the host from the request
+     */
+    public function getHost()
+    {
+        return $this->getHeader('host');
+    }
+
+    /**
      * Returns the client IP address which originated this request.
      *
      * @return string
@@ -809,7 +819,7 @@ class HTTPRequest implements ArrayAccess
     public function getAcceptMimetypes($includeQuality = false)
     {
         $mimetypes = array();
-        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('Accept'));
+        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('accept'));
         foreach ($mimetypesWithQuality as $mimetypeWithQuality) {
             $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
         }

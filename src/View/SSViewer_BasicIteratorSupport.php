@@ -8,7 +8,6 @@ namespace SilverStripe\View;
  */
 class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
 {
-
     /**
      * @var int
      */
@@ -19,9 +18,12 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     protected $iteratorTotalItems;
 
+    /**
+     * @return array
+     */
     public static function get_template_iterator_variables()
     {
-        return array(
+        return [
             'First',
             'Last',
             'FirstLast',
@@ -35,7 +37,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
             'TotalItems',
             'Modulus',
             'MultipleOf',
-        );
+        ];
     }
 
     /**
@@ -183,6 +185,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     /**
      * Returns the modulus of the numerical position of the item in the data set.
      * The count starts from $startIndex, which defaults to 1.
+     *
      * @param int $mod The number to perform Mod operation to.
      * @param int $startIndex Number to start count from.
      * @return int
@@ -196,6 +199,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * Returns true or false depending on if the pos of the iterator is a multiple of a specific number.
      * So, <% if MultipleOf(3) %> would return true on indexes: 3,6,9,12,15, etc.
      * The count starts from $offset, which defaults to 1.
+     *
      * @param int $factor The multiple of which to return
      * @param int $offset Number to start count from.
      * @return bool

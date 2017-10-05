@@ -9,6 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * Tests for the {@link SilverStripe\ORM\PaginatedList} class.
@@ -92,15 +93,13 @@ class PaginatedListTest extends SapphireTest
     public function testGetIterator()
     {
         $list = new PaginatedList(
-            new ArrayList(
-                array(
+            new ArrayList([
                 new DataObject(array('Num' => 1)),
                 new DataObject(array('Num' => 2)),
                 new DataObject(array('Num' => 3)),
                 new DataObject(array('Num' => 4)),
                 new DataObject(array('Num' => 5)),
-                )
-            )
+            ])
         );
         $list->setPageLength(2);
 
@@ -128,13 +127,13 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(0);
         $list->setCurrentPage(1);
         $this->assertDOSEquals(
-            array(
+            [
                 array('Num' => 1),
                 array('Num' => 2),
                 array('Num' => 3),
                 array('Num' => 4),
-                array('Num' => 5)
-            ),
+                array('Num' => 5),
+            ],
             $list->getIterator()
         );
 
@@ -156,9 +155,9 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
         $list->setTotalItems(50);
 
-        $this->assertEquals(5, count($list->Pages()));
-        $this->assertEquals(3, count($list->Pages(3)));
-        $this->assertEquals(5, count($list->Pages(15)));
+        $this->assertCount(5, $list->Pages());
+        $this->assertCount(3, $list->Pages(3));
+        $this->assertCount(5, $list->Pages(15));
 
         $list->setCurrentPage(3);
 
@@ -221,10 +220,10 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList($list);
 
         $list->setCurrentPage(3);
-        $this->assertEquals(10, count($list->getIterator()->getInnerIterator()));
+        $this->assertCount(10, $list->getIterator()->getInnerIterator());
 
         $list->setLimitItems(false);
-        $this->assertEquals(50, count($list->getIterator()->getInnerIterator()));
+        $this->assertCount(50, $list->getIterator()->getInnerIterator());
     }
 
     public function testCurrentPage()
@@ -330,6 +329,27 @@ class PaginatedListTest extends SapphireTest
         $this->assertContains('start=0', $list->FirstLink());
     }
 
+    public function testFirstLinkContainsCurrentGetParameters()
+    {
+        $request = new HTTPRequest(
+            'GET',
+            'http://example.com/my-cool-page',
+            ['awesomeness' => 'nextLevel', 'start' => 20]
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        // check the query string has correct parameters
+        $queryString = parse_url($list->FirstLink(), PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+
+        $this->assertArrayHasKey('awesomeness', $queryParams);
+        $this->assertequals('nextLevel', $queryParams['awesomeness']);
+        $this->assertArrayHasKey('start', $queryParams);
+        $this->assertequals(0, $queryParams['start']);
+    }
+
     public function testLastLink()
     {
         $list = new PaginatedList(new ArrayList());
@@ -340,6 +360,27 @@ class PaginatedListTest extends SapphireTest
         // Disable paging
         $list->setPageLength(0);
         $this->assertContains('start=0', $list->LastLink());
+    }
+
+    public function testLastLinkContainsCurrentGetParameters()
+    {
+        $request = new HTTPRequest(
+            'GET',
+            'http://example.com/my-cool-page',
+            ['awesomeness' => 'nextLevel']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        // check the query string has correct parameters
+        $queryString = parse_url($list->LastLink(), PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+
+        $this->assertArrayHasKey('awesomeness', $queryParams);
+        $this->assertequals('nextLevel', $queryParams['awesomeness']);
+        $this->assertArrayHasKey('start', $queryParams);
+        $this->assertequals(40, $queryParams['start']);
     }
 
     public function testNextLink()
@@ -363,6 +404,27 @@ class PaginatedListTest extends SapphireTest
         $this->assertNull($list->NextLink());
     }
 
+    public function testNextLinkContainsCurrentGetParameters()
+    {
+        $request = new HTTPRequest(
+            'GET',
+            'http://example.com/my-cool-page',
+            ['awesomeness' => 'nextLevel']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        // check the query string has correct parameters
+        $queryString = parse_url($list->NextLink(), PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+
+        $this->assertArrayHasKey('awesomeness', $queryParams);
+        $this->assertequals('nextLevel', $queryParams['awesomeness']);
+        $this->assertArrayHasKey('start', $queryParams);
+        $this->assertequals(10, $queryParams['start']);
+    }
+
     public function testPrevLink()
     {
         $list = new PaginatedList(new ArrayList());
@@ -379,5 +441,26 @@ class PaginatedListTest extends SapphireTest
         // Disable paging
         $list->setPageLength(0);
         $this->assertNull($list->PrevLink());
+    }
+
+    public function testPrevLinkContainsCurrentGetParameters()
+    {
+        $request = new HTTPRequest(
+            'GET',
+            'http://example.com/my-cool-page',
+            ['awesomeness' => 'nextLevel', 'start' => '30']
+        );
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setTotalItems(50);
+        $list->setPageLength(10);
+
+        // check the query string has correct parameters
+        $queryString = parse_url($list->PrevLink(), PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+
+        $this->assertArrayHasKey('awesomeness', $queryParams);
+        $this->assertequals('nextLevel', $queryParams['awesomeness']);
+        $this->assertArrayHasKey('start', $queryParams);
+        $this->assertequals(20, $queryParams['start']);
     }
 }

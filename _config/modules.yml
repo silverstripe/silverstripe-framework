@@ -21,7 +21,8 @@ SilverStripe\Core\Manifest\ModuleManifest:
     - $project
 ---
 Name: modules-framework
-After: modules-other
+After:
+  - '#modules-other'
 ---
 SilverStripe\Core\Manifest\ModuleManifest:
   module_priority:

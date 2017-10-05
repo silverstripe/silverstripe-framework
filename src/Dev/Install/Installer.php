@@ -34,7 +34,7 @@ class Installer extends InstallRequirements
             <meta charset="utf-8"/>
             <title>Installing SilverStripe...</title>
             <link rel="stylesheet" type="text/css"
-                  href="framework/src/Dev/Install/client/styles/install.css"/>
+                  href="resources/silverstripe/framework/src/Dev/Install/client/styles/install.css"/>
             <script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
         </head>
         <body>
@@ -150,7 +150,7 @@ PHP
             $adminMember = DefaultAdminService::singleton()
                 ->findOrCreateAdmin(
                     $username,
-                    _t(DefaultAdminService::class . '.DefaultAdminFirstname', 'Default Admin')
+                    _t('SilverStripe\\Security\\DefaultAdminService.DefaultAdminFirstname', 'Default Admin')
                 );
             $adminMember->Email = $username;
             $adminMember->Password = $password;
@@ -417,7 +417,7 @@ YML
 </Files>
 
 # Deny access to YAML configuration files which might include sensitive information
-<Files *.yml>
+<Files ~ "\.ya?ml$">
     Order allow,deny
     Deny from all
 </Files>
@@ -431,6 +431,7 @@ ErrorDocument 500 /assets/error-500.html
     # Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
     <IfModule mod_dir.c>
         DirectoryIndex disabled
+        DirectorySlash Off
     </IfModule>
 
     SetEnv HTTP_MOD_REWRITE On
@@ -438,16 +439,23 @@ ErrorDocument 500 /assets/error-500.html
     $baseClause
     $cgiClause
 
-    # Deny access to potentially sensitive files and folders
+    # Deny access to vendor, unless you're requesting main.php
+    # Not restricting to the start of the path to support RewriteBase
+    RewriteCond %{REQUEST_URI} !^/vendor/silverstripe/framework/main\.php
     RewriteRule ^vendor(/|$) - [F,L,NC]
+
+    # Deny access to potentially sensitive files and folders
+    RewriteRule ^\.env - [F,L,NC]
     RewriteRule silverstripe-cache(/|$) - [F,L,NC]
     RewriteRule composer\.(json|lock) - [F,L,NC]
+    RewriteRule (error|silverstripe|debug)\.log - [F,L,NC]
 
     # Process through SilverStripe if no file with the requested name exists.
     # Pass through the original path as a query parameter, and retain the existing parameters.
+    # Try finding framework in the vendor folder first
     RewriteCond %{REQUEST_URI} ^(.*)$
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule .* framework/main.php?url=%1 [QSA]
+    RewriteRule .* vendor/silverstripe/framework/main.php?url=%1 [QSA]
 </IfModule>
 TEXT;
 
@@ -502,8 +510,9 @@ TEXT;
                     <match url="^(.*)$" />
                     <conditions>
                         <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="vendor/silverstripe/framework/main.php" matchType="IsFile" />
                     </conditions>
-                    <action type="Rewrite" url="framework/main.php?url={R:1}" appendQueryString="true" />
+                    <action type="Rewrite" url="vendor/silverstripe/framework/main.php?url={R:1}" appendQueryString="true" />
                 </rule>
             </rules>
         </rewrite>

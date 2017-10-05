@@ -247,7 +247,7 @@ trait Extensible
 
         // Build filtered extension list
         $found = false;
-        $config = Config::inst()->get($class, 'extensions', true) ?: [];
+        $config = Config::inst()->get($class, 'extensions', Config::EXCLUDE_EXTRA_SOURCES | Config::UNINHERITED) ?: [];
         foreach ($config as $key => $candidate) {
             // extensions with parameters will be stored in config as ExtensionName("Param").
             if (strcasecmp($candidate, $extension) === 0 ||
@@ -332,7 +332,7 @@ trait Extensible
         $sources = null;
 
         // Get a list of extensions
-        $extensions = Config::inst()->get($class, 'extensions', true);
+        $extensions = Config::inst()->get($class, 'extensions', Config::EXCLUDE_EXTRA_SOURCES | Config::UNINHERITED);
 
         if (!$extensions) {
             return null;
@@ -547,7 +547,7 @@ trait Extensible
             if (in_array($class, self::$unextendable_classes)) {
                 continue;
             }
-            $extensions = Config::inst()->get($class, 'extensions', true);
+            $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
 
             if ($extensions) {
                 foreach ($extensions as $extension) {

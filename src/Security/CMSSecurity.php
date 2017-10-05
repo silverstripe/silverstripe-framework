@@ -3,11 +3,10 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\ORM\FieldType\DBField;
@@ -22,7 +21,6 @@ class CMSSecurity extends Security
 {
     private static $allowed_actions = array(
         'login',
-        'LoginForm',
         'success'
     );
 
@@ -43,8 +41,8 @@ class CMSSecurity extends Security
 
         // Core styles / vendor scripts
         $admin = ModuleLoader::getModule('silverstripe/admin');
-        Requirements::javascript($admin->getResourcePath('client/dist/js/vendor.js'));
-        Requirements::css($admin->getResourcePath('client/dist/styles/bundle.css'));
+        Requirements::javascript($admin->getRelativeResourcePath('client/dist/js/vendor.js'));
+        Requirements::css($admin->getRelativeResourcePath('client/dist/styles/bundle.css'));
     }
 
     public function login($request = null, $service = Authenticator::CMS_LOGIN)

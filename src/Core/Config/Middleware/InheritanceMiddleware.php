@@ -4,11 +4,17 @@ namespace SilverStripe\Core\Config\Middleware;
 
 use SilverStripe\Config\MergeStrategy\Priority;
 use SilverStripe\Config\Middleware\Middleware;
-use SilverStripe\Core\ClassInfo;
+use SilverStripe\Config\Middleware\MiddlewareCommon;
+use SilverStripe\Core\Config\Config;
 
 class InheritanceMiddleware implements Middleware
 {
     use MiddlewareCommon;
+
+    public function __construct($disableFlag = 0)
+    {
+        $this->setDisableFlag($disableFlag);
+    }
 
     /**
      * Get config for a class
@@ -20,17 +26,20 @@ class InheritanceMiddleware implements Middleware
      */
     public function getClassConfig($class, $excludeMiddleware, $next)
     {
-        // Check if enabled
+        // Skip if disabled
+        $config = $next($class, $excludeMiddleware);
         if (!$this->enabled($excludeMiddleware)) {
-            return $next($class, $excludeMiddleware);
+            return $config;
         }
 
-        // Merge hierarchy
-        $config = [];
-        foreach (ClassInfo::ancestry($class) as $nextClass) {
-            $nextConfig = $next($nextClass, $excludeMiddleware);
-            $config = Priority::mergeArray($nextConfig, $config);
+        // Skip if no parent class
+        $parent = get_parent_class($class);
+        if (!$parent) {
+            return $config;
         }
-        return $config;
+
+        // Merge with parent class
+        $parentConfig = Config::inst()->get($parent, null, $excludeMiddleware);
+        return Priority::mergeArray($config, $parentConfig);
     }
 }

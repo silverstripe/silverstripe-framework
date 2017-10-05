@@ -29,6 +29,8 @@ As you've added new files to your SilverStripe installation, make sure you clear
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
 </div>
 
+### Configuring themes
+
 After installing the files through either method, update the current theme in SilverStripe. This can be done by 
 either altering the `SSViewer.themes` setting in a [config.yml](../configuration) or by changing the current theme in 
 the Site Configuration panel (http://yoursite.com/admin/settings)
@@ -41,6 +43,31 @@ SilverStripe\View\SSViewer:
     - theme_name
     - '$default'
 ```
+
+There are a variety of ways in which you can specify a theme. The below describe the three
+main styles of syntax:
+
+1. You can use the following to point to a theme or path within your root project:
+
+  - `themename` -> A simple name with no slash represents a theme in the `/themes` directory
+  - `/some/path/to/theme` - Any `/` prefixed string will be treated as a direct filesystem path to a theme root.
+  - `$themeset` - Any `$` prefixed name will refer to a set of themes. By default only `$default` set is configured,
+  which represents all module roots with a `templates` directory.
+
+2. Using the `:` syntax you can also specify themes relative to the given module:
+
+  - `myvendor/mymodule:sometheme` - This will specify a standard theme within the given module.
+  This will lookup the theme in the `themes` subfolder within this module. E.g.
+  `/vendor/myvendor/mymodule/themes/sometheme`.
+  Note: This syntax also works without the vendor prefix (`mymodule:sometheme`)
+  - `myvendor/mymodule:/some/path` - Rather than looking in the themes subdir, look in the
+  exact path within the root of the given module.
+
+3. You can also specify a module root folder directly. 
+
+  - `myvendor/mymodule` - Points to the base folder of the given module.
+  - `mymodule:` - Also points to the base folder of the given module, but without a vendor.
+  The `:` is necessary to distinguish this from a non-module theme.
 
 ### Manually
 

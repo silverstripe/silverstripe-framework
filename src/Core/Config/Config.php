@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Config;
 
 use InvalidArgumentException;
 use SilverStripe\Config\Collections\ConfigCollectionInterface;
+use SilverStripe\Config\Collections\DeltaConfigCollection;
 use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
 
 abstract class Config
@@ -24,6 +25,13 @@ abstract class Config
      * sources (such as extension)
      */
     const EXCLUDE_EXTRA_SOURCES = 4;
+
+    /**
+     * Disable all modifications to the config
+     *
+     * @const
+     */
+    const NO_DELTAS = 8;
 
     /**
      * Get the current active Config instance.

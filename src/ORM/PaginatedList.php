@@ -436,7 +436,12 @@ class PaginatedList extends ListDecorator
      */
     public function FirstLink()
     {
-        return HTTP::setGetVar($this->getPaginationGetVar(), 0);
+        return HTTP::setGetVar(
+            $this->getPaginationGetVar(),
+            0,
+            $this->request ? $this->request->getURL(true) : null,
+            '&'
+        );
     }
 
     /**
@@ -446,7 +451,12 @@ class PaginatedList extends ListDecorator
      */
     public function LastLink()
     {
-        return HTTP::setGetVar($this->getPaginationGetVar(), ($this->TotalPages() - 1) * $this->getPageLength());
+        return HTTP::setGetVar(
+            $this->getPaginationGetVar(),
+            ($this->TotalPages() - 1) * $this->getPageLength(),
+            $this->request ? $this->request->getURL(true) : null,
+            '&'
+        );
     }
 
     /**
@@ -458,7 +468,12 @@ class PaginatedList extends ListDecorator
     public function NextLink()
     {
         if ($this->NotLastPage()) {
-            return HTTP::setGetVar($this->getPaginationGetVar(), $this->getPageStart() + $this->getPageLength());
+            return HTTP::setGetVar(
+                $this->getPaginationGetVar(),
+                $this->getPageStart() + $this->getPageLength(),
+                $this->request ? $this->request->getURL(true) : null,
+                '&'
+            );
         }
     }
 
@@ -471,7 +486,12 @@ class PaginatedList extends ListDecorator
     public function PrevLink()
     {
         if ($this->NotFirstPage()) {
-            return HTTP::setGetVar($this->getPaginationGetVar(), $this->getPageStart() - $this->getPageLength());
+            return HTTP::setGetVar(
+                $this->getPaginationGetVar(),
+                $this->getPageStart() - $this->getPageLength(),
+                $this->request ? $this->request->getURL(true) : null,
+                '&'
+            );
         }
     }
 

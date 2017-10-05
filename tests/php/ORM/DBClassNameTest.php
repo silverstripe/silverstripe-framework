@@ -28,21 +28,27 @@ class DBClassNameTest extends SapphireTest
     {
         // Object 1 fields
         $object = new DBClassNameTest\TestObject();
+        /** @var DBClassName $defaultClass */
         $defaultClass = $object->dbObject('DefaultClass');
+        /** @var DBClassName $anyClass */
         $anyClass = $object->dbObject('AnyClass');
+        /** @var DBClassName $childClass */
         $childClass = $object->dbObject('ChildClass');
+        /** @var DBClassName $leafClass */
         $leafClass = $object->dbObject('LeafClass');
 
         // Object 2 fields
         $object2 = new DBClassNameTest\ObjectSubClass();
+        /** @var DBClassName $midDefault */
         $midDefault = $object2->dbObject('MidClassDefault');
+        /** @var DBClassName $midClass */
         $midClass = $object2->dbObject('MidClass');
 
         // Default fields always default to children of base class (even if put in a subclass)
         $mainSubclasses = array (
-            DBClassNameTest\TestObject::class => DBClassNameTest\TestObject::class,
-            DBClassNameTest\ObjectSubClass::class => DBClassNameTest\ObjectSubClass::class,
-            DBClassNameTest\ObjectSubSubClass::class => DBClassNameTest\ObjectSubSubClass::class,
+            DBClassNameTest\TestObject::class,
+            DBClassNameTest\ObjectSubClass::class,
+            DBClassNameTest\ObjectSubSubClass::class,
         );
         $this->assertEquals($mainSubclasses, $defaultClass->getEnumObsolete());
         $this->assertEquals($mainSubclasses, $midDefault->getEnumObsolete());
@@ -56,15 +62,15 @@ class DBClassNameTest extends SapphireTest
 
         // Classes bound to the middle of a tree
         $midSubClasses = $mainSubclasses = array (
-            DBClassNameTest\ObjectSubClass::class => DBClassNameTest\ObjectSubClass::class,
-            DBClassNameTest\ObjectSubSubClass::class => DBClassNameTest\ObjectSubSubClass::class,
+            DBClassNameTest\ObjectSubClass::class,
+            DBClassNameTest\ObjectSubSubClass::class,
         );
         $this->assertEquals($midSubClasses, $childClass->getEnumObsolete());
         $this->assertEquals($midSubClasses, $midClass->getEnumObsolete());
 
         // Leaf clasess contain only exactly one node
         $this->assertEquals(
-            array(DBClassNameTest\ObjectSubSubClass::class => DBClassNameTest\ObjectSubSubClass::class,),
+            [ DBClassNameTest\ObjectSubSubClass::class ],
             $leafClass->getEnumObsolete()
         );
     }

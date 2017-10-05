@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Config;
 
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
+use SilverStripe\Config\Collections\DeltaConfigCollection;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Config\Transformer\PrivateStaticTransformer;
 use SilverStripe\Config\Transformer\YamlTransformer;
@@ -46,6 +47,11 @@ class CoreConfigFactory
     public function createRoot()
     {
         $instance = new CachedConfigCollection();
+
+        // Override nested config to use delta collection
+        $instance->setNestFactory(function ($collection) {
+            return DeltaConfigCollection::createFromCollection($collection, Config::NO_DELTAS);
+        });
 
         // Create config cache
         if ($this->cacheFactory) {
@@ -112,8 +118,9 @@ class CoreConfigFactory
     public function buildStaticTransformer()
     {
         return new PrivateStaticTransformer(function () {
-            $classes = ClassLoader::inst()->getManifest()->getClasses();
-            return array_keys($classes);
+            return ClassLoader::inst()
+                ->getManifest()
+                ->getClassNames();
         });
     }
 

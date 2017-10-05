@@ -16,63 +16,230 @@ use SilverStripe\Assets\FileFinder;
 class ManifestFileFinder extends FileFinder
 {
 
-    const CONFIG_FILE  = '_config.php';
-    const CONFIG_DIR  = '_config';
+    const CONFIG_FILE = '_config.php';
+    const CONFIG_DIR = '_config';
     const EXCLUDE_FILE = '_manifest_exclude';
-    const LANG_DIR     = 'lang';
-    const TESTS_DIR    = 'tests';
+    const LANG_DIR = 'lang';
+    const TESTS_DIR = 'tests';
+    const VENDOR_DIR = 'vendor';
+    const RESOURCES_DIR = 'resources';
 
     protected static $default_options = array(
         'include_themes' => false,
-        'ignore_tests'   => true,
-        'min_depth'      => 1,
-        'ignore_dirs'    => array('node_modules')
+        'ignore_tests' => true,
+        'min_depth' => 1,
+        'ignore_dirs' => ['node_modules']
     );
 
     public function acceptDir($basename, $pathname, $depth)
     {
-        // Skip over the assets directory in the site root.
-        if ($depth == 1 && $basename == ASSETS_DIR) {
+        // Skip if ignored
+        if ($this->isInsideIgnored($basename, $pathname, $depth)) {
             return false;
         }
 
-        // Skip over any lang directories in the top level of the module.
-        if ($depth == 2 && $basename == self::LANG_DIR) {
-            return false;
+        // Keep searching inside vendor
+        $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
+        if ($inVendor) {
+            // Keep searching if we could have a subdir module
+            if ($depth < 3) {
+                return true;
+            }
+
+            // Stop searching if we are in a non-module library
+            $libraryPath = $this->upLevels($pathname, $depth - 3);
+            $libraryBase = basename($libraryPath);
+            if (!$this->isDirectoryModule($libraryBase, $libraryPath, 3)) {
+                return false;
+            }
         }
 
-        // Skip over the vendor directories
-        if (($depth == 1 || $depth == 2) && $basename == 'vendor') {
-            return false;
+        // Include themes
+        if ($this->getOption('include_themes') && $this->isInsideThemes($basename, $pathname, $depth)) {
+            return true;
         }
 
-        // If we're not in testing mode, then skip over any tests directories.
-        if ($this->getOption('ignore_tests') && $basename == self::TESTS_DIR) {
-            return false;
-        }
-
-        // Ignore any directories which contain a _manifest_exclude file.
-        if (file_exists($pathname . '/' . self::EXCLUDE_FILE)) {
-            return false;
-        }
-
-        // Only include top level module directories which have a configuration
-        // _config.php file. However, if we're in themes mode then include
-        // the themes dir without a config file.
-        $lackingConfig = (
-            $depth == 1
-            && !($this->getOption('include_themes') && $basename == THEMES_DIR)
-            && !file_exists($pathname . '/' . self::CONFIG_FILE)
-            && !file_exists($pathname . '/' . self::CONFIG_DIR)
-            && $basename !== self::CONFIG_DIR // include a root config dir
-            && !file_exists("$pathname/../" . self::CONFIG_DIR) // include all paths if a root config dir exists
-            && !file_exists("$pathname/../" . self::CONFIG_FILE)// include all paths if a root config file exists
-        );
-
-        if ($lackingConfig) {
+        // Skip if not in module
+        if (!$this->isInsideModule($basename, $pathname, $depth)) {
             return false;
         }
 
         return parent::acceptDir($basename, $pathname, $depth);
+    }
+
+    /**
+     * Check if the given dir is, or is inside the vendor folder
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param int $depth
+     * @return bool
+     */
+    public function isInsideVendor($basename, $pathname, $depth)
+    {
+        $base = basename($this->upLevels($pathname, $depth - 1));
+        return $base === self::VENDOR_DIR;
+    }
+
+    /**
+     * Check if the given dir is, or is inside the themes folder
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param int $depth
+     * @return bool
+     */
+    public function isInsideThemes($basename, $pathname, $depth)
+    {
+        $base = basename($this->upLevels($pathname, $depth - 1));
+        return $base === THEMES_DIR;
+    }
+
+    /**
+     * Check if this folder or any parent is ignored
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param int $depth
+     * @return bool
+     */
+    public function isInsideIgnored($basename, $pathname, $depth)
+    {
+        return $this->anyParents($basename, $pathname, $depth, function ($basename, $pathname, $depth) {
+            return $this->isDirectoryIgnored($basename, $pathname, $depth);
+        });
+    }
+
+    /**
+     * Check if this folder is inside any module
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param int $depth
+     * @return bool
+     */
+    public function isInsideModule($basename, $pathname, $depth)
+    {
+        return $this->anyParents($basename, $pathname, $depth, function ($basename, $pathname, $depth) {
+            return $this->isDirectoryModule($basename, $pathname, $depth);
+        });
+    }
+
+    /**
+     * Check if any parents match the given callback
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param int $depth
+     * @param callable $callback
+     * @return bool
+     */
+    protected function anyParents($basename, $pathname, $depth, $callback)
+    {
+        // Check all ignored dir up the path
+        while ($depth >= 0) {
+            $ignored = $callback($basename, $pathname, $depth);
+            if ($ignored) {
+                return true;
+            }
+            $pathname = dirname($pathname);
+            $basename = basename($pathname);
+            $depth--;
+        }
+        return false;
+    }
+
+    /**
+     * Check if the given dir is a module root (not a subdir)
+     *
+     * @param string $basename
+     * @param string $pathname
+     * @param string $depth
+     * @return bool
+     */
+    public function isDirectoryModule($basename, $pathname, $depth)
+    {
+        // Depth can either be 0, 1, or 3 (if and only if inside vendor)
+        $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
+        if ($depth > 0 && $depth !== ($inVendor ? 3 : 1)) {
+            return false;
+        }
+
+        // True if config file exists
+        if (file_exists($pathname . '/' . self::CONFIG_FILE)) {
+            return true;
+        }
+
+        // True if config dir exists
+        if (file_exists($pathname . '/' . self::CONFIG_DIR)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get a parent path the given levels above
+     *
+     * @param string $pathname
+     * @param int $depth Number of parents to rise
+     * @return string
+     */
+    protected function upLevels($pathname, $depth)
+    {
+        if ($depth < 0) {
+            return null;
+        }
+        while ($depth--) {
+            $pathname = dirname($pathname);
+        }
+        return $pathname;
+    }
+
+    /**
+     * Get all ignored directories
+     *
+     * @return array
+     */
+    protected function getIgnoredDirs()
+    {
+        $ignored = [self::LANG_DIR, 'node_modules'];
+        if ($this->getOption('ignore_tests')) {
+            $ignored[] = self::TESTS_DIR;
+        }
+        return $ignored;
+    }
+
+    /**
+     * Check if the given directory is ignored
+     * @param string $basename
+     * @param string $pathname
+     * @param string $depth
+     * @return bool
+     */
+    public function isDirectoryIgnored($basename, $pathname, $depth)
+    {
+        // Don't ignore root
+        if ($depth === 0) {
+            return false;
+        }
+
+        // Check if manifest-ignored is present
+        if (file_exists($pathname . '/' . self::EXCLUDE_FILE)) {
+            return true;
+        }
+
+        // Check if directory name is ignored
+        $ignored = $this->getIgnoredDirs();
+        if (in_array($basename, $ignored)) {
+            return true;
+        }
+
+        // Ignore these dirs in the root only
+        if ($depth === 1 && in_array($basename, [ASSETS_DIR, self::RESOURCES_DIR])) {
+            return true;
+        }
+
+        return false;
     }
 }

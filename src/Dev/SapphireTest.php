@@ -950,13 +950,24 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * Create a member and group with the given permission code, and log in with it.
-     * Returns the member ID.
+     * A wrapper for automatically performing callbacks as a user with a specific permission
      *
-     * @param string|array $permCode Either a permission, or list of permissions
-     * @return int Member ID
+     * @param string|array $permCode
+     * @param callable $callback
+     * @return mixed
      */
-    public function logInWithPermission($permCode = "ADMIN")
+    public function actWithPermission($permCode, $callback)
+    {
+        return Member::actAs($this->createMemberWithPermission($permCode), $callback);
+    }
+
+    /**
+     * Create Member and Group objects on demand with specific permission code
+     *
+     * @param string|array $permCode
+     * @return Member
+     */
+    protected function createMemberWithPermission($permCode)
     {
         if (is_array($permCode)) {
             $permArray = $permCode;
@@ -997,6 +1008,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
             $this->cache_generatedMembers[$permCode] = $member;
         }
+        return $member;
+    }
+
+    /**
+     * Create a member and group with the given permission code, and log in with it.
+     * Returns the member ID.
+     *
+     * @param string|array $permCode Either a permission, or list of permissions
+     * @return int Member ID
+     */
+    public function logInWithPermission($permCode = "ADMIN")
+    {
+        $member = $this->createMemberWithPermission($permCode);
         $this->logInAs($member);
         return $member->ID;
     }

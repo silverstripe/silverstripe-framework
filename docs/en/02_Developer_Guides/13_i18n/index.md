@@ -398,9 +398,12 @@ the browser: The current locale, and the default locale as a fallback.
 The `Requirements` class has a special method to determine these includes:
 Just point it to a directory instead of a file, and the class will figure out the includes.
 
+If using this on the frontend, it's also necessary to include the stand-alone i18n
+js file.
 
 ```php
-    Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
+Requirements::javascript('silverstripe/admin:client/dist/js/i18n.js');
+Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 ```
 
 ###  Translation Tables in JavaScript

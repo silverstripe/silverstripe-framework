@@ -27,8 +27,8 @@ class FilesystemCacheFactory implements CacheFactory
     public function create($service, array $params = array())
     {
         return Injector::inst()->create(FilesystemCache::class, false, [
-            (isset($args['namespace'])) ? $args['namespace'] : '',
-            (isset($args['defaultLifetime'])) ? $args['defaultLifetime'] : 0,
+            (isset($params['namespace'])) ? $params['namespace'] : '',
+            (isset($params['defaultLifetime'])) ? $params['defaultLifetime'] : 0,
             $this->directory
         ]);
     }

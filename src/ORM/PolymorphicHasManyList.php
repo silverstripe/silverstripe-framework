@@ -37,9 +37,8 @@ class PolymorphicHasManyList extends HasManyList
      * to generate the ID and Class foreign keys.
      * @param string $foreignClass Name of the class filter this relation is filtered against
      */
-    function __construct($dataClass, $foreignField, $foreignClass)
+    public function __construct($dataClass, $foreignField, $foreignClass)
     {
-
         // Set both id foreign key (as in HasManyList) and the class foreign key
         parent::__construct($dataClass, "{$foreignField}ID");
         $this->classForeignKey = "{$foreignField}Class";
@@ -120,7 +119,8 @@ class PolymorphicHasManyList extends HasManyList
         $foreignClass = $this->getForeignClass();
         $classNames = ClassInfo::subclassesFor($foreignClass);
         $classForeignKey = $this->classForeignKey;
-        if (!in_array($item->$classForeignKey, $classNames)) {
+        $classValueLower = strtolower($item->$classForeignKey);
+        if (!array_key_exists($classValueLower, $classNames)) {
             return;
         }
 

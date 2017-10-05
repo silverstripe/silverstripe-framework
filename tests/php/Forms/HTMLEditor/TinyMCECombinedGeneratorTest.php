@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\HTMLEditor;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
@@ -21,7 +21,9 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
         SSViewer::config()->set('themes', [SSViewer::DEFAULT_THEME]);
-        TinyMCEConfig::config()->set('base_dir', 'tinymce');
+        TinyMCEConfig::config()
+            ->set('base_dir', 'tinymce')
+            ->set('editor_css', [ 'mycode/editor.css' ]);
     }
 
     protected function tearDown()
@@ -33,6 +35,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
 
     public function testConfig()
     {
+        $module = new Module(Director::baseFolder().'/mycode', Director::baseFolder());
         // Disable nonces
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');
@@ -47,6 +50,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
                 'plugin5' => null,
                 'plugin6' => '/basedir/mycode/plugin6.js',
                 'plugin7' => '/basedir/mycode/plugin7.js',
+                'plugin8' => $module->getResource('plugin8.js'),
             )
         );
         HTMLEditorConfig::set_config('testconfig', $c);
@@ -54,11 +58,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         // Get config for this
         /** @var TinyMCECombinedGenerator $generator */
         $generator = Injector::inst()->create(TinyMCECombinedGenerator::class);
-        $this->assertEquals(
-            '_tinymce/tinymce-testconfig-6422b3814d.js',
-            $generator->generateFilename($c),
-            "Filename for config: " . json_encode($c->getAttributes()) . " should match expected value"
-        );
+        $this->assertRegExp('#_tinymce/tinymce-testconfig-[0-9a-z]{10,10}#', $generator->generateFilename($c));
         $content = $generator->generateContent($c);
         $this->assertContains(
             "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir/';\n",
@@ -74,6 +74,8 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $this->assertContains("/* plugin4/langs/en.js */\n", $content);
         $this->assertContains("/* plugin5.js */\n", $content);
         $this->assertContains("/* plugin6.js */\n", $content);
+        // module-resource plugin
+        $this->assertContains("/* plugin8.js */\n", $content);
         // Exclude non-local plugins
         $this->assertNotContains('plugin2.js', $content);
         $this->assertNotContains('plugin3.js', $content);
@@ -84,10 +86,19 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $this->assertContains("/* theme.js */\n", $content);
         $this->assertContains("/* testtheme/langs/en.js */\n", $content);
 
-        // Register done scripts
+        // Check plugin links included
         $this->assertContains(
             <<<EOS
-tinymce.each('tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),function(f){tinymce.ScriptLoader.markDone(baseURL+f);});
+tinymce.each('tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,mycode/plugin8.js?m=
+EOS
+            ,
+            $content
+        );
+
+        // Check theme links included
+        $this->assertContains(
+            <<<EOS
+tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),function(f){tinymce.ScriptLoader.markDone(baseURL+f);});
 EOS
             ,
             $content

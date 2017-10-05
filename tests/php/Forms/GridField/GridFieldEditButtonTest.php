@@ -86,4 +86,38 @@ class GridFieldEditButtonTest extends SapphireTest
         $editLinks = $content->getBySelector('.edit-link');
         $this->assertEquals(3, count($editLinks), 'Edit links should show when logged in.');
     }
+
+    public function testDefaultClassesAreSet()
+    {
+        $button = new GridFieldEditButton;
+
+        $expected = [
+            'grid-field__icon-action--hidden-on-hover',
+            'font-icon-edit',
+            'btn--icon-large'
+        ];
+
+        $result = $button->getExtraClass();
+
+        foreach ($expected as $className) {
+            $this->assertContains($className, $result);
+        }
+    }
+
+    public function testAddAndRemoveExtraClass()
+    {
+        $button = new GridFieldEditButton;
+
+        $button->addExtraClass('foobar');
+        $this->assertContains('foobar', $button->getExtraClass());
+
+        $button->removeExtraClass('foobar');
+        $this->assertNotContains('foobar', $button->getExtraClass());
+
+        // Check that duplicates are removed
+        $button->addExtraClass('foobar');
+        $button->addExtraClass('foobar');
+        $button->removeExtraClass('foobar');
+        $this->assertNotContains('foobar', $button->getExtraClass());
+    }
 }

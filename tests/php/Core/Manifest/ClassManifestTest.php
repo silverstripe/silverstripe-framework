@@ -32,46 +32,65 @@ class ClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest      = new ClassManifest($this->base);
+        $this->manifest = new ClassManifest($this->base);
         $this->manifest->init(false);
         $this->manifestTests = new ClassManifest($this->base);
         $this->manifestTests->init(true);
     }
 
-    public function testGetItemPath()
+    /**
+     * @return array
+     */
+    public function providerTestGetItemPath()
     {
-        $expect = array(
-            'CLASSA'     => 'module/classes/ClassA.php',
-            'ClassA'     => 'module/classes/ClassA.php',
-            'classa'     => 'module/classes/ClassA.php',
-            'INTERFACEA' => 'module/interfaces/InterfaceA.php',
-            'InterfaceA' => 'module/interfaces/InterfaceA.php',
-            'interfacea' => 'module/interfaces/InterfaceA.php',
-            'TestTraitA' => 'module/traits/TestTraitA.php',
-            'TestNamespace\Testing\TestTraitB' => 'module/traits/TestTraitB.php'
-        );
+        return [
+            ['CLASSA', 'module/classes/ClassA.php'],
+            ['ClassA', 'module/classes/ClassA.php'],
+            ['classa', 'module/classes/ClassA.php'],
+            ['INTERFACEA', 'module/interfaces/InterfaceA.php'],
+            ['InterfaceA', 'module/interfaces/InterfaceA.php'],
+            ['interfacea', 'module/interfaces/InterfaceA.php'],
+            ['TestTraitA', 'module/traits/TestTraitA.php'],
+            ['TestNamespace\\Testing\\TestTraitB', 'module/traits/TestTraitB.php'],
+            ['VendorClassA', 'vendor/silverstripe/modulec/code/VendorClassA.php'],
+            ['VendorTraitA', 'vendor/silverstripe/modulec/code/VendorTraitA.php'],
+        ];
+    }
 
-        foreach ($expect as $name => $path) {
-            $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
-        }
+    /**
+     * @dataProvider providerTestGetItemPath
+     * @param string $name
+     * @param string $path
+     */
+    public function testGetItemPath($name, $path)
+    {
+        $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
     }
 
     public function testGetClasses()
     {
-        $expect = array(
-            'classa'                   => "{$this->base}/module/classes/ClassA.php",
-            'classb'                   => "{$this->base}/module/classes/ClassB.php",
-            'classc'                   => "{$this->base}/module/classes/ClassC.php",
-            'classd'                   => "{$this->base}/module/classes/ClassD.php",
-            'classe'                   => "{$this->base}/module/classes/ClassE.php",
-        );
+        $expect = [
+            'classa' => "{$this->base}/module/classes/ClassA.php",
+            'classb' => "{$this->base}/module/classes/ClassB.php",
+            'classc' => "{$this->base}/module/classes/ClassC.php",
+            'classd' => "{$this->base}/module/classes/ClassD.php",
+            'classe' => "{$this->base}/module/classes/ClassE.php",
+            'vendorclassa' => "{$this->base}/vendor/silverstripe/modulec/code/VendorClassA.php",
+        ];
         $this->assertEquals($expect, $this->manifest->getClasses());
     }
 
     public function testGetClassNames()
     {
         $this->assertEquals(
-            ['classa', 'classb', 'classc', 'classd', 'classe'],
+            [
+                'classa' => 'ClassA',
+                'classb' => 'ClassB',
+                'classc' => 'ClassC',
+                'classd' => 'ClassD',
+                'classe' => 'ClassE',
+                'vendorclassa' => 'VendorClassA',
+            ],
             $this->manifest->getClassNames()
         );
     }
@@ -79,28 +98,37 @@ class ClassManifestTest extends SapphireTest
     public function testGetTraitNames()
     {
         $this->assertEquals(
-            array('testtraita', 'testnamespace\testing\testtraitb'),
+            [
+                'testtraita' => 'TestTraitA',
+                'testnamespace\\testing\\testtraitb' => 'TestNamespace\\Testing\\TestTraitB',
+                'vendortraita' => 'VendorTraitA',
+            ],
             $this->manifest->getTraitNames()
         );
     }
 
     public function testGetDescendants()
     {
-        $expect = array(
-            'classa' => array('ClassC', 'ClassD'),
-            'classc' => array('ClassD')
-        );
+        $expect = [
+            'classa' => [
+                'classc' => 'ClassC',
+                'classd' => 'ClassD',
+            ],
+            'classc' => [
+                'classd' => 'ClassD',
+            ],
+        ];
         $this->assertEquals($expect, $this->manifest->getDescendants());
     }
 
     public function testGetDescendantsOf()
     {
-        $expect = array(
-            'CLASSA' => array('ClassC', 'ClassD'),
-            'classa' => array('ClassC', 'ClassD'),
-            'CLASSC' => array('ClassD'),
-            'classc' => array('ClassD')
-        );
+        $expect = [
+            'CLASSA' => ['classc' => 'ClassC', 'classd' => 'ClassD'],
+            'classa' => ['classc' => 'ClassC', 'classd' => 'ClassD'],
+            'CLASSC' => ['classd' => 'ClassD'],
+            'classc' => ['classd' => 'ClassD'],
+        ];
 
         foreach ($expect as $class => $desc) {
             $this->assertEquals($desc, $this->manifest->getDescendantsOf($class));
@@ -118,21 +146,21 @@ class ClassManifestTest extends SapphireTest
 
     public function testGetImplementors()
     {
-        $expect = array(
-            'interfacea' => array('ClassB'),
-            'interfaceb' => array('ClassC')
-        );
+        $expect = [
+            'interfacea' => ['classb' => 'ClassB'],
+            'interfaceb' => ['classc' => 'ClassC'],
+        ];
         $this->assertEquals($expect, $this->manifest->getImplementors());
     }
 
     public function testGetImplementorsOf()
     {
-        $expect = array(
-            'INTERFACEA' => array('ClassB'),
-            'interfacea' => array('ClassB'),
-            'INTERFACEB' => array('ClassC'),
-            'interfaceb' => array('ClassC')
-        );
+        $expect = [
+            'INTERFACEA' => ['classb' => 'ClassB'],
+            'interfacea' => ['classb' => 'ClassB'],
+            'INTERFACEB' => ['classc' => 'ClassC'],
+            'interfaceb' => ['classc' => 'ClassC'],
+        ];
 
         foreach ($expect as $interface => $impl) {
             $this->assertEquals($impl, $this->manifest->getImplementorsOf($interface));
@@ -141,13 +169,13 @@ class ClassManifestTest extends SapphireTest
 
     public function testTestManifestIncludesTestClasses()
     {
-        $this->assertNotContains('testclassa', array_keys($this->manifest->getClasses()));
-        $this->assertContains('testclassa', array_keys($this->manifestTests->getClasses()));
+        $this->assertArrayNotHasKey('testclassa', $this->manifest->getClasses());
+        $this->assertArrayHasKey('testclassa', $this->manifestTests->getClasses());
     }
 
     public function testManifestExcludeFilesPrefixedWithUnderscore()
     {
-        $this->assertNotContains('ignore', array_keys($this->manifest->getClasses()));
+        $this->assertArrayNotHasKey('ignore', $this->manifest->getClasses());
     }
 
     /**

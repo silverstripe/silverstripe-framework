@@ -9,6 +9,8 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResource;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
@@ -281,20 +283,20 @@ class TinyMCEConfig extends HTMLEditorConfig
      *
      * @var array
      */
-    protected $buttons = array(
-        1 => array(
+    protected $buttons = [
+        1 => [
             'bold', 'italic', 'underline', 'removeformat', '|',
             'alignleft', 'aligncenter', 'alignright', 'alignjustify', '|',
             'bullist', 'numlist', 'outdent', 'indent',
-        ),
-        2 => array(
+        ],
+        2 => [
             'formatselect', '|',
             'paste', 'pastetext', '|',
             'table', 'sslink', 'unlink', '|',
             'code'
-        ),
-        3 => array()
-    );
+        ],
+        3 => []
+    ];
 
     public function getOption($key)
     {
@@ -352,6 +354,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *  - null - Will be treated as a stardard plugin in the standard location
      *  - relative path - Will be treated as a relative url
      *  - absolute url - Some url to an external plugin
+     *  - An instance of ModuleResource object containing the plugin
      *
      * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
@@ -394,7 +397,8 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Gets the list of all enabled plugins as an associative array.
-     * Array keys are the plugin names, and values are potentially the plugin location
+     * Array keys are the plugin names, and values are potentially the plugin location,
+     * or ModuleResource object
      *
      * @return array
      */
@@ -567,13 +571,20 @@ class TinyMCEConfig extends HTMLEditorConfig
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
-        $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $this->getTinyMCEPath());
+        $baseResource = $this->getTinyMCEResource();
+        if ($baseResource instanceof ModuleResource) {
+            $tinyMCEBaseURL = $baseResource->getURL();
+        } else {
+            $tinyMCEBaseURL = Controller::join_links(Director::baseURL(), $baseResource);
+        }
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
         $plugins = array();
         foreach ($this->getPlugins() as $plugin => $path) {
-            if (!$path) {
+            if ($path instanceof ModuleResource) {
+                $path = Director::absoluteURL($path->getURL());
+            } elseif (!$path) {
                 // Empty paths: Convert to urls in standard base url
                 $path = Controller::join_links(
                     $tinyMCEBaseURL,
@@ -630,12 +641,14 @@ class TinyMCEConfig extends HTMLEditorConfig
         $editorCSSFiles = $this->config()->get('editor_css');
         if ($editorCSSFiles) {
             foreach ($editorCSSFiles as $editorCSS) {
-                $editor[] = Director::absoluteURL($this->resolvePath($editorCSS));
+                $path = ModuleResourceLoader::singleton()
+                    ->resolveURL($editorCSS);
+                $editor[] = Director::absoluteURL($path);
             }
         }
 
         // Themed editor.css
-        $themes = $this->config()->get('user_themes') ?: SSViewer::get_themes();
+        $themes = HTMLEditorConfig::getThemes() ?: SSViewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
             $editor[] = Director::absoluteURL($themedEditor);
@@ -682,20 +695,65 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
+     * Returns the full filesystem path to TinyMCE resources (which could be different from the original tinymce
+     * location in the module).
+     *
+     * Path will be absolute.
+     *
      * @return string
      * @throws Exception
      */
-    public function getTinyMCEPath()
+    public function getTinyMCEResourcePath()
+    {
+        $resource = $this->getTinyMCEResource();
+        if ($resource instanceof ModuleResource) {
+            return $resource->getPath();
+        }
+        return Director::baseFolder() . '/' . $resource;
+    }
+
+    /**
+     * Get front-end url to tinymce resources
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getTinyMCEResourceURL()
+    {
+        $resource = $this->getTinyMCEResource();
+        if ($resource instanceof ModuleResource) {
+            return $resource->getURL();
+        }
+        return $resource;
+    }
+
+    /**
+     * Get resource root for TinyMCE, either as a string or ModuleResource instance
+     * Path will be relative to BASE_PATH if string.
+     *
+     * @return ModuleResource|string
+     * @throws Exception
+     */
+    public function getTinyMCEResource()
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
-            return $this->resolvePath($configDir);
+            return ModuleResourceLoader::singleton()->resolveResource($configDir);
         }
 
         throw new Exception(sprintf(
             'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
             __CLASS__
         ));
+    }
+
+    /**
+     * @deprecated 4.0..5.0
+     */
+    public function getTinyMCEPath()
+    {
+        Deprecation::notice('5.0', 'use getTinyMCEResourcePath instead');
+        return $this->getTinyMCEResourcePath();
     }
 
     /**
@@ -706,22 +764,5 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
-    }
-
-    /**
-     * Expand resource path to a relative filesystem path
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function resolvePath($path)
-    {
-        if (preg_match('#(?<module>[^/]+/[^/]+)\s*:\s*(?<path>[^:]+)#', $path, $results)) {
-            $module = ModuleLoader::getModule($results['module']);
-            if ($module) {
-                return $module->getRelativeResourcePath($results['path']);
-            }
-        }
-        return $path;
     }
 }

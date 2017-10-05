@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
 use Exception;
-use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\SimpleResourceURLGenerator;
 use SilverStripe\Core\Config\Config;
@@ -14,7 +13,6 @@ use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class HTMLEditorConfigTest extends SapphireTest

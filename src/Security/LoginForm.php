@@ -25,6 +25,16 @@ abstract class LoginForm extends Form
      */
     protected $authenticator_class;
 
+    public function setAuthenticatorClass($class)
+    {
+        $this->authenticator_class = $class;
+        $authenticatorField = $this->Fields()->dataFieldByName('AuthenticationMethod');
+        if ($authenticatorField) {
+            $authenticatorField->setValue($class);
+        }
+        return $this;
+    }
+
     /**
      * Return the title of the form for use in the frontend
      * For tabs with multiple login methods, for example.

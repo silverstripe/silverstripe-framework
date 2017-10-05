@@ -9,6 +9,7 @@ SilverStripe\Core\Injector\Injector:
         extensions: '%$SilverStripe\Dev\State\ExtensionTestState'
         flushable: '%$SilverStripe\Dev\State\FlushableTestState'
         requirements: '%$SilverStripe\View\Dev\RequirementsTestState'
+        ssviewer: '%$SilverStripe\View\Dev\SSViewerTestState'
 ---
 Name: kerneltest
 Before: '*'

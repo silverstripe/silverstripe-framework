@@ -712,11 +712,11 @@ PHP;
         $collector = new Collector();
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         $this->assertEquals(
-            array(
+            [
                 'i18nnonstandardmodule',
+                'i18nothermodule',
                 'i18ntestmodule',
-                'i18nothermodule'
-            ),
+            ],
             array_keys($modules)
         );
 

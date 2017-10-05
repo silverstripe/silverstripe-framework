@@ -39,28 +39,29 @@ class ContentNegotiator
 
     /**
      * @config
-     *
      * @var string
      */
     private static $content_type = '';
 
     /**
      * @config
-     *
      * @var string
      */
     private static $encoding = 'utf-8';
 
     /**
      * @config
-     *
      * @var bool
      */
     private static $enabled = false;
 
     /**
+     * @var bool
+     */
+    protected static $current_enabled = null;
+
+    /**
      * @config
-     *
      * @var string
      */
     private static $default_format = 'html';
@@ -84,11 +85,34 @@ class ContentNegotiator
             return false;
         }
 
-        if (static::config()->get('enabled')) {
+        if (ContentNegotiator::getEnabled()) {
             return true;
         } else {
             return (substr($response->getBody(), 0, 5) == '<' . '?xml');
         }
+    }
+
+    /**
+     * Gets the current enabled status, if it is not set this will fallback to config
+     *
+     * @return bool
+     */
+    public static function getEnabled()
+    {
+        if (isset(static::$current_enabled)) {
+            return static::$current_enabled;
+        }
+        return Config::inst()->get(static::class, 'enabled');
+    }
+
+    /**
+     * Sets the current enabled status
+     *
+     * @param bool $enabled
+     */
+    public static function setEnabled($enabled)
+    {
+        static::$current_enabled = $enabled;
     }
 
     /**
@@ -116,7 +140,7 @@ class ContentNegotiator
                 $chosenFormat = "xhtml";
             } else {
                 foreach ($mimes as $format => $mime) {
-                    $regExp = '/' . str_replace(array('+','/'), array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+                    $regExp = '/' . str_replace(array('+', '/'), array('\+', '\/'), $mime) . '(;q=(\d+\.\d+))?/i';
                     if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
                         $preference = isset($matches[2]) ? $matches[2] : 1;
                         if (!isset($q[$preference])) {
@@ -130,13 +154,13 @@ class ContentNegotiator
                     krsort($q);
                     $chosenFormat = reset($q);
                 } else {
-                    $chosenFormat = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'default_format');
+                    $chosenFormat = Config::inst()->get(static::class, 'default_format');
                 }
             }
         }
 
         $negotiator = new ContentNegotiator();
-        $negotiator->$chosenFormat( $response );
+        $negotiator->$chosenFormat($response);
     }
 
     /**
@@ -202,7 +226,7 @@ class ContentNegotiator
         $response->addHeader("Vary", "Accept");
 
         $content = $response->getBody();
-        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml' );
+        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml');
 
         // Fix base tag
         $content = preg_replace(
@@ -212,7 +236,11 @@ class ContentNegotiator
         );
 
         $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
-        $content = str_replace(array('/>','xml:lang','application/xhtml+xml'), array('>','lang','text/html'), $content);
+        $content = str_replace(
+            array('/>', 'xml:lang', 'application/xhtml+xml'),
+            array('>', 'lang', 'text/html'),
+            $content
+        );
 
         // Only replace the doctype in templates with the xml header
         if ($hasXMLHeader) {

@@ -30,7 +30,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		}
 	
 		location / {
-			try_files $uri /framework/main.php?url=$uri&$query_string;
+			try_files $uri vendor/silverstripe/framework/main.php?url=$uri&$query_string;
 		}
 	
 		error_page 404 /assets/error-404.html;
@@ -41,7 +41,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 				deny all;
 			}
 			sendfile on;
-			try_files $uri /framework/main.php?url=$uri&$query_string;
+			try_files $uri vendor/silverstripe/framework/main.php?url=$uri&$query_string;
 		}
 	
 		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {

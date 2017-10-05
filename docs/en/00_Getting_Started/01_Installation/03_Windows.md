@@ -62,7 +62,7 @@ control.
 
 3. Apache rewrite (mod_rewrite) isn't working and it's installed (prior to SilverStripe 3.1.11)
 
-Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (framework/main.php). To fix this place the following within the `mod_rewrite` section of your .htaccess file:
+Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (`main.php`). To fix this place the following within the `mod_rewrite` section of your .htaccess file:
 
 ```
 <IfModule mod_rewrite.c>

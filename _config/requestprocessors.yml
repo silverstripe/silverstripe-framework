@@ -17,10 +17,22 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Middleware\TrustedProxyMiddleware:
     properties:
       TrustedProxyIPs: '`SS_TRUSTED_PROXY_IPS`'
+  SecurityRateLimitMiddleware:
+    class: SilverStripe\Control\Middleware\RateLimitMiddleware
+    properties:
+      ExtraKey: 'Security'
+      MaxAttempts: 10
+      Decay: 1
+  RateLimitedSecurityController:
+    class: SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter
+    properties:
+      RequestHandler: '%$SilverStripe\Security\Security'
+      Middlewares:
+        - '%$SecurityRateLimitMiddleware'
 ---
 Name: errorrequestprocessors
 After:
-  - requestprocessors
+  - '#requestprocessors'
 ---
 SilverStripe\Core\Injector\Injector:
   # Note: If Director config changes, take note it will affect this config too

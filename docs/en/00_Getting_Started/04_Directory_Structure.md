@@ -9,9 +9,9 @@ directories is meaningful to its logic.
 
 Directory   | Description
 ---------   | -----------
-`assets/`   | Contains images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS.
-`cms/`      | Contains all the files that form the CMS area of your site. It’s structure is similar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built.
-`framework/` | The framework that builds both your own site and as the CMS that powers it. You’ll be utilising files in this directory often, both directly and indirectly.
+`assets/`   | Images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS.
+`resources/`| Public files from modules (added automatically) 
+`vendor/`   | SilverStripe modules and other supporting libraries (the framework is in `vendor/silverstripe/framework`)
 
 ## Custom Code Structure
 
@@ -46,20 +46,22 @@ on folder and file naming in SilverStripe core modules.
 
 See [themes](/developer_guides/templates/themes)
 
-## Module Structure		{#module_structure}
+## Module Structure {#module_structure}
 
-Modules are currently top-level folders that have a `_config.php` file or a `_config/` directory present.
-They should follow the same conventions as posed in "Custom Site Structure"
+Modules are commonly stored as composer packages in the `vendor/` folder.
+They need to have a `_config.php` file or a `_config/` directory present,
+and should follow the same conventions as posed in "Custom Site Structure".
 
 Example Forum:
 
  | Directory  | Description                                                         |
  | ---------  | -----------                                                         |
- | `forum/`     | This directory contains all of your code that defines your website. |
- | `forum/code` | PHP code for model and controller (subdirectories are optional)     |
+ | `vendor/silverstripe/blog/`| This directory contains all of your code that defines your website. |
+ | `vendor/silverstripe/blog/code` | PHP code for model and controller (subdirectories are optional)     |
  | ...        | ...                                                                 |
 
-![](../_images/modules_folder.jpg)
+Note: Before SilverStripe 4.x, modules were living as top-level folders in the webroot itself.
+Some modules might not have been upgraded to support placement in `vendor/`
 
 ### Module documentation
 
@@ -68,7 +70,7 @@ plain text files inside a 'docs' folder located in the module folder. These file
 can be written with the Markdown syntax (See [Contributing Documentation](/contributing/documentation))
 and include media such as images or videos.
 
-Inside the docs folder, developers should organise the markdown files into each
+Inside the `docs/` folder, developers should organise the markdown files into each
 separate language they wish to write documentation for (usually just `en`). Inside
 each languages' subfolder, developers then have freedom to create whatever structure
 they wish for organising the documentation they wish.
@@ -77,14 +79,14 @@ Example Forum Documentation:
 
  | Directory  | Description                                                         |
  | ---------  | -----------                                                         |
- | `forum/docs` | The docs folder will be picked up by the documentation viewer. |
- | `forum/docs/_manifest_exclude` | Empty file to signify that SilverStripe does not need to load classes from this folder |
- | `forum/docs/en/`       | English documentation  |
- | `forum/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
- | `forum/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
- | `forum/docs/en/_images/` | Folder to store any images or media |
- | `forum/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
-|`forum/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
+ | `blog/docs` | |
+ | `blog/docs/_manifest_exclude` | Empty file to signify that SilverStripe does not need to load classes from this folder |
+ | `blog/docs/en/`       | English documentation  |
+ | `blog/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
+ | `blog/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
+ | `blog/docs/en/_images/` | Folder to store any images or media |
+ | `blog/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
+ | `blog/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
 
 
 ## Autoloading

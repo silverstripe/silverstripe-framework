@@ -818,20 +818,19 @@ class RequirementsTest extends SapphireTest
     public function testCommentedOutScriptTagIsIgnored()
     {
         /// Disable nonce
-        Injector::inst()->registerService(new SimpleResourceURLGenerator(), ResourceURLGenerator::class);
+        $urlGenerator = new SimpleResourceURLGenerator();
+        Injector::inst()->registerService($urlGenerator, ResourceURLGenerator::class);
 
         $template = '<html><head></head><body><!--<script>alert("commented out");</script>-->'
             . '<h1>more content</h1></body></html>';
-        /**
- * @var Requirements_Backend $backend
-*/
+        /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
         $src = $this->getThemeRoot() . '/javascript/RequirementsTest_a.js';
-        $urlSrc = Controller::join_links(Director::baseURL(), $src);
         $backend->javascript($src);
         $html = $backend->includeInHTML($template);
+        $urlSrc = $urlGenerator->urlForResource($src);
         $this->assertEquals(
             '<html><head></head><body><!--<script>alert("commented out");</script>-->'
             . '<h1>more content</h1><script type="application/javascript" src="' . $urlSrc
