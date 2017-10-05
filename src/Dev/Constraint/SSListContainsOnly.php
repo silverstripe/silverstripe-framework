@@ -15,7 +15,12 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  */
 class SSListContainsOnly extends SSListContains
 {
-    private $item_not_matching = false;
+    /**
+     * Check if the test fails due to a not matching item
+     *
+     * @var bool
+     */
+    private $itemNotMatching = false;
 
     /**
      * Evaluates the constraint for parameter $other
@@ -41,16 +46,16 @@ class SSListContainsOnly extends SSListContains
 
         foreach ($other as $item) {
             if (!$this->checkIfItemEvaltuatesRemainingMatches($item)) {
-                $this->item_not_matching = true;
+                $this->itemNotMatching = true;
                 $success = false;
                 break;
             }
         }
 
         //we have remaining matches?
-        if (!$this->item_not_matching && count($this->matches) !== 0) {
+        if (!$this->itemNotMatching && count($this->matches) !== 0) {
             $success = false;
-            $this->has_leftover_items = true;
+            $this->hasLeftoverItems = true;
         }
 
         if ($returnResult) {
@@ -64,7 +69,7 @@ class SSListContainsOnly extends SSListContains
 
     protected function getStubForToString()
     {
-        $this->item_not_matching
+        return $this->itemNotMatching
             ? parent::getStubForToString()
             : " contained only the given items, the following items were left over:\n";
     }

@@ -18,9 +18,17 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  */
 class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
 {
+    /**
+     * @var array
+     */
     protected $matches = [];
 
-    protected $has_leftover_items = false;
+    /**
+     * Check if the list has left over items that don't match
+     *
+     * @var bool
+     */
+    protected $hasLeftoverItems = false;
 
     public function __construct($matches)
     {
@@ -59,7 +67,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
         //we have remaining matches?
         if (count($this->matches) !== 0) {
             $success = false;
-            $this->has_leftover_items = true;
+            $this->hasLeftoverItems = true;
         }
 
         if ($returnResult) {
