@@ -7,7 +7,14 @@ use SebastianBergmann\RecursionContext\Context;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
 
-class SSListExporter extends Exporter
+if (!class_exists(Exporter::class)) {
+    return;
+}
+
+/**
+ * A custom exporter for prettier formatting of SilverStripe specific Objects in PHPUnit's failing test messages.
+ */
+class SSListExporter extends Exporter implements TestOnly
 {
     protected function recursiveExport(&$value, $indentation, $processed = null)
     {

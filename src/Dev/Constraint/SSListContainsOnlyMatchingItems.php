@@ -2,13 +2,19 @@
 
 namespace SilverStripe\Dev\Constraint;
 
+use PHPUnit_Framework_Constraint;
 use SilverStripe\Dev\SSListExporter;
+use SilverStripe\Dev\TestOnly;
+
+if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+    return;
+}
 
 /**
  * Constraint for checking if every item in a SS_List matches a given match,
  * e.g. every Member has isActive set to true
  */
-class SSListContainsOnlyMatchingItems extends \PHPUnit_Framework_Constraint
+class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint implements TestOnly
 {
     private $match = [];
     private $constraint;

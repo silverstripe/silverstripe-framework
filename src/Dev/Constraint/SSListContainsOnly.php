@@ -2,7 +2,12 @@
 
 namespace SilverStripe\Dev\Constraint;
 
+use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
+
+if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+    return;
+}
 
 /**
  * Constraint for checking if a SS_List contains only items matching the given
@@ -10,7 +15,6 @@ use PHPUnit_Framework_ExpectationFailedException;
  */
 class SSListContainsOnly extends SSListContains
 {
-
     private $item_not_matching = false;
 
     /**

@@ -2,11 +2,20 @@
 
 namespace SilverStripe\Dev\Constraint;
 
+use PHPUnit_Framework_Constraint;
 use PHPUnit_Util_InvalidArgumentHelper;
+use SilverStripe\Dev\TestOnly;
 
-class ViewableDataContains extends \PHPUnit_Framework_Constraint
+if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+    return;
+}
+
+/**
+ * Constraint for checking if a VieableData (e.g. ArrayData or any DataObject) contains fields matching the given
+ * key-value pairs.
+ */
+class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestOnly
 {
-
     private $match = [];
 
     public function __construct($match)

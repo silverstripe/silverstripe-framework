@@ -2,17 +2,22 @@
 
 namespace SilverStripe\Dev\Constraint;
 
+use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
+
+if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+    return;
+}
 
 /**
  * Constraint for checking if a SS_List contains items matching the given
  * key-value pairs.
  */
-class SSListContains extends \PHPUnit_Framework_Constraint
+class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
 {
-
     protected $matches = [];
 
     protected $has_leftover_items = false;
