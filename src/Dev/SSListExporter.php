@@ -16,6 +16,13 @@ if (!class_exists(Exporter::class)) {
  */
 class SSListExporter extends Exporter implements TestOnly
 {
+    /**
+     * @param mixed $value
+     * @param int $indentation
+     * @param null|Context $processed
+     * @return string
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     */
     protected function recursiveExport(&$value, $indentation, $processed = null)
     {
         if (!$processed) {

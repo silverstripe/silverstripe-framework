@@ -271,7 +271,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 $fixture->writeInto($this->getFixtureFactory());
             }
 
-            $this->logInWithPermission("ADMIN");
+            $this->logInWithPermission('ADMIN');
         }
 
         // turn off template debugging
@@ -489,8 +489,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
-            throw new LogicException("getItemPath returned null for " . static::class
-                . ". Try adding flush=1 to the test run.");
+            throw new LogicException('getItemPath returned null for ' . static::class
+                . '. Try adding flush=1 to the test run.');
         }
         return dirname($filename);
     }
@@ -612,7 +612,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $found = (bool)static::findEmail($to, $from, $subject, $content);
 
-        $infoParts = "";
+        $infoParts = '';
         $withParts = array();
         if ($to) {
             $infoParts .= " to '$to'";
@@ -627,7 +627,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $withParts[] = "content '$content'";
         }
         if ($withParts) {
-            $infoParts .= " with " . implode(" and ", $withParts);
+            $infoParts .= ' with ' . implode(' and ', $withParts);
         }
 
         static::assertTrue(
@@ -928,7 +928,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         // Health check
         if (InjectorLoader::inst()->countManifests()) {
-            throw new LogicException("SapphireTest::start() cannot be called within another application");
+            throw new LogicException('SapphireTest::start() cannot be called within another application');
         }
         static::set_is_running_test(true);
 
@@ -1032,7 +1032,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             }
 
             $member->FirstName = $permCode;
-            $member->Surname = "User";
+            $member->Surname = 'User';
             $member->Email = "$permCode@example.org";
             $member->write();
             $group->Members()->add($member);
@@ -1049,7 +1049,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string|array $permCode Either a permission, or list of permissions
      * @return int Member ID
      */
-    public function logInWithPermission($permCode = "ADMIN")
+    public function logInWithPermission($permCode = 'ADMIN')
     {
         $member = $this->createMemberWithPermission($permCode);
         $this->logInAs($member);
@@ -1122,7 +1122,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             return [];
         }
 
-        $fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : [$fixtureFile];
+        $fixtureFiles = is_array($fixtureFile) ? $fixtureFile : [$fixtureFile];
 
         return array_map(function ($fixtureFilePath) {
             return $this->resolveFixturePath($fixtureFilePath);
