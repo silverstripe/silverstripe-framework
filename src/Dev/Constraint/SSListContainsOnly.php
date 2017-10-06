@@ -36,7 +36,7 @@ class SSListContainsOnly extends SSListContains
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
-     * @return mixed
+     * @return null|bool
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
@@ -65,6 +65,8 @@ class SSListContainsOnly extends SSListContains
         if (!$success) {
             $this->fail($other, $description);
         }
+
+        return null;
     }
 
     protected function getStubForToString()
