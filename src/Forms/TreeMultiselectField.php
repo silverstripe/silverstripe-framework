@@ -215,38 +215,37 @@ class TreeMultiselectField extends TreeDropdownField
      */
     public function saveInto(DataObjectInterface $record)
     {
+        $items = [];
+        $fieldName = $this->name;
+        $saveDest = $record->$fieldName();
+
+        if (!$saveDest) {
+            $recordClass = get_class($record);
+            user_error(
+                "TreeMultiselectField::saveInto() Field '$fieldName' not found on"
+                . " {$recordClass}.{$record->ID}",
+                E_USER_ERROR
+            );
+        }
+
         // Detect whether this field has actually been updated
         if ($this->value !== 'unchanged') {
-            $items = [];
-
-            $fieldName = $this->name;
-            $saveDest = $record->$fieldName();
-            if (!$saveDest) {
-                $recordClass = get_class($record);
-                user_error(
-                    "TreeMultiselectField::saveInto() Field '$fieldName' not found on"
-                    . " {$recordClass}.{$record->ID}",
-                    E_USER_ERROR
-                );
-            }
-
             if (is_array($this->value)) {
                 $items = $this->value;
             } elseif ($this->value) {
                 $items = preg_split("/ *, */", trim($this->value));
             }
-
-            // Allows you to modify the items on your object before save
-            $funcName = "onChange$fieldName";
-            if ($record->hasMethod($funcName)) {
-                $result = $record->$funcName($items);
-                if (!$result) {
-                    return;
-                }
-            }
-
-            $saveDest->setByIDList($items);
         }
+
+        // Allows you to modify the items on your object before save
+        $funcName = "onChange$fieldName";
+        if ($record->hasMethod($funcName)) {
+            $result = $record->$funcName($items);
+            if (!$result) {
+                return;
+            }
+        }
+        $saveDest->setByIDList($items);
     }
 
     /**
