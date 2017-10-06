@@ -293,7 +293,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $fixtureFiles
      * @return bool
      */
-    protected function setupDatabaseForCurrentTest($fixtureFiles): bool
+    protected function setupDatabaseForCurrentTest($fixtureFiles)
     {
         $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
 
@@ -644,6 +644,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
      * @param SS_List $list The {@link SS_List} to test.
+     * @param string $message
      *
      * Examples
      * --------
@@ -693,6 +694,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
      * @param SS_List $list The {@link SS_List} to test.
+     * @param string $message
      *
      * Examples
      * --------
@@ -756,6 +758,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
      * @param mixed $list The {@link SS_List} to test.
+     * @param string $message
      */
     public static function assertListEquals($matches, SS_List $list, $message = '')
     {
