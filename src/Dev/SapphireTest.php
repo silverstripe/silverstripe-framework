@@ -247,7 +247,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $fixtureFiles = $this->getFixturePaths();
 
         // Set up fixture
-        if ($this->setupDatabaseForCurrentTest($fixtureFiles)) {
+        if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
             if (!static::$tempDB->isUsed()) {
                 static::$tempDB->build();
             }
@@ -293,7 +293,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param $fixtureFiles
      * @return bool
      */
-    protected function setupDatabaseForCurrentTest($fixtureFiles)
+    protected function shouldSetupDatabaseForCurrentTest($fixtureFiles)
     {
         $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
 
