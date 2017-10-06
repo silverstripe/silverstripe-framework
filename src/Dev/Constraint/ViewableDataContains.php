@@ -3,21 +3,30 @@
 namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit_Framework_Constraint;
+use PHPUnit_Framework_ExpectationFailedException;
 use PHPUnit_Util_InvalidArgumentHelper;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\View\ViewableData;
 
 if (!class_exists(PHPUnit_Framework_Constraint::class)) {
     return;
 }
 
 /**
- * Constraint for checking if a VieableData (e.g. ArrayData or any DataObject) contains fields matching the given
+ * Constraint for checking if a ViewableData (e.g. ArrayData or any DataObject) contains fields matching the given
  * key-value pairs.
  */
 class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestOnly
 {
-    private $match = [];
+    /**
+     * @var array
+     */
+    private $match;
 
+    /**
+     * ViewableDataContains constructor.
+     * @param array $match
+     */
     public function __construct($match)
     {
         parent::__construct();
@@ -42,13 +51,13 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed $other Value or object to evaluate.
+     * @param ViewableData $other Value or object to evaluate.
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
      * @return null|bool
      *
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws PHPUnit_Framework_ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false)
     {

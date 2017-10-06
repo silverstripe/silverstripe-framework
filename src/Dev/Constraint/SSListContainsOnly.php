@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
+use SilverStripe\ORM\SS_List;
 
 if (!class_exists(PHPUnit_Framework_Constraint::class)) {
     return;
@@ -32,7 +33,7 @@ class SSListContainsOnly extends SSListContains
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed $other Value or object to evaluate.
+     * @param SS_List $other Value or object to evaluate.
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
@@ -45,7 +46,7 @@ class SSListContainsOnly extends SSListContains
         $success = true;
 
         foreach ($other as $item) {
-            if (!$this->checkIfItemEvaltuatesRemainingMatches($item)) {
+            if (!$this->checkIfItemEvaluatesRemainingMatches($item)) {
                 $this->itemNotMatching = true;
                 $success = false;
                 break;

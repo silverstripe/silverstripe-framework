@@ -3,8 +3,10 @@
 namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit_Framework_Constraint;
+use PHPUnit_Framework_ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\SS_List;
 
 if (!class_exists(PHPUnit_Framework_Constraint::class)) {
     return;
@@ -16,7 +18,14 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  */
 class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint implements TestOnly
 {
-    private $match = [];
+    /**
+     * @var array
+     */
+    private $match;
+
+    /**
+     * @var ViewableDataContains
+     */
     private $constraint;
 
     public function __construct($match)
@@ -38,7 +47,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed $other Value or object to evaluate.
+     * @param SS_List $other Value or object to evaluate.
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *

@@ -6,6 +6,7 @@ use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
 
 if (!class_exists(PHPUnit_Framework_Constraint::class)) {
@@ -48,7 +49,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed $other Value or object to evaluate.
+     * @param SS_List $other Value or object to evaluate.
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
@@ -61,7 +62,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
         $success = true;
 
         foreach ($other as $item) {
-            $this->checkIfItemEvaltuatesRemainingMatches($item);
+            $this->checkIfItemEvaluatesRemainingMatches($item);
         }
 
         //we have remaining matches?
@@ -85,7 +86,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      * @param ViewableData $item
      * @return bool
      */
-    protected function checkIfItemEvaltuatesRemainingMatches(ViewableData $item)
+    protected function checkIfItemEvaluatesRemainingMatches(ViewableData $item)
     {
         $success = false;
         foreach ($this->matches as $key => $match) {
