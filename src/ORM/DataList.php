@@ -877,7 +877,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns the last item in this DataList
      *
-     *  @return DataObject
+     *  @return DataObject|static
      */
     public function last()
     {
