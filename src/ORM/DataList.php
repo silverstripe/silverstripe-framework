@@ -864,7 +864,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns the first item in this DataList
      *
-     * @return DataObject
+     * @return DataObject|static
      */
     public function first()
     {
