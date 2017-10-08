@@ -230,7 +230,7 @@ class InjectorTest extends SapphireTest
                 'properties' => array(
                     'filters' => array(
                         '`BASE_PATH`',
-                        '`TEMP_FOLDER`',
+                        '`TEMP_PATH`',
                         '`NOT_DEFINED`',
                         'THIRDPARTY_DIR' // Not back-tick escaped
                     )
@@ -243,7 +243,7 @@ class InjectorTest extends SapphireTest
         $this->assertEquals(
             [
                 BASE_PATH,
-                TEMP_FOLDER,
+                TEMP_PATH,
                 null,
                 'THIRDPARTY_DIR',
             ],

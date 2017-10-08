@@ -25,7 +25,7 @@ class i18nTextCollectorTest extends SapphireTest
         parent::setUp();
         $this->setupManifest();
 
-        $this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
+        $this->alternateBaseSavePath = TEMP_PATH . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
         Filesystem::makeFolder($this->alternateBaseSavePath);
     }
 

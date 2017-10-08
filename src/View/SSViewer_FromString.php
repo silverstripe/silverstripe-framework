@@ -50,7 +50,7 @@ class SSViewer_FromString extends SSViewer
     public function process($item, $arguments = null, $scope = null)
     {
         $hash = sha1($this->content);
-        $cacheFile = TEMP_FOLDER . "/.cache.$hash";
+        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . ".cache.$hash";
 
         if (!file_exists($cacheFile) || isset($_GET['flush'])) {
             $content = $this->parseTemplateContent($this->content, "string sha1=$hash");

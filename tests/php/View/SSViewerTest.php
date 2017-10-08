@@ -1689,7 +1689,7 @@ after'
         // as protocol-less absolute urls
         $base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
-        $tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
+        $tmplFile = TEMP_PATH . DIRECTORY_SEPARATOR . 'SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
@@ -1746,7 +1746,7 @@ after'
     {
         SSViewer::setRewriteHashLinksDefault('php');
 
-        $tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
+        $tmplFile = TEMP_PATH . DIRECTORY_SEPARATOR . 'SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
@@ -2060,7 +2060,7 @@ EOC;
     public function testFromStringCaching()
     {
         $content = 'Test content';
-        $cacheFile = TEMP_FOLDER . '/.cache.' . sha1($content);
+        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache.' . sha1($content);
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
         }

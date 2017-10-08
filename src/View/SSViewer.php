@@ -500,10 +500,10 @@ class SSViewer implements Flushable
     public static function flush_template_cache($force = false)
     {
         if (!self::$template_cache_flushed || $force) {
-            $dir = dir(TEMP_FOLDER);
+            $dir = dir(TEMP_PATH);
             while (false !== ($file = $dir->read())) {
                 if (strstr($file, '.cache')) {
-                    unlink(TEMP_FOLDER . '/' . $file);
+                    unlink(TEMP_PATH . DIRECTORY_SEPARATOR . $file);
                 }
             }
             self::$template_cache_flushed = true;
@@ -626,7 +626,7 @@ class SSViewer implements Flushable
 
         $template = $this->chosen;
 
-        $cacheFile = TEMP_FOLDER . "/.cache"
+        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache'
             . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
         $lastEdited = filemtime($template);
 

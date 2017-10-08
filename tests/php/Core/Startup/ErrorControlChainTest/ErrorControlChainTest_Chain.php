@@ -79,7 +79,7 @@ require_once '$classpath';
         $src .= "->execute();";
 
         // Now stick it in a temporary file & run it
-        $codepath = TEMP_FOLDER . '/ErrorControlChainTest_' . sha1($src) . '.php';
+        $codepath = TEMP_PATH . DIRECTORY_SEPARATOR . 'ErrorControlChainTest_' . sha1($src) . '.php';
 
         if ($includeStderr) {
             $null = '&1';

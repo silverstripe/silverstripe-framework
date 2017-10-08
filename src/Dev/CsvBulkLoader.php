@@ -169,7 +169,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function getNewSplitFileName()
     {
-        return TEMP_FOLDER . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class), true) . '.csv';
+        return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class), true) . '.csv';
     }
 
     /**

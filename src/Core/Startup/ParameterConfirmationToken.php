@@ -57,7 +57,7 @@ class ParameterConfirmationToken
 
     protected function pathForToken($token)
     {
-        return TEMP_FOLDER.'/token_'.preg_replace('/[^a-z0-9]+/', '', $token);
+        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_'.preg_replace('/[^a-z0-9]+/', '', $token);
     }
 
     /**
