@@ -57,7 +57,7 @@ matrix:
 
 before_script:
 # Init PHP
-  - export CORE_RELEASE=$TRAVIS_BRANCH
+  - pecl channel-update pecl.php.net
   - printf "\n" | pecl install imagick
   - phpenv rehash
   - phpenv config-rm xdebug.ini || true
