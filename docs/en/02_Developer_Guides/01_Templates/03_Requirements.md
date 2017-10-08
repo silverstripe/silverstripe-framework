@@ -297,6 +297,7 @@ Then, inject this service in `Requirements_Backend`.
 SilverStripe\Core\Injector\Injector:
   SilverStripe\View\Requirements_Backend:
     properties:
+      MinifyCombinedFiles: true
       Minifier: %$MyProject\MyMinifier
 ```
 
