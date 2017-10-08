@@ -960,6 +960,13 @@ class InjectorTest extends SapphireTest
         $injector->get('UnknownService');
     }
 
+    public function testGetTrimsWhitespaceFromNames()
+    {
+        $injector = new Injector;
+
+        $this->assertInstanceOf(MyChildClass::class, $injector->get('    ' . MyChildClass::class . '     '));
+    }
+
     /**
      * Test nesting of injector
      */
