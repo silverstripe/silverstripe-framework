@@ -68,8 +68,7 @@ or the command is run through [CLI](../cli).
 When rebuilding the database schema through the [api:SS_ClassLoader] the following additional properties are 
 automatically set on the `DataObject`.
 
-*  ID: Primary Key. When a new record is created, SilverStripe does not use the database's built-in auto-numbering 
-system. Instead, it will generate a new `ID` by adding 1 to the current maximum ID.
+*  ID: Primary Key. This will use the database's built-in auto-numbering system on the base table, and apply the same ID to all subclass tables.
 *  ClassName: An enumeration listing this data-class and all of its subclasses.
 *  Created: A date/time field set to the creation date of this record
 *  LastEdited: A date/time field set to the date this record was last edited through `write()`
