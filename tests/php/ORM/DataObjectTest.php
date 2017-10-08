@@ -517,10 +517,10 @@ class DataObjectTest extends SapphireTest
         ];
 
         // Test the IDs on the DataObjects are set correctly
-        $this->assertDOSEquals($team1Comments, $team1->Comments());
+        $this->assertListEquals($team1Comments, $team1->Comments());
 
         // Test that has_many can be infered from the has_one via getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             $team1Comments,
             $team1->inferReciprocalComponent(DataObjectTest\TeamComment::class, 'Team')
         );
@@ -1259,10 +1259,13 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
     }
 
+
+    /**
+     * @expectedException \SilverStripe\ORM\ValidationException
+     */
     public function testWritingInvalidDataObjectThrowsException()
     {
         $validatedObject = new DataObjectTest\ValidatedObject();
-        $this->setExpectedException(ValidationException::class);
         $validatedObject->write();
     }
 
@@ -1339,7 +1342,9 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($schema->classHasTable(ViewableData::class));
 
         // Invalid class
-        $this->setExpectedException(ReflectionException::class, 'Class ThisIsntADataObject does not exist');
+        $this->expectException(ReflectionException::class);
+        $this->expectExceptionMessage('Class ThisIsntADataObject does not exist');
+
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
     }
 
@@ -1405,24 +1410,30 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithArray()
     {
         Config::modify()->merge(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
         Config::modify()->set(DataObjectTest\Team::class, 'has_many', array(0 => DataObjectTest\Player::class));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
         Config::modify()->merge(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
-        $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
 
@@ -1448,7 +1459,8 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
 
         // Test invalid classes fail
-        $this->setExpectedException('InvalidArgumentException', "Controller is not a valid subclass of DataObject");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
         /**
  * @skipUpgrade
 */
@@ -1493,7 +1505,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
         // Test that belongs_many_many can be infered from with getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Name' => 'Company corp'],
                 ['Name' => 'Team co.'],
@@ -1502,7 +1514,7 @@ class DataObjectTest extends SapphireTest
         );
 
         // Test that many_many can be infered from getNonReciprocalComponent
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'Team 1'],
                 ['Title' => 'Team 2'],
@@ -1902,7 +1914,7 @@ class DataObjectTest extends SapphireTest
 
         // Test belongs_to can be infered via getNonReciprocalComponent
         // Note: Will be returned as has_many since the belongs_to is ignored.
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Name' => 'New Company']],
             $ceo->inferReciprocalComponent(DataObjectTest\Company::class, 'CEO')
         );
@@ -2078,14 +2090,17 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\Player::class, DataObjectTest\Player::get()->first());
 
         // You can't pass arguments to LSB syntax - use the DataList methods instead.
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
+
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testBrokenLateStaticBindingStyle()
     {
         // If you call DataObject::get() you have to pass a first argument
-        $this->setExpectedException('InvalidArgumentException');
         DataObject::get();
     }
 

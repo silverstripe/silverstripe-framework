@@ -41,10 +41,11 @@ class GridFieldDataColumnsTest extends SapphireTest
     /**
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testGridFieldDisplayFieldsWithBadArguments()
     {
-        $this->setExpectedException('InvalidArgumentException');
         $obj = new GridField('testfield', 'testfield', Member::get());
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields(new stdClass());
