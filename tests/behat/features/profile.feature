@@ -18,7 +18,7 @@ Feature: Manage my own settings
 		Given I go to "admin/myprofile"
 		Then I should not see "Joe"
 		Then I should see "Jack"
-		And I should not see "Johnson"
+		And I should see "Johnson"
 
 	Scenario: I can't reset the password without the original
 		Given I follow "Change Password"
