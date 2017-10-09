@@ -17,13 +17,10 @@ class HTTPRequestBuilder
     {
         // Clean and update live global variables
         $variables = static::cleanEnvironment(Environment::getVariables());
-
-        // Health-check prior to creating environment
-        $req = static::createFromVariables($variables, @file_get_contents('php://input'));
-
         Environment::setVariables($variables); // Currently necessary for SSViewer, etc to work
 
-        return $req;
+        // Health-check prior to creating environment
+        return static::createFromVariables($variables, @file_get_contents('php://input'));
     }
 
     /**
