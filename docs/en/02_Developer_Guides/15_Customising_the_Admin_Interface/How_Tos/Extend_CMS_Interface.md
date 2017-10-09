@@ -24,7 +24,8 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `framework/admin/templates/Includes/LeftAndMain_Menu.ss`
+Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_Menu.ss`
+from the `silverstripe/admin` module
 into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
 the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 

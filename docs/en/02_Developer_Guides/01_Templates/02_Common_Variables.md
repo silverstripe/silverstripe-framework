@@ -355,7 +355,8 @@ While you can achieve breadcrumbs through the `$Level(<level>)` control manually
     $Breadcrumbs
 ```
 
-By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.ss`
+By default, it uses the template defined in `templates/BreadcrumbsTemplate.ss`
+of the `silverstripe/cms` module.
 
 ```ss
 
@@ -367,7 +368,8 @@ By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.s
 ```
 
 <div class="info" markdown="1">
-To customise the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
+To customise the markup that the `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
+ from the `silverstripe/cms` module to 
 `mysite/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 </div>
 
