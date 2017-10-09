@@ -9,6 +9,7 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
@@ -1014,11 +1015,22 @@ class Director implements TemplateGlobalProvider
      */
     protected static function currentRequest(HTTPRequest $request = null)
     {
+        if ($request) {
+            return $request;
+        }
+
+        // Skip if called during bootstrapping
+        if (!InjectorLoader::inst()->hasManifest()) {
+            return null;
+        }
+
         // Ensure we only use a registered HTTPRequest and don't
         // incidentally construct a singleton
-        if (!$request && Injector::inst()->has(HTTPRequest::class)) {
-            $request = Injector::inst()->get(HTTPRequest::class);
+        if (Injector::inst()->has(HTTPRequest::class)) {
+            return Injector::inst()->get(HTTPRequest::class);
         }
-        return $request;
+
+        // End case
+        return null;
     }
 }
