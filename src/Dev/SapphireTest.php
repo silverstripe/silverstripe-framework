@@ -4,7 +4,9 @@ namespace SilverStripe\Dev;
 
 use Exception;
 use LogicException;
+use PHPUnit_Framework_Constraint_Not;
 use PHPUnit_Framework_TestCase;
+use PHPUnit_Util_InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\Control\CLIRequestBuilder;
 use SilverStripe\Control\Controller;
@@ -12,12 +14,15 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Constraint\SSListContains;
+use SilverStripe\Dev\Constraint\SSListContainsOnly;
+use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
@@ -242,7 +247,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $fixtureFiles = $this->getFixturePaths();
 
         // Set up fixture
-        if ($fixtureFiles || $this->usesDatabase) {
+        if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
             if (!static::$tempDB->isUsed()) {
                 static::$tempDB->build();
             }
@@ -266,7 +271,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 $fixture->writeInto($this->getFixtureFactory());
             }
 
-            $this->logInWithPermission("ADMIN");
+            $this->logInWithPermission('ADMIN');
         }
 
         // turn off template debugging
@@ -278,6 +283,50 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         Email::config()->remove('send_all_emails_from');
         Email::config()->remove('cc_all_emails_to');
         Email::config()->remove('bcc_all_emails_to');
+    }
+
+
+
+    /**
+     * Helper method to determine if the current test should enable a test database
+     *
+     * @param $fixtureFiles
+     * @return bool
+     */
+    protected function shouldSetupDatabaseForCurrentTest($fixtureFiles)
+    {
+        $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
+
+        return ($databaseEnabledByDefault && !$this->currentTestDisablesDatabase())
+            || $this->currentTestEnablesDatabase();
+    }
+
+    /**
+     * Helper method to check, if the current test uses the database.
+     * This can be switched on with the annotation "@useDatabase"
+     *
+     * @return bool
+     */
+    protected function currentTestEnablesDatabase()
+    {
+        $annotations = $this->getAnnotations();
+
+        return array_key_exists('useDatabase', $annotations['method'])
+            && $annotations['method']['useDatabase'][0] !== 'false';
+    }
+
+    /**
+     * Helper method to check, if the current test uses the database.
+     * This can be switched on with the annotation "@useDatabase false"
+     *
+     * @return bool
+     */
+    protected function currentTestDisablesDatabase()
+    {
+        $annotations = $this->getAnnotations();
+
+        return array_key_exists('useDatabase', $annotations['method'])
+            && $annotations['method']['useDatabase'][0] === 'false';
     }
 
     /**
@@ -440,8 +489,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
-            throw new LogicException("getItemPath returned null for " . static::class
-                . ". Try adding flush=1 to the test run.");
+            throw new LogicException('getItemPath returned null for ' . static::class
+                . '. Try adding flush=1 to the test run.');
         }
         return dirname($filename);
     }
@@ -540,7 +589,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
      *               'HtmlContent'
      */
-    public function findEmail($to, $from = null, $subject = null, $content = null)
+    public static function findEmail($to, $from = null, $subject = null, $content = null)
     {
         /** @var Mailer $mailer */
         $mailer = Injector::inst()->get(Mailer::class);
@@ -559,11 +608,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $subject
      * @param string $content
      */
-    public function assertEmailSent($to, $from = null, $subject = null, $content = null)
+    public static function assertEmailSent($to, $from = null, $subject = null, $content = null)
     {
-        $found = (bool)$this->findEmail($to, $from, $subject, $content);
+        $found = (bool)static::findEmail($to, $from, $subject, $content);
 
-        $infoParts = "";
+        $infoParts = '';
         $withParts = array();
         if ($to) {
             $infoParts .= " to '$to'";
@@ -578,10 +627,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $withParts[] = "content '$content'";
         }
         if ($withParts) {
-            $infoParts .= " with " . implode(" and ", $withParts);
+            $infoParts .= ' with ' . implode(' and ', $withParts);
         }
 
-        $this->assertTrue(
+        static::assertTrue(
             $found,
             "Failed asserting that an email was sent$infoParts."
         );
@@ -594,91 +643,103 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $dataObjectSet The {@link SS_List} to test.
+     * @param SS_List $list The {@link SS_List} to test.
+     * @param string $message
      *
      * Examples
      * --------
      * Check that $members includes an entry with Email = sam@example.com:
-     *      $this->assertDOSContains(array('Email' => '...@example.com'), $members);
+     *      $this->assertListContains(['Email' => '...@example.com'], $members);
      *
      * Check that $members includes entries with Email = sam@example.com and with
      * Email = ingo@example.com:
-     *      $this->assertDOSContains(array(
-     *         array('Email' => '...@example.com'),
-     *         array('Email' => 'i...@example.com'),
-     *      ), $members);
+     *      $this->assertListContains([
+     *         ['Email' => '...@example.com'],
+     *         ['Email' => 'i...@example.com'],
+     *      ], $members);
+     */
+    public static function assertListContains($matches, SS_List $list, $message = '')
+    {
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
+            );
+        }
+
+        static::assertThat(
+            $list,
+            new SSListContains(
+                $matches
+            ),
+            $message
+        );
+    }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
+     *
+     * @param $matches
+     * @param $dataObjectSet
      */
     public function assertDOSContains($matches, $dataObjectSet)
     {
-        $extracted = array();
-        foreach ($dataObjectSet as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        foreach ($matches as $match) {
-            $matched = false;
-            foreach ($extracted as $i => $item) {
-                if ($this->dataObjectArrayMatch($item, $match)) {
-                    // Remove it from $extracted so that we don't get duplicate mapping.
-                    unset($extracted[$i]);
-                    $matched = true;
-                    break;
-                }
-            }
-
-            // We couldn't find a match - assertion failed
-            $this->assertTrue(
-                $matched,
-                "Failed asserting that the SS_List contains an item matching "
-                . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                . $this->DOSSummaryForMatch($dataObjectSet, $match)
-            );
-        }
+        Deprecation::notice('5.0', 'Use assertListContains() instead');
+        return static::assertListContains($matches, $dataObjectSet);
     }
+
     /**
      * Asserts that no items in a given list appear in the given dataobject list
      *
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param SS_List $dataObjectSet The {@link SS_List} to test.
+     * @param SS_List $list The {@link SS_List} to test.
+     * @param string $message
      *
      * Examples
      * --------
      * Check that $members doesn't have an entry with Email = sam@example.com:
-     *      $this->assertNotDOSContains(array('Email' => '...@example.com'), $members);
+     *      $this->assertListNotContains(['Email' => '...@example.com'], $members);
      *
      * Check that $members doesn't have entries with Email = sam@example.com and with
      * Email = ingo@example.com:
-     *      $this->assertNotDOSContains(array(
-     *         array('Email' => '...@example.com'),
-     *         array('Email' => 'i...@example.com'),
-     *      ), $members);
+     *      $this->assertListNotContains([
+     *          ['Email' => '...@example.com'],
+     *          ['Email' => 'i...@example.com'],
+     *      ], $members);
      */
-    public function assertNotDOSContains($matches, $dataObjectSet)
+    public static function assertListNotContains($matches, SS_List $list, $message = '')
     {
-        $extracted = array();
-        foreach ($dataObjectSet as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        $matched = [];
-        foreach ($matches as $match) {
-            foreach ($extracted as $i => $item) {
-                if ($this->dataObjectArrayMatch($item, $match)) {
-                    $matched[] = $extracted[$i];
-                    break;
-                }
-            }
-
-            // We couldn't find a match - assertion failed
-            $this->assertEmpty(
-                $matched,
-                "Failed asserting that the SS_List dosn't contain a set of objects. "
-                . "Found objects were: " . var_export($matched, true)
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
             );
         }
+
+        $constraint =  new PHPUnit_Framework_Constraint_Not(
+            new SSListContains(
+                $matches
+            )
+        );
+
+        static::assertThat(
+            $list,
+            $constraint,
+            $message
+        );
+    }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
+     *
+     * @param $matches
+     * @param $dataObjectSet
+     */
+    public static function assertNotDOSContains($matches, $dataObjectSet)
+    {
+        Deprecation::notice('5.0', 'Use assertListNotContains() instead');
+        return static::assertListNotContains($matches, $dataObjectSet);
     }
 
     /**
@@ -689,57 +750,46 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * --------
      * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't
      * matter:
-     *     $this->assertDOSEquals(array(
-     *        array('FirstName' =>'Sam', 'Surname' => 'Minnee'),
-     *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'),
-     *      ), $members);
+     *     $this->assertListEquals([
+     *        ['FirstName' =>'Sam', 'Surname' => 'Minnee'],
+     *        ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+     *      ], $members);
      *
      * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param mixed $dataObjectSet The {@link SS_List} to test.
+     * @param mixed $list The {@link SS_List} to test.
+     * @param string $message
+     */
+    public static function assertListEquals($matches, SS_List $list, $message = '')
+    {
+        if (!is_array($matches)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
+            );
+        }
+
+        static::assertThat(
+            $list,
+            new SSListContainsOnly(
+                $matches
+            ),
+            $message
+        );
+    }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
+     *
+     * @param $matches
+     * @param SS_List $dataObjectSet
      */
     public function assertDOSEquals($matches, $dataObjectSet)
     {
-        // Extract dataobjects
-        $extracted = array();
-        if ($dataObjectSet) {
-            foreach ($dataObjectSet as $object) {
-                /** @var DataObject $object */
-                $extracted[] = $object->toMap();
-            }
-        }
-
-        // Check all matches
-        if ($matches) {
-            foreach ($matches as $match) {
-                $matched = false;
-                foreach ($extracted as $i => $item) {
-                    if ($this->dataObjectArrayMatch($item, $match)) {
-                        // Remove it from $extracted so that we don't get duplicate mapping.
-                        unset($extracted[$i]);
-                        $matched = true;
-                        break;
-                    }
-                }
-
-                // We couldn't find a match - assertion failed
-                $this->assertTrue(
-                    $matched,
-                    "Failed asserting that the SS_List contains an item matching "
-                    . var_export($match, true) . "\n\nIn the following SS_List:\n"
-                    . $this->DOSSummaryForMatch($dataObjectSet, $match)
-                );
-            }
-        }
-
-        // If we have leftovers than the DOS has extra data that shouldn't be there
-        $this->assertTrue(
-            (count($extracted) == 0),
-            // If we didn't break by this point then we couldn't find a match
-            "Failed asserting that the SS_List contained only the given items, the "
-            . "following items were left over:\n" . var_export($extracted, true)
-        );
+        Deprecation::notice('5.0', 'Use assertListEquals() instead');
+        return static::assertListEquals($matches, $dataObjectSet);
     }
+
 
     /**
      * Assert that the every record in the given {@link SS_List} matches the given key-value
@@ -748,26 +798,40 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Example
      * --------
      * Check that every entry in $members has a Status of 'Active':
-     *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members);
+     *     $this->assertListAllMatch(['Status' => 'Active'], $members);
      *
      * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
-     * @param mixed $dataObjectSet The {@link SS_List} to test.
+     * @param mixed $list The {@link SS_List} to test.
+     * @param string $message
      */
-    public function assertDOSAllMatch($match, $dataObjectSet)
+    public static function assertListAllMatch($match, SS_List $list, $message = '')
     {
-        $extracted = array();
-        foreach ($dataObjectSet as $object) {
-            /** @var DataObject $object */
-            $extracted[] = $object->toMap();
-        }
-
-        foreach ($extracted as $i => $item) {
-            $this->assertTrue(
-                $this->dataObjectArrayMatch($item, $match),
-                "Failed asserting that the the following item matched "
-                . var_export($match, true) . ": " . var_export($item, true)
+        if (!is_array($match)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1,
+                'array'
             );
         }
+
+        static::assertThat(
+            $list,
+            new SSListContainsOnlyMatchingItems(
+                $match
+            ),
+            $message
+        );
+    }
+
+    /**
+     * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
+     *
+     * @param $match
+     * @param SS_List $dataObjectSet
+     */
+    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
+    {
+        Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
+        return static::assertListAllMatch($match, $dataObjectSet);
     }
 
     /**
@@ -777,7 +841,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $sql
      * @return string The cleaned and normalised SQL string
      */
-    protected function normaliseSQL($sql)
+    protected static function normaliseSQL($sql)
     {
         return trim(preg_replace('/\s+/m', ' ', $sql));
     }
@@ -793,7 +857,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $canonicalize
      * @param boolean $ignoreCase
      */
-    public function assertSQLEquals(
+    public static function assertSQLEquals(
         $expectedSQL,
         $actualSQL,
         $message = '',
@@ -803,10 +867,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $ignoreCase = false
     ) {
         // Normalise SQL queries to remove patterns of repeating whitespace
-        $expectedSQL = $this->normaliseSQL($expectedSQL);
-        $actualSQL = $this->normaliseSQL($actualSQL);
+        $expectedSQL = static::normaliseSQL($expectedSQL);
+        $actualSQL = static::normaliseSQL($actualSQL);
 
-        $this->assertEquals($expectedSQL, $actualSQL, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
+        static::assertEquals($expectedSQL, $actualSQL, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
     }
 
     /**
@@ -818,17 +882,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $ignoreCase
      * @param boolean $checkForObjectIdentity
      */
-    public function assertSQLContains(
+    public static function assertSQLContains(
         $needleSQL,
         $haystackSQL,
         $message = '',
         $ignoreCase = false,
         $checkForObjectIdentity = true
     ) {
-        $needleSQL = $this->normaliseSQL($needleSQL);
-        $haystackSQL = $this->normaliseSQL($haystackSQL);
+        $needleSQL = static::normaliseSQL($needleSQL);
+        $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        $this->assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -840,50 +904,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param boolean $ignoreCase
      * @param boolean $checkForObjectIdentity
      */
-    public function assertSQLNotContains(
+    public static function assertSQLNotContains(
         $needleSQL,
         $haystackSQL,
         $message = '',
         $ignoreCase = false,
         $checkForObjectIdentity = true
     ) {
-        $needleSQL = $this->normaliseSQL($needleSQL);
-        $haystackSQL = $this->normaliseSQL($haystackSQL);
+        $needleSQL = static::normaliseSQL($needleSQL);
+        $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        $this->assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
-    }
-
-    /**
-     * Helper function for the DOS matchers
-     *
-     * @param array $item
-     * @param array $match
-     * @return bool
-     */
-    private function dataObjectArrayMatch($item, $match)
-    {
-        foreach ($match as $k => $v) {
-            if (!array_key_exists($k, $item) || $item[$k] != $v) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Helper function for the DOS matchers
-     *
-     * @param SS_List|array $dataObjectSet
-     * @param array $match
-     * @return string
-     */
-    private function DOSSummaryForMatch($dataObjectSet, $match)
-    {
-        $extracted = array();
-        foreach ($dataObjectSet as $item) {
-            $extracted[] = array_intersect_key($item->toMap(), $match);
-        }
-        return var_export($extracted, true);
+        static::assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -897,7 +928,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         // Health check
         if (InjectorLoader::inst()->countManifests()) {
-            throw new LogicException("SapphireTest::start() cannot be called within another application");
+            throw new LogicException('SapphireTest::start() cannot be called within another application');
         }
         static::set_is_running_test(true);
 
@@ -1001,7 +1032,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             }
 
             $member->FirstName = $permCode;
-            $member->Surname = "User";
+            $member->Surname = 'User';
             $member->Email = "$permCode@example.org";
             $member->write();
             $group->Members()->add($member);
@@ -1018,7 +1049,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string|array $permCode Either a permission, or list of permissions
      * @return int Member ID
      */
-    public function logInWithPermission($permCode = "ADMIN")
+    public function logInWithPermission($permCode = 'ADMIN')
     {
         $member = $this->createMemberWithPermission($permCode);
         $this->logInAs($member);
@@ -1091,7 +1122,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             return [];
         }
 
-        $fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : [$fixtureFile];
+        $fixtureFiles = is_array($fixtureFile) ? $fixtureFile : [$fixtureFile];
 
         return array_map(function ($fixtureFilePath) {
             return $this->resolveFixturePath($fixtureFilePath);

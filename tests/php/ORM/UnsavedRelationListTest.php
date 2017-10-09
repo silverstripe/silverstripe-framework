@@ -55,7 +55,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $children = $object->Children();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -68,7 +68,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($children, $object->Children());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -89,7 +89,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $siblings = $object->Siblings();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -102,7 +102,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($siblings, $object->Siblings());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -123,7 +123,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $children = $object->Children();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -136,7 +136,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($children, $object->Children());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -157,7 +157,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $children = $object->RelatedObjects();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -170,7 +170,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($children, $object->RelatedObjects());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -191,7 +191,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $siblings = $object->Siblings();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -204,7 +204,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($siblings, $object->Siblings());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
@@ -225,7 +225,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $siblings = $object->Siblings();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A', 'Number' => 1),
             array('Name' => 'B', 'Number' => 2),
@@ -238,7 +238,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $this->assertNotEquals($siblings, $object->Siblings());
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A', 'Number' => 1),
             array('Name' => 'B', 'Number' => 2),
@@ -292,7 +292,7 @@ class UnsavedRelationListTest extends SapphireTest
 
         $children = $object->Children();
 
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             array(
             array('Name' => 'A'),
             array('Name' => 'B'),
