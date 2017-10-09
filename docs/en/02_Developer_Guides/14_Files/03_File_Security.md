@@ -362,7 +362,7 @@ bypasses PHP requests for files that do exist. The default template
 # Non existant files passed to requesthandler
 RewriteCond %{REQUEST_URI} ^(.*)$
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* ../vendor/silverstripe/framework/main.php?url=%1 [QSA]
+RewriteRule .* ../index.php [QSA]
 ```
 
 You will need to ensure that your core apache configuration has the necessary `AllowOverride`
@@ -381,9 +381,9 @@ The default rule for IIS is as below (only partial configuration displayed):
     <match url="^(.*)$" />
     <conditions>
         <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-        <add input="../vendor/silverstripe/framework/main.php" matchType="IsFile" />
+        <add input="../index.php" matchType="IsFile" />
     </conditions>
-    <action type="Rewrite" url="../vendor/silverstripe/framework/main.php?url={R:1}" appendQueryString="true" />
+    <action type="Rewrite" url="../index.php" appendQueryString="true" />
 </rule>
 ```
 
@@ -402,6 +402,6 @@ dynamic requests are processed via the Framework:
 ```
     location ^~ /assets/ {
         sendfile on;
-        try_files $uri vendor/silverstripe/framework/main.php?url=$uri&$query_string;
+        try_files $uri index.php?$query_string;
     }
 ```

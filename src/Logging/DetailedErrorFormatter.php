@@ -94,9 +94,8 @@ class DetailedErrorFormatter implements FormatterInterface
         $httpRequest = null;
         if (isset($_SERVER['REQUEST_URI'])) {
             $httpRequest = $_SERVER['REQUEST_URI'];
-        } elseif (isset($_REQUEST['url'])) {
-            $httpRequest = $_REQUEST['url'];
         }
+
         if (isset($_SERVER['REQUEST_METHOD'])) {
             $httpRequest = $_SERVER['REQUEST_METHOD'] . ' ' . $httpRequest;
         }

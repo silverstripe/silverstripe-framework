@@ -442,7 +442,7 @@ class ClassManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
             'name_regex' => '/^[^_].*\\.php$/',
-            'ignore_files' => array('index.php', 'main.php', 'cli-script.php'),
+            'ignore_files' => array('index.php', 'cli-script.php'),
             'ignore_tests' => !$includeTests,
             'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
                 $this->handleFile($basename, $pathname, $includeTests);
