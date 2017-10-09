@@ -32,7 +32,13 @@ class HTTPRequestBuilder
      */
     public static function createFromVariables(array $variables, $input)
     {
-        $url = $variables['_SERVER']['REQUEST_URI'];
+        // Remove query parameters (they're retained separately through $server['_GET']
+        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
+
+        // Remove base folders from the URL if webroot is hosted in a subfolder
+        if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
+            $url = substr($url, strlen(BASE_URL));
+        }
 
         // Build request
         $request = new HTTPRequest(
@@ -123,17 +129,6 @@ class HTTPRequestBuilder
             (array)$variables['_POST'],
             (array)$variables['_COOKIE']
         );
-
-        // Remove query parameters (they're retained separately through $server['_GET']
-        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
-
-        // Remove base folders from the URL if webroot is hosted in a subfolder
-        if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
-            $url = substr($url, strlen(BASE_URL));
-        }
-
-        // Normalise URI
-        $variables['_SERVER']['REQUEST_URI'] = $url;
 
         return $variables;
     }
