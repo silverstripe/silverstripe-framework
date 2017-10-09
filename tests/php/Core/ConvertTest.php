@@ -276,6 +276,25 @@ PHP
         $this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
     }
 
+    public function filenameProvider()
+    {
+        return [
+            ['localhost:8080', 'localhost8080'], //remove : froma  filename
+            ['foo.bar', 'foo.bar'], //nothing, is fine
+            ['/this\-is-a-test', 'this-is-a-test'], //remove trailing slash and backslash inside
+            ['no whitespace', 'no-whitespace'],
+            ['österreich.jpg', 'oesterreich.jpg'], //convert umlaut
+        ];
+    }
+
+    /**
+     * @dataProvider filenameProvider
+     */
+    public function testRaw2Filename($orig, $expected)
+    {
+        $this->assertEquals($expected, Convert::raw2filename($orig));
+    }
+
     /**
      * Helper function for comparing characters with significant whitespaces
   *
