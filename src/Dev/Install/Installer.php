@@ -86,6 +86,7 @@ class Installer extends InstallRequirements
         }
 
         // Write all files
+        $this->writeIndexPHP();
         $this->writeConfigPHP($config);
         $this->writeConfigYaml($config);
         $this->writeConfigEnv($config);
@@ -197,6 +198,31 @@ HTML;
         }
 
         return $this->errors;
+    }
+
+    protected function writeIndexPHP()
+    {
+        $content = <<<'PHP'
+<?php
+
+use SilverStripe\Control\HTTPApplication;
+use SilverStripe\Control\HTTPRequestBuilder;
+use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Build request and detect flush
+$request = HTTPRequestBuilder::createFromEnvironment();
+
+// Default application
+$kernel = new CoreKernel(BASE_PATH);
+$app = new HTTPApplication($kernel);
+$app->addMiddleware(new ErrorControlChainMiddleware($app));
+$response = $app->handle($request);
+$response->output();
+PHP;
+        $this->writeToFile('index.php', $content);
     }
 
     /**

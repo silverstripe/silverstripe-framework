@@ -217,6 +217,8 @@ class InstallRequirements
             '',
         ));
 
+        $this->requireWriteable('index.php', array("File permissions", "Is the index.php file writeable?", null));
+
         if ($isApache) {
             $this->checkApacheVersion(array(
                 "Webserver Configuration",
@@ -732,8 +734,25 @@ class InstallRequirements
      */
     public function checkModuleExists($dirname)
     {
-        $path = $this->getBaseDir() . $dirname;
-        return file_exists($path) && ($dirname == 'mysite' || file_exists($path . '/_config.php'));
+        // Mysite is base-only and doesn't need _config.php to be counted
+        if ($dirname === 'mysite') {
+            return file_exists($this->getBaseDir() . $dirname);
+        }
+
+        $paths = [
+            "vendor/silverstripe/{$dirname}/",
+            "{$dirname}/",
+        ];
+        foreach ($paths as $path) {
+            $checks = ['_config', '_config.php'];
+            foreach ($checks as $check) {
+                if (file_exists($this->getBaseDir() . $path . $check)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
