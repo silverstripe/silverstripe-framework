@@ -63,7 +63,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      */
     protected static function canary()
     {
-        return TEMP_FOLDER . '/catalog.i18n_canary';
+        return TEMP_PATH . DIRECTORY_SEPARATOR . 'catalog.i18n_canary';
     }
 
     /**

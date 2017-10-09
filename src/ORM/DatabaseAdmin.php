@@ -196,8 +196,9 @@ class DatabaseAdmin extends Controller
      */
     public static function lastBuilt()
     {
-        $file = TEMP_FOLDER
-            . '/database-last-generated-'
+        $file = TEMP_PATH
+            . DIRECTORY_SEPARATOR
+            . 'database-last-generated-'
             . str_replace(array('\\','/',':'), '.', Director::baseFolder());
 
         if (file_exists($file)) {
@@ -371,8 +372,9 @@ class DatabaseAdmin extends Controller
             }
         }
 
-        touch(TEMP_FOLDER
-            . '/database-last-generated-'
+        touch(TEMP_PATH
+            . DIRECTORY_SEPARATOR
+            . 'database-last-generated-'
             . str_replace(array('\\', '/', ':'), '.', Director::baseFolder()));
 
         if (isset($_REQUEST['from_installer'])) {

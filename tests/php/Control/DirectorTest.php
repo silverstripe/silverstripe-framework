@@ -54,7 +54,7 @@ class DirectorTest extends SapphireTest
     public function testFileExists()
     {
         $tempFileName = 'DirectorTest_testFileExists.tmp';
-        $tempFilePath = TEMP_FOLDER . '/' . $tempFileName;
+        $tempFilePath = TEMP_PATH . DIRECTORY_SEPARATOR . $tempFileName;
 
         // create temp file
         file_put_contents($tempFilePath, '');
