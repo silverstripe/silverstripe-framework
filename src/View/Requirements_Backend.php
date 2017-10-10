@@ -989,6 +989,8 @@ class Requirements_Backend
      */
     public function add_i18n_javascript($langDir, $return = false)
     {
+        $langDir = ModuleResourceLoader::singleton()->resolvePath($langDir);
+
         $files = array();
         $base = Director::baseFolder() . '/';
 
