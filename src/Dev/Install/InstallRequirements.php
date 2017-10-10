@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Install;
 
+use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\TempFolder;
@@ -16,8 +17,25 @@ use SilverStripe\Core\TempFolder;
  */
 class InstallRequirements
 {
+    /**
+     * List of errors
+     *
+     * @var array
+     */
     protected $errors = [];
+
+    /**
+     * List of warnings
+     *
+     * @var array
+     */
     protected $warnings = [];
+
+    /**
+     * List of tests
+     *
+     * @var array
+     */
     protected $tests = [];
 
     /**
@@ -25,6 +43,28 @@ class InstallRequirements
      * @var array
      */
     protected $originalIni = [];
+
+    /**
+     * Base path
+     * @var
+     */
+    protected $baseDir;
+
+    public function __construct($basePath = null)
+    {
+        if ($basePath) {
+            $this->baseDir = $basePath;
+        } elseif (defined('BASE_PATH')) {
+            $this->baseDir = BASE_PATH;
+        } else {
+            throw new BadMethodCallException("No BASE_PATH defined");
+        }
+    }
+
+    public function getBaseDir()
+    {
+        return rtrim($this->baseDir, '/\\') . '/';
+    }
 
     /**
      * Check the database configuration. These are done one after another
@@ -217,6 +257,8 @@ class InstallRequirements
             '',
         ));
 
+        $this->requireWriteable('index.php', array("File permissions", "Is the index.php file writeable?", null));
+
         if ($isApache) {
             $this->checkApacheVersion(array(
                 "Webserver Configuration",
@@ -251,7 +293,7 @@ class InstallRequirements
         $this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
         try {
-            $tempFolder = TempFolder::getTempFolder(BASE_PATH);
+            $tempFolder = TempFolder::getTempFolder($this->getBaseDir());
         } catch (Exception $e) {
             $tempFolder = false;
         }
@@ -732,8 +774,25 @@ class InstallRequirements
      */
     public function checkModuleExists($dirname)
     {
-        $path = $this->getBaseDir() . $dirname;
-        return file_exists($path) && ($dirname == 'mysite' || file_exists($path . '/_config.php'));
+        // Mysite is base-only and doesn't need _config.php to be counted
+        if ($dirname === 'mysite') {
+            return file_exists($this->getBaseDir() . $dirname);
+        }
+
+        $paths = [
+            "vendor/silverstripe/{$dirname}/",
+            "{$dirname}/",
+        ];
+        foreach ($paths as $path) {
+            $checks = ['_config', '_config.php'];
+            foreach ($checks as $check) {
+                if (file_exists($this->getBaseDir() . $path . $check)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -828,7 +887,7 @@ class InstallRequirements
         $this->testing($testDetails);
 
         try {
-            $tempFolder = TempFolder::getTempFolder(BASE_PATH);
+            $tempFolder = TempFolder::getTempFolder($this->getBaseDir());
         } catch (Exception $e) {
             $tempFolder = false;
         }
@@ -1068,14 +1127,6 @@ class InstallRequirements
             $this->warning($testDetails);
             return false;
         }
-    }
-
-    // Must be PHP4 compatible
-    var $baseDir;
-
-    public function getBaseDir()
-    {
-        return BASE_PATH . '/';
     }
 
     public function testing($testDetails)
