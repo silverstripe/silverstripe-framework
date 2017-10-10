@@ -40,9 +40,8 @@ class CMSSecurity extends Security
         SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
 
         // Core styles / vendor scripts
-        $admin = ModuleLoader::getModule('silverstripe/admin');
-        Requirements::javascript($admin->getRelativeResourcePath('client/dist/js/vendor.js'));
-        Requirements::css($admin->getRelativeResourcePath('client/dist/styles/bundle.css'));
+        Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');
+        Requirements::css('silverstripe/admin: client/dist/styles/bundle.css');
     }
 
     public function login($request = null, $service = Authenticator::CMS_LOGIN)

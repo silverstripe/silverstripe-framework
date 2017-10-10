@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\TemplateGlobalProvider;
 
 /**
@@ -22,6 +23,10 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      */
     public function resolvePath($resource)
     {
+        // Skip blank resources
+        if (empty($resource)) {
+            return null;
+        }
         $resourceObj = $this->resolveResource($resource);
         if ($resourceObj instanceof ModuleResource) {
             return $resourceObj->getRelativePath();
@@ -37,11 +42,18 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      */
     public function resolveURL($resource)
     {
-        $resourceObj = $this->resolveResource($resource);
-        if ($resourceObj instanceof ModuleResource) {
-            return $resourceObj->getURL();
+        // Skip blank resources
+        if (empty($resource)) {
+            return null;
         }
-        return $resource;
+
+        // Resolve resource to reference
+        $resource = $this->resolveResource($resource);
+
+        // Resolve resource to url
+        /** @var ResourceURLGenerator $generator */
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        return $generator->urlForResource($resource);
     }
 
     /**
