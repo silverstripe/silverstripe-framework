@@ -587,6 +587,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         /** @var ArrayList $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
+
         if ($this->record && $this->record->ID) {
             $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
             $items->push(new ArrayData(array(
@@ -600,6 +601,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             )));
         }
 
+        $this->extend('updateBreadcrumbs', $items);
         return $items;
     }
 }
