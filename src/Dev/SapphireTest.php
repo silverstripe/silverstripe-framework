@@ -1149,6 +1149,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
+     * Get the current temporary database
+     *
+     * @return TempDatabase|null
+     */
+    public static function getTempDB()
+    {
+        return static::$tempDB;
+    }
+
+    /**
      * Map a fixture path to a physical file
      *
      * @param string $fixtureFilePath
