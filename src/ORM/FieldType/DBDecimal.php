@@ -11,7 +11,26 @@ use SilverStripe\Forms\NumericField;
 class DBDecimal extends DBField
 {
 
-    protected $wholeSize, $decimalSize, $defaultValue;
+    /**
+     * Whole number size
+     *
+     * @var int
+     */
+    protected $wholeSize = 9;
+
+    /**
+     * Decimal scale
+     *
+     * @var int
+     */
+    protected $decimalSize = 2;
+
+    /**
+     * Default value
+     *
+     * @var string
+     */
+    protected $defaultValue = 0;
 
     /**
      * Create a new Decimal field.
@@ -27,7 +46,6 @@ class DBDecimal extends DBField
         $this->decimalSize = is_int($decimalSize) ? $decimalSize : 2;
 
         $this->defaultValue = number_format((float) $defaultValue, $decimalSize);
-        ;
 
         parent::__construct($name);
     }
@@ -84,7 +102,8 @@ class DBDecimal extends DBField
      */
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new NumericField($this->name, $title);
+        return NumericField::create($this->name, $title)
+            ->setScale($this->decimalSize);
     }
 
     /**
