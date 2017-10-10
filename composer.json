@@ -18,6 +18,9 @@
             "homepage": "http://silverstripe.org"
         }
     ],
+    "bin": [
+        "sake"
+    ],
     "require": {
         "composer/installers": "~1.0",
         "embed/embed": "^3.0",
