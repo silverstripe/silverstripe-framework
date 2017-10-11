@@ -1,4 +1,6 @@
 bg:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: непозната
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 'Размери'
     EDIT: Промени
@@ -17,6 +19,8 @@ bg:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Грешна заявка'
     REQUEST_ABORTED: 'Заявката беше отказана'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Непозната
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Не
     YESANSWER: Да
@@ -311,6 +315,7 @@ bg:
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
     LOGIN: 'Влезте в системата'
+    LOGOUT: 'Изход'
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
     NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'
