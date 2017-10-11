@@ -1,4 +1,6 @@
 it:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: sconosciuto
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensioni
     EDIT: Modifica
@@ -14,6 +16,11 @@ it:
     TEXT1: 'Questa è la tua'
     TEXT2: 'link per l''azzeramento della password'
     TEXT3: per
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Richiesta non valida'
+    REQUEST_ABORTED: 'Richiesta annullata'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Sconosciuto
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sì
@@ -158,8 +165,13 @@ it:
     PASSWORDEXPIRED: '<p>La tua password è scaduta. <a target="_top" href="{link}">Per favore selezionarne una nuova.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Utente non valido. <a target="_top" href="{link}">Per favore autenticarsi di nuovo</a> per continuare.</p>'
+    LOGIN_MESSAGE: '<p>La tua sessione è scaduta per inattività.</p>'
+    LOGIN_TITLE: 'Tornare dove eri accedendo nuovamente'
     SUCCESS: Successo
     SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
+    SUCCESS_TITLE: 'Login completato'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Amministratore Predefinito'
   SilverStripe\Security\Group:
     AddRole: 'Aggiungi un ruolo per questo gruppo'
     Code: 'Codice gruppo'
@@ -200,6 +212,7 @@ it:
     BUTTONCHANGEPASSWORD: 'Cambia password'
     BUTTONLOGIN: Accedi
     BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
+    BUTTONLOGOUT: Scollegati
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
@@ -236,6 +249,14 @@ it:
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'Form di Login Utente CMS'
+    BUTTONFORGOTPASSWORD: 'Password dimenticata'
+    BUTTONLOGIN: 'Accedi nuovamente'
+    BUTTONLOGOUT: Scollegati
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
+    NoPassword: 'Manca la password per questo utente.'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     PLURALS:
@@ -290,9 +311,11 @@ it:
     BUTTONSEND: 'Inviami il link per azzerare la password'
     CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
+    CONFIRMLOGOUT: 'Per cortesia premere il pulsante sottostante per confermare la disconnesione.'
     ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
     LOGIN: Entra
+    LOGOUT: Scollegati
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
