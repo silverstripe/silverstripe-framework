@@ -90,7 +90,7 @@ then set the currently active config using `set_active()`.
 <div class="notice" markdown='1'>
 Currently the order in which the `_config.php` files are executed depends on the module directory names. Execution 
 order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.php`, this will be overridden in 
-`framework/admin/_config.php` and your modification will disappear.
+`vendor/silverstripe/framework/admin/_config.php` and your modification will disappear.
 </div>
 
 ## Adding and removing capabilities
@@ -163,7 +163,7 @@ from the HTML source by the editor.
 
 <div class="notice" markdown="1">
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
-`framework/admin/_config.php`.
+`vendor/silverstripe/framework/admin/_config.php`.
 </div>
 
 ## Writing custom plugins
@@ -331,33 +331,3 @@ Have a look in `HtmlEditorField.js` and the `ss.editorWrapper` object to get you
 on your own editor wrapper. Note that the [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) is currently hardwired to support TinyMCE,
 so its up to you to either convert existing configuration as applicable,
 or start your own configuration.
-
-### Integrating a Spellchecker for TinyMCE
-
-The TinyMCE editor uses spellchecking integrated into the browser if possible
-([docs](http://www.tinymce.com/wiki.php/Plugin3x:spellchecker)).
-Most modern browsers support it, although Internet Explorer only has limited
-support in IE10. Alternatively, you can use the PSpell PHP module for server side checks.
-Assuming you have the module installed, here's how you enable its use in `mysite/_config.php`:
-
-
-```php
-    HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
-    HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
-    HtmlEditorConfig::get('cms')->setOption(
-        'spellchecker_rpc_url', 
-        THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
-    );
-    HtmlEditorConfig::get('cms')->setOption('browser_spellcheck', false);
-```
-
-Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecker/config.php`:
-
-
-```php
-    
-    // ...
-    $config['general.engine'] = 'PSpell';
-```
-
-

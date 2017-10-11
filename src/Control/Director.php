@@ -255,7 +255,7 @@ class Director implements TemplateGlobalProvider
         } else {
             $newVars['_GET'] = [];
         }
-        $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . $url;
+        $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . ltrim($url, '/');
         $newVars['_REQUEST'] = array_merge($newVars['_GET'], $newVars['_POST']);
 
         // Normalise vars

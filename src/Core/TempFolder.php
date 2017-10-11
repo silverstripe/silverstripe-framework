@@ -65,6 +65,7 @@ class TempFolder
      */
     protected static function getTempParentFolder($base)
     {
+        $base = rtrim($base, '/\\');
         // first, try finding a silverstripe-cache dir built off the base path
         $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
         if (@file_exists($tempPath)) {

@@ -3,35 +3,44 @@
 namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 
 class SapphireTestTest extends SapphireTest
 {
-    public function testResolveFixturePath()
+
+    /**
+     * @return array
+     */
+    public function provideResolveFixturePath()
     {
-        // Same directory
+        return [
+            [__DIR__ . '/CsvBulkLoaderTest.yml', './CsvBulkLoaderTest.yml'],
+            //same dir
+            [__DIR__ . '/CsvBulkLoaderTest.yml', 'CsvBulkLoaderTest.yml'],
+            // Filename only
+            [dirname(__DIR__) . '/ORM/DataObjectTest.yml', '../ORM/DataObjectTest.yml'],
+            // Parent path
+            [dirname(__DIR__) . '/ORM/DataObjectTest.yml', dirname(__DIR__) . '/ORM/DataObjectTest.yml'],
+            // Absolute path
+        ];
+    }
+
+    /**
+     * @dataProvider provideResolveFixturePath
+     */
+    public function testResolveFixturePath($expected, $path)
+    {
         $this->assertEquals(
-            __DIR__ . '/CsvBulkLoaderTest.yml',
-            $this->resolveFixturePath('./CsvBulkLoaderTest.yml')
-        );
-        // Filename only
-        $this->assertEquals(
-            __DIR__ . '/CsvBulkLoaderTest.yml',
-            $this->resolveFixturePath('CsvBulkLoaderTest.yml')
-        );
-        // Parent path
-        $this->assertEquals(
-            dirname(__DIR__) . '/ORM/DataObjectTest.yml',
-            $this->resolveFixturePath('../ORM/DataObjectTest.yml')
-        );
-        // Absolute path
-        $this->assertEquals(
-            dirname(__DIR__) . '/ORM/DataObjectTest.yml',
-            $this->resolveFixturePath(dirname(__DIR__) .'/ORM/DataObjectTest.yml')
+            $expected,
+            $this->resolveFixturePath($path)
         );
     }
 
+    /**
+     * @useDatabase
+     */
     public function testActWithPermission()
     {
         $this->logOut();
@@ -45,10 +54,160 @@ class SapphireTestTest extends SapphireTest
         });
     }
 
+    /**
+     * @useDatabase
+     */
     public function testCreateMemberWithPermission()
     {
-        $this->assertCount(0, Member::get()->filter([ 'Email' => 'TESTPERM@example.org' ]));
+        $this->assertCount(0, Member::get()->filter(['Email' => 'TESTPERM@example.org']));
         $this->createMemberWithPermission('TESTPERM');
-        $this->assertCount(1, Member::get()->filter([ 'Email' => 'TESTPERM@example.org' ]));
+        $this->assertCount(1, Member::get()->filter(['Email' => 'TESTPERM@example.org']));
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideAllMatchingList()
+     *
+     * @param $match
+     * @param $itemsForList
+     * @testdox Has assertion assertListAllMatch
+     */
+    public function testAssertListAllMatch($match, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+
+        $this->assertListAllMatch($match, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotMatchingList()
+     *
+     * @param $match
+     * @param $itemsForList
+     *
+     * @testdox assertion assertListAllMatch fails when not all items are matching
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+
+        $this->assertListAllMatch($match, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
+     *
+     * @param $matches
+     * @param $itemsForList
+     * @testdox Has assertion assertListContains
+     */
+    public function testAssertListContains($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+
+        $this->assertListContains($matches, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
+     * @testdox assertion assertListEquals fails on non equal Lists
+     *
+     * @param $matches
+     * @param $itemsForList array
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListContainsFailsIfListDoesNotContainMatch($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+
+        $this->assertListContains($matches, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
+     *
+     * @testdox Has assertion assertListNotContains
+     *
+     * @param $matches
+     * @param $itemsForList
+     */
+    public function testAssertListNotContains($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+
+        $this->assertListNotContains($matches, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualLists
+     *
+     * @param $matches
+     * @param $itemsForList
+     * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListNotContainsFailsWhenListContainsAMatch($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+        $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
+        $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
+        $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
+
+        $this->assertListNotContains($matches, $list);
+    }
+
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
+     * @testdox Has assertion assertListEquals
+     *
+     * @param $matches
+     * @param $itemsForList
+     */
+    public function testAssertListEquals($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+
+        $this->assertListEquals($matches, $list);
+    }
+
+    /**
+     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNonEqualLists
+     * @testdox assertion assertListEquals fails on non equal Lists
+     *
+     * @param $matches
+     * @param $itemsForList
+     *
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     */
+    public function testAssertListEqualsFailsOnNonEqualLists($matches, $itemsForList)
+    {
+        $list = $this->generateArrayListFromItems($itemsForList);
+
+        $this->assertListEquals($matches, $list);
+    }
+
+    /**
+     * generate SS_List as this is not possible in dataProvider
+     *
+     * @param $itemsForList array
+     * @return ArrayList
+     */
+    private function generateArrayListFromItems($itemsForList)
+    {
+        $list = ArrayList::create();
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+        return $list;
     }
 }

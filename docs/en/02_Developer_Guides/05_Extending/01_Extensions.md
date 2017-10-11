@@ -142,7 +142,7 @@ If the `Extension` needs to modify an existing method it's a little trickier. It
 customise has provided an *Extension Hook* in the place where you want to modify the data. An *Extension Hook* is done 
 through the `extend()` method of the [Extensible](api:SilverStripe\Core\Extensible) trait.
 
-**framework/security/Member.php**
+**Member.php**
 
 
 ```php

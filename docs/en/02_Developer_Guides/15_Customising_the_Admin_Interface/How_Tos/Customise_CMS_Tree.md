@@ -4,7 +4,7 @@
 
 The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
-`framework/admin/javascript/src/LeftAndMain.Tree.js`, as well as some
+`client/src/legacy/LeftAndMain.Tree.js` in the `silverstripe/admin` module, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 
 The tree is rendered through [LeftAndMain::getSiteTreeFor()](api:SilverStripe\Admin\LeftAndMain::getSiteTreeFor()),

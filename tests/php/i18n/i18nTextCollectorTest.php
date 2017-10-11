@@ -25,7 +25,7 @@ class i18nTextCollectorTest extends SapphireTest
         parent::setUp();
         $this->setupManifest();
 
-        $this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
+        $this->alternateBaseSavePath = TEMP_PATH . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
         Filesystem::makeFolder($this->alternateBaseSavePath);
     }
 
@@ -114,10 +114,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            'Missing localisation default for key i18nTestModule.INJECTIONS_3'
-        );
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
+
         $c->collectFromTemplate($html, null, $mymodule);
     }
 
@@ -190,10 +189,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            'Missing localisation default for key Test.PRIOANDCOMMENT'
-        );
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
+
         $c->collectFromTemplate($html, 'Test', $mymodule);
     }
 
@@ -419,10 +417,9 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
-        $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            'Missing localisation default for key i18nTestModule.INJECTIONS4'
-        );
+        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
+
         $php = <<<PHP
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 PHP;

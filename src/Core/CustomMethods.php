@@ -67,27 +67,30 @@ trait CustomMethods
                     $this->{$property}[$index] :
                     $this->{$property};
 
-                if ($obj) {
-                    if (!empty($config['callSetOwnerFirst'])) {
-                        /** @var Extension $obj */
-                        $obj->setOwner($this);
-                    }
-                    $retVal = call_user_func_array(array($obj, $method), $arguments);
-                    if (!empty($config['callSetOwnerFirst'])) {
-                        /** @var Extension $obj */
-                        $obj->clearOwner();
-                    }
-                    return $retVal;
+                if (!$obj) {
+                    throw new BadMethodCallException(
+                        "Object->__call(): {$class} cannot pass control to {$property}({$index})."
+                        . ' Perhaps this object was mistakenly destroyed?'
+                    );
                 }
 
-                throw new BadMethodCallException(
-                    "Object->__call(): {$class} cannot pass control to {$property}({$index})."
-                    . ' Perhaps this object was mistakenly destroyed?'
-                );
+                // Call without setOwner
+                if (empty($config['callSetOwnerFirst'])) {
+                    return $obj->$method(...$arguments);
+                }
+
+                /** @var Extension $obj */
+                try {
+                    $obj->setOwner($this);
+                    return $obj->$method(...$arguments);
+                } finally {
+                    $obj->clearOwner();
+                }
             }
             case isset($config['wrap']): {
                 array_unshift($arguments, $config['method']);
-                return call_user_func_array(array($this, $config['wrap']), $arguments);
+                $wrapped = $config['wrap'];
+                return $this->$wrapped(...$arguments);
             }
             case isset($config['function']): {
                 return $config['function']($this, $arguments);
@@ -192,11 +195,14 @@ trait CustomMethods
     {
         if (method_exists($extension, 'allMethodNames')) {
             if ($extension instanceof Extension) {
-                $extension->setOwner($this);
-            }
-            $methods = $extension->allMethodNames(true);
-            if ($extension instanceof Extension) {
-                $extension->clearOwner();
+                try {
+                    $extension->setOwner($this);
+                    $methods = $extension->allMethodNames(true);
+                } finally {
+                    $extension->clearOwner();
+                }
+            } else {
+                $methods = $extension->allMethodNames(true);
             }
         } else {
             $class = get_class($extension);

@@ -92,21 +92,21 @@ class DBDateTest extends SapphireTest
         );
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.
+     */
     public function testMDYConversion()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            "Invalid date: '3/16/2003'. Use " . DBDate::ISO_DATE . " to prevent this error."
-        );
         DBField::create_field('Date', '3/16/2003');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.
+     */
     public function testY2kCorrection()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            "Invalid date: '03-03-04'. Use " . DBDate::ISO_DATE . " to prevent this error."
-        );
         DBField::create_field('Date', '03-03-04');
     }
 

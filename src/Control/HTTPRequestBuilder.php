@@ -32,9 +32,13 @@ class HTTPRequestBuilder
      */
     public static function createFromVariables(array $variables, $input)
     {
-        // Strip `url` out of querystring
-        $url = $variables['_GET']['url'];
-        unset($variables['_GET']['url']);
+        // Remove query parameters (they're retained separately through $server['_GET']
+        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
+
+        // Remove base folders from the URL if webroot is hosted in a subfolder
+        if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
+            $url = substr($url, strlen(BASE_URL));
+        }
 
         // Build request
         $request = new HTTPRequest(
@@ -100,7 +104,6 @@ class HTTPRequestBuilder
 
     /**
      * Clean up HTTP global vars for $_GET / $_REQUEST prior to bootstrapping
-     * Will also populate the $_GET['url'] var safely
      *
      * @param array $variables
      * @return array Cleaned variables
@@ -115,33 +118,6 @@ class HTTPRequestBuilder
         // Override REQUEST_METHOD
         if (isset($variables['_SERVER']['X-HTTP-Method-Override'])) {
             $variables['_SERVER']['REQUEST_METHOD'] = $variables['_SERVER']['X-HTTP-Method-Override'];
-        }
-
-        // Prevent injection of url= querystring argument by prioritising any leading url argument
-        if (isset($variables['_SERVER']['QUERY_STRING']) &&
-            preg_match('/^(?<url>url=[^&?]*)(?<query>.*[&?]url=.*)$/', $variables['_SERVER']['QUERY_STRING'], $results)
-        ) {
-            $queryString = $results['query'].'&'.$results['url'];
-            parse_str($queryString, $variables['_GET']);
-        }
-
-        // Decode url from REQUEST_URI if not passed via $_GET['url']
-        if (!isset($variables['_GET']['url'])) {
-            $url = $variables['_SERVER']['REQUEST_URI'];
-
-            // Querystring args need to be explicitly parsed
-            if (strpos($url, '?') !== false) {
-                list($url, $queryString) = explode('?', $url, 2);
-                parse_str($queryString);
-            }
-
-            // Ensure $_GET['url'] is set
-            $variables['_GET']['url'] = urldecode($url);
-        }
-
-        // Remove base folders from the URL if webroot is hosted in a subfolder
-        if (substr(strtolower($variables['_GET']['url']), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
-            $variables['_GET']['url'] = substr($variables['_GET']['url'], strlen(BASE_URL));
         }
 
         // Merge $_FILES into $_POST

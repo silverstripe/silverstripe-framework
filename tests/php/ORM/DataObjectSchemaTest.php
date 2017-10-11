@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -237,7 +238,8 @@ class DataObjectSchemaTest extends SapphireTest
         $this->assertEquals(BaseClass::class, $schema->baseDataClass(GrandChildClass::class));
         $this->assertEquals(BaseClass::class, $schema->baseDataClass(ucfirst(GrandChildClass::class)));
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
+
         $schema->baseDataClass(DataObject::class);
     }
 

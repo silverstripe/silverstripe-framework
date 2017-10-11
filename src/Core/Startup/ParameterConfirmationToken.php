@@ -16,7 +16,7 @@ use SilverStripe\Security\RandomGenerator;
  * established, this class takes care of allowing some other code of confirming the parameter,
  * by generating a one-time-use token & redirecting with that token included in the redirected URL
  *
- * WARNING: This class is experimental and designed specifically for use pre-startup in main.php
+ * WARNING: This class is experimental and designed specifically for use pre-startup.
  * It will likely be heavily refactored before the release of 3.2
  */
 class ParameterConfirmationToken
@@ -57,7 +57,7 @@ class ParameterConfirmationToken
 
     protected function pathForToken($token)
     {
-        return TEMP_FOLDER.'/token_'.preg_replace('/[^a-z0-9]+/', '', $token);
+        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_'.preg_replace('/[^a-z0-9]+/', '', $token);
     }
 
     /**

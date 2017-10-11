@@ -33,7 +33,7 @@ class ManyManyThroughListTest extends SapphireTest
     {
         /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'item 1'],
                 ['Title' => 'item 2']
@@ -68,7 +68,7 @@ class ManyManyThroughListTest extends SapphireTest
 
         // Test sorting on join table
         $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'item 2'],
                 ['Title' => 'item 1'],
@@ -77,7 +77,7 @@ class ManyManyThroughListTest extends SapphireTest
         );
 
         $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort" ASC');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'item 1'],
                 ['Title' => 'item 2'],
@@ -85,7 +85,7 @@ class ManyManyThroughListTest extends SapphireTest
             $items
         );
         $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'item 2'],
                 ['Title' => 'item 1'],
@@ -122,7 +122,7 @@ class ManyManyThroughListTest extends SapphireTest
     {
         /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [
                 ['Title' => 'item 1'],
                 ['Title' => 'item 2']
@@ -131,7 +131,7 @@ class ManyManyThroughListTest extends SapphireTest
         );
         $item1 = $parent->Items()->filter(['Title' => 'item 1'])->first();
         $parent->Items()->remove($item1);
-        $this->assertDOSEquals(
+        $this->assertListEquals(
             [['Title' => 'item 2']],
             $parent->Items()
         );
@@ -139,6 +139,8 @@ class ManyManyThroughListTest extends SapphireTest
 
     /**
      * Test validation
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testValidateModelValidatesJoinType()
     {
@@ -149,7 +151,7 @@ class ManyManyThroughListTest extends SapphireTest
             ManyManyThroughListTest\JoinObject::class => 'Text'
             ]
         );
-        $this->setExpectedException(InvalidArgumentException::class);
+
         DataObject::getSchema()->manyManyComponent(ManyManyThroughListTest\TestObject::class, 'Items');
     }
 

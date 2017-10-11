@@ -404,11 +404,7 @@ class HTTPRequest implements ArrayAccess
         $url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url;
 
         if ($includeGetVars) {
-            // if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc
-
             $vars = $this->getVars();
-            unset($vars['url']);
-
             if (count($vars)) {
                 $url .= '?' . http_build_query($vars);
             }

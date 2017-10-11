@@ -41,7 +41,7 @@ to `*text*`).
 ```
 
 <div class="info" markdown="1">
-The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/SilverStripe/Email/`.
+The default HTML template for emails is named `GenericEmail` and is located in `vendor/silverstripe/framework/templates/SilverStripe/Email/`.
 To customise this template, copy it to the `mysite/templates/Email/` folder or use `setHTMLTemplate` when you create the 
 `Email` instance.
 </div>

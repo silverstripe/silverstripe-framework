@@ -18,6 +18,9 @@
             "homepage": "http://silverstripe.org"
         }
     ],
+    "bin": [
+        "sake"
+    ],
     "require": {
         "composer/installers": "~1.0",
         "embed/embed": "^3.0",
@@ -49,7 +52,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
-        "silverstripe/versioned": "^1.0@dev",
+        "silverstripe/versioned": "^1@dev",
         "silverstripe/behat-extension": "^3",
         "silverstripe/serve": "dev-master",
         "se/selenium-server-standalone": "2.41.0"
@@ -59,7 +62,6 @@
     },
     "extra": {
         "branch-alias": {
-            "4.x-dev": "4.0.x-dev",
             "dev-master": "5.x-dev"
         },
         "expose": [

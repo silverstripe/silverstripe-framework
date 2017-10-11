@@ -20,12 +20,6 @@ use SilverStripe\Security\Security;
  */
 class Installer extends InstallRequirements
 {
-    public function __construct()
-    {
-        // Cache the baseDir value
-        $this->getBaseDir();
-    }
-
     protected function installHeader()
     {
         ?>
@@ -86,6 +80,7 @@ class Installer extends InstallRequirements
         }
 
         // Write all files
+        $this->writeIndexPHP();
         $this->writeConfigPHP($config);
         $this->writeConfigYaml($config);
         $this->writeConfigEnv($config);
@@ -197,6 +192,31 @@ HTML;
         }
 
         return $this->errors;
+    }
+
+    protected function writeIndexPHP()
+    {
+        $content = <<<'PHP'
+<?php
+
+use SilverStripe\Control\HTTPApplication;
+use SilverStripe\Control\HTTPRequestBuilder;
+use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Build request and detect flush
+$request = HTTPRequestBuilder::createFromEnvironment();
+
+// Default application
+$kernel = new CoreKernel(BASE_PATH);
+$app = new HTTPApplication($kernel);
+$app->addMiddleware(new ErrorControlChainMiddleware($app));
+$response = $app->handle($request);
+$response->output();
+PHP;
+        $this->writeToFile('index.php', $content);
     }
 
     /**
@@ -439,12 +459,8 @@ ErrorDocument 500 /assets/error-500.html
     $baseClause
     $cgiClause
 
-    # Deny access to vendor, unless you're requesting main.php
-    # Not restricting to the start of the path to support RewriteBase
-    RewriteCond %{REQUEST_URI} !^/vendor/silverstripe/framework/main\.php
-    RewriteRule ^vendor(/|$) - [F,L,NC]
-
     # Deny access to potentially sensitive files and folders
+    RewriteRule ^vendor(/|$) - [F,L,NC]
     RewriteRule ^\.env - [F,L,NC]
     RewriteRule silverstripe-cache(/|$) - [F,L,NC]
     RewriteRule composer\.(json|lock) - [F,L,NC]
@@ -455,7 +471,7 @@ ErrorDocument 500 /assets/error-500.html
     # Try finding framework in the vendor folder first
     RewriteCond %{REQUEST_URI} ^(.*)$
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule .* vendor/silverstripe/framework/main.php?url=%1 [QSA]
+    RewriteRule .* index.php
 </IfModule>
 TEXT;
 
@@ -510,9 +526,8 @@ TEXT;
                     <match url="^(.*)$" />
                     <conditions>
                         <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-                        <add input="vendor/silverstripe/framework/main.php" matchType="IsFile" />
                     </conditions>
-                    <action type="Rewrite" url="vendor/silverstripe/framework/main.php?url={R:1}" appendQueryString="true" />
+                    <action type="Rewrite" url="index.php" appendQueryString="true" />
                 </rule>
             </rules>
         </rewrite>

@@ -5,7 +5,6 @@ namespace SilverStripe\Dev\State;
 use LogicException;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 
@@ -90,7 +89,10 @@ class ExtensionTestState implements TestState
 
         // clear singletons, they're caching old extension info
         // which is used in DatabaseAdmin->doBuild()
-        Injector::inst()->unregisterObjects(DataObject::class);
+        Injector::inst()->unregisterObjects([
+            DataObject::class,
+            Extension::class
+        ]);
 
         // If we have altered the schema, but SapphireTest::setUpBeforeClass() would not otherwise
         // reset the schema (if there were extra objects) then force a reset

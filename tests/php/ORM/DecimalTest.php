@@ -3,12 +3,16 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBDecimal;
 
 class DecimalTest extends SapphireTest
 {
 
     protected static $fixture_file = 'DecimalTest.yml';
 
+    /**
+     * @var DecimalTest\TestObject
+     */
     protected $testDataObject;
 
     protected static $extra_dataobjects = array(
@@ -55,5 +59,16 @@ class DecimalTest extends SapphireTest
             4,
             'Default value for Decimal type is set to 4'
         );
+    }
+
+    public function testScaffoldFormField()
+    {
+        /** @var DBDecimal $decimal */
+        $decimal = $this->testDataObject->dbObject('MyDecimal2');
+        $field = $decimal->scaffoldFormField('The Decimal');
+        $this->assertEquals(3, $field->getScale());
+        $field->setValue(1.9999);
+        $this->assertEquals(1.9999, $field->dataValue());
+        $this->assertEquals('2.000', $field->Value());
     }
 }

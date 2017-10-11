@@ -296,7 +296,9 @@ class i18nTest extends SapphireTest
         );
 
         // Passing in non-associative arrays for placeholders is now an error
-        $this->setExpectedException(InvalidArgumentException::class, 'Injection must be an associative array');
+        $this->expectExceptionMessage(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Injection must be an associative array');
+
         i18n::_t(
             $entity, // has {name} placeholders
             $default,

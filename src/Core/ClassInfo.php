@@ -197,7 +197,7 @@ class ClassInfo
         // Merge with descendants
         $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
         return array_merge(
-            [ $lowerClassName => $className ],
+            [$lowerClassName => $className],
             $descendants
         );
     }
@@ -441,6 +441,10 @@ class ClassInfo
             } elseif (is_array($token) && $token[0] === T_NS_SEPARATOR) {
                 $class .= $token[1];
                 $hadNamespace = true;
+            } elseif ($token === '.') {
+                // Treat service name separator as NS separator
+                $class .= '.';
+                $hadNamespace = true;
             } elseif ($hadNamespace && is_array($token) && $token[0] === T_STRING) {
                 $class .= $token[1];
                 $hadNamespace = false;
@@ -454,7 +458,11 @@ class ClassInfo
                                 $result = stripcslashes(substr($argString, 1, -1));
                                 break;
                             case "'":
-                                $result = str_replace(array("\\\\", "\\'"), array("\\", "'"), substr($argString, 1, -1));
+                                $result = str_replace(
+                                    ["\\\\", "\\'"],
+                                    ["\\", "'"],
+                                    substr($argString, 1, -1)
+                                );
                                 break;
                             default:
                                 throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
@@ -506,7 +514,7 @@ class ClassInfo
             } else {
                 if ($tokenName === '[') {
                     $result = array();
-                } elseif (($tokenName === ')' || $tokenName === ']') && ! empty($bucketStack)) {
+                } elseif (($tokenName === ')' || $tokenName === ']') && !empty($bucketStack)) {
                     // Store the bucket we're currently working on
                     $oldBucket = $bucket;
                     // Fetch the key for the bucket at the top of the stack

@@ -29,9 +29,9 @@ Note: For each core module (e.g. `framework` and `cms`), a separate `npm install
 
 ## Building
 
-All "source" files for the frontend logic are located in `framework/client/src`.
-The base CMS interface has its own folder with `framework/admin/client/src`.
-If you have the `cms`  module installed, there's additional files in `cms/client/src`.
+All "source" files for the frontend logic are located in `vendor/silverstripe/framework/client/src`.
+The base CMS interface has its own folder with `vendor/silverstripe/framework/admin/client/src`.
+If you have the `cms`  module installed, there's additional files in `vendor/silverstripe/cms/client/src`.
 
 All build commands are run through `npm`. You can check the module's
 `package.json` for available commands.
@@ -243,8 +243,8 @@ Due to the procedural and selector-driven style of UI programming in jQuery.entw
 it can be difficult to find the piece of code responsible for a certain behaviour.
 Therefore it is important to adhere to file naming conventions.
 E.g. a feature only applicable to `ModelAdmin` should be placed in
-`framework/admin/javascript/src/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
-would be better suited in `framework/admin/javascript/src/LeftAndMain.EditForm.js`.
+`vendor/silverstripe/framework/admin/javascript/src/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
+would be better suited in `vendor/silverstripe/framework/admin/javascript/src/LeftAndMain.EditForm.js`.
 Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
@@ -256,7 +256,7 @@ and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic
 
 Most interfaces will require their own JavaScript and CSS files, so the Ajax loading has
 to ensure they're loaded unless already present. A custom-built library called
-`jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
+`jQuery.ondemand` (located in `vendor/silverstripe/framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the [Requirements](api:SilverStripe\View\Requirements) API.
 
 ## Client-side routing
@@ -265,7 +265,7 @@ SilverStripe uses the HTML5 browser history to modify the URL without a complete
 window refresh. We us the below systems in combination to achieve this:
   * [Page.js](https://github.com/visionmedia/page.js) routing library is used for most
     cms sections, which provides additional SilverStripe specific functionality via the
-    `admin/client/src/lib/Router.js` wrapper.
+    `vendor/silverstripe/admin/client/src/lib/Router.js` wrapper.
 	The router is available on `window.ss.router` and provides the same API as
 	described in the
 	[Page.js docs](https://github.com/visionmedia/page.js/blob/master/Readme.md#api).
@@ -543,10 +543,10 @@ To avoid repetition, we've written some helpers for various use cases:
 SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
-These icon identifiers relate to icon files in `framework/admin/images/sprites/src/btn-icons`,
+These icon identifiers relate to icon files in `vendor/silverstripe/framework/admin/images/sprites/src/btn-icons`,
 and are sprited into a single file through SCSS and [sprity](https://www.npmjs.com/package/sprity)
 (sprites are compiled with `yarn run build`). There are classes set up to show the correct sprite via
-background images (see `framework/admin/scss/_sprites.scss`).
+background images (see `vendor/silverstripe/framework/admin/scss/_sprites.scss`).
 
 Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
 
@@ -589,7 +589,7 @@ Note: You can see any additional HTTP headers through the web developer tools in
 
 The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
-`framework/admin/javascript/src/LeftAndMain.Tree.js`, as well as some
+`client/src/legacy/LeftAndMain.Tree.js` in the `silverstripe/admin` module, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 For more information, see the [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree).
 
