@@ -77,7 +77,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             $exists = file_exists($absolutePath);
         }
         if (!$exists) {
-            throw new InvalidArgumentException("File {$relativePath} does not exist");
+            trigger_error("File {$relativePath} does not exist", E_USER_NOTICE);
         }
 
         // Apply url rewrites
@@ -89,7 +89,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         // Apply nonce
         $nonce = '';
         // Don't add nonce to directories
-        if ($this->nonceStyle && is_file($absolutePath)) {
+        if ($this->nonceStyle && $exists && is_file($absolutePath)) {
             $nonce = (strpos($relativePath, '?') === false) ? '?' : '&';
 
             switch ($this->nonceStyle) {
