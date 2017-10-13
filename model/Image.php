@@ -131,6 +131,8 @@ class Image extends File implements Flushable {
 		$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
 		$fileAttributes->push(new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions') . ':'));
 
+		$fields->fieldByName('Root.Main.Title')->setTitle(_t('Image.TITLE', 'Title (alt text)'));
+
 		return $fields;
 	}
 
