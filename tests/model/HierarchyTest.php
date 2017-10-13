@@ -33,6 +33,27 @@ class HierarchyTest extends SapphireTest {
 		$this->fail('Failed to prevent infinite loop in hierarchy.');
 	}
 
+	public function testDeleteNonExistentObject() {
+	 	$numObjs = HierarchyTest_Object::get()->count();
+	 	$this->assertNotEmpty($numObjs);
+	 
+		$obj = new HierarchyTest_Object();
+	 	$this->assertFalse($obj->exists());
+	 	$fail = true;
+	 	try {
+	 		$obj->delete();
+	 	}
+	 	catch (LogicException $e) {
+	 		$fail = false;
+	 	}
+	 
+		if ($fail) {
+	 		$this->fail('Failed to throw delete exception');
+	 	}
+	 
+		$this->assertEquals($numObjs, HierarchyTest_Object::get()->count());
+ 	}
+
 	/**
 	 * Test Hierarchy::AllHistoricalChildren().
 	 */
