@@ -1,7 +1,7 @@
 <?php
 
-use Dotenv\Dotenv;
-use Dotenv\Exception\InvalidPathException;
+use SilverStripe\Core\Environment;
+use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\TempFolder;
 
 /**
@@ -58,24 +58,23 @@ if (!defined('BASE_PATH')) {
 }
 
 // Allow a first class env var to be set that disables .env file loading
-if (!getenv('SS_IGNORE_DOT_ENV')) {
+if (!Environment::getEnv('SS_IGNORE_DOT_ENV')) {
     call_user_func(function () {
+        $loader = new EnvironmentLoader();
         foreach ([BASE_PATH, dirname(BASE_PATH)] as $path) {
-            try {
-                (new Dotenv($path))->load();
-            } catch (InvalidPathException $e) {
-                // no .env found - no big deal
-                continue;
+            // Stop searching after first `.env` file is loaded
+            $dotEnvFile = $path . DIRECTORY_SEPARATOR . '.env';
+            if ($loader->loadFile($dotEnvFile)) {
+                break;
             }
-            break;
         }
     });
 }
 
 // Validate SS_BASE_URL is absolute
-if (getenv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', getenv('SS_BASE_URL'))) {
+if (Environment::getEnv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', Environment::getEnv('SS_BASE_URL'))) {
     call_user_func(function () {
-        $base = getenv('SS_BASE_URL');
+        $base = Environment::getEnv('SS_BASE_URL');
         user_error(
             "SS_BASE_URL should be an absolute url with protocol "
             . "(http://$base) or without protocol (//$base)",
@@ -83,14 +82,14 @@ if (getenv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', getenv('SS_BASE_URL')
         );
         // Treat as protocol-less absolute url
         $base = '//' . $base;
-        putenv("SS_BASE_URL=$base");
+        Environment::setEnv('SS_BASE_URL', $base);
     });
 }
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', call_user_func(function () {
         // Prefer explicitly provided SS_BASE_URL
-        $base = getenv('SS_BASE_URL');
+        $base = Environment::getEnv('SS_BASE_URL');
         if ($base) {
             // Strip relative path from SS_BASE_URL
             return rtrim(parse_url($base, PHP_URL_PATH), '/');

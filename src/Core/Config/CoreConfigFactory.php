@@ -11,6 +11,7 @@ use SilverStripe\Config\Transformer\YamlTransformer;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Config\Middleware\InheritanceMiddleware;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Manifest\ClassLoader;
@@ -141,11 +142,12 @@ class CoreConfigFactory
 
         // Add default rules
         $envvarset = function ($var, $value = null) {
-            if (getenv($var) === false) {
+            $actual = Environment::getEnv($var);
+            if ($actual === false) {
                 return false;
             }
             if ($value) {
-                return getenv($var) === $value;
+                return $actual === $value;
             }
             return true;
         };

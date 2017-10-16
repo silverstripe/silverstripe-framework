@@ -5,6 +5,7 @@ namespace SilverStripe\Control\Email;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -159,7 +160,7 @@ class Email extends ViewableData
                 $normalised[$name] = null;
             }
         }
-        $extra = getenv($env);
+        $extra = Environment::getEnv($env);
         if ($extra) {
             $normalised[$extra] = null;
         }
