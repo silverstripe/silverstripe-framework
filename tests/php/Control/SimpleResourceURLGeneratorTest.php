@@ -64,4 +64,12 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             $generator->urlForResource($module->getResource('client/style.css'))
         );
     }
+
+    public function testURLForResourceFailsGracefully()
+    {
+        /** @var SimpleResourceURLGenerator $generator */
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        $url = @$generator->urlForResource('doesnotexist.jpg');
+        $this->assertEquals('/doesnotexist.jpg', $url);
+    }
 }
