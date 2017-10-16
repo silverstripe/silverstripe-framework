@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\ORM\DB;
@@ -15,7 +16,7 @@ class DBTest extends SapphireTest
     {
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
+        $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
 
         $kernel->setEnvironment(Kernel::DEV);
         $this->assertTrue(DB::valid_alternative_database_name($prefix.'tmpdb1234567'));

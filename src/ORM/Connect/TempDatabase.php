@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use Exception;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestOnly;
@@ -40,7 +41,7 @@ class TempDatabase
      */
     protected function isDBTemp($name)
     {
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
+        $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $result = preg_match(
             sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')),
             $name
@@ -133,7 +134,7 @@ class TempDatabase
 
         // Create a temporary database, and force the connection to use UTC for time
         $dbConn = $this->getConn();
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
+        $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         do {
             $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
         } while ($dbConn->databaseExists($dbname));

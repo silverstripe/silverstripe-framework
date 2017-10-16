@@ -2,34 +2,35 @@
 
 // Bootstrap environment variables
 
-use Dotenv\Loader;
-
+use SilverStripe\Core\Environment;
 
 /** @skipUpgrade */
-if (!getenv('SS_DATABASE_CLASS') && !getenv('SS_DATABASE_USERNAME')) {
-    $loader = new Loader(null);
+if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABASE_USERNAME')) {
     // The default settings let us define the database config via environment vars
     // Database connection, including PDO and legacy ORM support
-    switch (getenv('DB')) {
+    switch (Environment::getEnv('DB')) {
         case "PGSQL";
-            $loader->setEnvironmentVariable('SS_DATABASE_CLASS', getenv('PDO') ? 'PostgrePDODatabase' : 'PostgreSQLDatabase');
-            $loader->setEnvironmentVariable('SS_DATABASE_USERNAME', 'postgres');
-            $loader->setEnvironmentVariable('SS_DATABASE_PASSWORD', '');
+            $pgDatabaseClass = Environment::getEnv('PDO') ? 'PostgrePDODatabase' : 'PostgreSQLDatabase';
+            Environment::setEnv('SS_DATABASE_CLASS', $pgDatabaseClass);
+            Environment::setEnv('SS_DATABASE_USERNAME', 'postgres');
+            Environment::setEnv('SS_DATABASE_PASSWORD', '');
             break;
 
         case "SQLITE":
-            $loader->setEnvironmentVariable('SS_DATABASE_CLASS', getenv('PDO') ? 'SQLite3PDODatabase' : 'SQLite3Database');
-            $loader->setEnvironmentVariable('SS_DATABASE_USERNAME', 'root');
-            $loader->setEnvironmentVariable('SS_DATABASE_PASSWORD', '');
-            $loader->setEnvironmentVariable('SS_SQLITE_DATABASE_PATH', ':memory:');
+            $sqliteDatabaseClass = Environment::getEnv('PDO') ? 'SQLite3PDODatabase' : 'SQLite3Database';
+            Environment::setEnv('SS_DATABASE_CLASS', $sqliteDatabaseClass);
+            Environment::setEnv('SS_DATABASE_USERNAME', 'root');
+            Environment::setEnv('SS_DATABASE_PASSWORD', '');
+            Environment::setEnv('SS_SQLITE_DATABASE_PATH', ':memory:');
             break;
 
         default:
-            $loader->setEnvironmentVariable('SS_DATABASE_CLASS', getenv('PDO') ? 'MySQLPDODatabase' : 'MySQLDatabase');
-            $loader->setEnvironmentVariable('SS_DATABASE_USERNAME', 'root');
-            $loader->setEnvironmentVariable('SS_DATABASE_PASSWORD', '');
+            $mysqlDatabaseClass = Environment::getEnv('PDO') ? 'MySQLPDODatabase' : 'MySQLDatabase';
+            Environment::setEnv('SS_DATABASE_CLASS', $mysqlDatabaseClass);
+            Environment::setEnv('SS_DATABASE_USERNAME', 'root');
+            Environment::setEnv('SS_DATABASE_PASSWORD', '');
     }
 
-    $loader->setEnvironmentVariable('SS_DATABASE_SERVER', '127.0.0.1');
-    $loader->setEnvironmentVariable('SS_DATABASE_CHOOSE_NAME', true);
+    Environment::setEnv('SS_DATABASE_CHOOSE_NAME', 'true');
+    Environment::setEnv('SS_DATABASE_SERVER', '127.0.0.1');
 }

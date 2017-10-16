@@ -8,6 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Connect\Database;
@@ -265,7 +266,7 @@ class DB
             return false;
         }
 
-        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
+        $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
         return (bool)preg_match($pattern, $name);
     }
