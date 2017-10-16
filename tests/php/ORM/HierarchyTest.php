@@ -55,28 +55,20 @@ class HierarchyTest extends SapphireTest
     }
 
     /**
-     * Test Hierarchy doesn't delete all records when non in the database
+     * Test Hierarchy doesn't return children when record is not in DB
      */
-    public function testDeleteNonExistentObject()
+    public function testNonExistentObjectHasNoChildren()
     {
         $numObjs = HierarchyTest\TestObject::get()->count();
         $this->assertNotEmpty($numObjs);
 
         $obj = new HierarchyTest\TestObject();
         $this->assertFalse($obj->exists());
-        $fail = true;
-        try {
-            $obj->delete();
-        }
-        catch (\LogicException $e) {
-            $fail = false;
-        }
 
-        if ($fail) {
-            $this->fail('Failed to throw delete exception');
-        }
-
-        $this->assertEquals($numObjs, HierarchyTest\TestObject::get()->count());
+        $this->assertEmpty($obj->AllChildren()->count());
+        $this->assertEmpty($obj->stageChildren()->count());
+        $this->assertEmpty($obj->Children()->count());
+        $this->assertEmpty($obj->liveChildren()->count());
     }
 
     /**

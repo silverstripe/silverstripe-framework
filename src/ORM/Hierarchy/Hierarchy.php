@@ -172,6 +172,11 @@ class Hierarchy extends DataExtension
      */
     public function Children()
     {
+        // If the record is not in the database, prevent a list of ParentID = 0
+        if (!$this->owner->isInDB()) {
+            return new ArrayList();
+        }
+
         $children = $this->owner->_cache_children;
         if ($children) {
             return $children;
@@ -303,10 +308,14 @@ class Hierarchy extends DataExtension
      *
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
-     * @return DataList
+     * @return DataList|ArrayList
      */
     public function stageChildren($showAll = false)
     {
+        if (!$this->owner->isInDB()) {
+            return new ArrayList();
+        }
+
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
         $baseClass = $this->owner->baseClass();
@@ -332,13 +341,17 @@ class Hierarchy extends DataExtension
      * @param bool $showAll              Include all of the elements, even those not shown in the menus. Only
      *                                   applicable when extension is applied to {@link SiteTree}.
      * @param bool $onlyDeletedFromStage Only return items that have been deleted from stage
-     * @return DataList
+     * @return DataList|ArrayList
      * @throws Exception
      */
     public function liveChildren($showAll = false, $onlyDeletedFromStage = false)
     {
         if (!$this->owner->hasExtension(Versioned::class)) {
             throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
+        }
+
+        if (!$this->owner->isInDB()) {
+            return new ArrayList();
         }
 
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
