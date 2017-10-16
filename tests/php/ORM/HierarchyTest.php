@@ -55,6 +55,23 @@ class HierarchyTest extends SapphireTest
     }
 
     /**
+     * Test Hierarchy doesn't return children when record is not in DB
+     */
+    public function testNonExistentObjectHasNoChildren()
+    {
+        $numObjs = HierarchyTest\TestObject::get()->count();
+        $this->assertNotEmpty($numObjs);
+
+        $obj = new HierarchyTest\TestObject();
+        $this->assertFalse($obj->exists());
+
+        $this->assertEmpty($obj->AllChildren()->count());
+        $this->assertEmpty($obj->stageChildren()->count());
+        $this->assertEmpty($obj->Children()->count());
+        $this->assertEmpty($obj->liveChildren()->count());
+    }
+
+    /**
      * Test Hierarchy::AllHistoricalChildren().
      */
     public function testAllHistoricalChildren()
