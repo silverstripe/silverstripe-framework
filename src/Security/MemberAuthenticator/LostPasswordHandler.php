@@ -99,7 +99,10 @@ class LostPasswordHandler extends RequestHandler
     public function passwordsent()
     {
         $request = $this->getRequest();
-        $email = Convert::raw2xml(rawurldecode($request->param('EmailAddress')) . '.' . $request->getExtension());
+        $email = Convert::raw2xml(rawurldecode($request->param('EmailAddress')));
+        if ($request->getExtension()) {
+            $email = $email . '.' . Convert::raw2xml($request->getExtension());
+        }
 
         $message = _t(
             'SilverStripe\\Security\\Security.PASSWORDSENTTEXT',
