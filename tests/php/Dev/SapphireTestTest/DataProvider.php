@@ -7,12 +7,17 @@ use SilverStripe\Dev\TestOnly;
 class DataProvider implements TestOnly
 {
     protected static $oneItemList = [
-        ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
+        ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
     ];
 
     protected static $twoItemList = [
         ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-        ['FirstName' => 'Sam', 'Surname' => 'Minnee']
+        ['FirstName' => 'Sam', 'Surname' => 'Minnee'],
+    ];
+
+    protected static $memberList = [
+        ['FirstName' => 'Ingo', 'Surname' => 'Schommer', 'Locale' => 'en_US'],
+        ['FirstName' => 'Sam', 'Surname' => 'Minnee', 'Locale' => 'en_US'],
     ];
 
     /**
@@ -21,11 +26,11 @@ class DataProvider implements TestOnly
     public static function provideEqualListsWithEmptyList()
     {
         return array_merge(
-            [ //empty list
-                [
+            [
+                'emptyLists' => [
                     [],
-                    []
-                ]
+                    [],
+                ],
             ],
             self::provideEqualLists()
         );
@@ -38,37 +43,37 @@ class DataProvider implements TestOnly
     {
         return [
             [
-                [ //one param
-                    ['FirstName' => 'Ingo']
-                ],
-                self::$oneItemList
-            ],
-            [
-                [ //two params
-                    ['FirstName' => 'Ingo', 'Surname' => 'Schommer']
-                ],
-                self::$oneItemList
-            ],
-            [ //only one param
-                [
+                'oneParameterOneItem' => [
                     ['FirstName' => 'Ingo'],
-                    ['FirstName' => 'Sam']
                 ],
-                self::$twoItemList
+                self::$oneItemList,
             ],
             [
-                [ //two params
+                'twoParametersOneItem' => [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-                    ['FirstName' => 'Sam', 'Surname' => 'Minnee']
                 ],
-                self::$twoItemList
+                self::$oneItemList,
             ],
             [
-                [ //mixed
-                    ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
-                    ['FirstName' => 'Sam']
+                'oneParameterTwoItems' => [
+                    ['FirstName' => 'Ingo'],
+                    ['FirstName' => 'Sam'],
                 ],
-                self::$twoItemList
+                self::$twoItemList,
+            ],
+            [
+                'twoParametersTwoItems' => [
+                    ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+                    ['FirstName' => 'Sam', 'Surname' => 'Minnee'],
+                ],
+                self::$twoItemList,
+            ],
+            [
+                'mixedParametersTwoItems' => [
+                    ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
+                    ['FirstName' => 'Sam'],
+                ],
+                self::$twoItemList,
             ],
         ];
     }
@@ -80,40 +85,38 @@ class DataProvider implements TestOnly
     {
 
         return [
-            [ //empty list
-                [
-                    ['FirstName' => 'Ingo']
+            [
+                'checkAgainstEmptyList' => [
+                    ['FirstName' => 'Ingo'],
                 ],
-                []
+                [],
             ],
             [
-                [ //one item expected
-                    ['FirstName' => 'Ingo']
-                ]
-                ,
-                self::$twoItemList
+                'oneItemExpectedListContainsMore' => [
+                    ['FirstName' => 'Ingo'],
+                ],
+                self::$twoItemList,
             ],
-            [ //one item with wrong param
-                [
+            [
+                'oneExpectationHasWrontParamter' => [
                     ['FirstName' => 'IngoXX'],
-                    ['FirstName' => 'Sam']
-                ]
-                ,
-                self::$twoItemList
+                    ['FirstName' => 'Sam'],
+                ],
+                self::$twoItemList,
             ],
             [
-                [ //two params wrong
+                'differentParametersInDifferentItemsAreWrong' => [
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
-                    ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX']
+                    ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX'],
                 ],
-                self::$twoItemList
+                self::$twoItemList,
             ],
             [
-                [ //mixed
+                'differentParametersNotMatching' => [
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
-                    ['FirstName' => 'Dan']
+                    ['FirstName' => 'Dan'],
                 ],
-                self::$twoItemList
+                self::$twoItemList,
             ],
         ];
     }
@@ -124,32 +127,31 @@ class DataProvider implements TestOnly
     public static function provideNotContainingList()
     {
         return [
-            [ //empty list
+            'listIsEmpty' => [
                 [
-                    ['FirstName' => 'Ingo']
+                    ['FirstName' => 'Ingo'],
                 ],
-                []
+                [],
             ],
-            [
-                [ //one item expected
-                    ['FirstName' => 'Sam']
-                ]
-                ,
-                self::$oneItemList
+            'oneItemIsExpected' => [
+                [
+                    ['FirstName' => 'Sam'],
+                ],
+                self::$oneItemList,
             ],
-            [
-                [ //two params wrong
+            'twoParametersAreWrong' => [
+                [
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
-                    ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX']
+                    ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX'],
                 ],
-                self::$twoItemList
+                self::$twoItemList,
             ],
-            [
-                [ //mixed
+            'mixedList' => [
+                [
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
-                    ['FirstName' => 'Dan']
+                    ['FirstName' => 'Dan'],
                 ],
-                self::$twoItemList
+                self::$twoItemList,
             ],
         ];
     }
@@ -159,14 +161,17 @@ class DataProvider implements TestOnly
      */
     public static function provideAllMatchingList()
     {
-        $list = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer', 'Locale' => 'en_US'],
-            ['FirstName' => 'Sam', 'Surname' => 'Minnee', 'Locale' => 'en_US']
-        ];
-
         return [
-            [[], $list], //empty match
-            [['Locale' => 'en_US'], $list] //all items have this field set
+            'emptyMatch' => [
+                [],
+                self::$memberList,
+                'empty list did not match',
+            ],
+            'allItemsWithLocaleSet' => [
+                ['Locale' => 'en_US'],
+                self::$memberList,
+                'list with Locale set in all items did not match',
+            ],
         ];
     }
 
@@ -175,13 +180,8 @@ class DataProvider implements TestOnly
      */
     public static function provideNotMatchingList()
     {
-        $list = [
-            ['FirstName' => 'Ingo', 'Surname' => 'Schommer', 'Locale' => 'en_US'],
-            ['FirstName' => 'Sam', 'Surname' => 'Minnee', 'Locale' => 'en_US']
-        ];
-
         return [
-            [['FirstName' => 'Ingo'], $list] //not all items have this field set
+            'notAllItemsHaveLocaleSet' => [['FirstName' => 'Ingo'], self::$memberList],
         ];
     }
 }
