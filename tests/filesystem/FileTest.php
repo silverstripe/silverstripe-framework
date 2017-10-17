@@ -187,6 +187,30 @@ class FileTest extends SapphireTest {
 		}
 	}
 
+	/**
+	 * Uses fixtures Folder.folder1 and File.setfromname
+	 * @dataProvider setNameFileProvider
+	 */
+	public function testSetNameAddsUniqueSuffixWhenFilenameAlreadyExists($name, $expected)
+	{
+		$duplicate = new Folder;
+		$duplicate->setName($name);
+		$duplicate->write();
+
+		$this->assertSame($expected, $duplicate->Name);
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function setNameFileProvider()
+	{
+		return array(
+			array('FileTest-folder1', 'FileTest-folder1-2'),
+			array('FileTest.png', 'FileTest-2.png'),
+		);
+	}
+
 	public function testLinkAndRelativeLink() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_DIR . '/FileTest.txt', $file->RelativeLink());

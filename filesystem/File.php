@@ -634,7 +634,7 @@ class File extends DataObject {
 	 *
 	 * Does not change the filesystem itself, please use {@link write()} for this.
 	 *
-	 * @param String $name
+	 * @param string $name
 	 */
 	public function setName($name) {
 		$oldName = $this->Name;
@@ -663,7 +663,10 @@ class File extends DataObject {
 				))->first()
 			) {
 				$suffix++;
-				$name = "$base-$suffix.$ext";
+				$name = "$base-$suffix";
+				if (!empty($ext)) {
+					$name .= ".$ext";
+				}
 			}
 		}
 
