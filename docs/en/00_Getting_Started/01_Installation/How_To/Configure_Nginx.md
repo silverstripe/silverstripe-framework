@@ -30,7 +30,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 		}
 	
 		location / {
-			try_files $uri index.php?$query_string;
+			try_files $uri /index.php?$query_string;
 		}
 	
 		error_page 404 /assets/error-404.html;
