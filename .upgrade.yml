@@ -953,3 +953,151 @@ excludedPaths:
   - '*vendor*'
 doctorTasks:
   SilverStripe\Dev\Upgrade\UpgradeBootstrap: src/Dev/Upgrade/UpgradeBootstrap.php
+warnings:
+  classes:
+    'Object':
+      message: 'Replaced with traits'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
+    'SS_Log':
+      message: 'Replaced with a PSR-3 logger'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#psr3-logging'
+    'Session':
+      message: 'Session is no longer statically accessible'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#session'
+    'SQLQuery':
+      message: 'Use SQLSelect instead'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#sqlquery'
+    'SilverStripe\AssetAdmin\Forms\UploadField':
+      message: 'Class implementations should be wrapped with FileHandleField'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#uploadfield'
+    'CompositeDBField':
+      message: 'Class has been replaced with an abstract DBComposite'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#compositedbfield'
+    'BuildTask':
+      message: 'Now needs a $segment property to run it'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#buildtask-segment'
+    'RestfulService':
+      message: 'Removed from core, please use Guzzle'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#restfulservice'
+    'Oembed':
+      message: 'Removed from core, please use third party lib'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#oembed'
+    'SS_Cache':
+      message: 'Using symfony/cache now'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache'
+    'LeftAndMain_TreeNode':
+      message: 'Renamed to CMSMain_TreeNode'
+    'SilverStripe\ORM\Hierarchy->getChildrenAsUL()':
+      message: 'Replaced with renderChildren()'
+    'SilverStripe\Security\Permission::flush_permission_cache()':
+      message: 'Renamed to reset()'
+  methods:
+    'setFilename()':
+      message: 'Filenames should not be set directly any more'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#write-file-dataobject'
+    'File::handle_shortcode()':
+      message: 'Has been removed'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#file-shortcode'
+    'database_fields()':
+      message: 'Does not have a second parameter any more'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-db-database-fields'
+    'Authenticator::register()':
+      message: 'Custom authenticators work differently now'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#custom-authenticators'
+    'Object::useCustomClass()':
+      message: 'Use injector instead'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#custom-authenticators'
+    'Director::setUrlParams()':
+      message: 'Method removed'
+    'manyManyComponent()':
+      message: 'DataObject->manyManyComponent() moved to DataObjectSchema, access through getSchema()'
+    'belongsToComponent()':
+      message: 'DataObject->belongsToComponent() moved to DataObjectSchema, access through getSchema()'
+    'hasOneComponent()':
+      message: 'DataObject->hasOneComponent() moved to DataObjectSchema, access through getSchema()'
+    'hasManyComponent()':
+      message: 'DataObject->hasManyComponent() moved to DataObjectSchema, access through getSchema()'
+    'getRemoteJoinField()':
+      message: 'DataObject->getRemoteJoinField() moved to DataObjectSchema, access through getSchema()'
+    'has_own_table()':
+      message: 'DataObject::has_own_table() moved to DataObjectSchema->classHasTable(), access through getSchema()'
+    'database_fields()':
+      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(), access through getSchema()'
+    'database_fields()':
+      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(), access through getSchema()'
+    'manyManyExtraFieldsForComponent()':
+      message: 'DataObject::manyManyExtraFieldsForComponent() moved to DataObjectSchema, access through getSchema()'
+    'validateModelDefinitions()':
+      message: 'Removed DataObject->validateModelDefinitions()'
+    'hasOwnTableDatabaseField()':
+      message: 'DataObject->hasOwnTableDatabaseField() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
+    'has_own_table_database_field()':
+      message: 'DataObject::has_own_table_database_field() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
+    'hasDatabaseFields()':
+      message: 'DataObject->hasDatabaseFields() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
+    'is_composite_field()'
+      message: 'Removed DataObject::is_composite_field. Use DataObjectSchema::compositeField instead.'
+    'custom_database_fields()':
+      message: 'Removed DataObject::custom_database_fields. Use DataObjectSchema::databaseFields'
+  props:
+    'class':
+      message: '$this->class access has been removed'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
+  functions:
+    'file_get_contents()':
+      message: 'Use new asset abstraction'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage'
+    'file_put_contents()':
+      message: 'Use new asset abstraction'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage'
+  constants:
+    'SS_TRUSTED_PROXY_HOST_HEADER':
+      message: 'See TrustedProxyMiddleware'
+    'SS_TRUSTED_PROXY_PROTOCOL_HEADER':
+      message: 'See TrustedProxyMiddleware'
+    'SS_TRUSTED_PROXY_IP_HEADER':
+      message: 'See TrustedProxyMiddleware'
+    'SS_TRUSTED_PROXY_HOST_HEADER':
+      message: 'See TrustedProxyMiddleware'
+    'MODULES_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'MODULES_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'FRAMEWORK_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'FRAMEWORK_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'CMS_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'CMS_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'FRAMEWORK_ADMIN_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'FRAMEWORK_ADMIN_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'FRAMEWORK_ADMIN_THIRDPARTY_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'THEMES_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'THEMES_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'THIRDPARTY_PATH':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'THIRDPARTY_DIR':
+      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
