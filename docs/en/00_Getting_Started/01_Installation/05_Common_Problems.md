@@ -90,9 +90,10 @@ If you are running on a server instance where users other than the webserver use
 read / write access to files in the assets folder, then you will need to adjust the
 permissions of the filesystem to a more permissive setting.
 
-By default private files and `.htaccess` are written with permission `0600`.
+By default private files and `.htaccess` are written with permission `0644`.
 You could enable other users to access these files with the below config.
-Note: Please adjust the values below to those appropriate for your server configuration:
+Note: Please adjust the values below to those appropriate for your server configuration.
+You may require `0666` for combined files generated during requests where they are cleared or refreshed only during a flush.
 
 *mysite/_config/assetperms.yml*
 
