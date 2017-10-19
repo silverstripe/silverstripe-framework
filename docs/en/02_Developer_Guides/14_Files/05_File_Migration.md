@@ -1,6 +1,11 @@
+title: File migration
 summary: Manage migration of legacy files to the new database structure
 
 # File migration
+
+This section describes how to upgrade existing filesystems from earlier versions of SilverStripe.
+
+## Running migration
 
 Since the structure of `File` dataobjects has changed between 3.0 and 4.0, a new task `MigrateFileTask`
 has been added to assist in migration of legacy files.
@@ -55,3 +60,20 @@ SilverStripe\Assets\FileMigrationHelper:
 Note that pre-existing security solutions for 3.x (such as
 [secure assets module](https://github.com/silverstripe/silverstripe-secureassets))
 are incompatible with core file security.
+
+## Support existing paths
+
+Because the filesystem now uses the sha1 of file contents in order to version multiple versions under the same
+filename, the default storage paths in 4.0 will not be the same as in 3.
+
+Although it is not recommended, it is possible to configure the backend to omit this SHA1 url segment,
+meaning that file paths and urls will not be modified during the upgrade.
+
+This is done by setting this config:
+
+```yaml
+SilverStripe\Assets\Flysystem\FlysystemAssetStore:
+  legacy_filenames: true
+```
+
+Note that this will not allow you to utilise certain file versioning features in 4.0.
