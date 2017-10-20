@@ -137,7 +137,7 @@ class CoreKernel implements Kernel
         }
 
         // Check getenv
-        if ($env = getenv('SS_ENVIRONMENT_TYPE')) {
+        if ($env = Environment::getEnv('SS_ENVIRONMENT_TYPE')) {
             return $env;
         }
 
@@ -328,32 +328,32 @@ class CoreKernel implements Kernel
     {
         /** @skipUpgrade */
         $databaseConfig = [
-            "type" => getenv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
-            "server" => getenv('SS_DATABASE_SERVER') ?: 'localhost',
-            "username" => getenv('SS_DATABASE_USERNAME') ?: null,
-            "password" => getenv('SS_DATABASE_PASSWORD') ?: null,
+            "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
+            "server" => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
+            "username" => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
+            "password" => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
         ];
 
         // Set the port if called for
-        $dbPort = getenv('SS_DATABASE_PORT');
+        $dbPort = Environment::getEnv('SS_DATABASE_PORT');
         if ($dbPort) {
             $databaseConfig['port'] = $dbPort;
         }
 
         // Set the timezone if called for
-        $dbTZ = getenv('SS_DATABASE_TIMEZONE');
+        $dbTZ = Environment::getEnv('SS_DATABASE_TIMEZONE');
         if ($dbTZ) {
             $databaseConfig['timezone'] = $dbTZ;
         }
 
         // For schema enabled drivers:
-        $dbSchema = getenv('SS_DATABASE_SCHEMA');
+        $dbSchema = Environment::getEnv('SS_DATABASE_SCHEMA');
         if ($dbSchema) {
             $databaseConfig["schema"] = $dbSchema;
         }
 
         // For SQlite3 memory databases (mainly for testing purposes)
-        $dbMemory = getenv('SS_DATABASE_MEMORY');
+        $dbMemory = Environment::getEnv('SS_DATABASE_MEMORY');
         if ($dbMemory) {
             $databaseConfig["memory"] = $dbMemory;
         }
@@ -368,7 +368,7 @@ class CoreKernel implements Kernel
      */
     protected function getDatabasePrefix()
     {
-        return getenv('SS_DATABASE_PREFIX') ?: '';
+        return Environment::getEnv('SS_DATABASE_PREFIX') ?: '';
     }
 
     /**
@@ -392,14 +392,14 @@ class CoreKernel implements Kernel
         }
 
         // Check environment
-        $database = getenv('SS_DATABASE_NAME');
+        $database = Environment::getEnv('SS_DATABASE_NAME');
 
         if ($database) {
             return $this->getDatabasePrefix() . $database;
         }
 
         // Auto-detect name
-        $chooseName = getenv('SS_DATABASE_CHOOSE_NAME');
+        $chooseName = Environment::getEnv('SS_DATABASE_CHOOSE_NAME');
 
         if ($chooseName) {
             // Find directory to build name from
@@ -529,7 +529,7 @@ class CoreKernel implements Kernel
         $errorHandler->start();
 
         // Register error log file
-        $errorLog = getenv('SS_ERROR_LOG');
+        $errorLog = Environment::getEnv('SS_ERROR_LOG');
         if ($errorLog) {
             $logger = Injector::inst()->get(LoggerInterface::class);
             if ($logger instanceof Logger) {

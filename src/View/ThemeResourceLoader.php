@@ -103,7 +103,7 @@ class ThemeResourceLoader
             if (count($parts) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
-            return substr($identifier, 1);
+            return ltrim($identifier, '/');
         }
 
         // If there is no slash / colon it's a legacy theme
@@ -148,7 +148,7 @@ class ThemeResourceLoader
         }
 
         // Join module with subpath
-        return $modulePath . $subpath;
+        return ltrim($modulePath . $subpath, '/');
     }
 
     /**

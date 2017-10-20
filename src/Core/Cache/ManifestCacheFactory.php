@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 
 /**
  * Assists with building of manifest cache prior to config being available
@@ -43,7 +44,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
     public function create($service, array $params = array())
     {
         // Override default cache generation with SS_MANIFESTCACHE
-        $cacheClass = getenv('SS_MANIFESTCACHE');
+        $cacheClass = Environment::getEnv('SS_MANIFESTCACHE');
         if (!$cacheClass) {
             return parent::create($service, $params);
         }

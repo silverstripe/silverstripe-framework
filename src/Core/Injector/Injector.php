@@ -11,6 +11,7 @@ use ReflectionObject;
 use ReflectionProperty;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -523,8 +524,9 @@ class Injector implements ContainerInterface
 
         // Evaluate constants surrounded by back ticks
         if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
-            if (getenv($matches['name']) !== false) {
-                $value = getenv($matches['name']);
+            $envValue = Environment::getEnv($matches['name']);
+            if ($envValue !== false) {
+                $value = $envValue;
             } elseif (defined($matches['name'])) {
                 $value = constant($matches['name']);
             } else {

@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
-use Dotenv\Loader;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Core\Config\CoreConfigFactory;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -100,8 +100,7 @@ class ConfigManifestTest extends SapphireTest
 
     public function testEnvVarSetRules()
     {
-        $loader = new Loader(null);
-        $loader->setEnvironmentVariable('ENVVARSET_FOO', 1);
+        Environment::setEnv('ENVVARSET_FOO', '1');
         $config = $this->getConfigFixtureValue('EnvVarSet');
 
         $this->assertEquals(
@@ -137,9 +136,7 @@ class ConfigManifestTest extends SapphireTest
 
     public function testEnvOrConstantMatchesValueRules()
     {
-        $loader = new Loader(null);
-
-        $loader->setEnvironmentVariable('CONSTANTMATCHESVALUE_FOO', 'Foo');
+        Environment::setEnv('CONSTANTMATCHESVALUE_FOO', 'Foo');
         define('CONSTANTMATCHESVALUE_BAR', 'Bar');
         $config = $this->getConfigFixtureValue('EnvOrConstantMatchesValue');
 
@@ -194,9 +191,7 @@ class ConfigManifestTest extends SapphireTest
 
     public function testMultipleRules()
     {
-        $loader = new Loader(null);
-
-        $loader->setEnvironmentVariable('MULTIPLERULES_ENVVARIABLESET', 1);
+        Environment::setEnv('MULTIPLERULES_ENVVARIABLESET', '1');
         define('MULTIPLERULES_DEFINEDCONSTANT', 'defined');
         $config = $this->getConfigFixtureValue('MultipleRules');
 

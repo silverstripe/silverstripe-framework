@@ -978,11 +978,11 @@ class FormField extends RequestHandler
     {
         $context = $this;
 
+        $this->extend('onBeforeRender', $context, $properties);
+
         if (count($properties)) {
             $context = $context->customise($properties);
         }
-
-        $this->extend('onBeforeRender', $this);
 
         $result = $context->renderWith($this->getTemplates());
 

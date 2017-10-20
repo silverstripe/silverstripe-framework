@@ -9,39 +9,29 @@ Executes a SilverStripe command"
 	exit 1
 fi
 
-# find the silverstripe installation
+# find the silverstripe installation, looking first at sake
+# bin location, but falling back to current directory
 sakedir=`dirname $0`
+directory="$PWD"
 if [ -f "$sakedir/cli-script.php" ]; then
+    # Calling sake from vendor/silverstripe/framework/sake
 	framework="$sakedir"
-	base=`dirname $sakedir`
-elif [ -f ./cli-script.php ]; then
-	framework=.
-	base=..
+	base="$sakedir/../../.."
+elif [ -f "$sakedir/../silverstripe/framework/cli-script.php" ]; then
+    # Calling sake from vendor/bin/sake
+	framework="$sakedir/../silverstripe/framework"
+	base="$sakedir/../.."
+elif [ -f "$directory/vendor/silverstripe/framework/cli-script.php" ]; then
+    # Vendor framework (from base) if sake installed globally
+    framework="$directory/vendor/silverstripe/framework"
+    base=.
+elif [ -f "$directory/framework/cli-script.php" ]; then
+    # Legacy directory (from base) if sake installed globally
+    framework="$directory/framework"
+    base=.
 else
-	# look up the tree for the first parent folder that has a framework
-	# installation
-	slashes=${PWD//[^\/]/}
-	directory="$PWD"
-	base=.
-	for (( n=${#slashes}; n>0; --n )) do
-		if [ -d "$directory/framework" ]; then
-			framework="$directory/framework"
-
-			break
-		elif [ -d "$directory/sapphire" ]; then
-			framework="$directory/sapphire"
-
-			break
-		fi
-
-		directory=`dirname $directory`
-		base="$base."
-	done
-
-	if [ ! -f "$framework/cli-script.php" ]; then
-		echo "Can't find cli-script.php in $framework"
-		exit 1
-	fi
+    echo "Can't find cli-script.php in $sakedir"
+    exit 1
 fi
 
 # Find the PHP binary
@@ -74,20 +64,20 @@ if [ "$1" = "-start" ]; then
 		echo "You need to install the 'daemon' tool.  In debian, go 'sudo apt-get install daemon'"
 		exit 1
 	fi
-	
+
 	if [ ! -f $base/$2.pid ]; then
 		echo "Starting service $2 $3"
 		touch $base/$2.pid
 		pidfile=`realpath $base/$2.pid`
-		
+
 		outlog=$base/$2.log
 		errlog=$base/$2.err
 
 		echo "Logging to $outlog"
-		
+
 		sake=`realpath $0`
 		base=`realpath $base`
-		
+
 		# if third argument is not explicitly given, copy from second argument
 		if [ "$3" = "" ]; then
 			url=$2
@@ -95,7 +85,7 @@ if [ "$1" = "-start" ]; then
 			url=$3
 		fi
 
-		# TODO: Give a globally unique processname by including the projectname as well		
+		# TODO: Give a globally unique processname by including the projectname as well
 		processname=$2
 
 		daemon -n $processname -r -D $base --pidfile=$pidfile --stdout=$outlog --stderr=$errlog $sake $url
@@ -109,7 +99,7 @@ if [ "$1" = "-stop" ]; then
 	pidfile=$base/$2.pid
 	if [ -f $pidfile ]; then
 		echo "Stopping service $2"
-		
+
 		# TODO: This is a bad way of killing the process
 		kill -KILL `cat $pidfile`
 		unlink $pidfile

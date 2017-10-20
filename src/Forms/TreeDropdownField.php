@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\Hierarchy\MarkedSet;
 use SilverStripe\View\ViewableData;
@@ -195,13 +196,18 @@ class TreeDropdownField extends FormField
      * @var array
      */
     protected $searchExpanded = [];
-    
+
     /**
      * Show full path for selected options, only applies for single select
      * @var bool
      */
     protected $showSelectedPath = false;
-    
+
+    /**
+     * @var array
+     */
+    protected static $cacheKeyCache = [];
+
     /**
      * CAVEAT: for search to work properly $labelField must be a database field,
      * or you need to setSearchFunction.
@@ -605,7 +611,7 @@ class TreeDropdownField extends FormField
         $callback = $this->getDisableFunction();
         return $callback && call_user_func($callback, $node);
     }
-    
+
     /**
      * Attributes to be given for this field type
      * @return array
@@ -618,11 +624,11 @@ class TreeDropdownField extends FormField
             'data-schema' => json_encode($this->getSchemaData()),
             'data-state' => json_encode($this->getSchemaState()),
         );
-        
+
         $attributes = array_merge($attributes, $this->attributes);
-        
+
         $this->extend('updateAttributes', $attributes);
-        
+
         return $attributes;
     }
 
@@ -858,15 +864,14 @@ class TreeDropdownField extends FormField
         /** @var Hierarchy|DataObject $record */
         $record = $this->Value() ? $this->objectForKey($this->Value()) : null;
 
-        // Ensure cache is keyed by last modified date of the underlying list
-        $data['data']['cacheKey'] = DataList::create($this->getSourceObject())->max('LastEdited');
+        $data['data']['cacheKey'] = $this->getCacheKey();
         $data['data']['showSelectedPath'] = $this->getShowSelectedPath();
         if ($record) {
             $titlePath = '';
-            
+
             if ($this->getShowSelectedPath()) {
                 $ancestors = $record->getAncestors(true)->reverse();
-                
+
                 foreach ($ancestors as $parent) {
                     $title = $parent->obj($this->getTitleField())->getValue();
                     $titlePath .= $title .'/';
@@ -881,6 +886,21 @@ class TreeDropdownField extends FormField
         }
 
         return $data;
+    }
+
+    /**
+     * Ensure cache is keyed by last modified datetime of the underlying list.
+     * Caches the key for the respective underlying list types, since it doesn't need to query again.
+     *
+     * @return DBDatetime
+     */
+    protected function getCacheKey()
+    {
+        $target = $this->getSourceObject();
+        if (!isset(self::$cacheKeyCache[$target])) {
+            self::$cacheKeyCache[$target] = DataList::create($target)->max('LastEdited');
+        }
+        return self::$cacheKeyCache[$target];
     }
 
     public function getSchemaDataDefaults()
@@ -947,7 +967,7 @@ class TreeDropdownField extends FormField
         );
         return $emptyString;
     }
-    
+
     /**
      * @return bool
      */
@@ -955,7 +975,7 @@ class TreeDropdownField extends FormField
     {
         return $this->showSelectedPath;
     }
-    
+
     /**
      * @param bool $showSelectedPath
      * @return TreeDropdownField

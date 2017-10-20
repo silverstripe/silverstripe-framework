@@ -5,6 +5,7 @@ namespace SilverStripe\Security;
 use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 
@@ -74,7 +75,7 @@ class DefaultAdminService
                 "No default admin configured. Please call hasDefaultAdmin() before getting default admin username"
             );
         }
-        return static::$default_username ?: getenv('SS_DEFAULT_ADMIN_USERNAME');
+        return static::$default_username ?: Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
     }
 
     /**
@@ -88,7 +89,7 @@ class DefaultAdminService
                 "No default admin configured. Please call hasDefaultAdmin() before getting default admin password"
             );
         }
-        return static::$default_password ?: getenv('SS_DEFAULT_ADMIN_PASSWORD');
+        return static::$default_password ?: Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD');
     }
 
     /**
@@ -100,8 +101,8 @@ class DefaultAdminService
     {
         // Check environment if not explicitly set
         if (!isset(static::$has_default_admin)) {
-            return !empty(getenv('SS_DEFAULT_ADMIN_USERNAME'))
-                && !empty(getenv('SS_DEFAULT_ADMIN_PASSWORD'));
+            return !empty(Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME'))
+                && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD'));
         }
         return static::$has_default_admin;
     }
