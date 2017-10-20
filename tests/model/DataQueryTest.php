@@ -63,7 +63,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
 	}
 
-	public function testApplyReplationDeepInheretence() {
+	public function testApplyRelationDeepInheritance() {
 		//test has_one relation
 		$newDQ = new DataQuery('DataQueryTest_E');
 		//apply a relation to a relation from an ancestor class
