@@ -254,7 +254,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         SSViewer::config()->update('source_file_comments', false);
         $viewer = SSViewer::fromString($this->resultsFormat);
         foreach ($results as $result) {
-            $title = html_entity_decode($viewer->process($result));
+            $title = Convert::html2raw($viewer->process($result));
             $json[] = array(
                 'label' => $title,
                 'value' => $title,
