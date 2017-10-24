@@ -122,16 +122,49 @@ automatically joined as required:
  * `MyRecordSubclass_Live` table: Contains only live data for subclass columns
  * `MyRecordSubclass_Versions` table: Contains only version history for subclass columns
 
-While not explicit DataObjects, `many_many` relationships create their own sets of records on their own tables.
-These records represent content changes to a DataObject, and are therefore versioned.
-If you have, for instance, a versioned `Product` DataObject with `many_many` categories, the following tables will be created:
+Because `many_many` relationships create their own sets of records on their own tables, representing content changes to a DataObject, they can therefore be versioned. This is done using the ["through" setting](https://docs.silverstripe.org/en/4/developer_guides/model/relations/#many-many-through-relationship-joined-on-a-separate-dataobject) on a `many_many` definition. This setting allows you to specify a custom DataObject through which to map the `many_many` relation. As such, it is possible to version your `many_many` data by versioning a "through" dataobject. For example:
 
-* `Product`
-* `Product_Live`
-* `Product_versions`
-* `Product_Categories`
-* `Product_Categories_Live`
-* `Product_Categories_versions`
+```php
+use SilverStripe\ORM\DataObject;
+
+class Product extends DataObject
+{
+    private static $db = [
+        'Title' => 'Varchar(100)',
+        'Price' => 'Currency',
+    ];
+    
+    private static $many_many = [
+        'Categories' => [
+            'through' => 'ProductCategory',
+            'from' => 'Product',
+            'to' => 'Category',
+        ],
+    ];
+}
+```
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+
+class ProductCategory extends DataObject
+{
+    private static $db = [
+        'SortOrder' => 'Int',
+    ];
+    
+    private static $has_one = [
+        'Product' => Product::class,
+        'Category'=> Category::class,
+    ];
+    
+    private static $extensions = [
+        Versioned::class,
+    ];
+}
+```
+
 
 ## Usage
 
@@ -331,7 +364,7 @@ the shortcode references the database identifier of the `Image` object.
 
 ### Changesets, a.k.a "Campaigns"
 
-Changes to many DataObjects can grouped together using the `ChangeSet` object, better known by its frontend name, "Campaign" (provided the `campaign-admin` module is installed). By grouping a series of content changes together as one cohesive unit, content editors can bulk publish or revert an entire body of content all at once, which affords them much more power and control over interdependent content types.
+Changes to many DataObjects can grouped together using the `ChangeSet` [api:SilverStripe\Versioning\ChangeSet] object, better known by its frontend name, "Campaign" (provided the `campaign-admin` module is installed). By grouping a series of content changes together as one cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
@@ -340,35 +373,46 @@ that is available on the edit forms of all pages and files. Programmatically, th
 Any DataObject can exist in any number of changesets, and even added to a changeset in advance of being published. While a record need not have modifications to be part of a changeset, for practical purposes, changesets are only concerned with records that have modifications.
 </div>
 
-By including an object in a changeset, the user is implicitly including all of that object's owned records (as declared by the `$owns` setting). This ensures that when a changeset is published (or reverted), the action cascades through not only all of the items explicitly added to the changeset, but also all of the records that each of those items owns.
+#### Implicit vs. Explicit inclusions
 
-#### ChangeSet actions
+Items can be added to a changeset in two ways -- *implicitly* and *explicitly*.
+  
+An *implicit* inclusion occurs when a record is added to a changeset by virtue of another object declaring ownership of it via the `$owns` setting. Implicitly including owned objects ensures that when a changeset is published, the action cascades through not only all of the items explicitly added to the changeset, but also all of the records that each of those items owns.
+
+An *explicit* inclusion is much more direct, occurring only when a user has opted to include a record in a changeset either through the UI or programatically.
+
+It is possible for an item to be included both implicitly and explicitly in a changeset. For instance, if a page owns a file, and the page gets added to a changeset, the file is implicitly added. That same file, however, can still be added to the changeset explicitly through the file editor. In this case, the file is considered to be *explicitly* added. If the file is later removed from the changeset, it is then considered *implicitly* added, due to its owner page still being in the changeset.
+
+#### Changeset actions
 
 Actions available on the frontend, i.e. those which are intended to be triggered by an end user, include:
 
 * `$myChangeSet->addObject(DataObject $record)`: Add a record and all of its owned records to the changeset (`canEdit()` dependent)
 * `$myChangeSet->removeObject(DataObject $record)`: Removes a record and all of its owned records from the changeset (`canEdit()` dependent)
-* `$myChangeSet->::publish()`: Publishes all items in the changeset that have modifications, along with all their owned records (`canPublish()` dependent). Closes the changeset on completion.
-* `$myChangeSet->::revert()`: Reverts all items in the changeset that have modifications, along with all their owned records (`canRevert()` dependent). Closes the changeset on completion.
- 
- <div class="info" markdown="1">
- Changesets cannot be "unpublished." Instead, a new changeset should be created to reverse the actions of the prior one.
- </div>
+* `$myChangeSet->publish()`: Publishes all items in the changeset that have modifications, along with all their owned records (`canPublish()` dependent). Closes the changeset on completion.
+* `$myChangeSet->revert()`: Reverts all items in the changeset that have modifications, along with all their owned records (`canRevert()` dependent). Closes the changeset on completion.
  
  Actions available on the backend, i.e. those which should only be invoked programmatically include:
  
  * `$myChangeSet->sync()`: Find all owned records with modifications for each item in the changeset, and include them implicitly.
  * `$myChangeSet->validate()`: Ensure all owned records with modifications for each item in the changeset are included. This method should not need to be invoked if `sync()` is being used on each mutation to the changeset.
  
- #### ChangeSet states
+ #### Changeset states
  
  Changesets can exists in five different states:
  
 * `open` No action has been taked on the changeset. Resolves to `publishing` or `reverting`.
-* `publishing`:  The changeset is in the process of publishing its items. Resolves to to `published`.
-* `reverting`: The changeset is in the process of reverting changes to its items. Resolves to `reverted`.
 * `published`: The changeset has published changes to all of its items and its now closed.
-* `reverted`: The changeset has reverted changes to all of its items and its now closed.
+* `reverted`: The changeset has reverted changes to all of its items and its now closed. (Future API, not supported yet)
+ 
+ #### Change types
+ 
+ Each item in the changeset stores `VersionBefore` and `VersionAfter` fields. As such, they can compute the type of change they are adding to their parent changeset. Change types include:
+ 
+ * `created`: This changeset item is for a record that does not yet exist
+ * `modified`: This changeset item is for a record that differs from what is on the live stage
+ * `deleted`: This changeset item will no longer exist when the changeset is published
+ * `none`: This changeset item is exactly as it is on the live stage
  
 ### Custom SQL
 
