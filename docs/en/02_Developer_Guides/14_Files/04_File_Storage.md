@@ -6,6 +6,29 @@ summary: Describes the persistence layer of files
 This section describes how the asset store abstraction layer stores the physical files underlying the ORM,
 and explains some of the considerations. 
 
+## Component Overview
+
+The assets module is composed of these major storage classes:
+
+* [api:SilverStripe\Assets\File]: This is the main DataObject that user code interacts with when working with files.
+ This class has the following subclasses:
+  - [api:SilverStripe\Assets\Folder]: Logical folder which holds a set of files. These can be nested.
+  - [api:SilverStripe\Assets\Image]: Specialisation of File representing an image which can be resized.
+  Note that this does not include non-resizable image files.
+* [api:SilverStripe\Assets\Storage\DBFile]: This is the DB field used by the File dataobject internally for
+  storing references to physical files in the asset backend.
+* [api:SilverStripe\Assets\Flysystem\FlysystemAssetStore]: The default backend, provided by
+  [Flysystem](https://flysystem.thephpleague.com/), which SilverStripe uses as an asset persistence layer.
+* [api:SilverStripe\Assets\InterventionBackend]: Default image resizing mechanism, provided by
+  [intervention image](http://image.intervention.io/).
+
+These interfaces are also provided to abstract certain behaviour:
+
+* [api:SilverStripe\Assets\Storage\AssetContainer]: Abstract interface for a file reference. Implemented by both
+  File and DBFile. Declare API for reading to and writing an single file.
+* [api:SilverStripe\Assets\Storage\AssetStore]: Abstract interface for the backend store for the asset system.
+  Implemented by FlysystemAssetStore. Declares API for reading and writing assets from and to the store.
+
 ## Storage via database columns
 
 Asset storage is provided out of the box via a [Flysystem](http://flysystem.thephpleague.com/) backed store.

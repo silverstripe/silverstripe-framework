@@ -176,8 +176,7 @@ class Page extends SiteTree
 
 Due to the shared nature of assets, it is not recommended to assign any 1-to-many (or exclusive 1-to-1) relationship
 between any objects and a File. E.g. a Page has_many File, or Page belongs_to File.
-These would require either a subclass, or extension on the File dataobject to create the appropriate
-has_one.
+
 
 Instead it is recommended to use either a Page has_one File for many-to-1 (or 1-to-1) relationships, or
 Page many_many File for many-to-many relationships.
