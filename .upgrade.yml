@@ -1008,6 +1008,12 @@ warnings:
       message: 'Removed'
     'Image_Cached':
       message: 'Removed'
+    'CMSFileAddController':
+      message: 'Removed'
+    'CMSBatchAction_Delete':
+      message: 'Use SilverStripe\CMS\BatchActions\CMSBatchAction_Archive instead'
+    'EncryptAllPasswordsTask':
+      message: 'Removed'
   methods:
     'setFilename()':
       message: 'Filenames should not be set directly any more'
@@ -1065,6 +1071,18 @@ warnings:
       message: 'Renamed to tearDownAfterClass()'
     'SilverStripe\Dev\SapphireTest::is_running_tests()':
       message: 'is_running_tests() is no longer public and user code should not rely on this. Test-specific behaviour should be implemented in setUp() and tearDown()'
+    'SilverStripe\Dev\SapphireTest::using_temp_db()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->isUsed()'
+    'SilverStripe\Dev\SapphireTest::kill_temp_db()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->kill()'
+    'SilverStripe\Dev\SapphireTest::empty_temp_db()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->clearAllData()'
+    'SilverStripe\Dev\SapphireTest::create_temp_db()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->build()'
+    'SilverStripe\Dev\SapphireTest::delete_all_temp_dbs()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->deleteAll()'
+    'SilverStripe\Dev\SapphireTest::resetDBSchema()':
+      message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->resetSchema()'
     'populateTemplate()':
       message: 'Email->populateTemplate() has been replaced with Email->setData()'
     'SilverStripe\Control\Email\Email->setTemplate()':
@@ -1222,6 +1240,60 @@ warnings:
       message: 'Removed'
     'SilverStripe\Assets\File::link_shortcode_handler()':
       message: 'Removed'
+    'SilverStripe\Assets\File::getRelativePath()':
+      message: 'Removed'
+    'SilverStripe\Assets\File::getFullPath()':
+      message: 'Removed'
+    'SilverStripe\Assets\File::setParentID()':
+      message: 'Removed'
+    'SilverStripe\Assets\Image::regenerateFormattedImages()':
+      message: 'Removed'
+    'SilverStripe\Assets\Image::getGeneratedImages()':
+      message: 'Removed'
+    'SilverStripe\Assets\Image::deleteFormattedImages()':
+      message: 'Removed'
+    'SilverStripe\Assets\Image::handle_shortcode()':
+      message: 'moved to SilverStripe\Assets\Shortcodes\ImageShortcodeProvider::handle_shortcode()'
+    'SilverStripe\Assets\Image::deleteFormattedImages()':
+      message: 'Removed'
+    'SilverStripe\Assets\Image::SetRatioSize()':
+      message: 'Renamed to Fit()'
+    'SilverStripe\Assets\Image::SetWidth()':
+      message: 'Renamed to ScaleWidth()'
+    'SilverStripe\Assets\Image::SetHeight()':
+      message: 'Renamed to ScaleHeight'
+    'SilverStripe\Assets\Image::SetSize()':
+      message: 'Renamed to Pad()'
+    'SilverStripe\Assets\Image::PaddedImage()':
+      message: 'Renamed to Pad()'
+    'SilverStripe\Assets\Image::CroppedImage()':
+      message: 'Renamed to Fill()'
+    'SilverStripe\Assets\Image::AssetLibraryPreview()':
+      message: 'Renamed to PreviewThumbnail()'
+    'SilverStripe\Assets\Image::AssetLibraryThumbnail()':
+      message: 'Renamed to CMSThumbnail()'
+    'SilverStripe\Assets\Image::deleteFormattedImages()':
+      message: 'Removed'
+    'SilverStripe\AssetAdmin\Controller\AssetAdmin::deleteunusedthumbnails()':
+      message: 'Removed'
+    'SilverStripe\AssetAdmin\Controller\AssetAdmin::getUnusedThumbnails()':
+      message: 'Removed'
+    'SilverStripe\ORM\FieldType\DBMoney::getAllowedCurrencies()':
+      message: 'Apply validation to MoneyField instead'
+    'SilverStripe\ORM\Hierarchy\Hierarchy->doAllChildrenIncludingDeleted':
+      message: 'Use AllChildrenIncludingDeleted() instead'
+    'past_date()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->past_date()'
+    'prior_monday()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->prior_monday()'
+    'weekday()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->weekday()'
+    'next_day()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->next_day()'
+    'day_before()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
+    'days_between()':
+      message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
   props:
     'class':
       message: '$this->class access has been removed'
