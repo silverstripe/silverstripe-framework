@@ -377,7 +377,7 @@ Any DataObject can exist in any number of changesets, and even added to a change
 
 Items can be added to a changeset in two ways -- *implicitly* and *explicitly*.
   
-An *implicit* inclusion occurs when a record is added to a changeset by virtue of another object declaring ownership of it via the `$owns` setting. Implicitly including owned objects ensures that when a changeset is published, the action cascades through not only all of the items explicitly added to the changeset, but also all of the records that each of those items owns.
+An *implicit* inclusion occurs when a record is added to a changeset by virtue of another object declaring ownership of it via the `$owns` setting. Implicit inclusion of owned objects ensures that when a changeset is published, the action cascades through not only all of the items explicitly added to the changeset, but also all of the records that each of those items owns.
 
 An *explicit* inclusion is much more direct, occurring only when a user has opted to include a record in a changeset either through the UI or programatically.
 
@@ -390,7 +390,6 @@ Actions available on the frontend, i.e. those which are intended to be triggered
 * `$myChangeSet->addObject(DataObject $record)`: Add a record and all of its owned records to the changeset (`canEdit()` dependent)
 * `$myChangeSet->removeObject(DataObject $record)`: Removes a record and all of its owned records from the changeset (`canEdit()` dependent)
 * `$myChangeSet->publish()`: Publishes all items in the changeset that have modifications, along with all their owned records (`canPublish()` dependent). Closes the changeset on completion.
-* `$myChangeSet->revert()`: Reverts all items in the changeset that have modifications, along with all their owned records (`canRevert()` dependent). Closes the changeset on completion.
  
  Actions available on the backend, i.e. those which should only be invoked programmatically include:
  
