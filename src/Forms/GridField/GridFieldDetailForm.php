@@ -66,8 +66,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     public function getURLHandlers($gridField)
     {
         return array(
-            'item/$ID' => 'handleItem',
-            'autocomplete' => 'handleAutocomplete',
+            'item/$ID' => 'handleItem'
         );
     }
 
