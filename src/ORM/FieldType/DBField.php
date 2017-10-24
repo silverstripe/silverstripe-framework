@@ -548,9 +548,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = new TextField($this->name, $title);
-
-        return $field;
+        return TextField::create($this->name, $title);
     }
 
     /**

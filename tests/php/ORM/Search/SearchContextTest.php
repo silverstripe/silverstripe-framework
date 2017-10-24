@@ -106,7 +106,8 @@ class SearchContextTest extends SapphireTest
         $context = $company->getDefaultSearchContext();
         $this->assertEquals(
             new FieldList(
-                new TextField("Name", 'Name'),
+                (new TextField("Name", 'Name'))
+                    ->setMaxLength(255),
                 new TextareaField("Industry", 'Industry'),
                 new NumericField("AnnualProfit", 'The Almighty Annual Profit')
             ),
