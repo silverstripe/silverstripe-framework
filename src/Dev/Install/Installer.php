@@ -2,13 +2,13 @@
 
 namespace SilverStripe\Dev\Install;
 
-use Dotenv\Dotenv;
 use Exception;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\ORM\DatabaseAdmin;
@@ -234,14 +234,9 @@ PHP;
         $vars = [];
 
         // Retain existing vars
-        // Note: vars with # or " in them are discarded
+        $env = new EnvironmentLoader();
         if (file_exists($path)) {
-            $env = new Dotenv($this->getBaseDir());
-            foreach ($env->load() as $line) {
-                if (preg_match('/^(?<key>\w+)\s*=\s*("?)(?<value>[^"#]*)("?)$/', $line, $matches)) {
-                    $vars[$matches['key']] = $matches['value'];
-                }
-            }
+            $vars = $env->loadFile($path) ?: [];
         }
 
         // Set base URL
@@ -288,8 +283,7 @@ PHP;
         $this->writeToFile('.env', implode("\n", $lines));
 
         // Re-load env vars for installer access
-        $path = $this->getBaseDir();
-        (new Dotenv($path))->load();
+        $env->loadFile($path);
     }
 
     /**
