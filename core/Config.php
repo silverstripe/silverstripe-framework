@@ -223,7 +223,7 @@ class Config {
 	 * @return Config Reference to new active Config instance
 	 */
 	public static function nest() {
-		$current = self::$instance;
+		$current = self::inst();
 
 		$new = clone $current;
 		$new->nestedFrom = $current;
