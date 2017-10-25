@@ -53,7 +53,6 @@ class LookupField extends MultiSelectField
         if ($mapped) {
             $attrValue = implode(', ', array_values($mapped));
 
-            $attrValue = Convert::raw2xml($attrValue);
             $inputValue = implode(', ', array_values($values));
         } else {
             $attrValue = '<i>('._t('SilverStripe\\Forms\\FormField.NONE', 'none').')</i>';
