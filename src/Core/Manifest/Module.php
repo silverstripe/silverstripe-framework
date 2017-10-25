@@ -158,7 +158,7 @@ class Module implements Serializable
     {
         $config = "{$this->path}/_config.php";
         if (file_exists($config)) {
-            require_once $config;
+            requireFile($config);
         }
     }
 
@@ -246,4 +246,16 @@ class Module implements Serializable
             ->getResource($path)
             ->exists();
     }
+}
+
+/**
+ * Scope isolated require - prevents access to $this, and prevents module _config.php
+ * files potentially leaking variables. Required argument $file is commented out
+ * to avoid leaking that into _config.php
+ *
+ * @param string $file
+ */
+function requireFile()
+{
+    require_once func_get_arg(0);
 }
