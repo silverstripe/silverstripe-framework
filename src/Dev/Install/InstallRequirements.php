@@ -259,6 +259,8 @@ class InstallRequirements
 
         $this->requireWriteable('index.php', array("File permissions", "Is the index.php file writeable?", null));
 
+        $this->requireWriteable('.env', ["File permissions", "Is the .env file writeable?", null], false, false);
+
         if ($isApache) {
             $this->checkApacheVersion(array(
                 "Webserver Configuration",
@@ -826,7 +828,7 @@ class InstallRequirements
         }
     }
 
-    public function requireWriteable($filename, $testDetails, $absolute = false)
+    public function requireWriteable($filename, $testDetails, $absolute = false, $error = true)
     {
         $this->testing($testDetails);
 
@@ -878,7 +880,11 @@ class InstallRequirements
                 $testDetails[2] .= "The webserver user needs to be able to write to this file:\n$filename";
             }
 
-            $this->error($testDetails);
+            if ($error) {
+                $this->error($testDetails);
+            } else {
+                $this->warning($testDetails);
+            }
         }
     }
 
