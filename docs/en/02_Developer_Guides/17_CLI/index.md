@@ -23,7 +23,7 @@ to have.
 ## Sake - SilverStripe Make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one 
-are available.
+are available. It is accessible via `vendor/bin/sake`.
 
 <div class="info" markdown='1'>
 If you are using a Debian server: Check you have the php-cli package installed for sake to work. If you get an error 
@@ -32,10 +32,10 @@ when running the command php -v, then you may not have php-cli installed so sake
 
 ### Installation
 
-`sake` can be invoked using `./vendor/silverstripe/framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
+`sake` can be invoked using `./vendor/bin/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
 ```
     cd your-webroot/
-    sudo ./vendor/silverstripe/framework/sake installsake
+    sudo ./vendor/bin/sake installsake
 ```
 <div class="warning">
 This currently only works on UNIX like systems, not on Windows.
@@ -55,7 +55,7 @@ SS_BASE_URL="http://localhost/base-url"
 
 ### Usage
 
-Sake can run any controller by passing the relative URL to that controller.
+`sake` can run any controller by passing the relative URL to that controller.
 
 
 ```bash
@@ -67,7 +67,7 @@ Sake can run any controller by passing the relative URL to that controller.
     # shows a list of development operations
 ```
 
-Sake is particularly useful for running build tasks.
+`sake` is particularly useful for running build tasks.
 ```bash
 
     sake dev/build "flush=1"
@@ -86,7 +86,7 @@ It can also be handy if you have a long running script..
 Make a task or controller class that runs a loop. To avoid memory leaks, you should make the PHP process exit when it 
 hits some reasonable memory limit. Sake will automatically restart your process whenever it exits.
 
-Include some appropriate sleep()s so that your process doesn't hog the system. The best thing to do is to have a short 
+Include some appropriate `sleep()`s so that your process doesn't hog the system. The best thing to do is to have a short 
 sleep when the process is in the middle of doing things, and a long sleep when doesn't have anything to do.
 
 This code provides a good template:
@@ -158,5 +158,5 @@ On a UNIX machine, you can typically run a scheduled task with a [cron job](http
 The following will run `MyTask` every minute.
 
 ```bash
-    * * * * * /your/site/folder/sake dev/tasks/MyTask
+    * * * * * /your/site/folder/vendor/bin/sake dev/tasks/MyTask
 ```
