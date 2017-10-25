@@ -4,10 +4,16 @@ namespace SilverStripe\Control\Tests\Email;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Email\SwiftMailer;
+use SilverStripe\Control\Tests\Email\EmailTest\EmailSubClass;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestMailer;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
+use SilverStripe\View\SSViewer;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
@@ -84,37 +90,25 @@ class EmailTest extends SapphireTest
 
     public function testSendPlain()
     {
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
-        $email = $this->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->disableOriginalConstructor()
-            ->setConstructorArgs(array(
-                'from@example.com',
-                'to@example.com',
-                'Test send plain',
-                'Testing Email->sendPlain()',
-                'cc@example.com',
-                'bcc@example.com',
-            ))
-            ->getMock();
+        $email = $this->makeEmailMock('Test send plain');
 
         // email should not call render if a body is supplied
-        $email->expects($this->never())->method('render');
-
-        $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
+        $email->expects($this->never())->method('renderWith');
         $successful = $email->sendPlain();
 
         $this->assertTrue($successful);
         $this->assertEmpty($email->getFailedRecipients());
 
-        $sentMail = $this->mailer->findEmail('to@example.com');
+        /** @var TestMailer $mailer */
+        $mailer = Injector::inst()->get(Mailer::class);
+        $sentMail = $mailer->findEmail('to@example.com');
 
         $this->assertTrue(is_array($sentMail));
 
         $this->assertEquals('to@example.com', $sentMail['To']);
         $this->assertEquals('from@example.com', $sentMail['From']);
         $this->assertEquals('Test send plain', $sentMail['Subject']);
-        $this->assertEquals('Testing Email->sendPlain()', $sentMail['Content']);
+        $this->assertEquals('Body for Test send plain', $sentMail['Content']);
 
         $this->assertCount(1, $sentMail['AttachedFiles']);
         $child = reset($sentMail['AttachedFiles']);
@@ -126,36 +120,25 @@ class EmailTest extends SapphireTest
     public function testSend()
     {
         /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
-        $email = $this->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->disableOriginalConstructor()
-            ->setConstructorArgs(array(
-                'from@example.com',
-                'to@example.com',
-                'Test send HTML',
-                'Testing Email->send()',
-                'cc@example.com',
-                'bcc@example.com',
-            ))
-            ->getMock();
+        $email = $this->makeEmailMock('Test send HTML');
 
         // email should not call render if a body is supplied
-        $email->expects($this->never())->method('render');
-
-        $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
+        $email->expects($this->never())->method('renderWith');
         $successful = $email->send();
 
         $this->assertTrue($successful);
         $this->assertEmpty($email->getFailedRecipients());
 
-        $sentMail = $this->mailer->findEmail('to@example.com');
+        /** @var TestMailer $mailer */
+        $mailer = Injector::inst()->get(Mailer::class);
+        $sentMail = $mailer->findEmail('to@example.com');
 
         $this->assertTrue(is_array($sentMail));
 
         $this->assertEquals('to@example.com', $sentMail['To']);
         $this->assertEquals('from@example.com', $sentMail['From']);
         $this->assertEquals('Test send HTML', $sentMail['Subject']);
-        $this->assertEquals('Testing Email->send()', $sentMail['Content']);
+        $this->assertEquals('Body for Test send HTML', $sentMail['Content']);
 
         $this->assertCount(1, $sentMail['AttachedFiles']);
         $child = reset($sentMail['AttachedFiles']);
@@ -169,12 +152,9 @@ class EmailTest extends SapphireTest
         /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
         $email = $this->getMockBuilder(Email::class)
             ->enableProxyingToOriginalMethods()
-            ->disableOriginalConstructor()
-            ->setConstructorArgs(array(
-              'from@example.com',
-              'to@example.com',
-            ))
             ->getMock();
+        $email->setFrom('from@example.com');
+        $email->setTo('to@example.com');
         $email->setData(array(
             'EmailContent' => 'test',
         ));
@@ -186,6 +166,31 @@ class EmailTest extends SapphireTest
         $email->send();
         $this->assertTrue($email->hasPlainPart());
         $this->assertNotEmpty($email->getBody());
+    }
+
+    public function testRenderedSendSubclass()
+    {
+        // Include dev theme
+        SSViewer::set_themes([
+            'silverstripe/framework:/tests/php/Control/Email/EmailTest',
+            '$default',
+        ]);
+
+        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        $email = $this->getMockBuilder(EmailSubClass::class)
+            ->enableProxyingToOriginalMethods()
+            ->getMock();
+        $email->setFrom('from@example.com');
+        $email->setTo('to@example.com');
+        $email->setData(array(
+            'EmailContent' => 'test',
+        ));
+        $this->assertFalse($email->hasPlainPart());
+        $this->assertEmpty($email->getBody());
+        $email->send();
+        $this->assertTrue($email->hasPlainPart());
+        $this->assertNotEmpty($email->getBody());
+        $this->assertContains('<h1>Email Sub-class</h1>', $email->getBody());
     }
 
     public function testConsturctor()
@@ -460,8 +465,33 @@ class EmailTest extends SapphireTest
 
     public function testHTMLTemplate()
     {
+        // Include dev theme
+        SSViewer::set_themes([
+            'silverstripe/framework:/tests/php/Control/Email/EmailTest',
+            '$default',
+        ]);
+
+        // Find template on disk
+        $emailTemplate = ModuleResourceLoader::singleton()->resolveResource(
+            'silverstripe/framework:templates/SilverStripe/Control/Email/Email.ss'
+        );
+        $subClassTemplate = ModuleResourceLoader::singleton()->resolveResource(
+            'silverstripe/framework:tests/php/Control/Email/EmailTest/templates/'
+            . str_replace('\\', '/', EmailSubClass::class)
+            .'.ss'
+        );
+        $this->assertTrue($emailTemplate->exists());
+        $this->assertTrue($subClassTemplate->exists());
+
+        // Check template is auto-found
         $email = new Email();
-        $this->assertEquals(Email::class, $email->getHTMLTemplate());
+        $this->assertEquals($emailTemplate->getPath(), $email->getHTMLTemplate());
+        $email->setHTMLTemplate('MyTemplate');
+        $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
+
+        // Check subclass template is found
+        $email2 = new EmailSubClass();
+        $this->assertEquals($subClassTemplate->getPath(), $email2->getHTMLTemplate());
         $email->setHTMLTemplate('MyTemplate');
         $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
     }
@@ -480,8 +510,8 @@ class EmailTest extends SapphireTest
         /** @var Swift_NullTransport|PHPUnit_Framework_MockObject_MockObject $transport */
         $transport = $this->getMockBuilder(Swift_NullTransport::class)->getMock();
         $transport->expects($this->once())
-                  ->method('send')
-                  ->willThrowException(new Swift_RfcComplianceException('Bad email'));
+            ->method('send')
+            ->willThrowException(new Swift_RfcComplianceException('Bad email'));
         $mailer->setSwiftMailer(new Swift_Mailer($transport));
         $email = new Email();
         $email->setTo('to@example.com');
@@ -495,7 +525,7 @@ class EmailTest extends SapphireTest
         $this->assertTrue((new Email)->IsEmail());
     }
 
-    public function testRender()
+    public function testRenderAgain()
     {
         $email = new Email();
         $email->setData(array(
@@ -577,5 +607,25 @@ class EmailTest extends SapphireTest
         /** @var \Swift_MimePart $plainPart */
         $plainPart = reset($children);
         $this->assertContains('Test', $plainPart->getBody());
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|Email
+     */
+    protected function makeEmailMock($subject)
+    {
+        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        $email = $this->getMockBuilder(Email::class)
+            ->enableProxyingToOriginalMethods()
+            ->getMock();
+
+        $email->setFrom('from@example.com');
+        $email->setTo('to@example.com');
+        $email->setSubject($subject);
+        $email->setBody("Body for {$subject}");
+        $email->setCC('cc@example.com');
+        $email->setBCC('bcc@example.com');
+        $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
+        return $email;
     }
 }

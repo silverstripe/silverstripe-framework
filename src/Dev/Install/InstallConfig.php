@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Dev\Install;
 
+use SilverStripe\Core\Environment;
+
 /**
  * Provides environment settings from the current request + environment
  *
@@ -42,10 +44,10 @@ class InstallConfig
         // Guess database config
         return [
             'type' => $this->getDatabaseClass($databaseClasses),
-            'server' => getenv('SS_DATABASE_SERVER') ?: 'localhost',
-            'username' => getenv('SS_DATABASE_USERNAME') ?: 'root',
-            'password' => getenv('SS_DATABASE_PASSWORD') ?: '',
-            'database' => getenv('SS_DATABASE_NAME') ?: 'SS_mysite',
+            'server' => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
+            'username' => Environment::getEnv('SS_DATABASE_USERNAME') ?: 'root',
+            'password' => Environment::getEnv('SS_DATABASE_PASSWORD') ?: '',
+            'database' => Environment::getEnv('SS_DATABASE_NAME') ?: 'SS_mysite',
         ];
     }
 
@@ -62,8 +64,8 @@ class InstallConfig
         }
 
         return [
-            'username' => getenv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
-            'password' => getenv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
+            'username' => Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
+            'password' => Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
         ];
     }
 
@@ -114,8 +116,9 @@ class InstallConfig
      */
     protected function getDatabaseClass($databaseClasses)
     {
-        if (getenv('SS_DATABASE_CLASS')) {
-            return getenv('SS_DATABASE_CLASS');
+        $envDatabase = Environment::getEnv('SS_DATABASE_CLASS');
+        if ($envDatabase) {
+            return $envDatabase;
         }
 
         // Check supported versions

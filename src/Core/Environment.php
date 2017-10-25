@@ -6,6 +6,11 @@ namespace SilverStripe\Core;
  * Consolidates access and modification of PHP global variables and settings.
  * This class should be used sparingly, and only if information cannot be obtained
  * from a current {@link HTTPRequest} object.
+ *
+ * Acts as the primary store for environment variables, including those loaded
+ * from .env files. Applications should use Environment::getEnv() instead of php's
+ * `getenv` in order to include `.env` configuration, as the system's actual
+ * environment variables are treated immutably.
  */
 class Environment
 {
@@ -24,6 +29,13 @@ class Environment
     protected static $timeLimitMax = null;
 
     /**
+     * Local overrides for all $_ENV var protected from cross-process operations
+     *
+     * @var array
+     */
+    protected static $env = [];
+
+    /**
      * Extract env vars prior to modification
      *
      * @return array List of all super globals
@@ -31,7 +43,7 @@ class Environment
     public static function getVariables()
     {
         // Suppress return by-ref
-        return array_merge($GLOBALS, []);
+        return array_merge($GLOBALS, [ 'env' => static::$env ]);
     }
 
     /**
@@ -41,8 +53,14 @@ class Environment
      */
     public static function setVariables(array $vars)
     {
-        foreach ($vars as $key => $value) {
-            $GLOBALS[$key] = $value;
+        foreach ($vars as $varName => $varValue) {
+            if ($varName === 'env') {
+                continue;
+            }
+            $GLOBALS[$varName] = $varValue;
+        }
+        if (array_key_exists('env', $vars)) {
+            static::$env = $vars['env'];
         }
     }
 
@@ -150,5 +168,52 @@ class Environment
     public static function getTimeLimitMax()
     {
         return static::$timeLimitMax;
+    }
+
+    /**
+     * Get value of environment variable
+     *
+     * @param string $name
+     * @return mixed Value of the environment variable, or false if not set
+     */
+    public static function getEnv($name)
+    {
+        switch (true) {
+            case array_key_exists($name, static::$env):
+                return static::$env[$name];
+            case array_key_exists($name, $_ENV):
+                return $_ENV[$name];
+            case array_key_exists($name, $_SERVER):
+                return $_SERVER[$name];
+            default:
+                return getenv($name);
+        }
+    }
+
+    /**
+     * Set environment variable using php.ini syntax.
+     * Acts as a process-isolated version of putenv()
+     * Note: This will be parsed via parse_ini_string() which handles quoted values
+     *
+     * @param string $string Setting to assign in KEY=VALUE or KEY="VALUE" syntax
+     */
+    public static function putEnv($string)
+    {
+        // Parse name-value pairs
+        $envVars = parse_ini_string($string) ?: [];
+        foreach ($envVars as $name => $value) {
+            self::setEnv($name, $value);
+        }
+    }
+
+    /**
+     * Set environment variable via $name / $value pair
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public static function setEnv($name, $value)
+    {
+        static::$env[$name] = $value;
     }
 }

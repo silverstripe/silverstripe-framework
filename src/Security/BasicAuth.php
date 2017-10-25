@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
@@ -224,9 +225,9 @@ class BasicAuth
         // Check if site is protected
         if ($config->get('entire_site_protected')) {
             $permissionCode = $config->get('entire_site_protected_code');
-        } elseif (getenv(self::USE_BASIC_AUTH)) {
+        } elseif (Environment::getEnv(self::USE_BASIC_AUTH)) {
             // Convert legacy 1 / true to ADMIN permissions
-            $permissionCode = getenv(self::USE_BASIC_AUTH);
+            $permissionCode = Environment::getEnv(self::USE_BASIC_AUTH);
             if (!is_string($permissionCode) || is_numeric($permissionCode)) {
                 $permissionCode = self::AUTH_PERMISSION;
             }

@@ -5,9 +5,14 @@ namespace SilverStripe\Control\Email;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ViewableData;
 use Swift_Message;
 use Swift_MimePart;
@@ -58,12 +63,12 @@ class Email extends ViewableData
     /**
      * @var string The name of the HTML template to render the email with (without *.ss extension)
      */
-    private $HTMLTemplate = self::class;
+    private $HTMLTemplate = null;
 
     /**
      * @var string The name of the plain text template to render the plain part of the email with
      */
-    private $plainTemplate = '';
+    private $plainTemplate = null;
 
     /**
      * @var Swift_MimePart
@@ -155,7 +160,7 @@ class Email extends ViewableData
                 $normalised[$name] = null;
             }
         }
-        $extra = getenv($env);
+        $extra = Environment::getEnv($env);
         if ($extra) {
             $normalised[$extra] = null;
         }
@@ -648,7 +653,14 @@ class Email extends ViewableData
      */
     public function getHTMLTemplate()
     {
-        return $this->HTMLTemplate;
+        if ($this->HTMLTemplate) {
+            return $this->HTMLTemplate;
+        }
+
+        return ThemeResourceLoader::inst()->findTemplate(
+            SSViewer::get_templates_by_class(static::class, '', self::class),
+            SSViewer::get_themes()
+        );
     }
 
     /**
@@ -760,30 +772,49 @@ class Email extends ViewableData
             $this->getSwiftMessage()->detach($existingPlainPart);
         }
         unset($existingPlainPart);
-        if (!$this->getHTMLTemplate() && !$this->getPlainTemplate()) {
+
+        // Respect explicitly set body
+        $htmlPart = $plainOnly ? null : $this->getBody();
+        $plainPart = $plainOnly ? $this->getBody() : null;
+
+        // Ensure we can at least render something
+        $htmlTemplate = $this->getHTMLTemplate();
+        $plainTemplate = $this->getPlainTemplate();
+        if (!$htmlTemplate && !$plainTemplate && !$plainPart && !$htmlPart) {
             return $this;
         }
-        $HTMLPart = '';
-        $plainPart = '';
 
-        if ($this->getHTMLTemplate()) {
-            $HTMLPart = $this->renderWith($this->getHTMLTemplate(), $this->getData());
+        // Render plain part
+        if ($plainTemplate && !$plainPart) {
+            $plainPart = $this->renderWith($plainTemplate, $this->getData());
         }
 
-        if ($this->getPlainTemplate()) {
-            $plainPart =  $this->renderWith($this->getPlainTemplate(), $this->getData());
-        } elseif ($HTMLPart) {
-            $plainPart = Convert::xml2raw($HTMLPart);
+        // Render HTML part, either if sending html email, or a plain part is lacking
+        if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
+            $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
         }
 
-        if ($HTMLPart && !$plainOnly) {
-            $this->setBody($HTMLPart);
+        // Plain part fails over to generated from html
+        if (!$plainPart && $htmlPart) {
+            /** @var DBHTMLText $htmlPartObject */
+            $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
+            $plainPart = $htmlPartObject->Plain();
+        }
+
+        // Fail if no email to send
+        if (!$plainPart && !$htmlPart) {
+            return $this;
+        }
+
+        // Build HTML / Plain components
+        if ($htmlPart && !$plainOnly) {
+            $this->setBody($htmlPart);
             $this->getSwiftMessage()->setContentType('text/html');
             $this->getSwiftMessage()->setCharset('utf-8');
             if ($plainPart) {
                 $this->getSwiftMessage()->addPart($plainPart, 'text/plain', 'utf-8');
             }
-        } elseif ($plainPart || $plainOnly) {
+        } else {
             if ($plainPart) {
                 $this->setBody($plainPart);
             }
@@ -812,7 +843,7 @@ class Email extends ViewableData
      */
     public function hasPlainPart()
     {
-        if ($this->getSwiftMessage()->getContentType() == 'text/plain') {
+        if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
             return true;
         }
         return (bool) $this->findPlainPart();

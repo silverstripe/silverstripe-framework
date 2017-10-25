@@ -35,7 +35,7 @@
         "symfony/config": "^3.2",
         "symfony/translation": "^2.8",
         "symfony/yaml": "~3.2",
-        "vlucas/phpdotenv": "^2.4",
+        "m1/env": "^2.1",
         "php": ">=5.6.0",
         "ext-intl": "*",
         "ext-mbstring": "*",

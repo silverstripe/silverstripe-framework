@@ -7,8 +7,8 @@ server.
 For each of these environments we may require slightly different configurations for our servers. This could be our debug
 level, caching backends, or - of course - sensitive information such as database credentials.
 
-To solve this problem of setting variables per environment we use environment variables with the help of the 
-[PHPDotEnv](https://github.com/vlucas/phpdotenv) library by Vance Lucas.
+To manage environment variables, as well as other server globals, the [api:SilverStripe\Core\Environment] class
+provides a set of APIs and helpers.
 
 ## Security considerations
 
@@ -32,13 +32,18 @@ You can set "real" environment variables using Apache. Please
 
 ## How to access the environment variables
 
-Accessing the environment varaibles is easy and can be done using the `getenv` method or in the `$_ENV` and `$_SERVER`
-super-globals:
+Accessing the environment varaibles should be done via the `Environment::getEnv()` method
 
 ```php
-getenv('SS_DATABASE_CLASS');
-$_ENV['SS_DATABASE_CLASS'];
-$_SERVER['SS_DATABASE_CLASS'];
+use SilverStripe\Core\Environment;
+Environment::getEnv('SS_DATABASE_CLASS');
+```
+
+Individual settings can be assigned via `Environment::setEnv()` or `Environment::putEnv()` methods.
+
+```php
+use SilverStripe\Core\Environment;
+Environment::setEnv('API_KEY', 'AABBCCDDEEFF012345');
 ```
 
 ## Including an extra `.env` file
@@ -46,12 +51,14 @@ $_SERVER['SS_DATABASE_CLASS'];
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
 database credentials could be the same. To do this, you can add this snippet to your `mysite/_config.php` file:
 
+Note that by default variables cannot be overloaded from this file; Existing values will be preferred
+over values in this file.
+
 ```php
-try {
-    (new \Dotenv\Dotenv('/path/to/env/'))->load();
-} catch (\Dotenv\Exception\InvalidPathException $e) {
-    // no file found
-}
+use SilverStripe\Core\EnvironmentLoader;
+$env = BASE_PATH . '/mysite/.env';
+$loader = new EnvironmentLoader();
+$loader->loadFile($env);
 ```
 
 ## Core environment variables

@@ -35,6 +35,7 @@ class HTTPResponse
         304 => 'Not Modified',
         305 => 'Use Proxy',
         307 => 'Temporary Redirect',
+        308 => 'Permanent Redirect',
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',
@@ -71,7 +72,8 @@ class HTTPResponse
         303,
         304,
         305,
-        307
+        307,
+        308
     );
 
     /**
