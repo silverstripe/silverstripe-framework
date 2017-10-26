@@ -8,18 +8,15 @@ class TreeDropdownField_Readonly extends TreeDropdownField
 
     public function Field($properties = array())
     {
-        $fieldName = $this->getLabelField();
+        $fieldName = $this->getTitleField();
         if ($this->value) {
             $keyObj = $this->objectForKey($this->value);
-            $obj = $keyObj ? $keyObj->$fieldName : '';
+            $title = $keyObj ? $keyObj->$fieldName : '';
         } else {
-            $obj = null;
+            $title = null;
         }
 
-        $source = array(
-            $this->value => $obj
-        );
-
+        $source = [ $this->value => $title ];
         $field = new LookupField($this->name, $this->title, $source);
         $field->setValue($this->value);
         $field->setForm($this->form);

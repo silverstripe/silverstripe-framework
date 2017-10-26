@@ -11,6 +11,7 @@ SilverStripe\Assets\Folder:
 SilverStripe\Assets\File:
   asdf:
     Filename: assets/FileTest.txt
+    Title: '<Special & characters>'
   subfolderfile1:
     Filename: assets/FileTest-subfolder/TestFile1InSubfolder.txt
     Name: TestFile1InSubfolder
