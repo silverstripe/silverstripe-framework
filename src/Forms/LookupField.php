@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\ArrayLib;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Read-only complement of {@link DropdownField}.
@@ -36,23 +36,22 @@ class LookupField extends MultiSelectField
         $values = $this->getValueArray();
 
         // Get selected values
-        $mapped = array();
+        $mapped = [];
         foreach ($values as $value) {
             if (isset($source[$value])) {
-                $mapped[] = $source[$value];
+                $mapped[] = Convert::raw2xml($source[$value]);
             }
         }
 
         // Don't check if string arguments are matching against the source,
         // as they might be generated HTML diff views instead of the actual values
         if ($this->value && is_string($this->value) && empty($mapped)) {
-            $mapped = array(trim($this->value));
-            $values = array();
+            $mapped[] = Convert::raw2xml(trim($this->value));
+            $values = [];
         }
 
         if ($mapped) {
             $attrValue = implode(', ', array_values($mapped));
-
             $inputValue = implode(', ', array_values($values));
         } else {
             $attrValue = '<i>('._t('SilverStripe\\Forms\\FormField.NONE', 'none').')</i>';
