@@ -11,8 +11,11 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldGroupDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
@@ -150,6 +153,9 @@ class Group extends DataObject
             $config->addComponent(new GridFieldButtonRow('after'));
             $config->addComponents(new GridFieldExportButton('buttons-after-left'));
             $config->addComponents(new GridFieldPrintButton('buttons-after-left'));
+            $config->removeComponentsByType(GridFieldDeleteAction::class);
+            $config->addComponent(new GridFieldGroupDeleteAction($this->ID), GridFieldPageCount::class);
+
             /** @var GridFieldAddExistingAutocompleter $autocompleter */
             $autocompleter = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
             /** @skipUpgrade */

@@ -6,7 +6,7 @@ Feature: Manage Security Permissions for Groups
 
   Background:
     Given a "group" "test group"
-    And a "member" "ADMIN" belonging to "ADMIN Group" with "Email"="admin@test.com"
+    And a "member" "ADMIN" belonging to "ADMIN group" with "Email"="admin@test.com"
     And the "group" "ADMIN group" has permissions "Full administrative rights"
     And I am logged in with "ADMIN" permissions
     And I go to "/admin/security"

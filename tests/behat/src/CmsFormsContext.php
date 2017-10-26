@@ -95,7 +95,7 @@ class CmsFormsContext implements Context
     {
         $element = $this->getHtmlField($locator);
         $actual = $element->getValue();
-        $regex = '/'.preg_quote($html, '/').'/ui';
+        $regex = '/' . preg_quote($html, '/') . '/ui';
         $failed = false;
 
         if (trim($negative)) {
@@ -230,7 +230,7 @@ JS;
      */
     public function iClickOnTheHtmlFieldButton($button)
     {
-        $xpath = "//*[@aria-label='".$button."']";
+        $xpath = "//*[@aria-label='" . $button . "']";
         $session = $this->getSession();
         $element = $session->getPage()->find('xpath', $xpath);
         if (null === $element) {
@@ -351,5 +351,88 @@ JS;
     {
         // Destroy cookie to detach session
         $this->getMainContext()->getSession()->setCookie('PHPSESSID', null);
+    }
+
+    /**
+     * @When /^I should see the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function assertIShouldSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+    }
+
+    /**
+     * @When /^I should not see the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function assertIShouldNotSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        assertNull($button, sprintf('Button "%s" not found', $buttonLabel));
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function stepIClickTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+
+        $button->click();
+    }
+
+    /**
+     * Finds a button in the gridfield row
+     *
+     * @param $gridFieldName
+     * @param $rowName
+     * @param $buttonLabel
+     * @return $button
+     */
+    protected function getGridFieldButton($gridFieldName, $rowName, $buttonLabel)
+    {
+        $page = $this->getSession()->getPage();
+        $gridField = $page->find('xpath', sprintf('//*[@data-name="%s"]', $gridFieldName));
+        assertNotNull($gridField, sprintf('Gridfield "%s" not found', $gridFieldName));
+
+        $name = $gridField->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $rowName));
+        if (!$name) {
+            return null;
+        }
+
+        $button = $name->getParent()->find('xpath', sprintf('//*[@aria-label="%s"]', $buttonLabel));
+
+        return $button;
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" option in the "([^"]*)" listbox$/
+     * @param $optionLabel
+     * @param $fieldName
+     */
+    public function stepIClickTheListBoxOption($optionLabel, $fieldName)
+    {
+        $page = $this->getSession()->getPage();
+        $listBox = $page->find('xpath', sprintf('//*[@name="%s[]"]', $fieldName));
+        assertNotNull($listBox, sprintf('The listbox %s is not found', $fieldName));
+
+        $option = $listBox->getParent()
+            ->find('css', '.chosen-choices')
+            ->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $optionLabel));
+        assertNotNull($option, sprintf('Option %s is not found', $optionLabel));
+
+        $button = $option->getParent()->find('css', 'a');
+
+        $button->click();
     }
 }

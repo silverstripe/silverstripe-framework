@@ -5,11 +5,29 @@ Feature: Manage users
   So that I can control access to the CMS
 
   Background:
-    Given a "member" "ADMIN" belonging to "ADMIN Group" with "Email"="admin@test.com"
-    And a "member" "Staff" belonging to "Staff Group" with "Email"="staffmember@test.com"
+    Given a "member" "ADMIN" belonging to "ADMIN group" with "Email"="ADMIN@example.org"
+    And the "member" "ADMIN" belonging to "ADMIN group2"
+    And a "member" "Staff" belonging to "Staff group" with "Email"="staffmember@test.com"
     And the "group" "ADMIN group" has permissions "Full administrative rights"
+    And the "group" "ADMIN group2" has permissions "Full administrative rights"
     And I am logged in with "ADMIN" permissions
     And I go to "/admin/security"
+
+
+  Scenario: I cannot remove my admin access, but can remove myself from an admin group
+    When I click the "Groups" CMS tab
+      And I click "ADMIN group" in the "#Root_Groups" element
+      And I should see the "Unlink" button in the "Members" gridfield for the "ADMIN" row
+    Then I click "Groups" in the ".breadcrumbs-wrapper" element
+      And I click the "Groups" CMS tab
+      And I click "ADMIN group2" in the "#Root_Groups" element
+      And I should see the "Unlink" button in the "Members" gridfield for the "ADMIN" row
+    Then I click the "Unlink" button in the "Members" gridfield for the "ADMIN" row
+      And I should not see the "Unlink" button in the "Members" gridfield for the "ADMIN" row
+    Then I click "Groups" in the ".breadcrumbs-wrapper" element
+      And I click the "Groups" CMS tab
+      And I click "ADMIN group" in the "#Root_Groups" element
+      And I should not see the "Unlink" button in the "Members" gridfield for the "ADMIN" row
 
   Scenario: I can list all users regardless of group
     When I click the "Users" CMS tab

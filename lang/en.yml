@@ -85,6 +85,8 @@ en:
     Print: Print
     RelationSearch: 'Relation search'
     ResetFilter: Reset
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -247,6 +249,7 @@ en:
       other: '{count} Members'
     REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
+    VALIDATIONADMINLOSTACCESS: 'Cannot remove all admin groups from your profile'
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname

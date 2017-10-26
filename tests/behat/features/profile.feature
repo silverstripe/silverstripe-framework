@@ -5,10 +5,24 @@ Feature: Manage my own settings
 	In order to streamline my CMS experience
 
 	Background:
-		Given a "member" "Joe" belonging to "Admin Group" with "Email"="joe@test.com" and "Password"="secret"
-		And the "group" "Admin Group" has permissions "Full administrative rights"
+		Given a "member" "Joe" belonging to "Admin group" with "Email"="joe@test.com" and "Password"="secret"
+		And the "group" "Admin group" has permissions "Full administrative rights"
+    And the "member" "Joe" belonging to "Admin group2"
+    And the "group" "Admin group2" has permissions "Full administrative rights"
 		And I log in with "joe@test.com" and "secret"
 		And I go to "admin/myprofile"
+
+  Scenario: I cannot remove all my admin groups
+    When I click the "Admin group" option in the "DirectGroups" listbox
+      And I click the "Admin group2" option in the "DirectGroups" listbox
+      And I press the "Save" button
+    Then I should see "Cannot remove all admin groups from your profile" in the "#Form_EditForm" element
+
+  Scenario: I can remove one of my admin groups
+    When I click the "Admin group" option in the "DirectGroups" listbox
+      And I press the "Save" button
+    Then I should see a "Saved" notice
+      And I should not see "Cannot remove all admin groups from your profile" in the "#Form_EditForm" element
 
 	Scenario: I can edit my personal details
 		Given I fill in "First Name" with "Jack"
