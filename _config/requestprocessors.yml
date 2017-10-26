@@ -11,6 +11,7 @@ SilverStripe\Core\Injector\Injector:
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
         RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
         FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
+        CanonicalURLMiddleware: '%$SilverStripe\Control\Middleware\CanonicalURLMiddleware'
   SilverStripe\Control\Middleware\AllowedHostsMiddleware:
     properties:
       AllowedHosts: '`SS_ALLOWED_HOSTS`'
@@ -37,3 +38,12 @@ After:
 SilverStripe\Core\Injector\Injector:
   # Note: If Director config changes, take note it will affect this config too
   SilverStripe\Core\Startup\ErrorDirector: '%$SilverStripe\Control\Director'
+---
+Name: canonicalurls
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Middleware\CanonicalURLMiddleware:
+    properties:
+      ForceSSL: false
+      ForceWWW: false
+

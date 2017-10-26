@@ -14,6 +14,8 @@ use DOMDocument;
  *
  * It's designed to allow dependancy injection to replace the standard HTML4 version with one that
  * handles XHTML or HTML5 instead
+ *
+ * @mixin DOMDocument
  */
 abstract class HTMLValue extends ViewableData
 {

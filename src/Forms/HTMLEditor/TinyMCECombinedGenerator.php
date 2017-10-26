@@ -92,10 +92,12 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
         foreach ($config->getPlugins() as $plugin => $path) {
             // Add external plugin
             if ($path) {
+                // Skip external urls
+                if (is_string($path) && !Director::is_site_url($path)) {
+                    continue;
+                }
                 // Convert URLS to relative paths
-                if (is_string($path)
-                    && (Director::is_absolute_url($path) || strpos($path, '/') === 0)
-                ) {
+                if (is_string($path)) {
                     $path = Director::makeRelative($path);
                 }
                 // Ensure file exists
