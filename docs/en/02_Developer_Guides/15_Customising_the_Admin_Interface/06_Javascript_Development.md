@@ -419,6 +419,9 @@ PHP:
 
 
 ```php
+	use SilverStripe\Control\HTTPResponse;
+	use SilverStripe\View\ViewableData;
+
     class MyController 
     {
       public function autocomplete($request) 

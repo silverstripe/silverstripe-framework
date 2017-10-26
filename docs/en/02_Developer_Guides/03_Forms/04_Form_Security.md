@@ -22,6 +22,8 @@ The `SecurityToken` automatically added looks something like:
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	
     $form = new Form(..);
     echo $form->getSecurityToken()->getValue();
 

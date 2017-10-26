@@ -11,6 +11,8 @@ at the last position within the field, and expects unescaped HTML content.
 
 
 ```php
+	use SilverStripe\Forms\TextField;
+	
     TextField::create('MyText', 'My Text Label')
         ->setDescription('More <strong>detailed</strong> help');
 ```

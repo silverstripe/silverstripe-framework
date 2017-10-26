@@ -11,7 +11,9 @@ with information that we need.
 
 ```php
     use SilverStripe\Core\Injector\Injector;
-
+    use SilverStripe\Dev\SapphireTest;
+    use SilverStripe\Core\Injector\Injector;
+    
     class MyObjectTest extends SapphireTest 
     {
 

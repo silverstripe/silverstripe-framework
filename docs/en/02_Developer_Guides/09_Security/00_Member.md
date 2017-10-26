@@ -15,6 +15,8 @@ The [api:Security] class comes with a static method for getting information abou
 Retrieves the current logged in member.  Returns *null* if user is not logged in, otherwise, the Member object is returned.  
 
 ```php
+	use SilverStripe\Security\Security;
+
 	if( $member = Security::getCurrentUser() ) {
 		// Work with $member
 	} else {
@@ -32,6 +34,8 @@ This is the least desirable way of extending the [Member](api:SilverStripe\Secur
 You can define subclasses of [Member](api:SilverStripe\Security\Member) to add extra fields or functionality to the built-in membership system.
 
 ```php
+use SilverStripe\Security\Member;
+
 class MyMember extends Member {
     private static $db = array(
         "Age" => "Int",
@@ -58,6 +62,8 @@ details in the newsletter system.  This function returns a [FieldList](api:Silve
 parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\FieldList) from there.
 
 ```php
+	use SilverStripe\Forms\TextField;
+	
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->insertBefore("HTMLEmail", new TextField("Age"));

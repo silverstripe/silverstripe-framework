@@ -50,6 +50,8 @@ class MyCustomController extends Controller
 ### CSS Files
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::css($path, $media);
 ```
 

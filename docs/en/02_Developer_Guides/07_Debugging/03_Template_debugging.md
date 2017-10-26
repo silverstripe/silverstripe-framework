@@ -15,6 +15,6 @@ block of html on your page.
     Only:
       environment: 'dev'
     ---
-    SSViewer:
+    SilverStripe\View\SSViewer:
       source_file_comments: true
 ```

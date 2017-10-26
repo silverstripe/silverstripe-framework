@@ -47,7 +47,7 @@ config:
 
     SilverStripe\Core\Injector\Injector:
       DataListFilter.CustomMatch:
-        class: MyVendor/Search/CustomMatchFilter
+        class: MyVendor\Search\CustomMatchFilter
 ```
 
 The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:

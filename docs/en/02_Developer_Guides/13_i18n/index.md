@@ -29,6 +29,8 @@ you want to set.
 
 
 ```php
+	use SilverStripe\i18n\i18n;
+
     // mysite/_config.php
     i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
     i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
@@ -82,6 +84,8 @@ You can use these settings for your own view logic.
 
 
 ```php
+	use SilverStripe\Core\Config\Config;
+
     Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
     Config::inst()->update('i18n', 'time_format', 'HH:mm');
 ```
@@ -107,7 +111,7 @@ In order to add a value, add the following to your `config.yml`:
 
 ```yml
 
-    i18n:
+    SilverStripe\i18n\i18n:
       common_locales:
         de_CGN:
           name: German (Cologne)
@@ -119,7 +123,7 @@ Similarly, to change an existing language label, you can overwrite one of these 
 
 ```yml
 
-    i18n:
+    SilverStripe\i18n\i18n:
       common_locales:
         en_NZ:
           native: Niu Zillund
@@ -155,6 +159,8 @@ followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 
 ```php
+	use SilverStripe\Forms\DateField;
+
     $field = new DateField();
     $field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
     $field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
@@ -341,7 +347,7 @@ To create a custom module order, you need to specify a config fragment that inse
     Name: customi18n
     Before: 'defaulti18n'
     ---
-    i18n:
+    SilverStripe\i18n\i18n:
       module_priority:
         - module1
         - module2
@@ -402,6 +408,8 @@ If using this on the frontend, it's also necessary to include the stand-alone i1
 js file.
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::javascript('silverstripe/admin:client/dist/js/i18n.js');
 Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 ```

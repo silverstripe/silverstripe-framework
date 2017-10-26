@@ -49,7 +49,7 @@ we want to add the `MyMemberExtension` too. To activate this extension, add the 
 
 ```yml
 
-    Member:
+    SilverStripe\Security\Member:
       extensions:
         - MyMemberExtension
 ```
@@ -58,7 +58,7 @@ Alternatively, we can add extensions through PHP code (in the `_config.php` file
 
 
 ```php
-    Member::add_extension('MyMemberExtension');
+    SilverStripe\Security\Member::add_extension('MyMemberExtension');
 ```
 
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
@@ -130,6 +130,8 @@ we added a `SayHi` method which is unique to our extension.
 **mysite/code/Page.php**
 
 ```php
+	use SilverStripe\Security\Security;
+	
     $member = Security::getCurrentUser();
     echo $member->SayHi;
 

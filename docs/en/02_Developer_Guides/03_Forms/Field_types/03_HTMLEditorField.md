@@ -103,6 +103,8 @@ transparently generate the relevant underlying TinyMCE code.
 **mysite/_config.php**
 
 ```php
+	use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
+
     HtmlEditorConfig::get('cms')->enablePlugins('media');
 ```
 
@@ -270,6 +272,8 @@ Example: Remove field for "image captions"
 
 ```php
     // File: mysite/_config.php
+    use SilverStripe\Admin\ModalController;
+    
     ModalController::add_extension('MyToolbarExtension');
 ```
 

@@ -38,6 +38,8 @@ Other fields can be manually parsed with shortcodes through the `parse` method.
 
 
 ```php
+	use SilverStripe\View\Parsers\ShortcodeParser;
+	
     $text = "My awesome [my_shortcode] is here.";
     ShortcodeParser::get_active()->parse($text);
 ```

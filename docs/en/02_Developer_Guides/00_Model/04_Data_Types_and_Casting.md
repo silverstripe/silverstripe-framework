@@ -173,6 +173,7 @@ On the most basic level, the class can be used as simple conversion class from o
 number.
 
 ```php
+	use SilverStripe\ORM\FieldType\DBField;
     DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 ```
 
@@ -180,6 +181,7 @@ Of course that's much more verbose than the equivalent PHP call. The power of [D
 sophisticated helpers, like showing the time difference to the current date:
 
 ```php
+	use SilverStripe\ORM\FieldType\DBField;
     DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 ```
 

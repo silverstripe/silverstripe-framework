@@ -10,6 +10,9 @@ This can be accessed in user code via Injector
 
 
 ```php
+	use SilverStripe\Core\Kernel;
+	use SilverStripe\Core\Injector\Injector;
+	
     $kernel = Injector::inst()->get(Kernel::class);
     echo "Current environment: " . $kernel->getEnvironment();
 ```

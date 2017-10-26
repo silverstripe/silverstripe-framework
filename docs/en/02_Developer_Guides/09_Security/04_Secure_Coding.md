@@ -26,6 +26,10 @@ come from user input.
 
 Example:
 ```php
+	use SilverStripe\ORM\DB;
+	use SilverStripe\ORM\DataObject;
+	use SilverStripe\ORM\Queries\SQLSelect;
+
     $records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', [3]);
     $records = MyClass::get()->where(['"ID" = ?' => 3]);
     $records = MyClass::get()->where(['"ID"' => 3]);
@@ -40,6 +44,9 @@ Parameterised updates and inserts are also supported, but the syntax is a little
 
 
 ```php
+	use SilverStripe\ORM\Queries\SQLInsert;
+	use SilverStripe\ORM\DB;
+
     SQLInsert::create('"MyClass"')
         ->assign('"Name"', 'Daniel')
         ->addAssignments([
@@ -80,6 +87,8 @@ handled via prepared statements.
 
 Example:
 ```php
+	use SilverStripe\Security\Member;
+
     // automatically escaped/quoted
     $members = Member::get()->filter('Name', $_GET['name']); 
     // automatically escaped/quoted
@@ -555,6 +564,9 @@ a [PasswordValidator](api:SilverStripe\Security\PasswordValidator):
 
 
 ```php
+	use SilverStripe\Security\Member;
+	use SilverStripe\Security\PasswordValidator;
+
     $validator = new PasswordValidator();
     $validator->minLength(7);
     $validator->checkHistoricalPasswords(6);
@@ -672,6 +684,8 @@ variable will be no longer necessary, thus it will be necessary to always set
 SilverStripe recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
 director function `forceSSL()` 
 ```php
+	use SilverStripe\Control\Director;
+
     if (!Director::isDev()) {
         Director::forceSSL();
     }
@@ -685,7 +699,7 @@ use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cooki
 To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`
 ```yml
 
-    Session:
+    SilverStripe\Control\Session:
         cookie_secure: true
 ```
 
@@ -700,6 +714,7 @@ clear text and can be intercepted and stolen by an attacker who is listening on 
 code. It is best practice to set this flag unless the application is known to use JavaScript to access these cookies 
 as this prevents an attacker who achieves cross-site scripting from accessing these cookies.
 ```php
+    use SilverStripe\Control\Cookie;
     
     Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
         $httpOnly = false

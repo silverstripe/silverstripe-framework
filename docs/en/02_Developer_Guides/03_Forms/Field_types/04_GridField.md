@@ -8,6 +8,8 @@ tabular data in a format that is easy to view and modify. It can be thought of a
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridField;
+
     $field = new GridField($name, $title, $list);
 ```
 
@@ -103,6 +105,9 @@ the `getConfig()` method on `GridField`.
 
 With the `GridFieldConfig` instance, we can modify the behavior of the `GridField`.
 ```php
+	use SilverStripe\Forms\GridField\GridFieldConfig;
+	use SilverStripe\Forms\GridField\GridFieldDataColumns;
+
     // `GridFieldConfig::create()` will create an empty configuration (no components).
     $config = GridFieldConfig::create();
 
@@ -115,7 +120,10 @@ With the `GridFieldConfig` instance, we can modify the behavior of the `GridFiel
 
 `GridFieldConfig` provides a number of methods to make setting the configuration easier. We can insert a component 
 before another component by passing the second parameter.
+
 ```php
+	use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+
     $config->addComponent(new GridFieldFilterHeader(), 'GridFieldDataColumns');
 ```
 
@@ -169,6 +177,8 @@ A simple read-only and paginated view of records with sortable and searchable he
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridFieldConfig_Base;
+
     $config = GridFieldConfig_Base::create();
 
     $gridField->setConfig($config);
@@ -199,6 +209,8 @@ this record.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+
     $config = GridFieldConfig_RecordViewer::create();
     
     $gridField->setConfig($config);
@@ -354,6 +366,9 @@ bottom right of the table.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridFieldButtonRow;
+	use SilverStripe\Forms\GridField\GridFieldPrintButton;
+
     $config->addComponent(new GridFieldButtonRow('after'));
     $config->addComponent(new GridFieldPrintButton('buttons-after-right'));
 ```
@@ -366,6 +381,8 @@ create an area rendered before the table wrapped in a simple `<div>`.
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
     class MyAreaComponent implements GridField_HTMLProvider 
     {
     
@@ -389,6 +406,8 @@ Now you can add other components into this area by returning them as an array fr
 
 
 ```php
+	use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
     class MyShareLinkComponent implements GridField_HTMLProvider 
     {
     

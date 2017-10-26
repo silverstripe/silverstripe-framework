@@ -19,6 +19,10 @@ For example, if you want to run a simple `COUNT` SQL statement,
 the following three statements are functionally equivalent:
 
 ```php
+	use SilverStripe\ORM\DB;
+	use SilverStripe\ORM\Queries\SQLSelect;
+	use SilverStripe\Security\Member;
+
     // Through raw SQL.
     $count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
 
@@ -96,7 +100,8 @@ object instead.
 For example, creating a `SQLDelete` object
 
 ```php
-    
+    use SilverStripe\ORM\Queries\SQLDelete;
+
     $query = SQLDelete::create()
         ->setFrom('"SiteTree"')
         ->setWhere(['"SiteTree"."ShowInMenus"' => 0]);
@@ -107,7 +112,8 @@ For example, creating a `SQLDelete` object
 Alternatively, turning an existing `SQLSelect` into a delete
 
 ```php
-    
+    use SilverStripe\ORM\Queries\SQLSelect;
+
     $query = SQLSelect::create()
         ->setFrom('"SiteTree"')
         ->setWhere(['"SiteTree"."ShowInMenus"' => 0])
@@ -119,7 +125,8 @@ Alternatively, turning an existing `SQLSelect` into a delete
 Directly querying the database
 
 ```php
-    
+    use SilverStripe\ORM\DB;
+
     DB::prepared_query('DELETE FROM "SiteTree" WHERE "SiteTree"."ShowInMenus" = ?', [0]);
 
 ```
@@ -169,7 +176,9 @@ SQLInsert also includes the following api methods:
 E.g.
 
 ```php
-        $update = SQLUpdate::create('"SiteTree"')->addWhere(['ID' => 3]);
+    use SilverStripe\ORM\Queries\SQLUpdate;
+
+    $update = SQLUpdate::create('"SiteTree"')->addWhere(['ID' => 3]);
 
     // assigning a list of items
     $update->addAssignments([
@@ -202,7 +211,9 @@ these are translated internally as multiple single row inserts.
 For example,
 
 ```php
-        $insert = SQLInsert::create('"SiteTree"');
+    use SilverStripe\ORM\Queries\SQLInsert;
+
+    $insert = SQLInsert::create('"SiteTree"');
 
     // Add multiple rows in a single call. Note that column names do not need 
     // to be symmetric
@@ -232,6 +243,8 @@ e.g. when you want a single column rather than a full-blown object representatio
 Example: Get the count from a relationship.
 
 ```php
+	use SilverStripe\ORM\Queries\SQLSelect;
+
     $sqlQuery = new SQLSelect();
     $sqlQuery->setFrom('Player');
     $sqlQuery->addSelect('COUNT("Player"."ID")');
@@ -255,6 +268,9 @@ This can be useful for creating dropdowns.
 Example: Show player names with their birth year, but set their birth dates as values.
 
 ```php
+	use SilverStripe\ORM\Queries\SQLSelect;
+	use SilverStripe\Forms\DropdownField;
+	
     $sqlQuery = new SQLSelect();
     $sqlQuery->setFrom('Player');
     $sqlQuery->setSelect('Birthdate');

@@ -547,6 +547,7 @@ when you want to find all the members that does not exist in a Group.
 
 ```php
     // ... Finding all members that does not belong to $group.
+    use SilverStripe\Security\Member;
     $otherMembers = Member::get()->subtract($group->Members());
 ```
 
@@ -555,6 +556,7 @@ when you want to find all the members that does not exist in a Group.
 You can limit the amount of records returned in a DataList by using the `limit()` method.
 
 ```php
+	use SilverStripe\Security\Member;
     $members = Member::get()->limit(5);
 ```
 
@@ -582,6 +584,8 @@ For instance, the below model will be stored in the table name `BannerImage`
 
 ```php
     namespace SilverStripe\BannerManager;
+    use SilverStripe\ORM\DataObject;
+
     class BannerImage extends \DataObject 
     {
         private static $table_name = 'BannerImage';
@@ -616,6 +620,9 @@ table and column.
 
 
 ```php
+	use SilverStripe\ORM\Queries\SQLSelect;
+	use SilverStripe\ORM\DataObject;
+	
     public function countDuplicates($model, $fieldToCheck) 
     {
         $table = DataObject::getSchema()->tableForField($model, $field);
@@ -642,7 +649,7 @@ you need it to, you may also consider extending the ORM with new data types or f
 
 You can specify a WHERE clause fragment (that will be combined with other filters using AND) with the `where()` method:
 
-```php
+```php	
     $members = Member::get()->where("\"FirstName\" = 'Sam'")
 ```
 
@@ -722,7 +729,7 @@ The data for the following classes would be stored across the following tables:
 
 ```yml
 
-    SiteTree:
+    SilverStripe\CMS\Model\SiteTree:
         - ID: Int
         - ClassName: Enum('SiteTree', 'Page', 'NewsPage')
         - Created: Datetime

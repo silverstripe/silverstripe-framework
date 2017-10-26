@@ -18,6 +18,8 @@ headers:
 
 ### HTTP::set_cache_age
 ```php
+	use SilverStripe\Control\HTTP;
+
     HTTP::set_cache_age(0);
 ```
 
@@ -46,7 +48,7 @@ Cookie, X-Forwarded-Protocol, User-Agent, Accept
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration
 
 ```yml
-HTTP:
+SilverStripe\Control\HTTP:
   vary: ""
 ```
 

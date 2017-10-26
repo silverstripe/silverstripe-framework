@@ -78,7 +78,7 @@ or across page types with common characteristics.
 Now you just need to enable the extension in your [configuration file](../../configuration).
 ```yml
     // mysite/_config/config.yml
-    LeftAndMain:
+    SilverStripe\Admin\LeftAndMain:
       extensions:
         - NewsPageHolderCMSMainExtension
 ```

@@ -82,7 +82,7 @@ to the `LeftAndMain.extra_requirements_javascript` [configuration value](../conf
 
 ```yml
 
-    LeftAndMain:
+    SilverStripe\Admin\LeftAndMain:
       extra_requirements_javascript:
         - mysite/javascript/MyLeftAndMain.Preview.js
 ```

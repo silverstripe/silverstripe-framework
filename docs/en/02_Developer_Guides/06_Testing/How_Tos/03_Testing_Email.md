@@ -8,6 +8,8 @@ email was sent using this method.
 
 
 ```php
+	use SilverStripe\Control\Email\Email;
+	
     public function MyMethod() 
     {
         $e = new Email();

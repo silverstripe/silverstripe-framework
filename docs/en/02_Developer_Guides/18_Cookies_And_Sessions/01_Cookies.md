@@ -15,6 +15,8 @@ Sets the value of cookie with configuration.
 
 
 ```php
+	use SilverStripe\Control\Cookie;
+
     Cookie::set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false);
 
     // Cookie::set('MyApplicationPreference', 'Yes');
@@ -54,6 +56,10 @@ from the browser.
 
 
 ```php
+	use SilverStripe\Core\Injector\Injector;
+	use SilverStripe\Control\Cookie;
+	use SilverStripe\Control\CookieJar;
+
     $myCookies = [
         'cookie1' => 'value1',
     ];
@@ -102,7 +108,7 @@ If you need to implement your own Cookie_Backend you can use the injector system
     Name: mycookie
     After: '#cookie'
     ---
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       Cookie_Backend:
         class: MyCookieJar
 ```

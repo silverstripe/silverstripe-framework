@@ -58,7 +58,7 @@ explicitly logging in or by invoking the "remember me" functionality.
 Now you just need to apply this extension through your config:
 
 ```yml
-    Member:
+    SilverStripe\Security\Member:
         extensions:
             - MyMemberExtension
 

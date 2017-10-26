@@ -43,6 +43,11 @@ There's quite a bit in this function, so we'll step through one piece at a time.
 
 
 ```php
+	use SilverStripe\Forms\FieldList;
+	use SilverStripe\Forms\TextField;
+	use SilverStripe\Forms\EmailField;
+	use SilverStripe\Forms\TextareaField;
+
     $fields = new FieldList(
         new TextField('Name'),
         new EmailField('Email'),
@@ -137,6 +142,9 @@ The framework comes with a predefined validator called [RequiredFields](api:Silv
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\RequiredFields;
+	
     public function Form() 
     { 
         // ...

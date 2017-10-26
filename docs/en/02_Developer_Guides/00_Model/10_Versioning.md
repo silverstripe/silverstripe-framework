@@ -174,6 +174,8 @@ By default, all records are retrieved from the "Draft" stage (so the `MyRecord` 
 explicitly request a certain stage through various getters on the `Versioned` class.
 
 ```php
+use SilverStripe\Versioned\Versioned;
+
 // Fetching multiple records
 $stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
 $liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);

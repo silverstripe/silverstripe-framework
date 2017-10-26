@@ -24,6 +24,8 @@ An outline of step one looks like:
 
 
 ```php
+	use SilverStripe\Control\RSS\RSSFeed;
+
     $feed = new RSSFeed(
         $list,
         $link,
@@ -201,6 +203,8 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 
 ```php
+	use SilverStripe\Control\RSS\RSSFeed;
+	
     public function players() 
     {
         $rss = new RSSFeed(

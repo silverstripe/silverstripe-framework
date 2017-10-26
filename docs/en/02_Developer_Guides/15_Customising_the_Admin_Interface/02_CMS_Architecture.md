@@ -62,7 +62,7 @@ The CMS interface can be accessed by default through the `admin/` URL. You can c
     After:
         - '#adminroutes'
     ---
-    Director:
+    SilverStripe\Control\Director:
         rules:
             'admin': ''
             'newAdmin': 'AdminRootController'
@@ -75,7 +75,7 @@ In PHP you should use:
 
 
 ```php
-    AdminRootController::admin_url()
+    SilverStripe\Admin\AdminRootController::admin_url()
 ```
 
 When writing templates use:

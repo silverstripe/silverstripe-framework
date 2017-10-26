@@ -412,6 +412,8 @@ Relationships between objects can cause cascading deletions, if necessary, throu
 `cascade_deletes` config on the parent class.
 
 ```php
+use SilverStripe\ORM\DataObject;
+
 class ParentObject extends DataObject {
     private static $has_one = [
         'Child' => ChildObject::class,

@@ -210,9 +210,9 @@ The structure of each YAML file is a series of headers and values separated by Y
         - '#rootroutes'
         - '#coreroutes'
     ---
-    Director:
+    SilverStripe\Control\Director:
       rules:
-        'admin': 'AdminRootController'
+        'admin': 'SilverStripe\Admin\AdminRootController'
     ---
 ```
 
@@ -260,9 +260,9 @@ keys is a list of reference paths to other value sections. A basic example:
         - '#rootroutes'
         - '#coreroutes'
     ---
-    Director:
+    SilverStripe\Control\Director:
       rules:
-        'admin': 'AdminRootController'
+        'admin': 'SilverStripe\Admin\AdminRootController'
     ---
 ```
 

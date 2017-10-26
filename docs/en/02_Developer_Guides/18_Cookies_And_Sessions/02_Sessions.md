@@ -29,6 +29,8 @@ class MyController extends Controller
 Otherwise, if you're not in a controller, get the request as a service.
 
 ```php
+use SilverStripe\Control\HTTPRequest;
+
 $request = Injector::inst()->get(HTTPRequest::class);
 $session = $request->getSession();
 ```

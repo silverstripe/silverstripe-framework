@@ -12,6 +12,8 @@ modify.
 [SS_List](api:SilverStripe\ORM\SS_List) implements `IteratorAggregate`, allowing you to loop over the instance.
 
 ```php
+	use SilverStripe\Security\Member;
+	
     $members = Member::get();
 
     foreach($members as $member) {

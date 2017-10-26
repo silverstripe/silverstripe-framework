@@ -14,6 +14,8 @@ For informational and debug logs, you can use the Logger directly. The Logger is
 can be accessed via the `Injector`:
 
 ```php
+use SilverStripe\Core\Injector\Injector;
+
 Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Security::getCurrentUser()->ID);
 Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
 ```

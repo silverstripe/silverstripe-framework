@@ -67,7 +67,7 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 
 ```yml
 
-    LeftAndMain:
+    SilverStripe\Admin\LeftAndMain:
       extra_requirements_css:
         - mysite/css/BookmarkedPages.css
 ```
@@ -106,7 +106,7 @@ Enable the extension in your [configuration file](../../configuration)
 
 ```yml
 
-    SiteTree:
+    SilverStripe\CMS\Model\SiteTree:
       extensions:
         - BookmarkedPageExtension
 ```
@@ -143,7 +143,7 @@ Enable the extension in your [configuration file](../../configuration)
 
 ```yml
 
-    LeftAndMain:
+    SilverStripe\Admin\LeftAndMain:
       extensions:
         - BookmarkedPagesLeftAndMainExtension
 ```
@@ -268,7 +268,7 @@ The extension then needs to be registered:
 
 ```yaml
 
-    LeftAndMain:
+    SilverStripe\Admin\LeftAndMain:
         extensions:
             - CustomActionsExtension
 ```

@@ -33,13 +33,15 @@ situations, you can disable anchor link rewriting by setting the `SSViewer.rewri
 **mysite/_config/app.yml**
 
 ```yml
-SSViewer:
+SilverStripe\View\SSViewer:
   rewrite_hash_links: false
 ```
 
 Or, a better way is to call this just for the rendering phase of this particular file:
 
 ```php
+	use SilverStripe\View\SSViewer;
+	
 	public function RenderCustomTemplate() 
 	{
 		SSViewer::setRewriteHashLinks(false);

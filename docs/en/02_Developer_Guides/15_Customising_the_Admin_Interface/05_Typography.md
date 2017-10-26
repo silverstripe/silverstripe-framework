@@ -8,6 +8,8 @@ SilverStripe lets you customise the style of content in the CMS. This is done by
 
 
 ```php
+	use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
+	
     HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
 ```
 

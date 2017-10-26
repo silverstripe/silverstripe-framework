@@ -137,6 +137,8 @@ in order to read page limit information. It is also passed the current
 
 
 ```php
+	use SilverStripe\ORM\PaginatedList;
+	
     public function getResults($searchCriteria = []) 
     {
         $start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;

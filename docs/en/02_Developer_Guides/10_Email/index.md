@@ -24,6 +24,8 @@ SilverStripe\Core\Injector\Injector:
 
 
 ```php
+	use SilverStripe\Control\Email\Email;
+
     $email = new Email($from, $to, $subject, $body);
     $email->sendPlain();
 ```
@@ -135,6 +137,8 @@ Configuration of those properties looks like the following:
 
 
 ```php
+	use SilverStripe\Control\Director;
+	use SilverStripe\Core\Config\Config;
     if(Director::isLive()) {
         Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
     } else {

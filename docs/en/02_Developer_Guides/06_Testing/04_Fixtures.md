@@ -16,6 +16,8 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 
 ```php
+	use SilverStripe\Dev\SapphireTest;
+
     class MyNewTest extends SapphireTest 
     {
     
@@ -31,6 +33,8 @@ You can also use an array of fixture files, if you want to use parts of multiple
 
 
 ```php
+	use SilverStripe\Dev\SapphireTest;
+
     class MyNewTest extends SapphireTest 
     {
     
@@ -293,6 +297,8 @@ using them.
 
 
 ```php
+	use SilverStripe\Core\Injector\Injector;
+	
     $factory = Injector::inst()->create('FixtureFactory');
 
     $obj = $factory->createObject('Team', 'hurricanes');

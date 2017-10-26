@@ -11,6 +11,8 @@ The `PaginatedList` will automatically set up query limits and read the request 
 **mysite/code/Page.php**
 
 ```php
+	use SilverStripe\ORM\PaginatedList;
+
 	/**
 	 * Returns a paginated list of all pages in the site.
 	 */
@@ -79,6 +81,8 @@ will break the pagination. You can disable automatic limiting using the [Paginat
 when using custom lists.
 
 ```php
+	use SilverStripe\ORM\PaginatedList;
+	
 	$myPreLimitedList = Page::get()->limit(10);
 
 	$pages = new PaginatedList($myPreLimitedList, $this->getRequest());

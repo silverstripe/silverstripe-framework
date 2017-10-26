@@ -36,6 +36,8 @@ The loader would be triggered through the `load()` method:
 
 
 ```php
+	use SilverStripe\Dev\CsvBulkLoader;
+	
     $loader = new CsvBulkLoader('Member');
     $result = $loader->load('<my-file-path>');
 ```

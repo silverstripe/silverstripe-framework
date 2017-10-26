@@ -20,6 +20,8 @@ The following sums up the simplest usage of the `Injector` it creates a new obje
 
 
 ```php
+	use SilverStripe\Core\Injector\Injector;
+
     $object = Injector::inst()->create('MyClassName');
 ```
 
@@ -30,7 +32,7 @@ The benefit of constructing objects through this syntax is `ClassName` can be sw
 
 ```yml
 
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       MyClassName:
         class: MyBetterClassName
 ```
@@ -134,7 +136,7 @@ As well as properties, method calls can also be specified:
 
 ```yml
 
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       Logger:
         class: Monolog\Logger
         calls:
@@ -169,7 +171,7 @@ An example using the `MyFactory` service to create instances of the `MyService` 
 
 ```yml
 
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       MyService:
         factory: MyFactory
 ```
@@ -247,7 +249,7 @@ And the following configuration..
     MyController:
       dependencies:
         permissions: %$PermissionService
-    Injector:
+    SilverStripe\Core\Injector\Injector:
       PermissionService:
         class: RestrictivePermissionService
         properties:

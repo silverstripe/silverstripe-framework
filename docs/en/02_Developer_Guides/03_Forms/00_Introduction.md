@@ -16,6 +16,9 @@ Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
 
 
 ```php
+	use SilverStripe\Forms\Form;
+	use SilverStripe\Forms\FieldList;
+	
     $form = new Form(
         $controller, // the Controller to render this form on 
         $name, // name of the method that returns this form on the controller
