@@ -9,6 +9,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\SS_List;
+use Traversable;
 
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).
@@ -248,7 +249,7 @@ class PermissionCheckboxSetField extends FormField
                             Permission::checkMember($record, 'ADMIN') && $code != 'ADMIN') {
                             $icon = 'plus-circled';
                         }
-    
+
                         $options .= "<li class=\"$extraClass\">"
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
@@ -298,7 +299,9 @@ class PermissionCheckboxSetField extends FormField
 
         // Remove all "privileged" permissions if the currently logged-in user is not an admin
         $privilegedPermissions = Permission::config()->privileged_permissions;
-        if (!Permission::check('ADMIN')) {
+        if ((is_array($this->value) || $this->value instanceof Traversable)
+            && !Permission::check('ADMIN')
+        ) {
             foreach ($this->value as $id => $bool) {
                 if (in_array($id, $privilegedPermissions)) {
                     unset($this->value[$id]);
@@ -321,7 +324,7 @@ class PermissionCheckboxSetField extends FormField
                 $record->write(); // We need a record ID to write permissions
             }
 
-            if ($this->value) {
+            if (is_array($this->value) || $this->value instanceof Traversable) {
                 foreach ($this->value as $id => $bool) {
                     if ($bool) {
                         $perm = new $managedClass();
