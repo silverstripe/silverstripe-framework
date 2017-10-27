@@ -11,36 +11,43 @@ To make an entire [Form](api:SilverStripe\Forms\Form) read-only.
 
 
 ```php
-    $form = new Form(..);
-    $form->makeReadonly();
+use SilverStripe\Forms\Form;
+
+$form = new Form(..);
+$form->makeReadonly();
 ```
 
 To make all the fields within a [FieldList](api:SilverStripe\Forms\FieldList) read-only (i.e to make fields read-only but not buttons).
 
 
 ```php
-    $fields = new FieldList(..);
-    $fields = $fields->makeReadonly();
+use SilverStripe\Forms\FieldList;
+
+$fields = new FieldList(..);
+$fields = $fields->makeReadonly();
 ```
 
 To make a [FormField](api:SilverStripe\Forms\FormField) read-only you need to know the name of the form field or call it direct on the object
 
 
 ```php
-    $field = new TextField(..);
-    $field = $field->performReadonlyTransformation();
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
 
-    $fields = new FieldList(
-        $field
-    );
+$field = new TextField(..);
+$field = $field->performReadonlyTransformation();
 
-    // Or,
-    $field = new TextField(..);
-    $field->setReadonly(true);
+$fields = new FieldList(
+    $field
+);
 
-    $fields = new FieldList(
-        $field
-    );
+// Or,
+$field = new TextField(..);
+$field->setReadonly(true);
+
+$fields = new FieldList(
+    $field
+);
 ```
 
 ## Disabled FormFields
@@ -49,11 +56,10 @@ Disabling [FormField](api:SilverStripe\Forms\FormField) instances, sets the `dis
 a normal form, but set the `disabled` attribute on the `input` tag.
 
 ```php
-    $field = new TextField(..);
-    $field->setDisabled(true);
+$field = new TextField(..);
+$field->setDisabled(true);
 
-    echo $field->forTemplate();
+echo $field->forTemplate();
 
-    // returns '<input type="text" class="text" .. disabled="disabled" />'
-
+// returns '<input type="text" class="text" .. disabled="disabled" />'
 ```

@@ -11,15 +11,17 @@ The `PaginatedList` will automatically set up query limits and read the request 
 **mysite/code/Page.php**
 
 ```php
-	/**
-	 * Returns a paginated list of all pages in the site.
-	 */
-	public function PaginatedPages() 
-	{
-		$list = Page::get();
+use SilverStripe\ORM\PaginatedList;
 
-		return new PaginatedList($list, $this->getRequest());
-	}
+/**
+ * Returns a paginated list of all pages in the site.
+ */
+public function PaginatedPages() 
+{
+    $list = Page::get();
+
+    return new PaginatedList($list, $this->getRequest());
+}
 ```
 
 <div class="notice" markdown="1">
@@ -35,11 +37,11 @@ The first step is to simply list the objects in the template:
 **mysite/templates/Page.ss**
 
 ```ss
-	<ul>
-		<% loop $PaginatedPages %>
-			<li><a href="$Link">$Title</a></li>
-		<% end_loop %>
-	</ul>
+<ul>
+    <% loop $PaginatedPages %>
+        <li><a href="$Link">$Title</a></li>
+    <% end_loop %>
+</ul>
 ```
 By default this will display 10 pages at a time. The next step is to add pagination controls below this so the user can 
 switch between pages:
@@ -47,25 +49,25 @@ switch between pages:
 **mysite/templates/Page.ss**
 
 ```ss
-	<% if $PaginatedPages.MoreThanOnePage %>
-		<% if $PaginatedPages.NotFirstPage %>
-			<a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
-		<% end_if %>
-		<% loop $PaginatedPages.Pages %>
-			<% if $CurrentBool %>
-				$PageNum
-			<% else %>
-				<% if $Link %>
-					<a href="$Link">$PageNum</a>
-				<% else %>
-					...
-				<% end_if %>
-			<% end_if %>
-			<% end_loop %>
-		<% if $PaginatedPages.NotLastPage %>
-			<a class="next" href="$PaginatedPages.NextLink">Next</a>
-		<% end_if %>
-	<% end_if %>
+<% if $PaginatedPages.MoreThanOnePage %>
+    <% if $PaginatedPages.NotFirstPage %>
+        <a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
+    <% end_if %>
+    <% loop $PaginatedPages.Pages %>
+        <% if $CurrentBool %>
+            $PageNum
+        <% else %>
+            <% if $Link %>
+                <a href="$Link">$PageNum</a>
+            <% else %>
+                ...
+            <% end_if %>
+        <% end_if %>
+        <% end_loop %>
+    <% if $PaginatedPages.NotLastPage %>
+        <a class="next" href="$PaginatedPages.NextLink">Next</a>
+    <% end_if %>
+<% end_if %>
 ```
 
 If there is more than one page, this block will render a set of pagination controls in the form 
@@ -79,17 +81,19 @@ will break the pagination. You can disable automatic limiting using the [Paginat
 when using custom lists.
 
 ```php
-	$myPreLimitedList = Page::get()->limit(10);
+use SilverStripe\ORM\PaginatedList;
 
-	$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
-	$pages->setLimitItems(false);
+$myPreLimitedList = Page::get()->limit(10);
+
+$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
+$pages->setLimitItems(false);
 ```
 
 ## Setting the limit of items
 
 ```php
-	$pages = new PaginatedList(Page::get(), $this->getRequest());
-	$pages->setPageLength(25);
+$pages = new PaginatedList(Page::get(), $this->getRequest());
+$pages->setPageLength(25);
 ```
 
 If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page

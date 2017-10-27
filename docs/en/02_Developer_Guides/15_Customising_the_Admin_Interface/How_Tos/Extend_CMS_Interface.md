@@ -31,18 +31,17 @@ the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 
 
 ```ss
-
-    ...
-    <ul class="cms-menu-list">
-        <!-- ... -->
-        <li class="bookmarked-link first">
-            <a href="{$AdminURL}pages/edit/show/1">Edit "My popular page"</a>
-        </li>
-        <li class="bookmarked-link last">
-            <a href="{$AdminURL}pages/edit/show/99">Edit "My other page"</a>
-        </li>
-    </ul>
-    ...
+...
+<ul class="cms-menu-list">
+    <!-- ... -->
+    <li class="bookmarked-link first">
+        <a href="{$AdminURL}pages/edit/show/1">Edit "My popular page"</a>
+    </li>
+    <li class="bookmarked-link last">
+        <a href="{$AdminURL}pages/edit/show/99">Edit "My other page"</a>
+    </li>
+</ul>
+...
 ```
 
 Refresh the CMS interface with `admin/?flush=all`, and you should see those
@@ -57,8 +56,7 @@ with the CMS interface. Paste the following content into a new file called
 
 
 ```css
-
-    .bookmarked-link.first {margin-top: 1em;}
+.bookmarked-link.first {margin-top: 1em;}
 ```
 
 Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
@@ -66,10 +64,9 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 
 
 ```yml
-
-    LeftAndMain:
-      extra_requirements_css:
-        - mysite/css/BookmarkedPages.css
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_css:
+    - mysite/css/BookmarkedPages.css
 ```
 
 ## Create a "bookmark" flag on pages
@@ -81,23 +78,23 @@ and insert the following code.
 
 
 ```php
-    use SilverStripe\Forms\CheckboxField;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\DataExtension;
 
-    class BookmarkedPageExtension extends DataExtension 
+class BookmarkedPageExtension extends DataExtension 
+{
+
+    private static $db = [
+        'IsBookmarked' => 'Boolean'
+    ];
+
+    public function updateCMSFields(FieldList $fields) 
     {
-
-        private static $db = [
-            'IsBookmarked' => 'Boolean'
-        ];
-
-        public function updateCMSFields(FieldList $fields) 
-        {
-            $fields->addFieldToTab('Root.Main',
-                new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
-            );
-        }
+        $fields->addFieldToTab('Root.Main',
+            new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
+        );
     }
+}
 
 ```
 
@@ -105,10 +102,9 @@ Enable the extension in your [configuration file](../../configuration)
 
 
 ```yml
-
-    SiteTree:
-      extensions:
-        - BookmarkedPageExtension
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - BookmarkedPageExtension
 ```
 
 In order to add the field to the database, run a `dev/build/?flush=all`.
@@ -125,27 +121,25 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 
 
 ```php
-    use Page;
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
+class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
+{
+
+    public function BookmarkedPages() 
     {
-
-        public function BookmarkedPages() 
-        {
-            return Page::get()->filter("IsBookmarked", 1);
-        }
+        return Page::get()->filter("IsBookmarked", 1);
     }
+}
 ```
 
 Enable the extension in your [configuration file](../../configuration)
 
 
 ```yml
-
-    LeftAndMain:
-      extensions:
-        - BookmarkedPagesLeftAndMainExtension
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - BookmarkedPagesLeftAndMainExtension
 ```
 
 As the last step, replace the hardcoded links with our list from the database.
@@ -154,15 +148,14 @@ and replace it with the following:
 
 
 ```ss
-
-    <ul class="cms-menu-list">
-        <!-- ... -->
-        <% loop $BookmarkedPages %>
-        <li class="bookmarked-link $FirstLast">
-            <li><a href="{$AdminURL}pages/edit/show/$ID">Edit "$Title"</a></li>
-        </li>
-        <% end_loop %>
-    </ul>
+<ul class="cms-menu-list">
+    <!-- ... -->
+    <% loop $BookmarkedPages %>
+    <li class="bookmarked-link $FirstLast">
+        <li><a href="{$AdminURL}pages/edit/show/$ID">Edit "$Title"</a></li>
+    </li>
+    <% end_loop %>
+</ul>
 ```
 
 ## Extending the CMS actions
@@ -197,7 +190,7 @@ button group (`CompositeField`) in a similar fashion.
 
 
 ```php
-    $fields->unshift(FormAction::create('normal', 'Normal button'));
+$fields->unshift(FormAction::create('normal', 'Normal button'));
 ```
 
 We can affect the existing button group by manipulating the `CompositeField`
@@ -205,7 +198,7 @@ already present in the `FieldList`.
 
 
 ```php
-    $fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
+$fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
 ```
 
 Another option is adding actions into the drop-up - best place for placing
@@ -213,7 +206,7 @@ infrequently used minor actions.
 
 
 ```php
-    $fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
+$fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
 ```
 
 We can also easily create new drop-up menus by defining new tabs within the
@@ -221,7 +214,7 @@ We can also easily create new drop-up menus by defining new tabs within the
 
 
 ```php
-    $fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
+$fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
 ```
 
 <div class="hint" markdown='1'>
@@ -245,21 +238,21 @@ applicable controller actions to it:
 
 
 ```php
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class CustomActionsExtension extends LeftAndMainExtension 
+class CustomActionsExtension extends LeftAndMainExtension 
+{
+    
+    private static $allowed_actions = [
+        'sampleAction'
+    ];
+    
+    public function sampleAction()
     {
-        
-        private static $allowed_actions = [
-            'sampleAction'
-        ];
-        
-        public function sampleAction()
-        {
-            // Create the web
-        }
-        
+        // Create the web
     }
+    
+}
 
 ```
 
@@ -267,17 +260,16 @@ The extension then needs to be registered:
 
 
 ```yaml
-
-    LeftAndMain:
-        extensions:
-            - CustomActionsExtension
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - CustomActionsExtension
 ```
 
 You can now use these handlers with your buttons:
 
 
 ```php
-    $fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
+$fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
 ```
 
 ## Summary

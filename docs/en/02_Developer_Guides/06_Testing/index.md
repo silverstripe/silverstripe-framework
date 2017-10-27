@@ -57,7 +57,7 @@ some `thirdparty/` directories add the following to the `phpunit.xml` configurat
 			<directory suffix=".php">framework/dev/</directory>
 			<directory suffix=".php">framework/thirdparty/</directory>
 			<directory suffix=".php">cms/thirdparty/</directory>
-			
+
 			<!-- Add your custom rules here -->
 			<directory suffix=".php">mysite/thirdparty/</directory>
 		</blacklist>

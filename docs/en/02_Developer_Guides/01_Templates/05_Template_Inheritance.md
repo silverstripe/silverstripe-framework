@@ -15,12 +15,12 @@ Instead of editing that file to provide a custom template for your application, 
 name in the `mysite/templates/email` folder or in the `themes/your_theme/templates/email` folder if you're using themes. 
 
 **mysite/templates/email/GenericEmail.ss**
-	
-```ss
-	$Body
 
-	<p>Thanks from Bob's Fantasy Football League.</p>
+```ss
+$Body
+<p>Thanks from Bob's Fantasy Football League.</p>
 ```
+
 All emails going out of our application will have the footer `Thanks from Bob's Fantasy Football Leaguee` added.
 
 <div class="alert" markdown="1">
@@ -102,32 +102,37 @@ footer and navigation will remain the same and we don't want to replicate this w
 `$Layout` function allows us to define the child template area which can be overridden.
 
 **mysite/templates/Page.ss**
+
 ```ss
-    <html>
-    <head>
-        ..
-    </head>
-    
-    <body>
-        <% include Header %>
-        <% include Navigation %>
+<html>
+<head>
+    ..
+</head>
 
-        $Layout
+<body>
+    <% include Header %>
+    <% include Navigation %>
 
-        <% include Footer %>
-    </body>
-``
-**mysite/templates/Layout/Page.ss**
-```ss
-	<p>You are on a $Title page</p>
+    $Layout
 
-	$Content
+    <% include Footer %>
+</body>
 ```
-**mysite/templates/Layout/HomePage.ss**
-```ss
-	<h1>This is the homepage!</h1>
 
-	<blink>Hi!</blink>
+**mysite/templates/Layout/Page.ss**
+
+```ss
+<p>You are on a $Title page</p>
+
+$Content
+```
+
+**mysite/templates/Layout/HomePage.ss**
+
+```ss
+<h1>This is the homepage!</h1>
+
+<blink>Hi!</blink>
 ```
 
 If your classes have in a namespace, the Layout folder will be a found inside of the appropriate namespace folder.

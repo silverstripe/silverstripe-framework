@@ -29,13 +29,12 @@ want to password protect the site. You can enable that by adding this to your `m
 
 
 ```yml
-
-    ---
-    Only:
-      environment: 'test'
-    ---
-    SilverStripe\Security\BasicAuth:
-      entire_site_protected: true
+---
+Only:
+  environment: 'test'
+---
+SilverStripe\Security\BasicAuth:
+  entire_site_protected: true
 ```
 
 ### Live Mode
@@ -52,30 +51,34 @@ Live sites should always run in live mode. You should not run production website
 You can check for the current environment type in [config files](../configuration) through the `environment` variant.
 
 **mysite/_config/app.yml**
+
 ```yml
-    ---
-    Only:
-      environment: 'live'
-    ---
-    MyClass:
-        myvar: live_value
-    ---
-    Only:
-      environment: 'test'
-    ---
-    MyClass:
-        myvar: test_value
+---
+Only:
+  environment: 'live'
+---
+MyClass:
+  myvar: live_value
+---
+Only:
+  environment: 'test'
+---
+MyClass:
+  myvar: test_value
 ```
 Checking for what environment you're running in can also be done in PHP. Your application code may disable or enable 
 certain functionality depending on the environment type.
+
 ```php
-    if (Director::isLive()) {
-        // is in live
-    } elseif (Director::isTest()) {
-        // is in test mode
-    } elseif (Director::isDev()) {
-        // is in dev mode
-    }
+use SilverStripe\Control\Director;
+
+if (Director::isLive()) {
+    // is in live
+} elseif (Director::isTest()) {
+    // is in test mode
+} elseif (Director::isDev()) {
+    // is in dev mode
+}
 ```
 
 

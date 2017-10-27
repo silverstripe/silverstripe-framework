@@ -95,6 +95,8 @@ Linking to resources in vendor modules uses exactly the same syntax as non-vendo
 this is how you would require a script in this module:
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::javascript('tractorcow/test-vendor-module:client/js/script.js');
 ```
 

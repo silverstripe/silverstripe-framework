@@ -190,6 +190,8 @@ will be moved to `assets/a870de278b/NewCompanyLogo.gif`, and will be served dire
 the web server, bypassing the need for additional PHP requests.
 
 ```php
+use SilverStripe\Assets\Storage\AssetStore;
+
 $store = singleton(AssetStore::class);
 $store->publish('NewCompanyLogo.gif', 'a870de278b475cb75f5d9f451439b2d378e13af1');
 ```

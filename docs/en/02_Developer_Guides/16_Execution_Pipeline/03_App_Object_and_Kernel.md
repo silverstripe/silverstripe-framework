@@ -10,8 +10,11 @@ This can be accessed in user code via Injector
 
 
 ```php
-    $kernel = Injector::inst()->get(Kernel::class);
-    echo "Current environment: " . $kernel->getEnvironment();
+use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Injector\Injector;
+
+$kernel = Injector::inst()->get(Kernel::class);
+echo "Current environment: " . $kernel->getEnvironment();
 ```
 
 ## Kernel services
@@ -39,16 +42,16 @@ you should call `->activate()` on the kernel instance you would like to unnest t
 
 
 ```php
-    $oldKernel = Injector::inst()->get(Kernel::class);
-    try {
-        // Injector::inst() / Config::inst() are automatically updated to the new kernel
-        $newKernel = $oldKernel->nest();
-        Config::modify()->set(Director::class, 'alternate_base_url', '/myurl');
-    }
-    finally {
-        // Any changes to config (or other application state) have now been reverted
-        $oldKernel->activate();
-    }
+$oldKernel = Injector::inst()->get(Kernel::class);
+try {
+    // Injector::inst() / Config::inst() are automatically updated to the new kernel
+    $newKernel = $oldKernel->nest();
+    Config::modify()->set(Director::class, 'alternate_base_url', '/myurl');
+}
+finally {
+    // Any changes to config (or other application state) have now been reverted
+    $oldKernel->activate();
+}
 ```
 
 # Application
@@ -70,7 +73,6 @@ You can customise it as required.
 
 
 ```php
-<?php
 
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequestBuilder;
@@ -105,19 +107,19 @@ routing.
 
 
 ```php
-    $request = CLIRequestBuilder::createFromEnvironment();
-    $kernel = new TestKernel(BASE_PATH);
-    $app = new HTTPApplication($kernel);
-    $app->execute($request, function (HTTPRequest $request) {
-        // Start session and execute
-        $request->getSession()->init();
-        
-        // Set dummy controller
-        $controller = Controller::create();
-        $controller->setRequest($request);
-        $controller->pushCurrent();
-        $controller->doInit();
-    }, true);
+$request = CLIRequestBuilder::createFromEnvironment();
+$kernel = new TestKernel(BASE_PATH);
+$app = new HTTPApplication($kernel);
+$app->execute($request, function (HTTPRequest $request) {
+    // Start session and execute
+    $request->getSession()->init();
+    
+    // Set dummy controller
+    $controller = Controller::create();
+    $controller->setRequest($request);
+    $controller->pushCurrent();
+    $controller->doInit();
+}, true);
 ```
 
  

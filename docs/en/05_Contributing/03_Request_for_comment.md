@@ -21,7 +21,7 @@ The benefits of writing an RFC for non-trivial feature proposals are:
  * Obtaining a preliminary approval from core-committers on an architecture before code is completed, to mitigate the risk of a non-merge after a PR is submitted
  * Community becomes aware of incoming changes prior to the implementation
  * RFC can be used as a basis for documentation of the feature
-	
+
 ## How to write an RFC?
 ### Template
 The following heading can act as a template to starting your RFC.

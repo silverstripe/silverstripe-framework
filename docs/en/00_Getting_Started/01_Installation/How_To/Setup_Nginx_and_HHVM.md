@@ -46,14 +46,14 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 	fastcgi_buffer_size 32k;
 	fastcgi_busy_buffers_size 64k;
 	fastcgi_buffers 4 32k;
-	
+
 	location / {
 		try_files $uri /index.php?$query_string;
 	}
-	
+
 	error_page 404 /assets/error-404.html;
 	error_page 500 /assets/error-500.html;
-	
+
 	location ^~ /assets/ {
 		try_files $uri =404;
 	}
@@ -99,10 +99,10 @@ e.g. `/etc/nginx/sites-enabled/mysite`:
 		listen 80;
 		root /var/www/mysite;
 		server_name www.mysite.com;
-	
+
 		error_log /var/log/nginx/mysite.error.log;
 		access_log /var/log/nginx/mysite.access.log;
-	
+
 		include /etc/nginx/hhvm.conf;
 		include /etc/nginx/silverstripe.conf;
 	}

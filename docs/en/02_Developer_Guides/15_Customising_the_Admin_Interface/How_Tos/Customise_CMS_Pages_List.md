@@ -18,23 +18,24 @@ Here's a brief example on how to add sorting and a new column for a
 hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
+**mysite/code/NewsPageHolder.php**
+
 ```php
-    use Page;
+class NewsPageHolder extends Page 
+{
+    private static $allowed_children = ['NewsPage'];
+}
+```
 
-    // mysite/code/NewsPageHolder.php
-    class NewsPageHolder extends Page 
-    {
-        private static $allowed_children = ['NewsPage'];
-    }
+**mysite/code/NewsPage.php**
 
-    // mysite/code/NewsPage.php
-    class NewsPage extends Page 
-    {
-        private static $has_one = [
-            'Author' => 'Member',
-        ];
-    }
-
+```php
+class NewsPage extends Page 
+{
+    private static $has_one = [
+        'Author' => 'Member',
+    ];
+}
 ```
 
 We'll now add an `Extension` subclass to `LeftAndMain`, which is the main CMS controller.
@@ -43,43 +44,44 @@ before its rendered. In this case, we limit our logic to the desired page type,
 although it's just as easy to implement changes which apply to all page types,
 or across page types with common characteristics.
 
+**mysite/code/NewsPageHolderCMSMainExtension.php**
 
 ```php
-    use Page;
-    use SilverStripe\Core\Extension;
+use SilverStripe\Core\Extension;
 
-    // mysite/code/NewsPageHolderCMSMainExtension.php
-    class NewsPageHolderCMSMainExtension extends Extension 
-    {
-        function updateListView($listView) {
-            $parentId = $listView->getController()->getRequest()->requestVar('ParentID');
-            $parent = ($parentId) ? Page::get()->byId($parentId) : new Page();
+class NewsPageHolderCMSMainExtension extends Extension 
+{
+    public function updateListView($listView) {
+        $parentId = $listView->getController()->getRequest()->requestVar('ParentID');
+        $parent = ($parentId) ? Page::get()->byId($parentId) : new Page();
 
-            // Only apply logic for this page type
-            if($parent && $parent instanceof NewsPageHolder) {
-                $gridField = $listView->Fields()->dataFieldByName('Page');
-                if($gridField) {
-                    // Sort by created
-                    $list = $gridField->getList();
-                    $gridField->setList($list->sort('Created', 'DESC'));
-                    // Add author to columns
-                    $cols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
-                    if($cols) {
-                        $fields = $cols->getDisplayFields($gridField);
-                        $fields['Author.Title'] = 'Author';
-                        $cols->setDisplayFields($fields);
-                    }
+        // Only apply logic for this page type
+        if($parent && $parent instanceof NewsPageHolder) {
+            $gridField = $listView->Fields()->dataFieldByName('Page');
+            if($gridField) {
+                // Sort by created
+                $list = $gridField->getList();
+                $gridField->setList($list->sort('Created', 'DESC'));
+                // Add author to columns
+                $cols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
+                if($cols) {
+                    $fields = $cols->getDisplayFields($gridField);
+                    $fields['Author.Title'] = 'Author';
+                    $cols->setDisplayFields($fields);
                 }
             }
         }
     }
+}
 ```
 
 Now you just need to enable the extension in your [configuration file](../../configuration).
+
 ```yml
-    // mysite/_config/config.yml
-    LeftAndMain:
-      extensions:
-        - NewsPageHolderCMSMainExtension
+// mysite/_config/config.yml
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - NewsPageHolderCMSMainExtension
 ```
+
 You're all set! Don't forget to flush the caches by appending `?flush=all` to the URL.

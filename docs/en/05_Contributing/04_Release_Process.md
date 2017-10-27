@@ -63,15 +63,15 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 
 
 ```php
-    /**
-     * Returns true if your are in development mode
-     * @deprecated 4.0 Use {@link Env::is_dev()} instead.
-     */
-    public function isDev() 
-    {
-        Deprecation::notice('4.0', 'Use Env::is_dev() instead');
-        return Env::is_dev();
-    }
+/**
+ * Returns true if your are in development mode
+ * @deprecated 4.0 Use {@link Env::is_dev()} instead.
+ */
+public function isDev() 
+{
+    Deprecation::notice('4.0', 'Use Env::is_dev() instead');
+    return Env::is_dev();
+}
 ```
 
 This change could be committed to a minor release like *3.2.0*, and remains deprecated in all subsequent minor releases
@@ -87,13 +87,14 @@ notices are always disabled on both live and test.
 
 
 ```php
-    Deprecation::set_enabled(false);
+Deprecation::set_enabled(false);
 ```
 
 `.env`
 
-
-    SS_DEPRECATION_ENABLED="0"
+```
+SS_DEPRECATION_ENABLED="0"
+```
 
 
 ## Security Releases

@@ -25,20 +25,19 @@ Indexes are represented on a `DataObject` through the `DataObject::$indexes` arr
 descriptor. There are several supported notations:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyObject extends DataObject 
-    {
-
-        private static $indexes = [
-            '<column-name>' => true,
-            '<index-name>' => [
-                'type' => '<type>', 
-                'columns' => ['<column-name>', '<other-column-name>'],
-            ],
-            '<index-name>' => ['<column-name>', '<other-column-name>'],
-        ];
-    }
+class MyObject extends DataObject 
+{
+    private static $indexes = [
+        '<column-name>' => true,
+        '<index-name>' => [
+            'type' => '<type>', 
+            'columns' => ['<column-name>', '<other-column-name>'],
+        ],
+        '<index-name>' => ['<column-name>', '<other-column-name>'],
+    ];
+}
 ```
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
@@ -55,20 +54,19 @@ support the following:
 **mysite/code/MyTestObject.php**
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyTestObject extends DataObject 
-    {
+class MyTestObject extends DataObject 
+{
+    private static $db = [
+        'MyField' => 'Varchar',
+        'MyOtherField' => 'Varchar',
+    ];
 
-        private static $db = [
-            'MyField' => 'Varchar',
-            'MyOtherField' => 'Varchar',
-        ];
-
-        private static $indexes = [
-            'MyIndexName' => ['MyField', 'MyOtherField'],
-        ];
-    }
+    private static $indexes = [
+        'MyIndexName' => ['MyField', 'MyOtherField'],
+    ];
+}
 ```
 
 <div class="alert" markdown="1">

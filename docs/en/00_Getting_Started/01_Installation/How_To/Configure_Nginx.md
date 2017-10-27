@@ -21,21 +21,21 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 	server {
 		listen 80;
 		root /path/to/ss/folder;
-	
+
 		server_name site.com www.site.com;
 
 		# Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
 		if ($http_x_forwarded_host) {
 			return 400;
 		}
-	
+
 		location / {
 			try_files $uri /index.php?$query_string;
 		}
-	
+
 		error_page 404 /assets/error-404.html;
 		error_page 500 /assets/error-500.html;
-	
+
 		location ^~ /assets/ {
 			location ~ /\. {
 				deny all;
@@ -43,7 +43,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 			sendfile on;
 			try_files $uri index.php?$query_string;
 		}
-	
+
 		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
 			fastcgi_keep_conn on;
 			fastcgi_pass   127.0.0.1:9000;
@@ -51,45 +51,45 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			include        fastcgi_params;
 		}
-	
+
 		location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
 			deny all;
 		}
-	
+
 		location ~ /\.. {
 			deny all;
 		}
-	
+
 		location ~ \.ss$ {
 			satisfy any;
 			allow 127.0.0.1;
 			deny all;
 		}
-	
+
 		location ~ web\.config$ {
 			deny all;
 		}
-	
+
 		location ~ \.ya?ml$ {
 			deny all;
 		}
-	
+
 		location ^~ /vendor/ {
 			deny all;
 		}
-	
+
 		location ~* /silverstripe-cache/ {
 			deny all;
 		}
-	
+
 		location ~* composer\.(json|lock)$ {
 			deny all;
 		}
-	
+
 		location ~* /(cms|framework)/silverstripe_version$ {
 			deny all;
 		}
-	
+
 		location ~ \.php$ {
 			fastcgi_keep_conn on;
 			fastcgi_pass   127.0.0.1:9000;

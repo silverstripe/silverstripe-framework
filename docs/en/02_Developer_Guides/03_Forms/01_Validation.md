@@ -174,9 +174,8 @@ class Page_Controller extends ContentController
         return $this->redirectBack();
     }
 }
-
 ```
-    
+
 ## Exempt validation actions
 
 In some cases you might need to disable validation for specific actions. E.g. actions which discard submitted

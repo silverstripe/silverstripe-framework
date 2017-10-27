@@ -27,10 +27,10 @@ As opposed to other variables, these should be declared as lower case with under
 
 
 ```php
-    class MyClass
-    {
-        private static $my_config_variable = 'foo';
-    }
+class MyClass
+{
+    private static $my_config_variable = 'foo';
+}
 ```
 
 ## Prefer identical (===) comparisons over equality (==)
@@ -40,15 +40,15 @@ Read more in the PHP documentation for [comparison operators](http://php.net/man
 
 
 ```php
-    // good - only need to cast to (int) if $a might not already be an int
-    if ((int)$a === 100) {
-        doThis();
-    }
-    
-    // bad
-    if ($a == 100) {
-        doThis();
-    }
+// good - only need to cast to (int) if $a might not already be an int
+if ((int)$a === 100) {
+    doThis();
+}
+
+// bad
+if ($a == 100) {
+    doThis();
+}
 ```
 
 ## Separation of Logic and Presentation
@@ -57,28 +57,32 @@ Try to avoid using PHP's ability to mix HTML into the code.
 
 
 ```php
-    // PHP code
-    public function getTitle() 
-    {
-        return "<h2>Bad Example</h2>";
-    }
+// PHP code
+public function getTitle() 
+{
+    return "<h2>Bad Example</h2>";
+}
+```
 
-    // Template code
-    $Title
+```ss
+// Template code
+$Title
 ```
 
 Better: Keep HTML in template files:
 
 
 ```php
-    // PHP code
-    public function getTitle() 
-    {
-        return "Better Example";
-    }
+// PHP code
+public function getTitle() 
+{
+    return "Better Example";
+}
+```
 
-    // Template code
-    <h2>$Title</h2>
+```ss
+// Template code
+<h2>$Title</h2>
 ```
 
 ## Comments
@@ -97,34 +101,34 @@ Example:
 
 
 ```php
+/**
+ * My short description for this class.
+ * My longer description with
+ * multiple lines and richer formatting.
+ *
+ * Usage:
+ * <code>
+ * $c = new MyClass();
+ * $c->myMethod();
+ * </code>
+ *
+ * @package custom
+ */
+class MyClass extends Class
+{
     /**
-     * My short description for this class.
-     * My longer description with
-     * multiple lines and richer formatting.
+     * My Method.
+     * This method returns something cool. {@link MyParentMethod} has other cool stuff in it.
      *
-     * Usage:
-     * <code>
-     * $c = new MyClass();
-     * $c->myMethod();
-     * </code>
-     *
-     * @package custom
+     * @param string $colour The colour of cool things that you want
+     * @return DataList A list of everything cool
      */
-    class MyClass extends Class
+    public function myMethod($colour)
     {
-        /**
-         * My Method.
-         * This method returns something cool. {@link MyParentMethod} has other cool stuff in it.
-         *
-         * @param string $colour The colour of cool things that you want
-         * @return DataList A list of everything cool
-         */
-        public function myMethod($foo)
-        {
-            // ...
-        }
-
+        // ...
     }
+
+}
 ```
 
 ## Class Member Ordering
@@ -148,7 +152,7 @@ with the column or table name escaped with double quotes as below.
 
 
 ```php
-    MyClass::get()->where(["\"Score\" > ?" => 50]);
+MyClass::get()->where(['"Score" > ?' => 50]);
 
 ```
 
@@ -159,7 +163,7 @@ are single quoted.
 
 
 ```php
-    MyClass::get()->where("\"Title\" = 'my title'");
+MyClass::get()->where("\"Title\" = 'my title'");
 ```
 
 Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
