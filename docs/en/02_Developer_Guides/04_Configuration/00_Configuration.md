@@ -29,23 +29,19 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 
 ```php
-    use Page;
+class MyClass extends Page 
+{
 
-    class MyClass extends Page 
-    {
+    /**
+     * @config
+     */
+    private static $option_one = true;
 
-        /**
-         * @config
-         */
-        private static $option_one = true;
-
-        /**
-         * @config
-         */
-        private static $option_two = [];
-
-        // ..
-    }
+    /**
+     * @config
+     */
+    private static $option_two = [];
+}
 
 ```
 
@@ -55,12 +51,13 @@ This can be done by calling the static method [Config::inst()](api:SilverStripe\
 
 
 ```php
-    $config = Config::inst()->get('MyClass', 'property');
+$config = Config::inst()->get('MyClass', 'property');
 ```
 
 Or through the `config()` object on the class.
+
 ```php
-    $config = $this->config()->get('property')';
+$config = $this->config()->get('property')';
 ```
 
 Note that by default `Config::inst()` returns only an immutable version of config. Use `Config::modify()`
@@ -86,45 +83,44 @@ To set those configuration options on our previously defined class we can define
 
 
 ```yml
-
-    MyClass:
-      option_one: false
-      option_two:
-        - Foo
-        - Bar
-        - Baz
+MyClass:
+  option_one: false
+  option_two:
+    - Foo
+    - Bar
+    - Baz
 ```
 
 To use those variables in your application code:
 
 
 ```php
-    $me = new MyClass();
+$me = new MyClass();
 
-    echo $me->config()->option_one;
-    // returns false
+echo $me->config()->option_one;
+// returns false
 
-    echo implode(', ', $me->config()->option_two);
-    // returns 'Foo, Bar, Baz'
+echo implode(', ', $me->config()->option_two);
+// returns 'Foo, Bar, Baz'
 
-    echo Config::inst()->get('MyClass', 'option_one');
-    // returns false
+echo Config::inst()->get('MyClass', 'option_one');
+// returns false
 
-    echo implode(', ', Config::inst()->get('MyClass', 'option_two'));
-    // returns 'Foo, Bar, Baz'
+echo implode(', ', Config::inst()->get('MyClass', 'option_two'));
+// returns 'Foo, Bar, Baz'
 
-    Config::modify()->set('MyClass', 'option_one', true);
+Config::modify()->set('MyClass', 'option_one', true);
 
-    echo Config::inst()->get('MyClass', 'option_one');
-    // returns true
+echo Config::inst()->get('MyClass', 'option_one');
+// returns true
 
-    // You can also use the static version
-    MyClass::config()->option_two = [
-        'Qux'
-    ];
+// You can also use the static version
+MyClass::config()->option_two = [
+    'Qux'
+];
 
-    echo implode(', ', MyClass::config()->option_one);
-    // returns 'Qux'
+echo implode(', ', MyClass::config()->option_one);
+// returns 'Qux'
 
 ```
 
@@ -174,9 +170,11 @@ be raised due to optimizations in the lookup code.
 At some of these levels you can also set masks. These remove values from the composite value at their priority point 
 rather than add.
 
-	$actionsWithoutExtra = $this->config()->get(
-		'allowed_actions', Config::UNINHERITED
-	);
+```php
+$actionsWithoutExtra = $this->config()->get(
+    'allowed_actions', Config::UNINHERITED
+);
+```
 
 Available masks include:
 
@@ -202,18 +200,18 @@ The name of the files within the applications `_config` directly are arbitrary. 
 </div>
 
 The structure of each YAML file is a series of headers and values separated by YAML document separators.
-```yml
 
-    ---
-    Name: adminroutes
-    After:
-        - '#rootroutes'
-        - '#coreroutes'
-    ---
-    SilverStripe\Control\Director:
-      rules:
-        'admin': 'SilverStripe\Admin\AdminRootController'
-    ---
+```yml
+---
+Name: adminroutes
+After:
+    - '#rootroutes'
+    - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'admin': 'SilverStripe\Admin\AdminRootController'
+---
 ```
 
 <div class="info">
@@ -253,17 +251,16 @@ keys is a list of reference paths to other value sections. A basic example:
 
 
 ```yml
-
-    ---
-    Name: adminroutes
-    After:
-        - '#rootroutes'
-        - '#coreroutes'
-    ---
-    SilverStripe\Control\Director:
-      rules:
-        'admin': 'SilverStripe\Admin\AdminRootController'
-    ---
+---
+Name: adminroutes
+After:
+    - '#rootroutes'
+    - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'admin': 'SilverStripe\Admin\AdminRootController'
+---
 ```
 
 You do not have to specify all portions of a reference path. Any portion may be replaced with a wildcard "\*", or left
@@ -319,33 +316,30 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 
 
 ```yml
-
-    ---
-    Only:
-      moduleexists: 'MyFineModule'
-    ---
-    MyClass:
-      property: 'foo'
-    ---
-    Except:
-      moduleexists: 'MyFineModule'
-    ---
-    MyClass:
-      property: 'bar'
-    ---
+---
+Only:
+  moduleexists: 'MyFineModule'
+---
+MyClass:
+  property: 'foo'
+---
+Except:
+  moduleexists: 'MyFineModule'
+---
+MyClass:
+  property: 'bar'
+---
 ```
 
 Multiple conditions of the same type can be declared via array format
 
-
-
 ```yaml
-
-    ---
-    Only:
-      moduleexists:
-        - 'silverstripe/blog'
-        - 'silverstripe/lumberjack'
+---
+Only:
+  moduleexists:
+    - 'silverstripe/blog'
+    - 'silverstripe/lumberjack'
+---
 ```
 
 <div class="alert" markdown="1">

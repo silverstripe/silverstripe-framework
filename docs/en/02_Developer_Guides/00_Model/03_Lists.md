@@ -12,34 +12,33 @@ modify.
 [SS_List](api:SilverStripe\ORM\SS_List) implements `IteratorAggregate`, allowing you to loop over the instance.
 
 ```php
-	use SilverStripe\Security\Member;
-	
-    $members = Member::get();
+use SilverStripe\Security\Member;
 
-    foreach($members as $member) {
-        echo $member->Name;
-    }
+$members = Member::get();
+
+foreach($members as $member) {
+    echo $member->Name;
+}
 ```
 
 Or in the template engine:
 
 ```ss
-
-    <% loop $Members %>
-        <!-- -->
-    <% end_loop %>
+<% loop $Members %>
+    <!-- -->
+<% end_loop %>
 ```
 
 ## Finding an item by value.
 
 ```php
-    // $list->find($key, $value);
+// $list->find($key, $value);
 
-    //
-    $members = Member::get();
+//
+$members = Member::get();
 
-    echo $members->find('ID', 4)->FirstName;
-    // returns 'Sam'
+echo $members->find('ID', 4)->FirstName;
+// returns 'Sam'
 ```
 
 ## Maps
@@ -47,36 +46,34 @@ Or in the template engine:
 A map is an array where the array indexes contain data as well as the values. You can build a map from any list
 
 ```php
-    $members = Member::get()->map('ID', 'FirstName');
-    
-    // $members = array(
-    //    1 => 'Sam'
-    //    2 => 'Sig'
-    //    3 => 'Will'
-    // );
+$members = Member::get()->map('ID', 'FirstName');
 
+// $members = array(
+//    1 => 'Sam'
+//    2 => 'Sig'
+//    3 => 'Will'
+// );
 ```
 
 This functionality is provided by the [Map](api:SilverStripe\ORM\Map) class, which can be used to build a map around any `SS_List`.
 
 ```php
-    $members = Member::get();
-    $map = new Map($members, 'ID', 'FirstName');
+$members = Member::get();
+$map = new Map($members, 'ID', 'FirstName');
 ```
 
 ## Column
 
 ```php
-    $members = Member::get();
+$members = Member::get();
 
-    echo $members->column('Email');
+echo $members->column('Email');
 
-    // returns array(
-    //    'sam@silverstripe.com',
-    //    'sig@silverstripe.com',
-    //    'will@silverstripe.com'
-    // );
-
+// returns array(
+//    'sam@silverstripe.com',
+//    'sig@silverstripe.com',
+//    'will@silverstripe.com'
+// );
 ```
 
 ## ArrayList
@@ -84,16 +81,15 @@ This functionality is provided by the [Map](api:SilverStripe\ORM\Map) class, whi
 [ArrayList](api:SilverStripe\ORM\ArrayList) exists to wrap a standard PHP array in the same API as a database backed list.
 
 ```php
-    $sam = Member::get()->byId(5);
-    $sig = Member::get()->byId(6);
+$sam = Member::get()->byId(5);
+$sig = Member::get()->byId(6);
 
-    $list = new ArrayList();
-    $list->push($sam);
-    $list->push($sig);
+$list = new ArrayList();
+$list->push($sam);
+$list->push($sig);
 
-    echo $list->Count();
-    // returns '2'
-
+echo $list->Count();
+// returns '2'
 ```
 
 ## API Documentation

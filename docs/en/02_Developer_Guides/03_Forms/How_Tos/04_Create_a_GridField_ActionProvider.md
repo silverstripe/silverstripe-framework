@@ -19,72 +19,71 @@ below:
 
 
 ```php
-	use SilverStripe\Forms\GridField\GridField_ColumnProvider;
-	use SilverStripe\Forms\GridField\GridField_ActionProvider;
-	use SilverStripe\Forms\GridField\GridField_FormAction;
-	use SilverStripe\Control\Controller;
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Control\Controller;
 
-    class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider 
+class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider 
+{
+
+    public function augmentColumns($gridField, &$columns) 
     {
-
-        public function augmentColumns($gridField, &$columns) 
-        {
-            if(!in_array('Actions', $columns)) {
-                $columns[] = 'Actions';
-            }
-        }
-
-        public function getColumnAttributes($gridField, $record, $columnName) 
-        {
-            return ['class' => 'grid-field__col-compact'];
-        }
-
-        public function getColumnMetadata($gridField, $columnName) 
-        {
-            if($columnName == 'Actions') {
-                return ['title' => ''];
-            }
-        }
-
-        public function getColumnsHandled($gridField) 
-        {
-            return ['Actions'];
-        }
-
-        public function getColumnContent($gridField, $record, $columnName) 
-        {
-            if(!$record->canEdit()) return;
-
-            $field = GridField_FormAction::create(
-                $gridField,
-                'CustomAction'.$record->ID,
-                'Do Action',
-                "docustomaction",
-                ['RecordID' => $record->ID]
-            );
-
-            return $field->Field();
-        }
-
-        public function getActions($gridField) 
-        {
-            return ['docustomaction'];
-        }
-
-        public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
-        {
-            if($actionName == 'docustomaction') {
-                // perform your action here
-
-                // output a success message to the user
-                Controller::curr()->getResponse()->setStatusCode(
-                    200,
-                    'Do Custom Action Done.'
-                );
-            }
+        if(!in_array('Actions', $columns)) {
+            $columns[] = 'Actions';
         }
     }
 
+    public function getColumnAttributes($gridField, $record, $columnName) 
+    {
+        return ['class' => 'grid-field__col-compact'];
+    }
+
+    public function getColumnMetadata($gridField, $columnName) 
+    {
+        if($columnName == 'Actions') {
+            return ['title' => ''];
+        }
+    }
+
+    public function getColumnsHandled($gridField) 
+    {
+        return ['Actions'];
+    }
+
+    public function getColumnContent($gridField, $record, $columnName) 
+    {
+        if(!$record->canEdit()) return;
+
+        $field = GridField_FormAction::create(
+            $gridField,
+            'CustomAction'.$record->ID,
+            'Do Action',
+            "docustomaction",
+            ['RecordID' => $record->ID]
+        );
+
+        return $field->Field();
+    }
+
+    public function getActions($gridField) 
+    {
+        return ['docustomaction'];
+    }
+
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
+    {
+        if($actionName == 'docustomaction') {
+            // perform your action here
+
+            // output a success message to the user
+            Controller::curr()->getResponse()->setStatusCode(
+                200,
+                'Do Custom Action Done.'
+            );
+        }
+    }
+}
 ```
 
 ## Add the GridFieldCustomAction to the current `GridFieldConfig`
@@ -96,14 +95,14 @@ manipulating the `GridFieldConfig` instance if required.
 
 
 ```php
-    // option 1: creating a new GridField with the CustomAction
-    $config = GridFieldConfig::create();
-    $config->addComponent(new GridFieldCustomAction());
+// option 1: creating a new GridField with the CustomAction
+$config = GridFieldConfig::create();
+$config->addComponent(new GridFieldCustomAction());
 
-    $gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
+$gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
 
-    // option 2: adding the CustomAction to an exisitng GridField
-    $gridField->getConfig()->addComponent(new GridFieldCustomAction());
+// option 2: adding the CustomAction to an exisitng GridField
+$gridField->getConfig()->addComponent(new GridFieldCustomAction());
 ```
 
 For documentation on adding a Component to a `GridField` created by `ModelAdmin`

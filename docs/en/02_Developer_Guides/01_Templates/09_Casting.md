@@ -13,27 +13,25 @@ output the result of the [DBHtmlText::FirstParagraph()](api:SilverStripe\ORM\Fie
 **mysite/code/Page.ss**
 
 ```ss
+$Content.FirstParagraph
+<!-- returns the result of HtmlText::FirstParagragh() -->
 
-    $Content.FirstParagraph
-    <!-- returns the result of HtmlText::FirstParagragh() -->
-
-    $LastEdited.Format("d/m/Y")
-    <!-- returns the result of SS_Datetime::Format("d/m/Y") -->
+$LastEdited.Format("d/m/Y")
+<!-- returns the result of SS_Datetime::Format("d/m/Y") -->
 ```
 
 Any public method from the object in scope can be called within the template. If that method returns another 
 `ViewableData` instance, you can chain the method calls.
 
 ```ss
+$Content.FirstParagraph.NoHTML
+<!-- "First Paragraph" -->
 
-    $Content.FirstParagraph.NoHTML
-    <!-- "First Paragraph" -->
+<p>Copyright {$Now.Year}</p>
+<!-- "Copyright 2014" -->
 
-    <p>Copyright {$Now.Year}</p>
-    <!-- "Copyright 2014" -->
-
-    <div class="$URLSegment.LowerCase">
-    <!-- <div class="about-us"> -->
+<div class="$URLSegment.LowerCase">
+<!-- <div class="about-us"> -->
 ```
 
 <div class="notice" markdown="1">
@@ -47,24 +45,25 @@ When rendering an object to the template such as `$Me` the `forTemplate` method 
 provide default template for an object.
 
 **mysite/code/Page.php**
+
 ```php
-    use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Model\SiteTree;
 
-    class Page extends SiteTree 
+class Page extends SiteTree 
+{
+
+    public function forTemplate() 
     {
-
-        public function forTemplate() 
-        {
-            return "Page: ". $this->Title;
-        }
+        return "Page: ". $this->Title;
     }
+}
 ```
 
 **mysite/templates/Page.ss**
-```ss
 
-    $Me
-    <!-- returns Page: Home -->
+```ss
+$Me
+<!-- returns Page: Home -->
 ```
 
 ## Casting
@@ -74,21 +73,20 @@ content that method sends back, or, provide a type in the `$casting` array for t
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
 ```php
-    use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Model\SiteTree;
 
-    class Page extends SiteTree 
+class Page extends SiteTree 
+{
+
+    private static $casting = [
+        'MyCustomMethod' => 'HTMLText' 
+    ];
+
+    public function MyCustomMethod() 
     {
-
-        private static $casting = [
-            'MyCustomMethod' => 'HTMLText' 
-        ];
-
-        public function MyCustomMethod() 
-        {
-            return "<h1>This is my header</h1>";
-        }
+        return "<h1>This is my header</h1>";
     }
-
+}
 ```
 
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data

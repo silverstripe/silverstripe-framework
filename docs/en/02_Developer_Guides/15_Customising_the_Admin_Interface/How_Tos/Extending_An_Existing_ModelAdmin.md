@@ -5,26 +5,25 @@ also another tool at your disposal: The [Extension](api:SilverStripe\Core\Extens
 
 
 ```php
-    use SilverStripe\Core\Extension;
+use SilverStripe\Core\Extension;
 
-    class MyAdminExtension extends Extension 
+class MyAdminExtension extends Extension 
+{
+    // ...
+    public function updateEditForm(&$form) 
     {
-        // ...
-        public function updateEditForm(&$form) 
-        {
-            $form->Fields()->push(/* ... */)
-        }
+        $form->Fields()->push(/* ... */)
     }
+}
 ```
 
 Now enable this extension through your `[config.yml](/topics/configuration)` file.
 
 
 ```yml
-
-    MyAdmin:
-      extensions:
-        - MyAdminExtension
+MyAdmin:
+  extensions:
+    - MyAdminExtension
 ```
 
 The following extension points are available: `updateEditForm()`, `updateSearchContext()`,

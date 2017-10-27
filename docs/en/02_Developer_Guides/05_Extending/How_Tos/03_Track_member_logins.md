@@ -11,55 +11,54 @@ explicitly logging in or by invoking the "remember me" functionality.
 
 
 ```php
-    use SilverStripe\Forms\ReadonlyField;
-    use SilverStripe\Security\Security;
-    use SilverStripe\ORM\DB;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Security\Security;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+    private static $db = [
+        'LastVisited' => 'Datetime',
+        'NumVisit' => 'Int',
+    ];
+
+    public function memberLoggedIn() 
     {
-        private static $db = [
-            'LastVisited' => 'Datetime',
-            'NumVisit' => 'Int',
-        ];
-
-        public function memberLoggedIn() 
-        {
-            $this->logVisit();
-        }
-
-        public function memberAutoLoggedIn() 
-        {
-            $this->logVisit();
-        }
-
-        public function updateCMSFields(FieldList $fields) 
-        {
-            $fields->addFieldsToTab('Root.Main', [
-                ReadonlyField::create('LastVisited', 'Last visited'),
-                ReadonlyField::create('NumVisit', 'Number of visits')
-            ]);
-        }
-
-        protected function logVisit() 
-        {
-            if(!Security::database_is_ready()) return;
-            
-            DB::query(sprintf(
-                'UPDATE "Member" SET "LastVisited" = %s, "NumVisit" = "NumVisit" + 1 WHERE "ID" = %d',
-                DB::get_conn()->now(),
-                $this->owner->ID
-            ));
-        }
+        $this->logVisit();
     }
+
+    public function memberAutoLoggedIn() 
+    {
+        $this->logVisit();
+    }
+
+    public function updateCMSFields(FieldList $fields) 
+    {
+        $fields->addFieldsToTab('Root.Main', [
+            ReadonlyField::create('LastVisited', 'Last visited'),
+            ReadonlyField::create('NumVisit', 'Number of visits')
+        ]);
+    }
+
+    protected function logVisit() 
+    {
+        if(!Security::database_is_ready()) return;
+        
+        DB::query(sprintf(
+            'UPDATE "Member" SET "LastVisited" = %s, "NumVisit" = "NumVisit" + 1 WHERE "ID" = %d',
+            DB::get_conn()->now(),
+            $this->owner->ID
+        ));
+    }
+}
 
 ```
 
 Now you just need to apply this extension through your config:
 
 ```yml
-    SilverStripe\Security\Member:
-        extensions:
-            - MyMemberExtension
-
+SilverStripe\Security\Member:
+  extensions:
+    - MyMemberExtension
 ```

@@ -8,26 +8,26 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 **mysite/templates/Page.ss**
 
 ```ss
-	<ul>
-		<% loop $Menu(1) %>
-			<li>
-				<a href="$Link" title="Go to the $Title page" class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
-					$MenuTitle
-				</a>
+<ul>
+    <% loop $Menu(1) %>
+        <li>
+            <a href="$Link" title="Go to the $Title page" class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
+                $MenuTitle
+            </a>
 
-				<% if $isSection %>
-					<% if $Children %>
-						<ul class="secondary">
-							<% loop $Children %>
-								<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>"><a href="$Link">$MenuTitle</a></li>
-							<% end_loop %>
-						</ul>
-					<% end_if %>
-				<% end_if %>
-			</li>
-		<% end_loop %>
-	</ul>
-```
+            <% if $isSection %>
+                <% if $Children %>
+                    <ul class="secondary">
+                        <% loop $Children %>
+                            <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>"><a href="$Link">$MenuTitle</a></li>
+                        <% end_loop %>
+                    </ul>
+                <% end_if %>
+            <% end_if %>
+        </li>
+    <% end_loop %>
+</ul>
+```w
 ## Related
 
 * [Template Syntax](../syntax)

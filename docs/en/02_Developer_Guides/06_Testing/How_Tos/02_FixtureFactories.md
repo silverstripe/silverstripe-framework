@@ -10,42 +10,41 @@ with information that we need.
 
 
 ```php
-    use SilverStripe\Core\Injector\Injector;
-    use SilverStripe\Dev\SapphireTest;
-    use SilverStripe\Core\Injector\Injector;
-    
-    class MyObjectTest extends SapphireTest 
-    {
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Injector\Injector;
 
-        protected $factory;
+class MyObjectTest extends SapphireTest 
+{
 
-        function __construct() {
-            parent::__construct();
+    protected $factory;
 
-            $factory = Injector::inst()->create('FixtureFactory');
+    function __construct() {
+        parent::__construct();
 
-            // Defines a "blueprint" for new objects
-            $factory->define('MyObject', [
-                'MyProperty' => 'My Default Value'
-            ]);
+        $factory = Injector::inst()->create('FixtureFactory');
 
-            $this->factory = $factory;
-        }
+        // Defines a "blueprint" for new objects
+        $factory->define('MyObject', [
+            'MyProperty' => 'My Default Value'
+        ]);
 
-        function testSomething() {
-            $MyObjectObj = $this->factory->createObject(
-                'MyObject',
-                ['MyOtherProperty' => 'My Custom Value']
-            );
-
-            echo $MyObjectObj->MyProperty;
-            // returns "My Default Value"
-
-            echo $myPageObj->MyOtherProperty;
-            // returns "My Custom Value"
-        }
+        $this->factory = $factory;
     }
 
+    function testSomething() {
+        $MyObjectObj = $this->factory->createObject(
+            'MyObject',
+            ['MyOtherProperty' => 'My Custom Value']
+        );
+
+        echo $MyObjectObj->MyProperty;
+        // returns "My Default Value"
+
+        echo $myPageObj->MyOtherProperty;
+        // returns "My Custom Value"
+    }
+}
 ```
 
 ## Related Documentation

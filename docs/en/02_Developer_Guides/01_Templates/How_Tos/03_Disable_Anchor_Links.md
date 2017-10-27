@@ -6,10 +6,10 @@ Anchor links are links with a "#" in them. A frequent use-case is to use anchor 
 the current page.  For example, we might have this in our template:
 
 ```ss
-	<ul>
-		<li><a href="#section1">Section 1</a></li>
-		<li><a href="#section2">Section 2</a></li>
-	</ul>
+<ul>
+    <li><a href="#section1">Section 1</a></li>
+    <li><a href="#section2">Section 2</a></li>
+</ul>
 ```
 
 Things get tricky because of we have set our `<base>` tag to point to the root of the site.  So, when you click the 
@@ -20,10 +20,10 @@ doesn't specify a URL before the anchor, prefixing the URL of the current page. 
 would be created in the final HTML
 
 ```ss
-	<ul>
-		<li><a href="my-long-page/#section1">Section 1</a></li>
-		<li><a href="my-long-page/#section2">Section 2</a></li>
-	</ul>
+<ul>
+    <li><a href="my-long-page/#section1">Section 1</a></li>
+    <li><a href="my-long-page/#section2">Section 2</a></li>
+</ul>
 ```
 
 There are cases where this can be unhelpful. HTML anchors created from Ajax responses are the most common. In these
@@ -40,14 +40,14 @@ SilverStripe\View\SSViewer:
 Or, a better way is to call this just for the rendering phase of this particular file:
 
 ```php
-	use SilverStripe\View\SSViewer;
-	
-	public function RenderCustomTemplate() 
-	{
-		SSViewer::setRewriteHashLinks(false);
-		$html = $this->renderWith('MyCustomTemplate');
-		SSViewer::setRewriteHashLinks(true);
+use SilverStripe\View\SSViewer;
 
-		return $html;
-	}
-```	
+public function RenderCustomTemplate() 
+{
+    SSViewer::setRewriteHashLinks(false);
+    $html = $this->renderWith('MyCustomTemplate');
+    SSViewer::setRewriteHashLinks(true);
+
+    return $html;
+}
+```

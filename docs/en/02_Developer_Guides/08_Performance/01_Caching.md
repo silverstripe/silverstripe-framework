@@ -32,12 +32,11 @@ and SilverStripe's [dependency injection](/developer-guides/extending/injector) 
 
 
 ```yml
-
-    SilverStripe\Core\Injector\Injector:
-      Psr\SimpleCache\CacheInterface.myCache:
-        factory: SilverStripe\Core\Cache\CacheFactory
-        constructor:
-          namespace: "myCache"
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.myCache:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "myCache"
 ```
 
 Cache objects are instantiated through a [CacheFactory](SilverStripe\Core\Cache\CacheFactory),
@@ -46,10 +45,10 @@ This factory allows us you to globally define an adapter for all cache instances
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface
-    use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface
+use SilverStripe\Core\Injector\Injector;
 
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 ```
 
 Caches are namespaced, which might allow granular clearing of a particular cache without affecting others.
@@ -67,24 +66,24 @@ Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class inte
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
 
-    // create a new item by trying to get it from the cache
-    $myValue = $cache->get('myCacheKey');
-    
-    // set a value and save it via the adapter
-    $cache->set('myCacheKey', 1234);
-    
-    // retrieve the cache item
-    if (!$cache->has('myCacheKey')) {
-        // ... item does not exists in the cache
-    }
+// create a new item by trying to get it from the cache
+$myValue = $cache->get('myCacheKey');
+
+// set a value and save it via the adapter
+$cache->set('myCacheKey', 1234);
+
+// retrieve the cache item
+if (!$cache->has('myCacheKey')) {
+    // ... item does not exists in the cache
+}
 ```
-    
+
 ## Invalidation
 
 Caches can be invalidated in different ways. The easiest is to actively clear the
@@ -93,40 +92,39 @@ this will only affect a subset of cache keys ("myCache" in this example):
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
-    
-    // remove all items in this (namespaced) cache
-    $cache->clear();
-    
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+
+// remove all items in this (namespaced) cache
+$cache->clear();
 ```
 
 You can also delete a single item based on it's cache key:
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
-    
-    // remove the cache item
-    $cache->delete('myCacheKey');
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+
+// remove the cache item
+$cache->delete('myCacheKey');
 ```
 
 Individual cache items can define a lifetime, after which the cached value is marked as expired:
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
-    
-    // remove the cache item
-    $cache->set('myCacheKey', 'myValue', 300); // cache for 300 seconds
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+
+// remove the cache item
+$cache->set('myCacheKey', 'myValue', 300); // cache for 300 seconds
 ```
 
 If a lifetime isn't defined on the `set()` call, it'll use the adapter default.
@@ -138,11 +136,10 @@ you need to be careful with resources here (e.g. filesystem space).
 
 
 ```yml
-
-    SilverStripe\Core\Injector\Injector:
-      Psr\SimpleCache\CacheInterface.cacheblock:
-          constructor:
-            defaultLifetime: 3600
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.cacheblock:
+    constructor:
+      defaultLifetime: 3600
 ```
 
 In most cases, invalidation and expiry should be handled by your cache key.
@@ -154,14 +151,14 @@ old cache keys will be garbage collected as the cache fills up.
 
 
 ```php
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Injector\Injector;
-    
-    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
-    
-    // Automatically changes when any group is edited
-    $cacheKey = implode(['groupNames', $member->ID, Group::get()->max('LastEdited')]);
-    $cache->set($cacheKey, $member->Groups()->column('Title'));        
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
+
+$cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+
+// Automatically changes when any group is edited
+$cacheKey = implode(['groupNames', $member->ID, Group::get()->max('LastEdited')]);
+$cache->set($cacheKey, $member->Groups()->column('Title'));        
 ```
 
 If `?flush=1` is requested in the URL, this will trigger a call to `flush()` on
@@ -196,20 +193,19 @@ and takes a `MemcachedClient` instance as a constructor argument.
 
 
 ```yml
-
-    ---
-    After:
-      - '#corecache'
-    ---
-    SilverStripe\Core\Injector\Injector:
-      MemcachedClient:
-        class: 'Memcached'
-        calls:
-          - [ addServer, [ 'localhost', 11211 ] ]
-      SilverStripe\Core\Cache\CacheFactory:
-        class: 'SilverStripe\Core\Cache\MemcachedCacheFactory'
-        constructor:
-          client: '%$MemcachedClient
+---
+After:
+  - '#corecache'
+---
+SilverStripe\Core\Injector\Injector:
+  MemcachedClient:
+    class: 'Memcached'
+    calls:
+      - [ addServer, [ 'localhost', 11211 ] ]
+  SilverStripe\Core\Cache\CacheFactory:
+    class: 'SilverStripe\Core\Cache\MemcachedCacheFactory'
+    constructor:
+      client: '%$MemcachedClient
 ```
 
 ## Additional Caches

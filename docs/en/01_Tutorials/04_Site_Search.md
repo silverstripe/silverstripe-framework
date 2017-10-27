@@ -19,8 +19,8 @@ To enable the search engine you need to include the following code in your `mysi
 This will enable fulltext search on page content as well as names of all files in the `/assets` folder.
 
 ```php
-    FulltextSearchable::enable();
-```	
+FulltextSearchable::enable();
+```
 
 After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
 
@@ -36,14 +36,13 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 **themes/simple/templates/Includes/Header.ss**
 
 ```ss
-    ...
-    <% if $SearchForm %>
-        <span class="search-dropdown-icon">L</span>
-        <div class="search-bar">
-            $SearchForm
-        </div>      
-    <% end_if %>
-    <% include Navigation %>
+<% if $SearchForm %>
+    <span class="search-dropdown-icon">L</span>
+    <div class="search-bar">
+        $SearchForm
+    </div>      
+<% end_if %>
+<% include Navigation %>
 ```
 
 This displays as:
@@ -58,23 +57,20 @@ is applied via `FulltextSearchable::enable()`
 **cms/code/search/ContentControllerSearchExtension.php**
 
 ```php
-    use SilverStripe\Core\Extension;
+use SilverStripe\Core\Extension;
 
-    class ContentControllerSearchExtension extends Extension 
+class ContentControllerSearchExtension extends Extension 
+{
+    public function results($data, $form, $request) 
     {
-        ...    
-    
-        public function results($data, $form, $request) 
-        {
-            $data = [
-                'Results' => $form->getResults(),
-                'Query' => $form->getSearchQuery(),
-                'Title' => _t('SearchForm.SearchResults', 'Search Results')
-            ];
-            return $this->owner->customise($data)->renderWith(['Page_results', 'Page']);
-        }
+        $data = [
+            'Results' => $form->getResults(),
+            'Query' => $form->getSearchQuery(),
+            'Title' => _t('SearchForm.SearchResults', 'Search Results')
+        ];
+        return $this->owner->customise($data)->renderWith(['Page_results', 'Page']);
     }
-
+}
 ```
 
 The code populates an array with the data we wish to pass to the template - the search results, query and title of the page. The final line is a little more complicated.
@@ -105,56 +101,56 @@ class.
 *themes/simple/templates/Layout/Page_results.ss*
 
 ```ss
-    <div id="Content" class="searchResults">
-        <h1>$Title</h1>
+<div id="Content" class="searchResults">
+    <h1>$Title</h1>
+     
+    <% if $Query %>
+        <p class="searchQuery"><strong>You searched for &quot;{$Query}&quot;</strong></p>
+    <% end_if %>
          
-        <% if $Query %>
-            <p class="searchQuery"><strong>You searched for &quot;{$Query}&quot;</strong></p>
-        <% end_if %>
+    <% if $Results %>
+    <ul id="SearchResults">
+        <% loop $Results %>
+        <li>
+            <a class="searchResultHeader" href="$Link">
+                <% if $MenuTitle %>
+                $MenuTitle
+                <% else %>
+                $Title
+                <% end_if %>
+            </a>
+            <p>$Content.LimitWordCountXML</p>
+            <a class="readMoreLink" href="$Link" 
+                title="Read more about &quot;{$Title}&quot;"
+                >Read more about &quot;{$Title}&quot;...</a>
+        </li>
+        <% end_loop %>
+    </ul>
+    <% else %>
+    <p>Sorry, your search query did not return any results.</p>
+    <% end_if %>
              
-        <% if $Results %>
-        <ul id="SearchResults">
-            <% loop $Results %>
-            <li>
-                <a class="searchResultHeader" href="$Link">
-                    <% if $MenuTitle %>
-                    $MenuTitle
-                    <% else %>
-                    $Title
-                    <% end_if %>
-                </a>
-                <p>$Content.LimitWordCountXML</p>
-                <a class="readMoreLink" href="$Link" 
-                    title="Read more about &quot;{$Title}&quot;"
-                    >Read more about &quot;{$Title}&quot;...</a>
-            </li>
+    <% if $Results.MoreThanOnePage %>
+    <div id="PageNumbers">
+        <% if $Results.NotLastPage %>
+        <a class="next" href="$Results.NextLink" title="View the next page">Next</a>
+        <% end_if %>
+        <% if $Results.NotFirstPage %>
+        <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
+        <% end_if %>
+        <span>
+            <% loop $Results.Pages %>
+                <% if $CurrentBool %>
+                $PageNum
+                <% else %>
+                <a href="$Link" title="View page number $PageNum">$PageNum</a>
+                <% end_if %>
             <% end_loop %>
-        </ul>
-        <% else %>
-        <p>Sorry, your search query did not return any results.</p>
-        <% end_if %>
-                 
-        <% if $Results.MoreThanOnePage %>
-        <div id="PageNumbers">
-            <% if $Results.NotLastPage %>
-            <a class="next" href="$Results.NextLink" title="View the next page">Next</a>
-            <% end_if %>
-            <% if $Results.NotFirstPage %>
-            <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
-            <% end_if %>
-            <span>
-                <% loop $Results.Pages %>
-                    <% if $CurrentBool %>
-                    $PageNum
-                    <% else %>
-                    <a href="$Link" title="View page number $PageNum">$PageNum</a>
-                    <% end_if %>
-                <% end_loop %>
-            </span>
-            <p>Page $Results.CurrentPage of $Results.TotalPages</p>
-        </div>
-        <% end_if %>
+        </span>
+        <p>Page $Results.CurrentPage of $Results.TotalPages</p>
     </div>
+    <% end_if %>
+</div>
 ```
 
 Then finally add ?flush=1 to the URL and you should see the new template.

@@ -202,7 +202,7 @@ rather than modifying the existing one.
 In order to get a list of all versions for a specific record, we need to generate specialized [Versioned_Version](api:SilverStripe\Versioned\Versioned_Version) 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
-	
+
 ```php
 $record = MyRecord::get()->byID(99); // stage doesn't matter here
 $versions = $record->allVersions();

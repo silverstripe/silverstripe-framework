@@ -15,13 +15,13 @@ The [api:Security] class comes with a static method for getting information abou
 Retrieves the current logged in member.  Returns *null* if user is not logged in, otherwise, the Member object is returned.  
 
 ```php
-	use SilverStripe\Security\Security;
+use SilverStripe\Security\Security;
 
-	if( $member = Security::getCurrentUser() ) {
-		// Work with $member
-	} else {
-		// Do non-member stuff
-	}
+if( $member = Security::getCurrentUser() ) {
+    // Work with $member
+} else {
+    // Do non-member stuff
+}
 ```
 
 ## Subclassing
@@ -49,8 +49,8 @@ To ensure that all new members are created using this class, put a call to [api:
 
 ```yml
 SilverStripe\Core\Injector\Injector:
-    SilverStripe\Security\Member:
-        class: MyVendor\MyNamespace\MyMemberClass
+  SilverStripe\Security\Member:
+    class: MyVendor\MyNamespace\MyMemberClass
 ```
 
 Note that if you want to look this class-name up, you can call `Injector::inst()->get('Member')->ClassName`
@@ -62,15 +62,15 @@ details in the newsletter system.  This function returns a [FieldList](api:Silve
 parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\FieldList) from there.
 
 ```php
-	use SilverStripe\Forms\TextField;
-	
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->insertBefore("HTMLEmail", new TextField("Age"));
-		$fields->removeByName("JobTitle");
-		$fields->removeByName("Organisation");
-		return $fields;
-	}
+use SilverStripe\Forms\TextField;
+
+public function getCMSFields() {
+    $fields = parent::getCMSFields();
+    $fields->insertBefore("HTMLEmail", new TextField("Age"));
+    $fields->removeByName("JobTitle");
+    $fields->removeByName("Organisation");
+    return $fields;
+}
 ```
 
 ## Extending Member or DataObject?
@@ -105,7 +105,6 @@ use SilverStripe\ORM\DataExtension;
 class MyMemberExtension extends DataExtension 
 {
     /**
-
     * Modify the field set to be displayed in the CMS detail pop-up
     */
     public function updateCMSFields(FieldList $currentFields) 
@@ -155,8 +154,6 @@ Note: Take care not to invoke this method to perform any operation the current u
 reasonably be expected to be allowed to do.
 
 E.g.
-
-
 
 ```php
  use SilverStripe\Control\Director;

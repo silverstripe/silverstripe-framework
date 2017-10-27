@@ -52,28 +52,27 @@ Note how the configuration happens in different entwine namespaces
 
 
 ```js
-
-    (function($) {
-        $.entwine('ss.preview', function($){
-            $('.cms-preview').entwine({
-                DefaultMode: 'content',
-                getSizes: function() {
-                    var sizes = this._super();
-                    sizes.mobile.width = '400px';
-                    return sizes;
-                }
-            });
+(function($) {
+    $.entwine('ss.preview', function($){
+        $('.cms-preview').entwine({
+            DefaultMode: 'content',
+            getSizes: function() {
+                var sizes = this._super();
+                sizes.mobile.width = '400px';
+                return sizes;
+            }
         });
-        $.entwine('ss', function($){
-            $('.cms-container').entwine({
-                getLayoutOptions: function() {
-                    var opts = this._super();
-                    opts.minPreviewWidth = 600;
-                    return opts;
-                }
-            });
+    });
+    $.entwine('ss', function($){
+        $('.cms-container').entwine({
+            getLayoutOptions: function() {
+                var opts = this._super();
+                opts.minPreviewWidth = 600;
+                return opts;
+            }
         });
-    }(jQuery));
+    });
+}(jQuery));
 ```
 
 Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'
@@ -81,10 +80,9 @@ to the `LeftAndMain.extra_requirements_javascript` [configuration value](../conf
 
 
 ```yml
-
-    SilverStripe\Admin\LeftAndMain:
-      extra_requirements_javascript:
-        - mysite/javascript/MyLeftAndMain.Preview.js
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - mysite/javascript/MyLeftAndMain.Preview.js
 ```
 
 In order to find out which configuration values are available, the source code
@@ -115,9 +113,9 @@ property.
 States are the site stages: _live_, _stage_ etc. Preview states are picked up
 from the `SilverStripeNavigator`. You can invoke the state change by calling:
 
-	```js
-    $('.cms-preview').entwine('.ss.preview').changeState('StageLink');
-    ```
+```js
+$('.cms-preview').entwine('.ss.preview').changeState('StageLink');
+```
 
 Note the state names come from `SilverStripeNavigatorItems` class names - thus
 the _Link_ in their names. This call will also redraw the state selector to fit
@@ -126,9 +124,9 @@ list of supported states.
 
 You can get the current state by calling:
 
-	```js
-    $('.cms-preview').entwine('.ss.preview').getCurrentStateName();
-    ```
+```js
+$('.cms-preview').entwine('.ss.preview').getCurrentStateName();
+```
 
 ## Preview sizes
 
@@ -145,15 +143,15 @@ You can switch between different types of display sizes programmatically, which
 has the benefit of redrawing the related selector and maintaining a consistent
 internal state:
 
-	```js
-    $('.cms-preview').entwine('.ss.preview').changeSize('auto');
-    ```
+```js
+$('.cms-preview').entwine('.ss.preview').changeSize('auto');
+```
 
 You can find out current size by calling:
 
-	```js
-    $('.cms-preview').entwine('.ss.preview').getCurrentSizeName();
-    ```
+```js
+$('.cms-preview').entwine('.ss.preview').getCurrentSizeName();
+```
 
 ## Preview modes
 
@@ -161,16 +159,16 @@ Preview modes map to the modes supported by the _threeColumnCompressor_ layout
 algorithm, see [layout reference](cms_layout) for more details. You
 can change modes by calling:
 
-	```js
-    $('.cms-preview').entwine('.ss.preview').changeMode('preview');
-    ```
+```js
+$('.cms-preview').entwine('.ss.preview').changeMode('preview');
+```
 
 Currently active mode is stored on the `.cms-container` along with related
 internal states of the layout. You can reach it by calling:
 
-	```js
-    $('.cms-container').entwine('.ss').getLayoutOptions().mode;
-    ```
+```js
+$('.cms-container').entwine('.ss').getLayoutOptions().mode;
+```
 
 <div class="notice" markdown='1'>
 Caveat: the `.preview-mode-selector` appears twice, once in the preview and
