@@ -225,12 +225,14 @@ class TinyMCEConfig extends HTMLEditorConfig
         'priority' => 0, // used for Per-member config override
         'browser_spellcheck' => true,
         'body_class' => 'typography',
-        'elementpath' => false, // https://www.tinymce.com/docs/configure/editor-appearance/#elementpath
+        'statusbar' => true,
+        'elementpath' => true, // https://www.tinymce.com/docs/configure/editor-appearance/#elementpath
         'relative_urls' => true,
         'remove_script_host' => true,
         'convert_urls' => false, // Prevent site-root images being rewritten to base relative
         'menubar' => false,
         'language' => 'en',
+        'branding' => false,
     );
 
     /**
