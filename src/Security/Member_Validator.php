@@ -101,8 +101,8 @@ class Member_Validator extends RequiredFields
 
         // Only validate identifier field if it's actually set. This could be the case if
         // somebody removes `Email` from the list of required fields.
+        $id = isset($data['ID']) ? (int)$data['ID'] : 0;
         if (isset($data[$identifierField])) {
-            $id = isset($data['ID']) ? (int)$data['ID'] : 0;
             if (!$id && ($ctrl = $this->form->getController())) {
                 // get the record when within GridField (Member editing page in CMS)
                 if ($ctrl instanceof GridFieldDetailForm_ItemRequest && $record = $ctrl->getRecord()) {
@@ -138,8 +138,11 @@ class Member_Validator extends RequiredFields
         }
 
         $currentUser = Security::getCurrentUser();
-        $id = $data['ID'];
-        if ($id === $currentUser->ID && Permission::checkMember($currentUser, 'ADMIN')) {
+        if ($currentUser
+            && $id
+            && $id === (int)$currentUser->ID
+            && Permission::checkMember($currentUser, 'ADMIN')
+        ) {
             $stillAdmin = true;
 
             if (!isset($data['DirectGroups'])) {
@@ -166,8 +169,6 @@ class Member_Validator extends RequiredFields
                 );
             }
         }
-
-
 
         // Execute the validators on the extensions
         $results = $this->extend('updatePHP', $data, $this->form);

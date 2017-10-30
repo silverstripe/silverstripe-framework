@@ -12,14 +12,11 @@ use SilverStripe\Security\Security;
  * Adds a delete action for the gridfield to remove a relationship from group.
  * This is a special case where it captures whether the current user is the record being removed and
  * prevents removal from happening.
- *
- * Class GroupGridFieldDeleteAction
- * @package SilverStripe\Security
  */
 class GridFieldGroupDeleteAction extends GridFieldDeleteAction
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $groupID;
 
@@ -49,8 +46,8 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      *
      * @param GridField $gridField
      * @param string $actionName
-     * @param mixed $arguments
-     * @param array $data - form data
+     * @param array $arguments
+     * @param array $data Form data
      * @throws ValidationException
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
@@ -74,7 +71,9 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
     protected function canUnlink($record)
     {
         $currentUser = Security::getCurrentUser();
-        if (($record instanceof Member && $record->ID === $currentUser->ID)
+        if ($currentUser
+            && $record instanceof Member
+            && (int)$record->ID === (int)$currentUser->ID
             && Permission::checkMember($record, 'ADMIN')
         ) {
             $adminGroups = array_intersect(

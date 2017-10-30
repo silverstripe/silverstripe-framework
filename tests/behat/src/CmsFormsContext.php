@@ -374,7 +374,7 @@ JS;
     public function assertIShouldNotSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
     {
         $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
-        assertNull($button, sprintf('Button "%s" not found', $buttonLabel));
+        assertNull($button, sprintf('Button "%s" found', $buttonLabel));
     }
 
     /**

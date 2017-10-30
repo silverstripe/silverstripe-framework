@@ -119,7 +119,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if (!$record->canEdit()) {
                 return null;
             }
-            $title = _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.UnlinkRelation', "Unlink");
+            $title = _t(__CLASS__.'.UnlinkRelation', "Unlink");
 
             $field = GridField_FormAction::create(
                 $gridField,
@@ -144,8 +144,8 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action')
-                ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.Delete', "Delete"))
-                ->setDescription(_t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.DELETE_DESCRIPTION', 'Delete'));
+                ->setAttribute('title', _t(__CLASS__.'.Delete', "Delete"))
+                ->setDescription(_t(__CLASS__.'.DELETE_DESCRIPTION', 'Delete'));
         }
         return $field->Field();
     }
@@ -155,8 +155,8 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      *
      * @param GridField $gridField
      * @param string $actionName
-     * @param mixed $arguments
-     * @param array $data - form data
+     * @param array $arguments
+     * @param array $data Form data
      * @throws ValidationException
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
@@ -171,7 +171,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if ($actionName == 'deleterecord') {
                 if (!$item->canDelete()) {
                     throw new ValidationException(
-                        _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.DeletePermissionsFailure', "No delete permissions")
+                        _t(__CLASS__.'.DeletePermissionsFailure', "No delete permissions")
                     );
                 }
 
@@ -179,7 +179,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             } else {
                 if (!$item->canEdit()) {
                     throw new ValidationException(
-                        _t('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction.EditPermissionsFailure', "No permission to unlink record")
+                        _t(__CLASS__.'.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
 

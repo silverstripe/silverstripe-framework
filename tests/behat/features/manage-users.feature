@@ -5,9 +5,9 @@ Feature: Manage users
   So that I can control access to the CMS
 
   Background:
-    Given a "member" "ADMIN" belonging to "ADMIN group" with "Email"="ADMIN@example.org"
+    Given a "member" "ADMIN" belonging to "ADMIN group" with "Email"="admin@example.org"
     And the "member" "ADMIN" belonging to "ADMIN group2"
-    And a "member" "Staff" belonging to "Staff group" with "Email"="staffmember@test.com"
+    And a "member" "Staff" belonging to "Staff group" with "Email"="staffmember@example.org"
     And the "group" "ADMIN group" has permissions "Full administrative rights"
     And the "group" "ADMIN group2" has permissions "Full administrative rights"
     And I am logged in with "ADMIN" permissions
@@ -31,15 +31,15 @@ Feature: Manage users
 
   Scenario: I can list all users regardless of group
     When I click the "Users" CMS tab
-    Then I should see "admin@test.com" in the "#Root_Users" element
-    And I should see "staffmember@test.com" in the "#Root_Users" element
+    Then I should see "admin@example.org" in the "#Root_Users" element
+    And I should see "staffmember@example.org" in the "#Root_Users" element
 
   Scenario: I can list all users in a specific group
     When I click the "Groups" CMS tab
     # TODO Please check how performant this is
     And I click "ADMIN group" in the "#Root_Groups" element
-    Then I should see "admin@test.com" in the "#Root_Members" element
-    And I should not see "staffmember@test.com" in the "#Root_Members" element
+    Then I should see "admin@example.org" in the "#Root_Members" element
+    And I should not see "staffmember@example.org" in the "#Root_Members" element
 
   Scenario: I can add a user to the system
     When I click the "Users" CMS tab
@@ -47,16 +47,16 @@ Feature: Manage users
     And I fill in the following:
       | First Name | John |
       | Surname | Doe |
-      | Email | john.doe@test.com |
+      | Email | john.doe@example.org |
     And I press the "Create" button
     Then I should see a "Saved member" message
 
     When I go to "admin/security/"
-    Then I should see "john.doe@test.com" in the "#Root_Users" element
+    Then I should see "john.doe@example.org" in the "#Root_Users" element
 
   Scenario: I can edit an existing user and add him to an existing group
     When I click the "Users" CMS tab
-    And I click "staffmember@test.com" in the "#Root_Users" element
+    And I click "staffmember@example.org" in the "#Root_Users" element
     And I select "ADMIN group" from "Groups"
     And I press the "Save" button
     Then I should see a "Saved Member" message
@@ -64,11 +64,11 @@ Feature: Manage users
     When I go to "admin/security"
     And I click the "Groups" CMS tab
     And I click "ADMIN group" in the "#Root_Groups" element
-    Then I should see "staffmember@test.com"
+    Then I should see "staffmember@example.org"
 
   Scenario: I can delete an existing user
     When I click the "Users" CMS tab
-    And I click "staffmember@test.com" in the "#Root_Users" element
+    And I click "staffmember@example.org" in the "#Root_Users" element
     And I press the "Delete" button, confirming the dialog
-    Then I should see "admin@test.com"
-    And I should not see "staffmember@test.com"
+    Then I should see "admin@example.org"
+    And I should not see "staffmember@example.org"
