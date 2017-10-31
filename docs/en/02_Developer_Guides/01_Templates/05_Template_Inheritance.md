@@ -3,97 +3,40 @@ summary: Override and extend module and core markup templates from your applicat
 
 # Template Inheritance
 
-Bundled within SilverStripe are default templates for any markup the framework outputs for things like Form templates,
-Emails or RSS Feeds. These templates are provided to make getting your site up and running quick with sensible defaults 
-but it's easy to replace and customise SilverStripe (and add-on's) by providing custom templates in your own 
-`mysite/templates` folder or in your `themes/your_theme/templates` folder.
+## Theme types
 
-Take for instance the `GenericEmail` template in SilverStripe. This is the HTML default template that any email created 
-in SilverStripe is rendered with. It's bundled in the core framework at `framework/templates/email/GenericEmail.ss`. 
+Templates in SilverStripe are bundled into one of two groups:
+ - Default Templates, such as those provided in `mymodule/templates` folder.
+ - Theme templates, such as those provided in `themes/mytheme/templates` folders.
 
-Instead of editing that file to provide a custom template for your application, simply define a template of the same 
-name in the `mysite/templates/email` folder or in the `themes/your_theme/templates/email` folder if you're using themes. 
+The default templates provide basic HTML formatting for elements such as Forms, Email, or RSS Feeds, and provide a
+generic base for web content to be built on.
 
-**mysite/templates/email/GenericEmail.ss**
+## Template types and locations
 
-```ss
-$Body
-<p>Thanks from Bob's Fantasy Football League.</p>
-```
+Typically all templates within one of the above locations will be nested in a folder deterministically through
+the fully qualified namespace of the underlying class, and an optional `type` specifier to segment template types.
+Basic template types include `Layout` and `Includes`, and a less commonly used `Content` type.
 
-All emails going out of our application will have the footer `Thanks from Bob's Fantasy Football Leaguee` added.
+For instance, a class `SilverStripe\Blog\BlogPage` will have a default template of type `Layout`
+in the folder `vendor/silverstripe/blog/templates/SilverStripe/Blog/Layout/BlogPage.ss`.
 
-<div class="alert" markdown="1">
-As we've added a new file, make sure you flush your SilverStripe cache by visiting `http://yoursite.com/?flush=1`
-</div>
+Note: The optional `type`, if specified, will require a nested folder at the end of the parent namespace
+(`SilverStripe\Blog`) to the class, but before the filename (`BlogPage`).
 
-Template inheritance works on more than email templates. All files within the `templates` directory including `includes`, 
-`layout` or anything else from core (or add-on's) template directory can be overridden by being located inside your 
-`mysite/templates` directory. SilverStripe keeps an eye on what templates have been overridden and the location of the
-correct template through a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader).
+Templates not backed by any class can exist in any location, but must always be referred to in code
+by the full path (from the `templates` folder onwards).
 
-## ThemeResourceLoader
-
-The location of each template and the hierarchy of what template to use is stored within a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader) 
-instance. This is a serialized object containing a map of [ThemeManifest](api:SilverStripe\View\ThemeManifest) instances. For SilverStripe to find the `GenericEmail` template 
-it does not check all your `template` folders on the fly, it simply asks the manifests. The manifests are created and added to the loader when the 
-[kernel](api:SilverStripe\Core\CoreKernel) is instantiated.
-
-## Template Priority
-
-The order in which templates are selected from themes can be explicitly declared
-through configuration. To specify the order you want, make a list of the module
-names under `SilverStripe\Core\Manifest\ModuleManifest.module_priority` in a
-configuration YAML file. 
-
-
-*some-module/_config.yml*
-```yml
-SilverStripe\Core\Manifest\ModuleManifest:
-  module_priority:
-    - 'example/module-one'
-    - 'example/module-two'
-    - '$other_modules'
-    - 'example/module-three'
-```
-
-The placeholder `$other_modules` is used to mark where all of the modules not specified
-in the list should appear. (In alphabetical order of their containing directory names).
-
-In this example, the module named `example/module-one` has the highest level of precedence,
-followed by `example/module-two`. The module `example/module-three` is guaranteed the lowest
-level of precedence.
-
-### Defining a "project"
-
-It is a good idea to define one of your modules as the `project`. Commonly, this is the
-`mysite/` module, but there is nothing compulsory about that module name. The "project"
-module can be specified as a variable in the `module_priorities` list, as well. 
-
-*some-module/_config.yml*
-```yml
-SilverStripe\Core\Manifest\ModuleManifest:
-  project: 'myapp'
-  module_priority:
-    - '$project'
-    - '$other_modules'
-```
-
-### About module "names"
-
-Module names are derived their local `composer.json` files using the following precedence:
-* The value of the `name` attribute in `composer.json`
-* The value of `extras.installer_name` in `composer.json`
-* The basename of the directory that contains the module
-
-## Nested Layouts through `$Layout`
+### Nested Layouts through `$Layout` type
 
 SilverStripe has basic support for nested layouts through a fixed template variable named `$Layout`. It's used for 
 storing top level template information separate to individual page layouts.
 
 When `$Layout` is found within a root template file (one in `templates`), SilverStripe will attempt to fetch a child 
-template from the `templates/Layout` directory. It will do a full sweep of your modules, core and custom code as it 
-would if it was looking for a new root template.
+template from the `templates/<namespace>/Layout/<class>.ss` path, where `<namespace>` and `<class>` represent
+the class being rendered. It will do a full sweep of your modules, core and custom code as it 
+would if it was looking for a new root template, as well as looking down the class hierarchy until
+it finds a template.
 
 This is better illustrated with an example. Take for instance our website that has two page types `Page` and `HomePage`.
 
@@ -139,3 +82,101 @@ If your classes have in a namespace, the Layout folder will be a found inside of
 
 For example, the layout template for `SilverStripe\Control\Controller` will be
 found at `templates/SilverStripe/Control/Layout/Controller.ss`.
+
+## Cascading themes
+
+Within each theme or templates folder, a specific path representing a template can potentially be found. As
+there may be multiple instances of any matching path for a template across the set of all themes, a cascading
+search is done in order to determine the resolved template for any specified string.
+
+In order to declare the priority for this search, themes can be declared in a cascading fashion in order
+to determine resolution priority. This search is based on the following three configuration values:
+
+ - `SilverStripe\View\SSViewer.themes` - The list of all themes in order of priority (highest first).
+   This includes the default set via `$default` as a theme set. This config is normally set by the web
+   developer.
+ - `SilverStripe\Core\Manifest\ModuleManifest.module_priority` - The list of modules within which $default
+   theme templates should be sorted, in order of priority (highest first). This config is normally set by
+   the module author, and does not normally need to be customised. This includes the `$project` and
+   `$other_modules` placeholder values.
+ - `SilverStripe\Core\Manifest\ModuleManifest.project` - The name of the `$project` module, which
+   defaults to `mysite`.
+
+### ThemeResourceLoader
+
+The resolution of themes is performed by a [ThemeResourceLoader](api:SilverStripe\View\ThemeResourceLoader) 
+instance, which resolves a template (or list of templates) and a set of themes to a system template path.
+
+For each path the loader will search in this order:
+
+ - Loop through each theme which is configured.
+ - If a theme is a set (declared with the `$` prefix, e.g. `$default`) it will perform a nested search within 
+   that set.
+ - When searching the `$default` set, all modules will be searched in the order declared via the `module_priority`
+   config, interpolating keys `$project` and `$other_modules` as necessary.
+ - When the first template is found, it will be immediately returned, and will not continue to search. 
+
+### Declaring themes
+
+All themes can be enabled and sorted via the `SilverStripe\View\SSViewer.themes` config value. For reference
+on what syntax styles you can use for this value please see the [themes configuration](./themes) documentation.
+
+Basic example:
+
+```yaml
+---
+Name: mytheme
+---
+SilverStripe\View\SSViewer:
+  themes:
+    - theme_name
+    - '$default'
+```
+
+### Declaring module priority
+
+The order in which templates are selected from themes can be explicitly declared
+through configuration. To specify the order you want, make a list of the module
+names under `SilverStripe\Core\Manifest\ModuleManifest.module_priority` in a
+configuration YAML file.
+
+Note: In order for modules to sort relative to other modules, it's normally necessary
+to provide `before:` / `after:` declarations.
+
+*mymodule/_config.yml*
+
+```yml
+Name: modules-mymodule
+After:
+  - '#modules-framework'
+  - `#modules-other`
+---
+SilverStripe\Core\Manifest\ModuleManifest:
+  module_priority:
+    - myvendor/mymodule
+```
+
+In this example, our module has applied its priority lower than framework modules, meaning template lookup
+will only defer to our modules templates folder if not found elsewhere.
+
+### Declaring project
+
+It is a good idea to define one of your modules as the `project`. Commonly, this is the
+`mysite/` module, but there is nothing compulsory about that module name. 
+
+*myapp/_config/config.yml*
+
+```yml
+---
+Name: myproject
+---
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: 'myapp'
+```
+
+### About module "names"
+
+Module names are derived their local `composer.json` files using the following precedence:
+* The value of the `name` attribute in `composer.json`
+* The value of `extras.installer_name` in `composer.json`
+* The basename of the directory that contains the module
