@@ -11,9 +11,9 @@
  * <code>
  * $parser = new CSVParser('myfile.csv');
  * $parser->mapColumns(array(
- *    'first name' => 'FirstName'
+ *    'first name' => 'FirstName',
  *    'lastname' => 'Surname',
- *    'last name' => 'Surname',
+ *    'last name' => 'Surname'
  * ));
  * foreach($parser as $row) {
  * 	 // $row is a map of column name => column value
