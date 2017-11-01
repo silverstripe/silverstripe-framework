@@ -246,4 +246,93 @@ class ArrayLibTest extends SapphireTest
 
         $this->assertEquals($expected, ArrayLib::flatten($options));
     }
+
+    /**
+     * Test that items can be added during iteration
+     */
+    public function testIterateVolatileAppended()
+    {
+        $initial = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => null, 'prev' => 'two' ],
+        ];
+
+        // Test new items are iterated
+        $items = $initial;
+        $seen = [];
+        foreach (ArrayLib::iterateVolatile($items) as $key => $value) {
+            $seen[$key] = $value;
+            // Append four
+            if ($key === 'three') {
+                $items['three']['next'] = 'four';
+                $items['four'] = [ 'next' => null, 'prev' => 'three'];
+            }
+            // Prepend zero won't force it to be iterated next, but it will be iterated
+            if ($key === 'one') {
+                $items['one']['next'] = 'zero';
+                $items = array_merge(
+                    ['zero' => [ 'next' => 'one', 'prev' => 'three']],
+                    $items
+                );
+            }
+        }
+        $expected = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => null, 'prev' => 'two' ],
+            'zero' => [ 'next' => 'one', 'prev' => 'three'],
+            'four' => [ 'next' => null, 'prev' => 'three']
+        ];
+        // All items are iterated (order not deterministic)
+        $this->assertEquals(
+            $expected,
+            $seen,
+            'New items are iterated over'
+        );
+    }
+
+    /**
+     * Test that items can be modified during iteration
+     */
+    public function testIterateVolatileModified()
+    {
+        $initial = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => 'four', 'prev' => 'two' ],
+            'four' => [ 'next' => null, 'prev' => 'three' ],
+        ];
+
+        // Test new items are iterated
+        $items = $initial;
+        $seen = [];
+        foreach (ArrayLib::iterateVolatile($items) as $key => $value) {
+            $seen[$key] = $value;
+            // One modifies two
+            if ($key === 'one') {
+                $items['two']['modifiedby'] = 'one';
+            }
+            // Two removes three, preventing it from being iterated next
+            if ($key === 'two') {
+                unset($items['three']);
+            }
+            // Four removes two, but since it's already been iterated by this point
+            // it's too late.
+            if ($key === 'four') {
+                unset($items['two']);
+            }
+        }
+        $expected = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one', 'modifiedby' => 'one' ],
+            'four' => [ 'next' => null, 'prev' => 'three' ],
+        ];
+        // All items are iterated (order not deterministic)
+        $this->assertEquals(
+            ksort($expected),
+            ksort($seen),
+            'New items are iterated over'
+        );
+    }
 }

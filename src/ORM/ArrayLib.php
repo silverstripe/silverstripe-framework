@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM;
 
+use Generator;
+
 /**
  * Library of static methods for manipulating arrays.
  */
@@ -262,5 +264,32 @@ class ArrayLib
         }
 
         return $out;
+    }
+
+    /**
+     * Iterate list, but allowing for modifications to the underlying list.
+     * Items in $list will only be iterated exactly once for each key, and supports
+     * items being removed or deleted.
+     * List must be associative.
+     *
+     * @param array $list
+     * @return Generator
+     */
+    public static function iterateVolatile(array &$list)
+    {
+        // Keyed by already-iterated items
+        $iterated = [];
+        // Get all items not yet iterated
+        while ($items = array_diff_key($list, $iterated)) {
+            // Yield all results
+            foreach ($items as $key => $value) {
+                // Skip items removed by a prior step
+                if (array_key_exists($key, $list)) {
+                    // Ensure we yield from the source list
+                    $iterated[$key] = true;
+                    yield $key => $list[$key];
+                }
+            }
+        }
     }
 }
