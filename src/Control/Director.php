@@ -3,6 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
@@ -242,7 +243,7 @@ class Director implements TemplateGlobalProvider
 
             // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
             $newVars['_SERVER']['HTTP_HOST'] = isset($bits['port'])
-                ? $bits['host'].':'.$bits['port']
+                ? $bits['host'] . ':' . $bits['port']
                 : $bits['host'];
         }
 
@@ -595,53 +596,34 @@ class Director implements TemplateGlobalProvider
      * Turns an absolute URL or folder into one that's relative to the root of the site. This is useful
      * when turning a URL into a filesystem reference, or vice versa.
      *
-     * @param string $url Accepts both a URL or a filesystem path.
+     * Note: You should check {@link Director::is_site_url()} if making an untrusted url relative prior
+     * to calling this function.
      *
+     * @param string $url Accepts both a URL or a filesystem path.
      * @return string
      */
     public static function makeRelative($url)
     {
         // Allow for the accidental inclusion whitespace and // in the URL
-        $url = trim(preg_replace('#([^:])//#', '\\1/', $url));
+        $url = preg_replace('#([^:])//#', '\\1/', trim($url));
 
-        $base1 = self::absoluteBaseURL();
-        $baseDomain = substr($base1, strlen(self::protocol()));
+        // If using a real url, remove protocol / hostname / auth / port
+        if (preg_match('#^(?<protocol>https?:)?//(?<hostpart>[^/]*)(?<url>(/.*)?)$#i', $url, $matches)) {
+            $url = $matches['url'];
+        }
 
-        // Only bother comparing the URL to the absolute version if $url looks like a URL.
-        if (preg_match('/^https?[^:]*:\/\//', $url, $matches)) {
-            $urlProtocol = $matches[0];
-            $urlWithoutProtocol = substr($url, strlen($urlProtocol));
+        // Empty case
+        if (trim($url, '\\/') === '') {
+            return '';
+        }
 
-            // If we are already looking at baseURL, return '' (substr will return false)
-            if ($url == $base1) {
-                return '';
-            } elseif (substr($url, 0, strlen($base1)) == $base1) {
-                return substr($url, strlen($base1));
-            } elseif (substr($base1, -1) == "/" && $url == substr($base1, 0, -1)) {
-                // Convert http://www.mydomain.com/mysitedir to ''
-                return "";
+        // Remove base folder or url
+        foreach ([self::baseFolder(), self::baseURL()] as $base) {
+            // Ensure single / doesn't break comparison (unless it would make base empty)
+            $base = rtrim($base, '\\/') ?: $base;
+            if (stripos($url, $base) === 0) {
+                return ltrim(substr($url, strlen($base)), '\\/');
             }
-
-            if (substr($urlWithoutProtocol, 0, strlen($baseDomain)) == $baseDomain) {
-                return substr($urlWithoutProtocol, strlen($baseDomain));
-            }
-        }
-
-        // test for base folder, e.g. /var/www
-        $base2 = self::baseFolder();
-        if (substr($url, 0, strlen($base2)) == $base2) {
-            return substr($url, strlen($base2));
-        }
-
-        // Test for relative base url, e.g. mywebsite/ if the full URL is http://localhost/mywebsite/
-        $base3 = self::baseURL();
-        if (substr($url, 0, strlen($base3)) == $base3) {
-            return substr($url, strlen($base3));
-        }
-
-        // Test for relative base url, e.g mywebsite/ if the full url is localhost/myswebsite
-        if (substr($url, 0, strlen($baseDomain)) == $baseDomain) {
-            return substr($url, strlen($baseDomain));
         }
 
         // Nothing matched, fall back to returning the original URL
@@ -697,10 +679,10 @@ class Director implements TemplateGlobalProvider
     {
         // Strip off the query and fragment parts of the URL before checking
         if (($queryPosition = strpos($url, '?')) !== false) {
-            $url = substr($url, 0, $queryPosition-1);
+            $url = substr($url, 0, $queryPosition - 1);
         }
         if (($hashPosition = strpos($url, '#')) !== false) {
-            $url = substr($url, 0, $hashPosition-1);
+            $url = substr($url, 0, $hashPosition - 1);
         }
         $colonPosition = strpos($url, ':');
         $slashPosition = strpos($url, '/');
@@ -809,7 +791,7 @@ class Director implements TemplateGlobalProvider
             $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
         }
 
-        return Director::protocol($request) . $login .  static::host($request) . Director::baseURL();
+        return Director::protocol($request) . $login . static::host($request) . Director::baseURL();
     }
 
     /**
@@ -855,62 +837,29 @@ class Director implements TemplateGlobalProvider
      *
      * @param array $patterns Array of regex patterns to match URLs that should be HTTPS.
      * @param string $secureDomain Secure domain to redirect to. Defaults to the current domain.
-     * @return bool true if already on SSL, false if doesn't match patterns (or cannot redirect)
-     * @throws HTTPResponse_Exception Throws exception with redirect, if successful
+     * @param HTTPRequest|null $request Request object to check
      */
-    public static function forceSSL($patterns = null, $secureDomain = null)
+    public static function forceSSL($patterns = null, $secureDomain = null, HTTPRequest $request = null)
     {
-        // Already on SSL
-        if (static::is_https()) {
-            return true;
-        }
-
-        // Can't redirect without a url
-        if (!isset($_SERVER['REQUEST_URI'])) {
-            return false;
-        }
-
+        $handler = CanonicalURLMiddleware::singleton()->setForceSSL(true);
         if ($patterns) {
-            $matched = false;
-            $relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
-
-            // protect portions of the site based on the pattern
-            foreach ($patterns as $pattern) {
-                if (preg_match($pattern, $relativeURL)) {
-                    $matched = true;
-                    break;
-                }
-            }
-            if (!$matched) {
-                return false;
-            }
+            $handler->setForceSSLPatterns($patterns);
         }
-
-        // if an domain is specified, redirect to that instead of the current domain
-        if (!$secureDomain) {
-            $secureDomain = static::host();
+        if ($secureDomain) {
+            $handler->setForceSSLDomain($secureDomain);
         }
-        $url = 'https://' . $secureDomain . $_SERVER['REQUEST_URI'];
-
-        // Force redirect
-        self::force_redirect($url);
-        return true;
+        $handler->throwRedirectIfNeeded($request);
     }
 
     /**
      * Force a redirect to a domain starting with "www."
+     *
+     * @param HTTPRequest $request
      */
-    public static function forceWWW()
+    public static function forceWWW(HTTPRequest $request = null)
     {
-        if (!Director::isDev() && !Director::isTest() && strpos(static::host(), 'www') !== 0) {
-            $destURL = str_replace(
-                Director::protocol(),
-                Director::protocol() . 'www.',
-                Director::absoluteURL($_SERVER['REQUEST_URI'])
-            );
-
-            self::force_redirect($destURL);
-        }
+        $handler = CanonicalURLMiddleware::singleton()->setForceWWW(true);
+        $handler->throwRedirectIfNeeded($request);
     }
 
     /**
@@ -947,7 +896,7 @@ class Director implements TemplateGlobalProvider
      * Can also be checked with {@link Director::isDev()}, {@link Director::isTest()}, and
      * {@link Director::isLive()}.
      *
-     * @return bool
+     * @return string
      */
     public static function get_environment_type()
     {

@@ -7,7 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\Middleware\HTTPMiddleware;
+use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\RequestProcessor;
@@ -30,6 +30,9 @@ class DirectorTest extends SapphireTest
     {
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/');
+
+        // Ensure redirects enabled on all environments
+        CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
         $this->expectedRedirect = null;
     }
 
@@ -239,26 +242,132 @@ class DirectorTest extends SapphireTest
         $this->assertTrue(Director::is_relative_url('/relative/#=http://test.com'));
     }
 
-    public function testMakeRelative()
+    /**
+     * @return array
+     */
+    public function providerMakeRelative()
     {
-        $siteUrl = Director::absoluteBaseURL();
-        $siteUrlNoProtocol = preg_replace('/https?:\/\//', '', $siteUrl);
+        return [
+            // Resilience to slash position
+            [
+                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com/base/folder',
+                ''
+            ],
+            [
+                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com/base/folder/',
+                ''
+            ],
+            [
+                'http://www.mysite.com/base/folder/',
+                'http://www.mysite.com/base/folder',
+                ''
+            ],
+            [
+                'http://www.mysite.com/',
+                'http://www.mysite.com/',
+                ''
+            ],
+            [
+                'http://www.mysite.com/',
+                'http://www.mysite.com',
+                ''
+            ],
+            [
+                'http://www.mysite.com',
+                'http://www.mysite.com/',
+                ''
+            ],
+            [
+                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com/base/folder/page',
+                'page'
+            ],
+            [
+                'http://www.mysite.com/',
+                'http://www.mysite.com/page/',
+                'page/'
+            ],
+            // Parsing protocol safely
+            [
+                'http://www.mysite.com/base/folder',
+                'https://www.mysite.com/base/folder',
+                ''
+            ],
+            [
+                'https://www.mysite.com/base/folder',
+                'http://www.mysite.com/base/folder/testpage',
+                'testpage'
+            ],
+            [
+                'http://www.mysite.com/base/folder',
+                '//www.mysite.com/base/folder/testpage',
+                'testpage'
+            ],
+            // Dirty input
+            [
+                'http://www.mysite.com/base/folder',
+                '    https://www.mysite.com/base/folder/testpage    ',
+                'testpage'
+            ],
+            [
+                'http://www.mysite.com/base/folder',
+                '//www.mysite.com/base//folder/testpage//subpage',
+                'testpage/subpage'
+            ],
+            // Non-http protocol isn't modified
+            [
+                'http://www.mysite.com/base/folder',
+                'ftp://test.com',
+                'ftp://test.com'
+            ],
+            // Alternate hostnames are redirected
+            [
+                'https://www.mysite.com/base/folder',
+                'http://mysite.com/base/folder/testpage',
+                'testpage'
+            ],
+            [
+                'http://www.otherdomain.com/base/folder',
+                '//www.mysite.com/base/folder/testpage',
+                'testpage'
+            ],
+            // Base folder is found
+            [
+                'http://www.mysite.com/base/folder',
+                BASE_PATH . '/some/file.txt',
+                'some/file.txt',
+            ],
+            // querystring is protected
+            [
+                'http://www.mysite.com/base/folder',
+                '//www.mysite.com/base//folder/testpage//subpage?args=hello',
+                'testpage/subpage?args=hello'
+            ],
+            [
+                'http://www.mysite.com/base/folder',
+                '//www.mysite.com/base//folder/?args=hello',
+                '?args=hello'
+            ],
+        ];
+    }
 
-        $this->assertEquals(Director::makeRelative("$siteUrl"), '');
-        $this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
-        $this->assertEquals(Director::makeRelative("http://$siteUrlNoProtocol"), '');
-
-        $this->assertEquals(Director::makeRelative("   $siteUrl/testpage   "), 'testpage');
-        $this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
-
-        $this->assertEquals(Director::makeRelative('ftp://test.com'), 'ftp://test.com');
-        $this->assertEquals(Director::makeRelative('http://test.com'), 'http://test.com');
-
-        $this->assertEquals(Director::makeRelative('relative'), 'relative');
-        $this->assertEquals(Director::makeRelative("$siteUrl/?url=http://test.com"), '?url=http://test.com');
-
-        $this->assertEquals("test", Director::makeRelative("https://".$siteUrlNoProtocol."/test"));
-        $this->assertEquals("test", Director::makeRelative("http://".$siteUrlNoProtocol."/test"));
+    /**
+     * @dataProvider providerMakeRelative
+     * @param string $baseURL Site base URL
+     * @param string $requestURL Request URL
+     * @param string $relativeURL Expected relative URL
+     */
+    public function testMakeRelative($baseURL, $requestURL, $relativeURL)
+    {
+        Director::config()->set('alternate_base_url', $baseURL);
+        $actualRelative = Director::makeRelative($requestURL);
+        $this->assertEquals(
+            $relativeURL,
+            $actualRelative,
+            "Expected relativeURL of {$requestURL} to be {$relativeURL}"
+        );
     }
 
     /**
@@ -412,43 +521,101 @@ class DirectorTest extends SapphireTest
         );
     }
 
+    public function testForceWWW()
+    {
+        $this->expectExceptionRedirect('http://www.mysite.com/some-url');
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
+            Director::forceWWW();
+        }, 'http://mysite.com/some-url');
+    }
+
+    public function testPromisedForceWWW()
+    {
+        Director::forceWWW();
+
+        // Flag is set but not redirected yet
+        $middleware = CanonicalURLMiddleware::singleton();
+        $this->assertTrue($middleware->getForceWWW());
+
+        // Middleware forces the redirection eventually
+        /** @var HTTPResponse $response */
+        $response = Director::mockRequest(function ($request) use ($middleware) {
+            return $middleware->process($request, function ($request) {
+                return null;
+            });
+        }, 'http://mysite.com/some-url');
+
+        // Middleware returns non-exception redirect
+        $this->assertEquals('http://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals(301, $response->getStatusCode());
+    }
+
     public function testForceSSLProtectsEntireSite()
     {
         $this->expectExceptionRedirect('https://www.mysite.com/some-url');
-        Director::mockRequest(function () {
+        Director::mockRequest(function ($request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL();
-        }, '/some-url');
+        }, 'http://www.mysite.com/some-url');
+    }
+
+    public function testPromisedForceSSL()
+    {
+        Director::forceSSL();
+
+        // Flag is set but not redirected yet
+        $middleware = CanonicalURLMiddleware::singleton();
+        $this->assertTrue($middleware->getForceSSL());
+
+        // Middleware forces the redirection eventually
+        /** @var HTTPResponse $response */
+        $response = Director::mockRequest(function ($request) use ($middleware) {
+            return $middleware->process($request, function ($request) {
+                return null;
+            });
+        }, 'http://www.mysite.com/some-url');
+
+        // Middleware returns non-exception redirect
+        $this->assertEquals('https://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals(301, $response->getStatusCode());
     }
 
     public function testForceSSLOnTopLevelPagePattern()
     {
         // Expect admin to trigger redirect
         $this->expectExceptionRedirect('https://www.mysite.com/admin');
-        Director::mockRequest(function () {
+        Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^admin/'));
-        }, '/admin');
+        }, 'http://www.mysite.com/admin');
     }
 
     public function testForceSSLOnSubPagesPattern()
     {
         // Expect to redirect to security login page
         $this->expectExceptionRedirect('https://www.mysite.com/Security/login');
-        Director::mockRequest(function () {
+        Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^Security/'));
-        }, '/Security/login');
+        }, 'http://www.mysite.com/Security/login');
     }
 
     public function testForceSSLWithPatternDoesNotMatchOtherPages()
     {
         // Not on same url should not trigger redirect
-        Director::mockRequest(function () {
-            $this->assertFalse(Director::forceSSL(array('/^admin/')));
-        }, Director::baseURL() . 'normal-page');
+        $response = Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
+            Director::forceSSL(array('/^admin/'));
+        }, 'http://www.mysite.com/normal-page');
+        $this->assertNull($response, 'Non-matching patterns do not trigger redirect');
 
         // nested url should not triger redirect either
-        Director::mockRequest(function () {
-            $this->assertFalse(Director::forceSSL(array('/^admin/', '/^Security/')));
-        }, Director::baseURL() . 'just-another-page/sub-url');
+        $response = Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
+            Director::forceSSL(array('/^admin/', '/^Security/'));
+        }, 'http://www.mysite.com/just-another-page/sub-url');
+        $this->assertNull($response, 'Non-matching patterns do not trigger redirect');
     }
 
     public function testForceSSLAlternateDomain()
@@ -456,8 +623,35 @@ class DirectorTest extends SapphireTest
         // Ensure that forceSSL throws the appropriate exception
         $this->expectExceptionRedirect('https://secure.mysite.com/admin');
         Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
             return Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
-        }, Director::baseURL() . 'admin');
+        }, 'http://www.mysite.com/admin');
+    }
+
+    /**
+     * Test that combined forceWWW and forceSSL combine safely
+     */
+    public function testForceSSLandForceWWW()
+    {
+        Director::forceWWW();
+        Director::forceSSL();
+
+        // Flag is set but not redirected yet
+        $middleware = CanonicalURLMiddleware::singleton();
+        $this->assertTrue($middleware->getForceWWW());
+        $this->assertTrue($middleware->getForceSSL());
+
+        // Middleware forces the redirection eventually
+        /** @var HTTPResponse $response */
+        $response = Director::mockRequest(function ($request) use ($middleware) {
+            return $middleware->process($request, function ($request) {
+                return null;
+            });
+        }, 'http://mysite.com/some-url');
+
+        // Middleware returns non-exception redirect
+        $this->assertEquals('https://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals(301, $response->getStatusCode());
     }
 
     /**
