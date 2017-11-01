@@ -8,6 +8,7 @@ addons:
   apt:
     packages:
       - tidy
+      - dbus-x11
 
 matrix:
   include:
