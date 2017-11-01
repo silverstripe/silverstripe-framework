@@ -260,7 +260,7 @@ class Injector {
 	 * @return Injector Reference to new active Injector instance
 	 */
 	public static function nest() {
-		$current = self::$instance;
+		$current = self::inst();
 
 		$new = clone $current;
 		$new->nestedFrom = $current;
