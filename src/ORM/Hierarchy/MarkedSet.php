@@ -459,18 +459,38 @@ class MarkedSet
 
         // Build markedNodes for this subtree until we reach the threshold
         // foreach can't handle an ever-growing $nodes list
-        while (list(, $node) = each($this->markedNodes)) {
-            $children = $this->markChildren($node);
-            if ($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
-                // Undo marking children as opened since they're lazy loaded
-                /** @var DataObject|Hierarchy $child */
-                foreach ($children as $child) {
-                    $this->markClosed($child);
+        $done = [];
+        while ($nodes = $this->iterateNewItems($this->markedNodes, $done)) {
+            foreach ($nodes as $node) {
+                $children = $this->markChildren($node);
+                if ($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
+                    // Undo marking children as opened since they're lazy loaded
+                    /** @var DataObject|Hierarchy $child */
+                    foreach ($children as $child) {
+                        $this->markClosed($child);
+                    }
+                    break;
                 }
-                break;
             }
         }
         return $this;
+    }
+
+    /**
+     * Helper method to iterate over a growing list. Returns all items added to $list since the
+     * last time this method was called.
+     *
+     * @param array $list Global list of items which must be iterated
+     * @param array $iterated Keys of already iterated items to skip, which is updated by calling this method
+     * @return array List of items yet to iterate
+     */
+    protected function iterateNewItems(array $list, array &$iterated)
+    {
+        $done = array_combine($iterated, $iterated);
+        $items = array_diff_key($list, $done);
+        // Mark these keys to prevent them being re-iterated again
+        $iterated = array_merge($iterated, array_keys($items));
+        return $items;
     }
 
     /**
