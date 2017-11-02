@@ -104,6 +104,6 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     public function logOut(HTTPRequest $request = null)
     {
         $request = $request ?: Controller::curr()->getRequest();
-        $request->getSession()->clear($this->getSessionVariable());
+        $request->getSession()->destroy();
     }
 }
