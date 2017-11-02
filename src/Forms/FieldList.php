@@ -132,6 +132,8 @@ class FieldList extends ArrayList
      *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
      * @param FormField $field The {@link FormField} object to add to the end of that tab.
      * @param string $insertBefore The name of the field to insert before.  Optional.
+     *
+     * @return $this
      */
     public function addFieldToTab($tabName, $field, $insertBefore = null)
     {
@@ -147,6 +149,8 @@ class FieldList extends ArrayList
         } else {
             $tab->push($field);
         }
+        
+        return $this;
     }
 
     /**
@@ -158,6 +162,8 @@ class FieldList extends ArrayList
      * This function will create any missing tabs.
      * @param array $fields An array of {@link FormField} objects.
      * @param string $insertBefore Name of field to insert before
+     *
+     * @return $this
      */
     public function addFieldsToTab($tabName, $fields, $insertBefore = null)
     {
@@ -178,6 +184,8 @@ class FieldList extends ArrayList
                 $tab->push($field);
             }
         }
+        
+        return $this;
     }
 
     /**
@@ -185,6 +193,8 @@ class FieldList extends ArrayList
      *
      * @param string $tabName The name of the tab
      * @param string $fieldName The name of the field
+     *
+     * @return $this
      */
     public function removeFieldFromTab($tabName, $fieldName)
     {
@@ -193,6 +203,8 @@ class FieldList extends ArrayList
         // Find the tab
         $tab = $this->findOrMakeTab($tabName);
         $tab->removeByName($fieldName);
+        
+        return $this;
     }
 
     /**
@@ -200,6 +212,8 @@ class FieldList extends ArrayList
      *
      * @param string $tabName The name of the Tab or TabSet field
      * @param array $fields A list of fields, e.g. array('Name', 'Email')
+     *
+     * @return $this
      */
     public function removeFieldsFromTab($tabName, $fields)
     {
@@ -212,6 +226,8 @@ class FieldList extends ArrayList
         foreach ($fields as $field) {
             $tab->removeByName($field);
         }
+        
+        return $this;
     }
 
     /**
@@ -222,6 +238,8 @@ class FieldList extends ArrayList
      * @param boolean $dataFieldOnly If this is true, then a field will only
      * be removed if it's a data field.  Dataless fields, such as tabs, will
      * be left as-is.
+     *
+     * @return $this
      */
     public function removeByName($fieldName, $dataFieldOnly = false)
     {
@@ -251,6 +269,8 @@ class FieldList extends ArrayList
                 $child->removeByName($fieldName, $dataFieldOnly);
             }
         }
+        
+        return $this;
     }
 
     /**
