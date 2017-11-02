@@ -79,8 +79,8 @@ since it makes permissions easier to handle when running commands both
 from the command line and through the web server. Find and adjust the following options,
 replacing the `<user>` placeholder:
 
-	User <user>
-	Group staff
+    user <user>
+    Group staff
 
 Now start the web server:
 

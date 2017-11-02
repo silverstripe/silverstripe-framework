@@ -1,3 +1,10 @@
+# Run framework behat tests with this command (installed with silverstripe/installer)
+# Note that framework behat tests require CMS module
+# ========================================================================= #
+# vendor/bin/selenium-server-standalone -Dwebdriver.firefox.bin="/Applications/Firefox31.app/Contents/MacOS/firefox-bin"
+# vendor/bin/serve --bootstrap-file vendor/silverstripe/framework/tests/behat/serve-bootstrap.php
+# vendor/bin/behat @framework
+# ========================================================================= #
 default:
   suites:
     framework:

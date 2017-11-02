@@ -7,44 +7,41 @@ how you can load default records into the test database.
 
 **mysite/tests/PageTest.php**
 
-
 ```php
-        
-    use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\SapphireTest;
 
-    class PageTest extends SapphireTest
+class PageTest extends SapphireTest
+{
+    /** 
+     * Defines the fixture file to use for this test class
+     * @var string
+     */
+    protected static $fixture_file = 'SiteTreeTest.yml';
+
+    /**
+     * Test generation of the URLSegment values.
+     *
+     * Makes sure to:
+     *  - Turn things into lowercase-hyphen-format
+     *  - Generates from Title by default, unless URLSegment is explicitly set
+     *  - Resolves duplicates by appending a number
+     */
+    public function testURLGeneration()
     {
-        /** 
-         * Defines the fixture file to use for this test class
-         * @var string
-         */
-        protected static $fixture_file = 'SiteTreeTest.yml';
+        $expectedURLs = [
+            'home' => 'home',
+            'staff' => 'my-staff',
+            'about' => 'about-us',
+            'staffduplicate' => 'my-staff-2'
+        ];
 
-        /**
-         * Test generation of the URLSegment values.
-         *
-         * Makes sure to:
-         *  - Turn things into lowercase-hyphen-format
-         *  - Generates from Title by default, unless URLSegment is explicitly set
-         *  - Resolves duplicates by appending a number
-         */
-        public function testURLGeneration()
-        {
-            $expectedURLs = [
-                'home' => 'home',
-                'staff' => 'my-staff',
-                'about' => 'about-us',
-                'staffduplicate' => 'my-staff-2'
-            ];
+        foreach ($expectedURLs as $fixture => $urlSegment) {
+            $obj = $this->objFromFixture('Page', $fixture);
 
-            foreach($expectedURLs as $fixture => $urlSegment) {
-                $obj = $this->objFromFixture('Page', $fixture);
-
-                $this->assertEquals($urlSegment, $obj->URLSegment);
-            }
+            $this->assertEquals($urlSegment, $obj->URLSegment);
         }
     }
-
+}
 ```
 
 Firstly we define a static `$fixture_file`, this should point to a file that represents the data we want to test,

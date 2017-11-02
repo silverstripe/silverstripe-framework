@@ -1150,6 +1150,8 @@ warnings:
       message: 'Removed'
     'dontEscape()':
       message: 'FormField::dontEscape() has been removed. Escaping is now managed on a class by class basis.'
+    'SilverStripe\Forms\CompositeField::setID()':
+      message: 'ID is generated from name indirectly; Use SilverStripe\Form\FormField::setName() instead'
     'SilverStripe\Forms\FormField::createTag()':
       message: 'moved to SilverStripe\View\HTML->createTag()'
     'SilverStripe\Forms\Form->transformTo()':

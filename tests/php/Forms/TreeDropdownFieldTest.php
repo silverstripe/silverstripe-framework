@@ -19,18 +19,18 @@ class TreeDropdownFieldTest extends SapphireTest
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
         $folder = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
-    
+
         $schema = $field->getSchemaStateDefaults();
         $this->assertFalse(isset($schema['data']['valueObject']));
-        
+
         $field->setValue($folder->ID);
-    
+
         $schema = $field->getSchemaStateDefaults();
         $this->assertEquals($folder->ID, $schema['data']['valueObject']['id']);
         $this->assertTrue(isset($schema['data']['valueObject']));
         $this->assertFalse($schema['data']['showSelectedPath']);
         $this->assertEquals('', $schema['data']['valueObject']['titlePath']);
-        
+
         $field->setShowSelectedPath(true);
         $schema = $field->getSchemaStateDefaults();
         $this->assertTrue($schema['data']['showSelectedPath']);
@@ -39,64 +39,64 @@ class TreeDropdownFieldTest extends SapphireTest
             $schema['data']['valueObject']['titlePath']
         );
     }
-    
+
     public function testTreeSearchJson()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
-    
+
         // case insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json'));
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = json_decode($response->getBody(), true);
-    
+
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
-        
+
         $this->assertContains(
             $folder1->Name,
             array_column($tree['children'], 'title'),
             $folder1->Name.' is found in the json'
         );
-        
+
         $filtered = array_filter($tree['children'], function ($entry) use ($folder1) {
             return $folder1->Name === $entry['title'];
         });
         $folder1Tree = array_pop($filtered);
-        
+
         $this->assertContains(
             $folder1Subfolder1->Name,
             array_column($folder1Tree['children'], 'title'),
             $folder1Subfolder1->Name.' is found in the folder1 entry in the json'
         );
     }
-    
+
     public function testTreeSearchJsonFlatlist()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
-        
+
         // case insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json', 'flatList' => '1'));
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = json_decode($response->getBody(), true);
-        
+
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
-        
+
         $this->assertNotContains(
             $folder1->Name,
             array_column($tree['children'], 'title'),
             $folder1->Name.' is not found in the json'
         );
-        
+
         $this->assertContains(
             $folder1Subfolder1->Name,
             array_column($tree['children'], 'title'),
             $folder1Subfolder1->Name.' is found in the json'
         );
     }
-    
+
     public function testTreeSearch()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
@@ -192,6 +192,21 @@ class TreeDropdownFieldTest extends SapphireTest
         $this->assertEmpty(
             $noResult,
             $file3->Name.' is not found'
+        );
+    }
+
+    public function testReadonly()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
+        $asdf = $this->objFromFixture(File::class, 'asdf');
+        $field->setValue($asdf->ID);
+        $readonlyField = $field->performReadonlyTransformation();
+        $this->assertEquals(
+            <<<"HTML"
+<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span><input type="hidden" name="TestTree" value="{$asdf->ID}" />
+HTML
+            ,
+            (string)$readonlyField->Field()
         );
     }
 }

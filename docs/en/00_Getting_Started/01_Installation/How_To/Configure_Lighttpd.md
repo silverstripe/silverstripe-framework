@@ -3,33 +3,33 @@
 1. Lighttpd works fine so long as you provide a custom config. Add the following to lighttpd.conf **BEFORE** installing
 Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 
-	
+
 	$HTTP["host"] == "yoursite.com" {
 	    server.document-root = "/home/yoursite/public_html/"
-	
+
 	    # Disable directory listings
 	    dir-listing.activate = "disable"
-	
+
 	    # Deny access to template files
 	    url.access-deny += ( ".ss" )
 	    static-file.exclude-extensions += ( ".ss" )
-	
+
 	    # Deny access to SilverStripe command-line interface
 	    $HTTP["url"] =~ "^/vendor/silverstripe/framework/cli-script.php" {
 	       url.access-deny = ( "" )
 	    }
-	
+
 	    # Disable FastCGI in assets directory (so that PHP files are not executed)
 	    $HTTP["url"] =~ "^/assets/" {
 	       fastcgi.server = ()
 	    }
-	
+
 	    # Rewrite URLs so they are nicer
 	    url.rewrite-once = (
 	       "^/.*\.[A-Za-z0-9]+.*?$" => "$0",
 	       "^/(.*?)(\?|$)(.*)" => "/index.php?$3"
 	    )
-	
+
 	    # Show SilverStripe error page
 	    server.error-handler-404 = "/index.php" 
 	}
@@ -48,7 +48,7 @@ recommend using subdomains instead if you can, for exampe: site1.yourdomain.com 
 things a lot simpler, as you just use two of the above host example blocks. But if you really must run multiple copies
 of Silverstripe on the same host, you can use something like this (be warned, it's quite nasty):
 
-	
+
 	$HTTP["host"] == "yoursite.com" {
 	   url.rewrite-once = (
 	      "(?i)(/copy1/.*\.([A-Za-z0-9]+))(.*?)$" => "$0",

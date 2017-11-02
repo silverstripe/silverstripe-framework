@@ -13,8 +13,8 @@ fa_IR:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: ﷼
   SilverStripe\Forms\DateField:
-    NOTSET: 'نامشخص'
-    TODAY: 'امروز'
+    NOTSET: نامشخص
+    TODAY: امروز
     VALIDDATEFORMAT2: 'لطفاً یک قالب تاریخ معتبر وارد نمایید ({format})'
     VALIDDATEMAXDATE: 'تاریخ شما باید قدیمی‌تر یا برابر با حداکثر تاریخ مجاز ({date}) باشد'
     VALIDDATEMINDATE: 'تاریخ شما باید جدیدتر یا برابر با حداقل تاریخ مجاز ({date}) باشد'
@@ -32,7 +32,7 @@ fa_IR:
     VALIDATOR: اعتبارسنج
     VALIDCURRENCY: 'لطفاً یک واحد پول معتبر وارد نمایید'
   SilverStripe\Forms\FormField:
-    NONE: 'هیچ‌کدام'
+    NONE: هیچ‌کدام
   SilverStripe\Forms\GridField\GridField:
     Add: 'افزودن {name}'
     CSVEXPORT: 'خروجی‌گیری به CSV'
@@ -65,7 +65,7 @@ fa_IR:
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: ویرایش
   SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: 'مقدار'
+    FIELDLABELAMOUNT: مقدار
     FIELDLABELCURRENCY: 'واحد پول'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'خالی است'
@@ -89,12 +89,12 @@ fa_IR:
     PASSWORDEXPIRED: '<p>گذرواژه شما منقضی شده‌است. <a target="_top" href="{link}">لطفاً یکی دیگر برگزینید.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>کاربر نامعتبر. جهت ادامه <a target="_top" href="{link}">لطفاً اینجا مجدداً وارد شوید.</a></p>'
-    SUCCESS: 'موفقیت'
+    SUCCESS: موفقیت
     SUCCESSCONTENT: '<p>ورود موفق. اگر به‌طور خودکار ارجاع نشدید <a target="_top" href="{link}">اینجا را کلیک کنید.</a></p>'
   SilverStripe\Security\Group:
     AddRole: 'اعمال یک وظیفه به گروه'
     Code: 'كد گروه'
-    DefaultGroupTitleAdministrators: 'مدیران'
+    DefaultGroupTitleAdministrators: مدیران
     DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
     Description: توضحیات
     GroupReminder: 'اگر یک گروه مادر را برگزینید،‌ این گروه تمامی وظایف آن را می‌پذیرد'
@@ -128,7 +128,7 @@ fa_IR:
     ENTEREMAIL: 'لطفاً یک نشانی ایمیل وارد نمایید تا لینک ازنوسازی گذرواژه را دریافت کنید.'
     ERRORNEWPASSWORD: 'شما گذرواژه جدید خود را متفاوت وارد کرده‌اید، دوباره امتحان نمایید'
     ERRORPASSWORDNOTMATCH: 'گذرواژه کنونی همانند نیست، لطفاً مجدداً تلاش نمایید'
-    FIRSTNAME: 'نام'
+    FIRSTNAME: نام
     INTERFACELANG: 'زبان برنامه'
     KEEPMESIGNEDIN: 'مرا واردشده نگه‌دار'
     LOGGEDINAS: 'شما به {name} عنوان وارد شده‌اید.'
@@ -155,8 +155,8 @@ fa_IR:
     AdminGroup: 'مدیر کل'
     CONTENT_CATEGORY: 'دسترسی محتوا'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
-    PLURALNAME: 'مجوز‌ها'
-    SINGULARNAME: 'مجوز'
+    PLURALNAME: مجوز‌ها
+    SINGULARNAME: مجوز
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'اختصاص داده‌شده به "{title}"'
     FromGroup: 'از گروه "{title}" ارث برده است'

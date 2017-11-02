@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Core\Startup;
 
-use function GuzzleHttp\Psr7\parse_query;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -138,7 +137,7 @@ class ParameterConfirmationToken
 
         // Filter backURL if it contains the given request parameter
         list(,$query) = explode('?', $backURL);
-        $queryArgs = parse_query($query);
+        parse_str($query, $queryArgs);
         $name = $this->getName();
         if (isset($queryArgs[$name])) {
             return $queryArgs[$name];

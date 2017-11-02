@@ -100,6 +100,8 @@ en:
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: of
     Page: Page
@@ -250,6 +252,7 @@ en:
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
+    VALIDATIONADMINLOSTACCESS: 'Cannot remove all admin groups from your profile'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'

@@ -8,7 +8,9 @@ SilverStripe lets you customise the style of content in the CMS. This is done by
 
 
 ```php
-    HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
+use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
+
+HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
 ```
 
 Will load the `mysite/css/editor.css` file.
@@ -17,7 +19,7 @@ If using this config option in `mysite/_config.php`, you will have to instead ca
 
 
 ```php
-    HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
+HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
 ```
 
 Any CSS classes within this file will be automatically added to the `WYSIWYG` editors 'style' dropdown. For instance, to
@@ -25,10 +27,9 @@ add the color 'red' as an option within the `WYSIWYG` add the following to the `
 
 
 ```css
-
-    .red {
-        color: red;
-    }
+.red {
+    color: red;
+}
 ```
 
 <div class="notice" markdown="1">

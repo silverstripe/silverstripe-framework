@@ -16,13 +16,16 @@ Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
 
 
 ```php
-    $form = new Form(
-        $controller, // the Controller to render this form on 
-        $name, // name of the method that returns this form on the controller
-        FieldList $fields, // list of FormField instances 
-        FieldList $actions, // list of FormAction instances
-        $required // optional use of RequiredFields object
-    );
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FieldList;
+
+$form = new Form(
+    $controller, // the Controller to render this form on 
+    $name, // name of the method that returns this form on the controller
+    FieldList $fields, // list of FormField instances 
+    FieldList $actions, // list of FormAction instances
+    $required // optional use of RequiredFields object
+);
 ```
 
 In practice, this looks like:
@@ -341,7 +344,6 @@ $validator = new SilverStripe\Forms\RequiredFields([
 ]);
 
 $form = new Form($this, 'MyForm', $fields, $actions, $validator);
-
 ```
 
 ## API Documentation

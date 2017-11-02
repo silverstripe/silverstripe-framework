@@ -22,7 +22,9 @@ class TextField extends FormField
      * @param string $name
      * @param null|string $title
      * @param string $value
-     * @param null|int $maxLength
+     * @param null|int $maxLength Max characters to allow for this field. If this value is stored
+     * against a DB field with a fixed size it's recommended to set an appropriate max length
+     * matching this size.
      * @param null|Form $form
      */
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
@@ -40,8 +42,7 @@ class TextField extends FormField
 
     /**
      * @param int $maxLength
-     *
-     * @return static
+     * @return $this
      */
     public function setMaxLength($maxLength)
     {

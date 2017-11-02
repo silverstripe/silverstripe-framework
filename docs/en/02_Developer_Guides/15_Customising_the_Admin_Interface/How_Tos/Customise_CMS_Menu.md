@@ -22,13 +22,13 @@ black-and-transparent PNG graphics. In this case we'll place the icon in
 
 
 ```php
-    use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Admin\ModelAdmin;
 
-    class ProductAdmin extends ModelAdmin 
-    {
-        // ...
-        private static $menu_icon = 'mysite/images/product-icon.png';
-    }
+class ProductAdmin extends ModelAdmin 
+{
+    // ...
+    private static $menu_icon = 'mysite/images/product-icon.png';
+}
 ```
 
 ### Defining a Custom Title
@@ -39,13 +39,13 @@ controller, removing the "Admin" bit at the end.
 
 
 ```php
-    use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Admin\ModelAdmin;
 
-    class ProductAdmin extends ModelAdmin 
-    {
-        // ...
-        private static $menu_title = 'My Custom Admin';
-    }
+class ProductAdmin extends ModelAdmin 
+{
+    // ...
+    private static $menu_title = 'My Custom Admin';
+}
 ```
 
 In order to localize the menu title in different languages, use the
@@ -66,37 +66,36 @@ button configuration.
 
 
 ```php
-    use SilverStripe\Admin\CMSMenu;
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class CustomLeftAndMain extends LeftAndMainExtension 
+class CustomLeftAndMain extends LeftAndMainExtension 
+{
+
+    public function init() 
     {
+        // unique identifier for this item. Will have an ID of Menu-$ID
+        $id = 'LinkToGoogle';
 
-        public function init() 
-        {
-            // unique identifier for this item. Will have an ID of Menu-$ID
-            $id = 'LinkToGoogle';
+        // your 'nice' title
+        $title = 'Google';
 
-            // your 'nice' title
-            $title = 'Google';
+        // the link you want to item to go to
+        $link = 'http://google.com';
 
-            // the link you want to item to go to
-            $link = 'http://google.com';
+        // priority controls the ordering of the link in the stack. The
+        // lower the number, the lower in the list
+        $priority = -2;
 
-            // priority controls the ordering of the link in the stack. The
-            // lower the number, the lower in the list
-            $priority = -2;
+        // Add your own attributes onto the link. In our case, we want to
+        // open the link in a new window (not the original)
+        $attributes = [
+            'target' => '_blank'
+        ];
 
-            // Add your own attributes onto the link. In our case, we want to
-            // open the link in a new window (not the original)
-            $attributes = [
-                'target' => '_blank'
-            ];
-
-            CMSMenu::add_link($id, $title, $link, $priority, $attributes);
-        }
+        CMSMenu::add_link($id, $title, $link, $priority, $attributes);
     }
-
+}
 ```
 
 To have the link appear, make sure you add the extension to the `LeftAndMain`
@@ -105,7 +104,7 @@ class. For more information about configuring extensions see the
 
 
 ```php
-    LeftAndMain::add_extension('CustomLeftAndMain')
+LeftAndMain::add_extension('CustomLeftAndMain')
 ```
 
 ## Related

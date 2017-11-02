@@ -39,26 +39,27 @@ As a core contributor it is necessary to have installed the following set of too
 * A good `.env` setup in your localhost webroot.
 
 Example `.env`:
+
 ```
-    # Environent
-    SS_TRUSTED_PROXY_IPS="*"
-    SS_ENVIRONMENT_TYPE="dev"
-    
-    # DB Credentials
-    SS_DATABASE_CLASS="MySQLDatabase"
-    SS_DATABASE_SERVER="127.0.0.1"
-    SS_DATABASE_USERNAME="root"
-    SS_DATABASE_PASSWORD=""
-    
-    # Each release will have its own DB
-    SS_DATABASE_CHOOSE_NAME=1
-    
-    # So you can test releases
-    SS_DEFAULT_ADMIN_USERNAME="admin"
-    SS_DEFAULT_ADMIN_PASSWORD="password"
-    
-    # Basic CLI request url default
-    SS_BASE_URL="http://localhost/"
+# Environent
+SS_TRUSTED_PROXY_IPS="*"
+SS_ENVIRONMENT_TYPE="dev"
+
+# DB Credentials
+SS_DATABASE_CLASS="MySQLDatabase"
+SS_DATABASE_SERVER="127.0.0.1"
+SS_DATABASE_USERNAME="root"
+SS_DATABASE_PASSWORD=""
+
+# Each release will have its own DB
+SS_DATABASE_CHOOSE_NAME=1
+
+# So you can test releases
+SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_PASSWORD="password"
+
+# Basic CLI request url default
+SS_BASE_URL="http://localhost/"
 ```
 
 You will also need to be assigned the following permissions. Contact one of the SS staff from
@@ -168,9 +169,11 @@ doe not make any upstream changes (so it's safe to run without worrying about
 any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
+
 ```
-    cow release <version> -vvv
+cow release <version> -vvv
 ```
+
 This command has the following parameters:
 
 * `<version>` The version that is to be released. E.g. 3.2.4 or 4.0.0-alpha4
@@ -238,8 +241,9 @@ building an archive, and uploading to
 [www.silverstripe.org](http://www.silverstripe.org/software/download/) download page.
 
 Invoked by running `cow release:publish` in the format as below:
+
 ```
-    cow release:publish <version> -vvv
+cow release:publish <version> -vvv
 ```
 As with the `cow release` command, this step is broken down into the following
 subtasks which are invoked in sequence:

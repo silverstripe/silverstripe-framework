@@ -16,10 +16,9 @@ The `Requirements` class can work with arbitrary file paths.
 **<my-module-dir>/templates/SomeTemplate.ss**
 
 ```ss
-
-    <% require css("<my-module-dir>/css/some_file.css") %>
-    <% require themedCSS("some_themed_file") %>
-    <% require javascript("<my-module-dir>/javascript/some_file.js") %>
+<% require css("<my-module-dir>/css/some_file.css") %>
+<% require themedCSS("some_themed_file") %>
+<% require javascript("<my-module-dir>/javascript/some_file.js") %>
 ```
 
 <div class="alert" markdown="1">
@@ -50,6 +49,8 @@ class MyCustomController extends Controller
 ### CSS Files
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::css($path, $media);
 ```
 

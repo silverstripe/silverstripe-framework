@@ -12,22 +12,22 @@ in their WYSIWYG editor. Shortcodes are a semi-technical solution for this. A go
 viewer or a Google Map at a certain location. 
 
 ```php
-    $text = "<h1>My Map</h1>[map]"
-    
-    // Will output
-    // <h1>My Map</h1><iframe ..></iframe>
+$text = "<h1>My Map</h1>[map]"
+
+// Will output
+// <h1>My Map</h1><iframe ..></iframe>
 ```
 
 Here's some syntax variations:
 
 ```php
-    [my_shortcode]
-    #
-    [my_shortcode /]
-    #
-    [my_shortcode,myparameter="value"]
-    #
-    [my_shortcode,myparameter="value"]Enclosed Content[/my_shortcode]
+[my_shortcode]
+#
+[my_shortcode /]
+#
+[my_shortcode,myparameter="value"]
+#
+[my_shortcode,myparameter="value"]Enclosed Content[/my_shortcode]
 ```
 
 Shortcodes are automatically parsed on any database field which is declared as [HTMLValue](api:SilverStripe\View\Parsers\HTMLValue) or [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText), 
@@ -38,8 +38,10 @@ Other fields can be manually parsed with shortcodes through the `parse` method.
 
 
 ```php
-    $text = "My awesome [my_shortcode] is here.";
-    ShortcodeParser::get_active()->parse($text);
+use SilverStripe\View\Parsers\ShortcodeParser;
+
+$text = "My awesome [my_shortcode] is here.";
+ShortcodeParser::get_active()->parse($text);
 ```
 
 ## Defining Custom Shortcodes
@@ -50,21 +52,19 @@ First we need to define a callback for the shortcode.
 
 
 ```php
-    use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Model\SiteTree;
 
-    class Page extends SiteTree 
+class Page extends SiteTree 
+{
+    private static $casting = [
+        'MyShortCodeMethod' => 'HTMLText'
+    ];
+
+    public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) 
     {
-        
-        private static $casting = [
-            'MyShortCodeMethod' => 'HTMLText'
-        ];
-
-        public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) 
-        {
-            return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
-        }
+        return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
     }
-
+}
 ```
 
 These parameters are passed to the `MyShortCodeMethod` callback:
@@ -85,10 +85,9 @@ To register a shortcode you call the following.
 
 
 ```php
-    // ShortcodeParser::get('default')->register($shortcode, $callback);
+// ShortcodeParser::get('default')->register($shortcode, $callback);
 
-    ShortcodeParser::get('default')->register('my_shortcode', ['Page', 'MyShortCodeMethod']);
-
+ShortcodeParser::get('default')->register('my_shortcode', ['Page', 'MyShortCodeMethod']);
 ```
 
 ## Built-in Shortcodes
@@ -103,14 +102,14 @@ shortcode, which takes an `id` parameter.
 
 
 ```php
-    <a href="[sitetree_link,id=99]">
+<a href="[sitetree_link,id=99]">
 ```
 
 Links to internal `File` database records work exactly the same, but with the `[file_link]` shortcode.
 
 
 ```php
-    <a href="[file_link,id=99]">
+<a href="[file_link,id=99]">
 ```
 
 ### Images
@@ -119,7 +118,9 @@ Images inserted through the "Insert Media" form (WYSIWYG editor) need to retain 
 the underlying `[Image](api:SilverStripe\Assets\Image)` database record. The `[image]` shortcode saves this database reference
 instead of hard-linking to the filesystem path of a given image.
 
-	[image id="99" alt="My text"]
+```html
+[image id="99" alt="My text"]
+```
 
 ### Media (Photo, Video and Rich Content)
 
@@ -130,11 +131,11 @@ Youtube link pasted into the "Insert Media" form of the CMS.
 Since TinyMCE can't represent all these variations, we're showing a placeholder instead, and storing the URL with a 
 custom `[embed]` shortcode.
 
-
+```html
 [embed width=480 height=270 class=left thumbnail=http://i1.ytimg.com/vi/lmWeD-vZAMY/hqdefault.jpg?r=8767]
 	http://www.youtube.com/watch?v=lmWeD-vZAMY
 [/embed]
-
+```
 
 ### Attribute and element scope
 
@@ -147,84 +148,97 @@ The first is called "element scope" use, the second "attribute scope"
 
 You may not use shortcodes in any other location. Specifically, you can not use shortcodes to generate attributes or 
 change the name of a tag. These usages are forbidden:
-```ss
-    <[paragraph]>Some test</[paragraph]>
 
-    <a [titleattribute]>link</a>
+```html
+<[paragraph]>Some test</[paragraph]>
+
+<a [titleattribute]>link</a>
 ```
+
 You may need to escape text inside attributes `>` becomes `&gt;`, You can include HTML tags inside a shortcode tag, but 
 you need to be careful of nesting to ensure you don't break the output.
   
-```ss
+```html
+<!-- Good -->
+<div>
+    [shortcode]
+        <p>Caption</p>
+    [/shortcode]
+</div>
 
-    <!-- Good -->
-    <div>
-        [shortcode]
-            <p>Caption</p>
-        [/shortcode]
-    </div>
+<!-- Bad: -->
 
-    <!-- Bad: -->
-
-    <div>
-        [shortcode]
-    </div>
-    <p>
-        [/shortcode]
-    </p>
+<div>
+    [shortcode]
+</div>
+<p>
+    [/shortcode]
+</p>
 ```
 
 ### Location
 
 Element scoped shortcodes have a special ability to move the location they are inserted at to comply with HTML lexical 
 rules. Take for example this basic paragraph tag:
-```ss
-    <p><a href="#">Head [figure,src="assets/a.jpg",caption="caption"] Tail</a></p>
+
+```html
+<p><a href="#">Head [figure,src="assets/a.jpg",caption="caption"] Tail</a></p>
 ```
+
 When converted naively would become:
-```ss
-    <p><a href="#">Head <figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure> Tail</a></p>
+
+```html
+<p><a href="#">Head <figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure> Tail</a></p>
 ```
+
 However this is not valid HTML - P elements can not contain other block level elements.
 
 To fix this you can specify a "location" attribute on a shortcode. When the location attribute is "left" or "right"
 the inserted content will be moved to immediately before the block tag. The result is this:
-```ss
-    <figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#">Head  Tail</a></p>
+
+```html
+<figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#">Head  Tail</a></p>
 ```
+
 When the location attribute is "leftAlone" or "center" then the DOM is split around the element. The result is this:
-```ss
-    <p><a href="#">Head </a></p><figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#"> Tail</a></p>
+
+```html
+<p><a href="#">Head </a></p><figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#"> Tail</a></p>
 ```
+
 ### Parameter values
 
 Here is a summary of the callback parameter values based on some example shortcodes.
+
 ```php
-    public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) 
-    {
-        // ..
-    }
+public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) 
+{
+    // ..
+}
+```
 
-    [my_shortcode]
-    $attributes     => [];
-    $content         => null;
-    $parser         => ShortcodeParser instance,
-    $tagName         => 'my_shortcode')
+```
+[my_shortcode]
+$attributes     => [];
+$content         => null;
+$parser         => ShortcodeParser instance,
+$tagName         => 'my_shortcode')
+```
 
-    [my_shortcode,attribute="foo",other="bar"]
+```
+[my_shortcode,attribute="foo",other="bar"]
+$attributes      => ['attribute'  => 'foo', 'other'      => 'bar']
+$enclosedContent => null
+$parser          => ShortcodeParser instance
+$tagName         => 'my_shortcode'
+```
 
-    $attributes      => ['attribute'  => 'foo', 'other'      => 'bar']
-    $enclosedContent => null
-    $parser          => ShortcodeParser instance
-    $tagName         => 'my_shortcode'
-
-    [my_shortcode,attribute="foo"]content[/my_shortcode]
-
-    $attributes      => ['attribute' => 'foo']
-    $enclosedContent => 'content'
-    $parser          => ShortcodeParser instance
-    $tagName         => 'my_shortcode'
-
+```
+[my_shortcode,attribute="foo"]content[/my_shortcode]
+$attributes      => ['attribute' => 'foo']
+$enclosedContent => 'content'
+$parser          => ShortcodeParser instance
+$tagName         => 'my_shortcode'
 ```
 
 ## Limitations
@@ -232,9 +246,11 @@ Here is a summary of the callback parameter values based on some example shortco
 Since the shortcode parser is based on a simple regular expression it cannot properly handle nested shortcodes. For
 example the below code will not work as expected:
 
-	[shortcode]
-	[shortcode][/shortcode]
-	[/shortcode]
+```html
+[shortcode]
+[shortcode][/shortcode]
+[/shortcode]
+```
 
 The parser will raise an error if it can not find a matching opening tag for any particular closing tag
 

@@ -37,45 +37,42 @@ Here are some examples, assuming the `$Image` object has dimensions of 200x100px
 
 
 ```ss
+// Scaling functions
+$Image.ScaleWidth(150) // Returns a 150x75px image
+$Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
+$Image.ScaleHeight(150) // Returns a 300x150px image (up-sampled. Try to avoid doing this)
+$Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
+$Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
+$Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
 
-    // Scaling functions
-    $Image.ScaleWidth(150) // Returns a 150x75px image
-    $Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
-    $Image.ScaleHeight(150) // Returns a 300x150px image (up-sampled. Try to avoid doing this)
-    $Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
-    $Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
-    $Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
-    
-    // Warning: This method can distort images that are not the correct aspect ratio
-    $Image.ResizedImage(200, 300) // Forces dimensions of this image to the given values.
-    
-    // Cropping functions
-    $Image.Fill(150,150) // Returns a 150x150px image resized and cropped to fill specified dimensions (up-sampled)
-    $Image.FillMax(150,150) // Returns a 100x100px image (like Fill but prevents up-sampling)
-    $Image.CropWidth(150) // Returns a 150x100px image (trims excess pixels off the x axis from the center)
-    $Image.CropHeight(50) // Returns a 200x50px image (trims excess pixels off the y axis from the center)
-    
-    // Padding functions (add space around an image)
-    $Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added at the top and bottom
-    $Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
-    
-    // Metadata
-    $Image.Width // Returns width of image
-    $Image.Height // Returns height of image
-    $Image.Orientation // Returns Orientation
-    $Image.Title // Returns the friendly file name
-    $Image.Name // Returns the actual file name
-    $Image.FileName // Returns the actual file name including directory path from web root
-    $Image.Link // Returns relative URL path to image
-    $Image.AbsoluteLink // Returns absolute URL path to image
+// Warning: This method can distort images that are not the correct aspect ratio
+$Image.ResizedImage(200, 300) // Forces dimensions of this image to the given values.
+
+// Cropping functions
+$Image.Fill(150,150) // Returns a 150x150px image resized and cropped to fill specified dimensions (up-sampled)
+$Image.FillMax(150,150) // Returns a 100x100px image (like Fill but prevents up-sampling)
+$Image.CropWidth(150) // Returns a 150x100px image (trims excess pixels off the x axis from the center)
+$Image.CropHeight(50) // Returns a 200x50px image (trims excess pixels off the y axis from the center)
+
+// Padding functions (add space around an image)
+$Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added at the top and bottom
+$Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
+
+// Metadata
+$Image.Width // Returns width of image
+$Image.Height // Returns height of image
+$Image.Orientation // Returns Orientation
+$Image.Title // Returns the friendly file name
+$Image.Name // Returns the actual file name
+$Image.FileName // Returns the actual file name including directory path from web root
+$Image.Link // Returns relative URL path to image
+$Image.AbsoluteLink // Returns absolute URL path to image
 ```
 
 Image methods are chainable. Example:
 
-
 ```ss
-
-    <body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
+<body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
 ```
 
 ### Padded Image Resize
@@ -88,9 +85,9 @@ png images.
 
 
 ```php
-    $Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
-    $Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
-    $Image.Pad(80, 80, FFFFFF) // white padding with no transparency
+$Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
+$Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
+$Image.Pad(80, 80, FFFFFF) // white padding with no transparency
 ```
 
 ### Manipulating images in PHP
@@ -107,42 +104,43 @@ You can also create your own functions by decorating the `Image` class.
 
 
 ```php
-    class ImageExtension extends \SilverStripe\Core\Extension
+use SilverStripe\Core\Extension;
+class ImageExtension extends Extension
+{
+    public function Square($width)
     {
-    
-        public function Square($width)
-        {
-            $variant = $this->owner->variantName(__FUNCTION__, $width);
-            return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use($width) {
-                $clone = clone $backend;
-                $resource = clone $backend->getImageResource();
-                $resource->fit($width);
-                $clone->setImageResource($resource);
-                return $clone;
-            });
-        }
-    
-        public function Blur($amount = null)
-        {
-            $variant = $this->owner->variantName(__FUNCTION__, $amount);
-            return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use ($amount) {
-                $clone = clone $backend;
-                $resource = clone $backend->getImageResource();
-                $resource->blur($amount);
-                $clone->setImageResource($resource);
-                return $clone;
-            });
-        }
-    
+        $variant = $this->owner->variantName(__FUNCTION__, $width);
+        return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use($width) {
+            $clone = clone $backend;
+            $resource = clone $backend->getImageResource();
+            $resource->fit($width);
+            $clone->setImageResource($resource);
+            return $clone;
+        });
     }
 
-    :::yml
-    SilverStripe\Assets\Image:
-      extensions:
-        - ImageExtension
-    SilverStripe\Filesystem\Storage\DBFile:
-      extensions:
-        - ImageExtension
+    public function Blur($amount = null)
+    {
+        $variant = $this->owner->variantName(__FUNCTION__, $amount);
+        return $this->owner->manipulateImage($variant, function (\SilverStripe\Assets\Image_Backend $backend) use ($amount) {
+            $clone = clone $backend;
+            $resource = clone $backend->getImageResource();
+            $resource->blur($amount);
+            $clone->setImageResource($resource);
+            return $clone;
+        });
+    }
+
+}
+```
+
+```yml
+SilverStripe\Assets\Image:
+  extensions:
+    - ImageExtension
+SilverStripe\Filesystem\Storage\DBFile:
+  extensions:
+    - ImageExtension
 ```
 
 ### Form Upload
@@ -176,13 +174,12 @@ necessary, you can add this to your mysite/config/config.yml file:
 
 
 ```yml
-
-    # Configure resampling for File dataobject
-    File:
-      force_resample: false
-    # DBFile can be configured independently
-    SilverStripe\Filesystem\Storage\DBFile:
-      force_resample: false
+# Configure resampling for File dataobject
+SilverStripe\Assets\File:
+  force_resample: false
+# DBFile can be configured independently
+SilverStripe\Assets\Storage\DBFile:
+  force_resample: false
 ```
 
 #### Resampled image quality
@@ -192,11 +189,10 @@ following to your mysite/config/config.yml file:
 
 
 ```yml
-
-       SilverStripe\Core\Injector\Injector:
-         SilverStripe\Assets\Image_Backend:
-           properties:
-             Quality: 90
+SilverStripe\Core\Injector\Injector:
+ SilverStripe\Assets\Image_Backend:
+   properties:
+     Quality: 90
 ```
 
 ## Changing the manipulation driver to Imagick

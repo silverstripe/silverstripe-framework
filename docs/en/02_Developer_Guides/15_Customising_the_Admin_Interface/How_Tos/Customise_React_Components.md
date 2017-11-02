@@ -43,13 +43,13 @@ into the admin page.
 __my-module/\_config/config.yml__
 
 ```yaml
-    ---
-    Name: my-module
-    ---
-    SilverStripe\Admin\LeftAndMain:
-      extra_requirements_javascript:
-        # The name of this file will depend on how you've configured your build process
-        - 'my-module/js/dist/main.bundle.js'
+---
+Name: my-module
+---
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    # The name of this file will depend on how you've configured your build process
+    - 'my-module/js/dist/main.bundle.js'
 ```
 Now that the customisation is applied, our text fields look like this:
 
@@ -61,6 +61,7 @@ Let's add another customisation to TextField. If the text goes beyond a specifie
 length, let's throw a warning in the UI.
 
 __my-module/js/components/TextLengthChecker.js__
+
 ```js
 const TextLengthCheker = (TextField) => (props) => {  
   const {limit, value } = props;
@@ -86,6 +87,7 @@ For the purposes of demonstration, let's imagine this customisation comes from a
 module.
 
 __my-module/js/main.js__
+
 ```js
 import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';

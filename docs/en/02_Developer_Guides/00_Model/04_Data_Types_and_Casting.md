@@ -14,19 +14,17 @@ In the `Player` example, we have four database columns each with a different dat
 **mysite/code/Player.php**
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-        private static $db = [
-            'PlayerNumber' => 'Int',
-            'FirstName' => 'Varchar(255)',
-            'LastName' => 'Text',
-            'Birthday' => 'Date'
-        ];
-    }
-
+class Player extends DataObject 
+{
+    private static $db = [
+        'PlayerNumber' => 'Int',
+        'FirstName' => 'Varchar(255)',
+        'LastName' => 'Text',
+        'Birthday' => 'Date'
+    ];
+}
 ```
 
 ## Available Types
@@ -55,22 +53,20 @@ For complex default values for newly instantiated objects see [Dynamic Default V
 For simple values you can make use of the `$defaults` array. For example:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Car extends DataObject 
-    {
-        
-        private static $db = [
-            'Wheels' => 'Int',
-            'Condition' => 'Enum(array("New","Fair","Junk"))'
-        ];
-        
-        private static $defaults = [
-            'Wheels' => 4,
-            'Condition' => 'New'
-        ];
-    }
-
+class Car extends DataObject 
+{   
+    private static $db = [
+        'Wheels' => 'Int',
+        'Condition' => 'Enum(array("New","Fair","Junk"))'
+    ];
+    
+    private static $defaults = [
+        'Wheels' => 4,
+        'Condition' => 'New'
+    ];
+}
 ```
 
 ### Default values for new database columns
@@ -88,18 +84,16 @@ For enum values, it's the second parameter.
 For example:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Car extends DataObject 
-    {
-        
-        private static $db = [
-            'Wheels' => 'Int(4)',
-            'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
-            'Make' => 'Varchar(["default" => "Honda"]),
-        );
-    }
-
+class Car extends DataObject 
+{   
+    private static $db = [
+        'Wheels' => 'Int(4)',
+        'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
+        'Make' => 'Varchar(["default" => "Honda"]),
+    );
+}
 ```
 
 ## Formatting Output
@@ -111,36 +105,33 @@ If this case, we'll create a new method for our `Player` that returns the full n
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
 **mysite/code/Player.php**
-	
+
 ```php
-    use SilverStripe\ORM\FieldType\DBField;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
+class Player extends DataObject 
+{
+    public function getName() 
     {
-
-        ..
-
-        public function getName() 
-        {
-            return DBField::create_field('Varchar', $this->FirstName . ' '. $this->LastName);
-        }
+        return DBField::create_field('Varchar', $this->FirstName . ' '. $this->LastName);
     }
+}
 ```
 
 Then we can refer to a new `Name` column on our `Player` instances. In templates we don't need to use the `get` prefix.
 
 ```php
-    $player = Player::get()->byId(1);
+$player = Player::get()->byId(1);
 
-    echo $player->Name;
-    // returns "Sam Minnée"
+echo $player->Name;
+// returns "Sam Minnée"
 
-    echo $player->getName();
-    // returns "Sam Minnée";
+echo $player->getName();
+// returns "Sam Minnée";
 
-    echo $player->getName()->LimitCharacters(2);
-    // returns "Sa.."
+echo $player->getName()->LimitCharacters(2);
+// returns "Sa.."
 ```
 
 ## Casting
@@ -148,21 +139,19 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-      private static $casting = [
+class Player extends DataObject 
+{
+    private static $casting = [
         "Name" => 'Varchar',
-      ];
+    ];
     
-      public function getName() 
-      {
-          return $this->FirstName . ' '. $this->LastName;
-      }
+    public function getName() 
+    {
+        return $this->FirstName . ' '. $this->LastName;
     }
-
+}
 ```
 
 The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
@@ -173,14 +162,16 @@ On the most basic level, the class can be used as simple conversion class from o
 number.
 
 ```php
-    DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
+use SilverStripe\ORM\FieldType\DBField;
+DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 ```
 
 Of course that's much more verbose than the equivalent PHP call. The power of [DBField](api:SilverStripe\ORM\FieldType\DBField) comes with its more 
 sophisticated helpers, like showing the time difference to the current date:
 
 ```php
-    DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
+use SilverStripe\ORM\FieldType\DBField;
+DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 ```
 
 ## Casting ViewableData
@@ -189,27 +180,26 @@ Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\Vi
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php
-    use SilverStripe\View\ViewableData;
+use SilverStripe\View\ViewableData;
 
-    class MyObject extends ViewableData 
+class MyObject extends ViewableData 
+{
+    
+    private static $casting = [
+        'MyDate' => 'Date'
+    ];
+
+    public function getMyDate() 
     {
-        
-        private static $casting = [
-            'MyDate' => 'Date'
-        ];
-
-        public function getMyDate() 
-        {
-            return '1982-01-01';
-        }
+        return '1982-01-01';
     }
+}
 
-    $obj = new MyObject;
-    $obj->getMyDate(); // returns string
-    $obj->MyDate; // returns string
-    $obj->obj('MyDate'); // returns object
-    $obj->obj('MyDate')->InPast(); // returns boolean
-
+$obj = new MyObject;
+$obj->getMyDate(); // returns string
+$obj->MyDate; // returns string
+$obj->obj('MyDate'); // returns object
+$obj->obj('MyDate')->InPast(); // returns boolean
 ```
 
 ## Casting HTML Text
@@ -231,20 +221,19 @@ The following example will use the result of `getStatus` instead of the 'Status'
 database column using `dbObject`.
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-      private static $db = [
+class Player extends DataObject 
+{
+    private static $db = [
         "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
-      ];
-
-      public function getStatus() 
-      {
-          return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
-      }
-
+    ];
+    
+    public function getStatus() 
+    {
+        return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
+    }
+}
 ```
 
 ## API Documentation

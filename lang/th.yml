@@ -78,7 +78,7 @@ th:
     ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
     ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
+    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
     NEWPASSWORD: รหัสผ่านใหม่
     PASSWORD: รหัสผ่าน
     SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
@@ -86,7 +86,7 @@ th:
     SURNAME: นามสกุล
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
-    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
+    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
     db_LockedOutUntil: ออกจากระบบจนกว่า
     db_Password: รหัสผ่าน
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ

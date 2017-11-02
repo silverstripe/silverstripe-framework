@@ -130,6 +130,8 @@ to live until a publish is made (either on this object, or cascading from a pare
 When files are renamed using the ORM, all file variants are automatically renamed at the same time.
 
 ```php
+use SilverStripe\Assets\File;
+
 $file = File::get()->filter('Name', 'oldname.jpg')->first();
 if ($file) {
   // The below will move 'oldname.jpg' and 'oldname__variant.jpg'

@@ -23,8 +23,7 @@ The easiest way to update the layout of the CMS is to call `redraw` on the top-l
 
 
 ```js
-
-    $('.cms-container').redraw();
+$('.cms-container').redraw();
 ```
 
 This causes the framework to:
@@ -65,13 +64,12 @@ Layout manager will automatically apply algorithms to the children of `.cms-cont
 
 
 ```html
-
-    <div class="cms-content-tools west cms-panel cms-panel-layout"
-        data-expandOnClick="true"
-        data-layout-type="border"
-        id="cms-content-tools-CMSMain">
-        <%-- content utilising border's north, south, east, west and center classes --%>
-    </div>
+<div class="cms-content-tools west cms-panel cms-panel-layout"
+    data-expandOnClick="true"
+    data-layout-type="border"
+    id="cms-content-tools-CMSMain">
+    <%-- content utilising border's north, south, east, west and center classes --%>
+</div>
 ```
 
 For detailed discussion on available algorithms refer to
@@ -112,8 +110,7 @@ Use provided factory method to generate algorithm instances.
 
 
 ```js
-
-    jLayout.threeColumnCompressor(<column-spec-object>, <options-object>);
+jLayout.threeColumnCompressor(<column-spec-object>, <options-object>);
 ```
 
 The parameters are as follows:

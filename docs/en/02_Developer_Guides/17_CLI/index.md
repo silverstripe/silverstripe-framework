@@ -8,10 +8,10 @@ needs to interface over the command line.
 
 The main entry point for any command line execution is `cli-script.php` in the framework module.
 For example, to run a database rebuild from the command line, use this command:
-```bash
 
-    cd your-webroot/
-    php vendor/silverstripe/framework/cli-script.php dev/build
+```bash
+cd your-webroot/
+php vendor/silverstripe/framework/cli-script.php dev/build
 ```
 
 <div class="notice">
@@ -23,7 +23,7 @@ to have.
 ## Sake - SilverStripe Make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one 
-are available.
+are available. It is accessible via `vendor/bin/sake`.
 
 <div class="info" markdown='1'>
 If you are using a Debian server: Check you have the php-cli package installed for sake to work. If you get an error 
@@ -32,11 +32,13 @@ when running the command php -v, then you may not have php-cli installed so sake
 
 ### Installation
 
-`sake` can be invoked using `./vendor/silverstripe/framework/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
+`sake` can be invoked using `./vendor/bin/sake`. For easier access, copy the `sake` file into `/usr/bin/sake`.
+
 ```
-    cd your-webroot/
-    sudo ./vendor/silverstripe/framework/sake installsake
+cd your-webroot/
+sudo ./vendor/bin/sake installsake
 ```
+
 <div class="warning">
 This currently only works on UNIX like systems, not on Windows.
 </div>
@@ -55,28 +57,27 @@ SS_BASE_URL="http://localhost/base-url"
 
 ### Usage
 
-Sake can run any controller by passing the relative URL to that controller.
+`sake` can run any controller by passing the relative URL to that controller.
 
 
 ```bash
+sake /
+# returns the homepage
 
-    sake /
-    # returns the homepage
-
-    sake dev/
-    # shows a list of development operations
+sake dev/
+# shows a list of development operations
 ```
 
-Sake is particularly useful for running build tasks.
-```bash
+`sake` is particularly useful for running build tasks.
 
-    sake dev/build "flush=1"
+```bash
+sake dev/build "flush=1"
 ```
 
 It can also be handy if you have a long running script..
-```bash
 
-    sake dev/tasks/MyReallyLongTask
+```bash
+sake dev/tasks/MyReallyLongTask
 ```
 
 ### Running processes
@@ -86,45 +87,42 @@ It can also be handy if you have a long running script..
 Make a task or controller class that runs a loop. To avoid memory leaks, you should make the PHP process exit when it 
 hits some reasonable memory limit. Sake will automatically restart your process whenever it exits.
 
-Include some appropriate sleep()s so that your process doesn't hog the system. The best thing to do is to have a short 
+Include some appropriate `sleep()`s so that your process doesn't hog the system. The best thing to do is to have a short 
 sleep when the process is in the middle of doing things, and a long sleep when doesn't have anything to do.
 
 This code provides a good template:
 
 
 ```php
-    use SilverStripe\Control\Controller;
+use SilverStripe\Control\Controller;
 
-    class MyProcess extends Controller 
-    {
+class MyProcess extends Controller 
+{
 
-        private static $allowed_actions = [
-            'index'
-        ];
+    private static $allowed_actions = [
+        'index'
+    ];
 
-        function index() {
-            set_time_limit(0);
+    function index() {
+        set_time_limit(0);
 
-            while(memory_get_usage() < 32*1024*1024) {
-                if($this->somethingToDo()) {
-                    $this->doSomething();
-                    sleep(1)
-                } else {
-                    sleep(300);
-                }
+        while(memory_get_usage() < 32*1024*1024) {
+            if($this->somethingToDo()) {
+                $this->doSomething();
+                sleep(1)
+            } else {
+                sleep(300);
             }
         }
     }
-
+}
 ```
 
 Then the process can be managed through `sake`
 
-
 ```bash
-
-    sake -start MyProcess
-    sake -stop MyProcess
+sake -start MyProcess
+sake -stop MyProcess
 ```
 
 <div class="notice">
@@ -135,19 +133,15 @@ Then the process can be managed through `sake`
 
 Parameters can be added to the command. All parameters will be available in `$_GET` array on the server.
 
-
 ```bash
-
-    cd your-webroot/
-    php vendor/silverstripe/framework/cli-script.php myurl myparam=1 myotherparam=2
+cd your-webroot/
+php vendor/silverstripe/framework/cli-script.php myurl myparam=1 myotherparam=2
 ```
 
 Or if you're using `sake`
 
-
 ```bash
-
-    sake myurl "myparam=1&myotherparam=2"
+vendor/bin/sake myurl "myparam=1&myotherparam=2"
 ```
 
 ## Running Regular Tasks With Cron
@@ -158,5 +152,5 @@ On a UNIX machine, you can typically run a scheduled task with a [cron job](http
 The following will run `MyTask` every minute.
 
 ```bash
-    * * * * * /your/site/folder/sake dev/tasks/MyTask
+* * * * * /your/site/folder/vendor/bin/sake dev/tasks/MyTask
 ```

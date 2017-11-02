@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -539,14 +540,30 @@ class Member extends DataObject
     {
         Deprecation::notice(
             '5.0.0',
-            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdenityStore'
+            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdentityStore'
         );
 
-        $this->extend('beforeMemberLoggedOut');
-
         Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
-        // Audit logging hook
-        $this->extend('afterMemberLoggedOut');
+    }
+
+    /**
+     * Audit logging hook, called before a member is logged out
+     *
+     * @param HTTPRequest|null $request
+     */
+    public function beforeMemberLoggedOut(HTTPRequest $request = null)
+    {
+        $this->extend('beforeMemberLoggedOut', $request);
+    }
+
+    /**
+     * Audit logging hook, called after a member is logged out
+     *
+     * @param HTTPRequest|null $request
+     */
+    public function afterMemberLoggedOut(HTTPRequest $request = null)
+    {
+        $this->extend('afterMemberLoggedOut', $request);
     }
 
     /**
