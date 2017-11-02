@@ -11,10 +11,9 @@ use SilverStripe\Security\BasicAuth;
  */
 class ControllerSecuredWithPermission extends Controller implements TestOnly
 {
+    public static $post_init_called = false;
 
-    static $post_init_called = false;
-
-    static $index_called = false;
+    public static $index_called = false;
 
     protected $template = 'BlankPage';
 
