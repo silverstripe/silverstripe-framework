@@ -1,7 +1,7 @@
 ru:
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размеры'
-    EDIT: 'Редактировать'
+    Dimensions: Размеры
+    EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
     REMOVE: Удалить
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -93,9 +93,9 @@ ru:
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено {type} {name}'
-    Save: 'Сохранить'
+    Save: Сохранить
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 'Редактировать'
+    EDIT: Редактировать
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница
@@ -203,7 +203,7 @@ ru:
       many: '{count} групп'
       other: '{count} групп'
     Parent: 'Родительская группа'
-    ROLES: 'Роли'
+    ROLES: Роли
     ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
     RolesAddEditLink: 'Добавить/редактировать роли'
     SINGULARNAME: Группа
@@ -294,7 +294,7 @@ ru:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
     PLURALNAME: 'Права доступа'
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       few: '{count} разрешения'
       many: '{count} разрешений'
       other: '{count} разрешений'
@@ -307,13 +307,13 @@ ru:
     FromRoleOnGroup: 'перенято из роли "{roletitle}" для группы "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Может применяться только администратором'
-    PLURALNAME: 'Роли'
+    PLURALNAME: Роли
     PLURALS:
-      one: 'Роль'
+      one: Роль
       few: '{count} роли'
       many: '{count} ролей'
       other: '{count} ролей'
-    SINGULARNAME: 'Роль'
+    SINGULARNAME: Роль
     Title: Название
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
@@ -340,7 +340,7 @@ ru:
     CONFIRMLOGOUT: 'Нажмите кнопку ниже чтобы подтвердить что вы хотите выйти из системы.'
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
-    LOGIN: 'Вход'
+    LOGIN: Вход
     LOGOUT: Выйти
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'

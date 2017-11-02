@@ -2,10 +2,10 @@ bg:
   SilverStripe\Admin\LeftAndMain:
     VersionUnknown: непозната
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размери'
+    Dimensions: Размери
     EDIT: Промени
     EDITINFO: 'Редактирай този файл'
-    REMOVE: 'Премахни'
+    REMOVE: Премахни
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Паролата за акаунт с адрес {email} беше променена. Ако не Вие сте променили паролата си, направете го от адреса долу'
     CHANGEPASSWORDTEXT1: 'Променихте паролата си за'
@@ -99,7 +99,7 @@ bg:
     Deleted: 'Изтрити {type} {name}'
     Save: Запис
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 'Редактиране'
+    EDIT: Редактиране
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: от
     Page: Страница
@@ -185,18 +185,18 @@ bg:
     MEMBERS: Потребители
     NEWGROUP: 'Нова група'
     NoRoles: 'Няма намерени роли'
-    PERMISSIONS: 'Разрешения'
+    PERMISSIONS: Разрешения
     PLURALNAME: Групи
     PLURALS:
       one: Група
       other: '{count} групи'
     Parent: 'Група източник'
-    ROLES: 'Роли'
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
     RolesAddEditLink: 'Управление на ролите'
     SINGULARNAME: Група
     Sort: Сортиране
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
   SilverStripe\Security\LoginAttempt:
     Email: 'Email адрес'
@@ -212,7 +212,7 @@ bg:
     BUTTONCHANGEPASSWORD: 'Променете паролата'
     BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
-    BUTTONLOGOUT: 'Изход'
+    BUTTONLOGOUT: Изход
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
@@ -274,11 +274,11 @@ bg:
     FULLADMINRIGHTS: 'Пълни административни права'
     FULLADMINRIGHTS_HELP: 'Включва и отменя другите присвоени разрешения.'
     PERMISSIONS_CATEGORY: 'Роли и права за достъп'
-    PLURALNAME: 'Разрешения'
+    PLURALNAME: Разрешения
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       other: '{count} разрешения'
-    SINGULARNAME: 'Разрешение'
+    SINGULARNAME: Разрешение
     UserPermissionsIntro: 'Присвояването на групи на този потребител ще коригира разрешенията, които има. Вижте раздела за групи за подробности относно разрешенията на отделните групи.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
@@ -287,11 +287,11 @@ bg:
     FromRoleOnGroup: 'унаследено от роля "{roletitle}" на група "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Може да се приложи само от администратор'
-    PLURALNAME: 'Роли'
+    PLURALNAME: Роли
     PLURALS:
-      one: 'Роля'
+      one: Роля
       other: '{count} роли'
-    SINGULARNAME: 'Роля'
+    SINGULARNAME: Роля
     Title: Заглавие
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Кодове за роли с разрешения'
@@ -315,7 +315,7 @@ bg:
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
     LOGIN: 'Влезте в системата'
-    LOGOUT: 'Изход'
+    LOGOUT: Изход
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
     NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'

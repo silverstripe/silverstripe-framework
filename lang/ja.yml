@@ -13,13 +13,13 @@ ja:
   SilverStripe\Forms\DropdownField:
     CHOOSE: (選択)
   SilverStripe\Forms\EmailField:
-    VALIDATION: 'メールアドレスを入力してください'
+    VALIDATION: メールアドレスを入力してください
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
     VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
-    VALIDATIONSTRONGPASSWORD: 'パスワードは少なくとも1桁の数字と1つの英字を含んでいる必要があります'
+    VALIDATIONSTRONGPASSWORD: パスワードは少なくとも1桁の数字と1つの英字を含んでいる必要があります
     VALIDATOR: 検証
-    VALIDCURRENCY: '有効な通貨を入力してください'
+    VALIDCURRENCY: 有効な通貨を入力してください
   SilverStripe\Forms\FormField:
     NONE: 何もありません
   SilverStripe\Forms\GridField\GridField:
@@ -30,7 +30,7 @@ ja:
     Find: 探す
     LinkExisting: 既存のリンク
     NewRecord: '新しい{type}'
-    NoItemsFound: '項目が見つかりませんでした'
+    NoItemsFound: 項目が見つかりませんでした
     PRINTEDAT: で印刷
     PRINTEDBY: によって印刷
     PlaceHolder: '{type}を探す'
@@ -73,28 +73,28 @@ ja:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: '無限ループが"{型}"階層内で見つかりました。　これを解決するために親を変更してください。'
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'ユーザー名とパスワードを入力してください'
-    ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
+    ENTERINFO: ユーザー名とパスワードを入力してください
+    ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   SilverStripe\Security\Group:
-    AddRole: 'このグループに役割を追加'
+    AddRole: このグループに役割を追加
     Code: グループコード
-    DefaultGroupTitleAdministrators: '管理者'
-    DefaultGroupTitleContentAuthors: 'コンテンツの作成者'
+    DefaultGroupTitleAdministrators: 管理者
+    DefaultGroupTitleContentAuthors: コンテンツの作成者
     Description: 説明文
-    GroupReminder: 'あなたが親グループを選択した場合、このグループはそのすべての役割を選択します'
+    GroupReminder: あなたが親グループを選択した場合、このグループはそのすべての役割を選択します
     Locked: ロックしますか？
     NoRoles: 役割が見つかりませんでした
-    Parent: '元グループ'
+    Parent: 元グループ
     RolesAddEditLink: 役割の管理
-    Sort: '並び順'
+    Sort: 並び順
     has_many_Permissions: 承認
     many_many_Members: メンバー
   SilverStripe\Security\LoginAttempt:
     IP: IPアドレス
     Status: ステータス
   SilverStripe\Security\Member:
-    ADDGROUP: 'グループを追加'
+    ADDGROUP: グループを追加
     BUTTONCHANGEPASSWORD: パスワードの変更
     BUTTONLOGIN: ログイン
     BUTTONLOGINOTHER: 他の誰かとしてログイン
@@ -102,12 +102,12 @@ ja:
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
     EMAIL: メールアドレス
-    EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
-    ENTEREMAIL: 'パスワードをリセットするためにメールアドレスを入力してください。'
+    EMPTYNEWPASSWORD: パスワードが空です。もう一度入力して下さい。
+    ENTEREMAIL: パスワードをリセットするためにメールアドレスを入力してください。
     ERRORLOCKEDOUT2: '複数回ログインに失敗したため、あなたのアカウントは一時的に使用不可能になっています。　{count} 分後に再びログインしてください。'
-    ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
-    ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
-    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
+    ERRORNEWPASSWORD: 入力されたパスワードが一致しません。再度お試しください
+    ERRORPASSWORDNOTMATCH: 登録されているパスワードと一致しません、もう一度入力し直してください
+    ERRORWRONGCRED: メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください
     FIRSTNAME: 名
     INTERFACELANG: 画面言語
     LOGGEDINAS: '{name}としてログインしています。'
@@ -126,32 +126,32 @@ ja:
     db_PasswordExpiry: パスワードの有効期限
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: {chars}'
-    PREVPASSWORD: 'このパスワードは過去に使用されています、新しいパスワードを選択してください'
+    PREVPASSWORD: このパスワードは過去に使用されています、新しいパスワードを選択してください
     TOOSHORT: パスワードが短すぎます、%文字以上でなければなりません
   SilverStripe\Security\Permission:
-    AdminGroup: '管理者'
+    AdminGroup: 管理者
     CONTENT_CATEGORY: コンテンツに関する権限
-    FULLADMINRIGHTS: '完全な管理権'
+    FULLADMINRIGHTS: 完全な管理権
     FULLADMINRIGHTS_HELP: 暗黙的に定義または他のすべての割り当てられた権限を無効にする。
-    UserPermissionsIntro: 'このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。'
+    UserPermissionsIntro: このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "{roletitle}" のロール "{grouptitle}"から継承'
   SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: '管理者のみ適用可能'
+    OnlyAdminCanApply: 管理者のみ適用可能
     Title: タイトル
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら 再ログインを行ってください。'
-    BUTTONSEND: 'パスワードリセットのリンクを送信してください'
+    BUTTONSEND: パスワードリセットのリンクを送信してください
     CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
     CHANGEPASSWORDHEADER: パスワードを変更しました
-    ENTERNEWPASSWORD: '新しいパスワードを入力してください'
+    ENTERNEWPASSWORD: 新しいパスワードを入力してください
     ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
     LOGIN: ログイン
-    NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
+    NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
     NOTERESETLINKINVALID: '<p>パスワードのリセットリンクは有効でないか期限切れです。</p><p> 新しいパスワードを要求することができます <a href="{link1}"> ここ </a> もしくはパスワードを変更することができます <a href="{link2}"> ログインした後 </a>.</p>'
-    NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
+    NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
     PASSWORDSENTHEADER: 'パスワードリセットリンクは ''{email}'' に送信されました'
     PASSWORDSENTTEXT: 'ありがとうございました！　リセットリンクは、''{email}'' に、このアカウントが存在することを前提として送信されました。'

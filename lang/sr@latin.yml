@@ -37,7 +37,7 @@ sr@latin:
     PRINTEDBY: Odštampao
     PlaceHolder: 'Pronađi {type}'
     PlaceHolderWithLabels: 'Pronađi {type} po {name}'
-    Print: 'Štampaj'
+    Print: Štampaj
     RelationSearch: 'Pretraživanje relacije'
     ResetFilter: 'Vrati u pređašnje stanje'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
