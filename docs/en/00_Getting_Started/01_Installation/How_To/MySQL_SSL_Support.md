@@ -34,11 +34,11 @@ The following commands will work on Linux/Unix based servers. For other servers 
 
 
 	:::bash
-	
+
 	# Create directory
 	sudo mkdir ssl
 	cd ssl
-	
+
 	# Generate CA key and CA cert
 	sudo openssl genrsa 2048 | sudo tee -a ca-key.pem
 	sudo openssl req -new -x509 -nodes -days 365000 -key ca-key.pem -out ca-cert.pem
@@ -47,20 +47,20 @@ The following commands will work on Linux/Unix based servers. For other servers 
 	# IMPORTANT: the common name of the certificate should match the domain name of your host!
 	sudo openssl rsa -in server-key.pem -out server-key.pem
 	sudo openssl req -newkey rsa:2048 -days 365000 -nodes -keyout server-key.pem -out server-req.pem
-	
+
 	# Generate and sign SERVER certificate
 	sudo openssl x509 -req -in server-req.pem -days 365000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
-	
+
 	# Generate CLIENT key and certificate signing request
 	sudo openssl rsa -in client-key.pem -out client-key.pem
 	sudo openssl req -newkey rsa:2048 -days 365000 -nodes -keyout client-key.pem -out client-req.pem
-	
+
 	# Generate and sign CLIENT certificate
 	sudo openssl x509 -req -in client-req.pem -days 365000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem
-	
+
 	# Verify validity of generated certificates
 	sudo openssl verify -CAfile ca-cert.pem server-cert.pem client-cert.pem
-	
+
 <div class="warning" markdown='1'>
 After generating the certificates, make sure to set the correct permissions to prevent unauthorized access to your keys! 
 
@@ -128,7 +128,7 @@ On your Silverstripe instance:
 	:::bash
 	# Secure copy over SSH via rsync command. You may use an alternative method if desired. 
 	rsync -avP user@db1.example.com:/path/to/client/certs /path/to/secure/folder
-	
+
 	#  Depending on your web server configuration, allow web server to read to SSL files
 	sudo chown -R www-data:www-data /path/to/secure/folder
 	sudo chmod 750 /path/to/secure/folder
@@ -144,14 +144,14 @@ Add or edit your `_ss_environment.php` configuration file. (See [Environment Man
 
 	:::php
 	<?php
-	
+
 	// These four define set the database connection details.
 	define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
-	
+
 	define('SS_DATABASE_SERVER', 'db1.example.com');
 	define('SS_DATABASE_USERNAME', 'dbuser');
 	define('SS_DATABASE_PASSWORD', '<password>');
-	
+
 	// These define the paths to the SSL key, certificate, and CA certificate bundle.
 	define('SS_DATABASE_SSL_KEY', '/home/newdrafts/mysqlssltest/client-key.pem');
 	define('SS_DATABASE_SSL_CERT', '/home/newdrafts/mysqlssltest/client-cert.pem');
@@ -160,8 +160,8 @@ Add or edit your `_ss_environment.php` configuration file. (See [Environment Man
 	// When using SSL connections, you also need to supply a username and password to override the default settings
 	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
-	
-	
+
+
 When running the installer, make sure to check on the `Use _ss_environment file for configuration` option under the `Database Configuration` section to use the environment file.
 
 ## Conclusion

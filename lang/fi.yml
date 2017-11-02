@@ -104,6 +104,15 @@ fi:
     OF: /
     Page: Sivu
     View: Näytä
+  SilverStripe\Forms\GridField\GridFieldVersionedState:
+    ADDEDTODRAFTHELP: 'Kohdetta ei ole julkaistu vielä'
+    ADDEDTODRAFTSHORT: Luonnos
+    ARCHIVEDPAGEHELP: 'Kohde on poistettu luonnoksista ja julkaisusta'
+    ARCHIVEDPAGESHORT: Arkistoitu
+    MODIFIEDONDRAFTHELP: 'Kohteella on julkaisemattomia muutoksia'
+    MODIFIEDONDRAFTSHORT: Muokattu
+    ONLIVEONLYSHORT: 'Vain julkaistuna'
+    ONLIVEONLYSHORTHELP: 'Kohde on julkaistu, mutta poistettu luonnoksista'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta

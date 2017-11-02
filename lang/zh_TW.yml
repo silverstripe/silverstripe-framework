@@ -2,21 +2,21 @@ zh_TW:
   SilverStripe\Forms\DropdownField:
     CHOOSE: (選擇)
   SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
+    VALIDATIONPASSWORDSDONTMATCH: 密碼不相配
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: '請輸入帳號密碼。'
-    ERRORNOTADMIN: '那個使用者不是管理員。'
+    ENTERINFO: 請輸入帳號密碼。
+    ERRORNOTADMIN: 那個使用者不是管理員。
     ERRORNOTREC: 那組帳號密碼不對。
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 更改密碼
-    BUTTONLOGIN: '登入'
-    BUTTONLOGINOTHER: '用別的帳戶登入'
+    BUTTONLOGIN: 登入
+    BUTTONLOGINOTHER: 用別的帳戶登入
     BUTTONLOSTPASSWORD: 忘記密碼
     CONFIRMNEWPASSWORD: 確認新密碼
     CONFIRMPASSWORD: 確認密碼
     EMAIL: 電子郵件
-    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
+    ERRORNEWPASSWORD: 新密碼不相配，請再試一次。
     ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
     FIRSTNAME: 名
     INTERFACELANG: 介面語言
@@ -27,11 +27,11 @@ zh_TW:
     SURNAME: 姓
     YOUROLDPASSWORD: 舊密碼
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
+    ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
     BUTTONSEND: 寄給我密碼重設網址。
     CHANGEPASSWORDBELOW: 請在下面更改密碼。
     CHANGEPASSWORDHEADER: 更改密碼
-    ENTERNEWPASSWORD: '請輸入新的密碼。'
-    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
-    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
-    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
+    ENTERNEWPASSWORD: 請輸入新的密碼。
+    ERRORPASSWORDPERMISSION: 你必須先登入才能改密碼！
+    NOTEPAGESECURED: 那的網頁是被保護的。請先登入。
+    NOTERESETPASSWORD: 請輸入您的電子郵件。我們將寄給你重設密媽的網址。

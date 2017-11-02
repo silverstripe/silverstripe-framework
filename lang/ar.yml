@@ -6,7 +6,7 @@ ar:
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
   SilverStripe\Forms\DateField:
     NOTSET: 'غير محدد'
-    TODAY: 'اليوم'
+    TODAY: اليوم
     VALIDDATEFORMAT2: 'الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})'
     VALIDDATEMAXDATE: 'التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})'
     VALIDDATEMINDATE: 'التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})'
@@ -18,14 +18,14 @@ ar:
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'كلمات المرور يجب أن تحتوي على رقم و حرف على الأقل'
-    VALIDATOR: 'المحقق'
+    VALIDATOR: المحقق
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
   SilverStripe\Forms\FormField:
     NONE: لايوجد
   SilverStripe\Forms\GridField\GridField:
     Add: 'إضافة {اسم}'
     CSVEXPORT: 'تصدير إلى CSV'
-    Filter: 'مرشح'
+    Filter: مرشح
     FilterBy: 'ترشيح باستخدام'
     Find: ابحث
     LinkExisting: 'الرابط موجود'
@@ -54,8 +54,8 @@ ar:
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: تعديل
   SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: 'الكمية'
-    FIELDLABELCURRENCY: 'العملة'
+    FIELDLABELAMOUNT: الكمية
+    FIELDLABELCURRENCY: العملة
   SilverStripe\Forms\NullableField:
     IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
@@ -120,7 +120,7 @@ ar:
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     WELCOMEBACK: 'مرحبا بك مرة أخرى، {الاسم الأول}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
-    belongs_many_many_Groups: 'المجموعات'
+    belongs_many_many_Groups: المجموعات
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
     db_Password: 'الرقم السري'

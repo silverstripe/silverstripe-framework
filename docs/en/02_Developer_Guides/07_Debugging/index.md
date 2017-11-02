@@ -18,14 +18,17 @@ bottle-necks and identify slow moving parts of your application chain.
 The [Debug](api:SilverStripe\Dev\Debug) class contains a number of static utility methods for more advanced debugging.
 
 ```php
-	Debug::show($myVariable);
-	// similar to print_r($myVariable) but shows it in a more useful format.
+use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Backtrace;
 
-	Debug::message("Wow, that's great");
-	// prints a short debugging message.
+Debug::show($myVariable);
+// similar to print_r($myVariable) but shows it in a more useful format.
 
-	Backtrace::backtrace();
-	// prints a calls-stack
+Debug::message("Wow, that's great");
+// prints a short debugging message.
+
+Backtrace::backtrace();
+// prints a calls-stack
 ```
 
 ## API Documentation

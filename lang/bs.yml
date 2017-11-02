@@ -39,7 +39,7 @@ bs:
     FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
-    PASSWORD: 'Šifra'
+    PASSWORD: Šifra
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime

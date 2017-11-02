@@ -45,13 +45,12 @@ plugin. See "[How jQuery Works](http://docs.jquery.com/How_jQuery_Works)" for a 
 You should write all your custom jQuery code in a closure.
 
 
-```javascript
-
-    (function($) {
-        $(document).ready(function(){
-            // your code here.
-        })
-    })(jQuery);
+```js
+(function($) {
+    $(document).ready(function(){
+        // your code here.
+    })
+})(jQuery);
 ```
 
 ## jQuery Plugins
@@ -75,49 +74,47 @@ Example: A plugin to highlight a collection of elements with a configurable fore
 
 
 ```js
-
-    // create closure
-    (function($) {
-      // plugin definition
-      $.fn.hilight = function(options) {
-        // build main options before element iteration
-        var opts = $.extend({}, $.fn.hilight.defaults, options);
-        // iterate and reformat each matched element
-        return this.each(function() {
-          $this = $(this);
-          // build element specific options
-          var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
-          // update element styles
-          $this.css({
-            backgroundColor: o.background,
-            color: o.foreground
-          });
-        });
-      };
-      // plugin defaults
-      $.fn.hilight.defaults = {
-        foreground: "red",
-        background: "yellow"
-      };
-    // end of closure
-    })(jQuery);
+// create closure
+(function($) {
+  // plugin definition
+  $.fn.hilight = function(options) {
+    // build main options before element iteration
+    var opts = $.extend({}, $.fn.hilight.defaults, options);
+    // iterate and reformat each matched element
+    return this.each(function() {
+      $this = $(this);
+      // build element specific options
+      var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
+      // update element styles
+      $this.css({
+        backgroundColor: o.background,
+        color: o.foreground
+      });
+    });
+  };
+  // plugin defaults
+  $.fn.hilight.defaults = {
+    foreground: "red",
+    background: "yellow"
+  };
+// end of closure
+})(jQuery);
 ```
 
 Usage:
 
 
 ```js
+(function($) {
+  // Highlight all buttons with default colours
+  jQuery(':button').highlight();
 
-    (function($) {
-      // Highlight all buttons with default colours
-      jQuery(':button').highlight();
+  // Highlight all buttons with green background
+  jQuery(':button').highlight({background: "green"});
 
-      // Highlight all buttons with green background
-      jQuery(':button').highlight({background: "green"});
-
-      // Set all further highlight() calls to have a green background
-      $.fn.hilight.defaults.background = "green";
-    })(jQuery);
+  // Set all further highlight() calls to have a green background
+  $.fn.hilight.defaults.background = "green";
+})(jQuery);
 ```
 
 ## jQuery UI Widgets
@@ -137,57 +134,54 @@ See the [official developer guide](http://jqueryui.com/docs/Developer_Guide) and
 
 Example: Highlighter
 
-
 ```js
-
-    (function($) {
-      $.widget("ui.myHighlight", {
-        getBlink: function () {
-          return this._getData('blink');
-        },
-        setBlink: function (blink) {
-          this._setData('blink', blink);
-          if(blink) this.element.wrapInner('<blink></blink>');
-          else this.element.html(this.element.children().html());
-        },
-        _init: function() {
-          // grab the default value and use it
-          this.element.css('background',this.options.background);
-          this.element.css('color',this.options.foreground);
-          this.setBlink(this.options.blink);
-        }
-      });
-      // For demonstration purposes, this is also possible with jQuery.css()
-      $.ui.myHighlight.getter = "getBlink";
-      $.ui.myHighlight.defaults = {
-        foreground: "red",
-        background: "yellow",
-        blink: false
-      };
-    })(jQuery);
+(function($) {
+  $.widget("ui.myHighlight", {
+    getBlink: function () {
+      return this._getData('blink');
+    },
+    setBlink: function (blink) {
+      this._setData('blink', blink);
+      if(blink) this.element.wrapInner('<blink></blink>');
+      else this.element.html(this.element.children().html());
+    },
+    _init: function() {
+      // grab the default value and use it
+      this.element.css('background',this.options.background);
+      this.element.css('color',this.options.foreground);
+      this.setBlink(this.options.blink);
+    }
+  });
+  // For demonstration purposes, this is also possible with jQuery.css()
+  $.ui.myHighlight.getter = "getBlink";
+  $.ui.myHighlight.defaults = {
+    foreground: "red",
+    background: "yellow",
+    blink: false
+  };
+})(jQuery);
 ```
 
 Usage:
 
 
 ```js
+(function($) {
+  // call with default options
+  $(':button').myHighlight();
 
-    (function($) {
-      // call with default options
-      $(':button').myHighlight();
+  // call with custom options
+  $(':button').myHighlight({background: "green"});
 
-      // call with custom options
-      $(':button').myHighlight({background: "green"});
+  // set defaults for all future instances
+  $.ui.myHighlight.defaults.background = "green";
 
-      // set defaults for all future instances
-      $.ui.myHighlight.defaults.background = "green";
+  // Adjust property after initialization
+  $(':button').myHighlight('setBlink', true);
 
-      // Adjust property after initialization
-      $(':button').myHighlight('setBlink', true);
-
-      // Get property
-      $(':button').myHighlight('getBlink');
-    })(jQuery);
+  // Get property
+  $(':button').myHighlight('getBlink');
+})(jQuery);
 ```
 
 ### jQuery.Entwine
@@ -205,34 +199,32 @@ Example: Highlighter
 
 
 ```js
-
-    (function($) {
-      $(':button').entwine({
-        Foreground: 'red',
-        Background: 'yellow',
-        highlight: function() {
-          this.css('background', this.getBackground());
-          this.css('color', this.getForeground());
-        }
-      });
-    })(jQuery);
+(function($) {
+  $(':button').entwine({
+    Foreground: 'red',
+    Background: 'yellow',
+    highlight: function() {
+      this.css('background', this.getBackground());
+      this.css('color', this.getForeground());
+    }
+  });
+})(jQuery);
 ```
 
 Usage:
 
 
 ```js
+(function($) {
+  // call with default options
+  $(':button').entwine().highlight();
 
-    (function($) {
-      // call with default options
-      $(':button').entwine().highlight();
+  // set options for existing and new instances
+  $(':button').entwine().setBackground('green');
 
-      // set options for existing and new instances
-      $(':button').entwine().setBackground('green');
-
-      // get property
-      $(':button').entwine().getBackground();
-    })(jQuery);
+  // get property
+  $(':button').entwine().getBackground();
+})(jQuery);
 ```
 
 This is a deliberately simple example, the strength of jQuery.entwine over simple jQuery plugins lies in its public
@@ -255,12 +247,11 @@ Global properties are evil. They are accessible by other scripts, might be overw
 
 
 ```js
-
-    // you can't rely on '$' being defined outside of the closure
-    (function($) {
-      var myPrivateVar; // only available inside the closure
-      // inside here you can use the 'jQuery' object as '$'
-    })(jQuery);
+// you can't rely on '$' being defined outside of the closure
+(function($) {
+  var myPrivateVar; // only available inside the closure
+  // inside here you can use the 'jQuery' object as '$'
+})(jQuery);
 ```
 
 You can run `[jQuery.noConflict()](http://docs.jquery.com/Core/jQuery.noConflict)` to avoid namespace clashes.
@@ -273,11 +264,10 @@ the `window.onload` and `document.ready` events.
 
 
 ```js
-
-    // DOM elements might not be available here
-    $(document).ready(function() {
-      // The DOM is fully loaded here
-    });
+// DOM elements might not be available here
+$(document).ready(function() {
+  // The DOM is fully loaded here
+});
 ```
 
 See [jQuery FAQ: Launching Code on Document
@@ -292,18 +282,16 @@ Caution: Only applies to certain events, see the [jQuery.on() documentation](htt
 
 Example: Add a 'loading' classname to all pressed buttons
 
-
 ```js
+// manual binding, only applies to existing elements
+$('input[[type=submit]]').on('click', function() {
+  $(this).addClass('loading');
+});
 
-    // manual binding, only applies to existing elements
-    $('input[[type=submit]]').on('click', function() {
-      $(this).addClass('loading');
-    });
-
-    // binding, applies to any inserted elements as well
-    $('.cms-container').on('click', 'input[[type=submit]]', function() {
-      $(this).addClass('loading');
-    });
+// binding, applies to any inserted elements as well
+$('.cms-container').on('click', 'input[[type=submit]]', function() {
+  $(this).addClass('loading');
+});
 ```
 
 ### Assume Element Collections
@@ -313,13 +301,12 @@ makes sense). Encapsulate your code by nesting your jQuery commands inside a `jQ
 
 
 ```js
-
-    $('div.MyGridField').each(function() {
-      // This is the over code for the tr elements inside a GridField.
-      $(this).find('tr').hover(
-        // ...
-      );
-    });
+$('div.MyGridField').each(function() {
+  // This is the over code for the tr elements inside a GridField.
+  $(this).find('tr').hover(
+    // ...
+  );
+});
 ```
 
 ### Use plain HTML and jQuery.data() to store data
@@ -333,27 +320,24 @@ Through CSS properties
 
 
 ```js
-
-    $('form :input').bind('change', function(e) {
-      $(this.form).addClass('isChanged');
-    });
-    $('form').bind('submit', function(e) {
-      if($(this).hasClass('isChanged')) return false;
-    });
+$('form :input').bind('change', function(e) {
+  $(this.form).addClass('isChanged');
+});
+$('form').bind('submit', function(e) {
+  if($(this).hasClass('isChanged')) return false;
+});
 ```
 
 Through jQuery.data()
 
-
 ```js
-
-    $('form :input').bind('change', function(e) {
-      $(this.form).data('isChanged', true);
-    });
-    $('form').bind('submit', function(e) {
-      alert($(this).data('isChanged'));
-      if($(this).data('isChanged')) return false;
-    });
+$('form :input').bind('change', function(e) {
+  $(this.form).data('isChanged', true);
+});
+$('form').bind('submit', function(e) {
+  alert($(this).data('isChanged'));
+  if($(this).data('isChanged')) return false;
+});
 ```
 
 See [interactive example on jsbin.com](http://jsbin.com/opuva)
@@ -364,25 +348,20 @@ rendering a form element through the SilverStripe templating engine.
 
 Example: Restricted numeric value field
 
-
 ```ss
-
-    <input type="text" class="restricted-text {min:4,max:10}" />
+<input type="text" class="restricted-text {min:4,max:10}" />
 ```
 
-
-
 ```js
-
-    $('.restricted-text').bind('change', function(e) {
-      if(
-        e.target.value < $(this).metadata().min
-        || e.target.value > $(this).metadata().max
-      ) {
-        alert('Invalid value');
-        return false;
-      }
-    });
+$('.restricted-text').bind('change', function(e) {
+  if(
+    e.target.value < $(this).metadata().min
+    || e.target.value > $(this).metadata().max
+  ) {
+    alert('Invalid value');
+    return false;
+  }
+});
 ```
 
 See [interactive example on jsbin.com](http://jsbin.com/axafa)
@@ -407,74 +386,73 @@ Template:
 
 
 ```ss
-
-    <ul>
-    <% loop $Results %>
-      <li id="Result-$ID">$Title</li>
-    <% end_loop %>
-    </ul>
+<ul>
+<% loop $Results %>
+  <li id="Result-$ID">$Title</li>
+<% end_loop %>
+</ul>
 ```
 
 PHP:
 
 
 ```php
-    class MyController 
-    {
-      public function autocomplete($request) 
-      {
-        $results = Page::get()->filter("Title", $request->getVar('title'));
-        if(!$results) return new HTTPResponse("Not found", 404);
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\View\ViewableData;
 
-        // Use HTTPResponse to pass custom status messages
-        $this->getResponse()->setStatusCode(200, "Found " . $results->Count() . " elements");
+class MyController 
+{
+  public function autocomplete($request) 
+  {
+    $results = Page::get()->filter("Title", $request->getVar('title'));
+    if(!$results) return new HTTPResponse("Not found", 404);
 
-        // render all results with a custom template
-        $vd = new ViewableData();
-        return $vd->customise([
-          "Results" => $results
-        ])->renderWith('AutoComplete');
-      }
-    }
+    // Use HTTPResponse to pass custom status messages
+    $this->getResponse()->setStatusCode(200, "Found " . $results->Count() . " elements");
 
+    // render all results with a custom template
+    $vd = new ViewableData();
+    return $vd->customise([
+      "Results" => $results
+    ])->renderWith('AutoComplete');
+  }
+}
 ```
 
 HTML
 
 
 ```ss
-
-    <form action"#">
-      <div class="autocomplete {url:'MyController/autocomplete'}">
-        <input type="text" name="title" />
-        <div class="results" style="display: none;">
-      </div>
-      <input type="submit" value="action_autocomplete" />
-    </form>
+<form action"#">
+  <div class="autocomplete {url:'MyController/autocomplete'}">
+    <input type="text" name="title" />
+    <div class="results" style="display: none;">
+  </div>
+  <input type="submit" value="action_autocomplete" />
+</form>
 ```
 
 JavaScript:
 
 
 ```js
-
-    $('.autocomplete input').on('change', function() {
-      var resultsEl = $(this).siblings('.results');
-      resultsEl.load(
-        // get form action, using the jQuery.metadata plugin
-        $(this).parent().metadata().url,
-        // submit all form values
-        $(this.form).serialize(),
-        // callback after data is loaded
-        function(data, status) {
-          resultsEl.show();
-          // get all record IDs from the new HTML
-          var ids = jQuery('.results').find('li').map(function() {
-            return $(this).attr('id').replace(/Record\-/,'');
-          });
-        }
-      );
-    });
+$('.autocomplete input').on('change', function() {
+  var resultsEl = $(this).siblings('.results');
+  resultsEl.load(
+    // get form action, using the jQuery.metadata plugin
+    $(this).parent().metadata().url,
+    // submit all form values
+    $(this.form).serialize(),
+    // callback after data is loaded
+    function(data, status) {
+      resultsEl.show();
+      // get all record IDs from the new HTML
+      var ids = jQuery('.results').find('li').map(function() {
+        return $(this).attr('id').replace(/Record\-/,'');
+      });
+    }
+  );
+});
 ```
 
 Although they are the minority of cases, there are times when a simple HTML fragment isn't enough.  For example, if you
@@ -498,21 +476,20 @@ Example: Trigger custom 'validationfailed' event on form submission for each emp
 
 
 ```js
+$('form').bind('submit', function(e) {
+  // $(this) refers to form
+  $(this).find(':input').each(function() {
+    // $(this) in here refers to input field
+    if(!$(this).val()) $(this).trigger('validationfailed');
+  });
+  return false;
+});
 
-    $('form').bind('submit', function(e) {
-      // $(this) refers to form
-      $(this).find(':input').each(function() {
-        // $(this) in here refers to input field
-        if(!$(this).val()) $(this).trigger('validationfailed');
-      });
-      return false;
-    });
-
-    // listen to custom event on each <input> field
-    $('form :input').bind('validationfailed',function(e) {
-      // $(this) refers to input field
-      alert($(this).attr('name'));
-    });
+// listen to custom event on each <input> field
+$('form :input').bind('validationfailed',function(e) {
+  // $(this) refers to input field
+  alert($(this).attr('name'));
+});
 ```
 
 See [interactive example on jsbin.com](http://jsbin.com/ipeca).
@@ -555,55 +532,53 @@ JSDoc-toolkit is a command line utility, see [usage](http://code.google.com/p/js
 
 Example: jQuery.entwine
 
-
 ```js
+/**
+
+ * Available Custom Events:
+ * <ul>
+ * <li>ajaxsubmit</li>
+ * <li>validate</li>
+ * <li>reloadeditform</li>
+ * </ul>
+ *
+ * @class Main LeftAndMain interface with some control panel and an edit form.
+ * @name ss.LeftAndMain
+ */
+$('.LeftAndMain').entwine('ss', function($){
+  return/** @lends ss.LeftAndMain */ {
+    /**
+
+     * Reference to some property
+     * @type Number
+     */
+    MyProperty: 123,
 
     /**
 
-     * Available Custom Events:
-     * <ul>
-     * <li>ajaxsubmit</li>
-     * <li>validate</li>
-     * <li>reloadeditform</li>
-     * </ul>
+     * Renders the provided data into an unordered list.
      *
-     * @class Main LeftAndMain interface with some control panel and an edit form.
-     * @name ss.LeftAndMain
+     * @param {Object} data
+     * @param {String} status
+     * @return {String} HTML unordered list
      */
-    $('.LeftAndMain').entwine('ss', function($){
-      return/** @lends ss.LeftAndMain */ {
-        /**
+    publicMethod: function(data, status) {
+      return '<ul>'
+        + /...
+        + '</ul>';
+    },
 
-         * Reference to some property
-         * @type Number
-         */
-        MyProperty: 123,
+    /**
 
-        /**
-
-         * Renders the provided data into an unordered list.
-         *
-         * @param {Object} data
-         * @param {String} status
-         * @return {String} HTML unordered list
-         */
-        publicMethod: function(data, status) {
-          return '<ul>'
-            + /...
-            + '</ul>';
-        },
-
-        /**
-
-         * Won't show in documentation, but still worth documenting.
-         *
-         * @return {String} Something else.
-         */
-        _privateMethod: function() {
-          // ...
-        }
-      };
-    ]]);
+     * Won't show in documentation, but still worth documenting.
+     *
+     * @return {String} Something else.
+     */
+    _privateMethod: function() {
+      // ...
+    }
+  };
+]]);
 ```
 
 ### Unit Testing
@@ -616,31 +591,31 @@ start with JSpec, as it provides a much more powerful testing framework.
 
 Example: QUnit test (from [jquery.com](http://docs.jquery.com/QUnit#Using_QUnit)):
 
-
 ```js
-
-    test("a basic test example", function() {
-      ok( true, "this test is fine" );
-      var value = "hello";
-      equals( "hello", value, "We expect value to be hello" );
-    });
+test("a basic test example", function() {
+  ok( true, "this test is fine" );
+  var value = "hello";
+  equals( "hello", value, "We expect value to be hello" );
+});
 ```
 
 Example: JSpec Shopping cart test (from [visionmedia.github.com](http://visionmedia.github.com/jspec/))
+
 ```
-    describe 'ShoppingCart'
-      before_each
-        cart = new ShoppingCart
-      end
-      describe 'addProduct'
-        it 'should add a product'
-          cart.addProduct('cookie')
-          cart.addProduct('icecream')
-          cart.should.have 2, 'products'
-        end
-      end
+describe 'ShoppingCart'
+  before_each
+    cart = new ShoppingCart
+  end
+  describe 'addProduct'
+    it 'should add a product'
+      cart.addProduct('cookie')
+      cart.addProduct('icecream')
+      cart.should.have 2, 'products'
     end
+  end
+end
 ```
+
 ## Related
 
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)

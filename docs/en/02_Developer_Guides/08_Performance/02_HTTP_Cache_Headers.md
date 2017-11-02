@@ -17,8 +17,11 @@ headers:
 ## Customizing Cache Headers
 
 ### HTTP::set_cache_age
+
 ```php
-    HTTP::set_cache_age(0);
+use SilverStripe\Control\HTTP;
+
+HTTP::set_cache_age(0);
 ```
 
 Used to set the max-age component of the cache-control line, in seconds. Set it to 0 to disable caching; the "no-cache" 
@@ -28,7 +31,7 @@ clause in `Cache-Control` and `Pragma` will be included.
 
 
 ```php
-    HTTP::register_modification_date('2014-10-10');
+HTTP::register_modification_date('2014-10-10');
 ```
 
 Used to set the modification date to something more recent than the default. [DataObject::__construct](api:SilverStripe\ORM\DataObject::__construct) calls 
@@ -46,10 +49,6 @@ Cookie, X-Forwarded-Protocol, User-Agent, Accept
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration
 
 ```yml
-HTTP:
+SilverStripe\Control\HTTP:
   vary: ""
 ```
-
-
-
-

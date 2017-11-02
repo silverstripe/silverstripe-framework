@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -148,7 +149,7 @@ class Deprecation
         if (isset(self::$enabled)) {
             return self::$enabled;
         }
-        return getenv('SS_DEPRECATION_ENABLED') ?: true;
+        return Environment::getEnv('SS_DEPRECATION_ENABLED') ?: true;
     }
 
     /**

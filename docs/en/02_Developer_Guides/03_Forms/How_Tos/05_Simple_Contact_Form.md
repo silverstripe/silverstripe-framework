@@ -6,34 +6,34 @@ Let's start by defining a new `ContactPage` page type:
 
 
 ```php
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\Forms\EmailField;
-    use SilverStripe\Forms\TextareaField;
-    use SilverStripe\Forms\FormAction;
-    use SilverStripe\Forms\Form;
-    use Page;
-    use PageController;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Form;
+use Page;
+use PageController;
 
-    class ContactPage extends Page 
-    {
+class ContactPage extends Page 
+{
+}
+class ContactPageController extends PageController 
+{
+    private static $allowed_actions = ['Form'];
+    public function Form() 
+    { 
+        $fields = new FieldList( 
+            new TextField('Name'), 
+            new EmailField('Email'), 
+            new TextareaField('Message')
+        ); 
+        $actions = new FieldList( 
+            new FormAction('submit', 'Submit') 
+        ); 
+        return new Form($this, 'Form', $fields, $actions); 
     }
-    class ContactPageController extends PageController 
-    {
-        private static $allowed_actions = ['Form'];
-        public function Form() 
-        { 
-            $fields = new FieldList( 
-                new TextField('Name'), 
-                new EmailField('Email'), 
-                new TextareaField('Message')
-            ); 
-            $actions = new FieldList( 
-                new FormAction('submit', 'Submit') 
-            ); 
-            return new Form($this, 'Form', $fields, $actions); 
-        }
-    }
+}
 
 ```
 
@@ -43,27 +43,32 @@ There's quite a bit in this function, so we'll step through one piece at a time.
 
 
 ```php
-    $fields = new FieldList(
-        new TextField('Name'),
-        new EmailField('Email'),
-        new TextareaField('Message')
-    );
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\TextareaField;
+
+$fields = new FieldList(
+    new TextField('Name'),
+    new EmailField('Email'),
+    new TextareaField('Message')
+);
 ```
 
 First we create all the fields we want in the contact form, and put them inside a FieldList. You can find a list of form fields available on the [FormField](api:SilverStripe\Forms\FormField) page.
 
 
 ```php
-    $actions = FieldList(
-        new FormAction('submit', 'Submit')
-    );
+$actions = FieldList(
+    new FormAction('submit', 'Submit')
+);
 ```
 
 We then create a [FieldList](api:SilverStripe\Forms\FieldList) of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
 
 
 ```php
-    return new Form($this, 'Form', $fields, $actions);
+return new Form($this, 'Form', $fields, $actions);
 ```
 
 Finally we create the `Form` object and return it. The first argument is the controller that the form is on – this is almost always $this. The second argument is the name of the form – this has to be the same as the name of the function that creates the form, so we've used 'Form'. The third and fourth arguments are the fields and actions we created earlier.
@@ -82,36 +87,35 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 
 ```php
-    use SilverStripe\Control\Email\Email;
-    use PageController;
+use SilverStripe\Control\Email\Email;
 
-    class ContactPageController extends PageController 
+class ContactPageController extends PageController 
+{
+    private static $allowed_actions = ['Form'];
+    public function Form() 
     {
-        private static $allowed_actions = ['Form'];
-        public function Form() 
-        {
-            // ...
-        }
-        public function submit($data, $form) 
-        { 
-            $email = new Email(); 
-             
-            $email->setTo('siteowner@mysite.com'); 
-            $email->setFrom($data['Email']); 
-            $email->setSubject("Contact Message from {$data["Name"]}"); 
-             
-            $messageBody = " 
-                <p><strong>Name:</strong> {$data['Name']}</p> 
-                <p><strong>Message:</strong> {$data['Message']}</p> 
-            "; 
-            $email->setBody($messageBody); 
-            $email->send(); 
-            return [
-                'Content' => '<p>Thank you for your feedback.</p>',
-                'Form' => ''
-            ];
-        }
+        // ...
     }
+    public function submit($data, $form) 
+    { 
+        $email = new Email(); 
+         
+        $email->setTo('siteowner@mysite.com'); 
+        $email->setFrom($data['Email']); 
+        $email->setSubject("Contact Message from {$data["Name"]}"); 
+         
+        $messageBody = " 
+            <p><strong>Name:</strong> {$data['Name']}</p> 
+            <p><strong>Message:</strong> {$data['Message']}</p> 
+        "; 
+        $email->setBody($messageBody); 
+        $email->send(); 
+        return [
+            'Content' => '<p>Thank you for your feedback.</p>',
+            'Form' => ''
+        ];
+    }
+}
 
 ```
 
@@ -137,13 +141,15 @@ The framework comes with a predefined validator called [RequiredFields](api:Silv
 
 
 ```php
-    public function Form() 
-    { 
-        // ...
-        $validator = new RequiredFields('Name', 'Message');
-        return new Form($this, 'Form', $fields, $actions, $validator); 
-    }
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
+
+public function Form() 
+{ 
+    // ...
+    $validator = new RequiredFields('Name', 'Message');
+    return new Form($this, 'Form', $fields, $actions, $validator); 
+}
 ```
 
 We've created a RequiredFields object, passing the name of the fields we want to be required. The validator we have created is then passed as the fifth argument of the form constructor. If we now try to submit the form without filling out the required fields, JavaScript validation will kick in, and the user will be presented with a message about the missing fields. If the user has JavaScript disabled, PHP validation will kick in when the form is submitted, and the user will be redirected back to the Form with messages about their missing fields.
-

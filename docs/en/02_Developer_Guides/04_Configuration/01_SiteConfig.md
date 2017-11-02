@@ -12,24 +12,23 @@ throughout the site. Out of the box this includes selecting the current site the
 
 
 ```ss
+$SiteConfig.Title 
+$SiteConfig.Tagline
 
-    $SiteConfig.Title 
-    $SiteConfig.Tagline
-    
-    <% with $SiteConfig %>
-        $Title $AnotherField
-    <% end_with %>
+<% with $SiteConfig %>
+    $Title $AnotherField
+<% end_with %>
 ```
 
 To access variables in the PHP:
 
 
 ```php
-    $config = SiteConfig::current_site_config(); 
-    
-    echo $config->Title;
+$config = SiteConfig::current_site_config(); 
 
-    // returns "Website Name"
+echo $config->Title;
+
+// returns "Website Name"
 ```
 
 ## Extending SiteConfig
@@ -40,25 +39,24 @@ To extend the options available in the panel, define your own fields via a [Data
 
 
 ```php
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\ORM\DataExtension;
 
-    class CustomSiteConfig extends DataExtension 
-    {
-        
-        private static $db = [
-            'FooterContent' => 'HTMLText'
-        ];
+class CustomSiteConfig extends DataExtension 
+{
     
-        public function updateCMSFields(FieldList $fields) 
-        {
-            $fields->addFieldToTab("Root.Main", 
-                new HTMLEditorField("FooterContent", "Footer Content")
-            );
-        }
-    }
+    private static $db = [
+        'FooterContent' => 'HTMLText'
+    ];
 
+    public function updateCMSFields(FieldList $fields) 
+    {
+        $fields->addFieldToTab("Root.Main", 
+            new HTMLEditorField("FooterContent", "Footer Content")
+        );
+    }
+}
 ```
 
 Then activate the extension.
@@ -67,10 +65,9 @@ Then activate the extension.
 
 
 ```yml
-
-    Silverstripe\SiteConfig\SiteConfig:
-      extensions:
-        - CustomSiteConfig
+Silverstripe\SiteConfig\SiteConfig:
+  extensions:
+    - CustomSiteConfig
 ```
 
 <div class="notice" markdown="1">

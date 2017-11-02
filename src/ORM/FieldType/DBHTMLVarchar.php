@@ -124,12 +124,12 @@ class DBHTMLVarchar extends DBVarchar
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new HTMLEditorField($this->name, $title, 1);
+        return HTMLEditorField::create($this->name, $title, 1);
     }
 
     public function scaffoldSearchField($title = null)
     {
-        return new TextField($this->name, $title);
+        return TextField::create($this->name, $title);
     }
 
     public function getSchemaValue()

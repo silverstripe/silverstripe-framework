@@ -11,44 +11,43 @@ response and modify the session within a test.
 
 
 ```php
-    use SilverStripe\Security\Member;
+use SilverStripe\Security\Member;
 
-    class HomePageTest extends FunctionalTest 
+class HomePageTest extends FunctionalTest 
+{
+
+    /**
+     * Test generation of the view
+     */
+    public function testViewHomePage() 
     {
+        $page = $this->get('home/');
 
-        /**
-         * Test generation of the view
-         */
-        public function testViewHomePage() 
-        {
-            $page = $this->get('home/');
+        // Home page should load..
+        $this->assertEquals(200, $page->getStatusCode());
 
-            // Home page should load..
-            $this->assertEquals(200, $page->getStatusCode());
+        // We should see a login form
+        $login = $this->submitForm("LoginFormID", null, [
+            'Email' => 'test@test.com',
+            'Password' => 'wrongpassword'
+        ]);
 
-            // We should see a login form
-            $login = $this->submitForm("LoginFormID", null, [
-                'Email' => 'test@test.com',
-                'Password' => 'wrongpassword'
-            ]);
+        // wrong details, should now see an error message
+        $this->assertExactHTMLMatchBySelector("#LoginForm p.error", [
+            "That email address is invalid."
+        ]);
 
-            // wrong details, should now see an error message
-            $this->assertExactHTMLMatchBySelector("#LoginForm p.error", [
-                "That email address is invalid."
-            ]);
+        // If we login as a user we should see a welcome message
+        $me = Member::get()->first();
 
-            // If we login as a user we should see a welcome message
-            $me = Member::get()->first();
+        $this->logInAs($me);
+        $page = $this->get('home/');
 
-            $this->logInAs($me);
-            $page = $this->get('home/');
-
-            $this->assertExactHTMLMatchBySelector("#Welcome", [
-                'Welcome Back'
-            ]);
-        }
+        $this->assertExactHTMLMatchBySelector("#Welcome", [
+            'Welcome Back'
+        ]);
     }
-
+}
 ```
 
 ## Related Documentation
