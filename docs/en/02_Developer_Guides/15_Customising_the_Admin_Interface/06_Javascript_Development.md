@@ -23,7 +23,7 @@ in a browser. This transpiling can be done using a variety of toolchains, but th
 __Deprecated:__
 The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS, Redux, and GraphQL](./ReactJS_Redux_and_GraphQL).
+[ReactJS, Redux, and GraphQL](./reactjs_redux_and_graphql).
 
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 

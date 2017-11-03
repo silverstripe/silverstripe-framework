@@ -25,6 +25,7 @@ trait Configurable
     /**
      * Get inherited config value
      *
+     * @deprecated 5.0 Use ->config()->get() instead
      * @param string $name
      * @return mixed
      */
@@ -48,6 +49,7 @@ trait Configurable
     /**
      * Update the config value for a given property
      *
+     * @deprecated 5.0 Use ->config()->set() instead
      * @param string $name
      * @param mixed $value
      * @return $this

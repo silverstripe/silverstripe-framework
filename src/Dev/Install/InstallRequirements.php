@@ -279,9 +279,9 @@ class InstallRequirements
             null
         ));
 
-        $this->requireWriteable('mysite/_config/config.yml', array(
+        $this->requireWriteable('mysite/_config/theme.yml', array(
             "File permissions",
-            "Is the mysite/_config/config.yml file writeable?",
+            "Is the mysite/_config/theme.yml file writeable?",
             null
         ));
 
