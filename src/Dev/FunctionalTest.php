@@ -100,6 +100,9 @@ class FunctionalTest extends SapphireTest implements TestOnly
             SSViewer::config()->update('theme_enabled', false);
         }
 
+        // Flush user
+        $this->logOut();
+
         // Switch to draft site, if necessary
         if (static::get_use_draft_site()) {
             $this->useDraftSite();
@@ -108,8 +111,6 @@ class FunctionalTest extends SapphireTest implements TestOnly
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
         BasicAuth::protect_entire_site(false);
-
-        $this->logOut();
 
         SecurityToken::disable();
     }
