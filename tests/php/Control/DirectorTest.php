@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Tests;
 use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
@@ -689,39 +688,6 @@ class DirectorTest extends SapphireTest
                 throw $exception;
             }
         }
-    }
-
-    /**
-     * @covers \SilverStripe\Control\HTTPRequestBuilder::extractRequestHeaders()
-     */
-    public function testExtractRequestHeaders()
-    {
-        $request = array(
-            'REDIRECT_STATUS'      => '200',
-            'HTTP_HOST'            => 'host',
-            'HTTP_USER_AGENT'      => 'User Agent',
-            'HTTP_ACCEPT'          => 'text/html',
-            'HTTP_ACCEPT_LANGUAGE' => 'en-us',
-            'HTTP_COOKIE'          => 'MyCookie=1',
-            'SERVER_PROTOCOL'      => 'HTTP/1.1',
-            'REQUEST_METHOD'       => 'GET',
-            'REQUEST_URI'          => '/',
-            'SCRIPT_NAME'          => FRAMEWORK_DIR . '/main.php',
-            'CONTENT_TYPE'         => 'text/xml',
-            'CONTENT_LENGTH'       => 10
-        );
-
-        $headers = array(
-            'Host'            => 'host',
-            'User-Agent'      => 'User Agent',
-            'Accept'          => 'text/html',
-            'Accept-Language' => 'en-us',
-            'Cookie'          => 'MyCookie=1',
-            'Content-Type'    => 'text/xml',
-            'Content-Length'  => '10'
-        );
-
-        $this->assertEquals($headers, HTTPRequestBuilder::extractRequestHeaders($request));
     }
 
     public function testUnmatchedRequestReturns404()

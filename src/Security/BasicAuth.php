@@ -87,22 +87,6 @@ class BasicAuth
             return true;
         }
 
-        /*
-		 * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
-		 * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
-		 * REDIRECT_HTTP_AUTHORIZATION
-		 *
-		 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
-		 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-		 */
-        $authHeader = $request->getHeader('Authorization');
-        $matches = array();
-        if ($authHeader && preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
-            list($name, $password) = explode(':', base64_decode($matches[1]));
-            $request->addHeader('PHP_AUTH_USER', strip_tags($name));
-            $request->addHeader('PHP_AUTH_PW', strip_tags($password));
-        }
-
         $member = null;
 
         try {
