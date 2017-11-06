@@ -50,6 +50,9 @@ In order to use more database specific or complex index notations, we also suppo
 		);
 	}
 
+As of 3.7.0 `default_sort` fields will automatically become database indexes as this provides significant performance
+benefits.
+
 ## API Documentation
 
 * [api:DataObject]
