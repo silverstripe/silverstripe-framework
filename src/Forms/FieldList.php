@@ -651,18 +651,24 @@ class FieldList extends ArrayList
     }
 
     /**
-     * Transform the named field into a readonly feld.
+     * Transform the named field into a readonly field.
      *
-     * @param string|FormField
+     * @param string|array|FormField $field
      */
     public function makeFieldReadonly($field)
     {
-        $fieldName = ($field instanceof FormField) ? $field->getName() : $field;
-        $srcField = $this->dataFieldByName($fieldName);
-        if ($srcField) {
-            $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
-        } else {
-            user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+        if (!is_array($field)) {
+            $field = [$field];
+        }
+
+        foreach ($field as $item) {
+            $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
+            $srcField = $this->dataFieldByName($fieldName);
+            if ($srcField) {
+                $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
+            } else {
+                user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+            }
         }
     }
 
