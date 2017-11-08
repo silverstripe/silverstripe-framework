@@ -58,7 +58,6 @@ matrix:
 before_script:
 # Init PHP
   - pecl channel-update pecl.php.net
-  - travis_retry printf "\n" | pecl install imagick
   - phpenv rehash
   - phpenv config-rm xdebug.ini || true
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
