@@ -62,7 +62,7 @@ abstract class RelationList extends DataList implements Relation
                 try {
                     $query->removeFilterOn($currentFilter);
                 } catch (Exception $e) {
-/* NOP */
+                    /* NOP */
                 }
             }
 

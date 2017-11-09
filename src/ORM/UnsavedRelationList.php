@@ -282,13 +282,27 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Returns a copy of this list with the relationship linked to the given foreign ID.
      * @param int|array $id An ID or an array of IDs.
-     * @return static
+     * @return Relation
      */
     public function forForeignID($id)
     {
-        $class = singleton($this->baseClass);
-        $class->ID = 1;
-        return $class->{$this->relationName}()->forForeignID($id);
+        $singleton = DataObject::singleton($this->baseClass);
+        /** @var Relation $relation */
+        $relation = $singleton->{$this->relationName}($id);
+        return $relation;
+    }
+
+    /**
+     * @param string $relationName
+     * @return Relation
+     */
+    public function relation($relationName)
+    {
+        $ids = $this->column('ID');
+        $singleton = DataObject::singleton($this->dataClass);
+        /** @var Relation $relation */
+        $relation = $singleton->$relationName($ids);
+        return $relation;
     }
 
     /**
@@ -299,7 +313,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function dbObject($fieldName)
     {
-        return singleton($this->dataClass)->dbObject($fieldName);
+        return DataObject::singleton($this->dataClass)->dbObject($fieldName);
     }
 
     protected function extractValue($item, $key)

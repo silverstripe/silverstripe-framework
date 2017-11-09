@@ -6,6 +6,12 @@ use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Abstract representation of a DB relation field, either saved or in memory
+ *
+ * Below methods will be added in 5.x
+ *
+ * @method Relation relation($relationName)
+ * @method Relation forForeignID($id)
+ * @method string dataClass()
  */
 interface Relation extends SS_List, Filterable, Sortable, Limitable
 {

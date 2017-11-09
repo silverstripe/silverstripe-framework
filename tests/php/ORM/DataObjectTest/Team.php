@@ -80,4 +80,9 @@ class Team extends DataObject implements TestOnly
     {
         return 'dynamicfield';
     }
+
+    public function ReturnsNull()
+    {
+        return null;
+    }
 }
