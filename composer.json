@@ -28,8 +28,8 @@
         "monolog/monolog": "~1.11",
         "nikic/php-parser": "^2 || ^3",
         "paragonie/random_compat": "^2.0",
-        "silverstripe/config": "^1@dev",
-        "silverstripe/assets": "^1@dev",
+        "silverstripe/config": "^2@dev",
+        "silverstripe/assets": "^2@dev",
         "swiftmailer/swiftmailer": "~5.4",
         "symfony/cache": "^3.3@dev",
         "symfony/config": "^3.2",
@@ -52,15 +52,18 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
-        "silverstripe/versioned": "^1.0@dev",
+        "silverstripe/versioned": "^2@dev",
         "silverstripe/behat-extension": "^3",
-        "silverstripe/serve": "dev-master",
+        "silverstripe/serve": "^2",
         "se/selenium-server-standalone": "2.41.0"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "5.x-dev"
+        },
         "expose": [
             "client/images",
             "client/styles",

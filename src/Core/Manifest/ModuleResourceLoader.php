@@ -106,9 +106,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
             throw new InvalidArgumentException("Can't find module '$module'");
         }
         $resourceObj = $moduleObj->getResource($resource);
-        if (!$resourceObj->exists()) {
-            throw new InvalidArgumentException("Module '$module' does not have specified resource '$resource'");
-        }
+
         return $resourceObj;
     }
 }

@@ -561,7 +561,7 @@ class DirectorTest extends SapphireTest
 
     public function testPromisedForceSSL()
     {
-        Director::forceSSL();
+            Director::forceSSL();
 
         // Flag is set but not redirected yet
         $middleware = CanonicalURLMiddleware::singleton();
