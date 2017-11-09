@@ -41,6 +41,7 @@ class DBTextTest extends SapphireTest
             ['The little brown fox jumped over the lazy cow.', 'The little brown fox...'],
             ['<p>Short & Sweet</p>', '&lt;p&gt;Short &amp; Sweet&lt;/p&gt;'],
             ['This text contains &amp; in it', 'This text contains &amp;...'],
+            ['Is an umault in schön?', 'Is an umault in schö...'],
         ];
     }
 
@@ -80,7 +81,10 @@ class DBTextTest extends SapphireTest
             ['<p>Lorem ipsum dolor sit amet</p>', 24, '&lt;p&gt;Lorem ipsum dolor...'],
             ['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, '&lt;p&gt;&lt;span&gt;Lorem ipsum...'],
             ['<p>Lorem ipsum</p>', 24, '&lt;p&gt;Lorem ipsum&lt;/p&gt;'],
-            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp;amp; ipsum dolor...']
+            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp;amp; ipsum dolor...'],
+
+            ['Is an umault in schön or not?', 22, 'Is an umault in schön...'],
+
         ];
     }
 
@@ -124,6 +128,9 @@ class DBTextTest extends SapphireTest
             // If storing HTML you should use DBHTMLText instead
             ['<p>Text inside a paragraph tag should also work</p>', 3, '&lt;p&gt;Text inside a...'],
             ['<p>Two words</p>', 3, '&lt;p&gt;Two words&lt;/p&gt;'],
+
+            // Check UTF8
+            ['Is an umault in schön or not?', 5, 'Is an umault in schön...'],
         ];
     }
 
@@ -156,6 +163,9 @@ class DBTextTest extends SapphireTest
             // If storing HTML you should use DBHTMLText instead
             ['<p>First sentence.</p>', 2, '&lt;p&gt;First sentence.&lt;/p&gt;'],
             ['<p>First sentence. Second sentence. Third sentence</p>', 2, '&lt;p&gt;First sentence. Second sentence.'],
+
+            // Check UTF8
+            ['Is schön. Isn\'t schön.', 1, 'Is schön.'],
         ];
     }
 
@@ -187,6 +197,9 @@ class DBTextTest extends SapphireTest
             // If storing HTML you should use DBHTMLText instead
             ['<br />First sentence.', '&lt;br /&gt;First sentence.'],
             ['<p>First sentence. Second sentence. Third sentence</p>', '&lt;p&gt;First sentence.'],
+
+            // Check UTF8
+            ['Is schön. Isn\'t schön.', 'Is schön.'],
         ];
     }
 
@@ -243,7 +256,16 @@ class DBTextTest extends SapphireTest
                 'ate',
                 // it should highlight 3 letters or more.
                 'A dog <mark>ate</mark> a cat while looking at a Foobar',
+            ],
+            [
+                'both schön and können have umlauts',
+                21,
+                'schön',
+                // check UTF8 support
+                'both <mark>schön</mark> and können...',
             ]
+
+
         ];
     }
 
