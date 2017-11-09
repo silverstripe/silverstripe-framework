@@ -96,7 +96,7 @@ Injector::set_inst($injector);
 // Regenerate the manifest if ?flush is set, or if the database is being built.
 // The coupling is a hack, but it removes an annoying bug where new classes
 // referenced in _config.php files can be referenced during the build process.
-$requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
+$requestURL = isset($_REQUEST['url']) ? trim(is_array($_REQUEST['url']) ? implode($_REQUEST['url']) : $_REQUEST['url'], '/') : false;
 $flush = (isset($_GET['flush']) || $requestURL === trim(BASE_URL . '/dev/build', '/'));
 
 global $manifest;

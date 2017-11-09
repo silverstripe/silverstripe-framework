@@ -87,7 +87,7 @@ if (isset($_GET['url']) && php_sapi_name() !== 'cli-server') {
 		$parseQuery($queryString);
 	}
 
-	$url = $_GET['url'];
+	$url = is_array($_GET['url']) ? implode($_GET['url']) : $_GET['url'];
 
 	// IIS includes get variables in url
 	$i = strpos($url, '?');
