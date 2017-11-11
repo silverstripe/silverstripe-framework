@@ -168,7 +168,9 @@ class MemberLoginForm extends BaseLoginForm
         if (isset($backURL)) {
             $fields->push(HiddenField::create('BackURL', 'BackURL', $backURL));
         }
-
+        
+        $this->extend('updateFormFields', $fields);
+        
         return $fields;
     }
 
@@ -188,6 +190,8 @@ class MemberLoginForm extends BaseLoginForm
             )
         );
 
+        $this->extend('updateFormActions', $actions);
+        
         return $actions;
     }
 
