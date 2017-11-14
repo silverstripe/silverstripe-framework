@@ -17,6 +17,15 @@ class PasswordField extends TextField
      */
     private static $autocomplete;
 
+    /**
+     * Determines if the value should be set in the frontend when rendering.
+     * Set to a default safe value. You should set this to true if you need these values
+     * to be sent back by the server.
+     *
+     * @var bool
+     */
+    protected $displaysSetValue = false;
+
     protected $inputType = 'password';
 
     /**
@@ -44,7 +53,7 @@ class PasswordField extends TextField
      */
     public function getAttributes()
     {
-        $attributes = array();
+        $attributes = parent::getAttributes();
 
         $autocomplete = $this->config()->get('autocomplete');
 
@@ -54,10 +63,12 @@ class PasswordField extends TextField
             $attributes['autocomplete'] = 'off';
         }
 
-        return array_merge(
-            parent::getAttributes(),
-            $attributes
-        );
+        // Hide value when rendering
+        if (!$this->getDisplaysSetValue()) {
+            $attributes['value'] = null;
+        }
+
+        return $attributes;
     }
 
     /**
@@ -80,5 +91,27 @@ class PasswordField extends TextField
     public function Type()
     {
         return 'text password';
+    }
+
+    /**
+     * Set if the assigned value should be emitted to the frontend
+     *
+     * @return bool
+     */
+    public function getDisplaysSetValue()
+    {
+        return $this->displaysSetValue;
+    }
+
+    /**
+     * Set if the assigned value should be emitted to the frontend
+     *
+     * @param bool $displaysSetValue
+     * @return $this
+     */
+    public function setDisplaysSetValue($displaysSetValue)
+    {
+        $this->displaysSetValue = $displaysSetValue;
+        return $this;
     }
 }

@@ -10,6 +10,9 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 
+/**
+ * @skipUpgrade
+ */
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
 
@@ -38,7 +41,6 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $member->Password = "valueB";
         $member->write();
 
-        /** @skipUpgrade */
         $form = new Form(Controller::curr(), 'Form', new FieldList($field), new FieldList());
         $form->loadDataFrom($member);
 
@@ -84,12 +86,11 @@ class ConfirmedPasswordFieldTest extends SapphireTest
             'Test',
             'Testing',
             array(
-            "_Password" => "abc123",
-            "_ConfirmPassword" => "abc123"
+                "_Password" => "abc123",
+                "_ConfirmPassword" => "abc123"
             )
         );
         $validator = new RequiredFields();
-        /** @skipUpgrade */
         new Form(Controller::curr(), 'Form', new FieldList($field), new FieldList(), $validator);
         $this->assertTrue(
             $field->validate($validator),
@@ -103,8 +104,8 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         //non-matching password should make the field invalid
         $field->setValue(
             array(
-            "_Password" => "abc123",
-            "_ConfirmPassword" => "123abc"
+                "_Password" => "abc123",
+                "_ConfirmPassword" => "123abc"
             )
         );
         $this->assertFalse(
@@ -115,7 +116,6 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
     public function testFormValidation()
     {
-        /** @skipUpgrade */
         $form = new Form(
             Controller::curr(),
             'Form',
@@ -125,15 +125,75 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $form->loadDataFrom(
             array(
-            'Password' => array(
-                '_Password' => '123',
-                '_ConfirmPassword' => '999',
-            )
+                'Password' => array(
+                    '_Password' => '123',
+                    '_ConfirmPassword' => '999',
+                )
             )
         );
 
         $this->assertEquals('123', $field->children->first()->Value());
         $this->assertEquals('999', $field->children->last()->Value());
         $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+    }
+
+    public function testValueProtected()
+    {
+        // Default: Value should not be emitted
+        $form = new Form(
+            null,
+            'Form',
+            new FieldList($field = new ConfirmedPasswordField('Password')),
+            new FieldList()
+        );
+        $form->loadDataFrom(
+            array(
+                'Password' => array(
+                    '_Password' => '999',
+                    '_ConfirmPassword' => '999',
+                )
+            )
+        );
+        $rendered = $form->forTemplate();
+        $this->assertNotContains('value="999"', $rendered);
+
+        // Setting DisplaysSetValue allows values to be displayed
+        $form = new Form(
+            null,
+            'Form',
+            new FieldList($field = new ConfirmedPasswordField('Password')),
+            new FieldList()
+        );
+        $field->setDisplaysSetValue(true);
+        $form->loadDataFrom(
+            array(
+                'Password' => array(
+                    '_Password' => '999',
+                    '_ConfirmPassword' => '999',
+                )
+            )
+        );
+        $rendered = $form->forTemplate();
+        $this->assertContains('value="999"', $rendered);
+
+        // DisplaysSetValue gets set to false on validation failure
+        $form = new Form(
+            null,
+            'Form',
+            new FieldList($field = new ConfirmedPasswordField('Password')),
+            new FieldList()
+        );
+        $field->setDisplaysSetValue(true);
+        $form->loadDataFrom(
+            array(
+                'Password' => array(
+                    '_Password' => '123',
+                    '_ConfirmPassword' => '999',
+                )
+            )
+        );
+        $rendered = $form->forTemplate();
+        $this->assertNotContains('value="123"', $rendered);
+        $this->assertNotContains('value="999"', $rendered);
     }
 }

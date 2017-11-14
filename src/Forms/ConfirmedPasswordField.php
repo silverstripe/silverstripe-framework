@@ -150,6 +150,9 @@ class ConfirmedPasswordField extends FormField
             )
         );
 
+        // Ensure passwords are never sent to the frontend
+        $this->setDisplaysSetValue(false);
+
         // has to be called in constructor because Field() isn't triggered upon saving the instance
         if ($showOnClick) {
             $this->children->push($this->hiddenField = new HiddenField("{$name}[_PasswordFieldVisible]"));
@@ -360,6 +363,12 @@ class ConfirmedPasswordField extends FormField
 
             $this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
                 ->setValue($this->confirmValue);
+        }
+
+        // If values are set but differ (validation error) then forbid these being emitted to
+        // the frontend, even if set to true
+        if (($this->value || $this->confirmValue) && $this->value !== $this->confirmValue) {
+            $this->setDisplaysSetValue(false);
         }
 
         return $this;
@@ -605,6 +614,29 @@ class ConfirmedPasswordField extends FormField
         } else {
             $this->children->removeByName($currentName, true);
         }
+        return $this;
+    }
+
+    /**
+     * Set if the assigned value should be emitted to the frontend
+     *
+     * @return bool
+     */
+    public function getDisplaysSetValue()
+    {
+        return $this->passwordField->getDisplaysSetValue();
+    }
+
+    /**
+     * Set if the assigned value should be emitted to the frontend
+     *
+     * @param bool $displaysSetValue
+     * @return $this
+     */
+    public function setDisplaysSetValue($displaysSetValue)
+    {
+        $this->passwordField->setDisplaysSetValue($displaysSetValue);
+        $this->confirmPasswordfield->setDisplaysSetValue($displaysSetValue);
         return $this;
     }
 }
