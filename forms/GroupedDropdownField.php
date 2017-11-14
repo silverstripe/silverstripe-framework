@@ -1,13 +1,13 @@
 <?php
 /**
- * Grouped dropdown, using <optgroup> tags.
+ * Grouped dropdown, using optgroup tags.
  *
  * $source parameter (from DropdownField) must be a two dimensional array.
- * The first level of the array is used for the <optgroup>, and the second
- * level are the <options> for each group.
+ * The first level of the array is used for the optgroup, and the second
+ * level are the options for each group.
  *
- * Returns a <select> tag containing all the appropriate <option> tags, with
- * <optgroup> tags around the <option> tags as required.
+ * Returns a select tag containing all the appropriate option tags, with
+ * optgroup tags around the option tags as required.
  *
  * <b>Usage</b>
  *
