@@ -44,7 +44,7 @@ class RequiredFields extends Validator
     /**
      * Clears all the validation from this object.
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function removeValidation()
     {
@@ -56,6 +56,7 @@ class RequiredFields extends Validator
 
     /**
      * Debug helper
+     * @return string
      */
     public function debug()
     {
@@ -152,7 +153,7 @@ class RequiredFields extends Validator
      *
      * @param string $field
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function addRequiredField($field)
     {
@@ -166,7 +167,7 @@ class RequiredFields extends Validator
      *
      * @param string $field
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function removeRequiredField($field)
     {
@@ -179,7 +180,7 @@ class RequiredFields extends Validator
      * Add {@link RequiredField} objects together
      *
      * @param RequiredFields $requiredFields
-     * @return RequiredFields
+     * @return $this
      */
     public function appendRequiredFields($requiredFields)
     {

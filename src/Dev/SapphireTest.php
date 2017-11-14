@@ -343,11 +343,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *  - Custom state helpers
      *
      * User code should call parent::setUpBeforeClass() before custom setup code
+     *
+     * @throws Exception
      */
     public static function setUpBeforeClass()
     {
         // Start tests
         static::start();
+
+        if (!static::$state) {
+            throw new Exception('SapphireTest failed to bootstrap!');
+        }
 
         // Call state helpers
         static::$state->setUpOnce(static::class);
