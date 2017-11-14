@@ -1,6 +1,6 @@
 <?php
 /**
- * Dropdown field, created from a <select> tag.
+ * Dropdown field, created from a select tag.
  *
  * <b>Setting a $has_one relation</b>
  *
