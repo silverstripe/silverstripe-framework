@@ -1,6 +1,6 @@
 <?php
 /**
- * Multi-line listbox field, created from a <select> tag.
+ * Multi-line listbox field, created from a select tag.
  *
  * <b>Usage</b>
  *
