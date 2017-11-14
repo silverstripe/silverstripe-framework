@@ -606,7 +606,7 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Set an HTML attribute on the field element, mostly an <input> tag.
+     * Set an HTML attribute on the field element, mostly an input tag.
      *
      * Some attributes are best set through more specialized methods, to avoid interfering with
      * built-in behaviour:
