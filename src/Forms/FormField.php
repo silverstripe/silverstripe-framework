@@ -1264,7 +1264,7 @@ class FormField extends RequestHandler
      *
      * The field type is the class name with the word Field dropped off the end, all lowercase.
      *
-     * It's handy for assigning HTML classes. Doesn't signify the <input type> attribute.
+     * It's handy for assigning HTML classes. Doesn't signify the input type attribute.
      *
      * @see {link getAttributes()}.
      *
@@ -1293,7 +1293,7 @@ class FormField extends RequestHandler
     /**
      * Describe this field, provide help text for it.
      *
-     * By default, renders as a <span class="description"> underneath the form field.
+     * By default, renders as a span class="description" underneath the form field.
      *
      * @param string $description
      *

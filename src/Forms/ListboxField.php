@@ -23,7 +23,7 @@ use SilverStripe\View\ArrayData;
  * )
  * </code>
  *
- * @see DropdownField for a simple <select> field with a single element.
+ * @see DropdownField for a simple select field with a single element.
  * @see CheckboxSetField for multiple selections through checkboxes.
  * @see OptionsetField for single selections via radiobuttons.
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
@@ -62,7 +62,7 @@ class ListboxField extends MultiSelectField
     }
 
     /**
-     * Returns a <select> tag containing all the appropriate <option> tags
+     * Returns a select tag containing all the appropriate option tags
      *
      * @param array $properties
      * @return string
