@@ -6,7 +6,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
- * Multi-line listbox field, created from a <select> tag.
+ * Multi-line listbox field, created from a select tag.
  *
  * <b>Usage</b>
  *
