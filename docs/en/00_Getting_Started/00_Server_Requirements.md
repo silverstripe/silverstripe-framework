@@ -10,6 +10,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
  * PHP 5.3.3+, <7.2
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
+     * Note: Some PHP 5.5+ packages already have [Zend OpCache](http://php.net/manual/en/book.opcache.php) installed by default. If this is the case on your system, do not try and run additional opcaches alongside Zend OpCache without first disabling it, as it will likely have unexpected consequences.
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
  * Recommended configuration
