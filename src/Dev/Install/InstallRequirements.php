@@ -5,7 +5,10 @@ namespace SilverStripe\Dev\Install;
 use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use SilverStripe\Core\TempFolder;
+use SplFileInfo;
 
 /**
  * This class checks requirements
@@ -292,7 +295,23 @@ class InstallRequirements
                 null
             ));
         }
+
+
+        // Ensure root assets dir is writable
         $this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
+
+        // Ensure all assets files are writable
+        $assetsDir = $this->getBaseDir() . 'assets';
+        $innerIterator = new RecursiveDirectoryIterator($assetsDir, RecursiveDirectoryIterator::SKIP_DOTS);
+        $iterator = new RecursiveIteratorIterator($innerIterator, RecursiveIteratorIterator::SELF_FIRST);
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $relativePath = substr($file->getPathname(), strlen($this->getBaseDir()));
+            $message = $file->isDir()
+                ? "Is the {$relativePath} directory writeable?"
+                : "Is the {$relativePath} file writeable?";
+            $this->requireWriteable($relativePath, array("File permissions", $message, null));
+        }
 
         try {
             $tempFolder = TempFolder::getTempFolder($this->getBaseDir());
