@@ -167,7 +167,7 @@ class HTTP
      * @param string $separator Separator for http_build_query().
      * @return string
      */
-    public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;')
+    public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&')
     {
         if (!isset($currentURL)) {
             $request = Controller::curr()->getRequest();
