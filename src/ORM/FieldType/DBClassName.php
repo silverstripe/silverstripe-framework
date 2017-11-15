@@ -110,6 +110,21 @@ class DBClassName extends DBEnum
     }
 
     /**
+     * Get the base name of the current class
+     * Useful as a non-fully qualified CSS Class name in templates.
+     *
+     * @return string|null
+     */
+    public function getShortName()
+    {
+        $value = $this->getValue();
+        if (empty($value) || !ClassInfo::exists($value)) {
+            return null;
+        }
+        return ClassInfo::shortName($value);
+    }
+
+    /**
      * Assign the base class
      *
      * @param string $baseClass
