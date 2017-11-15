@@ -31,16 +31,18 @@ class DetailedErrorFormatter implements FormatterInterface
                 }
             }
 
-            $trace = debug_backtrace();
+            if (!isset($context['trace'])) {
+                $trace = debug_backtrace();
 
-            // Filter out monolog plumbing from the trace
-            // If the context file & line isn't found in the trace, then the trace is most likely
-            // call to the fatal error handler and is not useful, so exclude it entirely
-            $i = $this->findInTrace($trace, $context['file'], $context['line']);
-            if ($i !== null) {
-                $context['trace'] = array_slice($trace, $i);
-            } else {
-                $context['trace'] = null;
+                // Filter out monolog plumbing from the trace
+                // If the context file & line isn't found in the trace, then the trace is most likely
+                // call to the fatal error handler and is not useful, so exclude it entirely
+                $i = $this->findInTrace($trace, $context['file'], $context['line']);
+                if ($i !== null) {
+                    $context['trace'] = array_slice($trace, $i);
+                } else {
+                    $context['trace'] = null;
+                }
             }
         }
 
