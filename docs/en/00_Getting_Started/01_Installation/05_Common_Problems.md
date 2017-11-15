@@ -87,10 +87,21 @@ needs to create/have write-access to:
  * Image thumbnails will not show in the CMS if permission is not given
  
 If you are running on a server instance where users other than the webserver user will need
-read / write access to files in the assets folder, then you will need to adjust the
-permissions of the filesystem to a more permissive setting.
+read / write access to files in the assets folder, then you should do one of the below:
 
-By default private files and `.htaccess` are written with permission `0644`.
+ - Ensure that all server users that modify this file belong to the same group
+ - Modify the permissions that SilverStripe uses to write to a more permissive setting (see below)
+
+It may be necessary to manually set the original permissions, and owner user/group of your assets folder on
+initial deployment.
+
+For more information on understanding and determining file permissions, please see
+[wikipedia](https://en.wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions)
+on unix permissions.
+
+### Modifying write permissions of files
+
+By default all files and `.htaccess` are written with permission `0664`.
 You could enable other users to access these files with the below config.
 Note: Please adjust the values below to those appropriate for your server configuration.
 You may require `0666` for combined files generated during requests where they are cleared or refreshed only during a flush.
@@ -104,16 +115,13 @@ Name: myassetperms
 SilverStripe\Assets\Flysystem\AssetAdapter:
   file_permissions:
     file:
-      public: 0644
-      private: 0644
+      public: 0666 # Replace with your desired permission for files
     dir:
-      public: 0755
-      private: 0755
+      public: 0777 # Replace with your desired permission for folders
 ```
 
-For more information on understanding and determining file permissions, please see
-[wikipedia](https://en.wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions)
-on unix permissions.
+Note: `public` key applies to all files whether they are protected or public; This is a flag internal to 
+Flysystem, and file protection is applied by SilverStripe on top of these permissions.
 
 ## I have whitespace before my HTML output, triggering quirks mode or preventing cookies from being set
 

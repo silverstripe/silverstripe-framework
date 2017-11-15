@@ -106,6 +106,11 @@ class GridField extends FormField
     protected $name = '';
 
     /**
+     * Pattern used for looking up
+     */
+    const FRAGMENT_REGEX = '/\$DefineFragment\(([a-z0-9\-_]+)\)/i';
+
+    /**
      * @param string $name
      * @param string $title
      * @param SS_List $dataList
@@ -362,11 +367,19 @@ class GridField extends FormField
             'before' => true,
             'after' => true,
         );
+        $fragmentDeferred = [];
 
-        reset($content);
+        // TODO: Break the below into separate reducer methods
 
-        while (list($contentKey, $contentValue) = each($content)) {
-            if (preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $contentValue, $matches)) {
+        // Continue looping if any placeholders exist
+        while (array_filter($content, function ($value) {
+            return preg_match(self::FRAGMENT_REGEX, $value);
+        })) {
+            foreach ($content as $contentKey => $contentValue) {
+                // Skip if this specific content has no placeholders
+                if (!preg_match_all(self::FRAGMENT_REGEX, $contentValue, $matches)) {
+                    continue;
+                }
                 foreach ($matches[1] as $match) {
                     $fragmentName = strtolower($match);
                     $fragmentDefined[$fragmentName] = true;
@@ -380,7 +393,7 @@ class GridField extends FormField
                     // If the fragment still has a fragment definition in it, when we should defer
                     // this item until later.
 
-                    if (preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
+                    if (preg_match(self::FRAGMENT_REGEX, $fragment, $matches)) {
                         if (isset($fragmentDeferred[$contentKey]) && $fragmentDeferred[$contentKey] > 5) {
                             throw new LogicException(sprintf(
                                 'GridField HTML fragment "%s" and "%s" appear to have a circular dependency.',
