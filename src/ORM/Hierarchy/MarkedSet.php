@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Hierarchy;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
@@ -459,7 +460,7 @@ class MarkedSet
 
         // Build markedNodes for this subtree until we reach the threshold
         // foreach can't handle an ever-growing $nodes list
-        while (list(, $node) = each($this->markedNodes)) {
+        foreach (ArrayLib::iterateVolatile($this->markedNodes) as $node) {
             $children = $this->markChildren($node);
             if ($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
                 // Undo marking children as opened since they're lazy loaded
