@@ -67,6 +67,9 @@ class DBDate extends DBField
         } else {
             // Convert US date -> iso, fix y2k, etc
             $value = $this->fixInputDate($value);
+            if (is_null($value)) {
+                return null;
+            }
             $source = strtotime($value); // convert string to timestamp
         }
         if ($value === false) {
@@ -529,6 +532,9 @@ class DBDate extends DBField
         // split
         list($year, $month, $day, $time) = $this->explodeDateString($value);
 
+        if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
+            return null;
+        }
         // Validate date
         if (!checkdate($month, $day, $year)) {
             throw new InvalidArgumentException(
@@ -568,7 +574,7 @@ class DBDate extends DBField
         if ($parts[0] < 1000 && $parts[2] > 1000) {
             $parts = array_reverse($parts);
         }
-        if ($parts[0] < 1000) {
+        if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
             throw new InvalidArgumentException(
                 "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
