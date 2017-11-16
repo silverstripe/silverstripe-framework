@@ -87,13 +87,14 @@ class HtmlEditorField extends TextareaField {
 			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
 
 			// Resample the images if the width & height have changed.
-			if($image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))))){
+			$image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))));
+			if($image instanceof Image){
 				$width  = (int)$img->getAttribute('width');
 				$height = (int)$img->getAttribute('height');
 
 				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
 					//Make sure that the resized image actually returns an image:
-					$resized=$image->ResizedImage($width, $height);
+					$resized = $image->ResizedImage($width, $height);
 					if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				}
 			}
