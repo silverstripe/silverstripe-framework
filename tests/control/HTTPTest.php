@@ -179,6 +179,7 @@ class HTTPTest extends FunctionalTest {
 		$this->assertEquals('image/gif', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.gif'));
 		$this->assertEquals('text/html', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.html'));
 		$this->assertEquals('image/jpeg', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.jpg'));
+		$this->assertEquals('image/jpeg', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/upperfile.JPG'));
 		$this->assertEquals('image/png', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.png'));
 		$this->assertEquals('image/vnd.adobe.photoshop',
 			HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
