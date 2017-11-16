@@ -774,6 +774,15 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(1, $list->count());
 	}
 
+	public function testFilterAnyWithRelation() {
+		$list = DataObjectTest_Player::get();
+		$list = $list->filterAny(array(
+			'Teams.Title:StartsWith' => 'Team',
+			'ID:GreaterThan' => 0,
+		));
+		$this->assertCount(4, $list);
+	}
+
 	public function testFilterAnyMultipleArray() {
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->filterAny(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));

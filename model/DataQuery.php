@@ -726,7 +726,7 @@ class DataQuery {
 				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
 				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				$this->query->addInnerJoin($relationTable,
+				$this->query->addLeftJoin($relationTable,
 					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
 				if (!$this->query->isJoinedTo($componentBaseClass)) {
 				$this->query->addLeftJoin($componentBaseClass,
