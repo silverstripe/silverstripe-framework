@@ -21,7 +21,7 @@
 		"mustangostang/spyc": "^0.6.2"
 	},
 	"require-dev": {
-		"phpunit/PHPUnit": "~3.7"
+		"phpunit/phpunit": "^3 || ^4 || ^5"
 	},
 	"extra": {
 		"branch-alias": {
