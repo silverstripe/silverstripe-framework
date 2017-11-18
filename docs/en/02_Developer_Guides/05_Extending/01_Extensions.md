@@ -90,7 +90,7 @@ class MyMemberExtension extends DataExtension
     ];
 
     private static $has_one = [
-        'Image' => 'Image',
+        'Image' => Image::class,
     ];
 
     public function SayHi() 
