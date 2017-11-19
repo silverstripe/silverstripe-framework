@@ -104,17 +104,17 @@ class PDODatabaseTest extends SapphireTest
             $this->markTestSkipped('This test requires the current DB connector is PDO');
         }
 
-        $query = new SQLUpdate('MySQLDatabaseTest_Data');
-        $query->setAssignments(array('Title' => 'New Title'));
+        $query = new SQLUpdate('"MySQLDatabaseTest_Data"');
+        $query->setAssignments(array('"Title"' => 'New Title'));
 
         // Test update which affects no rows
-        $query->setWhere(array('Title' => 'Bob'));
+        $query->setWhere(array('"Title"' => 'Bob'));
         $result = $query->execute();
         $this->assertInstanceOf(PDOQuery::class, $result);
         $this->assertEquals(0, DB::affected_rows());
 
         // Test update which affects some rows
-        $query->setWhere(array('Title' => 'First Item'));
+        $query->setWhere(array('"Title"' => 'First Item'));
         $result = $query->execute();
         $this->assertInstanceOf(PDOQuery::class, $result);
         $this->assertEquals(1, DB::affected_rows());
