@@ -1100,7 +1100,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$fromRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $from);
 		$toRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $to);
 
-		$diff = new DataDifferencer($fromRecord, $toRecord);
+		$diff = DataDifferencer::create($fromRecord, $toRecord);
 
 		return $diff->diffedData();
 	}
