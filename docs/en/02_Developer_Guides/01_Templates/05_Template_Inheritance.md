@@ -149,7 +149,7 @@ to provide `before:` / `after:` declarations.
 Name: modules-mymodule
 After:
   - '#modules-framework'
-  - `#modules-other`
+  - '#modules-other'
 ---
 SilverStripe\Core\Manifest\ModuleManifest:
   module_priority:
