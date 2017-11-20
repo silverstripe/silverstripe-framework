@@ -89,7 +89,7 @@ class Page extends SiteTree
         // Consult the API documentation for each component to determine the configuration
         // you can do.
         //
-        $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+        $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
         
         $dataColumns->setDisplayFields([
             'Title' => 'Title',
