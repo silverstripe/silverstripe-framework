@@ -429,7 +429,7 @@ Your new area can also be used by existing components, e.g. the [GridFieldPrintB
 
 
 ```php
-new GridFieldPrintButton('my-component-area');
+new GridFieldPrintButton('my-area');
 ```
 
 ## Creating a Custom GridFieldComponent
