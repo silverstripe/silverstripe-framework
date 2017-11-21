@@ -105,10 +105,14 @@ class MySQLDatabase extends SS_Database {
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC",
 		$extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false
 	) {
-		if (!class_exists('SiteTree'))
-				throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
-		if (!class_exists('File'))
-				throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
+		if (!class_exists('SiteTree')) {
+			throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
+		}
+		if (!class_exists('File')) {
+			throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
+		}
+		$start = (int)$start;
+		$pageLength = (int)$pageLength;
 
 		$keywords = $this->escapeString($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
@@ -134,7 +138,7 @@ class MySQLDatabase extends SS_Database {
 		if (array_key_exists('ShowInSearch', $fields))
 				$extraFilters['File'] .= " AND ShowInSearch <> 0";
 
-		$limit = $start . ", " . (int) $pageLength;
+		$limit = $start . ", " . $pageLength;
 
 		$notMatch = $invertedMatch
 				? "NOT "
