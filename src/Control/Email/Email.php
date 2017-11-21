@@ -621,6 +621,12 @@ class Email extends ViewableData
      */
     public function setBody($body)
     {
+        $plainPart = $this->findPlainPart();
+        if ($plainPart) {
+            $this->getSwiftMessage()->detach($plainPart);
+        }
+        unset($plainPart);
+
         $body = HTTP::absoluteURLs($body);
         $this->getSwiftMessage()->setBody($body);
 
@@ -856,6 +862,12 @@ class Email extends ViewableData
      */
     public function generatePlainPartFromBody()
     {
+        $plainPart = $this->findPlainPart();
+        if ($plainPart) {
+            $this->getSwiftMessage()->detach($plainPart);
+        }
+        unset($plainPart);
+
         $this->getSwiftMessage()->addPart(
             Convert::xml2raw($this->getBody()),
             'text/plain',

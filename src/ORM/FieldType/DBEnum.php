@@ -32,45 +32,46 @@ class DBEnum extends DBString
     private static $default_search_filter_class = 'ExactMatchFilter';
 
     /**
-     * Create a new Enum field.
+     * Create a new Enum field, which is a value within a defined set, with an optional default.
      *
-     * Example usage in {@link DataObject::$db} with comma-separated string
-     * notation ('Val1' is default)
-     *
-     * <code>
-     *  "MyField" => "Enum('Val1, Val2, Val3', 'Val1')"
-     * </code>
-     *
-     * Example usage in in {@link DataObject::$db} with array notation
-     * ('Val1' is default)
+     * Example field specification strings:
      *
      * <code>
-     * "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')"
+     *  "MyField" => "Enum('Val1, Val2, Val3')" // First item 'Val1' is default implicitly
+     *  "MyField" => "Enum('Val1, Val2, Val3', 'Val2')" // 'Val2' is default explicitly
+     *  "MyField" => "Enum('Val1, Val2, Val3', null)" // Force empty (no) default
+     *  "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')" // Supports array notation as well
      * </code>
      *
      * @param string $name
      * @param string|array $enum A string containing a comma separated list of options or an array of Vals.
-     * @param string $default The default option, which is either NULL or one of the items in the enumeration.
+     * @param string|int|null $default The default option, which is either NULL or one of the items in the enumeration.
+     * If passing in an integer (non-string) it will default to the index of that item in the list.
+     * Set to null or empty string to allow empty values
      * @param array  $options Optional parameters for this DB field
      */
-    public function __construct($name = null, $enum = null, $default = null, $options = [])
+    public function __construct($name = null, $enum = null, $default = 0, $options = [])
     {
         if ($enum) {
             $this->setEnum($enum);
+            $enum = $this->getEnum();
 
-            // If there's a default, then
-            if ($default) {
-                if (in_array($default, $this->getEnum())) {
+            // If there's a default, then use this
+            if ($default && !is_int($default)) {
+                if (in_array($default, $enum)) {
                     $this->setDefault($default);
                 } else {
-                    user_error("Enum::__construct() The default value '$default' does not match any item in the"
-                        . " enumeration", E_USER_ERROR);
+                    user_error(
+                        "Enum::__construct() The default value '$default' does not match any item in the enumeration",
+                        E_USER_ERROR
+                    );
                 }
-
-            // By default, set the default value to the first item
+            } elseif (is_int($default) && $default < count($enum)) {
+                // Set to specified index if given
+                $this->setDefault($enum[$default]);
             } else {
-                $enum = $this->getEnum();
-                $this->setDefault(reset($enum));
+                // Set to null if specified
+                $this->setDefault(null);
             }
         }
 
@@ -187,7 +188,7 @@ class DBEnum extends DBString
                 ltrim(preg_replace('/,\s*\n\s*$/', '', $enum))
             );
         }
-        $this->enum = $enum;
+        $this->enum = array_values($enum);
         return $this;
     }
 
@@ -210,6 +211,7 @@ class DBEnum extends DBString
     public function setDefault($default)
     {
         $this->default = $default;
+        $this->setDefaultValue($default);
         return $this;
     }
 }

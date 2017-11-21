@@ -181,16 +181,15 @@ class Diff extends \Diff
         $content = str_replace(array("&nbsp;", "<", ">"), array(" "," <", "> "), $content);
         $candidateChunks = preg_split("/[\t\r\n ]+/", $content);
         $chunks = [];
-        while ($chunk = each($candidateChunks)) {
-            $item = $chunk['value'];
+        for ($i = 0; $i < count($candidateChunks); $i++) {
+            $item = $candidateChunks[$i];
             if (isset($item[0]) && $item[0] == "<") {
                 $newChunk = $item;
                 while ($item[strlen($item)-1] != ">") {
-                    $chunk = each($candidateChunks);
-                    if ($chunk === false) {
+                    if (++$i >= count($candidateChunks)) {
                         break;
                     }
-                    $item = $chunk['value'];
+                    $item = $candidateChunks[$i];
                     $newChunk .= ' ' . $item;
                 }
                 $chunks[] = $newChunk;

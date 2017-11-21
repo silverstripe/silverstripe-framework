@@ -146,20 +146,24 @@ Follow these instructions in sequence as much as possible:
      Identifiers are based on reported year and order reported in JIRA (Example: `SS-2017-001`)
    * Respond to issue reporter with this identifier on the same discussion thread (cc security@silverstripe.org). Clarify issue if required.
    * If encrypted information is provided, add pass phrases into the SilverStripe Ltd. LastPass account. Keep encrypted documents in Google Drive and only share directly with relevant participants
-   * Add a new bug on our [Open Source Security JIRA board](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail). Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
+   * Add a new issue in the "Backlog" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1).
+     Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
    * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794) on silverstripe.org. Describe the issue in a readable way, make the impact clear. Credit the author if applicable. 
    * Clarify who picks up owns the issue resolution
  * When developing a fix:
+   * Move the issue into "In Progress" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
    * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo
    * Ensure that all security commit messages are prefixed with the CVE. E.g. "[ss-2015-001] Fixed invalid XSS"
-   * Get them peer reviewed by posting on security@silverstripe.org with a link to the JIRA issue
+   * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
  * Before release (or release candidate)
    * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
    * Send out a note on the pre-announce list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
    * Link to silverstripe.org security release page in the changelog.
+   * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
  * After release
    * Publish silverstripe.org security release page
    * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
+   * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
 
 ### Pre-announce Mailinglist
 

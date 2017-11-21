@@ -198,7 +198,7 @@ class DBText extends DBString
         $keywords = Convert::raw2xml($keywords);
 
         // Find the search string
-        $position = (int) stripos($text, $keywords);
+        $position = (int) mb_stripos($text, $keywords);
 
         // We want to search string to be in the middle of our block to give it some context
         $position = max(0, $position - ($characters / 2));
@@ -206,19 +206,19 @@ class DBText extends DBString
         if ($position > 0) {
             // We don't want to start mid-word
             $position = max(
-                (int) strrpos(substr($text, 0, $position), ' '),
-                (int) strrpos(substr($text, 0, $position), "\n")
+                (int) mb_strrpos(substr($text, 0, $position), ' '),
+                (int) mb_strrpos(substr($text, 0, $position), "\n")
             );
         }
 
-        $summary = substr($text, $position, $characters);
+        $summary = mb_substr($text, $position, $characters);
         $stringPieces = explode(' ', $keywords);
 
         if ($highlight) {
             // Add a span around all key words from the search term as well
             if ($stringPieces) {
                 foreach ($stringPieces as $stringPiece) {
-                    if (strlen($stringPiece) > 2) {
+                    if (mb_strlen($stringPiece) > 2) {
                         // Maintain case of original string
                         $summary = preg_replace(
                             '/' . preg_quote($stringPiece, '/') . '/i',

@@ -41,7 +41,7 @@ For those that use WAMP as a development environment, [detailed information is a
 Composer can create a new site for you, using the installer as a template (by default composer will download the latest stable version):
 
 ```
-composer create-project silverstripe/installer ./my/website/folder
+composer create-project silverstripe/installer ./my/website/folder ^4
 ```
 
 If you want to get all additional fixtures for testing, such as behat and phpunit configuration,
@@ -282,7 +282,7 @@ the latest unstable silverstripe/installer
 composer create-project silverstripe/installer ./my/website/folder dev-master
 ```
 
-Or for the latest development version in the 3.0.x series
+Or for the latest development version in the 4.0.x series
 
 ```
 composer create-project silverstripe/installer ./my/website/folder 4.0.x-dev

@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\View\ArrayData;
 use ArrayAccess;
@@ -259,7 +260,11 @@ class PaginatedList extends ListDecorator
         for ($i = $start; $i < $end; $i++) {
             $result->push(new ArrayData(array(
                 'PageNum' => $i + 1,
-                'Link' => HTTP::setGetVar($this->getPaginationGetVar(), $i * $this->getPageLength()),
+                'Link' => HTTP::setGetVar(
+                    $this->getPaginationGetVar(),
+                    $i * $this->getPageLength(),
+                    ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+                ),
                 'CurrentBool' => $this->CurrentPage() == ($i + 1)
             )));
         }
@@ -330,7 +335,11 @@ class PaginatedList extends ListDecorator
         }
 
         for ($i = 0; $i < $total; $i++) {
-            $link = HTTP::setGetVar($this->getPaginationGetVar(), $i * $this->getPageLength());
+            $link = HTTP::setGetVar(
+                $this->getPaginationGetVar(),
+                $i * $this->getPageLength(),
+                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+            );
             $num = $i + 1;
 
             $emptyRange = $num != 1 && $num != $total && (
@@ -439,8 +448,7 @@ class PaginatedList extends ListDecorator
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
             0,
-            $this->request ? $this->request->getURL(true) : null,
-            '&'
+            ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
         );
     }
 
@@ -454,8 +462,7 @@ class PaginatedList extends ListDecorator
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
             ($this->TotalPages() - 1) * $this->getPageLength(),
-            $this->request ? $this->request->getURL(true) : null,
-            '&'
+            ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
         );
     }
 
@@ -471,8 +478,7 @@ class PaginatedList extends ListDecorator
             return HTTP::setGetVar(
                 $this->getPaginationGetVar(),
                 $this->getPageStart() + $this->getPageLength(),
-                $this->request ? $this->request->getURL(true) : null,
-                '&'
+                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
             );
         }
     }
@@ -489,8 +495,7 @@ class PaginatedList extends ListDecorator
             return HTTP::setGetVar(
                 $this->getPaginationGetVar(),
                 $this->getPageStart() - $this->getPageLength(),
-                $this->request ? $this->request->getURL(true) : null,
-                '&'
+                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
             );
         }
     }
@@ -506,7 +511,7 @@ class PaginatedList extends ListDecorator
     /**
      * Set the request object for this list
      *
-     * @param HTTPRequest
+     * @param HTTPRequest|ArrayAccess
      */
     public function setRequest($request)
     {

@@ -89,7 +89,7 @@ class Page extends SiteTree
         // Consult the API documentation for each component to determine the configuration
         // you can do.
         //
-        $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+        $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
         
         $dataColumns->setDisplayFields([
             'Title' => 'Title',
@@ -429,7 +429,7 @@ Your new area can also be used by existing components, e.g. the [GridFieldPrintB
 
 
 ```php
-new GridFieldPrintButton('my-component-area');
+new GridFieldPrintButton('my-area');
 ```
 
 ## Creating a Custom GridFieldComponent

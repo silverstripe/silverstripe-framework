@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * @skipUpgrade
@@ -118,5 +119,22 @@ class DBClassNameTest extends SapphireTest
         $field7->setTable('DBClassNameTest_CustomDefault');
         $this->assertEquals(DBClassNameTest\CustomDefault::class, $field7->getBaseClass());
         $this->assertEquals(DBClassNameTest\CustomDefaultSubclass::class, $field7->getDefault());
+    }
+
+    public function testShortName()
+    {
+        $test1 = new DBClassNameTest\TestObject();
+        $test2 = new DBClassNameTest\ObjectSubSubClass();
+        $this->assertEquals('TestObject', $test1->obj('ClassName')->getShortName());
+        $this->assertEquals('ObjectSubSubClass', $test2->obj('ClassName')->getShortName());
+
+        $test3 = DBField::create_field('DBClassName', \stdClass::class);
+        $this->assertEquals('stdClass', $test3->getShortName());
+
+        $test4 = DBField::create_field('DBClassName', null);
+        $this->assertNull($test4->getShortName());
+
+        $test5 = DBField::create_field('DBClassName', 'not a class');
+        $this->assertNull($test5->getShortName());
     }
 }

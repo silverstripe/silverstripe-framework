@@ -165,20 +165,21 @@ around 2000px on the longest edge.
 
 #### Forced resampling
 
-Since the 'master' images in your asset store may have a large file size, by
-default SilverStripe will always apply compression to your images to save
-bandwidth - even if no other manipulation (such as a crop or resize) is taking
-place. If you expect the images in your asset store to already have
-compression applied and want to serve up the original when no resampling is
-necessary, you can add this to your mysite/config/config.yml file:
+Since the 'master' images in your asset store may have a large file size, SilverStripe
+can apply compression to your images to save bandwidth - even if no other manipulation
+(such as a crop or resize) is taking place. In many cases this can result in a smaller
+overall file size, which may be appropriate for streaming to web users.
 
+Please note that turning this feature on can increase the server memory requirements,
+and is off by default to conserve resources.
+
+You can turn this on with the below config:
 
 ```yml
-# Configure resampling for File dataobject
+---
+Name: resamplefiles
+---
 SilverStripe\Assets\File:
-  force_resample: false
-# DBFile can be configured independently
-SilverStripe\Assets\Storage\DBFile:
   force_resample: false
 ```
 

@@ -2,8 +2,9 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Injector\Injector;
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
@@ -139,7 +140,7 @@ abstract class DBField extends ViewableData implements DBIndexable
 
         if ($options) {
             if (!is_array($options)) {
-                throw new \InvalidArgumentException("Invalid options $options");
+                throw new InvalidArgumentException("Invalid options $options");
             }
             $this->setOptions($options);
         }
@@ -152,16 +153,26 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * Useful for accessing the classes behaviour for other parts of your code.
      *
-     * @param string $className class of field to construct
+     * @param string $spec Class specification to construct. May include both service name and additional
+     * constructor arguments in the same format as DataObject.db config.
      * @param mixed $value value of field
      * @param string $name Name of field
-     * @param mixed $object Additional parameter to pass to field constructor
+     * @param mixed $args Additional arguments to pass to constructor if not using args in service $spec
+     * Note: Will raise a warning if using both
      * @return static
      */
-    public static function create_field($className, $value, $name = null, $object = null)
+    public static function create_field($spec, $value, $name = null, ...$args)
     {
+        // Raise warning if inconsistent with DataObject::dbObject() behaviour
+        // This will cause spec args to be shifted down by the number of provided $args
+        if ($args && strpos($spec, '(') !== false) {
+            trigger_error('Additional args provided in both $spec and $args', E_USER_WARNING);
+        }
+        // Ensure name is always first argument
+        array_unshift($args, $name);
+
         /** @var DBField $dbField */
-        $dbField = Injector::inst()->create($className, $name, $object);
+        $dbField = Injector::inst()->createWithArgs($spec, $args);
         $dbField->setValue($value, null, false);
         return $dbField;
     }
@@ -633,11 +644,13 @@ DBG;
 
     public function getIndexSpecs()
     {
-        if ($type = $this->getIndexType()) {
+        $type = $this->getIndexType();
+        if ($type) {
             return [
                 'type' => $type,
                 'columns' => [$this->getName()],
             ];
         }
+        return null;
     }
 }
