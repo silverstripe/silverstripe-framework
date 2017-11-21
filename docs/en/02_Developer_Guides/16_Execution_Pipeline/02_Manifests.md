@@ -30,7 +30,7 @@ they require a powerful traversal tool: [api:SS_FileFinder].
 The class provides filtering abilities for files and folders, as well as
 callbacks for recursive traversal. Each manifest has its own implementation,
 for example [api:ManifestFileFinder], adding more domain specific filtering
-like including themes, or excluding testss.
+like including themes, or excluding tests.
 
 ## PHP Class Manifest
 
