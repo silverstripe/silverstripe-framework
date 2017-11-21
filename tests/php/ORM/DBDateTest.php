@@ -218,6 +218,12 @@ class DBDateTest extends SapphireTest
 
         $date = DBField::create_field('Date', 0);
         $this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+
+        $date = DBField::create_field('Date', '0000-00-00 00:00:00');
+        $this->assertNull($date->getValue(), '0000-00-00 00:00:00 is set as NULL');
+
+        $date = DBField::create_field('Date', '00/00/0000');
+        $this->assertNull($date->getValue(), '00/00/0000 is set as NULL');
     }
 
     public function testDayOfMonth()
