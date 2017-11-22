@@ -1,15 +1,12 @@
 language: php
 
-dist: precise
-
-sudo: false
+dist: trusty
 
 addons:
   apt:
     packages:
       - tidy
-      - dbus-x11
-  firefox: 31.0esr
+  firefox: "31.0"
 
 matrix:
   include:
