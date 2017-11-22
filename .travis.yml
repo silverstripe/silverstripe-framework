@@ -9,6 +9,7 @@ addons:
     packages:
       - tidy
       - dbus-x11
+  firefox: 31.0esr
 
 matrix:
   include:
