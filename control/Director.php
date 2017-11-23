@@ -810,9 +810,13 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Skip any further processing and immediately respond with a redirect to the passed URL.
 	 *
-	 * @param string $destURL - The URL to redirect to
+	 * @param string $destURL The URL to redirect to
+	 * @return string URL redirected to if on CLI
 	 */
 	protected static function force_redirect($destURL) {
+		if (static::is_cli()) {
+			return $destURL;
+		}
 		$response = new SS_HTTPResponse();
 		$response->redirect($destURL, 301);
 
@@ -859,9 +863,6 @@ class Director implements TemplateGlobalProvider {
 		$matched = false;
 
 		if($patterns) {
-			// Calling from the command-line?
-			if(!isset($_SERVER['REQUEST_URI'])) return;
-
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// protect portions of the site based on the pattern
@@ -887,12 +888,7 @@ class Director implements TemplateGlobalProvider {
 
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($url));
 
-			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
-			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
-				return $destURL;
-			} else {
-				self::force_redirect($destURL);
-			}
+			return self::force_redirect($destURL);
 		} else {
 			return false;
 		}
