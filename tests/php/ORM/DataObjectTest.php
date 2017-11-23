@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
@@ -1992,7 +1993,7 @@ class DataObjectTest extends SapphireTest
     }
 
     /**
-     * @expectedException \LogicException
+     * @expectedException LogicException
      */
     public function testInvalidate()
     {
@@ -2047,11 +2048,17 @@ class DataObjectTest extends SapphireTest
 
     public function testRelField()
     {
-        $captain = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
         // Test traversal of a single has_one
-        $this->assertEquals("Team 1", $captain->relField('FavouriteTeam.Title'));
+        $this->assertEquals("Team 1", $captain1->relField('FavouriteTeam.Title'));
         // Test direct field access
-        $this->assertEquals("Captain", $captain->relField('FirstName'));
+        $this->assertEquals("Captain", $captain1->relField('FirstName'));
+
+        // Test empty link
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+        $this->assertEmpty($captain2->relField('FavouriteTeam.Title'));
+        $this->assertNull($captain2->relField('FavouriteTeam.ReturnsNull'));
+        $this->assertNull($captain2->relField('FavouriteTeam.ReturnsNull.Title'));
 
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
         // Test that we can traverse more than once, and that arbitrary methods are okay
@@ -2063,24 +2070,39 @@ class DataObjectTest extends SapphireTest
         // Test that relField works on db field manipulations
         $comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment3');
         $this->assertEquals("PHIL IS A UNIQUE GUY, AND COMMENTS ON TEAM2", $comment->relField('Comment.UpperCase'));
+
+        // relField throws exception on invalid properties
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\TeamComment::class);
+        $comment->relField('Not.A.Field');
     }
 
     public function testRelObject()
     {
-        $captain = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
 
         // Test traversal of a single has_one
-        $this->assertInstanceOf(DBVarchar::class, $captain->relObject('FavouriteTeam.Title'));
-        $this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
+        $this->assertInstanceOf(DBVarchar::class, $captain1->relObject('FavouriteTeam.Title'));
+        $this->assertEquals("Team 1", $captain1->relObject('FavouriteTeam.Title')->getValue());
+
+        // Test empty link
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+        $this->assertEmpty($captain2->relObject('FavouriteTeam.Title')->getValue());
+        $this->assertNull($captain2->relObject('FavouriteTeam.ReturnsNull.Title'));
 
         // Test direct field access
-        $this->assertInstanceOf(DBBoolean::class, $captain->relObject('IsRetired'));
-        $this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
+        $this->assertInstanceOf(DBBoolean::class, $captain1->relObject('IsRetired'));
+        $this->assertEquals(1, $captain1->relObject('IsRetired')->getValue());
 
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
         // Test that we can traverse more than once, and that arbitrary methods are okay
         $this->assertInstanceOf(DBVarchar::class, $player->relObject('Teams.First.Title'));
         $this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
+
+        // relObject throws exception on invalid properties
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\Player::class);
+        $player->relObject('Not.A.Field');
     }
 
     public function testLateStaticBindingStyle()
