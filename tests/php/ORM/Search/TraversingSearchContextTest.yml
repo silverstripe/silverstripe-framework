@@ -1,0 +1,34 @@
+SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Competency:
+  competency1:
+    Name: Math
+  competency2:
+    Name: Physics
+  competency3:
+    Name: Biology
+  competency4:
+    Name: English
+  competency5:
+    Name: French
+
+SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Teacher:
+  teacher1:
+    Name: Susann
+    Competencies:
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Competency.competency2
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Competency.competency3
+  teacher2:
+    Name: Anna
+    Competencies:
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Competency.competency4
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Competency.competency5
+  teacher3:
+    Name: Mary
+
+SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Student:
+  student1:
+    Name: James
+    Teachers:
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Teacher.teacher1
+      - =>SilverStripe\ORM\Tests\Search\TraversingSearchContextTest\Teacher.teacher3
+  student2:
+    Name: John

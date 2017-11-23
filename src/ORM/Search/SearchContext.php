@@ -356,12 +356,12 @@ class SearchContext
             if (empty($searchValue)) {
                 continue;
             }
-            $filter = $this->getFilter($searchField);
+            $filter = $this->getFilter(str_replace('__', '.', $searchField));
             if (!$filter) {
                 continue;
             }
 
-            $field = $this->fields->fieldByName($filter->getFullName());
+            $field = $this->fields->fieldByName(str_replace('.', '__', $filter->getFullName()));
             if (!$field) {
                 continue;
             }

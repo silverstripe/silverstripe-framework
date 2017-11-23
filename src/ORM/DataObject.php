@@ -3215,10 +3215,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 //   'field' => 'NumericField', // optional
                 //   'title' => 'My Title', // optional
                 // ))
-                $rewrite[$identifer] = array_merge(
-                    array('filter' => $this->relObject($identifer)->config()->get('default_search_filter_class')),
-                    (array)$specOrName
-                );
+                try {
+                    $rewrite[$identifer] = array_merge(
+                        array('filter' => $this->relObject($identifer)->config()->get('default_search_filter_class')),
+                        (array)$specOrName
+                    );
+                } catch (Exception $exception) {
+                    $rewrite[$identifer] = (array)$specOrName;
+                }
             } else {
                 // Format: array('MyFieldName' => 'ExactMatchFilter')
                 $rewrite[$identifer] = array(
