@@ -21,9 +21,11 @@ webserver.
 
 ## Managing environment variables with `.env` files
 
-By default the `.env` must be placed in your project root (ie: same folder as you `composer.json`) or the parent
+By default a file named `.env` must be placed in your project root (ie: the same folder as your `composer.json`) or the parent
 directory. If this file exists, it will be automatically loaded by the framework and the environment variables will be
-set. An example `.env` file is included in the default installer named`.env.example`.
+set. An example `.env` file is included in the default installer named `.env.example`.
+
+**Note:** The file must be named exactly `.env` and not any variation (such as `mysite.env` or `.env.mysite`) or it will not be detected automatically. If you wish to load environment variables from a file with a different name, you will need to do so manually. See the [Including an extra `.env` file](#including-an-extra-env-file) section below for more information.
 
 ## Managing environment variables with Apache
 
