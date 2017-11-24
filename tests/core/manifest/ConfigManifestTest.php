@@ -30,13 +30,10 @@ class ConfigManifestTest extends SapphireTest {
 	 * @return Zend_Cache_Core
 	 */
 	protected function getCacheMock() {
-		return $this->getMock(
-			'Zend_Cache_Core',
-			array('load', 'save'),
-			array(),
-			'',
-			false
-		);
+		return $this->getMockBuilder('Zend_Cache_Core')
+			->setMethods(array('load', 'save'))
+			->disableOriginalConstructor()
+			->getMock();
 	}
 
 	/**
@@ -45,13 +42,10 @@ class ConfigManifestTest extends SapphireTest {
 	 * @return SS_ConfigManifest
 	 */
 	protected function getManifestMock($methods) {
-		return $this->getMock(
-			'SS_ConfigManifest',
-			$methods,
-			array(), // no constructor arguments
-			'', // default
-			false // don't call the constructor
-		);
+		return $this->getMockBuilder('SS_ConfigManifest')
+			->setMethods($methods)
+			->disableOriginalConstructor()
+			->getMock();
 	}
 
 	/**
