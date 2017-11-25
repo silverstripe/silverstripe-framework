@@ -2867,7 +2867,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $SNG = singleton($callerClass);
 
         $cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
-        $cacheKey = md5(var_export($cacheComponents, true));
+        $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
