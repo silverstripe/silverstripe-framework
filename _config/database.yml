@@ -22,5 +22,13 @@ Injector:
     type: prototype
   Int:
     class: DBInt
+  int:
+    class: DBInt
+  INT:
+    class: DBInt
   Float:
+    class: DBFloat
+  float:
+    class: DBFloat
+  FLOAT:
     class: DBFloat

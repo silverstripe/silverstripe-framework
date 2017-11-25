@@ -605,7 +605,7 @@ class InjectorTest extends SapphireTest {
 			'service' => array('factory' => 'factory', 'constructor' => array(1, 2, 3))
 		));
 
-		$factory = $this->getMock('SilverStripe\\Framework\\Injector\\Factory');
+		$factory = $this->getMockBuilder('SilverStripe\\Framework\\Injector\\Factory')->getMock();
 		$factory
 			->expects($this->once())
 			->method('create')

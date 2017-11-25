@@ -8,6 +8,7 @@ addons:
   apt:
     packages:
       - tidy
+  firefox: "31.0"
 
 matrix:
   include:
@@ -32,8 +33,8 @@ matrix:
 
 before_script:
  - export CORE_RELEASE=$TRAVIS_BRANCH
- - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick; fi
- - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick-3.3.0; fi
+ - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick; fi
+ - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick-3.3.0; fi
  - composer self-update || true
  - phpenv rehash
  - phpenv config-rm xdebug.ini
