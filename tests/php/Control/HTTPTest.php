@@ -205,6 +205,7 @@ class HTTPTest extends FunctionalTest
         $this->assertEquals('image/gif', HTTP::get_mime_type('file.gif'));
         $this->assertEquals('text/html', HTTP::get_mime_type('file.html'));
         $this->assertEquals('image/jpeg', HTTP::get_mime_type('file.jpg'));
+        $this->assertEquals('image/jpeg', HTTP::get_mime_type('upperfile.JPG'));
         $this->assertEquals('image/png', HTTP::get_mime_type('file.png'));
         $this->assertEquals(
             'image/vnd.adobe.photoshop',

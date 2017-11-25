@@ -137,7 +137,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         $this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
         $neededFilename
-            = '/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg';
+            = '/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg';
 
         $this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
         $this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');
@@ -186,7 +186,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="example" width="10" height="20">
 </span>
 
 
@@ -203,7 +203,7 @@ EOS
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="example" width="10" height="20">
 </span>
 
 	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />

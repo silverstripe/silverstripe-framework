@@ -218,6 +218,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected function setUp()
     {
+        if (!defined('FRAMEWORK_PATH')) {
+            trigger_error(
+                'Missing constants, did you remember to include the test bootstrap in your phpunit.xml file?',
+                E_USER_WARNING
+            );
+        }
+
         // Call state helpers
         static::$state->setUp($this);
 
