@@ -19,7 +19,7 @@ use SilverStripe\Control\Director;
  * <code>
  * $parser = new CSVParser('myfile.csv');
  * $parser->mapColumns(array(
- *    'first name' => 'FirstName'
+ *    'first name' => 'FirstName',
  *    'lastname' => 'Surname',
  *    'last name' => 'Surname',
  * ));

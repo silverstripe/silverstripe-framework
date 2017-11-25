@@ -23,7 +23,7 @@ they require a powerful traversal tool: [FileFinder](api:SilverStripe\Assets\Fil
 The class provides filtering abilities for files and folders, as well as
 callbacks for recursive traversal. Each manifest has its own implementation,
 for example [ManifestFileFinder](api:SilverStripe\Core\Manifest\ManifestFileFinder), adding more domain specific filtering
-like including themes, or excluding testss.
+like including themes, or excluding tests.
 
 ## PHP Class Manifest
 

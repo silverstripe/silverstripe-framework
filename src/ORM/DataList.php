@@ -1034,7 +1034,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function relation($relationName)
     {
         $ids = $this->column('ID');
-        return singleton($this->dataClass)->$relationName()->forForeignID($ids);
+        $singleton = DataObject::singleton($this->dataClass);
+        /** @var HasManyList|ManyManyList $relation */
+        $relation = $singleton->$relationName($ids);
+        return $relation;
     }
 
     public function dbObject($fieldName)

@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Cache;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Cache\Simple\ApcuCache;
@@ -85,7 +86,8 @@ class DefaultCacheFactory implements CacheFactory
     {
         static $apcuSupported = null;
         if (null === $apcuSupported) {
-            $apcuSupported = ApcuAdapter::isSupported();
+            // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080
+            $apcuSupported = Director::is_cli() ? ini_get('apc.enable_cli') && ApcuAdapter::isSupported() : ApcuAdapter::isSupported();
         }
         return $apcuSupported;
     }

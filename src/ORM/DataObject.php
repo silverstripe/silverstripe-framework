@@ -1584,10 +1584,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Returns a one-to-many relation as a HasManyList
      *
      * @param string $componentName Name of the component
+     * @param int|array $id Optional ID(s) for parent of this relation, if not the current record
      * @return HasManyList|UnsavedRelationList The components of the one-to-many relationship.
      */
-    public function getComponents($componentName)
+    public function getComponents($componentName, $id = null)
     {
+        if (!isset($id)) {
+            $id = $this->ID;
+        }
         $result = null;
 
         $schema = $this->getSchema();
@@ -1601,7 +1605,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
-        if (!$this->ID) {
+        if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] =
                     new UnsavedRelationList(static::class, $componentName, $componentClass);
@@ -1620,7 +1624,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         return $result
             ->setDataQueryParam($this->getInheritableQueryParams())
-            ->forForeignID($this->ID);
+            ->forForeignID($id);
     }
 
     /**
@@ -1799,10 +1803,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Returns a many-to-many component, as a ManyManyList.
      * @param string $componentName Name of the many-many component
+     * @param int|array $id Optional ID for parent of this relation, if not the current record
      * @return RelationList|UnsavedRelationList The set of components
      */
-    public function getManyManyComponents($componentName)
+    public function getManyManyComponents($componentName, $id = null)
     {
+        if (!isset($id)) {
+            $id = $this->ID;
+        }
         $schema = static::getSchema();
         $manyManyComponent = $schema->manyManyComponent(static::class, $componentName);
         if (!$manyManyComponent) {
@@ -1814,7 +1822,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
-        if (!$this->ID) {
+        if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] =
                     new UnsavedRelationList($manyManyComponent['parentClass'], $componentName, $manyManyComponent['childClass']);
@@ -1846,7 +1854,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // foreignID set elsewhere.
         return $result
             ->setDataQueryParam($this->getInheritableQueryParams())
-            ->forForeignID($this->ID);
+            ->forForeignID($id);
     }
 
     /**
@@ -2013,8 +2021,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
 
             // Otherwise, use the database field's scaffolder
-            } else {
-                $field = $this->relObject($fieldName)->scaffoldSearchField();
+            } elseif ($object = $this->relObject($fieldName)) {
+                $field = $object->scaffoldSearchField();
             }
 
             // Allow fields to opt out of search
@@ -2679,82 +2687,69 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * The path to the related field is specified with dot separated syntax
      * (eg: Parent.Child.Child.FieldName).
      *
-     * @param string $fieldPath
+     * If a relation is blank, this will return null instead.
+     * If a relation name is invalid (e.g. non-relation on a parent) this
+     * can throw a LogicException.
+     *
+     * @param string $fieldPath List of paths on this object. All items in this path
+     * must be ViewableData implementors
      *
      * @return mixed DBField of the field on the object or a DataList instance.
+     * @throws LogicException If accessing invalid relations
      */
     public function relObject($fieldPath)
     {
         $object = null;
+        $component = $this;
 
-        if (strpos($fieldPath, '.') !== false) {
-            $parts = explode('.', $fieldPath);
-            $fieldName = array_pop($parts);
-
-            // Traverse dot syntax
-            $component = $this;
-
-            foreach ($parts as $relation) {
-                if ($component instanceof SS_List) {
-                    if (method_exists($component, $relation)) {
-                        $component = $component->$relation();
-                    } else {
-                        /** @var DataList $component */
-                        $component = $component->relation($relation);
-                    }
-                } else {
-                    $component = $component->$relation();
-                }
+        // Parse all relations
+        foreach (explode('.', $fieldPath) as $relation) {
+            if (!$component) {
+                return null;
             }
 
-            $object = $component->dbObject($fieldName);
-        } else {
-            $object = $this->dbObject($fieldPath);
+            // Inspect relation type
+            if (ClassInfo::hasMethod($component, $relation)) {
+                $component = $component->$relation();
+            } elseif ($component instanceof Relation || $component instanceof DataList) {
+                // $relation could either be a field (aggregate), or another relation
+                $singleton = DataObject::singleton($component->dataClass());
+                $component = $singleton->dbObject($relation) ?: $component->relation($relation);
+            } elseif ($component instanceof DataObject && ($dbObject = $component->dbObject($relation))) {
+                $component = $dbObject;
+            } elseif ($component instanceof ViewableData && $component->hasField($relation)) {
+                $component = $component->obj($relation);
+            } else {
+                throw new LogicException(
+                    "$relation is not a relation/field on ".get_class($component)
+                );
+            }
         }
-
-        return $object;
+        return $component;
     }
 
     /**
      * Traverses to a field referenced by relationships between data objects, returning the value
      * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
      *
-     * @param $fieldName string
-     * @return string | null - will return null on a missing value
+     * @param string $fieldName string
+     * @return mixed Will return null on a missing value
      */
     public function relField($fieldName)
     {
+        // Navigate to relative parent using relObject() if needed
         $component = $this;
-
-        // We're dealing with relations here so we traverse the dot syntax
-        if (strpos($fieldName, '.') !== false) {
-            $relations = explode('.', $fieldName);
-            $fieldName = array_pop($relations);
-            foreach ($relations as $relation) {
-                // Inspect $component for element $relation
-                if ($component->hasMethod($relation)) {
-                    // Check nested method
-                    $component = $component->$relation();
-                } elseif ($component instanceof SS_List) {
-                    // Select adjacent relation from DataList
-                    /** @var DataList $component */
-                    $component = $component->relation($relation);
-                } elseif ($component instanceof DataObject
-                    && ($dbObject = $component->dbObject($relation))
-                ) {
-                    // Select db object
-                    $component = $dbObject;
-                } else {
-                    user_error("$relation is not a relation/field on ".get_class($component), E_USER_ERROR);
-                }
-            }
+        if (($pos = strrpos($fieldName, '.')) !== false) {
+            $relation = substr($fieldName, 0, $pos);
+            $fieldName = substr($fieldName, $pos + 1);
+            $component = $this->relObject($relation);
         }
 
         // Bail if the component is null
         if (!$component) {
             return null;
         }
-        if ($component->hasMethod($fieldName)) {
+        if (ClassInfo::hasMethod($component, $fieldName)) {
             return $component->$fieldName();
         }
         return $component->$fieldName;
@@ -2867,7 +2862,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $SNG = singleton($callerClass);
 
         $cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
-        $cacheKey = md5(var_export($cacheComponents, true));
+        $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
@@ -3209,14 +3204,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (is_int($name)) {
                 // Format: array('MyFieldName')
                 $rewrite[$identifer] = array();
-            } elseif (is_array($specOrName)) {
+            } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifer))) {
                 // Format: array('MyFieldName' => array(
                 //   'filter => 'ExactMatchFilter',
                 //   'field' => 'NumericField', // optional
                 //   'title' => 'My Title', // optional
                 // ))
                 $rewrite[$identifer] = array_merge(
-                    array('filter' => $this->relObject($identifer)->config()->get('default_search_filter_class')),
+                    array('filter' => $relObject->config()->get('default_search_filter_class')),
                     (array)$specOrName
                 );
             } else {
