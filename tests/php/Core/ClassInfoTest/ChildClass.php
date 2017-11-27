@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Core\Tests\ClassInfoTest;
 
-class ChildClass extends BaseClass
+use SilverStripe\Dev\TestOnly;
+
+class ChildClass extends BaseClass implements TestOnly
 {
 
 }

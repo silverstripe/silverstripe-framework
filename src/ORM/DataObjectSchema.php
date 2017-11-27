@@ -6,6 +6,7 @@ use Exception;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
@@ -126,6 +127,7 @@ class DataObjectSchema
         }
         return null;
     }
+
     /**
      * Returns the root class (the first to extend from DataObject) for the
      * passed class.
@@ -301,10 +303,25 @@ class DataObjectSchema
         $table = Config::inst()->get($class, 'table_name', Config::UNINHERITED);
 
         // Generate default table name
-        if (!$table) {
-            $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
-            $table = str_replace('\\', $separator, trim($class, '\\'));
+        if ($table) {
+            return $table;
         }
+
+        if (strpos($class, '\\') === false) {
+            return $class;
+        }
+
+        if (!ClassInfo::classImplements($class, TestOnly::class)) {
+            trigger_error(
+                "It is recommended to define a table_name for your '$class'." .
+                ' Not defining a table_name may cause subsequent table names to be too long and may not be supported' .
+                ' by your current database engine, the generated naming scheme will also change when upgrading to' .
+                ' SilverStripe 5.0 and potentially break.',
+                E_USER_WARNING
+            );
+        }
+        $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
+        $table = str_replace('\\', $separator, trim($class, '\\'));
 
         return $table;
     }
