@@ -1266,6 +1266,14 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     private static $default_login_dest = "";
 
+    /**
+     * @config
+     * @var string Set the default reset password destination
+     * This is the URL that users will be redirected to after they change their password,
+     * By default, it's redirecting to {@link $login}.
+     */
+    private static $default_reset_password_dest;
+
     protected static $ignore_disallowed_actions = false;
 
     /**
