@@ -793,7 +793,7 @@ class IntlLocales implements Locales, Resettable
         'pl' => 'pl_PL',
         'pon' => 'pon_FM',
         'ps' => 'ps_AF',
-        'pt' => 'pt_BR',
+        'pt' => 'pt_PT',
         'qu' => 'qu_PE',
         'rm' => 'rm_CH',
         'rn' => 'rn_BI',
