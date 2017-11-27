@@ -53,8 +53,8 @@
     "require-dev": {
         "phpunit/phpunit": "^5.7",
         "silverstripe/versioned": "^2@dev",
-        "silverstripe/behat-extension": "^3",
-        "silverstripe/serve": "^2",
+        "silverstripe/behat-extension": "^4",
+        "silverstripe/serve": "^3",
         "se/selenium-server-standalone": "2.41.0"
     },
     "provide": {
