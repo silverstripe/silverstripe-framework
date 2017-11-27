@@ -14,7 +14,7 @@ addons:
 
 env:
   global:
-    - COMPOSER_ROOT_VERSION=4.0.x-dev
+    - COMPOSER_ROOT_VERSION=4.1.x-dev
     - DISPLAY=":99"
     - XVFBARGS=":99 -ac -screen 0 1024x768x16"
     - SS_BASE_URL="http://localhost:8080/"
@@ -67,8 +67,8 @@ before_script:
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.0.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.0.x-dev --no-update; fi
-  - composer require silverstripe/recipe-core:1.0.x-dev silverstripe/admin:1.0.x-dev silverstripe/versioned:1.0.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:1.0.x-dev --no-update; fi
+  - composer require silverstripe/recipe-core:1.1.x-dev silverstripe/admin:1.1.x-dev silverstripe/versioned:1.1.x-dev --no-update
+  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:1.1.x-dev --no-update; fi
   - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
   - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
