@@ -22,6 +22,15 @@ class GridFieldPageCount implements GridField_HTMLProvider
     protected $targetFragment;
 
     /**
+     * Flag indicating whether or not the page count is hidden when the
+     * gridfield has no title
+     *
+     * @config
+     * @var boolean
+     */
+    private static $hidden_when_no_title = true;
+
+    /**
      * @param string $targetFragment The fragment indicating the placement of this page count
      */
     public function __construct($targetFragment = 'before')
@@ -65,6 +74,10 @@ class GridFieldPageCount implements GridField_HTMLProvider
      */
     public function getHTMLFragments($gridField)
     {
+        if($this->config()->get('hidden_when_no_title') && !$gridField->Title()) {
+            return null;
+        }
+
         // Retrieve paging parameters from the directing paginator component
         $paginator = $this->getPaginator($gridField);
         if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
