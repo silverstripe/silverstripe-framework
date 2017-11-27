@@ -5,6 +5,7 @@ namespace SilverStripe\View\Tests;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -203,5 +204,20 @@ class ViewableDataTest extends SapphireTest
         $container->setFailover($failover);
         $this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
+    }
+
+    public function testThemeDir()
+    {
+        $themes = [
+            "silverstripe/framework:/tests/php/View/ViewableDataTest/testtheme",
+            SSViewer::DEFAULT_THEME
+        ];
+        SSViewer::set_themes($themes);
+
+        $data = new ViewableData();
+        $this->assertContains(
+            'tests/php/View/ViewableDataTest/testtheme',
+            $data->ThemeDir()
+        );
     }
 }
