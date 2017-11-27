@@ -205,8 +205,8 @@ class LoginHandler extends RequestHandler
             Security::singleton()->setSessionMessage($message, ValidationResult::TYPE_GOOD);
         }
 
-        // Redirect back
-        return $this->redirectBack();
+        // Redirect to /admin/pages/ as a default if no backURL or default login dest is set
+        return $this->redirect('/admin/pages/');
     }
 
     /**
