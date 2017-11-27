@@ -56,8 +56,8 @@ foreach ($databaseClasses as $class => $details) {
 
 // Build config from config / environment / request
 $config = new InstallConfig();
-$databaseConfig = $config->getDatabaseConfig($_REQUEST, $databaseClasses);
-$adminConfig = $config->getAdminConfig($_REQUEST);
+$databaseConfig = $config->getDatabaseConfig($_REQUEST, $databaseClasses, true);
+$adminConfig = $config->getAdminConfig($_REQUEST, true);
 $alreadyInstalled = $config->alreadyInstalled();
 $silverstripe_version = $config->getFrameworkVersion();
 $sendStats = $config->canSendStats($_REQUEST);
@@ -107,22 +107,6 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 // Path to client resources (copied through silverstripe/vendor-plugin)
 $clientPath = 'resources/silverstripe/framework/src/Dev/Install/client';
 
-
-// config-form.html vars (placeholder to prevent deletion)
-[
-    $theme,
-    $clientPath,
-    $adminConfig,
-    $usingEnv,
-    $silverstripe_version,
-    $locale,
-    $locales,
-    $webserverConfigFile,
-    $hasErrorOtherThanDatabase,
-    $hasOnlyWarnings, // If warnings but not errors
-    $phpIniLocation
-];
-
 // If already installed, ensure the user clicked "reinstall"
 $expectedArg = $alreadyInstalled ? 'reinstall' : 'go';
 if ((isset($_REQUEST[$expectedArg]) || $installFromCli)
@@ -142,7 +126,27 @@ if ((isset($_REQUEST[$expectedArg]) || $installFromCli)
         'admin' => $adminConfig,
         'stats' => $sendStats,
     ]);
-    // Show the config form
-} else {
-    include(__DIR__ . '/config-form.html');
+    return;
 }
+
+// Sanitise config prior to rendering config-form.html
+$databaseConfig = $config->getDatabaseConfig($_REQUEST, $databaseClasses, false);
+$adminConfig = $config->getAdminConfig($_REQUEST, false);
+
+// config-form.html vars (placeholder to prevent deletion)
+[
+    $theme,
+    $clientPath,
+    $adminConfig,
+    $databaseConfig,
+    $usingEnv,
+    $silverstripe_version,
+    $locale,
+    $locales,
+    $webserverConfigFile,
+    $hasErrorOtherThanDatabase,
+    $hasOnlyWarnings, // If warnings but not errors
+    $phpIniLocation,
+];
+
+include(__DIR__ . '/config-form.html');
