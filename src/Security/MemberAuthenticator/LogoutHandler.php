@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
@@ -109,6 +110,14 @@ class LogoutHandler extends RequestHandler
             return $this->redirect($backURL);
         }
 
-        return $this->redirect(Security::config()->get('login_url'));
+        $link = Security::config()->get('login_url');
+        $referer = $this->getReturnReferer();
+        if ($referer) {
+            $link = Controller::join_links($link, '?' . http_build_query([
+                'BackURL' => Director::makeRelative($referer)
+            ]));
+        }
+
+        return $this->redirect($link);
     }
 }
