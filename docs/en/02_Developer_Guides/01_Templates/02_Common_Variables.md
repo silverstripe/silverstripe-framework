@@ -365,7 +365,10 @@ Placing it just below `$Content` is a good default.
 You can add your own forms by implementing new form instances (see the [Forms tutorial](/tutorials/forms)).
 
 
-## Related
+## Related Lessons
+* [Adding dynamic content](https://www.silverstripe.org/learn/lessons/v4/adding-dynamic-content-1)
+
+## Related Documentation
 
  * [Casting and Formating Variables](casting)
  * [Template Inheritance](template_inheritance)

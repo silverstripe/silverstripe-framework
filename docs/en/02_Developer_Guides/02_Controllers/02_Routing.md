@@ -213,6 +213,9 @@ Director:
     'feed': 'FeedController'
 ```
 
+## Related Lessons
+* [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)
+
 ## Links
 
 * [Controller](api:SilverStripe\Control\Controller) API documentation

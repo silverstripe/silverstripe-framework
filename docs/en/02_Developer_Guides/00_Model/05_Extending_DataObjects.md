@@ -89,3 +89,6 @@ class Player extends DataObject
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 
 these two modes, as shown in the example above.
 </div>
+
+## Related Lessons
+* [Working with data relationships - $has_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-has-many-1)

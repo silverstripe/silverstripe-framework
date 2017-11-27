@@ -311,6 +311,10 @@ public function getCMSFields()
 }
 ```
 
+## Related Lessons
+* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
+
+
 ## Related Documentaion
 
 * [Injector](injector/)

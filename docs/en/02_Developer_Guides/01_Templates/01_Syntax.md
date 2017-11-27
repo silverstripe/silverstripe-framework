@@ -551,7 +551,10 @@ for adding notes for other developers but for things you don't want published in
 $EditForm <%-- Some hidden comment about the form --%>
 ```
 
-## Related
+## Related Lessons
+* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+
+## Related Documentation
 
 [CHILDREN]
 
@@ -563,3 +566,5 @@ $EditForm <%-- Some hidden comment about the form --%>
 
 * [SSViewer](api:SilverStripe\View\SSViewer)
 * [ThemeManifest](api:SilverStripe\View\ThemeManifest)
+
+

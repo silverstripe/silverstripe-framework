@@ -113,6 +113,8 @@ list.
 | `$Link` | Links to the current controller URL, setting this page as current via a GET parameter |
 | `$CurrentBool` | Returns true if you're currently on that page |
 
+## Related Lessons
+* [Lists and pagination](https://www.silverstripe.org/learn/lessons/v4/lists-and-pagination-1)
 
 ## API Documentation
 

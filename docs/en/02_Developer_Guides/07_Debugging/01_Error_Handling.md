@@ -265,3 +265,6 @@ In SilverStripe 3, logging was based on the Zend Log module. Customisations were
 This function no longer works, and any Zend Log writers will need to be replaced with Monolog handlers. Fortunately,
 a range of handlers are available, both in the core package and in add-ons. See the
 [Monolog documentation](https://github.com/Seldaek/monolog/blob/master/doc/01-usage.md) for more information.
+
+## Related Lessons
+* [Advanced environment configuration](https://www.silverstripe.org/learn/lessons/v4/advanced-environment-configuration-1)

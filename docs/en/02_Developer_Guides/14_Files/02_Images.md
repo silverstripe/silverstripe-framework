@@ -214,3 +214,7 @@ SilverStripe\Core\Injector\Injector:
  * [Image](api:SilverStripe\Assets\Image)
  * [DBFile](api:SilverStripe\Assets\Storage\DBFile)
  * [ImageManipulation](api:SilverStripe\Assets\ImageManipulation)
+
+## Related Lessons
+* [Working with files and images](https://www.silverstripe.org/learn/lessons/v4/working-with-files-and-images-1)
+ 

@@ -92,6 +92,9 @@ echo $list->Count();
 // returns '2'
 ```
 
+## Related Lessons
+* [Lists and pagination](https://www.silverstripe.org/learn/lessons/v4/lists-and-pagination-1)
+
 ## API Documentation
 
 * [SS_List](api:SilverStripe\ORM\SS_List)
