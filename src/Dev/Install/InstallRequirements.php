@@ -227,8 +227,9 @@ class InstallRequirements
     /**
      * Check everything except the database
      */
-    public function check()
+    public function check($originalIni)
     {
+        $this->originalIni = $originalIni;
         $this->errors = [];
         $isApache = $this->isApache();
         $isIIS = $this->isIIS();
