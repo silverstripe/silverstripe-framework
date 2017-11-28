@@ -3059,11 +3059,32 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $fields = $schema->databaseFields(static::class, false);
         $indexes = $schema->databaseIndexes(static::class, false);
         $extensions = self::database_extensions(static::class);
+        $legacyTables = $schema->getLegacyTableNames(static::class);
 
         if (empty($table)) {
             throw new LogicException(
                 "Class " . static::class . " not loaded by manifest, or no database table configured"
             );
+        }
+
+        if ($legacyTables) {
+            $ignore = Config::inst()->get(static::class, 'ignored_legacy_tables') ?: [];
+            $renameTables = array_diff(
+                array_intersect($legacyTables, DB::table_list()),
+                $ignore
+            );
+            if (count($renameTables) > 1) {
+                $class = static::class;
+                $legacyList = implode(', ', $renameTables);
+                trigger_error(
+                    "Class $class has multiple legacy tables: $legacyList",
+                    E_USER_NOTICE
+                );
+            }
+            if (count($renameTables) === 1) {
+                $dbSchema = DB::get_schema();
+                $dbSchema->renameTable($renameTables[0], $table);
+            }
         }
 
         if ($fields) {

@@ -303,10 +303,31 @@ class DataObjectSchema
         // Generate default table name
         if (!$table) {
             $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
-            $table = str_replace('\\', $separator, trim($class, '\\'));
+            $parts = explode('\\', trim($class, '\\'));
+            $vendor = array_slice($parts, 0, 1)[0];
+            $base = array_slice($parts, -1, 1)[0];
+            if ($vendor && $base && $vendor !== $base) {
+                $table = "{$vendor}{$separator}{$base}";
+            } elseif ($base) {
+                $table = $base;
+            } else {
+                throw new InvalidArgumentException("Unable to build a table name for class '$class'");
+            }
         }
 
         return $table;
+    }
+
+    /**
+     * @param $class
+     * @return array
+     */
+    public function getLegacyTableNames($class)
+    {
+        $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
+        $names[] = str_replace('\\', $separator, trim($class, '\\'));
+
+        return $names;
     }
 
     /**
