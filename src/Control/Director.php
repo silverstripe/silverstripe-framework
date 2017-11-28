@@ -243,7 +243,7 @@ class Director implements TemplateGlobalProvider
 
             // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
             $newVars['_SERVER']['HTTP_HOST'] = isset($bits['port'])
-                ? $bits['host'].':'.$bits['port']
+                ? $bits['host'] . ':' . $bits['port']
                 : $bits['host'];
         }
 
@@ -614,8 +614,8 @@ class Director implements TemplateGlobalProvider
 
         // Empty case
         if (trim($url, '\\/') === '') {
-                return '';
-            }
+            return '';
+        }
 
         // Remove base folder or url
         foreach ([self::baseFolder(), self::baseURL()] as $base) {
@@ -623,7 +623,7 @@ class Director implements TemplateGlobalProvider
             $base = rtrim($base, '\\/') ?: $base;
             if (stripos($url, $base) === 0) {
                 return ltrim(substr($url, strlen($base)), '\\/');
-        }
+            }
         }
 
         // Nothing matched, fall back to returning the original URL
@@ -679,10 +679,10 @@ class Director implements TemplateGlobalProvider
     {
         // Strip off the query and fragment parts of the URL before checking
         if (($queryPosition = strpos($url, '?')) !== false) {
-            $url = substr($url, 0, $queryPosition-1);
+            $url = substr($url, 0, $queryPosition - 1);
         }
         if (($hashPosition = strpos($url, '#')) !== false) {
-            $url = substr($url, 0, $hashPosition-1);
+            $url = substr($url, 0, $hashPosition - 1);
         }
         $colonPosition = strpos($url, ':');
         $slashPosition = strpos($url, '/');
@@ -791,7 +791,7 @@ class Director implements TemplateGlobalProvider
             $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
         }
 
-        return Director::protocol($request) . $login .  static::host($request) . Director::baseURL();
+        return Director::protocol($request) . $login . static::host($request) . Director::baseURL();
     }
 
     /**
@@ -844,12 +844,12 @@ class Director implements TemplateGlobalProvider
         $handler = CanonicalURLMiddleware::singleton()->setForceSSL(true);
         if ($patterns) {
             $handler->setForceSSLPatterns($patterns);
-                }
+        }
         if ($secureDomain) {
             $handler->setForceSSLDomain($secureDomain);
-            }
-        $handler->throwRedirectIfNeeded($request);
         }
+        $handler->throwRedirectIfNeeded($request);
+    }
 
     /**
      * Force a redirect to a domain starting with "www."
@@ -860,7 +860,7 @@ class Director implements TemplateGlobalProvider
     {
         $handler = CanonicalURLMiddleware::singleton()->setForceWWW(true);
         $handler->throwRedirectIfNeeded($request);
-        }
+    }
 
     /**
      * Checks if the current HTTP-Request is an "Ajax-Request" by checking for a custom header set by
