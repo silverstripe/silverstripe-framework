@@ -346,6 +346,9 @@ $validator = new SilverStripe\Forms\RequiredFields([
 $form = new Form($this, 'MyForm', $fields, $actions, $validator);
 ```
 
+## Related Lessons
+* [Intoduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
+
 ## API Documentation
 
 * [Form](api:SilverStripe\Forms\Form)

@@ -744,6 +744,11 @@ record #2 in Page refers to the same object as record #2 in [SiteTree](api:Silve
 
 To retrieve a news article, SilverStripe joins the [SiteTree](api:SilverStripe\CMS\Model\SiteTree), [Page](api:SilverStripe\CMS\Model\SiteTree\Page) and NewsPage tables by their ID fields. 
 
+## Related Lessons
+* [Introduction to the ORM](https://www.silverstripe.org/learn/lessons/v4/introduction-to-the-orm-1)
+* [Adding custom fields to a page](https://www.silverstripe.org/learn/lessons/v4/adding-custom-fields-to-a-page-1)
+
+
 ## Related Documentation
 
 * [Data Types and Casting](/developer_guides/model/data_types_and_casting)

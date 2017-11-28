@@ -174,6 +174,10 @@ public function Link($action = null)
 The [Controller::join_links()](api:SilverStripe\Control\Controller::join_links()) is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 </div>
 
+## Related Lessons
+* [Controller actions/DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
+* [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)
+
 ## Related Documentation
 
 * [Execution Pipeline](../execution_pipeline)

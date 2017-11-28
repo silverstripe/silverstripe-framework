@@ -307,6 +307,10 @@ class Page extends SiteTree
 
 ```
 
+## Related Lessons
+* [Intoduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
+
+
 ## API Documentation
 
  * [RequiredFields](api:SilverStripe\Forms\RequiredFields)

@@ -103,3 +103,7 @@ The final step is to [submit your theme to Packagist](https://packagist.org/abou
  * [Themes Listing on silverstripe.org](http://addons.silverstripe.org/add-ons?search=&type=theme)
  * [Themes Forum on silverstripe.org](https://www.silverstripe.org/community/forums/themes-2/)
  * [Themes repositories on github.com](http://github.com/silverstripe-themes)
+
+## Related Lessons
+* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
