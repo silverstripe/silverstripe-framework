@@ -22,3 +22,6 @@ SilverStripe ships with default rewriting rules specific to your web server. Apa
 routing requests to the framework, they also prevent access to sensitive files in the webroot,
 for example YAML configuration files. Please refer to the [secure coding](/developer_guides/security/secure_coding/#filesystem) documentation for details.
 </div>
+
+## Related Lessons
+* [Up and running: Setting up a local SilverStripe dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)

@@ -45,9 +45,6 @@ class MyObject extends DataObject
 }
 ```
 
-## Related Lessons
-* [The holder/page pattern](https://www.silverstripe.org/learn/lessons/v4/the-holderpage-pattern-1)
-
 ## API Documentation
 
 * [DataObject](api:SilverStripe\ORM\DataObject)

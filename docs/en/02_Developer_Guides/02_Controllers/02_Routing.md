@@ -215,7 +215,7 @@ Director:
 
 ## Related Lessons
 * [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)
-
+* [Controller actions / DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
 ## Links
 
 * [Controller](api:SilverStripe\Control\Controller) API documentation

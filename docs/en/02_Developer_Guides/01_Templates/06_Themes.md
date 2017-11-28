@@ -106,3 +106,4 @@ The final step is to [submit your theme to Packagist](https://packagist.org/abou
 
 ## Related Lessons
 * [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)

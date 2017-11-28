@@ -15,3 +15,6 @@ templates from your controllers.
 ## How to's
 
 [CHILDREN Folder=How_Tos]
+
+## Related Lessons
+* [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
