@@ -53,6 +53,22 @@ class GridFieldExportButtonTest extends SapphireTest {
 		);
 	}
 
+	public function testXLSSanitisation() {
+		// Create risky object
+		$object = new GridFieldExportButtonTest_Team();
+		$object->Name = '=SUM(1, 2)';
+		$object->write();
+
+		// Export
+		$button = new GridFieldExportButton();
+		$button->setExportColumns(array('Name' => 'My Name'));
+
+		$this->assertEquals(
+			"\"My Name\"\n\"\t=SUM(1, 2)\"\n\"Test\"\n\"Test2\"\n",
+			$button->generateExportFileData($this->gridField)
+		);
+	}
+
 	public function testGenerateFileDataAnonymousFunctionField() {
 		$button = new GridFieldExportButton();
 		$button->setExportColumns(array(
