@@ -27,7 +27,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
+		$this->assertEquals(5, $results->Count(), 'Test correct count of imported data');
 
 		// Test that columns were correctly imported
 		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", array(
@@ -49,14 +49,14 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$loader->deleteExistingRecords = true;
 		$results1 = $loader->load($filepath);
-		$this->assertEquals(4, $results1->Count(), 'Test correct count of imported data on first load');
+		$this->assertEquals(5, $results1->Count(), 'Test correct count of imported data on first load');
 
 		//delete existing data before doing second CSV import
 		$results2 = $loader->load($filepath, '512MB', true);
 		//get all instances of the loaded DataObject from the database and count them
 		$resultDataObject = DataObject::get('CsvBulkLoaderTest_Player');
 
-		$this->assertEquals(4, $resultDataObject->Count(),
+		$this->assertEquals(5, $resultDataObject->Count(),
 			'Test if existing data is deleted before new data is added');
 		}
 
