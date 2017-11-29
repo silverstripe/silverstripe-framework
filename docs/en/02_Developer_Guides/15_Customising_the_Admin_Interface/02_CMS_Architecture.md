@@ -41,7 +41,7 @@ Check our [build tooling](/contributing/build_tooling) docs for more details.
 
 
 ```
-(cd framework && yarn run build && yarn run css)
+cd vendor/silverstripe/admin && yarn build
 ```
 
 ## Coding Conventions
@@ -49,6 +49,21 @@ Check our [build tooling](/contributing/build_tooling) docs for more details.
 Please follow our [CSS](/contributing/css_coding_conventions)
 and [JavaScript](/contributing/javascript_coding_conventions)
 coding conventions.
+
+
+## Pattern library
+
+A pattern library is a collection of user interface design elements, this helps developers and designers collaborate and to provide a quick preview of elements as they were intended without the need to build an entire interface to see it.
+Components built in React and used by the CMS are actively being added to the pattern library.
+
+To access the pattern library, starting from your project root:
+
+```
+cd vendor/silverstripe/admin && yarn pattern-lib
+```
+
+Then browse to `http://localhost:6006/`
+
 
 ## The Admin URL
 
