@@ -3,11 +3,15 @@
 namespace SilverStripe\Security;
 
 use InvalidArgumentException;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException as PSRInvalidArgumentException;
+use SilverStripe\View\SSViewer;
 
 /**
  * Calculates batch permissions for nested objects for:
@@ -16,7 +20,7 @@ use SilverStripe\Versioned\Versioned;
  *  - canDelete: Includes special logic for ensuring parent objects can only be deleted if their children can
  *    be deleted also.
  */
-class InheritedPermissions implements PermissionChecker
+class InheritedPermissions implements PermissionChecker, Flushable
 {
     use Injectable;
 
@@ -85,17 +89,72 @@ class InheritedPermissions implements PermissionChecker
     protected $cachePermissions = [];
 
     /**
+     * @var CacheInterface
+     */
+    protected $cacheService;
+
+    /**
+     * Cache key for persistent permissions
+     *
+     * @var string
+     */
+    protected $cacheKey;
+
+    /**
      * Construct new permissions object
      *
      * @param string $baseClass Base class
+     * @param CacheInterface $cache
      */
-    public function __construct($baseClass)
+    public function __construct($baseClass, CacheInterface $cache = null)
     {
         if (!is_a($baseClass, DataObject::class, true)) {
             throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
         }
+
         $this->baseClass = $baseClass;
+        $this->cacheService = $cache;
+        $this->cacheKey = md5(implode('_', [$this->baseClass, SSViewer::config()->global_key]));
+
+        // Warm the cache
+        try {
+            $permissions = (array)$this->cacheService->get($this->cacheKey);
+            $this->cachePermissions = $permissions;
+        } catch (PSRInvalidArgumentException $e) {
+            // If the cache doesn't exist, fail gracefully.
+            $this->cachePermissions = [];
+        }
+
         return $this;
+    }
+
+    /**
+     * Commits the cache
+     */
+    public function __destruct()
+    {
+        // Ensure back-end cache is updated
+        if (!empty($this->cachePermissions)) {
+            $this->cacheService->set($this->cacheKey, $this->cachePermissions);
+            // Prevent double-destruct
+            $this->cachePermissions = [];
+        }
+    }
+
+    /**
+     * Flush all instances of InheritedPermissions on flush=1
+     */
+    public static function flush()
+    {
+        InheritedPermissionFlusher::singleton()->flushCache();
+    }
+
+    /**
+     * Clear the cache for this instance only
+     */
+    public function flushCache()
+    {
+        $this->cacheService->clear();
     }
 
     /**

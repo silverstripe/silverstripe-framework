@@ -938,7 +938,8 @@ class Member extends DataObject
         parent::onAfterWrite();
 
         Permission::reset();
-
+        // To do - check if perms have changed
+        $this->flushInheritedPermissions();
         if ($this->isChanged('Password') && static::config()->get('password_logging_enabled')) {
             MemberPassword::log($this);
         }
