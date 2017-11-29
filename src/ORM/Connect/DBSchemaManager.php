@@ -899,8 +899,7 @@ abstract class DBSchemaManager
      *
      * @param string $tableName The name of the table.
      * @param string $indexName The name of the index.
-     * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()}
-     *                          for more details.
+     * @param array $indexSpec The specification of the index, see Database::requireIndex() for more details.
      * @todo Find out where this is called from - Is it even used? Aren't indexes always dropped and re-added?
      */
     abstract public function alterIndex($tableName, $indexName, $indexSpec);

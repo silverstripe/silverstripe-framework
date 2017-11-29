@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\Install;
 
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * This class keeps track of the available database adapters
@@ -131,10 +132,19 @@ class DatabaseAdapterRegistry
      * Called by ConfigureFromEnv.php.
      * Searches through vendor/ folder only,
      * does not support "legacy" folder location in webroot
+     *
+     * @param array $config Config to update. If not provided fall back to global $databaseConfig.
+     * In 5.0.0 this will be mandatory and the global will be removed.
      */
-    public static function autoconfigure()
+    public static function autoconfigure(&$config = null)
     {
-        // Search through all composer packages in vendor
+        if (!isset($config)) {
+            Deprecation::notice('5.0', 'Configuration via global is deprecated');
+            global $databaseConfig;
+        } else {
+            $databaseConfig = $config;
+        }
+        // Search through all composer packages in vendor, updating $databaseConfig
         foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
             foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
                 if (file_exists($directory . '/_configure_database.php')) {
@@ -142,6 +152,8 @@ class DatabaseAdapterRegistry
                 }
             }
         }
+        // Update modified variable
+        $config = $databaseConfig;
     }
 
     /**
