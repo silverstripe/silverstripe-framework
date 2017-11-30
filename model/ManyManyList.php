@@ -86,7 +86,7 @@ class ManyManyList extends RelationList {
 		$finalized = array();
 
 		foreach($this->extraFields as $field => $spec) {
-			$obj = Object::create_from_string($spec);
+			$obj = SS_Object::create_from_string($spec);
 
 			if($obj instanceof CompositeDBField) {
 				$this->_compositeExtraFields[$field] = array();
@@ -131,7 +131,7 @@ class ManyManyList extends RelationList {
 					}
 				}
 
-				$obj = Object::create_from_string($this->extraFields[$fieldName], $fieldName);
+				$obj = SS_Object::create_from_string($this->extraFields[$fieldName], $fieldName);
 				$obj->setValue($value, null, false);
 
 				$add[$fieldName] = $obj;
@@ -253,7 +253,7 @@ class ManyManyList extends RelationList {
 				foreach($this->extraFields as $fieldName => $fieldSpec) {
 					// Skip fields without an assignment
 					if(array_key_exists($fieldName, $extraFields)) {
-						$fieldObject = Object::create_from_string($fieldSpec, $fieldName);
+						$fieldObject = SS_Object::create_from_string($fieldSpec, $fieldName);
 						$fieldObject->setValue($extraFields[$fieldName]);
 						$fieldObject->writeToManipulation($manipulation[$this->joinTable]);
 					}

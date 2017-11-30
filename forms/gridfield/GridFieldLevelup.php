@@ -7,7 +7,7 @@
  * @package forms
  * @subpackage fields-gridfield
  */
-class GridFieldLevelup extends Object implements GridField_HTMLProvider {
+class GridFieldLevelup extends SS_Object implements GridField_HTMLProvider {
 
 	/**
 	 * @var integer - the record id of the level up to

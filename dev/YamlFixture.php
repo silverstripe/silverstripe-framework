@@ -65,7 +65,7 @@
  *
  * @see http://code.google.com/p/spyc/
  */
-class YamlFixture extends Object {
+class YamlFixture extends SS_Object {
 
 	/**
 	 * Absolute path to the .yml fixture file

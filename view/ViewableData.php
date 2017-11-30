@@ -9,7 +9,7 @@
  * @package framework
  * @subpackage view
  */
-class ViewableData extends Object implements IteratorAggregate {
+class ViewableData extends SS_Object implements IteratorAggregate {
 
 	/**
 	 * An array of objects to cast certain fields to. This is set up as an array in the format:
@@ -473,7 +473,7 @@ class ViewableData extends Object implements IteratorAggregate {
 					$castConstructor = $this->config()->default_cast;
 				}
 
-				$valueObject = Object::create_from_string($castConstructor, $fieldName);
+				$valueObject = SS_Object::create_from_string($castConstructor, $fieldName);
 				$valueObject->setValue($value, $this);
 
 				$value = $valueObject;
@@ -516,7 +516,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function hasValue($field, $arguments = null, $cache = true) {
 		$result = $cache ? $this->cachedCall($field, $arguments) : $this->obj($field, $arguments, false, false);
 
-		if(is_object($result) && $result instanceof Object) {
+		if(is_object($result) && $result instanceof SS_Object) {
 			return $result->exists();
 		} else {
 			// Empty paragraph checks are a workaround for TinyMCE
@@ -537,7 +537,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function XML_val($field, $arguments = null, $cache = false) {
 		$result = $this->obj($field, $arguments, false, $cache);
-		return (is_object($result) && $result instanceof Object) ? $result->forTemplate() : $result;
+		return (is_object($result) && $result instanceof SS_Object) ? $result->forTemplate() : $result;
 	}
 
 	/**

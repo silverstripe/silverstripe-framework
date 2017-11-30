@@ -85,17 +85,17 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		if(is_numeric($request->param('ID'))) {
 			$record = $gridField->getList()->byId($request->param("ID"));
 		} else {
-			$record = Object::create($gridField->getModelClass());
+			$record = SS_Object::create($gridField->getModelClass());
 		}
 
 		$class = $this->getItemRequestClass();
 
-		$handler = Object::create($class, $gridField, $this, $record, $requestHandler, $this->name);
+		$handler = SS_Object::create($class, $gridField, $this, $record, $requestHandler, $this->name);
 		$handler->setTemplate($this->template);
 
 		// if no validator has been set on the GridField and the record has a
 		// CMS validator, use that.
-		if(!$this->getValidator() && (method_exists($record, 'getCMSValidator') || $record instanceof Object && $record->hasMethod('getCMSValidator'))) {
+		if(!$this->getValidator() && (method_exists($record, 'getCMSValidator') || $record instanceof SS_Object && $record->hasMethod('getCMSValidator'))) {
 			$this->setValidator($record->getCMSValidator());
 		}
 

@@ -21,7 +21,7 @@ class ArrayData extends ViewableData {
 	protected $array;
 
 	/**
-	 * @param object|array $value An associative array, or an object with simple properties.
+	 * @param SS_Object|array $value An associative array, or an object with simple properties.
 	 * Converts object properties to keys of an associative array.
 	 */
 	public function __construct($value) {

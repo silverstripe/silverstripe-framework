@@ -115,7 +115,7 @@ class FileField extends FormField {
 			// assume that the file is connected via a has-one
 			$hasOnes = $record->hasOne($this->name);
 			// try to create a file matching the relation
-			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass();
+			$file = (is_string($hasOnes)) ? SS_Object::create($hasOnes) : new $fileClass();
 		} else if($record instanceof File) {
 			$file = $record;
 		} else {

@@ -11,7 +11,7 @@
  * @package framework
  * @subpackage dev
  */
-class DebugView extends Object {
+class DebugView extends SS_Object {
 
 	/**
 	 * Column size to wrap long strings to
@@ -215,7 +215,7 @@ class DebugView extends Object {
 	/**
 	 * Outputs a variable in a user presentable way
 	 *
-	 * @param object $val
+	 * @param SS_Object $val
 	 * @param array $caller Caller information
 	 */
 	public function writeVariable($val, $caller) {

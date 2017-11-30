@@ -18,7 +18,7 @@
  * @package framework
  * @subpackage core
  */
-class CSSContentParser extends Object {
+class CSSContentParser extends SS_Object {
 	protected $simpleXML = null;
 
 	public function __construct($content) {

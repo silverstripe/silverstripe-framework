@@ -23,8 +23,8 @@
  *
  * Overload both of these to support legacy code.
  */
-Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
-Object::useCustomClass('Datetime',   'SS_Datetime', true);
+SS_Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
+SS_Object::useCustomClass('Datetime',   'SS_Datetime', true);
 
 /**
  * The root directory of TinyMCE

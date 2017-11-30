@@ -6,7 +6,7 @@
  * @package framework
  * @subpackage formatters
  */
-abstract class DataFormatter extends Object {
+abstract class DataFormatter extends SS_Object {
 
 	/**
 	 * Set priority from 0-100.

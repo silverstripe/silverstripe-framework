@@ -214,7 +214,7 @@ class Convert {
 	 * Convert a JSON encoded string into an object.
 	 *
 	 * @param string $val
-	 * @return object|boolean
+	 * @return SS_Object|boolean
 	 */
 	public static function json2obj($val) {
 		return json_decode($val);

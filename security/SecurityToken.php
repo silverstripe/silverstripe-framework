@@ -28,7 +28,7 @@
  *
  * @todo Make token name form specific for additional forgery protection.
  */
-class SecurityToken extends Object implements TemplateGlobalProvider {
+class SecurityToken extends SS_Object implements TemplateGlobalProvider {
 
 	/**
 	 * @var String

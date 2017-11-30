@@ -26,7 +26,7 @@
  * devs might know what they're doing and don't want contentnegotiator messing with their HTML4 doctypes,
  * but still find it useful to have self-closing tags removed.
  */
-class ContentNegotiator extends Object {
+class ContentNegotiator extends SS_Object {
 
 	/**
 	 * @config

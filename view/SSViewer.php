@@ -131,7 +131,7 @@ class SSViewer_Scope {
 	/**
 	 * Gets the current object and resets the scope.
 	 *
-	 * @return object
+	 * @return SS_Object
 	 */
 	public function self() {
 		$result = $this->itemIterator ? $this->itemIterator->current() : $this->item;
@@ -637,7 +637,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		if ($val) {
 			$obj = $val['obj'];
 			if ($name === 'hasValue') {
-				$res = $obj instanceof Object
+				$res = $obj instanceof SS_Object
 					? $obj->exists()
 					: (bool)$obj;
 			} else {
@@ -1139,10 +1139,10 @@ class SSViewer implements Flushable {
 	 * Effectively this is the common code that both SSViewer#process and SSViewer_FromString#process call
 	 *
 	 * @param string $cacheFile - The path to the file that contains the template compiled to PHP
-	 * @param Object $item - The item to use as the root scope for the template
+	 * @param SS_Object $item - The item to use as the root scope for the template
 	 * @param array|null $overlay - Any variables to layer on top of the scope
 	 * @param array|null $underlay - Any variables to layer underneath the scope
-	 * @param Object $inheritedScope - the current scope of a parent template including a sub-template
+	 * @param SS_Object $inheritedScope - the current scope of a parent template including a sub-template
 	 *
 	 * @return string - The result of executing the template
 	 */
@@ -1179,7 +1179,7 @@ class SSViewer implements Flushable {
 	 *
 	 * @param ViewableData $item
 	 * @param array|null $arguments - arguments to an included template
-	 * @param Object $inheritedScope - the current scope of a parent template including a sub-template
+	 * @param SS_Object $inheritedScope - the current scope of a parent template including a sub-template
 	 *
 	 * @return HTMLText Parsed template output.
 	 */

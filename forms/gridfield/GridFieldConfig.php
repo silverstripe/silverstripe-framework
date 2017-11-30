@@ -19,7 +19,7 @@
  * @package forms
  * @subpackage fields-gridfield
  */
-class GridFieldConfig extends Object {
+class GridFieldConfig extends SS_Object {
 
 	/**
 	 * @var ArrayList

@@ -158,7 +158,7 @@ Debug::loadErrorHandlers();
  * data (e.g. the custom SilverStripe static handling).
  *
  * @param string $className
- * @return Object
+ * @return SS_Object
  */
 function singleton($className) {
 	if($className == "Config") user_error("Don't pass Config to singleton()", E_USER_ERROR);

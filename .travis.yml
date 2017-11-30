@@ -12,6 +12,8 @@ addons:
 
 matrix:
   include:
+    - php: 7.2
+      env: DB=MYSQL PDO=1
     - php: 5.3
       env: DB=MYSQL
     - php: 5.4

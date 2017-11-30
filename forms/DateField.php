@@ -514,7 +514,7 @@ class DateField_Disabled extends DateField {
  * @package framework
  * @subpackage forms
  */
-class DateField_View_JQuery extends Object {
+class DateField_View_JQuery extends SS_Object {
 
 	protected $field;
 

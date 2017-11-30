@@ -165,7 +165,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$this->setResponse($response);
 
 		} else {
-			if($body instanceof Object && $body->hasMethod('getViewer')) {
+			if($body instanceof SS_Object && $body->hasMethod('getViewer')) {
 				if(isset($_REQUEST['debug_request'])) {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");

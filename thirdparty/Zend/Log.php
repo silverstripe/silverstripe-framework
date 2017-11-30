@@ -242,7 +242,7 @@ class Zend_Log
      * @param string $type 'writer' of 'filter'
      * @param mixed $config Zend_Config or Array
      * @param string $namespace
-     * @return object
+     * @return SS_Object
      * @throws Zend_Log_Exception
      */
     protected function _constructFromConfig($type, $config, $namespace)

@@ -62,7 +62,7 @@ require_once 'i18nSSLegacyAdapter.php';
  * @package framework
  * @subpackage misc
  */
-class i18n extends Object implements TemplateGlobalProvider, Flushable {
+class i18n extends SS_Object implements TemplateGlobalProvider, Flushable {
 
 	/**
 	 * This static variable is used to store the current defined locale.

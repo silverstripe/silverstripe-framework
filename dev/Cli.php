@@ -6,7 +6,7 @@
  * @package framework
  * @subpackage dev
  */
-class SS_Cli extends Object {
+class SS_Cli extends SS_Object {
 	/**
 	 * Returns true if the current STDOUT supports the use of colour control codes.
 	 */

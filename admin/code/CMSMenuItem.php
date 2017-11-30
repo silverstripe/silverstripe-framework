@@ -11,7 +11,7 @@
  * @package framework
  * @subpackage admin
  */
-class CMSMenuItem extends Object {
+class CMSMenuItem extends SS_Object {
 
 	/**
 	 * The (translated) menu title

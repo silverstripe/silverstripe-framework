@@ -21,7 +21,7 @@ abstract class Extension {
 	/**
 	 * The object this extension is applied to.
 	 *
-	 * @var Object
+	 * @var SS_Object
 	 */
 	protected $owner;
 
@@ -55,7 +55,7 @@ abstract class Extension {
 
 	/**
 	 * Set the owner of this extension.
-	 * @param Object $owner The owner object,
+	 * @param SS_Object $owner The owner object,
 	 * @param string $ownerBaseClass The base class that the extension is applied to; this may be
 	 * the class of owner, or it may be a parent.  For example, if Versioned was applied to SiteTree,
 	 * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
@@ -78,7 +78,7 @@ abstract class Extension {
 	/**
 	 * Returns the owner of this extension.
 	 *
-	 * @return Object
+	 * @return SS_Object
 	 */
 	public function getOwner() {
 		return $this->owner;

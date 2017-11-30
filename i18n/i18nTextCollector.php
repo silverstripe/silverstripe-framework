@@ -25,7 +25,7 @@
  * @uses i18nEntityProvider
  * @uses i18n
  */
-class i18nTextCollector extends Object {
+class i18nTextCollector extends SS_Object {
 
 	/**
 	 * Default (master) locale

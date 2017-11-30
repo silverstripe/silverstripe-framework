@@ -9,7 +9,7 @@
  * @package framework
  * @subpackage misc
  */
-class ShortcodeParser extends Object {
+class ShortcodeParser extends SS_Object {
 
 	public function img_shortcode($attrs) {
 		return "<img src='".$attrs['src']."'>";

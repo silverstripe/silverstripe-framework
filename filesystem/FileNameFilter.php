@@ -27,7 +27,7 @@
  *
  * See {@link URLSegmentFilter} for a more generic implementation.
  */
-class FileNameFilter extends Object {
+class FileNameFilter extends SS_Object {
 
 	/**
 	 * @config

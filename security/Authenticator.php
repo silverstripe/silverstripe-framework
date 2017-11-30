@@ -9,7 +9,7 @@
  * @package framework
  * @subpackage security
  */
-abstract class Authenticator extends Object {
+abstract class Authenticator extends SS_Object {
 
 	/**
 	 * This variable holds all authenticators that should be used

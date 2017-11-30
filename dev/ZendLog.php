@@ -23,7 +23,7 @@ class SS_ZendLog extends Zend_Log {
 
 	/**
 	 * Remove a writer instance that exists in this logger.
-	 * @param object Zend_Log_Writer_Abstract instance
+	 * @param SS_Object Zend_Log_Writer_Abstract instance
 	 */
 	public function removeWriter($writer) {
 		foreach($this->_writers as $index => $existingWriter) {

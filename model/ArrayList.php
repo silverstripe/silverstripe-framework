@@ -171,8 +171,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Replaces an item in this list with another item.
 	 *
-	 * @param array|object $item
-	 * @param array|object $with
+	 * @param array|SS_Object $item
+	 * @param array|SS_Object $with
 	 * @return void;
 	 */
 	public function replace($item, $with) {
@@ -188,7 +188,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * Merges with another array or list by pushing all the items in it onto the
 	 * end of this list.
 	 *
-	 * @param array|object $with
+	 * @param array|SS_Object $with
 	 */
 	public function merge($with) {
 		foreach ($with as $item) $this->push($item);
@@ -221,7 +221,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Pushes an item onto the end of this list.
 	 *
-	 * @param array|object $item
+	 * @param array|SS_Object $item
 	 */
 	public function push($item) {
 		$this->items[] = $item;
@@ -230,7 +230,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Pops the last element off the end of the list and returns it.
 	 *
-	 * @return array|object
+	 * @return array|SS_Object
 	 */
 	public function pop() {
 		return array_pop($this->items);
@@ -239,7 +239,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Add an item onto the beginning of the list.
 	 *
-	 * @param array|object $item
+	 * @param array|SS_Object $item
 	 */
 	public function unshift($item) {
 		array_unshift($this->items, $item);
@@ -248,7 +248,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Shifts the item off the beginning of the list and returns it.
 	 *
-	 * @return array|object
+	 * @return array|SS_Object
 	 */
 	public function shift() {
 		return array_shift($this->items);
@@ -725,7 +725,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * Extracts a value from an item in the list, where the item is either an
 	 * object or array.
 	 *
-	 * @param  array|object $item
+	 * @param  array|SS_Object $item
 	 * @param  string $key
 	 * @return mixed
 	 */

@@ -613,7 +613,7 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 
 }
 
-class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
+class i18nTest_Object extends SS_Object implements TestOnly, i18nEntityProvider {
 	static $my_translatable_property = "Untranslated";
 
 	public static function my_translatable_property() {

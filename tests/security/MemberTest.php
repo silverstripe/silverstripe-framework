@@ -487,7 +487,7 @@ class MemberTest extends FunctionalTest {
 	 * edit and delete their own record too.
 	 */
 	public function testCanManipulateOwnRecord() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$extensions = $this->removeExtensions(SS_Object::get_extensions('Member'));
 		$member = $this->objFromFixture('Member', 'test');
 		$member2 = $this->objFromFixture('Member', 'staffmember');
 
@@ -515,7 +515,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testAuthorisedMembersCanManipulateOthersRecords() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$extensions = $this->removeExtensions(SS_Object::get_extensions('Member'));
 		$member = $this->objFromFixture('Member', 'test');
 		$member2 = $this->objFromFixture('Member', 'staffmember');
 
@@ -530,7 +530,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testExtendedCan() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$extensions = $this->removeExtensions(SS_Object::get_extensions('Member'));
 		$member = $this->objFromFixture('Member', 'test');
 
 		/* Normal behaviour is that you can't view a member unless canView() on an extension returns true */

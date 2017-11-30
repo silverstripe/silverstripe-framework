@@ -6,7 +6,7 @@
  * @package framework
  * @subpackage core
  */
-class ValidationResult extends Object {
+class ValidationResult extends SS_Object {
 	/**
 	 * @var bool - is the result valid or not
 	 */

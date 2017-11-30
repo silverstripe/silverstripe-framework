@@ -54,7 +54,7 @@ class XMLDataFormatter extends DataFormatter {
 			$fieldValue = $obj->obj($fieldName)->forTemplate();
 			if(!mb_check_encoding($fieldValue,'utf-8')) $fieldValue = "(data is badly encoded)";
 
-			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toXML')) {
+			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'SS_Object') && $fieldValue->hasMethod('toXML')) {
 				$xml .= $fieldValue->toXML();
 			} else {
 				if('HTMLText' == $fieldType) {

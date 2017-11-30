@@ -1,6 +1,6 @@
 <?php
 
-class ConfigTest_DefinesFoo extends Object implements TestOnly {
+class ConfigTest_DefinesFoo extends SS_Object implements TestOnly {
 	protected static $foo = 1;
 }
 
@@ -74,7 +74,7 @@ class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
 	private static $second = array('test_3');
 }
 
-class ConfigTest_TestNest extends Object implements TestOnly {
+class ConfigTest_TestNest extends SS_Object implements TestOnly {
 	/** @config */
 	private static $foo = 3;
 	/** @config */
@@ -249,17 +249,17 @@ class ConfigTest extends SapphireTest {
 	}
 
 	public function testStaticLookup() {
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'foo'), 1);
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'bar'), null);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFoo', 'foo'), 1);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFoo', 'bar'), null);
 
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesBar', 'foo'), null);
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesBar', 'bar'), 2);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesBar', 'foo'), null);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesBar', 'bar'), 2);
 
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooAndBar', 'foo'), 3);
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooAndBar', 'bar'), 3);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFooAndBar', 'foo'), 3);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFooAndBar', 'bar'), 3);
 
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'foo'), 4);
-		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'foo'), 4);
+		$this->assertEquals(SS_Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
 	}
 
 	public function testForClass() {

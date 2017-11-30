@@ -211,7 +211,7 @@ class SS_ClassManifest {
 	 * Returns an array containing all the descendants (direct and indirect)
 	 * of a class.
 	 *
-	 * @param  string|object $class
+	 * @param  string|SS_Object $class
 	 * @return array
 	 */
 	public function getDescendantsOf($class) {

@@ -26,7 +26,7 @@
  * @package framework
  * @subpackage bulkloading
  */
-class CSVParser extends Object implements Iterator {
+class CSVParser extends SS_Object implements Iterator {
 
 	/**
 	 * @var string $filename

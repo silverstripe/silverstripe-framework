@@ -20,7 +20,7 @@ class ManyManyListExtensionTest extends SapphireTest {
 		// This extends ManyManyListTest_Secondary with the secondary extension that adds the relationship back
 		// to the primary. The instance from the fixture is ManyManyListTest_SecondarySub, deliberately a sub-class of
 		// the extended class.
-		Object::add_extension('ManyManyListTest_Secondary', 'ManyManyListTest_IndirectSecondaryExtension');
+		SS_Object::add_extension('ManyManyListTest_Secondary', 'ManyManyListTest_IndirectSecondaryExtension');
 
 		// Test from the primary (not extended) to the secondary (which is extended)
 		$primary = $this->objFromFixture('ManyManyListTest_IndirectPrimary', 'manymany_extra_primary');

@@ -2429,7 +2429,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Otherwise, we need to determine if this is a complex field
 		if(self::is_composite_field($this->class, $field)) {
 			$helper = $this->castingHelper($field);
-			$fieldObj = Object::create_from_string($helper, $field);
+			$fieldObj = SS_Object::create_from_string($helper, $field);
 
 			$compositeFields = $fieldObj->compositeDatabaseFields();
 			foreach ($compositeFields as $compositeName => $compositeType) {
@@ -2687,7 +2687,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		$castingHelper = $this->castingHelper($fieldName);
 		if($castingHelper) {
-			$fieldObj = Object::create_from_string($castingHelper, $fieldName);
+			$fieldObj = SS_Object::create_from_string($castingHelper, $fieldName);
 			$fieldObj->setValue($val);
 			$fieldObj->saveInto($this);
 		} else {
@@ -2999,7 +2999,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// General casting information for items in $db
 		} else if($helper = $this->db($fieldName)) {
-			$obj = Object::create_from_string($helper, $fieldName);
+			$obj = SS_Object::create_from_string($helper, $fieldName);
 			$obj->setValue($this->$fieldName, $this->record, false);
 			return $obj;
 
