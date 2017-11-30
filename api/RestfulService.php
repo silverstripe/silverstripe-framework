@@ -373,7 +373,9 @@ class RestfulService extends ViewableData implements Flushable {
 			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
 				$match[1] = preg_replace_callback(
 					'/(?<=^|[\x09\x20\x2D])./',
-					create_function('$matches', 'return strtoupper($matches[0]);'),
+					function($matches) {
+					    return strtoupper($matches[0]);
+                    },
 					trim($match[1])
 				);
 				if( isset($headers[$match[1]]) ) {
