@@ -41,5 +41,4 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Security\InheritedPermissionFlusher:
     properties:
       Services:
-        - %$SilverStripe\Security\PermissionChecker.sitetree
-        - %$SilverStripe\Security\PermissionChecker.file
+        - '%$SilverStripe\Security\PermissionChecker.sitetree'
