@@ -405,9 +405,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$state = false;
 		} else {
 
-			$attempts = LoginAttempt::get()->filter($filter = array(
-				'Email' => $this->{static::config()->unique_identifier_field},
-			))->sort('Created', 'DESC')->limit($this->config()->lock_out_after_incorrect_logins);
+			$email = $this->{static::config()->unique_identifier_field};
+			$attempts = LoginAttempt::getByEmail($email)
+				->sort('Created', 'DESC')
+				->limit($this->config()->lock_out_after_incorrect_logins);
 
 			if ($attempts->count() < $this->config()->lock_out_after_incorrect_logins) {
 				$state = false;
