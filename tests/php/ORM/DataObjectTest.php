@@ -1341,10 +1341,7 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($schema->classHasTable(DataObject::class));
         $this->assertFalse($schema->classHasTable(ViewableData::class));
 
-        // Invalid class
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessage('Class ThisIsntADataObject does not exist');
-
+        /* Invalid class name */
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
     }
 
