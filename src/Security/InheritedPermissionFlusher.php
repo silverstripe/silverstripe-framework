@@ -40,7 +40,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * @param InheritedPermissions[]
+     * @param InheritedPermissions []
      */
     public function setServices($services)
     {
@@ -87,9 +87,16 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
             return null;
         }
 
-        return ($this->owner instanceof Group)
-            ? $this->owner->Members()->column('ID')
-            : [$this->owner->ID];
+        if (!$this->owner->exists()) {
+            return null;
+        }
 
+        if ($this->owner instanceof Group) {
+            return $this->owner->Members()->exists()
+                ? $this->owner->Members()->column('ID')
+                : null;
+        }
+
+        return [$this->owner->ID];
     }
 }

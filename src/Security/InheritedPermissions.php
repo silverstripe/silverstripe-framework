@@ -91,13 +91,6 @@ class InheritedPermissions implements PermissionChecker
     protected $cacheService;
 
     /**
-     * Cache key for persistent permissions
-     *
-     * @var string
-     */
-    protected $cacheKey;
-
-    /**
      * Construct new permissions object
      *
      * @param string $baseClass Base class
@@ -109,10 +102,8 @@ class InheritedPermissions implements PermissionChecker
             throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
         }
 
-        $memberID = Security::getCurrentUser() ? Security::getCurrentUser()->ID : null;
         $this->baseClass = $baseClass;
         $this->cacheService = $cache;
-        $this->cacheKey = md5(implode('_', [$this->baseClass, $memberID]));
 
         return $this;
     }
@@ -123,7 +114,7 @@ class InheritedPermissions implements PermissionChecker
     public function __destruct()
     {
         // Ensure back-end cache is updated
-        if (!empty($this->cachePermissions)) {
+        if (!empty($this->cachePermissions) && $this->cacheService) {
             foreach ($this->cachePermissions as $key => $permissions) {
                 $this->cacheService->set($key, $permissions);
             }
@@ -138,6 +129,10 @@ class InheritedPermissions implements PermissionChecker
      */
     public function flushCache($ids = null)
     {
+        if (!$this->cacheService) {
+            return;
+        }
+
         // Hard flush, e.g. flush=1
         if (!$ids) {
             $this->cacheService->clear();
@@ -145,7 +140,7 @@ class InheritedPermissions implements PermissionChecker
 
         if ($ids && is_array($ids)) {
             foreach ([self::VIEW, self::EDIT, self::DELETE] as $type) {
-                foreach($ids as $memberID) {
+                foreach ($ids as $memberID) {
                     $key = $this->generateCacheKey($type, $memberID);
                     $this->cacheService->delete($key);
                 }
@@ -270,10 +265,10 @@ class InheritedPermissions implements PermissionChecker
         $cacheKey = $this->generateCacheKey($type, $memberID);
         $cachePermissions = $this->getCachePermissions($cacheKey);
         if ($useCached && $cachePermissions) {
-            $cachedValues = array_intersect_key($cachePermissions[$cacheKey], $result);
+            $cachedValues = array_intersect_key($cachePermissions, $result);
 
             // If we can't find everything in the cache, then look up the remainder separately
-            $uncachedIDs = array_keys(array_diff_key($result, $cachePermissions[$cacheKey]));
+            $uncachedIDs = array_keys(array_diff_key($result, $cachePermissions));
             if ($uncachedIDs) {
                 $uncachedValues = $this->batchPermissionCheck($type, $uncachedIDs, $member, $globalPermission, false);
                 return $cachedValues + $uncachedValues;
@@ -297,7 +292,7 @@ class InheritedPermissions implements PermissionChecker
         if ($this->isVersioned()) {
             // Check all records for each stage and merge
             $combinedStageResult = [];
-            foreach ([ Versioned::DRAFT, Versioned::LIVE ] as $stage) {
+            foreach ([Versioned::DRAFT, Versioned::LIVE] as $stage) {
                 $stageRecords = Versioned::get_by_stage($this->getBaseClass(), $stage)
                     ->byIDs($ids);
                 // Exclude previously calculated records from later stage calculations
@@ -327,14 +322,12 @@ class InheritedPermissions implements PermissionChecker
         }
 
         // Cache the results
-        if (empty($cachePermissions[$cacheKey])) {
-            $cachePermissions[$cacheKey] = [];
+        if (empty($this->cachePermissions[$cacheKey])) {
+            $this->cachePermissions[$cacheKey] = [];
         }
         if ($combinedStageResult) {
-            $cachePermissions[$cacheKey] = $combinedStageResult + $cachePermissions[$cacheKey];
+            $this->cachePermissions[$cacheKey] = $combinedStageResult + $this->cachePermissions[$cacheKey];
         }
-
-        $this->cachePermissions = $cachePermissions;
 
         return $combinedStageResult;
     }
@@ -426,6 +419,12 @@ class InheritedPermissions implements PermissionChecker
         return $result;
     }
 
+    /**
+     * @param array $ids
+     * @param Member|null $member
+     * @param bool $useCached
+     * @return array
+     */
     public function canEditMultiple($ids, Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(
@@ -437,11 +436,23 @@ class InheritedPermissions implements PermissionChecker
         );
     }
 
+    /**
+     * @param array $ids
+     * @param Member|null $member
+     * @param bool $useCached
+     * @return array
+     */
     public function canViewMultiple($ids, Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(self::VIEW, $ids, $member, [], $useCached);
     }
 
+    /**
+     * @param array $ids
+     * @param Member|null $member
+     * @param bool $useCached
+     * @return array
+     */
     public function canDeleteMultiple($ids, Member $member = null, $useCached = true)
     {
         // Validate ids
@@ -511,6 +522,11 @@ class InheritedPermissions implements PermissionChecker
         return array_fill_keys($deletable, true) + array_fill_keys($ids, false);
     }
 
+    /**
+     * @param int $id
+     * @param Member|null $member
+     * @return bool|mixed
+     */
     public function canDelete($id, Member $member = null)
     {
         // No ID: Check default permission
@@ -520,7 +536,7 @@ class InheritedPermissions implements PermissionChecker
 
         // Regular canEdit logic is handled by canEditMultiple
         $results = $this->canDeleteMultiple(
-            [ $id ],
+            [$id],
             $member
         );
 
@@ -528,6 +544,11 @@ class InheritedPermissions implements PermissionChecker
         return isset($results[$id]) ? $results[$id] : false;
     }
 
+    /**
+     * @param int $id
+     * @param Member|null $member
+     * @return bool|mixed
+     */
     public function canEdit($id, Member $member = null)
     {
         // No ID: Check default permission
@@ -537,7 +558,7 @@ class InheritedPermissions implements PermissionChecker
 
         // Regular canEdit logic is handled by canEditMultiple
         $results = $this->canEditMultiple(
-            [ $id ],
+            [$id],
             $member
         );
 
@@ -545,6 +566,11 @@ class InheritedPermissions implements PermissionChecker
         return isset($results[$id]) ? $results[$id] : false;
     }
 
+    /**
+     * @param int $id
+     * @param Member|null $member
+     * @return bool|mixed
+     */
     public function canView($id, Member $member = null)
     {
         // No ID: Check default permission
@@ -554,7 +580,7 @@ class InheritedPermissions implements PermissionChecker
 
         // Regular canView logic is handled by canViewMultiple
         $results = $this->canViewMultiple(
-            [ $id ],
+            [$id],
             $member
         );
 
@@ -643,6 +669,9 @@ class InheritedPermissions implements PermissionChecker
         return $singleton->hasExtension(Versioned::class);
     }
 
+    /**
+     * @return $this
+     */
     public function clearCache()
     {
         $this->cachePermissions = [];
@@ -683,7 +712,11 @@ class InheritedPermissions implements PermissionChecker
             return $this->cachePermissions[$cacheKey];
         }
 
-        return $this->cacheService->get($this->cacheKey);
+        if ($this->cacheService) {
+            return $this->cacheService->get($cacheKey);
+        }
+
+        return null;
     }
 
     /**

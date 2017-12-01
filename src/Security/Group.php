@@ -88,7 +88,7 @@ class Group extends DataObject
         parent::populateDefaults();
 
         if (!$this->Title) {
-            $this->Title = _t(__CLASS__.'.NEWGROUP', "New Group");
+            $this->Title = _t(__CLASS__ . '.NEWGROUP', "New Group");
         }
     }
 
@@ -120,7 +120,7 @@ class Group extends DataObject
                 "Root",
                 new Tab(
                     'Members',
-                    _t(__CLASS__.'.MEMBERS', 'Members'),
+                    _t(__CLASS__ . '.MEMBERS', 'Members'),
                     new TextField("Title", $this->fieldLabel('Title')),
                     $parentidfield = DropdownField::create(
                         'ParentID',
@@ -131,7 +131,7 @@ class Group extends DataObject
                 ),
                 $permissionsTab = new Tab(
                     'Permissions',
-                    _t(__CLASS__.'.PERMISSIONS', 'Permissions'),
+                    _t(__CLASS__ . '.PERMISSIONS', 'Permissions'),
                     $permissionsField = new PermissionCheckboxSetField(
                         'Permissions',
                         false,
@@ -144,7 +144,8 @@ class Group extends DataObject
         );
 
         $parentidfield->setDescription(
-            _t('SilverStripe\\Security\\Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
+            _t('SilverStripe\\Security\\Group.GroupReminder',
+                'If you choose a parent group, this group will take all it\'s roles')
         );
 
         if ($this->ID) {
@@ -217,14 +218,14 @@ class Group extends DataObject
             PermissionRole::get()->count() &&
             class_exists(SecurityAdmin::class)
         ) {
-            $fields->findOrMakeTab('Root.Roles', _t(__CLASS__.'.ROLES', 'Roles'));
+            $fields->findOrMakeTab('Root.Roles', _t(__CLASS__ . '.ROLES', 'Roles'));
             $fields->addFieldToTab(
                 'Root.Roles',
                 new LiteralField(
                     "",
                     "<p>" .
                     _t(
-                        __CLASS__.'.ROLESDESCRIPTION',
+                        __CLASS__ . '.ROLESDESCRIPTION',
                         "Roles are predefined sets of permissions, and can be assigned to groups.<br />"
                         . "They are inherited from parent groups if required."
                     ) . '<br />' .
@@ -262,11 +263,13 @@ class Group extends DataObject
             }
 
             $rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
-                    ->setDefaultItems($groupRoleIDs)
-                    ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
-                    ->setDisabledItems($inheritedRoleIDs);
+                ->setDefaultItems($groupRoleIDs)
+                ->setAttribute('data-placeholder',
+                    _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
+                ->setDisabledItems($inheritedRoleIDs);
             if (!$allRoles->count()) {
-                $rolesField->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.NoRoles', 'No roles found'));
+                $rolesField->setAttribute('data-placeholder',
+                    _t('SilverStripe\\Security\\Group.NoRoles', 'No roles found'));
             }
             $fields->addFieldToTab('Root.Roles', $rolesField);
         }
@@ -286,15 +289,20 @@ class Group extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Title'] = _t(__CLASS__.'.GROUPNAME', 'Group name');
+        $labels['Title'] = _t(__CLASS__ . '.GROUPNAME', 'Group name');
         $labels['Description'] = _t('SilverStripe\\Security\\Group.Description', 'Description');
-        $labels['Code'] = _t('SilverStripe\\Security\\Group.Code', 'Group Code', 'Programmatical code identifying a group');
-        $labels['Locked'] = _t('SilverStripe\\Security\\Group.Locked', 'Locked?', 'Group is locked in the security administration area');
+        $labels['Code'] = _t('SilverStripe\\Security\\Group.Code', 'Group Code',
+            'Programmatical code identifying a group');
+        $labels['Locked'] = _t('SilverStripe\\Security\\Group.Locked', 'Locked?',
+            'Group is locked in the security administration area');
         $labels['Sort'] = _t('SilverStripe\\Security\\Group.Sort', 'Sort Order');
         if ($includerelations) {
-            $labels['Parent'] = _t('SilverStripe\\Security\\Group.Parent', 'Parent Group', 'One group has one parent group');
-            $labels['Permissions'] = _t('SilverStripe\\Security\\Group.has_many_Permissions', 'Permissions', 'One group has many permissions');
-            $labels['Members'] = _t('SilverStripe\\Security\\Group.many_many_Members', 'Members', 'One group has many members');
+            $labels['Parent'] = _t('SilverStripe\\Security\\Group.Parent', 'Parent Group',
+                'One group has one parent group');
+            $labels['Permissions'] = _t('SilverStripe\\Security\\Group.has_many_Permissions', 'Permissions',
+                'One group has many permissions');
+            $labels['Members'] = _t('SilverStripe\\Security\\Group.many_many_Members', 'Members',
+                'One group has many members');
         }
 
         return $labels;
@@ -328,8 +336,14 @@ class Group extends DataObject
             });
         }
         // Now set all children groups as a new foreign key
-        $groups = Group::get()->byIDs($this->collateFamilyIDs());
-        $result = $result->forForeignID($groups->column('ID'))->where($filter);
+        $familyIDs = $this->collateFamilyIDs();
+        if (!empty($familyIDs)) {
+            $groups = Group::get()->byIDs($familyIDs);
+            $groupIDs = $groups->column('ID');
+            if (!empty($groupIDs)) {
+                $result = $result->forForeignID($groupIDs)->where($filter);
+            }
+        }
 
         return $result;
     }
@@ -514,7 +528,7 @@ class Group extends DataObject
         // Only set code property when the group has a custom title, and no code exists.
         // The "Code" attribute is usually treated as a more permanent identifier than database IDs
         // in custom application logic, so can't be changed after its first set.
-        if (!$this->Code && $this->Title != _t(__CLASS__.'.NEWGROUP', "New Group")) {
+        if (!$this->Code && $this->Title != _t(__CLASS__ . '.NEWGROUP', "New Group")) {
             $this->setCode($this->Title);
         }
     }
