@@ -112,7 +112,7 @@ class DatabaseAdapterRegistry
 
     /**
      * Detects all _register_database.php files and invokes them.
-     * Searches through vendor/ folder only,
+     * Searches through vendor/*\/* folders only,
      * does not support "legacy" folder location in webroot
      */
     public static function autodiscover()
