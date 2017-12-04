@@ -1,0 +1,35 @@
+SilverStripe\Security\Group:
+  editors:
+    Title: Editors
+  admins:
+    Title: Administrators
+  allsections:
+    Title: All Section Editors
+  securityadmins:
+    Title: Security Admins
+
+SilverStripe\Security\Permission:
+  admins:
+    Code: ADMIN
+    Group: =>SilverStripe\Security\Group.admins
+  editors:
+    Code: CMS_ACCESS_CMSMain
+    Group: =>SilverStripe\Security\Group.editors
+  testpermission:
+    Code: TEST_NODE_ACCESS
+    Group: =>SilverStripe\Security\Group.editors
+
+
+SilverStripe\Security\Member:
+  editor:
+    FirstName: Test
+    Surname: Editor
+    Groups: =>SilverStripe\Security\Group.editors
+  admin:
+    FirstName: Test
+    Surname: Administrator
+    Groups: =>SilverStripe\Security\Group.admins
+  allsections:
+    Groups: =>SilverStripe\Security\Group.allsections
+  securityadmin:
+    Groups: =>SilverStripe\Security\Group.securityadmins
