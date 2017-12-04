@@ -28,9 +28,9 @@ class TextareaField extends FormField
         'Value' => 'Text',
         'ValueEntities' => 'HTMLFragment(array(\'shortcodes\' => false))',
     );
-    
+
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
-    
+
     /**
      * Visible number of text lines.
      *
@@ -46,18 +46,28 @@ class TextareaField extends FormField
     protected $cols = 20;
 
     /**
+     * @var int
+     */
+    protected $maxLength;
+
+    /**
      * Set textarea specific schema data
      */
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-        
+
         $data['data']['rows'] = $this->getRows();
         $data['data']['columns'] = $this->getColumns();
-        
+
+        $maxLength = $this->getMaxLength();
+        if ($maxLength) {
+            $data['maxLength'] = $maxLength;
+        }
+
         return $data;
     }
-    
+
     /**
      * Set the number of rows in the textarea
      *
@@ -104,6 +114,25 @@ class TextareaField extends FormField
     public function getColumns()
     {
         return $this->cols;
+    }
+
+    /**
+     * @param int $maxLength
+     * @return $this
+     */
+    public function setMaxLength($maxLength)
+    {
+        $this->maxLength = $maxLength;
+
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getMaxLength()
+    {
+        return $this->maxLength;
     }
 
     /**
