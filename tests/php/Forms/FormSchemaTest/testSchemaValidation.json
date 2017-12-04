@@ -30,6 +30,7 @@
             "disabled": false,
             "autoFocus": false,
             "customValidationMessage": "",
+            "maxLength": 40,
             "validation": {
                 "required": true,
                 "max": {
