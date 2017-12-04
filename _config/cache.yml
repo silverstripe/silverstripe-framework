@@ -22,3 +22,7 @@ SilverStripe\Core\Injector\Injector:
       factory: SilverStripe\Core\Cache\CacheFactory
       constructor:
         namespace: 'ratelimiter'
+  Psr\SimpleCache\CacheInterface.InheritedPermissions:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "InheritedPermissions"
