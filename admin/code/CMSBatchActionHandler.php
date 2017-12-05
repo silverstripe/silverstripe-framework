@@ -23,10 +23,13 @@ class CMSBatchActionHandler extends RequestHandler {
 		'handleConfirmation',
 	);
 
+    /**
+     * @var Controller
+     */
 	protected $parentController;
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $urlSegment;
 
@@ -38,7 +41,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	protected $recordClass = 'SiteTree';
 
 	/**
-	 * @param string $parentController
+	 * @param Controller $parentController
 	 * @param string $urlSegment
 	 * @param string $recordClass
 	 */

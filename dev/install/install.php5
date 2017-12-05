@@ -1307,7 +1307,9 @@ class Installer extends InstallRequirements {
 		$locale = isset($_POST['locale']) ? addcslashes($_POST['locale'], "\'") : 'en_US';
 		$type = addcslashes($config['db']['type'], "\'");
 		$dbConfig = $config['db'][$type];
-		$dbConfig = array_map(create_function('$v', 'return addcslashes($v, "\\\'");'), $dbConfig);
+		$dbConfig = array_map(function($v) {
+		    return addcslashes($v, "\\'");
+        }, $dbConfig);
 		if(!isset($dbConfig['path'])) $dbConfig['path'] = '';
 		if(!$dbConfig) {
 			echo "<p style=\"color: red\">Bad config submitted</p><pre>";
