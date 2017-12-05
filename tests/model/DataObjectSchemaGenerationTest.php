@@ -195,6 +195,12 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
         $this->assertArrayHasKey('Sort', $indexes);
         $this->assertTrue($indexes['Sort']);
 
+
+        Config::inst()->update('DataObjectSchemaGenerationTest_Sorted', 'default_sort', '"DataObjectSchemaGenerationTest_Sorted"."Sort" ASC');
+        $indexes = $object->databaseIndexes();
+        $this->assertArrayHasKey('Sort', $indexes);
+        $this->assertTrue($indexes['Sort']);
+
         Config::inst()->update('DataObjectSchemaGenerationTest_Sorted', 'default_sort', '"Sort" DESC, "Title" ASC');
         $indexes = $object->databaseIndexes();
         $this->assertArrayHasKey('Sort', $indexes);

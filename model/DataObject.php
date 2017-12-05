@@ -3405,25 +3405,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if ($sort && is_string($sort)) {
-		    $sort = preg_split('/,(?![^()]*+\\))/', $sort);
+			$sort = preg_split('/,(?![^()]*+\\))/', $sort);
 
 			foreach ($sort as $value) {
-				$value = trim($value);
-                if(strpos($value, ' ') !== false) {
-                    $parts = explode(' ', $value, 2);
-                    $column = $parts[0];
-				} else {
-					$column = $value;
-				}
-				if (substr($column, 0, 1) === '"') {
-					$column = substr($column, 1, strlen($column)-1);
-				}
-				if (substr($column, -1, 1) === '"') {
-					$column = substr($column, 0, -1);
-				}
-				if ($this->hasOwnTableDatabaseField($column) && !array_key_exists($column, $indexes)) {
-					$indexes[$column] = true;
-				}
+				try {
+					list ($table, $column) = $this->parseSortColumn(trim($value));
+
+					$table = trim($table, '"');
+					$column = trim($column, '"');
+
+					if ($table && strtolower($table) !== strtolower($this->class)) {
+						continue;
+					}
+
+					if ($this->hasOwnTableDatabaseField($column) && !array_key_exists($column, $indexes)) {
+						$indexes[$column] = true;
+					}
+				} catch (InvalidArgumentException $e) { }
 			}
 		}
 
@@ -3432,6 +3430,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		return $indexes;
+	}
+
+	/**
+	 * Parses a specified column into a sort field and direction
+	 *
+	 * @param string $column String to parse containing the column name
+	 * @return array Resolved table and column.
+	 */
+	protected function parseSortColumn($column) {
+		// Parse column specification, considering possible ansi sql quoting
+		// Note that table prefix is allowed, but discarded
+		if(preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
+			$table = $match['table'];
+			$column = $match['column'];
+		} else {
+			throw new InvalidArgumentException("Invalid sort() column");
+		}
+
+		return array($table, $column);
 	}
 
 	/**
