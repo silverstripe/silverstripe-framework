@@ -373,7 +373,9 @@ class RestfulService extends ViewableData implements Flushable {
 			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
 				$match[1] = preg_replace_callback(
 					'/(?<=^|[\x09\x20\x2D])./',
-					create_function('$matches', 'return strtoupper($matches[0]);'),
+					function($matches) {
+					    return strtoupper($matches[0]);
+                    },
 					trim($match[1])
 				);
 				if( isset($headers[$match[1]]) ) {
@@ -418,7 +420,7 @@ class RestfulService extends ViewableData implements Flushable {
 		if($element)
 			$childElements = $xml->{$collection}->{$element};
 
-		if($childElements){
+		if(isset($childElements) && $childElements){
 			foreach($childElements as $child){
 				$data = array();
 				foreach($child->attributes() as $key => $value){
@@ -448,7 +450,7 @@ class RestfulService extends ViewableData implements Flushable {
 		if($element)
 			$childElements = $xml->{$collection}->{$element};
 
-		if($childElements)
+		if(isset($childElements[$attr]))
 			$attr_value = (string) $childElements[$attr];
 
 		return Convert::raw2xml($attr_value);
@@ -474,7 +476,7 @@ class RestfulService extends ViewableData implements Flushable {
 		if($element)
 			$childElements = $xml->{$collection}->{$element};
 
-		if($childElements){
+		if(isset($childElements) && $childElements){
 			foreach($childElements as $child){
 				$data = array();
 				$this->getRecurseValues($child,$data);
@@ -523,7 +525,7 @@ class RestfulService extends ViewableData implements Flushable {
 		if($element)
 			$childElements = $xml->{$collection}->{$element};
 
-		if($childElements)
+		if(isset($childElements) && $childElements)
 			return Convert::raw2xml($childElements);
 	}
 
@@ -573,7 +575,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	protected $simpleXML;
 
 	/**
-	 * @var boolean It should be populated with cached request
+	 * @var RestfulService_Response|false It should be populated with cached request
 	 * when a request referring to this response was unsuccessful
 	 */
 	protected $cachedResponse = false;
@@ -600,14 +602,14 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 * get the cached response object. This allows you to access the cached
 	 * eaders, not just the cached body.
 	 *
-	 * @return RestfulSerivice_Response The cached response object
+	 * @return RestfulService_Response|false The cached response object
 	 */
 	public function getCachedResponse() {
 		return $this->cachedResponse;
 	}
 
 	/**
-	 * @return string
+	 * @return string|false
 	 */
 	public function getCachedBody() {
 		if ($this->cachedResponse) {

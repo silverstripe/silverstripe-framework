@@ -41,7 +41,7 @@ if(isset($_SERVER['argv'][2])) {
 	if(!isset($_GET)) $_GET = array();
 	if(!isset($_REQUEST)) $_REQUEST = array();
 	foreach($args as $arg) {
-		if(strpos($arg,'=') == false) {
+		if(strpos($arg,'=') === false) {
 			$_GET['args'][] = $arg;
 		} else {
 			$newItems = array();
