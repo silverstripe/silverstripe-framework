@@ -1,7 +1,17 @@
+
 inherit: true
+
+build:
+  environment:
+    variables:
+      # Must match actual branch, not alias. E.g. 4.x-dev rather than 4.1.x-dev for 4 branch, but 4.0.x-dev for 4.0 branch
+      COMPOSER_ROOT_VERSION: 4.x-dev
+  nodes:
+    analysis:
+      tests:
+        override: [php-scrutinizer-run]
+
 filter:
-  excluded_paths:
-    - thirdparty/*
-    - parsers/*
-    - docs/*
-    - images/*
+  paths:
+    - src/*
+    - tests/*

@@ -291,7 +291,11 @@ $players = Player::get();
 $map = $players->map('Name', 'NameWithBirthyear');
 ```
 
-## Related
+## Related Lessons
+* [Building custom SQL](https://www.silverstripe.org/learn/lessons/v4/beyond-the-orm-building-custom-sql-1)
+
+
+## Related Documentation
 
 * [Introduction to the Data Model and ORM](data_model_and_orm)
 

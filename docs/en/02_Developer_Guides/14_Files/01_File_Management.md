@@ -202,3 +202,6 @@ storage.
 SilverStripe\Assets\File:
   keep_archived_assets: true
 ```
+
+## Related Lessons
+* [Working with files and images](https://www.silverstripe.org/learn/lessons/v4/working-with-files-and-images-1)

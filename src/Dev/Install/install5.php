@@ -66,7 +66,7 @@ $theme = $config->getTheme($_REQUEST);
 
 // Check requirements
 $req = new InstallRequirements();
-$req->check();
+$req->check($originalIni);
 
 if ($req->isIIS()) {
     $webserverConfigFile = 'web.config';

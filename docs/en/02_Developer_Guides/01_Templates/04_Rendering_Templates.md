@@ -99,3 +99,9 @@ class PageController extends ContentController
 }
 
 ```
+
+## Related Lessons
+* [Controller actions/DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
+* [AJAX behaviour and ViewableData](https://www.silverstripe.org/learn/lessons/v4/ajax-behaviour-and-viewabledata-1)
+* [Dealing with arbitrary template data](https://www.silverstripe.org/learn/lessons/v4/dealing-with-arbitrary-template-data-1)
+* [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)

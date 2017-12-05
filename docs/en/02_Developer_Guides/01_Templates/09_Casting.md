@@ -167,3 +167,7 @@ Text / HTMLText methods:
   version of emails.
 * `$LimitSentences(<num>)` Will limit to the first `<num>` sentences in the content. If called on
   HTML content this will have all HTML stripped and converted to plain text.
+
+## Related Lessons
+* [Dealing with arbitrary template data](https://www.silverstripe.org/learn/lessons/v4/dealing-with-arbitrary-template-data-1)
+  

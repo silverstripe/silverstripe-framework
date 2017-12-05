@@ -558,6 +558,7 @@ class i18nTextCollector
         $inNamespace = false;
         $inClass = false; // after `class` but before `{`
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
+        $inSelf = false; // Tracks progress of collecting self::class
         $currentEntity = array();
         $currentClass = []; // Class components
         $previousToken = null;
@@ -584,10 +585,20 @@ class i18nTextCollector
                 if ($id === T_CLASS) {
                     // Skip if previous token was '::'. E.g. 'Object::class'
                     if (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
+                        if ($inSelf) {
+                            // Handle self::class by allowing logic further down
+                            // for __CLASS__ to handle an array of class parts
+                            $id = T_CLASS_C;
+                            $inSelf = false;
+                        } else {
+                            // Don't handle other ::class definitions. We can't determine which
+                            // class was invoked, so parent::class is not possible at this point.
+                            continue;
+                        }
+                    } else {
+                        $inClass = true;
                         continue;
                     }
-                    $inClass = true;
-                    continue;
                 }
                 if ($inClass && $id === T_STRING) {
                     $currentClass[] = $text;
@@ -614,7 +625,7 @@ class i18nTextCollector
 
                 // If inside this translation, some elements might be unreachable
                 if (in_array($id, [T_VARIABLE, T_STATIC]) ||
-                    ($id === T_STRING && in_array($text, ['self', 'static', 'parent']))
+                    ($id === T_STRING && in_array($text, ['static', 'parent']))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
                     // Should be provided by i18nEntityProvider instead
@@ -622,6 +633,12 @@ class i18nTextCollector
                     $inArrayClosedBy = false;
                     $inConcat = false;
                     $currentEntity = array();
+                    continue;
+                }
+
+                // Start collecting self::class declarations
+                if ($id === T_STRING && $text === 'self') {
+                    $inSelf = true;
                     continue;
                 }
 
@@ -648,7 +665,7 @@ class i18nTextCollector
                         throw new LogicException("Invalid string escape: " .$text);
                     }
                 } elseif ($id === T_CLASS_C) {
-                    // Evaluate __CLASS__ . '.KEY' concatenation
+                    // Evaluate __CLASS__ . '.KEY' and self::class concatenation
                     $text = implode('\\', $currentClass);
                 } else {
                     continue;

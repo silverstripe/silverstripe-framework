@@ -360,6 +360,9 @@ class MyAdmin extends ModelAdmin
 }
 ```
 
+## Related Lessons
+* [Intoduction to ModelAdmin](https://www.silverstripe.org/learn/lessons/v4/introduction-to-modeladmin-1)
+
 ## Related Documentation
 
 * [GridField](../forms/field_types/gridfield)

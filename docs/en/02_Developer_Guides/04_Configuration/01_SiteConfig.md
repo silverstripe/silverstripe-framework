@@ -81,3 +81,7 @@ provide the users a place to configure settings then the `SiteConfig` panel is t
 ## API Documentation
 
 * [SiteConfig](api:SilverStripe\SiteConfig\SiteConfig)
+
+
+## Related Lessons
+* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
