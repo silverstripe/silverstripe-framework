@@ -139,7 +139,7 @@ class ListboxField extends DropdownField {
 			function($key) {
 			    return strpos($key, ",") !== FALSE;
 			});
-			if($hasCommas) {
+			if(!empty($hasCommas)) {
 				throw new InvalidArgumentException('No commas allowed in $source keys');
 			}
 		}
