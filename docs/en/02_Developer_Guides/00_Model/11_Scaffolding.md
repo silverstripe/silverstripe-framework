@@ -86,7 +86,7 @@ class MyDataObject extends DataObject
 
     private static $searchable_fields = [
         'Name' => 'PartialMatchFilter',
-        'ProductCode' => 'NumericField'
+        'ProductCode' => NumericField::class
     ];
 }
 ```
@@ -102,12 +102,12 @@ class MyDataObject extends DataObject
 
    private static $searchable_fields = [
        'Name' => [
-          'field' => 'TextField',
+          'field' => TextField::class,
           'filter' => 'PartialMatchFilter',
        ],
        'ProductCode' => [
            'title' => 'Product code #',
-           'field' => 'NumericField',
+           'field' => NumericField::class,
            'filter' => 'PartialMatchFilter',
        ],
    ];
