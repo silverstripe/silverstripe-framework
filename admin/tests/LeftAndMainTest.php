@@ -173,7 +173,9 @@ class LeftAndMainTest extends FunctionalTest {
 		$adminuser = $this->objFromFixture('Member', 'admin');
 		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');
-		$allValsFn = create_function('$obj', 'return $obj->getValue();');
+		$allValsFn = function($obj) {
+            return $obj->getValue();
+        };
 
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);

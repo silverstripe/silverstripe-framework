@@ -171,7 +171,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$groupsTab->addExtraClass('ui-state-active');
 		} elseif($actionParam == 'users') {
 			$usersTab->addExtraClass('ui-state-active');
-		} elseif($actionParam == 'roles') {
+		} elseif($actionParam == 'roles' && isset($rolesTab)) {
 			$rolesTab->addExtraClass('ui-state-active');
 		}
 

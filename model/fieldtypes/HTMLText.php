@@ -118,7 +118,9 @@ class HTMLText extends Text {
 			$doc = new DOMDocument();
 
 			// Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error
-			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
+			set_error_handler(function($no, $str) {
+                throw new Exception("HTML Parse Error: " . $str);
+            }, E_ALL);
 			//  Nonbreaking spaces get converted into weird characters, so strip them
 			$value = str_replace('&nbsp;', ' ', $this->RAW());
 			try {

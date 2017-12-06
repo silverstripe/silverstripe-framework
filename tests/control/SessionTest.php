@@ -97,15 +97,27 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
 
 		// Generate our session
+		/** @var Session $s */
 		$s = Injector::inst()->create('Session', array());
 		$s->inst_set('val', 123);
 		$s->inst_finalize();
+		$data = $s->inst_getAll();
 
 		// Change our UA
 		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
 
-		// Verify the new session reset our values
-		$s2 = Injector::inst()->create('Session', $s);
+		// Verify the new session reset our values (passed by constructor)
+		/** @var Session $s2 */
+		$s2 = Injector::inst()->create('Session', $data);
 		$this->assertNotEquals($s2->inst_get('val'), 123);
+
+		// Verify a started session resets our values (initiated by $_SESSION object)
+		/** @var Session $s3 */
+		$s3 = Injector::inst()->create('Session', []);
+		foreach ($data as $key => $value) {
+			$s3->inst_set($key, $value);
+		}
+		$s3->inst_start();
+		$this->assertNotEquals($s3->inst_get('val'), 123);
 	}
 }
