@@ -507,25 +507,21 @@ class SecurityTest extends FunctionalTest {
 
 		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('testuser@example.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
-			'"LoginAttempt"."Email"' => 'testuser@example.com'
-		));
-		$this->assertTrue(is_object($attempt));
-		$member = DataObject::get_one('Member', array(
-			'"Member"."Email"' => 'testuser@example.com'
-		));
+		$attempt = LoginAttempt::getByEmail('testuser@example.com')->first();
+		$this->assertInstanceOf('LoginAttempt', $attempt);
+		$member = Member::get()->filter('Email', 'testuser@example.com')->first();
 		$this->assertEquals($attempt->Status, 'Failure');
-		$this->assertEquals($attempt->Email, 'testuser@example.com');
+		$this->assertEmpty($attempt->Email); // Doesn't store potentially sensitive data
+		$this->assertEquals($attempt->EmailHashed, sha1('testuser@example.com'));
 		$this->assertEquals($attempt->Member(), $member);
 
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('wronguser@silverstripe.com', 'wrongpassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
-			'"LoginAttempt"."Email"' => 'wronguser@silverstripe.com'
-		));
-		$this->assertTrue(is_object($attempt));
+		$attempt = LoginAttempt::getByEmail('wronguser@silverstripe.com')->first();
+		$this->assertInstanceOf('LoginAttempt', $attempt);
 		$this->assertEquals($attempt->Status, 'Failure');
-		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
+		$this->assertEmpty($attempt->Email); // Doesn't store potentially sensitive data
+		$this->assertEquals($attempt->EmailHashed, sha1('wronguser@silverstripe.com'));
 		$this->assertNotNull(
 			$this->loginErrorMessage(), 'An invalid email returns a message.'
 		);
@@ -536,15 +532,14 @@ class SecurityTest extends FunctionalTest {
 
 		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
 		$this->doTestLoginForm('testuser@example.com', '1nitialPassword');
-		$attempt = DataObject::get_one('LoginAttempt', array(
-			'"LoginAttempt"."Email"' => 'testuser@example.com'
-		));
+		$attempt = LoginAttempt::getByEmail('testuser@example.com')->first();
 		$member = DataObject::get_one('Member', array(
 			'"Member"."Email"' => 'testuser@example.com'
 		));
-		$this->assertTrue(is_object($attempt));
+		$this->assertInstanceOf('LoginAttempt', $attempt);
 		$this->assertEquals($attempt->Status, 'Success');
-		$this->assertEquals($attempt->Email, 'testuser@example.com');
+		$this->assertEmpty($attempt->Email); // Doesn't store potentially sensitive data
+		$this->assertEquals($attempt->EmailHashed, sha1('testuser@example.com'));
 		$this->assertEquals($attempt->Member(), $member);
 	}
 
