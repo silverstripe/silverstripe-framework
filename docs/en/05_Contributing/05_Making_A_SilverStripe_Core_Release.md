@@ -1,5 +1,5 @@
 title: Making a SilverStripe core release
-summary: Development guide for core contributors to build and publish a new release 
+summary: Development guide for core contributors to build and publish a new release
 
 # Making a SilverStripe core release
 
@@ -12,7 +12,7 @@ The artifacts for this process are typically:
  * A downloadable tar / zip on silverstripe.org
  * A published announcement
  * A new composer installable stable tag for silverstripe/installer
- 
+
 While this document is not normally applicable to normal silverstripe contributors,
 it is still useful to have it available in a public location so that these users
 are aware of these processes.
@@ -31,7 +31,7 @@ As a core contributor it is necessary to have installed the following set of too
   `composer global require silverstripe/cow dev-master`
 * [satis repository tool](https://github.com/composer/satis). This should be installed
   globally for minimum maintenance.
-  `composer global require composer/satis dev-master`
+  `composer global require composer/satis ^1@dev` (or `^1@alpha` for php 5)
 * [transifex client](http://docs.transifex.com/client/).
   `pip install transifex-client`
   If you're on OSX 10.10+, the standard Python installer is locked down.
@@ -97,7 +97,7 @@ When doing a security release, typically one or more (or sometimes all) of the b
 steps will need to be performed manually. As such, this guide should not be followed
 exactly the same for these.
 
-Standard practice is to produce a pre-release for any patched modules on the security 
+Standard practice is to produce a pre-release for any patched modules on the security
 forks for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
 <div class="warning" markdown="1">
@@ -125,12 +125,14 @@ Producing a security fix follows this general process:
   Security fixes should be applied to the branch on this private repository only.
   Once a fix (or fixes) have been applied to this branch, then a tag can be applied,
   and a private release can then be developed in order to test this release.
+* Once upstream branches are all pushed to the security forks, make sure to merge all
+  security fixes into those branches prior to running cow.
 * Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
   containing security fixes. See below for setting up a temporary satis repository.
 * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
   Make sure to publish any draft security pages at the same time as the release is published (same day).
-* After the final release has been published, close related JIRA issues 
+* After the final release has been published, close related JIRA issues
   at [open source security jira](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail)
 
 <div class="warning" markdown="1">
@@ -147,27 +149,37 @@ this we use [satis](https://github.com/composer/satis).
 
 To setup a Satis project for a release:
 
-* Ensure Satis is installed globally: `composer global require composer/satis dev-master`
-
+* Ensure Satis is installed globally: `composer global require composer/satis ^1@dev` (or `^1@alpha` if you
+  are running php 5)
 * `cd ~/Sites/` (or whereever your web-root is located)
 * `mkdir satis-security && cd satis-security` (or some directory specific to your release)
 * Create a config file (e.g. config.json) of the given format (add only those repositories necessary).
- Note the homepage path should match the eventual location of the package content:
+
+Note:
+- The homepage path should match the eventual location of the package content
+- You should add the root repository (silverstripe/installer) to ensure
+ `create-project` works (even if not a private security fork).
+- You should add some package version constraints to prevent having to parse
+ all legacy tags and all branches.
 
 ```json
 {
     "name": "SilverStripe Security Repository",
     "homepage": "http://localhost/satis-security/public",
     "repositories": {
+        "installer": {
+            "type": "vcs",
+            "url": "https://github.com/silverstripe/silverstripe-installer.git"
+        },
         "framework": {
             "type": "vcs",
             "url": "https://github.com/silverstripe-security/silverstripe-framework.git"
-        },
-        "cms": {
-            "type": "vcs",
-            "url": "https://github.com/silverstripe-security/silverstripe-cms.git"
         }
     },
+    "require": {
+		"silverstripe/installer": "^3.5 || ^4",
+		"silverstripe/framework": "^3.5 || ^4"
+	},
     "require-all": true
 }
 ```
@@ -175,11 +187,16 @@ To setup a Satis project for a release:
 * Build the repository:
   `satis build config.json ./public`
 * Test you can view the satis home page at `http://localhost/satis-security/public/`
-* When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below) 
+* When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below)
+
+<div class="warning" markdown="1">
+It's important that you re-run `satis build` step after EVERY change that is pushed upstream; E.g. between
+each release, if making multiple releases.
+</div>
 
 ## Standard release process
 
-The release process, at a high level, involves creating a release, publishing it, and 
+The release process, at a high level, involves creating a release, publishing it, and
 reviewing the need for either another pre-release or a final stable tag within a short period
 (normally within 3-5 business days).
 
@@ -200,9 +217,9 @@ cross-posted to other relevant channels such as Twitter and Facebook.
 Sending an email to [marketing@silverstripe.com](mailto:marketing@silverstripe.com)
 with an overview of the release and a rough release timeline.
 
-Check all tickets ([framework](https://github.com/silverstripe/silverstripe-framework/milestones), 
-[cms](https://github.com/silverstripe/silverstripe-cms/milestones), 
-[installer](https://github.com/silverstripe/silverstripe-installer/milestones)) assigned to that milestone are 
+Check all tickets ([framework](https://github.com/silverstripe/silverstripe-framework/milestones),
+[cms](https://github.com/silverstripe/silverstripe-cms/milestones),
+[installer](https://github.com/silverstripe/silverstripe-installer/milestones)) assigned to that milestone are
 either closed or reassigned to another milestone.
 
 Merge up from other older supported release branches (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
@@ -333,7 +350,7 @@ subtasks which are invoked in sequence:
   If the tags generated in the prior step are not yet available on packagist (which can
   take a few minutes at times) then this task will cycle through a retry-cycle,
   which will re-attempt the archive creation periodically until these tags are available.
-* `release:upload` This will invoke the AWS CLI command to upload these archives to the 
+* `release:upload` This will invoke the AWS CLI command to upload these archives to the
   s3 bucket `silverstripe-ssorg-releases`. If you have setup your AWS profile
   for silverstripe releases under a non-default name, you can specify this profile
   on the command line with the `--aws-profile=<profile>` command.
@@ -347,9 +364,9 @@ aren't strictly able to be automated:
   source branch (e.g. merge 3.2.4 into 3.2), or sometimes create new branches if
   releasing a new minor version, and bumping up the branch-alias in composer.json.
   E.g. branching 3.3 from 3, and aliasing 3 as 3.4.x-dev. You can then delete
-  the temporary release branches. This will need to be done before updating the 
+  the temporary release branches. This will need to be done before updating the
   release documentation in stage 3.
-* Merging up the changes in this release to newer branches, following the 
+* Merging up the changes in this release to newer branches, following the
   SemVer pattern (e.g. 3.2.4 > 3.2 > 3.3 > 3 > master). The more often this is
   done the easier it is, but this can sometimes be left for when you have
   more free time. Branches not receiving regular stable versions anymore (e.g.
@@ -358,7 +375,7 @@ aren't strictly able to be automated:
   minor versions. It may be necessary to re-assign any issues assigned to the prior
   milestones to these new ones.
 * Make sure that the [releases page](https://github.com/silverstripe/silverstripe-installer/releases)
-  on github shows the new tag. 
+  on github shows the new tag.
 
 *Updating non-patch versions*
 
@@ -405,7 +422,7 @@ Running either of these tasks may time out when requested, but will continue to 
 only the search index rebuild takes a long period of time.
 
 Note that markdown is automatically updated daily, and this should only be done if an immediate refresh is necessary.
-    
+
 ### Stage 3: Let the world know
 
 Once a release has been published there are a few places where user documentation
@@ -413,7 +430,7 @@ will need to be regularly updated.
 
 * Make sure that the [download page](http://www.silverstripe.org/download) on
   silverstripe.org has the release available. If it's a stable, it will appear
-  at the top of the page. If it's a pre-release, it will be available under the 
+  at the top of the page. If it's a pre-release, it will be available under the
   [development builds](http://www.silverstripe.org/download#download-releases)
   section. If it's not available, you might need to check that the release was
   properly uploaded to aws s3, or that you aren't viewing a cached version of
