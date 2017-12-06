@@ -26,18 +26,23 @@ class InstallConfig
      *
      * @param array $request Request object
      * @param array $databaseClasses Supported database config
+     * @param bool $realPassword Set to true to get the real password. If false, any non-posted
+     * password will be redacted as '********'. Note: Posted passwords are considered disclosed and
+     * never redacted.
      * @return array
      */
-    public function getDatabaseConfig($request, $databaseClasses)
+    public function getDatabaseConfig($request, $databaseClasses, $realPassword = true)
     {
         // Get config from request
         if (isset($request['db']['type'])) {
             $type = $request['db']['type'];
             if (isset($request['db'][$type])) {
-                return array_merge(
-                    [ 'type' => $type ],
-                    $request['db'][$type]
-                );
+                $config = $request['db'][$type];
+                // The posted placeholder must be substituted with the real password
+                if (isset($config['password']) && $config['password'] === Installer::PASSWORD_PLACEHOLDER) {
+                    $config['password'] = Environment::getEnv('SS_DATABASE_PASSWORD') ?: '';
+                }
+                return array_merge([ 'type' => $type ], $config);
             }
         }
 
@@ -46,8 +51,16 @@ class InstallConfig
             'type' => $this->getDatabaseClass($databaseClasses),
             'server' => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
             'username' => Environment::getEnv('SS_DATABASE_USERNAME') ?: 'root',
-            'password' => Environment::getEnv('SS_DATABASE_PASSWORD') ?: '',
+            'password' => $realPassword
+                ? (Environment::getEnv('SS_DATABASE_PASSWORD') ?: '')
+                : Installer::PASSWORD_PLACEHOLDER, // Avoid password disclosure
             'database' => Environment::getEnv('SS_DATABASE_NAME') ?: 'SS_mysite',
+            'path' => Environment::getEnv('SS_DATABASE_PATH')
+                ?: Environment::getEnv('SS_SQLITE_DATABASE_PATH') // sqlite compat
+                ?: null,
+            'key' => Environment::getEnv('SS_DATABASE_KEY')
+                ?: Environment::getEnv('SS_SQLITE_DATABASE_KEY') // sqlite compat
+                ?: null,
         ];
     }
 
@@ -55,17 +68,26 @@ class InstallConfig
      * Get admin config from the environment
      *
      * @param array $request
+     * @param bool $realPassword Set to true to get the real password. If false, any non-posted
+     * password will be redacted as '********'. Note: Posted passwords are considered disclosed and
+     * never redacted.
      * @return array
      */
-    public function getAdminConfig($request)
+    public function getAdminConfig($request, $realPassword = true)
     {
         if (isset($request['admin'])) {
+            $config = $request['admin'];
+            if (isset($config['password']) && $config['password'] === Installer::PASSWORD_PLACEHOLDER) {
+                $config['password'] = Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD') ?: '';
+            }
             return $request['admin'];
         }
 
         return [
             'username' => Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
-            'password' => Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
+            'password' => $realPassword
+                ? (Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD') ?: '')
+                : Installer::PASSWORD_PLACEHOLDER, // Avoid password disclosure
         ];
     }
 
