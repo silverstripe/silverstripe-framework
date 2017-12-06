@@ -145,15 +145,7 @@ class Session {
 		if($data instanceof Session) $data = $data->inst_getAll();
 
 		$this->data = $data;
-
-		if (isset($this->data['HTTP_USER_AGENT'])) {
-			if ($this->data['HTTP_USER_AGENT'] != $this->userAgent()) {
-				// Funny business detected!
-				$this->inst_clearAll();
-				$this->inst_destroy();
-				$this->inst_start();
-			}
-		}
+		$this->expireIfInvalid();
 	}
 
 	/**
@@ -391,6 +383,9 @@ class Session {
 
 			$this->data = isset($_SESSION) ? $_SESSION : array();
 		}
+
+		// Ensure session is validated on start
+		$this->expireIfInvalid();
 
 		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
 		// By default it's the total session lifetime
@@ -630,5 +625,32 @@ class Session {
 	public static function get_timeout() {
 		Deprecation::notice('4.0', 'Use the "Session.timeout" config setting instead');
 		return Config::inst()->get('Session', 'timeout');
+	}
+
+	/**
+	 * Validate the user agent against the current data, resetting the
+	 * current session if a mismatch is detected.
+	 *
+	 * @deprecated 3.0..4.0 Removed in 4.0
+	 * @return bool If user agent has been set against this session, returns
+	 * the valid state of this session as either true or false. If the agent
+	 * isn't set it is assumed valid and returns true.
+	 */
+	private function expireIfInvalid() {
+		// If not set, indeterminable; Assume true as safe default
+		if (!isset($this->data['HTTP_USER_AGENT'])) {
+			return true;
+		}
+
+		// Agents match, deterministically true
+		if ($this->data['HTTP_USER_AGENT'] === $this->userAgent()) {
+			return true;
+		}
+
+		// Funny business detected!
+		$this->inst_clearAll();
+		$this->inst_destroy();
+		$this->inst_start();
+		return false;
 	}
 }
