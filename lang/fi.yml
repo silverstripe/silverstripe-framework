@@ -100,6 +100,8 @@ fi:
     Save: Tallenna
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Muokkaa
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Et voi siirtää itseäsi pois tästä ryhmästä: menettäisit pääkäyttäjän oikeudet'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: /
     Page: Sivu
@@ -250,6 +252,7 @@ fi:
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
+    VALIDATIONADMINLOSTACCESS: 'Ylläpitäjäryhmää ei voi poistaa profiilistasi'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'
