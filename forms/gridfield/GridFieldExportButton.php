@@ -31,6 +31,15 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	protected $targetFragment;
 
 	/**
+	 * Set to true to disable XLS sanitisation
+	 * [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $xls_export_disabled = false;
+
+	/**
 	 * @param string $targetFragment The HTML fragment to write the button into
 	 * @param array $exportColumns The columns to include in the export
 	 */
@@ -91,12 +100,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
 		}
 	}
-	
+
 	/**
 	 * Return the columns to export
-	 * 
-	 * @param GridField $gridField 
-	 * 
+	 *
+	 * @param GridField $gridField
+	 *
 	 * @return array
 	 */
 	protected function getExportColumnsForGridField(GridField $gridField) {
@@ -174,6 +183,13 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 					}
 
 					$value = str_replace(array("\r", "\n"), "\n", $value);
+
+					// [SS-2017-007] Sanitise XLS executable column values with a leading tab
+					if (!Config::inst()->get(get_class($this), 'xls_export_disabled')
+						&& preg_match('/^[-@=+].*/', $value)
+					) {
+						$value = "\t" . $value;
+					}
 					$columnData[] = '"' . str_replace('"', '""', $value) . '"';
 				}
 
