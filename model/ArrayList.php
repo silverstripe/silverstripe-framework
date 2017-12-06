@@ -348,8 +348,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Parses a specified column into a sort field and direction
 	 *
-	 * @param type $column String to parse containing the column name
-	 * @param type $direction Optional Additional argument which may contain the direction
+	 * @param string $column String to parse containing the column name
+	 * @param string $direction Optional Additional argument which may contain the direction
 	 * @return array Sort specification in the form array("Column", SORT_ASC).
 	 */
 	protected function parseSortColumn($column, $direction = null) {
