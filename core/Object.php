@@ -948,7 +948,9 @@ abstract class Object {
 	 */
 	protected function createMethod($method, $code) {
 		self::$extra_methods[get_class($this)][strtolower($method)] = array (
-			'function' => create_function('$obj, $args', $code)
+			'function' => function($obj, $args) use ($code) {
+                eval($code);
+            }
 		);
 	}
 

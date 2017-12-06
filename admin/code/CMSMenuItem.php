@@ -41,7 +41,7 @@ class CMSMenuItem extends Object {
 	 * Attributes for the link. For instance, custom data attributes or standard
 	 * HTML anchor properties.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected $attributes = array();
 
