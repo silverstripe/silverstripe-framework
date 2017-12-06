@@ -29,7 +29,10 @@ As a core contributor it is necessary to have installed the following set of too
   be installed in a global location via the below command. Please see the installation
   docs on the cow repo for more setup details.
   `composer global require silverstripe/cow dev-master`
-* [transifex client](http://docs.transifex.com/client/). 
+* [satis repository tool](https://github.com/composer/satis). This should be installed
+  globally for minimum maintenance.
+  `composer global require composer/satis dev-master`
+* [transifex client](http://docs.transifex.com/client/).
   `pip install transifex-client`
   If you're on OSX 10.10+, the standard Python installer is locked down.
   Use `brew install python; sudo easy_install pip` instead
@@ -118,10 +121,12 @@ Producing a security fix follows this general process:
   release date of the final stable is not known, then it's ok to give an estimated
   release schedule.
 * Push the current upstream target branches (e.g. 3.2) to the corresponding security fork
-  to a new branch named for the target release (e.g. 3.2.4). Security fixes should be 
-  applied to this branch only. Once a fix (or fixes) have been applied to this branch, then
-  a tag can be applied, and a private release can then be developed in order
-  to test this release.
+  to the equivalent branch on [silverstripe-security](https://github.com/silverstripe-security).
+  Security fixes should be applied to the branch on this private repository only.
+  Once a fix (or fixes) have been applied to this branch, then a tag can be applied,
+  and a private release can then be developed in order to test this release.
+* Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
+  containing security fixes. See below for setting up a temporary satis repository.
 * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
   Make sure to publish any draft security pages at the same time as the release is published (same day).
@@ -133,6 +138,44 @@ Note: It's not considered acceptable to disclose any security vulnerability unti
 a public stable, not an RC or dev-branch. Security warnings that do not require a stable release
 can be published as soon as a workaround or usable resolution exists.
 </div>
+
+### Setting up satis for hosting private security releases
+
+When installing a project from protected repositories, it's necessary prior to creating your project
+to override the public repository URLs with the private repositories containing undisclosed fixes. For
+this we use [satis](https://github.com/composer/satis).
+
+To setup a Satis project for a release:
+
+* Ensure Satis is installed globally: `composer global require composer/satis dev-master`
+
+* `cd ~/Sites/` (or whereever your web-root is located)
+* `mkdir satis-security && cd satis-security` (or some directory specific to your release)
+* Create a config file (e.g. config.json) of the given format (add only those repositories necessary).
+ Note the homepage path should match the eventual location of the package content:
+
+```json
+{
+    "name": "SilverStripe Security Repository",
+    "homepage": "http://localhost/satis-security/public",
+    "repositories": {
+        "framework": {
+            "type": "vcs",
+            "url": "https://github.com/silverstripe-security/silverstripe-framework.git"
+        },
+        "cms": {
+            "type": "vcs",
+            "url": "https://github.com/silverstripe-security/silverstripe-cms.git"
+        }
+    },
+    "require-all": true
+}
+```
+
+* Build the repository:
+  `satis build config.json ./public`
+* Test you can view the satis home page at `http://localhost/satis-security/public/`
+* When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below) 
 
 ## Standard release process
 
@@ -170,13 +213,29 @@ any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
 
-```
-cow release <version> -vvv
-```
+`cow release <version> -vvv`
 
-This command has the following parameters:
+E.g.
 
-* `<version>` The version that is to be released. E.g. 3.2.4 or 4.0.0-alpha4
+`cow release 4.0.1 -vvv`
+
+* `<version>` is mandatory and must be the exact tag name to release including rc/alpha/beta if applicable.
+
+This command has these options (note that --repository option is critical for security releases):
+
+* `-vvv` to ensure all underlying commands are echoed
+* `--directory <directory>` to specify the folder to create or look for this project in. If you don't specify this,
+it will install to the path specified by `./release-<version>` in the current directory.
+* `--repository <repository>` will allow a custom composer package url to be specified. E.g. `http://packages.cwp.govt.nz`
+  See the above section "Setting up satis for hosting private security releases" on how to prepare a custom
+  repository for a security release.
+* `--branching <type>` will specify a branching strategy. This allows these options:
+  * `auto` - Default option, will branch to the minor version (e.g. 1.1) unless doing a non-stable tag (e.g. rc1)
+  * `major` - Branch all repos to the major version (e.g. 1) unless already on a more-specific minor version.
+  * `minor` - Branch all repos to the minor semver branch (e.g. 1.1)
+  * `none` - Release from the current branch and do no branching.
+* `--skip-tests` to skip tests
+* `--skip-i18n` to skip updating localisations
 
 This can take between 5-15 minutes, and will invoke the following steps,
 each of which can also be run in isolation (in case the process stalls
@@ -189,14 +248,16 @@ and needs to be manually advanced):
   know to install dev-master, and installing 3.3.0 will install from 3.x-dev.
   If installing pre-release versions for stabilisation, it will use the correct
   temporary release branch.
-* `release:branch` If release:create installed from a non-rc branch, it will
-  create the new temporary release branch (via `--branch-auto`). You can also customise this branch
-  with `--branch=<branchname>`, but it's best to use the standard.
+* `release:plan` The release plan will be auto-generated, and presented on the screen
+  for the user to modify or confirm. At this stage you can also modify the branching
+  behaviour to be performed in the next step.
+* `release:branch` This will branch all released modules to the correct branch, if necessary.
+  E.g. branching 3.7 from 3 branch in order to create the new minor version.
 * `release:translate` All upstream transifex strings will be pulled into the
-  local master strings, and then the [i18nTextCollector](api:SilverStripe\i18n\TextCollection\i18nTextCollector) task will be invoked
-  and will merge these strings together, before pushing all new master strings
-  back up to transifex to make them available for translation. Changes to these
-  files will also be automatically committed to git.
+  local master strings, and then the [i18nTextCollector](api:SilverStripe\i18n\TextCollection\i18nTextCollector)
+  task will be invoked and will merge these strings together, before pushing all
+  new master strings back up to transifex to make them available for translation.
+  Changes to these files will also be automatically committed to git.
 * `release:test` Will run all unit tests on this release. Make sure that you
   setup your `.env` correctly (as above) so that this will work.
 * `release:changelog` Will compare the current branch head with `--from` parameter
@@ -242,9 +303,24 @@ building an archive, and uploading to
 
 Invoked by running `cow release:publish` in the format as below:
 
-```
-cow release:publish <version> -vvv
-```
+`cow release:publish <version> -vvv`
+
+E.g.
+
+`cow release:publish 4.0.1`
+
+This command has these options:
+
+* `-vvv` to ensure all underlying commands are echoed
+* `--directory <directory>` to specify the folder to look for the project created in the prior step. As with
+  above, it will be guessed if omitted. You can run this command in the `./release-<version>` directory and
+  omit this option.
+* `--aws-profile <profile>` to specify the AWS profile name for uploading releases to s3. Check with
+  damian@silverstripe.com if you don't have an AWS key setup.
+* `--skip-archive-upload` to disable both "archive" and "upload". This is useful if doing a private release and
+  you don't want to upload this file to AWS.
+* `--skip-upload` to disable the "upload" command (but not archive)
+
 As with the `cow release` command, this step is broken down into the following
 subtasks which are invoked in sequence:
 
