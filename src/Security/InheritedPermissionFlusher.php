@@ -42,6 +42,8 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
 
     /**
      * @param CacheFlusher[]
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setServices($services)
     {
@@ -57,6 +59,8 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
         }
 
         $this->services = $services;
+
+        return $this;
     }
 
     /**
@@ -85,11 +89,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
      */
     protected function getMemberIDList()
     {
-        if (!$this->owner) {
-            return null;
-        }
-
-        if (!$this->owner->exists()) {
+        if (!$this->owner || !$this->owner->exists()) {
             return null;
         }
 

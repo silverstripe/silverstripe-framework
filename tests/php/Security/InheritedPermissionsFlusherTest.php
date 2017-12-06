@@ -16,7 +16,7 @@ class InheritedPermissionsFlusherTest extends SapphireTest
 {
     protected static $fixture_file = 'InheritedPermissionsFlusherTest.yml';
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
