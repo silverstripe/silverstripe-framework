@@ -173,6 +173,36 @@ class Convert
     }
 
     /**
+     * Convert an array or associative array to a string.
+     *
+     * Examples:
+     * - Convert::array2string(array("1","2","3"),',') => "1,2,3"
+     * - Convert::array2string(
+     *  array(
+     *     "background-color" => "#fff",
+     *     "color" => "#000",
+     *     "font-size" => "12px",
+     *  ), ';', ':') => "background-color: #fff;color:#000;font-size:12px"
+     *
+     * @param  array  $array     Array to convert
+     * @param  string $valueGlue Optional value glue
+     * @param  string $keyGlue   Optional key value glue
+     * @return string            Returns a string of all the array elements in the same order, with the glue string between each element.
+     */
+    public static function array2string(array $array, $valueGlue = '', $keyGlue = '')
+    {
+        $list = array();
+        if (array_keys($array) !== range(0, count($array) - 1)) {
+            foreach ($array as $key => $value) {
+                $list[] = $key . $keyGlue . $value;
+            }
+        } else {
+            $list = $array;
+        }
+        return implode($valueGlue, $list);
+    }
+
+    /**
      * Safely encodes a value (or list of values) using the current database's
      * safe string encoding method
      *
