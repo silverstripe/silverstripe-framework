@@ -11,7 +11,7 @@ use SilverStripe\Core\Cache\MemberCacheFlusher;
 class InheritedPermissionFlusher extends DataExtension implements Flushable
 {
     /**
-     * @var CacheFlusher[]
+     * @var MemberCacheFlusher[]
      */
     protected $services = [];
 
@@ -41,7 +41,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * @param CacheFlusher[]
+     * @param MemberCacheFlusher[]
      * @throws InvalidArgumentException
      * @return $this
      */
@@ -64,7 +64,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * @return CacheFlusher[]
+     * @return MemberCacheFlusher[]
      */
     public function getServices()
     {
@@ -72,7 +72,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * Flushes all registered CacheFlusher services
+     * Flushes all registered MemberCacheFlusher services
      */
     public function flushCache()
     {
