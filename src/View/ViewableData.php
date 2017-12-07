@@ -2,25 +2,26 @@
 
 namespace SilverStripe\View;
 
+use ArrayIterator;
 use Exception;
+use InvalidArgumentException;
+use IteratorAggregate;
+use LogicException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
-use IteratorAggregate;
-use LogicException;
-use InvalidArgumentException;
+use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
-use ArrayIterator;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -577,6 +578,17 @@ class ViewableData implements IteratorAggregate
     }
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
+
+    /**
+     * Find appropriate templates for SSViewer to use to render this object
+     *
+     * @param string $suffix
+     * @return array
+     */
+    public function getViewerTemplates($suffix = '')
+    {
+        return SSViewer::get_templates_by_class(static::class, $suffix, self::class);
+    }
 
     /**
      * When rendering some objects it is necessary to iterate over the object being rendered, to do this, you need

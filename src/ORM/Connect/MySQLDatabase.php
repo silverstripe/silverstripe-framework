@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\PaginatedList;
@@ -144,7 +146,7 @@ class MySQLDatabase extends Database
      * @param bool $booleanSearch
      * @param string $alternativeFileFilter
      * @param bool $invertedMatch
-     * @return \SilverStripe\ORM\PaginatedList
+     * @return PaginatedList
      * @throws Exception
      */
     public function searchEngine(
@@ -158,10 +160,8 @@ class MySQLDatabase extends Database
         $alternativeFileFilter = "",
         $invertedMatch = false
     ) {
-        $pageClass = 'SilverStripe\\CMS\\Model\\SiteTree';
-        $fileClass = 'SilverStripe\\Assets\\File';
-        $pageTable = DataObject::getSchema()->tableName($pageClass);
-        $fileTable = DataObject::getSchema()->tableName($fileClass);
+        $pageClass = SiteTree::class;
+        $fileClass = File::class;
         if (!class_exists($pageClass)) {
             throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
         }
@@ -194,12 +194,13 @@ class MySQLDatabase extends Database
 
         // File.ShowInSearch was added later, keep the database driver backwards compatible
         // by checking for its existence first
+        $fileTable = DataObject::getSchema()->tableName($fileClass);
         $fields = $this->getSchemaManager()->fieldList($fileTable);
         if (array_key_exists('ShowInSearch', $fields)) {
             $extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
         }
 
-        $limit = $start . ", " . (int) $pageLength;
+        $limit = (int)$start . ", " . (int)$pageLength;
 
         $notMatch = $invertedMatch
                 ? "NOT "
@@ -257,7 +258,6 @@ class MySQLDatabase extends Database
         $queryParameters = array();
         $totalCount = 0;
         foreach ($lists as $class => $list) {
-            $table = DataObject::getSchema()->tableName($class);
             /** @var SQLSelect $query */
             $query = $list->dataQuery()->query();
 
