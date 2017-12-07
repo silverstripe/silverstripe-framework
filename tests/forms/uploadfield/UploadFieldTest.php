@@ -728,7 +728,9 @@ class UploadFieldTest extends FunctionalTest {
 		// A bit too much coupling with GridField, but a full template overload would make things too complex
 		$parser = new CSSContentParser($response->getBody());
 		$items = $parser->getBySelector('.ss-gridfield-item');
-		$itemIDs = array_map(create_function('$el', 'return (int)$el["data-id"];'), $items);
+		$itemIDs = array_map(function($el) {
+            return (int)$el["data-id"];
+        }, $items);
 		$this->assertContains($file4->ID, $itemIDs, 'Contains file in assigned folder');
 		$this->assertContains($fileSubfolder->ID, $itemIDs, 'Contains file in subfolder');
 	}
@@ -746,7 +748,9 @@ class UploadFieldTest extends FunctionalTest {
 		// A bit too much coupling with GridField, but a full template overload would make things too complex
 		$parser = new CSSContentParser($response->getBody());
 		$items = $parser->getBySelector('.ss-gridfield-item');
-		$itemIDs = array_map(create_function('$el', 'return (int)$el["data-id"];'), $items);
+		$itemIDs = array_map(function($el) {
+		    return (int)$el["data-id"];
+        }, $items);
 		$this->assertContains($file4->ID, $itemIDs, 'Contains file in assigned folder');
 		$this->assertNotContains($fileSubfolder->ID, $itemIDs, 'Does not contain file in subfolder');
 	}

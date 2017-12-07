@@ -859,7 +859,9 @@ class Form extends RequestHandler {
 		$attrs = $this->getAttributes();
 
 		// Remove empty
-		$attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);'));
+		$attrs = array_filter((array)$attrs, function($v) {
+		    return ($v || $v === 0);
+        });
 
 		// Remove excluded
 		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));

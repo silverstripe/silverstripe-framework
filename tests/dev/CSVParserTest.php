@@ -21,16 +21,18 @@ class CSVParserTest extends SapphireTest {
 			$registered[] = $record['IsRegistered'];
 		}
 
-		$this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
+		$this->assertEquals(array('John','Jane','Jamie','Järg','Jacob'), $firstNames);
 
 		$this->assertEquals(array(
 			"He's a good guy",
 			"She is awesome." . PHP_EOL
 				. "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
-			"Unicode FTW"), $biographies);
-		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
-		$this->assertEquals(array('1', '0', '1', '1'), $registered);
+			"Unicode FTW",
+			"Likes leading tabs in his biography",
+		), $biographies);
+		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982","31/4/2000"), $birthdays);
+		$this->assertEquals(array('1', '0', '1', '1', '0'), $registered);
 	}
 
 	public function testParsingWithHeadersAndColumnMap() {
@@ -54,15 +56,16 @@ class CSVParserTest extends SapphireTest {
 			$registered[] = $record['IsRegistered'];
 		}
 
-		$this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
+		$this->assertEquals(array('John','Jane','Jamie','Järg','Jacob'), $firstNames);
 		$this->assertEquals(array(
 			"He's a good guy",
 			"She is awesome."
 				. PHP_EOL . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
-			"Unicode FTW"), $biographies);
-		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
-		$this->assertEquals(array('1', '0', '1', '1'), $registered);
+			"Unicode FTW",
+			"Likes leading tabs in his biography"), $biographies);
+		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982","31/4/2000"), $birthdays);
+		$this->assertEquals(array('1', '0', '1', '1', '0'), $registered);
 	}
 
 	public function testParsingWithExplicitHeaderRow() {
@@ -82,15 +85,16 @@ class CSVParserTest extends SapphireTest {
 		}
 
 		/* And the first row will be returned in the data */
-		$this->assertEquals(array('FirstName','John','Jane','Jamie','Järg'), $firstNames);
+		$this->assertEquals(array('FirstName','John','Jane','Jamie','Järg','Jacob'), $firstNames);
 		$this->assertEquals(array(
 			'Biography',
 			"He's a good guy",
 			"She is awesome." . PHP_EOL
 				. "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
-			"Unicode FTW"), $biographies);
-		$this->assertEquals(array("Birthday","31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
-		$this->assertEquals(array('IsRegistered', '1', '0', '1', '1'), $registered);
+			"Unicode FTW",
+			"Likes leading tabs in his biography"), $biographies);
+		$this->assertEquals(array("Birthday","31/01/1988","31/01/1982","31/01/1882","31/06/1982","31/4/2000"), $birthdays);
+		$this->assertEquals(array('IsRegistered', '1', '0', '1', '1', '0'), $registered);
 	}
 }

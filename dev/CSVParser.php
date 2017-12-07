@@ -247,7 +247,9 @@ class CSVParser extends Object implements Iterator {
 					array($this->enclosure, $this->delimiter),
 					$value
 				);
-
+				// Trim leading tab
+				// [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
+				$value = ltrim($value, "\t");
 				if(array_key_exists($i, $this->headerRow)) {
 					if($this->headerRow[$i]) {
 						$row[$this->headerRow[$i]] = $value;

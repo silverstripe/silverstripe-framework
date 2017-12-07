@@ -403,7 +403,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
 
 		// Browser-specific requirements
-		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
+		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false : false;
 		if($ie) {
 			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
 
@@ -1783,6 +1783,16 @@ class LeftAndMainMarkingFilter {
 	 * @var array Request params (unsanitized)
 	 */
 	protected $params = array();
+
+    /**
+     * @var array
+     */
+	public $ids = array();
+
+    /**
+     * @var array
+     */
+	public $expanded = array();
 
 	/**
 	 * @param array $params Request params (unsanitized)

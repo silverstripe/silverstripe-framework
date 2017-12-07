@@ -144,7 +144,7 @@ class CookieJar implements Cookie_Backend {
 	 * @see http://uk3.php.net/manual/en/function.setcookie.php
 	 *
 	 * @param string $name The name of the cookie
-	 * @param string|array $value The value for the cookie to hold
+	 * @param string|array|false $value The value for the cookie to hold
 	 * @param int $expiry The number of days until expiry
 	 * @param string $path The path to save the cookie on (falls back to site base)
 	 * @param string $domain The domain to make the cookie available on

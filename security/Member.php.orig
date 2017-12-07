@@ -404,10 +404,17 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		} elseif ($this->config()->lock_out_after_incorrect_logins <= 0) {
 			$state = false;
 		} else {
-			$email = $this->{static::config()->unique_identifier_field};
-			$attempts = LoginAttempt::getByEmail($email)
-				->sort('Created', 'DESC')
-				->limit($this->config()->lock_out_after_incorrect_logins);
+
+<<<<<<< HEAD
+			$attempts = LoginAttempt::get()->filter($filter = array(
+				'Email' => $this->{static::config()->unique_identifier_field},
+			))->sort('Created', 'DESC')->limit($this->config()->lock_out_after_incorrect_logins);
+=======
+		$email = $this->{static::config()->unique_identifier_field};
+		$attempts = LoginAttempt::getByEmail($email)
+			->sort('Created', 'DESC')
+			->limit($this->config()->lock_out_after_incorrect_logins);
+>>>>>>> silverstripe-security/3.5
 
 			if ($attempts->count() < $this->config()->lock_out_after_incorrect_logins) {
 				$state = false;
@@ -904,10 +911,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * filesystem.
 	 *
 	 * @return string Returns a random password.
-	 * @deprecated 3.6.0..4.0.0
 	 */
 	public static function create_new_password() {
-		Deprecation::notice('4.0', 'Please use Security/lostpassword to reset a password');
 		$words = Config::inst()->get('Security', 'word_list');
 
 		if($words && file_exists($words)) {
