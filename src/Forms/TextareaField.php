@@ -134,16 +134,22 @@ class TextareaField extends FormField
      */
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             parent::getAttributes(),
             array(
                 'rows' => $this->getRows(),
                 'cols' => $this->getColumns(),
                 'value' => null,
                 'type' => null,
-                'maxlength' => $this->getMaxLength(),
             )
         );
+
+        $maxLength = $this->getMaxLength();
+        if($maxLength) {
+            $attributes['maxlength'] = $maxLength;
+        }
+
+        return $attributes;
     }
 
 
