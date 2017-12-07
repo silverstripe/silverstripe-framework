@@ -6,7 +6,7 @@ use Psr\Log\InvalidArgumentException;
 use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Cache\CacheFlusher;
+use SilverStripe\Core\Cache\MemberCacheFlusher;
 
 class InheritedPermissionFlusher extends DataExtension implements Flushable
 {
@@ -48,11 +48,11 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     public function setServices($services)
     {
         foreach ($services as $service) {
-            if (!$service instanceof CacheFlusher) {
+            if (!$service instanceof MemberCacheFlusher) {
                 throw new InvalidArgumentException(sprintf(
                     '%s.services must contain only %s instances. %s provided.',
                     __CLASS__,
-                    CacheFlusher::class,
+                    MemberCacheFlusher::class,
                     get_class($service)
                 ));
             }
@@ -78,7 +78,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     {
         $ids = $this->getMemberIDList();
         foreach ($this->services as $service) {
-            $service->flushCache($ids);
+            $service->flushMemberCache($ids);
         }
     }
 

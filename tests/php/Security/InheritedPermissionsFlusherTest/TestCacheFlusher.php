@@ -3,9 +3,9 @@
 namespace SilverStripe\Security\Tests\InheritedPermissionsFlusherTest;
 
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Cache\CacheFlusher;
+use SilverStripe\Core\Cache\MemberCacheFlusher;
 
-class TestCacheFlusher implements CacheFlusher
+class TestCacheFlusher implements MemberCacheFlusher
 {
     /**
      * @var array
@@ -32,22 +32,22 @@ class TestCacheFlusher implements CacheFlusher
 
     /**
      * Clear the cache for this instance only
-     * @param array $ids A list of member IDs
+     * @param array $memberIDs A list of member IDs
      */
-    public function flushCache($ids = null)
+    public function flushMemberCache($memberIDs = null)
     {
         if (!$this->cache) {
             return;
         }
 
         // Hard flush, e.g. flush=1
-        if (!$ids) {
+        if (!$memberIDs) {
             $this->cache->clear();
         }
 
-        if ($ids && is_array($ids)) {
+        if ($memberIDs && is_array($memberIDs)) {
             foreach (self::$categories as $category) {
-                foreach ($ids as $memberID) {
+                foreach ($memberIDs as $memberID) {
                     $key = $this->generateCacheKey($category, $memberID);
                     $this->cache->delete($key);
                 }
