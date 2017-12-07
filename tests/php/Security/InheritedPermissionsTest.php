@@ -347,13 +347,13 @@ class InheritedPermissionsTest extends SapphireTest
         $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
 
         // Non existent ID
-        $permissionChecker->flushCache('dummy');
+        $permissionChecker->flushMemberCache('dummy');
         foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNotNull($cache->get($key));
         }
 
         // Precision strike
-        $permissionChecker->flushCache([$member1->ID]);
+        $permissionChecker->flushMemberCache([$member1->ID]);
         // Member1 should be clear
         $this->assertNull($cache->get($editKey1));
         $this->assertNull($cache->get($viewKey1));
@@ -362,7 +362,7 @@ class InheritedPermissionsTest extends SapphireTest
         $this->assertNotNull($cache->get($viewKey2));
 
         // Nuclear
-        $permissionChecker->flushCache();
+        $permissionChecker->flushMemberCache();
         foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNull($cache->get($key));
         }

@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Cache\CacheFlusher;
+use SilverStripe\Core\Cache\MemberCacheFlusher;
 /**
  * Calculates batch permissions for nested objects for:
  *  - canView: Supports 'Anyone' type
@@ -17,7 +17,7 @@ use SilverStripe\Core\Cache\CacheFlusher;
  *  - canDelete: Includes special logic for ensuring parent objects can only be deleted if their children can
  *    be deleted also.
  */
-class InheritedPermissions implements PermissionChecker, CacheFlusher
+class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 {
     use Injectable;
 
@@ -127,20 +127,20 @@ class InheritedPermissions implements PermissionChecker, CacheFlusher
      * Clear the cache for this instance only
      * @param array $ids A list of member IDs
      */
-    public function flushCache($ids = null)
+    public function flushMemberCache($memberIDs = null)
     {
         if (!$this->cacheService) {
             return;
         }
 
         // Hard flush, e.g. flush=1
-        if (!$ids) {
+        if (!$memberIDs) {
             $this->cacheService->clear();
         }
 
-        if ($ids && is_array($ids)) {
+        if ($memberIDs && is_array($memberIDs)) {
             foreach ([self::VIEW, self::EDIT, self::DELETE] as $type) {
-                foreach ($ids as $memberID) {
+                foreach ($memberIDs as $memberID) {
                     $key = $this->generateCacheKey($type, $memberID);
                     $this->cacheService->delete($key);
                 }
