@@ -79,6 +79,13 @@ class TextField extends FormField
         );
     }
 
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
+        $data['data']['maxlength'] =  $this->getMaxLength();
+        return $data;
+    }
+
     /**
      * @return string
      */
