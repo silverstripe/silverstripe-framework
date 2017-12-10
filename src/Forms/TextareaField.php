@@ -145,7 +145,7 @@ class TextareaField extends FormField
         );
 
         $maxLength = $this->getMaxLength();
-        if($maxLength) {
+        if ($maxLength) {
             $attributes['maxlength'] = $maxLength;
         }
 
