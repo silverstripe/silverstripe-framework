@@ -4,13 +4,12 @@ namespace SilverStripe\Security\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\Group;
 use SilverStripe\Security\InheritedPermissionFlusher;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Group;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Tests\InheritedPermissionsFlusherTest\TestCacheFlusher;
-use SilverStripe\Core\Config\Config;
 
 class InheritedPermissionsFlusherTest extends SapphireTest
 {
@@ -59,7 +58,9 @@ class InheritedPermissionsFlusherTest extends SapphireTest
         $extension = new InheritedPermissionFlusher();
         $extension->setServices([$flusher]);
         Injector::inst()->registerService($extension, InheritedPermissionFlusher::class);
+        /** @var Group $editors */
         $editors = $this->objFromFixture(Group::class, 'editors');
+        /** @var Group $admins */
         $admins = $this->objFromFixture(Group::class, 'admins');
 
         // Populate the cache for all members in each group

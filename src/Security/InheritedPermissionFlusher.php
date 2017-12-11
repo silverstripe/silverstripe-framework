@@ -77,7 +77,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     public function flushCache()
     {
         $ids = $this->getMemberIDList();
-        foreach ($this->services as $service) {
+        foreach ($this->getServices() as $service) {
             $service->flushMemberCache($ids);
         }
     }

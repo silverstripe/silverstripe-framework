@@ -32,6 +32,7 @@ class TestCacheFlusher implements MemberCacheFlusher
 
     /**
      * Clear the cache for this instance only
+     *
      * @param array $memberIDs A list of member IDs
      */
     public function flushMemberCache($memberIDs = null)
