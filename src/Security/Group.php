@@ -327,9 +327,16 @@ class Group extends DataObject
                 $query->removeFilterOn('Group_Members');
             });
         }
+
         // Now set all children groups as a new foreign key
-        $groups = Group::get()->byIDs($this->collateFamilyIDs());
-        $result = $result->forForeignID($groups->column('ID'))->where($filter);
+        $familyIDs = $this->collateFamilyIDs();
+        if (!empty($familyIDs)) {
+            $groups = Group::get()->byIDs($familyIDs);
+            $groupIDs = $groups->column('ID');
+            if (!empty($groupIDs)) {
+                $result = $result->forForeignID($groupIDs)->where($filter);
+            }
+        }
 
         return $result;
     }
