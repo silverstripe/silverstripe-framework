@@ -351,3 +351,6 @@ That is, the fragment will be included if all Only rules match, except if all Ex
 ## API Documentation
 
 * [Config](api:SilverStripe\Core\Config\Config)
+
+## Related Lessons
+* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)

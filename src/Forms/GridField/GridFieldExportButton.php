@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -11,7 +12,6 @@ use SilverStripe\ORM\DataObject;
  */
 class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-
     /**
      * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
      * Note that titles are only used when {@link $csvHasHeader} is set to TRUE.
@@ -37,6 +37,15 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Fragment to write the button to
      */
     protected $targetFragment;
+
+    /**
+     * Set to true to disable XLS sanitisation
+     * [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
+     *
+     * @config
+     * @var bool
+     */
+    private static $xls_export_disabled = false;
 
     /**
      * @param string $targetFragment The HTML fragment to write the button into
@@ -170,7 +179,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         }
 
         //Remove GridFieldPaginator as we're going to export the entire list.
-        $gridField->getConfig()->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldPaginator');
+        $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
 
         $items = $gridField->getManipulatedList();
 
@@ -203,6 +212,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
                     }
 
+                    // [SS-2017-007] Sanitise XLS executable column values with a leading tab
+                    if (!Config::inst()->get(get_class($this), 'xls_export_disabled')
+                        && preg_match('/^[-@=+].*/', $value)
+                    ) {
+                        $value = "\t" . $value;
+                    }
                     $columnData[] = $value;
                 }
 

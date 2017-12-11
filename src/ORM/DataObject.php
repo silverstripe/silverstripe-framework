@@ -2,35 +2,36 @@
 
 namespace SilverStripe\ORM;
 
+use BadMethodCallException;
+use Exception;
+use InvalidArgumentException;
+use LogicException;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Control\HTTP;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\Filters\SearchFilter;
-use SilverStripe\ORM\Search\SearchContext;
-use SilverStripe\ORM\Queries\SQLInsert;
-use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\Queries\SQLDelete;
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
-use LogicException;
-use InvalidArgumentException;
-use BadMethodCallException;
-use Exception;
 use stdClass;
 
 /**
@@ -2152,6 +2153,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->extend('updateFrontEndFields', $untabbedFields);
 
         return $untabbedFields;
+    }
+
+    public function getViewerTemplates($suffix = '')
+    {
+        return SSViewer::get_templates_by_class(static::class, $suffix, $this->baseClass());
     }
 
     /**

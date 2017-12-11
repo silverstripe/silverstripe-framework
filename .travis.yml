@@ -42,6 +42,11 @@ matrix:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_TEST=framework
+    - php: nightly
+      env:
+        - DB=MYSQL
+        - PDO=1
+        - PHPUNIT_TEST=framework
     - php: 7.0
       env:
        - DB=MYSQL
@@ -54,6 +59,12 @@ matrix:
       env:
         - DB=MYSQL
         - BEHAT_TEST=cms
+  allow_failures:
+    - php: nightly
+      env:
+        - DB=MYSQL
+        - PDO=1
+        - PHPUNIT_TEST=framework
 
 before_script:
 # Init PHP

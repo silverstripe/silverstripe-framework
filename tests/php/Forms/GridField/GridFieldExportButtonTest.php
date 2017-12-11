@@ -12,22 +12,27 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\ORM\FieldType\DBField;
 
 class GridFieldExportButtonTest extends SapphireTest
 {
 
+    /**
+     * @var DataList
+     */
     protected $list;
 
+    /**
+     * @var GridField
+     */
     protected $gridField;
-
-    protected $form;
 
     protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         NoView::class,
-    );
+    ];
 
     protected function setUp()
     {
@@ -44,7 +49,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $list = new DataList(NoView::class);
 
         $button = new GridFieldExportButton();
-        $button->setExportColumns(array('Name' => 'My Name'));
+        $button->setExportColumns(['Name' => 'My Name']);
 
         $config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
@@ -58,7 +63,7 @@ class GridFieldExportButtonTest extends SapphireTest
     public function testGenerateFileDataBasicFields()
     {
         $button = new GridFieldExportButton();
-        $button->setExportColumns(array('Name' => 'My Name'));
+        $button->setExportColumns(['Name' => 'My Name']);
 
         $this->assertEquals(
             '"My Name"'."\n".
@@ -68,17 +73,32 @@ class GridFieldExportButtonTest extends SapphireTest
         );
     }
 
+    public function testXLSSanitisation()
+    {
+        // Create risky object
+        $object = new Team();
+        $object->Name = '=SUM(1, 2)';
+        $object->write();
+
+        // Export
+        $button = new GridFieldExportButton();
+        $button->setExportColumns(['Name' => 'My Name']);
+
+        $this->assertEquals(
+            "\"My Name\"\n\"\t=SUM(1, 2)\"\nTest\nTest2\n",
+            $button->generateExportFileData($this->gridField)
+        );
+    }
+
     public function testGenerateFileDataAnonymousFunctionField()
     {
         $button = new GridFieldExportButton();
-        $button->setExportColumns(
-            array(
+        $button->setExportColumns([
             'Name' => 'Name',
-            'City' => function ($obj) {
+            'City' => function (DBField $obj) {
                 return $obj->getValue() . ' city';
             }
-            )
-        );
+        ]);
 
         $this->assertEquals(
             'Name,City'."\n".
@@ -91,12 +111,10 @@ class GridFieldExportButtonTest extends SapphireTest
     public function testBuiltInFunctionNameCanBeUsedAsHeader()
     {
         $button = new GridFieldExportButton();
-        $button->setExportColumns(
-            array(
+        $button->setExportColumns([
             'Name' => 'Name',
-            'City' => 'strtolower'
-            )
-        );
+            'City' => 'strtolower',
+        ]);
 
         $this->assertEquals(
             'Name,strtolower'."\n".
@@ -109,12 +127,10 @@ class GridFieldExportButtonTest extends SapphireTest
     public function testNoCsvHeaders()
     {
         $button = new GridFieldExportButton();
-        $button->setExportColumns(
-            array(
+        $button->setExportColumns([
             'Name' => 'Name',
-            'City' => 'City'
-            )
-        );
+            'City' => 'City',
+        ]);
         $button->setCsvHasHeader(false);
 
         $this->assertEquals(
@@ -132,9 +148,7 @@ class GridFieldExportButtonTest extends SapphireTest
         //Create an ArrayList 1 greater the Paginator's default 15 rows
         $arrayList = new ArrayList();
         for ($i = 1; $i <= 16; $i++) {
-            $dataobject = new DataObject(
-                array ( 'ID' => $i )
-            );
+            $dataobject = new DataObject(['ID' => $i]);
             $arrayList->add($dataobject);
         }
         $this->gridField->setList($arrayList);
@@ -164,11 +178,9 @@ class GridFieldExportButtonTest extends SapphireTest
     public function testZeroValue()
     {
         $button = new GridFieldExportButton();
-        $button->setExportColumns(
-            array(
+        $button->setExportColumns([
             'RugbyTeamNumber' => 'Rugby Team Number'
-            )
-        );
+        ]);
 
         $this->assertEquals(
             "\"Rugby Team Number\"\n2\n0\n",

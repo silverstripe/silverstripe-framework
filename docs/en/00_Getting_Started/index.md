@@ -64,6 +64,15 @@ ready for download or installation on a cloud platform.
 If you run into trouble, see [common-problems](installation/common_problems) or post to the 
 [SilverStripe forums](http://silverstripe.org/community/forums/).
 
-## Related
+
+## Related Lessons
+* [Up and running](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
+* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
+* [Working with multiple templates](https://www.silverstripe.org/learn/lessons/v4/working-with-multiple-templates-1)
+
+## Related Documentation
 
  * [Module installation](/developer_guides/extending/modules)
+
+

@@ -3,14 +3,15 @@
 namespace SilverStripe\ORM;
 
 use Exception;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBComposite;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Provides dataobject and database schema mapping functionality
@@ -126,6 +127,7 @@ class DataObjectSchema
         }
         return null;
     }
+
     /**
      * Returns the root class (the first to extend from DataObject) for the
      * passed class.
@@ -136,11 +138,11 @@ class DataObjectSchema
      */
     public function baseDataClass($class)
     {
-        $class = ClassInfo::class_name($class);
         $current = $class;
         while ($next = get_parent_class($current)) {
             if ($next === DataObject::class) {
-                return $current;
+                // Only use ClassInfo::class_name() to format the class if we've not used get_parent_class()
+                return ($current === $class) ? ClassInfo::class_name($current) : $current;
             }
             $current = $next;
         }
@@ -199,6 +201,11 @@ class DataObjectSchema
         $db = [];
         $classes = $uninherited ? [$class] : ClassInfo::ancestry($class);
         foreach ($classes as $tableClass) {
+            // Skip irrelevant parent classes
+            if (!is_subclass_of($tableClass, DataObject::class)) {
+                continue;
+            }
+
             // Find all fields on this class
             $fields = $this->databaseFields($tableClass, false);
             // Merge with composite fields
@@ -398,6 +405,10 @@ class DataObjectSchema
      */
     public function classHasTable($class)
     {
+        if (!is_subclass_of($class, DataObject::class)) {
+            return false;
+        }
+
         $fields = $this->databaseFields($class, false);
         return !empty($fields);
     }
@@ -536,7 +547,6 @@ class DataObjectSchema
      */
     protected function cacheDefaultDatabaseIndexes($class)
     {
-        $indexes = [];
         if (array_key_exists($class, $this->defaultDatabaseIndexes)) {
             return $this->defaultDatabaseIndexes[$class];
         }

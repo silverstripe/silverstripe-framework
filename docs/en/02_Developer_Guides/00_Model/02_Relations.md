@@ -479,6 +479,10 @@ As these lists are not backed by the database, most of the filtering methods on 
 this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an object, not 
 for displaying the objects contained in the relation.
 
+## Related Lessons
+* [Working with data relationships -- has_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-has-many-1)
+* [Working with data relationships -- many_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-many-many-1)
+
 ## Related Documentation
 
 * [Introduction to the Data Model and ORM](data_model_and_orm)

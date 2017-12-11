@@ -87,7 +87,7 @@ class PaginatedList extends ListDecorator
      */
     public function setPageLength($length)
     {
-        $this->pageLength = $length;
+        $this->pageLength = (int)$length;
         return $this;
     }
 
@@ -99,7 +99,7 @@ class PaginatedList extends ListDecorator
      */
     public function setCurrentPage($page)
     {
-        $this->pageStart = ($page - 1) * $this->getPageLength();
+        $this->pageStart = ((int)$page - 1) * $this->getPageLength();
         return $this;
     }
 
@@ -134,7 +134,7 @@ class PaginatedList extends ListDecorator
      */
     public function setPageStart($start)
     {
-        $this->pageStart = $start;
+        $this->pageStart = (int)$start;
         return $this;
     }
 
@@ -161,7 +161,7 @@ class PaginatedList extends ListDecorator
      */
     public function setTotalItems($items)
     {
-        $this->totalItems = $items;
+        $this->totalItems = (int)$items;
         return $this;
     }
 

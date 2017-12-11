@@ -392,6 +392,10 @@ $file = ModuleResourceLoader::singleton()
   ->resolveURL('silverstripe/admin:client/dist/images/spinner.gif');
 ```
 
+## Related Lessons
+* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [AJAX behaviour and ViewableData](https://www.silverstripe.org/learn/lessons/v4/ajax-behaviour-and-viewabledata-1)
+
 ## API Documentation
 
  * [Requirements](api:SilverStripe\View\Requirements)

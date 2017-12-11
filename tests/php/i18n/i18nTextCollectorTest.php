@@ -323,13 +323,21 @@ class MyClass extends Base implements SomeService {
             "Slash=\\\\, Quote=\\""
         );
     }
+    public function getMagicConstantStringFromSelf()
+    {
+        return _t(
+            self::class . '.SELF_CLASS',
+            'Self Class'
+        );
+    }
 }
 PHP;
         $this->assertEquals(
             [
                 'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines",
                 'SilverStripe\\Framework\\MyClass.ANOTHER_STRING' => 'Slash=\\, Quote=\'',
-                'SilverStripe\\Framework\\MyClass.DOUBLE_STRING' => 'Slash=\\, Quote="'
+                'SilverStripe\\Framework\\MyClass.DOUBLE_STRING' => 'Slash=\\, Quote="',
+                'SilverStripe\\Framework\\Core\\MyClass.SELF_CLASS' => 'Self Class',
             ],
             $c->collectFromCode($php, null, $mymodule)
         );
@@ -434,7 +442,7 @@ PHP;
 
         $php = <<<PHP
 _t(static::class.'.KEY1', 'Default');
-_t(self::class.'.KEY2', 'Default');
+_t(parent::class.'.KEY1', 'Default');
 _t('Collectable.KEY4', 'Default');
 PHP;
 

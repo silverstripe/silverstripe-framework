@@ -18,6 +18,22 @@ SilverStripe\Core\Injector\Injector:
   Swift_Transport: Swift_SendmailTransport
 ```
 
+For example, to use SMTP:
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport:
+    class: Swift_SmtpTransport
+    properties:
+      Host: smtp.host.com
+      Port: <port>
+      Encryption: tls
+    calls:
+      Username: [ setUsername, ['<username>'] ]
+      Password: [ setPassword, ['<password>'] ]
+      AuthMode: [ setAuthMode, ['login'] ]
+```
+
 ## Usage
 
 ### Sending plain text only

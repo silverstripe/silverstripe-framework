@@ -17,7 +17,7 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable | | Values | | Description                                                     | 
  | ------------ | | ------ | | -----------                                                     | 
- | flush=1      | | 1      | | Clears out all caches. Used mainly during development, e.g. when adding new classes or templates. Requires "dev" mode or ADMIN login |
+ | flush        | | 1      | | Clears out all caches. Used mainly during development, e.g. when adding new classes or templates. Requires "dev" mode or ADMIN login |
  | showtemplate | | 1      | | Show the compiled version of all the templates used, including line numbers.  Good when you have a syntax error in a template. Cannot be used on a Live site without **isDev**. |
 
 ## General Testing
@@ -39,7 +39,7 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable | | Values | | Description                                                                                  | 
  | ------------ | | --------- | | -----------                                                                                  | 
- | showqueries  | | 1\|inline | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries          | 
+ | showqueries  | | 1&vert;inline | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries          | 
  | previewwrite | | 1      | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
 
 ## Security Redirects

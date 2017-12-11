@@ -31,7 +31,9 @@
       "autoFocus": false,
       "customValidationMessage": "",
       "attributes": [],
-      "data": [],
+      "data": {
+        "maxlength": null
+      },
       "validation": []
     },
     {
