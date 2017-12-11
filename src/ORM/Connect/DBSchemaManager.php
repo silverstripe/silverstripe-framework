@@ -51,6 +51,20 @@ abstract class DBSchemaManager
     protected $supressOutput = false;
 
     /**
+     * @var array
+     */
+    protected static $table_name_warnings = [];
+
+    /**
+     * @param string
+     * @deprecated 4.0..5.0
+     */
+    public static function showTableNameWarning($table, $class)
+    {
+        static::$table_name_warnings[$table] = $class;
+    }
+
+    /**
      * Injector injection point for database controller
      *
      * @param Database $database
@@ -408,6 +422,23 @@ abstract class DBSchemaManager
             foreach ($indexSchema as $indexName => $indexSpec) {
                 $this->requireIndex($table, $indexName, $indexSpec);
             }
+        }
+
+        // Check and display notice about $table_name
+        static $table_name_info_sent = false;
+
+        if (isset(static::$table_name_warnings[$table])) {
+            if (!$table_name_info_sent) {
+                $this->alterationMessage('<strong>Please note:</strong> It is strongly recommended to define a' .
+                    ' table_name for all namespaced models. Not defining a table_name may cause generated table' .
+                    ' names to be too long and may not be supported by your current database engine. The generated' .
+                    ' naming scheme will also change when upgrading to SilverStripe 5.0 and potentially break.',
+                    'error'
+                );
+                $table_name_info_sent = true;
+            }
+
+            $this->alterationMessage('table_name not set for class ' . static::$table_name_warnings[$table], 'notice');
         }
     }
 
