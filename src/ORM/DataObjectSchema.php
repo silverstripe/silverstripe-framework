@@ -3,15 +3,16 @@
 namespace SilverStripe\ORM;
 
 use Exception;
-use SilverStripe\Core\Injector\Injectable;
+use InvalidArgumentException;
+use LogicException;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\FieldType\DBComposite;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
-use InvalidArgumentException;
-use LogicException;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Provides dataobject and database schema mapping functionality
@@ -316,7 +317,7 @@ class DataObjectSchema
             return $class;
         }
 
-        if (!ClassInfo::classImplements($class, TestOnly::class)) {
+        if (!ClassInfo::classImplements($class, TestOnly::class) && $this->classHasTable($class)) {
             trigger_error(
                 "It is recommended to define a table_name for your '$class'." .
                 ' Not defining a table_name may cause subsequent table names to be too long and may not be supported' .
@@ -541,7 +542,6 @@ class DataObjectSchema
      */
     protected function cacheDefaultDatabaseIndexes($class)
     {
-        $indexes = [];
         if (array_key_exists($class, $this->defaultDatabaseIndexes)) {
             return $this->defaultDatabaseIndexes[$class];
         }
