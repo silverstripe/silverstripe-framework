@@ -10,6 +10,7 @@ use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
+
 /**
  * Calculates batch permissions for nested objects for:
  *  - canView: Supports 'Anyone' type
@@ -125,7 +126,8 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 
     /**
      * Clear the cache for this instance only
-     * @param array $ids A list of member IDs
+     *
+     * @param array $memberIDs A list of member IDs
      */
     public function flushMemberCache($memberIDs = null)
     {
@@ -703,17 +705,25 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     /**
      * Gets the permission from cache
      *
-     * @param $cacheKey
+     * @param string $cacheKey
      * @return mixed
      */
     protected function getCachePermissions($cacheKey)
     {
+        // Check local cache
         if (isset($this->cachePermissions[$cacheKey])) {
             return $this->cachePermissions[$cacheKey];
         }
 
+        // Check persistent cache
         if ($this->cacheService) {
-            return $this->cacheService->get($cacheKey);
+            $result = $this->cacheService->get($cacheKey);
+
+            // Warm local cache
+            if ($result) {
+                $this->cachePermissions[$cacheKey] = $result;
+                return $result;
+            }
         }
 
         return null;
@@ -721,8 +731,9 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 
     /**
      * Creates a cache key for a member and type
-     * @param $type
-     * @param $memberID
+     *
+     * @param string $type
+     * @param int $memberID
      * @return string
      */
     protected function generateCacheKey($type, $memberID)

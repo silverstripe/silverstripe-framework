@@ -305,7 +305,7 @@ class Group extends DataObject
      * including all members which are "inherited" from children groups of this record.
      * See {@link DirectMembers()} for retrieving members without any inheritance.
      *
-     * @param String $filter
+     * @param string $filter
      * @return ManyManyList
      */
     public function Members($filter = '')
@@ -330,15 +330,9 @@ class Group extends DataObject
 
         // Now set all children groups as a new foreign key
         $familyIDs = $this->collateFamilyIDs();
-        if (!empty($familyIDs)) {
-            $groups = Group::get()->byIDs($familyIDs);
-            $groupIDs = $groups->column('ID');
-            if (!empty($groupIDs)) {
-                $result = $result->forForeignID($groupIDs)->where($filter);
-            }
-        }
-
-        return $result;
+        $result = $result->forForeignID($familyIDs);
+        
+        return $result->where($filter);
     }
 
     /**
@@ -450,7 +444,7 @@ class Group extends DataObject
     }
 
     /**
-     * This isn't a decendant of SiteTree, but needs this in case
+     * This isn't a descendant of SiteTree, but needs this in case
      * the group is "reorganised";
      */
     public function cmsCleanup_parentChanged()
@@ -626,6 +620,8 @@ class Group extends DataObject
     /**
      * Returns all of the children for the CMS Tree.
      * Filters to only those groups that the current user can edit
+     *
+     * @return ArrayList
      */
     public function AllChildrenIncludingDeleted()
     {
@@ -635,6 +631,7 @@ class Group extends DataObject
 
         if ($children) {
             foreach ($children as $child) {
+                /** @var DataObject $child */
                 if ($child->canView()) {
                     $filteredChildren->push($child);
                 }

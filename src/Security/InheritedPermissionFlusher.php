@@ -94,9 +94,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
         }
 
         if ($this->owner instanceof Group) {
-            return $this->owner->Members()->exists()
-                ? $this->owner->Members()->column('ID')
-                : null;
+            return $this->owner->Members()->column('ID');
         }
 
         return [$this->owner->ID];

@@ -325,7 +325,7 @@ class InheritedPermissionsTest extends SapphireTest
         $viewKey1 = $this->generateCacheKey($permissionChecker, InheritedPermissions::VIEW, $member1->ID);
         $viewKey2 = $this->generateCacheKey($permissionChecker, InheritedPermissions::VIEW, $member2->ID);
 
-        foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNull($cache->get($key));
         }
 
@@ -341,14 +341,14 @@ class InheritedPermissionsTest extends SapphireTest
 
         unset($permissionChecker);
 
-        foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNotNull($cache->get($key));
         }
         $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
 
         // Non existent ID
         $permissionChecker->flushMemberCache('dummy');
-        foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNotNull($cache->get($key));
         }
 
@@ -363,10 +363,9 @@ class InheritedPermissionsTest extends SapphireTest
 
         // Nuclear
         $permissionChecker->flushMemberCache();
-        foreach([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
             $this->assertNull($cache->get($key));
         }
-
     }
 
     protected function generateCacheKey(InheritedPermissions $inst, $type, $memberID)
@@ -377,5 +376,4 @@ class InheritedPermissionsTest extends SapphireTest
 
         return $method->invokeArgs($inst, [$type, $memberID]);
     }
-
 }

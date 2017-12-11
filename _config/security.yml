@@ -38,7 +38,3 @@ SilverStripe\Core\Injector\Injector:
       Authenticators:
         cms: '%$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator'
   SilverStripe\Security\IdentityStore: '%$SilverStripe\Security\AuthenticationHandler'
-  SilverStripe\Security\InheritedPermissionFlusher:
-    properties:
-      Services:
-        - '%$SilverStripe\Security\PermissionChecker.sitetree'
