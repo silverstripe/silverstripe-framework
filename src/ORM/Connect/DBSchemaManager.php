@@ -429,10 +429,14 @@ abstract class DBSchemaManager
 
         if (isset(static::$table_name_warnings[$table])) {
             if (!$table_name_info_sent) {
-                $this->alterationMessage('<strong>Please note:</strong> It is strongly recommended to define a' .
-                    ' table_name for all namespaced models. Not defining a table_name may cause generated table' .
-                    ' names to be too long and may not be supported by your current database engine. The generated' .
-                    ' naming scheme will also change when upgrading to SilverStripe 5.0 and potentially break.',
+                $this->alterationMessage(
+                    <<<'MESSAGE'
+<strong>Please note:</strong> It is strongly recommended to define a
+table_name for all namespaced models. Not defining a table_name may cause generated table
+names to be too long and may not be supported by your current database engine. The generated
+naming scheme will also change when upgrading to SilverStripe 5.0 and potentially break.
+MESSAGE
+                    ,
                     'error'
                 );
                 $table_name_info_sent = true;
