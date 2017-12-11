@@ -44,7 +44,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     protected $component;
 
     /**
-     *
      * @var DataObject
      */
     protected $record;
@@ -161,7 +160,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * complete controller with gaps for extra functionality.  This, for example, would be a better way
      * of letting Security/login put its log-in form inside a UI specified elsewhere.
      *
-     * @return Form
+     * @return Form|HTTPResponse
      */
     public function ItemEditForm()
     {
@@ -466,10 +465,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         // Save form and any extra saved data into this dataobject
-            $form->saveInto($this->record);
-            $this->record->write();
+        $form->saveInto($this->record);
+        $this->record->write();
+        $this->extend('onAfterSave', $this->record);
+
         $extraData = $this->getExtraSavedData($this->record, $list);
-            $list->add($this->record, $extraData);
+        $list->add($this->record, $extraData);
 
         return $this->record;
     }
