@@ -2,11 +2,13 @@
 
 namespace SilverStripe\Security;
 
+use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -56,7 +58,7 @@ class SecurityToken implements TemplateGlobalProvider
     protected static $enabled = true;
 
     /**
-     * @var String $name
+     * @var string $name
      */
     protected $name = null;
 
@@ -110,7 +112,7 @@ class SecurityToken implements TemplateGlobalProvider
     }
 
     /**
-     * @return String
+     * @return string
      */
     public static function get_default_name()
     {
@@ -146,11 +148,11 @@ class SecurityToken implements TemplateGlobalProvider
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getValue()
     {
-        $session = Controller::curr()->getRequest()->getSession();
+        $session = $this->getSession();
         $value = $session->get($this->getName());
 
         // only regenerate if the token isn't already set in the session
@@ -163,12 +165,28 @@ class SecurityToken implements TemplateGlobalProvider
     }
 
     /**
-     * @param String $val
+     * @param string $val
+     * @return $this
      */
     public function setValue($val)
     {
-        $session = Controller::curr()->getRequest()->getSession();
-        $session->set($this->getName(), $val);
+        $this->getSession()->set($this->getName(), $val);
+        return $this;
+    }
+
+    /**
+     * Returns the current session instance from the injector
+     *
+     * @return Session
+     * @throws Exception If the HTTPRequest class hasn't been registered as a service
+     */
+    protected function getSession()
+    {
+        $injector = Injector::inst();
+        if (!$injector->has(HTTPRequest::class)) {
+            throw new Exception('No HTTPRequest object available yet!');
+        }
+        return $injector->get(HTTPRequest::class)->getSession();
     }
 
     /**
@@ -188,8 +206,8 @@ class SecurityToken implements TemplateGlobalProvider
      *
      * Typically you'll want to check {@link Form->securityTokenEnabled()} before calling this method.
      *
-     * @param String $compare
-     * @return Boolean
+     * @param string $compare
+     * @return boolean
      */
     public function check($compare)
     {
@@ -246,8 +264,8 @@ class SecurityToken implements TemplateGlobalProvider
     }
 
     /**
-     * @param String $url
-     * @return String
+     * @param string $url
+     * @return string
      */
     public function addToUrl($url)
     {
@@ -272,7 +290,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @uses RandomGenerator
      *
-     * @return String
+     * @return string
      */
     protected function generate()
     {
