@@ -178,15 +178,17 @@ class SecurityToken implements TemplateGlobalProvider
      * Returns the current session instance from the injector
      *
      * @return Session
-     * @throws Exception If the HTTPRequest class hasn't been registered as a service
+     * @throws Exception If the HTTPRequest class hasn't been registered as a service and no controllers exist
      */
     protected function getSession()
     {
         $injector = Injector::inst();
-        if (!$injector->has(HTTPRequest::class)) {
-            throw new Exception('No HTTPRequest object available yet!');
+        if ($injector->has(HTTPRequest::class)) {
+            return $injector->get(HTTPRequest::class)->getSession();
+        } elseif (Controller::has_curr()) {
+            return Controller::curr()->getRequest()->getSession();
         }
-        return $injector->get(HTTPRequest::class)->getSession();
+        throw new Exception('No HTTPRequest object or controller available yet!');
     }
 
     /**
