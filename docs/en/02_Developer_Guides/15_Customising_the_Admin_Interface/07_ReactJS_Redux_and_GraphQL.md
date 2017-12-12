@@ -561,14 +561,24 @@ Injector.transform(
   (updater) => {
     updater.form.addValidation(
       'AssetAdmin.*',
-      (values, errors) => ({
-        ...errors,
-        PostalCode: values.PostalCode.length !== 5 ? 'Invalid postal code' : null,
-      })
+      (values, validator) => {
+      	if (values.PostalCode.length !== 5) {
+      		validator.addError('PostalCode', 'Invalid postal code');
+      	}
+      }
     )
   }
 );
 ```
+
+The `addValidation()` function takes a callback, with an instance of `FormValidationManager` (`validator` in the above example) as a parameter. `FormValidationMangaer` allows you to manage the validation result using several helper methods, including:
+
+* `addError(fieldName:string, message:string)`
+* `addErrors(fieldName:string, messages:Array)`
+* `hasError(fieldName:string)`
+* `clearErrors(fieldName:string)`
+* `getErrors(fieldName:string)`
+* `reset(void)`
 
 
 ## Using Injector to customise Redux state data
