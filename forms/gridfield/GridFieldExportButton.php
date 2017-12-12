@@ -112,7 +112,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		if($this->exportColumns) {
 			$exportColumns = $this->exportColumns;
 		} else if($dataCols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns')) {
-			$exportColumns = $dataCols->getDisplayFields($gridField);
+			$exportColumns = $dataCols->getColumnsHandled($gridField);
 		} else {
 			$exportColumns = singleton($gridField->getModelClass())->summaryFields();
 		}
