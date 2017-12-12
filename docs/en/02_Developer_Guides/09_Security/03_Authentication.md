@@ -60,6 +60,11 @@ SilverStripe\Core\Injector\Injector:
 ```
 If there is no authenticator registered, `Authenticator` will try to fall back on the default provided authenticator (`default`), which can be changed using the following config, replacing the MemberAuthenticator with your authenticator:
 ```yaml
+---
+Name: MyAuth
+After:
+  - '#coresecurity'
+---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Security\Security:
     properties:
