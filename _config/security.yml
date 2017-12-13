@@ -26,9 +26,13 @@ SilverStripe\Core\Injector\Injector:
     properties:
       Middlewares:
         AuthenticationMiddleware: '%$SilverStripe\Security\AuthenticationMiddleware'
+        BasicAuthMiddleware: '%$SilverStripe\Security\BasicAuthMiddleware'
   SilverStripe\Security\AuthenticationMiddleware:
     properties:
       AuthenticationHandler: '%$SilverStripe\Security\AuthenticationHandler'
+  SilverStripe\Security\BasicAuthMiddleware:
+    properties:
+      URLPatterns: []
   SilverStripe\Security\Security:
     properties:
       Authenticators:

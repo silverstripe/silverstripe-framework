@@ -2,11 +2,14 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\BasicAuth;
+use SilverStripe\Security\BasicAuthMiddleware;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Director;
+use SilverStripe\Security\Tests\BasicAuthTest\ControllerNotSecured;
 use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithoutPermission;
 use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission;
 
@@ -15,14 +18,12 @@ use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission;
  */
 class BasicAuthTest extends FunctionalTest
 {
-
-    protected static $original_unique_identifier_field;
-
     protected static $fixture_file = 'BasicAuthTest.yml';
 
     protected static $extra_controllers = [
         ControllerSecuredWithPermission::class,
         ControllerSecuredWithoutPermission::class,
+        ControllerNotSecured::class,
     ];
 
     protected function setUp()
@@ -37,30 +38,19 @@ class BasicAuthTest extends FunctionalTest
         // Temp disable is_cli() exemption for tests
         BasicAuth::config()->set('ignore_cli', false);
 
-        // Reset statics
-        BasicAuthTest\ControllerSecuredWithPermission::$index_called = false;
-        BasicAuthTest\ControllerSecuredWithPermission::$post_init_called = false;
+        // Set route-specific permissions
+        /** @var BasicAuthMiddleware $middleware */
+        $middleware = Injector::inst()->get(BasicAuthMiddleware::class);
+        $middleware->setURLPatterns([
+            '/^BasicAuthTest_ControllerSecuredWithPermission$/' => 'MYCODE',
+            '/^BasicAuthTest_ControllerSecuredWithoutPermission$/' => true,
+        ]);
     }
 
     public function testBasicAuthEnabledWithoutLogin()
     {
         $response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
         $this->assertEquals(401, $response->getStatusCode());
-    }
-
-    public function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure()
-    {
-        Director::test('BasicAuthTest_ControllerSecuredWithPermission');
-        $this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
-        $this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
-
-        $headers = [
-            'PHP_AUTH_USER' => 'user-in-mygroup@test.com',
-            'PHP_AUTH_PW' => 'test',
-        ];
-        Director::test('BasicAuthTest_ControllerSecuredWithPermission', [], [], null, null, $headers);
-        $this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
-        $this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
     }
 
     public function testBasicAuthEnabledWithPermission()
@@ -137,5 +127,27 @@ class BasicAuthTest extends FunctionalTest
         Director::test('BasicAuthTest_ControllerSecuredWithoutPermission', [], [], null, null, $headers);
         $check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
         $this->assertEquals(0, $check->FailedLoginCount);
+    }
+
+    public function testProtectEntireSite()
+    {
+        // Unsecured controller allows access
+        $response = Director::test('BasicAuthTest_ControllerNotSecured');
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Globally enable basic auth
+        BasicAuth::protect_entire_site();
+        $response = Director::test('BasicAuthTest_ControllerNotSecured');
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertNotEmpty($response->getHeader('WWW-Authenticate'));
+
+        // Can be excluded via rule
+        /** @var BasicAuthMiddleware $middleware */
+        $middleware = Injector::inst()->get(BasicAuthMiddleware::class);
+        $middleware->setURLPatterns([
+            '/^BasicAuthTest_ControllerNotSecured$/' => false,
+        ]);
+        $response = Director::test('BasicAuthTest_ControllerNotSecured');
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }
