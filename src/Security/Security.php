@@ -317,6 +317,15 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function permissionFailure($controller = null, $messageSet = null)
     {
         self::set_ignore_disallowed_actions(true);
+        $shouldEscapeHtml = function($message) {
+            if($message instanceof DBField) {
+                $escapeHtml = $message->config()->escape_type === 'raw';
+            } else {
+                $escapeHtml = true;
+            }
+
+            return $escapeHtml;
+        };
 
         if (!$controller && Controller::has_curr()) {
             $controller = Controller::curr();
@@ -380,7 +389,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 $message = $messageSet['default'];
             }
 
-            static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
+            static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING, $shouldEscapeHtml($message) ? ValidationResult::CAST_TEXT : ValidationResult::CAST_HTML);
             $request = new HTTPRequest('GET', '/');
             if ($controller) {
                 $request->setSession($controller->getRequest()->getSession());
@@ -399,7 +408,13 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
+        static::singleton()->setSessionMessage(
+            $message,
+            ValidationResult::TYPE_WARNING,
+            $shouldEscapeHtml($message) ?
+                ValidationResult::CAST_TEXT :
+                ValidationResult::CAST_HTML
+        );
 
         $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
 
