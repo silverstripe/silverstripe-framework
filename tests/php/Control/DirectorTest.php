@@ -929,4 +929,30 @@ class DirectorTest extends SapphireTest
     {
         $this->assertTrue(Director::is_cli(), 'is_cli should be true for PHP CLI and phpdbg');
     }
+
+    public function testMockRequest()
+    {
+        Director::config()->set('alternate_base_url', 'http://www.mysite.com/some-subdir/');
+
+        // Can handle root-relative $url
+        Director::mockRequest(function (HTTPRequest $request) {
+            $this->assertEquals('some-page/nested', $request->getURL());
+            $this->assertEquals(1, $request->getVar('query'));
+            $this->assertEquals('/some-subdir/some-page/nested', $_SERVER['REQUEST_URI']);
+        }, '/some-subdir/some-page/nested?query=1');
+
+        // Can handle absolute $url
+        Director::mockRequest(function (HTTPRequest $request) {
+            $this->assertEquals('some-page/nested', $request->getURL());
+            $this->assertEquals(1, $request->getVar('query'));
+            $this->assertEquals('/some-subdir/some-page/nested', $_SERVER['REQUEST_URI']);
+        }, 'http://www.mysite.com/some-subdir/some-page/nested?query=1');
+
+        // Can handle relative $url
+        Director::mockRequest(function (HTTPRequest $request) {
+            $this->assertEquals('some-page/nested', $request->getURL());
+            $this->assertEquals(1, $request->getVar('query'));
+            $this->assertEquals('/some-subdir/some-page/nested', $_SERVER['REQUEST_URI']);
+        }, 'some-page/nested?query=1');
+    }
 }

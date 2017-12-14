@@ -28,16 +28,20 @@ class HTTPRequestBuilder
      *
      * @param array $variables
      * @param string $input Request body
+     * @param string|null $url Provide specific url (relative to base)
      * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input)
+    public static function createFromVariables(array $variables, $input, $url = null)
     {
-        // Remove query parameters (they're retained separately through $server['_GET']
-        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
+        // Infer URL from REQUEST_URI unless explicitly provided
+        if (!isset($url)) {
+            // Remove query parameters (they're retained separately through $server['_GET']
+            $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
 
-        // Remove base folders from the URL if webroot is hosted in a subfolder
-        if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
-            $url = substr($url, strlen(BASE_URL));
+            // Remove base folders from the URL if webroot is hosted in a subfolder
+            if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
+                $url = substr($url, strlen(BASE_URL));
+            }
         }
 
         // Build request
