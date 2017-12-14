@@ -16,6 +16,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
@@ -128,6 +129,26 @@ class SecurityTest extends FunctionalTest
             'One-off failure message',
             $controller->getResponse()->getBody(),
             "Message set passed to Security::permissionFailure() didn't override Config values"
+        );
+
+        // Test DBField cast messages work
+        Security::permissionFailure(
+            $controller,
+            DBField::create_field('HTMLFragment', '<p>Custom HTML &amp; Message</p>')
+        );
+        $this->assertContains(
+            '<p>Custom HTML &amp; Message</p>',
+            $controller->getResponse()->getBody()
+        );
+
+        // Plain text DBText
+        Security::permissionFailure(
+            $controller,
+            DBField::create_field('Text', 'Safely escaped & message')
+        );
+        $this->assertContains(
+            'Safely escaped &amp; message',
+            $controller->getResponse()->getBody()
         );
     }
 
