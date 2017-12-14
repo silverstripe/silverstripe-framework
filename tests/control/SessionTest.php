@@ -113,7 +113,7 @@ class SessionTest extends SapphireTest {
 
 		// Verify a started session resets our values (initiated by $_SESSION object)
 		/** @var Session $s3 */
-		$s3 = Injector::inst()->create('Session', []);
+		$s3 = Injector::inst()->create('Session', array());
 		foreach ($data as $key => $value) {
 			$s3->inst_set($key, $value);
 		}
