@@ -140,8 +140,8 @@ class DevelopmentAdmin extends Controller
 
 
     /*
-	 * Internal methods
-	 */
+     * Internal methods
+     */
 
     /**
      * @return array of url => description
@@ -175,8 +175,8 @@ class DevelopmentAdmin extends Controller
 
 
     /*
-	 * Unregistered (hidden) actions
-	 */
+     * Unregistered (hidden) actions
+     */
 
     /**
      * Build the default data, calling requireDefaultRecords on all

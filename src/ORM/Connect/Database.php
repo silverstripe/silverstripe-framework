@@ -617,14 +617,14 @@ abstract class Database
     }
 
     /*
-	 * Determines if the current database connection supports a given list of extensions
-	 *
-	 * @param array $extensions List of extensions to check for support of. The key of this array
-	 * will be an extension name, and the value the configuration for that extension. This
-	 * could be one of partitions, tablespaces, or clustering
-	 * @return boolean Flag indicating support for all of the above
-	 * @todo Write test cases
-	 */
+     * Determines if the current database connection supports a given list of extensions
+     *
+     * @param array $extensions List of extensions to check for support of. The key of this array
+     * will be an extension name, and the value the configuration for that extension. This
+     * could be one of partitions, tablespaces, or clustering
+     * @return boolean Flag indicating support for all of the above
+     * @todo Write test cases
+     */
     public function supportsExtensions($extensions)
     {
         return false;

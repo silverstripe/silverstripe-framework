@@ -3413,8 +3413,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /*
-	 * @ignore
-	 */
+     * @ignore
+     */
     private static $subclass_access = true;
 
     /**
