@@ -1176,6 +1176,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * </code>
      * If the passed algorithm is invalid, FALSE will be returned.
      *
+     * @throws PasswordEncryptor_NotFoundException
      * @see encrypt_passwords()
      */
     public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null)

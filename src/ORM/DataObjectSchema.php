@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBField;
 
@@ -317,17 +318,12 @@ class DataObjectSchema
             return $class;
         }
 
-        if (!ClassInfo::classImplements($class, TestOnly::class) && $this->classHasTable($class)) {
-            trigger_error(
-                "It is recommended to define a table_name for your '$class'." .
-                ' Not defining a table_name may cause subsequent table names to be too long and may not be supported' .
-                ' by your current database engine, the generated naming scheme will also change when upgrading to' .
-                ' SilverStripe 5.0 and potentially break.',
-                E_USER_WARNING
-            );
-        }
         $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
         $table = str_replace('\\', $separator, trim($class, '\\'));
+
+        if (!ClassInfo::classImplements($class, TestOnly::class) && $this->classHasTable($class)) {
+            DBSchemaManager::showTableNameWarning($table, $class);
+        }
 
         return $table;
     }
