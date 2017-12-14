@@ -890,13 +890,13 @@ MESSAGE
 
 
     /*
-	 * This is a lookup table for data types.
-	 * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
-	 * So this is a DB-specific list of equivilents.
-	 *
-	 * @param string $type
-	 * @return string
-	 */
+     * This is a lookup table for data types.
+     * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
+     * So this is a DB-specific list of equivilents.
+     *
+     * @param string $type
+     * @return string
+     */
     abstract public function dbDataType($type);
 
     /**
@@ -1151,10 +1151,10 @@ MESSAGE
     abstract public function varchar($values);
 
     /*
-	 * Returns data type for 'year' column
-	 *
-	 * @param array $values Contains a tokenised list of info about this data type
-	 * @return string
-	 */
+     * Returns data type for 'year' column
+     *
+     * @param array $values Contains a tokenised list of info about this data type
+     * @return string
+     */
     abstract public function year($values);
 }

@@ -136,11 +136,11 @@ abstract class BulkLoader extends ViewableData
     }
 
     /*
-	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
-	 * Optionally truncates (clear) the table before it imports.
-	 *
-	 * @return BulkLoader_Result See {@link self::processAll()}
-	 */
+     * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
+     * Optionally truncates (clear) the table before it imports.
+     *
+     * @return BulkLoader_Result See {@link self::processAll()}
+     */
     public function load($filepath)
     {
         Environment::increaseTimeLimitTo(3600);
