@@ -2,25 +2,23 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
-use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\ViewableData;
 use stdClass;
-use ReflectionException;
-use InvalidArgumentException;
 
 class DataObjectTest extends SapphireTest
 {
@@ -87,11 +85,11 @@ class DataObjectTest extends SapphireTest
 
         // Test with table required
         $this->assertEquals(
-            DataObjectTest\TeamComment::class.'.Varchar',
+            DataObjectTest\TeamComment::class . '.Varchar',
             $schema->fieldSpec(DataObjectTest\TeamComment::class, 'Name', DataObjectSchema::INCLUDE_CLASS)
         );
         $this->assertEquals(
-            DataObjectTest\TeamComment::class.'.Text',
+            DataObjectTest\TeamComment::class . '.Text',
             $schema->fieldSpec(DataObjectTest\TeamComment::class, 'Comment', DataObjectSchema::INCLUDE_CLASS)
         );
         $dbFields = $schema->fieldSpecs(DataObjectTest\ExtendedTeamComment::class);
@@ -127,8 +125,8 @@ class DataObjectTest extends SapphireTest
         // Values can be an array...
         $player = new DataObjectTest\Player(
             array(
-            'FirstName' => 'James',
-            'Surname' => 'Smith'
+                'FirstName' => 'James',
+                'Surname' => 'Smith'
             )
         );
 
@@ -278,7 +276,7 @@ class DataObjectTest extends SapphireTest
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
             array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
+                '"DataObjectTest_TeamComment"."Name"' => 'Joe'
             ),
             false
         );
@@ -287,7 +285,7 @@ class DataObjectTest extends SapphireTest
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
             array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
+                '"DataObjectTest_TeamComment"."Name"' => 'Joe'
             ),
             false
         );
@@ -297,7 +295,7 @@ class DataObjectTest extends SapphireTest
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
             array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
+                '"DataObjectTest_TeamComment"."Name"' => 'Bob'
             ),
             true
         );
@@ -306,7 +304,7 @@ class DataObjectTest extends SapphireTest
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
             array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
+                '"DataObjectTest_TeamComment"."Name"' => 'Bob'
             ),
             true
         );
@@ -338,7 +336,7 @@ class DataObjectTest extends SapphireTest
         $subteam1 = DataObject::get_one(
             strtolower(DataObjectTest\SubTeam::class),
             array(
-            '"DataObjectTest_Team"."Title"' => 'Subteam 1'
+                '"DataObjectTest_Team"."Title"' => 'Subteam 1'
             ),
             true
         );
@@ -705,8 +703,8 @@ class DataObjectTest extends SapphireTest
             $obj->getChangedFields(true, DataObject::CHANGE_VALUE),
             array(
                 'FirstName' => array(
-                    'before'=>'Captain',
-                    'after'=>'Captain-changed',
+                    'before' => 'Captain',
+                    'after' => 'Captain-changed',
                     'level' => DataObject::CHANGE_VALUE
                 )
             ),
@@ -1190,15 +1188,13 @@ class DataObjectTest extends SapphireTest
         $summaryFields = $team->summaryFields();
 
         $this->assertEquals(
-            'Custom Title',
-            $summaryFields['Title'],
-            'Custom title is preserved'
-        );
-
-        $this->assertEquals(
-            'Captain\'s shirt number',
-            $summaryFields['Captain.ShirtNumber'],
-            'Custom title on relation is preserved'
+            [
+                'Title' => 'Custom Title',
+                'Title.UpperCase' => 'Title',
+                'Captain.ShirtNumber' => 'Captain\'s shirt number',
+                'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team',
+            ],
+            $summaryFields
         );
     }
 
@@ -1211,10 +1207,10 @@ class DataObjectTest extends SapphireTest
 
         $team1->update(
             array(
-            'DatabaseField' => 'Something',
-            'Captain.FirstName' => 'Jim',
-            'Captain.Email' => 'jim@example.com',
-            'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+                'DatabaseField' => 'Something',
+                'Captain.FirstName' => 'Jim',
+                'Captain.Email' => 'jim@example.com',
+                'Captain.FavouriteTeam.Title' => 'New and improved team 1',
             )
         );
 
@@ -1242,8 +1238,8 @@ class DataObjectTest extends SapphireTest
 
         $team1->update(
             array(
-            'Captain.FirstName' => 'Jim',
-            'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+                'Captain.FirstName' => 'Jim',
+                'Captain.FavouriteTeam.Title' => 'New and improved team 1',
             )
         );
         /* Test that the captain ID has been updated */
@@ -1459,8 +1455,8 @@ class DataObjectTest extends SapphireTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
         /**
- * @skipUpgrade
-*/
+         * @skipUpgrade
+         */
         $dataObject->newClassInstance('Controller');
     }
 
@@ -1577,7 +1573,7 @@ class DataObjectTest extends SapphireTest
         $teamExtraFields = $team->manyManyExtraFields();
         $this->assertEquals(
             array(
-            'Players' => array('Position' => 'Varchar(100)')
+                'Players' => array('Position' => 'Varchar(100)')
             ),
             $teamExtraFields
         );
@@ -1587,8 +1583,8 @@ class DataObjectTest extends SapphireTest
         $teamExtraFields = $subTeam->manyManyExtraFields();
         $this->assertEquals(
             array(
-            'Players' => array('Position' => 'Varchar(100)'),
-            'FormerPlayers' => array('Position' => 'Varchar(100)')
+                'Players' => array('Position' => 'Varchar(100)'),
+                'FormerPlayers' => array('Position' => 'Varchar(100)')
             ),
             $teamExtraFields
         );
@@ -1598,7 +1594,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(
             $teamExtraFields,
             array(
-            'Position' => 'Varchar(100)'
+                'Position' => 'Varchar(100)'
             )
         );
 
@@ -1607,7 +1603,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(
             $playerExtraFields,
             array(
-            'Position' => 'Varchar(100)'
+                'Position' => 'Varchar(100)'
             )
         );
 
@@ -1797,9 +1793,9 @@ class DataObjectTest extends SapphireTest
         $company = new DataObjectTest\Company();
 
         $this->assertEquals(
-            array (
-                'CurrentStaff'     => DataObjectTest\Staff::class,
-                'PreviousStaff'    => DataObjectTest\Staff::class
+            array(
+                'CurrentStaff' => DataObjectTest\Staff::class,
+                'PreviousStaff' => DataObjectTest\Staff::class
             ),
             $company->hasMany(),
             'has_many strips field name data by default.'
@@ -1812,16 +1808,16 @@ class DataObjectTest extends SapphireTest
         );
 
         $this->assertEquals(
-            array (
-                'CurrentStaff'     => DataObjectTest\Staff::class.'.CurrentCompany',
-                'PreviousStaff'    => DataObjectTest\Staff::class.'.PreviousCompany'
+            array(
+                'CurrentStaff' => DataObjectTest\Staff::class . '.CurrentCompany',
+                'PreviousStaff' => DataObjectTest\Staff::class . '.PreviousCompany'
             ),
             $company->hasMany(false),
             'has_many returns field name data when $classOnly is false.'
         );
 
         $this->assertEquals(
-            DataObjectTest\Staff::class.'.CurrentCompany',
+            DataObjectTest\Staff::class . '.CurrentCompany',
             DataObject::getSchema()->hasManyComponent(DataObjectTest\Company::class, 'CurrentStaff', false),
             'has_many returns field name data on single records when $classOnly is false.'
         );
@@ -1897,7 +1893,7 @@ class DataObjectTest extends SapphireTest
     public function testBelongsTo()
     {
         $company = new DataObjectTest\Company();
-        $ceo     = new DataObjectTest\CEO();
+        $ceo = new DataObjectTest\CEO();
 
         $company->Name = 'New Company';
         $company->write();
@@ -1948,7 +1944,7 @@ class DataObjectTest extends SapphireTest
     public function testBelongsToPolymorphic()
     {
         $company = new DataObjectTest\Company();
-        $ceo     = new DataObjectTest\CEO();
+        $ceo = new DataObjectTest\CEO();
 
         $company->write();
         $ceo->write();
