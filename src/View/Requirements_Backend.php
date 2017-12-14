@@ -602,6 +602,7 @@ class Requirements_Backend
      */
     public function javascriptTemplate($file, $vars, $uniquenessID = null)
     {
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
         $script = file_get_contents(Director::getAbsFile($file));
         $search = array();
         $replace = array();
