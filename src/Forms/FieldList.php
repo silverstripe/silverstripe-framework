@@ -714,7 +714,7 @@ class FieldList extends ArrayList
             $fieldMap[$field->getName()] = $field;
         }
 
-        // Iterate through the ordered list	of names, building a new array to be put into $this->items.
+        // Iterate through the ordered list of names, building a new array to be put into $this->items.
         // While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
         // Unrecognised field names are okay; just ignore them
         $fields = array();

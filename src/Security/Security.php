@@ -317,8 +317,8 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function permissionFailure($controller = null, $messageSet = null)
     {
         self::set_ignore_disallowed_actions(true);
-        $shouldEscapeHtml = function($message) {
-            if($message instanceof DBField) {
+        $shouldEscapeHtml = function ($message) {
+            if ($message instanceof DBField) {
                 $escapeHtml = $message->config()->escape_type === 'raw';
             } else {
                 $escapeHtml = true;

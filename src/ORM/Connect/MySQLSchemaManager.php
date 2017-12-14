@@ -614,11 +614,11 @@ class MySQLSchemaManager extends DBSchemaManager
     }
 
     /*
-	 * Return the MySQL-proprietary 'Year' datatype
-	 *
-	 * @param array $values Contains a tokenised list of info about this data type
-	 * @return string
-	 */
+     * Return the MySQL-proprietary 'Year' datatype
+     *
+     * @param array $values Contains a tokenised list of info about this data type
+     * @return string
+     */
     public function year($values)
     {
         return 'year(4)';
