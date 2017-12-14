@@ -27,22 +27,23 @@ use SilverStripe\ORM\DataObject;
 class MyStagedModel extends DataObject 
 {
     private static $extensions = [
-        Versioned::class
+        Versioned::class,
     ];
 }
 ```
 
 Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
-can be specified by setting the constructor argument to "Versioned"
-
+can be specified by using the `.versioned` service variant that provides only version history, and no
+staging.
 
 ```php
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
 
 class VersionedModel extends DataObject 
 {
     private static $extensions = [
-        "SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
+        Versioned::class . '.versioned',
     ];
 }
 ```
@@ -309,6 +310,19 @@ class Banner extends Page
 ```
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
+
+#### Unversioned dataobject ownership
+
+Ownership can be used with non-versioned dataobjects, as the necessary functionality is included by default
+by the versioned object through the `[api:SilverStripe\Versioned\RecursivePublishable]` extension which is
+applied to all objects.
+
+However, it is important to note that even when saving un-versioned objects, it is necessary to use
+`->publishRecursive()` to trigger a recursive publish.
+
+`owns` works the same regardless of whether these objects are versioned, so you can use any combination of
+versioned or unversioned dataobjects. You only need to call `->recursivePublish()` on the top most
+object in the tree.
 
 #### DataObject ownership with custom relations
 
