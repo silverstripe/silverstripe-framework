@@ -100,6 +100,7 @@ use stdClass;
  *
  * @property int $ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
  * @property int $OldID ID of object, if deleted
+ * @property string $Title
  * @property string $ClassName Class name of the DataObject
  * @property string $LastEdited Date and time of DataObject's last modification.
  * @property string $Created Date and time of DataObject creation.

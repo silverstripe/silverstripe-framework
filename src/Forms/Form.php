@@ -173,7 +173,7 @@ class Form extends ViewableData implements HasRequestHandler
      * another template for customisation.
      *
      * @see Form->setTemplate()
-     * @var string|null
+     * @var string|array|null
      */
     protected $template;
 
@@ -974,7 +974,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the SS template that this form should use
      * to render with. The default is "Form".
      *
-     * @param string $template The name of the template (without the .ss extension)
+     * @param string|array $template The name of the template (without the .ss extension) or array form
      * @return $this
      */
     public function setTemplate($template)
@@ -986,7 +986,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Return the template to render this form with.
      *
-     * @return string
+     * @return string|array
      */
     public function getTemplate()
     {
