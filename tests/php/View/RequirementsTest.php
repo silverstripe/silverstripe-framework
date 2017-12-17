@@ -3,10 +3,8 @@
 namespace SilverStripe\View\Tests;
 
 use InvalidArgumentException;
-use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
@@ -669,8 +667,9 @@ class RequirementsTest extends SapphireTest
         $this->setupRequirements($backend);
         $backend->javascript($basePath . '/a.js');
 
-        $this->assertTrue(
-            count($backend->getJavascript()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getJavascript(),
             "There should be only 1 file included in required javascript."
         );
         $this->assertArrayHasKey(
@@ -680,14 +679,16 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->javascript($basePath . '/b.js');
-        $this->assertTrue(
-            count($backend->getJavascript()) == 2,
+        $this->assertCount(
+            2,
+            $backend->getJavascript(),
             "There should be 2 files included in required javascript."
         );
 
         $backend->block($basePath . '/a.js');
-        $this->assertTrue(
-            count($backend->getJavascript()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getJavascript(),
             "There should be only 1 file included in required javascript."
         );
         $this->assertArrayNotHasKey(
@@ -702,8 +703,9 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->css($basePath . '/a.css');
-        $this->assertTrue(
-            count($backend->getCSS()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getCSS(),
             "There should be only 1 file included in required css."
         );
         $this->assertArrayHasKey(
@@ -713,9 +715,34 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->block($basePath . '/a.css');
-        $this->assertTrue(
-            count($backend->getCSS()) == 0,
+        $this->assertCount(
+            0,
+            $backend->getCSS(),
             "There should be nothing in required css after file has been blocked."
+        );
+    }
+
+    public function testAppendAndBlockWithModuleResourceLoader()
+    {
+        $basePath = $this->getThemeRoot();
+
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+
+        // Note: assumes that client/styles/debug.css is "exposed"
+        $backend->css('silverstripe/framework:client/styles/debug.css');
+        $this->assertCount(
+            1,
+            $backend->getCSS(),
+            'Module resource can be loaded via resources reference'
+        );
+
+        $backend->block('silverstripe/framework:client/styles/debug.css');
+        $this->assertCount(
+            0,
+            $backend->getCSS(),
+            'Module resource can be blocked via resources reference'
         );
     }
 
