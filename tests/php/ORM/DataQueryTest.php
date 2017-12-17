@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -167,7 +168,7 @@ class DataQueryTest extends SapphireTest
     {
         $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
         $dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
-        $dataQuery->execute();
+        $this->assertInstanceOf(Query::class, $dataQuery->execute());
     }
 
     public function testDisjunctiveGroup()

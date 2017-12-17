@@ -36,7 +36,7 @@
         "symfony/translation": "^2.8",
         "symfony/yaml": "~3.2",
         "m1/env": "^2.1",
-        "php": ">=5.6.0",
+        "php": ">=7.1.0",
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-xml": "*",
@@ -51,7 +51,7 @@
         "silverstripe/vendor-plugin": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^7@dev",
         "silverstripe/versioned": "^2@dev",
         "silverstripe/behat-extension": "^4",
         "silverstripe/serve": "^3",

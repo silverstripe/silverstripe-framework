@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev\Tests;
 
-use PHPUnit_Framework_Error;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\DeprecationTest\TestDeprecation;
@@ -34,7 +33,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      */
     public function testEqualVersionTriggersNotice()
     {
@@ -50,7 +49,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-    * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      */
     public function testGreaterVersionTriggersNotice()
     {
@@ -66,7 +65,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-    * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      */
     public function testMatchingModuleNotifcationVersionAffectsNotice()
     {
@@ -84,7 +83,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      * @expectedExceptionMessage DeprecationTest->testScopeMethod is deprecated. Method scope
      */
     public function testScopeMethod()
@@ -94,7 +93,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      * @expectedExceptionMessage DeprecationTest is deprecated. Class scope
      */
     public function testScopeClass()
@@ -104,7 +103,7 @@ class DeprecationTest extends SapphireTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      * @expectedExceptionMessage Global scope
      */
     public function testScopeGlobal()

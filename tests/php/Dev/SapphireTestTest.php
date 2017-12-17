@@ -86,7 +86,7 @@ class SapphireTestTest extends SapphireTest
      *
      * @testdox assertion assertListAllMatch fails when not all items are matching
      *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
     {
@@ -119,7 +119,7 @@ class SapphireTestTest extends SapphireTest
      * @param $matches
      * @param $itemsForList array
      *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertListContainsFailsIfListDoesNotContainMatch($matches, $itemsForList)
     {
@@ -153,7 +153,7 @@ class SapphireTestTest extends SapphireTest
      * @param $itemsForList
      * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
      *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertListNotContainsFailsWhenListContainsAMatch($matches, $itemsForList)
     {
@@ -187,7 +187,7 @@ class SapphireTestTest extends SapphireTest
      * @param $matches
      * @param $itemsForList
      *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertListEqualsFailsOnNonEqualLists($matches, $itemsForList)
     {

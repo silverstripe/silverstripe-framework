@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Dev;
 
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+use function debug_print_backtrace;
+use const E_USER_DEPRECATED;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 

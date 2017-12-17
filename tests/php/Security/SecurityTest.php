@@ -782,7 +782,7 @@ class SecurityTest extends FunctionalTest
      * @param string $expected
      * @param string $errorMessage
      */
-    protected function assertHasMessage($expected, $errorMessage = null)
+    protected function assertHasMessage($expected, string $errorMessage = '')
     {
         $messages = [];
         $result = $this->getValidationResult();

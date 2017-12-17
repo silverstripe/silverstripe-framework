@@ -23,19 +23,14 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 5.6
-      env:
-        - DB=MYSQL
-        - PHPCS_TEST=1
-        - PHPUNIT_TEST=framework
-    - php: 7.0
+    - php: 7.1
       env:
         - DB=PGSQL
         - PHPUNIT_TEST=framework
     - php: 7.1
       env:
         - DB=MYSQL
-        - PDO=1
+        - PHPCS_TEST=1
         - PHPUNIT_COVERAGE_TEST=framework
     - php: 7.2
       env:
@@ -47,15 +42,15 @@ matrix:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_TEST=framework
-    - php: 7.0
+    - php: 7.1
       env:
        - DB=MYSQL
        - BEHAT_TEST=framework
-    - php: 7.0
+    - php: 7.1
       env:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
-    - php: 7.0
+    - php: 7.1
       env:
         - DB=MYSQL
         - BEHAT_TEST=cms

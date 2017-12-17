@@ -2,7 +2,7 @@
 
 namespace SilverStripe\i18n\Tests;
 
-use PHPUnit_Framework_Error_Notice;
+use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
@@ -114,7 +114,7 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectException(Notice::class);
         $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
 
         $c->collectFromTemplate($html, null, $mymodule);
@@ -189,7 +189,7 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectException(Notice::class);
         $this->expectExceptionMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
 
         $c->collectFromTemplate($html, 'Test', $mymodule);
@@ -425,7 +425,7 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
+        $this->expectException(Notice::class);
         $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
 
         $php = <<<PHP
