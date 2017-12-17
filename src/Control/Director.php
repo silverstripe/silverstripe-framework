@@ -263,7 +263,7 @@ class Director implements TemplateGlobalProvider
         $newVars = HTTPRequestBuilder::cleanEnvironment($newVars);
 
         // Create new request
-        $request = HTTPRequestBuilder::createFromVariables($newVars, $body);
+        $request = HTTPRequestBuilder::createFromVariables($newVars, $body, ltrim($url, '/'));
         if ($headers) {
             foreach ($headers as $k => $v) {
                 $request->addHeader($k, $v);

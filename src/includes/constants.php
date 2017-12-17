@@ -95,6 +95,11 @@ if (!defined('BASE_URL')) {
             return rtrim(parse_url($base, PHP_URL_PATH), '/');
         }
 
+        // Unless specified, use empty string for base in CLI
+        if (in_array(php_sapi_name(), ['cli', 'phpdbg'])) {
+            return "";
+        }
+
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
         // This tends not to work on CLI
         $path = realpath($_SERVER['SCRIPT_FILENAME']);
