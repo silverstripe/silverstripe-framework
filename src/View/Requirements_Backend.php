@@ -602,6 +602,7 @@ class Requirements_Backend
      */
     public function javascriptTemplate($file, $vars, $uniquenessID = null)
     {
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
         $script = file_get_contents(Director::getAbsFile($file));
         $search = array();
         $replace = array();
@@ -733,10 +734,14 @@ class Requirements_Backend
      * Note that blocking should be used sparingly because it's hard to trace where an file is
      * being blocked from.
      *
-     * @param string|int $fileOrID
+     * @param string|int $fileOrID Relative path from webroot, module resource reference or
+     *                             requirement API ID
      */
     public function block($fileOrID)
     {
+        if (is_string($fileOrID)) {
+            $fileOrID = ModuleResourceLoader::singleton()->resolvePath($fileOrID);
+        }
         $this->blocked[$fileOrID] = $fileOrID;
     }
 
