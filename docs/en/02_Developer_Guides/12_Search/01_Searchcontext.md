@@ -175,8 +175,6 @@ The change is in **$results = $this->getResults($data);**, because you are using
 Another thing you cant forget is to check the name of the singleton you are using in your project. the example uses
 **MyDataObject**, you need to change it for the one you are using
 
-For more information on how to paginate your results within the template, see [Tutorial: Site Search](/tutorials/4-site-search).
-
 
 ### The Pagination Template
 
@@ -233,7 +231,6 @@ See [SearchFilter](api:SilverStripe\ORM\Filters\SearchFilter) API Documentation
 ## Related Documentation
 
 * [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin)
-* [Site Search](/tutorials/site_search)
 
 ## API Documentation
 

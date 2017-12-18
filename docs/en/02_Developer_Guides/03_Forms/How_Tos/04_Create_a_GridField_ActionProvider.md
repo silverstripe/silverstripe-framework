@@ -157,4 +157,3 @@ message to the user interface indicating a successful message.
 
  * [GridField Reference](/developer_guides/forms/field_types/gridfield)
  * [ModelAdmin: A UI driven by GridField](/developer_guides/customising_the_admin_interface/modeladmin)
- * [Tutorial 5: Dataobject Relationship Management](/tutorials/dataobject_relationship_management)
