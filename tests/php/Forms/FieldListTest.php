@@ -3,7 +3,10 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\EmailField;
@@ -32,6 +35,90 @@ use SilverStripe\Forms\HiddenField;
  */
 class FieldListTest extends SapphireTest
 {
+    public function testRecursiveWalk()
+    {
+        $fields = array(
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                new TextField('Day'),
+                new TextField('Month'),
+                new TextField('Year')
+            ),
+        );
+        $fieldList = new FieldList($fields);
+
+        $count = 0;
+
+        $fieldList->recursiveWalk(function (FormField $field) use (&$count) {
+            ++$count;
+        });
+
+        $this->assertEquals(8, $count);
+    }
+
+    public function testFlattenFields()
+    {
+        $fields = array(
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            $composite = new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        );
+        $fieldList = new FieldList($fields);
+
+        array_pop($fields);
+        array_push($fields, $composite, $day, $month, $year);
+
+        $this->assertEquals($fields, $fieldList->flattenFields()->toArray());
+    }
+
+    public function testSaveableFields()
+    {
+        $fields = array(
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        );
+        $fieldList = new FieldList($fields);
+
+        array_pop($fields);
+        array_pop($fields);
+        array_push($fields, $day, $month, $year);
+
+        $this->assertEquals($fields, array_values($fieldList->saveableFields()));
+    }
+
+    public function testFieldNames()
+    {
+        $fields = array(
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        );
+        $fieldList = new FieldList($fields);
+
+        $this->assertEquals(['Name', 'Email', 'Hidden', 'Day', 'Month', 'Year'], $fieldList->dataFieldNames());
+    }
 
     /**
      * Test adding a field to a tab in a set.

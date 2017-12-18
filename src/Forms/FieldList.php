@@ -59,6 +59,38 @@ class FieldList extends ArrayList
     }
 
     /**
+     * Iterate over each field in the current list recursively
+     *
+     * @param callable $callback
+     */
+    public function recursiveWalk(callable $callback)
+    {
+        $stack = $this->toArray();
+        while (!empty($stack)) {
+            /** @var FormField $field */
+            $field = array_shift($stack);
+            $callback($field);
+            if ($field instanceof CompositeField) {
+                $stack = array_merge($field->getChildren()->toArray(), $stack);
+            }
+        }
+    }
+
+    /**
+     * Return a flattened list of all fields
+     *
+     * @return static
+     */
+    public function flattenFields()
+    {
+        $fields = [];
+        $this->recursiveWalk(function (FormField $field) use (&$fields) {
+            $fields[] = $field;
+        });
+        return static::create($fields);
+    }
+
+    /**
      * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
      * as well as heading / help text fields.
      *
@@ -66,8 +98,19 @@ class FieldList extends ArrayList
      */
     public function dataFields()
     {
-        if (!$this->sequentialSet) {
-            $this->collateDataFields($this->sequentialSet);
+        if (empty($this->sequentialSet)) {
+            $fields = [];
+            $this->recursiveWalk(function (FormField $field) use (&$fields) {
+                if (!$field->hasData()) {
+                    return;
+                }
+                $name = $field->getName();
+                if (isset($fields[$name])) {
+                    $this->fieldNameError($field, __FUNCTION__);
+                }
+                $fields[$name] = $field;
+            });
+            $this->sequentialSet = $fields;
         }
         return $this->sequentialSet;
     }
@@ -77,10 +120,60 @@ class FieldList extends ArrayList
      */
     public function saveableFields()
     {
-        if (!$this->sequentialSaveableSet) {
-            $this->collateDataFields($this->sequentialSaveableSet, true);
+        if (empty($this->sequentialSaveableSet)) {
+            $fields = [];
+            $this->recursiveWalk(function (FormField $field) use (&$fields) {
+                if (!$field->canSubmitValue()) {
+                    return;
+                }
+                $name = $field->getName();
+                if (isset($fields[$name])) {
+                    $this->fieldNameError($field, __FUNCTION__);
+                }
+                $fields[$name] = $field;
+            });
+            $this->sequentialSaveableSet = $fields;
         }
         return $this->sequentialSaveableSet;
+    }
+
+    /**
+     * Return array of all field names
+     *
+     * @return array
+     */
+    public function dataFieldNames()
+    {
+        return array_keys($this->dataFields());
+    }
+
+    /**
+     * Trigger an error for duplicate field names
+     *
+     * @param FormField $field
+     * @param $functionName
+     */
+    protected function fieldNameError(FormField $field, $functionName)
+    {
+        if ($this->form) {
+            $errorSuffix = sprintf(
+                " in your '%s' form called '%s'",
+                get_class($this->form),
+                $this->form->getName()
+            );
+        } else {
+            $errorSuffix = '';
+        }
+
+        user_error(
+            sprintf(
+                "%s() I noticed that a field called '%s' appears twice%s",
+                $functionName,
+                $field->getName(),
+                $errorSuffix
+            ),
+            E_USER_ERROR
+        );
     }
 
     protected function flushFieldsCache()
@@ -89,8 +182,14 @@ class FieldList extends ArrayList
         $this->sequentialSaveableSet = null;
     }
 
+    /**
+     * @deprecated 4.1..5.0 Please use dataFields or saveableFields
+     * @param $list
+     * @param bool $saveableOnly
+     */
     protected function collateDataFields(&$list, $saveableOnly = false)
     {
+        Deprecation::notice('5.0', 'Please use dataFields or SaveableFields');
         if (!isset($list)) {
             $list = array();
         }
