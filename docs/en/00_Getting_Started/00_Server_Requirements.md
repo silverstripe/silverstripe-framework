@@ -8,9 +8,9 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
- * PHP 5.6 and PHP 7.x
+ * PHP 7.1 or higher
  * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),
-   we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 5.6 support may be dropped in a 4.x minor release after December 2018.
+   we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 7.1 support may be dropped in a 5.x minor release after December 2019.
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
      * Note: Some PHP 5.5+ packages already have [Zend OpCache](http://php.net/manual/en/book.opcache.php) installed by default. If this is the case on your system, do not try and run additional opcaches alongside Zend OpCache without first disabling it, as it will likely have unexpected consequences.
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
@@ -20,11 +20,6 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
      * `arc4random_buf` (OpenBSD & NetBSD only)
      * `getrandom(2)` (Linux only)
      * `/dev/urandom`
-   * PHP 5 [`random_compat`](https://github.com/paragonie/random_compat) polyfill:
-     * libsodium
-     * `/dev/urandom`
-     * [`mcrypt_create_iv()`](http://php.net/manual/en/function.mcrypt-create-iv.php)
-     * CAPICOM Utilities (`CAPICOM.Utilities.1`, Windows only)
  * Required modules: ctype, dom, fileinfo, hash, intl, mbstring, session, simplexml, tokenizer, xml.
  * At least one from each group of extensions:
      * Image library extension (gd2, imagick)
