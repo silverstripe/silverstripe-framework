@@ -6,12 +6,13 @@ This page lists a number of "page options" , "rendering tools" or "special URL v
 SilverStripe applications.  These are consumed in PHP using the $_REQUEST or $_GET superglobals throughout the SilverStripe
 core.
 
-**General Usage**
+## Debug Toolbar
 
-Append the option and corresponding value to your URL in your browser's address bar.  You may find the [Firefox UrlParams extension](https://addons.mozilla.org/en-US/firefox/addon/1290) useful in order to debug a POST requests (Like Forms).
-
-    http://yoursite.com/page?option_name=value
-    http://yoursite.com/page?option_1=value&option_2=value
+The easiest way to debug SilverStripe is through the
+[lekoala/silverstripe-debugbar](https://github.com/lekoala/silverstripe-debugbar) module.
+It similar to the browser "developer toolbar", and adds itself to the bottom of the screen
+when your site is in development mode. It shows you render times, database queries,
+session variables, used templates and much more.
 
 ## Templates
 
