@@ -390,8 +390,8 @@ class ControllerTest extends FunctionalTest
             'Numeric actions do not slip through.'
         );
         //$this->assertFalse(
-        //	$controller->hasAction('lowercase_permission'),
-        //	'Lowercase permission does not slip through.'
+        //  $controller->hasAction('lowercase_permission'),
+        //  'Lowercase permission does not slip through.'
         //);
         $this->assertFalse(
             $controller->hasAction('undefined'),

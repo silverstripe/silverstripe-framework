@@ -318,6 +318,24 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         self::set_ignore_disallowed_actions(true);
 
+        // Parse raw message / escape type
+        $parseMessage = function ($message) {
+            if ($message instanceof DBField) {
+                return [
+                    $message->getValue(),
+                    $message->config()->get('escape_type') === 'raw'
+                        ? ValidationResult::CAST_TEXT
+                        : ValidationResult::CAST_HTML,
+                ];
+            }
+
+            // Default to escaped value
+            return [
+                $message,
+                ValidationResult::CAST_TEXT,
+            ];
+        };
+
         if (!$controller && Controller::has_curr()) {
             $controller = Controller::curr();
         }
@@ -380,7 +398,8 @@ class Security extends Controller implements TemplateGlobalProvider
                 $message = $messageSet['default'];
             }
 
-            static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
+            list($messageText, $messageCast) = $parseMessage($message);
+            static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
             $request = new HTTPRequest('GET', '/');
             if ($controller) {
                 $request->setSession($controller->getRequest()->getSession());
@@ -399,7 +418,8 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING);
+        list($messageText, $messageCast) = $parseMessage($message);
+        static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
 
         $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
 
@@ -1161,6 +1181,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * </code>
      * If the passed algorithm is invalid, FALSE will be returned.
      *
+     * @throws PasswordEncryptor_NotFoundException
      * @see encrypt_passwords()
      */
     public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null)

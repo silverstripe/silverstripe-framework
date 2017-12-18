@@ -100,6 +100,7 @@ use stdClass;
  *
  * @property int $ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
  * @property int $OldID ID of object, if deleted
+ * @property string $Title
  * @property string $ClassName Class name of the DataObject
  * @property string $LastEdited Date and time of DataObject's last modification.
  * @property string $Created Date and time of DataObject creation.
@@ -3353,12 +3354,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function summaryFields()
     {
-        $fields = $this->config()->get('summary_fields');
+        $rawFields = $this->config()->get('summary_fields');
 
-        // if fields were passed in numeric array,
-        // convert to an associative array
-        if ($fields && array_key_exists(0, $fields)) {
-            $fields = array_combine(array_values($fields), array_values($fields));
+        // Merge associative / numeric keys
+        $fields = [];
+        foreach ($rawFields as $key => $value) {
+            if (is_int($key)) {
+                $key = $value;
+            }
+            $fields[$key] = $value;
         }
 
         if (!$fields) {
@@ -3434,8 +3438,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /*
-	 * @ignore
-	 */
+     * @ignore
+     */
     private static $subclass_access = true;
 
     /**

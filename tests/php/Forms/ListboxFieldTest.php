@@ -226,11 +226,11 @@ class ListboxFieldTest extends SapphireTest
          * @todo re-enable these tests when field validation is removed from {@link ListboxField::setValue()} and moved
          * to the {@link ListboxField::validate()} function
          */
-        //		$field->setValue(4);
-        //		$this->assertFalse(
-        //			$field->validate($validator),
-        //			'Field does not validate values outside of source map'
-        //		);
+        //      $field->setValue(4);
+        //      $this->assertFalse(
+        //          $field->validate($validator),
+        //          'Field does not validate values outside of source map'
+        //      );
         $field->setValue(
             false,
             new ArrayData(

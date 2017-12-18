@@ -18,9 +18,14 @@ SilverStripe\Core\Injector\Injector:
   Swift_Transport: Swift_SendmailTransport
 ```
 
-For example, to use SMTP:
+For example, to use SMTP, create a file mysite/_config/email.yml:
 
 ```yml
+---
+Name: myemailconfig
+After:
+  - '#emailconfig'
+---
 SilverStripe\Core\Injector\Injector:
   Swift_Transport:
     class: Swift_SmtpTransport

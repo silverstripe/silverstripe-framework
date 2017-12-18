@@ -59,7 +59,7 @@ class Team extends DataObject implements TestOnly
     );
 
     private static $summary_fields = array(
-        'Title' => 'Custom Title',
+        'Title', // Overridden by Team_Extension
         'Title.UpperCase' => 'Title',
         'Captain.ShirtNumber' => 'Captain\'s shirt number',
         'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'

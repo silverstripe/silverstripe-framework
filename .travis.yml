@@ -81,7 +81,7 @@ before_script:
   - composer require silverstripe/recipe-core:2.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
   - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:2.x-dev --no-update; fi
   - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
-  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
+  - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
   - php ./tests/dump_constants.php

@@ -1775,8 +1775,8 @@ EOC;
         $this->assertContains($code, $result);
         // TODO Fix inline links in PHP mode
         // $this->assertContains(
-        // 	'<a class="inline" href="<?php echo str_replace(',
-        // 	$result
+        //  '<a class="inline" href="<?php echo str_replace(',
+        //  $result
         // );
         $this->assertContains(
             '<svg><use xlink:href="#sprite"></use></svg>',
