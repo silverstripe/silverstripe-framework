@@ -101,7 +101,6 @@ The final step is to [submit your theme to Packagist](https://packagist.org/abou
 ## Links
 
  * [Themes Listing on silverstripe.org](http://addons.silverstripe.org/add-ons?search=&type=theme)
- * [Themes Forum on silverstripe.org](https://www.silverstripe.org/community/forums/themes-2/)
  * [Themes repositories on github.com](http://github.com/silverstripe-themes)
 
 ## Related Lessons
