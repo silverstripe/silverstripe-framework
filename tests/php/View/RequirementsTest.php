@@ -3,10 +3,8 @@
 namespace SilverStripe\View\Tests;
 
 use InvalidArgumentException;
-use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
@@ -53,38 +51,14 @@ class RequirementsTest extends SapphireTest
 
         $html = $backend->includeInHTML(self::$html_template);
 
-        $this->assertTrue(
-            (strpos($html, 'http://www.mydomain.com/test.js') !== false),
-            'Load external javascript URL'
-        );
-        $this->assertTrue(
-            (strpos($html, 'https://www.mysecuredomain.com/test.js') !== false),
-            'Load external secure javascript URL'
-        );
-        $this->assertTrue(
-            (strpos($html, '//scheme-relative.example.com/test.js') !== false),
-            'Load external scheme-relative javascript URL'
-        );
-        $this->assertTrue(
-            (strpos($html, 'http://www.mydomain.com:3000/test.js') !== false),
-            'Load external with port'
-        );
-        $this->assertTrue(
-            (strpos($html, 'http://www.mydomain.com/test.css') !== false),
-            'Load external CSS URL'
-        );
-        $this->assertTrue(
-            (strpos($html, 'https://www.mysecuredomain.com/test.css') !== false),
-            'Load external secure CSS URL'
-        );
-        $this->assertTrue(
-            (strpos($html, '//scheme-relative.example.com/test.css') !== false),
-            'Load scheme-relative CSS URL'
-        );
-        $this->assertTrue(
-            (strpos($html, 'http://www.mydomain.com:3000/test.css') !== false),
-            'Load external with port'
-        );
+        $this->assertContains('http://www.mydomain.com/test.js', $html, 'Load external javascript URL');
+        $this->assertContains('https://www.mysecuredomain.com/test.js', $html, 'Load external secure javascript URL');
+        $this->assertContains('//scheme-relative.example.com/test.js', $html, 'Load external scheme-relative JS');
+        $this->assertContains('http://www.mydomain.com:3000/test.js', $html, 'Load external with port');
+        $this->assertContains('http://www.mydomain.com/test.css', $html, 'Load external CSS URL');
+        $this->assertContains('https://www.mysecuredomain.com/test.css', $html, 'Load external secure CSS URL');
+        $this->assertContains('//scheme-relative.example.com/test.css', $html, 'Load scheme-relative CSS URL');
+        $this->assertContains('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
     }
 
     /**
@@ -229,12 +203,14 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+        $this->assertContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+        $this->assertContains(
+            "alert('c')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
@@ -278,12 +254,14 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+        $this->assertContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+        $this->assertContains(
+            "alert('c')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
@@ -330,12 +308,14 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+        $this->assertContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+        $this->assertContains(
+            "alert('c')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
@@ -402,12 +382,14 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+        $this->assertContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+        $this->assertContains(
+            "alert('c')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
@@ -471,12 +453,14 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('b')") !== false),
+        $this->assertContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertTrue(
-            (strpos(file_get_contents($combinedFilePath), "alert('c')") !== false),
+        $this->assertContains(
+            "alert('c')",
+            file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
@@ -607,8 +591,9 @@ class RequirementsTest extends SapphireTest
         clearstatcache(); // needed to get accurate file_exists() results
         $backend->includeInHTML(self::$html_template);
         $this->assertFileExists($combinedFilePath2);
-        $this->assertTrue(
-            strpos(file_get_contents($combinedFilePath2), "alert('b')") === false,
+        $this->assertNotContains(
+            "alert('b')",
+            file_get_contents($combinedFilePath2),
             'blocked uncombined files are not included'
         );
         $backend->unblock($basePath . '/javascript/RequirementsTest_b.js');
@@ -669,8 +654,9 @@ class RequirementsTest extends SapphireTest
         $this->setupRequirements($backend);
         $backend->javascript($basePath . '/a.js');
 
-        $this->assertTrue(
-            count($backend->getJavascript()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getJavascript(),
             "There should be only 1 file included in required javascript."
         );
         $this->assertArrayHasKey(
@@ -680,14 +666,16 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->javascript($basePath . '/b.js');
-        $this->assertTrue(
-            count($backend->getJavascript()) == 2,
+        $this->assertCount(
+            2,
+            $backend->getJavascript(),
             "There should be 2 files included in required javascript."
         );
 
         $backend->block($basePath . '/a.js');
-        $this->assertTrue(
-            count($backend->getJavascript()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getJavascript(),
             "There should be only 1 file included in required javascript."
         );
         $this->assertArrayNotHasKey(
@@ -702,8 +690,9 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->css($basePath . '/a.css');
-        $this->assertTrue(
-            count($backend->getCSS()) == 1,
+        $this->assertCount(
+            1,
+            $backend->getCSS(),
             "There should be only 1 file included in required css."
         );
         $this->assertArrayHasKey(
@@ -713,9 +702,34 @@ class RequirementsTest extends SapphireTest
         );
 
         $backend->block($basePath . '/a.css');
-        $this->assertTrue(
-            count($backend->getCSS()) == 0,
+        $this->assertCount(
+            0,
+            $backend->getCSS(),
             "There should be nothing in required css after file has been blocked."
+        );
+    }
+
+    public function testAppendAndBlockWithModuleResourceLoader()
+    {
+        $basePath = $this->getThemeRoot();
+
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+
+        // Note: assumes that client/styles/debug.css is "exposed"
+        $backend->css('silverstripe/framework:client/styles/debug.css');
+        $this->assertCount(
+            1,
+            $backend->getCSS(),
+            'Module resource can be loaded via resources reference'
+        );
+
+        $backend->block('silverstripe/framework:client/styles/debug.css');
+        $this->assertCount(
+            0,
+            $backend->getCSS(),
+            'Module resource can be blocked via resources reference'
         );
     }
 
@@ -1017,16 +1031,18 @@ EOS
                     $failedMatches[] = $file;
                 }
             }
-            $this->assertTrue(
-                (count($failedMatches) == 0),
+            $this->assertCount(
+                0,
+                $failedMatches,
                 "Failed asserting the $type files '"
                 . implode("', '", $failedMatches)
                 . "' have exact matches in the required elements:\n'"
                 . implode("'\n'", array_keys($includedFiles)) . "'"
             );
         } else {
-            $this->assertTrue(
-                (array_key_exists($files, $includedFiles)),
+            $this->assertArrayHasKey(
+                $files,
+                $includedFiles,
                 "Failed asserting the $type file '$files' has an exact match in the required elements:\n'"
                 . implode("'\n'", array_keys($includedFiles)) . "'"
             );
@@ -1043,16 +1059,18 @@ EOS
                     $failedMatches[] = $file;
                 }
             }
-            $this->assertTrue(
-                (count($failedMatches) == 0),
+            $this->assertCount(
+                0,
+                $failedMatches,
                 "Failed asserting the $type files '"
                 . implode("', '", $failedMatches)
                 . "' do not have exact matches in the required elements:\n'"
                 . implode("'\n'", array_keys($includedFiles)) . "'"
             );
         } else {
-            $this->assertFalse(
-                (array_key_exists($files, $includedFiles)),
+            $this->assertArrayNotHasKey(
+                $files,
+                $includedFiles,
                 "Failed asserting the $type file '$files' does not have an exact match in the required elements:"
                         . "\n'" . implode("'\n'", array_keys($includedFiles)) . "'"
             );
