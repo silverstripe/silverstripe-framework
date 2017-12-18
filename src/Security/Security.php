@@ -317,14 +317,23 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function permissionFailure($controller = null, $messageSet = null)
     {
         self::set_ignore_disallowed_actions(true);
-        $shouldEscapeHtml = function ($message) {
+
+        // Parse raw message / escape type
+        $parseMessage = function ($message) {
             if ($message instanceof DBField) {
-                $escapeHtml = $message->config()->escape_type === 'raw';
-            } else {
-                $escapeHtml = true;
+                return [
+                    $message->getValue(),
+                    $message->config()->get('escape_type') === 'raw'
+                        ? ValidationResult::CAST_TEXT
+                        : ValidationResult::CAST_HTML,
+                ];
             }
 
-            return $escapeHtml;
+            // Default to escaped value
+            return [
+                $message,
+                ValidationResult::CAST_TEXT,
+            ];
         };
 
         if (!$controller && Controller::has_curr()) {
@@ -389,7 +398,8 @@ class Security extends Controller implements TemplateGlobalProvider
                 $message = $messageSet['default'];
             }
 
-            static::singleton()->setSessionMessage($message, ValidationResult::TYPE_WARNING, $shouldEscapeHtml($message) ? ValidationResult::CAST_TEXT : ValidationResult::CAST_HTML);
+            list($messageText, $messageCast) = $parseMessage($message);
+            static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
             $request = new HTTPRequest('GET', '/');
             if ($controller) {
                 $request->setSession($controller->getRequest()->getSession());
@@ -408,13 +418,8 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        static::singleton()->setSessionMessage(
-            $message,
-            ValidationResult::TYPE_WARNING,
-            $shouldEscapeHtml($message) ?
-                ValidationResult::CAST_TEXT :
-                ValidationResult::CAST_HTML
-        );
+        list($messageText, $messageCast) = $parseMessage($message);
+        static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
 
         $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
 
