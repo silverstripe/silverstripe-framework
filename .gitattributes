@@ -1,4 +1,5 @@
-/tests export-ignore
+/tests/behat/features export-ignore
+/tests/php export-ignore
 /docs export-ignore
 /.tx export-ignore
 /.gitattributes export-ignore
