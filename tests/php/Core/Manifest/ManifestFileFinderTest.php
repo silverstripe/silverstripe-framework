@@ -26,7 +26,7 @@ class ManifestFileFinderTest extends SapphireTest
      * @param array $expect
      * @param string $message
      */
-    public function assertFinderFinds(ManifestFileFinder $finder, $base, $expect, $message = null)
+    public function assertFinderFinds(ManifestFileFinder $finder, $base, $expect, string $message = '')
     {
         if (!$base) {
             $base = $this->defaultBase;

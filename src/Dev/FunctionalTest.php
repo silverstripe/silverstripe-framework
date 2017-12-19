@@ -2,18 +2,13 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\BasicAuth;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
-use PHPUnit_Framework_AssertionFailedError;
 use SimpleXMLElement;
 
 /**
@@ -79,7 +74,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      *
      * @return Session
      */
-    public function session()
+    public function session() : Session
     {
         return $this->mainSession->session();
     }
@@ -127,7 +122,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $url The base URL to use for this test
      * @param callable $callback The test to run
      */
-    protected function withBaseURL($url, $callback)
+    protected function withBaseURL(string $url, callable $callback)
     {
         $oldBase = Config::inst()->get(Director::class, 'alternate_base_url');
         Config::modify()->set(Director::class, 'alternate_base_url', $url);
@@ -140,7 +135,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $folder The base folder to use for this test
      * @param callable $callback The test to run
      */
-    protected function withBaseFolder($folder, $callback)
+    protected function withBaseFolder(string $folder, callable $callback)
     {
         $oldFolder = Config::inst()->get(Director::class, 'alternate_base_folder');
         Config::modify()->set(Director::class, 'alternate_base_folder', $folder);
@@ -158,7 +153,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param array $cookies
      * @return HTTPResponse
      */
-    public function get($url, $session = null, $headers = null, $cookies = null)
+    public function get(string $url, Session $session = null, array $headers = null, array $cookies = null) : HTTPResponse
     {
         $this->cssParser = null;
         $response = $this->mainSession->get($url, $session, $headers, $cookies);

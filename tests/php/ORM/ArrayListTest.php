@@ -6,7 +6,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\SS_List;
 use stdClass;
 
 class ArrayListTest extends SapphireTest
@@ -723,7 +723,7 @@ class ArrayListTest extends SapphireTest
         $items->add($itemB);
 
         // This call will trigger a fatal error if there are issues with circular dependencies
-        $items->sort('Sort');
+        $this->assertInstanceOf(SS_List::class, $items->sort('Sort'));
     }
     /**
      * $list->filter('Name', 'bob'); // only bob in the list

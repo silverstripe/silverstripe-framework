@@ -56,10 +56,10 @@ For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need.
 Now visit the site in your web browser, and the installation process will be completed.
 
-You can also specify a version to download that version explicitly, i.e. this will download the older `3.5.0` release:
+You can also specify a version to download that version explicitly, i.e. this will download the older `3.6.0` release:
 
 ```
-composer create-project silverstripe/installer ./my/website/folder 3.5.0
+composer create-project silverstripe/installer ./my/website/folder 3.6.0
 ```
 
 When `create-project` is used with a release version like above,
@@ -183,9 +183,9 @@ Full example of composer.json with the SSAutoGitIgnore installed and enabled
     "name": "silverstripe/installer",
     "description": "The SilverStripe Framework Installer",
     "require": {
-        "php": ">=5.5.0",
-        "silverstripe/cms": "^4.0",
-        "silverstripe/framework": "^4.0",
+        "php": ">=7.1.0",
+        "silverstripe/cms": "^5",
+        "silverstripe/framework": "^5",
         "silverstripe-themes/simple": "~3.2.0"
     },
     "require-dev": {
@@ -212,11 +212,11 @@ You have to tell composer three things in order to be able to do this:
 The first two steps are done as part of the initial create project using additional arguments.
 
 ```
-composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 4.0.x-dev --prefer-source
+composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 5.x-dev --prefer-source
 ```
 
-The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 4.0 release line. To check out from master instead,
-replace `4.0.x-dev` with `dev-master` (more info on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifying-the-version)).
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 5.0 release line. To check out from master instead,
+replace `5.x-dev` with `dev-master` (more info on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifying-the-version)).
 
 The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
 
@@ -246,9 +246,9 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
     "name": "silverstripe/installer",
     "description": "The SilverStripe Framework Installer",
     "require": {
-        "php": ">=5.5.0",
-        "silverstripe/cms": "^4.0",
-        "silverstripe/framework": "^4.0",
+        "php": ">=7.1.0",
+        "silverstripe/cms": "^5",
+        "silverstripe/framework": "^5",
         "silverstripe-themes/simple": "~3.2.0"
     },
     "require-dev": {
@@ -282,10 +282,10 @@ the latest unstable silverstripe/installer
 composer create-project silverstripe/installer ./my/website/folder dev-master
 ```
 
-Or for the latest development version in the 4.0.x series
+Or for the latest development version in the 5.x series
 
 ```
-composer create-project silverstripe/installer ./my/website/folder 4.0.x-dev
+composer create-project silverstripe/installer ./my/website/folder 5.x-dev
 ```
 
 ## Working with project forks and unreleased modules
@@ -347,7 +347,7 @@ Open `composer.json`, and find the module's `require`. Then put `as (core versio
 ```json
 {
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=7.1.0",
         "silverstripe/cms": "3.5.1.2",
         "silverstripe/framework": "dev-myproj as 4.0.x-dev",
         "silverstripe-themes/simple": "~3.2.0"

@@ -2,9 +2,9 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 
@@ -36,7 +36,7 @@ class DBDateTest extends SapphireTest
     protected function suppressNotices()
     {
         error_reporting(error_reporting() & ~E_USER_NOTICE);
-        \PHPUnit_Framework_Error_Notice::$enabled = false;
+        Notice::$enabled = false;
     }
 
     /**
@@ -45,7 +45,7 @@ class DBDateTest extends SapphireTest
     protected function restoreNotices()
     {
         error_reporting($this->oldError);
-        \PHPUnit_Framework_Error_Notice::$enabled = true;
+        Notice::$enabled = true;
     }
 
     public function testNiceDate()

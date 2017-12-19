@@ -4,9 +4,9 @@ namespace SilverStripe\Dev;
 
 use Exception;
 use LogicException;
-use PHPUnit_Framework_Constraint_Not;
-use PHPUnit_Framework_TestCase;
-use PHPUnit_Util_InvalidArgumentHelper;
+use PHPUnit\Framework\Constraint\LogicalNot;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\Control\CLIRequestBuilder;
 use SilverStripe\Control\Controller;
@@ -38,7 +38,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
-if (!class_exists(PHPUnit_Framework_TestCase::class)) {
+if (!class_exists(TestCase::class)) {
     return;
 }
 
@@ -50,7 +50,7 @@ if (!class_exists(PHPUnit_Framework_TestCase::class)) {
  * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
  * in production sites.
  */
-class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
+class SapphireTest extends TestCase implements TestOnly
 {
     /**
      * Path to fixture data for this test run.
@@ -60,7 +60,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @var string|array
      */
-    protected static $fixture_file = null;
+    protected static $fixture_file = '';
 
     /**
      * @var FixtureFactory
@@ -163,7 +163,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return array
      */
-    public static function getIllegalExtensions()
+    public static function getIllegalExtensions() : array
     {
         return static::$illegal_extensions;
     }
@@ -173,7 +173,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return array
      */
-    public static function getRequiredExtensions()
+    public static function getRequiredExtensions() : array
     {
         return static::$required_extensions;
     }
@@ -184,7 +184,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool
      */
-    protected static function is_running_test()
+    protected static function is_running_test() : bool
     {
         return self::$is_running_test;
     }
@@ -194,13 +194,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param bool $bool
      */
-    protected static function set_is_running_test($bool)
+    protected static function set_is_running_test(bool $bool) : void
     {
         self::$is_running_test = $bool;
     }
 
     /**
-     * @return String
+     * @return string|string[]
      */
     public static function get_fixture_file()
     {
@@ -297,10 +297,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Helper method to determine if the current test should enable a test database
      *
-     * @param $fixtureFiles
+     * @param array|string $fixtureFiles
      * @return bool
      */
-    protected function shouldSetupDatabaseForCurrentTest($fixtureFiles)
+    protected function shouldSetupDatabaseForCurrentTest($fixtureFiles) : bool
     {
         $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
 
@@ -314,7 +314,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool
      */
-    protected function currentTestEnablesDatabase()
+    protected function currentTestEnablesDatabase() : bool
     {
         $annotations = $this->getAnnotations();
 
@@ -328,7 +328,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool
      */
-    protected function currentTestDisablesDatabase()
+    protected function currentTestDisablesDatabase() : bool
     {
         $annotations = $this->getAnnotations();
 
@@ -394,7 +394,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @return FixtureFactory
      */
-    public function getFixtureFactory()
+    public function getFixtureFactory() : FixtureFactory
     {
         if (!$this->fixtureFactory) {
             $this->fixtureFactory = Injector::inst()->create(FixtureFactory::class);
@@ -408,7 +408,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param FixtureFactory $factory
      * @return $this
      */
-    public function setFixtureFactory(FixtureFactory $factory)
+    public function setFixtureFactory(FixtureFactory $factory) : SapphireTest
     {
         $this->fixtureFactory = $factory;
         return $this;
@@ -421,7 +421,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return int
      */
-    protected function idFromFixture($className, $identifier)
+    protected function idFromFixture(string $className, string $identifier) : int
     {
         $id = $this->getFixtureFactory()->getId($className, $identifier);
 
@@ -443,7 +443,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $className The data class or table name, as specified in your fixture file
      * @return array A map of fixture-identifier => object-id
      */
-    protected function allFixtureIDs($className)
+    protected function allFixtureIDs(string $className) : array
     {
         return $this->getFixtureFactory()->getIds($className);
     }
@@ -456,7 +456,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return DataObject
      */
-    protected function objFromFixture($className, $identifier)
+    protected function objFromFixture(string $className, string $identifier) : DataObject
     {
         $obj = $this->getFixtureFactory()->get($className, $identifier);
 
@@ -478,7 +478,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
      */
-    public function loadFixture($fixtureFile)
+    public function loadFixture(string $fixtureFile) : void
     {
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory());
@@ -488,7 +488,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Clear all fixtures which were previously loaded through
      * {@link loadFixture()}
      */
-    public function clearFixtures()
+    public function clearFixtures() : void
     {
         $this->getFixtureFactory()->clear();
     }
@@ -498,7 +498,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return string Absolute path to current class.
      */
-    protected function getCurrentAbsolutePath()
+    protected function getCurrentAbsolutePath() : string
     {
         $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
@@ -511,7 +511,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @return string File path relative to webroot
      */
-    protected function getCurrentRelativePath()
+    protected function getCurrentRelativePath() : string
     {
         $base = Director::baseFolder();
         $path = $this->getCurrentAbsolutePath();
@@ -551,25 +551,32 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public static function assertContains(
         $needle,
         $haystack,
-        $message = '',
-        $ignoreCase = false,
-        $checkForObjectIdentity = true,
-        $checkForNonObjectIdentity = false
-    ) {
+        string $message = '',
+        bool $ignoreCase = false,
+        bool $checkForObjectIdentity = true,
+        bool $checkForNonObjectIdentity = false
+    ) : void {
         if ($haystack instanceof DBField) {
             $haystack = (string)$haystack;
         }
-        parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
+        parent::assertContains(
+            $needle,
+            $haystack,
+            $message,
+            $ignoreCase,
+            $checkForObjectIdentity,
+            $checkForNonObjectIdentity
+        );
     }
 
     public static function assertNotContains(
         $needle,
         $haystack,
-        $message = '',
-        $ignoreCase = false,
-        $checkForObjectIdentity = true,
-        $checkForNonObjectIdentity = false
-    ) {
+        string $message = '',
+        bool $ignoreCase = false,
+        bool $checkForObjectIdentity = true,
+        bool $checkForNonObjectIdentity = false
+    ) : void {
         if ($haystack instanceof DBField) {
             $haystack = (string)$haystack;
         }
@@ -581,7 +588,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return bool True if emails cleared
      */
-    public function clearEmails()
+    public function clearEmails() : bool
     {
         /** @var Mailer $mailer */
         $mailer = Injector::inst()->get(Mailer::class);
@@ -599,17 +606,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $from
      * @param string $subject
      * @param string $content
-     * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
+     * @return array Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
      *               'HtmlContent'
      */
-    public static function findEmail($to, $from = null, $subject = null, $content = null)
+    public static function findEmail($to, $from = null, $subject = null, $content = null) : array
     {
         /** @var Mailer $mailer */
         $mailer = Injector::inst()->get(Mailer::class);
         if ($mailer instanceof TestMailer) {
             return $mailer->findEmail($to, $from, $subject, $content);
         }
-        return null;
+        return [];
     }
 
     /**
@@ -621,7 +628,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $subject
      * @param string $content
      */
-    public static function assertEmailSent($to, $from = null, $subject = null, $content = null)
+    public static function assertEmailSent($to, $from = null, $subject = null, $content = null) : void
     {
         $found = (bool)static::findEmail($to, $from, $subject, $content);
 
@@ -671,10 +678,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *         ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListContains($matches, SS_List $list, $message = '')
+    public static function assertListContains($matches, SS_List $list, $message = '') : void
     {
         if (!is_array($matches)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+            throw InvalidArgumentHelper::factory(
                 1,
                 'array'
             );
@@ -692,13 +699,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
      *
-     * @param $matches
+     * @param array $matches
      * @param $dataObjectSet
      */
     public function assertDOSContains($matches, $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListContains() instead');
-        return static::assertListContains($matches, $dataObjectSet);
+        static::assertListContains($matches, $dataObjectSet);
     }
 
     /**
@@ -721,16 +728,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *          ['Email' => 'i...@example.com'],
      *      ], $members);
      */
-    public static function assertListNotContains($matches, SS_List $list, $message = '')
+    public static function assertListNotContains($matches, SS_List $list, $message = '') : void
     {
         if (!is_array($matches)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+            throw InvalidArgumentHelper::factory(
                 1,
                 'array'
             );
         }
 
-        $constraint =  new PHPUnit_Framework_Constraint_Not(
+        $constraint =  new LogicalNot(
             new SSListContains(
                 $matches
             )
@@ -752,7 +759,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public static function assertNotDOSContains($matches, $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListNotContains() instead');
-        return static::assertListNotContains($matches, $dataObjectSet);
+        static::assertListNotContains($matches, $dataObjectSet);
     }
 
     /**
@@ -773,10 +780,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param mixed $list The {@link SS_List} to test.
      * @param string $message
      */
-    public static function assertListEquals($matches, SS_List $list, $message = '')
+    public static function assertListEquals($matches, SS_List $list, $message = '') : void
     {
         if (!is_array($matches)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+            throw InvalidArgumentHelper::factory(
                 1,
                 'array'
             );
@@ -800,7 +807,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public function assertDOSEquals($matches, $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListEquals() instead');
-        return static::assertListEquals($matches, $dataObjectSet);
+        static::assertListEquals($matches, $dataObjectSet);
     }
 
 
@@ -817,7 +824,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param mixed $list The {@link SS_List} to test.
      * @param string $message
      */
-    public static function assertListAllMatch($match, SS_List $list, $message = '')
+    public static function assertListAllMatch($match, SS_List $list, $message = '') : void
     {
         if (!is_array($match)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
@@ -844,7 +851,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public function assertDOSAllMatch($match, SS_List $dataObjectSet)
     {
         Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
-        return static::assertListAllMatch($match, $dataObjectSet);
+        static::assertListAllMatch($match, $dataObjectSet);
     }
 
     /**
@@ -854,7 +861,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $sql
      * @return string The cleaned and normalised SQL string
      */
-    protected static function normaliseSQL($sql)
+    protected static function normaliseSQL($sql) : string
     {
         return trim(preg_replace('/\s+/m', ' ', $sql));
     }
@@ -873,12 +880,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public static function assertSQLEquals(
         $expectedSQL,
         $actualSQL,
-        $message = '',
-        $delta = 0,
-        $maxDepth = 10,
-        $canonicalize = false,
-        $ignoreCase = false
-    ) {
+        string $message = '',
+        int $delta = 0,
+        int $maxDepth = 10,
+        bool $canonicalize = false,
+        bool $ignoreCase = false
+    ) : void {
         // Normalise SQL queries to remove patterns of repeating whitespace
         $expectedSQL = static::normaliseSQL($expectedSQL);
         $actualSQL = static::normaliseSQL($actualSQL);
@@ -898,10 +905,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public static function assertSQLContains(
         $needleSQL,
         $haystackSQL,
-        $message = '',
-        $ignoreCase = false,
-        $checkForObjectIdentity = true
-    ) {
+        string $message = '',
+        bool $ignoreCase = false,
+        bool $checkForObjectIdentity = true
+    ) : void {
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
@@ -920,10 +927,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public static function assertSQLNotContains(
         $needleSQL,
         $haystackSQL,
-        $message = '',
-        $ignoreCase = false,
-        $checkForObjectIdentity = true
-    ) {
+        string $message = '',
+        bool $ignoreCase = false,
+        bool $checkForObjectIdentity = true
+    ) : void {
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
@@ -933,7 +940,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Start test environment
      */
-    public static function start()
+    public static function start() : void
     {
         if (static::is_running_test()) {
             return;
@@ -980,7 +987,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
      * @param bool $forceCreate Force DB to be created if it doesn't exist
      */
-    public static function resetDBSchema($includeExtraDataObjects = false, $forceCreate = false)
+    public static function resetDBSchema(bool $includeExtraDataObjects = false, bool $forceCreate = false) : void
     {
         // Check if DB is active before reset
         if (!static::$tempDB->isUsed()) {
@@ -1000,7 +1007,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param callable $callback
      * @return mixed
      */
-    public function actWithPermission($permCode, $callback)
+    public function actWithPermission($permCode, callable $callback)
     {
         return Member::actAs($this->createMemberWithPermission($permCode), $callback);
     }
@@ -1011,7 +1018,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string|array $permCode
      * @return Member
      */
-    protected function createMemberWithPermission($permCode)
+    protected function createMemberWithPermission($permCode) : Member
     {
         if (is_array($permCode)) {
             $permArray = $permCode;
@@ -1074,7 +1081,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
      */
-    public function logInAs($member)
+    public function logInAs($member) : void
     {
         if (is_numeric($member)) {
             $member = DataObject::get_by_id(Member::class, $member);
@@ -1087,7 +1094,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Log out the current user
      */
-    public function logOut()
+    public function logOut() : void
     {
         /** @var IdentityStore $store */
         $store = Injector::inst()->get(IdentityStore::class);
@@ -1097,7 +1104,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Cache for logInWithPermission()
      */
-    protected $cache_generatedMembers = array();
+    protected $cache_generatedMembers = [];
 
     /**
      * Test against a theme.
@@ -1107,7 +1114,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param callable $callback
      * @throws Exception
      */
-    protected function useTestTheme($themeBaseDir, $theme, $callback)
+    protected function useTestTheme(string $themeBaseDir, string $theme, callable $callback) : void
     {
         Config::nest();
         if (strpos($themeBaseDir, BASE_PATH) === 0) {
@@ -1128,7 +1135,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return array List of paths
      */
-    protected function getFixturePaths()
+    protected function getFixturePaths() : array
     {
         $fixtureFile = static::get_fixture_file();
         if (empty($fixtureFile)) {
@@ -1156,7 +1163,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return array
      */
-    public static function getExtraControllers()
+    public static function getExtraControllers() : array
     {
         return static::$extra_controllers;
     }
@@ -1167,7 +1174,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $fixtureFilePath
      * @return string
      */
-    protected function resolveFixturePath($fixtureFilePath)
+    protected function resolveFixturePath(string $fixtureFilePath) : string
     {
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.

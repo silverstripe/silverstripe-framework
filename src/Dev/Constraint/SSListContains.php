@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
 
-if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+if (!class_exists(Constraint::class)) {
     return;
 }
 
@@ -17,7 +17,7 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  * Constraint for checking if a SS_List contains items matching the given
  * key-value pairs.
  */
-class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
+class SSListContains extends Constraint implements TestOnly
 {
     /**
      * @var array
@@ -55,7 +55,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      *
      * @return null|bool
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false)
     {
@@ -86,7 +86,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      * @param ViewableData $item
      * @return bool
      */
-    protected function checkIfItemEvaluatesRemainingMatches(ViewableData $item)
+    protected function checkIfItemEvaluatesRemainingMatches(ViewableData $item) : bool
     {
         $success = false;
         foreach ($this->matches as $key => $match) {
@@ -107,7 +107,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      *
      * @return string
      */
-    public function toString()
+    public function toString() : string
     {
         $matchToString = function ($key, $value) {
             return ' "' . $key . '" is "' . $value . '"';
@@ -132,7 +132,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
         return $this->getStubForToString() . $allMatchesAsString;
     }
 
-    protected function getStubForToString()
+    protected function getStubForToString() : string
     {
         return ' contains an item matching ';
     }
