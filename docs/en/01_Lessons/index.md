@@ -1,13 +1,5 @@
-title: Tutorials
-introduction: The tutorials below take a step by step look at how to build a SilverStripe application.
-
-## Written Tutorials
-<div class="alert" markdown="1">
-These tutorials are deprecated, and have been replaced by the new [Lessons](http://silverstripe.org/learn/lessons) section.
-</div>
-
-##  Video lessons
-These include video screencasts, written tutorials and code examples to get you started working with SilverStripe websites.
+title: Lessons
+introduction: The lessons take a step by step look at how to build a SilverStripe application.
 
 * [How to set up a local development environment in SilverStripe](https://vimeo.com/108861537)
 * [Lesson 1: Creating your first theme](http://www.silverstripe.org/learn/lessons/creating-your-first-theme)
@@ -32,5 +24,4 @@ These include video screencasts, written tutorials and code examples to get you 
 ## Help: If you get stuck
 
  * [Common Problems](/getting_started/installation/common_problems): Review some existing solutions to common problems.
- * [SilverStripe Community Forums](http://www.silverstripe.org/community/forums/): Head over to the forums and ask the community
-for help.
+ * [SilverStripe Community](http://www.silverstripe.org/community/): Join our community chat via Slack, or ask a question on Stack Overflow.

@@ -61,8 +61,8 @@ ready for download or installation on a cloud platform.
 
 ## Troubleshooting
 
-If you run into trouble, see [common-problems](installation/common_problems) or post to the 
-[SilverStripe forums](http://silverstripe.org/community/forums/).
+If you run into trouble, see [common-problems](installation/common_problems) or
+check our [community help options](https://www.silverstripe.org/community/).
 
 
 ## Related Lessons
