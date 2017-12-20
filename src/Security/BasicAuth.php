@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
@@ -200,11 +201,13 @@ class BasicAuth
      *
      * If you want to enabled protection (rather than enforcing it),
      * please use {@link protect_entire_site()}.
+     *
+     * @param HTTPRequest|null $request
+     * @throws HTTPResponse_Exception
      */
-    public static function protect_site_if_necessary()
+    public static function protect_site_if_necessary(HTTPRequest $request = null)
     {
         $config = static::config();
-        $request = Controller::curr()->getRequest();
 
         // Check if site is protected
         if ($config->get('entire_site_protected')) {
@@ -218,6 +221,11 @@ class BasicAuth
         } else {
             // Not enabled
             return;
+        }
+
+        // Get request
+        if (!$request && Injector::inst()->has(HTTPRequest::class)) {
+            $request = Injector::inst()->get(HTTPRequest::class);
         }
 
         // Require login
