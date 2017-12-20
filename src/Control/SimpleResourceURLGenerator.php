@@ -3,7 +3,11 @@
 namespace SilverStripe\Control;
 
 use InvalidArgumentException;
+use PhpParser\Node\Scalar\MagicConst\Dir;
+use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 
@@ -21,9 +25,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @config
      * @var array
      */
-    private static $url_rewrites = [
-        '#^vendor/#i' => 'resources/',
-    ];
+    private static $url_rewrites = [];
 
     /*
      * @var string
@@ -65,40 +67,103 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      */
     public function urlForResource($relativePath)
     {
+        $query = '';
         if ($relativePath instanceof ModuleResource) {
             // Load from module resource
             $resource = $relativePath;
             $relativePath = $resource->getRelativePath();
             $exists = $resource->exists();
             $absolutePath = $resource->getPath();
+
+            // Rewrite to resources with public directory
+            if (Director::publicDir()) {
+                // All resources mapped directly to resources/
+                $relativePath = Filesystem::joinPaths(ManifestFileFinder::RESOURCES_DIR, $relativePath);
+            } elseif (stripos($relativePath, ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
+                // @todo Non-public dir support will be removed in 5.0, so remove this block there
+                // If there is no public folder, map to resources/ but trim leading vendor/ too (4.0 compat)
+                $relativePath = Filesystem::joinPaths(
+                    ManifestFileFinder::RESOURCES_DIR,
+                    substr($relativePath, strlen(ManifestFileFinder::VENDOR_DIR))
+                );
+            }
         } else {
-            // Use normal string
-            $absolutePath = preg_replace('/\?.*/', '', Director::baseFolder() . '/' . $relativePath);
-            $exists = file_exists($absolutePath);
+            // Remove querystring args, normalise path
+            if (strpos($relativePath, '?') !== false) {
+                list($relativePath, $query) = explode('?', $relativePath);
+            }
+            $relativePath = Filesystem::normalisePath($relativePath, true);
+
+            // Detect public-only request
+            $withPublic = stripos($relativePath, Director::publicDir() . DIRECTORY_SEPARATOR) === 0;
+            if ($withPublic) {
+                $relativePath = substr($relativePath, strlen(Director::publicDir() . DIRECTORY_SEPARATOR));
+            }
+            $absolutePath = null;
+            $exists = false;
+            if (!Director::publicDir()) {
+                // @todo Non-public dir support will be removed in 5.0, so remove this block there
+                // Throw if public path, but no public dir
+                if ($withPublic) {
+                    trigger_error('Requesting a public resource without a public folder has no effect', E_USER_WARNING);
+                }
+                $absolutePath = Filesystem::joinPaths(Director::baseFolder(), $relativePath);
+                $exists = file_exists($absolutePath);
+
+                // Rewrite vendor/ to resources/ folder
+                if (stripos($relativePath, ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
+                    $relativePath = Filesystem::joinPaths(
+                        ManifestFileFinder::RESOURCES_DIR,
+                        substr($relativePath, strlen(ManifestFileFinder::VENDOR_DIR))
+                    );
+                }
+            } else {
+                // Search public folder first, and unless `public/` is prefixed, also private base path
+                $publicPath = Filesystem::joinPaths(Director::publicFolder(), $relativePath);
+                $privatePath = Filesystem::joinPaths(Director::baseFolder(), $relativePath);
+                if (file_exists($publicPath)) {
+                    // String is a literal url comitted directly to public folder
+                    $absolutePath = $publicPath;
+                    $exists = true;
+                } elseif (!$withPublic && file_exists($privatePath)) {
+                    // String is private but exposed to resources/
+                    $absolutePath = $privatePath;
+                    $exists = true;
+                    $relativePath = Filesystem::joinPaths(ManifestFileFinder::RESOURCES_DIR, $relativePath);
+                }
+            }
         }
         if (!$exists) {
             trigger_error("File {$relativePath} does not exist", E_USER_NOTICE);
         }
 
+        // Switch slashes for URL
+        $relativeURL = Convert::slashes($relativePath, '/');
+
         // Apply url rewrites
         $rules = Config::inst()->get(static::class, 'url_rewrites') ?: [];
         foreach ($rules as $from => $to) {
-            $relativePath = preg_replace($from, $to, $relativePath);
+            $relativeURL = preg_replace($from, $to, $relativeURL);
         }
 
         // Apply nonce
-        $nonce = '';
         // Don't add nonce to directories
         if ($this->nonceStyle && $exists && is_file($absolutePath)) {
-            $nonce = (strpos($relativePath, '?') === false) ? '?' : '&';
-
             switch ($this->nonceStyle) {
                 case 'mtime':
-                    $nonce .= "m=" . filemtime($absolutePath);
+                    if ($query) {
+                        $query .= '&';
+                    }
+                    $query .= "m=" . filemtime($absolutePath);
                     break;
             }
         }
 
-        return Director::baseURL() . $relativePath . $nonce;
+        // Add back querystring
+        if ($query) {
+            $relativeURL .= '?' . $query;
+        }
+
+        return Director::baseURL() . $relativeURL;
     }
 }

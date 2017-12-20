@@ -7,6 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\TempFolder;
 use SplFileInfo;
 
@@ -297,16 +298,30 @@ class InstallRequirements
             ));
         }
 
+        // Check public folder exists
+        $this->requireFile(
+            'public',
+            [
+                'File permissions',
+                'Is there a public/ directory?',
+                'It is recommended to have a separate public/ web directory',
+            ],
+            false,
+            false
+        );
 
         // Ensure root assets dir is writable
-        $this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
+        $this->requireWriteable(ASSETS_PATH, array("File permissions", "Is the assets/ directory writeable?", null), true);
 
         // Ensure all assets files are writable
-        $assetsDir = $this->getBaseDir() . 'assets';
-        $innerIterator = new RecursiveDirectoryIterator($assetsDir, RecursiveDirectoryIterator::SKIP_DOTS);
+        $innerIterator = new RecursiveDirectoryIterator(ASSETS_PATH, RecursiveDirectoryIterator::SKIP_DOTS);
         $iterator = new RecursiveIteratorIterator($innerIterator, RecursiveIteratorIterator::SELF_FIRST);
         /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
+            // Only report file as error if not writable
+            if ($file->isWritable()) {
+                continue;
+            }
             $relativePath = substr($file->getPathname(), strlen($this->getBaseDir()));
             $message = $file->isDir()
                 ? "Is the {$relativePath} directory writeable?"
@@ -838,13 +853,23 @@ class InstallRequirements
         }
     }
 
-    public function requireFile($filename, $testDetails)
+    public function requireFile($filename, $testDetails, $absolute = false, $error = true)
     {
         $this->testing($testDetails);
-        $filename = $this->getBaseDir() . $filename;
-        if (!file_exists($filename)) {
-            $testDetails[2] .= " (file '$filename' not found)";
+
+        if ($absolute) {
+            $filename = Filesystem::normalisePath($filename);
+        } else {
+            $filename = Filesystem::joinPaths($this->getBaseDir(), $filename);
+        }
+        if (file_exists($filename)) {
+            return;
+        }
+        $testDetails[2] .= " (file '$filename' not found)";
+        if ($error) {
             $this->error($testDetails);
+        } else {
+            $this->warning($testDetails);
         }
     }
 
@@ -853,9 +878,9 @@ class InstallRequirements
         $this->testing($testDetails);
 
         if ($absolute) {
-            $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
+            $filename = Filesystem::normalisePath($filename);
         } else {
-            $filename = $this->getBaseDir() . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+            $filename = Filesystem::joinPaths($this->getBaseDir(), $filename);
         }
 
         if (file_exists($filename)) {
@@ -864,47 +889,49 @@ class InstallRequirements
             $isWriteable = is_writeable(dirname($filename));
         }
 
-        if (!$isWriteable) {
-            if (function_exists('posix_getgroups')) {
-                $userID = posix_geteuid();
-                $user = posix_getpwuid($userID);
+        if ($isWriteable) {
+            return;
+        }
 
-                $currentOwnerID = fileowner(file_exists($filename) ? $filename : dirname($filename));
-                $currentOwner = posix_getpwuid($currentOwnerID);
+        if (function_exists('posix_getgroups')) {
+            $userID = posix_geteuid();
+            $user = posix_getpwuid($userID);
 
-                $testDetails[2] .= "User '$user[name]' needs to be able to write to this file:\n$filename\n\nThe "
-                    . "file is currently owned by '$currentOwner[name]'.  ";
+            $currentOwnerID = fileowner(file_exists($filename) ? $filename : dirname($filename));
+            $currentOwner = posix_getpwuid($currentOwnerID);
 
-                if ($user['name'] == $currentOwner['name']) {
-                    $testDetails[2] .= "We recommend that you make the file writeable.";
-                } else {
-                    $groups = posix_getgroups();
-                    $groupList = array();
-                    foreach ($groups as $group) {
-                        $groupInfo = posix_getgrgid($group);
-                        if (in_array($currentOwner['name'], $groupInfo['members'])) {
-                            $groupList[] = $groupInfo['name'];
-                        }
-                    }
-                    if ($groupList) {
-                        $testDetails[2] .= "    We recommend that you make the file group-writeable "
-                            . "and change the group to one of these groups:\n - " . implode("\n - ", $groupList)
-                            . "\n\nFor example:\nchmod g+w $filename\nchgrp " . $groupList[0] . " $filename";
-                    } else {
-                        $testDetails[2] .= "  There is no user-group that contains both the web-server user and the "
-                            . "owner of this file.  Change the ownership of the file, create a new group, or "
-                            . "temporarily make the file writeable by everyone during the install process.";
+            $testDetails[2] .= "User '$user[name]' needs to be able to write to this file:\n$filename\n\nThe "
+                . "file is currently owned by '$currentOwner[name]'.  ";
+
+            if ($user['name'] == $currentOwner['name']) {
+                $testDetails[2] .= "We recommend that you make the file writeable.";
+            } else {
+                $groups = posix_getgroups();
+                $groupList = array();
+                foreach ($groups as $group) {
+                    $groupInfo = posix_getgrgid($group);
+                    if (in_array($currentOwner['name'], $groupInfo['members'])) {
+                        $groupList[] = $groupInfo['name'];
                     }
                 }
-            } else {
-                $testDetails[2] .= "The webserver user needs to be able to write to this file:\n$filename";
+                if ($groupList) {
+                    $testDetails[2] .= "    We recommend that you make the file group-writeable "
+                        . "and change the group to one of these groups:\n - " . implode("\n - ", $groupList)
+                        . "\n\nFor example:\nchmod g+w $filename\nchgrp " . $groupList[0] . " $filename";
+                } else {
+                    $testDetails[2] .= "  There is no user-group that contains both the web-server user and the "
+                        . "owner of this file.  Change the ownership of the file, create a new group, or "
+                        . "temporarily make the file writeable by everyone during the install process.";
+                }
             }
+        } else {
+            $testDetails[2] .= "The webserver user needs to be able to write to this file:\n$filename";
+        }
 
-            if ($error) {
-                $this->error($testDetails);
-            } else {
-                $this->warning($testDetails);
-            }
+        if ($error) {
+            $this->error($testDetails);
+        } else {
+            $this->warning($testDetails);
         }
     }
 

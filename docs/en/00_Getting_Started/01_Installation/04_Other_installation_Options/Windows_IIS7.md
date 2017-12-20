@@ -190,7 +190,7 @@ After gettng the code installed, make sure you set the folder permissions proper
 
 ## Start SilverStripe installer
 
-Open a browser and point it to `http://localhost/ss`
+Open a browser and point it to `http://localhost/ss/public`
 
 If an installation screen shows up, congratulations! We're very close now.
 

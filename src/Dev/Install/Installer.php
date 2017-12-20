@@ -7,6 +7,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\Kernel;
@@ -27,13 +28,15 @@ class Installer extends InstallRequirements
 
     protected function installHeader()
     {
+        $clientPath = PUBLIC_DIR
+            ? 'resources/vendor/silverstripe/framework/src/Dev/Install/client'
+            : 'resources/silverstripe/framework/src/Dev/Install/client';
         ?>
         <html>
         <head>
             <meta charset="utf-8"/>
             <title>Installing SilverStripe...</title>
-            <link rel="stylesheet" type="text/css"
-                  href="resources/silverstripe/framework/src/Dev/Install/client/styles/install.css"/>
+            <link rel="stylesheet" type="text/css" href="<?=$clientPath; ?>/styles/install.css"/>
             <script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
         </head>
         <body>
@@ -340,11 +343,13 @@ PHP
         if ($config['theme'] && $config['theme'] !== 'tutorial') {
             $theme = $this->ymlString($config['theme']);
             $themeYML = <<<YML
+    - '\$public'
     - '$theme'
     - '\$default'
 YML;
         } else {
             $themeYML = <<<YML
+    - '\$public'
     - '\$default'
 YML;
         }
@@ -405,11 +410,7 @@ YML
         $end = "\n### SILVERSTRIPE END ###";
 
         $base = dirname($_SERVER['SCRIPT_NAME']);
-        if (defined('DIRECTORY_SEPARATOR')) {
-            $base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
-        } else {
-            $base = str_replace("\\", '/', $base);
-        }
+        $base = Convert::slashes($base, '/');
 
         if ($base != '.') {
             $baseClause = "RewriteBase '$base'\n";

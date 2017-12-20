@@ -117,6 +117,8 @@ if (!defined('BASE_URL')) {
     }));
 }
 
+define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
+define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
 define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR);
 
@@ -135,7 +137,14 @@ if (!defined('ASSETS_DIR')) {
     define('ASSETS_DIR', 'assets');
 }
 if (!defined('ASSETS_PATH')) {
-    define('ASSETS_PATH', BASE_PATH . DIRECTORY_SEPARATOR . ASSETS_DIR);
+    call_user_func(function () {
+        $paths = [
+            BASE_PATH,
+            (PUBLIC_DIR ? PUBLIC_DIR : null),
+            ASSETS_DIR
+        ];
+        define('ASSETS_PATH', implode(DIRECTORY_SEPARATOR, array_filter($paths)));
+    });
 }
 
 // Custom include path - deprecated

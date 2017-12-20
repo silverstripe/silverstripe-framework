@@ -7,11 +7,13 @@ directories is meaningful to its logic.
 
 ## Core Structure
 
-Directory   | Description
----------   | -----------
-`assets/`   | Images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS.
-`resources/`| Public files from modules (added automatically) 
-`vendor/`   | SilverStripe modules and other supporting libraries (the framework is in `vendor/silverstripe/framework`)
+Directory            | Description
+---------            | -----------
+`public/`            | Webserver public webroot
+`public/assets/`     | Images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS.
+`public/resources/`  | Exposed public files added from modules. Folders within this parent will match that of the source root location.
+`vendor/`            | SilverStripe modules and other supporting libraries (the framework is in `vendor/silverstripe/framework`)
+`themes/`            | Standard theme installation location
 
 ## Custom Code Structure
 

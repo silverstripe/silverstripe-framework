@@ -249,7 +249,7 @@ class SSViewerTest extends SapphireTest
         // secondly, make sure that requirements is generated, even though minification failed
         $testBackend->processCombinedFiles();
         $js = array_keys($testBackend->getJavascript());
-        $combinedTestFilePath = BASE_PATH . reset($js);
+        $combinedTestFilePath = Director::publicFolder() . reset($js);
         $this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
         // and make sure the combined content matches the input content, i.e. no loss of functionality

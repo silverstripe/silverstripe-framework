@@ -24,6 +24,8 @@ use SilverStripe\Dev\DebugView;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\PublicThemes;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\Dev\Deprecation;
@@ -115,7 +117,8 @@ class CoreKernel implements Kernel
 
         // Load template manifest
         $themeResourceLoader = ThemeResourceLoader::inst();
-        $themeResourceLoader->addSet('$default', new ThemeManifest(
+        $themeResourceLoader->addSet(SSViewer::PUBLIC_THEME, new PublicThemes());
+        $themeResourceLoader->addSet(SSViewer::DEFAULT_THEME, new ThemeManifest(
             $basePath,
             null, // project is defined in config, and this argument is deprecated
             $manifestCacheFactory

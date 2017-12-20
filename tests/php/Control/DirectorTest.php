@@ -338,6 +338,12 @@ class DirectorTest extends SapphireTest
                 BASE_PATH . '/some/file.txt',
                 'some/file.txt',
             ],
+            // public folder is found
+            [
+                'http://www.mysite.com/base/folder',
+                PUBLIC_PATH . '/some/file.txt',
+                'some/file.txt',
+            ],
             // querystring is protected
             [
                 'http://www.mysite.com/base/folder',
