@@ -185,7 +185,8 @@ class DBTime extends DBField
     public function getTimestamp()
     {
         if ($this->value) {
-            return strtotime($this->value);
+            $now = DBDatetime::now()->getTimestamp();
+            return strtotime($this->value, $now) - $now;
         }
         return 0;
     }
