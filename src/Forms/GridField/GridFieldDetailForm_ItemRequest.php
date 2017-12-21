@@ -21,6 +21,7 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Versioned\Versioned;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
@@ -591,10 +592,21 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         if ($this->record && $this->record->ID) {
             $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
-            $items->push(new ArrayData(array(
+            $data = [
                 'Title' => $title,
-                'Link' => $this->Link()
-            )));
+                'Link' => $this->Link(),
+            ];
+            if ($this->record->hasExtension(Versioned::class) && $this->record->config()->get('versioned_gridfield_extensions')) {
+                $status = $this->getRecordStatus();
+                if ($status) {
+                    $data['Extra'] = sprintf(
+                        '<span class="badge version-status version-status--%s">%s</span>',
+                        $status['class'],
+                        $status['title']
+                    );
+                }
+            }
+            $items->push(new ArrayData($data));
         } else {
             $items->push(new ArrayData(array(
                 'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
@@ -604,5 +616,24 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $this->extend('updateBreadcrumbs', $items);
         return $items;
+    }
+
+    protected function getRecordStatus()
+    {
+        $record = $this->record;
+
+        if ($record->isOnDraftOnly()) {
+            return [
+                'class' => 'addedtodraft',
+                'title' => _t('SilverStripe\\Forms\\GridField\\GridFieldVersionedState.ADDEDTODRAFTSHORT', 'Draft')
+            ];
+        } elseif ($record->isModifiedOnDraft()) {
+            return [
+                'class' => 'modified',
+                'title' => _t('SilverStripe\\Forms\\GridField\\GridFieldVersionedState.MODIFIEDONDRAFTSHORT', 'Modified')
+            ];
+        }
+
+        return null;
     }
 }
