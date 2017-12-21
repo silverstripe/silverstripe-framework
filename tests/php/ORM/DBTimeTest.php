@@ -56,4 +56,12 @@ class DBTimeTest extends SapphireTest
         $time = DBTime::create_field('Time', '17:15:55');
         $this->assertRegexp('#5:15 PM#i', $time->Short());
     }
+
+    public function testTimeStamp()
+    {
+        $time = DBTime::create_field('Time', '01:00:00');
+        $this->assertEquals(3600, $time->getTimestamp());
+        $time = DBTime::create_field('Time', '23:30:00');
+        $this->assertEquals(3600*23.5, $time->getTimestamp());
+    }
 }
