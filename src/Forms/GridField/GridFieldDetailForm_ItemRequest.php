@@ -188,6 +188,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         // Build actions
         $actions = $this->getFormActions();
+        if(method_exists($this->record, 'getCMSActions')) {
+            $actions->merge($this->record->getCMSActions());
+        }
 
         // If we are creating a new record in a has-many list, then
         // pre-populate the record's foreign key.
