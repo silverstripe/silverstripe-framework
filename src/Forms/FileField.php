@@ -128,7 +128,7 @@ class FileField extends FormField implements FileHandleField
      */
     public function saveInto(DataObjectInterface $record)
     {
-        if (!isset($_FILES[$this->name])) {
+        if (!isset($_FILES[$this->name]['error']) || $_FILES[$this->name]['error'] == UPLOAD_ERR_NO_FILE) {
             return;
         }
 
