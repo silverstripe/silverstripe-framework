@@ -41,7 +41,7 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 				deny all;
 			}
 			sendfile on;
-			try_files $uri index.php?$query_string;
+			try_files $uri /index.php?$query_string;
 		}
 
 		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
