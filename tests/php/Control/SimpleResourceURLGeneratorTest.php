@@ -22,6 +22,10 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             'alternate_base_url',
             'http://www.mysite.com/'
         );
+        Director::config()->set(
+            'alternate_public_dir',
+            'public'
+        );
     }
 
     public function testAddMTime()
@@ -52,18 +56,13 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
     {
         /** @var SimpleResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
-
-        Director::config()->set(
-            'alternate_public_dir',
-            'fakepublic'
-        );
         $mtime = filemtime(
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/fakepublic/basemodule/css/style.css'
+            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/public/basemodule/css/style.css'
         );
 
         $this->assertEquals(
             '/basemodule/css/style.css?m='.$mtime,
-            $generator->urlForResource('fakepublic/basemodule/css/style.css')
+            $generator->urlForResource('public/basemodule/css/style.css')
         );
 
         $mtime = filemtime(

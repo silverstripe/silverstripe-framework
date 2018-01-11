@@ -5,7 +5,6 @@ namespace SilverStripe\View;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
@@ -15,6 +14,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
@@ -1012,7 +1012,7 @@ class Requirements_Backend
             i18n::get_locale() . '.js',
         );
         foreach ($candidates as $candidate) {
-            $relativePath = Filesystem::joinPaths($langDir, $candidate);
+            $relativePath = Path::join($langDir, $candidate);
             $absolutePath = Director::getAbsFile($relativePath);
             if (file_exists($absolutePath)) {
                 $files[] = $relativePath;

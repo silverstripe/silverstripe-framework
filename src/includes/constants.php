@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\TempFolder;
@@ -57,6 +58,10 @@ if (!defined('BASE_PATH')) {
     }));
 }
 
+// Set public webroot dir / path
+define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
+define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
+
 // Allow a first class env var to be set that disables .env file loading
 if (!Environment::getEnv('SS_IGNORE_DOT_ENV')) {
     call_user_func(function () {
@@ -102,13 +107,17 @@ if (!defined('BASE_URL')) {
 
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
         // This tends not to work on CLI
-        $path = realpath($_SERVER['SCRIPT_FILENAME']);
-        if (substr($path, 0, strlen(BASE_PATH)) == BASE_PATH) {
-            $urlSegmentToRemove = str_replace('\\', '/', substr($path, strlen(BASE_PATH)));
-            if (substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
-                $baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
-                // ltrim('.'), normalise slashes to '/', and rtrim('/')
-                return rtrim(str_replace('\\', '/', ltrim($baseURL, '.')), '/');
+        $path = Convert::slashes($_SERVER['SCRIPT_FILENAME']);
+        $scriptName = Convert::slashes($_SERVER['SCRIPT_NAME'], '/');
+
+        // Ensure script is served from public folder (otherwise error)
+        if (stripos($path, PUBLIC_PATH) === 0) {
+            // Get entire url following PUBLIC_PATH
+            $urlSegmentToRemove = Convert::slashes(substr($path, strlen(PUBLIC_PATH)), '/');
+            if (substr($scriptName, -strlen($urlSegmentToRemove)) === $urlSegmentToRemove) {
+                // Remove this from end of SCRIPT_NAME to get url to base
+                $baseURL = substr($scriptName, 0, -strlen($urlSegmentToRemove));
+                return rtrim(ltrim($baseURL, '.'), '/');
             }
         }
 
@@ -117,8 +126,6 @@ if (!defined('BASE_URL')) {
     }));
 }
 
-define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
-define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
 define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR);
 

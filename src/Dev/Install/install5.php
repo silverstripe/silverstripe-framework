@@ -105,6 +105,7 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 }
 
 // Path to client resources (copied through silverstripe/vendor-plugin)
+$base = BASE_URL;
 $clientPath = PUBLIC_DIR
     ? 'resources/vendor/silverstripe/framework/src/Dev/Install/client'
     : 'resources/silverstripe/framework/src/Dev/Install/client';
@@ -137,6 +138,7 @@ $adminConfig = $config->getAdminConfig($_REQUEST, false);
 
 // config-form.html vars (placeholder to prevent deletion)
 [
+    $base,
     $theme,
     $clientPath,
     $adminConfig,

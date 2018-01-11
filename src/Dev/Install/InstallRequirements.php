@@ -7,7 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SilverStripe\Assets\Filesystem;
+use SilverStripe\Core\Path;
 use SilverStripe\Core\TempFolder;
 use SplFileInfo;
 
@@ -65,9 +65,29 @@ class InstallRequirements
         }
     }
 
+    /**
+     * Get base path for this installation
+     *
+     * @return string
+     */
     public function getBaseDir()
     {
-        return rtrim($this->baseDir, '/\\') . '/';
+        return Path::normalise($this->baseDir) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Get path to public directory
+     *
+     * @return string
+     */
+    public function getPublicDir()
+    {
+        $base = $this->getBaseDir();
+        $public = Path::join($base, 'public') . DIRECTORY_SEPARATOR;
+        if (file_exists($public)) {
+            return $public;
+        }
+        return $base;
     }
 
     /**
@@ -858,9 +878,9 @@ class InstallRequirements
         $this->testing($testDetails);
 
         if ($absolute) {
-            $filename = Filesystem::normalisePath($filename);
+            $filename = Path::normalise($filename);
         } else {
-            $filename = Filesystem::joinPaths($this->getBaseDir(), $filename);
+            $filename = Path::join($this->getBaseDir(), $filename);
         }
         if (file_exists($filename)) {
             return;
@@ -878,9 +898,9 @@ class InstallRequirements
         $this->testing($testDetails);
 
         if ($absolute) {
-            $filename = Filesystem::normalisePath($filename);
+            $filename = Path::normalise($filename);
         } else {
-            $filename = Filesystem::joinPaths($this->getBaseDir(), $filename);
+            $filename = Path::join($this->getBaseDir(), $filename);
         }
 
         if (file_exists($filename)) {

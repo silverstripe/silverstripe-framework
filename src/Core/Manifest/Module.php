@@ -5,13 +5,13 @@ namespace SilverStripe\Core\Manifest;
 use Exception;
 use InvalidArgumentException;
 use Serializable;
-use SilverStripe\Assets\Filesystem;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 
 class Module implements Serializable
 {
     /**
-     * @deprecated 4.1..5.0 Use Filesystem::normalisePath() instead
+     * @deprecated 4.1..5.0 Use Path::normalise() instead
      */
     const TRIM_CHARS = ' /\\';
 
@@ -51,8 +51,8 @@ class Module implements Serializable
      */
     public function __construct($path, $basePath)
     {
-        $this->path = Filesystem::normalisePath($path);
-        $this->basePath = Filesystem::normalisePath($basePath);
+        $this->path = Path::normalise($path);
+        $this->basePath = Path::normalise($basePath);
         $this->loadComposer();
     }
 
@@ -196,7 +196,7 @@ class Module implements Serializable
      */
     public function getResource($path)
     {
-        $path = Filesystem::normalisePath($path, true);
+        $path = Path::normalise($path, true);
         if (empty($path)) {
             throw new InvalidArgumentException('$path is required');
         }

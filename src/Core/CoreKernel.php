@@ -309,9 +309,9 @@ class CoreKernel implements Kernel
     protected function redirectToInstaller()
     {
         // Error if installer not available
-        if (!file_exists($this->basePath . '/install.php')) {
+        if (!file_exists(Director::publicFolder() . '/install.php')) {
             throw new HTTPResponse_Exception(
-                'SilverStripe Framework requires a $databaseConfig defined.',
+                'SilverStripe Framework requires database configuration defined via .env',
                 500
             );
         }

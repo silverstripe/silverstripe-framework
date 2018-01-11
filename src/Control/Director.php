@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Assets\Filesystem;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
@@ -12,6 +11,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
@@ -592,10 +592,12 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Check if using a seperate public dir.
-     * This will be removed in 5.0 and forced to true
+     * Check if using a seperate public dir, and if so return this directory
+     * name.
      *
-     * @return bool
+     * This will be removed in 5.0 and fixed to 'public'
+     *
+     * @return string
      */
     public static function publicDir()
     {
@@ -616,7 +618,7 @@ class Director implements TemplateGlobalProvider
         $folder = self::baseFolder();
         $publicDir = self::publicDir();
         if ($publicDir) {
-            return Filesystem::joinPaths($folder, $publicDir);
+            return Path::join($folder, $publicDir);
         }
 
         return $folder;
@@ -783,14 +785,14 @@ class Director implements TemplateGlobalProvider
 
         // If path is relative to public folder search there first
         if (self::publicDir()) {
-            $path = Filesystem::joinPaths(self::publicFolder(), $file);
+            $path = Path::join(self::publicFolder(), $file);
             if (file_exists($path)) {
                 return $path;
             }
         }
 
         // Default to base folder
-        return Filesystem::joinPaths(self::baseFolder(), $file);
+        return Path::join(self::baseFolder(), $file);
     }
 
     /**

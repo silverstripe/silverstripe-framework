@@ -3,8 +3,8 @@
 namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
-use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Path;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
@@ -40,7 +40,7 @@ class ModuleResource
     public function __construct(Module $module, $relativePath)
     {
         $this->module = $module;
-        $this->relativePath = Filesystem::normalisePath($relativePath, true);
+        $this->relativePath = Path::normalise($relativePath, true);
         if (empty($this->relativePath)) {
             throw new InvalidArgumentException("Resource cannot have empty path");
         }
@@ -56,7 +56,7 @@ class ModuleResource
      */
     public function getPath()
     {
-        return Filesystem::joinPaths($this->module->getPath(), $this->relativePath);
+        return Path::join($this->module->getPath(), $this->relativePath);
     }
 
     /**
@@ -74,7 +74,7 @@ class ModuleResource
         if (!$parent) {
             return $this->relativePath;
         }
-        return Filesystem::joinPaths($parent, $this->relativePath);
+        return Path::join($parent, $this->relativePath);
     }
 
     /**
@@ -141,7 +141,7 @@ class ModuleResource
     public function getRelativeResource($path)
     {
         // Defer to parent module
-        $relativeToModule = Filesystem::joinPaths($this->relativePath, $path);
+        $relativeToModule = Path::join($this->relativePath, $path);
         return $this->getModule()->getResource($relativeToModule);
     }
 }

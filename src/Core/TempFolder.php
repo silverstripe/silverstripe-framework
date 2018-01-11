@@ -3,7 +3,6 @@
 namespace SilverStripe\Core;
 
 use Exception;
-use SilverStripe\Assets\Filesystem;
 
 /**
  * Guesses location for temp folder
@@ -21,7 +20,7 @@ class TempFolder
         $parent = static::getTempParentFolder($base);
 
         // The actual temp folder is a subfolder of getTempParentFolder(), named by username
-        $subfolder = Filesystem::joinPaths($parent, static::getTempFolderUsername());
+        $subfolder = Path::join($parent, static::getTempFolderUsername());
 
         if (!@file_exists($subfolder)) {
             mkdir($subfolder);
@@ -67,7 +66,7 @@ class TempFolder
     protected static function getTempParentFolder($base)
     {
         // first, try finding a silverstripe-cache dir built off the base path
-        $localPath = Filesystem::joinPaths($base, 'silverstripe-cache');
+        $localPath = Path::join($base, 'silverstripe-cache');
         if (@file_exists($localPath)) {
             if ((fileperms($localPath) & 0777) != 0777) {
                 @chmod($localPath, 0777);
@@ -76,7 +75,7 @@ class TempFolder
         }
 
         // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
-        $tempPath = Filesystem::joinPaths(
+        $tempPath = Path::join(
             sys_get_temp_dir(),
             'silverstripe-cache-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION) .
             str_replace(array(' ', '/', ':', '\\'), '-', $base)
