@@ -495,17 +495,22 @@ trait Extensible
     /**
      * Get an extension instance attached to this object by name.
      *
-     * @uses hasExtension()
-     *
      * @param string $extension
-     * @return Extension
+     * @return Extension|null
      */
     public function getExtensionInstance($extension)
     {
         $instances = $this->getExtensionInstances();
-        return isset($instances[$extension])
-            ? $instances[$extension]
-            : null;
+        if (array_key_exists($extension, $instances)) {
+            return $instances[$extension];
+        }
+        // in case Injector has been used to replace an extension
+        foreach ($instances as $instance) {
+            if (is_a($instance, $extension)) {
+                return $instance;
+            }
+        }
+        return null;
     }
 
     /**
@@ -524,8 +529,7 @@ trait Extensible
      */
     public function hasExtension($extension)
     {
-        $instances = $this->getExtensionInstances();
-        return isset($instances[$extension]);
+        return (bool) $this->getExtensionInstance($extension);
     }
 
     /**
@@ -553,8 +557,16 @@ trait Extensible
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
-                    $instance = Injector::inst()->get($extension);
-                    $this->extension_instances[get_class($instance)] = $instance;
+                    $name = $extension;
+                    // Allow service names of the form "%$ServiceName"
+                    if (substr($name, 0, 2) == '%$') {
+                        $name = substr($name, 2);
+                    }
+                    $name = trim(strtok($name, '('));
+                    if (class_exists($name)) {
+                        $name = ClassInfo::class_name($name);
+                    }
+                    $this->extension_instances[$name] = Injector::inst()->get($extension);
                 }
             }
         }
