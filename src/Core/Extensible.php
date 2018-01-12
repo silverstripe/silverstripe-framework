@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
@@ -108,14 +107,6 @@ trait Extensible
         $this->afterExtendCallbacks[$method][] = $callback;
     }
 
-    /**
-     * @deprecated 4.0..5.0 Extensions and methods are now lazy-loaded
-     */
-    protected function constructExtensions()
-    {
-        Deprecation::notice('5.0', 'constructExtensions does not need to be invoked and will be removed in 5.0');
-    }
-
     protected function defineMethods()
     {
         $this->defineMethodsCustom();
@@ -135,7 +126,7 @@ trait Extensible
     {
         $extensions = $this->getExtensionInstances();
         foreach ($extensions as $extensionClass => $extensionInstance) {
-            foreach ($this->findMethodsFromExtension($extensionInstance) as $method) {
+            foreach ($this->findMethodsFrom($extensionInstance) as $method) {
                 $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
                     /** @var Extensible $inst */
                     $extension = $inst->getExtensionInstance($extensionClass);
@@ -199,11 +190,8 @@ trait Extensible
         // unset some caches
         $subclasses = ClassInfo::subclassesFor($class);
         $subclasses[] = $class;
-
-        if ($subclasses) {
-            foreach ($subclasses as $subclass) {
-                unset(self::$extra_methods[$subclass]);
-            }
+        foreach ($subclasses as $subclass) {
+            unset(self::$extra_methods[strtolower($subclass)]);
         }
 
         Config::modify()
@@ -269,10 +257,8 @@ trait Extensible
         // unset some caches
         $subclasses = ClassInfo::subclassesFor($class);
         $subclasses[] = $class;
-        if ($subclasses) {
-            foreach ($subclasses as $subclass) {
-                unset(self::$extra_methods[$subclass]);
-            }
+        foreach ($subclasses as $subclass) {
+            unset(self::$extra_methods[strtolower($subclass)]);
         }
     }
 
@@ -407,25 +393,19 @@ trait Extensible
      * all results into an array
      *
      * @param string $method the method name to call
-     * @param mixed $a1
-     * @param mixed $a2
-     * @param mixed $a3
-     * @param mixed $a4
-     * @param mixed $a5
-     * @param mixed $a6
-     * @param mixed $a7
+     * @param mixed ...$arguments List of arguments
      * @return array List of results with nulls filtered out
      */
-    public function invokeWithExtensions($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
+    public function invokeWithExtensions($method, &...$arguments)
     {
         $result = array();
         if (method_exists($this, $method)) {
-            $thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+            $thisResult = $this->$method(...$arguments);
             if ($thisResult !== null) {
                 $result[] = $thisResult;
             }
         }
-        $extras = $this->extend($method, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+        $extras = $this->extend($method, ...$arguments);
 
         return $extras ? array_merge($result, $extras) : $result;
     }
@@ -442,22 +422,16 @@ trait Extensible
      * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
      *
      * @param string $method the name of the method to call on each extension
-     * @param mixed $a1
-     * @param mixed $a2
-     * @param mixed $a3
-     * @param mixed $a4
-     * @param mixed $a5
-     * @param mixed $a6
-     * @param mixed $a7
+     * @param mixed ...$arguments
      * @return array
      */
-    public function extend($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
+    public function extend($method, &...$arguments)
     {
         $values = array();
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
             foreach (array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, $arguments);
                 if ($value !== null) {
                     $values[] = $value;
                 }
@@ -466,10 +440,14 @@ trait Extensible
         }
 
         foreach ($this->getExtensionInstances() as $instance) {
-            if (method_exists($instance, $method)) {
+            // Prefer `extend` prefixed methods
+            $instanceMethod = method_exists($instance, "extend{$method}")
+                ? "extend{$method}"
+                : (method_exists($instance, $method) ? $method : null);
+            if ($instanceMethod) {
                 try {
                     $instance->setOwner($this);
-                    $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                    $value = $instance->$instanceMethod(...$arguments);
                 } finally {
                     $instance->clearOwner();
                 }
@@ -481,7 +459,7 @@ trait Extensible
 
         if (!empty($this->afterExtendCallbacks[$method])) {
             foreach (array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, $arguments);
                 if ($value !== null) {
                     $values[] = $value;
                 }
