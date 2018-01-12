@@ -40,9 +40,9 @@ $ composer create-project silverstripe/installer ./silverstripe
 ## Install and configure
 * Option 1: Environment file - Set up a file named `.env` file either in the webroot and setup as per the [Environment Management process](/getting_started/environment_management).
 
-* Option 2: Installer - Visit `http://localhost/silverstripe` - you will see SilverStripe's installation screen.
+* Option 2: Installer - Visit `http://localhost/silverstripe/public` - you will see SilverStripe's installation screen.
 * You should be able to click "Install SilverStripe" and the installer will do its thing.  It takes a minute or two.
-* Once the installer has finished, visit `http://localhost/silverstripe`. You should see your new SilverStripe site's
+* Once the installer has finished, visit `http://localhost/silverstripe/public`. You should see your new SilverStripe site's
 home page.
 
 ## Troubleshooting

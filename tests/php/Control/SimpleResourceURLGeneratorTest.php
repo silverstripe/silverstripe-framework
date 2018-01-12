@@ -22,6 +22,10 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             'alternate_base_url',
             'http://www.mysite.com/'
         );
+        Director::config()->set(
+            'alternate_public_dir',
+            'public'
+        );
     }
 
     public function testAddMTime()
@@ -30,7 +34,7 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
         $mtime = filemtime(__DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js');
         $this->assertEquals(
-            '/basemodule/client/file.js?m='.$mtime,
+            '/resources/basemodule/client/file.js?m='.$mtime,
             $generator->urlForResource('basemodule/client/file.js')
         );
     }
@@ -43,8 +47,31 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
         );
         $this->assertEquals(
-            '/resources/silverstripe/mymodule/client/style.css?m='.$mtime,
+            '/resources/vendor/silverstripe/mymodule/client/style.css?m='.$mtime,
             $generator->urlForResource('vendor/silverstripe/mymodule/client/style.css')
+        );
+    }
+
+    public function testPublicDirResource()
+    {
+        /** @var SimpleResourceURLGenerator $generator */
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        $mtime = filemtime(
+            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/public/basemodule/css/style.css'
+        );
+
+        $this->assertEquals(
+            '/basemodule/css/style.css?m='.$mtime,
+            $generator->urlForResource('public/basemodule/css/style.css')
+        );
+
+        $mtime = filemtime(
+            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js'
+        );
+
+        $this->assertEquals(
+            '/resources/basemodule/client/file.js?m='.$mtime,
+            $generator->urlForResource('basemodule/client/file.js')
         );
     }
 
@@ -60,7 +87,7 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
         );
         $this->assertEquals(
-            '/resources/silverstripe/mymodule/client/style.css?m='.$mtime,
+            '/resources/vendor/silverstripe/mymodule/client/style.css?m='.$mtime,
             $generator->urlForResource($module->getResource('client/style.css'))
         );
     }

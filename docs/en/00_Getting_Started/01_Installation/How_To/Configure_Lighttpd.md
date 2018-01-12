@@ -1,11 +1,11 @@
 # Lightttpd
 
 1. Lighttpd works fine so long as you provide a custom config. Add the following to lighttpd.conf **BEFORE** installing
-Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
+Silverstripe. Replace "yoursite.com" and "/home/yoursite/public/" below.
 
 
 	$HTTP["host"] == "yoursite.com" {
-	    server.document-root = "/home/yoursite/public_html/"
+	    server.document-root = "/home/yoursite/public/"
 
 	    # Disable directory listings
 	    dir-listing.activate = "disable"
@@ -14,14 +14,9 @@ Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 	    url.access-deny += ( ".ss" )
 	    static-file.exclude-extensions += ( ".ss" )
 
-	    # Deny access to SilverStripe command-line interface
-	    $HTTP["url"] =~ "^/vendor/silverstripe/framework/cli-script.php" {
+	    # Deny access to vendor
+	    $HTTP["url"] =~ "^/vendor" {
 	       url.access-deny = ( "" )
-	    }
-
-	    # Disable FastCGI in assets directory (so that PHP files are not executed)
-	    $HTTP["url"] =~ "^/assets/" {
-	       fastcgi.server = ()
 	    }
 
 	    # Rewrite URLs so they are nicer

@@ -14,6 +14,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
@@ -603,7 +604,12 @@ class Requirements_Backend
     public function javascriptTemplate($file, $vars, $uniquenessID = null)
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
-        $script = file_get_contents(Director::getAbsFile($file));
+        $absolutePath = Director::getAbsFile($file);
+        if (!file_exists($absolutePath)) {
+            throw new InvalidArgumentException("Javascript template file {$file} does not exist");
+        }
+
+        $script = file_get_contents($absolutePath);
         $search = array();
         $replace = array();
 
@@ -629,9 +635,9 @@ class Requirements_Backend
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
-        $this->css[$file] = array(
+        $this->css[$file] = [
             "media" => $media
-        );
+        ];
     }
 
     /**
@@ -997,12 +1003,6 @@ class Requirements_Backend
         $langDir = ModuleResourceLoader::singleton()->resolvePath($langDir);
 
         $files = array();
-        $base = Director::baseFolder() . '/';
-
-        if (substr($langDir, -1) != '/') {
-            $langDir .= '/';
-        }
-
         $candidates = array(
             'en.js',
             'en_US.js',
@@ -1012,19 +1012,21 @@ class Requirements_Backend
             i18n::get_locale() . '.js',
         );
         foreach ($candidates as $candidate) {
-            if (file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
-                $files[] = $langDir . $candidate;
+            $relativePath = Path::join($langDir, $candidate);
+            $absolutePath = Director::getAbsFile($relativePath);
+            if (file_exists($absolutePath)) {
+                $files[] = $relativePath;
             }
         }
 
         if ($return) {
             return $files;
-        } else {
-            foreach ($files as $file) {
-                $this->javascript($file);
-            }
-            return null;
         }
+
+        foreach ($files as $file) {
+            $this->javascript($file);
+        }
+        return null;
     }
 
     /**
@@ -1345,9 +1347,12 @@ MESSAGE
                 function () use ($fileList, $minify, $type) {
                     // Physically combine all file content
                     $combinedData = '';
-                    $base = Director::baseFolder() . '/';
                     foreach ($fileList as $file) {
-                        $fileContent = file_get_contents($base . $file);
+                        $filePath = Director::getAbsFile($file);
+                        if (!file_exists($filePath)) {
+                            throw new InvalidArgumentException("Combined file {$file} does not exist");
+                        }
+                        $fileContent = file_get_contents($filePath);
                         // Use configured minifier
                         if ($minify) {
                             $fileContent = $this->minifier->minify($fileContent, $type, $file);
@@ -1419,11 +1424,11 @@ MESSAGE
     protected function hashOfFiles($fileList)
     {
         // Get hash based on hash of each file
-        $base = Director::baseFolder() . '/';
         $hash = '';
         foreach ($fileList as $file) {
-            if (file_exists($base . $file)) {
-                $hash .= sha1_file($base . $file);
+            $absolutePath = Director::getAbsFile($file);
+            if (file_exists($absolutePath)) {
+                $hash .= sha1_file($absolutePath);
             } else {
                 throw new InvalidArgumentException("Combined file {$file} does not exist");
             }

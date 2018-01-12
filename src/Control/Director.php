@@ -11,6 +11,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
@@ -76,15 +77,13 @@ class Director implements TemplateGlobalProvider
     private static $alternate_base_folder;
 
     /**
-     * Force the base_url to a specific value.
-     * If assigned, default_base_url and the value in the $_SERVER
-     * global is ignored.
-     * Supports back-ticked vars; E.g. '`SS_BASE_URL`'
+     * Override PUBLIC_DIR. Set to a non-null value to override.
+     * Setting to an empty string will disable public dir.
      *
      * @config
-     * @var string
+     * @var bool|null
      */
-    private static $alternate_base_url;
+    private static $alternate_public_dir = null;
 
     /**
      * Base url to populate if cannot be determined otherwise.
@@ -589,7 +588,40 @@ class Director implements TemplateGlobalProvider
     public static function baseFolder()
     {
         $alternate = Director::config()->uninherited('alternate_base_folder');
-        return ($alternate) ? $alternate : BASE_PATH;
+        return $alternate ?: BASE_PATH;
+    }
+
+    /**
+     * Check if using a seperate public dir, and if so return this directory
+     * name.
+     *
+     * This will be removed in 5.0 and fixed to 'public'
+     *
+     * @return string
+     */
+    public static function publicDir()
+    {
+        $alternate = self::config()->uninherited('alternate_public_dir');
+        if (isset($alternate)) {
+            return $alternate;
+        }
+        return PUBLIC_DIR;
+    }
+
+    /**
+     * Gets the webroot of the project, which may be a subfolder of {@see baseFolder()}
+     *
+     * @return string
+     */
+    public static function publicFolder()
+    {
+        $folder = self::baseFolder();
+        $publicDir = self::publicDir();
+        if ($publicDir) {
+            return Path::join($folder, $publicDir);
+        }
+
+        return $folder;
     }
 
     /**
@@ -618,7 +650,7 @@ class Director implements TemplateGlobalProvider
         }
 
         // Remove base folder or url
-        foreach ([self::baseFolder(), self::baseURL()] as $base) {
+        foreach ([self::publicFolder(), self::baseFolder(), self::baseURL()] as $base) {
             // Ensure single / doesn't break comparison (unless it would make base empty)
             $base = rtrim($base, '\\/') ?: $base;
             if (stripos($url, $base) === 0) {
@@ -746,7 +778,21 @@ class Director implements TemplateGlobalProvider
      */
     public static function getAbsFile($file)
     {
-        return self::is_absolute($file) ? $file : Director::baseFolder() . '/' . $file;
+        // If already absolute
+        if (self::is_absolute($file)) {
+            return $file;
+        }
+
+        // If path is relative to public folder search there first
+        if (self::publicDir()) {
+            $path = Path::join(self::publicFolder(), $file);
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        // Default to base folder
+        return Path::join(self::baseFolder(), $file);
     }
 
     /**

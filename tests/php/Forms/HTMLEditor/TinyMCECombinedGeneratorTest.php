@@ -20,6 +20,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         // Set custom base_path for tinymce
         Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
+        Director::config()->set('alternate_public_dir', ''); // Disable public dir
         SSViewer::config()->set('themes', [SSViewer::DEFAULT_THEME]);
         TinyMCEConfig::config()
             ->set('base_dir', 'tinymce')

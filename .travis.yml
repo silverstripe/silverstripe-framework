@@ -76,6 +76,7 @@ before_script:
 # Install composer dependencies
   - export PATH=~/.composer/vendor/bin:$PATH
   - composer validate
+  - mkdir ./public
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.0.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.0.x-dev --no-update; fi
   - composer require silverstripe/recipe-core:1.1.x-dev silverstripe/admin:1.1.x-dev silverstripe/versioned:1.1.x-dev --no-update

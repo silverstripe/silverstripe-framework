@@ -20,7 +20,7 @@ class TempFolder
         $parent = static::getTempParentFolder($base);
 
         // The actual temp folder is a subfolder of getTempParentFolder(), named by username
-        $subfolder = $parent . DIRECTORY_SEPARATOR . static::getTempFolderUsername();
+        $subfolder = Path::join($parent, static::getTempFolderUsername());
 
         if (!@file_exists($subfolder)) {
             mkdir($subfolder);
@@ -65,26 +65,27 @@ class TempFolder
      */
     protected static function getTempParentFolder($base)
     {
-        $base = rtrim($base, '/\\');
         // first, try finding a silverstripe-cache dir built off the base path
-        $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
-        if (@file_exists($tempPath)) {
-            if ((fileperms($tempPath) & 0777) != 0777) {
-                @chmod($tempPath, 0777);
+        $localPath = Path::join($base, 'silverstripe-cache');
+        if (@file_exists($localPath)) {
+            if ((fileperms($localPath) & 0777) != 0777) {
+                @chmod($localPath, 0777);
             }
-            return $tempPath;
+            return $localPath;
         }
 
         // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
-        $tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR .
+        $tempPath = Path::join(
+            sys_get_temp_dir(),
             'silverstripe-cache-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION) .
-            str_replace(array(' ', '/', ':', '\\'), '-', $base);
+            str_replace(array(' ', '/', ':', '\\'), '-', $base)
+        );
         if (!@file_exists($tempPath)) {
             $oldUMask = umask(0);
             @mkdir($tempPath, 0777);
             umask($oldUMask);
 
-        // if the folder already exists, correct perms
+            // if the folder already exists, correct perms
         } else {
             if ((fileperms($tempPath) & 0777) != 0777) {
                 @chmod($tempPath, 0777);
@@ -95,7 +96,7 @@ class TempFolder
 
         // failing to use the system path, attempt to create a local silverstripe-cache dir
         if (!$worked) {
-            $tempPath = $base . DIRECTORY_SEPARATOR . 'silverstripe-cache';
+            $tempPath = $localPath;
             if (!@file_exists($tempPath)) {
                 $oldUMask = umask(0);
                 @mkdir($tempPath, 0777);

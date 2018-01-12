@@ -591,4 +591,20 @@ class Convert
         $num = round($bytes / pow(1024, $scale), $decimal);
         return $num . $scales[$scale];
     }
+
+    /**
+     * Convert slashes in relative or asolute filesystem path. Defaults to DIRECTORY_SEPARATOR
+     *
+     * @param string $path
+     * @param string $separator
+     * @param bool $multiple Collapses multiple slashes or not
+     * @return string
+     */
+    public static function slashes($path, $separator = DIRECTORY_SEPARATOR, $multiple = true)
+    {
+        if ($multiple) {
+            return preg_replace('#[/\\\\]+#', $separator, $path);
+        }
+        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+    }
 }

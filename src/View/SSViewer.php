@@ -50,6 +50,11 @@ class SSViewer implements Flushable
     const DEFAULT_THEME = '$default';
 
     /**
+     * Identifier for the public theme
+     */
+    const PUBLIC_THEME = '$public';
+
+    /**
      * A list (highest priority first) of themes to use
      * Only used when {@link $theme_enabled} is set to TRUE.
      *
@@ -267,7 +272,7 @@ class SSViewer implements Flushable
      */
     public static function get_themes()
     {
-        $default = [self::DEFAULT_THEME];
+        $default = [self::PUBLIC_THEME, self::DEFAULT_THEME];
 
         if (!SSViewer::config()->uninherited('theme_enabled')) {
             return $default;
@@ -284,7 +289,7 @@ class SSViewer implements Flushable
 
         // Support legacy behaviour
         if ($theme = SSViewer::config()->uninherited('theme')) {
-            return [$theme, self::DEFAULT_THEME];
+            return [self::PUBLIC_THEME, $theme, self::DEFAULT_THEME];
         }
 
         return $default;

@@ -3,7 +3,6 @@
 namespace SilverStripe\Core\Tests\Manifest;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
 
@@ -27,6 +26,7 @@ class ModuleResourceTest extends SapphireTest
         $this->manifest = new ModuleManifest($this->base);
         $this->manifest->init();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basefolder/');
+        Director::config()->set('alternate_public_dir', 'public');
     }
 
     public function testBaseModuleResource()
@@ -42,7 +42,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/module/client/script.js?m=',
+            '/basefolder/resources/module/client/script.js?m=',
             $resource->getURL()
         );
     }
@@ -60,7 +60,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/resources/silverstripe/modulec/client/script.js?m=',
+            '/basefolder/resources/vendor/silverstripe/modulec/client/script.js?m=',
             $resource->getURL()
         );
     }
@@ -80,7 +80,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/resources/silverstripe/modulec/client/script.js?m=',
+            '/basefolder/resources/vendor/silverstripe/modulec/client/script.js?m=',
             $resource->getURL()
         );
     }
