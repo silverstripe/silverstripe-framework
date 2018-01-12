@@ -69,7 +69,7 @@ This is useful where there could be many use cases for a particular data structu
 An additional column is created called "`<relationship-name>`Class", which along
 with the ID column identifies the object.
 
-To specify that a has_one relation is polymorphic set the type to 'DataObject'.
+To specify that a has_one relation is polymorphic set the type to [api:SilverStripe\ORM\DataObject]
 Ideally, the associated has_many (or belongs_to) should be specified with dot notation.
 
 ```php
@@ -94,7 +94,7 @@ class Fan extends DataObject
 
     // Generates columns FanOfID and FanOfClass
     private static $has_one = [
-        "FanOf" => "DataObject"
+        "FanOf" => DataObject::class,
     ];
 }
 ```

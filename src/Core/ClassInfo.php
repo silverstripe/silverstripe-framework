@@ -208,6 +208,7 @@ class ClassInfo
      * eg: self::class_name('dataobJEct'); //returns 'DataObject'
      *
      * @param string|object $nameOrObject The classname or object you want to normalise
+     * @throws \ReflectionException
      * @return string The normalised class name
      */
     public static function class_name($nameOrObject)

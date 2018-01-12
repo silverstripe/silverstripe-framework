@@ -42,7 +42,7 @@ you are running your site configuration with a separate `public/` webroot folder
 				deny all;
 			}
 			sendfile on;
-			try_files $uri index.php?$query_string;
+			try_files $uri /index.php?$query_string;
 		}
 		
 		location ~ /\.. {
