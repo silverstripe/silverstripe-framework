@@ -59,8 +59,12 @@ if (!defined('BASE_PATH')) {
 }
 
 // Set public webroot dir / path
-define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
-define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
+if (!defined('PUBLIC_DIR')) {
+    define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
+}
+if (!defined('PUBLIC_PATH')) {
+    define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
+}
 
 // Allow a first class env var to be set that disables .env file loading
 if (!Environment::getEnv('SS_IGNORE_DOT_ENV')) {
