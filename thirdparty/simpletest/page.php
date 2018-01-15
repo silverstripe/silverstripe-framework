@@ -94,7 +94,7 @@ class SimpleTagBuilder {
             $tag_class = $map[$type];
             return new $tag_class($attributes);
         }
-        return false;
+        return new SimpleTextTag($attributes);
     }
 
     /**
