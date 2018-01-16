@@ -245,7 +245,7 @@ class HTTPResponse
      */
     public function removeHeader($header)
     {
-        strtolower($header);
+        $header = strtolower($header);
         unset($this->headers[$header]);
         return $this;
     }
