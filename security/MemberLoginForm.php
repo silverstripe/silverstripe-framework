@@ -246,7 +246,7 @@ JS;
 			);
 			Session::set("Security.Message.type", "good");
 		}
-		Controller::curr()->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 
 
@@ -272,9 +272,10 @@ JS;
 	 *                or NULL on failure.
 	 */
 	public function performLogin($data) {
+		/** @var Member $member */
 		$member = call_user_func_array(array($this->authenticator_class, 'authenticate'), array($data, $this));
 		if($member) {
-			$member->LogIn(isset($data['Remember']));
+			$member->logIn(isset($data['Remember']));
 			return $member;
 		} else {
 			$this->extend('authenticationFailed', $data);

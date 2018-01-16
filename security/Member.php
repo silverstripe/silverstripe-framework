@@ -520,7 +520,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	public function isPasswordExpired() {
 		if(!$this->PasswordExpiry) return false;
-		return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry);
+		return $this->dbObject('PasswordExpiry')->InPast();
 	}
 
 	/**
