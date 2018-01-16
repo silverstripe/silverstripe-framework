@@ -109,10 +109,6 @@ class BasicAuth
             return true;
         }
 
-        if ($member instanceof Member) {
-            Security::setCurrentUser($member);
-        }
-
         if (!$member && $tryUsingSessionLogin) {
             $member = Security::getCurrentUser();
         }
