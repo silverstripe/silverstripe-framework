@@ -631,11 +631,10 @@ class TinyMCEConfig extends HTMLEditorConfig
 
         // Add standard editor.css
         $editorCSSFiles = $this->config()->get('editor_css');
+        $resourceLoader = ModuleResourceLoader::singleton();
         if ($editorCSSFiles) {
             foreach ($editorCSSFiles as $editorCSS) {
-                $path = ModuleResourceLoader::singleton()
-                    ->resolveURL($editorCSS);
-                $editor[] = Director::absoluteURL($path);
+                $editor[] = $resourceLoader->resolveURL($editorCSS);
             }
         }
 
@@ -643,7 +642,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         $themes = HTMLEditorConfig::getThemes() ?: SSViewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
-            $editor[] = Director::absoluteURL($themedEditor);
+            $editor[] = $resourceLoader->resolveURL($themedEditor);
         }
 
         return $editor;
