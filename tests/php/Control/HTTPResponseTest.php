@@ -47,4 +47,15 @@ class HTTPResponseTest extends SapphireTest
         // Fail if we get to here
         $this->assertFalse(true, 'Something went wrong with our test exception');
     }
+
+    public function testRemoveHeader()
+    {
+        $response = new HTTPResponse();
+
+        $response->addHeader('X-Animal', 'Monkey');
+        $this->assertSame('Monkey', $response->getHeader('X-Animal'));
+
+        $response->removeHeader('X-Animal');
+        $this->assertEmpty($response->getHeader('X-Animal'));
+    }
 }
