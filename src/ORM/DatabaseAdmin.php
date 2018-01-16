@@ -318,22 +318,6 @@ class DatabaseAdmin extends Controller
                 }
             }
 
-            foreach ($dataClasses as $dataClass) {
-                // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                // Test_ indicates that it's the data class is part of testing system
-                if (strpos($dataClass, 'Test_') === false && class_exists($dataClass)) {
-                    if (!$quiet) {
-                        if (Director::is_cli()) {
-                            echo " * $dataClass\n";
-                        } else {
-                            echo "<li>$dataClass</li>\n";
-                        }
-                    }
-
-                    singleton($dataClass)->requireDefaultRecords();
-                }
-            }
-
             // Remap obsolete class names
             $schema = DataObject::getSchema();
             foreach ($this->config()->classname_value_remapping as $oldClassName => $newClassName) {
@@ -353,7 +337,7 @@ class DatabaseAdmin extends Controller
                     $updateQueries = [sprintf($updateQuery, '')];
 
                     // Remap versioned table ClassName values as well
-                    $class = singleton($newClassName);
+                    $class = DataObject::singleton($newClassName);
                     if ($class->has_extension(Versioned::class)) {
                         if ($class->hasStages()) {
                             $updateQueries[] = sprintf($updateQuery, '_Live');
@@ -364,6 +348,23 @@ class DatabaseAdmin extends Controller
                     foreach ($updateQueries as $query) {
                         DB::prepared_query($query, [$newClassName, $oldClassName]);
                     }
+                }
+            }
+
+            // Require all default records
+            foreach ($dataClasses as $dataClass) {
+                // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
+                // Test_ indicates that it's the data class is part of testing system
+                if (strpos($dataClass, 'Test_') === false && class_exists($dataClass)) {
+                    if (!$quiet) {
+                        if (Director::is_cli()) {
+                            echo " * $dataClass\n";
+                        } else {
+                            echo "<li>$dataClass</li>\n";
+                        }
+                    }
+
+                    DataObject::singleton($dataClass)->requireDefaultRecords();
                 }
             }
 

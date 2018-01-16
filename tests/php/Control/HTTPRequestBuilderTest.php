@@ -52,7 +52,6 @@ class HTTPRequestBuilderTest extends SapphireTest
         ];
         $this->assertEquals($headers, HTTPRequestBuilder::extractRequestHeaders($request));
 
-
         $request = [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'password',
@@ -62,5 +61,29 @@ class HTTPRequestBuilderTest extends SapphireTest
             'PHP_AUTH_PW' => 'password',
         ];
         $this->assertEquals($headers, HTTPRequestBuilder::extractRequestHeaders($request));
+
+        $request = [
+            'REDIRECT_HTTP_AUTHORIZATION' => 'Basic YWRtaW46cGFzc3dvcmQ=',
+        ];
+        $headers = [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'password',
+        ];
+        $this->assertEquals($headers, HTTPRequestBuilder::extractRequestHeaders($request));
+
+        $request = [
+            'HTTP_AUTHORIZATION' => 'Basic YWRtaW46cGFzc3dvcmQ=',
+            'REDIRECT_HTTP_AUTHORIZATION' => 'Basic dXNlcjphdXRo=',
+        ];
+        $headers = [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'password',
+            'Authorization' => 'Basic YWRtaW46cGFzc3dvcmQ=',
+        ];
+        $this->assertEquals(
+            $headers,
+            HTTPRequestBuilder::extractRequestHeaders($request),
+            'Prefer HTTP_AUTHORIZATION over REDIRECT_HTTP_AUTHORIZATION'
+        );
     }
 }

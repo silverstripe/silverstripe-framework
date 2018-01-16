@@ -1,7 +1,7 @@
 # Nginx
 
 These instructions are also covered on the
-[Nginx Wiki](http://wiki.nginx.org/SilverStripe).
+[Nginx Wiki](https://www.nginx.com/resources/wiki/start/topics/recipes/silverstripe/).
 
 The prerequisite is that you have already installed Nginx and you are
 able to run PHP files via the FastCGI-wrapper from Nginx.
@@ -16,11 +16,12 @@ If you don't fully understand the configuration presented here, consult the
 Especially be aware of [accidental php-execution](https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/ "Don't trust the tutorials") when extending the configuration.
 </div>
 
-But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
+But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`. This assumes
+you are running your site configuration with a separate `public/` webroot folder.
 
 	server {
 		listen 80;
-		root /path/to/ss/folder;
+		root /var/www/the-website/public;
 
 		server_name site.com www.site.com;
 
@@ -41,52 +42,14 @@ But enough of the disclaimer, on to the actual configuration — typically in `n
 				deny all;
 			}
 			sendfile on;
-			try_files $uri index.php?$query_string;
+			try_files $uri /index.php?$query_string;
 		}
-
-		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
-			fastcgi_keep_conn on;
-			fastcgi_pass   127.0.0.1:9000;
-			fastcgi_index  index.php;
-			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include        fastcgi_params;
-		}
-
-		location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
-			deny all;
-		}
-
+		
 		location ~ /\.. {
 			deny all;
 		}
 
-		location ~ \.ss$ {
-			satisfy any;
-			allow 127.0.0.1;
-			deny all;
-		}
-
 		location ~ web\.config$ {
-			deny all;
-		}
-
-		location ~ \.ya?ml$ {
-			deny all;
-		}
-
-		location ^~ /vendor/ {
-			deny all;
-		}
-
-		location ~* /silverstripe-cache/ {
-			deny all;
-		}
-
-		location ~* composer\.(json|lock)$ {
-			deny all;
-		}
-
-		location ~* /(cms|framework)/silverstripe_version$ {
 			deny all;
 		}
 

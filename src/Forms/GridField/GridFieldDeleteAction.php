@@ -41,7 +41,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function __construct($removeRelation = false)
     {
-        $this->removeRelation = $removeRelation;
+        $this->setRemoveRelation($removeRelation);
     }
 
     /**
@@ -115,7 +115,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getColumnContent($gridField, $record, $columnName)
     {
-        if ($this->removeRelation) {
+        if ($this->getRemoveRelation()) {
             if (!$record->canEdit()) {
                 return null;
             }
@@ -186,5 +186,26 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 $gridField->getList()->remove($item);
             }
         }
+    }
+
+    /**
+     * Get whether to remove or delete the relation
+     *
+     * @return bool
+     */
+    public function getRemoveRelation()
+    {
+        return $this->removeRelation;
+    }
+
+    /**
+     * Set whether to remove or delete the relation
+     * @param bool $removeRelation
+     * @return $this
+     */
+    public function setRemoveRelation($removeRelation)
+    {
+        $this->removeRelation = (bool) $removeRelation;
+        return $this;
     }
 }

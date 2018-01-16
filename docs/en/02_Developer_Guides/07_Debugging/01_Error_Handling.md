@@ -24,7 +24,7 @@ Although you can raise more important levels of alerts in this way, we recommend
 these instead.
 
 For notice-level and warning-level issues, you should use [user_error](http://www.php.net/user_error) to throw errors
-where appropriate. These will not halt execution but will send a message to the 
+where appropriate. These will not halt execution but will send a message to the PHP error log.
 
 ```php
 public function delete()

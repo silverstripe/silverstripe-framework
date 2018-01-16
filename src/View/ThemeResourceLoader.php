@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Path;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
@@ -103,12 +104,12 @@ class ThemeResourceLoader
             if (count($parts) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
-            return ltrim($identifier, '/');
+            return Path::normalise($identifier, true);
         }
 
         // If there is no slash / colon it's a legacy theme
         if ($slashPos === false && count($parts) === 1) {
-            return THEMES_DIR.'/'.$identifier;
+            return Path::join(THEMES_DIR, $identifier);
         }
 
         // Extract from <vendor>/<module>:<theme> format.
@@ -148,7 +149,7 @@ class ThemeResourceLoader
         }
 
         // Join module with subpath
-        return ltrim($modulePath . $subpath, '/');
+        return Path::normalise($modulePath . $subpath, true);
     }
 
     /**
@@ -214,7 +215,7 @@ class ThemeResourceLoader
             foreach ($themePaths as $themePath) {
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
-                $path = implode('/', array_filter($pathParts)) . '.ss';
+                $path = Path::join($pathParts) . '.ss';
                 if (file_exists($path)) {
                     return $path;
                 }
@@ -282,16 +283,13 @@ class ThemeResourceLoader
      */
     public function findThemedResource($resource, $themes)
     {
-        if ($resource[0] !== '/') {
-            $resource = '/' . $resource;
-        }
-
         $paths = $this->getThemePaths($themes);
 
         foreach ($paths as $themePath) {
-            $abspath = $this->base . '/' . $themePath;
-            if (file_exists($abspath . $resource)) {
-                return $themePath . $resource;
+            $relativePath = Path::join($themePath, $resource);
+            $absolutePath = Path::join($this->base, $relativePath);
+            if (file_exists($absolutePath)) {
+                return $relativePath;
             }
         }
 

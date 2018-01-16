@@ -103,19 +103,23 @@ class HTTPRequestBuilder
             $headers['Content-Length'] = $server['CONTENT_LENGTH'];
         }
 
+        // Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
+        // Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
+        // REDIRECT_HTTP_AUTHORIZATION
+        $authHeader = null;
+        if (isset($headers['Authorization'])) {
+            $authHeader = $headers['Authorization'];
+        } elseif (isset($server['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $authHeader = $server['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+
         // Ensure basic auth is available via headers
         if (isset($server['PHP_AUTH_USER']) && isset($server['PHP_AUTH_PW'])) {
             // Shift PHP_AUTH_* into headers so they are available via request
             $headers['PHP_AUTH_USER'] = $server['PHP_AUTH_USER'];
             $headers['PHP_AUTH_PW'] = $server['PHP_AUTH_PW'];
-        } elseif (!empty($headers['Authorization']) && preg_match('/Basic\s+(.*)$/i', $headers['Authorization'], $matches)) {
-            // Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
-            // Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
-            // REDIRECT_HTTP_AUTHORIZATION
-            //
-            // The follow rewrite rule must be in the sites .htaccess file to enable this workaround
-            // RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-            list($name, $password) = explode(':', base64_decode($matches[1]));
+        } elseif ($authHeader && preg_match('/Basic\s+(?<token>.*)$/i', $authHeader, $matches)) {
+            list($name, $password) = explode(':', base64_decode($matches['token']));
             $headers['PHP_AUTH_USER'] = $name;
             $headers['PHP_AUTH_PW'] = $password;
         }

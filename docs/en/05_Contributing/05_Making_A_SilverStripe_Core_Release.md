@@ -67,13 +67,12 @@ the [core committers](core_committers), who will assist with setting up your cre
 
 * Write permissions on the [silverstripe](https://github.com/silverstripe) and
   [silverstripe-labs](https://github.com/silverstripe-labs) organisations.
-* Moderator permissions on the [community forum](http://www.silverstripe.org/community/forums/releases-and-announcements/).
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
   Set up a [~/.transifexrc](https://docs.transifex.com/client/client-configuration) with your credentials.
 * AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket
   ([add credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) via `aws configure`).
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
-* Moderator permissions in the #silverstripe [IRC channel](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/)
+* Moderator permissions in the [Slack channel](https://www.silverstripe.org/community/slack-signup/)
 * Administrator account on [docs.silverstripe.org](https://docs.silverstripe.org) and
   [userhelp.silverstripe.org](https://userhelp.silverstripe.org).
 
@@ -353,10 +352,7 @@ will need to be regularly updated.
   [https://docs.silverstripe.org/en/3.2/changelogs/3.2.1/](https://docs.silverstripe.org/en/3.2/changelogs/3.2.1/)
 * Post a release announcement on the [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce)
   google group.
-* Create a release announcement forum sticky on the
-  [releases and announcements](http://www.silverstripe.org/community/forums/releases-and-announcements/)
-  forum category. Make this a global read-only sticky, and un-sticky any older release.
-* Update the #silverstripe [IRC](https://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/) topic to include the new release version.
+* Update the [Slack](https://www.silverstripe.org/community/slack-signup/) topic to include the new release version.
 
 ## See also
 

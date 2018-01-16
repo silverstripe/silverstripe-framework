@@ -40,8 +40,8 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
  * We recommend enabling content compression (for example with mod_deflate) to speed up the delivery of HTML, CSS, and JavaScript.
  * One of the following operating systems:
    * Linux/Unix/BSD
-   * Microsoft Windows XP SP3, Vista, Windows 7, Server 2008, Server 2008 R2
-   * Mac OS X 10.4+
+   * Windows
+   * Mac OS X
 
 ## Web server hardware requirements
 

@@ -93,6 +93,9 @@ other columns. If this is indexed, smaller and reasonably unique it might be fas
 Indexes are generated and removed automatically during a `dev/build`. Caution if you're working with large tables and 
 modify an index as the next `dev/build` will `DROP` the index, and then `ADD` it. 
 
+As of 3.7.0 `default_sort` fields will automatically become database indexes as this provides significant performance
+benefits.
+
 ## API Documentation
 
 * [DataObject](api:SilverStripe\ORM\DataObject)

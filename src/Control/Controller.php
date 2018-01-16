@@ -4,8 +4,10 @@ namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
+use SilverStripe\Security\BasicAuthMiddleware;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
@@ -61,6 +63,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $templates = [];
 
     /**
+     * @deprecated 4.1.0...5.0.0 Add this controller's url to
+     * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      * @var bool
      */
     protected $basicAuthEnabled = true;
@@ -98,6 +102,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     protected function init()
     {
+        // @todo This will be removed in 5.0 and will be controlled by middleware instead
         if ($this->basicAuthEnabled) {
             BasicAuth::protect_site_if_necessary();
         }
@@ -528,9 +533,16 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Call this to disable site-wide basic authentication for a specific controller. This must be
      * called before Controller::init(). That is, you must call it in your controller's init method
      * before it calls parent::init().
+     *
+     * @deprecated 4.1.0...5.0.0 Add this controller's url to
+     * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      */
     public function disableBasicAuth()
     {
+        Deprecation::notice(
+            '5.0',
+            'Add this controller\'s url to ' . BasicAuthMiddleware::class . '.URLPatterns injected property instead'
+        );
         $this->basicAuthEnabled = false;
     }
 

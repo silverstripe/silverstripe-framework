@@ -331,13 +331,13 @@ class Requirements implements Flushable
      *                         'framework/javascript/lang'
      * @param bool   $return   Return all relative file paths rather than including them in
      *                         requirements
-     * @param bool   $langOnly Only include language files, not the base libraries
+     * @param bool $langOnly @deprecated 4.1...5.0 as i18n.js should be included manually in your project
      *
      * @return array
      */
     public static function add_i18n_javascript($langDir, $return = false, $langOnly = false)
     {
-        return self::backend()->add_i18n_javascript($langDir, $return, $langOnly);
+        return self::backend()->add_i18n_javascript($langDir, $return);
     }
 
     /**

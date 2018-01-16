@@ -7,6 +7,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPRequestBuilder;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\Kernel;
@@ -27,13 +28,15 @@ class Installer extends InstallRequirements
 
     protected function installHeader()
     {
+        $clientPath = PUBLIC_DIR
+            ? 'resources/vendor/silverstripe/framework/src/Dev/Install/client'
+            : 'resources/silverstripe/framework/src/Dev/Install/client';
         ?>
         <html>
         <head>
             <meta charset="utf-8"/>
             <title>Installing SilverStripe...</title>
-            <link rel="stylesheet" type="text/css"
-                  href="resources/silverstripe/framework/src/Dev/Install/client/styles/install.css"/>
+            <link rel="stylesheet" type="text/css" href="<?=$clientPath; ?>/styles/install.css"/>
             <script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
         </head>
         <body>
@@ -209,7 +212,15 @@ use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
 
-require __DIR__ . '/vendor/autoload.php';
+// Find autoload.php
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require __DIR__ . '/vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require __DIR__ . '/../vendor/autoload.php';
+} else {
+    echo "autoload.php not found";
+    die;
+}
 
 // Build request and detect flush
 $request = HTTPRequestBuilder::createFromEnvironment();
@@ -221,7 +232,8 @@ $app->addMiddleware(new ErrorControlChainMiddleware($app));
 $response = $app->handle($request);
 $response->output();
 PHP;
-        $this->writeToFile('index.php', $content);
+        $path = $this->getPublicDir() . 'index.php';
+        $this->writeToFile($path, $content, true);
     }
 
     /**
@@ -340,11 +352,13 @@ PHP
         if ($config['theme'] && $config['theme'] !== 'tutorial') {
             $theme = $this->ymlString($config['theme']);
             $themeYML = <<<YML
+    - '\$public'
     - '$theme'
     - '\$default'
 YML;
         } else {
             $themeYML = <<<YML
+    - '\$public'
     - '\$default'
 YML;
         }
@@ -378,21 +392,24 @@ YML
     /**
      * Write file to given location
      *
-     * @param $filename
-     * @param $content
+     * @param string $filename
+     * @param string $content
+     * @param bool $absolute If $filename is absolute path set to true
      * @return bool
      */
-    public function writeToFile($filename, $content)
+    public function writeToFile($filename, $content, $absolute = false)
     {
-        $base = $this->getBaseDir();
-        $this->statusMessage("Setting up $base$filename");
+        $path = $absolute
+            ? $filename
+            : $this->getBaseDir() . $filename;
+        $this->statusMessage("Setting up $path");
 
-        if ((@$fh = fopen($base . $filename, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
+        if ((@$fh = fopen($path, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
             // Set permissions to writable
-            @chmod($base . $filename, 0775);
+            @chmod($path, 0775);
             return true;
         }
-        $this->error("Couldn't write to file $base$filename");
+        $this->error("Couldn't write to file $path");
         return false;
     }
 
@@ -405,11 +422,7 @@ YML
         $end = "\n### SILVERSTRIPE END ###";
 
         $base = dirname($_SERVER['SCRIPT_NAME']);
-        if (defined('DIRECTORY_SEPARATOR')) {
-            $base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
-        } else {
-            $base = str_replace("\\", '/', $base);
-        }
+        $base = Convert::slashes($base, '/');
 
         if ($base != '.') {
             $baseClause = "RewriteBase '$base'\n";
@@ -474,8 +487,9 @@ ErrorDocument 500 /assets/error-500.html
 </IfModule>
 TEXT;
 
-        if (file_exists('.htaccess')) {
-            $htaccess = file_get_contents('.htaccess');
+        $htaccessPath = $this->getPublicDir() . '.htaccess';
+        if (file_exists($htaccessPath)) {
+            $htaccess = file_get_contents($htaccessPath);
 
             if (strpos($htaccess, '### SILVERSTRIPE START ###') === false
                 && strpos($htaccess, '### SILVERSTRIPE END ###') === false
@@ -492,7 +506,7 @@ TEXT;
             }
         }
 
-        $this->writeToFile('.htaccess', $start . $rewrite . $end);
+        $this->writeToFile($htaccessPath, $start . $rewrite . $end, true);
     }
 
     /**
@@ -509,7 +523,6 @@ TEXT;
             <requestFiltering>
                 <hiddenSegments applyToWebDAV="false">
                     <add segment="silverstripe-cache" />
-                    <add segment="vendor" />
                     <add segment="composer.json" />
                     <add segment="composer.lock" />
                 </hiddenSegments>
@@ -534,7 +547,8 @@ TEXT;
 </configuration>
 TEXT;
 
-        $this->writeToFile('web.config', $content);
+        $path = $this->getPublicDir() . 'web.config';
+        $this->writeToFile($path, $content, true);
     }
 
     public function checkRewrite()
@@ -542,8 +556,11 @@ TEXT;
         $token = new ParameterConfirmationToken('flush', new HTTPRequest('GET', '/'));
         $params = http_build_query($token->params());
 
-        $destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
-            ($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
+        $destinationURL = BASE_URL . '/' . (
+            $this->checkModuleExists('cms')
+                ? "home/successfullyinstalled?$params"
+                : "?$params"
+        );
 
         echo <<<HTML
 <li id="ModRewriteResult">Testing...</li>

@@ -195,11 +195,13 @@ class ObjectTest extends SapphireTest
         );
         $inst = new ExtensionTest();
         $extensions = $inst->getExtensionInstances();
-        $this->assertEquals(count($extensions), 2);
+        $this->assertCount(2, $extensions);
+        $this->assertArrayHasKey(ExtendTest1::class, $extensions);
         $this->assertInstanceOf(
             ExtendTest1::class,
             $extensions[ExtendTest1::class]
         );
+        $this->assertArrayHasKey(ExtendTest2::class, $extensions);
         $this->assertInstanceOf(
             ExtendTest2::class,
             $extensions[ExtendTest2::class]
@@ -506,5 +508,34 @@ class ObjectTest extends SapphireTest
             array('\Test\MyClass', array()),
             ClassInfo::parse_class_spec('\Test\MyClass')
         );
+    }
+
+    public function testInjectedExtensions()
+    {
+        $mockExtension = $this->createMock(TestExtension::class);
+        $mockClass = get_class($mockExtension);
+
+        $object = new ExtensionTest2();
+
+        // sanity check
+        $this->assertNotEquals(TestExtension::class, $mockClass);
+
+        $this->assertTrue($object->hasExtension(TestExtension::class));
+        $this->assertFalse($object->hasExtension($mockClass));
+        $this->assertCount(1, $object->getExtensionInstances());
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance(TestExtension::class));
+        $this->assertNotInstanceOf($mockClass, $object->getExtensionInstance(TestExtension::class));
+
+        Injector::inst()->registerService($mockExtension, TestExtension::class);
+
+        $object = new ExtensionTest2();
+
+        $this->assertTrue($object->hasExtension(TestExtension::class));
+        $this->assertTrue($object->hasExtension($mockClass));
+        $this->assertCount(1, $object->getExtensionInstances());
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance(TestExtension::class));
+        $this->assertInstanceOf($mockClass, $object->getExtensionInstance(TestExtension::class));
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance($mockClass));
+        $this->assertInstanceOf($mockClass, $object->getExtensionInstance($mockClass));
     }
 }

@@ -57,33 +57,10 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 	location ^~ /assets/ {
 		try_files $uri =404;
 	}
-	location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
-		deny all;
-	}
 	location ~ /\.. {
 		deny all;
 	}
-	location ~ \.ss$ {
-		satisfy any;
-		allow 127.0.0.1;
-		deny all;
-	}
 	location ~ web\.config$ {
-		deny all;
-	}
-	location ~ \.ya?ml$ {
-		deny all;
-	}
-	location ^~ /vendor/ {
-		deny all;
-	}
-	location ~* /silverstripe-cache/ {
-		deny all;
-	}
-	location ~* composer\.(json|lock)$ {
-		deny all;
-	}
-	location ~* /(cms|framework)/silverstripe_version$ {
 		deny all;
 	}
 
@@ -97,7 +74,7 @@ e.g. `/etc/nginx/sites-enabled/mysite`:
 
 	server {
 		listen 80;
-		root /var/www/mysite;
+		root /var/www/mysite/public;
 		server_name www.mysite.com;
 
 		error_log /var/log/nginx/mysite.error.log;

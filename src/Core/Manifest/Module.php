@@ -3,12 +3,17 @@
 namespace SilverStripe\Core\Manifest;
 
 use Exception;
+use InvalidArgumentException;
 use Serializable;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 
 class Module implements Serializable
 {
-    const TRIM_CHARS = '/\\';
+    /**
+     * @deprecated 4.1..5.0 Use Path::normalise() instead
+     */
+    const TRIM_CHARS = ' /\\';
 
     /**
      * Full directory path to this module with no trailing slash
@@ -42,12 +47,12 @@ class Module implements Serializable
      * Construct a module
      *
      * @param string $path Absolute filesystem path to this module
-     * @param string $base base url for the application this module is installed in
+     * @param string $basePath base path for the application this module is installed in
      */
-    public function __construct($path, $base)
+    public function __construct($path, $basePath)
     {
-        $this->path = rtrim($path, self::TRIM_CHARS);
-        $this->basePath = rtrim($base, self::TRIM_CHARS);
+        $this->path = Path::normalise($path);
+        $this->basePath = Path::normalise($basePath);
         $this->loadComposer();
     }
 
@@ -137,7 +142,10 @@ class Module implements Serializable
      */
     public function getRelativePath()
     {
-        return trim(substr($this->path, strlen($this->basePath)), self::TRIM_CHARS);
+        if ($this->path === $this->basePath) {
+            return '';
+        }
+        return substr($this->path, strlen($this->basePath) + 1);
     }
 
     public function serialize()
@@ -188,7 +196,10 @@ class Module implements Serializable
      */
     public function getResource($path)
     {
-        $path = trim($path, self::TRIM_CHARS);
+        $path = Path::normalise($path, true);
+        if (empty($path)) {
+            throw new InvalidArgumentException('$path is required');
+        }
         if (isset($this->resources[$path])) {
             return $this->resources[$path];
         }

@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Path;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
@@ -39,7 +40,7 @@ class ModuleResource
     public function __construct(Module $module, $relativePath)
     {
         $this->module = $module;
-        $this->relativePath = ltrim($relativePath, Module::TRIM_CHARS);
+        $this->relativePath = Path::normalise($relativePath, true);
         if (empty($this->relativePath)) {
             throw new InvalidArgumentException("Resource cannot have empty path");
         }
@@ -55,7 +56,7 @@ class ModuleResource
      */
     public function getPath()
     {
-        return $this->module->getPath() . '/' . $this->relativePath;
+        return Path::join($this->module->getPath(), $this->relativePath);
     }
 
     /**
@@ -68,8 +69,12 @@ class ModuleResource
      */
     public function getRelativePath()
     {
-        $path = $this->module->getRelativePath() . '/' . $this->relativePath;
-        return ltrim($path, Module::TRIM_CHARS);
+        // Root module
+        $parent = $this->module->getRelativePath();
+        if (!$parent) {
+            return $this->relativePath;
+        }
+        return Path::join($parent, $this->relativePath);
     }
 
     /**
@@ -135,15 +140,8 @@ class ModuleResource
      */
     public function getRelativeResource($path)
     {
-        // Check cache
-        $path = trim($path, Module::TRIM_CHARS);
-        if (isset($this->resources[$path])) {
-            return $this->resources[$path];
-        }
-
-        // Build new relative path
-        $relativeBase = rtrim($this->relativePath, Module::TRIM_CHARS);
-        $relativePath = "{$relativeBase}/{$path}";
-        return $this->resources[$path] = new ModuleResource($this->getModule(), $relativePath);
+        // Defer to parent module
+        $relativeToModule = Path::join($this->relativePath, $path);
+        return $this->getModule()->getResource($relativeToModule);
     }
 }
