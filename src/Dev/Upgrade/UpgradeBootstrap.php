@@ -36,11 +36,13 @@ class UpgradeBootstrap
      */
     public function __invoke(InputInterface $input, OutputInterface $output, $basePath)
     {
+        $publicPath = file_exists("{$basePath}/public") ? "{$basePath}/public" : $basePath;
+
         // Fail if destination isn't writable
-        $this->ensureWritable($basePath);
+        $this->ensureWritable($publicPath);
 
         // Check source
-        $source = $basePath . '/vendor/silverstripe/recipe-core';
+        $source = $basePath . '/vendor/silverstripe/recipe-core/public';
         if (!is_dir($source)) {
             throw new BadMethodCallException("silverstripe/recipe-core is not installed.");
         }
@@ -49,7 +51,7 @@ class UpgradeBootstrap
         $output->writeln("Upgrading project bootstrapping files:");
         foreach ($this->files as $file => $canCreate) {
             $fileSource = $source . '/' . $file;
-            $fileDest = $basePath . '/' . $file;
+            $fileDest = $publicPath . '/' . $file;
 
             // Skip if we should only upgrade existing files
             if (!$canCreate && !file_exists($fileDest)) {
