@@ -56,7 +56,7 @@ class ParameterConfirmationToken
 
     protected function pathForToken($token)
     {
-        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_'.preg_replace('/[^a-z0-9]+/', '', $token);
+        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_' . preg_replace('/[^a-z0-9]+/', '', $token);
     }
 
     /**
@@ -116,7 +116,7 @@ class ParameterConfirmationToken
         $this->parameterBackURL = $this->backURLToken($request);
 
         // If the token provided is valid, mark it as such
-        $token = $request->getVar($parameterName.'token');
+        $token = $request->getVar($parameterName . 'token');
         if ($this->checkToken($token)) {
             $this->token = $token;
         }

@@ -357,7 +357,7 @@ class DBQueryBuilder
         // Assert that the array version provides the 'limit' key
         if (!isset($limit['limit']) || !is_numeric($limit['limit'])) {
             throw new InvalidArgumentException(
-                'DBQueryBuilder::buildLimitSQL(): Wrong format for $limit: '. var_export($limit, true)
+                'DBQueryBuilder::buildLimitSQL(): Wrong format for $limit: ' . var_export($limit, true)
             );
         }
 

@@ -127,7 +127,7 @@ class DevelopmentAdmin extends Controller
             return $controllerClass::create();
         }
 
-        $msg = 'Error: no controller registered in '.__CLASS__.' for: '.$request->param('Action');
+        $msg = 'Error: no controller registered in ' . __CLASS__ . ' for: ' . $request->param('Action');
         if (Director::is_cli()) {
             // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
             throw new Exception($msg);

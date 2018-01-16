@@ -16,7 +16,7 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
         parent::setUp();
         Director::config()->set(
             'alternate_base_folder',
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot'
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot'
         );
         Director::config()->set(
             'alternate_base_url',
@@ -28,9 +28,9 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
     {
         /** @var SimpleResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
-        $mtime = filemtime(__DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js');
+        $mtime = filemtime(__DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js');
         $this->assertEquals(
-            '/basemodule/client/file.js?m='.$mtime,
+            '/basemodule/client/file.js?m=' . $mtime,
             $generator->urlForResource('basemodule/client/file.js')
         );
     }
@@ -40,10 +40,10 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
         /** @var SimpleResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
         $mtime = filemtime(
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
         );
         $this->assertEquals(
-            '/resources/silverstripe/mymodule/client/style.css?m='.$mtime,
+            '/resources/silverstripe/mymodule/client/style.css?m=' . $mtime,
             $generator->urlForResource('vendor/silverstripe/mymodule/client/style.css')
         );
     }
@@ -53,14 +53,14 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
         /** @var SimpleResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
         $module = new Module(
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/',
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/'
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/',
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/'
         );
         $mtime = filemtime(
-            __DIR__ .'/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/vendor/silverstripe/mymodule/client/style.css'
         );
         $this->assertEquals(
-            '/resources/silverstripe/mymodule/client/style.css?m='.$mtime,
+            '/resources/silverstripe/mymodule/client/style.css?m=' . $mtime,
             $generator->urlForResource($module->getResource('client/style.css'))
         );
     }

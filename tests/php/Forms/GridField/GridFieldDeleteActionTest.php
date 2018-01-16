@@ -95,8 +95,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->expectException(HTTPResponse_Exception::class);
         $this->expectExceptionMessage(_t(
             "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-            "There seems to have been a technical problem. Please click the back button, ".
-            "refresh your browser, and try again."
+            "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
         ));
         $this->expectExceptionCode(400);
         $stateID = 'testGridStateActionField';
@@ -105,7 +104,7 @@ class GridFieldDeleteActionTest extends SapphireTest
             'url',
             array(),
             array(
-                'action_gridFieldAlterAction?StateID='.$stateID,
+                'action_gridFieldAlterAction?StateID=' . $stateID,
                 'SecurityID' => null,
             )
         );
@@ -138,7 +137,7 @@ class GridFieldDeleteActionTest extends SapphireTest
             'url',
             array(),
             array(
-                'action_gridFieldAlterAction?StateID='.$stateID => true,
+                'action_gridFieldAlterAction?StateID=' . $stateID => true,
                 $token->getName() => $token->getValue(),
             )
         );
@@ -172,7 +171,7 @@ class GridFieldDeleteActionTest extends SapphireTest
             'url',
             array(),
             array(
-                'action_gridFieldAlterAction?StateID='.$stateID=>true,
+                'action_gridFieldAlterAction?StateID=' . $stateID=>true,
                 $token->getName() => $token->getValue(),
             )
         );
@@ -207,7 +206,7 @@ class GridFieldDeleteActionTest extends SapphireTest
             'url',
             array(),
             array(
-                'action_gridFieldAlterAction?StateID='.$stateID=>true,
+                'action_gridFieldAlterAction?StateID=' . $stateID=>true,
                 $token->getName() => $token->getValue(),
             )
         );

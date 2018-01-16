@@ -351,8 +351,7 @@ class Member extends DataObject
             $result->addError(
                 _t(
                     __CLASS__ . '.ERRORLOCKEDOUT2',
-                    'Your account has been temporarily disabled because of too many failed attempts at ' .
-                    'logging in. Please try again in {count} minutes.',
+                    'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
                     null,
                     array('count' => static::config()->get('lock_out_delay_mins'))
                 )

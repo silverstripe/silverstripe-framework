@@ -39,11 +39,11 @@ HTML
         );
 
         $result = $parser->getBySelector('div.one');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
         $result = $parser->getBySelector('div.two');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
         $result = $parser->getBySelector('div.three');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
 
         $result = $parser->getBySelector('div#A p.other');
         $this->assertEquals("result", $result[0] . '');

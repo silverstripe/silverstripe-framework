@@ -35,7 +35,7 @@ class InheritedPermissionsTest extends SapphireTest
             ->setDefaultPermissions($this->rootPermissions = new TestDefaultPermissionChecker());
         Injector::inst()->registerService(
             $permission,
-            PermissionChecker::class.'.testpermissions'
+            PermissionChecker::class . '.testpermissions'
         );
 
         // Reset root permission

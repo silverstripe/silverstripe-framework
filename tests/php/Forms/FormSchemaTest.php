@@ -35,7 +35,7 @@ class FormSchemaTest extends SapphireTest
     {
         $form = new Form(null, 'TestForm', new FieldList(), new FieldList());
         $formSchema = new FormSchema();
-        $expected = json_decode(file_get_contents(__DIR__.'/FormSchemaTest/testGetSchema.json'), true);
+        $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testGetSchema.json'), true);
 
         $schema = $formSchema->getSchema($form);
         $this->assertInternalType('array', $schema);
@@ -164,7 +164,7 @@ class FormSchemaTest extends SapphireTest
             )
         );
         $formSchema = new FormSchema();
-        $expected = json_decode(file_get_contents(__DIR__.'/FormSchemaTest/testGetNestedSchema.json'), true);
+        $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testGetNestedSchema.json'), true);
         $schema = $formSchema->getSchema($form);
 
         $this->assertInternalType('array', $schema);
@@ -206,7 +206,7 @@ class FormSchemaTest extends SapphireTest
         );
         $formSchema = new FormSchema();
         $schema = $formSchema->getSchema($form);
-        $expected = json_decode(file_get_contents(__DIR__.'/FormSchemaTest/testSchemaValidation.json'), true);
+        $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testSchemaValidation.json'), true);
         $this->assertInternalType('array', $schema);
         $this->assertEquals($expected, $schema);
     }

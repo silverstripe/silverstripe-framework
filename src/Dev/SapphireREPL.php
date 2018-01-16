@@ -97,7 +97,7 @@ class SapphireREPL extends Controller
                 } catch (Exception $__repl_exception) {
                     echo CLI::start_colour("red");
                     printf(
-                        '%s (code: %d) got thrown'.PHP_EOL,
+                        '%s (code: %d) got thrown' . PHP_EOL,
                         get_class($__repl_exception),
                         $__repl_exception->getCode()
                     );

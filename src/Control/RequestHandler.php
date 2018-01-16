@@ -189,7 +189,7 @@ class RequestHandler extends ViewableData
             user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
         }
 
-        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.static::class;
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         try {
             if (!$this->hasAction($action)) {
@@ -266,8 +266,7 @@ class RequestHandler extends ViewableData
                             $class = static::class;
                             $latestParams = var_export($request->latestParams(), true);
                             Debug::message(
-                                "Rule '{$rule}' matched to action '{$action}' on {$class}. ".
-                                "Latest request params: {$latestParams}"
+                                "Rule '{$rule}' matched to action '{$action}' on {$class}. " . "Latest request params: {$latestParams}"
                             );
                         }
 
@@ -306,7 +305,7 @@ class RequestHandler extends ViewableData
      */
     protected function handleAction($request, $action)
     {
-        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.static::class;
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         if (!$this->hasMethod($action)) {
             return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
@@ -566,8 +565,7 @@ class RequestHandler extends ViewableData
 
         // no link defined by default
         trigger_error(
-            'Request handler '.static::class. ' does not have a url_segment defined. '.
-            'Relying on this link may be an application error',
+            'Request handler ' . static::class . ' does not have a url_segment defined. ' . 'Relying on this link may be an application error',
             E_USER_WARNING
         );
         return null;

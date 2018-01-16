@@ -83,8 +83,7 @@ class ShortcodeParserTest extends SapphireTest
     {
         $tests = array(
             '[test_shortcode]',
-            '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]'.
-            '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
+            '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]' . '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
         );
 
         foreach ($tests as $test) {

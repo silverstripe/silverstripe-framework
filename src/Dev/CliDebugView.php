@@ -119,7 +119,7 @@ class CliDebugView extends DebugView
         $output .= CLI::text(str_repeat('=', self::config()->columns), 'green');
         $output .= PHP_EOL;
         $output .= CLI::text($this->formatCaller($caller), 'blue', null, true);
-        $output .= PHP_EOL.PHP_EOL;
+        $output .= PHP_EOL . PHP_EOL;
         if (is_string($val)) {
             $output .= wordwrap($val, self::config()->columns);
         } else {

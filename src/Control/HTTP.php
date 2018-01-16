@@ -205,14 +205,14 @@ class HTTP
         }
 
         $host = (isset($parts['host'])) ? $parts['host'] : '';
-        $port = (isset($parts['port']) && $parts['port'] != '') ? ':'.$parts['port'] : '';
+        $port = (isset($parts['port']) && $parts['port'] != '') ? ':' . $parts['port'] : '';
         $path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
 
         // handle URL params which are existing / new
         $params = ($params) ?  '?' . http_build_query($params, null, $separator) : '';
 
         // keep fragments (anchors) intact.
-        $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#'.$parts['fragment'] : '';
+        $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#' . $parts['fragment'] : '';
 
         // Recompile URI segments
         $newUri =  $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
@@ -465,7 +465,7 @@ class HTTP
             } elseif ((is_bool($value) && $value) || $value === "true") {
                 $cacheControlHeaders[$header] = $header;
             } else {
-                $cacheControlHeaders[$header] = $header."=".$value;
+                $cacheControlHeaders[$header] = $header . "=" . $value;
             }
         }
 

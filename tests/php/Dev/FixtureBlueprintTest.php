@@ -44,11 +44,11 @@ class FixtureBlueprintTest extends SapphireTest
                 'ManyManyRelation' =>
                     array(
                         array(
-                            "=>".DataObjectRelation::class.".relation1" => array(),
+                            "=>" . DataObjectRelation::class . ".relation1" => array(),
                             "Label" => 'This is a label for relation 1'
                         ),
                         array(
-                            "=>".DataObjectRelation::class.".relation2" => array(),
+                            "=>" . DataObjectRelation::class . ".relation2" => array(),
                             "Label" => 'This is a label for relation 2'
                         )
                     )
@@ -109,8 +109,7 @@ class FixtureBlueprintTest extends SapphireTest
             'one',
             array(
                 'ManyManyRelation' =>
-                    '=>'.DataObjectRelation::class.'.relation1,' .
-                    '=>'.DataObjectRelation::class.'.relation2'
+                    '=>' . DataObjectRelation::class . '.relation1,' . '=>' . DataObjectRelation::class . '.relation2'
             ),
             array(
                 DataObjectRelation::class => array(
@@ -129,8 +128,8 @@ class FixtureBlueprintTest extends SapphireTest
             array(
                 // Note; using array format here, not comma separated
                 'HasManyRelation' => array(
-                    '=>'.DataObjectRelation::class.'.relation1',
-                    '=>'.DataObjectRelation::class.'.relation2'
+                    '=>' . DataObjectRelation::class . '.relation1',
+                    '=>' . DataObjectRelation::class . '.relation2'
                 )
             ),
             array(
@@ -177,7 +176,7 @@ class FixtureBlueprintTest extends SapphireTest
         $obj = $blueprint->createObject(
             'one',
             array(
-                'ManyManyRelation' => '=>'.DataObjectRelation::class.'.unknown_identifier'
+                'ManyManyRelation' => '=>' . DataObjectRelation::class . '.unknown_identifier'
             ),
             array(
                 DataObjectRelation::class => array(
@@ -202,7 +201,7 @@ class FixtureBlueprintTest extends SapphireTest
         $obj = $blueprint->createObject(
             'one',
             array(
-                'ManyManyRelation' => DataObjectRelation::class.'.relation1'
+                'ManyManyRelation' => DataObjectRelation::class . '.relation1'
             ),
             array(
                 DataObjectRelation::class => array(

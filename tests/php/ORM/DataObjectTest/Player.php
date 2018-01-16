@@ -24,13 +24,13 @@ class Player extends Member implements TestOnly
     );
 
     private static $has_many = array(
-        'Fans' => Fan::class.'.Favourite', // Polymorphic - Player fans
-        'CaptainTeams' => Team::class.'.Captain',
-        'FoundingTeams' => Team::class.'.Founder'
+        'Fans' => Fan::class . '.Favourite', // Polymorphic - Player fans
+        'CaptainTeams' => Team::class . '.Captain',
+        'FoundingTeams' => Team::class . '.Founder'
     );
 
     private static $belongs_to = array(
-        'CompanyOwned' => Company::class.'.Owner'
+        'CompanyOwned' => Company::class . '.Owner'
     );
 
     private static $searchable_fields = array(

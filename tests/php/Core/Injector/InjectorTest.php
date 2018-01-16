@@ -616,7 +616,7 @@ class InjectorTest extends SapphireTest
             NewRequirementsBackend::class,
             DummyRequirements::class => array(
                 'constructor' => array(
-                    '%$'.OriginalRequirementsBackend::class
+                    '%$' . OriginalRequirementsBackend::class
                 )
             )
         );
@@ -634,7 +634,7 @@ class InjectorTest extends SapphireTest
             array(
             DummyRequirements::class => array(
                 'constructor' => array(
-                    '%$'.NewRequirementsBackend::class
+                    '%$' . NewRequirementsBackend::class
                 )
             )
             )
@@ -690,7 +690,7 @@ class InjectorTest extends SapphireTest
         $config = array(
             OriginalRequirementsBackend::class,
             DummyRequirements::class => array(
-                'class' => DummyRequirements::class.'(\'%$'.OriginalRequirementsBackend::class.'\')'
+                'class' => DummyRequirements::class . '(\'%$' . OriginalRequirementsBackend::class . '\')'
             )
         );
         $injector->load($config);
@@ -730,7 +730,7 @@ class InjectorTest extends SapphireTest
         Config::modify()->merge(
             Injector::class,
             MyChildClass::class,
-            '%$'.MyParentClass::class
+            '%$' . MyParentClass::class
         );
 
         // Class isn't inherited and parent properties are ignored
@@ -766,15 +766,15 @@ class InjectorTest extends SapphireTest
         // make sure convert service property is not called on direct calls to create, only on configured
         // declarations to avoid un-needed function calls
         $injector = new Injector();
-        $item = $injector->create(ConstructableObject::class, '%$'.TestObject::class);
-        $this->assertEquals('%$'.TestObject::class, $item->property);
+        $item = $injector->create(ConstructableObject::class, '%$' . TestObject::class);
+        $this->assertEquals('%$' . TestObject::class, $item->property);
 
         // do it again but have test object configured as a constructor dependency
         $injector = new Injector();
         $config = array(
             ConstructableObject::class => array(
                 'constructor' => array(
-                    '%$'.TestObject::class
+                    '%$' . TestObject::class
                 )
             )
         );
@@ -788,7 +788,7 @@ class InjectorTest extends SapphireTest
         $config = array(
             ConstructableObject::class => array(
                 'constructor' => array(
-                    '%$'.TestObject::class
+                    '%$' . TestObject::class
                 )
             ),
         );
