@@ -6,7 +6,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\ApcuCacheFactory;
 use SilverStripe\Core\Cache\MemcachedCacheFactory;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Test\Cache\CacheTest\MockCache;
+use SilverStripe\Core\Tests\Cache\CacheTest\MockCache;
 use SilverStripe\Dev\SapphireTest;
 use Symfony\Component\Cache\Simple\ApcuCache;
 use Symfony\Component\Cache\Simple\MemcachedCache;
