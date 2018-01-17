@@ -57,20 +57,20 @@ The following example is taken from the [Redux Github page](https://github.com/r
 function counter(state = 0, action) {
   switch (action.type) {
   case 'INCREMENT':
-    return state + 1
+    return state + 1;
   case 'DECREMENT':
-    return state - 1
+    return state - 1;
   default:
     return state
   }
 }
 
-let store = createStore(counter)
+let store = createStore(counter);
 store.subscribe(() =>
   console.log(store.getState())
-)
+);
 // Call an action
-store.dispatch({ type: 'INCREMENT' })
+store.dispatch({ type: 'INCREMENT' });
 // 1
 ```
 
@@ -169,12 +169,13 @@ export default LoggingService;
 
 Now, let's add some middleware to that service. The signature of middleware is: 
 ```js
-(next) => (args) => next(args)
+const middleware = (next) => (args) => next(args);
 ```
 Where `next()` is the next customisation in the "chain" of middleware. Before invoking the next implementation, you can add whatever customisations you need. Here's how we would use middleware to enhance `LoggingService`.
 
 ```js
 import thirdPartyLogger from 'third-party-logger';
+
 const addLoggingMiddleware = (next) => (error) => {
     if (error.type === LoggingService.CRITICAL) {
         thirdpartyLogger.send(error.message);
@@ -379,16 +380,16 @@ Using the `PhotoItem` example above, let's create a customised `PhotoItem` that 
 
 ```js
 const enhancedPhoto = (PhotoItem) => (props) => {
-    const badge = props.isNew ? 
-      <div className="badge">New!</div> : 
-      null;
+  const badge = props.isNew ? 
+    <div className="badge">New!</div> : 
+    null;
 
-    return (
-        <div>
-            {badge}
-            <PhotoItem {...props} />
-        </div>
-    );
+  return (
+    <div>
+      {badge}
+      <PhotoItem {...props} />
+    </div>
+  );
 }
 
 const EnhancedPhotoItem = enhancedPhoto(PhotoItem);
@@ -400,23 +401,22 @@ Alternatively, this component could be expressed with an ES6 class, rather than 
 function.
 
 ```js
-const enhancedPhoto = (PhotoItem) => {
-    return class EnhancedPhotoItem extends React.Component {
-        render() {
-            const badge = this.props.isNew ? 
-              <div className="badge">New!</div> : 
-              null;
+const enhancedPhoto = (PhotoItem) => (
+  class EnhancedPhotoItem extends React.Component {
+    render() {
+      const badge = this.props.isNew ? 
+        <div className="badge">New!</div> : 
+        null;
 
-            return (
-                <div>
-                    {badge}
-                    <PhotoItem {...this.props} />
-                </div>
-            );
-
-        }
+      return (
+        <div>
+          {badge}
+          <PhotoItem {...this.props} />
+        </div>
+      );
     }
-}
+  }
+);
 ```
 
 When components are stateless, using a simple function in lieu of a class is recommended.
@@ -428,12 +428,15 @@ If your component has dependencies, you can add them via the injector using the 
 higher order component. The function accepts the following arguments:
 
 ```js
-inject([dependencies], mapDependenciesToProps)(Component)
+inject([dependencies], mapDependenciesToProps, getContext)(Component)
 ```
 * **[dependencies]**: An array of dependencies (or a string, if just one)
 * **mapDependenciesToProps**: (optional) All dependencies are passed into this function as params. The function
 is expected to return a map of props to dependencies. If this parameter is not specified,
 the prop names and the service names will mirror each other.
+* **getContext**: A callback function that will calculate the context to use for determining which
+tranformations apply to the dependencies. This defaults to the current context. This could help when any
+customisations that may calls for a change (or tweak) to the current context.
 
 The result is a function that is ready to apply to a component.
  
@@ -450,9 +453,7 @@ __my-module/js/components/Gallery.js__
 import React from 'react';
 import { inject } from 'lib/Injector';
 
-class Gallery extends React.Component 
-
-{
+class Gallery extends React.Component {
   render() {
     const { SearchComponent, ItemComponent } = this.props;
     return (
@@ -466,15 +467,41 @@ class Gallery extends React.Component
   }
 }
 
-export default inject(
-  Gallery, 
+export default inject( 
   ['GalleryItem', 'SearchBar'], 
   (GalleryItem, SearchBar) => ({
     ItemComponent: GalleryItem,
     SearchComponent: SearchBar
   })
- );
+)(Gallery);
 ```
+
+The properties used by `inject()` are soft-supplied. This means of a parent calling a component which uses
+`inject()` could choose to overwrite the dependencies which `inject()` would've otherwise supplied.
+Here is an example using the above `Gallery` component with the dependency `ItemComponent` overwritten by the
+calling component. We pull in a previously registered `PreviewItem` to replace the former `GalleryItem`.
+
+__my-module/js/components/PreviewSection.js__
+```js
+import React from 'react';
+import { inject } from 'lib/Injector';
+
+class PreviewSection extends React.Component {
+  render() {
+    const { Gallery, PreviewItem } = this.props;
+    return (
+      <div className="preview-section">
+        <div className="preview-sidebar">Sidebar here</div>
+        <Gallery ItemComponent={PreviewItem}/>
+      </div>
+    );
+  }
+}
+
+export default inject(
+  ['Gallery', 'PreviewItem']
+)(PreviewSection);
+``` 
 
 ## Using the injector directly within your component
 
@@ -501,11 +528,16 @@ export default withInjector(MyGallery);
 
 ## Using Injector to customise forms
 
-Forms in the React layer are built declaratively, using the `FormSchema` API. A component called `FormBuilderLoader` is given a URL to a form schema definition, and it populates itself with fields (both structural and data-containing) and actions to create the UI for the form. Each form is required to have an `identifier` property, which is used to create context for Injector when field components are fetched. This affords developers the opportunity provide very surgical customisations.
+Forms in the React layer are built declaratively, using the `FormSchema` API. A component called
+`FormBuilderLoader` is given a URL to a form schema definition, and it populates itself with fields
+(both structural and data-containing) and actions to create the UI for the form. Each form is required
+to have an `identifier` property, which is used to create context for Injector when field components
+are fetched. This affords developers the opportunity provide very surgical customisations.
 
 ### Updating the form schema
 
-Most behavioural and aesthetic customisations will happen via a mutation of the form schema. For this, we'll use the `updater.form.alterSchema()` function.
+Most behavioural and aesthetic customisations will happen via a mutation of the form schema. For this,
+we'll use the `updater.form.alterSchema()` function.
 
 ```js
 Injector.transform(
@@ -523,7 +555,9 @@ Injector.transform(
 );
 ```
 
-The `alterSchema()` function takes a callback, with an instance of `FormStateManager` (`form` in the above example) as a parameter. `FormStateMangaer` allows you to declaratively update the form schema API using several helper methods, including:
+The `alterSchema()` function takes a callback, with an instance of `FormStateManager` (`form` in the
+above example) as a parameter. `FormStateMangaer` allows you to declaratively update the form schema
+API using several helper methods, including:
 
 * `updateField(fieldName:string, updates:object)`
 * `updateFields({ myFieldName: updates:object })`
