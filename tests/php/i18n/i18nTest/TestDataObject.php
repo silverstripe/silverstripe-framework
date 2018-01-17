@@ -34,7 +34,7 @@ class TestDataObject extends DataObject implements TestOnly
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['MyProperty'] = _t(__CLASS__.'.MyProperty', 'My Property');
+        $labels['MyProperty'] = _t(__CLASS__ . '.MyProperty', 'My Property');
 
         return $labels;
     }

@@ -14,7 +14,7 @@ class DetailedErrorFormatterTest extends SapphireTest
         $formatter = new DetailedErrorFormatter();
         $exception = $generator->mockException();
 
-        $output = ''.$formatter->format(['context' => [
+        $output = '' . $formatter->format(['context' => [
             'exception' => $exception,
         ]]);
 

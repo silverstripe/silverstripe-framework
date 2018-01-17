@@ -79,7 +79,7 @@ class ThemeManifest implements ThemeList
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
-                CacheInterface::class.'.thememanifest',
+                CacheInterface::class . '.thememanifest',
                 [ 'namespace' => 'thememanifest' . ($includeTests ? '_tests' : '') ]
             );
         }
@@ -165,7 +165,7 @@ class ThemeManifest implements ThemeList
             return;
         }
         $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
-        $this->themes[] = "/".$dir;
+        $this->themes[] = "/" . $dir;
     }
 
     /**

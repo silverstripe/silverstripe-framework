@@ -179,29 +179,29 @@ class DataObjectSchemaTest extends SapphireTest
         );
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class.'.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class.'.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)',
-                'MoneyField' => DataObjectSchemaTest\HasFields::class.'.Money',
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
+                'MoneyField' => DataObjectSchemaTest\HasFields::class . '.Money',
             ],
             $schema->fieldSpecs(HasFields::class, DataObjectSchema::INCLUDE_CLASS)
         );
         // DB_ONLY excludes composite field MoneyField
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class.'.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class.'.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)'
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)'
             ],
             $schema->fieldSpecs(
                 HasFields::class,
@@ -212,10 +212,10 @@ class DataObjectSchemaTest extends SapphireTest
         // Use all options at once
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)',
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
             ],
             $schema->fieldSpecs(
                 HasFields::class,

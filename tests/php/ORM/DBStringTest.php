@@ -26,7 +26,7 @@ class DBStringTest extends SapphireTest
     {
         /** @var DBString $dbField */
         $dbField = Injector::inst()->create(
-            DBStringTest\MyStringField::class."(['default' => 'Here is my default text'])",
+            DBStringTest\MyStringField::class . "(['default' => 'Here is my default text'])",
             'Myfield'
         );
         $this->assertEquals(

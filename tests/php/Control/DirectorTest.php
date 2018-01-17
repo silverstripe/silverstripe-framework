@@ -821,7 +821,7 @@ class DirectorTest extends SapphireTest
 
         $response = Director::test('some-dummy-url');
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals(_t(Director::class.'.REQUEST_ABORTED', 'Request aborted'), $response->getBody());
+        $this->assertEquals(_t(Director::class . '.REQUEST_ABORTED', 'Request aborted'), $response->getBody());
 
         $this->assertEquals(2, $filter->preCalls);
         $this->assertEquals(2, $filter->postCalls);
@@ -830,7 +830,7 @@ class DirectorTest extends SapphireTest
 
         $response = Director::test('some-dummy-url');
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals(_t(Director::class.'.INVALID_REQUEST', 'Invalid request'), $response->getBody());
+        $this->assertEquals(_t(Director::class . '.INVALID_REQUEST', 'Invalid request'), $response->getBody());
 
         $this->assertEquals(3, $filter->preCalls);
 

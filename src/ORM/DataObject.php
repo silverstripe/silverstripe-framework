@@ -321,7 +321,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         if (!is_array($record)) {
             if (is_object($record)) {
-                $passed = "an object of type '".get_class($record)."'";
+                $passed = "an object of type '" . get_class($record) . "'";
             } else {
                 $passed = "The value '$record'";
             }
@@ -359,7 +359,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             foreach ($fields as $field => $fieldSpec) {
                 $fieldClass = strtok($fieldSpec, ".");
                 if (!array_key_exists($field, $record)) {
-                    $this->record[$field.'_Lazy'] = $fieldClass;
+                    $this->record[$field . '_Lazy'] = $fieldClass;
                 }
             }
         }
@@ -636,7 +636,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         $default = 'one ' . $this->i18n_singular_name() . '|{count} ' . $this->i18n_plural_name();
         return i18n::_t(
-            static::class.'.PLURALS',
+            static::class . '.PLURALS',
             $default,
             [ 'count' => $count ]
         );
@@ -675,7 +675,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function i18n_singular_name()
     {
-        return _t(static::class.'.SINGULARNAME', $this->singular_name());
+        return _t(static::class . '.SINGULARNAME', $this->singular_name());
     }
 
     /**
@@ -710,7 +710,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function i18n_plural_name()
     {
-        return _t(static::class.'.PLURALNAME', $this->plural_name());
+        return _t(static::class . '.PLURALNAME', $this->plural_name());
     }
 
     /**
@@ -809,7 +809,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                         // If the intermediate relationship objects haven't been created, then write them
                         if ($i<sizeof($relations)-1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
                             $relObj->write();
-                            $relatedFieldName = $relation."ID";
+                            $relatedFieldName = $relation . "ID";
                             $parentObj->$relatedFieldName = $relObj->ID;
                             $parentObj->write();
                         }
@@ -828,7 +828,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 if ($relObj) {
                     $relObj->$fieldName = $value;
                     $relObj->write();
-                    $relatedFieldName = $relation."ID";
+                    $relatedFieldName = $relation . "ID";
                     $this->$relatedFieldName = $relObj->ID;
                     $relObj->flushCache();
                 } else {
@@ -1151,7 +1151,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         if ($this->ObsoleteClassName) {
             return new ValidationException(
-                "Object is of class '{$this->ObsoleteClassName}' which doesn't exist - ".
+                "Object is of class '{$this->ObsoleteClassName}' which doesn't exist - " .
                 "you need to change the ClassName before you can write it"
             );
         }
@@ -1281,7 +1281,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Perform an insert on the base table
-        $insert = new SQLInsert('"'.$baseTable.'"');
+        $insert = new SQLInsert('"' . $baseTable . '"');
         $insert
             ->assign('"Created"', $now)
             ->execute();
@@ -1565,8 +1565,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (empty($component)) {
                 $component = Injector::inst()->create($class);
                 if ($polymorphic) {
-                    $component->{$joinField.'ID'} = $this->ID;
-                    $component->{$joinField.'Class'} = static::class;
+                    $component->{$joinField . 'ID'} = $this->ID;
+                    $component->{$joinField . 'Class'} = static::class;
                 } else {
                     $component->$joinField = $this->ID;
                 }
@@ -2167,8 +2167,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Do we have a field that needs to be lazy loaded?
-        if (isset($this->record[$field.'_Lazy'])) {
-            $tableClass = $this->record[$field.'_Lazy'];
+        if (isset($this->record[$field . '_Lazy'])) {
+            $tableClass = $this->record[$field . '_Lazy'];
             $this->loadLazyFields($tableClass);
         }
 
@@ -2368,8 +2368,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // If we've just lazy-loaded the column, then we need to populate the $original array
-        if (isset($this->record[$fieldName.'_Lazy'])) {
-            $tableClass = $this->record[$fieldName.'_Lazy'];
+        if (isset($this->record[$fieldName . '_Lazy'])) {
+            $tableClass = $this->record[$fieldName . '_Lazy'];
             $this->loadLazyFields($tableClass);
         }
 
@@ -2751,7 +2751,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     // Select db object
                     $component = $dbObject;
                 } else {
-                    user_error("$relation is not a relation/field on ".get_class($component), E_USER_ERROR);
+                    user_error("$relation is not a relation/field on " . get_class($component), E_USER_ERROR);
                 }
             }
         }
@@ -3659,9 +3659,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $singularName = $this->singular_name();
         $conjunction = preg_match('/^[aeiou]/i', $singularName) ? 'An ' : 'A ';
         return [
-            static::class.'.SINGULARNAME' => $this->singular_name(),
-            static::class.'.PLURALNAME' => $pluralName,
-            static::class.'.PLURALS' => [
+            static::class . '.SINGULARNAME' => $this->singular_name(),
+            static::class . '.PLURALNAME' => $pluralName,
+            static::class . '.PLURALS' => [
                 'one' => $conjunction . $singularName,
                 'other' => '{count} ' . $pluralName
             ]

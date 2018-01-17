@@ -44,7 +44,7 @@ class FixtureBlueprint
 
     /** @config */
     private static $dependencies = array(
-        'factory' => '%$'.FixtureFactory::class,
+        'factory' => '%$' . FixtureFactory::class,
     );
 
     /**
@@ -221,10 +221,10 @@ class FixtureBlueprint
                     } else {
                         $hasOneField = preg_replace('/ID$/', '', $fieldName);
                         if ($className = $schema->hasOneComponent($class, $hasOneField)) {
-                            $obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
+                            $obj->{$hasOneField . 'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
                             // Inject class for polymorphic relation
                             if ($className === 'SilverStripe\\ORM\\DataObject') {
-                                $obj->{$hasOneField.'Class'} = $fieldClass;
+                                $obj->{$hasOneField . 'Class'} = $fieldClass;
                             }
                         }
                     }

@@ -251,7 +251,7 @@ trait Extensible
         foreach ($config as $key => $candidate) {
             // extensions with parameters will be stored in config as ExtensionName("Param").
             if (strcasecmp($candidate, $extension) === 0 ||
-                stripos($candidate, $extension.'(') === 0
+                stripos($candidate, $extension . '(') === 0
             ) {
                 $found = true;
                 unset($config[$key]);

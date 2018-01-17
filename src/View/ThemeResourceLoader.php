@@ -108,7 +108,7 @@ class ThemeResourceLoader
 
         // If there is no slash / colon it's a legacy theme
         if ($slashPos === false && count($parts) === 1) {
-            return THEMES_DIR.'/'.$identifier;
+            return THEMES_DIR . '/' . $identifier;
         }
 
         // Extract from <vendor>/<module>:<theme> format.

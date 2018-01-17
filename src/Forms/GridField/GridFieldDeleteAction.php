@@ -119,11 +119,11 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if (!$record->canEdit()) {
                 return null;
             }
-            $title = _t(__CLASS__.'.UnlinkRelation', "Unlink");
+            $title = _t(__CLASS__ . '.UnlinkRelation', "Unlink");
 
             $field = GridField_FormAction::create(
                 $gridField,
-                'UnlinkRelation'.$record->ID,
+                'UnlinkRelation' . $record->ID,
                 false,
                 "unlinkrelation",
                 array('RecordID' => $record->ID)
@@ -138,14 +138,14 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
             $field = GridField_FormAction::create(
                 $gridField,
-                'DeleteRecord'.$record->ID,
+                'DeleteRecord' . $record->ID,
                 false,
                 "deleterecord",
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action')
-                ->setAttribute('title', _t(__CLASS__.'.Delete', "Delete"))
-                ->setDescription(_t(__CLASS__.'.DELETE_DESCRIPTION', 'Delete'));
+                ->setAttribute('title', _t(__CLASS__ . '.Delete', "Delete"))
+                ->setDescription(_t(__CLASS__ . '.DELETE_DESCRIPTION', 'Delete'));
         }
         return $field->Field();
     }
@@ -171,7 +171,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if ($actionName == 'deleterecord') {
                 if (!$item->canDelete()) {
                     throw new ValidationException(
-                        _t(__CLASS__.'.DeletePermissionsFailure', "No delete permissions")
+                        _t(__CLASS__ . '.DeletePermissionsFailure', "No delete permissions")
                     );
                 }
 
@@ -179,7 +179,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             } else {
                 if (!$item->canEdit()) {
                     throw new ValidationException(
-                        _t(__CLASS__.'.EditPermissionsFailure', "No permission to unlink record")
+                        _t(__CLASS__ . '.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
 

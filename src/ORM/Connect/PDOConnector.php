@@ -199,7 +199,7 @@ class PDOConnector extends DBConnector
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
-            $driver.implode(';', $dsn),
+            $driver . implode(';', $dsn),
             empty($parameters['username']) ? '' : $parameters['username'],
             empty($parameters['password']) ? '' : $parameters['password'],
             $options

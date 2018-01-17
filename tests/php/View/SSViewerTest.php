@@ -206,7 +206,7 @@ class SSViewerTest extends SapphireTest
         if (!$data) {
             $data = new SSViewerTest\TestFixture();
         }
-        return trim(''.$t->process($data));
+        return trim('' . $t->process($data));
     }
 
     public function testRequirements()
@@ -254,7 +254,7 @@ class SSViewerTest extends SapphireTest
 
         // and make sure the combined content matches the input content, i.e. no loss of functionality
         if (!file_exists($combinedTestFilePath)) {
-            $this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
+            $this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
         }
         $combinedTestFileContents = file_get_contents($combinedTestFilePath);
         $this->assertContains($jsFileContents, $combinedTestFileContents);
@@ -1398,7 +1398,7 @@ after'
             'BazBarQux',
             $this->render(
                 '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
-                .'<% end_with %>',
+                . '<% end_with %>',
                 $data
             )
         );
@@ -1586,7 +1586,7 @@ after'
     public function testLayout()
     {
         $this->useTestTheme(
-            __DIR__.'/SSViewerTest',
+            __DIR__ . '/SSViewerTest',
             'layouttest',
             function () {
                 $template = new SSViewer(array('Page'));
@@ -1871,7 +1871,7 @@ EOC;
         ),
         );
         foreach ($templates as $template) {
-            $this->_renderWithSourceFileComments('SSViewerTestComments/'.$template['name'], $template['expected']);
+            $this->_renderWithSourceFileComments('SSViewerTestComments/' . $template['name'], $template['expected']);
         }
     }
     private function _renderWithSourceFileComments($name, $expected)
@@ -1935,7 +1935,7 @@ EOC;
             );
         } else {
             $this->markTestSkipped(
-                'Requirement will always fail if the framework dir is not '.
+                'Requirement will always fail if the framework dir is not ' .
                 'named \'framework\', since templates require hard coded paths'
             );
         }

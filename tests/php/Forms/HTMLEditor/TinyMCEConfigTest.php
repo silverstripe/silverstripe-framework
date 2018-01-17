@@ -19,7 +19,7 @@ class TinyMCEConfigTest extends SapphireTest
             $this->markTestSkipped("Test skipped without TinyMCE resources folder being installed");
         }
 
-        $langs = Director::baseFolder().'/'.ModuleResourceLoader::resourcePath($configDir).'/langs';
+        $langs = Director::baseFolder() . '/' . ModuleResourceLoader::resourcePath($configDir) . '/langs';
 
         // Test all langs exist as real files
         foreach (TinyMCEConfig::config()->get('tinymce_lang') as $locale => $resource) {

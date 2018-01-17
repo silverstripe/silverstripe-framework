@@ -135,7 +135,7 @@ if (!defined('ASSETS_PATH')) {
 
 // Custom include path - deprecated
 if (defined('CUSTOM_INCLUDE_PATH')) {
-    set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR   . get_include_path());
+    set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR . get_include_path());
 }
 
 // Define the temporary folder if it wasn't defined yet

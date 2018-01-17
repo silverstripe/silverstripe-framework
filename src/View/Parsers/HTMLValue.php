@@ -49,7 +49,7 @@ abstract class HTMLValue extends ViewableData
         $i = 0;
 
         foreach ($xp->query('//body//@*') as $attr) {
-            $key = "__HTMLVALUE_".($i++);
+            $key = "__HTMLVALUE_" . ($i++);
             $attrs[$key] = $attr->value;
             $attr->value = $key;
         }

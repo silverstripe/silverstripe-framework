@@ -149,23 +149,23 @@ class GridFieldVersionedState implements GridField_ColumnProvider
 
         if ($record->isOnLiveOnly()) {
             $flags['removedfromdraft'] = array(
-                'text' => _t(__CLASS__.'.ONLIVEONLYSHORT', 'On live only'),
-                'title' => _t(__CLASS__.'.ONLIVEONLYSHORTHELP', 'Item is published, but has been deleted from draft'),
+                'text' => _t(__CLASS__ . '.ONLIVEONLYSHORT', 'On live only'),
+                'title' => _t(__CLASS__ . '.ONLIVEONLYSHORTHELP', 'Item is published, but has been deleted from draft'),
             );
         } elseif ($record->isArchived()) {
             $flags['archived'] = array(
-                'text' => _t(__CLASS__.'.ARCHIVEDPAGESHORT', 'Archived'),
-                'title' => _t(__CLASS__.'.ARCHIVEDPAGEHELP', 'Item is removed from draft and live'),
+                'text' => _t(__CLASS__ . '.ARCHIVEDPAGESHORT', 'Archived'),
+                'title' => _t(__CLASS__ . '.ARCHIVEDPAGEHELP', 'Item is removed from draft and live'),
             );
         } elseif ($record->isOnDraftOnly()) {
             $flags['addedtodraft'] = array(
-                'text' => _t(__CLASS__.'.ADDEDTODRAFTSHORT', 'Draft'),
-                'title' => _t(__CLASS__.'.ADDEDTODRAFTHELP', "Item has not been published yet")
+                'text' => _t(__CLASS__ . '.ADDEDTODRAFTSHORT', 'Draft'),
+                'title' => _t(__CLASS__ . '.ADDEDTODRAFTHELP', "Item has not been published yet")
             );
         } elseif ($record->isModifiedOnDraft()) {
             $flags['modified'] = array(
-                'text' => _t(__CLASS__.'.MODIFIEDONDRAFTSHORT', 'Modified'),
-                'title' => _t(__CLASS__.'.MODIFIEDONDRAFTHELP', 'Item has unpublished changes'),
+                'text' => _t(__CLASS__ . '.MODIFIEDONDRAFTSHORT', 'Modified'),
+                'title' => _t(__CLASS__ . '.MODIFIEDONDRAFTHELP', 'Item has unpublished changes'),
             );
         }
 

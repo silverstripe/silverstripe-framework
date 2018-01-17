@@ -86,14 +86,14 @@ class CMSMemberLoginForm extends MemberLoginForm
 
         // Make actions
         $actions = FieldList::create([
-            FormAction::create('doLogin', _t(__CLASS__.'.BUTTONLOGIN', "Let me back in"))
+            FormAction::create('doLogin', _t(__CLASS__ . '.BUTTONLOGIN', "Let me back in"))
                 ->addExtraClass('btn-primary'),
             LiteralField::create(
                 'doLogout',
                 sprintf(
                     '<a class="btn btn-secondary" href="%s" target="_top">%s</a>',
                     Convert::raw2att($logoutLink),
-                    _t(__CLASS__.'.BUTTONLOGOUT', "Log out")
+                    _t(__CLASS__ . '.BUTTONLOGOUT', "Log out")
                 )
             ),
             LiteralField::create(
@@ -101,7 +101,7 @@ class CMSMemberLoginForm extends MemberLoginForm
                 sprintf(
                     '<a href="%s" class="cms-security__container__form__forgotPassword btn btn-secondary" target="_top">%s</a>',
                     $this->getExternalLink('lostpassword'),
-                    _t(__CLASS__.'.BUTTONFORGOTPASSWORD', "Forgot password")
+                    _t(__CLASS__ . '.BUTTONFORGOTPASSWORD', "Forgot password")
                 )
             )
         ]);
@@ -125,6 +125,6 @@ class CMSMemberLoginForm extends MemberLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(__CLASS__.'.AUTHENTICATORNAME', 'CMS Member Login Form');
+        return _t(__CLASS__ . '.AUTHENTICATORNAME', 'CMS Member Login Form');
     }
 }

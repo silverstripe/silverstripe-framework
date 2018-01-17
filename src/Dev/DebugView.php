@@ -222,7 +222,7 @@ class DebugView
         $debugCSS = ModuleResourceLoader::singleton()
             ->resolveURL('silverstripe/framework:client/styles/debug.css');
         $output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';
-        $output .= '<link rel="stylesheet" type="text/css" href="'. $debugCSS .'" />';
+        $output .= '<link rel="stylesheet" type="text/css" href="' . $debugCSS . '" />';
         $output .= '</head>';
         $output .= '<body>';
 
@@ -367,7 +367,7 @@ class DebugView
     public function renderVariable($val, $caller)
     {
         $output = '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
-        $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
+        $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller) . " - </span>\n";
         if (is_string($val)) {
             $output .= wordwrap($val, self::config()->columns);
         } else {

@@ -37,7 +37,7 @@ class VersionProvider
         foreach ($modules as $module => $title) {
             $version = isset($lockModules[$module])
                 ? $lockModules[$module]
-                : _t(__CLASS__.'.VERSIONUNKNOWN', 'Unknown');
+                : _t(__CLASS__ . '.VERSIONUNKNOWN', 'Unknown');
             $output[] = $title . ': ' . $version;
         }
         return implode(', ', $output);

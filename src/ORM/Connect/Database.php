@@ -285,7 +285,7 @@ abstract class Database
         }
 
         // Implode quoted column
-        return '"' . implode('"'.$separator.'"', $value) . '"';
+        return '"' . implode('"' . $separator . '"', $value) . '"';
     }
 
     /**

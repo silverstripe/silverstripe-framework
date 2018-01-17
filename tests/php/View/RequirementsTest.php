@@ -585,7 +585,7 @@ class RequirementsTest extends SapphireTest
 
         /* BLOCKED UNCOMBINED FILES ARE NOT INCLUDED */
         $this->setupCombinedRequirements($backend);
-        $backend->block($basePath .'/javascript/RequirementsTest_b.js');
+        $backend->block($basePath . '/javascript/RequirementsTest_b.js');
         $combinedFileName2 = '/_combinedfiles/RequirementsTest_bc-3748f67.js'; // SHA1 without file b included
         $combinedFilePath2 = TestAssetStore::base_path() . $combinedFileName2;
         clearstatcache(); // needed to get accurate file_exists() results
@@ -750,22 +750,22 @@ class RequirementsTest extends SapphireTest
 
         // Note: SSViewer theme automatically registered due to 'templates' directory
         $data->renderWith('RequirementsTest_Conditionals');
-        $this->assertFileIncluded($backend, 'css', $testPath .'/css/RequirementsTest_a.css');
+        $this->assertFileIncluded($backend, 'css', $testPath . '/css/RequirementsTest_a.css');
         $this->assertFileIncluded(
             $backend,
             'js',
             array(
-                $testPath .'/javascript/RequirementsTest_b.js',
-                $testPath .'/javascript/RequirementsTest_c.js'
+                $testPath . '/javascript/RequirementsTest_b.js',
+                $testPath . '/javascript/RequirementsTest_c.js'
             )
         );
-        $this->assertFileNotIncluded($backend, 'js', $testPath .'/javascript/RequirementsTest_a.js');
+        $this->assertFileNotIncluded($backend, 'js', $testPath . '/javascript/RequirementsTest_a.js');
         $this->assertFileNotIncluded(
             $backend,
             'css',
             array(
-                $testPath .'/css/RequirementsTest_b.css',
-                $testPath .'/css/RequirementsTest_c.css'
+                $testPath . '/css/RequirementsTest_b.css',
+                $testPath . '/css/RequirementsTest_c.css'
             )
         );
         $backend->clear();
@@ -775,22 +775,22 @@ class RequirementsTest extends SapphireTest
             )
         );
         $data->renderWith('RequirementsTest_Conditionals');
-        $this->assertFileNotIncluded($backend, 'css', $testPath .'/css/RequirementsTest_a.css');
+        $this->assertFileNotIncluded($backend, 'css', $testPath . '/css/RequirementsTest_a.css');
         $this->assertFileNotIncluded(
             $backend,
             'js',
             array(
-                $testPath .'/javascript/RequirementsTest_b.js',
-                $testPath .'/javascript/RequirementsTest_c.js'
+                $testPath . '/javascript/RequirementsTest_b.js',
+                $testPath . '/javascript/RequirementsTest_c.js'
             )
         );
-        $this->assertFileIncluded($backend, 'js', $testPath .'/javascript/RequirementsTest_a.js');
+        $this->assertFileIncluded($backend, 'js', $testPath . '/javascript/RequirementsTest_a.js');
         $this->assertFileIncluded(
             $backend,
             'css',
             array(
-                $testPath .'/css/RequirementsTest_b.css',
-                $testPath .'/css/RequirementsTest_c.css'
+                $testPath . '/css/RequirementsTest_b.css',
+                $testPath . '/css/RequirementsTest_c.css'
             )
         );
         Requirements::set_backend($holder);
@@ -929,10 +929,10 @@ EOS
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
-        $backend->javascript($basePath .'/javascript/RequirementsTest_a.js');
-        $backend->javascript($basePath .'/javascript/RequirementsTest_b.js?foo=bar&bla=blubb');
-        $backend->css($basePath .'/css/RequirementsTest_a.css');
-        $backend->css($basePath .'/css/RequirementsTest_b.css?foo=bar&bla=blubb');
+        $backend->javascript($basePath . '/javascript/RequirementsTest_a.js');
+        $backend->javascript($basePath . '/javascript/RequirementsTest_b.js?foo=bar&bla=blubb');
+        $backend->css($basePath . '/css/RequirementsTest_a.css');
+        $backend->css($basePath . '/css/RequirementsTest_b.css?foo=bar&bla=blubb');
 
         $urlGenerator->setNonceStyle('mtime');
         $html = $backend->includeInHTML($template);
