@@ -8,7 +8,6 @@ use SilverStripe\Core\TempFolder;
  * This file is the Framework constants bootstrap. It will prepare some basic common constants.
  *
  * It takes care of:
- *  - Normalisation of $_SERVER values
  *  - Initialisation of necessary constants (mostly paths)
  *
  * Initialized constants:
