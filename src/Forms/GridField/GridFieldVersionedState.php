@@ -1,12 +1,21 @@
 <?php
+
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Convert;
 
+/**
+ * @todo Move to siverstripe/versioned module
+ */
 class GridFieldVersionedState implements GridField_ColumnProvider
 {
+    /**
+     * Column name for versioned state
+     *
+     * @var string
+     */
     protected $column = null;
 
     /**
@@ -33,9 +42,12 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     public function augmentColumns($gridField, &$columns)
     {
+        if (!class_exists(Versioned::class)) {
+            return;
+        }
+
         $model = $gridField->getModelClass();
         $isModelVersioned = $model::has_extension(Versioned::class);
-
         if (!$isModelVersioned) {
             return;
         }
@@ -61,7 +73,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     public function getColumnsHandled($gridField)
     {
-        return [$this->column];
+        return $this->column ? [$this->column] : [];
     }
 
     /**
@@ -74,7 +86,6 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     public function getColumnContent($gridField, $record, $columnName)
     {
-
         $flagContent = '';
         $flags = $this->getStatusFlags($record);
         foreach ($flags as $class => $data) {
@@ -140,13 +151,16 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      *   )
      * ```
      *
-     * @param DataObject $record - the record to check status for
+     * @param Versioned|DataObject $record - the record to check status for
      * @return array
      */
     protected function getStatusFlags($record)
     {
-        $flags = array();
+        if (!$record->hasExtension(Versioned::class)) {
+            return [];
+        }
 
+        $flags = [];
         if ($record->isOnLiveOnly()) {
             $flags['removedfromdraft'] = array(
                 'text' => _t(__CLASS__ . '.ONLIVEONLYSHORT', 'On live only'),
