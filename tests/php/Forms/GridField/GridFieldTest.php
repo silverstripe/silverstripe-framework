@@ -2,13 +2,14 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use Psr\Log\InvalidArgumentException;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
@@ -28,6 +29,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
+use SilverStripe\Versioned\VersionedGridFieldStateExtension;
 
 class GridFieldTest extends SapphireTest
 {
@@ -36,6 +38,15 @@ class GridFieldTest extends SapphireTest
         Cheerleader::class,
         Player::class,
         Team::class,
+    ];
+
+    protected static $illegal_extensions = [
+        GridFieldConfig_RecordEditor::class => [
+            VersionedGridFieldStateExtension::class,
+        ],
+        GridFieldConfig_Base::class => [
+            VersionedGridFieldStateExtension::class,
+        ],
     ];
 
     /**
@@ -68,8 +79,7 @@ class GridFieldTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
 
-        $expectedComponents = new ArrayList(
-            array(
+        $expectedComponents = new ArrayList([
             new GridFieldToolbarHeader(),
             $sort = new GridFieldSortableHeader(),
             $filter = new GridFieldFilterHeader(),
@@ -77,8 +87,7 @@ class GridFieldTest extends SapphireTest
             new GridFieldPageCount('toolbar-header-right'),
             $pagination = new GridFieldPaginator(),
             new GridState_Component(),
-            )
-        );
+        ]);
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
         $pagination->setThrowExceptionOnBadDataType(false);
