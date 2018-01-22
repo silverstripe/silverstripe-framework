@@ -224,6 +224,6 @@ class MemberLoginForm extends BaseLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(self::class . '.AUTHENTICATORNAME', "E-mail &amp; Password");
+        return _t(self::class . '.AUTHENTICATORNAME', "E-mail & Password");
     }
 }
