@@ -476,8 +476,8 @@ export default inject(
 )(Gallery);
 ```
 
-The properties used by `inject()` are soft-supplied. This means of a parent calling a component which uses
-`inject()` could choose to overwrite the dependencies which `inject()` would've otherwise supplied.
+The properties used by `inject()` are soft-supplied. This means a parent calling a component that uses
+`inject()` could choose to overwrite the dependencies which `inject()` would have otherwise supplied.
 Here is an example using the above `Gallery` component with the dependency `ItemComponent` overwritten by the
 calling component. We pull in a previously registered `PreviewItem` to replace the former `GalleryItem`.
 
