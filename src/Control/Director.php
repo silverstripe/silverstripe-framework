@@ -468,8 +468,9 @@ class Director implements TemplateGlobalProvider
         if ($baseURL = self::config()->get('alternate_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
             $host = parse_url($baseURL, PHP_URL_HOST);
+            $port = parse_url($baseURL, PHP_URL_PORT);
             if ($host) {
-                return $host;
+                return $port ? "$host:$port" : $host;
             }
         }
 
@@ -487,8 +488,9 @@ class Director implements TemplateGlobalProvider
         if ($baseURL = self::config()->uninherited('default_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
             $host = parse_url($baseURL, PHP_URL_HOST);
+            $port = parse_url($baseURL, PHP_URL_PORT);
             if ($host) {
-                return $host;
+                return $port ? "$host:$port" : $host;
             }
         }
 
