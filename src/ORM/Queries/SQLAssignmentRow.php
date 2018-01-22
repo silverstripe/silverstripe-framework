@@ -76,7 +76,7 @@ class SQLAssignmentRow
 
         throw new InvalidArgumentException(
             "Nested field assignments should be given as a single parameterised item array in "
-            .  "array('?' => array('value')) format)"
+            . "array('?' => array('value')) format)"
         );
     }
 

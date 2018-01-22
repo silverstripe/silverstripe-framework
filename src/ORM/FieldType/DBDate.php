@@ -329,7 +329,7 @@ class DBDate extends DBField
 
         $matches = array();
         if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $this->getTimestamp()), $matches)) {
-            $date .= $matches[1].$matches[2].':'.$matches[3];
+            $date .= $matches[1] . $matches[2] . ':' . $matches[3];
         } else {
             $date .= 'Z';
         }
@@ -419,7 +419,7 @@ class DBDate extends DBField
             case "seconds":
                 $span = $ago;
                 return _t(
-                    __CLASS__.'.SECONDS_SHORT_PLURALS',
+                    __CLASS__ . '.SECONDS_SHORT_PLURALS',
                     '{count} sec|{count} secs',
                     ['count' => $span]
                 );
@@ -427,7 +427,7 @@ class DBDate extends DBField
             case "minutes":
                 $span = round($ago/60);
                 return _t(
-                    __CLASS__.'.MINUTES_SHORT_PLURALS',
+                    __CLASS__ . '.MINUTES_SHORT_PLURALS',
                     '{count} min|{count} mins',
                     ['count' => $span]
                 );
@@ -435,7 +435,7 @@ class DBDate extends DBField
             case "hours":
                 $span = round($ago/3600);
                 return _t(
-                    __CLASS__.'.HOURS_SHORT_PLURALS',
+                    __CLASS__ . '.HOURS_SHORT_PLURALS',
                     '{count} hour|{count} hours',
                     ['count' => $span]
                 );
@@ -443,7 +443,7 @@ class DBDate extends DBField
             case "days":
                 $span = round($ago/86400);
                 return _t(
-                    __CLASS__.'.DAYS_SHORT_PLURALS',
+                    __CLASS__ . '.DAYS_SHORT_PLURALS',
                     '{count} day|{count} days',
                     ['count' => $span]
                 );
@@ -451,7 +451,7 @@ class DBDate extends DBField
             case "months":
                 $span = round($ago/86400/30);
                 return _t(
-                    __CLASS__.'.MONTHS_SHORT_PLURALS',
+                    __CLASS__ . '.MONTHS_SHORT_PLURALS',
                     '{count} month|{count} months',
                     ['count' => $span]
                 );
@@ -459,7 +459,7 @@ class DBDate extends DBField
             case "years":
                 $span = round($ago/86400/365);
                 return _t(
-                    __CLASS__.'.YEARS_SHORT_PLURALS',
+                    __CLASS__ . '.YEARS_SHORT_PLURALS',
                     '{count} year|{count} years',
                     ['count' => $span]
                 );

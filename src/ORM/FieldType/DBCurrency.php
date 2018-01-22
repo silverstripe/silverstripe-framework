@@ -17,7 +17,6 @@ namespace SilverStripe\ORM\FieldType;
  */
 class DBCurrency extends DBDecimal
 {
-
     /**
      * @config
      * @var string
@@ -38,9 +37,9 @@ class DBCurrency extends DBDecimal
         $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
         if ($this->value < 0) {
             return "($val)";
-        } else {
-            return $val;
         }
+
+        return $val;
     }
 
     /**
@@ -51,9 +50,8 @@ class DBCurrency extends DBDecimal
         $val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
         if ($this->value < 0) {
             return "($val)";
-        } else {
-            return $val;
         }
+        return $val;
     }
 
     public function setValue($value, $record = null, $markChanged = true)
@@ -62,9 +60,11 @@ class DBCurrency extends DBDecimal
         if (is_numeric($value)) {
             $this->value = $value;
         } elseif (preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
-            $this->value = str_replace(array('$',',',$this->config()->currency_symbol), '', $matches[0]);
+            $this->value = str_replace(['$', ',', $this->config()->currency_symbol], '', $matches[0]);
         } else {
             $this->value = 0;
         }
+
+        return $this;
     }
 }

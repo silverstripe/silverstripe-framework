@@ -171,7 +171,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
                 $field = GridField_FormAction::create(
                     $gridField,
-                    'SetOrder'.$fieldName,
+                    'SetOrder' . $fieldName,
                     $title,
                     "sort$dir",
                     array('SortColumn' => $columnField)

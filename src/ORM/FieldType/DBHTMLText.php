@@ -186,11 +186,11 @@ class DBHTMLText extends DBText
                 if ($tag === 'text()') {
                     $textFilter = ''; // Disable text filter if allowed
                 } else {
-                    $query[] = 'not(self::'.$tag.')';
+                    $query[] = 'not(self::' . $tag . ')';
                 }
             }
 
-            foreach ($dom->query('//body//*['.implode(' and ', $query).']'.$textFilter) as $el) {
+            foreach ($dom->query('//body//*[' . implode(' and ', $query) . ']' . $textFilter) as $el) {
                 if ($el->parentNode) {
                     $el->parentNode->removeChild($el);
                 }

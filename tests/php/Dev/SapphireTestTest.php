@@ -16,25 +16,38 @@ class SapphireTestTest extends SapphireTest
     public function provideResolveFixturePath()
     {
         return [
-            [__DIR__ . '/CsvBulkLoaderTest.yml', './CsvBulkLoaderTest.yml'],
-            //same dir
-            [__DIR__ . '/CsvBulkLoaderTest.yml', 'CsvBulkLoaderTest.yml'],
-            // Filename only
-            [dirname(__DIR__) . '/ORM/DataObjectTest.yml', '../ORM/DataObjectTest.yml'],
-            // Parent path
-            [dirname(__DIR__) . '/ORM/DataObjectTest.yml', dirname(__DIR__) . '/ORM/DataObjectTest.yml'],
-            // Absolute path
+            'sameDirectory' => [
+                __DIR__ . '/CsvBulkLoaderTest.yml',
+                './CsvBulkLoaderTest.yml',
+                'Could not resolve fixture path relative from same directory',
+            ],
+            'filenameOnly' => [
+                __DIR__ . '/CsvBulkLoaderTest.yml',
+                'CsvBulkLoaderTest.yml',
+                'Could not resolve fixture path from filename only',
+            ],
+            'parentPath' => [
+                dirname(__DIR__) . '/ORM/DataObjectTest.yml',
+                '../ORM/DataObjectTest.yml',
+                'Could not resolve fixture path from parent path',
+            ],
+            'absolutePath' => [
+                dirname(__DIR__) . '/ORM/DataObjectTest.yml',
+                dirname(__DIR__) . '/ORM/DataObjectTest.yml',
+                'Could not relsolve fixture path from absolute path',
+            ],
         ];
     }
 
     /**
      * @dataProvider provideResolveFixturePath
      */
-    public function testResolveFixturePath($expected, $path)
+    public function testResolveFixturePath($expected, $path, $message)
     {
         $this->assertEquals(
             $expected,
-            $this->resolveFixturePath($path)
+            $this->resolveFixturePath($path),
+            $message
         );
     }
 
@@ -46,10 +59,10 @@ class SapphireTestTest extends SapphireTest
         $this->logOut();
         $this->assertFalse(Permission::check('ADMIN'));
         $this->actWithPermission('ADMIN', function () {
-            $this->assertTrue(Permission::check('ADMIN'));
+            $this->assertTrue(Permission::check('ADMIN'), 'Member should now have ADMIN role');
             // check nested actAs calls work as expected
             Member::actAs(null, function () {
-                $this->assertFalse(Permission::check('ADMIN'));
+                $this->assertFalse(Permission::check('ADMIN'), 'Member should not act as ADMIN any more after reset');
             });
         });
     }
@@ -59,9 +72,16 @@ class SapphireTestTest extends SapphireTest
      */
     public function testCreateMemberWithPermission()
     {
-        $this->assertCount(0, Member::get()->filter(['Email' => 'TESTPERM@example.org']));
+        $this->assertEmpty(
+            Member::get()->filter(['Email' => 'TESTPERM@example.org']),
+            'DB should not have the test member created when the test starts'
+        );
         $this->createMemberWithPermission('TESTPERM');
-        $this->assertCount(1, Member::get()->filter(['Email' => 'TESTPERM@example.org']));
+        $this->assertCount(
+            1,
+            Member::get()->filter(['Email' => 'TESTPERM@example.org']),
+            'Database should now contain the test member'
+        );
     }
 
     /**
@@ -69,13 +89,30 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $match
      * @param $itemsForList
+     *
      * @testdox Has assertion assertListAllMatch
      */
-    public function testAssertListAllMatch($match, $itemsForList)
+    public function testAssertListAllMatch($match, $itemsForList, $message)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
 
-        $this->assertListAllMatch($match, $list);
+        $this->assertListAllMatch($match, $list, $message);
+    }
+
+    /**
+     * generate SS_List as this is not possible in dataProvider
+     *
+     * @param array $itemsForList
+     *
+     * @return ArrayList
+     */
+    private function generateArrayListFromItems($itemsForList)
+    {
+        $list = ArrayList::create();
+        foreach ($itemsForList as $data) {
+            $list->push(Member::create($data));
+        }
+        return $list;
     }
 
     /**
@@ -100,6 +137,7 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $matches
      * @param $itemsForList
+     *
      * @testdox Has assertion assertListContains
      */
     public function testAssertListContains($matches, $itemsForList)
@@ -109,7 +147,7 @@ class SapphireTestTest extends SapphireTest
         $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
         $list->push(Member::create(['FirstName' => 'Baz', 'Surname' => 'Baz']));
 
-        $this->assertListContains($matches, $list);
+        $this->assertListContains($matches, $list, 'The list does not contain the expected items');
     }
 
     /**
@@ -143,7 +181,7 @@ class SapphireTestTest extends SapphireTest
     {
         $list = $this->generateArrayListFromItems($itemsForList);
 
-        $this->assertListNotContains($matches, $list);
+        $this->assertListNotContains($matches, $list, 'List contains forbidden items');
     }
 
     /**
@@ -151,6 +189,7 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $matches
      * @param $itemsForList
+     *
      * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
      *
      * @expectedException \PHPUnit_Framework_ExpectationFailedException
@@ -165,7 +204,6 @@ class SapphireTestTest extends SapphireTest
         $this->assertListNotContains($matches, $list);
     }
 
-
     /**
      * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
      * @testdox Has assertion assertListEquals
@@ -177,7 +215,7 @@ class SapphireTestTest extends SapphireTest
     {
         $list = $this->generateArrayListFromItems($itemsForList);
 
-        $this->assertListEquals($matches, $list);
+        $this->assertListEquals($matches, $list, 'Lists do not equal');
     }
 
     /**
@@ -194,20 +232,5 @@ class SapphireTestTest extends SapphireTest
         $list = $this->generateArrayListFromItems($itemsForList);
 
         $this->assertListEquals($matches, $list);
-    }
-
-    /**
-     * generate SS_List as this is not possible in dataProvider
-     *
-     * @param $itemsForList array
-     * @return ArrayList
-     */
-    private function generateArrayListFromItems($itemsForList)
-    {
-        $list = ArrayList::create();
-        foreach ($itemsForList as $data) {
-            $list->push(Member::create($data));
-        }
-        return $list;
     }
 }

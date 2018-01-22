@@ -478,7 +478,7 @@ class EmailTest extends SapphireTest
         $subClassTemplate = ModuleResourceLoader::singleton()->resolveResource(
             'silverstripe/framework:tests/php/Control/Email/EmailTest/templates/'
             . str_replace('\\', '/', EmailSubClass::class)
-            .'.ss'
+            . '.ss'
         );
         $this->assertTrue($emailTemplate->exists());
         $this->assertTrue($subClassTemplate->exists());

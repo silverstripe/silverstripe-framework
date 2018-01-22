@@ -478,8 +478,8 @@ class SQLSelectTest extends SapphireTest
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID');
 
         $this->assertSQLEquals(
-            'SELECT * FROM MyTable '.
-            'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 '.
+            'SELECT * FROM MyTable ' .
+            'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 ' .
             'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -490,8 +490,8 @@ class SQLSelectTest extends SapphireTest
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table2');
 
         $this->assertSQLEquals(
-            'SELECT * FROM MyTable '.
-            'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 '.
+            'SELECT * FROM MyTable ' .
+            'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 ' .
             'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -516,7 +516,7 @@ class SQLSelectTest extends SapphireTest
         $query->setOrderBy('COALESCE(Mlt.MyLastTableCount, 0) DESC');
 
         $this->assertSQLEquals(
-            'SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable '.
+            'SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable ' .
             'INNER JOIN (SELECT * FROM MyOtherTable) AS "Mot" ON Mot.MyTableID = MyTable.ID ' .
             'LEFT JOIN (SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
             . 'GROUP BY MyOtherTableID) AS "Mlt" ON Mlt.MyOtherTableID = Mot.ID ' .

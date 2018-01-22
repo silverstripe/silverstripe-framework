@@ -294,7 +294,7 @@ PHP;
         ];
         ksort($vars);
         foreach ($vars as $key => $value) {
-            $lines[] = $key.'="'.addcslashes($value, '"').'"';
+            $lines[] = $key . '="' . addcslashes($value, '"') . '"';
         }
 
         $this->writeToFile('.env', implode("\n", $lines));

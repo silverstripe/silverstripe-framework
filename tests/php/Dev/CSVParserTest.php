@@ -117,7 +117,7 @@ class CSVParserTest extends SapphireTest
     public function testParsingWithExplicitHeaderRow()
     {
         /* If your CSV file doesn't have a header row */
-        $csv = new CSVParser($this->csvPath .'PlayersWithHeader.csv');
+        $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
         $csv->provideHeaderRow(array('__fn','__bio','__bd','__reg'));
 

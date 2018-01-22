@@ -44,14 +44,14 @@ class CacheTest extends SapphireTest
 
     public function testApcuCacheFactory()
     {
-        $cache = Injector::inst()->get(CacheInterface::class .'.TestApcuCache');
+        $cache = Injector::inst()->get(CacheInterface::class . '.TestApcuCache');
         $this->assertInstanceOf(
             MockCache::class,
             $cache
         );
         $this->assertEquals(
             [
-                'TestApcuCache_'.md5(BASE_PATH),
+                'TestApcuCache_' . md5(BASE_PATH),
                 2600,
                 'ss40test'
             ],
@@ -61,7 +61,7 @@ class CacheTest extends SapphireTest
 
     public function testMemCacheFactory()
     {
-        $cache = Injector::inst()->get(CacheInterface::class .'.TestMemcache');
+        $cache = Injector::inst()->get(CacheInterface::class . '.TestMemcache');
         $this->assertInstanceOf(
             MockCache::class,
             $cache
@@ -69,7 +69,7 @@ class CacheTest extends SapphireTest
         $this->assertEquals(
             [
                 null,
-                'TestMemCache_'.md5(BASE_PATH),
+                'TestMemCache_' . md5(BASE_PATH),
                 5600
             ],
             $cache->getArgs()

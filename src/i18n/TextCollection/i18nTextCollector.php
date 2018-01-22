@@ -343,7 +343,7 @@ class i18nTextCollector
 
         // Find FQN that ends with $class
         $classes = preg_grep(
-            '/'.preg_quote("\\{$class}", '\/').'$/i',
+            '/' . preg_quote("\\{$class}", '\/') . '$/i',
             ClassLoader::inst()->getManifest()->getClassNames()
         );
 
@@ -662,7 +662,7 @@ class i18nTextCollector
                             $matches['text']
                         );
                     } else {
-                        throw new LogicException("Invalid string escape: " .$text);
+                        throw new LogicException("Invalid string escape: " . $text);
                     }
                 } elseif ($id === T_CLASS_C) {
                     // Evaluate __CLASS__ . '.KEY' and self::class concatenation
@@ -907,7 +907,7 @@ class i18nTextCollector
             return $fileList;
         }
 
-        foreach (glob($folder.'/*') as $path) {
+        foreach (glob($folder . '/*') as $path) {
             // Recurse if directory
             if (is_dir($path)) {
                 $fileList = array_merge(

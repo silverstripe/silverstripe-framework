@@ -98,7 +98,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
 
         // Fail and redirect the user to the login page
         $params = array_merge($request->getVars(), $reloadToken->params(false));
-        $backURL = $request->getURL(). '?' . http_build_query($params);
+        $backURL = $request->getURL() . '?' . http_build_query($params);
         $loginPage = Director::absoluteURL(Security::config()->get('login_url'));
         $loginPage .= "?BackURL=" . urlencode($backURL);
         $result = new HTTPResponse();

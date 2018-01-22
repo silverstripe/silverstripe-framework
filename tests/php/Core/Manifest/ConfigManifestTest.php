@@ -181,8 +181,8 @@ class ConfigManifestTest extends SapphireTest
 
             foreach (array('dev', 'test', 'live') as $check) {
                 $this->assertEquals(
-                    $env == $check ? $check : 'not'.$check,
-                    @$config[ucfirst($check).'Environment'],
+                    $env == $check ? $check : 'not' . $check,
+                    @$config[ucfirst($check) . 'Environment'],
                     'Only & except rules correctly detect environment in env ' . $env
                 );
             }

@@ -81,17 +81,17 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyProperty' => 'MyProperty' ],
+            [ i18nTest\TestDataObject::class . '.MyProperty' => 'MyProperty' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class . '.MyProperty' => 'Mein Attribut' ],
             'de_DE'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyUntranslatedProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class . '.MyUntranslatedProperty' => 'Mein Attribut' ],
             'en_US'
         );
 
@@ -113,12 +113,12 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class.'.MyProperty' => 'Untranslated' ],
+            [ i18nTest\TestObject::class . '.MyProperty' => 'Untranslated' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class.'.my_translatable_property' => 'Übersetzt' ],
+            [ i18nTest\TestObject::class . '.my_translatable_property' => 'Übersetzt' ],
             'de_DE'
         );
 
@@ -260,7 +260,7 @@ class i18nTest extends SapphireTest
 
         // Test missing entity key
         $translated = i18n::_t(
-            $entity.'_DOES_NOT_EXIST',
+            $entity . '_DOES_NOT_EXIST',
             $default,
             array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye")
         );
@@ -341,7 +341,7 @@ class i18nTest extends SapphireTest
         //test injected calls
         $this->assertContains(
             Convert::nl2os(
-                "TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n"
+                "TRANS Hello " . Director::absoluteBaseURL() . " " . i18n::get_locale() . ". But it is late, global calls\n"
             ),
             $parsedHtml,
             "Testing a translation with just entity and injection array, but with global variables injected in"

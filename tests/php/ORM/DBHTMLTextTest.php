@@ -193,7 +193,7 @@ class DBHTMLTextTest extends SapphireTest
         foreach ($cases as $add) {
             $textObj = DBField::create_field('HTMLFragment', $orig);
             $result = $textObj->obj('Summary', [4, $add])->forTemplate();
-            $this->assertEquals($match.Convert::raw2xml($add), $result);
+            $this->assertEquals($match . Convert::raw2xml($add), $result);
         }
     }
 

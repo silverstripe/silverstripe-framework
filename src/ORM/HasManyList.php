@@ -54,7 +54,7 @@ class HasManyList extends RelationList
         // Apply relation filter
         $key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
         if (is_array($id)) {
-            return array("$key IN (".DB::placeholders($id).")"  => $id);
+            return array("$key IN (" . DB::placeholders($id) . ")"  => $id);
         } elseif ($id !== null) {
             return array($key => $id);
         }

@@ -95,7 +95,7 @@ class YamlFixture
             $this->fixtureString = $fixture;
         } else {
             if (!Director::is_absolute($fixture)) {
-                $fixture = Director::baseFolder().'/'. $fixture;
+                $fixture = Director::baseFolder() . '/' . $fixture;
             }
 
             if (!file_exists($fixture)) {

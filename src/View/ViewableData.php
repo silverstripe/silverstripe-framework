@@ -398,7 +398,7 @@ class ViewableData implements IteratorAggregate
         }
 
         throw new UnexpectedValueException(
-            "ViewableData::renderWith(): unexpected ".get_class($template)." object, expected an SSViewer instance"
+            "ViewableData::renderWith(): unexpected " . get_class($template) . " object, expected an SSViewer instance"
         );
     }
 

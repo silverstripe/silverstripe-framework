@@ -977,7 +977,7 @@ EOS
         $backend->javascript(
             'javascript/RequirementsTest_b.js',
             [
-                'provides' => [
+            'provides' => [
                     'javascript/RequirementsTest_a.js',
                     'javascript/RequirementsTest_c.js',
                 ],

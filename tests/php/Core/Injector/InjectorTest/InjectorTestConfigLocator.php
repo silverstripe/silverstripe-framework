@@ -16,7 +16,7 @@ class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator 
                 return $this->configs[$name] = array(
                     'class' => ConstructableObject::class,
                     'constructor' => array(
-                        '%$'.OtherTestObject::class
+                        '%$' . OtherTestObject::class
                     )
                 );
 
