@@ -64,4 +64,12 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
             $generator->urlForResource($module->getResource('client/style.css'))
         );
     }
+    
+    public function testAbsoluteResource()
+    {
+        /** @var SimpleResourceURLGenerator $generator */
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        $fakeExternalAsset = 'https://cdn.example.com/some_library.css';
+        $this->assertEquals($fakeExternalAsset, $generator->urlForResource($fakeExternalAsset));
+    }
 }
