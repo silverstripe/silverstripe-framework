@@ -217,7 +217,8 @@ class DBDate extends DBField
     }
 
     /**
-     * Return the date using a particular formatting string.
+     * Return the date using a particular formatting string. Use {o} to include an ordinal representation
+     * for the day of the month ("1st", "2nd", "3rd" etc)
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
      * @return string The date in the requested format
@@ -227,6 +228,12 @@ class DBDate extends DBField
         if (!$this->value) {
             return null;
         }
+
+        // Replace {o} with ordinal representation of day of the month
+        if (strpos($format, '{o}') !== false) {
+            $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format);
+        }
+
         $formatter = $this->getFormatter();
         $formatter->setPattern($format);
         return $formatter->format($this->getTimestamp());
