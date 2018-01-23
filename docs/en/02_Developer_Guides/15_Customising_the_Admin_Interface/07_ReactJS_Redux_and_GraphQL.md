@@ -434,9 +434,9 @@ inject([dependencies], mapDependenciesToProps, getContext)(Component)
 * **mapDependenciesToProps**: (optional) All dependencies are passed into this function as params. The function
 is expected to return a map of props to dependencies. If this parameter is not specified,
 the prop names and the service names will mirror each other.
-* **getContext**: A callback function that will calculate the context to use for determining which
-tranformations apply to the dependencies. This defaults to the current context. This could help when any
-customisations that may calls for a change (or tweak) to the current context.
+* **getContext**: A callback function with params `(props, currentContext)` that will calculate the context to
+use for determining which tranformations apply to the dependencies. This defaults to the current context. This
+could help when any customisations that may calls for a change (or tweak) to the current context.
 
 The result is a function that is ready to apply to a component.
  
@@ -472,7 +472,8 @@ export default inject(
   (GalleryItem, SearchBar) => ({
     ItemComponent: GalleryItem,
     SearchComponent: SearchBar
-  })
+  }),
+  () => 'Gallery.Search'
 )(Gallery);
 ```
 
@@ -501,7 +502,25 @@ class PreviewSection extends React.Component {
 export default inject(
   ['Gallery', 'PreviewItem']
 )(PreviewSection);
-``` 
+```
+
+Another way to provide context to injector is by using the `provideContext` HOC, rather than
+the `getContext` param in `inject()`.
+
+__my-module/js/components/ContextualSection.js__
+```js
+import React, { Component } from 'react';
+import { provideContext, inject } from 'lib/Injector';
+
+class MySection extends Component {
+  // ... section code here ...
+}
+
+export default compose(
+  provideContext('Gallery.Search'),
+  inject(['Gallery'])
+)(MySection);
+```
 
 ## Using the injector directly within your component
 
@@ -516,7 +535,7 @@ class MyGallery extends React.Component
   render () {
     <div>
       {this.props.items.map(item => {
-        const Component = this.context.injector.get(item.type);
+        const Component = this.context.injector.get(item.type, 'Reports.context');
         return <Component title={item.title} image={item.image} />
       })}
     </div>
@@ -525,6 +544,11 @@ class MyGallery extends React.Component
 
 export default withInjector(MyGallery);
 ```
+
+The `Reports.context` in the second parameter provides a context for the injector to determine
+which transformations to apply to or remove from the component you're looking to get.
+More details about transformations below.
+
 
 ## Using Injector to customise forms
 
