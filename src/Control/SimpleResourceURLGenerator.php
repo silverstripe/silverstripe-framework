@@ -71,6 +71,9 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             $relativePath = $resource->getRelativePath();
             $exists = $resource->exists();
             $absolutePath = $resource->getPath();
+        } else if (Director::is_absolute_url($relativePath)) {
+            // Path is not relative, and probably not of this site
+            return $relativePath;
         } else {
             // Use normal string
             $absolutePath = preg_replace('/\?.*/', '', Director::baseFolder() . '/' . $relativePath);
