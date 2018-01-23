@@ -294,7 +294,8 @@ trait FileUploadReceiver
         }
 
         if ($tmpFile['error']) {
-            $error = $tmpFile['error'];
+            $this->getUpload()->validate($tmpFile);
+            $error = implode(' ' . PHP_EOL, $this->getUpload()->getErrors());
             return null;
         }
 
