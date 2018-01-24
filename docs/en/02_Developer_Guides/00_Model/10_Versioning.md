@@ -311,7 +311,7 @@ class Banner extends Page
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
 
-#### Unversioned dataobject ownership
+#### Unversioned dataobject ownership (4.1 and above)
 
 Ownership can be used with non-versioned dataobjects, as the necessary functionality is included by default
 by the versioned object through the `[api:SilverStripe\Versioned\RecursivePublishable]` extension which is
@@ -321,7 +321,7 @@ However, it is important to note that even when saving un-versioned objects, it 
 `->publishRecursive()` to trigger a recursive publish.
 
 `owns` works the same regardless of whether these objects are versioned, so you can use any combination of
-versioned or unversioned dataobjects. You only need to call `->recursivePublish()` on the top most
+versioned or unversioned dataobjects. You only need to call `->publishRecursive()` on the top most
 object in the tree.
 
 #### DataObject ownership with custom relations
