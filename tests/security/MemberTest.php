@@ -385,6 +385,35 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 
+	/**
+	 * Assertions to check that Member_GroupSet is functionally equivalent to ManyManyList
+	 */
+	public function testRemoveGroups()
+	{
+		$staffmember = $this->objFromFixture('Member', 'staffmember');
+
+		$staffgroup = $this->objFromFixture('Group', 'staffgroup');
+		$managementgroup = $this->objFromFixture('Group', 'managementgroup');
+
+		$this->assertTrue(
+			$staffmember->inGroups(array($staffgroup, $managementgroup)),
+			'inGroups() succeeds if a membership is detected on one of many passed groups'
+		);
+
+		$staffmember->Groups()->remove($managementgroup);
+		$this->assertFalse(
+			$staffmember->inGroup($managementgroup),
+			'member was not removed from group using ->Groups()->remove()'
+		);
+
+		$staffmember->Groups()->removeAll();
+		$this->assertEquals(
+			0,
+			$staffmember->Groups()->count(),
+			'member was not removed from all groups using ->Groups()->removeAll()'
+		);
+	}
+
 	public function testAddToGroupByCode() {
 		$grouplessMember = $this->objFromFixture('Member', 'grouplessmember');
 		$memberlessGroup = $this->objFromFixture('Group','memberlessgroup');
