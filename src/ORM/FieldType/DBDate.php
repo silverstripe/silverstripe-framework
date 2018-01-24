@@ -322,19 +322,7 @@ class DBDate extends DBField
      */
     public function Rfc3339()
     {
-        $date = $this->Format('y-MM-dd\\THH:mm:ss');
-        if (!$date) {
-            return null;
-        }
-
-        $matches = array();
-        if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $this->getTimestamp()), $matches)) {
-            $date .= $matches[1] . $matches[2] . ':' . $matches[3];
-        } else {
-            $date .= 'Z';
-        }
-
-        return $date;
+        return date('c', $this->getTimestamp());
     }
 
     /**
