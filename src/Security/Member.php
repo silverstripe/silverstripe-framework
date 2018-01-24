@@ -1660,7 +1660,8 @@ class Member extends DataObject
 
         if (!$this->ID || $this->isChanged('Password')) {
             if ($this->Password && $validator) {
-                $valid->combineAnd($validator->validate($this->Password, $this));
+                $userValid = $validator->validate($this->Password, $this);
+                $valid->combineAnd($userValid);
             }
         }
 

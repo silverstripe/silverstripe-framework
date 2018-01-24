@@ -259,8 +259,8 @@ class MemberTest extends FunctionalTest
     public function testValidatePassword()
     {
         /**
- * @var Member $member
-*/
+         * @var Member $member
+        */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
 
