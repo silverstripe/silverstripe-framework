@@ -100,6 +100,8 @@ eo:
     Save: Konservi
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redakti
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Paĝo
@@ -209,6 +211,7 @@ eo:
     many_many_Members: Membroj
   SilverStripe\Security\LoginAttempt:
     Email: 'Retpoŝta adreso'
+    EmailHashed: 'Retpoŝta adreso (haketa)'
     IP: IP-Adreso
     PLURALNAME: 'Provoj ensaluti'
     PLURALS:
@@ -250,6 +253,7 @@ eo:
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: 'Familia nomo'
+    VALIDATIONADMINLOSTACCESS: 'Ne povas forigi ĉiujn administrajn grupojn el via profilo'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
@@ -266,6 +270,8 @@ eo:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
     NoPassword: 'Mankas pasvorto por ĉi tiu membro.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Retpoŝto &amp; pasvorto'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Membraj pasvortoj'
     PLURALS:
