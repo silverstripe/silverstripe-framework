@@ -26,6 +26,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -224,6 +225,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      */
     protected static $_cache_get_one;
+
+    /**
+     * Static caches use by isInDB to check if an ID is in the DB
+     *
+     * @var array
+     */
+    protected static $_cache_in_db = [];
 
     /**
      * Cache of field labels
@@ -596,7 +604,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function exists()
     {
-        return (isset($this->record['ID']) && $this->record['ID'] > 0);
+        return $this->isInDB();
     }
 
     /**
@@ -1284,10 +1292,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Perform an insert on the base table
         $insert = new SQLInsert('"' . $baseTable . '"');
         $insert
-            ->assign('"Created"', $now)
-            ->execute();
+            ->assign('"Created"', $now);
+        if ($id = $this->ID) {
+            $insert = $insert->assign('"ID"', $id);
+        }
+        $insert->execute();
+        if (!$id) {
+            $id = DB::get_generated_id($baseTable);
+        }
         $this->changed['ID'] = self::CHANGE_VALUE;
-        $this->record['ID'] = DB::get_generated_id($baseTable);
+        $this->record['ID'] = $id;
+        self::$_cache_in_db[$this->baseClass()][$id] = true;
     }
 
     /**
@@ -2903,7 +2918,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         if (static::class == self::class) {
             self::$_cache_get_one = array();
+            self::$_cache_in_db = [];
             return $this;
+        } else {
+            unset(self::$_cache_in_db[$this->baseClass()][$this->ID]);
         }
 
         $classes = ClassInfo::ancestry(static::class);
@@ -3413,7 +3431,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function isInDB()
     {
-        return is_numeric($this->ID) && $this->ID > 0;
+        if (empty($this->ID)) {
+            return false;
+        }
+        $class = $this->baseClass();
+        if (!isset(self::$_cache_in_db[$class][$this->ID])) {
+            $sqlSelect = new SQLSelect();
+            $sqlSelect->setFrom('"' . $this->baseTable() . '"');
+            $sqlSelect->setWhere([
+                '"ID" = ?' => $this->ID,
+            ]);
+            self::$_cache_in_db[$class][$this->ID] = $sqlSelect->count() > 0;
+        }
+        return self::$_cache_in_db[$class][$this->ID];
     }
 
     /*

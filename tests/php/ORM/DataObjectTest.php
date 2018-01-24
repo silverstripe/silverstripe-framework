@@ -18,6 +18,7 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Staff;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -2134,5 +2135,21 @@ class DataObjectTest extends SapphireTest
             DataObjectTest\TeamComment::class,
             ['"DataObjectTest_TeamComment"."Name"' => 'does not exists']
         ));
+    }
+
+    public function testIsInDB()
+    {
+        $nonExistantID = Staff::get()->max('ID') + 1;
+        $staff = new Staff([
+            'ID' => $nonExistantID,
+            'Salary' => 12,
+        ]);
+        $this->assertFalse($staff->isInDB());
+        $staff->write();
+        $this->assertTrue($staff->isInDB());
+        $staff->delete();
+        $this->assertFalse($staff->isInDB());
+        $staff->ID = $nonExistantID;
+        $this->assertFalse($staff->isInDB());
     }
 }
