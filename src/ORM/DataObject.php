@@ -1302,7 +1302,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
         $this->changed['ID'] = self::CHANGE_VALUE;
         $this->record['ID'] = $id;
-        self::$_cache_in_db[$this->baseClass()][$id] = true;
+        self::register_object($this);
     }
 
     /**
@@ -2921,7 +2921,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             self::$_cache_in_db = [];
             return $this;
         } else {
-            unset(self::$_cache_in_db[$this->baseClass()][$this->ID]);
+            self::unregister_object($this);
         }
 
         $classes = ClassInfo::ancestry(static::class);
@@ -2967,6 +2967,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         static::getSchema()->reset();
         self::$_cache_get_one = array();
         self::$_cache_field_labels = array();
+        self::$_cache_in_db = [];
+    }
+
+    /**
+     * @param DataObject $object
+     */
+    public static function register_object($object)
+    {
+        self::$_cache_in_db[$object->baseClass()][$object->ID] = true;
+    }
+
+    /**
+     * @param DataObject $object
+     */
+    public function unregister_object($object)
+    {
+        unset(self::$_cache_in_db[$object->baseClass()][$object->ID]);
     }
 
     /**
@@ -3441,7 +3458,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $sqlSelect->setWhere([
                 '"ID" = ?' => $this->ID,
             ]);
-            self::$_cache_in_db[$class][$this->ID] = $sqlSelect->count() > 0;
+            if ($sqlSelect->count() > 0) {
+                static::register_object($this);
+            }
         }
         return self::$_cache_in_db[$class][$this->ID];
     }

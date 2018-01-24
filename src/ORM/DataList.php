@@ -781,6 +781,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         $item = Injector::inst()->create($class, $row, false, $this->getQueryParams());
 
+        DataObject::register_object($item);
+
         return $item;
     }
 
