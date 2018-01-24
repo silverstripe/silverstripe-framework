@@ -69,6 +69,9 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         $query = '';
         if ($relativePath instanceof ModuleResource) {
             list($exists, $absolutePath, $relativePath) = $this->resolveModuleResource($relativePath);
+        } elseif (Director::is_absolute_url($relativePath)) {
+            // Path is not relative, and probably not of this site
+            return $relativePath;
         } else {
             // Save querystring for later
             if (strpos($relativePath, '?') !== false) {

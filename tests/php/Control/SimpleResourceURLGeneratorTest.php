@@ -99,4 +99,12 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
         $url = @$generator->urlForResource('doesnotexist.jpg');
         $this->assertEquals('/doesnotexist.jpg', $url);
     }
+
+    public function testAbsoluteResource()
+    {
+        /** @var SimpleResourceURLGenerator $generator */
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        $fakeExternalAsset = 'https://cdn.example.com/some_library.css';
+        $this->assertEquals($fakeExternalAsset, $generator->urlForResource($fakeExternalAsset));
+    }
 }

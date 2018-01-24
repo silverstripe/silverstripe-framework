@@ -271,7 +271,7 @@ en:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     NoPassword: 'There is no password on this member.'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
-    AUTHENTICATORNAME: 'E-mail &amp; Password'
+    AUTHENTICATORNAME: 'E-mail & Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Member Passwords'
     PLURALS:
