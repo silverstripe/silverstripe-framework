@@ -18,83 +18,75 @@ Especially be aware of [accidental php-execution](https://nealpoole.com/blog/201
 
 But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
 
-	server {
-		include mime.types;
-		default_type  application/octet-stream;
-		client_max_body_size 0; # Manage this in php.ini
-		listen 80;
-		root /path/to/ss/folder;
-		server_name example.com www.example.com;
+```nginx
+server {
+  include mime.types;
+  default_type  application/octet-stream;
+  client_max_body_size 0; # Manage this in php.ini
+  listen 80;
+  root /path/to/ss/folder;
+  server_name example.com www.example.com;
 
-		# Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
-		if ($http_x_forwarded_host) {
-			return 400;
-		}
+  # Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
+    if ($http_x_forwarded_host) {
+    return 400;
+  }
 
-		location / {
-			try_files $uri /framework/main.php?url=$uri&$query_string;
-		}
+  location / {
+  try_files $uri /framework/main.php?url=$uri&$query_string;
+  }
 
-		error_page 404 /assets/error-404.html;
-		error_page 500 /assets/error-500.html;
+  error_page 404 /assets/error-404.html;
+  error_page 500 /assets/error-500.html;
 
-		location ^~ /assets/ {
-			sendfile on;
-			try_files $uri =404;
-		}
+  location ^~ /assets/ {
+  sendfile on;
+  try_files $uri =404;
+  }
 
-		location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
-			fastcgi_buffer_size 32k;
-            fastcgi_busy_buffers_size 64k;
-            fastcgi_buffers 4 32k;
-            fastcgi_keep_conn on;
-            fastcgi_pass   127.0.0.1:9000;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            include        fastcgi_params;
-		}
+  location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
+    fastcgi_buffer_size 32k;
+    fastcgi_busy_buffers_size 64k;
+    fastcgi_buffers 4 32k;
+    fastcgi_keep_conn on;
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+  }
 
-		# Core denial (change mysite if you use a different name)
-        location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
-            deny all;
-        }
-
-        # Modules denial (edit the regex to match your installed modules)
-        location ~ /(buildtools|colorpicker|docsviewer|editlock|geoip|googlesitemaps|mathspamprotection|sortablegridfield|spamprotection|testsession|userforms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
-            deny all;
-        }
-		
-        # Other denials
-        location ~ /\.. {
-            deny all;
-        }
-        location ~ \.ss$ {
-            satisfy any;
-            allow 127.0.0.1;
-            deny all;
-        }
-        location ~ web\.config$ {
-            deny all;
-        }
-        location ~ \.ya?ml$ {
-            deny all;
-        }
-        location ~* README.*$ {
-            deny all;
-        }
-        location ^~ /vendor/ {
-            deny all;
-        }
-        location ~* /silverstripe-cache/ {
-            deny all;
-        }
-        location ~* composer\.(json|lock)$ {
-            deny all;
-        }
-        location ~* /(cms|framework)/silverstripe_version$ {
-            deny all;
-        }
-    }
+  # Denials
+  location ~ /\.. {
+      deny all;
+  }
+  location ~ \.ss$ {
+      satisfy any;
+      allow 127.0.0.1;
+      deny all;
+  }
+  location ~ web\.config$ {
+      deny all;
+  }
+  location ~ \.ya?ml$ {
+      deny all;
+  }
+  location ~* README.*$ {
+      deny all;
+  }
+  location ^~ /vendor/ {
+      deny all;
+  }
+  location ~* /silverstripe-cache/ {
+      deny all;
+  }
+  location ~* composer\.(json|lock)$ {
+      deny all;
+  }
+  location ~* /(cms|framework)/silverstripe_version$ {
+      deny all;
+  }
+}
+```
 
 The above configuration sets up a virtual host `example.com` with
 rewrite rules suited for SilverStripe. The location block for framework
