@@ -237,13 +237,10 @@ class Director implements TemplateGlobalProvider
         $url = strtok($url, '#');
 
         // Handle absolute URLs
-        if (parse_url($url, PHP_URL_HOST)) {
-            $bits = parse_url($url);
-
-            // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
-            $newVars['_SERVER']['HTTP_HOST'] = isset($bits['port'])
-                ? $bits['host'] . ':' . $bits['port']
-                : $bits['host'];
+        // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
+        $urlHostPort = static::parseHost($url);
+        if ($urlHostPort) {
+            $newVars['_SERVER']['HTTP_HOST'] = $urlHostPort;
         }
 
         // Ensure URL is properly made relative.
@@ -449,6 +446,29 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
+     * Return only host (and optional port) part of a url
+     *
+     * @param string $url
+     * @return string|null Hostname, and optional port, or null if not a valid host
+     */
+    protected static function parseHost($url)
+    {
+        // Get base hostname
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return null;
+        }
+
+        // Include port
+        $port = parse_url($url, PHP_URL_PORT);
+        if ($port) {
+            $host .= ':' . $port;
+        }
+
+        return $host;
+    }
+
+    /**
      * A helper to determine the current hostname used to access the site.
      * The following are used to determine the host (in order)
      *  - Director.alternate_base_url (if it contains a domain name)
@@ -459,14 +479,14 @@ class Director implements TemplateGlobalProvider
      *  - gethostname()
      *
      * @param HTTPRequest $request
-     * @return string
+     * @return string Host name, including port (if present)
      */
     public static function host(HTTPRequest $request = null)
     {
         // Check if overridden by alternate_base_url
         if ($baseURL = self::config()->get('alternate_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
-            $host = parse_url($baseURL, PHP_URL_HOST);
+            $host = static::parseHost($baseURL);
             if ($host) {
                 return $host;
             }
@@ -485,7 +505,7 @@ class Director implements TemplateGlobalProvider
         // Check base url
         if ($baseURL = self::config()->uninherited('default_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
-            $host = parse_url($baseURL, PHP_URL_HOST);
+            $host = static::parseHost($baseURL);
             if ($host) {
                 return $host;
             }
@@ -493,6 +513,32 @@ class Director implements TemplateGlobalProvider
 
         // Fail over to server_name (least reliable)
         return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : gethostname();
+    }
+
+    /**
+     * Return port used for the base URL.
+     * Note, this will be null if not specified, in which case you should assume the default
+     * port for the current protocol.
+     *
+     * @param HTTPRequest $request
+     * @return int|null
+     */
+    public static function port(HTTPRequest $request = null)
+    {
+        $host = static::host($request);
+        return (int)parse_url($host, PHP_URL_PORT) ?: null;
+    }
+
+    /**
+     * Return host name without port
+     *
+     * @param HTTPRequest|null $request
+     * @return string|null
+     */
+    public static function hostName(HTTPRequest $request = null)
+    {
+        $host = static::host($request);
+        return parse_url($host, PHP_URL_HOST) ?: null;
     }
 
     /**
@@ -760,13 +806,14 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_site_url($url)
     {
-        $urlHost = parse_url($url, PHP_URL_HOST);
-        $actualHost = parse_url(self::protocolAndHost(), PHP_URL_HOST);
-        if ($urlHost && $actualHost && $urlHost == $actualHost) {
+        // Validate host[:port]
+        $urlHost = static::parseHost($url);
+        if ($urlHost && $urlHost === static::host()) {
             return true;
-        } else {
-            return self::is_relative_url($url);
         }
+
+        // Relative urls always are site urls
+        return self::is_relative_url($url);
     }
 
     /**
@@ -831,10 +878,13 @@ class Director implements TemplateGlobalProvider
      */
     public static function absoluteBaseURLWithAuth(HTTPRequest $request = null)
     {
-        $login = "";
-
-        if (isset($_SERVER['PHP_AUTH_USER'])) {
-            $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
+        // Detect basic auth
+        $user = $request->getHeader('PHP_AUTH_USER');
+        if ($user) {
+            $password = $request->getHeader('PHP_AUTH_PW');
+            $login = sprintf("%s:%s@", $user, $password) ;
+        } else {
+            $login = '';
         }
 
         return Director::protocol($request) . $login . static::host($request) . Director::baseURL();
@@ -883,6 +933,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param array $patterns Array of regex patterns to match URLs that should be HTTPS.
      * @param string $secureDomain Secure domain to redirect to. Defaults to the current domain.
+     * Can include port number.
      * @param HTTPRequest|null $request Request object to check
      */
     public static function forceSSL($patterns = null, $secureDomain = null, HTTPRequest $request = null)

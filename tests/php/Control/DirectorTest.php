@@ -28,7 +28,7 @@ class DirectorTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        Director::config()->set('alternate_base_url', 'http://www.mysite.com/');
+        Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
 
         // Ensure redirects enabled on all environments
         CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
@@ -76,53 +76,53 @@ class DirectorTest extends SapphireTest
 
     public function testAbsoluteURL()
     {
-        Director::config()->set('alternate_base_url', 'http://www.mysite.com/mysite/');
-        $_SERVER['REQUEST_URI'] = "http://www.mysite.com/mysite/sub-page/";
+        Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/mysite/');
+        $_SERVER['REQUEST_URI'] = "http://www.mysite.com:9090/mysite/sub-page/";
 
         //test empty / local urls
         foreach (array('', './', '.') as $url) {
-            $this->assertEquals("http://www.mysite.com/mysite/", Director::absoluteURL($url, Director::BASE));
-            $this->assertEquals("http://www.mysite.com/", Director::absoluteURL($url, Director::ROOT));
-            $this->assertEquals("http://www.mysite.com/mysite/sub-page/", Director::absoluteURL($url, Director::REQUEST));
+            $this->assertEquals("http://www.mysite.com:9090/mysite/", Director::absoluteURL($url, Director::BASE));
+            $this->assertEquals("http://www.mysite.com:9090/", Director::absoluteURL($url, Director::ROOT));
+            $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/", Director::absoluteURL($url, Director::REQUEST));
         }
 
         // Test site root url
-        $this->assertEquals("http://www.mysite.com/", Director::absoluteURL('/'));
+        $this->assertEquals("http://www.mysite.com:9090/", Director::absoluteURL('/'));
 
         // Test Director::BASE
-        $this->assertEquals('http://www.mysite.com/', Director::absoluteURL('http://www.mysite.com/', Director::BASE));
+        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::BASE));
         $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::BASE));
-        $this->assertEquals("http://www.mysite.com/test", Director::absoluteURL("http://www.mysite.com/test", Director::BASE));
-        $this->assertEquals("http://www.mysite.com/root", Director::absoluteURL("/root", Director::BASE));
-        $this->assertEquals("http://www.mysite.com/root/url", Director::absoluteURL("/root/url", Director::BASE));
+        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::BASE));
+        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::BASE));
+        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::BASE));
 
         // Test Director::ROOT
-        $this->assertEquals('http://www.mysite.com/', Director::absoluteURL('http://www.mysite.com/', Director::ROOT));
+        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::ROOT));
         $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::ROOT));
-        $this->assertEquals("http://www.mysite.com/test", Director::absoluteURL("http://www.mysite.com/test", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com/root", Director::absoluteURL("/root", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com/root/url", Director::absoluteURL("/root/url", Director::ROOT));
+        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::ROOT));
+        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::ROOT));
+        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::ROOT));
 
         // Test Director::REQUEST
-        $this->assertEquals('http://www.mysite.com/', Director::absoluteURL('http://www.mysite.com/', Director::REQUEST));
+        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::REQUEST));
         $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com/test", Director::absoluteURL("http://www.mysite.com/test", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com/root", Director::absoluteURL("/root", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com/root/url", Director::absoluteURL("/root/url", Director::REQUEST));
+        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::REQUEST));
+        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::REQUEST));
+        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::REQUEST));
 
         // Test evaluating relative urls relative to base (default)
-        $this->assertEquals("http://www.mysite.com/mysite/test", Director::absoluteURL("test"));
-        $this->assertEquals("http://www.mysite.com/mysite/test/url", Director::absoluteURL("test/url"));
-        $this->assertEquals("http://www.mysite.com/mysite/test", Director::absoluteURL("test", Director::BASE));
-        $this->assertEquals("http://www.mysite.com/mysite/test/url", Director::absoluteURL("test/url", Director::BASE));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/test", Director::absoluteURL("test"));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/test/url", Director::absoluteURL("test/url"));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/test", Director::absoluteURL("test", Director::BASE));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/test/url", Director::absoluteURL("test/url", Director::BASE));
 
         // Test evaluting relative urls relative to root
-        $this->assertEquals("http://www.mysite.com/test", Director::absoluteURL("test", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com/test/url", Director::absoluteURL("test/url", Director::ROOT));
+        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("test", Director::ROOT));
+        $this->assertEquals("http://www.mysite.com:9090/test/url", Director::absoluteURL("test/url", Director::ROOT));
 
         // Test relative to requested page
-        $this->assertEquals("http://www.mysite.com/mysite/sub-page/test", Director::absoluteURL("test", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com/mysite/sub-page/test/url", Director::absoluteURL("test/url", Director::REQUEST));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/test", Director::absoluteURL("test", Director::REQUEST));
+        $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/test/url", Director::absoluteURL("test/url", Director::REQUEST));
 
         // Test that javascript links are not left intact
         $this->assertStringStartsNotWith('javascript', Director::absoluteURL('javascript:alert("attack")'));
@@ -228,6 +228,13 @@ class DirectorTest extends SapphireTest
         $this->assertTrue(Director::is_absolute_url('//http://test.com'));
     }
 
+    public function testHostPortParts()
+    {
+        $this->assertEquals('www.mysite.com:9090', Director::host());
+        $this->assertEquals('www.mysite.com', Director::hostName());
+        $this->assertEquals('9090', Director::port());
+    }
+
     public function testIsRelativeUrl()
     {
         $this->assertFalse(Director::is_relative_url('http://test.com'));
@@ -249,110 +256,110 @@ class DirectorTest extends SapphireTest
         return [
             // Resilience to slash position
             [
-                'http://www.mysite.com/base/folder',
-                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder',
+                'http://www.mysite.com:9090/base/folder',
                 ''
             ],
             [
-                'http://www.mysite.com/base/folder',
-                'http://www.mysite.com/base/folder/',
+                'http://www.mysite.com:9090/base/folder',
+                'http://www.mysite.com:9090/base/folder/',
                 ''
             ],
             [
-                'http://www.mysite.com/base/folder/',
-                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder/',
+                'http://www.mysite.com:9090/base/folder',
                 ''
             ],
             [
-                'http://www.mysite.com/',
-                'http://www.mysite.com/',
+                'http://www.mysite.com:9090/',
+                'http://www.mysite.com:9090/',
                 ''
             ],
             [
-                'http://www.mysite.com/',
+                'http://www.mysite.com:9090/',
                 'http://www.mysite.com',
                 ''
             ],
             [
                 'http://www.mysite.com',
-                'http://www.mysite.com/',
+                'http://www.mysite.com:9090/',
                 ''
             ],
             [
-                'http://www.mysite.com/base/folder',
-                'http://www.mysite.com/base/folder/page',
+                'http://www.mysite.com:9090/base/folder',
+                'http://www.mysite.com:9090/base/folder/page',
                 'page'
             ],
             [
-                'http://www.mysite.com/',
-                'http://www.mysite.com/page/',
+                'http://www.mysite.com:9090/',
+                'http://www.mysite.com:9090/page/',
                 'page/'
             ],
             // Parsing protocol safely
             [
-                'http://www.mysite.com/base/folder',
-                'https://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder',
+                'https://www.mysite.com:9090/base/folder',
                 ''
             ],
             [
-                'https://www.mysite.com/base/folder',
-                'http://www.mysite.com/base/folder/testpage',
+                'https://www.mysite.com:9090/base/folder',
+                'http://www.mysite.com:9090/base/folder/testpage',
                 'testpage'
             ],
             [
-                'http://www.mysite.com/base/folder',
-                '//www.mysite.com/base/folder/testpage',
+                'http://www.mysite.com:9090/base/folder',
+                '//www.mysite.com:9090/base/folder/testpage',
                 'testpage'
             ],
             // Dirty input
             [
-                'http://www.mysite.com/base/folder',
-                '    https://www.mysite.com/base/folder/testpage    ',
+                'http://www.mysite.com:9090/base/folder',
+                '    https://www.mysite.com:9090/base/folder/testpage    ',
                 'testpage'
             ],
             [
-                'http://www.mysite.com/base/folder',
-                '//www.mysite.com/base//folder/testpage//subpage',
+                'http://www.mysite.com:9090/base/folder',
+                '//www.mysite.com:9090/base//folder/testpage//subpage',
                 'testpage/subpage'
             ],
             // Non-http protocol isn't modified
             [
-                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder',
                 'ftp://test.com',
                 'ftp://test.com'
             ],
             // Alternate hostnames are redirected
             [
-                'https://www.mysite.com/base/folder',
-                'http://mysite.com/base/folder/testpage',
+                'https://www.mysite.com:9090/base/folder',
+                'http://mysite.com:9090/base/folder/testpage',
                 'testpage'
             ],
             [
                 'http://www.otherdomain.com/base/folder',
-                '//www.mysite.com/base/folder/testpage',
+                '//www.mysite.com:9090/base/folder/testpage',
                 'testpage'
             ],
             // Base folder is found
             [
-                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder',
                 BASE_PATH . '/some/file.txt',
                 'some/file.txt',
             ],
             // public folder is found
             [
-                'http://www.mysite.com/base/folder',
+                'http://www.mysite.com:9090/base/folder',
                 PUBLIC_PATH . '/some/file.txt',
                 'some/file.txt',
             ],
             // querystring is protected
             [
-                'http://www.mysite.com/base/folder',
-                '//www.mysite.com/base//folder/testpage//subpage?args=hello',
+                'http://www.mysite.com:9090/base/folder',
+                '//www.mysite.com:9090/base//folder/testpage//subpage?args=hello',
                 'testpage/subpage?args=hello'
             ],
             [
-                'http://www.mysite.com/base/folder',
-                '//www.mysite.com/base//folder/?args=hello',
+                'http://www.mysite.com:9090/base/folder',
+                '//www.mysite.com:9090/base//folder/?args=hello',
                 '?args=hello'
             ],
         ];
@@ -528,11 +535,11 @@ class DirectorTest extends SapphireTest
 
     public function testForceWWW()
     {
-        $this->expectExceptionRedirect('http://www.mysite.com/some-url');
+        $this->expectExceptionRedirect('http://www.mysite.com:9090/some-url');
         Director::mockRequest(function ($request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceWWW();
-        }, 'http://mysite.com/some-url');
+        }, 'http://mysite.com:9090/some-url');
     }
 
     public function testPromisedForceWWW()
@@ -549,20 +556,20 @@ class DirectorTest extends SapphireTest
             return $middleware->process($request, function ($request) {
                 return null;
             });
-        }, 'http://mysite.com/some-url');
+        }, 'http://mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
-        $this->assertEquals('http://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals('http://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }
 
     public function testForceSSLProtectsEntireSite()
     {
-        $this->expectExceptionRedirect('https://www.mysite.com/some-url');
+        $this->expectExceptionRedirect('https://www.mysite.com:9090/some-url');
         Director::mockRequest(function ($request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL();
-        }, 'http://www.mysite.com/some-url');
+        }, 'http://www.mysite.com:9090/some-url');
     }
 
     public function testPromisedForceSSL()
@@ -579,31 +586,31 @@ class DirectorTest extends SapphireTest
             return $middleware->process($request, function ($request) {
                 return null;
             });
-        }, 'http://www.mysite.com/some-url');
+        }, 'http://www.mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
-        $this->assertEquals('https://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals('https://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }
 
     public function testForceSSLOnTopLevelPagePattern()
     {
         // Expect admin to trigger redirect
-        $this->expectExceptionRedirect('https://www.mysite.com/admin');
+        $this->expectExceptionRedirect('https://www.mysite.com:9090/admin');
         Director::mockRequest(function (HTTPRequest $request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^admin/'));
-        }, 'http://www.mysite.com/admin');
+        }, 'http://www.mysite.com:9090/admin');
     }
 
     public function testForceSSLOnSubPagesPattern()
     {
         // Expect to redirect to security login page
-        $this->expectExceptionRedirect('https://www.mysite.com/Security/login');
+        $this->expectExceptionRedirect('https://www.mysite.com:9090/Security/login');
         Director::mockRequest(function (HTTPRequest $request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^Security/'));
-        }, 'http://www.mysite.com/Security/login');
+        }, 'http://www.mysite.com:9090/Security/login');
     }
 
     public function testForceSSLWithPatternDoesNotMatchOtherPages()
@@ -612,14 +619,14 @@ class DirectorTest extends SapphireTest
         $response = Director::mockRequest(function (HTTPRequest $request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^admin/'));
-        }, 'http://www.mysite.com/normal-page');
+        }, 'http://www.mysite.com:9090/normal-page');
         $this->assertNull($response, 'Non-matching patterns do not trigger redirect');
 
         // nested url should not triger redirect either
         $response = Director::mockRequest(function (HTTPRequest $request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             Director::forceSSL(array('/^admin/', '/^Security/'));
-        }, 'http://www.mysite.com/just-another-page/sub-url');
+        }, 'http://www.mysite.com:9090/just-another-page/sub-url');
         $this->assertNull($response, 'Non-matching patterns do not trigger redirect');
     }
 
@@ -630,7 +637,17 @@ class DirectorTest extends SapphireTest
         Director::mockRequest(function (HTTPRequest $request) {
             Injector::inst()->registerService($request, HTTPRequest::class);
             return Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
-        }, 'http://www.mysite.com/admin');
+        }, 'http://www.mysite.com:9090/admin');
+    }
+
+    public function testForceSSLAlternateDomainWithPort()
+    {
+        // Ensure that forceSSL throws the appropriate exception
+        $this->expectExceptionRedirect('https://secure.mysite.com:81/admin');
+        Director::mockRequest(function (HTTPRequest $request) {
+            Injector::inst()->registerService($request, HTTPRequest::class);
+            return Director::forceSSL(array('/^admin/'), 'secure.mysite.com:81');
+        }, 'http://www.mysite.com:9090/admin');
     }
 
     /**
@@ -652,10 +669,10 @@ class DirectorTest extends SapphireTest
             return $middleware->process($request, function ($request) {
                 return null;
             });
-        }, 'http://mysite.com/some-url');
+        }, 'http://mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
-        $this->assertEquals('https://www.mysite.com/some-url', $response->getHeader('Location'));
+        $this->assertEquals('https://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }
 
@@ -938,7 +955,7 @@ class DirectorTest extends SapphireTest
 
     public function testMockRequest()
     {
-        Director::config()->set('alternate_base_url', 'http://www.mysite.com/some-subdir/');
+        Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/some-subdir/');
 
         // Can handle root-relative $url
         Director::mockRequest(function (HTTPRequest $request) {
@@ -952,7 +969,7 @@ class DirectorTest extends SapphireTest
             $this->assertEquals('some-page/nested', $request->getURL());
             $this->assertEquals(1, $request->getVar('query'));
             $this->assertEquals('/some-subdir/some-page/nested', $_SERVER['REQUEST_URI']);
-        }, 'http://www.mysite.com/some-subdir/some-page/nested?query=1');
+        }, 'http://www.mysite.com:9090/some-subdir/some-page/nested?query=1');
 
         // Can handle relative $url
         Director::mockRequest(function (HTTPRequest $request) {
