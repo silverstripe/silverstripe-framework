@@ -28,20 +28,20 @@ server {
   server_name example.com www.example.com;
 
   # Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
-    if ($http_x_forwarded_host) {
+  if ($http_x_forwarded_host) {
     return 400;
   }
 
   location / {
-  try_files $uri /framework/main.php?url=$uri&$query_string;
+    try_files $uri /framework/main.php?url=$uri&$query_string;
   }
 
   error_page 404 /assets/error-404.html;
   error_page 500 /assets/error-500.html;
 
   location ^~ /assets/ {
-  sendfile on;
-  try_files $uri =404;
+    sendfile on;
+    try_files $uri =404;
   }
 
   location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
@@ -57,33 +57,33 @@ server {
 
   # Denials
   location ~ /\.. {
-      deny all;
+    deny all;
   }
   location ~ \.ss$ {
-      satisfy any;
-      allow 127.0.0.1;
-      deny all;
+    satisfy any;
+    allow 127.0.0.1;
+    deny all;
   }
   location ~ web\.config$ {
-      deny all;
+    deny all;
   }
   location ~ \.ya?ml$ {
-      deny all;
+    deny all;
   }
   location ~* README.*$ {
-      deny all;
+    deny all;
   }
   location ^~ /vendor/ {
-      deny all;
+    deny all;
   }
   location ~* /silverstripe-cache/ {
-      deny all;
+    deny all;
   }
   location ~* composer\.(json|lock)$ {
-      deny all;
+    deny all;
   }
   location ~* /(cms|framework)/silverstripe_version$ {
-      deny all;
+    deny all;
   }
 }
 ```
