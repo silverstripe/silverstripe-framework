@@ -238,6 +238,21 @@ class DBDateTest extends SapphireTest
         $this->assertEquals('10th - 20th Oct 2000', $range);
     }
 
+    public function testFormatReplacesOrdinals()
+    {
+        $this->assertEquals(
+            '20th October 2000',
+            DBField::create_field('Date', '2000-10-20')->Format('{o} MMMM YYYY'),
+            'Ordinal day of month was not injected'
+        );
+
+        $this->assertEquals(
+            '20th is the 20th day of the month',
+            DBField::create_field('Date', '2000-10-20')->Format("{o} 'is the' {o} 'day of the month'"),
+            'Failed to inject multiple ordinal values into one string'
+        );
+    }
+
     public function testExtendedDates()
     {
         $date = DBField::create_field('Date', '1800-10-10');
