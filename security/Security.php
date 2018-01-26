@@ -394,6 +394,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * sessions don't timeout. A common use is in the admin.
 	 */
 	public function ping() {
+		Requirements::clear();
 		return 1;
 	}
 
