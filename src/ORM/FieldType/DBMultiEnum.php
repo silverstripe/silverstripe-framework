@@ -76,4 +76,12 @@ class DBMultiEnum extends DBEnum
 
         return $field;
     }
+    
+    public function prepValueForDB($value)
+    {
+        $value = parent::prepValueForDB($value);
+        if ($value) {
+            return str_replace(array('[',']','"'), '', $value);
+        }
+    }
 }
