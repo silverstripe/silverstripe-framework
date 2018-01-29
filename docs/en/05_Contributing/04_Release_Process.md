@@ -6,7 +6,13 @@ This page describes the process followed for "core" releases (mainly the `framew
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/milestones).
+Releases are planned by assigning issues to GitHub milestones.
+SilverStripe is split up into many modules listed on [github.com/silverstripe](https://github.com/silverstripe).
+Each of them will have its own milestones and issues, and different release lines (e.g. 1.x vs. 4.x).
+There are high-level "recipe" milestones on the [framework repository](https://github.com/silverstripe/silverstripe-framework/milestones)
+to combine individual module milestones into a larger release that's eventually available on
+[silverstripe.org/download](https://silverstripe.org/download).
+
 New features and API changes are discussed on the [core mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritised by the core team as tickets on 
 github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
 Any feature ideas we're planning to implement will be flagged there.
@@ -14,8 +20,6 @@ Any feature ideas we're planning to implement will be flagged there.
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
 reviewing the release milestone on github.com. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
-
-Releases of the *cms* and *framework* modules are coupled at the moment, and they follow the same numbering scheme.
 
 ## Release Numbering
 
@@ -185,12 +189,10 @@ Please contact security@silverstripe.org for details.
 
 The quality of our software is important to us, and we continously test it for regressions
 through a broad suite of unit and integration tests. Most of these run on 
-[Travis CI](http://travis-ci.com), and results are publicly available
-for the [framework](https://travis-ci.org/silverstripe/silverstripe-framework) and
-[cms](https://travis-ci.org/silverstripe/silverstripe-cms) modules.
-In addition, some build configurations (e.g. running on Windows) are tested
-through a [TeamCity](http://www.jetbrains.com/teamcity/) instance hosted at
-[teamcity.silverstripe.com](http://teamcity.silverstripe.com) (click "Login as guest").
+[Travis CI](http://travis-ci.com), and results are publicly available.
+Check the badges on the various modules available on [github.com/silverstripe](http://github.com/silverstripe).
+There's also a [build matrix](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
+for our commercially supported modules (only showing build status for the default branch).
 
 ## Releasing to modules to NPM
 
