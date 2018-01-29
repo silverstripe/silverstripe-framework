@@ -189,7 +189,7 @@ class DropdownField extends FormField {
 				}
 
 				$options[] = new ArrayData(array(
-					'Title' => $title,
+					'Title' => (string)$title,
 					'Value' => $value,
 					'Selected' => $selected,
 					'Disabled' => $disabled,
