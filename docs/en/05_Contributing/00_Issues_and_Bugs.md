@@ -8,26 +8,25 @@ summary: Report bugs or problems with SilverStripe, feature requests or other is
 If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 
- * [Framework Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
- * [CMS Bugtracker](https://github.com/silverstripe/silverstripe-cms/issues)
- * [Documentation Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
- * Search on [http://addons.silverstripe.org/](http://addons.silverstripe.org/) for module-specific bugtrackers
- * Request features: [UserVoice](http://silverstripe.uservoice.com).
-
 Before submitting a bug:
 
- * Ask for assistance on the [forums](http://www.silverstripe.org/community/forums/), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://irc.silverstripe.org/) if you're unsure if its really a bug.
- * Search for similar, existing tickets
+ * Ask for assistance in our [community channels](https://www.silverstripe.org/community) if you're unsure if it's really a bug.
+ * Search for similar, existing tickets.
+   You can [list all issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues),
+   then add your search phrase at the start of the existing search filters. 
  * Is this a security issue? Please follow our separate reporting guidelines below.
- * Is this a issue with the core framework or cms? Modules have their own issue trackers (see [http://addons.silverstripe.org/](http://addons.silverstripe.org/))
+ * Which modules does this issue belong to? Each one has its own issue tracker.
+   If you are unsure, [create an issue](https://github.com/silverstripe/silverstripe-framework/issues/new) on the the "framework" repository.
+   Note that [documentation issues](https://github.com/silverstripe/silverstripe-framework/issues) are tracked in "framework" as well. 
  * Try to reproduce your issue on a [clean installation](/getting_started/composer#using-development-versions), maybe the bug has already been fixed on an unreleased branch?
- * The bugtracker is not the place to discuss enhancements, please use the forums or mailinglist.
+ * The bugtracker is not the place to discuss enhancements, please use 
+   [UserVoice](http://silverstripe.uservoice.com) and our [community channels](https://www.silverstripe.org/community).
    Only log enhancement tickets if they gather a large interest in the community
    and the enhancement is likely to be implemented in the next couple of months.
 
 If the issue does look like a new bug:
 
- * [Create a new ticket](https://github.com/silverstripe/silverstripe-framework/issues/new)
+ * Create an issue on the right module repository in GitHub
  * Describe the steps required to reproduce your issue, and the expected outcome. Unit tests, screenshots and screencasts can help here.
  * Describe your environment as detailed as possible: SilverStripe version, Browser, PHP version, Operating System, any installed SilverStripe modules.
  * *(optional)* [Submit a pull request](/contributing/code/#step-by-step-from-forking-to-sending-the-pull-request) which fixes the issue.
@@ -48,9 +47,7 @@ expected to be closed as soon as they're reviewed.
 </div>
 
 In order to gain interest and feedback in your feature, we encourage you to 
-present it to the community through the [forums](http://www.silverstripe.org/community/forums), 
-[core mailinglist](http://groups.google.com/group/silverstripe-dev) or on 
-[IRC](http://irc.silverstripe.org/).
+present it to the community through the [community channels](https://www.silverstripe.org/community).
 
 ## Reporting Security Issues
 
@@ -62,4 +59,4 @@ read our guide on [how to write secure code](/developer_guides/security/secure_c
 
 * [silverstripe.org/forums](http://www.silverstripe.org/community/forums/): Forums on silverstripe.org
 * [silverstripe-dev](http://groups.google.com/group/silverstripe-dev/): Core development mailinglist
-* [silverstripe-documentation](http://groups.google.com/group/silverstripe-documentation/): Documentation mailing list
+* [All issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
