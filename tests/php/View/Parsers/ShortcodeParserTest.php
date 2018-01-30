@@ -328,6 +328,17 @@ class ShortcodeParserTest extends SapphireTest
         $stub->parse('<p>test</p>');
     }
 
+    public function testSelfClosingHtmlTags()
+    {
+        $this->parser->register('img', function () {
+            return '<img src="http://example.com/image.jpg">';
+        });
+
+        $result = $this->parser->parse('[img]');
+
+        $this->assertContains('http://example.com/image.jpg', $result);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
