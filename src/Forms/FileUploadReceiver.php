@@ -139,7 +139,13 @@ trait FileUploadReceiver
         $items = new ArrayList();
 
         // Determine format of presented data
-        if (empty($value) && $record) {
+        if ($value instanceof File) {
+            $items = ArrayList::create([$value]);
+            $value = null;
+        } elseif ($value instanceof SS_List) {
+            $items = $value;
+            $value = null;
+        } elseif (empty($value) && $record) {
             // If a record is given as a second parameter, but no submitted values,
             // then we should inspect this instead for the form values
 
@@ -158,7 +164,7 @@ trait FileUploadReceiver
                 // If directly passing a list then save the items directly
                 $items = $record;
             }
-        } elseif (!empty($value['Files'])) {
+        } elseif (is_array($value) && !empty($value['Files'])) {
             // If value is given as an array (such as a posted form), extract File IDs from this
             $class = $this->getRelationAutosetClass();
             $items = DataObject::get($class)->byIDs($value['Files']);
