@@ -104,8 +104,6 @@ $gf_grid_x:	16px;
 	}
 
 	.ss-gridfield {
-		overflow-x: hidden;
-
 		.grid-levelup {
 			text-indent: -9999em;
 			a.list-parent-link{
@@ -138,7 +136,7 @@ $gf_grid_x:	16px;
 			font-size: $font-base-size;
 			@include inline-block();
 		}
-		}
+	}
 	table.ss-gridfield-table {
 		display: table;
 		@include box-shadow-none;
@@ -197,6 +195,7 @@ $gf_grid_x:	16px;
 					padding:0 $gf_grid_x/2;
 					text-align: right;
 					white-space: nowrap;
+					overflow: hidden;
 				}
 				&.col-listChildrenLink {
 					width:$gf_grid_x;
@@ -444,6 +443,9 @@ $gf_grid_x:	16px;
 				}
 				&.last {
 					@include border-top-right-radius($gf_border_radius);
+				}
+				&.col-Actions {
+					overflow: hidden;
 				}
 
 
