@@ -285,7 +285,7 @@ class CoreKernel implements Kernel
         $body =
             $dv->renderHeader() .
             $dv->renderInfo(
-                "Configuraton Error",
+                "Configuration Error",
                 Director::absoluteBaseURL()
             ) .
             $dv->renderParagraph(
