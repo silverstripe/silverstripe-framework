@@ -20,8 +20,8 @@ class ClassInfoTest extends SapphireTest {
 	}
 
 	public function testExists() {
-		$this->assertTrue(ClassInfo::exists('Object'));
-		$this->assertTrue(ClassInfo::exists('object'));
+		$this->assertTrue(ClassInfo::exists('SS_Object'));
+		$this->assertTrue(ClassInfo::exists('SS_Object'));
 		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));
 		$this->assertTrue(ClassInfo::exists('CLASSINFOTEST'));
 		$this->assertTrue(ClassInfo::exists('stdClass'));
@@ -97,7 +97,7 @@ class ClassInfoTest extends SapphireTest {
 	public function testAncestry() {
 		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
 		$expect = ArrayLib::valuekey(array(
-			'Object',
+            'SS_Object',
 			'ViewableData',
 			'DataObject',
 			'ClassInfoTest_BaseClass',
@@ -191,7 +191,7 @@ class ClassInfoTest extends SapphireTest {
 		);
 
 		$this->assertNull(
-			ClassInfo::table_for_object_field('Object', 'Title')
+			ClassInfo::table_for_object_field('SS_Object', 'Title')
 		);
 
 		$this->assertNull(

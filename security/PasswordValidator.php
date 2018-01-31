@@ -15,7 +15,7 @@
  * @package framework
  * @subpackage security
  */
-class PasswordValidator extends Object {
+class PasswordValidator extends SS_Object {
 
 	private static $character_strength_tests = array(
 		'lowercase' => '/[a-z]/',

@@ -14,7 +14,7 @@
  * @package framework
  * @subpackage core
  */
-abstract class Object {
+abstract class SS_Object {
 
 	/**
 	 * An array of extension names and parameters to be applied to this object upon construction.
@@ -135,7 +135,7 @@ abstract class Object {
 		// Class to create should be the calling class if not Object,
 		// otherwise the first parameter
 		$class = get_called_class();
-		if($class == 'Object') $class = array_shift($args);
+		if($class == 'SS_Object' || $class == 'Object') $class = array_shift($args);
 
 		$class = self::getCustomClass($class);
 
@@ -158,7 +158,7 @@ abstract class Object {
 		// Singleton to create should be the calling class if not Object,
 		// otherwise the first parameter
 		$class = get_called_class();
-		if($class === 'Object') $class = array_shift($args);
+		if($class === 'SS_Object') $class = array_shift($args);
 
 		return Injector::inst()->get($class);
 	}
@@ -192,8 +192,8 @@ abstract class Object {
 			// an $extension value can contain parameters as a string,
 			// e.g. "Versioned('Stage','Live')"
 			if(strpos($classSpec,'(') === false) {
-				if($firstArg === null) self::$_cache_inst_args[$classSpec.$firstArg] = Object::create($classSpec);
-				else self::$_cache_inst_args[$classSpec.$firstArg] = Object::create($classSpec, $firstArg);
+				if($firstArg === null) self::$_cache_inst_args[$classSpec.$firstArg] = SS_Object::create($classSpec);
+				else self::$_cache_inst_args[$classSpec.$firstArg] = SS_Object::create($classSpec, $firstArg);
 
 			} else {
 				list($class, $args) = self::parse_class_spec($classSpec);
@@ -201,7 +201,7 @@ abstract class Object {
 				if($firstArg !== null) array_unshift($args, $firstArg);
 				array_unshift($args, $class);
 
-				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array(array('Object','create'), $args);
+				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array(array('SS_Object','create'), $args);
 			}
 		}
 
@@ -394,7 +394,7 @@ abstract class Object {
 	 *               defined
 	 */
 	public static function static_lookup($class, $name, $default = null) {
-		if (is_subclass_of($class, 'Object')) {
+		if (is_subclass_of($class, 'SS_Object')) {
 			if (isset($class::$$name)) {
 				$parent = get_parent_class($class);
 				if (!$parent || !isset($parent::$$name) || $parent::$$name !== $class::$$name) return $class::$$name;
@@ -653,7 +653,7 @@ abstract class Object {
 
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
+	private static $unextendable_classes = array('SS_Object', 'ViewableData', 'RequestHandler');
 
 	static public function get_extra_config_sources($class = null) {
 		if($class === null) $class = get_called_class();
@@ -840,7 +840,7 @@ abstract class Object {
 	}
 
 	/**
-	 * @param object $extension
+	 * @param SS_Object $extension
 	 * @return array
 	 */
 	protected function findMethodsFromExtension($extension) {
@@ -957,21 +957,21 @@ abstract class Object {
 	// --------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * @see Object::get_static()
+	 * @see SS_Object::get_static()
 	 */
 	public function stat($name, $uncached = false) {
 		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::FIRST_SET);
 	}
 
 	/**
-	 * @see Object::set_static()
+	 * @see SS_Object::set_static()
 	 */
 	public function set_stat($name, $value) {
 		Config::inst()->update(($this->class ? $this->class : get_class($this)), $name, $value);
 	}
 
 	/**
-	 * @see Object::uninherited_static()
+	 * @see SS_Object::uninherited_static()
 	 */
 	public function uninherited($name) {
 		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);

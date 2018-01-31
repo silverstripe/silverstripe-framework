@@ -770,7 +770,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return Form Returns the lost password form
 	 */
 	public function ChangePasswordForm() {
-		return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
+		return SS_Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
 	}
 
 	/**

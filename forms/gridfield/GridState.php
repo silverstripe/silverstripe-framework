@@ -37,7 +37,7 @@ class GridState extends HiddenField {
 
 	/**
 	 * @param mixed $d
-	 * @return object
+	 * @return SS_Object
 	 */
 	public static function array_to_object($d) {
 		if(is_array($d)) {

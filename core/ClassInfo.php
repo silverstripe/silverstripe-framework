@@ -76,7 +76,7 @@ class ClassInfo {
 	 * Returns an array of the current class and all its ancestors and children
 	 * which require a DB table.
 	 *
-	 * @param string|object $class
+	 * @param string|SS_Object $class
 	 * @todo Move this into data object
 	 * @return array
 	 */
@@ -103,7 +103,7 @@ class ClassInfo {
 	 * Returns the root class (the first to extend from DataObject) for the
 	 * passed class.
 	 *
-	 * @param  string|object $class
+	 * @param  string|SS_Object $class
 	 * @return string
 	 */
 	public static function baseDataClass($class) {
@@ -162,7 +162,7 @@ class ClassInfo {
 	 *
 	 * eg: self::class_name('dataobJEct'); //returns 'DataObject'
 	 *
-	 * @param string|object $nameOrObject The classname or object you want to normalise
+	 * @param string|SS_Object $nameOrObject The classname or object you want to normalise
 	 *
 	 * @return string The normalised class name
 	 */

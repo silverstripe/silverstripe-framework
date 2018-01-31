@@ -192,7 +192,7 @@ class MySQLiConnector extends DBConnector {
 				case 'double':
 					$types .= 'd';
 					break;
-				case 'object': // Allowed if the object or resource has a __toString method
+				case 'SS_Object': // Allowed if the object or resource has a __toString method
 				case 'resource':
 				case 'string':
 				case 'NULL': // Take care that a where clause should use "where XX is null" not "where XX = null"

@@ -8,7 +8,7 @@
  * @package forms
  * @subpackage validators
  */
-abstract class Validator extends Object {
+abstract class Validator extends SS_Object {
 
 	/**
 	 * @var Form $form

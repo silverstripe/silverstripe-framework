@@ -5,7 +5,7 @@
  * @package framework
  * @subpackage filesystem
  */
-class Filesystem extends Object {
+class Filesystem extends SS_Object {
 
 	/**
 	 * @config

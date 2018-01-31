@@ -843,7 +843,7 @@ class SSObjectCreator extends InjectionCreator {
 		if (strpos($class, '(') === false) {
 			return parent::create($class, $params);
 		} else {
-			list($class, $params) = Object::parse_class_spec($class);
+			list($class, $params) = SS_Object::parse_class_spec($class);
 			$params = $this->injector->convertServiceProperty($params);
 			return parent::create($class, $params);
 		}

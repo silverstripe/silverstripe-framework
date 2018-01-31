@@ -14,7 +14,7 @@
  *
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
-class URLSegmentFilter extends Object {
+class URLSegmentFilter extends SS_Object {
 
 	/**
 	 * @config

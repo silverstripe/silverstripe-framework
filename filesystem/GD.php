@@ -4,7 +4,7 @@
  * @package framework
  * @subpackage filesystem
  */
-class GDBackend extends Object implements Image_Backend {
+class GDBackend extends SS_Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	protected $interlace;

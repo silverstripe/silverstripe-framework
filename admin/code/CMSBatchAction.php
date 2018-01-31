@@ -13,7 +13,7 @@
  * @package framework
  * @subpackage admin
  */
-abstract class CMSBatchAction extends Object {
+abstract class CMSBatchAction extends SS_Object {
 
 	protected $managedClass = 'SiteTree';
 

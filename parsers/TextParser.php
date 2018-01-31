@@ -25,7 +25,7 @@
  * @package framework
  * @subpackage misc
  */
-abstract class TextParser extends Object {
+abstract class TextParser extends SS_Object {
 	protected $content;
 
 	/**

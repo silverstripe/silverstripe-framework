@@ -13,7 +13,7 @@
  * @package forms
  * @subpackage transformations
  */
-class FormTransformation extends Object {
+class FormTransformation extends SS_Object {
 	public function transform(FormField $field) {
 		// Look for a performXXTransformation() method on the field itself.
 		// performReadonlyTransformation() is a pretty commonly applied method.

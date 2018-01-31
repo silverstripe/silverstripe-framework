@@ -77,7 +77,7 @@ class Config {
 	 * A marker instance for the "anything" singleton value. Don't access
 	 * directly, even in-class, always use self::anything()
 	 *
-	 * @var Object
+	 * @var SS_Object
 	 */
 	private static $_anything = null;
 
@@ -85,7 +85,7 @@ class Config {
 	 * Get a marker class instance that is used to do a "remove anything with
 	 * this key" by adding $key => Config::anything() to the suppress array
 	 *
-	 * @return Object
+	 * @return SS_Object
 	 */
 	public static function anything() {
 		if (self::$_anything === null) {
@@ -515,7 +515,7 @@ class Config {
 		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
 			// If we don't have a fresh list of extra sources, get it from the class itself
 			if (!array_key_exists($class, $this->extraConfigSources)) {
-				$this->extraConfigSources[$class] = Object::get_extra_config_sources($class);
+				$this->extraConfigSources[$class] = SS_Object::get_extra_config_sources($class);
 			}
 
 			// Update $sources with any extra sources

@@ -14,8 +14,8 @@ class SimpleTestCompatibility {
     
     /**
      *    Creates a copy whether in PHP5 or PHP4.
-     *    @param object $object     Thing to copy.
-     *    @return object            A copy.
+     *    @param SS_Object $object     Thing to copy.
+     *    @return SS_Object            A copy.
      *    @access public
      *    @static
      */
@@ -128,7 +128,7 @@ class SimpleTestCompatibility {
     /**
      *    Test to see if an object is a member of a
      *    class hiearchy.
-     *    @param object $object    Object to test.
+     *    @param SS_Object $object    Object to test.
      *    @param string $class     Root name of hiearchy.
      *    @return boolean         True if class in hiearchy.
      *    @access public

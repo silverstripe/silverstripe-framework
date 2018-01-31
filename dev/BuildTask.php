@@ -10,7 +10,7 @@
  * @package framework
  * @subpackage dev
  */
-abstract class BuildTask extends Object {
+abstract class BuildTask extends SS_Object {
 
 	/**
 	 * Set a custom url segment (to follow dev/tasks/)

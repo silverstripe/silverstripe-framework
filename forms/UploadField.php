@@ -1113,7 +1113,7 @@ class UploadField extends FileField {
 		// to default if there is no automatic relation
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
-			$fileObject = Object::create($relationClass);
+			$fileObject = SS_Object::create($relationClass);
 		}
 
 		// Get the uploaded file into a new file object.

@@ -1891,7 +1891,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 	/**
 	 * Object represented by this node
 	 *
-	 * @var Object
+	 * @var SS_Object
 	 */
 	protected $obj;
 
@@ -1924,7 +1924,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 	protected $filter;
 
 	/**
-	 * @param Object $obj
+	 * @param SS_Object $obj
 	 * @param string $link
 	 * @param bool $isCurrent
 	 * @param string $numChildrenMethod

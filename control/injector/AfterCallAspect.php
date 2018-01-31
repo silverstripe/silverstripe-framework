@@ -16,7 +16,7 @@ interface AfterCallAspect {
 	/**
 	 * Call this aspect after a method is executed
 	 *
-	 * @param object $proxied
+	 * @param SS_Object $proxied
 	 *				The object having the method called upon it.
 	 * @param string $method
 	 *				The name of the method being called

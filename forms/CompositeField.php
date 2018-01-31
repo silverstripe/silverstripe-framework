@@ -58,7 +58,7 @@ class CompositeField extends FormField {
 		// Skipping FormField::__construct(), but we have to make sure this
 		// doesn't count as a broken constructor
 		$this->brokenOnConstruct = false;
-		Object::__construct();
+		SS_Object::__construct();
 	}
 
 	/**

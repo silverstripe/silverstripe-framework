@@ -131,7 +131,7 @@ class SS_Backtrace {
 	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be
 	 * shown
 	 *
-	 * @param Object $item
+	 * @param SS_Object $item
 	 * @param boolean $showArg
 	 * @param Int $argCharLimit
 	 * @return String

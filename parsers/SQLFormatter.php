@@ -9,7 +9,7 @@
  * @subpackage parsers
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class SQLFormatter extends Object {
+class SQLFormatter extends SS_Object {
 
 	protected static $newline_before_tokens = array(
 		'SELECT',

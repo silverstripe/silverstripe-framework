@@ -8,7 +8,7 @@
  * @package framework
  * @subpackage search
  */
-abstract class SearchFilter extends Object {
+abstract class SearchFilter extends SS_Object {
 
 	/**
 	 * @var string Classname of the inspected {@link DataObject}

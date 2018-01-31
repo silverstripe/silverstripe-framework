@@ -367,7 +367,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromWeb->addExtraClass('content ss-uploadfield');
 
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
-		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
+		$computerUploadField = SS_Object::create('UploadField', 'AssetUploadField', '');
 		$computerUploadField->setConfig('previewMaxWidth', 40);
 		$computerUploadField->setConfig('previewMaxHeight', 30);
 		$computerUploadField->addExtraClass('ss-assetuploadfield');

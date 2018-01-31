@@ -7,7 +7,7 @@
  * @uses DBField::scaffoldFormField()
  * @uses DataObject::fieldLabels()
  */
-class FormScaffolder extends Object {
+class FormScaffolder extends SS_Object {
 
 	/**
 	 * @var DataObject $obj The object defining the fields to be scaffolded
@@ -131,7 +131,7 @@ class FormScaffolder extends Object {
 					$fieldClass = (isset($this->fieldClasses[$relationship]))
 						? $this->fieldClasses[$relationship]
 						: 'GridField';
-					$grid = Object::create($fieldClass,
+					$grid = SS_Object::create($fieldClass,
 						$relationship,
 						$this->obj->fieldLabel($relationship),
 						$this->obj->$relationship(),
@@ -160,7 +160,7 @@ class FormScaffolder extends Object {
 						? $this->fieldClasses[$relationship]
 						: 'GridField';
 
-					$grid = Object::create($fieldClass,
+					$grid = SS_Object::create($fieldClass,
 						$relationship,
 						$this->obj->fieldLabel($relationship),
 						$this->obj->$relationship(),

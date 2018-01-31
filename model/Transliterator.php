@@ -13,7 +13,7 @@
  * @package framework
  * @subpackage model
  */
-class SS_Transliterator extends Object {
+class SS_Transliterator extends SS_Object {
 	/**
 	 * @config
 	 * @var boolean Allow the use of iconv() to perform transliteration.  Set to false to disable.

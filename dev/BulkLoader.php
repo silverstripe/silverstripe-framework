@@ -256,7 +256,7 @@ abstract class BulkLoader extends ViewableData {
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class BulkLoader_Result extends Object {
+class BulkLoader_Result extends SS_Object {
 
 	/**
 	 * @var array Stores a map of ID and ClassNames

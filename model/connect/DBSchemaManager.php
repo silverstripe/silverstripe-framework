@@ -342,7 +342,7 @@ abstract class DBSchemaManager {
 					$fieldSpec = substr($fieldSpec, 0, $pos);
 				}
 
-				$fieldObj = Object::create_from_string($fieldSpec, $fieldName);
+				$fieldObj = SS_Object::create_from_string($fieldSpec, $fieldName);
 				$fieldObj->arrayValue = $arrayValue;
 
 				$fieldObj->setTable($table);

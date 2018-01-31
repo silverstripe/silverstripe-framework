@@ -7,7 +7,7 @@
 /**
  * Base class for HTML cleaning implementations.
  */
-abstract class HTMLCleaner extends Object {
+abstract class HTMLCleaner extends SS_Object {
 
 	/**
 	 * @var array

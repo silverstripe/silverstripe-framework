@@ -7,7 +7,7 @@
  * @package framework
  * @subpackage email
  */
-class Mailer extends Object {
+class Mailer extends SS_Object {
 
 	/**
 	 * Default encoding type for messages. Available options are:

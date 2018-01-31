@@ -23,7 +23,7 @@
 * @package framework
 * @subpackage search
 */
-class SearchContext extends Object {
+class SearchContext extends SS_Object {
 
 	/**
 	 * DataObject subclass to which search parameters relate to.

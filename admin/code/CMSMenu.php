@@ -15,7 +15,7 @@
  * @package framework
  * @subpackage admin
  */
-class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
+class CMSMenu extends SS_Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
 	 * An array of changes to be made to the menu items, in the order that the changes should be

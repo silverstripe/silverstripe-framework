@@ -422,7 +422,7 @@ class RequestHandler extends ViewableData {
 				$isAllowed = true;
 			} elseif(substr($test, 0, 2) == '->') {
 				// Determined by custom method with "->" prefix
-				list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+				list($method, $arguments) = SS_Object::parse_class_spec(substr($test, 2));
 				$isAllowed = call_user_func_array(array($this, $method), $arguments);
 			} else {
 				// Value is a permission code to check the current member against
