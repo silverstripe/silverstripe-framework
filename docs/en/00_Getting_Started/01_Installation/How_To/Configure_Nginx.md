@@ -44,7 +44,7 @@ server {
     try_files $uri =404;
   }
 
-  location ~ /framework/.*(main|rpc|tiny_mce_gzip)\.php$ {
+  location /index.php {
     fastcgi_buffer_size 32k;
     fastcgi_busy_buffers_size 64k;
     fastcgi_buffers 4 32k;
@@ -89,8 +89,7 @@ server {
 ```
 
 The above configuration sets up a virtual host `example.com` with
-rewrite rules suited for SilverStripe. The location block for framework
-php files passes all the php scripts to the FastCGI-wrapper via a TCP
-socket.
+rewrite rules suited for SilverStripe. The location block for index.php
+passes the php script to the FastCGI-wrapper via a TCP socket.
 
 Now you can proceed with the SilverStripe installation normally.
