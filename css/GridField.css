@@ -27,7 +27,6 @@ Used in side panels and action tabs
 .cms .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
 .cms .ss-gridfield .left { float: left; }
 .cms .ss-gridfield .left > * { margin-right: 8px; float: left; }
-.cms .ss-gridfield { overflow-x: hidden; }
 .cms .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
 .cms .ss-gridfield .grid-levelup a.list-parent-link { background: transparent url(../images/gridfield-level-up.png) no-repeat 0 0; display: block; }
 .cms .ss-gridfield .add-existing-autocompleter span { float: left; display: inline-block; vertical-align: top; *vertical-align: auto; *zoom: 1; *display: inline; }
@@ -45,7 +44,7 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tbody { background: #FFF; }
 .cms table.ss-gridfield-table tbody tr { cursor: pointer; }
 .cms table.ss-gridfield-table tbody td { width: auto; max-width: 500px; word-wrap: break-word; }
-.cms table.ss-gridfield-table tbody td.col-buttons { width: 1px; padding: 0 8px; text-align: right; white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td.col-buttons { width: 1px; padding: 0 8px; text-align: right; white-space: nowrap; overflow: hidden; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0071c4; }
@@ -93,6 +92,7 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tr th.extra select { margin: 0; }
 .cms table.ss-gridfield-table tr th.first { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
 .cms table.ss-gridfield-table tr th.last { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
+.cms table.ss-gridfield-table tr th.col-Actions { overflow: hidden; }
 .cms table.ss-gridfield-table tr th button.action_gridfield_relationadd:hover { color: #444 !important; /* Not sure why IE think it needs this */ }
 .cms table.ss-gridfield-table tr th button:hover { color: #ccc !important; /* Not sure why IE think it needs this */ }
 .cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { color: #fff !important; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
