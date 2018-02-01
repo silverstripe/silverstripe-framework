@@ -28,7 +28,7 @@ abstract class PasswordEncryptor
      */
     public static function get_encryptors()
     {
-        return Config::inst()->get('SilverStripe\\Security\\PasswordEncryptor', 'encryptors');
+        return Config::inst()->get(self::class, 'encryptors');
     }
 
     /**

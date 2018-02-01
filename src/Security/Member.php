@@ -1654,6 +1654,11 @@ class Member extends DataObject
      */
     public function validate()
     {
+        // If validation is disabled, skip this step
+        if (!DataObject::config()->uninherited('validation_enabled')) {
+            return ValidationResult::create();
+        }
+
         $valid = parent::validate();
         $validator = static::password_validator();
 
