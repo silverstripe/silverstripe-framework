@@ -78,18 +78,20 @@ class SessionTest extends SapphireTest
      */
     public function testClearElementThatDoesntExist()
     {
-        $s = new Session(array('something' => array('does' => 'exist')));
-
+        $s = new Session(['something' => ['does' => 'exist']]);
         $s->clear('something.doesnt.exist');
-        $result = $s->changedData();
-        unset($result['HTTP_USER_AGENT']);
-        $this->assertEquals(array(), $result);
 
+        // Clear without existing data
+        $data = $s->get('something.doesnt.exist');
+        $this->assertEquals(array(), $s->changedData());
+        $this->assertNull($data);
+
+        // Clear with existing change
         $s->set('something-else', 'val');
         $s->clear('something-new');
-        $result = $s->changedData();
-        unset($result['HTTP_USER_AGENT']);
-        $this->assertEquals(array('something-else' => 'val'), $result);
+        $data = $s->get('something-else');
+        $this->assertEquals(['something-else' => true], $s->changedData());
+        $this->assertEquals('val', $data);
     }
 
     /**
@@ -97,12 +99,29 @@ class SessionTest extends SapphireTest
      */
     public function testClearElementThatDoesExist()
     {
-        $s = new Session(array('something' => array('does' => 'exist')));
+        $s = new Session(['something' => ['does' => 'exist']]);
 
+        // Ensure keys are properly removed and not simply nullified
         $s->clear('something.does');
-        $result = $s->changedData();
-        unset($result['HTTP_USER_AGENT']);
-        $this->assertEquals(array('something' => array('does' => null)), $result);
+        $this->assertEquals(
+            ['something' => ['does' => true]],
+            $s->changedData()
+        );
+        $this->assertEquals(
+            [], // 'does' removed
+            $s->get('something')
+        );
+
+        // Clear at more specific level should also clear other changes
+        $s->clear('something');
+        $this->assertEquals(
+            ['something' => true],
+            $s->changedData()
+        );
+        $this->assertEquals(
+            null, // Should be removed not just empty array
+            $s->get('something')
+        );
     }
 
     public function testUserAgentLockout()
@@ -125,5 +144,53 @@ class SessionTest extends SapphireTest
         $s2 = new Session($s);
         $s2->init($req2);
         $this->assertNotEquals($s2->get('val'), 123);
+    }
+
+    public function testSave()
+    {
+        $request = new HTTPRequest('GET', '/');
+
+        // Test change of nested array type
+        $s = new Session($_SESSION = ['something' => ['some' => 'value', 'another' => 'item']]);
+        $s->set('something', 'string');
+        $s->save($request);
+        $this->assertEquals(
+            ['something' => 'string'],
+            $_SESSION
+        );
+
+        // Test multiple changes combine safely
+        $s = new Session($_SESSION = ['something' => ['some' => 'value', 'another' => 'item']]);
+        $s->set('something.another', 'newanother');
+        $s->clear('something.some');
+        $s->set('something.newkey', 'new value');
+        $s->save($request);
+        $this->assertEquals(
+            [
+                'something' => [
+                    'another' => 'newanother',
+                    'newkey' => 'new value',
+                ]
+            ],
+            $_SESSION
+        );
+
+        // Test cleared keys are restorable
+        $s = new Session($_SESSION = ['bookmarks' => [ 1 => 1, 2 => 2]]);
+        $s->clear('bookmarks');
+        $s->set('bookmarks', [
+            1 => 1,
+            3 => 3,
+        ]);
+        $s->save($request);
+        $this->assertEquals(
+            [
+                'bookmarks' => [
+                    1 => 1,
+                    3 => 3,
+                ]
+            ],
+            $_SESSION
+        );
     }
 }
