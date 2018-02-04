@@ -421,7 +421,7 @@ class DebugView
     public function debugVariableText($val)
     {
         // Check debug
-        if (ClassInfo::hasMethod($val, 'debug')) {
+        if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
             return $val->debug();
         }
 
