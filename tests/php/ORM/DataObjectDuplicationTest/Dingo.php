@@ -11,19 +11,23 @@ use SilverStripe\ORM\ManyManyList;
  * @method ManyManyList Children()
  * @method ManyManyList Parents()
  */
-class Class4 extends DataObject implements TestOnly
+class Dingo extends DataObject implements TestOnly
 {
-    private static $table_name = 'DataObjectDuplicateTest_Class4';
+    private static $table_name = 'DataObjectDuplicateTest_Dingo';
+
+    private static $cascade_duplicates = [
+        'Children',
+    ];
 
     private static $db = [
         'Title' => 'Varchar',
     ];
 
     private static $many_many = [
-        'Children' => Class4::class,
+        'Children' => Dingo::class,
     ];
 
     private static $belongs_many_many = [
-        'Parents' => Class4::class,
+        'Parents' => Dingo::class,
     ];
 }

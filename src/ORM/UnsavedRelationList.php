@@ -82,10 +82,6 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function changeToList(RelationList $list)
     {
         foreach ($this->items as $key => $item) {
-            if (is_object($item)) {
-                /** @var DataObject $item */
-                $item->write();
-            }
             $list->add($item, $this->extraFields[$key]);
         }
     }

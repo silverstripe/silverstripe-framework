@@ -1088,6 +1088,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * list manipulation
      *
      * @param mixed $item
+     * @param array|null $extraFields Any extra fields, if supported by this list
      */
     public function add($item)
     {

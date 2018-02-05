@@ -420,6 +420,45 @@ If your object is versioned, cascade_deletes will also act as "cascade unpublish
 on a parent object will trigger unpublish on the child, similarly to how `owns` causes triggered publishing.
 See the [versioning docs](/developer_guides/versioning) for more information on ownership.
 
+## Cascading duplications
+
+Similar to `cascade_deletes` there is also a `cascade_duplicates` config which works in much the same way.
+When you invoke `$dataObject->duplicate()`, relation names specified by this config will be duplicated
+and saved against the new clone object.
+
+Note that duplications will act differently depending on the kind of relation:
+ - Exclusive relationships (e.g. has_many, belongs_to) will be explicitly duplicated.
+ - Non-exclusive many_many will not be duplicated, but the mapping table values will instead
+   be copied for this record.
+ - Non-exclusive has_one relationships are not normally necessary to duplicate, since both parent and clone
+   can normally share the same relation ID. However, if this is declared in `cascade_duplicates` any
+   has one will be similarly duplicated as though it were an exclusive relationship.
+
+For example:
+
+```php
+use SilverStripe\ORM\DataObject;
+
+class ParentObject extends DataObject {
+    private static $many_many = [
+        'RelatedChildren' => ChildObject::class,
+    ];
+    private static $cascade_duplicates = [ 'RelatedChildren' ];
+}
+class ChildObject extends DataObject {
+}
+```
+
+When duplicating objects you can disable recursive duplication by passing in `false` to the second
+argument of duplicate().
+
+E.g.
+
+```php
+$parent = ParentObject::get()->first();
+$dupe = $parent->duplicate(true, false);
+```
+
 ## Adding relations
 
 Adding new items to a relations works the same, regardless if you're editing a **has_many** or a **many_many**. They are 
