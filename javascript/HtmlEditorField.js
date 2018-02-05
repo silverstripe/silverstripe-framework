@@ -1142,7 +1142,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var val = this.val(), orig = val;
 
 				val = $.trim(val);
-				val = val.replace(/^https?:\/\//i, '');
 				if (orig !== val) this.val(val);
 
 				this.getAddButton().button(!!val ? 'enable' : 'disable');
@@ -1160,10 +1159,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			onclick: function(e) {
 				var urlField = this.getURLField(), container = this.closest('.CompositeField'), form = this.closest('form');
+				var val = urlField.val();
 
 				if (urlField.validate()) {
 					container.addClass('loading');
-					form.showFileView('http://' + urlField.val()).done(function() {
+ 
+					// add "http://" if a protocol is missing from the url
+					if (val.match(/^https?:\/\//i) == void 0) {
+						val = 'http://' + val;
+					}
+
+					form.showFileView(val).done(function() {
 						container.removeClass('loading');
 					});
 					form.redraw();
