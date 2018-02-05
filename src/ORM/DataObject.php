@@ -2370,8 +2370,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getField($field)
     {
-        // If we already have an object in $this->record, then we should just return that
-        if (isset($this->record[$field]) && is_object($this->record[$field])) {
+        // If we already have a value in $this->record, then we should just return that
+        if (isset($this->record[$field])) {
             return $this->record[$field];
         }
 
@@ -2591,13 +2591,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Support component assignent via field setter
         $schema = static::getSchema();
         if ($schema->unaryComponent(static::class, $fieldName)) {
+            unset($this->components[$fieldName]);
             // Assign component directly
             if (is_null($val) || $val instanceof DataObject) {
                 return $this->setComponent($fieldName, $val);
             }
             // Assign by ID instead of object
-            unset($this->components[$fieldName]);
-            $fieldName .= 'ID';
+            if (is_numeric($val)) {
+                $fieldName .= 'ID';
+            }
         }
 
         // Situation 1: Passing an DBField
