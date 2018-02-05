@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use League\Csv\Writer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
@@ -160,7 +161,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
     public function generateExportFileData($gridField)
     {
         $csvColumns = $this->getExportColumnsForGridField($gridField);
-        $fileData = array();
+
+        $csvWriter = Writer::createFromFileObject(new \SplTempFileObject());
+        $csvWriter->setDelimiter($this->getCsvSeparator());
+        $csvWriter->setEnclosure($this->getCsvEnclosure());
+        $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
+        $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
         if ($this->csvHasHeader) {
             $headers = array();
@@ -175,7 +181,8 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                 }
             }
 
-            $fileData[] = $headers;
+            $csvWriter->insertOne($headers);
+            unset($headers);
         }
 
         //Remove GridFieldPaginator as we're going to export the entire list.
@@ -221,7 +228,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                     $columnData[] = $value;
                 }
 
-                $fileData[] = $columnData;
+                $csvWriter->insertOne($columnData);
             }
 
             if ($item->hasMethod('destroy')) {
@@ -229,13 +236,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
-        // Convert the $fileData array into csv by capturing fputcsv's output
-        $csv = fopen('php://temp', 'r+');
-        foreach ($fileData as $line) {
-            fputcsv($csv, $line, $this->getCsvSeparator(), $this->getCsvEnclosure());
-        }
-        rewind($csv);
-        return stream_get_contents($csv);
+        return (string) $csvWriter;
     }
 
     /**

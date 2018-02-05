@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use League\Csv\Reader;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team;
 use SilverStripe\ORM\DataList;
@@ -54,9 +55,12 @@ class GridFieldExportButtonTest extends SapphireTest
         $config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            "\"My Name\"\n",
-            $button->generateExportFileData($gridField)
+            "$bom\"My Name\"\r\n",
+            (string) $csvReader
         );
     }
 
@@ -65,9 +69,12 @@ class GridFieldExportButtonTest extends SapphireTest
         $button = new GridFieldExportButton();
         $button->setExportColumns(['Name' => 'My Name']);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            '"My Name"' . "\n" . 'Test' . "\n" . 'Test2' . "\n",
-            $button->generateExportFileData($this->gridField)
+            $bom . '"My Name"' . "\r\n" . 'Test' . "\r\n" . 'Test2' . "\r\n",
+            (string) $csvReader
         );
     }
 
@@ -82,9 +89,12 @@ class GridFieldExportButtonTest extends SapphireTest
         $button = new GridFieldExportButton();
         $button->setExportColumns(['Name' => 'My Name']);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            "\"My Name\"\n\"\t=SUM(1, 2)\"\nTest\nTest2\n",
-            $button->generateExportFileData($this->gridField)
+            "$bom\"My Name\"\r\n\"\t=SUM(1, 2)\"\r\nTest\r\nTest2\r\n",
+            (string) $csvReader
         );
     }
 
@@ -98,9 +108,12 @@ class GridFieldExportButtonTest extends SapphireTest
             }
         ]);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            'Name,City' . "\n" . 'Test,"City city"' . "\n" . 'Test2,"Quoted ""City"" 2 city"' . "\n",
-            $button->generateExportFileData($this->gridField)
+            $bom . 'Name,City' . "\r\n" . 'Test,"City city"' . "\r\n" . 'Test2,"Quoted ""City"" 2 city"' . "\r\n",
+            (string) $csvReader
         );
     }
 
@@ -112,9 +125,12 @@ class GridFieldExportButtonTest extends SapphireTest
             'City' => 'strtolower',
         ]);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            'Name,strtolower' . "\n" . 'Test,City' . "\n" . 'Test2,"Quoted ""City"" 2"' . "\n",
-            $button->generateExportFileData($this->gridField)
+            $bom . 'Name,strtolower' . "\r\n" . 'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
+            (string) $csvReader
         );
     }
 
@@ -127,9 +143,12 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
         $button->setCsvHasHeader(false);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            'Test,City' . "\n" . 'Test2,"Quoted ""City"" 2"' . "\n",
-            $button->generateExportFileData($this->gridField)
+            $bom . 'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
+            (string) $csvReader
         );
     }
 
@@ -146,9 +165,14 @@ class GridFieldExportButtonTest extends SapphireTest
         }
         $this->gridField->setList($arrayList);
 
+        $exportData = $button->generateExportFileData($this->gridField);
+
+        $csvReader = Reader::createFromString($exportData);
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            "ID\n" . "1\n" . "2\n" . "3\n" . "4\n" . "5\n" . "6\n" . "7\n" . "8\n" . "9\n" . "10\n" . "11\n" . "12\n" . "13\n" . "14\n" . "15\n" . "16\n",
-            $button->generateExportFileData($this->gridField)
+            $bom . "ID\r\n" . "1\r\n" . "2\r\n" . "3\r\n" . "4\r\n" . "5\r\n" . "6\r\n" . "7\r\n" . "8\r\n" . "9\r\n" . "10\r\n" . "11\r\n" . "12\r\n" . "13\r\n" . "14\r\n" . "15\r\n" . "16\r\n",
+            (string) $csvReader
         );
     }
 
@@ -159,9 +183,12 @@ class GridFieldExportButtonTest extends SapphireTest
             'RugbyTeamNumber' => 'Rugby Team Number'
         ]);
 
+        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $bom = $csvReader->getInputBOM();
+
         $this->assertEquals(
-            "\"Rugby Team Number\"\n2\n0\n",
-            $button->generateExportFileData($this->gridField)
+            "$bom\"Rugby Team Number\"\r\n2\r\n0\r\n",
+            (string) $csvReader
         );
     }
 }
