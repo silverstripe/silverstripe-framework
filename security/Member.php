@@ -894,7 +894,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$id = Session::get("loggedInAs");
 		}
 
-		return is_numeric($id) ? $id : 0;
+		return is_numeric($id) ? (int) $id : 0;
 	}
 	private static $_already_tried_to_auto_log_in = false;
 
@@ -1829,6 +1829,37 @@ class Member_GroupSet extends ManyManyList {
 		if($this->canAddGroups(array($itemID))) {
 			parent::add($item, $extraFields);
 		}
+	}
+
+	public function removeAll() {
+		$base = ClassInfo::baseDataClass($this->dataClass());
+
+		// Remove the join to the join table to avoid MySQL row locking issues.
+		$query = $this->dataQuery();
+		$foreignFilter = $query->getQueryParam('Foreign.Filter');
+		$query->removeFilterOn($foreignFilter);
+
+		$selectQuery = $query->query();
+		$selectQuery->setSelect("\"{$base}\".\"ID\"");
+
+		$from = $selectQuery->getFrom();
+		unset($from[$this->joinTable]);
+		$selectQuery->setFrom($from);
+		$selectQuery->setOrderBy(); // ORDER BY in subselects breaks MS SQL Server and is not necessary here
+		$selectQuery->setDistinct(false);
+
+		// Use a sub-query as SQLite does not support setting delete targets in
+		// joined queries.
+		$delete = new SQLDelete();
+		$delete->setFrom("\"{$this->joinTable}\"");
+		// Use ManyManyList::foreignIDFilter() rather than the one in this class
+		// otherwise we end up selecting the wrong columns
+		$delete->addWhere(parent::foreignIDFilter());
+		$subSelect = $selectQuery->sql($parameters);
+		$delete->addWhere(array(
+			"\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+		));
+		$delete->execute();
 	}
 
 	/**

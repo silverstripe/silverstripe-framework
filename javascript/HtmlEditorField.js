@@ -1142,7 +1142,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var val = this.val(), orig = val;
 
 				val = $.trim(val);
-				val = val.replace(/^https?:\/\//i, '');
 				if (orig !== val) this.val(val);
 
 				this.getAddButton().button(!!val ? 'enable' : 'disable');
@@ -1160,10 +1159,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			onclick: function(e) {
 				var urlField = this.getURLField(), container = this.closest('.CompositeField'), form = this.closest('form');
+				var val = urlField.val();
 
 				if (urlField.validate()) {
 					container.addClass('loading');
-					form.showFileView('http://' + urlField.val()).done(function() {
+ 
+					// add "http://" if a protocol is missing from the url
+					if (val.match(/^https?:\/\//i) == void 0) {
+						val = 'http://' + val;
+					}
+
+					form.showFileView(val).done(function() {
 						container.removeClass('loading');
 					});
 					form.redraw();
@@ -1411,22 +1417,76 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				};
 			},
 			getHTML: function() {
-				var el,
-					attrs = this.getAttributes(),
-					extraData = this.getExtraData(),
-					// imgEl = $('<img id="_ss_tmp_img" />');
-					imgEl = $('<img />').attr(attrs).addClass('ss-htmleditorfield-file embed');
+				/* NOP. Instead, will override insertHTML() below and directly update these elements. */
 
+			},
+			/**
+			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
+			 */
+			insertHTML: function(ed) {
+				var form = this.closest('form');
+				var node = form.getSelection();
+
+				// Get the attributes & extra data
+				var attrs = this.getAttributes(), extraData = this.getExtraData();
+
+				// Find the element we are replacing - either the img, it's wrapper parent, or nothing (if creating)
+				var replacee = (node && node.is('img')) ? node : null;
+				if (replacee && replacee.parent().is('.captionImage')) replacee = replacee.parent();
+
+				// Find the img node - either the existing img or a new one, and update it
+				var img = (node && node.is('img')) ? node : $('<img />').attr(attrs).addClass('ss-htmleditorfield-file embed');
+
+				// Setup extra data.
 				$.each(extraData, function (key, value) {
-					imgEl.attr('data-' + key, value);
+					img.attr('data-' + key, value);
 				});
 
+				// Any existing figure or caption node
+				var container = img.parent('.captionImage'), caption = container.find('.caption');
+
+				// If we've got caption text, we need a wrapping div.captionImage and sibling p.caption
 				if(extraData.CaptionText) {
-					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
-				} else {
-					el = imgEl;
+					if (!container.length) {
+						container = $('<div></div>');
 				}
-				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+
+					container.attr('class', 'captionImage '+attrs['class']).css('width', attrs.width);
+
+					if (!caption.length) {
+						caption = $('<p class="caption"></p>').appendTo(container);
+					}
+
+					caption.attr('class', 'caption '+attrs['class']).text(extraData.CaptionText);
+				}
+				// Otherwise forget they exist
+				else {
+					container = caption = null;
+				}
+
+				// The element we are replacing the replacee with
+				var replacer = container ? container : img;
+
+				// If we're replacing something, and it's not with itself, do so
+				if (replacee && replacee.not(replacer).length) {
+					replacee.replaceWith(replacer);
+				}
+
+				// If we have a wrapper element, make sure the img is the first child - img might be the
+				// replacee, and the wrapper the replacer, and we can't do this till after the replace has happened
+				if (container) {
+					container.prepend(img);
+				}
+
+				// If we don't have a replacee, then we need to insert the whole HTML
+				if (!replacee) {
+					// Otherwise insert the whole HTML content
+					ed.repaint();
+					ed.insertContent($('<div />').append(replacer).html(), {skip_undo : 1});
+				}
+
+				ed.addUndo();
+				ed.repaint();
 			},
 			updateFromNode: function(node) {
 				this.find(':input[name=AltText]').val(node.attr('alt'));
@@ -1435,6 +1495,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=Title]').val(node.attr('title'));
 				this.find(':input[name=CSSClass]').val(node.data('cssclass'));
+				this.find(':input[name=CaptionText]').val(node.siblings('.caption:first').text());
 			}
 		});
 

@@ -515,6 +515,7 @@ class DataQuery {
 		if($compositeFields) foreach($compositeFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && $v) {
 				$dbO = SS_Object::create_from_string($v, $k);
+				$dbO->setTable($tableClass);
 				$dbO->addToQuery($query);
 			}
 		}
