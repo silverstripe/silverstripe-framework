@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\Reader;
 use SilverStripe\Core\Injector\Injectable;
 use Iterator;
 
@@ -114,6 +115,7 @@ class CSVParser implements Iterator
      */
     public function __construct($filename, $delimiter = ",", $enclosure = '"')
     {
+        Deprecation::notice('5.0', __CLASS__ . ' is deprecated, use ' . Reader::class . ' instead');
         $filename = Director::getAbsFile($filename);
         $this->filename = $filename;
         $this->delimiter = $delimiter;

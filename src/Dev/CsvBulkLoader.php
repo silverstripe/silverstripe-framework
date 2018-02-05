@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\Reader;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
-use Exception;
 
 /**
  * Utility class to facilitate complex CSV-imports by defining column-mappings
@@ -67,35 +67,72 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processAll($filepath, $preview = false)
     {
-        $filepath = Director::getAbsFile($filepath);
-        $files = $this->splitFile($filepath);
+        $previousDetectLE = ini_get('auto_detect_line_endings');
 
-        $result = null;
-        $last = null;
-
+        ini_set('auto_detect_line_endings', true);
         try {
-            foreach ($files as $file) {
-                $last = $file;
+            $filepath = Director::getAbsFile($filepath);
+            $csvReader = Reader::createFromPath($filepath, 'r');
 
-                $next = $this->processChunk($file, $preview);
-
-                if ($result instanceof BulkLoader_Result) {
-                    $result->merge($next);
-                } else {
-                    $result = $next;
-                }
-
-                @unlink($file);
+            if ($this->columnMap) {
+                $headerMap = $this->getNormalisedColumnMap();
+                $remapper = function ($row, $rowOffset, $iterator) use ($headerMap) {
+                    foreach ($headerMap as $column => $renamedColumn) {
+                        if ($column == $renamedColumn) {
+                            continue;
+                        }
+                        if (array_key_exists($column, $row)) {
+                            if (strpos($renamedColumn, '_ignore_') !== 0) {
+                                $row[$renamedColumn] = $row[$column];
+                            }
+                            unset($row[$column]);
+                        }
+                    }
+                    return $row;
+                };
+            } else {
+                $remapper = null;
             }
-        } catch (Exception $e) {
-            $failedMessage = sprintf("Failed to parse %s", $last);
+
+            if ($this->hasHeaderRow) {
+                $rows = $csvReader->fetchAssoc(0, $remapper);
+            } elseif ($this->columnMap) {
+                $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+            }
+
+            $result = BulkLoader_Result::create();
+
+            foreach ($rows as $row) {
+                $this->processRecord($row, $this->columnMap, $result, $preview);
+            }
+        } catch (\Exception $e) {
+            $failedMessage = sprintf("Failed to parse %s", $filepath);
             if (Director::isDev()) {
                 $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
             }
             print $failedMessage . PHP_EOL;
+        } finally {
+            ini_set('auto_detect_line_endings', $previousDetectLE);
         }
-
         return $result;
+    }
+
+    protected function getNormalisedColumnMap()
+    {
+        $map = [];
+        foreach ($this->columnMap as $column => $newColumn) {
+            if (strpos($newColumn, "->") === 0) {
+                $map[$column] = $column;
+            } elseif (is_null($newColumn)) {
+                // the column map must consist of unique scalar values
+                // `null` can be present multiple times and is not scalar
+                // so we name it in a standard way so we can remove it later
+                $map[$column] = '_ignore_' . $column;
+            } else {
+                $map[$column] = $newColumn;
+            }
+        }
+        return $map;
     }
 
     /**
@@ -108,6 +145,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function splitFile($path, $lines = null)
     {
+        Deprecation::notice('5.0', 'splitFile is deprecated, please process files using a stream');
         $previous = ini_get('auto_detect_line_endings');
 
         ini_set('auto_detect_line_endings', true);
@@ -169,6 +207,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function getNewSplitFileName()
     {
+        Deprecation::notice('5.0', 'getNewSplitFileName is deprecated, please name your files yourself');
         return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class), true) . '.csv';
     }
 
@@ -180,6 +219,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processChunk($filepath, $preview = false)
     {
+        Deprecation::notice('5.0', 'processChunk is deprecated, please process rows individually');
         $results = BulkLoader_Result::create();
 
         $csv = new CSVParser(
@@ -331,8 +371,7 @@ class CsvBulkLoader extends BulkLoader
         $obj->destroy();
 
         // memory usage
-        unset($existingObj);
-        unset($obj);
+        unset($existingObj, $obj);
 
         return $objID;
     }

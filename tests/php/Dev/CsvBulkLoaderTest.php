@@ -246,9 +246,9 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($filepath);
         $createdPlayers = $results->Created();
         $player = $createdPlayers->first();
-        $this->assertEquals($player->FirstName, 'Customized John');
-        $this->assertEquals($player->Biography, "He's a good guy");
-        $this->assertEquals($player->IsRegistered, "1");
+        $this->assertEquals('Customized John', $player->FirstName);
+        $this->assertEquals("He's a good guy", $player->Biography);
+        $this->assertEquals("1", $player->IsRegistered);
     }
 
     public function testLoadWithCustomImportMethodDuplicateMap()
