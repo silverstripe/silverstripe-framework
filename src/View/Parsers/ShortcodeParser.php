@@ -726,7 +726,7 @@ class ShortcodeParser
             $content = preg_replace_callback(
                 // Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
                 // hasn't been heavily modified
-                '/<img[^>]+class="' . preg_quote(self::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]+>/i',
+                '/<img[^>]+class="' . preg_quote(self::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]*>/i',
                 function ($matches) use ($tags, $parser) {
                     $tag = $tags[$matches[1]];
                     return $parser->getShortcodeReplacementText($tag);

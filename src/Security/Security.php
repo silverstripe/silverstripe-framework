@@ -671,7 +671,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         if ($request) {
             $this->setRequest($request);
-        } elseif ($request) {
+        } elseif ($this->getRequest()) {
             $request = $this->getRequest();
         } else {
             throw new HTTPResponse_Exception("No request available", 500);
