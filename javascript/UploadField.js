@@ -450,6 +450,10 @@
 						if (iframe.data('src')) {
 							self._prepareIframe(iframe, editform, itemInfo);
 							iframe.data('src', '');
+						// Subsequent load events are likely form submissions, which may change
+						// the height if alert dialogs are displayed
+						} else {
+							editform.fitHeight();
 						}
 					});
 				} else {
