@@ -674,6 +674,31 @@ class DataObjectTest extends SapphireTest
     }
 
     /**
+     * Test has_one used as field getter/setter
+     */
+    public function testHasOneAsField()
+    {
+        /** @var DataObjectTest\Team $team1 */
+        $team1 = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+
+        // Setter: By RelationID
+        $team1->CaptainID = $captain1->ID;
+        $team1->write();
+        $this->assertEquals($captain1->ID, $team1->Captain->ID);
+
+        // Setter: New object
+        $team1->Captain = $captain2;
+        $team1->write();
+        $this->assertEquals($captain2->ID, $team1->Captain->ID);
+
+        // Setter: Custom data (required by DataDifferencer)
+        $team1->Captain = DBField::create_field('HTMLFragment', '<p>No captain</p>');
+        $this->assertEquals('<p>No captain</p>', $team1->Captain);
+    }
+
+    /**
      * @todo Extend type change tests (e.g. '0'==NULL)
      */
     public function testChangedFields()
