@@ -171,6 +171,7 @@ class DefaultAdminService
             $admin = Member::create();
             $admin->FirstName = $name ?: $email;
             $admin->Email = $email;
+            $admin->PasswordEncryption = 'none';
             $admin->write();
         }
 
