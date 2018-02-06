@@ -587,9 +587,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Return a copy of this list which does not contain any items with these charactaristics
+     * Return a copy of this list which does not contain any items that match all params
      *
-     * @see SS_List::exclude()
      * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list = $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
      * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
@@ -623,6 +622,43 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 $filter->exclude($subquery);
             }
         });
+    }
+
+    /**
+     * Return a copy of this list which does not contain any items with any of these params
+     *
+     * @example $list = $list->excludeAny('Name', 'bob'); // exclude bob from list
+     * @example $list = $list->excludeAny('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>21)); // exclude bob or Age 21
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or Age 21 or 43
+     * @example $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+     *          // bob, phil, 21 or 43 would be excluded
+     *
+     * @todo extract the sql from this method into a SQLGenerator class
+     *
+     * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
+     * @return $this
+     */
+    public function excludeAny()
+    {
+        $numberFuncArgs = count(func_get_args());
+        $whereArguments = array();
+
+        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+            $whereArguments = func_get_arg(0);
+        } elseif ($numberFuncArgs == 2) {
+            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+        } else {
+            throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
+        }
+        $list = $this;
+
+        foreach ($whereArguments as $field => $value) {
+            $filter = $this->createSearchFilter($field, $value);
+            $list = $list->alterDataQuery(array($filter, 'exclude'));
+        }
+
+        return $list;
     }
 
     /**

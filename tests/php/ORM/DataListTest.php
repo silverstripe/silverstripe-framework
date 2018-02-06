@@ -1644,6 +1644,54 @@ class DataListTest extends SapphireTest
     }
 
     /**
+     * Test that Bob and Phil are excluded (one match each)
+     */
+    public function testExcludeAny()
+    {
+        /**
+         * @var DataList $list
+         */
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+                'Name' => 'Bob',
+                'Comment' => 'Phil is a unique guy, and comments on team2'
+        ));
+        $this->assertCount(1, $list);
+    }
+
+    /**
+     * Test that Bob and Phil are excluded by Name
+     */
+    public function testExcludeAnyArrays()
+    {
+        /**
+         * @var DataList $list
+         */
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+                'Name' => array('Bob', 'Phil'),
+                'Comment' => 'No matching comments'
+        ));
+        $this->assertCount(1, $list);
+    }
+
+    /**
+     * Test that Bob is excluded by Name, Phil by comment
+     */
+    public function testExcludeAnyMultiArrays()
+    {
+        /**
+         * @var DataList $list
+         */
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+                'Name' => array('Bob', 'Fred'),
+                'Comment' => array('No matching comments', 'Phil is a unique guy, and comments on team2')
+        ));
+        $this->assertCount(1, $list);
+    }
+
+    /**
      * Test exact match filter with empty array items
      *
      * @expectedException \InvalidArgumentException
