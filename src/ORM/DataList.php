@@ -598,7 +598,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @todo extract the sql from this method into a SQLGenerator class
      *
-     * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
+     * @param string|array
+     * @param string [optional]
+     *
      * @return $this
      */
     public function exclude()
@@ -634,9 +636,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // bob, phil, 21 or 43 would be excluded
      *
-     * @todo extract the sql from this method into a SQLGenerator class
+     * @param string|array
+     * @param string [optional]
      *
-     * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
      * @return $this
      */
     public function excludeAny()
