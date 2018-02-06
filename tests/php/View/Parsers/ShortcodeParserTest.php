@@ -83,8 +83,7 @@ class ShortcodeParserTest extends SapphireTest
     {
         $tests = array(
             '[test_shortcode]',
-            '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]'.
-            '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
+            '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]' . '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
         );
 
         foreach ($tests as $test) {
@@ -327,6 +326,17 @@ class ShortcodeParserTest extends SapphireTest
             ->method('replaceElementTagsWithMarkers')->will($this->returnValue(array('', '')));
 
         $stub->parse('<p>test</p>');
+    }
+
+    public function testSelfClosingHtmlTags()
+    {
+        $this->parser->register('img', function () {
+            return '<img src="http://example.com/image.jpg">';
+        });
+
+        $result = $this->parser->parse('[img]');
+
+        $this->assertContains('http://example.com/image.jpg', $result);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

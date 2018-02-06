@@ -78,7 +78,7 @@ class DeprecationTest extends SapphireTest
     {
         $this->assertEquals(
             TestDeprecation::get_method(),
-            static::class.'->testMethodNameCalculation'
+            static::class . '->testMethodNameCalculation'
         );
     }
 

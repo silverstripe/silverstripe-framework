@@ -490,7 +490,7 @@ class FormField extends RequestHandler
      * Gets the contextual label than can be used for additional field description.
      * Can be shown to the right or under the field in question.
      *
-     * @return string Contextual label text.
+     * @return string Contextual label text
      */
     public function RightTitle()
     {
@@ -499,9 +499,8 @@ class FormField extends RequestHandler
 
     /**
      * Sets the right title for this formfield
-     * Note: This expects escaped HTML.
      *
-     * @param string $rightTitle Escaped HTML for title
+     * @param string|DBField Plain text string, or a DBField with appropriately escaped HTML
      * @return $this
      */
     public function setRightTitle($rightTitle)

@@ -217,7 +217,8 @@ class DBDate extends DBField
     }
 
     /**
-     * Return the date using a particular formatting string.
+     * Return the date using a particular formatting string. Use {o} to include an ordinal representation
+     * for the day of the month ("1st", "2nd", "3rd" etc)
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
      * @return string The date in the requested format
@@ -227,6 +228,12 @@ class DBDate extends DBField
         if (!$this->value) {
             return null;
         }
+
+        // Replace {o} with ordinal representation of day of the month
+        if (strpos($format, '{o}') !== false) {
+            $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format);
+        }
+
         $formatter = $this->getFormatter();
         $formatter->setPattern($format);
         return $formatter->format($this->getTimestamp());
@@ -322,19 +329,7 @@ class DBDate extends DBField
      */
     public function Rfc3339()
     {
-        $date = $this->Format('y-MM-dd\\THH:mm:ss');
-        if (!$date) {
-            return null;
-        }
-
-        $matches = array();
-        if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $this->getTimestamp()), $matches)) {
-            $date .= $matches[1].$matches[2].':'.$matches[3];
-        } else {
-            $date .= 'Z';
-        }
-
-        return $date;
+        return date('c', $this->getTimestamp());
     }
 
     /**
@@ -419,7 +414,7 @@ class DBDate extends DBField
             case "seconds":
                 $span = $ago;
                 return _t(
-                    __CLASS__.'.SECONDS_SHORT_PLURALS',
+                    __CLASS__ . '.SECONDS_SHORT_PLURALS',
                     '{count} sec|{count} secs',
                     ['count' => $span]
                 );
@@ -427,7 +422,7 @@ class DBDate extends DBField
             case "minutes":
                 $span = round($ago/60);
                 return _t(
-                    __CLASS__.'.MINUTES_SHORT_PLURALS',
+                    __CLASS__ . '.MINUTES_SHORT_PLURALS',
                     '{count} min|{count} mins',
                     ['count' => $span]
                 );
@@ -435,7 +430,7 @@ class DBDate extends DBField
             case "hours":
                 $span = round($ago/3600);
                 return _t(
-                    __CLASS__.'.HOURS_SHORT_PLURALS',
+                    __CLASS__ . '.HOURS_SHORT_PLURALS',
                     '{count} hour|{count} hours',
                     ['count' => $span]
                 );
@@ -443,7 +438,7 @@ class DBDate extends DBField
             case "days":
                 $span = round($ago/86400);
                 return _t(
-                    __CLASS__.'.DAYS_SHORT_PLURALS',
+                    __CLASS__ . '.DAYS_SHORT_PLURALS',
                     '{count} day|{count} days',
                     ['count' => $span]
                 );
@@ -451,7 +446,7 @@ class DBDate extends DBField
             case "months":
                 $span = round($ago/86400/30);
                 return _t(
-                    __CLASS__.'.MONTHS_SHORT_PLURALS',
+                    __CLASS__ . '.MONTHS_SHORT_PLURALS',
                     '{count} month|{count} months',
                     ['count' => $span]
                 );
@@ -459,7 +454,7 @@ class DBDate extends DBField
             case "years":
                 $span = round($ago/86400/365);
                 return _t(
-                    __CLASS__.'.YEARS_SHORT_PLURALS',
+                    __CLASS__ . '.YEARS_SHORT_PLURALS',
                     '{count} year|{count} years',
                     ['count' => $span]
                 );

@@ -42,7 +42,7 @@ class MySQLQueryBuilder extends DBQueryBuilder
         // Assert that the array version provides the 'limit' key
         if (!array_key_exists('limit', $limit) || ($limit['limit'] !== null && ! is_numeric($limit['limit']))) {
             throw new InvalidArgumentException(
-                'MySQLQueryBuilder::buildLimitSQL(): Wrong format for $limit: '. var_export($limit, true)
+                'MySQLQueryBuilder::buildLimitSQL(): Wrong format for $limit: ' . var_export($limit, true)
             );
         }
 

@@ -1121,7 +1121,7 @@ class SapphireTest extends TestCase implements TestOnly
             $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
         }
         SSViewer::config()->update('theme_enabled', true);
-        SSViewer::set_themes([$themeBaseDir.'/themes/'.$theme, '$default']);
+        SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
 
         try {
             $callback();

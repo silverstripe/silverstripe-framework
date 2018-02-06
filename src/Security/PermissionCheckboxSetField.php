@@ -225,7 +225,7 @@ class PermissionCheckboxSetField extends FormField
                     } elseif ($this->records && $this->records->Count() > 1 && isset($uninheritedCodes[$code])) {
                         // If code assignments are collected from more than one "source group",
                         // show its origin automatically
-                        $inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]).')';
+                        $inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]) . ')';
                     }
 
                     // Disallow modification of "privileged" permissions unless currently logged-in user is an admin

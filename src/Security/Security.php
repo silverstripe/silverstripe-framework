@@ -671,7 +671,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         if ($request) {
             $this->setRequest($request);
-        } elseif ($request) {
+        } elseif ($this->getRequest()) {
             $request = $this->getRequest();
         } else {
             throw new HTTPResponse_Exception("No request available", 500);
@@ -695,7 +695,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t(__CLASS__.'.LOGIN', 'Log in'),
+            _t(__CLASS__ . '.LOGIN', 'Log in'),
             $this->getTemplatesFor('login'),
             [$this, 'aggregateTabbedForms']
         );
@@ -732,7 +732,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $this->delegateToMultipleHandlers(
             $handlers,
-            _t(__CLASS__.'.LOGOUT', 'Log out'),
+            _t(__CLASS__ . '.LOGOUT', 'Log out'),
             $this->getTemplatesFor('logout'),
             [$this, 'aggregateAuthenticatorResponses']
         );

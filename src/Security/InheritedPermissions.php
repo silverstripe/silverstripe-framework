@@ -360,8 +360,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             $baseTable = DataObject::getSchema()->baseDataTable($this->getBaseClass());
             $uninheritedPermissions = $stageRecords
                 ->where([
-                    "(\"$typeField\" IN (?, ?) OR " .
-                    "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
+                    "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
                     => [
                         self::ANYONE,
                         self::LOGGED_IN_USERS,
@@ -370,8 +369,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 ])
                 ->leftJoin(
                     $groupJoinTable,
-                    "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " .
-                    "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
+                    "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
                 )->column('ID');
         } else {
             // Only view pages with ViewType = Anyone if not logged in

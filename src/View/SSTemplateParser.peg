@@ -893,7 +893,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
         // Note: 'type' here is important to disable subTemplates in SSViewer::getSubtemplateFor()
         $res['php'] = '$val .= \\SilverStripe\\View\\SSViewer::execute_template([["type" => "Includes", '.$template.'], '.$template.'], $scope->getItem(), array(' .
-            implode(',', $arguments)."), \$scope);\n";
+            implode(',', $arguments)."), \$scope, true);\n";
 
         if ($this->includeDebuggingComments) { // Add include filename comments on dev sites
             $res['php'] =

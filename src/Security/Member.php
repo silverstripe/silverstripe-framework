@@ -351,8 +351,7 @@ class Member extends DataObject
             $result->addError(
                 _t(
                     __CLASS__ . '.ERRORLOCKEDOUT2',
-                    'Your account has been temporarily disabled because of too many failed attempts at ' .
-                    'logging in. Please try again in {count} minutes.',
+                    'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
                     null,
                     array('count' => static::config()->get('lock_out_delay_mins'))
                 )
@@ -1655,12 +1654,18 @@ class Member extends DataObject
      */
     public function validate()
     {
+        // If validation is disabled, skip this step
+        if (!DataObject::config()->uninherited('validation_enabled')) {
+            return ValidationResult::create();
+        }
+
         $valid = parent::validate();
         $validator = static::password_validator();
 
         if (!$this->ID || $this->isChanged('Password')) {
             if ($this->Password && $validator) {
-                $valid->combineAnd($validator->validate($this->Password, $this));
+                $userValid = $validator->validate($this->Password, $this);
+                $valid->combineAnd($userValid);
             }
         }
 

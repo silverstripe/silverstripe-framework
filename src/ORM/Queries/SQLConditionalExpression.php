@@ -227,7 +227,7 @@ abstract class SQLConditionalExpression extends SQLExpression
 
         foreach ($this->from as $key => $tableClause) {
             if (is_array($tableClause)) {
-                $table = '"'.$tableClause['table'].'"';
+                $table = '"' . $tableClause['table'] . '"';
             } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) {
                 $table = $matches[1];
             } else {
@@ -526,7 +526,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         $filters = $this->normalisePredicates(func_get_args());
         $this->splitQueryParameters($filters, $predicates, $parameters);
 
-        $clause = "(".implode(") OR (", $predicates).")";
+        $clause = "(" . implode(") OR (", $predicates) . ")";
         return $this->addWhere(array($clause => $parameters));
     }
 
@@ -595,7 +595,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             // then run a quick check over the contents and recursively parse
             if (count($value) != 1) {
                 user_error('Nested predicates should be given as a single item array in '
-                        .  'array($predicate => array($prameters)) format)', E_USER_ERROR);
+                        . 'array($predicate => array($prameters)) format)', E_USER_ERROR);
             }
             foreach ($value as $key => $pairValue) {
                 return $this->parsePredicate($key, $pairValue);

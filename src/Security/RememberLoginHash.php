@@ -145,7 +145,7 @@ class RememberLoginHash extends DataObject
         $now = DBDatetime::now();
         $expiryDate = new DateTime($now->Rfc2822());
         $tokenExpiryDays = static::config()->token_expiry_days;
-        $expiryDate->add(new DateInterval('P'.$tokenExpiryDays.'D'));
+        $expiryDate->add(new DateInterval('P' . $tokenExpiryDays . 'D'));
         $rememberLoginHash->ExpiryDate = $expiryDate->format('Y-m-d H:i:s');
         $rememberLoginHash->extend('onAfterGenerateToken');
         $rememberLoginHash->write();

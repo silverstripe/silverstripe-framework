@@ -290,7 +290,7 @@ class NumericField extends TextField
         if ($scale === 0) {
             return '1';
         }
-        return '0.'.str_repeat('0', $scale - 1).'1';
+        return '0.' . str_repeat('0', $scale - 1) . '1';
     }
 
     /**

@@ -30,7 +30,7 @@ class ShortcodeParser
 
     public function img_shortcode($attrs)
     {
-        return "<img src='".$attrs['src']."'>";
+        return "<img src='" . $attrs['src'] . "'>";
     }
 
     protected static $instances = array();
@@ -191,9 +191,9 @@ class ShortcodeParser
         // Missing tag
         if ($content === false) {
             if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
-                user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERROR);
+                user_error('Unknown shortcode tag ' . $tag['open'], E_USER_ERROR);
             } elseif (self::$error_behavior == self::WARN && $isHTMLAllowed) {
-                $content = '<strong class="warning">'.$tag['text'].'</strong>';
+                $content = '<strong class="warning">' . $tag['text'] . '</strong>';
             } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
                 return '';
             } else {
@@ -271,7 +271,7 @@ class ShortcodeParser
 
     protected static function attrrx()
     {
-        return '/'.self::$attrrx.'/xS';
+        return '/' . self::$attrrx . '/xS';
     }
 
     protected static $tagrx = '
@@ -296,7 +296,7 @@ class ShortcodeParser
 
     protected static function tagrx()
     {
-        return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
+        return '/' . sprintf(self::$tagrx, self::$attrrx) . '/xS';
     }
 
     const WARN = 'warn';
@@ -372,13 +372,11 @@ class ShortcodeParser
                 $err = null;
 
                 if ($i == 0) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" is the first found tag, so has no related open tag';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" is the first found tag, so has no related open tag';
                 } elseif (!$tags[$i-1]['open']) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" preceded by another close tag "'.
-                            $tags[$i-1]['close'].'"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "' . $tags[$i-1]['close'] . '"';
                 } elseif ($tags[$i]['close'] != $tags[$i-1]['open']) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" doesn\'t match preceding open tag "'.
-                            $tags[$i-1]['open'].'"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "' . $tags[$i-1]['open'] . '"';
                 }
 
                 if ($err) {
@@ -502,7 +500,7 @@ class ShortcodeParser
             $markerClass = self::$marker_class;
 
             $content = $this->replaceTagsWithText($content, $tags, function ($idx, $tag) use ($markerClass) {
-                return '<img class="'.$markerClass.'" data-tagid="'.$idx.'" />';
+                return '<img class="' . $markerClass . '" data-tagid="' . $idx . '" />';
             });
         }
 
@@ -599,14 +597,13 @@ class ShortcodeParser
         elseif ($location == self::INLINE) {
             if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
                 user_error(
-                    'Requested to insert block tag '.$node->tagName.
-                    ' inline - probably this will break HTML compliance',
+                    'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
                 );
             }
             // NOP
         } else {
-            user_error('Unknown value for $location argument '.$location, E_USER_ERROR);
+            user_error('Unknown value for $location argument ' . $location, E_USER_ERROR);
         }
     }
 
@@ -680,7 +677,7 @@ class ShortcodeParser
             $this->replaceAttributeTagsWithContent($htmlvalue);
 
             // Find all the element scoped shortcode markers
-            $shortcodes = $htmlvalue->query('//img[@class="'.self::$marker_class.'"]');
+            $shortcodes = $htmlvalue->query('//img[@class="' . self::$marker_class . '"]');
 
             // Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
             $parents = $this->findParentsForMarkers($shortcodes);
@@ -729,7 +726,7 @@ class ShortcodeParser
             $content = preg_replace_callback(
                 // Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
                 // hasn't been heavily modified
-                '/<img[^>]+class="'.preg_quote(self::$marker_class).'"[^>]+data-tagid="([^"]+)"[^>]+>/i',
+                '/<img[^>]+class="' . preg_quote(self::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]*>/i',
                 function ($matches) use ($tags, $parser) {
                     $tag = $tags[$matches[1]];
                     return $parser->getShortcodeReplacementText($tag);

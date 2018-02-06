@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Security\Test\InheritedPermissionsTest;
+namespace SilverStripe\Security\Tests\InheritedPermissionsTest;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestOnly;
@@ -40,7 +40,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     public static function getInheritedPermissions()
     {
         /** @var InheritedPermissions $permissions */
-        return Injector::inst()->get(PermissionChecker::class.'.testpermissions');
+        return Injector::inst()->get(PermissionChecker::class . '.testpermissions');
     }
 
     public function canEdit($member = null)

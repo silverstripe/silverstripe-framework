@@ -918,6 +918,19 @@ class DataObjectSchema
     }
 
     /**
+     * Check class for any unary component
+     *
+     * Alias for hasOneComponent() ?: belongsToComponent()
+     * @param string $class
+     * @param string $component
+     * @return string|null
+     */
+    public function unaryComponent($class, $component)
+    {
+        return $this->hasOneComponent($class, $component) ?: $this->belongsToComponent($class, $component);
+    }
+
+    /**
      *
      * @param string $parentClass Parent class name
      * @param string $component ManyMany name

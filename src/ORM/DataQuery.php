@@ -324,7 +324,7 @@ class DataQuery
         $query->selectField(
             "
 			CASE WHEN {$baseClassColumn} IS NOT NULL THEN {$baseClassColumn}
-			ELSE ".Convert::raw2sql($baseDataClass, true)." END",
+			ELSE " . Convert::raw2sql($baseDataClass, true) . " END",
             "RecordClassName"
         );
 
@@ -939,7 +939,7 @@ class DataQuery
         foreach ($ancestry as $ancestor) {
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $foreignTable) {
-                $ancestorTableAliased = $foreignPrefix.$ancestorTable;
+                $ancestorTableAliased = $foreignPrefix . $ancestorTable;
                 $this->query->addLeftJoin(
                     $ancestorTable,
                     "\"{$foreignTableAliased}\".\"ID\" = \"{$ancestorTableAliased}\".\"ID\"",
@@ -979,7 +979,7 @@ class DataQuery
         // Skip if already joined
         $foreignBaseClass = $schema->baseDataClass($foreignClass);
         $foreignBaseTable = $schema->tableName($foreignBaseClass);
-        if ($this->query->isJoinedTo($foreignPrefix.$foreignBaseTable)) {
+        if ($this->query->isJoinedTo($foreignPrefix . $foreignBaseTable)) {
             return;
         }
 
@@ -989,7 +989,7 @@ class DataQuery
         $this->query->addLeftJoin(
             $foreignBaseTable,
             "{$foreignIDColumn} = {$localColumn}",
-            $foreignPrefix.$foreignBaseTable
+            $foreignPrefix . $foreignBaseTable
         );
 
         // Add join clause to the component's ancestry classes so that the search filter could search on
@@ -1000,7 +1000,7 @@ class DataQuery
             foreach ($ancestry as $ancestor) {
                 $ancestorTable = $schema->tableName($ancestor);
                 if ($ancestorTable !== $foreignBaseTable) {
-                    $ancestorTableAliased = $foreignPrefix.$ancestorTable;
+                    $ancestorTableAliased = $foreignPrefix . $ancestorTable;
                     $this->query->addLeftJoin(
                         $ancestorTable,
                         "{$foreignIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
@@ -1048,7 +1048,7 @@ class DataQuery
         }
 
         // Join parent class to join table
-        $relationAliasedTable = $componentPrefix.$relationClassOrTable;
+        $relationAliasedTable = $componentPrefix . $relationClassOrTable;
         $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID', $parentPrefix);
         $this->query->addLeftJoin(
             $relationClassOrTable,
@@ -1071,7 +1071,7 @@ class DataQuery
         foreach ($ancestry as $ancestor) {
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $componentBaseTable) {
-                $ancestorTableAliased = $componentPrefix.$ancestorTable;
+                $ancestorTableAliased = $componentPrefix . $ancestorTable;
                 $this->query->addLeftJoin(
                     $ancestorTable,
                     "{$componentIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
@@ -1096,7 +1096,7 @@ class DataQuery
         $subSelect->selectField($fieldExpression, $field);
         $subSelect->setOrderBy(null);
         $subSelectSQL = $subSelect->sql($subSelectParameters);
-        $this->where(array($this->expressionForField($field)." NOT IN ($subSelectSQL)" => $subSelectParameters));
+        $this->where(array($this->expressionForField($field) . " NOT IN ($subSelectSQL)" => $subSelectParameters));
 
         return $this;
     }

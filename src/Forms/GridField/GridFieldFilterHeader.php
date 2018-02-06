@@ -128,7 +128,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
         $dataListClone = clone($dataList);
         foreach ($filterArguments as $columnName => $value) {
             if ($dataList->canFilterBy($columnName) && $value) {
-                $dataListClone = $dataListClone->filter($columnName.':PartialMatch', $value);
+                $dataListClone = $dataListClone->filter($columnName . ':PartialMatch', $value);
             }
         }
         return $dataListClone;
@@ -196,7 +196,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
                 $field->setAttribute(
                     'placeholder',
-                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', "Filter by ") . _t('SilverStripe\\Forms\\GridField\\GridField.'.$metadata['title'], $metadata['title'])
+                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', "Filter by ") . _t('SilverStripe\\Forms\\GridField\\GridField.' . $metadata['title'], $metadata['title'])
                 );
 
                 $fields->push($field);

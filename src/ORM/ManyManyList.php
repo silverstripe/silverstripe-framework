@@ -178,7 +178,7 @@ class ManyManyList extends RelationList
         // Apply relation filter
         $key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
         if (is_array($id)) {
-            return array("$key IN (".DB::placeholders($id).")"  => $id);
+            return array("$key IN (" . DB::placeholders($id) . ")"  => $id);
         } elseif ($id !== null) {
             return array($key => $id);
         }
@@ -225,6 +225,10 @@ class ManyManyList extends RelationList
         if (is_numeric($item)) {
             $itemID = $item;
         } elseif ($item instanceof $this->dataClass) {
+            // Ensure record is saved
+            if (!$item->isInDB()) {
+                $item->write();
+            }
             $itemID = $item->ID;
         } else {
             throw new InvalidArgumentException(
@@ -232,7 +236,7 @@ class ManyManyList extends RelationList
             );
         }
         if (empty($itemID)) {
-            throw new InvalidArgumentException("ManyManyList::add() doesn't accept unsaved records");
+            throw new InvalidArgumentException("ManyManyList::add() couldn't add this record");
         }
 
         // Validate foreignID

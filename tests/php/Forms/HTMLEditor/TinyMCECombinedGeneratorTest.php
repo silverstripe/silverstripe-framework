@@ -36,7 +36,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
 
     public function testConfig()
     {
-        $module = new Module(Director::baseFolder().'/mycode', Director::baseFolder());
+        $module = new Module(Director::baseFolder() . '/mycode', Director::baseFolder());
         // Disable nonces
         $c = new TinyMCEConfig();
         $c->setTheme('testtheme');

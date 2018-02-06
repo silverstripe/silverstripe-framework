@@ -153,8 +153,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Get a sub-range of this dataobjectset as an array
      *
-     * @param int $offset
      * @param int $length
+     * @param int $offset
      * @return static
      */
     public function limit($length, $offset = 0)

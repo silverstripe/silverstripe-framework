@@ -60,7 +60,7 @@ class CurrencyField extends TextField
     public function validate($validator)
     {
         $currencySymbol = preg_quote(DBCurrency::config()->uninherited('currency_symbol'));
-        $regex = '/^\s*(\-?'.$currencySymbol.'?|'.$currencySymbol.'\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
+        $regex = '/^\s*(\-?' . $currencySymbol . '?|' . $currencySymbol . '\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
         if (!empty($this->value) && !preg_match($regex, $this->value)) {
             $validator->validationError(
                 $this->name,

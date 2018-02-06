@@ -88,7 +88,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                     }
 
                     $conn = @new PDO(
-                        'mysql:host='.$databaseConfig['server'],
+                        'mysql:host=' . $databaseConfig['server'],
                         $databaseConfig['username'],
                         $databaseConfig['password'],
                         $ssl
@@ -247,8 +247,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
             preg_quote('"%".*'),
             preg_quote('*.*')
         );
-        $expression = '/GRANT[ ,\w]+((ALL PRIVILEGES)|('.$permission.'(?! ((VIEW)|(ROUTINE)))))[ ,\w]+ON '.
-            $dbPattern.'/i';
+        $expression = '/GRANT[ ,\w]+((ALL PRIVILEGES)|(' . $permission . '(?! ((VIEW)|(ROUTINE)))))[ ,\w]+ON ' . $dbPattern . '/i';
         return preg_match($expression, $grant);
     }
 

@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use BadMethodCallException;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles all manipulation of the session.
@@ -136,6 +137,24 @@ class Session
     protected $data = null;
 
     /**
+     * List of keys changed. This is a nested array which represents the
+     * keys modified in $this->data. The value of each item is either "true"
+     * or a nested array.
+     *
+     * If a value is in changedData but not in data, it must be removed
+     * from the destination during save().
+     *
+     * Only highest level changes are stored. E.g. changes to `Base.Sub`
+     * and then `Base` only records `Base` as the change.
+     *
+     * E.g.
+     * [
+     *   'Base' => true,
+     *   'Key' => [
+     *      'Nested' => true,
+     *   ],
+     * ]
+     *
      * @var array
      */
     protected $changedData = array();
@@ -305,36 +324,38 @@ class Session
         if (!$this->isStarted()) {
             throw new BadMethodCallException("Session cannot be modified until it's started");
         }
+        $var = &$this->nestedValueRef($name, $this->data);
 
-        // Quicker execution path for "."-free names
-        if (strpos($name, '.') === false) {
-            $this->data[$name] = $val;
-            $this->changedData[$name] = $val;
-        } else {
-            $names = explode('.', $name);
-
-            // We still want to do this even if we have strict path checking for legacy code
-            $var = &$this->data;
-            $diffVar = &$this->changedData;
-
-            // Iterate twice over the names - once to see if the value needs to be changed,
-            // and secondly to get the changed data value. This is done to solve a problem
-            // where iterating over the diff var would create empty arrays, and the value
-            // would then not be set, inadvertently clearing session values.
-            foreach ($names as $n) {
-                $var = &$var[$n];
-            }
-
-            if ($var !== $val) {
-                foreach ($names as $n) {
-                    $diffVar = &$diffVar[$n];
-                }
-
-                $var = $val;
-                $diffVar = $val;
-            }
+        // Mark changed
+        if ($var !== $val) {
+            $var = $val;
+            $this->markChanged($name);
         }
         return $this;
+    }
+
+    /**
+     * Mark key as changed
+     *
+     * @internal
+     * @param string $name
+     */
+    protected function markChanged($name)
+    {
+        $diffVar = &$this->changedData;
+        foreach (explode('.', $name) as $namePart) {
+            if (!isset($diffVar[$namePart])) {
+                $diffVar[$namePart] = [];
+            }
+            $diffVar = &$diffVar[$namePart];
+
+            // Already diffed
+            if ($diffVar === true) {
+                return;
+            }
+        }
+        // Mark changed
+        $diffVar = true;
     }
 
     /**
@@ -375,31 +396,7 @@ class Session
         if (!$this->isStarted()) {
             throw new BadMethodCallException("Session cannot be accessed until it's started");
         }
-
-        // Quicker execution path for "."-free names
-        if (strpos($name, '.') === false) {
-            if (isset($this->data[$name])) {
-                return $this->data[$name];
-            }
-            return null;
-        } else {
-            $names = explode('.', $name);
-
-            if (!isset($this->data)) {
-                return null;
-            }
-
-            $var = $this->data;
-
-            foreach ($names as $n) {
-                if (!isset($var[$n])) {
-                    return null;
-                }
-                $var = $var[$n];
-            }
-
-            return $var;
-        }
+        return $this->nestedValue($name, $this->data);
     }
 
     /**
@@ -414,28 +411,21 @@ class Session
             throw new BadMethodCallException("Session cannot be modified until it's started");
         }
 
-        $names = explode('.', $name);
+        // Get var by path
+        $var = $this->nestedValue($name, $this->data);
 
-        // We still want to do this even if we have strict path checking for legacy code
-        $var = &$this->data;
-        $diffVar = &$this->changedData;
-
-        foreach ($names as $n) {
-            // don't clear a record that doesn't exist
-            if (!isset($var[$n])) {
-                return $this;
-            }
-            $var = &$var[$n];
-        }
-
-        // only loop to find data within diffVar if var is proven to exist in the above loop
-        foreach ($names as $n) {
-            $diffVar = &$diffVar[$n];
-        }
-
+        // Unset var
         if ($var !== null) {
-            $var = null;
-            $diffVar = null;
+            // Unset parent key
+            $parentParts = explode('.', $name);
+            $basePart = array_pop($parentParts);
+            if ($parentParts) {
+                $parent = &$this->nestedValueRef(implode('.', $parentParts), $this->data);
+                unset($parent[$basePart]);
+            } else {
+                unset($this->data[$name]);
+            }
+            $this->markChanged($name);
         }
         return $this;
     }
@@ -491,7 +481,8 @@ class Session
                 $this->start($request);
             }
 
-            $this->recursivelyApply($this->changedData, $_SESSION);
+            // Apply all changes recursively
+            $this->recursivelyApplyChanges($this->changedData, $this->data, $_SESSION);
         }
     }
 
@@ -499,11 +490,13 @@ class Session
      * Recursively apply the changes represented in $data to $dest.
      * Used to update $_SESSION
      *
+     * @deprecated 4.1...5.0 Use recursivelyApplyChanges() instead
      * @param array $data
      * @param array $dest
      */
     protected function recursivelyApply($data, &$dest)
     {
+        Deprecation::notice('5.0', 'Use recursivelyApplyChanges() instead');
         foreach ($data as $k => $v) {
             if (is_array($v)) {
                 if (!isset($dest[$k]) || !is_array($dest[$k])) {
@@ -517,12 +510,86 @@ class Session
     }
 
     /**
-     * Return the changed data, for debugging purposes.
+     * Returns the list of changed keys
      *
      * @return array
      */
     public function changedData()
     {
         return $this->changedData;
+    }
+
+    /**
+     * Navigate to nested value in source array by name,
+     * creating a null placeholder if it doesn't exist.
+     *
+     * @internal
+     * @param string $name
+     * @param array $source
+     * @return mixed Reference to value in $source
+     */
+    protected function &nestedValueRef($name, &$source)
+    {
+        // Find var to change
+        $var = &$source;
+        foreach (explode('.', $name) as $namePart) {
+            if (!isset($var)) {
+                $var = [];
+            }
+            if (!isset($var[$namePart])) {
+                $var[$namePart] = null;
+            }
+            $var = &$var[$namePart];
+        }
+        return $var;
+    }
+
+    /**
+     * Navigate to nested value in source array by name,
+     * returning null if it doesn't exist.
+     *
+     * @internal
+     * @param string $name
+     * @param array $source
+     * @return mixed Value in array in $source
+     */
+    protected function nestedValue($name, $source)
+    {
+        // Find var to change
+        $var = $source;
+        foreach (explode('.', $name) as $namePart) {
+            if (!isset($var[$namePart])) {
+                return null;
+            }
+            $var = $var[$namePart];
+        }
+        return $var;
+    }
+
+    /**
+     * Apply all changes using separate keys and data sources and a destination
+     *
+     * @internal
+     * @param array $changes
+     * @param array $source
+     * @param array $destination
+     */
+    protected function recursivelyApplyChanges($changes, $source, &$destination)
+    {
+        foreach ($changes as $key => $changed) {
+            if ($changed === true) {
+                // Determine if replacement or removal
+                if (array_key_exists($key, $source)) {
+                    $destination[$key] = $source[$key];
+                } else {
+                    unset($destination[$key]);
+                }
+            } else {
+                // Recursively apply
+                $destVal = &$this->nestedValueRef($key, $destination);
+                $sourceVal = $this->nestedValue($key, $source);
+                $this->recursivelyApplyChanges($changed, $sourceVal, $destVal);
+            }
+        }
     }
 }

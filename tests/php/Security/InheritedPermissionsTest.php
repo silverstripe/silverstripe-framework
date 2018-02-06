@@ -8,8 +8,8 @@ use SilverStripe\Security\Group;
 use SilverStripe\Security\InheritedPermissions;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PermissionChecker;
-use SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode;
-use SilverStripe\Security\Test\InheritedPermissionsTest\TestDefaultPermissionChecker;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\TestDefaultPermissionChecker;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
@@ -37,7 +37,7 @@ class InheritedPermissionsTest extends SapphireTest
             ->setDefaultPermissions($this->rootPermissions = new TestDefaultPermissionChecker());
         Injector::inst()->registerService(
             $permission,
-            PermissionChecker::class.'.testpermissions'
+            PermissionChecker::class . '.testpermissions'
         );
 
         // Reset root permission

@@ -91,7 +91,7 @@ class ParameterConfirmationTokenTest extends SapphireTest
 
         // Check redirect url
         $home = (BASE_URL ?: '/') . '?';
-        $current = Controller::join_links(BASE_URL, '/', 'anotherpage'). '?';
+        $current = Controller::join_links(BASE_URL, '/', 'anotherpage') . '?';
         $this->assertStringStartsWith($current, $withoutToken->redirectURL());
         $this->assertStringStartsWith($current, $emptyParameter->redirectURL());
         $this->assertStringStartsWith($current, $nullToken->redirectURL());

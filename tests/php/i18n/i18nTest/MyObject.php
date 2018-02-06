@@ -28,7 +28,7 @@ class MyObject extends DataObject implements TestOnly
     {
         $entities = parent::provideI18nEntities();
         return array_merge($entities, [
-            LeftAndMain::class.'.OTHER_TITLE' => [
+            LeftAndMain::class . '.OTHER_TITLE' => [
                 'default' => 'Other title',
                 'module' => 'admin',
             ],

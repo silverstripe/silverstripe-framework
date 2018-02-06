@@ -700,7 +700,7 @@ class TreeDropdownField extends FormField
             $grandChildren = $child['children'];
             $contextString = implode('/', $parentTitles);
 
-            $child['contextString'] = ($contextString !== '') ? $contextString .'/' : '';
+            $child['contextString'] = ($contextString !== '') ? $contextString . '/' : '';
             unset($child['children']);
 
             if (!$this->search || in_array($child['id'], $this->realSearchIds)) {
@@ -847,7 +847,7 @@ class TreeDropdownField extends FormField
 
                 foreach ($ancestors as $parent) {
                     $title = $parent->obj($this->getTitleField())->getValue();
-                    $titlePath .= $title .'/';
+                    $titlePath .= $title . '/';
                 }
             }
             $data['data']['valueObject'] = [

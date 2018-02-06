@@ -256,7 +256,7 @@ class CSVParser implements Iterator
             foreach ($srcRow as $i => $value) {
                 // Allow escaping of quotes and commas in the data
                 $value = str_replace(
-                    array('\\'.$this->enclosure,'\\'.$this->delimiter),
+                    array('\\' . $this->enclosure,'\\' . $this->delimiter),
                     array($this->enclosure, $this->delimiter),
                     $value
                 );

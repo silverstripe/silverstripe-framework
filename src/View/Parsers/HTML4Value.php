@@ -22,8 +22,7 @@ class HTML4Value extends HTMLValue
 
         $errorState = libxml_use_internal_errors(true);
         $result = $this->getDocument()->loadHTML(
-            '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
-            "<body>$content</body></html>"
+            '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' . "<body>$content</body></html>"
         );
         libxml_clear_errors();
         libxml_use_internal_errors($errorState);

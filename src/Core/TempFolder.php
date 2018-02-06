@@ -77,7 +77,7 @@ class TempFolder
         // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
         $tempPath = Path::join(
             sys_get_temp_dir(),
-            'silverstripe-cache-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION) .
+            'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION) .
             str_replace(array(' ', '/', ':', '\\'), '-', $base)
         );
         if (!@file_exists($tempPath)) {
@@ -85,7 +85,7 @@ class TempFolder
             @mkdir($tempPath, 0777);
             umask($oldUMask);
 
-            // if the folder already exists, correct perms
+        // if the folder already exists, correct perms
         } else {
             if ((fileperms($tempPath) & 0777) != 0777) {
                 @chmod($tempPath, 0777);
@@ -108,9 +108,7 @@ class TempFolder
 
         if (!$worked) {
             throw new Exception(
-                'Permission problem gaining access to a temp folder. ' .
-                'Please create a folder named silverstripe-cache in the base folder ' .
-                'of the installation and ensure it has the correct permissions'
+                'Permission problem gaining access to a temp folder. ' . 'Please create a folder named silverstripe-cache in the base folder ' . 'of the installation and ensure it has the correct permissions'
             );
         }
 

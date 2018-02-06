@@ -268,7 +268,7 @@ class RequestHandlingTest extends FunctionalTest
             403,
             $response->getStatusCode(),
             'Should fail: Invocation through POST form handler, controller action instead of form action,'
-            .' not contained in $allowed_actions, with CSRF token'
+            . ' not contained in $allowed_actions, with CSRF token'
         );
 
         $data = array('action_formaction' => 1, 'SecurityID' => $securityId);

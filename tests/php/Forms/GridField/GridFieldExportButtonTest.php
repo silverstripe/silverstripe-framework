@@ -66,9 +66,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $button->setExportColumns(['Name' => 'My Name']);
 
         $this->assertEquals(
-            '"My Name"'."\n".
-            'Test'."\n".
-            'Test2'."\n",
+            '"My Name"' . "\n" . 'Test' . "\n" . 'Test2' . "\n",
             $button->generateExportFileData($this->gridField)
         );
     }
@@ -101,9 +99,7 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
 
         $this->assertEquals(
-            'Name,City'."\n".
-            'Test,"City city"'."\n".
-            'Test2,"Quoted ""City"" 2 city"'."\n",
+            'Name,City' . "\n" . 'Test,"City city"' . "\n" . 'Test2,"Quoted ""City"" 2 city"' . "\n",
             $button->generateExportFileData($this->gridField)
         );
     }
@@ -117,9 +113,7 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
 
         $this->assertEquals(
-            'Name,strtolower'."\n".
-            'Test,City'."\n".
-            'Test2,"Quoted ""City"" 2"'."\n",
+            'Name,strtolower' . "\n" . 'Test,City' . "\n" . 'Test2,"Quoted ""City"" 2"' . "\n",
             $button->generateExportFileData($this->gridField)
         );
     }
@@ -134,8 +128,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $button->setCsvHasHeader(false);
 
         $this->assertEquals(
-            'Test,City'."\n".
-            'Test2,"Quoted ""City"" 2"'."\n",
+            'Test,City' . "\n" . 'Test2,"Quoted ""City"" 2"' . "\n",
             $button->generateExportFileData($this->gridField)
         );
     }
@@ -154,23 +147,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $this->gridField->setList($arrayList);
 
         $this->assertEquals(
-            "ID\n".
-            "1\n".
-            "2\n".
-            "3\n".
-            "4\n".
-            "5\n".
-            "6\n".
-            "7\n".
-            "8\n".
-            "9\n".
-            "10\n".
-            "11\n".
-            "12\n".
-            "13\n".
-            "14\n".
-            "15\n".
-            "16\n",
+            "ID\n" . "1\n" . "2\n" . "3\n" . "4\n" . "5\n" . "6\n" . "7\n" . "8\n" . "9\n" . "10\n" . "11\n" . "12\n" . "13\n" . "14\n" . "15\n" . "16\n",
             $button->generateExportFileData($this->gridField)
         );
     }

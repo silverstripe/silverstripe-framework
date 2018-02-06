@@ -330,7 +330,7 @@ class MoneyField extends FormField
             $validator->validationError(
                 $this->getName(),
                 _t(
-                    __CLASS__.'.INVALID_CURRENCY',
+                    __CLASS__ . '.INVALID_CURRENCY',
                     'Currency {currency} is not in the list of allowed currencies',
                     ['currency' => $currency]
                 )

@@ -897,8 +897,7 @@ class GridField extends FormField
         if (!$token->checkRequest($request)) {
             $this->httpError(400, _t(
                 "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                "There seems to have been a technical problem. Please click the back button, ".
-                "refresh your browser, and try again."
+                "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
             ));
         }
 

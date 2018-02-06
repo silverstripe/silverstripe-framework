@@ -31,7 +31,7 @@ class DebugViewTest extends SapphireTest
             <<<EOS
 <div style="background-color: white; text-align: left;">
 <hr>
-<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\Dev\Tests\DebugViewTest::setUp())</span>
+<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\\Dev\\Tests\\DebugViewTest::setUp())</span>
 </h3>
 <pre style="font-family: Courier new, serif">string</pre>
 </div>
@@ -44,7 +44,7 @@ EOS
             <<<EOS
 <div style="background-color: white; text-align: left;">
 <hr>
-<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\Dev\Tests\DebugViewTest::setUp())</span>
+<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\\Dev\\Tests\\DebugViewTest::setUp())</span>
 </h3>
 <ul>
 <li>key = <pre style="font-family: Courier new, serif">value</pre>
@@ -62,12 +62,26 @@ EOS
             <<<EOS
 <div style="background-color: white; text-align: left;">
 <hr>
-<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\Dev\Tests\DebugViewTest::setUp())</span>
+<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\\Dev\\Tests\\DebugViewTest::setUp())</span>
 </h3>
-SilverStripe\Dev\Tests\DebugViewTest\ObjectWithDebug::debug() custom content</div>
+SilverStripe\\Dev\\Tests\\DebugViewTest\\ObjectWithDebug::debug() custom content</div>
 EOS
             ,
             $view->debugVariable(new ObjectWithDebug(), $this->caller)
+        );
+
+        $this->assertEquals(
+            <<<EOS
+<div style="background-color: white; text-align: left;">
+<hr>
+<h3>Debug <span style="font-size: 65%">(DebugViewTest.php:17 - SilverStripe\\Dev\\Tests\\DebugViewTest::setUp())</span>
+</h3>
+<pre style="font-family: Courier new, serif">SilverStripe\\Dev\\Tests\\DebugViewTest\\ObjectWithDebug</pre>
+</div>
+EOS
+
+            ,
+            $view->debugVariable(ObjectWithDebug::class, $this->caller)
         );
     }
 }

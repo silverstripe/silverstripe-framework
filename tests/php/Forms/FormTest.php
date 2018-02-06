@@ -560,11 +560,11 @@ class FormTest extends FunctionalTest
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
         $this->assertTrue(
-            stripos($response->getBody(), 'name="SecurityID" value="'.$expectedToken.'"') !== false,
+            stripos($response->getBody(), 'name="SecurityID" value="' . $expectedToken . '"') !== false,
             'Submission reloads with correct security token after failure'
         );
         $this->assertTrue(
-            stripos($response->getBody(), 'name="SecurityID" value="'.$invalidToken.'"') === false,
+            stripos($response->getBody(), 'name="SecurityID" value="' . $invalidToken . '"') === false,
             'Submission reloads without incorrect security token after failure'
         );
 

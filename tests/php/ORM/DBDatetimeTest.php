@@ -204,4 +204,11 @@ class DBDatetimeTest extends SapphireTest
 
         DBDatetime::clear_mock_now();
     }
+
+    public function testRfc3999()
+    {
+        // Dates should be formatted as: 2018-01-24T14:05:53+00:00
+        $date = DBDatetime::create_field('Datetime', '2010-12-31 16:58:59');
+        $this->assertEquals('2010-12-31T16:58:59+00:00', $date->Rfc3339());
+    }
 }

@@ -56,10 +56,10 @@ class LoginAttempt extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Email'] = _t(__CLASS__.'.Email', 'Email Address');
-        $labels['EmailHashed'] = _t(__CLASS__.'.EmailHashed', 'Email Address (hashed)');
-        $labels['Status'] = _t(__CLASS__.'.Status', 'Status');
-        $labels['IP'] = _t(__CLASS__.'.IP', 'IP Address');
+        $labels['Email'] = _t(__CLASS__ . '.Email', 'Email Address');
+        $labels['EmailHashed'] = _t(__CLASS__ . '.EmailHashed', 'Email Address (hashed)');
+        $labels['Status'] = _t(__CLASS__ . '.Status', 'Status');
+        $labels['IP'] = _t(__CLASS__ . '.IP', 'IP Address');
 
         return $labels;
     }

@@ -246,7 +246,7 @@ class MemberTest extends FunctionalTest
             "testuser@example.com",
             null,
             'Your password reset link',
-            '/Security\/changepassword\?m='.$member->ID.'&amp;t=[^"]+/'
+            '/Security\/changepassword\?m=' . $member->ID . '&amp;t=[^"]+/'
         );
     }
 
@@ -259,8 +259,8 @@ class MemberTest extends FunctionalTest
     public function testValidatePassword()
     {
         /**
- * @var Member $member
-*/
+         * @var Member $member
+        */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
 
@@ -805,11 +805,11 @@ class MemberTest extends FunctionalTest
 
         $this->assertTrue(
             in_array($admin->getTitle(), $members),
-            $admin->getTitle().' should be in the returned list.'
+            $admin->getTitle() . ' should be in the returned list.'
         );
         $this->assertTrue(
             in_array($otherAdmin->getTitle(), $members),
-            $otherAdmin->getTitle().' should be in the returned list.'
+            $otherAdmin->getTitle() . ' should be in the returned list.'
         );
         $this->assertEquals(2, count($members), 'There should be 2 members from the admin group');
     }
@@ -920,7 +920,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$token,
+                'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
             )
         );
@@ -941,7 +941,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':asdfasd'.str_rot13($token),
+                'alc_enc' => $m1->ID . ':asdfasd' . str_rot13($token),
                 'alc_device' => $firstHash->DeviceID
             )
         );
@@ -952,7 +952,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$token,
+                'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => str_rot13($firstHash->DeviceID)
             )
         );
@@ -1000,7 +1000,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$token,
+                'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
             )
         );
@@ -1028,7 +1028,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$token,
+                'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
             )
         );
@@ -1076,7 +1076,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$firstToken,
+                'alc_enc' => $m1->ID . ':' . $firstToken,
                 'alc_device' => $firstHash->DeviceID
             )
         );
@@ -1101,7 +1101,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$secondToken,
+                'alc_enc' => $m1->ID . ':' . $secondToken,
                 'alc_device' => $secondHash->DeviceID
             )
         );
@@ -1114,7 +1114,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             array(
-                'alc_enc' => $m1->ID.':'.$secondToken,
+                'alc_enc' => $m1->ID . ':' . $secondToken,
                 'alc_device' => $secondHash->DeviceID
             )
         );

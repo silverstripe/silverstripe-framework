@@ -211,7 +211,7 @@ abstract class DBComposite extends DBField
 
         // Check bound object
         if ($this->record instanceof DataObject) {
-            $key = $this->getName().$field;
+            $key = $this->getName() . $field;
             return $this->record->getField($key);
         }
 
