@@ -23,6 +23,8 @@ class TempDatabase
      */
     protected $name = null;
 
+    private $hasStarted = false;
+
     /**
      * Create a new temp database
      *
@@ -68,6 +70,34 @@ class TempDatabase
         return $this->isDBTemp($selected);
     }
 
+    public function hasStarted()
+    {
+        return $this->hasStarted;
+    }
+
+    public function supportsTransactions()
+    {
+        return static::getConn()->supportsTransactions();
+    }
+
+    public function startTransaction()
+    {
+        $this->hasStarted = true;
+        if (static::getConn()->supportsTransactions()) {
+            static::getConn()->transactionStart();
+        }
+    }
+
+    public function rollbackTransaction()
+    {
+        if (static::getConn()->supportsTransactions()) {
+            static::getConn()->transactionRollback();
+        } else {
+            $this->hasStarted = false;
+            static::clearAllData();
+        }
+    }
+
     /**
      * Destroy the current temp database
      */
@@ -102,6 +132,7 @@ class TempDatabase
      */
     public function clearAllData()
     {
+        $this->hasStarted = false;
         if (!$this->isUsed()) {
             return;
         }

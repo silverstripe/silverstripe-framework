@@ -66,7 +66,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @var FixtureFactory
      */
-    protected $fixtureFactory;
+    protected static $fixtureFactory;
 
     /**
      * @var Boolean If set to TRUE, this will force a test database to be generated
@@ -262,24 +262,25 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
             DataObject::singleton()->flushCache();
 
-            static::$tempDB->clearAllData();
-
-            foreach ($this->requireDefaultRecordsFrom as $className) {
-                $instance = singleton($className);
-                if (method_exists($instance, 'requireDefaultRecords')) {
-                    $instance->requireDefaultRecords();
+            if (!static::$tempDB->hasStarted()) {
+                foreach ($this->requireDefaultRecordsFrom as $className) {
+                    $instance = singleton($className);
+                    if (method_exists($instance, 'requireDefaultRecords')) {
+                        $instance->requireDefaultRecords();
+                    }
+                    if (method_exists($instance, 'augmentDefaultRecords')) {
+                        $instance->augmentDefaultRecords();
+                    }
                 }
-                if (method_exists($instance, 'augmentDefaultRecords')) {
-                    $instance->augmentDefaultRecords();
-                }
-            }
 
-            foreach ($fixtureFiles as $fixtureFilePath) {
-                $fixture = YamlFixture::create($fixtureFilePath);
-                $fixture->writeInto($this->getFixtureFactory());
+                foreach ($fixtureFiles as $fixtureFilePath) {
+                    $this->loadFixture($fixtureFilePath);
+                }
             }
 
             $this->logInWithPermission('ADMIN');
+
+            static::$tempDB->startTransaction();
         }
 
         // turn off template debugging
@@ -390,17 +391,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         // Reset DB schema
         static::resetDBSchema();
+
+        static::$tempDB->clearAllData();
+
+        static::$fixtureFactory = null;
     }
 
     /**
      * @return FixtureFactory
      */
-    public function getFixtureFactory()
+    public static function getFixtureFactory()
     {
-        if (!$this->fixtureFactory) {
-            $this->fixtureFactory = Injector::inst()->create(FixtureFactory::class);
+        if (!static::$fixtureFactory) {
+            static::setFixtureFactory(Injector::inst()->create(FixtureFactory::class));
         }
-        return $this->fixtureFactory;
+        return static::$fixtureFactory;
     }
 
     /**
@@ -409,10 +414,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param FixtureFactory $factory
      * @return $this
      */
-    public function setFixtureFactory(FixtureFactory $factory)
+    public static function setFixtureFactory(FixtureFactory $factory)
     {
-        $this->fixtureFactory = $factory;
-        return $this;
+        static::$fixtureFactory = $factory;
     }
 
     /**
@@ -422,9 +426,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return int
      */
-    protected function idFromFixture($className, $identifier)
+    protected static function idFromFixture($className, $identifier)
     {
-        $id = $this->getFixtureFactory()->getId($className, $identifier);
+        $id = static::getFixtureFactory()->getId($className, $identifier);
 
         if (!$id) {
             user_error(sprintf(
@@ -444,9 +448,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param string $className The data class or table name, as specified in your fixture file
      * @return array A map of fixture-identifier => object-id
      */
-    protected function allFixtureIDs($className)
+    protected static function allFixtureIDs($className)
     {
-        return $this->getFixtureFactory()->getIds($className);
+        return static::getFixtureFactory()->getIds($className);
     }
 
     /**
@@ -457,9 +461,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @return DataObject
      */
-    protected function objFromFixture($className, $identifier)
+    protected static function objFromFixture($className, $identifier)
     {
-        $obj = $this->getFixtureFactory()->get($className, $identifier);
+        $obj = static::getFixtureFactory()->get($className, $identifier);
 
         if (!$obj) {
             user_error(sprintf(
@@ -479,19 +483,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
      */
-    public function loadFixture($fixtureFile)
+    public static function loadFixture($fixtureFile)
     {
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
-        $fixture->writeInto($this->getFixtureFactory());
+        $fixture->writeInto(static::getFixtureFactory());
     }
 
     /**
      * Clear all fixtures which were previously loaded through
      * {@link loadFixture()}
      */
-    public function clearFixtures()
+    public static function clearFixtures()
     {
-        $this->getFixtureFactory()->clear();
+        static::getFixtureFactory()->clear();
     }
 
     /**
@@ -547,6 +551,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         // Call state helpers
         static::$state->tearDown($this);
+
+        if ($this->shouldSetupDatabaseForCurrentTest($this->getFixturePaths())) {
+            static::$tempDB->rollbackTransaction();
+        }
     }
 
     public static function assertContains(
