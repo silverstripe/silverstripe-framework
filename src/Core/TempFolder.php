@@ -77,7 +77,7 @@ class TempFolder
         // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
         $tempPath = Path::join(
             sys_get_temp_dir(),
-            'silverstripe-cache-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION) .
+            'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION) .
             str_replace(array(' ', '/', ':', '\\'), '-', $base)
         );
         if (!@file_exists($tempPath)) {
