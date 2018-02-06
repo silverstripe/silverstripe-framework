@@ -115,7 +115,8 @@ class MemberTest extends FunctionalTest
 
         $memberNoPassword = new Member();
         $memberNoPassword->write();
-        $this->assertNull(
+        $this->assertEquals(
+            Security::config()->get('password_encryption_algorithm'),
             $memberNoPassword->PasswordEncryption,
             'Password encryption is not set for new member records on first write, when not setting a "Password")'
         );
@@ -853,15 +854,12 @@ class MemberTest extends FunctionalTest
 
     public function testGenerateAutologinTokenAndStoreHash()
     {
-        $enc = new PasswordEncryptor_Blowfish();
-
         $m = new Member();
-        $m->PasswordEncryption = 'blowfish';
-        $m->Salt = $enc->salt('123');
+        $m->write();
 
         $token = $m->generateAutologinTokenAndStoreHash();
 
-        $this->assertEquals($m->encryptWithUserSettings($token), $m->AutoLoginHash, 'Stores the token as ahash.');
+        $this->assertEquals($m->encryptWithUserSettings($token), $m->AutoLoginHash, 'Stores the token as a hash.');
     }
 
     public function testValidateAutoLoginToken()
@@ -869,13 +867,11 @@ class MemberTest extends FunctionalTest
         $enc = new PasswordEncryptor_Blowfish();
 
         $m1 = new Member();
-        $m1->PasswordEncryption = 'blowfish';
-        $m1->Salt = $enc->salt('123');
+        $m1->write();
         $m1Token = $m1->generateAutologinTokenAndStoreHash();
 
         $m2 = new Member();
-        $m2->PasswordEncryption = 'blowfish';
-        $m2->Salt = $enc->salt('456');
+        $m2->write();
         $m2->generateAutologinTokenAndStoreHash();
 
         $this->assertTrue($m1->validateAutoLoginToken($m1Token), 'Passes token validity test against matching member.');
@@ -899,9 +895,7 @@ class MemberTest extends FunctionalTest
 
     public function testRememberMeHashAutologin()
     {
-        /**
- * @var Member $m1
-*/
+        /** @var Member $m1 */
         $m1 = $this->objFromFixture(Member::class, 'noexpiry');
 
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);

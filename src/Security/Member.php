@@ -919,7 +919,7 @@ class Member extends DataObject
         // The test on $this->ID is used for when records are initially created. Note that this only works with
         // cleartext passwords, as we can't rehash existing passwords. Checking passwordChangesToWrite prevents
         // recursion between changePassword and this method.
-        if ((!$this->ID && $this->Password) || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
+        if (!$this->ID || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
             $this->changePassword($this->Password, false);
         }
 
