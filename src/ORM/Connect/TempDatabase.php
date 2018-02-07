@@ -214,6 +214,9 @@ class TempDatabase
      */
     public function resetDBSchema(array $extraDataObjects = [])
     {
+        if ($this->hasStarted()) {
+            $this->rollbackTransaction();
+        }
         if (!$this->isUsed()) {
             return;
         }
