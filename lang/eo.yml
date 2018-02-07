@@ -106,15 +106,6 @@ eo:
     OF: de
     Page: Paĝo
     View: Vido
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Ero ankoraŭ estas ne publikigita'
-    ADDEDTODRAFTSHORT: Malneto
-    ARCHIVEDPAGEHELP: 'Ero estas forigita el malneta kaj publika'
-    ARCHIVEDPAGESHORT: Enarkivigita
-    MODIFIEDONDRAFTHELP: 'Ero enhavas nepublikigitajn ŝanĝojn'
-    MODIFIEDONDRAFTSHORT: Ŝanĝita
-    ONLIVEONLYSHORT: 'Nur ĉe publika'
-    ONLIVEONLYSHORTHELP: 'Ero estas publikigita, sed ĝi estas forigita el malneto'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo

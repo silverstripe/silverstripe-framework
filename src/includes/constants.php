@@ -107,7 +107,7 @@ if (!defined('BASE_URL')) {
 
         // Unless specified, use empty string for base in CLI
         if (in_array(php_sapi_name(), ['cli', 'phpdbg'])) {
-            return "";
+            return '';
         }
 
         // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
@@ -116,18 +116,39 @@ if (!defined('BASE_URL')) {
         $scriptName = Convert::slashes($_SERVER['SCRIPT_NAME'], '/');
 
         // Ensure script is served from public folder (otherwise error)
-        if (stripos($path, PUBLIC_PATH) === 0) {
-            // Get entire url following PUBLIC_PATH
-            $urlSegmentToRemove = Convert::slashes(substr($path, strlen(PUBLIC_PATH)), '/');
-            if (substr($scriptName, -strlen($urlSegmentToRemove)) === $urlSegmentToRemove) {
-                // Remove this from end of SCRIPT_NAME to get url to base
-                $baseURL = substr($scriptName, 0, -strlen($urlSegmentToRemove));
-                return rtrim(ltrim($baseURL, '.'), '/');
-            }
+        if (stripos($path, PUBLIC_PATH) !== 0) {
+            return '';
         }
 
-        // Assume no base_url
-        return '';
+        // Get entire url following PUBLIC_PATH
+        $urlSegmentToRemove = Convert::slashes(substr($path, strlen(PUBLIC_PATH)), '/');
+        if (substr($scriptName, -strlen($urlSegmentToRemove)) !== $urlSegmentToRemove) {
+            return '';
+        }
+
+        // Remove this from end of SCRIPT_NAME to get url to base
+        $baseURL = substr($scriptName, 0, -strlen($urlSegmentToRemove));
+        $baseURL = rtrim(ltrim($baseURL, '.'), '/');
+
+        // When htaccess redirects from /base to /base/public folder, we need to only include /public
+        // in the BASE_URL if it's also present in the request
+        if ($baseURL
+            && PUBLIC_DIR
+            && isset($_SERVER['REQUEST_URI'])
+            && substr($baseURL, -strlen(PUBLIC_DIR)) === PUBLIC_DIR
+        ) {
+            $requestURI = $_SERVER['REQUEST_URI'];
+            // Check if /base/public or /base are in the request
+            foreach ([$baseURL, dirname($baseURL)] as $candidate) {
+                if (stripos($requestURI, $candidate) === 0) {
+                    return $candidate;
+                }
+            }
+            // Ambiguous
+            return '';
+        }
+
+        return $baseURL;
     }));
 }
 

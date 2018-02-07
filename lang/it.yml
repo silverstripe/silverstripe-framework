@@ -104,15 +104,6 @@ it:
     OF: di
     Page: Pagina
     View: Visualizza
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'L''elemento non è stato ancora pubblicato'
-    ADDEDTODRAFTSHORT: Bozza
-    ARCHIVEDPAGEHELP: 'Elemento rimosso da bozza e live'
-    ARCHIVEDPAGESHORT: Archiviato
-    MODIFIEDONDRAFTHELP: 'L''elemento ha modifiche nascoste'
-    MODIFIEDONDRAFTSHORT: Modificato
-    ONLIVEONLYSHORT: 'Solo su live'
-    ONLIVEONLYSHORTHELP: 'L''elemento è pubblicato, ma è stato eliminato dal sito bozza'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta

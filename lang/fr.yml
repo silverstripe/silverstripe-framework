@@ -106,15 +106,6 @@ fr:
     OF: de
     Page: Page
     View: Vue
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'L''élément n''a pas encore été publié'
-    ADDEDTODRAFTSHORT: Brouillon
-    ARCHIVEDPAGEHELP: 'Elément retiré du brouillon et du site public'
-    ARCHIVEDPAGESHORT: Archivé
-    MODIFIEDONDRAFTHELP: 'L''élément comporte des modifications non sauvegardées'
-    MODIFIEDONDRAFTSHORT: Modifié
-    ONLIVEONLYSHORT: 'Site public uniquement'
-    ONLIVEONLYSHORTHELP: 'L''élément a été publié, mais sa version brouillon a été supprimée'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Quantité
     FIELDLABELCURRENCY: Devise
