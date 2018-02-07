@@ -68,12 +68,12 @@ class GridFieldConfig
     }
 
     /**
-     * @param GridFieldComponent $component,... One or more components
+     * @param GridFieldComponent|GridFieldComponent[] $component,... One or more components, or an array of components
      * @return $this
      */
     public function addComponents($component = null)
     {
-        $components = func_get_args();
+        $components = is_array($component) ? $component : func_get_args();
         foreach ($components as $component) {
             $this->addComponent($component);
         }
