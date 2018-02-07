@@ -152,7 +152,10 @@ main sets of commands:
 If you are managing a release, it's best to first make sure that SilverStripe marketing
 are aware of any impending release. This is so that they can ensure that a relevant blog
 post will appear on [www.silverstripe.org/blog](http://www.silverstripe.org/blog/), and
-cross-posted to other relevant channels such as Twitter and Facebook.
+cross-posted to other relevant channels such as social media.
+Blog posts should be prepared for each major, minor and security releases.
+Patch releases, alphas, betas and release candidates usually don't need blog posts,
+unless they're introducing important changes (e.g. for a new major release). 
 Sending an email to [marketing@silverstripe.com](mailto:marketing@silverstripe.com)
 with an overview of the release and a rough release timeline.
 
@@ -351,6 +354,9 @@ will need to be regularly updated.
 * Post a release announcement on the [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce)
   google group.
 * Update the [Slack](https://www.silverstripe.org/community/slack-signup/) topic to include the new release version.
+* For major or minor releases: Work with SilverStripe marketing to get a blog post out.
+  They might choose to announce the release on social media as well. 
+
 
 ## See also
 
