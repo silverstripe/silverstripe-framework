@@ -1494,7 +1494,6 @@ class DataListTest extends SapphireTest
      */
     public function testMultipleExcludeWithMiss()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'Does not match any comments'));
         $this->assertEquals(3, $list->count());
@@ -1505,7 +1504,6 @@ class DataListTest extends SapphireTest
      */
     public function testMultipleExclude()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
         $this->assertEquals(2, $list->count());
@@ -1517,7 +1515,6 @@ class DataListTest extends SapphireTest
      */
     public function testMultipleExcludeMultipleMatches()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'Phil is a unique guy, and comments on team2'));
         $this->assertCount(3, $list);
@@ -1528,7 +1525,6 @@ class DataListTest extends SapphireTest
      */
     public function testMultipleExcludeArraysMultipleMatches()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->exclude(array(
             'Name'=> array('Bob', 'Phil'),
@@ -1545,7 +1541,6 @@ class DataListTest extends SapphireTest
      */
     public function testMultipleExcludeArraysMultipleMatchesOneMiss()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->exclude(array(
             'Name' => array('Bob', 'Phil'),
@@ -1569,7 +1564,6 @@ class DataListTest extends SapphireTest
      */
     public function testExcludeOnFilter()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
         $list = $list->exclude('Name', 'Bob');
@@ -1589,7 +1583,6 @@ class DataListTest extends SapphireTest
      */
     public function testComplicatedExcludeOnFilter()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->filter('Name', array('Phil', 'Bob'));
         $list = $list->exclude('Name', array('Bob', 'Joe'));
@@ -1609,7 +1602,6 @@ class DataListTest extends SapphireTest
      */
     public function testVeryComplicatedExcludeOnFilter()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->filter('Name', array('Phil', 'Bob'));
         $list = $list->exclude(array(
@@ -1652,7 +1644,6 @@ class DataListTest extends SapphireTest
      */
     public function testExcludeAny()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->excludeAny(array(
             'Name' => 'Bob',
@@ -1666,7 +1657,6 @@ class DataListTest extends SapphireTest
      */
     public function testExcludeAnyArrays()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->excludeAny(array(
             'Name' => array('Bob', 'Phil'),
@@ -1680,7 +1670,6 @@ class DataListTest extends SapphireTest
      */
     public function testExcludeAnyMultiArrays()
     {
-        /** @var DataList $list */
         $list = TeamComment::get();
         $list = $list->excludeAny(array(
             'Name' => array('Bob', 'Fred'),

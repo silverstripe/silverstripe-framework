@@ -653,14 +653,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
         }
-        $list = $this;
 
-        foreach ($whereArguments as $field => $value) {
-            $filter = $this->createSearchFilter($field, $value);
-            $list = $list->alterDataQuery(array($filter, 'exclude'));
-        }
-
-        return $list;
+        return $this->alterDataQuery(function (DataQuery $dataQuery) use ($whereArguments) {
+            foreach ($whereArguments as $field => $value) {
+                $filter = $this->createSearchFilter($field, $value);
+                $filter->exclude($dataQuery);
+            }
+            return $dataQuery;
+        });
     }
 
     /**
