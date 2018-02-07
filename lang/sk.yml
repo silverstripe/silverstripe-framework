@@ -94,8 +94,6 @@ sk:
     EDIT: Editovať
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Stránka
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ONLIVEONLYSHORT: 'Len publikované'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena

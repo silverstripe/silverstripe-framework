@@ -106,15 +106,6 @@ en:
     OF: of
     Page: Page
     View: View
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Item has not been published yet'
-    ADDEDTODRAFTSHORT: Draft
-    ARCHIVEDPAGEHELP: 'Item is removed from draft and live'
-    ARCHIVEDPAGESHORT: Archived
-    MODIFIEDONDRAFTHELP: 'Item has unpublished changes'
-    MODIFIEDONDRAFTSHORT: Modified
-    ONLIVEONLYSHORT: 'On live only'
-    ONLIVEONLYSHORTHELP: 'Item is published, but has been deleted from draft'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
