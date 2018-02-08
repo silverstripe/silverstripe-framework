@@ -23,7 +23,10 @@ class TempDatabase
      */
     protected $name = null;
 
-    private $hasStarted = false;
+    /**
+     * @var bool If a transaction has been started
+     */
+    protected $hasStarted = false;
 
     /**
      * Create a new temp database
@@ -70,16 +73,25 @@ class TempDatabase
         return $this->isDBTemp($selected);
     }
 
+    /**
+     * @return bool
+     */
     public function hasStarted()
     {
         return $this->hasStarted;
     }
 
+    /**
+     * @return bool
+     */
     public function supportsTransactions()
     {
         return static::getConn()->supportsTransactions();
     }
 
+    /**
+     * Start a transaction for easy rollback after tests
+     */
     public function startTransaction()
     {
         $this->hasStarted = true;
@@ -88,6 +100,9 @@ class TempDatabase
         }
     }
 
+    /**
+     * Rollback a transaction (or trash all data if the DB doesn't support databases
+     */
     public function rollbackTransaction()
     {
         if (static::getConn()->supportsTransactions()) {
@@ -214,6 +229,8 @@ class TempDatabase
      */
     public function resetDBSchema(array $extraDataObjects = [])
     {
+        // pgsql doesn't allow schema updates inside transactions
+        // so we need to rollback any transactions before commencing a schema reset
         if ($this->hasStarted()) {
             $this->rollbackTransaction();
         }

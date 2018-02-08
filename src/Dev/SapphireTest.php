@@ -160,6 +160,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected static $tempDB = null;
 
+    /**
+     * @return TempDatabase
+     */
     public static function tempDB()
     {
         if (!static::$tempDB) {
@@ -217,11 +220,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         return static::$fixture_file;
     }
 
+    /**
+     * @return bool
+     */
     public function getUsesDatabase()
     {
         return $this->usesDatabase;
     }
 
+    /**
+     * @return array
+     */
     public function getRequireDefaultRecordsFrom()
     {
         return $this->requireDefaultRecordsFrom;
