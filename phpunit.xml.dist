@@ -11,7 +11,7 @@ Requires PHPUnit ^5.7
         <directory>tests/php</directory>
     </testsuite>
     <testsuite name="cms">
-        <directory>cms/tests</directory>
+        <directory>vendor/silverstripe/cms/tests</directory>
     </testsuite>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
