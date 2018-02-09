@@ -446,7 +446,7 @@ class Zend_Loader_Autoloader_Resource implements Zend_Loader_Autoloader_Interfac
      *
      * @param  string $resource
      * @param  string $type
-     * @return SS_Object
+     * @return object
      * @throws Zend_Loader_Exception if resource type not specified or invalid
      */
     public function load($resource, $type = null)

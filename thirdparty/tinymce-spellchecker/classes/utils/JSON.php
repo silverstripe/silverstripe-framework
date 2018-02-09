@@ -4,7 +4,7 @@
  *
  * @package MCManager.utils
  * @author Moxiecode
- * @copyright Copyright ï¿½ 2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2007, Moxiecode Systems AB, All rights reserved.
  */
 
 define('JSON_BOOL', 1);
@@ -474,7 +474,7 @@ class Moxiecode_JSON {
 			case 'array':
 				return $this->_encodeArray($input);
 
-			case 'SS_Object':
+			case 'object':
 				return $this->_encodeArray(get_object_vars($input));
 		}
 

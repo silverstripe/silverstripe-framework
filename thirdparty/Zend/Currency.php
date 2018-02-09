@@ -850,7 +850,7 @@ class Zend_Currency
                         if (!is_string($value) || (strpos($value, '0') === false)) {
                             require_once 'Zend/Currency/Exception.php';
                             throw new Zend_Currency_Exception("'" .
-                                ((gettype($value) === 'SS_Object') ? get_class($value) : $value)
+                                ((gettype($value) === 'object') ? get_class($value) : $value)
                                 . "' is no format token");
                         }
                     }
