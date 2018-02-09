@@ -131,7 +131,7 @@ class SSViewer_Scope {
 	/**
 	 * Gets the current object and resets the scope.
 	 *
-	 * @return SS_Object
+	 * @return object
 	 */
 	public function self() {
 		$result = $this->itemIterator ? $this->itemIterator->current() : $this->item;

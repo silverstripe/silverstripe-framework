@@ -102,7 +102,7 @@ class Upload extends Controller {
 	 * Set a different instance than {@link Upload_Validator}
 	 * for this upload session.
 	 *
-	 * @param SS_Object $validator
+	 * @param object $validator
 	 */
 	public function setValidator($validator) {
 		$this->validator = $validator;

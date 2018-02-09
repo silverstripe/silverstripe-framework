@@ -549,7 +549,7 @@ class Diff
 	 *
 	 *  $diff = new Diff($lines1, $lines2);
 	 *  $rev = $diff->reverse();
-	 * @return SS_Object A Diff object representing the inverse of the
+	 * @return object A Diff object representing the inverse of the
 	 *                original diff.
 	 */
 	public function reverse () {
@@ -665,7 +665,7 @@ class Diff
 	 *  by passing through DomDocument::loadHTML and saveXML
 	 *
 	 * @param string $content HTML content
-	 * @param SS_Object $cleaner Optional instance of a HTMLCleaner class to
+	 * @param object $cleaner Optional instance of a HTMLCleaner class to
 	 * 	use, overriding self::$html_cleaner_class
 	 */
 	public static function cleanHTML($content, $cleaner=null) {

@@ -215,7 +215,7 @@ class DebugView extends SS_Object {
 	/**
 	 * Outputs a variable in a user presentable way
 	 *
-	 * @param SS_Object $val
+	 * @param object $val
 	 * @param array $caller Caller information
 	 */
 	public function writeVariable($val, $caller) {

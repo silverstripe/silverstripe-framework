@@ -840,7 +840,7 @@ abstract class SS_Object {
 	}
 
 	/**
-	 * @param SS_Object $extension
+	 * @param object $extension
 	 * @return array
 	 */
 	protected function findMethodsFromExtension($extension) {

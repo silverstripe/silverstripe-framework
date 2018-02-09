@@ -14,7 +14,7 @@ interface BeforeCallAspect {
 	/**
 	 * Call this aspect before a method is executed
 	 *
-	 * @param SS_Object $proxied
+	 * @param object $proxied
 	 *				The object having the method called upon it.
 	 * @param string $method
 	 *				The name of the method being called

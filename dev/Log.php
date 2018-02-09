@@ -61,7 +61,7 @@ class SS_Log {
 
 	/**
 	 * @see SS_Log::get_logger()
-	 * @var SS_Object
+	 * @var object
 	 */
 	protected static $logger;
 
@@ -86,7 +86,7 @@ class SS_Log {
 	/**
 	 * Get the logger currently in use, or create a new one if it doesn't exist.
 	 *
-	 * @return SS_Object
+	 * @return object
 	 */
 	public static function get_logger() {
 		if(!static::$logger) {
@@ -122,7 +122,7 @@ class SS_Log {
 
 	/**
 	 * Remove a writer instance from the logger.
-	 * @param SS_Object $writer Zend_Log_Writer_Abstract instance
+	 * @param object $writer Zend_Log_Writer_Abstract instance
 	 */
 	public static function remove_writer($writer) {
 		static::get_logger()->removeWriter($writer);
@@ -130,7 +130,7 @@ class SS_Log {
 
 	/**
 	 * Add a writer instance to the logger.
-	 * @param SS_Object $writer Zend_Log_Writer_Abstract instance
+	 * @param object $writer Zend_Log_Writer_Abstract instance
 	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
 	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only

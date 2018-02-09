@@ -356,7 +356,7 @@ class Injector {
 	 *
 	 * @param string $property
 	 *				the name of the property
-	 * @param SS_Object $object
+	 * @param object $object
 	 *				the object to be set
 	 */
 	public function addAutoProperty($property, $object) {
@@ -585,7 +585,7 @@ class Injector {
 	 * into them, so we can update that binding at a later point if needbe (ie
 	 * if the managed service changes)
 	 *
-	 * @param SS_Object $object
+	 * @param object $object
 	 *				The object to inject
 	 * @param string $asType
 	 *				The ID this item was loaded as. This is so that the property configuration
@@ -694,7 +694,7 @@ class Injector {
 	/**
 	 * Helper to set a property's value
 	 *
-	 * @param SS_Object $object
+	 * @param object $object
 	 *					Set an object's property to a specific value
 	 * @param string $name
 	 *					The name of the property to set

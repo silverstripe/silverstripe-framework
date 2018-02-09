@@ -85,7 +85,7 @@ class UnsavedRelationList extends ArrayList {
 	/**
 	 * Pushes an item onto the end of this list.
 	 *
-	 * @param array|SS_Object $item
+	 * @param array|object $item
 	 * @param array $extraFields
 	 */
 	public function push($item, $extraFields = null) {

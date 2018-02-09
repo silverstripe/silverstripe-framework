@@ -185,7 +185,7 @@ class File extends DataObject {
 	 * Replace "[file_link id=n]" shortcode with an anchor tag or link to the file.
 	 * @param $arguments array Arguments to the shortcode
 	 * @param $content string Content of the returned link (optional)
-	 * @param $parser SS_Object Specify a parser to parse the content (see {@link ShortCodeParser})
+	 * @param $parser object Specify a parser to parse the content (see {@link ShortCodeParser})
 	 * @return string anchor HTML tag if content argument given, otherwise file path link
 	 */
 	public static function link_shortcode_handler($arguments, $content = null, $parser = null) {
