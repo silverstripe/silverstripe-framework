@@ -25,6 +25,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
 
@@ -491,6 +492,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function ping()
     {
+        Requirements::clear();
         return 1;
     }
 

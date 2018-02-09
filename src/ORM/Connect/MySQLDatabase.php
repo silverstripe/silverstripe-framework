@@ -57,6 +57,11 @@ class MySQLDatabase extends Database
      */
     private static $collation = 'utf8_general_ci';
 
+    /**
+     * @var bool
+     */
+    protected $transactionNesting = 0;
+
     public function connect($parameters)
     {
         // Ensure that driver is available (required by PDO)
@@ -300,16 +305,21 @@ class MySQLDatabase extends Database
 
     public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
     {
-        // This sets the isolation level for the NEXT transaction, not the current one.
-        if ($transactionMode) {
-            $this->query('SET TRANSACTION ' . $transactionMode);
-        }
+        if ($this->transactionNesting > 0) {
+            $this->transactionSavepoint('NESTEDTRANSACTION' . $this->transactionNesting);
+        } else {
+            // This sets the isolation level for the NEXT transaction, not the current one.
+            if ($transactionMode) {
+                $this->query('SET TRANSACTION ' . $transactionMode);
+            }
 
-        $this->query('START TRANSACTION');
+            $this->query('START TRANSACTION');
 
-        if ($sessionCharacteristics) {
-            $this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics);
+            if ($sessionCharacteristics) {
+                $this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics);
+            }
         }
+        ++$this->transactionNesting;
     }
 
     public function transactionSavepoint($savepoint)
@@ -322,13 +332,22 @@ class MySQLDatabase extends Database
         if ($savepoint) {
             $this->query('ROLLBACK TO ' . $savepoint);
         } else {
-            $this->query('ROLLBACK');
+            --$this->transactionNesting;
+            if ($this->transactionNesting > 0) {
+                $this->transactionRollback('NESTEDTRANSACTION' . $this->transactionNesting);
+            } else {
+                $this->query('ROLLBACK');
+            }
         }
     }
 
     public function transactionEnd($chain = false)
     {
-        $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        --$this->transactionNesting;
+        if ($this->transactionNesting <= 0) {
+            $this->transactionNesting = 0;
+            $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        }
     }
 
     public function comparisonClause(

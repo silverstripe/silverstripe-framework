@@ -155,7 +155,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
-     * @return array
+     * @return string
      */
     public function generateExportFileData($gridField)
     {
@@ -232,7 +232,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         // Convert the $fileData array into csv by capturing fputcsv's output
         $csv = fopen('php://temp', 'r+');
         foreach ($fileData as $line) {
-            fputcsv($csv, $line, $this->csvSeparator, $this->csvEnclosure);
+            fputcsv($csv, $line, $this->getCsvSeparator(), $this->getCsvEnclosure());
         }
         rewind($csv);
         return stream_get_contents($csv);
