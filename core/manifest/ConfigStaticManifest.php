@@ -91,7 +91,7 @@ class SS_ConfigStaticManifest {
 	protected $statics;
 
 	static protected $initial_classes = array(
-        'SS_Object', 'ViewableData', 'Injector', 'Director'
+		'SS_Object', 'Object', 'ViewableData', 'Injector', 'Director'
 	);
 
 	/**

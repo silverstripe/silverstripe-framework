@@ -158,7 +158,7 @@ abstract class SS_Object {
 		// Singleton to create should be the calling class if not Object,
 		// otherwise the first parameter
 		$class = get_called_class();
-		if($class === 'SS_Object') $class = array_shift($args);
+		if($class == 'SS_Object' || $class == 'Object') $class = array_shift($args);
 
 		return Injector::inst()->get($class);
 	}
@@ -653,7 +653,7 @@ abstract class SS_Object {
 
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $unextendable_classes = array('SS_Object', 'ViewableData', 'RequestHandler');
+	private static $unextendable_classes = array('SS_Object', 'Object', 'ViewableData', 'RequestHandler');
 
 	static public function get_extra_config_sources($class = null) {
 		if($class === null) $class = get_called_class();

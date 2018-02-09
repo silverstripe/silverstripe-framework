@@ -286,7 +286,7 @@ class PDOConnector extends DBConnector {
 				return PDO::PARAM_NULL;
 			case 'integer':
 				return PDO::PARAM_INT;
-			case 'SS_Object': // Allowed if the object or resource has a __toString method
+			case 'object': // Allowed if the object or resource has a __toString method
 			case 'resource':
 			case 'float': // Not actually returnable from get_type
 			case 'double':
