@@ -92,6 +92,19 @@ class GridFieldConfigTest extends SapphireTest
         );
     }
 
+    public function testAddComponentsByArray()
+    {
+        $config = GridFieldConfig::create()
+            ->addComponents([
+                $c1 = new MyComponent(),
+            ]);
+
+        $this->assertEquals(
+            $c1,
+            $config->getComponentByType(MyComponent::class)
+        );
+    }
+
     public function testRemoveComponents()
     {
         $config = GridFieldConfig::create()

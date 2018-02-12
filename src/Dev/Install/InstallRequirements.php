@@ -282,7 +282,8 @@ class InstallRequirements
             '',
         ));
 
-        $this->requireWriteable('index.php', array("File permissions", "Is the index.php file writeable?", null));
+
+        $this->requireWriteable($this->getPublicDir() . 'index.php', array("File permissions", "Is the index.php file writeable?", null), true);
 
         $this->requireWriteable('.env', ["File permissions", "Is the .env file writeable?", null], false, false);
 
@@ -293,9 +294,9 @@ class InstallRequirements
                 "SilverStripe requires Apache version 2 or greater",
                 $webserver
             ));
-            $this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
+            $this->requireWriteable($this->getPublicDir() . '.htaccess', array("File permissions", "Is the .htaccess file writeable?", null), true);
         } elseif ($isIIS) {
-            $this->requireWriteable('web.config', array("File permissions", "Is the web.config file writeable?", null));
+            $this->requireWriteable($this->getPublicDir() . 'web.config', array("File permissions", "Is the web.config file writeable?", null), true);
         }
 
         $this->requireWriteable('mysite/_config.php', array(

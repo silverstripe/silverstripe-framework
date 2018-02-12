@@ -61,5 +61,16 @@ EOS
             ,
             $view->debugVariable(new ObjectWithDebug(), $this->caller)
         );
+
+        $this->assertEquals(
+            <<<EOS
+Debug (CLIDebugViewTest.php:17 - SilverStripe\\Dev\\Tests\\CLIDebugViewTest::setUp())
+SilverStripe\\Dev\\Tests\\DebugViewTest\\ObjectWithDebug
+
+
+EOS
+            ,
+            $view->debugVariable(ObjectWithDebug::class, $this->caller)
+        );
     }
 }

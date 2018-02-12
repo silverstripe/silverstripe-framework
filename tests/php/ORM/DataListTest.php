@@ -1510,13 +1510,60 @@ class DataListTest extends SapphireTest
     }
 
     /**
+     * Test doesn't exclude if only matches one
+     * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+     */
+    public function testMultipleExcludeMultipleMatches()
+    {
+        $list = TeamComment::get();
+        $list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'Phil is a unique guy, and comments on team2'));
+        $this->assertCount(3, $list);
+    }
+
+    /**
+     * // exclude only those that match both
+     */
+    public function testMultipleExcludeArraysMultipleMatches()
+    {
+        $list = TeamComment::get();
+        $list = $list->exclude(array(
+            'Name'=> array('Bob', 'Phil'),
+            'Comment'=> array(
+                'This is a team comment by Bob',
+                'Phil is a unique guy, and comments on team2'
+            )
+        ));
+        $this->assertListEquals([['Name' => 'Joe']], $list);
+    }
+
+    /**
+     * Exclude only which matches both params
+     */
+    public function testMultipleExcludeArraysMultipleMatchesOneMiss()
+    {
+        $list = TeamComment::get();
+        $list = $list->exclude(array(
+            'Name' => array('Bob', 'Phil'),
+            'Comment' => array(
+                'Does not match any comments',
+                'Phil is a unique guy, and comments on team2'
+            )
+        ));
+        $list = $list->sort('Name');
+        $this->assertListEquals(
+            [
+                ['Name' => 'Bob'],
+                ['Name' => 'Joe'],
+            ],
+            $list
+        );
+    }
+
+    /**
      * Test that if an exclude() is applied to a filter(), the filter() is still preserved.
      */
     public function testExcludeOnFilter()
     {
-        /**
- * @var DataList $list
-*/
         $list = TeamComment::get();
         $list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
         $list = $list->exclude('Name', 'Bob');
@@ -1528,6 +1575,58 @@ class DataListTest extends SapphireTest
             $sql
         );
         $this->assertEquals(array('Phil is a unique guy, and comments on team2', 'Bob'), $parameters);
+        $this->assertListEquals([['Name' => 'Phil']], $list);
+    }
+
+    /**
+     * Test that if a complicated exclude() is applied to a filter(), the filter() is still preserved.
+     */
+    public function testComplicatedExcludeOnFilter()
+    {
+        $list = TeamComment::get();
+        $list = $list->filter('Name', array('Phil', 'Bob'));
+        $list = $list->exclude('Name', array('Bob', 'Joe'));
+
+        $sql = $list->sql($parameters);
+        $this->assertSQLContains(
+            'WHERE ("DataObjectTest_TeamComment"."Name" IN (?, ?)) AND (("DataObjectTest_TeamComment"."Name" NOT IN (?, ?) '
+            . 'OR "DataObjectTest_TeamComment"."Name" IS NULL))',
+            $sql
+        );
+        $this->assertEquals(array('Phil', 'Bob', 'Bob', 'Joe'), $parameters);
+        $this->assertListEquals([['Name' => 'Phil']], $list);
+    }
+
+    /**
+     * Test that if a very complicated exclude() is applied to a filter(), the filter() is still preserved.
+     */
+    public function testVeryComplicatedExcludeOnFilter()
+    {
+        $list = TeamComment::get();
+        $list = $list->filter('Name', array('Phil', 'Bob'));
+        $list = $list->exclude(array(
+            'Name' => array('Joe', 'Phil'),
+            'Comment' => array('Matches no comments', 'Not a matching comment')
+        ));
+
+        $sql = $list->sql($parameters);
+        $this->assertSQLContains(
+            'WHERE ("DataObjectTest_TeamComment"."Name" IN (?, ?)) '
+            . 'AND (("DataObjectTest_TeamComment"."Name" NOT IN (?, ?) '
+            . 'OR "DataObjectTest_TeamComment"."Name" IS NULL) '
+            . 'OR ("DataObjectTest_TeamComment"."Comment" NOT IN (?, ?) '
+            . 'OR "DataObjectTest_TeamComment"."Comment" IS NULL))',
+            $sql
+        );
+        $this->assertEquals(array('Phil', 'Bob', 'Joe', 'Phil', 'Matches no comments', 'Not a matching comment'), $parameters);
+        $list = $list->sort('Name');
+        $this->assertListEquals(
+            [
+                ['Name' => 'Bob'],
+                ['Name' => 'Phil'],
+            ],
+            $list
+        );
     }
 
     public function testExcludeWithSearchFilter()
@@ -1538,6 +1637,45 @@ class DataListTest extends SapphireTest
         $sql = $list->sql($parameters);
         $this->assertSQLContains('WHERE (("DataObjectTest_TeamComment"."Name" >= ?))', $sql);
         $this->assertEquals(array('Bob'), $parameters);
+    }
+
+    /**
+     * Test that Bob and Phil are excluded (one match each)
+     */
+    public function testExcludeAny()
+    {
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+            'Name' => 'Bob',
+            'Comment' => 'Phil is a unique guy, and comments on team2'
+        ));
+        $this->assertListEquals([['Name' => 'Joe']], $list);
+    }
+
+    /**
+     * Test that Bob and Phil are excluded by Name
+     */
+    public function testExcludeAnyArrays()
+    {
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+            'Name' => array('Bob', 'Phil'),
+            'Comment' => 'No matching comments'
+        ));
+        $this->assertListEquals([['Name' => 'Joe']], $list);
+    }
+
+    /**
+     * Test that Bob is excluded by Name, Phil by comment
+     */
+    public function testExcludeAnyMultiArrays()
+    {
+        $list = TeamComment::get();
+        $list = $list->excludeAny(array(
+            'Name' => array('Bob', 'Fred'),
+            'Comment' => array('No matching comments', 'Phil is a unique guy, and comments on team2')
+        ));
+        $this->assertListEquals([['Name' => 'Joe']], $list);
     }
 
     /**
