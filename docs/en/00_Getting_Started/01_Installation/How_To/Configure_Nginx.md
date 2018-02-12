@@ -16,57 +16,80 @@ If you don't fully understand the configuration presented here, consult the
 Especially be aware of [accidental php-execution](https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/ "Don't trust the tutorials") when extending the configuration.
 </div>
 
-But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`. This assumes
-you are running your site configuration with a separate `public/` webroot folder.
+But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
 
-	server {
-		listen 80;
-		root /var/www/the-website/public;
+```nginx
+server {
+  include mime.types;
+  default_type  application/octet-stream;
+  client_max_body_size 0; # Manage this in php.ini
+  listen 80;
+  root /path/to/ss/folder;
+  server_name example.com www.example.com;
 
-		server_name site.com www.site.com;
+  # Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
+  if ($http_x_forwarded_host) {
+    return 400;
+  }
 
-		# Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
-		if ($http_x_forwarded_host) {
-			return 400;
-		}
+  location / {
+      try_files $uri /index.php?$query_string;
+  }
 
-		location / {
-			try_files $uri /index.php?$query_string;
-		}
+  error_page 404 /assets/error-404.html;
+  error_page 500 /assets/error-500.html;
 
-		error_page 404 /assets/error-404.html;
-		error_page 500 /assets/error-500.html;
+  location ^~ /assets/ {
+    sendfile on;
+    try_files $uri =404;
+  }
 
-		location ^~ /assets/ {
-			location ~ /\. {
-				deny all;
-			}
-			sendfile on;
-			try_files $uri /index.php?$query_string;
-		}
-		
-		location ~ /\.. {
-			deny all;
-		}
+  location /index.php {
+    fastcgi_buffer_size 32k;
+    fastcgi_busy_buffers_size 64k;
+    fastcgi_buffers 4 32k;
+    fastcgi_keep_conn on;
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+  }
 
-		location ~ web\.config$ {
-			deny all;
-		}
+  # Denials
+  location ~ /\.. {
+    deny all;
+  }
+  location ~ \.ss$ {
+    satisfy any;
+    allow 127.0.0.1;
+    deny all;
+  }
+  location ~ web\.config$ {
+    deny all;
+  }
+  location ~ \.ya?ml$ {
+    deny all;
+  }
+  location ~* README.*$ {
+    deny all;
+  }
+  location ^~ /vendor/ {
+    deny all;
+  }
+  location ~* /silverstripe-cache/ {
+    deny all;
+  }
+  location ~* composer\.(json|lock)$ {
+    deny all;
+  }
+  location ~* /(cms|framework)/silverstripe_version$ {
+    deny all;
+  }
+}
+```
 
-		location ~ \.php$ {
-			fastcgi_keep_conn on;
-			fastcgi_pass   127.0.0.1:9000;
-			fastcgi_index  index.php;
-			fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include        fastcgi_params;
-			fastcgi_buffer_size 32k;
-			fastcgi_busy_buffers_size 64k;
-			fastcgi_buffers 4 32k;
-		}
-	}
-
-The above configuration sets up a virtual host `site.com` with
-rewrite rules suited for SilverStripe. The location block for php files
-passes all php scripts to the FastCGI-wrapper via a TCP socket.
+The above configuration sets up a virtual host `example.com` with
+rewrite rules suited for SilverStripe. The location block for index.php
+passes the php script to the FastCGI-wrapper via a TCP socket.
 
 Now you can proceed with the SilverStripe installation normally.

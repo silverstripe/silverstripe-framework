@@ -5,6 +5,7 @@ namespace SilverStripe\Security;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
@@ -83,6 +84,36 @@ class Member_GroupSet extends ManyManyList
         if ($this->canAddGroups(array($itemID))) {
             parent::add($item, $extraFields);
         }
+    }
+
+    public function removeAll()
+    {
+        // Remove the join to the join table to avoid MySQL row locking issues.
+        $query = $this->dataQuery();
+        $foreignFilter = $query->getQueryParam('Foreign.Filter');
+        $query->removeFilterOn($foreignFilter);
+
+        // Select ID column
+        $selectQuery = $query->query();
+        $dataClassIDColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
+        $selectQuery->setSelect($dataClassIDColumn);
+
+        $from = $selectQuery->getFrom();
+        unset($from[$this->joinTable]);
+        $selectQuery->setFrom($from);
+        $selectQuery->setOrderBy(); // ORDER BY in subselects breaks MS SQL Server and is not necessary here
+        $selectQuery->setDistinct(false);
+
+        // Use a sub-query as SQLite does not support setting delete targets in
+        // joined queries.
+        $delete = new SQLDelete();
+        $delete->setFrom("\"{$this->joinTable}\"");
+        $delete->addWhere(parent::foreignIDFilter());
+        $subSelect = $selectQuery->sql($parameters);
+        $delete->addWhere(array(
+            "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+        ));
+        $delete->execute();
     }
 
     /**

@@ -263,7 +263,7 @@ _t('CMSMain.RESTORED',
 );
 
 // Plurals are invoked via a `|` pipe-delimeter with a {count} argument
-_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
+_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => $count ]);
 ```
 
 #### Usage in Template Files
