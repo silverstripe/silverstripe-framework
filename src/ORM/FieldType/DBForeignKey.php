@@ -29,6 +29,16 @@ class DBForeignKey extends DBInt
      */
     protected $object;
 
+    /**
+     * This represents the number of related objects to show in a dropdown before it reverts
+     * to a NumericField. If you are tweaking this value, you should also consider constructing
+     * your form field manually rather than allowing it to be scaffolded
+     *
+     * @config
+     * @var int
+     */
+    private static $dropdown_field_threshold = 100;
+
     private static $index = true;
 
     private static $default_search_filter_class = 'ExactMatchFilter';
@@ -63,11 +73,13 @@ class DBForeignKey extends DBInt
         $list = DataList::create($hasOneClass);
         // Don't scaffold a dropdown for large tables, as making the list concrete
         // might exceed the available PHP memory in creating too many DataObject instances
-        if ($list->count() < 100) {
+        $threshold = self::config()->get('dropdown_field_threshold');
+        if ($list->count() < $threshold) {
             $field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
             $field->setEmptyString(' ');
         } else {
             $field = new NumericField($this->name, $title);
+            $field->setRightTitle(_t(self::class . '.DROPDOWN_THRESHOLD_FALLBACK_MESSAGE', 'Too many related objects; fallback field in use'));
         }
         return $field;
     }
