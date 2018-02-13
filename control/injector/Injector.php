@@ -551,6 +551,11 @@ class Injector {
 			$constructorParams = $spec['constructor'];
 		}
 
+		// If we're dealing with a DataObject, pass through Singleton flag as second argument
+		if ($type != 'prototype' && empty($constructorParams) && is_subclass_of($class, 'DataObject')) {
+			$constructorParams = array(null, true);
+		}
+
 		$factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
 		$object = $factory->create($class, $constructorParams);
 
