@@ -605,6 +605,6 @@ class Convert
         if ($multiple) {
             return preg_replace('#[/\\\\]+#', $separator, $path);
         }
-        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        return str_replace(['/', '\\'], $separator, $path);
     }
 }
