@@ -33,6 +33,51 @@ class DataObjectTest extends SapphireTest {
 		'ManyManyListTest_Category',
 	);
 
+	/**
+	 * @dataProvider provideSingletons
+	 */
+	public function testSingleton($inst, $defaultValue, $altDefaultValue)
+	{
+		$inst = $inst();
+		// Test that populateDefaults() isn't called on singletons
+		// which can lead to SQL errors during build, and endless loops
+		if ($defaultValue) {
+			$this->assertEquals($defaultValue, $inst->MyFieldWithDefault);
+		} else {
+			$this->assertEmpty($inst->MyFieldWithDefault);
+		}
+
+		if ($altDefaultValue) {
+			$this->assertEquals($altDefaultValue, $inst->MyFieldWithAltDefault);
+		} else {
+			$this->assertEmpty($inst->MyFieldWithAltDefault);
+		}
+	}
+
+	public function provideSingletons()
+	{
+		// because PHPUnit evalutes test providers *before* setUp methods
+		// any extensions added in the setUp methods won't be available
+		// we must return closures to generate the arguments at run time
+		return array(
+			array(function () {
+				return DataObjectTest_Fixture::create();
+			}, 'Default Value', 'Default Value'),
+			array(function () {
+				return new DataObjectTest_Fixture();
+			}, 'Default Value', 'Default Value'),
+			array(function () {
+				return singleton('DataObjectTest_Fixture');
+			}, null, null),
+			array(function () {
+				return DataObjectTest_Fixture::singleton();
+			}, null, null),
+			array(function () {
+				return new DataObjectTest_Fixture(null, true);
+			}, null, null),
+		);
+	}
+
 	public function testDb() {
 		$obj = new DataObjectTest_TeamComment();
 		$dbFields = $obj->db();
