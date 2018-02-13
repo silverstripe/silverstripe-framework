@@ -259,7 +259,7 @@ PHP
 
     /**
      * Tests {@link Convert::testRaw2URL()}
-  *
+     *
      * @todo test toASCII()
      */
     public function testRaw2URL()
@@ -273,7 +273,7 @@ PHP
 
     /**
      * Helper function for comparing characters with significant whitespaces
-  *
+     *
      * @param string $expected
      * @param string $actual
      */
@@ -590,7 +590,7 @@ XML
     /**
      * Test that bytes2memstring returns a binary prefixed string representing the number of bytes
      *
-     * @param string $memString
+     * @param string $bytes
      * @param int    $expected
      * @dataProvider bytes2MemStringProvider
      */
@@ -612,5 +612,41 @@ XML
             [(512 * 1024 * 1024 * 1024 * 1024), '512T'],
             [(512 * 1024 * 1024 * 1024 * 1024 * 1024), '512P']
         ];
+    }
+
+    public function providerTestSlashes()
+    {
+        return [
+            ['bob/bob', '/', true, 'bob/bob'],
+            ['\\bob/bob\\', '/', true, '/bob/bob/'],
+            ['\\bob////bob\\/', '/', true, '/bob/bob/'],
+            ['bob/bob', '\\', true, 'bob\\bob'],
+            ['\\bob/bob\\', '\\', true, '\\bob\\bob\\'],
+            ['\\bob////bob\\/', '\\', true, '\\bob\\bob\\'],
+            ['bob/bob', '#', true, 'bob#bob'],
+            ['\\bob/bob\\', '#', true, '#bob#bob#'],
+            ['\\bob////bob\\/', '#', true, '#bob#bob#'],
+            ['bob/bob', '/', false, 'bob/bob'],
+            ['\\bob/bob\\', '/', false, '/bob/bob/'],
+            ['\\bob////bob\\/', '/', false, '/bob////bob//'],
+            ['bob/bob', '\\', false, 'bob\\bob'],
+            ['\\bob/bob\\', '\\', false, '\\bob\\bob\\'],
+            ['\\bob////bob\\/', '\\', false, '\\bob\\\\\\\\bob\\\\'],
+            ['bob/bob', '#', false, 'bob#bob'],
+            ['\\bob/bob\\', '#', false, '#bob#bob#'],
+            ['\\bob////bob\\/', '#', false, '#bob####bob##'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestSlashes
+     * @param string $path
+     * @param string $separator
+     * @param bool $multiple
+     * @param string $expected
+     */
+    public function testSlashes($path, $separator, $multiple, $expected)
+    {
+        $this->assertEquals($expected, Convert::slashes($path, $separator, $multiple));
     }
 }
