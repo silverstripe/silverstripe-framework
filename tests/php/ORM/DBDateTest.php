@@ -349,7 +349,7 @@ class DBDateTest extends SapphireTest
     public function testRfc3999()
     {
         // Dates should be formatted as: 2018-01-24T14:05:53+00:00
-        $date = DBDate::create_field('Date', '2010-12-31');
+        $date = DBField::create_field('Date', '2010-12-31');
         $this->assertEquals('2010-12-31T00:00:00+00:00', $date->Rfc3339());
     }
 }
