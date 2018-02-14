@@ -8,7 +8,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
-use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
+use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Control\SimpleResourceURLGenerator;
