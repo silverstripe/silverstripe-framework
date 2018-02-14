@@ -13,7 +13,7 @@ Before submitting a bug:
  * Ask for assistance in our [community channels](https://www.silverstripe.org/community) if you're unsure if it's really a bug.
  * Search for similar, existing tickets.
    You can [list all issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues),
-   then add your search phrase at the start of the existing search filters. 
+   then add your search phrase at the start of the existing search filters (for example [all issues with label "type/ux"](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-open-ux-issues))
  * Is this a security issue? Please follow our separate reporting guidelines below.
  * Which modules does this issue belong to? Each one has its own issue tracker.
    If you are unsure, [create an issue](https://github.com/silverstripe/silverstripe-framework/issues/new) on the the "framework" repository.

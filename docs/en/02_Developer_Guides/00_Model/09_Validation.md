@@ -37,7 +37,7 @@ class MyObject extends DataObject
         $result = parent::validate();
 
         if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {
-            $result->error('Need five digits for German postcodes');
+            $result->addError('Need five digits for German postcodes');
         }
 
         return $result;

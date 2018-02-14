@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
+use SilverStripe\View\HTML;
 
 /**
  * Two masked input fields, checks for matching passwords.
@@ -186,24 +187,8 @@ class ConfirmedPasswordField extends FormField
      */
     public function Field($properties = array())
     {
-        $content = '';
-
-        if ($this->showOnClick) {
-            if ($this->showOnClickTitle) {
-                $title = $this->showOnClickTitle;
-            } else {
-                $title = _t(
-                    'SilverStripe\\Forms\\ConfirmedPasswordField.SHOWONCLICKTITLE',
-                    'Change Password',
-                    'Label of the link which triggers display of the "change password" formfields'
-                );
-            }
-
-            $content .= "<div class=\"showOnClick\">\n";
-            $content .= "<a href=\"#\">{$title}</a>\n";
-            $content .= "<div class=\"showOnClickContainer\">";
-        }
-
+        // Build inner content
+        $fieldContent = '';
         foreach ($this->children as $field) {
             /** @var FormField $field */
             $field->setDisabled($this->isDisabled());
@@ -215,15 +200,37 @@ class ConfirmedPasswordField extends FormField
                 }
             }
 
-            $content .= $field->FieldHolder();
+            $fieldContent .= $field->FieldHolder();
         }
 
-        if ($this->showOnClick) {
-            $content .= "</div>\n";
-            $content .= "</div>\n";
+        if (!$this->showOnClick) {
+            return $fieldContent;
         }
 
-        return $content;
+        if ($this->showOnClickTitle) {
+            $title = $this->showOnClickTitle;
+        } else {
+            $title = _t(
+                __CLASS__ . '.SHOWONCLICKTITLE',
+                'Change Password',
+                'Label of the link which triggers display of the "change password" formfields'
+            );
+        }
+
+        // Check if the field should be visible up front
+        $visible = $this->hiddenField->Value();
+        $classes = $visible
+            ? 'showOnClickContainer'
+            : 'showOnClickContainer d-none';
+
+        // Build display holder
+        $container = HTML::createTag('div', ['class' => $classes], $fieldContent);
+        $actionLink = HTML::createTag('a', ['href' => '#'], $title);
+        return HTML::createTag(
+            'div',
+            ['class' => 'showOnClick'],
+            $actionLink . "\n" . $container
+        );
     }
 
     /**

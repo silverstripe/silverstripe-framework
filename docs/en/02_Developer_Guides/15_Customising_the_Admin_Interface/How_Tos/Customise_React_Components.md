@@ -25,7 +25,7 @@ const CharacterCounter = (TextField) => (props) => {
 export default CharacterCounter;
 ```
 
-Now let's add this higher order component to []Injector](../07_ReactJS_Redux_and_GraphQL.md#the-injector-api). 
+Now let's add this higher order component to [Injector](../07_ReactJS_Redux_and_GraphQL.md#the-injector-api). 
 
 __my-module/js/main.js__
 ```js

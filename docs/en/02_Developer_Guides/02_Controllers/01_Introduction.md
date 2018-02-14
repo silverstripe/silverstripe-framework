@@ -51,7 +51,7 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 ```yml
 ---
 Name: mysiteroutes
-After: framework/routes#coreroutes
+After: framework/_config/routes#coreroutes
 ---
 SilverStripe\Control\Director:
   rules:

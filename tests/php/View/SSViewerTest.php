@@ -5,7 +5,7 @@ namespace SilverStripe\View\Tests;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit_Framework_MockObject_MockObject;
-use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
+use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
