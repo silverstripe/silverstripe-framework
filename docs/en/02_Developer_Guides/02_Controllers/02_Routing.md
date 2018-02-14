@@ -20,7 +20,7 @@ These routes by standard, go into a `routes.yml` file in your applications `_con
 ```yml
 ---
 Name: mysiteroutes
-After: framework/routes#coreroutes
+After: framework/_config/routes#coreroutes
 ---
 SilverStripe\Control\Director:
   rules:

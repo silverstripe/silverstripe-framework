@@ -1,6 +1,6 @@
 ---
 Name: basei18n
-Before: '/i18n'
+Before: '#defaulti18n'
 ---
 SilverStripe\i18n\Data\Sources:
   module_priority:

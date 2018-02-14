@@ -37,3 +37,8 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
  * [Forums](http://silverstripe.org/forums)
  * [Developer Mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
  * [License](./LICENSE)
+	
+## Attribution ##
+
+ * Some icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](http://creativecommons.org/licenses/by/3.0/).
+ * default_media.png by Thibault Geffroy from [The Noun Project](http://thenounproject.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](http://creativecommons.org/licenses/by/3.0/).

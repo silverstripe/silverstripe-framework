@@ -337,7 +337,7 @@ To create a custom module order, you need to specify a config fragment that inse
 ```yml
 ---
 Name: customi18n
-Before: 'defaulti18n'
+Before: '#defaulti18n'
 ---
 SilverStripe\i18n\i18n:
   module_priority:
