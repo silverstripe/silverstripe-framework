@@ -167,14 +167,17 @@ class ThemeResourceLoader
      * list, or list of templates each in the array spec given.
      * Templates with an .ss extension will be treated as file paths, and will bypass
      * theme-coupled resolution.
-     * @param array $themes List of themes to use to resolve themes. In most cases
-     * you should pass in {@see SSViewer::get_themes()}
+     * @param array $themes List of themes to use to resolve themes. Defaults to {@see SSViewer::get_themes()}
      * @return string Absolute path to resolved template file, or null if not resolved.
      * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
      * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
      */
-    public function findTemplate($template, $themes)
+    public function findTemplate($template, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         $type = '';
         if (is_array($template)) {
             // Check if templates has type specified
@@ -230,11 +233,15 @@ class ThemeResourceLoader
      * Resolve themed CSS path
      *
      * @param string $name Name of CSS file without extension
-     * @param array $themes List of themes
+     * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved CSS file (relative to base dir)
      */
-    public function findThemedCSS($name, $themes)
+    public function findThemedCSS($name, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         if (substr($name, -4) !== '.css') {
             $name .= '.css';
         }
@@ -255,11 +262,15 @@ class ThemeResourceLoader
      * the module is used.
      *
      * @param string $name The name of the file - eg '/js/File.js' would have the name 'File'
-     * @param array $themes List of themes
+     * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved javascript file (relative to base dir)
      */
-    public function findThemedJavascript($name, $themes)
+    public function findThemedJavascript($name, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         if (substr($name, -3) !== '.js') {
             $name .= '.js';
         }
@@ -278,11 +289,15 @@ class ThemeResourceLoader
      * A themed resource and be any file that resides in a theme folder.
      *
      * @param string $resource A file path relative to the root folder of a theme
-     * @param array $themes An order listed of themes to search
+     * @param array $themes An order listed of themes to search, Defaults to {@see SSViewer::get_themes()}
      * @return string
      */
-    public function findThemedResource($resource, $themes)
+    public function findThemedResource($resource, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         $paths = $this->getThemePaths($themes);
 
         foreach ($paths as $themePath) {
@@ -300,11 +315,15 @@ class ThemeResourceLoader
     /**
      * Resolve all themes to the list of root folders relative to site root
      *
-     * @param array $themes List of themes to resolve. Supports named theme sets.
+     * @param array $themes List of themes to resolve. Supports named theme sets. Defaults to {@see SSViewer::get_themes()}.
      * @return array List of root-relative folders in order of precendence.
      */
-    public function getThemePaths($themes)
+    public function getThemePaths($themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         $paths = [];
         foreach ($themes as $themename) {
             // Expand theme sets
