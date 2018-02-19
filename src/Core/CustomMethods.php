@@ -4,18 +4,20 @@ namespace SilverStripe\Core;
 
 use BadMethodCallException;
 use InvalidArgumentException;
-use SilverStripe\Dev\Deprecation;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Allows an object to declare a set of custom methods
  */
 trait CustomMethods
 {
-
     /**
      * Custom method sources
      *
-     * @var array
+     * @var array Array of class names (lowercase) to list of methods.
+     * The list of methods will have lowercase keys. Each value in this array
+     * can be a callable, array, or string callback
      */
     protected static $extra_methods = [];
 
@@ -24,12 +26,13 @@ trait CustomMethods
      *
      * @var array
      */
-    protected $extra_method_registers = array();
+    protected $extra_method_registers = [];
 
     /**
-     * Non-custom methods
+     * Non-custom public methods.
      *
-     * @var array
+     * @var array Array of class names (lowercase) to list of methods.
+     * The list of methods will have lowercase keys and correct-case values.
      */
     protected static $built_in_methods = array();
 
@@ -74,17 +77,16 @@ trait CustomMethods
                     );
                 }
 
-                // Call without setOwner
-                if (empty($config['callSetOwnerFirst'])) {
-                    return $obj->$method(...$arguments);
-                }
-
-                /** @var Extension $obj */
+                // Call on object
                 try {
-                    $obj->setOwner($this);
+                    if ($obj instanceof Extension) {
+                        $obj->setOwner($this);
+                    }
                     return $obj->$method(...$arguments);
                 } finally {
-                    $obj->clearOwner();
+                    if ($obj instanceof Extension) {
+                        $obj->clearOwner();
+                    }
                 }
             }
             case isset($config['wrap']): {
@@ -157,66 +159,87 @@ trait CustomMethods
     protected function getExtraMethodConfig($method)
     {
         // Lazy define methods
-        if (!isset(self::$extra_methods[static::class])) {
+        $lowerClass = strtolower(static::class);
+        if (!isset(self::$extra_methods[$lowerClass])) {
             $this->defineMethods();
         }
 
-        if (isset(self::$extra_methods[static::class][strtolower($method)])) {
-            return self::$extra_methods[static::class][strtolower($method)];
-        }
-        return null;
+        return self::$extra_methods[$lowerClass][strtolower($method)] ?? null;
     }
 
     /**
      * Return the names of all the methods available on this object
      *
      * @param bool $custom include methods added dynamically at runtime
-     * @return array
+     * @return array Map of method names with lowercase keys
      */
     public function allMethodNames($custom = false)
     {
-        $class = static::class;
-        if (!isset(self::$built_in_methods[$class])) {
-            self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($this));
-        }
+        $methods = static::findBuiltInMethods();
 
-        if ($custom && isset(self::$extra_methods[$class])) {
-            return array_merge(self::$built_in_methods[$class], array_keys(self::$extra_methods[$class]));
-        } else {
-            return self::$built_in_methods[$class];
-        }
-    }
-
-    /**
-     * @param object $extension
-     * @return array
-     */
-    protected function findMethodsFromExtension($extension)
-    {
-        if (method_exists($extension, 'allMethodNames')) {
-            if ($extension instanceof Extension) {
-                try {
-                    $extension->setOwner($this);
-                    $methods = $extension->allMethodNames(true);
-                } finally {
-                    $extension->clearOwner();
-                }
-            } else {
-                $methods = $extension->allMethodNames(true);
-            }
-        } else {
-            $class = get_class($extension);
-            if (!isset(self::$built_in_methods[$class])) {
-                self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($extension));
-            }
-            $methods = self::$built_in_methods[$class];
+        // Query extra methods
+        $lowerClass = strtolower(static::class);
+        if ($custom && isset(self::$extra_methods[$lowerClass])) {
+            $methods = array_merge(self::$extra_methods[$lowerClass], $methods);
         }
 
         return $methods;
     }
 
     /**
-     * Add all the methods from an object property (which is an {@link Extension}) to this object.
+     * Get all public built in methods for this class
+     *
+     * @param string|object $class Class or instance to query methods from (defaults to static::class)
+     * @return array Map of methods with lowercase key name
+     */
+    protected static function findBuiltInMethods($class = null)
+    {
+        $class = is_object($class) ? get_class($class) : ($class ?: static::class);
+        $lowerClass = strtolower($class);
+        if (isset(self::$built_in_methods[$lowerClass])) {
+            return self::$built_in_methods[$lowerClass];
+        }
+
+        // Build new list
+        $reflection = new ReflectionClass($class);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        self::$built_in_methods[$lowerClass] = [];
+        foreach ($methods as $method) {
+            $name = $method->getName();
+            self::$built_in_methods[$lowerClass][strtolower($name)] = $name;
+        }
+        return self::$built_in_methods[$lowerClass];
+    }
+
+    /**
+     * Find all methods on the given object.
+     *
+     * @param object $object
+     * @return array
+     */
+    protected function findMethodsFrom($object)
+    {
+        // Respect "allMethodNames"
+        if (method_exists($object, 'allMethodNames')) {
+            if ($object instanceof Extension) {
+                try {
+                    $object->setOwner($this);
+                    $methods = $object->allMethodNames(true);
+                } finally {
+                    $object->clearOwner();
+                }
+            } else {
+                $methods = $object->allMethodNames(true);
+            }
+            return $methods;
+        }
+
+        // Get methods
+        return static::findBuiltInMethods($object);
+    }
+
+    /**
+     * Add all the methods from an object property.
      *
      * @param string $property the property name
      * @param string|int $index an index to use if the property is an array
@@ -225,37 +248,31 @@ trait CustomMethods
     protected function addMethodsFrom($property, $index = null)
     {
         $class = static::class;
-        $extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
+        $object = ($index !== null) ? $this->{$property}[$index] : $this->$property;
 
-        if (!$extension) {
+        if (!$object) {
             throw new InvalidArgumentException(
                 "Object->addMethodsFrom(): could not add methods from {$class}->{$property}[$index]"
             );
         }
 
-        $methods = $this->findMethodsFromExtension($extension);
-        if ($methods) {
-            if ($extension instanceof Extension) {
-                Deprecation::notice(
-                    '5.0',
-                    'Register custom methods from extensions with addCallbackMethod.'
-                    . ' callSetOwnerFirst will be removed in 5.0'
-                );
-            }
-            $methodInfo = array(
-                'property' => $property,
-                'index' => $index,
-                'callSetOwnerFirst' => $extension instanceof Extension,
-            );
+        $methods = $this->findMethodsFrom($object);
+        if (!$methods) {
+            return;
+        }
+        $methodInfo = [
+            'property' => $property,
+            'index' => $index,
+        ];
 
-            $newMethods = array_fill_keys($methods, $methodInfo);
+        $newMethods = array_fill_keys(array_keys($methods), $methodInfo);
 
-            if (isset(self::$extra_methods[$class])) {
-                self::$extra_methods[$class] =
-                    array_merge(self::$extra_methods[$class], $newMethods);
-            } else {
-                self::$extra_methods[$class] = $newMethods;
-            }
+        // Merge with extra_methods
+        $lowerClass = strtolower($class);
+        if (isset(self::$extra_methods[$lowerClass])) {
+            self::$extra_methods[$lowerClass] = array_merge(self::$extra_methods[$lowerClass], $newMethods);
+        } else {
+            self::$extra_methods[$lowerClass] = $newMethods;
         }
     }
 
@@ -276,19 +293,18 @@ trait CustomMethods
             );
         }
 
-        $methods = $this->findMethodsFromExtension($extension);
-        if ($methods) {
-            foreach ($methods as $method) {
-                $methodInfo = self::$extra_methods[$class][$method];
+        $lowerClass = strtolower($class);
+        if (!isset(self::$extra_methods[$lowerClass])) {
+            return;
+        }
+        $methods = $this->findMethodsFrom($extension);
 
-                if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
-                    unset(self::$extra_methods[$class][$method]);
-                }
-            }
+        // Unset by key
+        self::$extra_methods[$lowerClass] = array_diff_key(self::$extra_methods[$lowerClass], $methods);
 
-            if (empty(self::$extra_methods[$class])) {
-                unset(self::$extra_methods[$class]);
-            }
+        // Clear empty list
+        if (empty(self::$extra_methods[$lowerClass])) {
+            unset(self::$extra_methods[$lowerClass]);
         }
     }
 
@@ -301,10 +317,10 @@ trait CustomMethods
      */
     protected function addWrapperMethod($method, $wrap)
     {
-        self::$extra_methods[static::class][strtolower($method)] = array(
+        self::$extra_methods[strtolower(static::class)][strtolower($method)] = [
             'wrap' => $wrap,
             'method' => $method
-        );
+        ];
     }
 
     /**
@@ -316,7 +332,7 @@ trait CustomMethods
      */
     protected function addCallbackMethod($method, $callback)
     {
-        self::$extra_methods[static::class][strtolower($method)] = [
+        self::$extra_methods[strtolower(static::class)][strtolower($method)] = [
             'callback' => $callback,
         ];
     }
