@@ -208,12 +208,14 @@ class Hierarchy extends DataExtension
      */
     public function AllChildrenIncludingDeleted()
     {
-        $stageChildren = $this->owner->stageChildren(true);
+        /** @var DataObject|Hierarchy|Versioned $owner */
+        $owner = $this->owner;
+        $stageChildren = $owner->stageChildren(true);
 
         // Add live site content that doesn't exist on the stage site, if required.
-        if ($this->owner->hasExtension(Versioned::class)) {
+        if ($owner->hasExtension(Versioned::class) && $owner->hasStages()) {
             // Next, go through the live children.  Only some of these will be listed
-            $liveChildren = $this->owner->liveChildren(true, true);
+            $liveChildren = $owner->liveChildren(true, true);
             if ($liveChildren) {
                 $merged = new ArrayList();
                 $merged->merge($stageChildren);
@@ -221,7 +223,7 @@ class Hierarchy extends DataExtension
                 $stageChildren = $merged;
             }
         }
-        $this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren);
+        $owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren);
         return $stageChildren;
     }
 
@@ -233,15 +235,19 @@ class Hierarchy extends DataExtension
      */
     public function AllHistoricalChildren()
     {
-        if (!$this->owner->hasExtension(Versioned::class)) {
-            throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+        /** @var DataObject|Versioned|Hierarchy $owner */
+        $owner = $this->owner;
+        if (!$owner->hasExtension(Versioned::class) || !$owner->hasStages()) {
+            throw new Exception(
+                'Hierarchy->AllHistoricalChildren() only works with Versioned extension applied with staging'
+            );
         }
 
-        $baseTable = $this->owner->baseTable();
-        $parentIDColumn = $this->owner->getSchema()->sqlColumnForField($this->owner, 'ParentID');
+        $baseTable = $owner->baseTable();
+        $parentIDColumn = $owner->getSchema()->sqlColumnForField($owner, 'ParentID');
         return Versioned::get_including_deleted(
-            $this->owner->baseClass(),
-            [ $parentIDColumn => $this->owner->ID ],
+            $owner->baseClass(),
+            [ $parentIDColumn => $owner->ID ],
             "\"{$baseTable}\".\"ID\" ASC"
         );
     }
@@ -337,15 +343,17 @@ class Hierarchy extends DataExtension
      */
     public function liveChildren($showAll = false, $onlyDeletedFromStage = false)
     {
-        if (!$this->owner->hasExtension(Versioned::class)) {
-            throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
+        /** @var Versioned|DataObject|Hierarchy $owner */
+        $owner = $this->owner;
+        if (!$owner->hasExtension(Versioned::class) || !$owner->hasStages()) {
+            throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied with staging');
         }
 
-        $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
-        $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
-        $children = DataObject::get($this->owner->baseClass())
-            ->filter('ParentID', (int)$this->owner->ID)
-            ->exclude('ID', (int)$this->owner->ID)
+        $hideFromHierarchy = $owner->config()->hide_from_hierarchy;
+        $hideFromCMSTree = $owner->config()->hide_from_cms_tree;
+        $children = DataObject::get($owner->baseClass())
+            ->filter('ParentID', (int)$owner->ID)
+            ->exclude('ID', (int)$owner->ID)
             ->setDataQueryParam(array(
                 'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
                 'Versioned.stage' => 'Live'
@@ -356,7 +364,7 @@ class Hierarchy extends DataExtension
         if ($hideFromCMSTree && $this->showingCMSTree()) {
             $children = $children->exclude('ClassName', $hideFromCMSTree);
         }
-        if (!$showAll && DataObject::getSchema()->fieldSpec($this->owner, 'ShowInMenus')) {
+        if (!$showAll && DataObject::getSchema()->fieldSpec($owner, 'ShowInMenus')) {
             $children = $children->filter('ShowInMenus', 1);
         }
 

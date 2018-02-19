@@ -577,8 +577,9 @@ class InheritedPermissions implements PermissionChecker
         if (!class_exists(Versioned::class)) {
             return false;
         }
+        /** @var Versioned|DataObject $singleton */
         $singleton = DataObject::singleton($this->getBaseClass());
-        return $singleton->hasExtension(Versioned::class);
+        return $singleton->hasExtension(Versioned::class) && $singleton->hasStages();
     }
 
     public function clearCache()
