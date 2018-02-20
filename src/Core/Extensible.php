@@ -422,12 +422,12 @@ trait Extensible
      * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
      *
      * @param string $method the name of the method to call on each extension
-     * @param mixed ...$arguments
+     * @param mixed &...$arguments
      * @return array
      */
     public function extend($method, &...$arguments)
     {
-        $values = array();
+        $values = [];
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
             foreach (array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
@@ -441,19 +441,9 @@ trait Extensible
 
         foreach ($this->getExtensionInstances() as $instance) {
             // Prefer `extend` prefixed methods
-            $instanceMethod = method_exists($instance, "extend{$method}")
-                ? "extend{$method}"
-                : (method_exists($instance, $method) ? $method : null);
-            if ($instanceMethod) {
-                try {
-                    $instance->setOwner($this);
-                    $value = $instance->$instanceMethod(...$arguments);
-                } finally {
-                    $instance->clearOwner();
-                }
-                if ($value !== null) {
-                    $values[] = $value;
-                }
+            $value = $instance->invokeExtension($this, $method, ...$arguments);
+            if ($value !== null) {
+                $values[] = $value;
             }
         }
 
