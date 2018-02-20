@@ -74,9 +74,20 @@ class CsvBulkLoader extends BulkLoader
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
 
+            $tabExtractor = function ($row, $rowOffset, $iterator) {
+                foreach ($row as &$item) {
+                    // [SS-2017-007] Ensure all cells with leading tab and then [@=+] have the tab removed on import
+                    if (preg_match("/^\t[\-@=\+]+.*/", $item)) {
+                        $item = ltrim($item, "\t");
+                    }
+                }
+                return $row;
+            };
+
             if ($this->columnMap) {
                 $headerMap = $this->getNormalisedColumnMap();
-                $remapper = function ($row, $rowOffset, $iterator) use ($headerMap) {
+                $remapper = function ($row, $rowOffset, $iterator) use ($headerMap, $tabExtractor) {
+                    $row = $tabExtractor($row, $rowOffset, $iterator);
                     foreach ($headerMap as $column => $renamedColumn) {
                         if ($column == $renamedColumn) {
                             continue;
@@ -91,7 +102,7 @@ class CsvBulkLoader extends BulkLoader
                     return $row;
                 };
             } else {
-                $remapper = null;
+                $remapper = $tabExtractor;
             }
 
             if ($this->hasHeaderRow) {

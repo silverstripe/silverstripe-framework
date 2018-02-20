@@ -62,6 +62,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Place the export button in a <p> tag below the field
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getHTMLFragments($gridField)
@@ -75,20 +76,21 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         );
         $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
-        return array(
-            $this->targetFragment => $button->Field()
-        );
+        return [
+            $this->targetFragment => $button->Field(),
+        ];
     }
 
     /**
      * export is an action button
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getActions($gridField)
     {
-        return array('export');
+        return ['export'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
@@ -103,13 +105,14 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * it is also a URL
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'export' => 'handleExport',
-        );
+        ];
     }
 
     /**
@@ -117,6 +120,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      *
      * @param GridField $gridField
      * @param HTTPRequest $request
+     *
      * @return HTTPResponse
      */
     public function handleExport($gridField, $request = null)
@@ -156,6 +160,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
+     *
      * @return string
      */
     public function generateExportFileData($gridField)
@@ -168,8 +173,20 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
+        if (!Config::inst()->get(get_class($this), 'xls_export_disabled')) {
+            $csvWriter->addFormatter(function (array $row) {
+                foreach ($row as &$item) {
+                    // [SS-2017-007] Sanitise XLS executable column values with a leading tab
+                    if (preg_match('/^[-@=+].*/', $item)) {
+                        $item = "\t" . $item;
+                    }
+                }
+                return $row;
+            });
+        }
+
         if ($this->csvHasHeader) {
-            $headers = array();
+            $headers = [];
 
             // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
             // source name as the header instead
@@ -200,7 +217,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
             if (!$item->hasMethod('canView') || $item->canView()) {
-                $columnData = array();
+                $columnData = [];
 
                 foreach ($csvColumns as $columnSource => $columnHeader) {
                     if (!is_string($columnHeader) && is_callable($columnHeader)) {
@@ -219,12 +236,6 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
                     }
 
-                    // [SS-2017-007] Sanitise XLS executable column values with a leading tab
-                    if (!Config::inst()->get(get_class($this), 'xls_export_disabled')
-                        && preg_match('/^[-@=+].*/', $value)
-                    ) {
-                        $value = "\t" . $value;
-                    }
                     $columnData[] = $value;
                 }
 
@@ -236,7 +247,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
-        return (string) $csvWriter;
+        return (string)$csvWriter;
     }
 
     /**
@@ -249,6 +260,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param array $cols
+     *
      * @return $this
      */
     public function setExportColumns($cols)
@@ -267,6 +279,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param string $separator
+     *
      * @return $this
      */
     public function setCsvSeparator($separator)
@@ -285,6 +298,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param string $enclosure
+     *
      * @return $this
      */
     public function setCsvEnclosure($enclosure)
@@ -303,6 +317,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param boolean $bool
+     *
      * @return $this
      */
     public function setCsvHasHeader($bool)
