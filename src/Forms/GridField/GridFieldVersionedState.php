@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Convert;
+use SilverStripe\View\HTML;
 
 /**
  * @todo Move to siverstripe/versioned module
@@ -46,8 +47,9 @@ class GridFieldVersionedState implements GridField_ColumnProvider
             return;
         }
 
-        $model = $gridField->getModelClass();
-        $isModelVersioned = $model::has_extension(Versioned::class);
+        /** @var Versioned|DataObject $model */
+        $model = DataObject::singleton($gridField->getModelClass());
+        $isModelVersioned = $model->hasExtension(Versioned::class) && $model->hasStages();
         if (!$isModelVersioned) {
             return;
         }
@@ -92,10 +94,12 @@ class GridFieldVersionedState implements GridField_ColumnProvider
             if (is_string($data)) {
                 $data = array('text' => $data);
             }
-            $flagContent .= sprintf(
-                " <span class=\"ss-gridfield-badge badge %s\"%s>%s</span>",
-                'status-' . Convert::raw2xml($class),
-                (isset($data['title'])) ? sprintf(' title="%s"', Convert::raw2xml($data['title'])) : '',
+            $flagContent .= HTML::createTag(
+                'span',
+                array_merge(
+                    [ 'class' => 'ss-gridfield-badge badge status-' . $class ],
+                    array_intersect_key($data, ['title' => true])
+                ),
                 Convert::raw2xml($data['text'])
             );
         }
@@ -156,7 +160,7 @@ class GridFieldVersionedState implements GridField_ColumnProvider
      */
     protected function getStatusFlags($record)
     {
-        if (!$record->hasExtension(Versioned::class)) {
+        if (!$record->hasExtension(Versioned::class) || !$record->hasStages()) {
             return [];
         }
 
