@@ -115,4 +115,31 @@ abstract class Extension
         // Split out both args and service name
         return strtok(strtok($extensionStr, '('), '.');
     }
+
+    /**
+     * Invoke extension point. This will prefer explicit `extend` prefixed
+     * methods.
+     *
+     * @param object $owner
+     * @param string $method
+     * @param array &...$arguments
+     * @return mixed
+     */
+    public function invokeExtension($owner, $method, &...$arguments)
+    {
+        // Prefer `extend` prefixed methods
+        $instanceMethod = method_exists($this, "extend{$method}")
+            ? "extend{$method}"
+            : (method_exists($this, $method) ? $method : null);
+        if (!$instanceMethod) {
+            return null;
+        }
+
+        try {
+            $this->setOwner($owner);
+            return $this->$instanceMethod(...$arguments);
+        } finally {
+            $this->clearOwner();
+        }
+    }
 }
