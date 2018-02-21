@@ -12,11 +12,11 @@ use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 
 /**
- * @method TestPermissionNode Parent()
+ * @method UnstagedNode Parent()
  * @mixin Versioned
  * @mixin InheritedPermissionsExtension
  */
-class TestPermissionNode extends DataObject implements TestOnly
+class UnstagedNode extends DataObject implements TestOnly
 {
     private static $db = [
         "Title" => "Varchar(255)",
@@ -26,10 +26,10 @@ class TestPermissionNode extends DataObject implements TestOnly
         "Parent" => self::class,
     ];
 
-    private static $table_name = 'InheritedPermissionsTest_TestPermissionNode';
+    private static $table_name = 'InheritedPermissionsTest_UnstagedNode';
 
     private static $extensions = [
-        Versioned::class,
+        Versioned::class . '.versioned',
         InheritedPermissionsExtension::class,
     ];
 
@@ -39,7 +39,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     public static function getInheritedPermissions()
     {
         /** @var InheritedPermissions $permissions */
-        return Injector::inst()->get(PermissionChecker::class . '.testpermissions');
+        return Injector::inst()->get(PermissionChecker::class . '.unstagedpermissions');
     }
 
     public function canEdit($member = null)

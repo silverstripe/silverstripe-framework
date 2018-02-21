@@ -10,6 +10,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\PermissionChecker;
 use SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode;
 use SilverStripe\Security\Tests\InheritedPermissionsTest\TestDefaultPermissionChecker;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
@@ -20,6 +21,7 @@ class InheritedPermissionsTest extends SapphireTest
 
     protected static $extra_dataobjects = [
         TestPermissionNode::class,
+        UnstagedNode::class,
     ];
 
     /**
@@ -29,18 +31,38 @@ class InheritedPermissionsTest extends SapphireTest
 
     protected function setUp()
     {
-        parent::setUp();
+        $this->rootPermissions = new TestDefaultPermissionChecker();
 
         // Register root permissions
-        $permission = InheritedPermissions::create(TestPermissionNode::class)
+        $permission1 = InheritedPermissions::create(TestPermissionNode::class)
             ->setGlobalEditPermissions(['TEST_NODE_ACCESS'])
-            ->setDefaultPermissions($this->rootPermissions = new TestDefaultPermissionChecker());
+            ->setDefaultPermissions($this->rootPermissions);
         Injector::inst()->registerService(
-            $permission,
+            $permission1,
             PermissionChecker::class . '.testpermissions'
         );
 
         // Reset root permission
+        $permission2 = InheritedPermissions::create(UnstagedNode::class)
+            ->setGlobalEditPermissions(['TEST_NODE_ACCESS'])
+            ->setDefaultPermissions($this->rootPermissions);
+        Injector::inst()->registerService(
+            $permission2,
+            PermissionChecker::class . '.unstagedpermissions'
+        );
+
+        parent::setUp();
+
+        $permission1->clearCache();
+        $permission2->clearCache();
+    }
+
+    protected function tearDown()
+    {
+        Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.testpermissions');
+        Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.unstagedpermissions');
+        $this->rootPermissions = null;
+        parent::tearDown();
     }
 
     public function testEditPermissions()
@@ -157,6 +179,49 @@ class InheritedPermissionsTest extends SapphireTest
         $this->assertTrue($history->canView($editor));
 
         TestPermissionNode::getInheritedPermissions()->clearCache();
+        $this->rootPermissions->setCanView(false);
+
+        $this->assertFalse($history->canView($editor));
+    }
+
+    public function testUnstagedViewPermissions()
+    {
+        $history = $this->objFromFixture(UnstagedNode::class, 'history');
+        $contact = $this->objFromFixture(UnstagedNode::class, 'contact');
+        $contactForm = $this->objFromFixture(UnstagedNode::class, 'contact-form');
+        $secret = $this->objFromFixture(UnstagedNode::class, 'secret');
+        $secretNested = $this->objFromFixture(UnstagedNode::class, 'secret-nested');
+        $protected = $this->objFromFixture(UnstagedNode::class, 'protected');
+        $protectedChild = $this->objFromFixture(UnstagedNode::class, 'protected-child');
+        $editor = $this->objFromFixture(Member::class, 'editor');
+
+        // Not logged in user can only access Inherit or Anyone pages
+        Member::actAs(
+            null,
+            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm) {
+                $this->assertTrue($history->canView());
+                $this->assertTrue($contact->canView());
+                $this->assertTrue($contactForm->canView());
+                // Protected
+                $this->assertFalse($secret->canView());
+                $this->assertFalse($secretNested->canView());
+                $this->assertFalse($protected->canView());
+                $this->assertFalse($protectedChild->canView());
+            }
+        );
+
+        // Editor can view pages restricted to logged in users
+        $this->assertTrue($secret->canView($editor));
+        $this->assertTrue($secretNested->canView($editor));
+
+        // Cannot read admin-only pages
+        $this->assertFalse($protected->canView($editor));
+        $this->assertFalse($protectedChild->canView($editor));
+
+        // Check root permissions
+        $this->assertTrue($history->canView($editor));
+
+        UnstagedNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanView(false);
 
         $this->assertFalse($history->canView($editor));
@@ -316,7 +381,7 @@ class InheritedPermissionsTest extends SapphireTest
         /* @var CacheInterface $cache */
         $cache = Injector::inst()->create(CacheInterface::class . '.InheritedPermissions');
         $cache->clear();
-        
+
         $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
         $member1 = $this->objFromFixture(Member::class, 'editor');
         $member2 = $this->objFromFixture(Member::class, 'admin');

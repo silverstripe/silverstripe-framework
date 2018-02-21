@@ -115,7 +115,7 @@ Links to internal `File` database records work exactly the same, but with the `[
 ### Images
 
 Images inserted through the "Insert Media" form (WYSIWYG editor) need to retain a relationship with
-the underlying `[Image](api:SilverStripe\Assets\Image)` database record. The `[image]` shortcode saves this database reference
+the underlying [Image](api:SilverStripe\Assets\Image) database record. The `[image]` shortcode saves this database reference
 instead of hard-linking to the filesystem path of a given image.
 
 ```html
