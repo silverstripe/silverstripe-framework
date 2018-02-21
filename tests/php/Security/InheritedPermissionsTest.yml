@@ -100,3 +100,70 @@ SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode:
     Title: Child
     CanViewType: Inherit
     Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.protected
+
+SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode:
+  about:
+    Title: About Us
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.admins
+  about-staff:
+    Title: Staff
+    CanEditType: Inherit
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.about
+  about-staff-ceo:
+    Title: CEO
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.about-staff
+  about-staffduplicate:
+    Title: Staff
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.about
+  products:
+    Title: Products
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.editors
+  products-product1:
+    Title: 1.1 Test Product
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.products
+    CanEditType: Inherit
+  products-product2:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.products
+    CanEditType: Inherit
+  products-product3:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.products
+    CanEditType: Inherit
+  products-product4:
+    Title: Another Product
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.products
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>SilverStripe\Security\Group.admins
+  history:
+    Title: History
+    CanViewType: Inherit
+    CanEditType: Inherit
+  history-gallery:
+    Title: Gallery
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.history
+  contact:
+    Title: Contact Us
+    CanViewType: Anyone
+  contact-form:
+    Title: Send us a message
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.contact
+  secret:
+    Title: Secret
+    CanViewType: LoggedInUsers
+  secret-nested:
+    Title: Nested
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.secret
+  protected:
+    Title: Protected
+    CanViewType: OnlyTheseUsers
+    ViewerGroups: =>SilverStripe\Security\Group.admins
+  protected-child:
+    Title: Child
+    CanViewType: Inherit
+    Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.protected
