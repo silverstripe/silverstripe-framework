@@ -43,7 +43,12 @@ class Environment
     public static function getVariables()
     {
         // Suppress return by-ref
-        return array_merge($GLOBALS, [ 'env' => static::$env ]);
+        $vars = [ 'env' => static::$env ];
+        foreach ($GLOBALS as $varName => $varValue) {
+            $vars[$varName] = $varValue;
+        }
+
+        return $vars;
     }
 
     /**
