@@ -44,6 +44,7 @@ class Environment
     {
         // Suppress return by-ref
         $vars = [ 'env' => static::$env ];
+        // needs to use a for loop, using `array_merge([], $GLOBALS);` left reference traces somehow
         foreach ($GLOBALS as $varName => $varValue) {
             $vars[$varName] = $varValue;
         }
