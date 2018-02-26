@@ -50,7 +50,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($filepath);
 
         // Test that right amount of columns was imported
-        $this->assertEquals(5, $results->Count(), 'Test correct count of imported data');
+        $this->assertCount(5, $results, 'Test correct count of imported data');
 
         // Test that columns were correctly imported
         $obj = DataObject::get_one(
@@ -76,18 +76,48 @@ class CsvBulkLoaderTest extends SapphireTest
         $filepath = $this->csvPath . 'PlayersWithHeader.csv';
         $loader->deleteExistingRecords = true;
         $results1 = $loader->load($filepath);
-        $this->assertEquals(5, $results1->Count(), 'Test correct count of imported data on first load');
+        $this->assertCount(5, $results1, 'Test correct count of imported data on first load');
 
         //delete existing data before doing second CSV import
         $results2 = $loader->load($filepath);
         //get all instances of the loaded DataObject from the database and count them
         $resultDataObject = DataObject::get(Player::class);
 
-        $this->assertEquals(
+        $this->assertCount(
             5,
-            $resultDataObject->count(),
+            $resultDataObject,
             'Test if existing data is deleted before new data is added'
         );
+    }
+
+    public function testLeadingTabs()
+    {
+        $loader = new CsvBulkLoader(Player::class);
+        $loader->hasHeaderRow = false;
+        $loader->columnMap = array(
+            'FirstName',
+            'Biography',
+            null, // ignored column
+            'Birthday',
+            'IsRegistered'
+        );
+        $filepath = $this->csvPath . 'PlayersWithTabs.csv';
+        $results = $loader->load($filepath);
+        $this->assertCount(5, $results);
+
+        $expectedBios = [
+            "\tHe's a good guy",
+            "=She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography",
+            "-Pretty old\, with an escaped comma",
+            "@Unicode FTW",
+            "+Unicode FTW",
+        ];
+
+        foreach (Player::get()->column('Biography') as $bio) {
+            $this->assertContains($bio, $expectedBios);
+        }
+
+        $this->assertEquals(Player::get()->count(), count($expectedBios));
     }
 
     /**
@@ -111,7 +141,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($filepath);
 
         // Test that right amount of columns was imported
-        $this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
+        $this->assertCount(4, $results, 'Test correct count of imported data');
 
         // Test that columns were correctly imported
         $obj = DataObject::get_one(
@@ -167,7 +197,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($filepath);
 
         // Test that right amount of columns was imported
-        $this->assertEquals(1, $results->Count(), 'Test correct count of imported data');
+        $this->assertCount(1, $results, 'Test correct count of imported data');
 
         // Test of augumenting existing relation (created by fixture)
         $testTeam = DataObject::get_one(Team::class, null, null, '"Created" DESC');
@@ -246,9 +276,9 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($filepath);
         $createdPlayers = $results->Created();
         $player = $createdPlayers->first();
-        $this->assertEquals($player->FirstName, 'Customized John');
-        $this->assertEquals($player->Biography, "He's a good guy");
-        $this->assertEquals($player->IsRegistered, "1");
+        $this->assertEquals('Customized John', $player->FirstName);
+        $this->assertEquals("He's a good guy", $player->Biography);
+        $this->assertEquals("1", $player->IsRegistered);
     }
 
     public function testLoadWithCustomImportMethodDuplicateMap()
@@ -290,6 +320,6 @@ class CsvBulkLoaderTest extends SapphireTest
 
         $results = $loader->load($path);
 
-        $this->assertEquals(10, $results->Count());
+        $this->assertCount(10, $results);
     }
 }

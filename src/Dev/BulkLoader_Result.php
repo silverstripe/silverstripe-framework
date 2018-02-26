@@ -15,7 +15,7 @@ use SilverStripe\View\ArrayData;
  *
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class BulkLoader_Result
+class BulkLoader_Result implements \Countable
 {
     use Injectable;
 

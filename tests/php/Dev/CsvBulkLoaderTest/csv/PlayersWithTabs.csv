@@ -1,0 +1,6 @@
+"John","	He's a good guy","ignored","1988-01-31","1"
+"Jane","	=She is awesome.
+So awesome that she gets multiple rows and ""escaped"" strings in her biography","ignored","1982-01-31","0"
+"Jamie","	-Pretty old\, with an escaped comma","ignored","1882-01-31","1"
+"Järg","	@Unicode FTW","ignored","1982-06-30","1"
+"Järg","	+Unicode FTW","ignored","1982-06-30","1"
