@@ -14,8 +14,8 @@ if (!defined('BASE_PATH')) {
 ini_set('display_errors', 1);
 
 // Asset folder
-if (!file_exists(BASE_PATH . '/assets')) {
-    mkdir(BASE_PATH . '/assets', 02775);
+if (!file_exists(ASSETS_PATH)) {
+    mkdir(ASSETS_PATH, 02775);
 }
 
 if (empty($_SERVER['HTTP_HOST'])) {
