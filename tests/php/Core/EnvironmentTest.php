@@ -53,4 +53,17 @@ class EnvironmentTest extends SapphireTest
         Environment::setVariables($vars);
         $this->assertEquals('initial', Environment::getEnv('_ENVTEST_RESTORED'));
     }
+
+    public function testGetVariables()
+    {
+        $GLOBALS['test'] = 'global';
+        $vars = Environment::getVariables();
+        $this->assertArrayHasKey('test', $vars);
+        $this->assertEquals('global', $vars['test']);
+        $this->assertEquals('global', $GLOBALS['test']);
+
+        $vars['test'] = 'fail';
+        $this->assertEquals('fail', $vars['test']);
+        $this->assertEquals('global', $GLOBALS['test']);
+    }
 }
