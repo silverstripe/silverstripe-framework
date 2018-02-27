@@ -3711,7 +3711,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function summaryFields() {
         $rawFields = $this->stat('summary_fields');
 
-        $fields = [];
+        $fields = array();
         // Merge associative / numeric keys
         if (is_array($rawFields)) {
             foreach ($rawFields as $key => $value) {
