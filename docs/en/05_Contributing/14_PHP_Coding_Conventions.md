@@ -90,7 +90,6 @@ public function getTitle()
 Use [phpdoc](http://phpdoc.org/) syntax before each definition (see [tutorial](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_phpDocumentor.quickstart.pkg.html)
 and [tag overview](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html)).
 
- * All class definitions and PHP files should have `@package` and `@subpackage`.
  * Methods should include at least `@param` and `@return`.
  * Include a blank line after the description.
  * Use `{@link MyOtherClass}` and `{@link MyOtherClass->otherMethod}` for inline references.
