@@ -128,6 +128,12 @@ class Session {
 
 	protected $changedData = array();
 
+	/**
+	 * Flag to force session ID regeneration on session_start(), used by inst_destroy()
+	 * @var bool
+	 */
+	protected $mustRegenerateSessionID = false;
+
 	protected function userAgent() {
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
 			return $_SERVER['HTTP_USER_AGENT'];
@@ -375,39 +381,33 @@ class Session {
 			// seperate (less secure) session for non-HTTPS requests
 			if($secure) session_name('SECSESSID');
 
-			if($sid) session_id($sid);
+			if ($sid) session_id($sid);
 			session_start();
+
+			// If a fixed session ID wasn't provided, and the session has already been destroyed in this
+			// request, generate a new session ID
+			if (!$sid && $this->mustRegenerateSessionID) {
+				session_regenerate_id(true);
+			}
 
 			$this->data = isset($_SESSION) ? $_SESSION : array();
 		}
 
 		// Ensure session is validated on start
 		$this->expireIfInvalid();
-
-		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
-		// By default it's the total session lifetime
-		if(!headers_sent()) {
-			$timeout /= 86400; // Convert timeout from seconds to days
-			Cookie::set(session_name(), session_id(), $timeout, $path, $domain, $secure, true);
-		}
 	}
 
-	public function inst_destroy($removeCookie = true) {
+	public function inst_destroy() {
 		if(session_id()) {
-			if($removeCookie) {
-				$path = Config::inst()->get('Session', 'cookie_path') ?: Director::baseURL();
-				$domain = Config::inst()->get('Session', 'cookie_domain');
-				$secure = Config::inst()->get('Session', 'cookie_secure');
-
-				Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
-			}
-
 			session_destroy();
 
 			// Clean up the superglobal - session_destroy does not do it.
 			// http://nz1.php.net/manual/en/function.session-destroy.php
-			unset($_SESSION);
+			$_SESSION = array();
 			$this->data = array();
+
+			// Flag that if the session is restarted during this request, the ID needs to be regenerated
+			$this->mustRegenerateSessionID = true;
 		}
 	}
 
@@ -596,12 +596,10 @@ class Session {
 	}
 
 	/**
-	 * Destroy the active session.
-	 *
-	 * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
+	 * Destroy the active session
 	 */
-	public static function destroy($removeCookie = true) {
-		self::current_session()->inst_destroy($removeCookie);
+	public static function destroy() {
+		self::current_session()->inst_destroy();
 	}
 
 	/**
