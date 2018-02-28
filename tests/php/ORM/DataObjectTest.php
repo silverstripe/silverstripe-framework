@@ -324,6 +324,20 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Phil', $comment->Name);
     }
 
+    public function testGetByIDCallerClass()
+    {
+        $captain1ID = $this->idFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = DataObjectTest\Player::get_by_id($captain1ID);
+        $this->assertInstanceOf(DataObjectTest\Player::class, $captain1);
+        $this->assertEquals('Captain', $captain1->FirstName);
+
+        $captain2ID = $this->idFromFixture(DataObjectTest\Player::class, 'captain2');
+        // make sure we can call from any class but get the one passed as an argument
+        $captain2 = DataObjectTest\TeamComment::get_by_id(DataObjectTest\Player::class, $captain2ID);
+        $this->assertInstanceOf(DataObjectTest\Player::class, $captain2);
+        $this->assertEquals('Captain 2', $captain2->FirstName);
+    }
+
     public function testGetCaseInsensitive()
     {
         // Test get_one() with bad case on the classname
