@@ -47,13 +47,15 @@
 			// XMLHttpRequest
 			CurrentXhr: null,
 
-			onmatch: function() {
+			onadd: function() {
 				this.append(
 					'<span class="treedropdownfield-title"></span>' +
 					'<div class="treedropdownfield-toggle-panel-link"><a href="#" class="ui-icon ui-icon-triangle-1-s"></a></div>' +
 					'<div class="treedropdownfield-panel"><div class="tree-holder"></div></div>'
 				);
+			},
 
+			onmatch: function() {
 				var linkTitle = strings.openLink;
 				if(linkTitle) this.find("treedropdownfield-toggle-panel-link a").attr('title', linkTitle);
 				if(this.data('title')) this.setTitle(this.data('title'));
@@ -334,7 +336,7 @@
 		});
 
 		$('.TreeDropdownField.searchable').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				var title = ss.i18n._t('TreeDropdownField.ENTERTOSEARCH');
 				this.find('.treedropdownfield-panel').prepend(
