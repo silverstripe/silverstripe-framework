@@ -198,7 +198,7 @@ class DBText extends DBString
         $keywords = Convert::raw2xml($keywords);
 
         // Find the search string
-        $position = (int) mb_stripos($text, $keywords);
+        $position = empty($keywords) ? 0 : (int) mb_stripos($text, $keywords);
 
         // We want to search string to be in the middle of our block to give it some context
         $position = max(0, $position - ($characters / 2));
