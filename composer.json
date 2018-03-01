@@ -31,7 +31,7 @@
         "paragonie/random_compat": "^2.0",
         "silverstripe/config": "^2@dev",
         "silverstripe/assets": "^2@dev",
-        "swiftmailer/swiftmailer": "~5.4",
+        "swiftmailer/swiftmailer": "^6",
         "symfony/cache": "^3.3@dev",
         "symfony/config": "^3.2",
         "symfony/translation": "^2.8",
