@@ -264,6 +264,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         if ($cb) {
             $cb($form, $this);
         }
+
+        // prevent "discarded changes" notification when creating new item
+        if (!$this->record->isInDB()) {
+            $form->addExtraClass('discardchanges');
+        }
+
         $this->extend("updateItemEditForm", $form);
         return $form;
     }
