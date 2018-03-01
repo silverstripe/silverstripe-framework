@@ -50,7 +50,7 @@ if (!class_exists(TestCase::class)) {
  * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
  * in production sites.
  */
-class SapphireTest extends TestCase implements TestOnly
+abstract class SapphireTest extends TestCase implements TestOnly
 {
     /**
      * Path to fixture data for this test run.
@@ -227,12 +227,6 @@ class SapphireTest extends TestCase implements TestOnly
 
         // Call state helpers
         static::$state->setUp($this);
-
-        // We cannot run the tests on this abstract class.
-        if (static::class == __CLASS__) {
-            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
-            return;
-        }
 
         // i18n needs to be set to the defaults or tests fail
         i18n::set_locale(i18n::config()->uninherited('default_locale'));
