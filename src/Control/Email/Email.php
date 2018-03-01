@@ -273,7 +273,7 @@ class Email extends ViewableData
      */
     public function setSwiftMessage($swiftMessage)
     {
-        $swiftMessage->setDate(DBDatetime::now()->getTimestamp());
+        $swiftMessage->setDate((new \DateTime())->setTimestamp(DBDatetime::now()->getTimestamp()));
         if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
             $swiftMessage->setFrom($defaultFrom);
         }
