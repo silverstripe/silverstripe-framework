@@ -974,10 +974,10 @@ warnings:
       message: 'Now needs a $segment property to run it'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#buildtask-segment'
     'RestfulService':
-      message: 'Removed from core, please use Guzzle'
+      message: 'Removed from core. Please use Guzzle'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#restfulservice'
     'Oembed':
-      message: 'Removed from core, please use third party lib'
+      message: 'Removed from core. Please use third party lib'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#oembed'
     'SS_Cache':
       message: 'Using symfony/cache now'
@@ -1024,39 +1024,39 @@ warnings:
     'SilverStripe\Control\Director::setUrlParams()':
       message: 'Method removed'
     'SilverStripe\ORM\DataObject->manyManyComponent()':
-      message: 'DataObject->manyManyComponent() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to manyManyComponent()'
+      message: 'DataObject->manyManyComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to manyManyComponent()'
       replacement: 'getSchema()->manyManyComponent'
     'SilverStripe\ORM\DataObject->belongsToComponent()':
-      message: 'DataObject->belongsToComponent() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to belongsToComponent()'
+      message: 'DataObject->belongsToComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to belongsToComponent()'
       replacement: 'getSchema()->belongsToComponent'
     'SilverStripe\ORM\DataObject->hasOneComponent()':
-      message: 'DataObject->hasOneComponent() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to hasOneComponent()'
+      message: 'DataObject->hasOneComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to hasOneComponent()'
       replacement: 'getSchema()->hasOneComponent'
     'SilverStripe\ORM\DataObject->hasManyComponent()':
-      message: 'DataObject->hasManyComponent() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
+      message: 'DataObject->hasManyComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
       replacement: 'getSchema()->hasManyComponent'
     'SilverStripe\ORM\DataObject->getRemoteJoinField()':
-      message: 'DataObject->getRemoteJoinField() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
+      message: 'DataObject->getRemoteJoinField() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
       replacement: 'getSchema()->getRemoteJoinField'
     'SilverStripe\ORM\DataObject::has_own_table()':
-      message: 'DataObject::has_own_table() moved to DataObjectSchema->classHasTable(), access through getSchema().'
+      message: 'DataObject::has_own_table() moved to DataObjectSchema->classHasTable(). Access through getSchema().'
       replacement: 'getSchema()->classHasTable'
     'SilverStripe\ORM\DataObject::database_fields()':
-      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(), access through getSchema()'
+      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(). Access through getSchema()'
       replacement: 'getSchema()->databaseFields'
     'SilverStripe\ORM\DataObject->manyManyExtraFieldsForComponent()':
-      message: 'DataObject::manyManyExtraFieldsForComponent() moved to DataObjectSchema, access through getSchema(). You must manually add static::class as the first argument to manyManyExtraFieldsForComponent()'
+      message: 'DataObject::manyManyExtraFieldsForComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to manyManyExtraFieldsForComponent()'
       replacement: 'getSchema()->manyManyExtraFieldsForComponent'
     'SilverStripe\ORM\DataObject->validateModelDefinitions()':
       message: 'Removed DataObject->validateModelDefinitions()'
     'SilverStripe\ORM\DataObject->hasOwnTableDatabaseField()':
-      message: 'DataObject->hasOwnTableDatabaseField() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      message: 'DataObject->hasOwnTableDatabaseField() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
     'SilverStripe\ORM\DataObject::has_own_table_database_field()':
-      message: 'DataObject::has_own_table_database_field() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      message: 'DataObject::has_own_table_database_field() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
     'SilverStripe\ORM\DataObject->hasDatabaseField()':
-      message: 'DataObject->hasDatabaseField() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+      message: 'DataObject->hasDatabaseField() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
     'SilverStripe\ORM\DataObject::is_composite_field()':
       message: 'Removed DataObject::is_composite_field. Use DataObjectSchema::compositeField instead.'
@@ -1207,7 +1207,7 @@ warnings:
       message: 'Moved to FormRequestHandler'
       replacement: 'getRequestHandler()->Link'
     'SilverStripe\Forms\Validator::requireField()':
-      message: 'Validator::requireField() has been removed, use RequiredFields instead'
+      message: 'Validator::requireField() has been removed. Use RequiredFields instead'
     'provideI18nEntities()':
       message: 'Return type has changed (needs to be associative)'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#i18n'
@@ -1332,41 +1332,41 @@ warnings:
     'SS_TRUSTED_PROXY_HOST_HEADER':
       message: 'See TrustedProxyMiddleware'
     'MODULES_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'MODULES_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'CMS_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'CMS_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_THIRDPARTY_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THEMES_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THEMES_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THIRDPARTY_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THIRDPARTY_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
