@@ -203,6 +203,13 @@ class TinyMCEConfig extends HTMLEditorConfig
     private static $editor_css = [];
 
     /**
+     * List of content css files to use for this instance, or null to default to editor_css config.
+     *
+     * @var string[]|null
+     */
+    protected $contentCSS = null;
+
+    /**
      * TinyMCE JS settings
      *
      * @link https://www.tinymce.com/docs/configure/
@@ -621,20 +628,42 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
-     * Get location of all editor.css files
+     * Get location of all editor.css files.
+     * All resource specifiers are resolved to urls.
      *
      * @return array
      */
     protected function getEditorCSS()
     {
-        $editor = array();
+        $editor = [];
+        $resourceLoader = ModuleResourceLoader::singleton();
+        foreach ($this->getContentCSS() as $contentCSS) {
+            $editor[] = $resourceLoader->resolveURL($contentCSS);
+        }
+        return $editor;
+    }
+
+    /**
+     * Get list of resource paths to css files.
+     *
+     * Will default to `editor_css` config, as well as any themed `editor.css` files.
+     * Use setContentCSS() to override.
+     *
+     * @return string[]
+     */
+    public function getContentCSS()
+    {
+        // Prioritise instance specific content
+        if (isset($this->contentCSS)) {
+            return $this->contentCSS;
+        }
 
         // Add standard editor.css
+        $editor = [];
         $editorCSSFiles = $this->config()->get('editor_css');
-        $resourceLoader = ModuleResourceLoader::singleton();
         if ($editorCSSFiles) {
             foreach ($editorCSSFiles as $editorCSS) {
-                $editor[] = $resourceLoader->resolveURL($editorCSS);
+                $editor[] = $editorCSS;
             }
         }
 
@@ -642,10 +671,25 @@ class TinyMCEConfig extends HTMLEditorConfig
         $themes = HTMLEditorConfig::getThemes() ?: SSViewer::get_themes();
         $themedEditor = ThemeResourceLoader::inst()->findThemedCSS('editor', $themes);
         if ($themedEditor) {
-            $editor[] = $resourceLoader->resolveURL($themedEditor);
+            $editor[] = $themedEditor;
         }
-
         return $editor;
+    }
+
+    /**
+     * Set explicit set of CSS resources to use for `content_css` option.
+     *
+     * Note: If merging with default paths, you should call getContentCSS() and merge
+     * prior to assignment.
+     *
+     * @param string[] $css Array of resource paths. Supports module prefix,
+     * e.g. `silverstripe/admin:client/dist/styles/editor.css`
+     * @return $this
+     */
+    public function setContentCSS($css)
+    {
+        $this->contentCSS = $css;
+        return $this;
     }
 
     /**
