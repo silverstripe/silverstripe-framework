@@ -181,6 +181,8 @@ Name: resamplefiles
 ---
 SilverStripe\Assets\File:
   force_resample: false
+SilverStripe\Assets\Storage\DBFile:
+  force_resample: false
 ```
 
 #### Resampled image quality
