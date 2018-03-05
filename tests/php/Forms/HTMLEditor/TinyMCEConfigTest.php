@@ -37,4 +37,28 @@ class TinyMCEConfigTest extends SapphireTest
             }
         }
     }
+
+    public function testGetContentCSS()
+    {
+        TinyMCEConfig::config()->set('editor_css', [
+            'silverstripe/framework:tests/php/Forms/HTMLEditor.css'
+        ]);
+
+        // Test default config
+        $config = new TinyMCEConfig();
+        $this->assertContains('silverstripe/framework:tests/php/Forms/HTMLEditor.css', $config->getContentCSS());
+
+        // Test manual disable
+        $config->setContentCSS([]);
+        $this->assertEmpty($config->getContentCSS());
+
+        // Test replacement config
+        $config->setContentCSS([
+            'silverstripe/framework:tests/php/Forms/HTMLEditor_another.css'
+        ]);
+        $this->assertEquals(
+            [ 'silverstripe/framework:tests/php/Forms/HTMLEditor_another.css'],
+            $config->getContentCSS()
+        );
+    }
 }
