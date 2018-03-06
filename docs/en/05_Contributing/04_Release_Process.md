@@ -105,12 +105,15 @@ SS_DEPRECATION_ENABLED="0"
 
 ### Reporting an issue
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). 
+Report security issues in our [commercially supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
+to [security@silverstripe.com](mailto:security@silverstripe.com). 
 Please don't file security issues in our [bugtracker](issues_and_bugs). 
 
 ### Acknowledgment and disclosure
 
-In the event of a confirmed vulnerability in SilverStripe core, we will take the following actions:
+In the event of a confirmed vulnerability in our
+[supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/),
+we will take the following actions:
 
 *  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
 timeline and ask the reporter to keep the issue confidential until we announce it.
