@@ -314,7 +314,7 @@ Note that ownership cannot be used with polymorphic relations. E.g. has_one to n
 #### Unversioned dataobject ownership (4.1 and above)
 
 Ownership can be used with non-versioned dataobjects, as the necessary functionality is included by default
-by the versioned object through the `[api:SilverStripe\Versioned\RecursivePublishable]` extension which is
+by the versioned object through the [`RecursivePublishable`](api:SilverStripe\Versioned\RecursivePublishable) extension which is
 applied to all objects.
 
 However, it is important to note that even when saving un-versioned objects, it is necessary to use
@@ -371,7 +371,7 @@ class MyChild extends DataObject
 
 #### DataObject Ownership in HTML Content
 
-If you are using `[DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText)` or `[DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar)` fields in your `DataObject::$db` definitions,
+If you are using [`DBHTMLText`](api:SilverStripe\ORM\FieldType\DBHTMLText) or [`DBHTMLVarchar`](api:SilverStripe\ORM\FieldType\DBHTMLVarchar) fields in your `DataObject::$db` definitions,
 it's likely that your authors can insert images into those fields via the CMS interface.
 These images are usually considered to be owned by the `DataObject`, and should be published alongside it.
 The ownership relationship is tracked through an `[image]` [shortcode](/developer-guides/extending/shortcodes),
@@ -380,7 +380,7 @@ the shortcode references the database identifier of the `Image` object.
 
 ### Changesets, a.k.a "Campaigns"
 
-Changes to many DataObjects can grouped together using the `ChangeSet` [api:SilverStripe\Versioning\ChangeSet] object, better known by its frontend name, "Campaign" (provided the `campaign-admin` module is installed). By grouping a series of content changes together as one cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
+Changes to many DataObjects can grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object, better known by its frontend name, "Campaign" (provided the `campaign-admin` module is installed). By grouping a series of content changes together as one cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
