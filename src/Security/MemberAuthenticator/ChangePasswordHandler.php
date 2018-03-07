@@ -112,21 +112,19 @@ class ChangePasswordHandler extends RequestHandler
         }
         // Show a friendly message saying the login token has expired
         if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $message = [
-                'Content' => DBField::create_field(
-                    'HTMLFragment',
-                    _t(
-                        'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                        '<p>The password reset link is invalid or expired.</p>'
-                        . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                        . ' you <a href="{link2}">logged in</a>.</p>',
-                        [
-                            'link1' => $this->link('lostpassword'),
-                            'link2' => $this->link('login')
-                        ]
-                    )
+            $message = DBField::create_field(
+                'HTMLFragment',
+                _t(
+                    'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
+                    '<p>The password reset link is invalid or expired.</p>'
+                    . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                    . ' you <a href="{link2}">logged in</a>.</p>',
+                    [
+                        'link1' => $this->link('lostpassword'),
+                        'link2' => $this->link('login')
+                    ]
                 )
-            ];
+            );
 
             return [
                 'Content' => $message,
