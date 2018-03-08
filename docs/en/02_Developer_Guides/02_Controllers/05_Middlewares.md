@@ -19,7 +19,7 @@ will deliberately return a different response, e.g. an error response or a redir
 **mysite/code/CustomMiddleware.php**
 
 ```php
-use SilverStripe\Control\Middleware\HTTPMiddleware
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\HTTPRequest;
 
 class CustomMiddleware implements HTTPMiddleware
