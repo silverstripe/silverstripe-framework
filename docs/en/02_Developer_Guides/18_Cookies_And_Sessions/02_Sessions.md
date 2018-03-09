@@ -30,6 +30,7 @@ Otherwise, if you're not in a controller, get the request as a service.
 
 ```php
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
 
 $request = Injector::inst()->get(HTTPRequest::class);
 $session = $request->getSession();
