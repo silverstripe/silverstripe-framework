@@ -8,7 +8,6 @@ The core committers team is reviewed approximately annually, new members are add
 * [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
 * [Ingo Schommer](https://github.com/chillu)
-* [Jono Menz](https://github.com/jonom)
 * [Loz Calver](https://github.com/kinglozzer)
 * [Robbie Averill](https://github.com/robbieaverill)
 * [Sam Minnée](https://github.com/sminnee)
