@@ -12,9 +12,7 @@ The core committers team is reviewed approximately annually, new members are add
 * [Loz Calver](https://github.com/kinglozzer)
 * [Robbie Averill](https://github.com/robbieaverill)
 * [Sam Minnée](https://github.com/sminnee)
-* [Sean Harvey](https://github.com/halkyon/)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
-* [Stig Lindqvist](https://github.com/stojg)
 * [Will Rossiter](https://github.com/wilr/)
 
 ## House rules for the core committer team
