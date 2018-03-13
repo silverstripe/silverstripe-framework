@@ -17,7 +17,7 @@ use SilverStripe\View\SSViewer;
  * The default routing applies to the {@link GridFieldDetailForm} component,
  * which has to be added separately to the {@link GridField} configuration.
  */
-class GridFieldEditButton implements GridField_ColumnProvider
+class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionMenuItem
 {
     /**
      * HTML classes to be added to GridField edit buttons
@@ -29,6 +29,31 @@ class GridFieldEditButton implements GridField_ColumnProvider
         'font-icon-edit' => true,
         'btn--icon-large' => true
     ];
+
+    public function getTitle($gridField, $record)
+    {
+        return 'Edit';
+    }
+
+    public function getGroup($gridField, $record)
+    {
+        return 'General';
+    }
+
+    public function getType($gridField, $record)
+    {
+        return GridField_ActionMenuItem::LINK;
+    }
+
+    public function getUrl($gridField, $record)
+    {
+        return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
+    }
+
+    public function getExtraData($gridField, $record)
+    {
+        return [];
+    }
 
     /**
      * Add a column 'Delete'
