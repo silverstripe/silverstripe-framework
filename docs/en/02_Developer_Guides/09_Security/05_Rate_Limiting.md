@@ -44,6 +44,15 @@ Director:
     'MyController//$Action/$ID/$OtherID': '%$MyRateLimitedController'
 ```
 
+Or if you want to apply your middleware to a specific route:
+
+```yml
+SilverStripe\Control\Director:
+  rules:
+    special/section:
+      Controller: %$MyRateLimitedController
+```
+
 ## Applying rate limiting across an entire application
 
 If you'd like to add rate limiting to an entire application (ie: across all routes) then you'll need to define your rate

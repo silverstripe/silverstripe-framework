@@ -946,8 +946,9 @@ class Member extends DataObject
     {
         parent::onAfterDelete();
 
-        //prevent orphaned records remaining in the DB
+        // prevent orphaned records remaining in the DB
         $this->deletePasswordLogs();
+        $this->Groups()->removeAll();
     }
 
     /**
