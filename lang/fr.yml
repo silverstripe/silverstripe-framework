@@ -202,6 +202,7 @@ fr:
     many_many_Members: Membres
   SilverStripe\Security\LoginAttempt:
     Email: 'Adresse email'
+    EmailHashed: 'Adresse Email (hashed)'
     IP: 'Adresse IP'
     PLURALNAME: 'Tentatives de connexion'
     PLURALS:
@@ -260,6 +261,8 @@ fr:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Les renseignements fournis semblent incorrects. Merci de réessayer.'
     NoPassword: 'Ce membre n''a pas de mot de passe'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Email & Mot de passe'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Mots de passe utilisateur'
     PLURALS:
