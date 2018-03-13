@@ -188,8 +188,9 @@ trait FileUploadReceiver
         // Filter items by what's allowed to be viewed
         $filteredItems = new ArrayList();
         $fileIDs = array();
+        /** @var File $file */
         foreach ($items as $file) {
-            if ($file->exists() && $file->canView()) {
+            if ($file->isInDB() && $file->canView()) {
                 $filteredItems->push($file);
                 $fileIDs[] = $file->ID;
             }
