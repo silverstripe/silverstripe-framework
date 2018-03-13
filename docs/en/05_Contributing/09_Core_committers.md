@@ -10,6 +10,7 @@ The core committers team is reviewed approximately annually, new members are add
 * [Ingo Schommer](https://github.com/chillu)
 * [Jono Menz](https://github.com/jonom)
 * [Loz Calver](https://github.com/kinglozzer)
+* [Paul Clarke](https://github.com/clarkepaul)
 * [Robbie Averill](https://github.com/robbieaverill)
 * [Sam Minnée](https://github.com/sminnee)
 * [Sean Harvey](https://github.com/halkyon/)
