@@ -2,19 +2,16 @@
 The core committers team is reviewed approximately annually, new members are added based on quality contributions to SilverStipe code and outstanding community participation. 
 
 ## Core committer team
+
 * [Aaron Carlino](https://github.com/unclecheese/)
 * [Chris Joe](https://github.com/flamerohr/)
 * [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
-* [Hamish Friedlander](https://github.com/hafriedlander)
 * [Ingo Schommer](https://github.com/chillu)
-* [Jono Menz](https://github.com/jonom)
 * [Loz Calver](https://github.com/kinglozzer)
 * [Robbie Averill](https://github.com/robbieaverill)
 * [Sam Minnée](https://github.com/sminnee)
-* [Sean Harvey](https://github.com/halkyon/)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
-* [Stig Lindqvist](https://github.com/stojg)
 * [Will Rossiter](https://github.com/wilr/)
 
 ## House rules for the core committer team

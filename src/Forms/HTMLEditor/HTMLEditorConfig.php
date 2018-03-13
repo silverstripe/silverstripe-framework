@@ -20,7 +20,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * Typically global config changes should set the active config.
  *
- * The defaut config class can be changed via dependency injection to replace HTMLEditorConfig.
+ * The default config class can be changed via dependency injection to replace HTMLEditorConfig.
  *
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  */
@@ -59,7 +59,7 @@ abstract class HTMLEditorConfig
      * @var array
      */
     private static $user_themes = [];
-    
+
     /**
      * List of the current themes set for this config
      *
@@ -103,7 +103,7 @@ abstract class HTMLEditorConfig
         }
         return $config;
     }
-    
+
     /**
      * Gets the current themes, if it is not set this will fallback to config
      * @return array
@@ -115,7 +115,7 @@ abstract class HTMLEditorConfig
         }
         return Config::inst()->get(static::class, 'user_themes');
     }
-    
+
     /**
      * Sets the current theme
      *
@@ -125,7 +125,7 @@ abstract class HTMLEditorConfig
     {
         static::$current_themes = $themes;
     }
-    
+
     /**
      * Set the currently active configuration object. Note that the existing active
      * config will not be renamed to the new identifier.

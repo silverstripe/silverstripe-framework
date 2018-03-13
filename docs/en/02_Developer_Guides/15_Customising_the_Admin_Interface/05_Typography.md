@@ -17,6 +17,13 @@ SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
 
 Will load the `mysite/css/editor.css` file.
 
+Alternatively, you can set this on a specific `TinyMCEConfig` instance via `setContentCSS` method.
+
+```php
+$config = new TinyMCEConfig();
+$config->setContentCSS([ '/mysite/client/css/editor.css' ]);
+```
+
 ## Custom style dropdown
 
 The custom style dropdown can be enabled via the `importcss` plugin bundled with admin module. ([Doc](https://www.tinymce.com/docs/plugins/importcss/))  

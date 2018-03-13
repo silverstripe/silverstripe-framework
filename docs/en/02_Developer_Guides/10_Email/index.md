@@ -154,12 +154,12 @@ Configuration of those properties looks like the following:
 **mysite/_config.php**
 
 ```php
-use SilverStripe\Control\Director;
+use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 if(Director::isLive()) {
-    Config::inst()->update('Email', 'bcc_all_emails_to', "client@example.com");
+    Config::modify()->set(Email::class, 'bcc_all_emails_to', "client@example.com");
 } else {
-    Config::inst()->update('Email', 'send_all_emails_to', "developer@example.com");
+    Config::modify()->set(Email::class, 'send_all_emails_to', "developer@example.com");
 }
 ```
 

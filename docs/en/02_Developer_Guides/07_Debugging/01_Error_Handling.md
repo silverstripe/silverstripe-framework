@@ -15,6 +15,8 @@ can be accessed via the `Injector`:
 
 ```php
 use SilverStripe\Core\Injector\Injector;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Security\Security;
 
 Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Security::getCurrentUser()->ID);
 Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
@@ -55,7 +57,7 @@ throw new \LogicException("Query failed: " . $sql);
 
 ### Accessing the logger via dependency injection.
 
-It can quite verbose to call `Injector::inst()->get(LoggerInterface::class)` all the time. More importantly,
+It can be quite verbose to call `Injector::inst()->get(LoggerInterface::class)` all the time. More importantly,
 it also means that you're coupling your code to global state, which is a bad design practise. A better
 approach is to use depedency injection to pass the logger in for you. The [Injector](../extending/Injector)
 can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
