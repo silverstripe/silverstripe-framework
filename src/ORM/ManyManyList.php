@@ -205,6 +205,10 @@ class ManyManyList extends RelationList
      * Add an item to this many_many relationship
      * Does so by adding an entry to the joinTable.
      *
+     * Can also be used to update an already existing joinTable entry:
+     *
+     *     $manyManyList->add($recordID,["ExtraField" => "value"]);
+     *
      * @throws InvalidArgumentException
      * @throws Exception
      *
