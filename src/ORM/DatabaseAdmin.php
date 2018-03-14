@@ -48,6 +48,11 @@ class DatabaseAdmin extends Controller
         'RememberLoginHash' => 'SilverStripe\\Security\\RememberLoginHash',
     ];
 
+    /**
+     * Config setting to enabled/disable the display of record counts on the dev/build output
+     */
+    private static $show_record_counts = true;
+
     protected function init()
     {
         parent::init();
@@ -272,9 +277,11 @@ class DatabaseAdmin extends Controller
             }
         }
 
+        $showRecordCounts = (boolean)$this->config()->show_record_counts;
+
         // Initiate schema update
         $dbSchema = DB::get_schema();
-        $dbSchema->schemaUpdate(function () use ($dataClasses, $testMode, $quiet) {
+        $dbSchema->schemaUpdate(function () use ($dataClasses, $testMode, $quiet, $showRecordCounts) {
             $dataObjectSchema = DataObject::getSchema();
 
             foreach ($dataClasses as $dataClass) {
@@ -292,10 +299,21 @@ class DatabaseAdmin extends Controller
 
                 // Log data
                 if (!$quiet) {
-                    if (Director::is_cli()) {
-                        echo " * $tableName\n";
+                    if ($showRecordCounts && DB::get_schema()->hasTable($tableName)) {
+                        try {
+                            $count = DB::query("SELECT COUNT(*) FROM \"$tableName\"")->value();
+                            $countSuffix = " ($count records)";
+                        } catch (Exception $e) {
+                            $countSuffix = " (error getting record count)";
+                        }
                     } else {
-                        echo "<li>$tableName</li>\n";
+                        $countSuffix = "";
+                    }
+
+                    if (Director::is_cli()) {
+                        echo " * $tableName$countSuffix\n";
+                    } else {
+                        echo "<li>$tableName$countSuffix</li>\n";
                     }
                 }
 
