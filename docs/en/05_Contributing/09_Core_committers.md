@@ -9,6 +9,7 @@ The core committers team is reviewed approximately annually, new members are add
 * [Daniel Hensby](https://github.com/dhensby)
 * [Ingo Schommer](https://github.com/chillu)
 * [Loz Calver](https://github.com/kinglozzer)
+* [Paul Clarke](https://github.com/clarkepaul)
 * [Robbie Averill](https://github.com/robbieaverill)
 * [Sam Minnée](https://github.com/sminnee)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
