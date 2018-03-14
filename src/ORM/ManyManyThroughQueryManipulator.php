@@ -37,18 +37,36 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     protected $foreignKey;
 
     /**
+     * Foreign class 'from' property. Normally not needed unless polymorphic.
+     *
+     * @var string
+     */
+    protected $foreignClass;
+
+    /**
+     * Class name of instance that owns this list
+     *
+     * @var string
+     */
+    protected $parentClass;
+
+    /**
      * Build query manipulator for a given join table. Additional parameters (foreign key, etc)
      * will be infered at evaluation from query parameters set via the ManyManyThroughList
      *
      * @param string $joinClass Class name of the joined dataobject record
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
+     * @param string $foreignClass the 'from' class name
+     * @param string $parentClass Name of parent class. Subclass of $foreignClass
      */
-    public function __construct($joinClass, $localKey, $foreignKey)
+    public function __construct($joinClass, $localKey, $foreignKey, $foreignClass, $parentClass)
     {
         $this->setJoinClass($joinClass);
         $this->setLocalKey($localKey);
         $this->setForeignKey($foreignKey);
+        $this->setForeignClass($foreignClass);
+        $this->setParentClass($parentClass);
     }
 
     /**
@@ -96,6 +114,33 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
+     * Gets ID key name for foreign key component
+     *
+     * @return string
+     */
+    public function getForeignIDKey()
+    {
+        $key = $this->getForeignKey();
+        if ($this->getForeignClass() === DataObject::class) {
+            return $key . 'ID';
+        }
+        return $key;
+    }
+
+    /**
+     * Gets Class key name for foreign key component (or null if none)
+     *
+     * @return string|null
+     */
+    public function getForeignClassKey()
+    {
+        if ($this->getForeignClass() === DataObject::class) {
+            return $this->getForeignKey() . 'Class';
+        }
+        return null;
+    }
+
+    /**
      * @param string $foreignKey
      * @return $this
      */
@@ -114,11 +159,21 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     public function getParentRelationship(DataQuery $query)
     {
         // Create has_many
-        $list = HasManyList::create($this->getJoinClass(), $this->getForeignKey());
+        if ($this->getForeignClass() === DataObject::class) {
+            /** @internal Polymorphic many_many is experimental */
+            $list = PolymorphicHasManyList::create(
+                $this->getJoinClass(),
+                $this->getForeignKey(),
+                $this->getParentClass()
+            );
+        } else {
+            $list = HasManyList::create($this->getJoinClass(), $this->getForeignKey());
+        }
         $list = $list->setDataQueryParam($this->extractInheritableQueryParameters($query));
 
         // Limit to given foreign key
-        if ($foreignID = $query->getQueryParam('Foreign.ID')) {
+        $foreignID = $query->getQueryParam('Foreign.ID');
+        if ($foreignID) {
             $list = $list->forForeignID($foreignID);
         }
         return $list;
@@ -190,6 +245,8 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
         }
 
         // Apply join and record sql for later insertion (at end of replacements)
+        // By using a string placeholder $$_SUBQUERY_$$ we protect field/table rewrites from interfering twice
+        // on the already-finalised inner list
         $sqlSelect->addInnerJoin(
             '(SELECT $$_SUBQUERY_$$)',
             "\"{$joinTableAlias}\".\"{$localKey}\" = {$childField}",
@@ -222,5 +279,41 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
             $sqlQuery->replaceText('SELECT $$_SUBQUERY_$$', $joinTableSQL);
             $dataQuery->setQueryParam('Foreign.JoinTableSQL', null);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getForeignClass()
+    {
+        return $this->foreignClass;
+    }
+
+    /**
+     * @param string $foreignClass
+     * @return $this
+     */
+    public function setForeignClass($foreignClass)
+    {
+        $this->foreignClass = $foreignClass;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentClass()
+    {
+        return $this->parentClass;
+    }
+
+    /**
+     * @param string $parentClass
+     * @return ManyManyThroughQueryManipulator
+     */
+    public function setParentClass($parentClass)
+    {
+        $this->parentClass = $parentClass;
+        return $this;
     }
 }

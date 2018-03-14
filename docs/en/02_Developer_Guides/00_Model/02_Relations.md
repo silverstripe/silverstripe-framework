@@ -339,6 +339,46 @@ $supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
 Note: ->filter() currently does not support joined fields natively due to the fact that the
 query for the join table is isolated from the outer query controlled by DataList.
 
+### Polymorphic many_many (Experimental)
+
+Using many_many through, it is possible to support polymorphic relations on the mapping table.
+Note, that this feature is currently experimental, and has certain limitations:
+ - This feature only works with many_many through
+ - This feature will only allow polymorphic many_many, but not belongs_many_many. However,
+   you can have a has_many relation to the mapping table on this side, and iterate through this
+   to collate parent records.
+
+For instance, this is how you would link an arbitrary object to many_many tags.
+
+```php
+use SilverStripe\ORM\DataObject;
+
+class SomeObject extends DataObject 
+{
+    // This same many_many may also exist on other classes
+    private static $many_many = [
+        "Tags" => [
+            'through' => TagMapping::class,
+            'from' => 'Parent',
+            'to' => 'Tag',
+        ]
+    ];
+}
+class Tag extends DataObject 
+{
+    // has_many works, but belongs_many_many will not
+    private static $has_many = [
+        'TagMappings' => TagMapping::class,
+    ];
+}
+class TagMapping extends DataObject 
+{   
+    private static $has_one = [
+        'Parent' => DataObject::class, // Polymorphic has_one
+        'Tag' => Tag::class,
+    ];
+}
+```
 
 ### Using many_many in templates
 
