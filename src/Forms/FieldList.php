@@ -351,7 +351,7 @@ class FieldList extends ArrayList
             foreach ($fieldName as $field) {
                 $this->removeByName($field, $dataFieldOnly);
             }
-            return;
+            return $this;
         }
 
         $this->flushFieldsCache();
