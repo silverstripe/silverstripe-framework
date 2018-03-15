@@ -1,7 +1,7 @@
 <?php
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
- * are created from &lt;textarea&gt; tags, which are then converted with JavaScript.
+ * are created from `<textarea>` tags, which are then converted with JavaScript.
  *
  * @package forms
  * @subpackage fields-formattedinput
