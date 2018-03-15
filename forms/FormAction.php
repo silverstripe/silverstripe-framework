@@ -1,6 +1,6 @@
 <?php
 /**
- * The action buttons are <code><input type="submit"></code> as well as <code><button></code> tags.
+ * The action buttons are `<input type="submit">` as well as `<button>` tags.
  *
  * Upon clicking the button below will redirect the user to doAction under the current controller.
  *
@@ -25,7 +25,7 @@ class FormAction extends FormField {
 	protected $action;
 
 	/**
-	 * Enables the use of <code><button></code> instead of <code><input></code>
+	 * Enables the use of `<button>` instead of `<input>`
 	 * in {@link Field()} - for more customizeable styling.
 	 *
 	 * @var boolean
@@ -154,7 +154,7 @@ class FormAction extends FormField {
 	}
 
 	/**
-	 * Enable or disable the rendering of this action as a <code><button /></code>
+	 * Enable or disable the rendering of this action as a `<button />`
 	 *
 	 * @param boolean
 	 * @return $this
@@ -165,7 +165,7 @@ class FormAction extends FormField {
 	}
 
 	/**
-	 * Determine if this action is rendered as a <code><button /></code>
+	 * Determine if this action is rendered as a `<button />`
 	 *
 	 * @return boolean
 	 */
