@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
- * The action buttons are <input type="submit"> as well as <button> tags.
+ * The action buttons are `<input type="submit">` as well as `<button>` tags.
  *
  * Upon clicking the button below will redirect the user to doAction under the current controller.
  *
@@ -49,7 +49,7 @@ class FormAction extends FormField
     protected $schemaComponent = 'FormAction';
 
     /**
-     * Enables the use of <button> instead of <input>
+     * Enables the use of `<button>` instead of `<input>`
      * in {@link Field()} - for more customisable styling.
      *
      * @var boolean
@@ -218,7 +218,7 @@ class FormAction extends FormField
     }
 
     /**
-     * Enable or disable the rendering of this action as a <button />
+     * Enable or disable the rendering of this action as a `<button />`
      *
      * @param boolean
      * @return $this
@@ -230,7 +230,7 @@ class FormAction extends FormField
     }
 
     /**
-     * Determine if this action is rendered as a <button />
+     * Determine if this action is rendered as a `<button />`
      *
      * @return boolean
      */
