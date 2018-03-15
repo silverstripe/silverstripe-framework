@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use League\Csv\EscapeFormula;
 use League\Csv\Writer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -174,15 +175,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
         if (!Config::inst()->get(get_class($this), 'xls_export_disabled')) {
-            $csvWriter->addFormatter(function (array $row) {
-                foreach ($row as &$item) {
-                    // [SS-2017-007] Sanitise XLS executable column values with a leading tab
-                    if (preg_match('/^[-@=+].*/', $item)) {
-                        $item = "\t" . $item;
-                    }
-                }
-                return $row;
-            });
+            $csvWriter->addFormatter(new EscapeFormula());
         }
 
         if ($this->csvHasHeader) {

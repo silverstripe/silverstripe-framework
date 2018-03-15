@@ -24,7 +24,7 @@
     "require": {
         "composer/installers": "~1.0",
         "embed/embed": "^3.0",
-        "league/csv": "^8",
+        "league/csv": "^9",
         "league/flysystem": "~1.0.12",
         "monolog/monolog": "~1.11",
         "nikic/php-parser": "^2 || ^3 || ^4",

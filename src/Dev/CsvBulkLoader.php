@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\EscapeFormula;
 use League\Csv\Reader;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
@@ -74,10 +75,12 @@ class CsvBulkLoader extends BulkLoader
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
 
-            $tabExtractor = function ($row, $rowOffset, $iterator) {
+            $tabExtractor = function ($row) {
                 foreach ($row as &$item) {
                     // [SS-2017-007] Ensure all cells with leading tab and then [@=+] have the tab removed on import
-                    if (preg_match("/^\t[\-@=\+]+.*/", $item)) {
+                    $specialChars = implode('', EscapeFormula::FORMULA_STARTING_CHARS);
+                    $specialChars = preg_quote($specialChars, '/');
+                    if (preg_match("/^\t[$specialChars]+.*/", $item)) {
                         $item = ltrim($item, "\t");
                     }
                 }
@@ -86,8 +89,8 @@ class CsvBulkLoader extends BulkLoader
 
             if ($this->columnMap) {
                 $headerMap = $this->getNormalisedColumnMap();
-                $remapper = function ($row, $rowOffset, $iterator) use ($headerMap, $tabExtractor) {
-                    $row = $tabExtractor($row, $rowOffset, $iterator);
+                $remapper = function ($row) use ($headerMap, $tabExtractor) {
+                    $row = $tabExtractor($row);
                     foreach ($headerMap as $column => $renamedColumn) {
                         if ($column == $renamedColumn) {
                             continue;
@@ -106,14 +109,16 @@ class CsvBulkLoader extends BulkLoader
             }
 
             if ($this->hasHeaderRow) {
-                $rows = $csvReader->fetchAssoc(0, $remapper);
+                $csvReader->setHeaderOffset(0);
+                $rows = $csvReader->getRecords();
             } elseif ($this->columnMap) {
-                $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+                $rows = $csvReader->getRecords($headerMap);
             }
 
             $result = BulkLoader_Result::create();
 
             foreach ($rows as $row) {
+                $row = $remapper($row);
                 $this->processRecord($row, $this->columnMap, $result, $preview);
             }
         } catch (\Exception $e) {
