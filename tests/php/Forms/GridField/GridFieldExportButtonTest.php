@@ -56,10 +56,9 @@ class GridFieldExportButtonTest extends SapphireTest
         $gridField = new GridField('testfield', 'testfield', $list, $config);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            "$bom\"My Name\"\r\n",
+            "\"My Name\"\r\n",
             (string) $csvReader
         );
     }
@@ -70,10 +69,9 @@ class GridFieldExportButtonTest extends SapphireTest
         $button->setExportColumns(['Name' => 'My Name']);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            $bom . '"My Name"' . "\r\n" . 'Test' . "\r\n" . 'Test2' . "\r\n",
+            '"My Name"' . "\r\n" . 'Test' . "\r\n" . 'Test2' . "\r\n",
             (string) $csvReader
         );
     }
@@ -90,10 +88,9 @@ class GridFieldExportButtonTest extends SapphireTest
         $button->setExportColumns(['Name' => 'My Name']);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            "$bom\"My Name\"\r\n\"\t=SUM(1, 2)\"\r\nTest\r\nTest2\r\n",
+            "\"My Name\"\r\n\"\t=SUM(1, 2)\"\r\nTest\r\nTest2\r\n",
             (string) $csvReader
         );
     }
@@ -109,10 +106,9 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            $bom . 'Name,City' . "\r\n" . 'Test,"City city"' . "\r\n" . 'Test2,"Quoted ""City"" 2 city"' . "\r\n",
+            'Name,City' . "\r\n" . 'Test,"City city"' . "\r\n" . 'Test2,"Quoted ""City"" 2 city"' . "\r\n",
             (string) $csvReader
         );
     }
@@ -126,10 +122,9 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            $bom . 'Name,strtolower' . "\r\n" . 'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
+            'Name,strtolower' . "\r\n" . 'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
             (string) $csvReader
         );
     }
@@ -144,10 +139,9 @@ class GridFieldExportButtonTest extends SapphireTest
         $button->setCsvHasHeader(false);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            $bom . 'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
+            'Test,City' . "\r\n" . 'Test2,"Quoted ""City"" 2"' . "\r\n",
             (string) $csvReader
         );
     }
@@ -168,10 +162,9 @@ class GridFieldExportButtonTest extends SapphireTest
         $exportData = $button->generateExportFileData($this->gridField);
 
         $csvReader = Reader::createFromString($exportData);
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            $bom . "ID\r\n" . "1\r\n" . "2\r\n" . "3\r\n" . "4\r\n" . "5\r\n" . "6\r\n" . "7\r\n" . "8\r\n" . "9\r\n" . "10\r\n" . "11\r\n" . "12\r\n" . "13\r\n" . "14\r\n" . "15\r\n" . "16\r\n",
+            "ID\r\n" . "1\r\n" . "2\r\n" . "3\r\n" . "4\r\n" . "5\r\n" . "6\r\n" . "7\r\n" . "8\r\n" . "9\r\n" . "10\r\n" . "11\r\n" . "12\r\n" . "13\r\n" . "14\r\n" . "15\r\n" . "16\r\n",
             (string) $csvReader
         );
     }
@@ -184,10 +177,9 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
 
         $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
-        $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
-            "$bom\"Rugby Team Number\"\r\n2\r\n0\r\n",
+            "\"Rugby Team Number\"\r\n2\r\n0\r\n",
             (string) $csvReader
         );
     }
