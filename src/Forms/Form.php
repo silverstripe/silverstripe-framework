@@ -1454,7 +1454,7 @@ class Form extends ViewableData implements HasRequestHandler
                         $tmpData = &$data[$name];
                         // drill down into the data array looking for the corresponding value
                         foreach ($keys as $arrayKey) {
-                            if ($arrayKey !== '') {
+                            if ($tmpData && $arrayKey !== '') {
                                 $tmpData = &$tmpData[$arrayKey];
                             } else {
                                 //empty square brackets means new array
