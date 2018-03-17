@@ -90,7 +90,7 @@ class PaginatedListTest extends SapphireTest
         $this->assertEquals(1, $list->CurrentPage());
     }
 
-    public function testGetIterator()
+    public function testIteration()
     {
         $list = new PaginatedList(
             new ArrayList([
@@ -105,26 +105,23 @@ class PaginatedListTest extends SapphireTest
 
         $this->assertListEquals(
             array(array('Num' => 1), array('Num' => 2)),
-            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+            $list
         );
 
         $list->setCurrentPage(2);
         $this->assertListEquals(
             array(array('Num' => 3), array('Num' => 4)),
-            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+            $list
         );
 
         $list->setCurrentPage(3);
         $this->assertListEquals(
             array(array('Num' => 5)),
-            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+            $list
         );
 
         $list->setCurrentPage(999);
-        $this->assertListEquals(
-            array(),
-            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
-        );
+        $this->assertDOSEquals(array(), $list);
 
         // Test disabled paging
         $list->setPageLength(0);
@@ -135,16 +132,16 @@ class PaginatedListTest extends SapphireTest
                 array('Num' => 2),
                 array('Num' => 3),
                 array('Num' => 4),
-                array('Num' => 5),
+                array('Num' => 5)
             ],
-            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+            $list
         );
 
         // Test with dataobjectset
         $players = Player::get();
         $list = new PaginatedList($players);
         $list->setPageLength(1);
-        $list->getIterator();
+        $list;
         $this->assertEquals(
             4,
             $list->getTotalItems(),
@@ -223,10 +220,10 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList($list);
 
         $list->setCurrentPage(3);
-        $this->assertCount(10, $list->getIterator()->getInnerIterator());
+        $this->assertEquals(10, count($list->toArray()));
 
         $list->setLimitItems(false);
-        $this->assertCount(50, $list->getIterator()->getInnerIterator());
+        $this->assertEquals(50, count($list->toArray()));
     }
 
     public function testCurrentPage()

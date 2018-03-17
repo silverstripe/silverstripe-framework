@@ -74,7 +74,7 @@ class DatabaseTest extends SapphireTest
                 'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
                 'DatabaseTest_MyObject'
             )
-        )->first();
+        )->record();
         $this->assertEquals(
             $ret['Engine'],
             'InnoDB',

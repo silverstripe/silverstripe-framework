@@ -36,13 +36,13 @@ class MySQLQuery extends Query
         }
     }
 
-    public function seek($row)
+    public function getIterator()
     {
         if (is_object($this->handle)) {
-            $this->handle->data_seek($row);
-            return $this->handle->fetch_assoc();
+            while ($data = $this->handle->fetch_assoc()) {
+                yield $data;
+            }
         }
-        return null;
     }
 
     public function numRecords()
@@ -50,15 +50,7 @@ class MySQLQuery extends Query
         if (is_object($this->handle)) {
             return $this->handle->num_rows;
         }
-        return null;
-    }
 
-    public function nextRecord()
-    {
-        if (is_object($this->handle) && ($data = $this->handle->fetch_assoc())) {
-            return $data;
-        } else {
-            return false;
-        }
+        return null;
     }
 }
