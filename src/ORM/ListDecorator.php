@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use Iterator;
 use SilverStripe\View\ViewableData;
 use LogicException;
 
@@ -96,8 +97,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         $this->list->remove($itemObject);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         return $this->list->getIterator();
     }

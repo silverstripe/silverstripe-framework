@@ -8,6 +8,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\View\ArrayData;
 use ArrayAccess;
 use Exception;
+use Iterator;
 use IteratorIterator;
 
 /**
@@ -208,11 +209,7 @@ class PaginatedList extends ListDecorator
         return $this;
     }
 
-    /**
-     * @return IteratorIterator
-     */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         $pageLength = $this->getPageLength();
         if ($this->limitItems && $pageLength) {
@@ -223,6 +220,21 @@ class PaginatedList extends ListDecorator
         } else {
             return new IteratorIterator($this->list);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [];
+
+        // Use getIterator()
+        foreach ($this as $record) {
+            $result[] = $record;
+        }
+
+        return $result;
     }
 
     /**
@@ -344,8 +356,8 @@ class PaginatedList extends ListDecorator
             $num = $i + 1;
 
             $emptyRange = $num != 1 && $num != $total && (
-                $num == $left - 1 || $num == $right + 1
-            );
+                    $num == $left - 1 || $num == $right + 1
+                );
 
             if ($emptyRange) {
                 $result->push(new ArrayData([

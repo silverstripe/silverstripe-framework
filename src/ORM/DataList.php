@@ -6,10 +6,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
+use SilverStripe\View\TemplateIterator;
 use SilverStripe\View\ViewableData;
 use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
+use Iterator;
 use LogicException;
 
 /**
@@ -50,6 +52,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected $dataQuery;
 
     /**
+     * A cached Query to save repeated database calls. {@see DataList::getTemplateIteratorCount()}
+     *
+     * @var SilverStripe\ORM\Connect\Query
+     */
+    protected $finalisedQuery;
+
+    /**
      * Create a new DataList.
      * No querying is done on construction, but the initial query schema is set up.
      *
@@ -79,6 +88,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function __clone()
     {
         $this->dataQuery = clone $this->dataQuery;
+        $this->finalisedQuery = null;
     }
 
     /**
@@ -863,13 +873,32 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns an Iterator for this DataList.
      * This function allows you to use DataLists in foreach loops
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        return new ArrayIterator($this->toArray());
+        foreach ($this->getFinalisedQuery() as $row) {
+            yield $this->createDataObject($row);
+        }
+
+        // Re-set the finaliseQuery so that it can be re-executed
+        $this->finalisedQuery = null;
+    }
+
+    /**
+     * Returns the Query result for this DataList. Repeated calls will return
+     * a cached result, unless the DataQuery underlying this list has been
+     * modified
+     *
+     * @return SilverStripe\ORM\Connect\Query
+     * @internal This API may change in minor releases
+     */
+    protected function getFinalisedQuery()
+    {
+        if (!$this->finalisedQuery) {
+            $this->finalisedQuery = $this->dataQuery->query()->execute();
+        }
+
+        return $this->finalisedQuery;
     }
 
     /**
@@ -880,6 +909,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     #[\ReturnTypeWillChange]
     public function count()
     {
+        if ($this->finalisedQuery) {
+            return $this->finalisedQuery->numRecords();
+        }
+
         return $this->dataQuery->count();
     }
 
@@ -1027,8 +1060,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function column($colName = "ID")
     {
-        $dataQuery = clone $this->dataQuery;
-        return $dataQuery->distinct(false)->column($colName);
+        return $this->dataQuery->distinct(false)->column($colName);
     }
 
     /**

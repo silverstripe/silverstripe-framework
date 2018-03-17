@@ -43,58 +43,47 @@ class PDODatabaseTest extends SapphireTest
         $this->assertInstanceOf(PDOQuery::class, $result3);
 
         // Iterating one level should not buffer, but return the right result
+        $result1Array = [];
+        foreach ($result1 as $record) {
+            $result1Array[] = $record;
+        }
         $this->assertEquals(
             [
-                'Sort' => 1,
-                'Title' => 'First Item'
+                [ 'Sort' => 1, 'Title' => 'First Item' ],
+                [ 'Sort' => 2, 'Title' => 'Second Item' ],
+                [ 'Sort' => 3, 'Title' => 'Third Item' ],
+                [ 'Sort' => 4, 'Title' => 'Last Item' ],
             ],
-            $result1->next()
-        );
-        $this->assertEquals(
-            [
-                'Sort' => 2,
-                'Title' => 'Second Item'
-            ],
-            $result1->next()
-        );
-
-        // Test first
-        $this->assertEquals(
-            [
-                'Sort' => 1,
-                'Title' => 'First Item'
-            ],
-            $result1->first()
-        );
-
-        // Test seek
-        $this->assertEquals(
-            [
-                'Sort' => 2,
-                'Title' => 'Second Item'
-            ],
-            $result1->seek(1)
+            $result1Array
         );
 
         // Test count
         $this->assertEquals(4, $result1->numRecords());
 
         // Test second statement
+        $result2Array = [];
+        foreach ($result2 as $record) {
+            $result2Array[] = $record;
+            break;
+        }
         $this->assertEquals(
             [
-                'Sort' => 3,
-                'Title' => 'Third Item'
+                [ 'Sort' => 3, 'Title' => 'Third Item' ],
             ],
-            $result2->next()
+            $result2Array
         );
 
         // Test non-prepared query
+        $result3Array = [];
+        foreach ($result3 as $record) {
+            $result3Array[] = $record;
+            break;
+        }
         $this->assertEquals(
             [
-                'Sort' => 1,
-                'Title' => 'First Item'
+                [ 'Sort' => 1, 'Title' => 'First Item' ],
             ],
-            $result3->next()
+            $result3Array
         );
     }
 
