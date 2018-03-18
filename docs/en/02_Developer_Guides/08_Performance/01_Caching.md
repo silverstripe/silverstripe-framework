@@ -45,7 +45,7 @@ This factory allows us you to globally define an adapter for all cache instances
 
 
 ```php
-use Psr\SimpleCache\CacheInterface
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
 
 $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
