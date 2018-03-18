@@ -370,6 +370,19 @@ class Tag extends DataObject
     private static $has_many = [
         'TagMappings' => TagMapping::class,
     ];
+    
+    /**
+     * Example iterator placeholder for belongs_many_many.
+     * This is a list of arbitrary types of objects
+     * @return Generator|DataObject[]
+     */
+    public function TaggedObjects()
+    {
+        foreach ($this->TagMappings() as $mapping) {
+            yield $mapping->Parent();
+        }
+    }
+    
 }
 class TagMapping extends DataObject 
 {   
