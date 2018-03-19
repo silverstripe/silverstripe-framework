@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -216,5 +217,17 @@ class ManyManyThroughList extends RelationList
         $record = $hasManyList->createDataObject($extraFields ?: []);
         $record->$localKey = $itemID;
         $hasManyList->add($record);
+    }
+
+    /**
+     * Get extra fields used by this list
+     *
+     * @return array a map of field names to types
+     */
+    public function getExtraFields()
+    {
+        // Inherit config from join table
+        $joinClass = $this->manipulator->getJoinClass();
+        return Config::inst()->get($joinClass, 'db');
     }
 }
