@@ -20,12 +20,12 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\FixtureTestState;
 use SilverStripe\Dev\State\SapphireTestState;
-use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
@@ -38,7 +38,9 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 if (!class_exists(TestCase::class)) {
     return;
@@ -994,6 +996,11 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $kernel = new TestKernel(BASE_PATH);
         $app = new HTTPApplication($kernel);
         $flush = array_key_exists('flush', $request->getVars());
+
+        // Mock session storage - PHPUnit already triggers output so native session handler is unable to start
+        $mockSessionStorage = new MockFileSessionStorage();
+        $mockSession = new SymfonySession($mockSessionStorage);
+        Injector::inst()->registerService($mockSession, SessionInterface::class);
 
         // Custom application
         $app->execute($request, function (HTTPRequest $request) {

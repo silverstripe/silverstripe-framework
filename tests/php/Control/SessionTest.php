@@ -24,6 +24,12 @@ class SessionTest extends SapphireTest
         return parent::setUp();
     }
 
+    protected function tearDown()
+    {
+        $this->session->clearAll();
+        return parent::tearDown();
+    }
+
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -148,8 +154,10 @@ class SessionTest extends SapphireTest
     public function testGetSetBasics()
     {
         $this->session->set('Test', 'Test');
-
         $this->assertEquals($this->session->get('Test'), 'Test');
+
+        $this->session->set('Test.Nested', 'Value');
+        $this->assertEquals($this->session->get('Test.Nested'), 'Value');
     }
 
     public function testClearElement()
@@ -293,46 +301,41 @@ class SessionTest extends SapphireTest
         $request = new HTTPRequest('GET', '/');
 
         // Test change of nested array type
-        $s = new Session($_SESSION = ['something' => ['some' => 'value', 'another' => 'item']]);
+        $s = new Session(['something' => ['some' => 'value', 'another' => 'item']]);
         $s->set('something', 'string');
         $s->save($request);
-        $this->assertEquals(
-            ['something' => 'string'],
-            $_SESSION
-        );
+        $data = (new Session())->getAll();
+        $this->assertArrayHasKey('something', $data);
+        $this->assertEquals('string', $data['something']);
 
         // Test multiple changes combine safely
-        $s = new Session($_SESSION = ['something' => ['some' => 'value', 'another' => 'item']]);
+        $s = new Session(['something' => ['some' => 'value', 'another' => 'item']]);
         $s->set('something.another', 'newanother');
         $s->clear('something.some');
         $s->set('something.newkey', 'new value');
         $s->save($request);
-        $this->assertEquals(
-            [
-                'something' => [
-                    'another' => 'newanother',
-                    'newkey' => 'new value',
-                ],
-            ],
-            $_SESSION
-        );
+
+        $data = (new Session())->getAll();
+        $this->assertArrayHasKey('something', $data);
+        $this->assertEquals([
+            'another' => 'newanother',
+            'newkey' => 'new value',
+        ], $data['something']);
 
         // Test cleared keys are restorable
-        $s = new Session($_SESSION = ['bookmarks' => [1 => 1, 2 => 2]]);
+        $s = new Session(['bookmarks' => [ 1 => 1, 2 => 2]]);
         $s->clear('bookmarks');
         $s->set('bookmarks', [
             1 => 1,
             3 => 3,
         ]);
         $s->save($request);
-        $this->assertEquals(
-            [
-                'bookmarks' => [
-                    1 => 1,
-                    3 => 3,
-                ],
-            ],
-            $_SESSION
-        );
+
+        $data = (new Session())->getAll();
+        $this->assertArrayHasKey('bookmarks', $data);
+        $this->assertEquals([
+            1 => 1,
+            3 => 3,
+        ], $data['bookmarks']);
     }
 }

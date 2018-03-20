@@ -147,6 +147,7 @@ class CoreKernel implements Kernel
         $this->bootManifests($flush);
         $this->bootErrorHandling();
         $this->bootDatabaseEnvVars();
+        $this->bootSessionEnvVars();
         $this->bootConfigs();
         $this->bootDatabaseGlobals();
         $this->validateDatabase();
@@ -209,6 +210,16 @@ class CoreKernel implements Kernel
         $databaseConfig = $this->getDatabaseConfig();
         $databaseConfig['database'] = $this->getDatabaseName();
         DB::setConfig($databaseConfig);
+    }
+
+    /**
+     * Load base URL path into a constant - this is injected
+     */
+    protected function bootSessionEnvVars()
+    {
+        if (!defined('SS_SESSION_COOKIE_PATH')) {
+            define('SS_SESSION_COOKIE_PATH', Director::baseURL());
+        }
     }
 
     /**

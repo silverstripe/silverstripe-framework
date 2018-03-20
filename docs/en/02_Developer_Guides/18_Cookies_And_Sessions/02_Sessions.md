@@ -98,18 +98,53 @@ including form and page comment information. None of this is vital but `clear_al
 $session->clearAll();
 ```
 
-## Secure Session Cookie
+## Configuration
 
-In certain circumstances, you may want to use a different `session_name` cookie when using the `https` protocol for security purposes. To do this, you may set the `cookie_secure` parameter to `true` on your `config.yml`
+Sessions are backed by `symfony/http-foundation` internally, which is easily customisable and includes support for a number of different “save handlers” (which persist session data server-side between requests).
+
+The default configuration (backed by PHP’s native session storage, usually file-based) can be customised by adjusting the default `Injector` service definition:
+
+```yml
+---
+Name: mysitesession
+After: '#coresession'
+---
+SilverStripe\Core\Injector\Injector:
+  SymfonyNativeSessionStorage:
+    class: Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage
+    constructor:
+      config:
+        cookie_lifetime: 1200
+        cookie_secure: true
+        name: 'MYSESSIONID'
+```
+
+A full list of available configuration options is available here: [http://php.net/session.configuration](http://php.net/session.configuration). Note that the `session.` prefix is omitted for convenience.
+
+You can also use a different save handler, for example to use Memcached as a save handler:
 
 
 ```yml
-SilverStripe\Control\Session:
-  cookie_secure: true
+---
+Name: mysitesession
+After: '#coresession'
+---
+SilverStripe\Core\Injector\Injector:
+  SymfonyNativeSessionStorage:
+    class: Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage
+    constructor:
+      config:
+        cookie_lifetime: 60
+      handler: %$MemcachedSessionHandler
+  MemcachedSessionHandler:
+    class: Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
+    constructor:
+      memcached: %$MemcachedClient
+  MemcachedClient:
+    class: 'Memcached'
+    calls:
+      - [ addServer, [ 'localhost', 11211 ] ]
 ```
-
-This uses the session_name `SECSESSID` for `https` connections instead of the default `PHPSESSID`. Doing so adds an extra layer of security to your session cookie since you no longer share `http` and `https` sessions.
-
 
 ## API Documentation
 

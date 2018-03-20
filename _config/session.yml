@@ -1,0 +1,13 @@
+---
+Name: coresession
+---
+SilverStripe\Core\Injector\Injector:
+  Symfony\Component\HttpFoundation\Session\SessionInterface:
+    class: Symfony\Component\HttpFoundation\Session\Session
+    constructor:
+      storage: '%$SymfonyNativeSessionStorage'
+  SymfonyNativeSessionStorage:
+    class: Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage
+    constructor:
+      config:
+        cookie_path: '`SS_SESSION_COOKIE_PATH`'
