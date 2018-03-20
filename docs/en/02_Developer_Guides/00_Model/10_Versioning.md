@@ -554,10 +554,93 @@ public function init()
 
 ### Controllers
 
-The current stage for each request is determined by `VersionedRequestFilter` before any controllers initialize, through 
-`Versioned::choose_site_stage()`. It checks for a `Stage` GET parameter, so you can force a draft stage by appending 
-`?stage=Stage` to your request. The setting is "sticky" in the PHP session, so any subsequent requests will also be in 
-draft stage.
+The current stage for each request is determined by `VersionedHTTPMiddleware` before any controllers initialize, through 
+`Versioned::choose_site_stage()`. It checks for a `stage` GET parameter, so you can force a draft stage by appending 
+`?stage=Stage` to your request. 
+
+Since SilverStripe 4.2, the current stage setting is no longer "sticky" in the session.
+Any links presented on the view produced with `?stage=Stage` need to have the same GET parameters in order
+to retain the stage. If you are using the `SiteTree->Link()` and `Controller->Link()` methods,
+this is automatically the case for page links, controller links and form actions.
+
+You can opt for a session base stage setting through the `Versioned.use_session` setting.
+Warning: This can lead to leaking of unpublished information, if a live URL is viewed in draft mode,
+and the result is cached due to agressive cache settings (not varying on cookie values).   
+
+*mysite/src/MyObject.php*
+
+```php
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\Control\Controller;
+
+class MyObject extends DataObject {
+
+    private static $extensions = [
+        Versioned::class
+    ];
+
+    public function Link($action = null)
+    {
+        return Injector::inst()->get(MyObjectController::class)->Link($this->ID);
+    }
+
+    public function CustomLink($action = null)
+    {
+        $link = Controller::join_links('custom-route', $this->ID, '?rand=' . rand());
+        $this->extend('updateLink', $link, $action); // updates $link by reference
+        return $link;
+    }
+}
+```
+
+*mysite/src/MyObjectController.php*
+
+```php
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Versioned\VersionedRequestHandlerExtension;
+
+class MyObjectController extends Controller
+{
+    private static $extensions = [
+        VersionedRequestHandlerExtension::class
+    ];
+
+    public function index(HTTPRequest $request)
+    {
+        $obj = MyObject::get()->byID($request->param('ID'));
+        if (!$obj) {
+            return $this->httpError(404);
+        }
+
+        // Construct view
+        $html = sprintf('<a href="%s">%s</a>', $obj->Link(), $obj->ID);
+
+        return $html;
+    }
+
+    public function Link($action = null)
+    {
+        // Construct link with graceful handling of GET parameters
+        $link = Controller::join_links('my-objects', $action, '?rand=' . rand());
+
+        // Allow Versioned and other extension to update $link by reference
+        $this->extend('updateLink', $link, $action);
+
+        return $link;
+    }
+}
+```
+
+*mysite/_config/routes.yml*
+
+```yml
+SilverStripe\Control\Director:
+  rules:
+    'my-objects/$ID': 'MyObjectController'
+```
 
 <div class="alert" markdown="1">
 The `choose_site_stage()` call only deals with setting the default stage, and doesn't check if the user is 

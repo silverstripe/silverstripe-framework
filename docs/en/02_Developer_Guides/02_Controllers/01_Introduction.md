@@ -159,20 +159,23 @@ For more information about templates, inheritance and how to render into views, 
 
 ## Link
 
-Each controller should define a `Link()` method. This should be used to avoid hard coding your routing in views etc.
+Each controller should define a `Link()` method. This should be used to avoid hard coding your routing in views,
+as well as give other features in SilverStripe the ability to influence link behaviour.
 
 **mysite/code/controllers/TeamController.php**
 
 ```php
 public function Link($action = null) 
 {
-    return Controller::join_links('teams', $action);
+    // Construct link with graceful handling of GET parameters
+    $link = Controller::join_links('teams', $ction);
+    
+    // Allow Versioned and other extension to update $link by reference.
+    $this->extend('updateLink', $link, $action);
+    
+    return $link;
 }
-```
-
-<div class="info" markdown="1">
-The [Controller::join_links()](api:SilverStripe\Control\Controller::join_links()) is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
-</div>
+``` 
 
 ## Related Lessons
 * [Controller actions/DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
