@@ -61,6 +61,14 @@ abstract class DBField extends ViewableData {
 	private static $default_search_filter_class = 'PartialMatchFilter';
 
 	/**
+	 * Flag to indicate whether this data type is safe to automatically generate an index for
+	 *
+	 * @var bool
+	 * @config
+	 */
+	private static $auto_indexable = true;
+
+	/**
 	 * @var $default mixed Default-value in the database.
 	 * Might be overridden on DataObject-level, but still useful for setting defaults on
 	 * already existing records after a db-build.

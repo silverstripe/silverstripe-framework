@@ -216,6 +216,11 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
         $indexes = $object->databaseIndexes();
         $this->assertArrayHasKey('Sort', $indexes);
         $this->assertEquals('unique', $indexes['Sort']);
+
+        // make sure Text fields don't get indexes automatically - these can be db-driver dependent
+		$object = new DataObjectSchemaGenerationTest_SortedByText();
+		$indexes = $object->databaseIndexes();
+		$this->assertArrayNotHasKey('Description', $indexes);
 	}
 }
 
@@ -265,4 +270,14 @@ class DataObjectSchemaGenerationTest_Sorted extends DataObject implements TestOn
     );
 
     private static $default_sort = "Sort";
+}
+
+class DataObjectSchemaGenerationTest_SortedByText extends DataObject implements TestOnly {
+	private static $db = array(
+		'Title' => 'Varchar',
+		'Description' => 'Text',
+		'Sort' => 'Int',
+	);
+
+	private static $default_sort = "Description";
 }
