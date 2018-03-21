@@ -406,15 +406,13 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.
      *
-     * @param bool $enabled toggle the use of the draft site
+     * @param bool $draft toggle the use of the draft site
      */
-    public function useDraftSite($enabled = true)
+    public function useDraftSite($draft = true)
     {
-        if ($enabled) {
-            Versioned::set_stage(Versioned::DRAFT);
-        } else {
-            Versioned::set_stage(Versioned::LIVE);
-        }
+        $stage = $draft ? Versioned::DRAFT : Versioned::LIVE;
+        Versioned::set_stage($stage);
+        Versioned::set_default_reading_mode(Versioned::get_reading_mode());
     }
 
     /**
