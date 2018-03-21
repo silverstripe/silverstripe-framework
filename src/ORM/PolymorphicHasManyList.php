@@ -67,9 +67,8 @@ class PolymorphicHasManyList extends HasManyList
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
         } elseif (!($item instanceof $this->dataClass)) {
-            user_error(
-                "PolymorphicHasManyList::add() expecting a $this->dataClass object, or ID value",
-                E_USER_ERROR
+            throw new InvalidArgumentException(
+                "PolymorphicHasManyList::add() expecting a $this->dataClass object, or ID value"
             );
         }
 

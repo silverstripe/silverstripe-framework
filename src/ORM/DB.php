@@ -678,10 +678,12 @@ class DB
 
     /**
      * Enable supression of database messages.
+     *
+     * @param bool $quiet
      */
-    public static function quiet()
+    public static function quiet($quiet = true)
     {
-        self::get_schema()->quiet();
+        self::get_schema()->quiet($quiet);
     }
 
     /**

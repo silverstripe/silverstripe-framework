@@ -17,3 +17,37 @@ SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject:
     Sort: 2
     Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
     Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
+SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectA:
+  obja1:
+    Title: 'object A1'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectB:
+  objb1:
+    Title: 'object B1'
+  objb2:
+    Title: 'object B2'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem:
+  child1:
+    Title: 'item 1'
+  child2:
+    Title: 'item 2'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject:
+  join1:
+    Title: 'join 1'
+    Sort: 4
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectA.obja1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem.child1
+  join2:
+    Title: 'join 2'
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectA.obja1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem.child2
+  join3:
+    Title: 'join 3'
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectB.objb1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem.child2
+  join4:
+    Title: 'join 4'
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectB.objb2
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem.child2

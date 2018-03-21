@@ -7,14 +7,12 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
 
 /**
- * Basic parent object
- *
  * @property string $Title
  * @method ManyManyThroughList Items()
  */
-class TestObject extends DataObject implements TestOnly
+class PolyObjectA extends DataObject implements TestOnly
 {
-    private static $table_name = 'ManyManyThroughListTest_Object';
+    private static $table_name = 'ManyManyThroughListTest_PolyObjectA';
 
     private static $db = [
         'Title' => 'Varchar'
@@ -22,7 +20,7 @@ class TestObject extends DataObject implements TestOnly
 
     private static $many_many = [
         'Items' => [
-            'through' => JoinObject::class,
+            'through' => PolyJoinObject::class,
             'from' => 'Parent',
             'to' => 'Child',
         ]
