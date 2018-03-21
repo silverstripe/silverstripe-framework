@@ -552,7 +552,7 @@ public function init()
 }
 ```
 
-### Controllers
+### Controllers {#controllers}
 
 The current stage for each request is determined by `VersionedHTTPMiddleware` before any controllers initialize, through 
 `Versioned::choose_site_stage()`. It checks for a `stage` GET parameter, so you can force a draft stage by appending 
@@ -561,7 +561,9 @@ The current stage for each request is determined by `VersionedHTTPMiddleware` be
 Since SilverStripe 4.2, the current stage setting is no longer "sticky" in the session.
 Any links presented on the view produced with `?stage=Stage` need to have the same GET parameters in order
 to retain the stage. If you are using the `SiteTree->Link()` and `Controller->Link()` methods,
-this is automatically the case for page links, controller links and form actions.
+this is automatically the case for `DataObject` links, controller links and form actions.
+Note that this behaviour applies for unversioned objects as well, since the views
+these are presented in might still contain dependant objects that are versioned.
 
 You can opt for a session base stage setting through the `Versioned.use_session` setting.
 Warning: This can lead to leaking of unpublished information, if a live URL is viewed in draft mode,
@@ -581,16 +583,22 @@ class MyObject extends DataObject {
         Versioned::class
     ];
 
-    public function Link($action = null)
+    public function Link()
     {
         return Injector::inst()->get(MyObjectController::class)->Link($this->ID);
     }
 
-    public function CustomLink($action = null)
+    public function CustomLink()
     {
         $link = Controller::join_links('custom-route', $this->ID, '?rand=' . rand());
-        $this->extend('updateLink', $link, $action); // updates $link by reference
+        $this->extend('updateLink', $link); // updates $link by reference
         return $link;
+    }
+
+    public function LiveLink()
+    {
+        // Force live link even when current view is in draft mode
+        return Controller::join_links(Injector::inst()->get(MyObjectController::class)->Link($this->ID), '?stage=Live');
     }
 }
 ```
@@ -600,14 +608,9 @@ class MyObject extends DataObject {
 ```php
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Versioned\VersionedRequestHandlerExtension;
 
 class MyObjectController extends Controller
 {
-    private static $extensions = [
-        VersionedRequestHandlerExtension::class
-    ];
-
     public function index(HTTPRequest $request)
     {
         $obj = MyObject::get()->byID($request->param('ID'));
@@ -624,9 +627,10 @@ class MyObjectController extends Controller
     public function Link($action = null)
     {
         // Construct link with graceful handling of GET parameters
-        $link = Controller::join_links('my-objects', $action, '?rand=' . rand());
+        $link = Controller::join_links('my-objects', $action);
 
-        // Allow Versioned and other extension to update $link by reference
+        // Allow Versioned and other extension to update $link by reference.
+        // Calls VersionedStateExtension->updateLink().
         $this->extend('updateLink', $link, $action);
 
         return $link;
