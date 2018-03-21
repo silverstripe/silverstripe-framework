@@ -2,20 +2,15 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\Controller;
+use PHPUnit_Framework_AssertionFailedError;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTP;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\BasicAuth;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
-use PHPUnit_Framework_AssertionFailedError;
 use SimpleXMLElement;
 
 /**
@@ -105,6 +100,11 @@ class FunctionalTest extends SapphireTest implements TestOnly
         // Flush user
         $this->logOut();
 
+        // Switch to draft site, if necessary
+        if (static::get_use_draft_site()) {
+            $this->useDraftSite();
+        }
+
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
         BasicAuth::protect_entire_site(false);
@@ -158,9 +158,6 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function get($url, $session = null, $headers = null, $cookies = null)
     {
         $this->cssParser = null;
-        if (self::get_use_draft_site()) {
-            $url = HTTP::setGetVar('stage', Versioned::DRAFT, $url);
-        }
         $response = $this->mainSession->get($url, $session, $headers, $cookies);
         if ($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
             $response = $this->mainSession->followRedirection();
@@ -410,6 +407,9 @@ class FunctionalTest extends SapphireTest implements TestOnly
      */
     public function useDraftSite($draft = true)
     {
+        if (!class_exists(Versioned::class)) {
+            return;
+        }
         $stage = $draft ? Versioned::DRAFT : Versioned::LIVE;
         Versioned::set_stage($stage);
         Versioned::set_default_reading_mode(Versioned::get_reading_mode());
