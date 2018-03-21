@@ -2,15 +2,16 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\Cookie_Backend;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
+use Exception;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SimpleByName;
-use Exception;
 use SimplePage;
 use SimplePageBuilder;
 
@@ -20,6 +21,7 @@ use SimplePageBuilder;
  */
 class TestSession
 {
+    use Extensible;
 
     /**
      * @var Session
@@ -89,6 +91,7 @@ class TestSession
      */
     public function get($url, $session = null, $headers = null, $cookies = null)
     {
+        $this->extend('updateGetURL', $url, $session, $headers, $cookies);
         $headers = (array) $headers;
         if ($this->lastUrl && !isset($headers['Referer'])) {
             $headers['Referer'] = $this->lastUrl;
@@ -123,6 +126,7 @@ class TestSession
      */
     public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null)
     {
+        $this->extend('updatePostURL', $url, $data, $headers, $session, $body, $cookies);
         $headers = (array) $headers;
         if ($this->lastUrl && !isset($headers['Referer'])) {
             $headers['Referer'] = $this->lastUrl;
