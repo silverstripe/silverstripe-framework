@@ -48,7 +48,6 @@ trait Extensible
      */
     private static $unextendable_classes = array(
         ViewableData::class,
-        RequestHandler::class,
     );
 
     /**
