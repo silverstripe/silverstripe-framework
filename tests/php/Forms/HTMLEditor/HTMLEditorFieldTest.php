@@ -2,29 +2,24 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
+use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
-use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class HTMLEditorFieldTest extends FunctionalTest
 {
     protected static $fixture_file = 'HTMLEditorFieldTest.yml';
-
-    protected static $use_draft_site = true;
 
     protected static $extra_dataobjects = [
         TestObject::class,

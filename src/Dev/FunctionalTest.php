@@ -9,7 +9,6 @@ use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
 use SimpleXMLElement;
 
@@ -46,6 +45,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     /**
      * Set this to true on your sub-class to use the draft site by default for every test in this class.
      *
+     * @deprecated 4.2..5.0 Use ?stage=Stage in your ->get() querystring requests instead
      * @var bool
      */
     protected static $use_draft_site = false;
@@ -101,6 +101,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $this->logOut();
 
         // Switch to draft site, if necessary
+        // If you rely on this you should be crafting stage-specific urls instead though.
         if (static::get_use_draft_site()) {
             $this->useDraftSite();
         }
@@ -403,16 +404,18 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.
      *
+     * @deprecated 4.2..5.0 Use ?stage=Stage querystring arguments instead of useDraftSite
      * @param bool $enabled toggle the use of the draft site
      */
     public function useDraftSite($enabled = true)
     {
+        Deprecation::notice('5.0', 'Use ?stage=Stage querystring arguments instead of useDraftSite');
         if ($enabled) {
             $this->session()->set('readingMode', 'Stage.Stage');
             $this->session()->set('unsecuredDraftSite', true);
         } else {
-            $this->session()->set('readingMode', 'Stage.Live');
-            $this->session()->set('unsecuredDraftSite', false);
+            $this->session()->clear('readingMode');
+            $this->session()->clear('unsecuredDraftSite');
         }
     }
 
@@ -425,6 +428,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     }
 
     /**
+     * @deprecated 4.2..5.0 Use ?stage=Stage in your querystring arguments instead
      * @return bool
      */
     public static function get_use_draft_site()
