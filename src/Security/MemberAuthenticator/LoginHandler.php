@@ -41,9 +41,11 @@ class LoginHandler extends RequestHandler
     ];
 
     /**
-     * @var string Called link on this handler
+     * Link to this handler
+     *
+     * @var string
      */
-    private $link;
+    protected $link = null;
 
     /**
      * @param string $link The URL to recreate this request handler
@@ -59,16 +61,15 @@ class LoginHandler extends RequestHandler
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
+     *
      * @param null|string $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -152,7 +153,7 @@ class LoginHandler extends RequestHandler
 
     public function getReturnReferer()
     {
-        return $this->link();
+        return $this->Link();
     }
 
     /**

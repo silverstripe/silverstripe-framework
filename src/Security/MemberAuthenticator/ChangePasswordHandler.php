@@ -7,7 +7,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -25,9 +24,11 @@ class ChangePasswordHandler extends RequestHandler
     protected $authenticator;
 
     /**
+     * Link to this handler
+     *
      * @var string
      */
-    protected $link;
+    protected $link = null;
 
     /**
      * @var array Allowed Actions
@@ -123,8 +124,8 @@ class ChangePasswordHandler extends RequestHandler
                     . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
                     . ' you <a href="{link2}">logged in</a>.</p>',
                     [
-                        'link1' => $this->link('lostpassword'),
-                        'link2' => $this->link('login')
+                        'link1' => $this->Link('lostpassword'),
+                        'link2' => $this->Link('login')
                     ]
                 )
             );
@@ -164,16 +165,15 @@ class ChangePasswordHandler extends RequestHandler
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
-     * @param null $action
+     *
+     * @param string|null $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**

@@ -44,7 +44,12 @@ class LostPasswordHandler extends RequestHandler
         'passwordsent',
     ];
 
-    private $link = null;
+    /**
+     * Link to this handler
+     *
+     * @var string
+     */
+    protected $link = null;
 
     /**
      * @param string $link The URL to recreate this request handler
@@ -59,16 +64,14 @@ class LostPasswordHandler extends RequestHandler
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
      *
-     * @param string $action
+     * @param string|null $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -261,7 +264,7 @@ class LostPasswordHandler extends RequestHandler
     protected function redirectToSuccess(array $data)
     {
         $link = Controller::join_links(
-            $this->link('passwordsent'),
+            $this->Link('passwordsent'),
             rawurlencode($data['Email']),
             '/'
         );
