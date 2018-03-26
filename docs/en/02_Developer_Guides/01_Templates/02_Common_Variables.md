@@ -45,7 +45,7 @@ to locate your site’s images and css files.
 It renders in the template as `<base href="http://www.yoursite.com" /><!--[if lte IE 6]></base><![endif]-->`
 
 <div class="alert" markdown="1">
-A `<% base_tag %>` is nearly always required or assumed by SilverStripe to exist.
+A `&lt;% base_tag %&gt;` is nearly always required or assumed by SilverStripe to exist.
 </div>
 
 ## CurrentMember
