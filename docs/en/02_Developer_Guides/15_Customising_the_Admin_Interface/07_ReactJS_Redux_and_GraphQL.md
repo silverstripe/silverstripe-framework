@@ -952,7 +952,7 @@ We use `Injector.query.register` to register our `readNotes` query as extensible
 
 #### Applying the injected query as a transformation
 
-The only missing piece now is to attach the `ReadNotes` injected query to the `NotesList` component. We could have done this using `injectGraphql` in the component itself, but instead, we'll do it as an Injector transformation. Why? There's a good chance whoever is customising the query will want to customise the UI of the component that is using that query. If someone adds a new field, it is likely the component should display that new field. Registering the GraphQL injection as a transformation will allow a thirdparty developer to override the UI of the component explicitly *after* the GraphQL query is attached. This is important, because otherwise, the component override would not be wired up to your data source.
+The only missing piece now is to attach the `ReadNotes` injected query to the `NotesList` component. We could have done this using `injectGraphql` in the `NotesList` component itself, but instead, we'll do it as an Injector transformation. Why? There's a good chance whoever is customising the query will want to customise the UI of the component that is using that query. If someone adds a new field to a query, it is likely the component should display that new field. Registering the GraphQL injection as a transformation will allow a thirdparty developer to override the UI of the component explicitly *after* the GraphQL query is attached. This is important, because otherwise, the component override would not be wired up to your data source.
 
 *myapp/client/registerDependencies.js*
 ```js
@@ -1000,7 +1000,7 @@ You can register this with `Injector`, too, but since it's already injected with
 
 #### Bootstrap and mount
 
-Since almost everything is in `Injector` now, our app definition is pretty trivial.
+Since almost everything is in `Injector` now, our mounting code is pretty trivial.
 
 *myapp/client/index.js*
 ```js
@@ -1034,7 +1034,7 @@ Injector.ready(() => {
 ```
 We register a callback with `Injector` to ensure that we don't attempt to render anything before the transformations have been applied. This would result in fatal errors, so be sure to wrap your mounting code in `Injector.ready()`.
 
-The `silverstripe/admin` module was generous enough to hang its `apolloClient` and`store` objects in the global namespace to be shared by other modules. We'll make use of those, and create our own app wrapped in `<ApolloProvider />`. We then make our app `Injector` aware by wrapping it with the `provideInjector` higher-order component.
+The `silverstripe/admin` module was generous enough to hang its `apolloClient` and `store` objects in the global namespace to be shared by other modules. We'll make use of those, and create our own app wrapped in `<ApolloProvider />`. We then make our app `Injector` aware by wrapping it with the `provideInjector` higher-order component.
 
 To mount the app, we use the `onmatch()`  event fired by entwine, and we're off and running.
 
@@ -1049,6 +1049,7 @@ We'll first need to apply the extension and update our GraphQL scaffolding.
 ```yaml
 MyApp\AwesomeNotes\Note:
   extensions:
+    # this extension adds a "Priority" field
     - MyOtherApp\NastyNotes\NoteExtension
 SilverStripe\GraphQL\Controller:
   schema:
@@ -1109,7 +1110,7 @@ Injector.transform(
 
 Let's now add an `AddForm` component to our list that lets the user create a new note.
 
-*myapp/client/App.js
+*myapp/client/App.js*
 ```js
 import React from 'react';
 import { inject } from 'lib/Injector';
@@ -1170,7 +1171,7 @@ const mutation = {
           mutate({
             variables: {
               Input: {
-                Content: title,
+                Content: content,
               }
             }
           });
