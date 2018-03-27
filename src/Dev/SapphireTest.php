@@ -37,6 +37,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 if (!class_exists(PHPUnit_Framework_TestCase::class)) {
     return;
@@ -1169,6 +1170,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected function resolveFixturePath($fixtureFilePath)
     {
+        // support loading via composer name path.
+        if (strpos($fixtureFilePath, ':') !== false) {
+            return ModuleResourceLoader::singleton()->resolvePath($fixtureFilePath);
+        }
+        
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
         $isRelativeToFile
