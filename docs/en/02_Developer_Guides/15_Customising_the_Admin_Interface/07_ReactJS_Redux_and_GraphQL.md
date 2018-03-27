@@ -872,14 +872,14 @@ First, let's break up the list into smaller components.
 import React from 'react';
 import { inject } from 'lib/Injector';
 
-const NotesList = ({ notes, ItemComponent }) => (
+const NotesList = ({ notes = [], ItemComponent }) => (
   <ul className="notes">
     {notes.map(note => <ItemComponent key={note.ID} note={note} />)}
   </ul>
 );
 
 export default inject(
-  ['NotesListItem']
+  ['NotesListItem'],
   (NotesListItem) => ({
     ItemComponent: NotesListItem
   })
@@ -915,6 +915,7 @@ const query = {
   templateName: READ,
   pluralName: 'Notes',
   pagination: false,
+  params: {},
   fields: [
     'Content',
     'ID'
@@ -1182,6 +1183,7 @@ const mutation = {
   templateName: CREATE,
   singularName: 'Note',
   pagination: false,
+  params: {},
   fields: [
     'Content',
     'ID'
@@ -1288,13 +1290,13 @@ Now we just need to register these transforms, and we're done!
 ```js
 //...
 import transformAddForm from './transformAddForm';
-import transformCreateNote from './transformReadNotes';
+import transformCreateNote from './transformCreateNote';
 
 Injector.transform(
   'noteslist-query-extension',
   (updater) => {
     //...
-    updater.component('NotesAddForm', transformAddForm);
+    updater.component('NoteAddForm', transformAddForm);
     updater.query('CreateNote', transformCreateNote);
   },
   { after: ['noteslist-graphql', 'notesaddform-graphql'] }
