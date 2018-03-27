@@ -867,7 +867,7 @@ The best thing you can do to make your code extensible is to use `Injector` earl
 
 First, let's break up the list into smaller components.
 
-*myapp/client/components/notesList.js*
+*myapp/client/components/NotesList.js*
 ```js
 import React from 'react';
 import { inject } from 'lib/Injector';
@@ -885,7 +885,7 @@ export default inject(
   })
 )(NotesList);
 ```
-*myapp/client/components/notesListItem.js*
+*myapp/client/components/NotesListItem.js*
 ```js
 import React from 'react';
 
