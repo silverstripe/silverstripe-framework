@@ -32,7 +32,7 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
  * [Bugtracker: Framework](https://github.com/silverstripe/silverstripe-framework/issues)
  * [Bugtracker: CMS](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Bugtracker: Installer](https://github.com/silverstripe/silverstripe-installer/issues)
- * [Forums](http://silverstripe.org/forums)
+ * [Forums](https://forum.silverstripe.org/)
  * [Developer Mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 	
 ## Attribution ##
