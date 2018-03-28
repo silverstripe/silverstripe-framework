@@ -11,7 +11,7 @@ use SilverStripe\Forms\CheckboxSetField;
  */
 class DBMultiEnum extends DBEnum
 {
-    public function __construct($name, $enum = null, $default = null)
+    public function __construct($name = null, $enum = null, $default = null)
     {
         // MultiEnum needs to take care of its own defaults
         parent::__construct($name, $enum, null);
