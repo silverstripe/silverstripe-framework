@@ -84,10 +84,12 @@ abstract class DBSchemaManager
 
     /**
      * Enable supression of database messages.
+     *
+     * @param bool $quiet
      */
-    public function quiet()
+    public function quiet($quiet = true)
     {
-        $this->supressOutput = true;
+        $this->supressOutput = $quiet;
     }
 
     /**

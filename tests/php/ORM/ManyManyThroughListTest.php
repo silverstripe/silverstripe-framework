@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
-use InvalidArgumentException;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -14,7 +14,11 @@ class ManyManyThroughListTest extends SapphireTest
     protected static $extra_dataobjects = [
         ManyManyThroughListTest\Item::class,
         ManyManyThroughListTest\JoinObject::class,
-        ManyManyThroughListTest\TestObject::class
+        ManyManyThroughListTest\TestObject::class,
+        ManyManyThroughListTest\PolyItem::class,
+        ManyManyThroughListTest\PolyJoinObject::class,
+        ManyManyThroughListTest\PolyObjectA::class,
+        ManyManyThroughListTest\PolyObjectB::class,
     ];
 
     protected function setUp()
@@ -184,5 +188,77 @@ class ManyManyThroughListTest extends SapphireTest
             ],
             $schema->manyManyComponent(ManyManyThroughListTest\Item::class, 'Objects')
         );
+    }
+
+    /**
+     * Note: polymorphic many_many support is currently experimental
+     */
+    public function testPolymorphicManyMany()
+    {
+        /** @var ManyManyThroughListTest\PolyObjectA $objA1 */
+        $objA1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectA::class, 'obja1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB1 */
+        $objB1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB2 */
+        $objB2 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb2');
+
+        // Test various parent class queries
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'item 2'],
+        ], $objA1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB2->Items());
+
+        // Test adding items
+        $newItem = new PolyItem();
+        $newItem->Title = 'New Item';
+        $objA1->Items()->add($newItem);
+        $objB2->Items()->add($newItem);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
+
+        // Test removing items
+        $item2 = $this->objFromFixture(ManyManyThroughListTest\PolyItem::class, 'child2');
+        $objA1->Items()->remove($item2);
+        $objB1->Items()->remove($item2);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
+
+        // Test set-by-id-list
+        $objB2->Items()->setByIDList([
+            $newItem->ID,
+            $this->idFromFixture(ManyManyThroughListTest\PolyItem::class, 'child1'),
+        ]);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
     }
 }

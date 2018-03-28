@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -25,14 +26,30 @@ class ManyManyThroughList extends RelationList
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
      *
+     * @param array $extraFields Ignored for ManyManyThroughList
+     * @param string $foreignClass 'from' class
+     * @param string $parentClass Parent class (should be subclass of 'from')
      * @example new ManyManyThroughList('Banner', 'PageBanner', 'BannerID', 'PageID');
      */
-    public function __construct($dataClass, $joinClass, $localKey, $foreignKey)
-    {
+    public function __construct(
+        $dataClass,
+        $joinClass,
+        $localKey,
+        $foreignKey,
+        $extraFields = [],
+        $foreignClass = null,
+        $parentClass = null
+    ) {
         parent::__construct($dataClass);
 
         // Inject manipulator
-        $this->manipulator = ManyManyThroughQueryManipulator::create($joinClass, $localKey, $foreignKey);
+        $this->manipulator = ManyManyThroughQueryManipulator::create(
+            $joinClass,
+            $localKey,
+            $foreignKey,
+            $foreignClass,
+            $parentClass
+        );
         $this->dataQuery->pushQueryManipulator($this->manipulator);
     }
 
@@ -64,7 +81,7 @@ class ManyManyThroughList extends RelationList
         }
 
         // Create parent record
-        $record =  parent::createDataObject($row);
+        $record = parent::createDataObject($row);
 
         // Create joined record
         if ($joinRow) {
@@ -145,6 +162,10 @@ class ManyManyThroughList extends RelationList
         if (is_numeric($item)) {
             $itemID = $item;
         } elseif ($item instanceof $this->dataClass) {
+            /** @var DataObject $item */
+            if (!$item->isInDB()) {
+                $item->write();
+            }
             $itemID = $item->ID;
         } else {
             throw new InvalidArgumentException(
@@ -152,7 +173,7 @@ class ManyManyThroughList extends RelationList
             );
         }
         if (empty($itemID)) {
-            throw new InvalidArgumentException("ManyManyThroughList::add() doesn't accept unsaved records");
+            throw new InvalidArgumentException("ManyManyThroughList::add() could not add record without ID");
         }
 
         // Validate foreignID
@@ -169,7 +190,8 @@ class ManyManyThroughList extends RelationList
 
         // Update existing records
         $localKey = $this->manipulator->getLocalKey();
-        $foreignKey = $this->manipulator->getForeignKey();
+        // Foreign key (or key for ID field if polymorphic)
+        $foreignKey = $this->manipulator->getForeignIDKey();
         $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
         $records = $hasManyList->filter($localKey, $itemID);
         /** @var DataObject $record */
@@ -185,12 +207,27 @@ class ManyManyThroughList extends RelationList
             unset($foreignIDsToAdd[$foreignID]);
         }
 
-        // Once existing records are updated, add missing mapping records
-        foreach ($foreignIDsToAdd as $foreignID) {
-            $record = $hasManyList->createDataObject($extraFields ?: []);
-            $record->$foreignKey = $foreignID;
-            $record->$localKey = $itemID;
-            $record->write();
+        // Check if any records remain to add
+        if (empty($foreignIDsToAdd)) {
+            return;
         }
+
+        // Add item to relation
+        $hasManyList = $hasManyList->forForeignID($foreignIDsToAdd);
+        $record = $hasManyList->createDataObject($extraFields ?: []);
+        $record->$localKey = $itemID;
+        $hasManyList->add($record);
+    }
+
+    /**
+     * Get extra fields used by this list
+     *
+     * @return array a map of field names to types
+     */
+    public function getExtraFields()
+    {
+        // Inherit config from join table
+        $joinClass = $this->manipulator->getJoinClass();
+        return Config::inst()->get($joinClass, 'db');
     }
 }

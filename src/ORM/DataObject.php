@@ -104,6 +104,7 @@ use stdClass;
  * @property string $ClassName Class name of the DataObject
  * @property string $LastEdited Date and time of DataObject's last modification.
  * @property string $Created Date and time of DataObject creation.
+ * @property string $ObsoleteClassName If ClassName no longer exists this will be set to the legacy value
  */
 class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider, Resettable
 {
@@ -1982,7 +1983,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     $manyMany['join'],
                     $manyMany['parentField'], // Reversed parent / child field
                     $manyMany['childField'], // Reversed parent / child field
-                    $extraFields
+                    $extraFields,
+                    $manyMany['childClass'], // substitute child class for parentClass
+                    $remoteClass // In case ManyManyThroughList needs to use PolymorphicHasManyList internally
                 );
                 $this->extend('updateManyManyComponents', $result);
 
@@ -2040,9 +2043,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $manyManyComponent['join'],
             $manyManyComponent['childField'],
             $manyManyComponent['parentField'],
-            $extraFields
+            $extraFields,
+            $manyManyComponent['parentClass'],
+            static::class // In case ManyManyThroughList needs to use PolymorphicHasManyList internally
         );
-
 
         // Store component data in query meta-data
         $result = $result->alterDataQuery(function ($query) use ($extraFields) {

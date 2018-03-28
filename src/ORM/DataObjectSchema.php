@@ -949,7 +949,8 @@ class DataObjectSchema
                 'relationClass' => ManyManyThroughList::class,
                 'parentClass' => $parentClass,
                 'childClass' => $joinChildClass,
-                'parentField' => $specification['from'] . 'ID',
+                /** @internal Polymorphic many_many is experimental */
+                'parentField' => $specification['from'] . ($parentClass === DataObject::class ? '' : 'ID'),
                 'childField' => $specification['to'] . 'ID',
                 'join' => $joinClass,
             ];
@@ -991,9 +992,17 @@ class DataObjectSchema
         if (!$otherManyMany) {
             return null;
         }
-        foreach ($otherManyMany as $inverseComponentName => $nextClass) {
-            if ($nextClass === $parentClass) {
+        foreach ($otherManyMany as $inverseComponentName => $manyManySpec) {
+            // Normal many-many
+            if ($manyManySpec === $parentClass) {
                 return $inverseComponentName;
+            }
+            // many-many through, inspect 'to' for the many_many
+            if (is_array($manyManySpec)) {
+                $toClass = $this->hasOneComponent($manyManySpec['through'], $manyManySpec['to']);
+                if ($toClass === $parentClass) {
+                    return $inverseComponentName;
+                }
             }
         }
         return null;
@@ -1115,7 +1124,13 @@ class DataObjectSchema
         }
 
         // Check for polymorphic
+        /** @internal Polymorphic many_many is experimental */
         if ($relationClass === DataObject::class) {
+            // Currently polymorphic 'from' is supported.
+            if ($key === 'from') {
+                return $relationClass;
+            }
+            // @todo support polymorphic 'to'
             throw new InvalidArgumentException(
                 "many_many through relation {$parentClass}.{$component} {$key} references a polymorphic field "
                 . "{$joinClass}::{$relation} which is not supported"

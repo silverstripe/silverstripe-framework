@@ -44,6 +44,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
     /**
      * Set this to true on your sub-class to use the draft site by default for every test in this class.
      *
+     * @deprecated 4.2..5.0 Use ?stage=Stage in your ->get() querystring requests instead
      * @var bool
      */
     protected static $use_draft_site = false;
@@ -99,6 +100,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
         $this->logOut();
 
         // Switch to draft site, if necessary
+        // If you rely on this you should be crafting stage-specific urls instead though.
         if (static::get_use_draft_site()) {
             $this->useDraftSite();
         }
@@ -264,7 +266,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws \PHPUnit\Framework\AssertionFailedError
      */
     public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -301,7 +303,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matching tags as an array
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws \PHPUnit\Framework\AssertionFailedError
      */
     public function assertExactMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -336,7 +338,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws \PHPUnit\Framework\AssertionFailedError
      */
     public function assertPartialHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -374,7 +376,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matched tags as an array
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws \PHPUnit\Framework\AssertionFailedError
      */
     public function assertExactHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -401,16 +403,18 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.
      *
+     * @deprecated 4.2..5.0 Use ?stage=Stage querystring arguments instead of useDraftSite
      * @param bool $enabled toggle the use of the draft site
      */
     public function useDraftSite($enabled = true)
     {
+        Deprecation::notice('5.0', 'Use ?stage=Stage querystring arguments instead of useDraftSite');
         if ($enabled) {
             $this->session()->set('readingMode', 'Stage.Stage');
             $this->session()->set('unsecuredDraftSite', true);
         } else {
-            $this->session()->set('readingMode', 'Stage.Live');
-            $this->session()->set('unsecuredDraftSite', false);
+            $this->session()->clear('readingMode');
+            $this->session()->clear('unsecuredDraftSite');
         }
     }
 
@@ -423,6 +427,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
     }
 
     /**
+     * @deprecated 4.2..5.0 Use ?stage=Stage in your querystring arguments instead
      * @return bool
      */
     public static function get_use_draft_site()

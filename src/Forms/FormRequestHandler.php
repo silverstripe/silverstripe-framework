@@ -85,15 +85,15 @@ class FormRequestHandler extends RequestHandler
 
         // Respect FormObjectLink() method
         if ($controller->hasMethod("FormObjectLink")) {
-            return Controller::join_links(
-                $controller->FormObjectLink($this->form->getName()),
-                $action,
-                '/'
-            );
+            $base = $controller->FormObjectLink($this->form->getName());
+        } else {
+            $base = Controller::join_links($controller->Link(), $this->form->getName());
         }
 
-        // Default form link
-        return Controller::join_links($controller->Link(), $this->form->getName(), $action, '/');
+        // Join with action and decorate
+        $link = Controller::join_links($base, $action, '/');
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**

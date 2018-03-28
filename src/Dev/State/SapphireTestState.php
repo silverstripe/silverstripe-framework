@@ -3,7 +3,6 @@
 namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 
 class SapphireTestState implements TestState

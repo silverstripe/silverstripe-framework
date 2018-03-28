@@ -641,7 +641,7 @@ The `addValidation()` function takes a callback, with an instance of `FormValida
 
 ## Using Injector to customise Redux state data
 
-Before starting this tutorial, you should become familiar with the concepts of [Immutability](https://www.sitepoint.com/immutability-javascript/) and [Redux](http://reduxjs.org).
+Before starting this tutorial, you should become familiar with the concepts of [Immutability](https://www.sitepoint.com/immutability-javascript/) and [Redux](http://redux.js.org).
 
 The examples use [Spread in object literals](http://redux.js.org/docs/recipes/UsingObjectSpreadOperator.html) which is at this moment in Stage 3 Proposal. If you're more comfortable with using
  the `Object.assign()` API that shouldn't present any problems and should work the same.

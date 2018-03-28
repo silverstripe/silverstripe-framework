@@ -45,7 +45,7 @@ This factory allows us you to globally define an adapter for all cache instances
 
 
 ```php
-use Psr\SimpleCache\CacheInterface
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
 
 $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
@@ -202,10 +202,11 @@ SilverStripe\Core\Injector\Injector:
     class: 'Memcached'
     calls:
       - [ addServer, [ 'localhost', 11211 ] ]
-  SilverStripe\Core\Cache\CacheFactory:
+  MemcachedCacheFactory:
     class: 'SilverStripe\Core\Cache\MemcachedCacheFactory'
     constructor:
-      client: '%$MemcachedClient
+      client: '%$MemcachedClient'
+  SilverStripe\Core\Cache\CacheFactory: '%$MemcachedCacheFactory'
 ```
 
 ## Additional Caches
