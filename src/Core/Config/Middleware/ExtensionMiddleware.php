@@ -39,7 +39,7 @@ class ExtensionMiddleware implements Middleware
         }
 
         foreach ($this->getExtraConfig($class, $config, $excludeMiddleware) as $extra) {
-            $config = Priority::mergeArray($extra, $config);
+            $config = Priority::mergeArray($config, $extra);
         }
         return $config;
     }
