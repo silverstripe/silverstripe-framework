@@ -1884,7 +1884,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Notes on behaviour:
      *  - This can still be used on components that are defined on both sides, but do not need to be.
      *  - All has_ones on remote class will be treated as local has_many, even if they are belongs_to
-     *  - Cannot be used on polymorphic relationships
+     *  - Polymorphic relationships do not have two natural endpoints (only on one side)
+     *   and thus attempting to infer them will return nothing.
      *  - Cannot be used on unsaved objects.
      *
      * @param string $remoteClass
@@ -1911,14 +1912,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $remoteRelation
             ));
         }
+        // If relation is polymorphic, do not infer recriprocal relationship
         if ($class === self::class) {
-            throw new InvalidArgumentException(sprintf(
-                "%s cannot generate opposite component of relation %s.%s as it is polymorphic. " .
-                "This method does not support polymorphic relationships",
-                __METHOD__,
-                $remoteClass,
-                $remoteRelation
-            ));
+            return null;
         }
         if (!is_a($this, $class, true)) {
             throw new InvalidArgumentException(sprintf(
@@ -1950,14 +1946,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     $relationType,
                     $polymorphic
                 );
+                // If relation is polymorphic, do not infer recriprocal relationship automatically
                 if ($polymorphic) {
-                    throw new InvalidArgumentException(sprintf(
-                        "%s cannot generate opposite component of relation %s.%s, as the other end appears" .
-                        "to be a has_one polymorphic. This method does not support polymorphic relationships",
-                        __METHOD__,
-                        $remoteClass,
-                        $remoteRelation
-                    ));
+                    return null;
                 }
                 $joinID = $this->getField($joinField);
                 if (empty($joinID)) {
