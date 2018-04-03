@@ -37,6 +37,11 @@ class LogoutHandler extends RequestHandler
         'LogoutForm'
     ];
 
+    /**
+     * @config
+     * @var bool
+     */
+    private static $confirm_logout = true;
 
     /**
      * Log out form handler method
@@ -54,7 +59,7 @@ class LogoutHandler extends RequestHandler
 
         // If the user doesn't have a security token, show them a form where they can get one.
         // This protects against nuisance CSRF attacks to log out users.
-        if ($member && !SecurityToken::inst()->checkRequest($this->getRequest())) {
+        if ($member && self::config()->get('confirm_logout') && !SecurityToken::inst()->checkRequest($this->getRequest())) {
             Security::singleton()->setSessionMessage(
                 _t(
                     'SilverStripe\\Security\\Security.CONFIRMLOGOUT',
