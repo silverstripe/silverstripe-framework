@@ -10,8 +10,7 @@ use SilverStripe\Forms\SelectionGroup;
 
 class SelectionGroupTest extends SapphireTest
 {
-
-    function testFieldHolder()
+    public function testFieldHolder()
     {
         $items = array(
             new SelectionGroup_Item(
@@ -41,7 +40,7 @@ class SelectionGroupTest extends SapphireTest
         $this->assertContains('two view', (string)$listElTwo->div);
     }
 
-    function testSelectedFieldHolder()
+    public function testSelectedFieldHolder()
     {
         $items = array(
             new SelectionGroup_Item(
@@ -68,7 +67,7 @@ class SelectionGroupTest extends SapphireTest
         $this->assertEquals('selected', (string)$listElTwo->attributes()->class);
     }
 
-    function testLegacyItemsFieldHolder()
+    public function testLegacyItemsFieldHolder()
     {
         $items = array(
             'one' => new LiteralField('one', 'one view'),
@@ -87,7 +86,7 @@ class SelectionGroupTest extends SapphireTest
         $this->assertEquals(' two', (string)$listElTwo->label[0]);
     }
 
-    function testLegacyItemsFieldHolderWithTitle()
+    public function testLegacyItemsFieldHolderWithTitle()
     {
         $items = array(
             'one//one title' => new LiteralField('one', 'one view'),
