@@ -6,9 +6,9 @@
 			$RadioLabel
 			$FieldHolder
 		</li>
-	</ul>
 	<% end_if %>
 	<% end_loop %>
+	</ul>
 <% else %>
 	<ul class="SelectionGroup<% if extraClass %> $extraClass<% end_if %>">
 	<% loop $FieldSet %>

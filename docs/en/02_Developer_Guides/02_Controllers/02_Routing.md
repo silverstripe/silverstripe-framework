@@ -204,10 +204,9 @@ class FeedController extends ContentController
         /* more processing goes here */
     }
 }
+```
 
-The YAML rule, in contrast, is simple. It needs to provide only enough
-information for the framework to choose the desired controller.
-
+The YAML rule, in contrast, is simple. It needs to provide only enough information for the framework to choose the desired controller.
 
 ```yml
 Director:
@@ -218,6 +217,7 @@ Director:
 ## Related Lessons
 * [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)
 * [Controller actions / DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
+
 ## Links
 
 * [Controller](api:SilverStripe\Control\Controller) API documentation
