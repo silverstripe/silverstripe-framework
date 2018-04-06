@@ -25,7 +25,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 abstract class DBComposite extends DBField
 {
-
     /**
      * Similiar to {@link DataObject::$db},
      * holds an array of composite field names.
@@ -43,6 +42,27 @@ abstract class DBComposite extends DBField
      * @var array|DataObject
      */
     protected $record = array();
+
+    public function __set($property, $value)
+    {
+        // Prevent failover / extensions from hijacking composite field setters
+        // by intentionally avoiding hasMethod()
+        if ($this->hasField($property) && !method_exists($this, "set$property")) {
+            $this->setField($property, $value);
+            return;
+        }
+        parent::__set($property, $value);
+    }
+
+    public function __get($property)
+    {
+        // Prevent failover / extensions from hijacking composite field getters
+        // by intentionally avoiding hasMethod()
+        if ($this->hasField($property) && !method_exists($this, "get$property")) {
+            return $this->getField($property);
+        }
+        return parent::__get($property);
+    }
 
     /**
      * Write all nested fields into a manipulation
@@ -243,7 +263,7 @@ abstract class DBComposite extends DBField
         // Non-db fields get assigned as normal properties
         if (!$this->hasField($field)) {
             parent::setField($field, $value);
-            
+
             return $this;
         }
 
