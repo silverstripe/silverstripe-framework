@@ -53,10 +53,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
     {
         $chain = new ConfirmationTokenChain();
         $chain->pushToken(new URLConfirmationToken('dev/build', $request));
-
-        foreach (['isTest', 'isDev', 'flush'] as $parameter) {
-            $chain->pushToken(new ParameterConfirmationToken($parameter, $request));
-        }
+        $chain->pushToken(new ParameterConfirmationToken('flush', $request));
 
         return $chain;
     }

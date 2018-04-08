@@ -269,35 +269,12 @@ abstract class BaseKernel implements Kernel
             return $this->enviroment;
         }
 
-        // Check saved session
-        $env = $this->sessionEnvironment();
-        if ($env) {
-            return $env;
-        }
-
         // Check getenv
         if ($env = Environment::getEnv('SS_ENVIRONMENT_TYPE')) {
             return $env;
         }
 
         return self::LIVE;
-    }
-
-    /**
-     * Check or update any temporary environment specified in the session.
-     *
-     * @return null|string
-     *
-     * @deprecated 5.0 Use Director::get_session_environment_type() instead
-     */
-    protected function sessionEnvironment()
-    {
-        if (!$this->booted) {
-            // session is not initialyzed yet, neither is manifest
-            return null;
-        }
-
-        return Director::get_session_environment_type();
     }
 
     abstract public function boot($flush = false);
