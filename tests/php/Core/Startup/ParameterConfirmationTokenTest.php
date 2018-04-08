@@ -20,17 +20,17 @@ class ParameterConfirmationTokenTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        $_GET = [];
-        $_GET['parameterconfirmationtokentest_notoken'] = 'value';
-        $_GET['parameterconfirmationtokentest_empty'] = '';
-        $_GET['parameterconfirmationtokentest_withtoken'] = '1';
-        $_GET['parameterconfirmationtokentest_withtokentoken'] = 'dummy';
-        $_GET['parameterconfirmationtokentest_nulltoken'] = '1';
-        $_GET['parameterconfirmationtokentest_nulltokentoken'] = null;
-        $_GET['parameterconfirmationtokentest_emptytoken'] = '1';
-        $_GET['parameterconfirmationtokentest_emptytokentoken'] = '';
-        $_GET['BackURL'] = 'page?parameterconfirmationtokentest_backtoken=1';
-        $this->request = new HTTPRequest('GET', 'anotherpage', $_GET);
+        $get = [];
+        $get['parameterconfirmationtokentest_notoken'] = 'value';
+        $get['parameterconfirmationtokentest_empty'] = '';
+        $get['parameterconfirmationtokentest_withtoken'] = '1';
+        $get['parameterconfirmationtokentest_withtokentoken'] = 'dummy';
+        $get['parameterconfirmationtokentest_nulltoken'] = '1';
+        $get['parameterconfirmationtokentest_nulltokentoken'] = null;
+        $get['parameterconfirmationtokentest_emptytoken'] = '1';
+        $get['parameterconfirmationtokentest_emptytokentoken'] = '';
+        $get['BackURL'] = 'page?parameterconfirmationtokentest_backtoken=1';
+        $this->request = new HTTPRequest('GET', 'anotherpage', $get);
         $this->request->setSession(new Session([]));
     }
 
@@ -129,11 +129,6 @@ class ParameterConfirmationTokenTest extends SapphireTest
             $this->request
         );
         $this->assertEquals('parameterconfirmationtokentest_backtoken', $token->getName());
-
-        // Test prepare_tokens() unsets $_GET vars
-        $this->assertArrayNotHasKey('parameterconfirmationtokentest_notoken', $_GET);
-        $this->assertArrayNotHasKey('parameterconfirmationtokentest_empty', $_GET);
-        $this->assertArrayNotHasKey('parameterconfirmationtokentest_noparam', $_GET);
     }
 
     public function dataProviderURLs()

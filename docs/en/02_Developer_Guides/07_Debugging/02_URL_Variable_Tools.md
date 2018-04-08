@@ -19,14 +19,12 @@ session variables, used templates and much more.
  | URL Variable | | Values | | Description                                                     | 
  | ------------ | | ------ | | -----------                                                     | 
  | flush        | | 1      | | Clears out all caches. Used mainly during development, e.g. when adding new classes or templates. Requires "dev" mode or ADMIN login |
- | showtemplate | | 1      | | Show the compiled version of all the templates used, including line numbers.  Good when you have a syntax error in a template. Cannot be used on a Live site without **isDev**. |
+ | showtemplate | | 1      | | Show the compiled version of all the templates used, including line numbers.  Good when you have a syntax error in a template. Cannot be used on a Live site. |
 
 ## General Testing
 
  | URL Variable  | | Values | | Description                                                | 
  | ------------  | | ------ | | -----------                                                | 
- | isDev         | | 1      | | Put the site into [development mode](../), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in. Will persist for the current browser session. | 
- | isTest        | | 1      | | See above. | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
  | debug_request | | 1      | | Show all steps of the request from initial [HTTPRequest](api:SilverStripe\Control\HTTPRequest) to [Controller](api:SilverStripe\Control\Controller) to Template Rendering  | 
 

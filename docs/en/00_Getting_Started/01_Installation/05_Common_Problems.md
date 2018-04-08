@@ -8,13 +8,28 @@ This first and foremost means that your environment is set to "live mode" (see [
 detailed error messages for security reasons. You'll typically need to get your environment into "dev mode" to see more
 information.
 
-If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL to temporarily set your browsing session into
-"dev mode". If you can't log-in in the first place because of the error, please
-configure an `SS_ENVIRONMENT_TYPE` through [environment-management] (don't forget to remove it afterwards!).
+It is highly recommended that you have separate environments for debugging issues, in order
+to prevent vulnerability disclosure on your live site.
+
+However, if you are unable to replicate your issue on a secure test environment, you can
+configure your live site to display verbose errors with the below YML.
+
+```yaml
+---
+Name: project-live-logging
+After: live-logging
+Except:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Monolog\Handler\HandlerInterface:
+    properties:
+      DefaultFormatter: '%$Monolog\Formatter\FormatterInterface.detailed'
+```
 
 <div class="warning" markdown='1'>
-On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly
-(and potentially security sensitive) PHP errors as well.
+Note: It is only recommended to enable this feature for short periods of time, and
+only if necessary to debug issues that cannot be safely reproduced in a separate environment.
 </div>
 
 ## mod_rewrite isn't working but it's installed (prior to SilverStripe 3.1.11)
