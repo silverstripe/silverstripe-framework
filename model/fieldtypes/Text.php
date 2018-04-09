@@ -32,6 +32,8 @@ class Text extends StringField {
 		'LimitWordCountXML' => 'HTMLText',
 	);
 
+	private static $auto_indexable = false;
+
 	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()

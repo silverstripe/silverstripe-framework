@@ -1789,7 +1789,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = $result->alterDataQuery(function($query) use ($extraFields) {
 			$query->setQueryParam('Component.ExtraFields', $extraFields);
 		});
-		
+
 		if($this->model) $result->setDataModel($this->model);
 
 		$this->extend('updateManyManyComponents', $result);
@@ -3421,7 +3421,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						continue;
 					}
 
-					if ($this->hasOwnTableDatabaseField($column) && !array_key_exists($column, $indexes)) {
+					list($fieldType) = SS_Object::parse_class_spec($this->db($column));
+					$isAutoIndexable = (Config::inst()->get($fieldType, 'auto_indexable')
+						|| Config::inst()->get("DB{$fieldType}", 'auto_indexable'));
+
+					if (
+						$this->hasOwnTableDatabaseField($column)
+						&& !array_key_exists($column, $indexes)
+						&& $isAutoIndexable
+					) {
 						$indexes[$column] = true;
 					}
 				} catch (InvalidArgumentException $e) { }
@@ -3754,7 +3762,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function summaryFields() {
 		$rawFields = $this->stat('summary_fields');
-	
+
 		$fields = array();
 		// Merge associative / numeric keys
 		if (is_array($rawFields)) {
