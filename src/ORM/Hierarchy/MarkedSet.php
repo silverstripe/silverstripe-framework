@@ -333,7 +333,7 @@ class MarkedSet
         $parentNode->setField('markingClasses', $this->markingClasses($data['node']));
 
         // Evaluate custom context
-        if (is_callable($context)) {
+        if (!is_array($context) && is_callable($context)) {
             $context = call_user_func($context, $data['node']);
         }
         if ($context) {
