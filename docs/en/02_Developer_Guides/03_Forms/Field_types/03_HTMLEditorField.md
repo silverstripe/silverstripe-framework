@@ -196,28 +196,60 @@ The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media ser
 representation of files just by referencing a website URL. For example, a content author can insert a playable youtube 
 video just by knowing its URL, as opposed to dealing with manual HTML code.
 
-oEmbed powers the "Insert from web" feature available through [HtmlEditorField](api:SilverStripe\Forms\HTMLEditor\HtmlEditorField). Internally, it makes HTTP 
-queries to a list of external services if it finds a matching URL. These services are described in the 
-`Oembed.providers` configuration. Since these requests are performed on page rendering, they typically have a long 
-cache time (multiple days). 
+oEmbed powers the "Insert from web" feature available through 
+[HtmlEditorField](api:SilverStripe\Forms\HTMLEditor\HtmlEditorField). Internally this service is provided
+by the [embed](https://github.com/oscarotero/Embed) library.
 
-<div class="info" markdown="1">
-To refresh a oEmbed cache, append `?flush=1` to a URL.
-</div>
+To disable oembed you will need to follow the below to remove the plugin from tinymce, as well
+as disabling the internal service via yml:
 
-To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
+```yaml
+---
+Name: oembed-disable
+---
+SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory:
+  enabled: false
+```
+
+```php
+HtmlEditorConfig::get('cms')->disablePlugins('ssembed');
+```
 
 ## Limiting oembed URLs
 
 HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
 inserting files for use with oembed.
 
-This is performed through the config variables [RemoteFileFormFactory::$fileurl_scheme_whitelist](api:SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory::$fileurl_scheme_whitelist) and
-[RemoteFileFormFactory::$fileurl_domain_whitelist](api:SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory::$fileurl_domain_whitelist).
+This is performed through the config variables on the 
+[RemoteFileFormFactory](api:SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory) class:
 
-Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
-lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
-wildcards are currently supported).
+```yaml
+---
+Name: oembed-restrictions
+---
+SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory:
+  fileurl_scheme_whitelist:
+    - https
+    - http
+  fileurl_scheme_blacklist:
+    - ftp
+  fileurl_domain_whitelist:
+    - google.com
+  fileurl_domain_blacklist:
+    - localhost
+  fileurl_port_whitelist:
+    - 80
+    - 443
+  fileurl_port_blacklist:
+    - 23
+```
+
+This allows a white or blacklist to be applied to schema, domain, or port (if provided). Note that
+both blacklist and whitelist need to match, and are only ignored if the rules are empty for any
+of the above values.
+
+By default live sites (SS_ENVIRONMENT_TYPE="live") will not attempt to resolve oembed urls that
+point to localhost to protect your site from cross site request forgery.
 
 ### Doctypes
 
