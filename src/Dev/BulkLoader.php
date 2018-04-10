@@ -223,19 +223,30 @@ abstract class BulkLoader extends ViewableData
      **/
     public function getImportSpec()
     {
-        $spec = array();
+        $singleton = DataObject::singleton($this->objectClass);
 
         // get database columns (fieldlabels include fieldname as a key)
         // using $$includerelations flag as false, so that it only contain $db fields
-        $spec['fields'] = (array)singleton($this->objectClass)->fieldLabels(false);
+        $fields = (array)$singleton->fieldLabels(false);
 
-        $has_ones = singleton($this->objectClass)->hasOne();
-        $has_manys = singleton($this->objectClass)->hasMany();
-        $many_manys = singleton($this->objectClass)->manyMany();
+        // Merge relations
+        $relations = array_merge(
+            $singleton->hasOne(),
+            $singleton->hasMany(),
+            $singleton->manyMany()
+        );
 
-        $spec['relations'] = (array)$has_ones + (array)$has_manys + (array)$many_manys;
+        // Ensure description is string (e.g. many_many through)
+        foreach ($relations as $name => $desc) {
+            if (!is_string($desc)) {
+                $relations[$name] = $name;
+            }
+        }
 
-        return $spec;
+        return [
+            'fields' => $fields,
+            'relations' => $relations,
+        ];
     }
 
     /**
