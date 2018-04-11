@@ -112,7 +112,7 @@ class Environment
      *
      * @param string|float $memoryLimit Memory limit string or float value
      */
-    static function setMemoryLimitMax($memoryLimit)
+    public static function setMemoryLimitMax($memoryLimit)
     {
         if (isset($memoryLimit) && !is_numeric($memoryLimit)) {
             $memoryLimit = Convert::memstring2bytes($memoryLimit);

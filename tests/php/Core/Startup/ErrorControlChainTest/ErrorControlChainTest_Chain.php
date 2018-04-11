@@ -45,7 +45,7 @@ class ErrorControlChainTest_Chain extends ErrorControlChain
         return parent::translateMemstring($memstring);
     }
 
-    function executeInSubprocess($includeStderr = false)
+    public function executeInSubprocess($includeStderr = false)
     {
         // Get the path to the ErrorControlChain class
         $erroControlClass = 'SilverStripe\\Core\\Startup\\ErrorControlChain';

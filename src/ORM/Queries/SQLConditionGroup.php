@@ -16,5 +16,5 @@ interface SQLConditionGroup
      * @param array $parameters Out list of parameters
      * @return string The complete SQL string for this item
      */
-    function conditionSQL(&$parameters);
+    public function conditionSQL(&$parameters);
 }

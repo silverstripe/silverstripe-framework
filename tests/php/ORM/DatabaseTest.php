@@ -82,7 +82,7 @@ class DatabaseTest extends SapphireTest
         );
     }
 
-    function testIsSchemaUpdating()
+    public function testIsSchemaUpdating()
     {
         $schema = DB::get_schema();
 

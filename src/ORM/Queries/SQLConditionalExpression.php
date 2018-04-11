@@ -48,7 +48,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
      * @param array $where An array of WHERE clauses.
      */
-    function __construct($from = array(), $where = array())
+    public function __construct($from = array(), $where = array())
     {
         $this->setFrom($from);
         $this->setWhere($where);

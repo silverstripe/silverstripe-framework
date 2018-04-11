@@ -435,7 +435,7 @@ class DBHTMLTextTest extends SapphireTest
         );
     }
 
-    function testExists()
+    public function testExists()
     {
         $h = new DBHTMLText();
         $h->setValue("");
@@ -444,7 +444,7 @@ class DBHTMLTextTest extends SapphireTest
         $this->assertTrue($h->exists());
     }
 
-    function testWhitelist()
+    public function testWhitelist()
     {
         $textObj = new DBHTMLText('Test', ['whitelist'=> 'meta,link']);
         $this->assertEquals(

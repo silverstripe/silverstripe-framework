@@ -13,7 +13,6 @@
 		<exclude name="PSR2.ControlStructures.SwitchDeclaration.WrongOpenerdefault" />
 		<exclude name="PSR2.ControlStructures.SwitchDeclaration.TerminatingComment" />
 		<exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
-		<exclude name="Squiz.Scope.MethodScope" />
 		<exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
 		<exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />
 	</rule>

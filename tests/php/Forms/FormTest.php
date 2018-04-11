@@ -850,7 +850,7 @@ class FormTest extends FunctionalTest
         $this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
     }
 
-    function testMessageEscapeHtml()
+    public function testMessageEscapeHtml()
     {
         $form = $this->getStubForm();
         $form->setMessage('<em>Escaped HTML</em>', 'good', ValidationResult::CAST_TEXT);

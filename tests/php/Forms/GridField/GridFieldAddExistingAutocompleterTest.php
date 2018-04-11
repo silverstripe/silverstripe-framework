@@ -49,7 +49,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         );
     }
 
-    function testSearch()
+    public function testSearch()
     {
         $team2 = $this->objFromFixture(Team::class, 'team2');
 
