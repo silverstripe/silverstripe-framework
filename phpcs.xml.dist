@@ -8,10 +8,6 @@
 		<exclude name="PSR1.Methods.CamelCapsMethodName" />
 		<exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
 		<exclude name="PSR2.Classes.PropertyDeclaration" />
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration" /> <!-- causes php notice while linting -->
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration.WrongOpenercase" />
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration.WrongOpenerdefault" />
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration.TerminatingComment" />
 		<exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
 		<exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
 		<exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />

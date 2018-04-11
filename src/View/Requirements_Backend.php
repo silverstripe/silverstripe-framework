@@ -1266,8 +1266,8 @@ class Requirements_Backend
             // that the file is included in the correct location (regardless of which files are blocked).
             $included = false;
             switch ($type) {
-                case 'css': {
-                    $newCSS = array(); // Assoc array of css file => spec
+                case 'css':
+                    $newCSS = []; // Assoc array of css file => spec
                     foreach ($this->getAllCSS() as $css => $spec) {
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
@@ -1279,8 +1279,7 @@ class Requirements_Backend
                     }
                     $this->css = $newCSS;
                     break;
-                }
-                case 'js': {
+                case 'js':
                     // Assoc array of file => attributes
                     $newJS = array();
                     foreach ($this->getAllJavascript() as $script => $attributes) {
@@ -1294,7 +1293,6 @@ class Requirements_Backend
                     }
                     $this->javascript = $newJS;
                     break;
-                }
             }
         }
     }

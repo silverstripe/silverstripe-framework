@@ -9,7 +9,7 @@ if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABA
     // The default settings let us define the database config via environment vars
     // Database connection, including PDO and legacy ORM support
     switch (Environment::getEnv('DB')) {
-        case "PGSQL";
+        case "PGSQL":
             $pgDatabaseClass = Environment::getEnv('PDO') ? 'PostgrePDODatabase' : 'PostgreSQLDatabase';
             Environment::setEnv('SS_DATABASE_CLASS', $pgDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'postgres');
@@ -29,6 +29,7 @@ if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABA
             Environment::setEnv('SS_DATABASE_CLASS', $mysqlDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'root');
             Environment::setEnv('SS_DATABASE_PASSWORD', '');
+            break;
     }
 
     Environment::setEnv('SS_DATABASE_CHOOSE_NAME', 'true');
