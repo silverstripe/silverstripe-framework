@@ -95,7 +95,8 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->expectException(HTTPResponse_Exception::class);
         $this->expectExceptionMessage(_t(
             "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-            "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
+            "There seems to have been a technical problem. Please click the back button, "
+            . "refresh your browser, and try again."
         ));
         $this->expectExceptionCode(400);
         $stateID = 'testGridStateActionField';
@@ -171,13 +172,17 @@ class GridFieldDeleteActionTest extends SapphireTest
             'url',
             array(),
             array(
-                'action_gridFieldAlterAction?StateID=' . $stateID=>true,
+                'action_gridFieldAlterAction?StateID=' . $stateID => true,
                 $token->getName() => $token->getValue(),
             )
         );
         $request->setSession($session);
-        $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
-        $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
+        $this->gridField->gridFieldAlterAction(['StateID' => $stateID], $this->form, $request);
+        $this->assertCount(
+            2,
+            $this->list,
+            'User should be able to delete records with ADMIN permission.'
+        );
     }
 
     public function testDeleteActionRemoveRelation()
@@ -212,6 +217,10 @@ class GridFieldDeleteActionTest extends SapphireTest
         );
         $request->setSession($session);
         $gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
-        $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
+        $this->assertCount(
+            2,
+            $this->list,
+            'User should be able to delete records with ADMIN permission.'
+        );
     }
 }

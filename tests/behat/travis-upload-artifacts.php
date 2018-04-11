@@ -83,7 +83,10 @@ run("curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/insta
 echo "Creating {$artifactsPath}index.html...\n";
 
 $html = '<html><head></head><body><ul>';
-$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(realpath($artifactsPath)), RecursiveIteratorIterator::SELF_FIRST);
+$objects = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator(realpath($artifactsPath)),
+    RecursiveIteratorIterator::SELF_FIRST
+);
 foreach ($objects as $name => $object) {
     if ($object->isDir()) {
         continue;

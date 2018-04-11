@@ -198,7 +198,8 @@ PHP
         $controller = $controller->customise(array(
             'Content' => DBField::create_field(DBHTMLText::class, _t(
                 __CLASS__ . '.SUCCESSCONTENT',
-                '<p>Login success. If you are not automatically redirected ' . '<a target="_top" href="{link}">click here</a></p>',
+                '<p>Login success. If you are not automatically redirected '
+                . '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',
                 array('link' => Convert::raw2att($backURL))
             ))

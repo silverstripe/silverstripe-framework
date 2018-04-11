@@ -53,8 +53,8 @@ class FormActionController extends Controller implements TestOnly
 
     /**
      * @param array $data
-     * @param Form  $form Made optional to simulate error behaviour in "live" environment (missing arguments don't throw a fatal error there)
-     *  (missing arguments don't throw a fatal error there)
+     * @param Form  $form Made optional to simulate error behaviour in "live" environment (missing arguments
+     *                    don't throw a fatal error there)
      * @return string
      */
     public function formaction($data, $form = null)

@@ -749,8 +749,13 @@ PHP;
      *
      * @return string Evaluated result
      */
-    public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
-    {
+    public static function execute_template(
+        $template,
+        $data,
+        $arguments = null,
+        $scope = null,
+        $globalRequirements = false
+    ) {
         $v = SSViewer::create($template);
 
         if ($globalRequirements) {

@@ -315,7 +315,8 @@ class ThemeResourceLoader
     /**
      * Resolve all themes to the list of root folders relative to site root
      *
-     * @param array $themes List of themes to resolve. Supports named theme sets. Defaults to {@see SSViewer::get_themes()}.
+     * @param array $themes List of themes to resolve. Supports named theme sets. Defaults
+     *                      to {@see SSViewer::get_themes()}.
      * @return array List of root-relative folders in order of precendence.
      */
     public function getThemePaths($themes = null)

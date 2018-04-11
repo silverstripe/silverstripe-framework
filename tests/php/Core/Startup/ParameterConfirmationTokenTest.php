@@ -36,13 +36,34 @@ class ParameterConfirmationTokenTest extends SapphireTest
 
     public function testParameterDetectsParameters()
     {
-        $withoutToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_notoken', $this->request);
-        $emptyParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_empty', $this->request);
-        $withToken = new ParameterConfirmationTokenTest_ValidToken('parameterconfirmationtokentest_withtoken', $this->request);
-        $withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam', $this->request);
-        $nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken', $this->request);
-        $emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken', $this->request);
-        $backToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_backtoken', $this->request);
+        $withoutToken = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_notoken',
+            $this->request
+        );
+        $emptyParameter = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_empty',
+            $this->request
+        );
+        $withToken = new ParameterConfirmationTokenTest_ValidToken(
+            'parameterconfirmationtokentest_withtoken',
+            $this->request
+        );
+        $withoutParameter = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_noparam',
+            $this->request
+        );
+        $nullToken = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_nulltoken',
+            $this->request
+        );
+        $emptyToken = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_emptytoken',
+            $this->request
+        );
+        $backToken = new ParameterConfirmationTokenTest_Token(
+            'parameterconfirmationtokentest_backtoken',
+            $this->request
+        );
 
         // Check parameter
         $this->assertTrue($withoutToken->parameterProvided());

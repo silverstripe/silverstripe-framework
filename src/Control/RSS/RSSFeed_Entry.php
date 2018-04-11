@@ -130,7 +130,8 @@ class RSSFeed_Entry extends ViewableData
         }
 
         throw new BadMethodCallException(
-            get_class($this->failover) . " object has neither an AbsoluteLink nor a Link method." . " Can't put a link in the RSS feed",
+            get_class($this->failover) . " object has neither an AbsoluteLink nor a Link method."
+            . " Can't put a link in the RSS feed",
             E_USER_WARNING
         );
     }

@@ -14,7 +14,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
- * Provides dataobject and database schema mapping functionality
+ * Provides {@link \SilverStripe\ORM\DataObject} and database schema mapping functionality
  */
 class DataObjectSchema
 {
@@ -652,7 +652,8 @@ class DataObjectSchema
     {
         // Parse column specification, considering possible ansi sql quoting
         // Note that table prefix is allowed, but discarded
-        if (preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
+        $pattern = '/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i';
+        if (preg_match($pattern, $column, $match)) {
             $table = $match['table'];
             $column = $match['column'];
         } else {
@@ -943,8 +944,21 @@ class DataObjectSchema
         if (is_array($specification)) {
             // Validate join, parent and child classes
             $joinClass = $this->checkManyManyJoinClass($parentClass, $component, $specification);
-            $parentClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'from');
-            $joinChildClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'to');
+            $parentClass = $this->checkManyManyFieldClass(
+                $parentClass,
+                $component,
+                $joinClass,
+                $specification,
+                'from'
+            );
+            $joinChildClass = $this->checkManyManyFieldClass(
+                $parentClass,
+                $component,
+                $joinClass,
+                $specification,
+                'to'
+            );
+
             return [
                 'relationClass' => ManyManyThroughList::class,
                 'parentClass' => $parentClass,

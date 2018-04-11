@@ -116,7 +116,8 @@ class NumericField extends TextField
         // Format number
         $formatter = $this->getFormatter();
         $parsed = 0;
-        $this->value = $formatter->parse($value, $this->getNumberType(), $parsed); // Note: may store literal `false` for invalid values
+        // Note: may store literal `false` for invalid values
+        $this->value = $formatter->parse($value, $this->getNumberType(), $parsed);
         // Ensure that entire string is parsed
         if ($parsed < strlen($value)) {
             $this->value = false;

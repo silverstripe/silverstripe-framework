@@ -190,7 +190,9 @@ class PDOConnector extends DBConnector
                 $options[PDO::MYSQL_ATTR_SSL_CA] = $parameters['ssl_ca'];
             }
             // use default cipher if not provided
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : self::config()->get('ssl_cipher_default');
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters)
+                ? $parameters['ssl_cipher']
+                : self::config()->get('ssl_cipher_default');
         }
 
         if (self::is_emulate_prepare()) {

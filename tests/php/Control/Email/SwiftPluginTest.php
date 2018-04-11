@@ -83,7 +83,10 @@ class SwiftPluginTest extends SapphireTest
         $this->assertContains('from@example.com', array_keys($email->getFrom()));
 
         $this->assertCount(1, $headers->get('X-Original-From')->getFieldBodyModel());
-        $this->assertContains('original-from@example.com', array_keys($headers->get('X-Original-From')->getFieldBodyModel()));
+        $this->assertContains(
+            'original-from@example.com',
+            array_keys($headers->get('X-Original-From')->getFieldBodyModel())
+        );
     }
 
     public function testCCAllEmailsTo()

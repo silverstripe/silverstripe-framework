@@ -59,8 +59,14 @@ class DBCompositeTest extends SapphireTest
         );
 
 
-        $this->assertEquals('Money', $schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'MyMoney'));
-        $this->assertEquals('Money', $schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'OtherMoney'));
+        $this->assertEquals(
+            'Money',
+            $schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'MyMoney')
+        );
+        $this->assertEquals(
+            'Money',
+            $schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'OtherMoney')
+        );
         $this->assertNull($schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'Title'));
         $this->assertNull($schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'OtherField'));
         $this->assertEquals(
@@ -109,6 +115,9 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('DBCompositeTest_DataObject', $object1->dbObject('OverriddenMoney')->getTable());
         $this->assertEquals('DBCompositeTest_DataObject', $object2->dbObject('MyMoney')->getTable());
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OtherMoney')->getTable());
-        $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OverriddenMoney')->getTable());
+        $this->assertEquals(
+            'DBCompositeTest_SubclassedDBFieldObject',
+            $object2->dbObject('OverriddenMoney')->getTable()
+        );
     }
 }

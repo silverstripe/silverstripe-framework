@@ -58,7 +58,7 @@ class FulltextFilterTest extends SapphireTest
         $filter1->apply($query1);
         $this->assertNotEquals('"ColumnA","ColumnB"', $filter1->getDbName());
         $this->assertNotEquals(
-            array("MATCH (\"ColumnA\",\"ColumnB\") AGAINST ('SilverStripe')"),
+            ["MATCH (\"ColumnA\",\"ColumnB\") AGAINST ('SilverStripe')"],
             $query1->query()->getWhere()
         );
 
@@ -67,11 +67,15 @@ class FulltextFilterTest extends SapphireTest
         $filter1->setModel(TestObject::class);
         $query1 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter1->apply($query1);
-        $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
         $this->assertEquals(
-            array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST (?)" => array('SilverStripe')
-            )),
+            '"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"',
+            $filter1->getDbName()
+        );
+        $this->assertEquals(
+            [[
+                'MATCH ("FulltextFilterTest_DataObject"."ColumnA",'
+                . '"FulltextFilterTest_DataObject"."ColumnB") AGAINST (?)' => ['SilverStripe']
+            ]],
             $query1->query()->getWhere()
         );
 
@@ -80,11 +84,15 @@ class FulltextFilterTest extends SapphireTest
         $filter2->setModel(TestObject::class);
         $query2 = FulltextFilterTest\TestObject::get()->dataQuery();
         $filter2->apply($query2);
-        $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
         $this->assertEquals(
-            array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST (?)" => array('SilverStripe')
-            )),
+            '"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"',
+            $filter2->getDbName()
+        );
+        $this->assertEquals(
+            [[
+                'MATCH ("FulltextFilterTest_DataObject"."ColumnC",'
+                . '"FulltextFilterTest_DataObject"."ColumnD") AGAINST (?)' => ['SilverStripe']
+            ]],
             $query2->query()->getWhere()
         );
 
@@ -95,9 +103,9 @@ class FulltextFilterTest extends SapphireTest
         $filter3->apply($query3);
         $this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA"', $filter3->getDbName());
         $this->assertEquals(
-            array(array(
-                "MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST (?)" => array('SilverStripe')
-            )),
+            [[
+                'MATCH ("FulltextFilterTest_DataObject"."ColumnA") AGAINST (?)' => ['SilverStripe']
+            ]],
             $query3->query()->getWhere()
         );
     }

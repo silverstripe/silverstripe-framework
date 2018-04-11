@@ -13,8 +13,8 @@ use DOMElement;
 /**
  * A simple parser that allows you to map BBCode-like "shortcodes" to an arbitrary callback.
  * It is a simple regex based parser that allows you to replace simple bbcode-like tags
- * within a DBHTMLText or DBHTMLVarchar field when rendered into a template. The API is inspired by and very similar to the
- * [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
+ * within a DBHTMLText or DBHTMLVarchar field when rendered into a template. The API is inspired by and very
+ * similar to the [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
  *
  * @see http://doc.silverstripe.org/framework/en/reference/shortcodes
  */
@@ -374,9 +374,11 @@ class ShortcodeParser
                 if ($i == 0) {
                     $err = 'Close tag "' . $tags[$i]['close'] . '" is the first found tag, so has no related open tag';
                 } elseif (!$tags[$i-1]['open']) {
-                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "' . $tags[$i-1]['close'] . '"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "'
+                        . $tags[$i-1]['close'] . '"';
                 } elseif ($tags[$i]['close'] != $tags[$i-1]['open']) {
-                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "' . $tags[$i-1]['open'] . '"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "'
+                        . $tags[$i-1]['open'] . '"';
                 }
 
                 if ($err) {
@@ -597,7 +599,8 @@ class ShortcodeParser
         elseif ($location == self::INLINE) {
             if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
                 user_error(
-                    'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
+                    'Requested to insert block tag ' . $node->tagName
+                    . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
                 );
             }

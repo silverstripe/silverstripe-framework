@@ -15,7 +15,6 @@
 		<exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
 		<exclude name="Squiz.Scope.MethodScope" />
 		<exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
-		<exclude name="Generic.Files.LineLength.TooLong" />
 		<exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />
 	</rule>
 	<rule phpcbf-only="true" ref="Squiz.Strings.ConcatenationSpacing">

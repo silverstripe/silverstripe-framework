@@ -144,7 +144,8 @@ class FormRequestHandler extends RequestHandler
             if (empty($vars[$securityID])) {
                 $this->httpError(400, _t(
                     "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                    "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
+                    "There seems to have been a technical problem. Please click the back button, "
+                    . "refresh your browser, and try again."
                 ));
             } else {
                 // Clear invalid token on refresh
@@ -257,7 +258,8 @@ class FormRequestHandler extends RequestHandler
         $legacyActions = $this->form->config()->get('allowed_actions');
         if ($legacyActions) {
             throw new BadMethodCallException(
-                "allowed_actions are not valid on Form class " . get_class($this->form) . ". Implement these in subclasses of " . static::class . " instead"
+                "allowed_actions are not valid on Form class " . get_class($this->form)
+                . ". Implement these in subclasses of " . static::class . " instead"
             );
         }
 

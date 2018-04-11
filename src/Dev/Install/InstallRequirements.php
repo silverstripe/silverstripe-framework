@@ -156,7 +156,8 @@ class InstallRequirements
                 "Database Configuration",
                 "Database server version requirement",
                 '',
-                'Version ' . $this->getDatabaseConfigurationHelper($databaseConfig['type'])->getDatabaseVersion($databaseConfig)
+                'Version ' . $this->getDatabaseConfigurationHelper($databaseConfig['type'])
+                    ->getDatabaseVersion($databaseConfig)
             )
         )
         ) {
@@ -283,9 +284,18 @@ class InstallRequirements
         ));
 
 
-        $this->requireWriteable($this->getPublicDir() . 'index.php', array("File permissions", "Is the index.php file writeable?", null), true);
+        $this->requireWriteable(
+            $this->getPublicDir() . 'index.php',
+            ["File permissions", "Is the index.php file writeable?", null],
+            true
+        );
 
-        $this->requireWriteable('.env', ["File permissions", "Is the .env file writeable?", null], false, false);
+        $this->requireWriteable(
+            '.env',
+            ["File permissions", "Is the .env file writeable?", null],
+            false,
+            false
+        );
 
         if ($isApache) {
             $this->checkApacheVersion(array(
@@ -294,9 +304,17 @@ class InstallRequirements
                 "SilverStripe requires Apache version 2 or greater",
                 $webserver
             ));
-            $this->requireWriteable($this->getPublicDir() . '.htaccess', array("File permissions", "Is the .htaccess file writeable?", null), true);
+            $this->requireWriteable(
+                $this->getPublicDir() . '.htaccess',
+                ["File permissions", "Is the .htaccess file writeable?", null],
+                true
+            );
         } elseif ($isIIS) {
-            $this->requireWriteable($this->getPublicDir() . 'web.config', array("File permissions", "Is the web.config file writeable?", null), true);
+            $this->requireWriteable(
+                $this->getPublicDir() . 'web.config',
+                ["File permissions", "Is the web.config file writeable?", null],
+                true
+            );
         }
 
         $this->requireWriteable('mysite/_config.php', array(
@@ -332,7 +350,11 @@ class InstallRequirements
         );
 
         // Ensure root assets dir is writable
-        $this->requireWriteable(ASSETS_PATH, array("File permissions", "Is the assets/ directory writeable?", null), true);
+        $this->requireWriteable(
+            ASSETS_PATH,
+            ["File permissions", "Is the assets/ directory writeable?", null],
+            true
+        );
 
         // Ensure all assets files are writable
         $innerIterator = new RecursiveDirectoryIterator(ASSETS_PATH, RecursiveDirectoryIterator::SKIP_DOTS);
@@ -383,11 +405,12 @@ class InstallRequirements
                 . "but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"
             ));
         } else {
-            $this->warning(array(
+            $this->warning([
                 "Webserver Configuration",
                 "URL rewriting support",
-                "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."
-            ));
+                "I can't tell whether any rewriting module is running. You may need to configure a rewriting "
+                . "rule yourself."
+            ]);
         }
 
         $this->requireServerVariables(array('SCRIPT_NAME', 'HTTP_HOST', 'SCRIPT_FILENAME'), array(
@@ -463,7 +486,10 @@ class InstallRequirements
         ));
 
         // Check for hash support
-        $this->requireFunction('hash', array('PHP Configuration', 'hash support', 'hash support not included in PHP.'));
+        $this->requireFunction(
+            'hash',
+            ['PHP Configuration', 'hash support', 'hash support not included in PHP.']
+        );
 
         // Check for mbstring support
         $this->requireFunction('mb_internal_encoding', array(
@@ -733,7 +759,8 @@ class InstallRequirements
                     $text = "All Requirements Pass but " . $warningRequirements . ' ' . $pluralWarnings;
                 }
 
-                echo "<h5 class='requirement $className'>$section <a href='#'>Show All Requirements</a> <span>$text</span></h5>";
+                echo "<h5 class='requirement $className'>$section <a href='#'>Show All Requirements</a> "
+                    . "<span>$text</span></h5>";
                 echo "<table class=\"testResults\">";
                 echo $output;
                 echo "</table>";
@@ -807,8 +834,10 @@ class InstallRequirements
         if (version_compare($installedVersion, $requiredVersion, '<')) {
             $message = "SilverStripe requires PHP version $requiredVersion or later.\n
                 PHP version $installedVersion is currently installed.\n
-                While SilverStripe requires at least PHP version $requiredVersion, upgrading to $recommendedVersion or later is recommended.\n
-                If you are installing SilverStripe on a shared web server, please ask your web hosting provider to upgrade PHP for you.";
+                While SilverStripe requires at least PHP version $requiredVersion, upgrading to $recommendedVersion "
+                . "or later is recommended.\n
+                If you are installing SilverStripe on a shared web server, please ask your web hosting provider "
+                . "to upgrade PHP for you.";
             $this->error($testDetails, $message);
             return false;
         }
@@ -816,7 +845,8 @@ class InstallRequirements
         if (version_compare($installedVersion, $recommendedVersion, '<')) {
             $message = "PHP version $installedVersion is currently installed.\n
                 Upgrading to at least PHP version $recommendedVersion is recommended.\n
-                SilverStripe should run, but you may run into issues. Future releases may require a later version of PHP.\n";
+                SilverStripe should run, but you may run into issues. Future releases may "
+                . "require a later version of PHP.\n";
             $this->warning($testDetails, $message);
             return false;
         }
@@ -865,7 +895,8 @@ class InstallRequirements
         $this->testing($testDetails);
         $path = $this->getBaseDir() . $dirname;
         if (!file_exists($path)) {
-            $testDetails[2] .= " Directory '$path' not found. Please make sure you have uploaded the SilverStripe files to your webserver correctly.";
+            $testDetails[2] .= " Directory '$path' not found. Please make sure you have uploaded the SilverStripe "
+                . "files to your webserver correctly.";
             $this->error($testDetails);
         } elseif (!file_exists($path . '/_config.php') && $dirname != 'mysite') {
             $testDetails[2] .= " Directory '$path' exists, but is missing files. Please make sure you have uploaded "
@@ -1135,7 +1166,8 @@ class InstallRequirements
             if (empty($result['cannotCreate'])) {
                 $message = $testDetails[2] . ". Please create the database manually.";
             } else {
-                $message = $testDetails[2] . " (user '$databaseConfig[username]' doesn't have CREATE DATABASE permissions.)";
+                $message = $testDetails[2] . " (user '$databaseConfig[username]' doesn't have CREATE "
+                    . "DATABASE permissions.)";
             }
 
             $this->error($testDetails, $message);

@@ -43,8 +43,13 @@ class SecurityTest extends FunctionalTest
     protected function setUp()
     {
         // Set to an empty array of authenticators to enable the default
-        Config::modify()->set(MemberAuthenticator::class, 'authenticators', []);
-        Config::modify()->set(MemberAuthenticator::class, 'default_authenticator', MemberAuthenticator::class);
+        Config::modify()
+            ->set(MemberAuthenticator::class, 'authenticators', [])
+            ->set(
+                MemberAuthenticator::class,
+                'default_authenticator',
+                MemberAuthenticator::class
+            );
 
         /**
          * @skipUpgrade
@@ -554,7 +559,8 @@ class SecurityTest extends FunctionalTest
         }
         $msg = _t(
             'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
-            'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
+            'Your account has been temporarily disabled because of too many failed attempts at '
+            . 'logging in. Please try again in {count} minutes.',
             null,
             array('count' => 15)
         );
@@ -583,7 +589,10 @@ class SecurityTest extends FunctionalTest
         }
         $this->assertNull($this->session()->get('loggedInAs'));
         $this->assertHasMessage(
-            _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
+            _t(
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                'The provided details don\'t seem to be correct. Please try again.'
+            ),
             'The user can retry with a wrong password after the lockout expires'
         );
 

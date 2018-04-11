@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM;
 
-use InvalidArgumentException;
 use ArrayIterator;
+use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -67,7 +67,8 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Add an item to this relationship
      *
      * @param mixed $item
-     * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
+     * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a
+     *                           many_many relation
      */
     public function add($item, $extraFields = null)
     {

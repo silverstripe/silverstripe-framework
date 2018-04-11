@@ -611,7 +611,11 @@ class DBHTMLTextTest extends SapphireTest
             return;
         }
 
-        $problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT, 'UTF-8');
+        $problematicText = html_entity_decode(
+            '<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>',
+            ENT_COMPAT,
+            'UTF-8'
+        );
 
         $textObj = new DBHTMLText('Test');
         $textObj->setValue($problematicText);

@@ -430,7 +430,8 @@ class GridField extends FormField
         foreach ($content as $contentKey => $contentValue) {
             if (empty($fragmentDefined[$contentKey])) {
                 throw new LogicException(sprintf(
-                    'GridField HTML fragment "%s" was given content, but not defined. Perhaps there is a supporting GridField component you need to add?',
+                    'GridField HTML fragment "%s" was given content, but not defined. Perhaps there is a '
+                    . 'supporting GridField component you need to add?',
                     $contentKey
                 ));
             }
@@ -897,7 +898,8 @@ class GridField extends FormField
         if (!$token->checkRequest($request)) {
             $this->httpError(400, _t(
                 "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
+                "There seems to have been a technical problem. Please click the back button, "
+                . "refresh your browser, and try again."
             ));
         }
 

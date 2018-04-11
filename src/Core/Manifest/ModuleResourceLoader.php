@@ -92,6 +92,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      *
      * @param string $resource
      * @return ModuleResource|string The resource, or input string if not a module resource
+     * @throws InvalidArgumentException
      */
     public function resolveResource($resource)
     {
@@ -103,7 +104,10 @@ class ModuleResourceLoader implements TemplateGlobalProvider
         $resource = $matches['resource'];
         $moduleObj = ModuleLoader::getModule($module);
         if (!$moduleObj) {
-            throw new InvalidArgumentException("Can't find module '$module', the composer.json file may be missing from the modules installation directory");
+            throw new InvalidArgumentException(
+                "Can't find module '$module', the composer.json file may be missing from the modules "
+                . "installation directory"
+            );
         }
         $resourceObj = $moduleObj->getResource($resource);
 

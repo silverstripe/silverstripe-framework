@@ -81,48 +81,126 @@ class DirectorTest extends SapphireTest
 
         //test empty / local urls
         foreach (array('', './', '.') as $url) {
-            $this->assertEquals("http://www.mysite.com:9090/mysite/", Director::absoluteURL($url, Director::BASE));
-            $this->assertEquals("http://www.mysite.com:9090/", Director::absoluteURL($url, Director::ROOT));
-            $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/", Director::absoluteURL($url, Director::REQUEST));
+            $this->assertEquals(
+                "http://www.mysite.com:9090/mysite/",
+                Director::absoluteURL($url, Director::BASE)
+            );
+            $this->assertEquals(
+                "http://www.mysite.com:9090/",
+                Director::absoluteURL($url, Director::ROOT)
+            );
+            $this->assertEquals(
+                "http://www.mysite.com:9090/mysite/sub-page/",
+                Director::absoluteURL($url, Director::REQUEST)
+            );
         }
 
         // Test site root url
         $this->assertEquals("http://www.mysite.com:9090/", Director::absoluteURL('/'));
 
         // Test Director::BASE
-        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::BASE));
-        $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::BASE));
-        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::BASE));
-        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::BASE));
-        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::BASE));
+        $this->assertEquals(
+            'http://www.mysite.com:9090/',
+            Director::absoluteURL('http://www.mysite.com:9090/', Director::BASE)
+        );
+        $this->assertEquals(
+            'http://www.mytest.com',
+            Director::absoluteURL('http://www.mytest.com', Director::BASE)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/test",
+            Director::absoluteURL("http://www.mysite.com:9090/test", Director::BASE)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root",
+            Director::absoluteURL("/root", Director::BASE)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root/url",
+            Director::absoluteURL("/root/url", Director::BASE)
+        );
 
         // Test Director::ROOT
-        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::ROOT));
-        $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::ROOT));
-        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::ROOT));
+        $this->assertEquals(
+            'http://www.mysite.com:9090/',
+            Director::absoluteURL('http://www.mysite.com:9090/', Director::ROOT)
+        );
+        $this->assertEquals(
+            'http://www.mytest.com',
+            Director::absoluteURL('http://www.mytest.com', Director::ROOT)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/test",
+            Director::absoluteURL("http://www.mysite.com:9090/test", Director::ROOT)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root",
+            Director::absoluteURL("/root", Director::ROOT)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root/url",
+            Director::absoluteURL("/root/url", Director::ROOT)
+        );
 
         // Test Director::REQUEST
-        $this->assertEquals('http://www.mysite.com:9090/', Director::absoluteURL('http://www.mysite.com:9090/', Director::REQUEST));
-        $this->assertEquals('http://www.mytest.com', Director::absoluteURL('http://www.mytest.com', Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("http://www.mysite.com:9090/test", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com:9090/root", Director::absoluteURL("/root", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com:9090/root/url", Director::absoluteURL("/root/url", Director::REQUEST));
+        $this->assertEquals(
+            'http://www.mysite.com:9090/',
+            Director::absoluteURL('http://www.mysite.com:9090/', Director::REQUEST)
+        );
+        $this->assertEquals(
+            'http://www.mytest.com',
+            Director::absoluteURL('http://www.mytest.com', Director::REQUEST)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/test",
+            Director::absoluteURL("http://www.mysite.com:9090/test", Director::REQUEST)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root",
+            Director::absoluteURL("/root", Director::REQUEST)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/root/url",
+            Director::absoluteURL("/root/url", Director::REQUEST)
+        );
 
         // Test evaluating relative urls relative to base (default)
-        $this->assertEquals("http://www.mysite.com:9090/mysite/test", Director::absoluteURL("test"));
-        $this->assertEquals("http://www.mysite.com:9090/mysite/test/url", Director::absoluteURL("test/url"));
-        $this->assertEquals("http://www.mysite.com:9090/mysite/test", Director::absoluteURL("test", Director::BASE));
-        $this->assertEquals("http://www.mysite.com:9090/mysite/test/url", Director::absoluteURL("test/url", Director::BASE));
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/test",
+            Director::absoluteURL("test")
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/test/url",
+            Director::absoluteURL("test/url")
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/test",
+            Director::absoluteURL("test", Director::BASE)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/test/url",
+            Director::absoluteURL("test/url", Director::BASE)
+        );
 
         // Test evaluting relative urls relative to root
-        $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("test", Director::ROOT));
-        $this->assertEquals("http://www.mysite.com:9090/test/url", Director::absoluteURL("test/url", Director::ROOT));
+        $this->assertEquals(
+            "http://www.mysite.com:9090/test",
+            Director::absoluteURL("test", Director::ROOT)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/test/url",
+            Director::absoluteURL("test/url", Director::ROOT)
+        );
 
         // Test relative to requested page
-        $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/test", Director::absoluteURL("test", Director::REQUEST));
-        $this->assertEquals("http://www.mysite.com:9090/mysite/sub-page/test/url", Director::absoluteURL("test/url", Director::REQUEST));
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/sub-page/test",
+            Director::absoluteURL("test", Director::REQUEST)
+        );
+        $this->assertEquals(
+            "http://www.mysite.com:9090/mysite/sub-page/test/url",
+            Director::absoluteURL("test/url", Director::REQUEST)
+        );
 
         // Test that javascript links are not left intact
         $this->assertStringStartsNotWith('javascript', Director::absoluteURL('javascript:alert("attack")'));
@@ -150,8 +228,14 @@ class DirectorTest extends SapphireTest
         $_SERVER['REQUEST_URI'] = "http://www.example.org/relativebase/sub-page/";
         $this->assertEquals('/relativebase/', Director::baseURL()); // Non-absolute url
         $this->assertEquals('http://www.example.org/relativebase/', Director::absoluteBaseURL());
-        $this->assertEquals('http://www.example.org/relativebase/sub-page/', Director::absoluteURL('', Director::REQUEST));
-        $this->assertEquals('http://www.example.org/relativebase/', Director::absoluteURL('', Director::BASE));
+        $this->assertEquals(
+            'http://www.example.org/relativebase/sub-page/',
+            Director::absoluteURL('', Director::REQUEST)
+        );
+        $this->assertEquals(
+            'http://www.example.org/relativebase/',
+            Director::absoluteURL('', Director::BASE)
+        );
         $this->assertEquals('http://www.example.org/', Director::absoluteURL('', Director::ROOT));
         $this->assertEquals(
             'http://www.example.org/relativebase/sub-page/subfolder/test',

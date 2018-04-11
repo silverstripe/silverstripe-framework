@@ -248,7 +248,7 @@ class FieldList extends ArrayList
         } else {
             $tab->push($field);
         }
-        
+
         return $this;
     }
 
@@ -283,7 +283,7 @@ class FieldList extends ArrayList
                 $tab->push($field);
             }
         }
-        
+
         return $this;
     }
 
@@ -302,7 +302,7 @@ class FieldList extends ArrayList
         // Find the tab
         $tab = $this->findOrMakeTab($tabName);
         $tab->removeByName($fieldName);
-        
+
         return $this;
     }
 
@@ -325,7 +325,7 @@ class FieldList extends ArrayList
         foreach ($fields as $field) {
             $tab->removeByName($field);
         }
-        
+
         return $this;
     }
 
@@ -368,7 +368,7 @@ class FieldList extends ArrayList
                 $child->removeByName($fieldName, $dataFieldOnly);
             }
         }
-        
+
         return $this;
     }
 
@@ -786,7 +786,10 @@ class FieldList extends ArrayList
             if ($srcField) {
                 $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
             } else {
-                user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+                user_error(
+                    "Trying to make field '$fieldName' readonly, but it does not exist in the list",
+                    E_USER_WARNING
+                );
             }
         }
     }

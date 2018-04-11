@@ -412,7 +412,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
         // Parse column specification, considering possible ansi sql quoting
         // Note that table prefix is allowed, but discarded
-        if (preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
+        $pattern = '/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i';
+        if (preg_match($pattern, $column, $match)) {
             $column = $match['column'];
             if (empty($direction) && !empty($match['direction'])) {
                 $direction = $match['direction'];

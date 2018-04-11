@@ -83,7 +83,12 @@ class ShortcodeParserTest extends SapphireTest
     {
         $tests = array(
             '[test_shortcode]',
-            '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]' . '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
+            '[test_shortcode ]',
+            '[test_shortcode,]',
+            '[test_shortcode, ]' . '[test_shortcode/]',
+            '[test_shortcode /]',
+            '[test_shortcode,/]',
+            '[test_shortcode, /]',
         );
 
         foreach ($tests as $test) {
@@ -168,7 +173,9 @@ class ShortcodeParserTest extends SapphireTest
 
         $this->assertEquals(
             '[[Doesnt strip double [ character if not a shortcode',
-            $this->parser->parse('[[Doesnt strip double [ character if not a [test_shortcode]shortcode[/test_shortcode]')
+            $this->parser->parse(
+                '[[Doesnt strip double [ character if not a [test_shortcode]shortcode[/test_shortcode]'
+            )
         );
 
         $this->assertEquals(

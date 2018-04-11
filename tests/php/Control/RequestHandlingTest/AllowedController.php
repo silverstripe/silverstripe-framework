@@ -39,17 +39,17 @@ class AllowedController extends Controller implements TestOnly
         return "This is the controller";
     }
 
-    function provideAccess($access = true)
+    public function provideAccess($access = true)
     {
         return $access;
     }
 
-    function blockMethod($request)
+    public function blockMethod($request)
     {
         return 'blockMethod';
     }
 
-    function allowMethod($request)
+    public function allowMethod($request)
     {
         return 'allowMethod';
     }

@@ -44,7 +44,9 @@ class ViewableData_Debugger extends ViewableData
         // debugging info for a specific field
         $class = get_class($this->object);
         if ($field) {
-            return "<b>Debugging Information for {$class}->{$field}</b><br/>" . ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) . ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
+            return "<b>Debugging Information for {$class}->{$field}</b><br/>"
+                . ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null)
+                . ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
         }
 
         // debugging information for the entire class

@@ -355,7 +355,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *  - absolute url - Some url to an external plugin
      *  - An instance of ModuleResource object containing the plugin
      *
-     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array $plugin,... a string, or several strings, or a single array of strings - plugins to enable
      * @return $this
      */
     public function enablePlugins($plugin)
@@ -379,7 +379,7 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
-     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array $plugin,... a string, or several strings, or a single array of strings - plugins to enable
      * @return $this
      */
     public function disablePlugins($plugin)

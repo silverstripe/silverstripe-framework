@@ -101,7 +101,10 @@ class DatabaseTest extends SapphireTest
         $schema->schemaUpdate(
             function () use ($test, $schema) {
                 $schema->cancelSchemaUpdate();
-                $test->assertFalse($schema->doesSchemaNeedUpdating(), 'After cancelling the transaction the flag is false');
+                $test->assertFalse(
+                    $schema->doesSchemaNeedUpdating(),
+                    'After cancelling the transaction the flag is false'
+                );
             }
         );
     }

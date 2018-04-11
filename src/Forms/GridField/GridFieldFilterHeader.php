@@ -196,7 +196,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
                 $field->setAttribute(
                     'placeholder',
-                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', "Filter by ") . _t('SilverStripe\\Forms\\GridField\\GridField.' . $metadata['title'], $metadata['title'])
+                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', "Filter by ")
+                    . _t('SilverStripe\\Forms\\GridField\\GridField.' . $metadata['title'], $metadata['title'])
                 );
 
                 $fields->push($field);
@@ -211,13 +212,19 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
             if ($currentColumn == count($columns)) {
                 $fields->push(
                     GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
-                        ->addExtraClass('btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit ss-gridfield-button-filter')
+                        ->addExtraClass(
+                            'btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit'
+                            . ' ss-gridfield-button-filter'
+                        )
                         ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.Filter', 'Filter'))
                         ->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $columnField)
                 );
                 $fields->push(
                     GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-                        ->addExtraClass('btn font-icon-cancel btn--no-text grid-field__filter-clear btn--icon-md ss-gridfield-button-close')
+                        ->addExtraClass(
+                            'btn font-icon-cancel btn--no-text grid-field__filter-clear btn--icon-md'
+                            . 'ss-gridfield-button-close'
+                        )
                         ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', "Reset"))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );

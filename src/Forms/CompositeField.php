@@ -121,7 +121,8 @@ class CompositeField extends FormField
      * If the CompositeField doesn't have a name, but we still want the ID/name to be set.
      * This code generates the ID from the nested children.
      *
-     * @todo this is temporary, and should be removed when FormTemplateHelper is updated to handle ID for CompositeFields with no name
+     * @todo this is temporary, and should be removed when FormTemplateHelper is updated to handle
+     * ID for CompositeFields with no name
      *
      * @return String $name
      */

@@ -40,16 +40,20 @@ class ValidatorTest extends SapphireTest
 
         // Setup a form with the fields/data we're testing (a form is a dependency for validation right now).
         $data = array("foobar" => "");
-        $form = $this->getForm(array_keys($data)); // We only care right now about the fields we've got setup in this array.
+        // We only care right now about the fields we've got setup in this array.
+        $form = $this->getForm(array_keys($data));
         $form->disableSecurityToken();
-        $form->setValidator($validator); // Setup validator now that we've got our form.
-        $form->loadDataFrom($data); // Put data into the form so the validator can pull it back out again.
+        // Setup validator now that we've got our form.
+        $form->setValidator($validator);
+        // Put data into the form so the validator can pull it back out again.
+        $form->loadDataFrom($data);
 
         $result = $form->validationResult();
         $this->assertFalse($result->isValid());
         $this->assertCount(1, $result->getMessages());
 
-        // Make sure it doesn't fail after removing validation AND has no errors (since calling validate should reset errors).
+        // Make sure it doesn't fail after removing validation AND has no errors
+        // (since calling validate should reset errors).
         $validator->removeValidation();
         $result = $form->validationResult();
         $this->assertTrue($result->isValid());

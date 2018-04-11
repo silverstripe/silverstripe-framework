@@ -144,7 +144,7 @@ class Group extends DataObject
         );
 
         $parentidfield->setDescription(
-            _t('SilverStripe\\Security\\Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
+            _t(__CLASS__ . '.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
         );
 
         if ($this->ID) {
@@ -233,7 +233,7 @@ class Group extends DataObject
                         SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
                         // TODO This should include #Root_Roles to switch directly to the tab,
                         // but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
-                        _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
+                        _t(__CLASS__ . '.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"
                 )
@@ -263,10 +263,10 @@ class Group extends DataObject
 
             $rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
                     ->setDefaultItems($groupRoleIDs)
-                    ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
+                    ->setAttribute('data-placeholder', _t(__CLASS__ . '.AddRole', 'Add a role for this group'))
                     ->setDisabledItems($inheritedRoleIDs);
             if (!$allRoles->count()) {
-                $rolesField->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.NoRoles', 'No roles found'));
+                $rolesField->setAttribute('data-placeholder', _t(__CLASS__ . '.NoRoles', 'No roles found'));
             }
             $fields->addFieldToTab('Root.Roles', $rolesField);
         }
@@ -287,14 +287,18 @@ class Group extends DataObject
     {
         $labels = parent::fieldLabels($includerelations);
         $labels['Title'] = _t(__CLASS__ . '.GROUPNAME', 'Group name');
-        $labels['Description'] = _t('SilverStripe\\Security\\Group.Description', 'Description');
-        $labels['Code'] = _t('SilverStripe\\Security\\Group.Code', 'Group Code', 'Programmatical code identifying a group');
-        $labels['Locked'] = _t('SilverStripe\\Security\\Group.Locked', 'Locked?', 'Group is locked in the security administration area');
-        $labels['Sort'] = _t('SilverStripe\\Security\\Group.Sort', 'Sort Order');
+        $labels['Description'] = _t(__CLASS__ . '.Description', 'Description');
+        $labels['Code'] = _t(__CLASS__ . '.Code', 'Group Code', 'Programmatical code identifying a group');
+        $labels['Locked'] = _t(__CLASS__ . '.Locked', 'Locked?', 'Group is locked in the security administration area');
+        $labels['Sort'] = _t(__CLASS__ . '.Sort', 'Sort Order');
         if ($includerelations) {
-            $labels['Parent'] = _t('SilverStripe\\Security\\Group.Parent', 'Parent Group', 'One group has one parent group');
-            $labels['Permissions'] = _t('SilverStripe\\Security\\Group.has_many_Permissions', 'Permissions', 'One group has many permissions');
-            $labels['Members'] = _t('SilverStripe\\Security\\Group.many_many_Members', 'Members', 'One group has many members');
+            $labels['Parent'] = _t(__CLASS__ . '.Parent', 'Parent Group', 'One group has one parent group');
+            $labels['Permissions'] = _t(
+                __CLASS__ . '.has_many_Permissions',
+                'Permissions',
+                'One group has many permissions'
+            );
+            $labels['Members'] = _t(__CLASS__ . '.many_many_Members', 'Members', 'One group has many members');
         }
 
         return $labels;
@@ -331,7 +335,7 @@ class Group extends DataObject
         // Now set all children groups as a new foreign key
         $familyIDs = $this->collateFamilyIDs();
         $result = $result->forForeignID($familyIDs);
-        
+
         return $result->where($filter);
     }
 

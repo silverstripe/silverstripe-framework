@@ -189,7 +189,10 @@ class Email extends ViewableData
     {
         switch ($method) {
             case 'direction':
-                Requirements::customCSS('span.codedirection { unicode-bidi: bidi-override; direction: rtl; }', 'codedirectionCSS');
+                Requirements::customCSS(
+                    'span.codedirection { unicode-bidi: bidi-override; direction: rtl; }',
+                    'codedirectionCSS'
+                );
 
                 return '<span class="codedirection">' . strrev($email) . '</span>';
             case 'visible':

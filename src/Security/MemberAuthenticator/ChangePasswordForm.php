@@ -56,11 +56,20 @@ class ChangePasswordForm extends Form
         // without GET parameter to avoid potential HTTP referer leakage.
         // In this case, a user is not logged in, and no 'old password' should be necessary.
         if (Security::getCurrentUser()) {
-            $fields->push(PasswordField::create('OldPassword', _t('SilverStripe\\Security\\Member.YOUROLDPASSWORD', 'Your old password')));
+            $fields->push(PasswordField::create(
+                'OldPassword',
+                _t('SilverStripe\\Security\\Member.YOUROLDPASSWORD', 'Your old password')
+            ));
         }
 
-        $fields->push(PasswordField::create('NewPassword1', _t('SilverStripe\\Security\\Member.NEWPASSWORD', 'New Password')));
-        $fields->push(PasswordField::create('NewPassword2', _t('SilverStripe\\Security\\Member.CONFIRMNEWPASSWORD', 'Confirm New Password')));
+        $fields->push(PasswordField::create(
+            'NewPassword1',
+            _t('SilverStripe\\Security\\Member.NEWPASSWORD', 'New Password')
+        ));
+        $fields->push(PasswordField::create(
+            'NewPassword2',
+            _t('SilverStripe\\Security\\Member.CONFIRMNEWPASSWORD', 'Confirm New Password')
+        ));
 
         return $fields;
     }

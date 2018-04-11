@@ -292,7 +292,8 @@ class CoreKernel implements Kernel
                 Director::absoluteBaseURL()
             ) .
             $dv->renderParagraph(
-                'You need to replace your _ss_environment.php file with a .env file, or with environment variables.<br><br>'
+                'You need to replace your _ss_environment.php file with a .env file, or with environment '
+                . 'variables.<br><br>'
                 . 'See the <a href="https://docs.silverstripe.org/en/4/getting_started/environment_management/">'
                 . 'Environment Management</a> docs for more information.'
             ) .
@@ -538,7 +539,10 @@ class CoreKernel implements Kernel
             if ($logger instanceof Logger) {
                 $logger->pushHandler(new StreamHandler($this->basePath . '/' . $errorLog, Logger::WARNING));
             } else {
-                user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
+                user_error(
+                    "SS_ERROR_LOG setting only works with Monolog, you are using another logger",
+                    E_USER_WARNING
+                );
             }
         }
     }

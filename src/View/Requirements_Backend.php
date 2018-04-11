@@ -1272,7 +1272,7 @@ class Requirements_Backend
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
-                            $newCSS[$combinedURL] = array('media' => (isset($options['media']) ? $options['media'] : null));
+                            $newCSS[$combinedURL] = ['media' => (isset($options['media']) ? $options['media'] : null)];
                             $included = true;
                         }
                         // If already included, or otherwise blocked, then don't add into CSS

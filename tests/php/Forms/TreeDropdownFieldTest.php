@@ -111,7 +111,8 @@ class TreeDropdownFieldTest extends SapphireTest
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
 
         $parser = new CSSContentParser($tree);
-        $cssPath = 'ul.tree li#selector-TestTree-' . $folder1->ID . ' li#selector-TestTree-' . $folder1Subfolder1->ID . ' a span.item';
+        $cssPath = 'ul.tree li#selector-TestTree-' . $folder1->ID . ' li#selector-TestTree-'
+            . $folder1Subfolder1->ID . ' a span.item';
         $firstResult = $parser->getBySelector($cssPath);
         $this->assertEquals(
             $folder1Subfolder1->Name,
@@ -148,7 +149,8 @@ class TreeDropdownFieldTest extends SapphireTest
         $parser = new CSSContentParser($tree);
 
         // Even if we used File as the source object, folders are still returned because Folder is a File
-        $cssPath = 'ul.tree li#selector-TestTree-' . $folder1->ID . ' li#selector-TestTree-' . $folder1Subfolder1->ID . ' a span.item';
+        $cssPath = 'ul.tree li#selector-TestTree-' . $folder1->ID . ' li#selector-TestTree-'
+            . $folder1Subfolder1->ID . ' a span.item';
         $firstResult = $parser->getBySelector($cssPath);
         $this->assertEquals(
             $folder1Subfolder1->Name,
@@ -196,14 +198,13 @@ class TreeDropdownFieldTest extends SapphireTest
     public function testReadonly()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
-        $asdf = $this->objFromFixture(File::class, 'asdf');
-        $field->setValue($asdf->ID);
+        /** @var File $fileFixture */
+        $fileFixture = $this->objFromFixture(File::class, 'asdf');
+        $field->setValue($fileFixture->ID);
         $readonlyField = $field->performReadonlyTransformation();
         $this->assertEquals(
-            <<<"HTML"
-<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span><input type="hidden" name="TestTree" value="{$asdf->ID}" />
-HTML
-            ,
+            '<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span>'
+            . '<input type="hidden" name="TestTree" value="' . $fileFixture->ID . '" />',
             (string)$readonlyField->Field()
         );
     }
