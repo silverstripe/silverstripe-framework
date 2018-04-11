@@ -40,8 +40,8 @@ class EmbedShortcodeProviderTest extends SapphireTest
                 'provider_url' => 'https://www.youtube.com/',
                 'title' => 'SilverStripe Platform 2 min introduction',
                 'html' => '<iframe width="480" height="270"'
-                    . 'src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" '
-                    . 'frameborder="0" allowfullscreen></iframe>',
+                    . ' src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed"'
+                    . ' frameborder="0" allowfullscreen></iframe>',
                 'provider_name' => 'YouTube',
                 'thumbnail_width' => 480,
                 'type' => 'video',
