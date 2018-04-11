@@ -246,6 +246,9 @@ class Group extends DataObject {
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
 	 *
 	 * @param string $filter
+	 * @param string $sort
+	 * @param string $join
+	 * @param string $limit
 	 * @return ManyManyList
 	 */
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {

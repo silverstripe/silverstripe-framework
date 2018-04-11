@@ -47,7 +47,6 @@ class MemberLoginForm extends LoginForm {
 	 * @param bool $checkCurrentUser If set to TRUE, it will be checked if a
 	 *                               the user is currently logged in, and if
 	 *                               so, only a logout button will be rendered
-	 * @param string $authenticatorClassName Name of the authenticator class that this form uses.
 	 */
 	public function __construct($controller, $name, $fields = null, $actions = null,
 								$checkCurrentUser = true) {

@@ -821,12 +821,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Get a site tree HTML listing which displays the nodes under the given criteria.
 	 *
-	 * @param $className The class of the root object
-	 * @param $rootID The ID of the root object.  If this is null then a complete tree will be
+	 * @param string $className The class of the root object
+	 * @param int $rootID The ID of the root object.  If this is null then a complete tree will be
 	 *  shown
-	 * @param $childrenMethod The method to call to get the children of the tree. For example,
+	 * @param string $childrenMethod The method to call to get the children of the tree. For example,
 	 *  Children, AllChildrenIncludingDeleted, or AllHistoricalChildren
-	 * @return String Nested unordered list with links to each page
+	 * @return string Nested unordered list with links to each page
 	 */
 	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null,
 			$filterFunction = null, $nodeCountThreshold = 30) {

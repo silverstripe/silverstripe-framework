@@ -123,19 +123,19 @@ class SelectionGroup extends CompositeField {
 class SelectionGroup_Item extends CompositeField {
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $value;
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $title;
 
 	/**
-	 * @param String $value Form field identifier
-	 * @param FormField $field Contents of the option
-	 * @param String $title Title to show for the radio button option
+	 * @param string $value Form field identifier
+	 * @param FormField[] $fields Contents of the option
+	 * @param string $title Title to show for the radio button option
 	 */
 	function __construct($value, $fields = null, $title = null) {
 		$this->value = $value;
@@ -145,19 +145,33 @@ class SelectionGroup_Item extends CompositeField {
 		parent::__construct($fields);
 	}
 
+	/**
+	 * @return string
+	 */
 	function getTitle() {
 		return $this->title;
 	}
 
+	/**
+	 * @param string $title
+	 * @return $this
+	 */
 	function setTitle($title) {
 		$this->title = $title;
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	function getValue() {
 		return $this->value;
 	}
 
+	/**
+	 * @param mixed $Value
+	 * @return $this
+	 */
 	function setValue($Value) {
 		$this->value = $Value;
 		return $this;

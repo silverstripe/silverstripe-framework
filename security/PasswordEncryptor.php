@@ -108,6 +108,8 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * The two digit cost parameter is the base-2 logarithm of the iteration
 	 * count for the underlying Blowfish-based hashing algorithmeter and must
 	 * be in range 04-31, values outside this range will cause crypt() to fail.
+	 *
+	 * @var int
 	 */
 	protected static $cost = 10;
 
@@ -127,8 +129,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	/**
 	 * Gets the cost that is set for the blowfish algorithm
 	 *
-	 * @param int $cost
-	 * @return null
+	 * @return int
 	 */
 	public static function get_cost() {
 		return self::$cost;

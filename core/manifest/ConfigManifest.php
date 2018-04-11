@@ -80,6 +80,7 @@ class SS_ConfigManifest {
 	 * from the cache or re-scanning for classes.
 	 *
 	 * @param string $base The project base path.
+	 * @param bool   $includeTests
 	 * @param bool   $forceRegen Force the manifest to be regenerated.
 	 */
 	public function __construct($base, $includeTests = false, $forceRegen = false ) {
@@ -192,6 +193,7 @@ class SS_ConfigManifest {
 	 *
 	 * Does _not_ build the actual variant
 	 *
+	 * @param bool $includeTests
 	 * @param bool $cache Cache the result.
 	 */
 	public function regenerate($includeTests = false, $cache = true) {

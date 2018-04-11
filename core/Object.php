@@ -278,7 +278,7 @@ abstract class Object {
 							case 'null': $result = null; $forceResult = true; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
-						
+
 					break;
 
 				case T_ARRAY:
@@ -1045,7 +1045,13 @@ abstract class Object {
 	 * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
 	 *
 	 * @param string $method the name of the method to call on each extension
-	 * @param mixed $a1,... up to 7 arguments to be passed to the method
+	 * @param mixed $a1
+	 * @param mixed $a2
+	 * @param mixed $a3
+	 * @param mixed $a4
+	 * @param mixed $a5
+	 * @param mixed $a6
+	 * @param mixed $a7
 	 * @return array
 	 */
 	public function extend($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {

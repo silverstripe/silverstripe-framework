@@ -24,8 +24,8 @@ class GridState extends HiddenField {
 
 	/**
 	 *
-	 * @param GridField $name
-	 * @param string $data - json encoded string
+	 * @param GridField $grid
+	 * @param string $value JSON encoded string
 	 */
 	public function __construct($grid, $value = null) {
 		$this->grid = $grid;

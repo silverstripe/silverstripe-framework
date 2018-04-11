@@ -55,8 +55,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @see {@link GridFieldDataColumns}.
 	 *
 	 * @param GridField $gridField
-	 * @param arary $columns List of columns
-	 * @param array - List reference of all column names.
+	 * @param array $columns List of columns
 	 */
 	public function augmentColumns($gridField, &$columns);
 
@@ -205,7 +204,7 @@ interface GridField_SaveHandler extends GridFieldComponent {
 	/**
 	 * Called when a grid field is saved - i.e. the form is submitted.
 	 *
-	 * @param GridField $field
+	 * @param GridField $grid
 	 * @param DataObjectInterface $record
 	 */
 	public function handleSave(GridField $grid, DataObjectInterface $record);

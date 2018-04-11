@@ -47,7 +47,9 @@ abstract class Extension {
 	 * Called when this extension is added to a particular class
 	 *
 	 * @static
-	 * @param $class
+	 * @param string $class
+	 * @param string $extensionClass
+	 * @param mixed $args
 	 */
 	public static function add_to_class($class, $extensionClass, $args = null) {
 		// NOP
