@@ -257,12 +257,12 @@ class InstallRequirements
         $isIIS = $this->isIIS();
         $webserver = $this->findWebserver();
 
-        $this->requirePHPVersion('5.5.0', '5.5.0', array(
+        $this->requirePHPVersion('7.1.0', '7.1.0', [
             "PHP Configuration",
             "PHP5 installed",
             null,
             "PHP version " . phpversion()
-        ));
+        ]);
 
         // Check that we can identify the root folder successfully
         $this->requireFile('vendor/silverstripe/framework/src/Dev/Install/config-form.html', array(
