@@ -62,7 +62,6 @@ trait CustomMethods
         switch (true) {
             case isset($config['callback']):
                 return $config['callback']($this, $arguments);
-                break;
             case isset($config['property']):
                 $property = $config['property'];
                 $index = $config['index'];
@@ -88,21 +87,17 @@ trait CustomMethods
                         $obj->clearOwner();
                     }
                 }
-                break;
             case isset($config['wrap']):
                 array_unshift($arguments, $config['method']);
                 $wrapped = $config['wrap'];
                 return $this->$wrapped(...$arguments);
-                break;
             case isset($config['function']):
                 return $config['function']($this, $arguments);
-                break;
             default:
                 throw new BadMethodCallException(
                     "Object->__call(): extra method $method is invalid on $class:"
                     . var_export($config, true)
                 );
-                break;
         }
     }
 

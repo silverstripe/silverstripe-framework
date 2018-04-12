@@ -1932,7 +1932,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 return $result
                     ->setDataQueryParam($this->getInheritableQueryParams())
                     ->forForeignID($this->ID);
-                break;
             case 'belongs_to':
             case 'has_many':
                 // These relations must have a has_one on the other end, so find it
@@ -1955,7 +1954,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     ->filter('ID', $joinID)
                     ->setDataQueryParam($this->getInheritableQueryParams())
                     ->first();
-                break;
             case 'many_many':
             case 'belongs_many_many':
                 // Get components and extra fields from parent
@@ -1981,10 +1979,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 return $result
                     ->setDataQueryParam($this->getInheritableQueryParams())
                     ->forForeignID($this->ID);
-                break;
             default:
                 return null;
-                break;
         }
     }
 
