@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Session;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 use Symfony\Component\DomCrawler\Crawler;
@@ -24,6 +25,9 @@ class CmsFormsContext implements Context
 
     /**
      * Get Mink session from MinkContext
+     *
+     * @param string $name
+     * @return Session
      */
     public function getSession($name = null)
     {
@@ -210,6 +214,7 @@ JS;
         $page = $this->getSession()->getPage();
         $els = $page->findAll('named', array('field', "'$text'"));
         $matchedEl = null;
+        /** @var NodeElement $el */
         foreach ($els as $el) {
             if ($el->isVisible()) {
                 $matchedEl = $el;
@@ -267,6 +272,7 @@ JS;
     public function iSelectValueInTreeDropdown($text, $selector)
     {
         $page = $this->getSession()->getPage();
+        /** @var NodeElement $parentElement */
         $parentElement = null;
         $this->retryThrowable(function () use (&$parentElement, &$page, $selector) {
             $parentElement = $page->find('css', $selector);

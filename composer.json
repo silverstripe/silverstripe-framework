@@ -53,19 +53,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
-        "silverstripe/versioned": "^1@dev",
-        "silverstripe/behat-extension": "^3",
-        "silverstripe/serve": "^2@dev",
-        "se/selenium-server-standalone": "2.41.0"
+        "silverstripe/versioned": "^1"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
     },
     "extra": {
-        "branch-alias": {
-            "4.x-dev": "4.2.x-dev",
-            "dev-master": "5.x-dev"
-        },
         "expose": [
             "client/images",
             "client/styles",
