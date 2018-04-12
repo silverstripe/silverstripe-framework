@@ -87,6 +87,7 @@ trait CustomMethods
                         $obj->clearOwner();
                     }
                 }
+                break;
             case isset($config['wrap']):
                 array_unshift($arguments, $config['method']);
                 $wrapped = $config['wrap'];
