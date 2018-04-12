@@ -43,7 +43,8 @@ through the [Composer dependency update section](/changelogs/4.0.0#deps)
 * Backup your database content.
 * Backup your webroot files.
 * Download the new release and uncompress it to a temporary folder.
-* Leave custom folders like *mysite* or *themes* in place.
+* Leave custom folders like *themes* in place.
+* Rename `mysite/code` folder to `app/src`, updating your `app/_config/mysite.yml` config to set the new project name.
 * Identify system folders in your webroot (`cms`, `framework` and any additional modules).
 * Delete existing system folders (or move them outside of your webroot).
 * Add a `private static $table_name = 'MyDataObject'` for any custom DataObjects in your code that are namespaced. This ensures that your database table name will be `MyDataObject` instead of `Me_MyPackage_Model_MyDataObject` (converts your namespace to the table_name).
@@ -99,7 +100,7 @@ For a full list of renamed classes, check the `.upgrade.yml` definitions in each
 After installing, run the upgrader upgrade command: 
 ```
 cd ~/my-project-root
-~/.composer/vendor/bin/upgrade-code upgrade ./mysite --write
+~/.composer/vendor/bin/upgrade-code upgrade ./app/src --write
 ```
 
 ## Migrating files

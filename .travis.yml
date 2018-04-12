@@ -2,6 +2,10 @@ language: php
 
 dist: trusty
 
+before_install:
+ - sudo apt-get update
+ - sudo apt-get install chromium-chromedriver
+
 cache:
   directories:
     - $HOME/.composer/cache/files
@@ -62,6 +66,9 @@ matrix:
         - PHPUNIT_TEST=framework
 
 before_script:
+# Extra $PATH
+  - export PATH=/usr/lib/chromium-browser/:$PATH
+
 # Init PHP
   - pecl channel-update pecl.php.net
   - phpenv rehash
@@ -69,14 +76,12 @@ before_script:
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 # Install composer dependencies
-  - export PATH=~/.composer/vendor/bin:$PATH
   - composer validate
   - mkdir ./public
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:3.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:3.x-dev --no-update; fi
-  - composer require silverstripe/recipe-core:2.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
+  - composer require silverstripe/recipe-testing:^2 silverstripe/recipe-core:2.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
   - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:2.x-dev --no-update; fi
-  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
@@ -86,7 +91,7 @@ before_script:
   - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
   - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
   - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
-  - if [[ $BEHAT_TEST ]]; then (vendor/bin/selenium-server-standalone > artifacts/selenium.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST ]]; then (chromedriver > artifacts/chromedriver.log 2>&1 &); fi
   - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
   - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
 

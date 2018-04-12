@@ -18,8 +18,9 @@ Feature: Reauthenticate
     When I fill in "Password" with "Secret!123"
       And I press the "Let me back in" button
       And I am not in an iframe
-      And I click "ADMIN" in the "#Root_Users" element
-    Then I should see "Save" in the "#Form_ItemEditForm_action_doSave" element
+      And I go to "/admin/security"
+      When I press the "Add Member" button
+    Then I should see "Create" in the "#Form_ItemEditForm_action_doSave" element
 
   Scenario: Reauthenticate with wrong login
     When I press the "Add Member" button
@@ -31,5 +32,6 @@ Feature: Reauthenticate
     When I fill in "Password" with "Secret!123"
       And I press the "Let me back in" button
       And I am not in an iframe
-      And I click "ADMIN" in the "#Root_Users" element
-    Then I should see "Save" in the "#Form_ItemEditForm_action_doSave" element
+      And I go to "/admin/security"
+      When I press the "Add Member" button
+    Then I should see "Create" in the "#Form_ItemEditForm_action_doSave" element
