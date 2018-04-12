@@ -23,10 +23,11 @@ default:
 
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
-      default_session: selenium2
-      javascript_session: selenium2
-      selenium2:
-        browser: firefox
+      default_session: facebook_web_driver
+      javascript_session: facebook_web_driver
+      facebook_web_driver:
+        browser: chrome
+        wd_host: "http://127.0.0.1:9515" #chromedriver port
 
     SilverStripe\BehatExtension\Extension:
       screenshot_path: %paths.base%/artifacts/screenshots
