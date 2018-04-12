@@ -104,6 +104,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
 	 * 					If blank, it's assumed that this is public, and always shown to users who
 	 * 					have the rights to access some other part of the admin area.
+	 * @param int $priority
 	 * @param array $attributes an array of attributes to include on the link.
 	 *
 	 * @return boolean Success
@@ -235,6 +236,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
 	 * 					If blank, it's assumed that this is public, and always shown to users who
 	 * 					have the rights to access some other part of the admin area.
+	 * @param int $priority
 	 * @param array $attributes an array of attributes to include on the link.
 	 *
 	 * @return boolean Success

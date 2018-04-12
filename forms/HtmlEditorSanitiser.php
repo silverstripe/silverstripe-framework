@@ -165,8 +165,9 @@ class HtmlEditorSanitiser {
 
 	/**
 	 * Given an element tag, return the rule structure for that element
-	 * @param string $tag - The element tag
-	 * @return stdClass - The element rule
+	 *
+	 * @param string $tag The element tag
+	 * @return stdClass The element rule
 	 */
 	protected function getRuleForElement($tag) {
 		if(isset($this->elements[$tag])) {
@@ -179,8 +180,10 @@ class HtmlEditorSanitiser {
 
 	/**
 	 * Given an attribute name, return the rule structure for that attribute
-	 * @param string $name - The attribute name
-	 * @return stdClass - The attribute rule
+	 *
+	 * @param object $elementRule
+	 * @param string $name The attribute name
+	 * @return stdClass The attribute rule
 	 */
 	protected function getRuleForAttribute($elementRule, $name) {
 		if(isset($elementRule->attributes[$name])) {
@@ -193,9 +196,9 @@ class HtmlEditorSanitiser {
 
 	/**
 	 * Given a DOMElement and an element rule, check if that element passes the rule
-	 * @param DOMElement $element - the element to check
-	 * @param stdClass $rule - the rule to check against
-	 * @return bool - true if the element passes (and so can be kept), false if it fails (and so needs stripping)
+	 * @param DOMElement $element The element to check
+	 * @param stdClass $rule The rule to check against
+	 * @return bool True if the element passes (and so can be kept), false if it fails (and so needs stripping)
 	 */
 	protected function elementMatchesRule($element, $rule = null) {
 		// If the rule doesn't exist at all, the element isn't allowed

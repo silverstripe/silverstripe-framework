@@ -23,7 +23,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	protected $itemClass = 'GridFieldPageCount';
 
 	/**
-	 * @param string $targetFrament The fragment indicating the placement of this page count
+	 * @param string $targetFragment The fragment indicating the placement of this page count
 	 */
 	public function __construct($targetFragment = 'before') {
 		$this->targetFragment = $targetFragment;

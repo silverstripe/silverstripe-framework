@@ -602,9 +602,9 @@ class Config {
 	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to
 	 * replace the current array value, you'll need to call remove first.
 	 *
-	 * @param $class string - The class to update a configuration value for
-	 * @param $name string - The configuration property name to update
-	 * @param $value any - The value to update with
+	 * @param string $class The class to update a configuration value for
+	 * @param string $name  The configuration property name to update
+	 * @param mixed $value The value to update with
 	 *
 	 * Arrays are recursively merged into current configuration as "latest" - for associative arrays the passed value
 	 * replaces any item with the same key, for sequential arrays the items are placed at the end of the array, for
@@ -648,13 +648,6 @@ class Config {
 	 *
 	 * @param string $class The class to remove a configuration value from
 	 * @param string $name The configuration name
-	 * @param mixed $key An optional key to filter against.
-	 *   If referenced config value is an array, only members of that array that match this key will be removed
-	 *   Must also match value if provided to be removed
-	 * @param mixed $value And optional value to filter against.
-	 *   If referenced config value is an array, only members of that array that match this value will be removed
-	 *   If referenced config value is not an array, value will be removed only if it matches this argument
-	 *   Must also match key if provided and referenced config value is an array to be removed
 	 *
 	 * Matching is always by "==", not by "==="
 	 */

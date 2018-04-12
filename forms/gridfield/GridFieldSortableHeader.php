@@ -61,7 +61,8 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 * Specify sortings with fieldname as the key, and actual fieldname to sort as value.
 	 * Example: array("MyCustomTitle"=>"Title", "MyCustomBooleanField" => "ActualBooleanField")
 	 *
-	 * @param array $casting
+	 * @param array $sorting
+	 * @return $this
 	 */
 	public function setFieldSorting($sorting) {
 		$this->fieldSorting = $sorting;
@@ -77,6 +78,8 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 	/**
 	 * Returns the header row providing titles with sort buttons
+	 *
+	 * @param GridField $gridField
 	 */
 	public function getHTMLFragments($gridField) {
 		if(!$this->checkDataType($gridField->getList())) return;

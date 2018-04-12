@@ -364,9 +364,10 @@ class ShortcodeParser extends Object {
 	 * Replaces the shortcode tags extracted by extractTags with HTML element "markers", so that
 	 * we can parse the resulting string as HTML and easily mutate the shortcodes in the DOM
 	 *
-	 * @param string $content - The HTML string with [tag] style shortcodes embedded
-	 * @param array $tags - The tags extracted by extractTags
-	 * @return string - The HTML string with [tag] style shortcodes replaced by markers
+	 * @param string $content The HTML string with [tag] style shortcodes embedded
+	 * @param array $tags The tags extracted by extractTags
+	 * @param callable $generator Callback for performing the replacements
+	 * @return string The HTML string with [tag] style shortcodes replaced by markers
 	 */
 	protected function replaceTagsWithText($content, $tags, $generator) {
 		// The string with tags replaced with markers
@@ -398,7 +399,7 @@ class ShortcodeParser extends Object {
 	 * We don't use markers with attributes because there's no point, it's easier to do all the matching
 	 * in-DOM after the XML parse
 	 *
-	 * @param DOMDocument $doc
+	 * @param DOMDocument $htmlvalue
 	 */
 	protected function replaceAttributeTagsWithContent($htmlvalue) {
 		$attributes = $htmlvalue->query('//@*[contains(.,"[")][contains(.,"]")]');
@@ -485,7 +486,8 @@ class ShortcodeParser extends Object {
 	 * generate only inline blocks)
 	 *
 	 * @param DOMElement $node
-	 * @param int $location - ShortcodeParser::BEFORE, ShortcodeParser::SPLIT or ShortcodeParser::INLINE
+	 * @param DOMElement $parent
+	 * @param string $location ShortcodeParser::BEFORE, ShortcodeParser::SPLIT or ShortcodeParser::INLINE
 	 */
 	protected function moveMarkerToCompliantHome($node, $parent, $location) {
 		// Move before block parent
