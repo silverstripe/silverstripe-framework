@@ -2,13 +2,13 @@
 
 namespace SilverStripe\Framework\Tests\Behaviour;
 
-use Behat\Behat\Hook\Call\AfterStep;
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Session;
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Mink\Element\Element;
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Selector\Xpath\Escaper;
+use Behat\Mink\Session;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
-use SilverStripe\BehatExtension\Context\RetryableContextTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 
 /**
@@ -24,6 +24,7 @@ class CmsUiContext implements Context
     /**
      * Get Mink session from MinkContext
      *
+     * @param string $name
      * @return Session
      */
     public function getSession($name = null)
@@ -306,6 +307,7 @@ class CmsUiContext implements Context
         $page = $this->getSession()->getPage();
         $toggle_elements = $page->findAll('css', '.toggle-expand');
         assertNotNull($toggle_elements, 'Panel toggle not found');
+        /** @var NodeElement $toggle */
         foreach ($toggle_elements as $toggle) {
             if ($toggle->isVisible()) {
                 $toggle->click();
@@ -354,7 +356,6 @@ SCRIPT
     public function iExpandInTheTree($action, $nodeText)
     {
         //Tries to find the first visiable matched Node in the page
-        $page = $this->getSession()->getPage();
         $treeEl = $this->getCmsTreeElement();
         $treeNode = $treeEl->findLink($nodeText);
         assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
@@ -391,6 +392,7 @@ SCRIPT
         assertNotNull($tabsets, 'CMS tabs not found');
 
         $tab_element = null;
+        /** @var NodeElement $tabset */
         foreach ($tabsets as $tabset) {
             $tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
             if ($tab_element) {
@@ -419,6 +421,7 @@ SCRIPT
         assertNotNull($tabsets, 'CMS tabs not found');
 
         $tab_element = null;
+        /** @var NodeElement $tabset */
         foreach ($tabsets as $tabset) {
             if ($tab_element) {
                 continue;
@@ -443,14 +446,10 @@ SCRIPT
      */
     public function thePreviewContains($content)
     {
-        $driver = $this->getSession()->getDriver();
-        // TODO Remove once we have native support in Mink and php-webdriver,
         // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
-        $origWindowName = $driver->getWebDriverSession()->window_handle();
-
-        $driver->switchToIFrame('cms-preview-iframe');
+        $this->getSession()->switchToIFrame('cms-preview-iframe');
         $this->getMainContext()->assertPageContainsText($content);
-        $driver->switchToWindow($origWindowName);
+        $this->getSession()->switchToWindow();
     }
 
     /**
@@ -467,17 +466,13 @@ SCRIPT
      */
     public function iWaitForThePreviewToLoad()
     {
-        $driver = $this->getSession()->getDriver();
-        // TODO Remove once we have native support in Mink and php-webdriver,
         // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
-        $origWindowName = $driver->getWebDriverSession()->window_handle();
-
-        $driver->switchToIFrame('cms-preview-iframe');
+        $this->getSession()->switchToIFrame('cms-preview-iframe');
         $this->getSession()->wait(
             5000,
             "window.jQuery && !window.jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
         );
-        $driver->switchToWindow($origWindowName);
+        $this->getSession()->switchToWindow();
     }
 
     /**
@@ -504,14 +499,10 @@ SCRIPT
      */
     public function thePreviewDoesNotContain($content)
     {
-        $driver = $this->getSession()->getDriver();
-        // TODO Remove once we have native support in Mink and php-webdriver,
         // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
-        $origWindowName = $driver->getWebDriverSession()->window_handle();
-
-        $driver->switchToIFrame('cms-preview-iframe');
+        $this->getSession()->switchToIFrame('cms-preview-iframe');
         $this->getMainContext()->assertPageNotContainsText($content);
-        $driver->switchToWindow($origWindowName);
+        $this->getSession()->switchToWindow();
     }
 
     /**
@@ -521,16 +512,12 @@ SCRIPT
      */
     public function clickLinkInPreview($link)
     {
-        $driver = $this->getSession()->getDriver();
         // TODO Remove once we have native support in Mink and php-webdriver,
         // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
-        $origWindowName = $driver->getWebDriverSession()->window_handle();
-        $driver->switchToIFrame('cms-preview-iframe');
-
+        $this->getSession()->switchToIFrame('cms-preview-iframe');
         $link = $this->fixStepArgument($link);
         $this->getSession()->getPage()->clickLink($link);
-
-        $driver->switchToWindow($origWindowName);
+        $this->getSession()->switchToWindow();
     }
 
     /**
@@ -540,16 +527,11 @@ SCRIPT
      */
     public function pressButtonInPreview($button)
     {
-        $driver = $this->getSession()->getDriver();
-        // TODO Remove once we have native support in Mink and php-webdriver,
         // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
-        $origWindowName = $driver->getWebDriverSession()->window_handle();
-        $driver->switchToIFrame('cms-preview-iframe');
-
+        $this->getSession()->switchToIFrame('cms-preview-iframe');
         $button = $this->fixStepArgument($button);
         $this->getSession()->getPage()->pressButton($button);
-
-        $driver->switchToWindow($origWindowName);
+        $this->getSession()->switchToWindow();
     }
 
     /**
@@ -563,9 +545,10 @@ SCRIPT
         $field = $this->fixStepArgument($field);
         $value = $this->fixStepArgument($value);
 
+        $escaper = new Escaper();
         $nativeField = $this->getSession()->getPage()->find(
             'named',
-            array('select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field))
+            array('select', $escaper->escapeLiteral($field))
         );
         if ($nativeField && $nativeField->isVisible()) {
             $nativeField->selectOption($value);
@@ -614,6 +597,7 @@ SCRIPT
         ));
 
         // Traverse up to field holder
+        /** @var NodeElement $container */
         $container = null;
         foreach ($formFields as $formField) {
             $container = $this->findParentByClass($formField, 'field');
