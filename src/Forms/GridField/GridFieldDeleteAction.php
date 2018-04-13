@@ -128,7 +128,10 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 "unlinkrelation",
                 array('RecordID' => $record->ID)
             )
-                ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink')
+                ->addExtraClass(
+                    'btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action'
+                    . ' gridfield-button-unlink'
+                )
                 ->setAttribute('title', $title)
                 ->setAttribute('aria-label', $title);
         } else {
@@ -143,7 +146,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 "deleterecord",
                 array('RecordID' => $record->ID)
             )
-                ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action')
+                ->addExtraClass(
+                    'gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action'
+                )
                 ->setAttribute('title', _t(__CLASS__ . '.Delete', "Delete"))
                 ->setDescription(_t(__CLASS__ . '.DELETE_DESCRIPTION', 'Delete'));
         }

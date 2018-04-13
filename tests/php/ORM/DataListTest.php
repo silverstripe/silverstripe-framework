@@ -152,13 +152,25 @@ class DataListTest extends SapphireTest
     public function testDistinct()
     {
         $list = TeamComment::get();
-        $this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is set as distinct by default');
+        $this->assertContains(
+            'SELECT DISTINCT',
+            $list->dataQuery()->sql($params),
+            'Query is set as distinct by default'
+        );
 
         $list = $list->distinct(false);
-        $this->assertNotContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query does not contain distinct');
+        $this->assertNotContains(
+            'SELECT DISTINCT',
+            $list->dataQuery()->sql($params),
+            'Query does not contain distinct'
+        );
 
         $list = $list->distinct(true);
-        $this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query contains distinct');
+        $this->assertContains(
+            'SELECT DISTINCT',
+            $list->dataQuery()->sql($params),
+            'Query contains distinct'
+        );
     }
 
     public function testDataClass()
@@ -1589,7 +1601,8 @@ class DataListTest extends SapphireTest
 
         $sql = $list->sql($parameters);
         $this->assertSQLContains(
-            'WHERE ("DataObjectTest_TeamComment"."Name" IN (?, ?)) AND (("DataObjectTest_TeamComment"."Name" NOT IN (?, ?) '
+            'WHERE ("DataObjectTest_TeamComment"."Name" IN (?, ?)) '
+            . 'AND (("DataObjectTest_TeamComment"."Name" NOT IN (?, ?) '
             . 'OR "DataObjectTest_TeamComment"."Name" IS NULL))',
             $sql
         );
@@ -1618,7 +1631,10 @@ class DataListTest extends SapphireTest
             . 'OR "DataObjectTest_TeamComment"."Comment" IS NULL))',
             $sql
         );
-        $this->assertEquals(array('Phil', 'Bob', 'Joe', 'Phil', 'Matches no comments', 'Not a matching comment'), $parameters);
+        $this->assertEquals(
+            ['Phil', 'Bob', 'Joe', 'Phil', 'Matches no comments', 'Not a matching comment'],
+            $parameters
+        );
         $list = $list->sort('Name');
         $this->assertListEquals(
             [

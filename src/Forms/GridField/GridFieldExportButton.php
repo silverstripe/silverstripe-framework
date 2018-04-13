@@ -187,7 +187,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                 if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
                     $headers[] = $columnHeader['title'];
                 } else {
-                    $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
+                    $headers[] = (!is_string($columnHeader) && is_callable($columnHeader))
+                        ? $columnSource
+                        : $columnHeader;
                 }
             }
 

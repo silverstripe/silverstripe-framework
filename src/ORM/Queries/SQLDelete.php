@@ -43,7 +43,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param array $where An array of WHERE clauses.
      * @param array|string $delete The table(s) to delete, if multiple tables are queried from
      */
-    function __construct($from = array(), $where = array(), $delete = array())
+    public function __construct($from = array(), $where = array(), $delete = array())
     {
         parent::__construct($from, $where);
         $this->setDelete($delete);

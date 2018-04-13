@@ -2,13 +2,11 @@
 
 namespace SilverStripe\ORM\Search;
 
-use SilverStripe\Assets\File;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\DataExtension;
 use Exception;
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\ORM\DataExtension;
 
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index.
@@ -69,7 +67,11 @@ class FulltextSearchable extends DataExtension
             }
 
             if (isset($defaultColumns[$class])) {
-                $class::add_extension(sprintf('%s(%s)', static::class, "'" . implode("','", $defaultColumns[$class]) . "''"));
+                $class::add_extension(sprintf(
+                    '%s(%s)',
+                    static::class,
+                    "'" . implode("','", $defaultColumns[$class]) . "''"
+                ));
             } else {
                 throw new Exception(
                     "FulltextSearchable::enable() I don't know the default search columns for class '$class'"

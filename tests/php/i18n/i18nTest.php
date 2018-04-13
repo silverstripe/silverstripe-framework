@@ -341,7 +341,8 @@ class i18nTest extends SapphireTest
         //test injected calls
         $this->assertContains(
             Convert::nl2os(
-                "TRANS Hello " . Director::absoluteBaseURL() . " " . i18n::get_locale() . ". But it is late, global calls\n"
+                "TRANS Hello " . Director::absoluteBaseURL() . " " . i18n::get_locale()
+                . ". But it is late, global calls\n"
             ),
             $parsedHtml,
             "Testing a translation with just entity and injection array, but with global variables injected in"

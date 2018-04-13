@@ -412,7 +412,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * Get the ID of an object from the fixture.
      *
-     * @param string $className The data class or table name, as specified in your fixture file.  Parent classes won't work
+     * @param string $className The data class or table name, as specified in your fixture file.
+     *                          Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return int
      */
@@ -446,7 +447,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * Get an object from the fixture.
      *
-     * @param string $className The data class or table name, as specified in your fixture file. Parent classes won't work
+     * @param string $className The data class or table name, as specified in your fixture file.
+     *                          Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
      *
      * @return DataObject
@@ -575,7 +577,14 @@ abstract class SapphireTest extends TestCase implements TestOnly
         if ($haystack instanceof DBField) {
             $haystack = (string)$haystack;
         }
-        parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
+        parent::assertNotContains(
+            $needle,
+            $haystack,
+            $message,
+            $ignoreCase,
+            $checkForObjectIdentity,
+            $checkForNonObjectIdentity
+        );
     }
 
     /**
@@ -960,8 +969,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
             // Start session and execute
             $request->getSession()->init($request);
 
-            // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
-            // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
+            // Invalidate classname spec since the test manifest will now pull out new subclasses for each
+            // internal class (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
             DataObject::reset();
 
             // Set dummy controller;
@@ -1175,7 +1184,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         if (strpos($fixtureFilePath, ':') !== false) {
             return ModuleResourceLoader::singleton()->resolvePath($fixtureFilePath);
         }
-        
+
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
         $isRelativeToFile

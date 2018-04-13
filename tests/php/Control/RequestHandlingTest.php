@@ -120,7 +120,7 @@ class RequestHandlingTest extends FunctionalTest
         $this->assertEquals("MyField requested", $response->getBody());
 
         /* We can also make a POST request on a form field, which could be used for in-place editing, for example. */
-        $response = Director::test("testGoodBase1/TestForm/fields/MyField", array("MyField" => 5));
+        $response = Director::test("testGoodBase1/TestForm/fields/MyField", ["MyField" => 5]);
         $this->assertEquals("MyField posted, update to 5", $response->getBody());
     }
 
@@ -136,7 +136,8 @@ class RequestHandlingTest extends FunctionalTest
 
                 $this->assertEquals(
                     'MyField posted, update to 5',
-                    Director::test('/silverstripe/testGoodBase1/TestForm/fields/MyField', array('MyField' => 5))->getBody()
+                    Director::test('/silverstripe/testGoodBase1/TestForm/fields/MyField', ['MyField' => 5])
+                        ->getBody()
                 );
             }
         );

@@ -168,7 +168,8 @@ SCRIPT;
         // Join list of paths
         $filesList = Convert::raw2js(implode(',', $fileURLS));
         // Mark all themes, plugins and languages as done
-        $buffer[] = "window.tinymce.each('$filesList'.split(',')," . "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
+        $buffer[] = "window.tinymce.each('$filesList'.split(','),"
+            . "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
 
         $buffer[] = '})();';
         return implode("\n", $buffer) . "\n";

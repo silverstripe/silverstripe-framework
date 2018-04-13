@@ -38,7 +38,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $assignment List of column assignments
      * @param array $where List of where clauses
      */
-    function __construct($table = null, $assignment = array(), $where = array())
+    public function __construct($table = null, $assignment = array(), $where = array())
     {
         parent::__construct(null, $where);
         $this->assignment = new SQLAssignmentRow();

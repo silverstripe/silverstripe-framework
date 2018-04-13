@@ -2,12 +2,14 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Controller;
+use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Permission;
@@ -113,6 +115,12 @@ class DevelopmentAdmin extends Controller
         }
     }
 
+    /**
+     * @param HTTPRequest $request
+     * @return Controller
+     * @throws Exception
+     * @throws HTTPResponse_Exception
+     */
     public function runRegisteredController(HTTPRequest $request)
     {
         $controllerClass = null;
@@ -129,7 +137,8 @@ class DevelopmentAdmin extends Controller
 
         $msg = 'Error: no controller registered in ' . __CLASS__ . ' for: ' . $request->param('Action');
         if (Director::is_cli()) {
-            // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
+            // in CLI we cant use httpError because of a bug with stuff being in the output already,
+            // see DevAdminControllerTest
             throw new Exception($msg);
         } else {
             $this->httpError(500, $msg);
@@ -207,10 +216,12 @@ class DevelopmentAdmin extends Controller
     /**
      * Generate a secure token which can be used as a crypto key.
      * Returns the token and suggests PHP configuration to set it.
+     *
+     * @return HTTPResponse
      */
     public function generatesecuretoken()
     {
-        $generator = Injector::inst()->create('SilverStripe\\Security\\RandomGenerator');
+        $generator = Injector::inst()->create(RandomGenerator::class);
         $token = $generator->randomToken('sha1');
         $body = <<<TXT
 Generated new token. Please add the following code to your YAML configuration:
@@ -219,7 +230,7 @@ Security:
   token: $token
 
 TXT;
-        $response = new HTTPResponse($body);
+        $response = HTTPResponse::create($body);
         return $response->addHeader('Content-Type', 'text/plain');
     }
 

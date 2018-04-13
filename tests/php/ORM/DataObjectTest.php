@@ -156,7 +156,8 @@ class DataObjectTest extends SapphireTest
             $helper = $obj->dbObject($field);
             $this->assertTrue(
                 ($helper instanceof DBField),
-                "for {$field} expected helper to be DBField, but was " . (is_object($helper) ? get_class($helper) : "null")
+                "for {$field} expected helper to be DBField, but was "
+                . (is_object($helper) ? get_class($helper) : "null")
             );
         }
     }

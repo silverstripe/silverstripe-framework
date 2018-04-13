@@ -32,7 +32,11 @@ use LogicException;
  * For easier setup, have a look at a sample configuration in
  * {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
+class GridFieldAddExistingAutocompleter implements
+    GridField_HTMLProvider,
+    GridField_ActionProvider,
+    GridField_DataManipulator,
+    GridField_URLHandler
 {
 
     /**
@@ -105,10 +109,13 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
     {
         $dataClass = $gridField->getModelClass();
 
-        $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new FieldList();
+        $forTemplate = ArrayData::create([]);
+        $forTemplate->Fields = FieldList::create();
 
-        $searchField = new TextField('gridfield_relationsearch', _t('SilverStripe\\Forms\\GridField\\GridField.RelationSearch', "Relation search"));
+        $searchField = TextField::create(
+            'gridfield_relationsearch',
+            _t('SilverStripe\\Forms\\GridField\\GridField.RelationSearch', "Relation search")
+        );
 
         $searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
         $searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));

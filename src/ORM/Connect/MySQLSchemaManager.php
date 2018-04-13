@@ -307,9 +307,13 @@ class MySQLSchemaManager extends DBSchemaManager
     {
         if ($indexSpec['type'] == 'using') {
             return sprintf('index "%s" using (%s)', $indexName, $this->implodeColumnList($indexSpec['columns']));
-        } else {
-            return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeColumnList($indexSpec['columns']));
         }
+        return sprintf(
+            '%s "%s" (%s)',
+            $indexSpec['type'],
+            $indexName,
+            $this->implodeColumnList($indexSpec['columns'])
+        );
     }
 
     public function alterIndex($tableName, $indexName, $indexSpec)

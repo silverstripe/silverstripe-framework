@@ -147,7 +147,9 @@ class ConfirmedPasswordField extends FormField
             ),
             $this->confirmPasswordfield = new PasswordField(
                 "{$name}[_ConfirmPassword]",
-                (isset($titleConfirmField)) ? $titleConfirmField : _t('SilverStripe\\Security\\Member.CONFIRMPASSWORD', 'Confirm Password')
+                (isset($titleConfirmField))
+                    ? $titleConfirmField
+                    : _t('SilverStripe\\Security\\Member.CONFIRMPASSWORD', 'Confirm Password')
             )
         );
 
@@ -607,7 +609,10 @@ class ConfirmedPasswordField extends FormField
         $name = $this->getName();
         $currentName = "{$name}[_CurrentPassword]";
         if ($show) {
-            $confirmField = PasswordField::create($currentName, _t('SilverStripe\\Security\\Member.CURRENT_PASSWORD', 'Current Password'));
+            $confirmField = PasswordField::create(
+                $currentName,
+                _t('SilverStripe\\Security\\Member.CURRENT_PASSWORD', 'Current Password')
+            );
             $this->children->unshift($confirmField);
         } else {
             $this->children->removeByName($currentName, true);

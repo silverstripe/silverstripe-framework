@@ -3,7 +3,6 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -144,7 +143,10 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertEmpty($result);
         $messages = $message->getMessages();
         $this->assertEquals(
-            _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
+            _t(
+                'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                'The provided details don\'t seem to be correct. Please try again.'
+            ),
             $messages[0]['message']
         );
     }

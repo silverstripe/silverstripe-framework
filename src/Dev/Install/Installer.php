@@ -81,8 +81,9 @@ class Installer extends InstallRequirements
 
         // Cleanup _config.php
         if (file_exists('mysite/_config.php')) {
-            // Truncate the contents of _config instead of deleting it - we can't re-create it because Windows handles permissions slightly
-            // differently to UNIX based filesystems - it takes the permissions from the parent directory instead of retaining them
+            // Truncate the contents of _config instead of deleting it - we can't re-create it because Windows handles
+            // permissions slightly differently to UNIX based filesystems - it takes the permissions from the parent
+            // directory instead of retaining them
             $fh = fopen('mysite/_config.php', 'wb');
             fclose($fh);
         }
@@ -562,6 +563,7 @@ TEXT;
                 : "?$params"
         );
 
+        // phpcs:disable
         echo <<<HTML
 <li id="ModRewriteResult">Testing...</li>
 <script>
@@ -597,6 +599,7 @@ TEXT;
     <li><a href="$destinationURL">Click here</a> to check friendly URLs are working. If you get a 404 then something is wrong.</li>
 </noscript>
 HTML;
+        // phpcs:enable
     }
 
     /**

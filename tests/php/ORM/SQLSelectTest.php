@@ -147,9 +147,13 @@ class SQLSelectTest extends SapphireTest
     public function testAddOrderBy()
     {
         $query = new SQLSelect();
-        $query->setSelect('ID', "Title")->setFrom('Page')->addOrderBy('(ID % 2)  = 0', 'ASC')->addOrderBy('ID > 50', 'ASC');
+        $query->setSelect('ID', "Title")
+            ->setFrom('Page')
+            ->addOrderBy('(ID % 2)  = 0', 'ASC')
+            ->addOrderBy('ID > 50', 'ASC');
         $this->assertSQLEquals(
-            'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1" FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
+            'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1"'
+            . ' FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
             $query->sql($parameters)
         );
     }
@@ -167,10 +171,11 @@ class SQLSelectTest extends SapphireTest
 
     public function testSelectWithLimitClause()
     {
-        if (!(DB::get_conn() instanceof MySQLDatabase || DB::get_conn() instanceof SQLite3Database
+        if (!(DB::get_conn() instanceof MySQLDatabase
+            || DB::get_conn() instanceof SQLite3Database
             || DB::get_conn() instanceof PostgreSQLDatabase)
         ) {
-            $this->markTestIncomplete();
+            $this->markTestSkipped('This test requires either a MySQL, SQLite or PostgreSQL database');
         }
 
         $query = new SQLSelect();
@@ -281,10 +286,11 @@ class SQLSelectTest extends SapphireTest
 
     public function testZeroLimitWithOffset()
     {
-        if (!(DB::get_conn() instanceof MySQLDatabase || DB::get_conn() instanceof SQLite3Database
+        if (!(DB::get_conn() instanceof MySQLDatabase
+            || DB::get_conn() instanceof SQLite3Database
             || DB::get_conn() instanceof PostgreSQLDatabase)
         ) {
-            $this->markTestIncomplete();
+            $this->markTestSkipped('This test requires either a MySQL, SQLite or PostgreSQL database');
         }
 
         $query = new SQLSelect();
@@ -704,25 +710,27 @@ class SQLSelectTest extends SapphireTest
      */
     public function testOrderByMultiple()
     {
-        if (DB::get_conn() instanceof MySQLDatabase) {
-            $query = new SQLSelect();
-            $query->setSelect(array('"Name"', '"Meta"'));
-            $query->setFrom('"SQLSelectTest_DO"');
-            $query->setOrderBy(array('MID("Name", 8, 1) DESC', '"Name" ASC'));
-
-            $records = array();
-            foreach ($query->execute() as $record) {
-                $records[] = $record;
-            }
-
-            $this->assertCount(2, $records);
-
-            $this->assertEquals('Object 2', $records[0]['Name']);
-            $this->assertEquals('2', $records[0]['_SortColumn0']);
-
-            $this->assertEquals('Object 1', $records[1]['Name']);
-            $this->assertEquals('1', $records[1]['_SortColumn0']);
+        if (!(DB::get_conn() instanceof MySQLDatabase)) {
+            $this->markTestSkipped('This test requires a MySQL database');
         }
+
+        $query = new SQLSelect();
+        $query->setSelect(array('"Name"', '"Meta"'));
+        $query->setFrom('"SQLSelectTest_DO"');
+        $query->setOrderBy(array('MID("Name", 8, 1) DESC', '"Name" ASC'));
+
+        $records = array();
+        foreach ($query->execute() as $record) {
+            $records[] = $record;
+        }
+
+        $this->assertCount(2, $records);
+
+        $this->assertEquals('Object 2', $records[0]['Name']);
+        $this->assertEquals('2', $records[0]['_SortColumn0']);
+
+        $this->assertEquals('Object 1', $records[1]['Name']);
+        $this->assertEquals('1', $records[1]['_SortColumn0']);
     }
 
     public function testSelect()

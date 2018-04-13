@@ -116,7 +116,11 @@ class DataQueryTest extends SapphireTest
         //confirm we are still joined to the base table
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //double check it is the "FROM" clause
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
+        $this->assertContains(
+            "FROM \"$baseDBTable\"",
+            $newDQ->sql(),
+            'The FROM clause has been removed from the query'
+        );
         //another (potentially less crude check) for checking "FROM" clause
         $fromTables = $newDQ->query()->getFrom();
         $this->assertEquals('"' . $baseDBTable . '"', $fromTables[$baseDBTable]);

@@ -87,7 +87,9 @@ class DefaultCacheFactory implements CacheFactory
         static $apcuSupported = null;
         if (null === $apcuSupported) {
             // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080
-            $apcuSupported = Director::is_cli() ? ini_get('apc.enable_cli') && ApcuAdapter::isSupported() : ApcuAdapter::isSupported();
+            $apcuSupported = Director::is_cli()
+                ? ini_get('apc.enable_cli') && ApcuAdapter::isSupported()
+                : ApcuAdapter::isSupported();
         }
         return $apcuSupported;
     }

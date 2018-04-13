@@ -213,7 +213,10 @@ class DatetimeField extends TextField
      */
     protected function getFrontendFormatter()
     {
-        if ($this->getHTML5() && $this->datetimeFormat && $this->datetimeFormat !== DBDatetime::ISO_DATETIME_NORMALISED) {
+        if ($this->getHTML5()
+            && $this->datetimeFormat
+            && $this->datetimeFormat !== DBDatetime::ISO_DATETIME_NORMALISED
+        ) {
             throw new \LogicException(
                 'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDatetimeFormat()'
             );

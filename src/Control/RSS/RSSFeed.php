@@ -214,7 +214,8 @@ class RSSFeed extends ViewableData
     /**
      * Output the feed to the browser.
      *
-     * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier testing/prototyping so dev can inject custom HTTPResponse instance.
+     * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier
+     * testing/prototyping so dev can inject custom HTTPResponse instance.
      *
      * @return DBHTMLText
      */

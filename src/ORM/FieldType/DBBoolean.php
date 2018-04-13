@@ -35,7 +35,7 @@ class DBBoolean extends DBField
 
     public function Nice()
     {
-        return ($this->value) ? _t('SilverStripe\\ORM\\FieldType\\DBBoolean.YESANSWER', 'Yes') : _t('SilverStripe\\ORM\\FieldType\\DBBoolean.NOANSWER', 'No');
+        return ($this->value) ? _t(__CLASS__ . '.YESANSWER', 'Yes') : _t(__CLASS__ . '.NOANSWER', 'No');
     }
 
     public function NiceAsBoolean()
@@ -61,10 +61,10 @@ class DBBoolean extends DBField
 
     public function scaffoldSearchField($title = null)
     {
-        $anyText = _t('SilverStripe\\ORM\\FieldType\\DBBoolean.ANY', 'Any');
+        $anyText = _t(__CLASS__ . '.ANY', 'Any');
         $source = array(
-            1 => _t('SilverStripe\\ORM\\FieldType\\DBBoolean.YESANSWER', 'Yes'),
-            0 => _t('SilverStripe\\ORM\\FieldType\\DBBoolean.NOANSWER', 'No')
+            1 => _t(__CLASS__ . '.YESANSWER', 'Yes'),
+            0 => _t(__CLASS__ . '.NOANSWER', 'No')
         );
 
         $field = new DropdownField($this->name, $title, $source);

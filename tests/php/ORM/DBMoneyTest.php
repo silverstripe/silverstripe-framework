@@ -84,7 +84,10 @@ class DBMoneyTest extends SapphireTest
         $m1->setCurrency('NZD');
         $obj1->NonDBMoneyField = $m1;
         $this->assertFalse($obj1->isChanged()); // Because only detects DB fields
-        $this->assertTrue($obj1->isChanged('NonDBMoneyField')); // Allow change detection to non-db fields explicitly named
+        $this->assertTrue(
+            $obj1->isChanged('NonDBMoneyField'),
+            'Allow change detection to non-db fields explicitly named'
+        );
 
         // Modify db field
         $obj2 = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test2');

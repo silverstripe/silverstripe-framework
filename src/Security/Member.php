@@ -351,9 +351,10 @@ class Member extends DataObject
             $result->addError(
                 _t(
                     __CLASS__ . '.ERRORLOCKEDOUT2',
-                    'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
+                    'Your account has been temporarily disabled because of too many failed attempts at '
+                    . 'logging in. Please try again in {count} minutes.',
                     null,
-                    array('count' => static::config()->get('lock_out_delay_mins'))
+                    ['count' => static::config()->get('lock_out_delay_mins')]
                 )
             );
         }
@@ -456,7 +457,8 @@ class Member extends DataObject
     {
         Deprecation::notice(
             '5.0.0',
-            'This method is deprecated and only logs in for the current request. Please use Security::setCurrentUser($user) or an IdentityStore'
+            'This method is deprecated and only logs in for the current request. Please use '
+            . 'Security::setCurrentUser($user) or an IdentityStore'
         );
         Security::setCurrentUser($this);
     }
@@ -538,7 +540,8 @@ class Member extends DataObject
     {
         Deprecation::notice(
             '5.0.0',
-            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdentityStore'
+            'This method is deprecated and now does not persist. Please use '
+            . 'Security::setCurrentUser(null) or an IdentityStore'
         );
 
         Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
@@ -912,7 +915,11 @@ class Member extends DataObject
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
-                ->setSubject(_t(__CLASS__ . '.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
+                ->setSubject(_t(
+                    __CLASS__ . '.SUBJECTPASSWORDCHANGED',
+                    "Your password has been changed",
+                    'Email subject'
+                ))
                 ->send();
         }
 
@@ -1525,8 +1532,16 @@ class Member extends DataObject
         /** @skipUpgrade */
         $labels['Email'] = _t(__CLASS__ . '.EMAIL', 'Email');
         $labels['Password'] = _t(__CLASS__ . '.db_Password', 'Password');
-        $labels['PasswordExpiry'] = _t(__CLASS__ . '.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
-        $labels['LockedOutUntil'] = _t(__CLASS__ . '.db_LockedOutUntil', 'Locked out until', 'Security related date');
+        $labels['PasswordExpiry'] = _t(
+            __CLASS__ . '.db_PasswordExpiry',
+            'Password Expiry Date',
+            'Password expiry date'
+        );
+        $labels['LockedOutUntil'] = _t(
+            __CLASS__ . '.db_LockedOutUntil',
+            'Locked out until',
+            'Security related date'
+        );
         $labels['Locale'] = _t(__CLASS__ . '.db_Locale', 'Interface Locale');
         if ($includerelations) {
             $labels['Groups'] = _t(

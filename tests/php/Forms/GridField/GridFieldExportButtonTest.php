@@ -164,7 +164,8 @@ class GridFieldExportButtonTest extends SapphireTest
         $csvReader = Reader::createFromString($exportData);
 
         $this->assertEquals(
-            "ID\r\n" . "1\r\n" . "2\r\n" . "3\r\n" . "4\r\n" . "5\r\n" . "6\r\n" . "7\r\n" . "8\r\n" . "9\r\n" . "10\r\n" . "11\r\n" . "12\r\n" . "13\r\n" . "14\r\n" . "15\r\n" . "16\r\n",
+            "ID\r\n" . "1\r\n" . "2\r\n" . "3\r\n" . "4\r\n" . "5\r\n" . "6\r\n" . "7\r\n" . "8\r\n"
+            . "9\r\n" . "10\r\n" . "11\r\n" . "12\r\n" . "13\r\n" . "14\r\n" . "15\r\n" . "16\r\n",
             (string) $csvReader
         );
     }

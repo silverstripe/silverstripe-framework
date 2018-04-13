@@ -39,7 +39,9 @@ class EmbedShortcodeProviderTest extends SapphireTest
                 'version' => '1.0',
                 'provider_url' => 'https://www.youtube.com/',
                 'title' => 'SilverStripe Platform 2 min introduction',
-                'html' => '<iframe width="480" height="270" src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>',
+                'html' => '<iframe width="480" height="270"'
+                    . ' src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed"'
+                    . ' frameborder="0" allowfullscreen></iframe>',
                 'provider_name' => 'YouTube',
                 'thumbnail_width' => 480,
                 'type' => 'video',
@@ -52,11 +54,9 @@ class EmbedShortcodeProviderTest extends SapphireTest
             ]
         );
         $this->assertEquals(
-            <<<EOS
-<div style="width: 480px;"><iframe width="480" height="270" src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>
-<p class="caption">A nice video</p></div>
-EOS
-            ,
+            '<div style="width: 480px;"><iframe width="480" height="270" src="https://www.youtube.com/embed/'
+            . 'dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>' . PHP_EOL
+            . '<p class="caption">A nice video</p></div>',
             $result
         );
     }
@@ -76,16 +76,17 @@ EOS
                 'title' => 'DELAIN - Suckerpunch by Napalm Records',
                 'description' => 'Taken from the EP "Lunar Prelude": http://shop.napalmrecords.com/delain',
                 'thumbnail_url' => 'http://i1.sndcdn.com/artworks-000143578557-af0v6l-t500x500.jpg',
-                'html' => '<iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F242518079&show_artwork=true"></iframe>',
+                'html' => '<iframe width="100%" height="400" scrolling="no" frameborder="no" '
+                    . 'src="https://w.soundcloud.com/player/?visual=true&url=http%3A%2F%2Fapi.soundcloud.com%2F'
+                    . 'tracks%2F242518079&show_artwork=true"></iframe>',
                 'author_name' => 'Napalm Records',
                 'author_url' => 'http://soundcloud.com/napalmrecords',
             ]
         );
         $this->assertEquals(
-            <<<EOS
-<div style="width: 100px;"><iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F242518079&show_artwork=true"></iframe></div>
-EOS
-            ,
+            '<div style="width: 100px;"><iframe width="100%" height="400" scrolling="no" frameborder="no" '
+            . 'src="https://w.soundcloud.com/player/?visual=true&url=http%3A%2F%2Fapi.soundcloud.com%2F'
+            . 'tracks%2F242518079&show_artwork=true"></iframe></div>',
             $result
         );
     }

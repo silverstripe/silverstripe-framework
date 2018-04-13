@@ -108,7 +108,9 @@ class TempFolder
 
         if (!$worked) {
             throw new Exception(
-                'Permission problem gaining access to a temp folder. ' . 'Please create a folder named silverstripe-cache in the base folder ' . 'of the installation and ensure it has the correct permissions'
+                'Permission problem gaining access to a temp folder. '
+                . 'Please create a folder named silverstripe-cache in the base folder '
+                . 'of the installation and ensure it has the correct permissions'
             );
         }
 

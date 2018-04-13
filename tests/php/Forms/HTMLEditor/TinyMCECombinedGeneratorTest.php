@@ -89,19 +89,16 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
 
         // Check plugin links included
         $this->assertContains(
-            <<<EOS
-tinymce.each('tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,mycode/plugin8.js?m=
-EOS
-            ,
+            'tinymce.each(\'tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,'
+            . 'tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,'
+            . 'mycode/plugin8.js?m=',
             $content
         );
 
         // Check theme links included
         $this->assertContains(
-            <<<EOS
-tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),function(f){tinymce.ScriptLoader.markDone(baseURL+f);});
-EOS
-            ,
+            "tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),"
+            . "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});",
             $content
         );
     }

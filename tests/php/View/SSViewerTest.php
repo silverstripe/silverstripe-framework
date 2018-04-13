@@ -240,8 +240,6 @@ class SSViewerTest extends SapphireTest
         $testBackend->setSuffixRequirements(false);
         $testBackend->setCombinedFilesEnabled(true);
 
-        //$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
-
         $jsFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/bad.js';
         $jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
         $testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
@@ -1327,7 +1325,11 @@ after'
 
         //test MultipleOf 10
         $result = $this->render('<% loop Set %><% if MultipleOf(10,1) %>$Number<% end_if %><% end_loop %>', $data);
-        $this->assertEquals("10", $result, "Only numbers that are multiples of 10 (with 1-based indexing) are returned");
+        $this->assertEquals(
+            "10",
+            $result,
+            "Only numbers that are multiples of 10 (with 1-based indexing) are returned"
+        );
 
         //test MultipleOf 9 zero-based
         $result = $this->render('<% loop Set %><% if MultipleOf(9,0) %>$Number<% end_if %><% end_loop %>', $data);
@@ -1746,7 +1748,8 @@ after'
     {
         SSViewer::setRewriteHashLinksDefault('php');
 
-        $tmplFile = TEMP_PATH . DIRECTORY_SEPARATOR . 'SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
+        $tmplFile = TEMP_PATH . DIRECTORY_SEPARATOR . 'SSViewerTest_testRewriteHashlinksInPhpMode_'
+            . sha1(rand()) . '.ss';
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
@@ -1769,9 +1772,8 @@ after'
         );
         $result = $tmpl->process($obj);
 
-        $code = <<<'EOC'
-<a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
-EOC;
+        $code = '<a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace("/^(\/)+/", "/",'
+            . ' $_SERVER[\'REQUEST_URI\'])); ?>#anchor">InsertedLink</a>';
         $this->assertContains($code, $result);
         // TODO Fix inline links in PHP mode
         // $this->assertContains(
@@ -1920,7 +1922,8 @@ EOC;
 
     public function testRequireCallInTemplateInclude()
     {
-        //TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
+        //TODO undo skip test on the event that templates ever obtain the ability to reference
+        //MODULE_DIR (or something to that effect)
         if (FRAMEWORK_DIR === 'framework') {
             $template = new SSViewer(array('SSViewerTestProcess'));
 

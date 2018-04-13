@@ -433,7 +433,8 @@ class FormTest extends FunctionalTest
         );
 
         $this->assertContains(
-            '&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
+            '&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only '
+            . 'numbers can be accepted for this field',
             $response->getBody(),
             "Validation messages are safely XML encoded"
         );
@@ -849,7 +850,7 @@ class FormTest extends FunctionalTest
         $this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
     }
 
-    function testMessageEscapeHtml()
+    public function testMessageEscapeHtml()
     {
         $form = $this->getStubForm();
         $form->setMessage('<em>Escaped HTML</em>', 'good', ValidationResult::CAST_TEXT);

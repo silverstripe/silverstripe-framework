@@ -56,7 +56,11 @@ class ExtensionMiddleware implements Middleware
     {
         // Note: 'extensions' config needs to come from it's own middleware call in case
         // applied by delta middleware (e.g. Object::add_extension)
-        $extensionSourceConfig = Config::inst()->get($class, null, Config::UNINHERITED | $excludeMiddleware | $this->disableFlag);
+        $extensionSourceConfig = Config::inst()->get(
+            $class,
+            null,
+            Config::UNINHERITED | $excludeMiddleware | $this->disableFlag
+        );
         if (empty($extensionSourceConfig['extensions'])) {
             return;
         }

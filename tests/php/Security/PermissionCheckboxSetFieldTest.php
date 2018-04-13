@@ -36,14 +36,10 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
 
     public function testSaveInto()
     {
-        /**
- * @var Group $group
-*/
+        /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'group');  // tested group
-        /**
- * @var Group $untouchable
-*/
-        $untouchable = $this->objFromFixture(Group::class, 'untouchable');  // group that should not change
+        /** @var Group $untouchable */
+        $untouchable = $this->objFromFixture(Group::class, 'untouchable');  // should not change
 
         $field = new PermissionCheckboxSetField(
             'Permissions',
@@ -69,7 +65,11 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'The other group has ADMIN permission'
         );
 
-        $this->assertEquals(DataObject::get(Permission::class)->count(), $baseCount, 'There are no orphaned permissions');
+        $this->assertEquals(
+            DataObject::get(Permission::class)->count(),
+            $baseCount,
+            'There are no orphaned permissions'
+        );
 
         // add some permissions
         $field->setValue(

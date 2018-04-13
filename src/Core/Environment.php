@@ -75,7 +75,8 @@ class Environment
      * Only increases up to the maximum defined in {@link setMemoryLimitMax()},
      * and defaults to the 'memory_limit' setting in the PHP configuration.
      *
-     * @param string|float|int $memoryLimit A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
+     * @param string|float|int $memoryLimit A memory limit string, such as "64M".
+     *                                      If omitted, unlimited memory will be set.
      * @return bool true indicates a successful change, false a denied change.
      */
     public static function increaseMemoryLimitTo($memoryLimit = -1)
@@ -111,7 +112,7 @@ class Environment
      *
      * @param string|float $memoryLimit Memory limit string or float value
      */
-    static function setMemoryLimitMax($memoryLimit)
+    public static function setMemoryLimitMax($memoryLimit)
     {
         if (isset($memoryLimit) && !is_numeric($memoryLimit)) {
             $memoryLimit = Convert::memstring2bytes($memoryLimit);

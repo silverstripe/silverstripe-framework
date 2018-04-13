@@ -169,7 +169,11 @@ class MemberTest extends FunctionalTest
         $member->Password = "test3";
         $member->write();
 
-        $passwords = DataObject::get(MemberPassword::class, "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
+        $passwords = DataObject::get(
+            MemberPassword::class,
+            "\"MemberID\" = $member->ID",
+            "\"Created\" DESC, \"ID\" DESC"
+        )
             ->getIterator();
         $this->assertNotNull($passwords);
         $passwords->rewind();

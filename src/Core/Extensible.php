@@ -513,7 +513,11 @@ trait Extensible
             if (in_array($class, self::$unextendable_classes)) {
                 continue;
             }
-            $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
+            $extensions = Config::inst()->get(
+                $class,
+                'extensions',
+                Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+            );
 
             if ($extensions) {
                 foreach ($extensions as $extension) {

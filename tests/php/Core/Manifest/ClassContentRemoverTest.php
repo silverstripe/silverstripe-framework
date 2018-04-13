@@ -13,7 +13,8 @@ class ClassContentRemoverTest extends SapphireTest
         $cleanContents = ClassContentRemover::remove_class_content($filePath);
 
         $expected = '<?php
- namespace TestNamespace\\Testing; use TestNamespace\\{Test1, Test2, Test3}; class MyTest extends Test1 implements Test2 {}';
+ namespace TestNamespace\\Testing; use TestNamespace\\{Test1, Test2, Test3}; class MyTest extends Test1 '
+        . 'implements Test2 {}';
 
         $this->assertEquals($expected, $cleanContents);
     }
@@ -24,7 +25,8 @@ class ClassContentRemoverTest extends SapphireTest
         $cleanContents = ClassContentRemover::remove_class_content($filePath);
 
         $expected = '<?php
- namespace TestNamespace\\Testing; use TestNamespace\\{Test1, Test2, Test3}; if (class_exists(\'Class\')) { class MyTest extends Test1 implements Test2 {} class MyTest2 {} }';
+ namespace TestNamespace\\Testing; use TestNamespace\\{Test1, Test2, Test3}; if (class_exists(\'Class\')) { '
+        . 'class MyTest extends Test1 implements Test2 {} class MyTest2 {} }';
 
         $this->assertEquals($expected, $cleanContents);
     }

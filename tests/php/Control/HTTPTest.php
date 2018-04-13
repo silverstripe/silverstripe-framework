@@ -226,26 +226,36 @@ class HTTPTest extends FunctionalTest
                 // background-image
                 // Note that using /./ in urls is absolutely acceptable
                 $this->assertEquals(
-                    '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">' . 'Content</div>',
-                    HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
+                    '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'
+                    . 'Content</div>',
+                    HTTP::absoluteURLs(
+                        '<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>'
+                    )
                 );
 
                 // background
                 $this->assertEquals(
-                    '<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
-                    HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
+                    '<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">'
+                    . 'Content</div>',
+                    HTTP::absoluteURLs(
+                        '<div style="background: url(\'images/mybackground.gif\');">Content</div>'
+                    )
                 );
 
                 // list-style-image
                 $this->assertEquals(
                     '<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
-                    HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
+                    HTTP::absoluteURLs(
+                        '<div style=\'background: url(list.png);\'>Content</div>'
+                    )
                 );
 
                 // list-style
                 $this->assertEquals(
                     '<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
-                    HTTP::absoluteURLs('<div style=\'background: url("./assets/list.png");\'>Content</div>')
+                    HTTP::absoluteURLs(
+                        '<div style=\'background: url("./assets/list.png");\'>Content</div>'
+                    )
                 );
             }
         );
@@ -289,8 +299,11 @@ class HTTPTest extends FunctionalTest
                 // background
                 // Note that using /./ in urls is absolutely acceptable
                 $this->assertEquals(
-                    '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">' . 'SS Blog</div>',
-                    HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
+                    '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'
+                    . 'SS Blog</div>',
+                    HTTP::absoluteURLs(
+                        '<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>'
+                    )
                 );
 
                 //check dot segments
@@ -315,8 +328,11 @@ class HTTPTest extends FunctionalTest
 
                 // Test special characters are retained
                 $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>',
-                    HTTP::absoluteURLs('<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>')
+                    '<a href="http://www.silverstripe.org/Security/changepassword?m=3&amp;t=7214fdfde">password'
+                    . ' reset link</a>',
+                    HTTP::absoluteURLs(
+                        '<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>'
+                    )
                 );
             }
         );
@@ -340,9 +356,11 @@ class HTTPTest extends FunctionalTest
 
                 // data uri
                 $this->assertEquals(
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38' . 'GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
+                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI'
+                    . '12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
                     HTTP::absoluteURLs(
-                        '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH' . 'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'
+                        '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH'
+                        . 'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'
                     ),
                     'Data URI links are not rewritten'
                 );

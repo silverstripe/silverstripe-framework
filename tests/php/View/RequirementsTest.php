@@ -888,9 +888,12 @@ EOS
             . "<script type=\"application/javascript\">//<![CDATA[\n"
             . "var globalvar = {\n\tpattern: '\\\\\$custom\\\\1'\n};\n"
             . "//]]></script>\n";
-        $JsInHead = "<html><head>$expectedScripts</head><body><header>My header</header><p>Body<script></script></p></body></html>";
-        $JsInBody = "<html><head></head><body><header>My header</header><p>Body$expectedScripts<script></script></p></body></html>";
-        $JsAtEnd  = "<html><head></head><body><header>My header</header><p>Body<script></script></p>$expectedScripts</body></html>";
+        $JsInHead = "<html><head>$expectedScripts</head>"
+            . "<body><header>My header</header><p>Body<script></script></p></body></html>";
+        $JsInBody = "<html><head></head>"
+            . "<body><header>My header</header><p>Body$expectedScripts<script></script></p></body></html>";
+        $JsAtEnd  = "<html><head></head>"
+            . "<body><header>My header</header><p>Body<script></script></p>$expectedScripts</body></html>";
 
 
         // Test if the script is before the head tag, not before the body.

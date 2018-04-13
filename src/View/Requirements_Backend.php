@@ -1266,21 +1266,20 @@ class Requirements_Backend
             // that the file is included in the correct location (regardless of which files are blocked).
             $included = false;
             switch ($type) {
-                case 'css': {
-                    $newCSS = array(); // Assoc array of css file => spec
+                case 'css':
+                    $newCSS = []; // Assoc array of css file => spec
                     foreach ($this->getAllCSS() as $css => $spec) {
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
-                            $newCSS[$combinedURL] = array('media' => (isset($options['media']) ? $options['media'] : null));
+                            $newCSS[$combinedURL] = ['media' => (isset($options['media']) ? $options['media'] : null)];
                             $included = true;
                         }
                         // If already included, or otherwise blocked, then don't add into CSS
                     }
                     $this->css = $newCSS;
                     break;
-                }
-                case 'js': {
+                case 'js':
                     // Assoc array of file => attributes
                     $newJS = array();
                     foreach ($this->getAllJavascript() as $script => $attributes) {
@@ -1294,7 +1293,6 @@ class Requirements_Backend
                     }
                     $this->javascript = $newJS;
                     break;
-                }
             }
         }
     }

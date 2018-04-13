@@ -136,7 +136,12 @@ class ConvertTest extends SapphireTest
             "Single quotes are decoded correctly"
         );
 
-        $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' . 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud ' . 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute ' . 'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' . 'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia ' . 'deserunt mollit anim id est laborum.';
+        $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor '
+            . 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud '
+            . 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute '
+            . 'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla '
+            . 'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia '
+            . 'deserunt mollit anim id est laborum.';
         $this->assertEquals($val8, Convert::html2raw($val8), 'Test long text is unwrapped');
         $this->assertEquals(
             <<<PHP
@@ -514,7 +519,11 @@ XML
             return;
         }
 
-        $problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT, 'UTF-8');
+        $problematicText = html_entity_decode(
+            '<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>',
+            ENT_COMPAT,
+            'UTF-8'
+        );
 
         $this->assertTrue(mb_check_encoding(Convert::html2raw($problematicText), 'UTF-8'));
     }

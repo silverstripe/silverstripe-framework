@@ -80,7 +80,8 @@ class MySQLDatabaseConfigurationHelperTest extends SapphireTest
             $helper->checkDatabasePermissionGrant(
                 'database_name',
                 'create',
-                "GRANT ALL PRIVILEGES, CREATE ON \"database_name\".* TO 'root'@'localhost' IDENTIFIED BY PASSWORD 'XXXX'"
+                "GRANT ALL PRIVILEGES, CREATE ON \"database_name\".* TO "
+                . "'root'@'localhost' IDENTIFIED BY PASSWORD 'XXXX'"
                 . " WITH GRANT OPTION"
             )
         );
@@ -90,7 +91,8 @@ class MySQLDatabaseConfigurationHelperTest extends SapphireTest
             $helper->checkDatabasePermissionGrant(
                 'database_name',
                 'create',
-                "GRANT ALL PRIVILEGES, CREATE ON \"database\\_name\".* TO 'root'@'localhost' IDENTIFIED BY PASSWORD 'XXXX'"
+                "GRANT ALL PRIVILEGES, CREATE ON \"database\\_name\".* "
+                . "TO 'root'@'localhost' IDENTIFIED BY PASSWORD 'XXXX'"
                 . " WITH GRANT OPTION"
             )
         );
@@ -115,7 +117,8 @@ class MySQLDatabaseConfigurationHelperTest extends SapphireTest
             $helper->checkDatabasePermissionGrant(
                 'database_name',
                 'create',
-                "GRANT SELECT, CREATE ROUTINE ON *.* TO 'user'@'localhost' IDENTIFIED BY PASSWORD 'XXXX' WITH GRANT OPTION"
+                "GRANT SELECT, CREATE ROUTINE ON *.* TO 'user'@'localhost' "
+                . "IDENTIFIED BY PASSWORD 'XXXX' WITH GRANT OPTION"
             )
         );
 

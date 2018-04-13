@@ -4,7 +4,6 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use Serializable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Deprecation;
 
@@ -71,11 +70,19 @@ class ValidationResult implements Serializable
     public function __construct()
     {
         if (func_num_args() > 0) {
-            Deprecation::notice('3.2', '$valid parameter is deprecated please addError to mark the result as invalid', false);
+            Deprecation::notice(
+                '3.2',
+                '$valid parameter is deprecated please addError to mark the result as invalid',
+                false
+            );
             $this->isValid = func_get_arg(0);
         }
         if (func_num_args() > 1) {
-            Deprecation::notice('3.2', '$message parameter is deprecated please use addMessage or addError instead', false);
+            Deprecation::notice(
+                '3.2',
+                '$message parameter is deprecated please use addMessage or addError instead',
+                false
+            );
             $this->addError(func_get_arg(1));
         }
     }

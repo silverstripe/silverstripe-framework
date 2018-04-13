@@ -67,7 +67,7 @@ class EmailFieldTest extends FunctionalTest
      *
      * @see SimpleTagBuilder::_createInputTag()
      */
-    function testEmailFieldPopulation()
+    public function testEmailFieldPopulation()
     {
 
         $this->get('EmailFieldTest_Controller');

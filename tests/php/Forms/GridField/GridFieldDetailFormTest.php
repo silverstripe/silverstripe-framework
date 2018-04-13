@@ -2,20 +2,19 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
-use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 
 /**
  * @skipUpgrade
@@ -348,7 +347,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $this->logInWithPermission('ADMIN');
 
         $component = new GridFieldDetailForm();
-        $this->assertEquals('SilverStripe\\Forms\\GridField\\GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
+        $this->assertEquals(GridFieldDetailForm_ItemRequest::class, $component->getItemRequestClass());
         $component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
         $this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
     }

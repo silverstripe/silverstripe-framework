@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\SampleService;
@@ -24,8 +23,6 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\TestObject;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestSetterInjections;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestStaticInjections;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use stdClass;
 
 define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
 
@@ -329,11 +326,19 @@ class InjectorTest extends SapphireTest
         $service = $injector->get('SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService.Subset');
         $this->assertInstanceOf(AnotherService::class, $service);
 
-        $injector->setInjectMapping(TestObject::class, 'sampleService', 'SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService.Geronimo');
+        $injector->setInjectMapping(
+            TestObject::class,
+            'sampleService',
+            'SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService.Geronimo'
+        );
         $testObject = $injector->create(TestObject::class);
         $this->assertEquals(get_class($testObject->sampleService), AnotherService::class);
 
-        $injector->setInjectMapping(TestObject::class, 'sampleService', 'SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService.DottedChild.AnotherDown');
+        $injector->setInjectMapping(
+            TestObject::class,
+            'sampleService',
+            'SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService.DottedChild.AnotherDown'
+        );
         $testObject = $injector->create(TestObject::class);
         $this->assertEquals(get_class($testObject->sampleService), SampleService::class);
     }

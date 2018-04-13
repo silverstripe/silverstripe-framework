@@ -217,7 +217,10 @@ class RequestHandler extends ViewableData
         // empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
         // actions which return themselves to avoid infinite loops.
         $matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
-        if ($this !== $result && !$matchedRuleWasEmpty && ($result instanceof RequestHandler || $result instanceof HasRequestHandler)) {
+        if ($this !== $result
+            && !$matchedRuleWasEmpty
+            && ($result instanceof RequestHandler || $result instanceof HasRequestHandler)
+        ) {
             // Expose delegated request handler
             if ($result instanceof HasRequestHandler) {
                 $result = $result->getRequestHandler();
@@ -266,7 +269,8 @@ class RequestHandler extends ViewableData
                             $class = static::class;
                             $latestParams = var_export($request->latestParams(), true);
                             Debug::message(
-                                "Rule '{$rule}' matched to action '{$action}' on {$class}. " . "Latest request params: {$latestParams}"
+                                "Rule '{$rule}' matched to action '{$action}' on {$class}. "
+                                . "Latest request params: {$latestParams}"
                             );
                         }
 
@@ -569,7 +573,8 @@ class RequestHandler extends ViewableData
 
         // no link defined by default
         trigger_error(
-            'Request handler ' . static::class . ' does not have a url_segment defined. ' . 'Relying on this link may be an application error',
+            'Request handler ' . static::class . ' does not have a url_segment defined. '
+            . 'Relying on this link may be an application error',
             E_USER_WARNING
         );
         return null;

@@ -31,7 +31,10 @@ class ErrorDirector extends Director
 
         // Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
         $reload = function (HTTPRequest $request) use ($token, $kernel) {
-            if ($kernel->getEnvironment() === Kernel::DEV || !Security::database_is_ready() || Permission::check('ADMIN')) {
+            if ($kernel->getEnvironment() === Kernel::DEV
+                || !Security::database_is_ready()
+                || Permission::check('ADMIN')
+            ) {
                 return $token->reloadWithToken();
             }
             return null;

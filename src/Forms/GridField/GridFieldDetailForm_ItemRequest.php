@@ -280,21 +280,36 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $actions = new FieldList();
         if ($this->record->ID !== 0) {
             if ($canEdit) {
-                $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
-                    ->setUseButtonTag(true)
-                    ->addExtraClass('btn-primary font-icon-save'));
+                $actions->push(
+                    FormAction::create(
+                        'doSave',
+                        _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save')
+                    )
+                        ->setUseButtonTag(true)
+                        ->addExtraClass('btn-primary font-icon-save')
+                );
             }
 
             if ($canDelete) {
-                $actions->push(FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
-                    ->setUseButtonTag(true)
-                    ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action-delete'));
+                $actions->push(
+                    FormAction::create(
+                        'doDelete',
+                        _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete')
+                    )
+                        ->setUseButtonTag(true)
+                        ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action-delete')
+                );
             }
         } else { // adding new record
             //Change the Save label to 'Create'
-            $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
-                ->setUseButtonTag(true)
-                ->addExtraClass('btn-primary font-icon-plus'));
+            $actions->push(
+                FormAction::create(
+                    'doSave',
+                    _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create')
+                )
+                    ->setUseButtonTag(true)
+                    ->addExtraClass('btn-primary font-icon-plus')
+            );
 
             // Add a Cancel link which is a button-like link and link back to one level up.
             $crumbs = $this->Breadcrumbs();
@@ -486,7 +501,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $title = $this->record->Title;
         if (!$this->record->canDelete()) {
             throw new ValidationException(
-                _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
+                _t(
+                    'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.DeletePermissionsFailure',
+                    "No delete permissions"
+                )
             );
         }
         $this->record->delete();
@@ -597,7 +615,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             )));
         } else {
             $items->push(new ArrayData(array(
-                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
+                'Title' => _t(
+                    'SilverStripe\\Forms\\GridField\\GridField.NewRecord',
+                    'New {type}',
+                    ['type' => $this->record->i18n_singular_name()]
+                ),
                 'Link' => false
             )));
         }

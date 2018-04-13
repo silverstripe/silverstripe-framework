@@ -33,7 +33,7 @@ class SQLAssignmentRow
      *
      * @param array $values
      */
-    function __construct(array $values = array())
+    public function __construct(array $values = array())
     {
         $this->setAssignments($values);
     }
