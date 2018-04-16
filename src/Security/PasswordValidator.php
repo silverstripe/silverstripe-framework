@@ -251,7 +251,7 @@ class PasswordValidator
                 );
             }
 
-            $score = count($this->testNames) - count($missedTests);
+            $score = count($testNames) - count($missedTests);
             if ($score < $minTestScore) {
                 $error = _t(
                     'SilverStripe\\Security\\PasswordValidator.LOWCHARSTRENGTH',
