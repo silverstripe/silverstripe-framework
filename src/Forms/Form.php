@@ -563,12 +563,16 @@ class Form extends ViewableData implements HasRequestHandler
 
         return $this;
     }
+
     /**
      * Convert this form into a readonly form
+     *
+     * @return $this
      */
     public function makeReadonly()
     {
         $this->transform(new ReadonlyTransformation());
+        return $this;
     }
 
     /**
