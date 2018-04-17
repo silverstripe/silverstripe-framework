@@ -132,7 +132,7 @@ class DevelopmentAdmin extends Controller
             // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
             throw new Exception($msg);
         } else {
-            $this->httpError(500, $msg);
+            $this->httpError(404, $msg);
         }
     }
 
