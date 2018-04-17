@@ -586,8 +586,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$relations = $sourceObject->$name();
 		if ($relations) {
             if ($relations instanceOf ManyManyList) { //many-to-many relation
-                $source = $sourceObject->getManyManyComponents($name);
-                $extraFieldNames = $source->getExtraFields();
+                $extraFieldNames = $relations->getExtraFields();
 
                 if ($relations->Count() > 0) {  //with more than one thing it is related to
 					foreach($relations as $relation) {
