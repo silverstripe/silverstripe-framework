@@ -460,10 +460,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $source = $sourceObject->getManyManyComponents($manyManyName);
         $dest = $destinationObject->getManyManyComponents($manyManyName);
 
-        if ($source instanceof UnsavedRelationList) {
-            $extraFieldNames = array();
-        } else {
+        if ($source instanceof ManyManyList) {
             $extraFieldNames = $source->getExtraFields();
+        } else {
+            $extraFieldNames = array();
         }
 
         foreach ($source as $item) {
