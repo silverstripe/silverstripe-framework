@@ -131,9 +131,9 @@ class FieldList extends ArrayList {
 	 * This is most commonly used when overloading getCMSFields()
 	 *
 	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
-	 *                        or TabSet.Tab.Subtab.
-	 * This function will create any missing tabs.
+	 *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
 	 * @param array $fields An array of {@link FormField} objects.
+	 * @param string $name Name of the field to insert before (optional)
 	 */
 	public function addFieldsToTab($tabName, $fields, $insertBefore = null) {
 		$this->flushFieldsCache();
@@ -663,8 +663,8 @@ class FieldList extends ArrayList {
 	 * Support function for backwards compatibility purposes.
 	 * Caution: Volatile API, might be removed in 3.1 or later.
 	 *
-	 * @param  String $tabname Path to a tab, e.g. "Root.Content.Main"
-	 * @return String Rewritten path, based on {@link tabPathRewrites}
+	 * @param  string $name Path to a tab, e.g. "Root.Content.Main"
+	 * @return string Rewritten path, based on {@link tabPathRewrites}
 	 */
 	protected function rewriteTabPath($name) {
 		$isRunningTest = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());

@@ -202,7 +202,6 @@ class UploadField extends FileField {
 	 * @param string $title The field label.
 	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
 	 *                       @link $record}, with the same name as the field name.
-	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null, SS_List $items = null) {
 
@@ -1335,8 +1334,8 @@ class UploadField_ItemHandler extends RequestHandler {
 	);
 
 	/**
-	 * @param UploadFIeld $parent
-	 * @param int $item
+	 * @param UploadField $parent
+	 * @param int $itemID
 	 */
 	public function __construct($parent, $itemID) {
 		$this->parent = $parent;
@@ -1499,7 +1498,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 * @config
 	 * @var int
 	 */
-	private static $page_size = 11; 
+	private static $page_size = 11;
 
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
@@ -1584,7 +1583,7 @@ class UploadField_SelectHandler extends RequestHandler {
 			'Created' => 'SS_Datetime->Nice'
 		));
 
- 		// Set configurable pagination for file list field  
+ 		// Set configurable pagination for file list field
 		$pageSize = Config::inst()->get(get_class($this), 'page_size');
 		$config->addComponent(new GridFieldPaginator($pageSize));
 

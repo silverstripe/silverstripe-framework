@@ -79,7 +79,7 @@ class GridFieldAddExistingAutocompleter
 	protected $resultsLimit = 20;
 
 	/**
-	 *
+	 * @param string $targetFragment
 	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
 	public function __construct($targetFragment = 'before', $searchFields = null) {

@@ -441,8 +441,8 @@ class TreeDropdownField extends FormField {
 	 * Marking public function for the tree, which combines different filters sensibly.
 	 * If a filter function has been set, that will be called. And if search text is set,
 	 * filter on that too. Return true if all applicable conditions are true, false otherwise.
-	 * @param $node
-	 * @return unknown_type
+	 * @param DataObject $node
+	 * @return boolean
 	 */
 	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
@@ -463,7 +463,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $field
+	 * @return $this
 	 */
 	public function setLabelField($field) {
 		$this->labelField = $field;
@@ -471,14 +472,15 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getLabelField() {
 		return $this->labelField;
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $field
+	 * @return $this
 	 */
 	public function setKeyField($field) {
 		$this->keyField = $field;
@@ -486,14 +488,15 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getKeyField() {
 		return $this->keyField;
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $field
+	 * @return $this
 	 */
 	public function setSourceObject($class) {
 		$this->sourceObject = $class;
@@ -501,7 +504,7 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getSourceObject() {
 		return $this->sourceObject;

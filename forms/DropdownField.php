@@ -122,6 +122,7 @@ class DropdownField extends FormField {
 	 * @param array|ArrayAccess $source A map of the dropdown items
 	 * @param string $value The current value
 	 * @param Form $form The parent form
+	 * @param string $emptyString Empty string value, e.g. "please choose"
 	 */
 	public function __construct($name, $title=null, $source=array(), $value='', $form=null, $emptyString=null) {
 		$this->setSource($source);

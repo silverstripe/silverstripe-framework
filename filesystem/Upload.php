@@ -92,7 +92,7 @@ class Upload extends Controller {
 	/**
 	 * Get current validator
 	 *
-	 * @return Upload_Validator $validator
+	 * @return Upload_Validator
 	 */
 	public function getValidator() {
 		return $this->validator;

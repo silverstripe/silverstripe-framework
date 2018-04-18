@@ -229,6 +229,7 @@ class ArrayLib {
 	 *
 	 * @param array $array
 	 * @param boolean $preserveKeys
+	 * @param array $out
 	 *
 	 * @return array
 	 */

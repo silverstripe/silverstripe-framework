@@ -653,7 +653,6 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 *
 	 * @param mixed $value
-	 * @param null|array|DataObject $data {@see Form::loadDataFrom}
 	 *
 	 * @return $this
 	 */
