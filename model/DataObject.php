@@ -585,7 +585,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private function duplicateRelations($sourceObject, $destinationObject, $name) {
 		$relations = $sourceObject->$name();
 		if ($relations) {
-			if ($relations instanceOf RelationList) {   //many-to-something relation
+            if ($relations instanceOf ManyManyList) { //many-to-many relation
+                $extraFieldNames = $relations->getExtraFields();
+
+                if ($relations->Count() > 0) {  //with more than one thing it is related to
+					foreach($relations as $relation) {
+                        // Merge extra fields
+                        $extraFields = array();
+                        foreach ($extraFieldNames as $fieldName => $fieldType) {
+                            $extraFields[$fieldName] = $relation->getField($fieldName);
+                        }
+                        $destinationObject->$name()->add($relation, $extraFields);
+                    }
+                }
+            } else if ($relations instanceOf RelationList) {   //many-to-something relation
 				if ($relations->Count() > 0) {  //with more than one thing it is related to
 					foreach($relations as $relation) {
 						$destinationObject->$name()->add($relation);

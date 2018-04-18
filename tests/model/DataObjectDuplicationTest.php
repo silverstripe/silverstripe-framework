@@ -77,7 +77,7 @@ class DataObjectDuplicationTest extends SapphireTest {
 
 		//create relations
 		$one->twos()->add($two);
-		$one->threes()->add($three);
+		$one->threes()->add($three, array('TestExtra'=>'three'));
 
 		$one = DataObject::get_by_id("DataObjectDuplicateTestClass1", $one->ID);
 		$two = DataObject::get_by_id("DataObjectDuplicateTestClass2", $two->ID);
@@ -115,6 +115,9 @@ class DataObjectDuplicationTest extends SapphireTest {
 			"Match between relation of copy and the original");
 		$this->assertEquals($one->ID, $threeCopy->ones()->First()->ID,
 			"Match between relation of copy and the original");
+
+		$this->assertEquals('three', $oneCopy->threes()->First()->TestExtra,
+			"Match between extra field of copy and the original");
 	}
 
 }
@@ -132,6 +135,12 @@ class DataObjectDuplicateTestClass1 extends DataObject implements TestOnly {
 
 	private static $many_many = array(
 		'threes' => 'DataObjectDuplicateTestClass3'
+	);
+
+	private static $many_many_extraFields = array(
+		'threes' => array(
+            'TestExtra' => 'Varchar'
+        )
 	);
 }
 
