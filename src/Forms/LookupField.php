@@ -8,9 +8,9 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
- * Read-only complement of {@link DropdownField}.
+ * Read-only complement of {@link MultiSelectField}.
  *
- * Shows the "human value" of the dropdown field for the currently selected
+ * Shows the "human value" of the MultiSelectField for the currently selected
  * value.
  */
 class LookupField extends MultiSelectField
