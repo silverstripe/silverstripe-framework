@@ -20,4 +20,10 @@ class Class1 extends DataObject implements TestOnly
     private static $many_many = array(
         'threes' => Class3::class
     );
+
+    private static $many_many_extraFields = array(
+        'threes' => array(
+            'TestExtra' => 'Varchar'
+        )
+    );
 }
