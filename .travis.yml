@@ -37,6 +37,7 @@ matrix:
         - DB=PGSQL
         - PHPUNIT_TEST=framework
     - php: 7.1
+      if: type IN (cron)
       env:
         - DB=MYSQL
         - PDO=1
