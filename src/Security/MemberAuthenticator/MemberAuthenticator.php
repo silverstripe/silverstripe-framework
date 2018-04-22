@@ -91,6 +91,11 @@ class MemberAuthenticator implements Authenticator
         // Validate against member if possible
         if ($member && !$asDefaultAdmin) {
             $this->checkPassword($member, $data['Password'], $result);
+        } elseif (!$asDefaultAdmin) {
+            // spoof a login attempt
+            $tempMember = Member::create();
+            $tempMember->{Member::config()->get('unique_identifier_field')} = $email;
+            $tempMember->validateCanLogin($result);
         }
 
         // Emit failure to member and form (if available)
@@ -164,7 +169,9 @@ class MemberAuthenticator implements Authenticator
      */
     protected function recordLoginAttempt($data, HTTPRequest $request, $member, $success)
     {
-        if (!Security::config()->get('login_recording')) {
+        if (!Security::config()->get('login_recording')
+            && !Member::config()->get('lock_out_after_incorrect_logins')
+        ) {
             return;
         }
 
