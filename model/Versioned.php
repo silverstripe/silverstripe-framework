@@ -42,6 +42,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	const DEFAULT_MODE = 'Stage.Live';
 
 	/**
+     * The Public stage.
+     */
+    const LIVE = 'Live';
+
+    /**
+     * The draft (default) stage
+     */
+    const DRAFT = 'Stage';
+
+	/**
 	 * A version that a DataObject should be when it is 'migrating', that is, when it is in the process of moving from
 	 * one stage to another.
 	 * @var string
@@ -56,6 +66,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/** @var string */
 	protected static $reading_mode = null;
+
+    /**
+     * Default reading mode, if none set.
+     * Any modes which differ to this value should be assigned via querystring / session (if enabled)
+     *
+     * @var null
+     */
+    protected static $default_reading_mode = self::DEFAULT_MODE;
 
 	/**
 	 * Flag which is temporarily changed during the write() process to influence augmentWrite() behaviour. If set to
@@ -1055,6 +1073,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		$query = $list->dataQuery()->query();
 
+		$baseTable = null;
 		foreach($query->getFrom() as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
@@ -1165,7 +1184,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		} elseif($preexistingMode) {
 			$mode = $preexistingMode;
 		} else {
-			$mode = self::DEFAULT_MODE;
+			$mode = self::get_default_reading_mode();
 		}
 
 		// Save reading mode
@@ -1173,7 +1192,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Try not to store the mode in the session if not needed
 		if(($preexistingMode && $preexistingMode !== $mode)
-			|| (!$preexistingMode && $mode !== self::DEFAULT_MODE)
+			|| (!$preexistingMode && $mode !== self::get_default_reading_mode())
 		) {
 			Session::set('readingMode', $mode);
 		}
@@ -1251,6 +1270,25 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public static function reading_stage($stage) {
 		Versioned::set_reading_mode('Stage.' . $stage);
 	}
+
+    /**
+     * Replace default mode.
+     * An non-default mode should be specified via querystring arguments.
+     *
+     * @param string $mode
+     */
+    public static function set_default_reading_mode($mode) {
+        self::$default_reading_mode = $mode;
+    }
+
+    /**
+     * Get default reading mode
+     *
+     * @return string
+     */
+    public static function get_default_reading_mode() {
+        return self::$default_reading_mode ?: self::DEFAULT_MODE;
+    }
 
 	/**
 	 * Set the reading archive date.

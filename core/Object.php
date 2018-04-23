@@ -653,7 +653,11 @@ abstract class SS_Object {
 
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $unextendable_classes = array('SS_Object', 'Object', 'ViewableData', 'RequestHandler');
+	private static $unextendable_classes = array(
+		'SS_Object',
+		'Object',
+		'ViewableData',
+	);
 
 	static public function get_extra_config_sources($class = null) {
 		if($class === null) $class = get_called_class();
