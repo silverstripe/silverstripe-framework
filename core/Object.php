@@ -572,13 +572,6 @@ abstract class SS_Object {
 		Config::inst()->extraConfigSourcesChanged($class);
 
 		Injector::inst()->unregisterNamedObject($class);
-
-		// load statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
-			if(!is_subclass_of($extensionClass, 'DataExtension')) {
-				user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
-			}
-		}
 	}
 
 
