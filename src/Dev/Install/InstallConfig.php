@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Install;
 
+use BadMethodCallException;
 use SilverStripe\Core\Environment;
 
 /**
@@ -11,6 +12,8 @@ use SilverStripe\Core\Environment;
  */
 class InstallConfig
 {
+    use InstallEnvironmentAware;
+
     /**
      * List of preferred DB classes in order
      *
@@ -20,6 +23,11 @@ class InstallConfig
         'MySQLPDODatabase',
         'MySQLDatabase',
     ];
+
+    public function __construct($basePath = null)
+    {
+        $this->initBaseDir($basePath);
+    }
 
     /**
      * Get database config from the current environment
@@ -119,7 +127,7 @@ class InstallConfig
      */
     protected function getConfigPath()
     {
-        return BASE_PATH . '/mysite/_config.php';
+        return $this->getBaseDir() . $this->getProjectDir() . DIRECTORY_SEPARATOR . '_config.php';
     }
 
     /**
@@ -127,7 +135,7 @@ class InstallConfig
      */
     protected function getEnvPath()
     {
-        return BASE_PATH . '/.env';
+        return $this->getBaseDir() . '.env';
     }
 
     /**
