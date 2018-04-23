@@ -35,6 +35,14 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     protected $forceSSL = false;
 
     /**
+     * Set if we should automatically redirect basic auth requests to HTTPS. A null value (default) will
+     * cause this property to return the value of the forceSSL property.
+     *
+     * @var bool|null
+     */
+    protected $forceBasicAuthToSSL = null;
+
+    /**
      * Redirect type
      *
      * @var int
@@ -138,6 +146,29 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     }
 
     /**
+     * @param bool|null $forceBasicAuth
+     * @return $this
+     */
+    public function setForceBasicAuthToSSL($forceBasicAuth)
+    {
+        $this->forceBasicAuthToSSL = $forceBasicAuth;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getForceBasicAuthToSSL()
+    {
+        // Check if explicitly set
+        if (isset($this->forceBasicAuthToSSL)) {
+            return $this->forceBasicAuthToSSL;
+        }
+        // If not explicitly set, default to on if ForceSSL is on
+        return $this->getForceSSL();
+    }
+
+    /**
      * Generate response for the given request
      *
      * @param HTTPRequest $request
@@ -152,7 +183,16 @@ class CanonicalURLMiddleware implements HTTPMiddleware
             return $redirect;
         }
 
-        return $delegate($request);
+        /** @var HTTPResponse $response */
+        $response = $delegate($request);
+        if ($this->hasBasicAuthPrompt($response)
+            && $request->getScheme() !== 'https'
+            && $this->getForceBasicAuthToSSL()
+        ) {
+            return $this->redirectToScheme($request, 'https');
+        }
+
+        return $response;
     }
 
     /**
@@ -190,14 +230,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
             return null;
         }
 
-        // Rebuild url for request
-        $url = Controller::join_links("{$scheme}://{$host}", Director::baseURL(), $request->getURL(true));
-
-        // Force redirect
-        $response = new HTTPResponse();
-        $response->redirect($url, $this->getRedirectType());
-        HTTP::add_cache_headers($response);
-        return $response;
+        return $this->redirectToScheme($request, $scheme, $host);
     }
 
     /**
@@ -224,7 +257,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * Return a valid request, if one is available, or null if none is available
      *
      * @param HTTPRequest $request
-     * @return mixed|null
+     * @return HTTPRequest|null
      */
     protected function getOrValidateRequest(HTTPRequest $request = null)
     {
@@ -327,5 +360,43 @@ class CanonicalURLMiddleware implements HTTPMiddleware
             return $enabledEnvs;
         }
         return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs);
+    }
+
+    /**
+     * Determine whether the executed middlewares have added a basic authentication prompt
+     *
+     * @param HTTPResponse $response
+     * @return bool
+     */
+    protected function hasBasicAuthPrompt(HTTPResponse $response = null)
+    {
+        if (!$response) {
+            return false;
+        }
+        return ($response->getStatusCode() === 401 && $response->getHeader('WWW-Authenticate'));
+    }
+
+    /**
+     * Redirect the current URL to the specified HTTP scheme
+     *
+     * @param HTTPRequest $request
+     * @param string $scheme
+     * @param string $host
+     * @return HTTPResponse
+     */
+    protected function redirectToScheme(HTTPRequest $request, $scheme, $host = null)
+    {
+        if (!$host) {
+            $host = $request->getHost();
+        }
+
+        $url = Controller::join_links("{$scheme}://{$host}", Director::baseURL(), $request->getURL(true));
+
+        // Force redirect
+        $response = HTTPResponse::create();
+        $response->redirect($url, $this->getRedirectType());
+        HTTP::add_cache_headers($response);
+
+        return $response;
     }
 }
