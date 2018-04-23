@@ -64,6 +64,22 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	protected static $cache_versionnumber;
 
+    /**
+     * Set if draft site is secured or not. Fails over to
+     * $draft_site_secured if unset
+     *
+     * @var bool|null
+     */
+    protected static $is_draft_site_secured = null;
+
+    /**
+     * Default config for $is_draft_site_secured
+     *
+     * @config
+     * @var bool
+     */
+    private static $draft_site_secured = true;
+
 	/** @var string */
 	protected static $reading_mode = null;
 
@@ -167,6 +183,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $non_live_permissions = array('CMS_ACCESS_LeftAndMain', 'CMS_ACCESS_CMSMain', 'VIEW_DRAFT_CONTENT');
+
+	/**
+     * Use PHP's session storage for the "reading mode" and "unsecuredDraftSite",
+     * instead of explicitly relying on the "stage" query parameter.
+     * This is considered bad practice, since it can cause draft content
+     * to leak under live URLs to unauthorised users, depending on HTTP cache settings.
+     *
+     * @config
+     * @var bool
+     */
+    private static $use_session = false;
 
 	/**
 	 * Reset static configuration variables to their default values.
@@ -817,7 +844,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Bypass if site is unsecured
-		if (Session::get('unsecuredDraftSite')) {
+		if (!self::get_draft_site_secured()) {
 			return true;
 		}
 
@@ -1158,6 +1185,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			return true;
 		}
 
+        // Request is allowed if unsecuredDraftSite is enabled
+        if (!static::get_draft_site_secured()) {
+            return true;
+        }
+
+        // Predict if choose_site_stage() will allow unsecured draft assignment by session
+        if (Config::inst()->get('Versioned', 'use_session') && Session::get('unsecuredDraftSite')) {
+            return true;
+        }
+
 		// Check permissions with member ID in session.
 		$member = Member::currentUser();
 		$permissions = Config::inst()->get(get_called_class(), 'non_live_permissions');
@@ -1169,33 +1206,42 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * - If $_GET['stage'] is set, then it will use that stage, and store it in the session.
 	 * - If $_GET['archiveDate'] is set, it will use that date, and store it in the session.
 	 * - If neither of these are set, it checks the session, otherwise the stage is set to 'Live'.
+	 *
+	 * @param SS_HTTPRequest|null $request
 	 */
-	public static function choose_site_stage() {
-		// Check any pre-existing session mode
-		$preexistingMode = Session::get('readingMode');
-
-		// Determine the reading mode
-		if(isset($_GET['stage'])) {
-			$stage = ucfirst(strtolower($_GET['stage']));
-			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
-			$mode = 'Stage.' . $stage;
-		} elseif (isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
-			$mode = 'Archive.' . $_GET['archiveDate'];
-		} elseif($preexistingMode) {
-			$mode = $preexistingMode;
-		} else {
-			$mode = self::get_default_reading_mode();
+	public static function choose_site_stage(SS_HTTPRequest $request = null) {
+		if (!$request) {
+			throw new InvalidArgumentException("Request not found");
 		}
+		$mode = static::get_default_reading_mode();
 
-		// Save reading mode
-		Versioned::set_reading_mode($mode);
+        // Check any pre-existing session mode
+        $useSession = Config::inst()->get('Versioned', 'use_session');
+        $updateSession = false;
+        if ($useSession) {
+            // Boot reading mode from session
+            $mode = Session::get('readingMode') ?: $mode;
 
-		// Try not to store the mode in the session if not needed
-		if(($preexistingMode && $preexistingMode !== $mode)
-			|| (!$preexistingMode && $mode !== self::get_default_reading_mode())
-		) {
-			Session::set('readingMode', $mode);
-		}
+            // Set draft site security if disabled for this session
+            if (Session::get('unsecuredDraftSite')) {
+                static::set_draft_site_secured(false);
+            }
+        }
+
+		// Verify if querystring contains valid reading mode
+        $queryMode = VersionedReadingMode::fromQueryString($request->getVars());
+        if ($queryMode) {
+            $mode = $queryMode;
+            $updateSession = true;
+        }
+
+        // Save reading mode
+        Versioned::set_reading_mode($mode);
+
+		// Set mode if session enabled
+        if ($useSession && $updateSession) {
+            Session::set('readingMode', $mode);
+        }
 
 		if(!headers_sent() && !Director::is_cli()) {
 			if(Versioned::current_stage() == 'Live') {
@@ -1236,7 +1282,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function get_live_stage() {
-		return "Live";
+		return self::LIVE;
 	}
 
 	/**
@@ -1288,6 +1334,29 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
      */
     public static function get_default_reading_mode() {
         return self::$default_reading_mode ?: self::DEFAULT_MODE;
+    }
+
+    /**
+     * Check if draft site should be secured.
+     * Can be turned off if draft site unauthenticated
+     *
+     * @return bool
+     */
+    public static function get_draft_site_secured() {
+        if (isset(static::$is_draft_site_secured)) {
+            return (bool)static::$is_draft_site_secured;
+        }
+        // Config default
+        return (bool)Config::inst()->get('Versioned', 'draft_site_secured');
+    }
+
+    /**
+     * Set if the draft site should be secured or not
+     *
+     * @param bool $secured
+     */
+    public static function set_draft_site_secured($secured) {
+        static::$is_draft_site_secured = $secured;
     }
 
 	/**
