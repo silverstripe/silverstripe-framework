@@ -39,6 +39,22 @@ class Player extends DataObject
 This defines a relationship called `Team` which links to a `Team` class. The `ORM` handles navigating the relationship
 and provides a short syntax for accessing the related object.
 
+To create a has_one/has_many relationship to core classes (File, Image, etc), reference the Classname::class, like below.
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\File;
+
+class Team extends DataObject
+{
+    private static $has_many = [
+        'Teamphoto' => Image::class,
+        'Lineup' => File::class
+    ];    
+}
+```
+
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
 
 ```php
@@ -113,7 +129,12 @@ Defines 1-to-many joins. As you can see from the previous example, `$has_many` g
 
 <div class="alert" markdown='1'>
 Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary accessors
-available on both ends.
+available on both ends. To add a $has_one-relationship on core classes, yml config settings can be used:
+```yml
+SilverStripe\Assets\Image:
+  has_one:
+    MyDataObject: MyDataObject
+```
 </div>
 
 ```php
