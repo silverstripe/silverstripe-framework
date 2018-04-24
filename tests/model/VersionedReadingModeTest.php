@@ -111,31 +111,27 @@ class VersionedReadingModeTest extends SapphireTest
 			),
             // Draft archive
             array(
-                'Archive.2017-11-15 11:31:42.Stage',
+                'Archive.2017-11-15 11:31:42',
                 array(
                     'Versioned.mode' => 'archive',
                     'Versioned.date' => '2017-11-15 11:31:42',
-                    'Versioned.stage' => 'Stage',
 				),
                 array(
                     'archiveDate' => '2017-11-15 11:31:42',
-                    'stage' => 'Stage',
 				),
-                'archiveDate=2017-11-15+11%3A31%3A42&stage=Stage',
+                'archiveDate=2017-11-15+11%3A31%3A42',
 			),
             // Live archive
             array(
-                'Archive.2017-11-15 11:31:42.Live',
+                'Archive.2017-11-15 11:31:42',
                 array(
                     'Versioned.mode' => 'archive',
                     'Versioned.date' => '2017-11-15 11:31:42',
-                    'Versioned.stage' => 'Live',
 				),
                 array(
                     'archiveDate' => '2017-11-15 11:31:42',
-                    'stage' => 'Live',
 				),
-                'archiveDate=2017-11-15+11%3A31%3A42&stage=Live',
+                'archiveDate=2017-11-15+11%3A31%3A42',
 			),
 		);
     }

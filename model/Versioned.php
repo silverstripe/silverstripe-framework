@@ -297,24 +297,30 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Reading a specific stage (Stage or Live)
 		case 'stage':
+			// Check stage is available on object
 			$stage = $dataQuery->getQueryParam('Versioned.stage');
-			if($stage && ($stage != $this->defaultStage)) {
-				foreach($query->getFrom() as $table => $dummy) {
-					// Only rewrite table names that are actually part of the subclass tree
-					// This helps prevent rewriting of other tables that get joined in, in
-					// particular, many_many tables
-					if(class_exists($table) && ($table == $this->owner->class
-							|| is_subclass_of($table, $this->owner->class)
-							|| is_subclass_of($this->owner->class, $table))) {
-						$query->renameTable($table, $table . '_' . $stage);
-					}
+			if (!$stage || !in_array($stage, $this->stages) || $stage === $this->defaultStage) {
+				break;
+			}
+			foreach ($query->getFrom() as $table => $dummy) {
+				// Only rewrite table names that are actually part of the subclass tree
+				// This helps prevent rewriting of other tables that get joined in, in
+				// particular, many_many tables
+				if (class_exists($table) && ($table == $this->owner->class
+						|| is_subclass_of($table, $this->owner->class)
+						|| is_subclass_of($this->owner->class, $table))) {
+					$query->renameTable($table, $table . '_' . $stage);
 				}
 			}
 			break;
 
 		// Reading a specific stage, but only return items that aren't in any other stage
 		case 'stage_unique':
+			// Check stage is available on object
 			$stage = $dataQuery->getQueryParam('Versioned.stage');
+			if (!$stage || !in_array($stage, $this->stages) || $stage === $this->defaultStage) {
+				break;
+			}
 
 			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before
 			// below)

@@ -508,9 +508,11 @@ class RequestHandler extends ViewableData {
 	/**
 	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
 	 *
+	 * @param string $action Optional action (soft-supported via func_get_args)
 	 * @return string
 	 */
-	public function Link($action = null) {
+	public function Link() {
+		$action = func_num_args() ? func_get_arg(0) : null;
 		$urlSegment = $this->config()->get('url_segment') ?: get_class($this);
 		$link = Controller::join_links($urlSegment, $action, '/');
 
