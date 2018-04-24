@@ -195,7 +195,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
      * @config
      * @var bool
      */
-    private static $use_session = false;
+    private static $use_session = true;
 
 	/**
 	 * Reset static configuration variables to their default values.
