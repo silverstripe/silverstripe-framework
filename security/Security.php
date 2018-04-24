@@ -399,7 +399,11 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the link to the given action
 	 */
 	public function Link($action = null) {
-		return Controller::join_links(Director::baseURL(), "Security", $action);
+		$link = Controller::join_links(Director::baseURL(), "Security", $action);
+
+		// Give extensions the chance to modify by reference
+		$this->extend('updateLink', $link, $action);
+		return $link;
 	}
 
 	/**

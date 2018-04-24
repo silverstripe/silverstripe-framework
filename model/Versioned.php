@@ -4,17 +4,15 @@
  * The Versioned extension allows your DataObjects to have several versions, allowing you to rollback changes and view
  * history. An example of this is the pages used in the CMS.
  *
- * @property int $Version
- *
  * @package framework
  * @subpackage model
  *
- * @property DataObject owner
- * @property int  RecordID
- * @property int  Version
- * @property bool WasPublished
- * @property int  AuthorID
- * @property int  PublisherID
+ * @property DataObject $owner
+ * @property int  $RecordID
+ * @property int  $Version
+ * @property bool $WasPublished
+ * @property int  $AuthorID
+ * @property int  $PublisherID
  */
 class Versioned extends DataExtension implements TemplateGlobalProvider {
 
@@ -80,7 +78,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
      */
     private static $draft_site_secured = true;
 
-	/** @var string */
+	/**
+	 * Current reading mode
+	 *
+	 * @var string
+	 */
 	protected static $reading_mode = null;
 
     /**
@@ -199,7 +201,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Reset static configuration variables to their default values.
 	 */
 	public static function reset() {
-		self::$reading_mode = '';
+		self::set_reading_mode(null);
+		self::set_default_reading_mode(null);
+		self::set_draft_site_secured(null);
 
 		Session::clear('readingMode');
 	}
@@ -229,18 +233,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param DataQuery $dataQuery
 	 */
 	public function augmentDataQueryCreation(SQLQuery &$query, DataQuery &$dataQuery) {
-		$parts = explode('.', Versioned::get_reading_mode());
-
-		if($parts[0] == 'Archive') {
-			$dataQuery->setQueryParam('Versioned.mode', 'archive');
-			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
-
-		} else if($parts[0] == 'Stage' && $parts[1] != $this->defaultStage
-				&& array_search($parts[1],$this->stages) !== false) {
-
-			$dataQuery->setQueryParam('Versioned.mode', 'stage');
-			$dataQuery->setQueryParam('Versioned.stage', $parts[1]);
-		}
+		// Convert reading mode to dataquery params and assign
+        $args = VersionedReadingMode::toDataQueryParams(Versioned::get_reading_mode());
+        if ($args) {
+            foreach ($args as $key => $value) {
+                $dataQuery->setQueryParam($key, $value);
+            }
+        }
 	}
 
 	/**
@@ -836,15 +835,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return bool False is returned if the current viewing mode denies visibility
 	 */
 	public function canViewVersioned($member = null) {
-		// Bypass when live stage
-		$mode = $this->owner->getSourceQueryParam("Versioned.mode");
-		$stage = $this->owner->getSourceQueryParam("Versioned.stage");
-		if ($mode === 'stage' && $stage === static::get_live_stage()) {
+		// Bypass if site is unsecured
+		if (!self::get_draft_site_secured()) {
 			return true;
 		}
 
-		// Bypass if site is unsecured
-		if (!self::get_draft_site_secured()) {
+		// Bypass when live stage
+		$mode = $this->owner->getSourceQueryParam("Versioned.mode");
+		$stage = $this->owner->getSourceQueryParam("Versioned.stage");
+		if ($mode === 'stage' && $stage === self::LIVE) {
 			return true;
 		}
 
@@ -1244,7 +1243,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
         }
 
 		if(!headers_sent() && !Director::is_cli()) {
-			if(Versioned::current_stage() == 'Live') {
+			if(Versioned::current_stage() === self::LIVE) {
 				// clear the cookie if it's set
 				if(Cookie::get('bypassStaticCache')) {
 					Cookie::force_expiry('bypassStaticCache', null, null, false, true /* httponly */);
