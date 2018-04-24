@@ -24,6 +24,13 @@ class FormTest extends FunctionalTest {
 		Config::inst()->remove('SSViewer', 'theme');
 	}
 
+	public function boolDataProvider() {
+		return array(
+			array(false),
+			array(true),
+		);
+	}
+
 	public function testLoadDataFromRequest() {
 		$form = new Form(
 			new Controller(),
@@ -727,6 +734,57 @@ class FormTest extends FunctionalTest {
         $formData = $form->getData();
         $this->assertEmpty($formData['ExtraFieldCheckbox']);
     }
+
+
+    /**
+     * @dataProvider boolDataProvider
+     * @param bool $allow
+     */
+    public function testPasswordRemovedFromResponseData($allow) {		
+		$form = $this->getStubForm();
+		$form->enableSecurityToken();
+		$form->Fields()->push(
+			new TextField('Username')
+		);
+		$form->Fields()->push(
+			PasswordField::create('Password')
+				->setAllowValuePostback($allow)
+		);
+		$form->Actions()->push(
+			new FormAction('submit')
+		);
+		$form->handleRequest(
+			new SS_HTTPRequest(
+				'POST',
+				'/',
+				array(),
+				array(
+					'Username' => 'uncle',
+					'Password' => 'cheese',
+					'SecurityID' => 'FAIL',
+					'action_submit' => 1
+				)
+			),
+			DataModel::inst()
+		);
+
+		$parser = new CSSContentParser($result = $form->forTemplate());
+        $passwords = $parser->getBySelector('input#Password');
+        $this->assertNotNull($passwords);
+        $this->assertCount(1, $passwords);
+        /* @var \SimpleXMLElement $password */
+        $password = $passwords[0];
+        $attrs = iterator_to_array($password->attributes());
+
+        if ($allow) {
+            $this->assertArrayHasKey('value', $attrs);
+            $this->assertEquals('cheese', $attrs['value']);
+        } else {
+            $this->assertArrayNotHasKey('value', $attrs);
+        }
+
+    }    
+
 
 	protected function getStubForm() {
 		return new Form(
