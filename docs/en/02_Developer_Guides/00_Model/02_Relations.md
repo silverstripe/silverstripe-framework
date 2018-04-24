@@ -42,10 +42,17 @@ and provides a short syntax for accessing the related object.
 To create a has_one/has_many relationship to core classes (File, Image, etc), reference the Classname::class, like below.
 
 ```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\File;
+
+class Team extends DataObject
+{
     private static $has_many = [
         'Teamphoto' => Image::class,
         'Lineup' => File::class
-    ];
+    ];    
+}
 ```
 
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
