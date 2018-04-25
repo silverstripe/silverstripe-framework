@@ -60,6 +60,21 @@ Or through the `config()` object on the class.
 $config = $this->config()->get('property')';
 ```
 
+If your class does not inherit from a SilverStripe class, you must apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` object.
+
+**mysite/code/MyOtherClass.php**
+
+```php
+use SilverStripe\Core\Config\Configurable;
+
+class MyOtherClass 
+{
+    use Configurable;
+ 
+}
+```
+
+
 Note that by default `Config::inst()` returns only an immutable version of config. Use `Config::modify()`
 if it's necessary to alter class config. This is generally undesirable in most applications, as modification
 of the config can immediately have performance implications, so this should be used sparingly, or
