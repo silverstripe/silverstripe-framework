@@ -60,7 +60,7 @@ Or through the `config()` object on the class.
 $config = $this->config()->get('property')';
 ```
 
-If your class does not inherit from a SilverStripe class, you must apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` object.
+You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` object.
 
 **mysite/code/MyOtherClass.php**
 
