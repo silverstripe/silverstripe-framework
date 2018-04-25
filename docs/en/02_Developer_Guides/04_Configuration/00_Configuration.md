@@ -54,13 +54,13 @@ This can be done by calling the static method [Config::inst()](api:SilverStripe\
 $config = Config::inst()->get('MyClass', 'property');
 ```
 
-Or through the `config()` object on the class.
+Or through the `config()` method on the class.
 
 ```php
 $config = $this->config()->get('property')';
 ```
 
-You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` object.
+You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` method.
 
 **mysite/code/MyOtherClass.php**
 
