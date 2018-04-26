@@ -348,6 +348,24 @@ RewriteRule .* ../index.php [QSA]
 You will need to ensure that your core apache configuration has the necessary `AllowOverride`
 settings to support the local .htaccess file.
 
+Although assets have a 404 handler which routes to a PHP handler, .php files within assets itself
+should not be allowed to be marked as executable.
+
+When securing your server you should ensure that you protect against both files that can be uploaded as
+executable on the server, as well as protect against accidental upload of `.htaccess` which bypasses
+this file security.
+
+For instance your server configuration should look similar to the below:
+
+```
+<Directory "/var/www/superarcade/public/assets">
+  php_admin_flag engine off
+</Directory>
+```
+
+The `php_admin_flag` will protect against uploaded `.htaccess` files accidentally re-enabling script
+execution within the assets directory.
+
 #### Configuring Web Server: Windows IIS 7.5+
 
 Configuring via IIS requires the Rewrite extension to be installed and configured properly.
