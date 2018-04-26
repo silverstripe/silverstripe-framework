@@ -1319,6 +1319,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param string $stage
 	 */
 	public static function reading_stage($stage) {
+		VersionedReadingMode::validateStage($stage);
 		Versioned::set_reading_mode('Stage.' . $stage);
 	}
 

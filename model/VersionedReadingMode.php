@@ -135,7 +135,9 @@ class VersionedReadingMode
      */
     public static function validateStage($stage)
     {
-        if (!in_array($stage, array(Versioned::LIVE, Versioned::DRAFT))) {
+    	// Any stage is allowed in 3.x. Note that 4.x only allows Stage / Live
+		// Any string that contains no dots is ok.
+		if (empty($stage) || !preg_match('/^([^.]+)$/', $stage)) {
             throw new InvalidArgumentException("Invalid stage name \"{$stage}\"");
         }
     }

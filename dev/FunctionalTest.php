@@ -381,6 +381,7 @@ class FunctionalTest extends SapphireTest {
 		if($enabled) {
 			$this->session()->inst_set('readingMode', 'Stage.Stage');
 			$this->session()->inst_set('unsecuredDraftSite', true);
+			Versioned::set_draft_site_secured(false);
 		}
 		else {
 			$this->session()->inst_set('readingMode', 'Stage.Live');

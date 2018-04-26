@@ -296,7 +296,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testWritingNewToStage() {
-		$origStage = Versioned::current_stage();
+		$origMode = Versioned::get_reading_mode();
 
 		Versioned::reading_stage("Stage");
 		$page = new VersionedTest_DataObject();
@@ -315,7 +315,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(1, $stage->count());
 		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_reading_mode($origMode);
 	}
 
 	/**
@@ -325,7 +325,7 @@ class VersionedTest extends SapphireTest {
 	 * the VersionedTest_DataObject record though.
 	 */
 	public function testWritingNewToLive() {
-		$origStage = Versioned::current_stage();
+		$origMode = Versioned::get_reading_mode();
 
 		Versioned::reading_stage("Live");
 		$page = new VersionedTest_DataObject();
@@ -344,7 +344,7 @@ class VersionedTest extends SapphireTest {
 		));
 		$this->assertEquals(0, $stage->count());
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_reading_mode($origMode);
 	}
 
 	/**

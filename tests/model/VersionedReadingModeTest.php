@@ -150,8 +150,26 @@ class VersionedReadingModeTest extends SapphireTest
     {
         return array(
             array(''),
-            array('stage'),
-            array('bob'),
+			array('Stage.stage'),
+		);
+    }
+
+    /**
+     * @dataProvider provideTestValidStage
+     * @param string $stage
+     */
+    public function testValidStage($stage)
+    {
+        VersionedReadingMode::validateStage($stage);
+        $this->assertTrue(true, 'Stage is valid');
+    }
+
+    public function provideTestValidStage()
+    {
+        return array(
+            array('anything'),
+            array(Versioned::DRAFT),
+            array(Versioned::LIVE),
 		);
     }
 }
