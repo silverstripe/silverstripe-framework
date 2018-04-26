@@ -146,7 +146,7 @@ class SS_Cache {
 	 * @param string $frontend (optional) The type of Zend_Cache frontend
 	 * @param array $frontendOptions (optional) Any frontend options to use.
 	 *
-	 * @return Zend_Cache_Frontend The cache object
+	 * @return Zend_Cache_Core The cache object
 	 */
 	public static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
