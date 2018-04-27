@@ -62,3 +62,20 @@ function _t($entity, $arg = null)
     // Pass args directly to handle deprecation
     return call_user_func_array([i18n::class, '_t'], func_get_args());
 }
+
+/**
+ * Polyfill for is_iterable for PHP5.6 and PHP7.0
+ * http://php.net/manual/en/function.is-iterable.php
+ **/
+if (!function_exists('is_iterable')) {
+
+    /**
+     * Verify that the contents of a variable is an iterable value
+     * @param  mixed    $obj    the variable to test
+     * @return boolean          Returns TRUE if $obj is iterable, FALSE otherwise.
+     */
+    function is_iterable($obj) {
+        return is_array($obj) || (is_object($obj) && ($obj instanceof \Traversable));
+    }
+}
+
