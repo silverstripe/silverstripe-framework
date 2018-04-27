@@ -1352,7 +1352,7 @@ class Member extends DataObject
             return ArrayList::create()->map();
         }
 
-        if (count($groups) == 0) {
+        if ($groups && count($groups) == 0) {
             $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 
             if (class_exists(CMSMain::class)) {
