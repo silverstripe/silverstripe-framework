@@ -1347,6 +1347,12 @@ class Member extends DataObject
      */
     public static function mapInCMSGroups($groups = null)
     {
+        
+        // non-countable $groups will issue a warning when using count() in PHP 7.2+
+        if (!$groups) {
+            $groups = [];
+        }
+            
         // Check CMS module exists
         if (!class_exists(LeftAndMain::class)) {
             return ArrayList::create()->map();
