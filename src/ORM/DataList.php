@@ -1047,7 +1047,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * Example: Get members from all Groups:
      *
-     *     DataList::Create("Group")->relation("Members")
+     *     DataList::Create(\SilverStripe\Security\Group::class)->relation("Members")
      *
      * @param string $relationName
      * @return HasManyList|ManyManyList
