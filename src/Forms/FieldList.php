@@ -154,8 +154,7 @@ class FieldList extends ArrayList
      * This is most commonly used when overloading getCMSFields()
      *
      * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
-     *                        or TabSet.Tab.Subtab.
-     * This function will create any missing tabs.
+     *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
      * @param array $fields An array of {@link FormField} objects.
      * @param string $insertBefore Name of field to insert before
      */

@@ -19,7 +19,7 @@ class ConfigManifestTest extends SapphireTest
 
         $moduleManifest = new ModuleManifest(dirname(__FILE__) . '/fixtures/configmanifest');
         $moduleManifest->init();
-        ModuleLoader::inst()->pushManifest($moduleManifest);
+        ModuleLo    ader::inst()->pushManifest($moduleManifest);
     }
 
     protected function tearDown()

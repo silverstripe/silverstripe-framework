@@ -305,7 +305,7 @@ class Group extends DataObject
      * including all members which are "inherited" from children groups of this record.
      * See {@link DirectMembers()} for retrieving members without any inheritance.
      *
-     * @param String $filter
+     * @param string $filter
      * @return ManyManyList
      */
     public function Members($filter = '')

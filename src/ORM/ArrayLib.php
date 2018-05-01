@@ -247,6 +247,7 @@ class ArrayLib
      * @param array $array
      * @param boolean $preserveKeys
      * @param array $out
+     *
      * @return array
      */
     public static function flatten($array, $preserveKeys = true, &$out = array())
