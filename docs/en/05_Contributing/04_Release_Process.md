@@ -2,7 +2,9 @@ summary: Describes the process followed for "core" releases.
 
 # Release Process
 
-This page describes the process followed for "core" releases.
+This page describes the process followed for "core" releases
+(the modules included by [silverstripe/recipe-core](https://github.com/silverstripe/recipe-core)
+and [silverstripe/recipe-cms](https://github.com/silverstripe/recipe-cms)).
 
 ## Release Planning
 
@@ -15,7 +17,7 @@ to combine individual module milestones into a larger release that's eventually 
 [silverstripe.org/download](https://silverstripe.org/download).
 
 New features and API changes are discussed as
-[Github issues](https://docs.silverstripe.org/en/contributing/issues_and_bugs/)),
+[GitHub issues](https://docs.silverstripe.org/en/contributing/issues_and_bugs/)),
 as well as the [forum](https://forum.silverstripe.org). 
 They are prioritised by the core team as tickets on 
 github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
@@ -35,11 +37,12 @@ Our version support is outlined on [silverstripe.org/roadmap](http://silverstrip
 At any point in time, the core development team will support a set of releases to varying levels:
 
 *  The current *master* will get new features, bug fixes and API changes that might require major refactoring before going
-into a release. At the moment, bugfixing and feature development might happen on the current major release branch (e.g. *3*), to be
+into a release. At the moment, bugfixing and feature development might happen on the current major release branch (e.g. *4*), to be
 merged forward to master regularly.
 *  Applicable bugfixes on master will also be merged back to the last major release branch, to be released as the next
 patch release
-*  Security fixes will be applied to the current master and the previous two major releases (e.g. *4.0*, *3.2* and *3.1*).
+*  Security fixes will be applied to the current master,
+   as well as patch releases for SilverStripe versions in "active development", "full support" or "limited support".
 
 ## Deprecation
 
