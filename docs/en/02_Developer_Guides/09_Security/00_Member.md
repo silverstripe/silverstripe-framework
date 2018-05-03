@@ -8,7 +8,7 @@ The [Member](api:SilverStripe\Security\Member) class is used to represent user a
  
 ## Testing For Logged In Users
 
-The [api:Security] class comes with a static method for getting information about the current logged in user.
+The [Security](api:SilverStripe\Security\Security) class comes with a static method for getting information about the current logged in user.
 
 **Security::getCurrentUser()**
 
@@ -75,17 +75,17 @@ public function getCMSFields() {
 
 ## Extending Member or DataObject?
 
-Basic rule: Class [api:Member] should just be extended for entities who have some kind of login.
-If you have different types of [api:Member]s in the system, you have to make sure that those with login-capabilities a unique field to be used for the login.
-For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [api:Member] to avoid conflicts
-with the Member-database. This enables us to have a different subclass of [api:Member] for an email-address with login-data,
+Basic rule: Class [Member](api:SilverStripe\Security\Member) should just be extended for entities who have some kind of login.
+If you have different types of [Member](api:SilverStripe\Security\Member)s in the system, you have to make sure that those with login-capabilities a unique field to be used for the login.
+For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [Member](api:SilverStripe\Security\Member) to avoid conflicts
+with the Member-database. This enables us to have a different subclass of [Member](api:SilverStripe\Security\Member) for an email-address with login-data,
 and another subclass for the same email-address in the address-database.
 
 ## Member Role Extension
 
 Using inheritance to add extra behaviour or data fields to a member is limiting, because you can only inherit from 1
 class. A better way is to use role extensions to add this behaviour. Add the following to your
-`[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
+[`config.yml`](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules).
 
 ```yml
 SilverStripe\Security\Member:
@@ -130,14 +130,14 @@ class MyMemberExtension extends DataExtension
 
 ```
 
-## Saved User Logins ##
+## Saved User Logins
 
 Logins can be "remembered" across multiple devices when user checks the "Remember Me" box. By default, a new login token
 will be created and associated with the device used during authentication. When user logs out, all previously saved tokens
-for all devices will be revoked, unless `[RememberLoginHash::$logout_across_devices](api:SilverStripe\Security\RememberLoginHash::$logout_across_devices) is set to false. For extra security,
-single tokens can be enforced by setting `[RememberLoginHash::$force_single_token](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.
+for all devices will be revoked, unless [`RememberLoginHash::$logout_across_devices`](api:SilverStripe\Security\RememberLoginHash::$logout_across_devices) is set to false. For extra security,
+single tokens can be enforced by setting [`RememberLoginHash::$force_single_token`](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.
 
-## Acting as another user ##
+## Acting as another user
 
 Occasionally, it may be necessary not only to check permissions of a particular member, but also to
 temporarily assume the identity of another user for certain tasks. E.g. when running a CLI task,
