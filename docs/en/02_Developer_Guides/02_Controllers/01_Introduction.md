@@ -19,12 +19,12 @@ class TeamController extends Controller
         'index'
     ];
     
-    public function index(HTTPRequest $request) 
+    public function index() 
     {
         // ..
     }
 
-    public function players(HTTPRequest $request) 
+    public function players() 
     {
         print_r($request->allParams());
     }
