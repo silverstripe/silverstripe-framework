@@ -1072,12 +1072,6 @@ class Form extends RequestHandler {
 			return $this->formActionPath;
 		}
 
-		// Forms without parent controller have no link;
-        // E.g. Submission handled via graphql
-		if (!$this->controller) {
-			return null;
-		}
-
 		// Respect FormObjectLink() method
 		if($this->controller->hasMethod("FormObjectLink")) {
 			$link = $this->controller->FormObjectLink($this->getName());
