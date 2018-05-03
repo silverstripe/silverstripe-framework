@@ -10,6 +10,7 @@ subclass the base `Controller` class.
 
 ```php
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 
 class TeamController extends Controller 
 {
