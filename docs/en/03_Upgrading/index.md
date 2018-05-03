@@ -114,6 +114,16 @@ cd ~/my-project-root
 ~/.composer/vendor/bin/upgrade-code upgrade ./app/src --write
 ```
 
+### Switching to new `app/src` structure
+
+The `reorganise` command can automatically rename the `mysite` and `code` folder for you. It will search your code and find any occurence of `mysite`. It won't replace those occurence with `app` however.
+
+After installing, run the upgrader reorganise command:
+```
+cd ~/my-project-root
+~/.composer/vendor/bin/upgrade-code reorganise --write
+```
+
 ## Migrating files
 
 Since the structure of `File` dataobjects has changed, a new task `MigrateFileTask`
