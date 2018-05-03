@@ -2,24 +2,28 @@ summary: Describes the process followed for "core" releases.
 
 # Release Process
 
-This page describes the process followed for "core" releases (mainly the `framework` and `cms` modules).
+This page describes the process followed for "core" releases.
 
 ## Release Planning
 
-Releases are planned by assigning issues to GitHub milestones.
+Releases are planned by assigning issues to GitHub milestones,
+according to our [roadmap](http://silverstripe.org/roadmap).
 SilverStripe is split up into many modules listed on [github.com/silverstripe](https://github.com/silverstripe).
 Each of them will have its own milestones and issues, and different release lines (e.g. 1.x vs. 4.x).
 There are high-level "recipe" milestones on the [framework repository](https://github.com/silverstripe/silverstripe-framework/milestones)
 to combine individual module milestones into a larger release that's eventually available on
 [silverstripe.org/download](https://silverstripe.org/download).
 
-New features and API changes are discussed on the [core mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritised by the core team as tickets on 
+New features and API changes are discussed as
+[Github issues](https://docs.silverstripe.org/en/contributing/issues_and_bugs/)),
+as well as the [forum](https://forum.silverstripe.org). 
+They are prioritised by the core team as tickets on 
 github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
 Any feature ideas we're planning to implement will be flagged there.
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
 reviewing the release milestone on github.com. Releases will be
-announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
+announced on the ["releases" forum category](https://forum.silverstripe.org/c/releases).
 
 ## Release Numbering
 
@@ -27,6 +31,7 @@ SilverStripe follows [Semantic Versioning](http://semver.org).
 
 ## Supported versions
 
+Our version support is outlined on [silverstripe.org/roadmap](http://silverstripe.org/roadmap).
 At any point in time, the core development team will support a set of releases to varying levels:
 
 *  The current *master* will get new features, bug fixes and API changes that might require major refactoring before going
@@ -120,7 +125,7 @@ timeline and ask the reporter to keep the issue confidential until we announce i
 *  Halt all other development as long as is needed to develop a fix, including patches against the current and one
 previous major release (if applicable).
 * Pre-announce the upcoming security release to a private mailing list of important stakeholders (see below).
-*  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a 
+*  We will inform you about resolution and [announce](https://forum.silverstripe.org/c/releases) a 
 [new release](http://silverstripe.org/security-releases/) publically.
 
 You can help us determine the problem and speed up responses by providing us with more information on how to reproduce
