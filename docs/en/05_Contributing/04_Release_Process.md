@@ -25,10 +25,6 @@ announced on the [release announcements mailing list](http://groups.google.com/g
 
 SilverStripe follows [Semantic Versioning](http://semver.org).
 
-Note: Until November 2014, the project didn't adhere to Semantic Versioning. Instead, a "minor release" in semver terminology
-was treated as a "major release" in SilverStripe. For example, the *3.1.0* release contained API breaking changes, and
-the *3.1.1* release contained new features rather than just bugfixes.
-
 ## Supported versions
 
 At any point in time, the core development team will support a set of releases to varying levels:
