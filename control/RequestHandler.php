@@ -36,6 +36,14 @@
 class RequestHandler extends ViewableData {
 
 	/**
+     * Optional url_segment for this request handler
+     *
+     * @config
+     * @var string|null
+     */
+    private static $url_segment = null;
+
+	/**
 	 * @var SS_HTTPRequest $request The request object that the controller was called with.
 	 * Set in {@link handleRequest()}. Useful to generate the {}
 	 */
@@ -495,5 +503,21 @@ class RequestHandler extends ViewableData {
 	 */
 	public function setRequest($request) {
 		$this->request = $request;
+	}
+
+	/**
+	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
+	 *
+	 * @param string $action Optional action (soft-supported via func_get_args)
+	 * @return string
+	 */
+	public function Link() {
+		$action = func_num_args() ? func_get_arg(0) : null;
+		$urlSegment = $this->config()->get('url_segment') ?: get_class($this);
+		$link = Controller::join_links($urlSegment, $action, '/');
+
+		// Give extensions the chance to modify by reference
+		$this->extend('updateLink', $link);
+		return $link;
 	}
 }

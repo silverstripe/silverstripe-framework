@@ -38,7 +38,7 @@ class VersionedRequestFilter implements RequestFilter {
 			die;
 		}
 
-		Versioned::choose_site_stage();
+		Versioned::choose_site_stage($request);
 		$dummyController->popCurrent();
 		return true;
 	}

@@ -296,7 +296,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testWritingNewToStage() {
-		$origStage = Versioned::current_stage();
+		$origMode = Versioned::get_reading_mode();
 
 		Versioned::reading_stage("Stage");
 		$page = new VersionedTest_DataObject();
@@ -315,7 +315,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(1, $stage->count());
 		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_reading_mode($origMode);
 	}
 
 	/**
@@ -325,7 +325,7 @@ class VersionedTest extends SapphireTest {
 	 * the VersionedTest_DataObject record though.
 	 */
 	public function testWritingNewToLive() {
-		$origStage = Versioned::current_stage();
+		$origMode = Versioned::get_reading_mode();
 
 		Versioned::reading_stage("Live");
 		$page = new VersionedTest_DataObject();
@@ -344,7 +344,7 @@ class VersionedTest extends SapphireTest {
 		));
 		$this->assertEquals(0, $stage->count());
 
-		Versioned::reading_stage($origStage);
+		Versioned::set_reading_mode($origMode);
 	}
 
 	/**
@@ -635,63 +635,91 @@ class VersionedTest extends SapphireTest {
 		Versioned::set_reading_mode($originalMode);
 	}
 
-	/**
-	 * Tests that reading mode persists between requests
-	 */
-	public function testReadingPersistent() {
-		$session = Injector::inst()->create('Session', array());
-		$adminID = $this->logInWithPermission('ADMIN');
-		$session->inst_set('loggedInAs', $adminID);
+	public function testReadingNotPersistentWhenUseSessionFalse()
+    {
+        Config::inst()->update('Versioned', 'use_session', false);
 
-		// Set to stage
-		Director::test('/?stage=Stage', null, $session);
-		$this->assertEquals(
-				'Stage.Stage',
-				$session->inst_get('readingMode'),
-				'Check querystring changes reading mode to Stage'
-		);
-		Director::test('/', null, $session);
-		$this->assertEquals(
-				'Stage.Stage',
-				$session->inst_get('readingMode'),
-				'Check that subsequent requests in the same session remain in Stage mode'
-		);
+        $session = new Session(array());
+        $adminID = $this->logInWithPermission('ADMIN');
+        $session->inst_set('loggedInAs', $adminID);
 
-		// Test live persists
-		Director::test('/?stage=Live', null, $session);
-		$this->assertEquals(
-				'Stage.Live',
-				$session->inst_get('readingMode'),
-				'Check querystring changes reading mode to Live'
-		);
-		Director::test('/', null, $session);
-		$this->assertEquals(
-				'Stage.Live',
-				$session->inst_get('readingMode'),
-				'Check that subsequent requests in the same session remain in Live mode'
-		);
+        Director::test('/?stage=Stage', null, $session);
+        $this->assertNull(
+            $session->inst_get('readingMode'),
+            'Check querystring does not change reading mode'
+        );
 
-		// Test that session doesn't redundantly store the default stage if it doesn't need to
-		$session2 = Injector::inst()->create('Session', array());
-		$session2->inst_set('loggedInAs', $adminID);
-		Director::test('/', null, $session2);
-		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
-		Director::test('/?stage=Live', null, $session2);
-		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
+        Director::test('/', null, $session);
+        $this->assertNull(
+            $session->inst_get('readingMode'),
+            'Check that subsequent requests in the same session do not have a changed reading mode'
+        );
+    }
 
-		// Test choose_site_stage
-		unset($_GET['stage']);
-		unset($_GET['archiveDate']);
-		Session::set('readingMode', 'Stage.Stage');
-		Versioned::choose_site_stage();
-		$this->assertEquals('Stage.Stage', Versioned::get_reading_mode());
-		Session::set('readingMode', 'Archive.2014-01-01');
-		Versioned::choose_site_stage();
-		$this->assertEquals('Archive.2014-01-01', Versioned::get_reading_mode());
-		Session::clear('readingMode');
-		Versioned::choose_site_stage();
-		$this->assertEquals('Stage.Live', Versioned::get_reading_mode());
-	}
+    /**
+     * Tests that reading mode persists between requests
+     */
+    public function testReadingPersistentWhenUseSessionTrue()
+    {
+        Config::inst()->update('Versioned', 'use_session', true);
+
+        $session = new Session(array());
+        $adminID = $this->logInWithPermission('ADMIN');
+        $session->inst_set('loggedInAs', $adminID);
+        // Set to stage
+        Director::test('/?stage=Stage', null, $session);
+        $this->assertEquals(
+            'Stage.Stage',
+            $session->inst_get('readingMode'),
+            'Check querystring changes reading mode to Stage'
+        );
+        Director::test('/', null, $session);
+        $this->assertEquals(
+            'Stage.Stage',
+            $session->inst_get('readingMode'),
+            'Check that subsequent requests in the same session remain in Stage mode'
+        );
+        // Default stage stored anyway (in case default changes)
+        Director::test('/?stage=Live', null, $session);
+        $this->assertEquals(
+            'Stage.Live',
+            $session->inst_get('readingMode'),
+            'Check querystring changes reading mode to Live'
+        );
+        Director::test('/', null, $session);
+        $this->assertEquals(
+            'Stage.Live',
+            $session->inst_get('readingMode'),
+            'Check that subsequent requests in the same session remain in Live mode'
+        );
+        // Test that session doesn't redundantly modify session stage without querystring args
+        $session2 = new Session(array());
+        $session2->inst_set('loggedInAs', $adminID);
+        Director::test('/', null, $session2);
+        $this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
+        Director::test('/?stage=Live', null, $session2);
+        $this->assertArrayHasKey('readingMode', $session2->inst_changedData());
+        // Test choose_site_stage
+        unset($_GET['stage']);
+        unset($_GET['archiveDate']);
+        $request = new SS_HTTPRequest('GET', '/');
+        Session::clear_all();
+        Session::set('readingMode', 'Stage.Stage');
+        Versioned::choose_site_stage($request);
+        $this->assertEquals('Stage.Stage', Versioned::get_reading_mode());
+        Session::set('readingMode', 'Archive.2014-01-01');
+        Versioned::choose_site_stage($request);
+        $this->assertEquals('Archive.2014-01-01', Versioned::get_reading_mode());
+        Session::clear('readingMode');
+        Versioned::choose_site_stage($request);
+        $this->assertEquals('Stage.Live', Versioned::get_reading_mode());
+        // Ensure stage is reset to Live when logging out
+        Session::set('readingMode', 'Stage.Stage');
+        Versioned::choose_site_stage($request);
+        Session::clear_all();
+        Versioned::choose_site_stage($request);
+        $this->assertSame('Stage.Live', Versioned::get_reading_mode());
+    }
 
 	/**
 	 * Test that stage parameter is blocked by non-administrative users

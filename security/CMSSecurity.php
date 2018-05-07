@@ -43,7 +43,10 @@ class CMSSecurity extends Security {
 	}
 
 	public function Link($action = null) {
-		return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
+		$link = Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
+		// Give extensions the chance to modify by reference
+		$this->extend('updateLink', $link, $action);
+		return $link;
 	}
 
 	/**

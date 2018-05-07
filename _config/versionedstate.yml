@@ -1,0 +1,9 @@
+---
+Name: versionedstate
+---
+RequestHandler:
+  extensions:
+    - VersionedStateExtension
+DataObject:
+  extensions:
+    - VersionedStateExtension

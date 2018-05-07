@@ -1070,11 +1070,18 @@ class Form extends RequestHandler {
 	public function FormAction() {
 		if ($this->formActionPath) {
 			return $this->formActionPath;
-		} elseif($this->controller->hasMethod("FormObjectLink")) {
-			return $this->controller->FormObjectLink($this->name);
-		} else {
-			return Controller::join_links($this->controller->Link(), $this->name);
 		}
+
+		// Respect FormObjectLink() method
+		if($this->controller->hasMethod("FormObjectLink")) {
+			$link = $this->controller->FormObjectLink($this->getName());
+		} else {
+			$link = Controller::join_links($this->controller->Link(), $this->getName());
+		}
+
+		// Join with action and decorate
+        $this->extend('updateLink', $link);
+        return $link;
 	}
 
 	/**

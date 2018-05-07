@@ -460,8 +460,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// replaced TableListField.ss or Form.ss.
 		Config::inst()->update('SSViewer', 'theme_enabled', false);
 
-		//set the reading mode for the admin to stage
-		Versioned::reading_stage('Stage');
+		// Set the current reading mode
+		Versioned::reading_stage(Versioned::DRAFT);
+
+        // Set default reading mode to suppress ?stage=Stage querystring params in CMS
+        Versioned::set_default_reading_mode(Versioned::get_reading_mode());
 	}
 
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
@@ -560,7 +563,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'/', // trailing slash needed if $action is null!
 			"$action"
 		);
-		$this->extend('updateLink', $link);
+		$this->extend('updateLink', $link, $action);
 		return $link;
 	}
 

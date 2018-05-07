@@ -222,7 +222,7 @@ class Director implements TemplateGlobalProvider {
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-		$oldStage = Versioned::current_stage();
+		$oldMode = Versioned::get_reading_mode();
 		$getVars = array();
 
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
@@ -248,7 +248,7 @@ class Director implements TemplateGlobalProvider {
 		// Set callback to invoke prior to return
 		$onCleanup = function() use(
 			$existingRequestVars, $existingGetVars, $existingPostVars, $existingSessionVars,
-			$existingCookies, $existingServer, $existingRequirementsBackend, $oldStage
+			$existingCookies, $existingServer, $existingRequirementsBackend, $oldMode
 		) {
 			// Restore the superglobals
 			$_REQUEST = $existingRequestVars;
@@ -262,7 +262,7 @@ class Director implements TemplateGlobalProvider {
 
 			// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 			// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-			Versioned::reading_stage($oldStage);
+			Versioned::set_reading_mode($oldMode);
 
 			Injector::unnest(); // Restore old CookieJar, etc
 			Config::unnest();
