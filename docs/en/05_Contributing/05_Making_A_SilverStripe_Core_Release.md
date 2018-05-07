@@ -12,7 +12,7 @@ The artifacts for this process are typically:
  * A downloadable tar / zip on silverstripe.org
  * A published announcement
  * A new composer installable stable tag for silverstripe/installer
- 
+
 While this document is not normally applicable to normal silverstripe contributors,
 it is still useful to have it available in a public location so that these users
 are aware of these processes.
@@ -23,7 +23,7 @@ As a core contributor it is necessary to have installed the following set of too
 
 ### First time setup: Standard releases
 
-* PHP 5.5+
+* PHP 5.3+ (for SilverStripe 3.x) or PHP 5.6+ (for SilverStripe 4.x)
 * Python 2.7 / 3.5
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
@@ -62,11 +62,10 @@ SS_DEFAULT_ADMIN_PASSWORD="password"
 SS_BASE_URL="http://localhost/"
 ```
 
-You will also need to be assigned the following permissions. Contact one of the SS staff from
+You will also need to be assigned the following permissions. Contact one of the SilverStripe staff from
 the [core committers](core_committers), who will assist with setting up your credentials.
 
-* Write permissions on the [silverstripe](https://github.com/silverstripe) and
-  [silverstripe-labs](https://github.com/silverstripe-labs) organisations.
+* Write permissions on the [silverstripe](https://github.com/silverstripe) organisation.
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
   Set up a [~/.transifexrc](https://docs.transifex.com/client/client-configuration) with your credentials.
 * AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket
@@ -82,9 +81,8 @@ For doing security releases the following additional setup tasks are necessary:
 
 * Write permissions on the [silverstripe-security](https://github.com/silverstripe-security)
   organisation.
-* Permission granted on the [open source security JIRA](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail)
 * Permissions to write to the [security releases page](http://www.silverstripe.org/download/security-releases)
-  and the [silverstripe.org cms](http://www.silverstripe.org/admin).
+  and the [silverstripe.org CMS](http://www.silverstripe.org/admin).
 * Permission on [security pre-announcement mailing list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
 
 ## Security release process
@@ -94,7 +92,7 @@ steps will need to be performed manually. As such, this guide should not be foll
 exactly the same for these.
 
 Standard practice is to produce a pre-release for any patched modules on the security 
-forks for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
+forks, e.g. for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
 <div class="warning" markdown="1">
 Security issues are never disclosed until a public stable release containing this fix
@@ -108,11 +106,11 @@ Producing a security fix follows this general process:
   anyone who disclosed this issue, and confirm with them as soon as possible whether
   this issue is a verified security issue.
 * Log this CVE, along with description, release version, and name of reporter in
-  JIRA at [open source security jira](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail).
+  the [security issues GitHub repository](https://github.com/silverstripe-security/security-issues/issues).
 * Create a similar record of this issue on the [security releases page](http://www.silverstripe.org/download/security-releases)
   in draft mode.
 * Post a pre-announcement to the [security pre-announcement list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
-  It's normally ideal to include a [VCSS](https://nvd.nist.gov/CVSS-v2-Calculator)
+  It's normally ideal to include a [CVSS](https://nvd.nist.gov/CVSS-v2-Calculator)
   (common vulnerability scoring system) along with this pre-announcement. If the
   release date of the final stable is not known, then it's ok to give an estimated
   release schedule.
@@ -124,8 +122,8 @@ Producing a security fix follows this general process:
 * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
   Make sure to publish any draft security pages at the same time as the release is published (same day).
-* After the final release has been published, close related JIRA issues 
-  at [open source security jira](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail)
+* After the final release has been published, close related GitHub issues 
+  in the [security-issues repository](https://github.com/silverstripe-security/security-issues/issues).
 
 <div class="warning" markdown="1">
 Note: It's not considered acceptable to disclose any security vulnerability until a fix exists in
