@@ -20,7 +20,7 @@ Feature: Reauthenticate
       And I am not in an iframe
       And I go to "/admin/security"
       When I press the "Add Member" button
-    Then I should see "Create" in the "#Form_ItemEditForm_action_doSave" element
+    Then I should see "Apply changes" in the "#Form_ItemEditForm_action_doSave" element
 
   Scenario: Reauthenticate with wrong login
     When I press the "Add Member" button
@@ -34,4 +34,4 @@ Feature: Reauthenticate
       And I am not in an iframe
       And I go to "/admin/security"
       When I press the "Add Member" button
-    Then I should see "Create" in the "#Form_ItemEditForm_action_doSave" element
+    Then I should see "Apply changes" in the "#Form_ItemEditForm_action_doSave" element
