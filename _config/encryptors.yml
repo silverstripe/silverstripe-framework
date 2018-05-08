@@ -15,3 +15,5 @@ name: coreencryptors
       'SilverStripe\Security\PasswordEncryptor_PHPHash': sha1
     blowfish:
       'SilverStripe\Security\PasswordEncryptor_Blowfish':
+    password_hash:
+      'SilverStripe\Security\PasswordEncryptor_PHPPasswordHash':

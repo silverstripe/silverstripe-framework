@@ -67,7 +67,7 @@ class Member extends DataObject
         'Email'              => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
         'TempIDHash'         => 'Varchar(160)', // Temporary id used for cms re-authentication
         'TempIDExpired'      => 'Datetime', // Expiry of temp login
-        'Password'           => 'Varchar(160)',
+        'Password'           => 'Varchar(255)',
         'AutoLoginHash'      => 'Varchar(160)', // Used to auto-login the user on password reset
         'AutoLoginExpired'   => 'Datetime',
         // This is an arbitrary code pointing to a PasswordEncryptor instance,
