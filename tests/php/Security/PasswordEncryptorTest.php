@@ -165,4 +165,14 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertTrue($e->check($intelHash, "mypassword"));
         $this->assertFalse($e->check($wrongHash, "mypassword"));
     }
+
+    public function testPHPPasswordHashEncryptor()
+    {
+        $password = 'correcthorsebatterystaple';
+        $e = PasswordEncryptor::create_for_algorithm('password_hash');
+        $hash = $e->encrypt($password);
+        $this->assertTrue($e->check($hash, $password));
+        $this->assertFalse($e->check($hash, 'wrongpassword'));
+        $this->assertFalse($e->check('wronghash', $password));
+    }
 }

@@ -62,7 +62,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @config
      * @var string
      */
-    private static $password_encryption_algorithm = 'blowfish';
+    private static $password_encryption_algorithm = 'password_hash';
 
     /**
      * Showing "Remember me"-checkbox
