@@ -17,7 +17,7 @@ use SilverStripe\View\SSViewer;
  * The default routing applies to the {@link GridFieldDetailForm} component,
  * which has to be added separately to the {@link GridField} configuration.
  */
-class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionMenuItem
+class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
 {
     /**
      * HTML classes to be added to GridField edit buttons
@@ -52,7 +52,9 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionM
 
     public function getExtraData($gridField, $record)
     {
-        return [];
+        return [
+            "extraClass" => "edit-link"
+        ];
     }
 
     /**
