@@ -665,6 +665,36 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 
+    /**
+     * Ensure DirectGroups listbox disallows admin-promotion
+     */
+    public function testAllowedGroupsListbox() {
+        /** @var Group $adminGroup */
+        $adminGroup = $this->objFromFixture('Group', 'admingroup');
+        /** @var Member $staffMember */
+        $staffMember = $this->objFromFixture('Member', 'staffmember');
+        /** @var Member $adminMember */
+        $adminMember = $this->objFromFixture('Member', 'admin');
+
+        // Ensure you can see the DirectGroups box
+        $this->logInWithPermission('EDIT_PERMISSIONS');
+
+        // Non-admin member field contains non-admin groups
+        /** @var ListboxField $staffListbox */
+        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayNotHasKey($adminGroup->ID, $staffListbox->getSource());
+
+        // admin member field contains admin group
+        /** @var ListboxField $adminListbox */
+        $adminListbox = $adminMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayHasKey($adminGroup->ID, $adminListbox->getSource());
+
+        // If logged in as admin, staff listbox has admin group
+        $this->logInWithPermission('ADMIN');
+        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayHasKey($adminGroup->ID, $staffListbox->getSource());
+    }
+
 	/**
 	 * Test Member_GroupSet::add
 	 */
