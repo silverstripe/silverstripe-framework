@@ -281,7 +281,7 @@
 				tree.find('li').removeClass('failed');
 
 				var button = this.find(':submit:first');
-				$('.cms-content-fields').addClass('loading');
+				jQuery('.cms-content-fields').addClass('loading');
 				button.addClass('loading');
 
 				jQuery.ajax({
@@ -290,7 +290,7 @@
 					type: 'POST',
 					data: this.serializeArray(),
 					complete: function(xmlhttp, status) {
-						$('.cms-content-fields').removeClass('loading');
+						jQuery('.cms-content-fields').removeClass('loading');
 						button.removeClass('loading');
 
 						// Refresh the tree.
