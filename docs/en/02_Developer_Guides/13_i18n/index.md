@@ -7,8 +7,8 @@ The i18n class (short for "internationalization") in SilverStripe enables you to
 different languages based on your global settings and the preferences of your website users. This process is also known
 as l10n (short for "localization").
 
-For translating any content managed through the CMS or stored in the database, please use the 
-[translatable](http://github.com/silverstripe/silverstripe-translatable) module.
+For translating any content managed through the CMS or stored in the database, we recommend using the 
+[Fluent](https://github.com/tractorcow/silverstripe-fluent) module.
 
 This page aims to describe the low-level functionality of the i18n API. It targets developers who:
 
