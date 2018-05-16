@@ -27,7 +27,8 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     protected $extraClass = [
         'grid-field__icon-action--hidden-on-hover' => true,
         'font-icon-edit' => true,
-        'btn--icon-large' => true
+        'btn--icon-large' => true,
+        'action-menu--handled' => true
     ];
 
     public function getTitle($gridField, $record)

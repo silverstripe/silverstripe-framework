@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -12,13 +13,6 @@ use SilverStripe\View\SSViewer;
  */
 class GridField_ActionMenu implements GridField_ColumnProvider, GridField_ActionProvider
 {
-    protected $items = [];
-
-    public function __construct($items)
-    {
-        $this->setItems($items);
-    }
-
     public function augmentColumns($gridField, &$columns)
     {
         if (!in_array('Actions', $columns)) {
@@ -33,7 +27,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
 
     public function getColumnContent($gridField, $record, $columnName)
     {
-        $items = $this->getItems();
+        $items = $this->getItems($gridField);
 
         if (!$items) {
             return null;
@@ -86,7 +80,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
     {
         $actions = [];
 
-        foreach ($this->getItems() as $item) {
+        foreach ($this->getItems($gridField) as $item) {
             if ($item instanceof GridField_ActionProvider) {
                 $actions = array_merge($actions, $item->getActions($gridField));
             }
@@ -97,7 +91,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        foreach ($this->getItems() as $item) {
+        foreach ($this->getItems($gridField) as $item) {
             $actions = [];
             if ($item instanceof GridField_ActionProvider) {
                 $actions = $item->getActions($gridField);
@@ -114,23 +108,10 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
      *
      * @return array
      */
-    public function getItems()
+    public function getItems($gridfield)
     {
-        return $this->items;
-    }
+        $items = $gridfield->config->getComponentsByType(GridField_ActionMenuItem::class)->items;
 
-    /**
-     * Sets the list of items, will filter out items not implementing {@see GridField_ActionMenuItem}
-     *
-     * @param array $items
-     * @return $this
-     */
-    public function setItems($items)
-    {
-        $this->items = array_filter($items, function ($item) {
-            return $item instanceof GridField_ActionMenuItem;
-        });
-
-        return $this;
+        return $items;
     }
 }
