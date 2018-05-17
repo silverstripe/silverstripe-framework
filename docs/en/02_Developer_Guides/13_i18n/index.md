@@ -222,8 +222,8 @@ class MyObject extends DataObject implements i18nEntityProvider
     public function provideI18nEntities()
     {
         return [
-            'MyObject.SINGULAR_NAME' => 'object',
-            'MyObject.PLURAL_NAME' => 'objects',
+            'MyObject.SINGULARNAME' => 'object',
+            'MyObject.PLURALNAME' => 'objects',
             'MyObject.PLURALS' => [
                 'one' => 'An object',
                 'other' => '{count} objects',
@@ -239,8 +239,8 @@ In YML format this will be expressed as the below. This follows the
 ```yaml
 en:
   MyObject:
-    SINGULAR_NAME: 'object'
-    PLURAL_NAME: 'objects'
+    SINGULARNAME: 'object'
+    PLURALNAME: 'objects'
     PLURALS:
       one: 'An object',
       other: '{count} objects'
