@@ -47,10 +47,13 @@ this unique link will persist across sessions.
 
 ## Login Attempts
 
-SilverStripe can be configured to record login attempts, in order to lock out users
+SilverStripe is configured by default to record login attempts, in order to lock out users
 after a defined number of attempts, and hence limit the attack surface of the login process.
 This is predicated on tracking the IP address of the attempt, which can be considered personal data.
-See `SilverStripe\Security\Security::$login_recording` for details.
+IP addresses related to these attempts are stored indefinitely unless manually purged
+from the `LoginAttempt` table.
+See `SilverStripe\Security\Security::$login_recording` and
+`SilverStripe\Security\Security::$lock_out_after_incorrect_logins` for details.
 
 ## Logging and Exceptions
 
