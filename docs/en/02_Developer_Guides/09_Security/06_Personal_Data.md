@@ -44,6 +44,8 @@ SilverStripe will default to using PHP sessions for tracking logged-in users,
 which uniquely link users to their device/browser through a session cookie.
 If the user chooses the "Remember me" feature on login,
 this unique link will persist across sessions. 
+The default cookie lifetime for this feature is 48h.
+See `SilverStripe\Security\Member::$auto_login_token_lifetime` for details.
 
 ## Login Attempts
 
