@@ -52,7 +52,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getGroup($gridField, $record)
     {
-        return 'General';
+        return 'Default';
     }
 
     public function getType($gridField, $record)
