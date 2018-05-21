@@ -72,7 +72,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      * @param string $columnName
      * @return string|null the attribles for the action
      */
-    public function getExtraData($gridField, $record)
+    public function getExtraData($gridField, $record, $columnName)
     {
 
         $field = $this->getRemoveAction($gridField, $record, $columnName);
@@ -225,6 +225,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink action-menu--handled')
+                ->setAttribute('classNames', 'gridfield-button-unlink')
                 ->setAttribute('title', $title)
                 ->setAttribute('aria-label', $title);
         } else {
@@ -240,6 +241,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 array('RecordID' => $record->ID)
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action action-menu--handled')
+                ->setAttribute('classNames', 'gridfield-button-delete')
                 ->setAttribute('title', _t(__CLASS__ . '.Delete', "Delete"))
                 ->setDescription(_t(__CLASS__ . '.DELETE_DESCRIPTION', 'Delete'));
         }

@@ -51,10 +51,10 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
         return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
     }
 
-    public function getExtraData($gridField, $record)
+    public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "extraClass" => "edit-link"
+            "classNames" => "action-detail edit-link"
         ];
     }
 

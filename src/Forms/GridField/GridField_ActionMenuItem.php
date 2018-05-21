@@ -60,7 +60,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      * @param $record
      * @return array $data
      */
-    public function getExtraData($gridField, $record);
+    public function getExtraData($gridField, $record, $columnName);
 
     /**
      * Gets the group this menu item will belong to

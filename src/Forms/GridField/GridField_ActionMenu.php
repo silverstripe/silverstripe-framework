@@ -32,18 +32,22 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
         if (!$items) {
             return null;
         }
-        $schema = array_filter(array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record) {
+        $schema = array_filter(array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record, $columnName) {
             $type = $item->getType($gridField, $record);
+            $group = $item->getGroup($gridField, $record);
             if (!$type) {
                 return null;
+            }
+            if (!$group) {
+                $group = 'Default';
             }
 
             return [
                 'type' => $type,
                 'title' => $item->getTitle($gridField, $record),
                 'url' => $item->getUrl($gridField, $record),
-                'group' => $item->getGroup($gridField, $record),
-                'data' => $item->getExtraData($gridField, $record),
+                'group' => $group,
+                'data' => $item->getExtraData($gridField, $record, $columnName),
             ];
         }, $items));
         $itemContents = array_filter(array_map(function ($item) use ($gridField, $record, $columnName) {
