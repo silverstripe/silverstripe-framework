@@ -27,6 +27,7 @@ With great power comes great responsibility, so we have agreed on certain expect
  * Only merge code you have tested and fully understand. If in doubt, ask for a second opinion.
  * Ensure contributions have appropriate [test coverage](../developer_guides/testing), are documented, and pass our [coding conventions](/getting_started/coding_conventions)
  * Keep the codebase "releasable" at all times (check our [release process](release_process))
+ * Follow [Semantic Versioning](code/#picking-the-right-version) by putting any changes into the correct branch
  * API changes and non-trivial features should not be merged into release branches. 
  * API changes on master should not be merged until they have the buy-in of at least two Core Committers (or better, through the [core mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev))
  * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
