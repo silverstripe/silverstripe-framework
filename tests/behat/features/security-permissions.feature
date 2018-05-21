@@ -29,7 +29,7 @@ Feature: Manage Security Permissions for Groups
     Then the "Access to 'Security' section" checkbox should be checked
 
     # Save so the driver can reset without having to deal with the popup alert.
-    Then I press the "Save" button
+    Then I press the "Apply changes" button
 
   Scenario: I can see sub-permissions being properly set and restored when using "Full administrative rights"
     When I check "Access to 'Security' section"
@@ -46,11 +46,11 @@ Feature: Manage Security Permissions for Groups
     And the "Access to 'Security' section" field should be enabled
 
     # Save so the driver can reset without having to deal with the popup alert.
-    Then I press the "Save" button
+    Then I press the "Apply changes" button
 
   Scenario: I can see sub-permissions being handled properly between reloads when using "Full administrative rights"
     When I check "Full administrative rights"
-    And I press the "Save" button
+    And I press the "Apply changes" button
     And I click the "Permissions" CMS tab
     Then the "Full administrative rights" checkbox should be checked
     And the "Access to 'Security' section" checkbox should be checked
@@ -60,7 +60,7 @@ Feature: Manage Security Permissions for Groups
     Then the "Access to 'Security' section" checkbox should not be checked
     And the "Access to 'Security' section" field should be enabled
 
-    When I press the "Save" button
+    When I press the "Apply changes" button
     And I click the "Permissions" CMS tab
     Then the "Full administrative rights" checkbox should not be checked
     And the "Access to 'Security' section" checkbox should not be checked
@@ -68,7 +68,7 @@ Feature: Manage Security Permissions for Groups
 
   Scenario: I can see sub-permissions being handled properly between reloads when using "Access to all CMS sections"
     When I check "Access to all CMS sections"
-    And I press the "Save" button
+    And I press the "Apply changes" button
     And I click the "Permissions" CMS tab
     Then the "Access to all CMS sections" checkbox should be checked
     And the "Access to 'Security' section" checkbox should be checked
@@ -78,7 +78,7 @@ Feature: Manage Security Permissions for Groups
     Then the "Access to 'Security' section" checkbox should not be checked
     And the "Access to 'Security' section" field should be enabled
 
-    When I press the "Save" button
+    When I press the "Apply changes" button
     And I click the "Permissions" CMS tab
     Then the "Access to all CMS sections" checkbox should not be checked
     And the "Access to 'Security' section" checkbox should not be checked

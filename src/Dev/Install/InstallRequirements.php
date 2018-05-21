@@ -21,6 +21,8 @@ use SplFileInfo;
  */
 class InstallRequirements
 {
+    use InstallEnvironmentAware;
+
     /**
      * List of errors
      *
@@ -48,46 +50,9 @@ class InstallRequirements
      */
     protected $originalIni = [];
 
-    /**
-     * Base path
-     * @var
-     */
-    protected $baseDir;
-
     public function __construct($basePath = null)
     {
-        if ($basePath) {
-            $this->baseDir = $basePath;
-        } elseif (defined('BASE_PATH')) {
-            $this->baseDir = BASE_PATH;
-        } else {
-            throw new BadMethodCallException("No BASE_PATH defined");
-        }
-    }
-
-    /**
-     * Get base path for this installation
-     *
-     * @return string
-     */
-    public function getBaseDir()
-    {
-        return Path::normalise($this->baseDir) . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Get path to public directory
-     *
-     * @return string
-     */
-    public function getPublicDir()
-    {
-        $base = $this->getBaseDir();
-        $public = Path::join($base, 'public') . DIRECTORY_SEPARATOR;
-        if (file_exists($public)) {
-            return $public;
-        }
-        return $base;
+        $this->initBaseDir($basePath);
     }
 
     /**
@@ -204,49 +169,10 @@ class InstallRequirements
     }
 
     /**
-     * Check if the web server is IIS and version greater than the given version.
-     *
-     * @param int $fromVersion
-     * @return bool
-     */
-    public function isIIS($fromVersion = 7)
-    {
-        $webserver = $this->findWebserver();
-        if (preg_match('#.*IIS/(?<version>[.\\d]+)$#', $webserver, $matches)) {
-            return version_compare($matches['version'], $fromVersion, '>=');
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isApache()
-    {
-        return strpos($this->findWebserver(), 'Apache') !== false;
-    }
-
-    /**
-     * Find the webserver software running on the PHP host.
-     *
-     * @return string|false Server software or boolean FALSE
-     */
-    public function findWebserver()
-    {
-        // Try finding from SERVER_SIGNATURE or SERVER_SOFTWARE
-        if (!empty($_SERVER['SERVER_SIGNATURE'])) {
-            $webserver = $_SERVER['SERVER_SIGNATURE'];
-        } elseif (!empty($_SERVER['SERVER_SOFTWARE'])) {
-            $webserver = $_SERVER['SERVER_SOFTWARE'];
-        } else {
-            return false;
-        }
-
-        return strip_tags(trim($webserver));
-    }
-
-    /**
      * Check everything except the database
+     *
+     * @param array $originalIni
+     * @return array
      */
     public function check($originalIni)
     {
@@ -255,6 +181,10 @@ class InstallRequirements
         $isApache = $this->isApache();
         $isIIS = $this->isIIS();
         $webserver = $this->findWebserver();
+
+        // Get project dirs to inspect
+        $projectDir = $this->getProjectDir();
+        $projectSrcDir = $this->getProjectSrcDir();
 
         $this->requirePHPVersion('5.5.0', '5.5.0', array(
             "PHP Configuration",
@@ -271,11 +201,11 @@ class InstallRequirements
             $this->getBaseDir()
         ));
 
-        $this->requireModule('mysite', array(
+        $this->requireModule($projectDir, [
             "File permissions",
-            "mysite/ directory exists?",
+            "{$projectDir}/ directory exists?",
             ''
-        ));
+        ]);
         $this->requireModule('vendor/silverstripe/framework', array(
             "File permissions",
             "vendor/silverstripe/framework/ directory exists?",
@@ -283,7 +213,15 @@ class InstallRequirements
         ));
 
 
-        $this->requireWriteable($this->getPublicDir() . 'index.php', array("File permissions", "Is the index.php file writeable?", null), true);
+        $this->requireWriteable(
+            $this->getPublicDir() . 'index.php',
+            [
+                "File permissions",
+                "Is the index.php file writeable?",
+                null,
+            ],
+            true
+        );
 
         $this->requireWriteable('.env', ["File permissions", "Is the .env file writeable?", null], false, false);
 
@@ -294,29 +232,37 @@ class InstallRequirements
                 "SilverStripe requires Apache version 2 or greater",
                 $webserver
             ));
-            $this->requireWriteable($this->getPublicDir() . '.htaccess', array("File permissions", "Is the .htaccess file writeable?", null), true);
+            $this->requireWriteable(
+                $this->getPublicDir() . '.htaccess',
+                array("File permissions", "Is the .htaccess file writeable?", null),
+                true
+            );
         } elseif ($isIIS) {
-            $this->requireWriteable($this->getPublicDir() . 'web.config', array("File permissions", "Is the web.config file writeable?", null), true);
+            $this->requireWriteable(
+                $this->getPublicDir() . 'web.config',
+                array("File permissions", "Is the web.config file writeable?", null),
+                true
+            );
         }
 
-        $this->requireWriteable('mysite/_config.php', array(
+        $this->requireWriteable("{$projectDir}/_config.php", [
             "File permissions",
-            "Is the mysite/_config.php file writeable?",
-            null
-        ));
+            "Is the {$projectDir}/_config.php file writeable?",
+            null,
+        ]);
 
-        $this->requireWriteable('mysite/_config/theme.yml', array(
+        $this->requireWriteable("{$projectDir}/_config/theme.yml", [
             "File permissions",
-            "Is the mysite/_config/theme.yml file writeable?",
-            null
-        ));
+            "Is the {$projectDir}/_config/theme.yml file writeable?",
+            null,
+        ]);
 
         if (!$this->checkModuleExists('cms')) {
-            $this->requireWriteable('mysite/code/RootURLController.php', array(
+            $this->requireWriteable("{$projectSrcDir}/RootURLController.php", [
                 "File permissions",
-                "Is the mysite/code/RootURLController.php file writeable?",
-                null
-            ));
+                "Is the {$projectSrcDir}/RootURLController.php file writeable?",
+                null,
+            ]);
         }
 
         // Check public folder exists
@@ -332,7 +278,11 @@ class InstallRequirements
         );
 
         // Ensure root assets dir is writable
-        $this->requireWriteable(ASSETS_PATH, array("File permissions", "Is the assets/ directory writeable?", null), true);
+        $this->requireWriteable(
+            ASSETS_PATH,
+            array("File permissions", "Is the assets/ directory writeable?", null),
+            true
+        );
 
         // Ensure all assets files are writable
         $innerIterator = new RecursiveDirectoryIterator(ASSETS_PATH, RecursiveDirectoryIterator::SKIP_DOTS);
@@ -825,35 +775,6 @@ class InstallRequirements
     }
 
     /**
-     * Check that a module exists
-     *
-     * @param string $dirname
-     * @return bool
-     */
-    public function checkModuleExists($dirname)
-    {
-        // Mysite is base-only and doesn't need _config.php to be counted
-        if ($dirname === 'mysite') {
-            return file_exists($this->getBaseDir() . $dirname);
-        }
-
-        $paths = [
-            "vendor/silverstripe/{$dirname}/",
-            "{$dirname}/",
-        ];
-        foreach ($paths as $path) {
-            $checks = ['_config', '_config.php'];
-            foreach ($checks as $check) {
-                if (file_exists($this->getBaseDir() . $path . $check)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * The same as {@link requireFile()} but does additional checks
      * to ensure the module directory is intact.
      *
@@ -867,7 +788,7 @@ class InstallRequirements
         if (!file_exists($path)) {
             $testDetails[2] .= " Directory '$path' not found. Please make sure you have uploaded the SilverStripe files to your webserver correctly.";
             $this->error($testDetails);
-        } elseif (!file_exists($path . '/_config.php') && $dirname != 'mysite') {
+        } elseif (!file_exists($path . '/_config.php') && !in_array($dirname, ['mysite', 'app'])) {
             $testDetails[2] .= " Directory '$path' exists, but is missing files. Please make sure you have uploaded "
                 . "the SilverStripe files to your webserver correctly.";
             $this->error($testDetails);
@@ -985,29 +906,6 @@ class InstallRequirements
         }
     }
 
-    public function testApacheRewriteExists($moduleName = 'mod_rewrite')
-    {
-        if (function_exists('apache_get_modules') && in_array($moduleName, apache_get_modules())) {
-            return true;
-        }
-        if (isset($_SERVER['HTTP_MOD_REWRITE']) && $_SERVER['HTTP_MOD_REWRITE'] == 'On') {
-            return true;
-        }
-        if (isset($_SERVER['REDIRECT_HTTP_MOD_REWRITE']) && $_SERVER['REDIRECT_HTTP_MOD_REWRITE'] == 'On') {
-            return true;
-        }
-        return false;
-    }
-
-    public function testIISRewriteModuleExists($moduleName = 'IIS_UrlRewriteModule')
-    {
-        if (isset($_SERVER[$moduleName]) && $_SERVER[$moduleName]) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function requireApacheRewriteModule($moduleName, $testDetails)
     {
         $this->testing($testDetails);
@@ -1019,15 +917,6 @@ class InstallRequirements
         }
     }
 
-    /**
-     * Determines if the web server has any rewriting capability.
-     * @return boolean
-     */
-    public function hasRewritingCapability()
-    {
-        return ($this->testApacheRewriteExists() || $this->testIISRewriteModuleExists());
-    }
-
     public function requireIISRewriteModule($moduleName, $testDetails)
     {
         $this->testing($testDetails);
@@ -1037,22 +926,6 @@ class InstallRequirements
             $this->warning($testDetails);
             return false;
         }
-    }
-
-    public function getDatabaseTypeNice($databaseClass)
-    {
-        return substr($databaseClass, 0, -8);
-    }
-
-    /**
-     * Get an instance of a helper class for the specific database.
-     *
-     * @param string $databaseClass e.g. MySQLDatabase or MSSQLDatabase
-     * @return DatabaseConfigurationHelper
-     */
-    public function getDatabaseConfigurationHelper($databaseClass)
-    {
-        return DatabaseAdapterRegistry::getDatabaseConfigurationHelper($databaseClass);
     }
 
     public function requireDatabaseFunctions($databaseConfig, $testDetails)

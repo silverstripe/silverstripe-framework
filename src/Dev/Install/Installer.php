@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Install;
 
+use BadMethodCallException;
 use Exception;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
@@ -11,6 +12,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Path;
 use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\DefaultAdminService;
@@ -19,12 +21,36 @@ use SilverStripe\Security\Security;
 /**
  * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
  */
-class Installer extends InstallRequirements
+class Installer
 {
+    use InstallEnvironmentAware;
+
+    /**
+     * Errors during install
+     *
+     * @var array
+     */
+    protected $errors = [];
+
     /**
      * value='' attribute placeholder for password fields
      */
     const PASSWORD_PLACEHOLDER = '********';
+
+    public function __construct($basePath = null)
+    {
+        $this->initBaseDir($basePath);
+    }
+
+    /**
+     * Installer error
+     *
+     * @param string $message
+     */
+    protected function error($message = null)
+    {
+        $this->errors[] = $message;
+    }
 
     protected function installHeader()
     {
@@ -43,8 +69,6 @@ class Installer extends InstallRequirements
         <div class="install-header">
             <div class="inner">
                 <div class="brand">
-                    <span class="logo"></span>
-
                     <h1>SilverStripe</h1>
                 </div>
             </div>
@@ -68,9 +92,10 @@ class Installer extends InstallRequirements
     {
         // Render header
         $this->installHeader();
-
         $isIIS = $this->isIIS();
         $isApache = $this->isApache();
+        $projectDir = $this->getProjectDir();
+        $projectSrcDir = $this->getProjectSrcDir();
 
         flush();
 
@@ -80,10 +105,12 @@ class Installer extends InstallRequirements
         }
 
         // Cleanup _config.php
-        if (file_exists('mysite/_config.php')) {
+        $basePath = $this->getBaseDir();
+        $appConfigPath = $basePath . "{$projectDir}/_config.php";
+        if (file_exists($appConfigPath)) {
             // Truncate the contents of _config instead of deleting it - we can't re-create it because Windows handles permissions slightly
             // differently to UNIX based filesystems - it takes the permissions from the parent directory instead of retaining them
-            $fh = fopen('mysite/_config.php', 'wb');
+            $fh = fopen($appConfigPath, 'wb');
             fclose($fh);
         }
 
@@ -95,17 +122,18 @@ class Installer extends InstallRequirements
 
         // Write other stuff
         if (!$this->checkModuleExists('cms')) {
-            $this->writeToFile("mysite/code/RootURLController.php", <<<PHP
+            $rootURLControllerPath = $basePath . "{$projectSrcDir}/RootURLController.php";
+            $this->writeToFile($rootURLControllerPath, <<<PHP
 <?php
 
 use SilverStripe\\Control\\Controller;
 
-class RootURLController extends Controller {
-
-    public function index() {
-        echo "<html>Your site is now set up. Start adding controllers to mysite to get started.</html>";
+class RootURLController extends Controller
+{
+    public function index()
+    {
+        echo "<html>Your site is now set up. Start adding controllers to app/src to get started.</html>";
     }
-
 }
 PHP
             );
@@ -124,7 +152,7 @@ PHP
         $request = HTTPRequestBuilder::createFromEnvironment();
 
         // Install kernel (fix to dev)
-        $kernel = new CoreKernel(BASE_PATH);
+        $kernel = new CoreKernel(Path::normalise($basePath));
         $kernel->setEnvironment(Kernel::DEV);
         $app = new HTTPApplication($kernel);
 
@@ -197,6 +225,15 @@ PHP
                 </noscript>
 HTML;
             }
+        } else {
+            // Output all errors
+            $this->statusMessage('Encountered ' . count($this->errors) . ' errors during install:');
+            echo "<ul>";
+            foreach ($this->errors as $error) {
+                $this->statusMessage($error);
+            }
+            echo "</ul>";
+            $this->statusMessage('Please <a href="install.php">Click here</a> to return to the installer.');
         }
 
         return $this->errors;
@@ -310,8 +347,9 @@ PHP;
      */
     protected function writeConfigPHP($config)
     {
+        $configPath = $this->getProjectDir() . DIRECTORY_SEPARATOR . "_config.php";
         if ($config['usingEnv']) {
-            $this->writeToFile("mysite/_config.php", "<?php\n ");
+            $this->writeToFile($configPath, "<?php\n ");
             return;
         }
 
@@ -325,7 +363,7 @@ PHP;
             );
         }
         $databaseConfigContent = implode(",\n", $lines);
-        $this->writeToFile("mysite/_config.php", <<<PHP
+        $this->writeToFile($configPath, <<<PHP
 <?php
 
 use SilverStripe\\ORM\\DB;
@@ -347,6 +385,7 @@ PHP
     {
         // Escape user input for safe insertion into PHP file
         $locale = $this->ymlString($config['locale']);
+        $projectDir = $this->getProjectDir();
 
         // Set either specified, or no theme
         if ($config['theme'] && $config['theme'] !== 'tutorial') {
@@ -364,7 +403,7 @@ YML;
         }
 
         // Write theme.yml
-        $this->writeToFile("mysite/_config/theme.yml", <<<YML
+        $this->writeToFile("{$projectDir}/_config/theme.yml", <<<YML
 ---
 Name: mytheme
 ---
@@ -399,17 +438,23 @@ YML
      */
     public function writeToFile($filename, $content, $absolute = false)
     {
-        $path = $absolute
-            ? $filename
-            : $this->getBaseDir() . $filename;
-        $this->statusMessage("Setting up $path");
+        // Get absolute / relative paths by either combining or removing base from path
+        list($absolutePath, $relativePath) = $absolute
+            ? [
+                $filename,
+                substr($filename, strlen($this->getBaseDir()))]
+            : [
+                $this->getBaseDir() . $filename,
+                $filename
+            ];
+        $this->statusMessage("Setting up $relativePath");
 
-        if ((@$fh = fopen($path, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
+        if ((@$fh = fopen($absolutePath, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
             // Set permissions to writable
-            @chmod($path, 0775);
+            @chmod($absolutePath, 0775);
             return true;
         }
-        $this->error("Couldn't write to file $path");
+        $this->error("Couldn't write to file $relativePath");
         return false;
     }
 
