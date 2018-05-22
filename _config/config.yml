@@ -13,6 +13,7 @@ MySQLDatabase:
   collation: utf8_general_ci
 HTTP:
   cache_control:
+    no-cache: "true"
     must-revalidate: "true"
   vary: "X-Requested-With"
 LeftAndMain:
