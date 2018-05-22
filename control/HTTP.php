@@ -369,8 +369,7 @@ class HTTP {
 		else {
 			if($body) {
 				// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
-				$contentDisposition = $body->getHeader('Content-disposition');
-				if (!$contentDisposition) $contentDisposition = $body->getHeader('Content-Disposition');
+				$contentDisposition = $body->getHeader('Content-disposition', true);
 			}
 
 			if(
