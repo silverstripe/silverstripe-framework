@@ -29,6 +29,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'DataObjectTest_SortOnFixed',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
@@ -1744,6 +1745,19 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(PHP_INT_MAX, DataObjectTest_Staff::get()->byID($staff->ID)->Salary);
 	}
 
+	public function testSortOnFixedField() {
+		$model = new DataObjectTest_SortOnFixed();
+		$model->Name = 'Apple';
+		$model->write();
+
+		$model2 = new DataObjectTest_SortOnFixed();
+		$model2->Name = 'Orange';
+		$model2->write();
+
+		$result = DataObjectTest_SortOnFixed::get()->column('Name');
+		$this->assertSame(array('Orange', 'Apple'), $result);
+	}
+
 }
 
 class DataObjectTest_Sortable extends DataObject implements TestOnly {
@@ -1751,6 +1765,15 @@ class DataObjectTest_Sortable extends DataObject implements TestOnly {
 		'Sort' => 'Int',
 		'Name' => 'Varchar',
 	);
+}
+
+class DataObjectTest_SortOnFixed extends DataObject implements TestOnly {
+	private static $db = array(
+		'Name' => 'Varchar',
+	);
+
+	// Sorts on a "fixed field"
+	private static $default_sort = '"Created" DESC';
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
