@@ -21,6 +21,7 @@ use SilverStripe\Security\Member_Validator;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\MemberPassword;
+use SilverStripe\Security\PasswordEncryptor_Blowfish;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
@@ -899,6 +900,8 @@ class MemberTest extends FunctionalTest
 
     public function testValidateAutoLoginToken()
     {
+        $enc = new PasswordEncryptor_Blowfish();
+
         $m1 = new Member();
         $m1->PasswordEncryption = 'blowfish';
         $m1->Salt = $enc->salt('123');
