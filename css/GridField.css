@@ -14,6 +14,7 @@ Used in side panels and action tabs
 .cms .ss-gridfield > div { margin-bottom: 36px; }
 .cms .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 0; }
 .cms .ss-gridfield > div.addNewGridFieldButton .action { margin-bottom: 12px; }
+.cms .ss-gridfield > div.ss-gridfield-buttonrow:after { content: ""; display: table; clear: both; }
 .cms .ss-gridfield > div.ss-gridfield-buttonrow-before { margin-bottom: 0; }
 .cms .ss-gridfield > div.ss-gridfield-buttonrow-before .action { margin-bottom: 12px; }
 .cms .ss-gridfield > div.ss-gridfield-buttonrow-after { margin-bottom: 0; }
