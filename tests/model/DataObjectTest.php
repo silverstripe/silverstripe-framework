@@ -1772,8 +1772,8 @@ class DataObjectTest_SortOnFixed extends DataObject implements TestOnly {
 		'Name' => 'Varchar',
 	);
 
-	// Sorts on a "fixed field"
-	private static $default_sort = '"Created" DESC';
+	// Sorts on a "fixed field" - adding name as a second option since fixtures are created at the same time
+	private static $default_sort = '"Created" DESC, "Name" DESC';
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
