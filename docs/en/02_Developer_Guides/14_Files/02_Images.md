@@ -138,7 +138,7 @@ class ImageExtension extends Extension
 SilverStripe\Assets\Image:
   extensions:
     - ImageExtension
-SilverStripe\Filesystem\Storage\DBFile:
+SilverStripe\Assets\Storage\DBFile:
   extensions:
     - ImageExtension
 ```
