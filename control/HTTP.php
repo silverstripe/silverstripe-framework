@@ -431,40 +431,31 @@ class HTTP {
 			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
 			// By also using and etag that includes both the modification date and all the varies
 			// values which we also check against we can catch this and not return a 304
-			$etagParts = array(self::$modification_date, serialize($_COOKIE));
-			$etagParts[] = Director::is_https() ? 'https' : 'http';
-			if (isset($_SERVER['HTTP_USER_AGENT'])) $etagParts[] = $_SERVER['HTTP_USER_AGENT'];
-			if (isset($_SERVER['HTTP_ACCEPT'])) $etagParts[] = $_SERVER['HTTP_ACCEPT'];
+			$etag = self::generateETag($body);
+			if ($etag) {
+				$responseHeaders["ETag"] = $etag;
 
-			$etag = sha1(implode(':', $etagParts));
-			$responseHeaders["ETag"] = $etag;
+				// 304 response detection
+				if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+					// As above, only 304 if the last request had all the same varies values
+					// (or the etag isn't passed as part of the request - but with chrome it always is)
+					$matchesEtag = $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
 
-			// 304 response detection
-			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-				$ifModifiedSince = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
-
-				// As above, only 304 if the last request had all the same varies values
-				// (or the etag isn't passed as part of the request - but with chrome it always is)
-				$matchesEtag = !isset($_SERVER['HTTP_IF_NONE_MATCH']) || $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
-
-				if($ifModifiedSince >= self::$modification_date && $matchesEtag) {
-					if($body) {
-						$body->setStatusCode(304);
-						$body->setBody('');
-					} else {
-						header('HTTP/1.0 304 Not Modified');
-						die();
+					if ($matchesEtag) {
+						if ($body) {
+							$body->setStatusCode(304);
+							$body->setBody('');
+						} else {
+							header('HTTP/1.0 304 Not Modified');
+							die();
+						}
 					}
 				}
 			}
-
-			$expires = time() + $cacheAge;
-			$responseHeaders["Expires"] = self::gmt_date($expires);
 		}
 
-		if(self::$etag) {
-			$responseHeaders['ETag'] = self::$etag;
-		}
+		$expires = time() + $cacheAge;
+		$responseHeaders["Expires"] = self::gmt_date($expires);
 
 		// etag needs to be a quoted string according to HTTP spec
 		if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
@@ -484,6 +475,23 @@ class HTTP {
 		}
 	}
 
+	protected static function generateETag($response)
+	{
+		if (self::$etag) {
+			return self::$etag;
+		}
+		if ($response instanceof SS_HTTPResponse) {
+			if ($response->getHeader('ETag')) {
+				return $response->getHeader('ETag');
+			} else {
+				return sprintf('"%s"', md5($response->getBody()));
+			}
+		}
+		if ($response) {
+			return sprintf('"%s"', md5($response));
+		}
+		return false;
+	}
 
 	/**
 	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the
