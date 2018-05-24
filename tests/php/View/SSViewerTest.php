@@ -109,6 +109,16 @@ class SSViewerTest extends SapphireTest
         $this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U", '', $result)));
     }
 
+    /**
+     * Ensure global methods aren't executed
+     */
+    public function testTemplateExecution()
+    {
+        $data = new ArrayData([ 'Var' => 'phpinfo' ]);
+        $result = $data->renderWith("SSViewerTestPartialTemplate");
+        $this->assertEquals('Test partial template: phpinfo', trim(preg_replace("/<!--.*-->/U", '', $result)));
+    }
+
     public function testIncludeScopeInheritance()
     {
         $data = $this->getScopeInheritanceTestData();
