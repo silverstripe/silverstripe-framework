@@ -338,21 +338,21 @@ class HTTP {
 			return;
 		}
 
-		$config = Config::inst();
+		$config = Config::inst()->forClass(__CLASS__);
 
 		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
 		// templates and other data
-		if ($config->get(__CLASS__, 'disable_http_cache')) {
+		if ($config->get('disable_http_cache')) {
 			HTTPCacheControl::singleton()->disableCaching();
 		}
 
 		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
-		$cacheControlHeaders = Config::inst()->get(__CLASS__, 'cache_control');
+		$cacheControlHeaders = $config->get('cache_control');
 
 		// if no caching ajax requests, disable ajax if is ajax request
 		// why are we using apache_request_headers here when we use `$_SERVER` later to inspect request headers?
-		if (!$config->get(__CLASS__, 'cache_ajax_requests') && function_exists('apache_request_headers')) {
+		if (!$config->get('cache_ajax_requests') && function_exists('apache_request_headers')) {
 			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
 
 			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
@@ -360,7 +360,7 @@ class HTTP {
 			}
 		}
 
-		$vary = $config->get(__CLASS__, 'vary');
+		$vary = $config->get('vary');
 		if ($vary && strlen($vary)) {
 			if ($body) {
 				// split the current vary header into it's parts and merge it with the config settings
