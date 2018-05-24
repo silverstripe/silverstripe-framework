@@ -363,6 +363,20 @@ class HTTP {
 			// varying according to user-agent.
 			$vary = $config->get('HTTP', 'vary');
 			if ($vary && strlen($vary)) {
+				if ($body) {
+					// split the current vary header into it's parts and merge it with the config settings
+					// to create a list of unique vary values
+					if ($body->getHeader('Vary')) {
+						$currentVary = explode(',', $body->getHeader('Vary'));
+					} else {
+						$currentVary = array();
+					}
+					$vary = explode(',', $vary);
+					$vary = array_merge($currentVary, $vary);
+					$vary = array_map('trim', $vary);
+					$vary = array_unique($vary);
+					$vary = implode(', ', $vary);
+				}
 				$responseHeaders['Vary'] = $vary;
 			}
 		}
