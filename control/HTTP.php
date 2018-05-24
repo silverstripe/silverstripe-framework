@@ -326,13 +326,13 @@ class HTTP {
 			$body = null;
 		}
 
-		// Development sites have frequently changing templates; this can get stuffed up by the code
-		// below.
-		if(Director::isDev()) $cacheAge = 0;
-
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
+
+		// Development sites have frequently changing templates; this can get stuffed up by the code
+		// below.
+		if(Director::isDev()) $cacheAge = 0;
 
 		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
