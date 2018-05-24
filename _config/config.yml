@@ -22,3 +22,9 @@ LeftAndMain:
 SilverStripeVersionProvider:
   modules:
     silverstripe/framework: Framework
+---
+Only:
+  environment: dev
+---
+HTTP:
+  disable_http_cache: true

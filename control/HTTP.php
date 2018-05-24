@@ -30,6 +30,12 @@ class HTTP {
 	private static $cache_ajax_requests = true;
 
 	/**
+	 * @config
+	 * @var bool
+	 */
+	private static $disable_http_cache = false;
+
+	/**
 	 * Turns a local system filename into a URL by comparing it to the script
 	 * filename.
 	 *
@@ -332,16 +338,16 @@ class HTTP {
 			return;
 		}
 
-		// Development sites have frequently changing templates; this can get stuffed up by the code
-		// below.
-		if(Director::isDev()) {
+		$config = Config::inst();
+
+		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
+		// templates and other data
+		if ($config->get(__CLASS__, 'disable_http_cache')) {
 			HTTPCacheControl::inst()->disableCaching();
 		}
 
 		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
-
-		$config = Config::inst();
 		$cacheControlHeaders = Config::inst()->get(__CLASS__, 'cache_control');
 
 		// if no caching ajax requests, disable ajax if is ajax request
