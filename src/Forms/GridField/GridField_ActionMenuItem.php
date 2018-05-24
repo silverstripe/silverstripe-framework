@@ -5,26 +5,20 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\ORM\DataObject;
 
 /**
- * @internal
- *
- * GridField action menu interface, this should only go in a {@see GridField_ActionMenu}
+ * GridField action menu item interface, this provides data so the action
+ * will be included if there is a {@see GridField_ActionMenu}
  */
 interface GridField_ActionMenuItem extends GridFieldComponent
 {
     /**
-     * For submitting the gridfield
+     * Default group name
      */
-    const SUBMIT = 'submit';
-
-    /**
-     * For just following the url link
-     */
-    const LINK = 'link';
+    const DEFAULT_GROUP = 'Default';
 
     /**
      * Gets the title for this menu item
      *
-     * @see {@link GridFieldActionMenu->getColumnContent()}
+     * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
      * @param DataObject $record
@@ -34,30 +28,13 @@ interface GridField_ActionMenuItem extends GridFieldComponent
     public function getTitle($gridField, $record);
 
     /**
-     * Gets the action url for this menu item
-     *
-     * @param $gridField
-     * @param $record
-     *
-     * @return string $url
-     */
-    public function getUrl($gridField, $record);
-
-    /**
-     * Gets the type this menu item will behave as
-     *
-     * @param $gridField
-     * @param $record
-     *
-     * @return string $type
-     */
-    public function getType($gridField, $record);
-
-    /**
      * Gets any extra data that could go in to the schema that the menu generates
      *
-     * @param $gridField
-     * @param $record
+     * @see {@link GridField_ActionMenu->getColumnContent()}
+     *
+     * @param GridField $gridField
+     * @param DataObject $record
+     *
      * @return array $data
      */
     public function getExtraData($gridField, $record, $columnName);
@@ -65,8 +42,10 @@ interface GridField_ActionMenuItem extends GridFieldComponent
     /**
      * Gets the group this menu item will belong to
      *
-     * @param $gridField
-     * @param $record
+     * @see {@link GridField_ActionMenu->getColumnContent()}
+     *
+     * @param GridField $gridField
+     * @param DataObject $record
      *
      * @return string $group
      */

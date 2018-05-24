@@ -45,24 +45,20 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
         $this->setRemoveRelation($removeRelation);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTitle($gridField, $record)
     {
-        return 'Delete';
+        return _t(__CLASS__ . '.Delete', "Delete");
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getGroup($gridField, $record)
     {
-        return 'Default';
-    }
-
-    public function getType($gridField, $record)
-    {
-        return GridField_ActionMenuItem::SUBMIT;
-    }
-
-    public function getUrl($gridField, $record)
-    {
-        return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
+        return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
 
     /**
@@ -107,7 +103,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'grid-field__col-compact');
+        return ['class' => 'grid-field__col-compact'];
     }
 
     /**
@@ -120,7 +116,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
     public function getColumnMetadata($gridField, $columnName)
     {
         if ($columnName == 'Actions') {
-            return array('title' => '');
+            return ['title' => ''];
         }
     }
 
@@ -132,7 +128,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getColumnsHandled($gridField)
     {
-        return array('Actions');
+        return ['Actions'];
     }
 
     /**
@@ -143,7 +139,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getActions($gridField)
     {
-        return array('deleterecord', 'unlinkrelation');
+        return ['deleterecord', 'unlinkrelation'];
     }
 
     /**
@@ -222,7 +218,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 'UnlinkRelation' . $record->ID,
                 false,
                 "unlinkrelation",
-                array('RecordID' => $record->ID)
+                ['RecordID' => $record->ID]
             )
                 ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink action-menu--handled')
                 ->setAttribute('classNames', 'gridfield-button-unlink')
@@ -238,7 +234,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 'DeleteRecord' . $record->ID,
                 false,
                 "deleterecord",
-                array('RecordID' => $record->ID)
+                ['RecordID' => $record->ID]
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action action-menu--handled')
                 ->setAttribute('classNames', 'gridfield-button-delete')

@@ -3,8 +3,6 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
-use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -32,39 +30,21 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
         if (!$items) {
             return null;
         }
-        $schema = array_filter(array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record, $columnName) {
-            $type = $item->getType($gridField, $record);
-            $group = $item->getGroup($gridField, $record);
-            if (!$type) {
-                return null;
-            }
-            if (!$group) {
-                $group = 'Default';
-            }
 
+        $schema = array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record, $columnName) {
             return [
-                'type' => $type,
+                'type' => $item instanceof GridField_ActionMenuLink ? 'link' : 'submit',
                 'title' => $item->getTitle($gridField, $record),
-                'url' => $item->getUrl($gridField, $record),
-                'group' => $group,
+                'url' => $item instanceof GridField_ActionMenuLink ? $item->getUrl($gridField, $record) : null,
+                'group' => $item->getGroup($gridField, $record),
                 'data' => $item->getExtraData($gridField, $record, $columnName),
             ];
-        }, $items));
-        $itemContents = array_filter(array_map(function ($item) use ($gridField, $record, $columnName) {
-            if (!$item instanceof GridField_ColumnProvider) {
-                return null;
-            }
-            $content = $item->getColumnContent($gridField, $record, $columnName);
-            if ($content instanceof DBField) {
-                return $content->getValue();
-            }
-            return $content;
-        }, $items));
+        }, $items);
 
         $templateData = ArrayData::create([
             'Schema' => Convert::raw2json($schema),
-            'Items' => implode('', $itemContents),
         ]);
+
         $template = SSViewer::get_templates_by_class($this, '', static::class);
 
         return $templateData->renderWith($template);

@@ -178,31 +178,14 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getTitle($gridField, $record)
     {
-        return 'Custom Action';
+        return _t(__CLASS__ . '.Delete', "Delete");
     }
 
     public function getGroup($gridField, $record)
     {
-        return 'Default';
+        return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
 
-    public function getType($gridField, $record)
-    {
-        return GridField_ActionMenuItem::SUBMIT;
-    }
-
-    public function getUrl($gridField, $record)
-    {
-        return Controller::join_links($gridField->Link('item'), $record->ID, 'docustomaction');
-    }
-
-    /**
-     *
-     * @param GridField $gridField
-     * @param DataObject $record
-     * @param string $columnName
-     * @return string|null the attribles for the action
-     */
     public function getExtraData($gridField, $record, $columnName)
     {
         if ($field) {

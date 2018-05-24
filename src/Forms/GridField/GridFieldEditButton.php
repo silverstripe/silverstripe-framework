@@ -17,7 +17,7 @@ use SilverStripe\View\SSViewer;
  * The default routing applies to the {@link GridFieldDetailForm} component,
  * which has to be added separately to the {@link GridField} configuration.
  */
-class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
+class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuLink
 {
     /**
      * HTML classes to be added to GridField edit buttons
@@ -31,31 +31,38 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
         'action-menu--handled' => true
     ];
 
+    /**
+     * @inheritdoc
+     */
     public function getTitle($gridField, $record)
     {
-        return 'Edit';
+        return _t(__CLASS__ . '.EDIT', "Edit");
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getGroup($gridField, $record)
     {
-        return 'Default';
+        return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
 
-    public function getType($gridField, $record)
-    {
-        return GridField_ActionMenuItem::LINK;
-    }
-
-    public function getUrl($gridField, $record)
-    {
-        return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
-    }
-
+    /**
+     * @inheritdoc
+     */
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
             "classNames" => "action-detail edit-link"
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUrl($gridField, $record)
+    {
+        return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
     }
 
     /**
@@ -81,7 +88,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'grid-field__col-compact');
+        return ['class' => 'grid-field__col-compact'];
     }
 
     /**
@@ -94,7 +101,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     public function getColumnMetadata($gridField, $columnName)
     {
         if ($columnName == 'Actions') {
-            return array('title' => '');
+            return ['title' => ''];
         }
         return [];
     }
@@ -107,7 +114,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getColumnsHandled($gridField)
     {
-        return array('Actions');
+        return ['Actions'];
     }
 
     /**
@@ -118,7 +125,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getActions($gridField)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -132,10 +139,10 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
         // No permission checks, handled through GridFieldDetailForm,
         // which can make the form readonly if no edit permissions are available.
 
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit'),
             'ExtraClass' => $this->getExtraClass()
-        ));
+        ]);
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);

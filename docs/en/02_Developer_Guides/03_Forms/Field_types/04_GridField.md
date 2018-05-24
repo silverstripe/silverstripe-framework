@@ -274,10 +274,24 @@ The `GridField_ActionMenu` component provides a dropdown menu which automaticall
 To add it to a GridField, add the `GridField_ActionMenu` component and any action(s) that implement `GridField_ActionMenuItem` (such as `GridFieldEditButton` or `GridFieldDeleteAction`) to the `GridFieldConfig`.
 
 ```php
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+
+// `GridFieldConfig::create()` will create an empty configuration (no components).
+$config = GridFieldConfig::create();
+
+// add a component
+$config->addComponent();
+
 $config->addComponents(
+    new GridFieldDataColumns(),
     new GridFieldEditButton(), 
     new GridField_ActionMenu()
 );
+
+// Update the GridField with our custom configuration
+$gridField->setConfig($config);
+
 ```
 
 ## GridFieldDetailForm
