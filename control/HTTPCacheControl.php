@@ -5,7 +5,7 @@
  *
  *
  */
-class HTTPCacheControl {
+class HTTPCacheControl extends SS_Object {
 
 	/**
 	 * @var static
@@ -35,22 +35,9 @@ class HTTPCacheControl {
 		'no-transform',
 	);
 
-	/**
-	 * @return static
-	 */
-	public static function inst()
-	{
-		return static::$inst ?: static::$inst = new static();
-	}
-
-	public static function reset()
-	{
-		static::$inst = null;
-	}
-
 	public function setDirective($directive, $value = null)
 	{
-		$allowedDirectives = Config::inst()->get(__CLASS__, 'allowed_directives');
+		$allowedDirectives = $this->config()->get('allowed_directives');
 		$directive = strtolower($directive);
 		if (in_array($directive, $allowedDirectives)) {
 			$this->state[$directive] = $value;

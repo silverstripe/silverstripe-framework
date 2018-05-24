@@ -294,7 +294,7 @@ class HTTP {
 	 */
 	public static function set_cache_age($age) {
 		self::$cache_age = $age;
-		HTTPCacheControl::inst()->setMaxAge($age);
+		HTTPCacheControl::singleton()->setMaxAge($age);
 	}
 
 	public static function register_modification_date($dateString) {
@@ -343,7 +343,7 @@ class HTTP {
 		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
 		// templates and other data
 		if ($config->get(__CLASS__, 'disable_http_cache')) {
-			HTTPCacheControl::inst()->disableCaching();
+			HTTPCacheControl::singleton()->disableCaching();
 		}
 
 		// Populate $responseHeaders with all the headers that we want to build
@@ -356,7 +356,7 @@ class HTTP {
 			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
 
 			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
-				HTTPCacheControl::inst()->disableCaching();
+				HTTPCacheControl::singleton()->disableCaching();
 			}
 		}
 
@@ -392,21 +392,21 @@ class HTTP {
 			strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')==true &&
 			strstr($contentDisposition, 'attachment;')==true &&
 			(
-				HTTPCacheControl::inst()->hasDirective('no-cache') ||
-				HTTPCacheControl::inst()->hasDirective('no-store')
+				HTTPCacheControl::singleton()->hasDirective('no-cache') ||
+				HTTPCacheControl::singleton()->hasDirective('no-store')
 			)
 		) {
 			// IE6-IE8 have problems saving files when https and no-cache/no-store are used
 			// (http://support.microsoft.com/kb/323308)
 			// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-			HTTPCacheControl::inst()
+			HTTPCacheControl::singleton()
 				->privateCache()
 				->removeDirective('no-cache')
 				->removeDirective('no-store');
 		}
 
 		if (!empty($cacheControlHeaders)) {
-			HTTPCacheControl::inst()->setDirectivesFromArray($cacheControlHeaders);
+			HTTPCacheControl::singleton()->setDirectivesFromArray($cacheControlHeaders);
 		}
 
 		if (self::$modification_date) {
@@ -414,7 +414,7 @@ class HTTP {
 		}
 
 		// if we can store the cache responses we should generate and send etags
-		if (!HTTPCacheControl::inst()->hasDirective('no-store')) {
+		if (!HTTPCacheControl::singleton()->hasDirective('no-store')) {
 
 			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
 			// which means that if you log out, you get redirected back to a page which Chrome then checks against
@@ -446,11 +446,11 @@ class HTTP {
 			}
 		}
 
-		if (HTTPCacheControl::inst()->hasDirective('max-age')) {
-			$expires = time() + HTTPCacheControl::inst()->getDirective('max-age');
+		if (HTTPCacheControl::singleton()->hasDirective('max-age')) {
+			$expires = time() + HTTPCacheControl::singleton()->getDirective('max-age');
 			$responseHeaders["Expires"] = self::gmt_date($expires);
 		}
-		
+
 		// etag needs to be a quoted string according to HTTP spec
 		if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
 			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
@@ -469,9 +469,9 @@ class HTTP {
 		}
 
 		if ($body) {
-			HTTPCacheControl::inst()->applyToResponse($body);
+			HTTPCacheControl::singleton()->applyToResponse($body);
 		} elseif (!headers_sent()) {
-			header('Cache-Control: ' . HTTPCacheControl::inst()->generateCacheHeader());
+			header('Cache-Control: ' . HTTPCacheControl::singleton()->generateCacheHeader());
 		}
 	}
 
