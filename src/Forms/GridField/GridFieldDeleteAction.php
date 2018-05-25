@@ -48,7 +48,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
     /**
      * @inheritdoc
      */
-    public function getTitle($gridField, $record)
+    public function getTitle($gridField, $record, $columnName)
     {
         $field = $this->getRemoveAction($gridField, $record, $columnName);
 
@@ -62,7 +62,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
     /**
      * @inheritdoc
      */
-    public function getGroup($gridField, $record)
+    public function getGroup($gridField, $record, $columnName)
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }

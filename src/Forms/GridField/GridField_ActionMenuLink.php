@@ -17,5 +17,5 @@ interface GridField_ActionMenuLink extends GridField_ActionMenuItem
      *
      * @return string $url
      */
-    public function getUrl($gridField, $record);
+    public function getUrl($gridField, $record, $columnName);
 }

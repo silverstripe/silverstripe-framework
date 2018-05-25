@@ -34,9 +34,9 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
         $schema = array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record, $columnName) {
             return [
                 'type' => $item instanceof GridField_ActionMenuLink ? 'link' : 'submit',
-                'title' => $item->getTitle($gridField, $record),
-                'url' => $item instanceof GridField_ActionMenuLink ? $item->getUrl($gridField, $record) : null,
-                'group' => $item->getGroup($gridField, $record),
+                'title' => $item->getTitle($gridField, $record, $columnName),
+                'url' => $item instanceof GridField_ActionMenuLink ? $item->getUrl($gridField, $record, $columnName) : null,
+                'group' => $item->getGroup($gridField, $record, $columnName),
                 'data' => $item->getExtraData($gridField, $record, $columnName),
             ];
         }, $items);

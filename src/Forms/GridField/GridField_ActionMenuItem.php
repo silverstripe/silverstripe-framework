@@ -25,7 +25,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      *
      * @return string $title
      */
-    public function getTitle($gridField, $record);
+    public function getTitle($gridField, $record, $columnName);
 
     /**
      * Gets any extra data that could go in to the schema that the menu generates
@@ -49,5 +49,5 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      *
      * @return string $group
      */
-    public function getGroup($gridField, $record);
+    public function getGroup($gridField, $record, $columnName);
 }

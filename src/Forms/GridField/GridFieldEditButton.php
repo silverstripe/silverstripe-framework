@@ -34,7 +34,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     /**
      * @inheritdoc
      */
-    public function getTitle($gridField, $record)
+    public function getTitle($gridField, $record, $columnName)
     {
         return _t(__CLASS__ . '.EDIT', "Edit");
     }
@@ -42,7 +42,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     /**
      * @inheritdoc
      */
-    public function getGroup($gridField, $record)
+    public function getGroup($gridField, $record, $columnName)
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
@@ -60,7 +60,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     /**
      * @inheritdoc
      */
-    public function getUrl($gridField, $record)
+    public function getUrl($gridField, $record, $columnName)
     {
         return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
     }
