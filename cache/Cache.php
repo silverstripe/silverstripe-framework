@@ -146,7 +146,7 @@ class SS_Cache {
 	 * @param string $frontend (optional) The type of Zend_Cache frontend
 	 * @param array $frontendOptions (optional) Any frontend options to use.
 	 *
-	 * @return Zend_Cache_Core The cache object
+	 * @return CacheProxy
 	 */
 	public static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
@@ -188,8 +188,10 @@ class SS_Cache {
 
 		require_once 'Zend/Cache.php';
 
-		return Zend_Cache::factory(
-			$frontend, $backend[0], $frontendOptions, $backend[1]
-		);
+        $container = Zend_Cache::factory(
+            $frontend, $backend[0], $frontendOptions, $backend[1]
+        );
+
+		return Injector::inst()->createWithArgs('CacheProxy', [$container]);
 	}
 }

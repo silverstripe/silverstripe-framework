@@ -2,7 +2,12 @@
 
 class CacheTest extends SapphireTest {
 
-	public function testCacheBasics() {
+    public function setUpOnce() {
+        parent::setUpOnce();
+        Versioned::set_reading_mode('Stage.Live');
+    }
+
+    public function testCacheBasics() {
 		$cache = SS_Cache::factory('test');
 
 		$cache->save('Good', 'cachekey');
@@ -63,6 +68,29 @@ class CacheTest extends SapphireTest {
 
 		$this->assertEquals(1200, $cache->getOption('lifetime'));
 	}
+
+	public function testVersionedCacheSegmentation() {
+        $cacheInstance = SS_Cache::factory('versioned');
+        $cacheInstance->clean();
+
+        Versioned::set_reading_mode('Stage.Live');
+        $result = $cacheInstance->load('test');
+        $this->assertFalse($result);
+        $cacheInstance->save('uncle', 'test');
+        $this->assertEquals('uncle', $cacheInstance->load('test'));
+        Versioned::set_reading_mode('Stage.Stage');
+        $this->assertFalse($cacheInstance->load('test'));
+        $cacheInstance->save('cheese', 'test');
+        $cacheInstance->save('bar', 'foo');
+        $this->assertEquals('cheese', $cacheInstance->load('test'));
+        $this->assertEquals('bar', $cacheInstance->load('foo'));
+        Versioned::set_reading_mode('Stage.Live');
+        $this->assertFalse($cacheInstance->load('foo'));
+        $this->assertEquals('uncle', $cacheInstance->load('test'));
+
+        $cacheInstance->clean();
+
+    }
 
 }
 
