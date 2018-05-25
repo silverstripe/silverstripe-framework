@@ -50,6 +50,12 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getTitle($gridField, $record)
     {
+        $field = $this->getRemoveAction($gridField, $record, $columnName);
+
+        if ($field) {
+            return $field->getAttribute('title');
+        }
+
         return _t(__CLASS__ . '.Delete', "Delete");
     }
 
@@ -221,13 +227,14 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 ['RecordID' => $record->ID]
             )
                 ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink action-menu--handled')
-                ->setAttribute('classNames', 'gridfield-button-unlink')
-                ->setAttribute('title', $title)
+                ->setAttribute('classNames', 'gridfield-button-unlink font-icon-link-broken')
+                ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         } else {
             if (!$record->canDelete()) {
                 return null;
             }
+            $title = _t(__CLASS__ . '.Delete', "Delete");
 
             $field = GridField_FormAction::create(
                 $gridField,
@@ -237,9 +244,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 ['RecordID' => $record->ID]
             )
                 ->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action action-menu--handled')
-                ->setAttribute('classNames', 'gridfield-button-delete')
-                ->setAttribute('title', _t(__CLASS__ . '.Delete', "Delete"))
-                ->setDescription(_t(__CLASS__ . '.DELETE_DESCRIPTION', 'Delete'));
+                ->setAttribute('classNames', 'gridfield-button-delete font-icon-trash')
+                ->setDescription($title)
+                ->setAttribute('aria-label', $title);
         }
 
         return $field;

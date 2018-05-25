@@ -53,7 +53,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "classNames" => "action-detail edit-link"
+            "classNames" => "font-icon-edit action-detail edit-link"
         ];
     }
 
