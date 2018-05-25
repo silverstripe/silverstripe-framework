@@ -78,7 +78,7 @@ $Content
 <blink>Hi!</blink>
 ```
 
-If your classes have in a namespace, the Layout folder will be a found inside of the appropriate namespace folder.
+If your classes have a namespace, the Layout folder will be found inside of the appropriate namespaced folder.
 
 For example, the layout template for `SilverStripe\Control\Controller` will be
 found at `templates/SilverStripe/Control/Layout/Controller.ss`.
