@@ -2,8 +2,7 @@
 
 require_once 'Zend/Cache.php';
 
-class CacheProxy extends Zend_Cache_Core
-{
+class CacheProxy extends Zend_Cache_Core {
     /**
      * @var Zend_Cache_Backend|Zend_Cache_Backend_ExtendedInterface
      */
@@ -13,8 +12,7 @@ class CacheProxy extends Zend_Cache_Core
      * CacheProxy constructor.
      * @param Zend_Cache_Core $container
      */
-    public function __construct(Zend_Cache_Core $container)
-    {
+    public function __construct(Zend_Cache_Core $container) {
         $this->container = $container;
 
         parent::__construct();
@@ -23,8 +21,7 @@ class CacheProxy extends Zend_Cache_Core
     /**
      * @param array $directives
      */
-    public function setDirectives($directives)
-    {
+    public function setDirectives($directives) {
         $this->container->setDirectives($directives);
     }
 

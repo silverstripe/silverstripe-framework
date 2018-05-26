@@ -92,5 +92,27 @@ class CacheTest extends SapphireTest {
 
     }
 
+    public function testDisableVersionedCacheSegmentation() {
+        $cacheInstance = SS_Cache::factory('versioned_disabled', 'Output', ['disable-container' => true]);
+        $cacheInstance->clean();
+
+        Versioned::set_reading_mode('Stage.Live');
+        $result = $cacheInstance->load('test');
+        $this->assertFalse($result);
+        $cacheInstance->save('uncle', 'test');
+        $this->assertEquals('uncle', $cacheInstance->load('test'));
+        Versioned::set_reading_mode('Stage.Stage');
+        $this->assertEquals('uncle', $cacheInstance->load('test'));
+        $cacheInstance->save('cheese', 'test');
+        $cacheInstance->save('bar', 'foo');
+        $this->assertEquals('cheese', $cacheInstance->load('test'));
+        $this->assertEquals('bar', $cacheInstance->load('foo'));
+        Versioned::set_reading_mode('Stage.Live');
+        $this->assertEquals('bar', $cacheInstance->load('foo'));
+        $this->assertEquals('cheese', $cacheInstance->load('test'));
+
+        $cacheInstance->clean();
+    }
+
 }
 
