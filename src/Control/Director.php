@@ -733,13 +733,26 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_site_url($url)
     {
-        $urlHost = parse_url($url, PHP_URL_HOST);
-        $actualHost = parse_url(self::protocolAndHost(), PHP_URL_HOST);
-        if ($urlHost && $actualHost && $urlHost == $actualHost) {
-            return true;
-        } else {
-            return self::is_relative_url($url);
+        $parsedURL = parse_url($url);
+
+        // Validate user (disallow slashes)
+        if (!empty($parsedURL['user']) && strstr($parsedURL['user'], '\\')) {
+            return false;
         }
+        if (!empty($parsedURL['pass']) && strstr($parsedURL['pass'], '\\')) {
+            return false;
+        }
+
+        // Validate host[:port]
+        $actualHost = parse_url(self::protocolAndHost(), PHP_URL_HOST);
+        if (!empty($parsedURL['host'])
+            && $actualHost
+            && $parsedURL['host'] === $actualHost
+        ) {
+            return true;
+        }
+
+        return self::is_relative_url($url);
     }
 
     /**
