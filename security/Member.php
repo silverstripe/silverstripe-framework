@@ -1042,15 +1042,24 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return boolean True if the change can be accepted
 	 */
 	public function onChangeGroups($ids) {
+		// Ensure none of these match disallowed list
+		$disallowedGroupIDs = $this->disallowedGroups();
+		return count(array_intersect($ids, $disallowedGroupIDs)) == 0;
+	}
+
+	/**
+	 * List of group IDs this user is disallowed from
+	 *
+	 * @return int[] List of group IDs
+	 */
+	protected function disallowedGroups() {
 		// unless the current user is an admin already OR the logged in user is an admin
-		if(Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
-			return true;
+		if (Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
+			return array();
 		}
 
-		// If there are no admin groups in this set then it's ok
-		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-		return count(array_intersect($ids, $adminGroupIDs)) == 0;
+		// Non-admins may not belong to admin groups
+		return Permission::get_groups_by_permission('ADMIN')->column('ID');
 	}
 
 
@@ -1465,12 +1474,18 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$fields->removeByName('LoggedPasswords');
 
 			if(Permission::check('EDIT_PERMISSIONS')) {
-				$groupsMap = array();
-				foreach(Group::get() as $group) {
-					// Listboxfield values are escaped, use ASCII char instead of &raquo;
-					$groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
-				}
-				asort($groupsMap);
+                // Filter allowed groups
+                $groups = Group::get();
+                $disallowedGroupIDs = $this->disallowedGroups();
+                if ($disallowedGroupIDs) {
+                    $groups = $groups->exclude('ID', $disallowedGroupIDs);
+                }
+                $groupsMap = array();
+                foreach ($groups as $group) {
+                    // Listboxfield values are escaped, use ASCII char instead of &raquo;
+                    $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
+                }
+                asort($groupsMap);
 				$fields->addFieldToTab('Root.Main',
 					ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
 						->setMultiple(true)
