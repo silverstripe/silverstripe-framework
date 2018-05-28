@@ -281,7 +281,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
         }
 
         $spec = $this->fieldFormatting[$fieldName];
-        if (is_callable($spec)) {
+        if (!is_string($spec) && is_callable($spec)) {
             return $spec($value, $item);
         } else {
             $format = str_replace('$value', "__VAL__", $spec);
