@@ -39,39 +39,39 @@ class PasswordValidator
 
     /**
      * @config
-     * @var integer
+     * @var int
      */
     private static $min_length = null;
 
     /**
      * @config
-     * @var integer
+     * @var int
      */
     private static $min_test_score = null;
 
     /**
      * @config
-     * @var integer
+     * @var int
      */
     private static $historic_count = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $minLength = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $minScore = null;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $testNames = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $historicalPasswordCount = null;
 
@@ -95,18 +95,20 @@ class PasswordValidator
      * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
      *
      * @param int $minScore The minimum number of character tests that must pass
-     * @param array $testNames The names of the tests to perform
+     * @param string[] $testNames The names of the tests to perform
      * @return $this
      */
     public function characterStrength($minScore, $testNames = null)
     {
-
         Deprecation::notice(
             '5.0',
             'Use ->setMinTestScore($score) and ->setTextNames($names) instead.'
         );
-        return $this->setMinTestScore($minScore)
-            ->setTestNames($testNames);
+        $this->setMinTestScore($minScore);
+        if ($testNames) {
+            $this->setTestNames($testNames);
+        }
+        return $this;
     }
 
     /**
@@ -123,7 +125,7 @@ class PasswordValidator
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getMinLength()
     {
@@ -134,7 +136,7 @@ class PasswordValidator
     }
 
     /**
-     * @param $minLength
+     * @param int $minLength
      * @return $this
      */
     public function setMinLength($minLength)
@@ -155,7 +157,7 @@ class PasswordValidator
     }
 
     /**
-     * @param $minScore
+     * @param int $minScore
      * @return $this
      */
     public function setMinTestScore($minScore)
@@ -165,7 +167,9 @@ class PasswordValidator
     }
 
     /**
-     * @return array
+     * Gets the list of tests to use for this validator
+     *
+     * @return string[]
      */
     public function getTestNames()
     {
@@ -176,7 +180,9 @@ class PasswordValidator
     }
 
     /**
-     * @param $testNames
+     * Set list of tests to use for this validator
+     *
+     * @param string[] $testNames
      * @return $this
      */
     public function setTestNames($testNames)
@@ -186,7 +192,7 @@ class PasswordValidator
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getHistoricCount()
     {
@@ -197,7 +203,7 @@ class PasswordValidator
     }
 
     /**
-     * @param $count
+     * @param int $count
      * @return $this
      */
     public function setHistoricCount($count)
@@ -207,6 +213,8 @@ class PasswordValidator
     }
 
     /**
+     * Gets all possible tests
+     *
      * @return array
      */
     public function getTests()
@@ -226,7 +234,7 @@ class PasswordValidator
         $minLength = $this->getMinLength();
         if ($minLength && strlen($password) < $minLength) {
             $error = _t(
-                'SilverStripe\\Security\\PasswordValidator.TOOSHORT',
+                __CLASS__ . '.TOOSHORT',
                 'Password is too short, it must be {minimum} or more characters long',
                 ['minimum' => $this->minLength]
             );
@@ -245,16 +253,16 @@ class PasswordValidator
                     continue;
                 }
                 $missedTests[] = _t(
-                    'SilverStripe\\Security\\PasswordValidator.STRENGTHTEST' . strtoupper($name),
+                    __CLASS__ . '.STRENGTHTEST' . strtoupper($name),
                     $name,
                     'The user needs to add this to their password for more complexity'
                 );
             }
 
-            $score = count($this->testNames) - count($missedTests);
-            if ($score < $minTestScore) {
+            $score = count($testNames) - count($missedTests);
+            if ($missedTests && $score < $minTestScore) {
                 $error = _t(
-                    'SilverStripe\\Security\\PasswordValidator.LOWCHARSTRENGTH',
+                    __CLASS__ . '.LOWCHARSTRENGTH',
                     'Please increase password strength by adding some of the following characters: {chars}',
                     ['chars' => implode(', ', $missedTests)]
                 );
@@ -271,8 +279,8 @@ class PasswordValidator
             /** @var MemberPassword $previousPassword */
             foreach ($previousPasswords as $previousPassword) {
                 if ($previousPassword->checkPassword($password)) {
-                    $error =  _t(
-                        'SilverStripe\\Security\\PasswordValidator.PREVPASSWORD',
+                    $error = _t(
+                        __CLASS__ . '.PREVPASSWORD',
                         'You\'ve already used that password in the past, please choose a new password'
                     );
                     $valid->addError($error, 'bad', 'PREVIOUS_PASSWORD');

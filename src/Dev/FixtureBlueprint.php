@@ -121,7 +121,7 @@ class FixtureBlueprint
                         continue;
                     }
 
-                    if (is_callable($fieldVal)) {
+                    if (!is_string($fieldVal) && is_callable($fieldVal)) {
                         $obj->$fieldName = $fieldVal($obj, $data, $fixtures);
                     } else {
                         $obj->$fieldName = $fieldVal;

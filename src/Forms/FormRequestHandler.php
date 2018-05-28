@@ -157,7 +157,6 @@ class FormRequestHandler extends RequestHandler
                         "SilverStripe\\Forms\\Form.CSRF_EXPIRED_MESSAGE",
                         "Your session has expired. Please re-submit the form."
                     ));
-
                 // Return the user
                 return $this->redirectBack();
             }
