@@ -7,6 +7,7 @@
  * @subpackage fields-formattedinput
  */
 class PasswordField extends TextField {
+
 	/**
 	 * Controls the autocomplete attribute on the field.
 	 *
@@ -14,6 +15,13 @@ class PasswordField extends TextField {
 	 * to not cache the password and to not use any password managers.
 	 */
 	private static $autocomplete;
+
+    /**
+     * If true, the field can accept a value attribute, e.g. from posted form data
+     * @var bool
+     */
+    protected $allowValuePostback = false;
+	
 
 	/**
 	 * Returns an input field.
@@ -33,6 +41,24 @@ class PasswordField extends TextField {
 		parent::__construct($name, $title, $value);
 	}
 
+    /**
+     * @param bool $bool
+     * @return $this
+     */
+    public function setAllowValuePostback($bool) {
+        $this->allowValuePostback = (bool) $bool;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllowValuePostback() {
+        return $this->allowValuePostback;
+    }
+
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -40,6 +66,11 @@ class PasswordField extends TextField {
 		$attributes = array(
 			'type' => 'password',
 		);
+
+
+        if (!$this->getAllowValuePostback()) {
+            $attributes['value'] = null;
+        }
 
 		$autocomplete = Config::inst()->get('PasswordField', 'autocomplete');
 
