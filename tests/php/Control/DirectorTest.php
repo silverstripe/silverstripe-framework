@@ -593,6 +593,7 @@ class DirectorTest extends SapphireTest
         }, 'http://www.mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
+        $this->assertInstanceOf(HTTPResponse::class, $response);
         $this->assertEquals('https://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }
