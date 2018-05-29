@@ -153,6 +153,51 @@ called method is available as a parameter.
 To finish off our basic example, the `handleAction` method simply returns a
 message to the user interface indicating a successful message.
 
+## Add the GridFieldCustomAction to the `GridField_ActionMenu`
+
+For an action to be included in the action menu dropdown, which appears on each row if `GridField_ActionMenu` is included in the `GridFieldConfig`, it must implement `GridField_ActionMenuItem` and relevant `get` functions to provide information to the frontend react action menu component.
+
+## Basic GridFieldCustomAction boilerplate implementing GridField_ActionMenuItem
+
+```php
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Control\Controller;
+
+class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
+{
+
+    public function augmentColumns($gridField, &$columns) 
+    {
+        if(!in_array('Actions', $columns)) {
+            $columns[] = 'Actions';
+        }
+    }
+
+    public function getTitle($gridField, $record)
+    {
+        return _t(__CLASS__ . '.Delete', "Delete");
+    }
+
+    public function getGroup($gridField, $record)
+    {
+        return GridField_ActionMenuItem::DEFAULT_GROUP;
+    }
+
+    public function getExtraData($gridField, $record, $columnName)
+    {
+        if ($field) {
+            return $field->getAttributes();
+        }
+
+        return null;
+    }
+
+    // ...rest of boilerplate code
+```
+
 ## Related
 
  * [GridField Reference](/developer_guides/forms/field_types/gridfield)

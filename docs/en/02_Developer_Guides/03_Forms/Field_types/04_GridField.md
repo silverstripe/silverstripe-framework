@@ -157,6 +157,7 @@ $component = $config->getComponentByType(GridFieldFilterHeader::class)
 Here is a list of components for use bundled with the core framework. Many more components are provided by third-party
 modules and extensions.
 
+ - [GridField_ActionMenu](api:SilverStripe\Forms\GridField\GridField_ActionMenu)
  - [GridFieldToolbarHeader](api:SilverStripe\Forms\GridField\GridFieldToolbarHeader)
  - [GridFieldSortableHeader](api:SilverStripe\Forms\GridField\GridFieldSortableHeader)
  - [GridFieldFilterHeader](api:SilverStripe\Forms\GridField\GridFieldFilterHeader)
@@ -265,6 +266,33 @@ This configuration adds the ability to searched for existing records and add a r
 
 Records created or deleted through the `GridFieldConfig_RelationEditor` automatically update the relationship in the
 database.
+
+## GridField_ActionMenu
+
+The `GridField_ActionMenu` component provides a dropdown menu which automatically bundles GridField actions into a react based dropdown. It is included by default on `GridFieldConfig_RecordEditor` and `GridFieldConfig_RelationEditor` configs.
+
+To add it to a GridField, add the `GridField_ActionMenu` component and any action(s) that implement `GridField_ActionMenuItem` (such as `GridFieldEditButton` or `GridFieldDeleteAction`) to the `GridFieldConfig`.
+
+```php
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+
+// `GridFieldConfig::create()` will create an empty configuration (no components).
+$config = GridFieldConfig::create();
+
+// add a component
+$config->addComponent();
+
+$config->addComponents(
+    new GridFieldDataColumns(),
+    new GridFieldEditButton(), 
+    new GridField_ActionMenu()
+);
+
+// Update the GridField with our custom configuration
+$gridField->setConfig($config);
+
+```
 
 ## GridFieldDetailForm
 
