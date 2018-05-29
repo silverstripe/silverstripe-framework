@@ -283,14 +283,14 @@ class DiffEngine
                     continue;
                 $matches = $ymatches[$line];
                 reset($matches);
-                while (list ($junk, $y) = each($matches))
+                foreach ($matches as $y)
                     if (empty($this->in_seq[$y])) {
                         $k = $this->lcs_pos($y);
                         assert($k > 0);
                         $ymids[$k] = $ymids[$k - 1];
                         break;
                     }
-                while (list ($junk, $y) = each($matches)) {
+                foreach ($matches as $y) {
                     if ($y > $this->seq[$k - 1]) {
                         assert($y < $this->seq[$k]);
                         // Optimization: this is a common case:
