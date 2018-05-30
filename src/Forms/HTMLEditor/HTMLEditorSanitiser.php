@@ -190,7 +190,7 @@ class HTMLEditorSanitiser
     /**
      * Given an attribute name, return the rule structure for that attribute
      *
-     * @param stdClass $elementRule
+     * @param object $elementRule
      * @param string $name The attribute name
      * @return stdClass The attribute rule
      */
@@ -211,7 +211,7 @@ class HTMLEditorSanitiser
      * Given a DOMElement and an element rule, check if that element passes the rule
      * @param DOMElement $element The element to check
      * @param stdClass $rule The rule to check against
-     * @return bool true if the element passes (and so can be kept), false if it fails (and so needs stripping)
+     * @return bool True if the element passes (and so can be kept), false if it fails (and so needs stripping)
      */
     protected function elementMatchesRule($element, $rule = null)
     {
