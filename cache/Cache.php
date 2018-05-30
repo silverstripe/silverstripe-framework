@@ -188,14 +188,14 @@ class SS_Cache {
 
 		require_once 'Zend/Cache.php';
 
-        $container = Zend_Cache::factory(
+        $cache = Zend_Cache::factory(
             $frontend, $backend[0], $frontendOptions, $backend[1]
         );
 
         if (isset($frontendOptions['disable-container']) && $frontendOptions['disable-container']) {
-            return $container;
+            return $cache;
         }
 
-		return Injector::inst()->createWithArgs('CacheProxy', [$container]);
+		return Injector::inst()->createWithArgs('CacheProxy', [$cache]);
 	}
 }
