@@ -77,16 +77,28 @@ class CacheTest extends SapphireTest {
         $result = $cacheInstance->load('shared_key');
         $this->assertFalse($result);
         $cacheInstance->save('uncle', 'shared_key');
-        $this->assertEquals('uncle', $cacheInstance->load('shared_key'), 'Shared key is cached on LIVE');
+        // Shared key is cached on LIVE
+        $this->assertEquals('uncle', $cacheInstance->load('shared_key'));
+
         Versioned::set_reading_mode('Stage.Stage');
-        $this->assertFalse($cacheInstance->load('shared_key'), 'Shared key does not exist on STAGE');
+
+        // Shared key does not exist on STAGE
+        $this->assertFalse($cacheInstance->load('shared_key'));
+
         $cacheInstance->save('cheese', 'shared_key');
         $cacheInstance->save('bar', 'stage_key');
-        $this->assertEquals('cheese', $cacheInstance->load('shared_key'), 'Shared key has its own value on STAGE');
-        $this->assertEquals('bar', $cacheInstance->load('stage_key'), 'New key is cached on STAGE');
+
+        // Shared key has its own value on STAGE
+        $this->assertEquals('cheese', $cacheInstance->load('shared_key'));
+        // New key is cached on STAGE
+        $this->assertEquals('bar', $cacheInstance->load('stage_key'));
+
         Versioned::set_reading_mode('Stage.Live');
-        $this->assertFalse($cacheInstance->load('stage_key'), 'New key does not exist on LIVE');
-        $this->assertEquals('uncle', $cacheInstance->load('shared_key'), 'Shared key retains its own value on LIVE');
+
+        // New key does not exist on LIVE
+        $this->assertFalse($cacheInstance->load('stage_key'));
+        // Shared key retains its own value on LIVE
+        $this->assertEquals('uncle', $cacheInstance->load('shared_key'));
 
         $cacheInstance->clean();
 
@@ -100,16 +112,27 @@ class CacheTest extends SapphireTest {
         $result = $cacheInstance->load('shared_key');
         $this->assertFalse($result);
         $cacheInstance->save('uncle', 'shared_key');
-        $this->assertEquals('uncle', $cacheInstance->load('shared_key'), 'Shared key is cached on LIVE');
+        // Shared key is cached on LIVE
+        $this->assertEquals('uncle', $cacheInstance->load('shared_key'));
+
         Versioned::set_reading_mode('Stage.Stage');
-        $this->assertEquals('uncle', $cacheInstance->load('shared_key'), 'Shared key is same on STAGE');
+
+        // Shared key is same on STAGE
+        $this->assertEquals('uncle', $cacheInstance->load('shared_key'));
+
         $cacheInstance->save('cheese', 'shared_key');
         $cacheInstance->save('bar', 'stage_key');
-        $this->assertEquals('cheese', $cacheInstance->load('shared_key'), 'Shared key is overwritten on STAGE');
-        $this->assertEquals('bar', $cacheInstance->load('stage_key'), 'New key is written on STAGE');
+
+        // Shared key is overwritten on STAGE
+        $this->assertEquals('cheese', $cacheInstance->load('shared_key'));
+        // New key is written on STAGE
+        $this->assertEquals('bar', $cacheInstance->load('stage_key'));
+
         Versioned::set_reading_mode('Stage.Live');
-        $this->assertEquals('bar', $cacheInstance->load('stage_key'), 'New key has same value on LIVE');
-        $this->assertEquals('cheese', $cacheInstance->load('shared_key'), 'New value for existing key is same on LIVE');
+        // New key has same value on LIVE
+        $this->assertEquals('bar', $cacheInstance->load('stage_key'));
+        // New value for existing key is same on LIVE
+        $this->assertEquals('cheese', $cacheInstance->load('shared_key'));
 
         $cacheInstance->clean();
     }
