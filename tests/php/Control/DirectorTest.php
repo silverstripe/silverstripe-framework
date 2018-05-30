@@ -477,6 +477,10 @@ class DirectorTest extends SapphireTest
         $this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
         $this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
         $this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('http://google.com\@test.com'));
+        $this->assertFalse(Director::is_site_url('http://google.com/@test.com'));
+        $this->assertFalse(Director::is_site_url('http://google.com:pass\@test.com'));
+        $this->assertFalse(Director::is_site_url('http://google.com:pass/@test.com'));
     }
 
     /**

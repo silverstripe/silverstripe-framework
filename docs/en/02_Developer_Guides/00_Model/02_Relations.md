@@ -12,13 +12,13 @@ SilverStripe supports a number of relationship types and each relationship type 
 
 ## has_one
 
-A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in the example below this would be 
+A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in the example below this would be
 "TeamID" on the "Player"-table.
 
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $db = [
         'Title' => 'Varchar'
@@ -28,7 +28,7 @@ class Team extends DataObject
         'Players' => 'Player'
     ];
 }
-class Player extends DataObject 
+class Player extends DataObject
 {
     private static $has_one = [
         "Team" => "Team",
@@ -38,6 +38,22 @@ class Player extends DataObject
 
 This defines a relationship called `Team` which links to a `Team` class. The `ORM` handles navigating the relationship
 and provides a short syntax for accessing the related object.
+
+To create a has_one/has_many relationship to core classes (File, Image, etc), reference the Classname::class, like below.
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\File;
+
+class Team extends DataObject
+{
+    private static $has_many = [
+        'Teamphoto' => Image::class,
+        'Lineup' => File::class
+    ];    
+}
+```
 
 At the database level, the `has_one` creates a `TeamID` field on `Player`. A `has_many` field does not impose any database changes. It merely injects a new method into the class to access the related records (in this case, `Players()`)
 
@@ -75,13 +91,13 @@ Ideally, the associated has_many (or belongs_to) should be specified with dot no
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Player extends DataObject 
+class Player extends DataObject
 {
     private static $has_many = [
         "Fans" => "Fan.FanOf"
     ];
 }
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $has_many = [
         "Fans" => "Fan.FanOf"
@@ -89,7 +105,7 @@ class Team extends DataObject
 }
 
 // Type of object returned by $fan->FanOf() will vary
-class Fan extends DataObject 
+class Fan extends DataObject
 {
 
     // Generates columns FanOfID and FanOfClass
@@ -113,13 +129,18 @@ Defines 1-to-many joins. As you can see from the previous example, `$has_many` g
 
 <div class="alert" markdown='1'>
 Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary accessors
-available on both ends.
+available on both ends. To add a $has_one-relationship on core classes, yml config settings can be used:
+```yml
+SilverStripe\Assets\Image:
+  has_one:
+    MyDataObject: MyDataObject
+```
 </div>
 
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $db = [
         'Title' => 'Varchar'
@@ -129,7 +150,7 @@ class Team extends DataObject
         'Players' => 'Player'
     ];
 }
-class Player extends DataObject 
+class Player extends DataObject
 {
 
     private static $has_one = [
@@ -160,14 +181,14 @@ To specify multiple `$has_many` to the same object you can use dot notation to d
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Person extends DataObject 
+class Person extends DataObject
 {
     private static $has_many = [
         "Managing" => "Company.Manager",
         "Cleaning" => "Company.Cleaner",
     ];
 }
-class Company extends DataObject 
+class Company extends DataObject
 {
     private static $has_one = [
         "Manager" => "Person",
@@ -192,27 +213,27 @@ public function getCMSFields()
 
 ## belongs_to
 
-Defines a 1-to-1 relationship with another object, which declares the other end of the relationship with a 
-corresponding `$has_one`. A single database column named `<relationship-name>ID` will be created in the object with the 
-`$has_one`, but the $belongs_to by itself will not create a database field. This field will hold the ID of the object 
+Defines a 1-to-1 relationship with another object, which declares the other end of the relationship with a
+corresponding `$has_one`. A single database column named `<relationship-name>ID` will be created in the object with the
+`$has_one`, but the $belongs_to by itself will not create a database field. This field will hold the ID of the object
 declaring the `$belongs_to`.
 
-Similarly with `$has_many`, dot notation can be used to explicitly specify the `$has_one` which refers to this relation. 
+Similarly with `$has_many`, dot notation can be used to explicitly specify the `$has_one` which refers to this relation.
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
-    
+
     private static $has_one = [
         'Coach' => 'Coach'
     ];
 }
-class Coach extends DataObject 
+class Coach extends DataObject
 {
-    
+
     private static $belongs_to = [
         'Team' => 'Team.Coach'
     ];
@@ -253,7 +274,7 @@ config to add extra columns.
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $many_many = [
         "Supporters" => "Supporter",
@@ -261,12 +282,12 @@ class Team extends DataObject
 
     private static $many_many_extraFields = [
         'Supporters' => [
-          'Ranking' => 'Int' 
+          'Ranking' => 'Int'
         ]
     ];
 }
 
-class Supporter extends DataObject 
+class Supporter extends DataObject
 {
     private static $belongs_many_many = [
         "Supports" => "Team",
@@ -290,7 +311,7 @@ This is declared via array syntax, with the following keys on the many_many:
  - `through` Class name of the mapping table
  - `from` Name of the has_one relationship pointing back at the object declaring many_many
  - `to` Name of the has_one relationship pointing to the object declaring belongs_many_many.
- 
+
 Note: The `through` class must not also be the name of any field or relation on the parent
 or child record.
 
@@ -299,7 +320,7 @@ The syntax for `belongs_many_many` is unchanged.
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $many_many = [
         "Supporters" => [
@@ -309,18 +330,18 @@ class Team extends DataObject
         ]
     ];
 }
-class Supporter extends DataObject 
+class Supporter extends DataObject
 {
     private static $belongs_many_many = [
         "Supports" => "Team",
     ];
 }
-class TeamSupporter extends DataObject 
+class TeamSupporter extends DataObject
 {
     private static $db = [
         'Ranking' => 'Int',
     ];
-    
+
     private static $has_one = [
         'Team' => 'Team',
         'Supporter' => 'Supporter',
@@ -353,7 +374,7 @@ For instance, this is how you would link an arbitrary object to many_many tags.
 ```php
 use SilverStripe\ORM\DataObject;
 
-class SomeObject extends DataObject 
+class SomeObject extends DataObject
 {
     // This same many_many may also exist on other classes
     private static $many_many = [
@@ -364,13 +385,13 @@ class SomeObject extends DataObject
         ]
     ];
 }
-class Tag extends DataObject 
+class Tag extends DataObject
 {
     // has_many works, but belongs_many_many will not
     private static $has_many = [
         'TagMappings' => TagMapping::class,
     ];
-    
+
     /**
      * Example iterator placeholder for belongs_many_many.
      * This is a list of arbitrary types of objects
@@ -382,9 +403,9 @@ class Tag extends DataObject
             yield $mapping->Parent();
         }
     }
-    
+
 }
-class TagMapping extends DataObject 
+class TagMapping extends DataObject
 {   
     private static $has_one = [
         'Parent' => DataObject::class, // Polymorphic has_one
@@ -407,7 +428,7 @@ The joined record can be accessed via `Join` or `TeamSupporter` property (many_m
 ```
 
 You can also use `$Join` in place of the join class alias (`$TeamSupporter`), if your template
-is class-agnostic and doesn't know the type of the join table. 
+is class-agnostic and doesn't know the type of the join table.
 
 ## belongs_many_many
 
@@ -421,16 +442,16 @@ distinguish them like below:
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Category extends DataObject 
+class Category extends DataObject
 {
-    
+
     private static $many_many = [
         'Products' => 'Product',
         'FeaturedProducts' => 'Product'
     ];
 }
 
-class Product extends DataObject 
+class Product extends DataObject
 {   
     private static $belongs_many_many = [
         'Categories' => 'Category.Products',
@@ -471,7 +492,7 @@ are supported, as are methods that return lists of objects but do not correspond
 
 If your object is versioned, cascade_deletes will also act as "cascade unpublish", such that any unpublish
 on a parent object will trigger unpublish on the child, similarly to how `owns` causes triggered publishing.
-See the [versioning docs](/developer_guides/versioning) for more information on ownership.
+See the [versioning docs](/developer_guides/model/versioning) for more information on ownership.
 
 ## Cascading duplications
 
@@ -514,7 +535,7 @@ $dupe = $parent->duplicate(true, false);
 
 ## Adding relations
 
-Adding new items to a relations works the same, regardless if you're editing a **has_many** or a **many_many**. They are 
+Adding new items to a relations works the same, regardless if you're editing a **has_many** or a **many_many**. They are
 encapsulated by [HasManyList](api:SilverStripe\ORM\HasManyList) and [ManyManyList](api:SilverStripe\ORM\ManyManyList), both of which provide very similar APIs, e.g. an `add()`
 and `remove()` method.
 
@@ -532,7 +553,7 @@ $team->Supporters()->add($supporter);
 
 ## Custom Relations
 
-You can use the ORM to get a filtered result list without writing any SQL. For example, this snippet gets you the 
+You can use the ORM to get a filtered result list without writing any SQL. For example, this snippet gets you the
 "Players"-relation on a team, but only containing active players.
 
 See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more info on the described relations.
@@ -540,13 +561,13 @@ See [DataObject::$has_many](api:SilverStripe\ORM\DataObject::$has_many) for more
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Team extends DataObject 
+class Team extends DataObject
 {
     private static $has_many = [
         "Players" => "Player"
     ];
-    
-    public function ActivePlayers() 
+
+    public function ActivePlayers()
     {
         return $this->Players()->filter('Status', 'Active');
     }
@@ -555,20 +576,20 @@ class Team extends DataObject
 ```
 
 <div class="notice" markdown="1">
-Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the filtered 
+Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the filtered
 criteria on the added record.
 </div>
 
 ## Relations on Unsaved Objects
 
-You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behavior uses the 
-[UnsavedRelationList](api:SilverStripe\ORM\UnsavedRelationList) and converts it into the correct `RelationList` when saving the `DataObject` for the first 
+You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behavior uses the
+[UnsavedRelationList](api:SilverStripe\ORM\UnsavedRelationList) and converts it into the correct `RelationList` when saving the `DataObject` for the first
 time.
 
 This unsaved lists will also recursively save any unsaved objects that they contain.
 
-As these lists are not backed by the database, most of the filtering methods on `DataList` cannot be used on a list of 
-this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an object, not 
+As these lists are not backed by the database, most of the filtering methods on `DataList` cannot be used on a list of
+this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an object, not
 for displaying the objects contained in the relation.
 
 ## Related Lessons

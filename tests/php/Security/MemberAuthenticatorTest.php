@@ -245,7 +245,6 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testNonExistantMemberGetsLoginAttemptRecorded()
     {
-        Security::config()->set('login_recording', true);
         Member::config()
             ->set('lock_out_after_incorrect_logins', 1)
             ->set('lock_out_delay_mins', 10);
@@ -274,7 +273,6 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testNonExistantMemberGetsLockedOut()
     {
-        Security::config()->set('login_recording', true);
         Member::config()
             ->set('lock_out_after_incorrect_logins', 1)
             ->set('lock_out_delay_mins', 10);

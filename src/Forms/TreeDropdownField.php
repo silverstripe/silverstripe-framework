@@ -654,7 +654,7 @@ class TreeDropdownField extends FormField
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getKeyField()
     {

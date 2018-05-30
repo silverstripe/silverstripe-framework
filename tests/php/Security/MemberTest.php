@@ -7,6 +7,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\ListboxField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -690,6 +691,8 @@ class MemberTest extends FunctionalTest
         $staffMember = $this->objFromFixture(Member::class, 'staffmember');
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
+
+        // Construct admin and non-admin gruops
         $newAdminGroup = new Group(array('Title' => 'newadmin'));
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');
@@ -720,6 +723,37 @@ class MemberTest extends FunctionalTest
             $adminMember->onChangeGroups(array($newAdminGroup->ID)),
             'Adding new admin group relation is allowed for admin members'
         );
+    }
+
+    /**
+     * Ensure DirectGroups listbox disallows admin-promotion
+     */
+    public function testAllowedGroupsListbox()
+    {
+        /** @var Group $adminGroup */
+        $adminGroup = $this->objFromFixture(Group::class, 'admingroup');
+        /** @var Member $staffMember */
+        $staffMember = $this->objFromFixture(Member::class, 'staffmember');
+        /** @var Member $adminMember */
+        $adminMember = $this->objFromFixture(Member::class, 'admin');
+
+        // Ensure you can see the DirectGroups box
+        $this->logInWithPermission('EDIT_PERMISSIONS');
+
+        // Non-admin member field contains non-admin groups
+        /** @var ListboxField $staffListbox */
+        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayNotHasKey($adminGroup->ID, $staffListbox->getSource());
+
+        // admin member field contains admin group
+        /** @var ListboxField $adminListbox */
+        $adminListbox = $adminMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayHasKey($adminGroup->ID, $adminListbox->getSource());
+
+        // If logged in as admin, staff listbox has admin group
+        $this->logInWithPermission('ADMIN');
+        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
+        $this->assertArrayHasKey($adminGroup->ID, $staffListbox->getSource());
     }
 
     /**
@@ -1490,6 +1524,7 @@ class MemberTest extends FunctionalTest
     public function testChangePasswordWithExtensionsThatModifyValidationResult()
     {
         // Default behaviour
+        /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'admin');
         $result = $member->changePassword('my-secret-new-password');
         $this->assertInstanceOf(ValidationResult::class, $result);

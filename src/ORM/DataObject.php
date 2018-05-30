@@ -528,7 +528,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Copy all components from source to destination
         $source = $sourceObject->getManyManyComponents($relation);
         $dest = $destinationObject->getManyManyComponents($relation);
-        $extraFieldNames = $source->getExtraFields();
+
+        if ($source instanceof ManyManyList) {
+            $extraFieldNames = $source->getExtraFields();
+        } else {
+            $extraFieldNames = [];
+        }
+
         foreach ($source as $item) {
             // Merge extra fields
             $extraFields = [];

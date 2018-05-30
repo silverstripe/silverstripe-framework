@@ -14,16 +14,16 @@ use SilverStripe\View\SSViewer;
 class GridFieldViewButton implements GridField_ColumnProvider
 {
 
-    public function augmentColumns($field, &$cols)
+    public function augmentColumns($field, &$columns)
     {
-        if (!in_array('Actions', $cols)) {
-            $cols[] = 'Actions';
+        if (!in_array('Actions', $columns)) {
+            $columns[] = 'Actions';
         }
     }
 
     public function getColumnsHandled($field)
     {
-        return array('Actions');
+        return ['Actions'];
     }
 
     public function getColumnContent($field, $record, $col)
@@ -31,20 +31,20 @@ class GridFieldViewButton implements GridField_ColumnProvider
         if (!$record->canView()) {
             return null;
         }
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
-        ));
+        ]);
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);
     }
 
     public function getColumnAttributes($field, $record, $col)
     {
-        return array('class' => 'grid-field__col-compact');
+        return ['class' => 'grid-field__col-compact'];
     }
 
     public function getColumnMetadata($gridField, $col)
     {
-        return array('title' => null);
+        return ['title' => null];
     }
 }

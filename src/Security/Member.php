@@ -33,6 +33,7 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Map;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 
@@ -60,27 +61,26 @@ use SilverStripe\ORM\ValidationResult;
  */
 class Member extends DataObject
 {
-
     private static $db = array(
-        'FirstName'          => 'Varchar',
-        'Surname'            => 'Varchar',
-        'Email'              => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
-        'TempIDHash'         => 'Varchar(160)', // Temporary id used for cms re-authentication
-        'TempIDExpired'      => 'Datetime', // Expiry of temp login
-        'Password'           => 'Varchar(160)',
-        'AutoLoginHash'      => 'Varchar(160)', // Used to auto-login the user on password reset
-        'AutoLoginExpired'   => 'Datetime',
+        'FirstName' => 'Varchar',
+        'Surname' => 'Varchar',
+        'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
+        'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
+        'TempIDExpired' => 'Datetime', // Expiry of temp login
+        'Password' => 'Varchar(160)',
+        'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
+        'AutoLoginExpired' => 'Datetime',
         // This is an arbitrary code pointing to a PasswordEncryptor instance,
         // not an actual encryption algorithm.
         // Warning: Never change this field after its the first password hashing without
         // providing a new cleartext password as well.
         'PasswordEncryption' => "Varchar(50)",
-        'Salt'               => 'Varchar(50)',
-        'PasswordExpiry'     => 'Date',
-        'LockedOutUntil'     => 'Datetime',
-        'Locale'             => 'Varchar(6)',
+        'Salt' => 'Varchar(50)',
+        'PasswordExpiry' => 'Date',
+        'LockedOutUntil' => 'Datetime',
+        'Locale' => 'Varchar(6)',
         // handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
-        'FailedLoginCount'   => 'Int',
+        'FailedLoginCount' => 'Int',
     );
 
     private static $belongs_many_many = array(
@@ -88,7 +88,7 @@ class Member extends DataObject
     );
 
     private static $has_many = array(
-        'LoggedPasswords'     => MemberPassword::class,
+        'LoggedPasswords' => MemberPassword::class,
         'RememberLoginHashes' => RememberLoginHash::class,
     );
 
@@ -312,7 +312,7 @@ class Member extends DataObject
                 break;
             }
         }
-            return $result;
+        return $result;
     }
 
     /**
@@ -523,10 +523,9 @@ class Member extends DataObject
             'This method is deprecated and now does not add value. Please use Security::getCurrentUser()'
         );
 
-        if ($member = Security::getCurrentUser()) {
-            if ($member && $member->exists()) {
-                return true;
-            }
+        $member = Security::getCurrentUser();
+        if ($member && $member->exists()) {
+            return true;
         }
 
         return false;
@@ -658,7 +657,7 @@ class Member extends DataObject
     {
         /** @var Member $member */
         $member = static::get()->filter([
-            'AutoLoginHash'                => $hash,
+            'AutoLoginHash' => $hash,
             'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
         ])->first();
 
@@ -802,6 +801,7 @@ class Member extends DataObject
      * @param Member|null|int $member Member or member ID to log in as.
      * Set to null or 0 to act as a logged out user.
      * @param callable $callback
+     * @return mixed Result of $callback
      */
     public static function actAs($member, $callback)
     {
@@ -834,11 +834,11 @@ class Member extends DataObject
             'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
         );
 
-        if ($member = Security::getCurrentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             return $member->ID;
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -895,8 +895,8 @@ class Member extends DataObject
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
                     array(
-                        'id'    => $existingRecord->ID,
-                        'name'  => $identifierField,
+                        'id' => $existingRecord->ID,
+                        'name' => $identifierField,
                         'value' => $this->$identifierField
                     )
                 ));
@@ -982,16 +982,25 @@ class Member extends DataObject
      */
     public function onChangeGroups($ids)
     {
+        // Ensure none of these match disallowed list
+        $disallowedGroupIDs = $this->disallowedGroups();
+        return count(array_intersect($ids, $disallowedGroupIDs)) == 0;
+    }
+
+    /**
+     * List of group IDs this user is disallowed from
+     *
+     * @return int[] List of group IDs
+     */
+    protected function disallowedGroups()
+    {
         // unless the current user is an admin already OR the logged in user is an admin
         if (Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
-            return true;
+            return [];
         }
 
-        // If there are no admin groups in this set then it's ok
-        $adminGroups = Permission::get_groups_by_permission('ADMIN');
-        $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-
-        return count(array_intersect($ids, $adminGroupIDs)) == 0;
+        // Non-admins may not belong to admin groups
+        return Permission::get_groups_by_permission('ADMIN')->column('ID');
     }
 
 
@@ -1167,7 +1176,7 @@ class Member extends DataObject
         if (!$format) {
             $format = [
                 'columns' => ['Surname', 'FirstName'],
-                'sep'     => ' ',
+                'sep' => ' ',
             ];
         }
 
@@ -1295,7 +1304,7 @@ class Member extends DataObject
     }
 
     /**
-     * @return ManyManyList
+     * @return ManyManyList|UnsavedRelationList
      */
     public function DirectGroups()
     {
@@ -1354,6 +1363,11 @@ class Member extends DataObject
      */
     public static function mapInCMSGroups($groups = null)
     {
+        // non-countable $groups will issue a warning when using count() in PHP 7.2+
+        if (!$groups) {
+            $groups = [];
+        }
+
         // Check CMS module exists
         if (!class_exists(LeftAndMain::class)) {
             return ArrayList::create()->map();
@@ -1476,8 +1490,14 @@ class Member extends DataObject
             $fields->removeByName('RememberLoginHashes');
 
             if (Permission::check('EDIT_PERMISSIONS')) {
+                // Filter allowed groups
+                $groups = Group::get();
+                $disallowedGroupIDs = $this->disallowedGroups();
+                if ($disallowedGroupIDs) {
+                    $groups = $groups->exclude('ID', $disallowedGroupIDs);
+                }
                 $groupsMap = array();
-                foreach (Group::get() as $group) {
+                foreach ($groups as $group) {
                     // Listboxfield values are escaped, use ASCII char instead of &raquo;
                     $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
                 }
@@ -1695,8 +1715,8 @@ class Member extends DataObject
      *
      * This method will encrypt the password prior to writing.
      *
-     * @param string $password  Cleartext password
-     * @param bool   $write     Whether to write the member afterwards
+     * @param string $password Cleartext password
+     * @param bool $write Whether to write the member afterwards
      * @return ValidationResult
      */
     public function changePassword($password, $write = true)

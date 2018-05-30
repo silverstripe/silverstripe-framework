@@ -3,6 +3,8 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\Tests\FormTest\TestController;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
@@ -10,6 +12,7 @@ use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Dev\CSSContentParser;
@@ -57,6 +60,17 @@ class FormTest extends FunctionalTest
             SSViewer::DEFAULT_THEME
             ]
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function boolDataProvider()
+    {
+        return [
+            [false],
+            [true],
+        ];
     }
 
     public function testLoadDataFromRequest()
@@ -914,6 +928,46 @@ class FormTest extends FunctionalTest
 
         $formData = $form->getData();
         $this->assertEmpty($formData['ExtraFieldCheckbox']);
+    }
+
+    /**
+     * @dataProvider boolDataProvider
+     * @param bool $allow
+     */
+    public function testPasswordPostback($allow)
+    {
+        $form = $this->getStubForm();
+        $form->enableSecurityToken();
+        $form->Fields()->push(
+            PasswordField::create('Password')
+                ->setAllowValuePostback($allow)
+        );
+        $form->Actions()->push(FormAction::create('doSubmit'));
+        $request = new HTTPRequest(
+            'POST',
+            'FormTest_Controller/Form',
+            [],
+            [
+                'key1' => 'foo',
+                'Password' => 'hidden',
+                SecurityToken::inst()->getName() => 'fail',
+                'action_doSubmit' => 1,
+            ]
+        );
+        $form->getRequestHandler()->httpSubmission($request);
+        $parser = new CSSContentParser($form->forTemplate());
+        $passwords = $parser->getBySelector('input#Password');
+        $this->assertNotNull($passwords);
+        $this->assertCount(1, $passwords);
+        /* @var \SimpleXMLElement $password */
+        $password = $passwords[0];
+        $attrs = iterator_to_array($password->attributes());
+        if ($allow) {
+            $this->assertArrayHasKey('value', $attrs);
+            $this->assertEquals('hidden', $attrs['value']);
+        } else {
+            $this->assertArrayNotHasKey('value', $attrs);
+        }
     }
 
     protected function getStubForm()

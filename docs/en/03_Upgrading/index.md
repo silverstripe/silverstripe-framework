@@ -12,10 +12,10 @@ See our [upgrade notes and changelogs](/changelogs/4.0.0) for 4.0.0 specific inf
 
 ## Composer
 
-SilverStripe CMS is becoming more modular, and 
+SilverStripe CMS is becoming more modular, and
 [composer is becoming the preferred way to manage your code](/getting_started/composer).
 
-For projects managed through Composer, we recommend using `recipe-cms` in your `composer.json` file to help you keep 
+For projects managed through Composer, we recommend using `recipe-cms` in your `composer.json` file to help you keep
 up to date and run `composer update`.
 
 ```json
@@ -26,15 +26,15 @@ up to date and run `composer update`.
 }
 ```
 
-This will also add extra dependencies, such as the `admin`, `asset-admin`, `reports`, `errorpage` and `siteconfig` 
+This will also add extra dependencies, such as the `admin`, `asset-admin`, `reports`, `errorpage` and `siteconfig`
 modules.
 
-If you want more granular control over what gets installed, 
-reading through the README documentation in the [recipe plugin repository](https://github.com/silverstripe/recipe-plugin) 
-and also checking the `composer.json` files in [recipe-core](https://github.com/silverstripe/recipe-core) and 
+If you want more granular control over what gets installed,
+reading through the README documentation in the [recipe plugin repository](https://github.com/silverstripe/recipe-plugin)
+and also checking the `composer.json` files in [recipe-core](https://github.com/silverstripe/recipe-core) and
 [recipe-cms](https://github.com/silverstripe/recipe-cms).
 
-For a description on how to handle issues with pre-existing composer installs or upgrading other modules, please read 
+For a description on how to handle issues with pre-existing composer installs or upgrading other modules, please read
 through the [Composer dependency update section](/changelogs/4.0.0#deps)
 
 ## Manual upgrades
@@ -60,18 +60,29 @@ Never update a website on the live server without trying it on a development cop
 
 ## Environment variables file changed to dotenv
 
-SilverStripe 4 requires the use of `.env` and no longer supports using `_ss_environment.php` for your 
+SilverStripe 4 requires the use of `.env` and no longer supports using `_ss_environment.php` for your
 environment configuration.
 
 You'll need to move your constants to a new `.env` file before SilverStripe will build successfully.
 
-For further details about the `.env` migration, read through the 
+For further details about the `.env` migration, read through the
 [`_ss_environment.php` changed to `.env` section](/changelogs/4.0.0#env)
+
+If you have installed the upgrader tool, you can use the `environment` command to generate a valid `.env` file from your
+existing `_ss_environment.php` file.
+
+```
+cd ~/my-project-root
+upgrade-code environment --write
+```
+
+Read the [upgrader `environment` command documentation](https://github.com/silverstripe/silverstripe-upgrader/blob/master/docs/en/environment.md)
+for more details.
 
 ## Using the upgrader tool
 
-We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help 
-with the upgrade process to SilverStripe 4. See the README documentation in the repository for more detailed 
+We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help
+with the upgrade process to SilverStripe 4. See the README documentation in the repository for more detailed
 instructions on how to use it.
 
 
@@ -97,10 +108,20 @@ Nearly all core PHP classes in SilverStripe have been namespaced. For example, `
 
 For a full list of renamed classes, check the `.upgrade.yml` definitions in each module.
 
-After installing, run the upgrader upgrade command: 
+After installing, run the upgrader upgrade command:
 ```
 cd ~/my-project-root
 ~/.composer/vendor/bin/upgrade-code upgrade ./app/src --write
+```
+
+### Switching to new `app/src` structure
+
+The `reorganise` command can automatically rename the `mysite` and `code` folder for you. It will search your code and find any occurence of `mysite`. It won't replace those occurence with `app` however.
+
+After installing, run the upgrader reorganise command:
+```
+cd ~/my-project-root
+~/.composer/vendor/bin/upgrade-code reorganise --write
 ```
 
 ## Migrating files
@@ -149,7 +170,7 @@ For example, referencing the class name `'Member'` should be `Member::class` or 
 
 [Template locations and references](/changelogs/4.0.0#template-locations)  
 Templates require the folder path inside the templates folder, and Core templates are placed in paths following the class namespace, e.g. `FormField` is now `SilverStripe/Forms/FormField`.  
-When using the `<% include %>` syntax, you can leave out the `Includes` folder in the path. 
+When using the `<% include %>` syntax, you can leave out the `Includes` folder in the path.
 
 [Config settings should be set to `private static`](/changelogs/4.0.0#private-static)  
 We no longer support `public static $config_item` on classes, it now needs to be `private static $config_item`.

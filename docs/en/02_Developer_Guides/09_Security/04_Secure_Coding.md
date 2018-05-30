@@ -691,6 +691,11 @@ if (!Director::isDev()) {
 Forcing HTTPS so requires a certificate to be purchased or obtained through a vendor such as 
 [lets encrypt](https://letsencrypt.org/) and configured on your web server.
 
+Note that by default enabling SSL will also enable `CanonicalURLMiddleware::forceBasicAuthToSSL` which will detect
+and automatically redirect any requests with basic authentication headers to first be served over HTTPS. You can
+disable this behaviour using `CanonicalURLMiddleware::singleton()->setForceBasicAuthToSSL(false)`, or via Injector
+configuration in YAML.
+
 We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell SilverStripe to 
 use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie). 
 To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`

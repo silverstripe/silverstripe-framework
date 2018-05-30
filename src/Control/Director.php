@@ -474,6 +474,27 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
+     * Validate user and password in URL, disallowing slashes
+     *
+     * @param string $url
+     * @return bool
+     */
+    protected static function validateUserAndPass($url)
+    {
+        $parsedURL = parse_url($url);
+
+        // Validate user (disallow slashes)
+        if (!empty($parsedURL['user']) && strstr($parsedURL['user'], '\\')) {
+            return false;
+        }
+        if (!empty($parsedURL['pass']) && strstr($parsedURL['pass'], '\\')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * A helper to determine the current hostname used to access the site.
      * The following are used to determine the host (in order)
      *  - Director.alternate_base_url (if it contains a domain name)
@@ -811,6 +832,11 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_site_url($url)
     {
+        // Validate user and password
+        if (!static::validateUserAndPass($url)) {
+            return false;
+        }
+
         // Validate host[:port]
         $urlHost = static::parseHost($url);
         if ($urlHost && $urlHost === static::host()) {

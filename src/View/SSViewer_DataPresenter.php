@@ -326,7 +326,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         $override = $overrides[$property];
 
         // Late-evaluate this value
-        if (is_callable($override)) {
+        if (!is_string($override) && is_callable($override)) {
             $override = $override();
 
             // Late override may yet return null

@@ -38,6 +38,7 @@ class DataObjectDuplicationTest extends SapphireTest
         // Check 'bobcats' relation duplicated
         $twoOne = $this->objFromFixture(DataObjectDuplicationTest\Bobcat::class, 'one');
         $twoTwo = $this->objFromFixture(DataObjectDuplicationTest\Bobcat::class, 'two');
+
         $this->assertListEquals(
             [
                 ['Title' => 'Bobcat two'],

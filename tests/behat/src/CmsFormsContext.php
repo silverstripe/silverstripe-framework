@@ -416,7 +416,11 @@ JS;
             return null;
         }
 
-        $button = $name->getParent()->find('xpath', sprintf('//*[@aria-label="%s"]', $buttonLabel));
+        if ($dropdownButton = $name->getParent()->find('css', '.action-menu__toggle')) {
+            $dropdownButton->click();
+        }
+
+        $button = $name->getParent()->find('named', array('link_or_button', $buttonLabel));
 
         return $button;
     }
