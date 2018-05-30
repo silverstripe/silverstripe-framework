@@ -38,7 +38,7 @@ class GridFieldFooter implements GridField_HTMLProvider
     /**
      *
      * @param string $message A message to display in the footer
-     * @param boolt $showrecordcount
+     * @param bool $showrecordcount
      */
     public function __construct($message = null, $showrecordcount = true)
     {
