@@ -192,7 +192,7 @@ class SS_Cache {
             $frontend, $backend[0], $frontendOptions, $backend[1]
         );
 
-        if (isset($frontendOptions['disable-container']) && $frontendOptions['disable-container']) {
+        if (isset($frontendOptions['disable-segmentation']) && $frontendOptions['disable-segmentation']) {
             return $cache;
         }
 

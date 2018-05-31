@@ -118,6 +118,7 @@ class SS_ConfigManifest {
 			'automatic_serialization' => true,
 			'lifetime' => null,
 			'cache_id_prefix' => 'SS_Configuration_',
+            'disable-segmentation' => true,
 		));
 	}
 

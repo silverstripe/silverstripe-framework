@@ -35,7 +35,7 @@ class CleanImageManipulationCache extends BuildTask {
 		$images = DataObject::get('Image');
 
 		if($images && Image::get_backend() == "GDBackend") {
-			$cache = SS_Cache::factory('GDBackend_Manipulations');
+			$cache = SS_Cache::factory('GDBackend_Manipulations', 'Output', array('disable-segmentation' => true));
 
 			foreach($images as $image) {
 				$path = $image->getFullPath();

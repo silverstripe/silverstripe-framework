@@ -39,7 +39,7 @@ class GDBackend extends SS_Object implements Image_Backend {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
-		$this->cache = SS_Cache::factory('GDBackend_Manipulations');
+		$this->cache = SS_Cache::factory('GDBackend_Manipulations', 'Output', array('disable-segmentation' => true));
 
 		if($filename && is_readable($filename)) {
 			$this->cacheKey = md5(implode('_', array($filename, filemtime($filename))));

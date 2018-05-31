@@ -105,7 +105,7 @@ class CacheTest extends SapphireTest {
     }
 
     public function testDisableVersionedCacheSegmentation() {
-        $cacheInstance = SS_Cache::factory('versioned_disabled', 'Output', ['disable-container' => true]);
+        $cacheInstance = SS_Cache::factory('versioned_disabled', 'Output', array('disable-segmentation' => true));
         $cacheInstance->clean();
 
         Versioned::set_reading_mode('Stage.Live');
