@@ -119,7 +119,6 @@ class GridFieldActionMenuTest extends SapphireTest
         $schema = (string) $node[0]->attributes()['data-schema'];
         $json = json_decode($schema, true);
         $this->assertCount(1, $json);
-
     }
 
     public function testShowEditLinksWithAdminPermission()
