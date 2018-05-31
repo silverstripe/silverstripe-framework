@@ -284,7 +284,7 @@ class DiffEngine
                 $matches = $ymatches[$line];
                 reset($matches);
                 $pointer = 0;
-                foreach ($matches as $y)
+                foreach ($matches as $y) {
                     $pointer++;
                     if (empty($this->in_seq[$y])) {
                         $k = $this->lcs_pos($y);
@@ -292,6 +292,7 @@ class DiffEngine
                         $ymids[$k] = $ymids[$k - 1];
                         break;
                     }
+                }
                 foreach (array_slice($matches, $pointer) as $y) {
                     if ($y > $this->seq[$k - 1]) {
                         assert($y < $this->seq[$k]);
