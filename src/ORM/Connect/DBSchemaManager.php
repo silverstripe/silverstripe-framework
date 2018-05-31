@@ -729,7 +729,7 @@ MESSAGE
                             $holder[] = $check;
                         }
                     }
-                    if (count($holder)) {
+                    if (count($holder) && strpos($spec_orig, 'default ') !== false) {
                         $default = explode('default ', $spec_orig);
                         $default = $default[1];
                         $query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
