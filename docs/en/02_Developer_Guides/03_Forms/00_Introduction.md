@@ -30,7 +30,7 @@ $form = new Form(
 
 In practice, this looks like:
 
-**mysite/code/Page.php**
+**mysite/code/PageController.php**
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
