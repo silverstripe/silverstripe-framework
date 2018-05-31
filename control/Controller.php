@@ -502,7 +502,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function redirectBack() {
 		// Don't cache the redirect back ever
-		HTTP::set_cache_age(0);
+		HTTPCacheControl::singleton()->disableCaching();
 
 		$url = null;
 
