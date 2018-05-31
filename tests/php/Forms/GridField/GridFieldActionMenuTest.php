@@ -12,6 +12,7 @@ use SilverStripe\Forms\GridField\GridField_ActionMenu;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyActionMenuItemComponent;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
@@ -82,6 +83,43 @@ class GridFieldActionMenuTest extends SapphireTest
             count($content->getBySelector('.gridfield-actionmenu__container')),
             'Edit links should show when not logged in.'
         );
+    }
+
+    public function testHiddenActionMenuItems()
+    {
+        $config = GridFieldConfig::create()
+            ->addComponent(new MyActionMenuItemComponent(true))
+            ->addComponent(new GridFieldDeleteAction())
+            ->addComponent($menu = new GridField_ActionMenu());
+        $this->gridField->setConfig($config);
+
+        $html = $menu->getColumnContent($this->gridField, new Team(), 'test');
+        $content = new CSSContentParser($html);
+        /* @var \SimpleXMLElement $node */
+        $node = $content->getBySelector('.gridfield-actionmenu__container');
+        $this->assertNotNull($node);
+        $this->assertCount(1, $node);
+        $schema = (string) $node[0]->attributes()['data-schema'];
+        $json = json_decode($schema, true);
+        $this->assertCount(2, $json);
+
+        // Now set the component to not display
+        $config = GridFieldConfig::create()
+            ->addComponent(new MyActionMenuItemComponent(false))
+            ->addComponent(new GridFieldDeleteAction())
+            ->addComponent($menu = new GridField_ActionMenu());
+        $this->gridField->setConfig($config);
+
+        $html = $menu->getColumnContent($this->gridField, new Team(), 'test');
+        $content = new CSSContentParser($html);
+        /* @var \SimpleXMLElement $node */
+        $node = $content->getBySelector('.gridfield-actionmenu__container');
+        $this->assertNotNull($node);
+        $this->assertCount(1, $node);
+        $schema = (string) $node[0]->attributes()['data-schema'];
+        $json = json_decode($schema, true);
+        $this->assertCount(1, $json);
+
     }
 
     public function testShowEditLinksWithAdminPermission()
