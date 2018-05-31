@@ -240,6 +240,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		if(!$controller) $controller = Controller::curr();
 
+		HTTPCacheControl::singleton()->disableCaching();
+
 		if(Director::is_ajax()) {
 			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 			$response->setStatusCode(403);
