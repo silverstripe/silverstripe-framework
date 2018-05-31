@@ -34,6 +34,7 @@ class VersionedRequestFilter implements RequestFilter {
 			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
 				throw new SS_HTTPResponse_Exception($response);
 			}
+			HTTP::add_cache_headers($response);
 			$response->output();
 			die;
 		}
