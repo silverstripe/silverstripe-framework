@@ -20,6 +20,13 @@ class HTTPCacheControl extends SS_Object {
 	private $state = array();
 
 	/**
+	 * Whether the cache-control object is locked to further changes
+	 *
+	 * @var bool
+	 */
+	protected $locked = false;
+
+	/**
 	 * A list of allowed cache directives for HTTPResponses
 	 *
 	 * This doesn't include any experimental directives,
@@ -41,6 +48,17 @@ class HTTPCacheControl extends SS_Object {
 	);
 
 	/**
+	 * Lock the current state of the cache control to prevent further modifications
+	 *
+	 * @return $this
+	 */
+	public function lock()
+	{
+		$this->locked = true;
+		return $this;
+	}
+
+	/**
 	 * Low level method for setting directives include any experimental or custom ones added via config
 	 *
 	 * @param string $directive
@@ -50,6 +68,15 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function setDirective($directive, $value = null)
 	{
+		if ($this->locked) {
+			user_error(
+				'Cannot set further directives; cache is locked.' .
+				'Use `Injector::inst()->unregisterNamedObject("HTTPCacheControl");`' .
+				'to reset the cache control state',
+				E_USER_WARNING
+			);
+			return;
+		}
 		// make sure the directive is in the list of allowed directives
 		$allowedDirectives = $this->config()->get('allowed_directives');
 		$directive = strtolower($directive);
@@ -95,6 +122,15 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function removeDirective($directive)
 	{
+		if ($this->locked) {
+			user_error(
+				'Cannot set further directives; cache is locked.' .
+				'Use `Injector::inst()->unregisterNamedObject("HTTPCacheControl");`' .
+				'to reset the cache control state',
+				E_USER_WARNING
+			);
+			return;
+		}
 		unset($this->state[strtolower($directive)]);
 		return $this;
 	}
@@ -255,6 +291,7 @@ class HTTPCacheControl extends SS_Object {
 			'no-store' => null,
 			'must-revalidate' => null,
 		);
+		$this->lock();
 		return $this;
 	}
 
@@ -272,11 +309,17 @@ class HTTPCacheControl extends SS_Object {
 	/**
 	 * Helper function to set the current cache to public
 	 *
+	 * @param bool $force Force the cache to public even if it's private
+	 *
 	 * @return $this
 	 */
-	public function publicCache()
+	public function publicCache($force = false)
 	{
-		$this->setPublic();
+		if ($force || !$this->hasDirective('private')) {
+			$this->setPublic();
+		} else {
+			user_error('Cannot change a private cache to public', E_USER_WARNING);
+		}
 		return $this;
 	}
 
