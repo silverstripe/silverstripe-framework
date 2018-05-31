@@ -18,6 +18,9 @@ class FlushRequestFilter implements RequestFilter {
 	}
 
 	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+		if(array_key_exists('flush', $request->getVars())) {
+			HTTPCacheControl::singleton()->disableCaching();
+		}
 		return true;
 	}
 
