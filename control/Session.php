@@ -595,6 +595,9 @@ class Session {
 	 * @param string $sid Start the session with a specific ID
 	 */
 	public static function start($sid = null) {
+		// When sessions start, we assume that the responses should not be cached by CDNs / proxies as we are
+		// likely to be supplying information relevant to the current user only
+		HTTPCacheControl::singleton()->privateCache();
 		self::current_session()->inst_start($sid);
 	}
 
