@@ -267,6 +267,7 @@ class HTTPCacheControl extends SS_Object {
 		// Only exeucute this if its forcing level is high enough
 		$forcingLevel = self::LEVEL_DISABLED + ($force ? self::LEVEL_FORCED : 0);
 		if ($forcingLevel < $this->forcingLevel) {
+			SS_Log::log("Call to publicCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return;
 		}
 		$this->forcingLevel = $forcingLevel;
@@ -293,6 +294,7 @@ class HTTPCacheControl extends SS_Object {
 		// Only exeucute this if its forcing level is high enough
 		$forcingLevel = self::LEVEL_PRIVATE + ($force ? self::LEVEL_FORCED : 0);
 		if ($forcingLevel < $this->forcingLevel) {
+			SS_Log::log("Call to privateCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return;
 		}
 		$this->forcingLevel = $forcingLevel;
@@ -318,6 +320,7 @@ class HTTPCacheControl extends SS_Object {
 		// Only exeucute this if its forcing level is high enough
 		$forcingLevel = self::LEVEL_PUBLIC + ($force ? self::LEVEL_FORCED : 0);
 		if ($forcingLevel < $this->forcingLevel) {
+			SS_Log::log("Call to publicCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return;
 		}
 		$this->forcingLevel = $forcingLevel;
