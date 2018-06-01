@@ -175,8 +175,8 @@ class SS_Cache {
 		$backend = self::$backends[$backend_name];
 
 		$basicOptions = array(
-		    'cache_id_prefix' => md5(BASE_PATH) . '_' . $for . '_',
-        );
+			'cache_id_prefix' => md5(BASE_PATH) . '_' . $for . '_',
+		);
 
 		if ($cache_lifetime >= 0) {
 			$basicOptions['lifetime'] = $cache_lifetime;
@@ -188,14 +188,14 @@ class SS_Cache {
 
 		require_once 'Zend/Cache.php';
 
-        $cache = Zend_Cache::factory(
-            $frontend, $backend[0], $frontendOptions, $backend[1]
-        );
+		$cache = Zend_Cache::factory(
+			$frontend, $backend[0], $frontendOptions, $backend[1]
+		);
 
-        if (isset($frontendOptions['disable-segmentation']) && $frontendOptions['disable-segmentation']) {
-            return $cache;
-        }
+		if (!empty($frontendOptions['disable-segmentation'])) {
+			return $cache;
+		}
 
-		return Injector::inst()->createWithArgs('CacheProxy', [$cache]);
+		return Injector::inst()->createWithArgs('CacheProxy', array($cache));
 	}
 }
