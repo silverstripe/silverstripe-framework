@@ -70,9 +70,11 @@ class DiffTest extends SapphireTest
         $from = "$sentenceOne $sentenceTwo";
         $to = "$sentenceTwo $sentenceOne";
 
-        $expected = "<del>$sentenceOne</del> $sentenceTwo <ins>$sentenceOne</ins>";
+        // We're cheating our test a little bit here, because depending on what HTML cleaner you have, you'll get
+        // spaces added or not added around the tags.
+        $expected = "/^ *<del>$sentenceOne<\/del> *$sentenceTwo *<ins>$sentenceOne<\/ins> *$/";
         $actual = Diff::compareHTML($from, $to);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertRegExp($expected, $actual);
     }
 }
