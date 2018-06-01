@@ -118,7 +118,7 @@ class i18n extends SS_Object implements TemplateGlobalProvider, Flushable {
 
 	/**
 	 * Return an instance of the cache used for i18n data.
-	 * @return Zend_Cache
+	 * @return Zend_Cache_Core
 	 */
 	public static function get_cache() {
 		return SS_Cache::factory(

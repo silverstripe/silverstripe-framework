@@ -110,7 +110,7 @@ class SS_ConfigManifest {
 
 	/**
 	 * Provides a hook for mock unit tests despite no DI
-	 * @return Zend_Cache_Frontend
+	 * @return Zend_Cache_Core
 	 */
 	protected function getCache()
 	{
