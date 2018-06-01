@@ -855,7 +855,7 @@ class Form extends RequestHandler {
 
 		// If we need to disable cache, do it
 		if ($needsCacheDisabled) {
-			HTTPCacheControl::singleton()->disableCaching();
+			HTTPCacheControl::singleton()->disableCache(true);
 		}
 
 		$attrs = $this->getAttributes();

@@ -14,17 +14,44 @@ class HTTPCacheControl extends SS_Object {
 
 	/**
 	 * Store for all the current directives and their values
+	 * Starts with an implicit config for disabled caching
 	 *
 	 * @var array
 	 */
-	private $state = array();
+	private $state = array(
+		'no-cache' => null,
+		'no-store' => null,
+		'must-revalidate' => null,
+	);
 
 	/**
-	 * Whether the cache-control object is locked to further changes
-	 *
-	 * @var bool
+	 * Forcing level of previous setting; higher number wins
+	 * Combination of consts belo
+	 *w
+	 * @var int
 	 */
-	protected $locked = false;
+	protected $forcingLevel = 0;
+
+	/**
+	 * Forcing level forced, optionally combined with one of the below.
+	 */
+	private const LEVEL_FORCED = 10;
+
+	/**
+	 * Forcing level caching disabled. Overrides public/private.
+	 */
+	private const LEVEL_DISABLED = 3;
+
+	/**
+	 * Forcing level private-cached. Overrides public.
+	 */
+	private const LEVEL_PRIVATE = 2;
+
+	/**
+	 * Forcing level public cached. Lowest priority.
+	 */
+	private const LEVEL_PUBLIC = 1;
+
 
 	/**
 	 * A list of allowed cache directives for HTTPResponses
@@ -48,17 +75,6 @@ class HTTPCacheControl extends SS_Object {
 	);
 
 	/**
-	 * Lock the current state of the cache control to prevent further modifications
-	 *
-	 * @return $this
-	 */
-	public function lock()
-	{
-		$this->locked = true;
-		return $this;
-	}
-
-	/**
 	 * Low level method for setting directives include any experimental or custom ones added via config
 	 *
 	 * @param string $directive
@@ -68,15 +84,6 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function setDirective($directive, $value = null)
 	{
-		if ($this->locked) {
-			user_error(
-				'Cannot set further directives; cache is locked.' .
-				'Use `Injector::inst()->unregisterNamedObject("HTTPCacheControl");`' .
-				'to reset the cache control state',
-				E_USER_WARNING
-			);
-			return;
-		}
 		// make sure the directive is in the list of allowed directives
 		$allowedDirectives = $this->config()->get('allowed_directives');
 		$directive = strtolower($directive);
@@ -122,15 +129,6 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function removeDirective($directive)
 	{
-		if ($this->locked) {
-			user_error(
-				'Cannot set further directives; cache is locked.' .
-				'Use `Injector::inst()->unregisterNamedObject("HTTPCacheControl");`' .
-				'to reset the cache control state',
-				E_USER_WARNING
-			);
-			return;
-		}
 		unset($this->state[strtolower($directive)]);
 		return $this;
 	}
@@ -203,35 +201,6 @@ class HTTPCacheControl extends SS_Object {
 	}
 
 	/**
-	 * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
-	 *
-	 * Also removes `public` as this is a contradictory directive
-	 *
-	 * @return $this
-	 */
-	public function setPublic()
-	{
-		$this->setDirective('public');
-		$this->removeDirective('private');
-		return $this;
-	}
-
-	/**
-	 * Indicates that the response is intended for a single user and must not be stored by a shared cache.
-	 * A private cache may store the response.
-	 *
-	 * Also removes `private` as this is a contradictory directive
-	 *
-	 * @return $this
-	 */
-	public function setPrivate()
-	{
-		$this->setDirective('private');
-		$this->removeDirective('public');
-		return $this;
-	}
-
-	/**
 	 * Specifies the maximum amount of time (seconds) a resource will be considered fresh.
 	 * This directive is relative to the time of the request.
 	 *
@@ -282,44 +251,75 @@ class HTTPCacheControl extends SS_Object {
 	 * Removes all state and replaces it with `no-cache, no-store, must-revalidate`. Although `no-store` is sufficient
 	 * the others are added under recommendation from Mozilla (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)
 	 *
+	 * This will take precendence over unforced privateCache / publicCache calls
+	 *
+	 * @param bool $force Force the cache to private even if it's forced private or public
 	 * @return $this
 	 */
-	public function disableCaching()
+	public function disableCache($force = false)
 	{
+		// Only exeucute this if its forcing level is high enough
+		$forcingLevel = self::LEVEL_DISABLED + ($force ? self::LEVEL_FORCED : 0);
+		if ($forcingLevel < $this->forcingLevel) {
+			return;
+		}
+		$this->forcingLevel = $forcingLevel;
+
 		$this->state = array(
 			'no-cache' => null,
 			'no-store' => null,
 			'must-revalidate' => null,
 		);
-		$this->lock();
 		return $this;
 	}
 
 	/**
-	 * Helper function to set the current cache to private
+	 * Indicates that the response is intended for a single user and must not be stored by a shared cache.
+	 * A private cache may store the response.
 	 *
+	 * Also removes `private` as this is a contradictory directive
+	 *
+	 * @param bool $force Force the cache to private even if it's forced public
 	 * @return $this
 	 */
-	public function privateCache()
+	public function privateCache($force = false)
 	{
-		$this->setPrivate();
+		// Only exeucute this if its forcing level is high enough
+		$forcingLevel = self::LEVEL_PRIVATE + ($force ? self::LEVEL_FORCED : 0);
+		if ($forcingLevel < $this->forcingLevel) {
+			return;
+		}
+		$this->forcingLevel = $forcingLevel;
+
+		// Update the directives
+		$this->setDirective('private');
+		$this->removeDirective('public');
+		$this->removeDirective('no-cache');
+		$this->removeDirective('no-store');
 		return $this;
 	}
 
 	/**
-	 * Helper function to set the current cache to public
+ 	 * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
 	 *
-	 * @param bool $force Force the cache to public even if it's private
+	 * Also removes `public` as this is a contradictory directive
 	 *
+	 * @param bool $force Force the cache to public even if it's private, unless it's been forced private
 	 * @return $this
 	 */
 	public function publicCache($force = false)
 	{
-		if ($force || !$this->hasDirective('private')) {
-			$this->setPublic();
-		} else {
-			user_error('Cannot change a private cache to public', E_USER_WARNING);
+		// Only exeucute this if its forcing level is high enough
+		$forcingLevel = self::LEVEL_PUBLIC + ($force ? self::LEVEL_FORCED : 0);
+		if ($forcingLevel < $this->forcingLevel) {
+			return;
 		}
+		$this->forcingLevel = $forcingLevel;
+
+		$this->setDirective('public');
+		$this->removeDirective('private');
+		$this->removeDirective('no-cache');
+		$this->removeDirective('no-store');
 		return $this;
 	}
 

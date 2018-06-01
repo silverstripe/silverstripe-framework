@@ -341,9 +341,9 @@ class HTTP {
 		$config = Config::inst()->forClass(__CLASS__);
 
 		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
-		// templates and other data
+		// templates and other data. will be overridden by forced publicCache() or privateCache() calls
 		if ($config->get('disable_http_cache')) {
-			HTTPCacheControl::singleton()->disableCaching();
+			HTTPCacheControl::singleton()->disableCache();
 		}
 
 		// Populate $responseHeaders with all the headers that we want to build
@@ -356,7 +356,7 @@ class HTTP {
 			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
 
 			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
-				HTTPCacheControl::singleton()->disableCaching();
+				HTTPCacheControl::singleton()->disableCache(true);
 			}
 		}
 
@@ -400,11 +400,12 @@ class HTTP {
 			// (http://support.microsoft.com/kb/323308)
 			// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
 			HTTPCacheControl::singleton()
-				->privateCache()
+				->privateCache(true)
 				->removeDirective('no-cache')
 				->removeDirective('no-store');
 		}
 
+		// TODO: These risk overriding nocache / privatecache calls. Perhaps this should only be applied if caching is unspecified or specified as public
 		if (!empty($cacheControlHeaders)) {
 			HTTPCacheControl::singleton()->setDirectivesFromArray($cacheControlHeaders);
 		}
