@@ -348,7 +348,6 @@ class HTTP {
 
 		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
-		$cacheControlHeaders = $config->get('cache_control');
 
 		// if no caching ajax requests, disable ajax if is ajax request
 		// why are we using apache_request_headers here when we use `$_SERVER` later to inspect request headers?
@@ -403,11 +402,6 @@ class HTTP {
 				->privateCache(true)
 				->removeDirective('no-cache')
 				->removeDirective('no-store');
-		}
-
-		// TODO: These risk overriding nocache / privatecache calls. Perhaps this should only be applied if caching is unspecified or specified as public
-		if (!empty($cacheControlHeaders)) {
-			HTTPCacheControl::singleton()->setDirectivesFromArray($cacheControlHeaders);
 		}
 
 		if (self::$modification_date) {

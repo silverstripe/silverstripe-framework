@@ -18,11 +18,7 @@ class HTTPCacheControl extends SS_Object {
 	 *
 	 * @var array
 	 */
-	private $state = array(
-		'no-cache' => null,
-		'no-store' => null,
-		'must-revalidate' => null,
-	);
+	private $state = array();
 
 	/**
 	 * Forcing level of previous setting; higher number wins
@@ -73,6 +69,16 @@ class HTTPCacheControl extends SS_Object {
 		'no-store',
 		'no-transform',
 	);
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		// If we've not been provided an initial state, then grab HTTP.cache_contrpl from config
+		if (!$this->state) {
+			$this->setDirectivesFromArray(Config::inst()->get('HTTP', 'cache_control'));
+		}
+	}
 
 	/**
 	 * Low level method for setting directives include any experimental or custom ones added via config
