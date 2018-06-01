@@ -196,15 +196,17 @@ class TreeDropdownFieldTest extends SapphireTest
     public function testReadonly()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
-        $asdf = $this->objFromFixture(File::class, 'asdf');
-        $field->setValue($asdf->ID);
+        $fileMock = $this->objFromFixture(File::class, 'asdf');
+        $field->setValue($fileMock->ID);
         $readonlyField = $field->performReadonlyTransformation();
-        $this->assertEquals(
-            <<<"HTML"
-<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span><input type="hidden" name="TestTree" value="{$asdf->ID}" />
-HTML
-            ,
-            (string)$readonlyField->Field()
+        $result = (string) $readonlyField->Field();
+        $this->assertContains(
+            '<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span>',
+            $result
+        );
+        $this->assertContains(
+            '<input type="hidden" name="TestTree" value="' . $fileMock->ID . '" />',
+            $result
         );
     }
 }
