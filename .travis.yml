@@ -40,6 +40,7 @@ before_script:
  - composer self-update || true
  - phpenv rehash
  - phpenv config-rm xdebug.ini
+ - echo 'memory_limit = 2G' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - "if [ \"$BEHAT_TEST\" = \"\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
