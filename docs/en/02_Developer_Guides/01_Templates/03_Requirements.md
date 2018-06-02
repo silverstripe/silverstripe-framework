@@ -334,7 +334,7 @@ One common example is to block the core `jquery.js` added by various form fields
 version in a custom location. This assumes you have tested your application with the newer version.
 
 ```php
-Requirements::block('silverstripe-admin/thirdparty/jquery/jquery.js');
+Requirements::block('vendor/silverstripe/admin/thirdparty/jquery/jquery.js');
 ```
 
 <div class="alert" markdown="1">
