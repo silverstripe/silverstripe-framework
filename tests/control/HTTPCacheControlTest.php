@@ -10,6 +10,9 @@ class HTTPCacheControlTest extends SapphireTest
 		$hcc = new HTTPCacheControl();
 		$this->assertTrue($this->isDisabled($hcc), 'caching starts as disabled');
 
+		$hcc->enableCache();
+		$this->assertFalse($this->isDisabled($hcc));
+
 		$hcc->publicCache();
 		$this->assertTrue($this->isPublic($hcc), 'public can be set at start');
 
@@ -24,6 +27,9 @@ class HTTPCacheControlTest extends SapphireTest
 
 		$hcc->privateCache();
 		$this->assertFalse($this->isPrivate($hcc), 'private does not override disabled');
+
+		$hcc->enableCache(true);
+		$this->assertFalse($this->isDisabled($hcc));
 
 		$hcc->publicCache(true);
 		$this->assertTrue($this->isPublic($hcc), 'force-public overrides disabled');

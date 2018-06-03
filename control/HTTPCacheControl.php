@@ -48,6 +48,11 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	const LEVEL_PUBLIC = 1;
 
+	/**
+	 * Forcing level caching enabled.
+	 */
+	const LEVEL_ENABLED = 0;
+
 
 	/**
 	 * A list of allowed cache directives for HTTPResponses
@@ -258,6 +263,27 @@ class HTTPCacheControl extends SS_Object {
 		} else {
 			$this->removeDirective('must-revalidate');
 		}
+		return $this;
+	}
+
+	/**
+	 * Helper method to turn the cache control header into a cacheable state
+	 *
+	 * Removes `no-store` and `no-cache` directives; other directives will remain in place.
+	 *
+	 * @param bool $force
+	 * @return $this
+	 */
+	public function enableCache($force = false)
+	{
+		// Only execute this if its forcing level is high enough
+		if (!$this->allowChange(self::LEVEL_ENABLED, $force)) {
+			SS_Log::log("Call to enableCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
+			return $this;
+		}
+
+		$this->removeDirective('no-store');
+		$this->removeDirective('no-cache');
 		return $this;
 	}
 
