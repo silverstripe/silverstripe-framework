@@ -80,6 +80,16 @@ class HTTPCacheControl extends SS_Object {
 		}
 	}
 
+	protected function allowChange($level, $force)
+	{
+		$forcingLevel = $level + ($force ? self::LEVEL_FORCED : 0);
+		if ($forcingLevel < $this->forcingLevel) {
+			return false;
+		}
+		$this->forcingLevel = $forcingLevel;
+		return true;
+	}
+
 	/**
 	 * Low level method for setting directives include any experimental or custom ones added via config
 	 *
@@ -264,13 +274,11 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function disableCache($force = false)
 	{
-		// Only exeucute this if its forcing level is high enough
-		$forcingLevel = self::LEVEL_DISABLED + ($force ? self::LEVEL_FORCED : 0);
-		if ($forcingLevel < $this->forcingLevel) {
-			SS_Log::log("Call to publicCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
-			return;
+		// Only execute this if its forcing level is high enough
+		if (!$this->allowChange(self::LEVEL_DISABLED, $force )) {
+			SS_Log::log("Call to disableCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
+			return $this;
 		}
-		$this->forcingLevel = $forcingLevel;
 
 		$this->state = array(
 			'no-cache' => null,
@@ -291,13 +299,11 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function privateCache($force = false)
 	{
-		// Only exeucute this if its forcing level is high enough
-		$forcingLevel = self::LEVEL_PRIVATE + ($force ? self::LEVEL_FORCED : 0);
-		if ($forcingLevel < $this->forcingLevel) {
+		// Only execute this if its forcing level is high enough
+		if (!$this->allowChange(self::LEVEL_PRIVATE, $force)) {
 			SS_Log::log("Call to privateCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
-			return;
+			return $this;
 		}
-		$this->forcingLevel = $forcingLevel;
 
 		// Update the directives
 		$this->setDirective('private');
@@ -317,13 +323,11 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function publicCache($force = false)
 	{
-		// Only exeucute this if its forcing level is high enough
-		$forcingLevel = self::LEVEL_PUBLIC + ($force ? self::LEVEL_FORCED : 0);
-		if ($forcingLevel < $this->forcingLevel) {
+		// Only execute this if its forcing level is high enough
+		if (!$this->allowChange(self::LEVEL_PUBLIC, $force)) {
 			SS_Log::log("Call to publicCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
-			return;
+			return $this;
 		}
-		$this->forcingLevel = $forcingLevel;
 
 		$this->setDirective('public');
 		$this->removeDirective('private');
