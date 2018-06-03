@@ -31,22 +31,22 @@ class HTTPCacheControl extends SS_Object {
 	/**
 	 * Forcing level forced, optionally combined with one of the below.
 	 */
-	private const LEVEL_FORCED = 10;
+	const LEVEL_FORCED = 10;
 
 	/**
 	 * Forcing level caching disabled. Overrides public/private.
 	 */
-	private const LEVEL_DISABLED = 3;
+	const LEVEL_DISABLED = 3;
 
 	/**
 	 * Forcing level private-cached. Overrides public.
 	 */
-	private const LEVEL_PRIVATE = 2;
+	const LEVEL_PRIVATE = 2;
 
 	/**
 	 * Forcing level public cached. Lowest priority.
 	 */
-	private const LEVEL_PUBLIC = 1;
+	const LEVEL_PUBLIC = 1;
 
 
 	/**
