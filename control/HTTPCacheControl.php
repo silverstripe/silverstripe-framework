@@ -3,7 +3,7 @@
 /**
  * Class HTTPCacheControl
  *
- *
+ * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
  */
 class HTTPCacheControl extends SS_Object {
 
@@ -267,11 +267,17 @@ class HTTPCacheControl extends SS_Object {
 	}
 
 	/**
-	 * Helper method to turn the cache control header into a cacheable state
+	 * Simple way to set cache control header to a cacheable state.
+	 * Use this method over `publicCache()` if you are unsure about caching details.
 	 *
 	 * Removes `no-store` and `no-cache` directives; other directives will remain in place.
+	 * Use alongside `setMaxAge()` to indicate caching.
 	 *
-	 * @param bool $force
+	 * Does not set `public` directive. Usually, `setMaxAge()` is sufficient. Use `publicCache()` if this is explicitly required.
+	 * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private
+	 *
+	 * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
+	 * @param bool $force Force the cache to public even if its unforced private or public
 	 * @return $this
 	 */
 	public function enableCache($force = false)
@@ -288,14 +294,18 @@ class HTTPCacheControl extends SS_Object {
 	}
 
 	/**
-	 * Helper method to turn the cache control header into a non-cacheable state
+	 * Simple way to set cache control header to a non-cacheable state.
+	 * Use this method over `privateCache()` if you are unsure about caching details.
+	 * Takes precendence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
 	 *
 	 * Removes all state and replaces it with `no-cache, no-store, must-revalidate`. Although `no-store` is sufficient
 	 * the others are added under recommendation from Mozilla (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)
 	 *
-	 * This will take precendence over unforced privateCache / publicCache calls
+	 * Does not set `private` directive, use `privateCache()` if this is explicitly required.
+	 * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private
 	 *
-	 * @param bool $force Force the cache to private even if it's forced private or public
+	 * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
+	 * @param bool $force Force the cache to diabled even if it's forced private or public
 	 * @return $this
 	 */
 	public function disableCache($force = false)
@@ -315,11 +325,11 @@ class HTTPCacheControl extends SS_Object {
 	}
 
 	/**
+	 * Advanced way to set cache control header to a non-cacheable state.
 	 * Indicates that the response is intended for a single user and must not be stored by a shared cache.
-	 * A private cache may store the response.
+	 * A private cache (e.g. Web Browser) may store the response. Also removes `public` as this is a contradictory directive.
 	 *
-	 * Also removes `private` as this is a contradictory directive
-	 *
+	 * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
 	 * @param bool $force Force the cache to private even if it's forced public
 	 * @return $this
 	 */
@@ -340,10 +350,11 @@ class HTTPCacheControl extends SS_Object {
 	}
 
 	/**
- 	 * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
+ 	 * Advanced way to set cache control header to a cacheable state.
+	 * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
+	 * Also removes `private` as this is a contradictory directive
 	 *
-	 * Also removes `public` as this is a contradictory directive
-	 *
+	 * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
 	 * @param bool $force Force the cache to public even if it's private, unless it's been forced private
 	 * @return $this
 	 */

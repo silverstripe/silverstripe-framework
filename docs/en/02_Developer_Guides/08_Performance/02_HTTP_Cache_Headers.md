@@ -6,7 +6,7 @@ summary: Set the correct HTTP cache headers for your responses.
 ## Overview
 
 By default, SilverStripe sends headers which signal to HTTP caches
-that the response should be considered not cacheable.
+that the response should be not considered cacheable.
 HTTP caches can either be intermediary caches (e.g. CDNs and proxies), or clients (e.g. browsers).
 The cache headers sent are `Cache-Control: no-store, no-cache, must-revalidate`;
 
@@ -16,6 +16,8 @@ The [Google Web Fundamentals](https://developers.google.com/web/fundamentals/per
 are a great way to learn about HTTP caching.
 
 ## Cache Control Headers
+
+### Overview
 
 In order to support developers in making safe choices around HTTP caching,
 we're using a `HTTPCacheControl` class to control if a response
@@ -39,12 +41,42 @@ the developer to ensure caching is used appropriately there.
 The `HTTPCacheControl` class supplements the `HTTP` helper class.
 It comes with methods which let developers safely interact with the `Cache-Control` header.
 
- * `disableCache()`: Disables caching in intermediary caches as well as HTTP clients.
-    Removes all state and replaces it with `no-cache, no-store, must-revalidate`.
- * `privateCache()`: Disables caching in intermediary caches, but allows it in HTTP clients.
-    Sends `Cache-Control: private`.
- * `publicCache()`: Enables caching in intermediary caches and HTTP clients.
-    Sends `Cache-Control: public`.
+### disableCache()
+
+Simple way to set cache control header to a non-cacheable state.
+Use this method over `privateCache()` if you are unsure about caching details.
+Takes precendence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
+
+Removes all state and replaces it with `no-cache, no-store, must-revalidate`. Although `no-store` is sufficient
+the others are added under [recommendation from Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)
+
+Does not set `private` directive, use `privateCache()` if this is explicitly required
+([details](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private))
+
+### enableCache()
+
+Simple way to set cache control header to a cacheable state.
+Use this method over `publicCache()` if you are unsure about caching details.
+
+Removes `no-store` and `no-cache` directives; other directives will remain in place.
+Use alongside `setMaxAge()` to indicate caching.
+
+Does not set `public` directive. Usually, `setMaxAge()` is sufficient. Use `publicCache()` if this is explicitly required
+([details](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private))
+
+### privateCache()
+
+Advanced way to set cache control header to a non-cacheable state.
+Indicates that the response is intended for a single user and must not be stored by a shared cache.
+A private cache (e.g. Web Browser) may store the response. Also removes `public` as this is a contradictory directive.
+
+### publicCache()
+
+Advanced way to set cache control header to a cacheable state.
+Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
+Also removes `private` as this is a contradictory directive
+
+### Priority
     
 Each of these highlevel methods has a boolean `$force` parameter which determines
 their application priority regardless of execution order.
@@ -54,9 +86,11 @@ The priority order is as followed, sorted in descending order
  * `disableCache($force=true)`
  * `privateCache($force=true)`
  * `publicCache($force=true)`
+ * `enableCache($force=true)`
  * `disableCache()`
  * `privateCache()`
  * `publicCache()`
+ * `enableCache()`
 
 ## Cache Control Examples
 
@@ -136,13 +170,13 @@ headers:
 
 The cache age determines the lifetime of your cache, in seconds.
 It only takes effect if you instruct the cache control
-that your response is public in the first place (`setPublic()`).
-Note that `setMaxAge(0)` is NOT sufficient to disable caching in all cases.
+that your response is public in the first place (via `enableCache()` or via modifying the `HTTP.cache_control` defaults).
 
 	:::php
 	HTTPCacheControl::singleton()
-	    ->setPublic()
 	    ->setMaxAge(60)
+
+Note that `setMaxAge(0)` is NOT sufficient to disable caching in all cases.
 
 ### Last Modified
 

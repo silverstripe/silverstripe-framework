@@ -6,6 +6,7 @@
  *
  * @package framework
  * @subpackage misc
+ * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
  */
 class HTTP {
 
