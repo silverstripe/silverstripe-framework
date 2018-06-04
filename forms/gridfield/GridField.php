@@ -337,26 +337,34 @@ class GridField extends FormField {
 			'before' => true,
 			'after' => true,
 		);
+		$fragmentDeferred = array();
 
-		reset($content);
+		// TODO: Break the below into separate reducer methods
 
-		while(list($contentKey, $contentValue) = each($content)) {
-			if(preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $contentValue, $matches)) {
-				foreach($matches[1] as $match) {
+		// Continue looping if any placeholders exist
+		while (array_filter($content, function ($value) {
+			return preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $value);
+		})) {
+			foreach ($content as $contentKey => $contentValue) {
+				// Skip if this specific content has no placeholders
+				if (!preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $contentValue, $matches)) {
+					continue;
+				}
+				foreach ($matches[1] as $match) {
 					$fragmentName = strtolower($match);
 					$fragmentDefined[$fragmentName] = true;
 
 					$fragment = '';
 
-					if(isset($content[$fragmentName])) {
+					if (isset($content[$fragmentName])) {
 						$fragment = $content[$fragmentName];
 					}
 
 					// If the fragment still has a fragment definition in it, when we should defer
 					// this item until later.
 
-					if(preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
-						if(isset($fragmentDeferred[$contentKey]) && $fragmentDeferred[$contentKey] > 5) {
+					if (preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
+						if (isset($fragmentDeferred[$contentKey]) && $fragmentDeferred[$contentKey] > 5) {
 							throw new LogicException(sprintf(
 								'GridField HTML fragment "%s" and "%s" appear to have a circular dependency.',
 								$fragmentName,
@@ -368,7 +376,7 @@ class GridField extends FormField {
 
 						$content[$contentKey] = $contentValue;
 
-						if(!isset($fragmentDeferred[$contentKey])) {
+						if (!isset($fragmentDeferred[$contentKey])) {
 							$fragmentDeferred[$contentKey] = 0;
 						}
 
@@ -385,6 +393,7 @@ class GridField extends FormField {
 				}
 			}
 		}
+
 
 		// Check for any undefined fragments, and if so throw an exception.
 		// While we're at it, trim whitespace off the elements.
@@ -587,7 +596,7 @@ class GridField extends FormField {
 		} else {
 			$classes[] = 'odd';
 		}
-		
+
 		$this->extend('updateNewRowClasses', $classes, $total, $index, $record);
 
 		return $classes;

@@ -247,8 +247,10 @@ class Hierarchy extends DataExtension {
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
+		$node = reset($this->markedNodes);
+
 		// foreach can't handle an ever-growing $nodes list
-		while(list($id, $node) = each($this->markedNodes)) {
+		do {
 			// first determine the number of children, if it's too high the tree view can't be used
 			// so will will not even bother to display the subtree
 			// this covers two cases:
@@ -267,7 +269,7 @@ class Hierarchy extends DataExtension {
 				if($children) foreach($children as $child) $child->markClosed();
 				break;
 			}
-		}
+		} while (false !== ($node = next($this->markedNodes)));
 		return sizeof($this->markedNodes);
 	}
 

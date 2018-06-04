@@ -278,15 +278,17 @@ class _DiffEngine
 				if (empty($ymatches[$line]))
 			continue;
 		$matches = $ymatches[$line];
-				reset($matches);
-		while (list ($junk, $y) = each($matches))
+		$y = reset($matches);
+		do {
 			if (empty($this->in_seq[$y])) {
-			$k = $this->_lcs_pos($y);
-			USE_ASSERTS && assert($k > 0);
-			$ymids[$k] = $ymids[$k-1];
-			break;
-					}
-		while (list ($junk, $y) = each($matches)) {
+				$k = $this->_lcs_pos($y);
+				USE_ASSERTS && assert($k > 0);
+				$ymids[$k] = $ymids[$k - 1];
+				break;
+			}
+		} while (false !== ($y = next($matches)));
+
+		while (false !== ($y = next($matches))) {
 			if ($y > $this->seq[$k-1]) {
 			USE_ASSERTS && assert($y < $this->seq[$k]);
 			// Optimization: this is a common case:
@@ -797,18 +799,19 @@ class Diff
 
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
 		$candidateChunks = preg_split("/[\t\r\n ]+/", $content);
-		while(list($i,$item) = each($candidateChunks)) {
+		$item = reset($candidateChunks);
+		do {
 			if(isset($item[0]) && $item[0] == "<") {
 				$newChunk = $item;
 				while($item[strlen($item)-1] != ">") {
-					list($i,$item) = each($candidateChunks);
+					$item = next($candidateChunks);
 					$newChunk .= ' ' . $item;
 				}
 				$chunks[] = $newChunk;
 			} else {
 				$chunks[] = $item;
 			}
-		}
+		} while (false !== ($item = next($candidateChunks)));
 		return $chunks;
 	}
 
