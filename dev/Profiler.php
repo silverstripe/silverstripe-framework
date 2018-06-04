@@ -161,7 +161,7 @@ class Profiler {
 			echo"============================================================================\n";
 			print( "Calls                    Time  Routine\n");
 			echo"-----------------------------------------------------------------------------\n";
-			while (list ($key, $val) = each ($this->description)) {
+			foreach ($this->description as $key => $val) {
 				$t = $this->elapsedTime($key);
 				$total = $this->running[$key];
 				$count = $this->count[$key];
