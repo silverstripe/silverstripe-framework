@@ -28,7 +28,7 @@ The `HTTPCacheControl` API makes it easier to express your caching preferences
 without running the risk of overriding essential core safety measures.
 Most commonly, these APIs will prevent HTTP caching of draft content.
 
-It will also prevent content generated with an active session,
+It will also prevent caching of content generated with an active session,
 since the system can't tell whether session data was used to vary the output.
 In this case, it's up to the developer to opt-in to caching,
 after ensuring that certain execution paths are safe despite of using sessions.
@@ -94,9 +94,9 @@ The priority order is as followed, sorted in descending order
 
 ## Cache Control Examples
 
-Globally opting into HTTP caching for all page content.
-SilverStripe will still override this preference when a session is active,
-or draft content has been requested. 
+### Global opt-in for page content 
+
+Enable caching for all page content (through `Page_Controller`).
 
 ```php
 class Page_Controller extends ContentController
@@ -104,7 +104,7 @@ class Page_Controller extends ContentController
     public function init()
     {
         HTTPCacheControl::inst()
-           ->publicCache()
+           ->enableCache()
            ->setMaxAge(60); // 1 minute
 
         
@@ -113,7 +113,16 @@ class Page_Controller extends ContentController
 }
 ```
 
-Opting out of HTTP caching in a particular controller action.
+Note: SilverStripe will still override this preference when a session is active,
+a [CSRF token](/developer_guides/forms/form_security) token is present,
+or draft content has been requested.
+
+### Opt-out for a particular controller action
+
+If a controller output relies on session data, cookies,
+permission checks or other triggers for conditional output,
+you can disable caching either on a controller level
+(through `init()`) or for a particular action.
 
 ```php
 class MyPage_Controller extends Page_Controller
@@ -122,14 +131,19 @@ class MyPage_Controller extends Page_Controller
     {
         $response = $this->myPrivateResponse();
         HTTPCacheControl::inst()
-           ->privateCache();
+           ->disableCache();
         
         return $response;
     }
 }
 ```
 
-Globally opting into HTTP caching for all page content, ignoring active session.
+Note: SilverStripe will still override this preference when a session is active,
+a [CSRF token](/developer_guides/forms/form_security) token is present,
+or draft content has been requested. 
+
+### Global opt-in, ignoring session (advanced) 
+
 This can be helpful in situations where forms are embedded on the website.
 SilverStripe will still override this preference when draft content has been requested.
 CAUTION: This mode relies on a developer examining each execution path to ensure
@@ -147,13 +161,15 @@ class Page_Controller extends ContentController
     public function init()
     {
         HTTPCacheControl::inst()
-           ->publicCache($force=true) // DANGER ZONE
+           ->enableCache($force=true) // DANGER ZONE
            ->setMaxAge(60); // 1 minute
         
         parent::init();
     }
 }
 ```
+
+## Defaults
 
 By default, PHP adds caching headers that make the page appear purely dynamic. This isn't usually appropriate for most 
 sites, even ones that are updated reasonably frequently. SilverStripe overrides the default settings with the following 
