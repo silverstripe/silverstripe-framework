@@ -1052,7 +1052,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 *
 	 * @return int[] List of group IDs
 	 */
-	protected function disallowedGroups() {
+	public function disallowedGroups() {
 		// unless the current user is an admin already OR the logged in user is an admin
 		if (Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
 			return array();
@@ -1476,7 +1476,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			if(Permission::check('EDIT_PERMISSIONS')) {
                 // Filter allowed groups
                 $groups = Group::get();
-                $disallowedGroupIDs = $this->disallowedGroups();
+                $disallowedGroupIDs = $self->disallowedGroups();
                 if ($disallowedGroupIDs) {
                     $groups = $groups->exclude('ID', $disallowedGroupIDs);
                 }
