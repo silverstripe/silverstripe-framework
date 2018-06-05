@@ -83,7 +83,11 @@ class SilverStripeVersionProvider
 
 		$lockData = array();
 		if ($cache) {
-			$cache = SS_Cache::factory('SilverStripeVersionProvider_composerlock');
+			$cache = SS_Cache::factory(
+				'SilverStripeVersionProvider_composerlock',
+				'Output',
+				array('disable-segmentation' => true)
+			);
 			$cacheKey = filemtime($composerLockPath);
 			if ($versions = $cache->load($cacheKey)) {
 				$lockData = json_decode($versions, true);

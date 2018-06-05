@@ -90,6 +90,20 @@ e.g. by including the `LastEdited` value when caching `DataObject` results.
 	// set all caches to 3 hours
 	SS_Cache::set_cache_lifetime('any', 60*60*3);
 
+### Versioned cache segmentation
+
+`SS_Cache` segments caches based on the versioned reading mode. This prevents developers 
+from caching draft data and then accidentally exposing it on the live stage without potentially 
+required authorisation checks. This segmentation is automatic for all caches generated using
+`SS_Cache::factory` method.
+
+Data that is not content sensitive can be cached across stages by simply opting out of the
+segmented cache with the `disable-segmentation` argument.
+
+```php
+$cache = SS_Cache::factory('myapp', 'Output', array('disable-segmentation' => true));
+``` 
+
 ## Alternative Cache Backends
 
 By default, SilverStripe uses a file-based caching backend.

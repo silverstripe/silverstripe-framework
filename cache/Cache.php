@@ -146,7 +146,7 @@ class SS_Cache {
 	 * @param string $frontend (optional) The type of Zend_Cache frontend
 	 * @param array $frontendOptions (optional) Any frontend options to use.
 	 *
-	 * @return Zend_Cache_Core The cache object
+	 * @return CacheProxy|Zend_Cache_Core
 	 */
 	public static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
@@ -175,8 +175,8 @@ class SS_Cache {
 		$backend = self::$backends[$backend_name];
 
 		$basicOptions = array(
-		    'cache_id_prefix' => md5(BASE_PATH) . '_' . $for . '_',
-        );
+			'cache_id_prefix' => md5(BASE_PATH) . '_' . $for . '_',
+		);
 
 		if ($cache_lifetime >= 0) {
 			$basicOptions['lifetime'] = $cache_lifetime;
@@ -188,8 +188,14 @@ class SS_Cache {
 
 		require_once 'Zend/Cache.php';
 
-		return Zend_Cache::factory(
+		$cache = Zend_Cache::factory(
 			$frontend, $backend[0], $frontendOptions, $backend[1]
 		);
+
+		if (!empty($frontendOptions['disable-segmentation'])) {
+			return $cache;
+		}
+
+		return Injector::inst()->createWithArgs('CacheProxy', array($cache));
 	}
 }
