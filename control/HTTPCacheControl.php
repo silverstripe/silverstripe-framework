@@ -396,7 +396,10 @@ class HTTPCacheControl extends SS_Object {
 	 */
 	public function applyToResponse($response)
 	{
-		$response->addHeader('Cache-Control', $this->generateCacheHeader());
+		$headers = $this->generateHeaders();
+		foreach ($headers as $name => $value) {
+			$response->addHeader($name, $value);
+		}
 		return $this;
 	}
 
@@ -405,7 +408,7 @@ class HTTPCacheControl extends SS_Object {
 	 *
 	 * @return string
 	 */
-	public function generateCacheHeader()
+	protected function generateCacheHeader()
 	{
 		$cacheControl = array();
 		foreach ($this->state as $directive => $value) {
@@ -416,6 +419,18 @@ class HTTPCacheControl extends SS_Object {
 			}
 		}
 		return implode(', ', $cacheControl);
+	}
+
+	/**
+	 * Generate all headers to output
+	 *
+	 * @return array
+	 */
+	public function generateHeaders()
+	{
+		return array(
+			'Cache-Control' => $this->generateCacheHeader(),
+		);
 	}
 
 }

@@ -449,6 +449,9 @@ class HTTP {
 			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
 		}
 
+		// Merge with cache control headers
+		$responseHeaders = array_merge($responseHeaders, $cacheControl->generateHeaders());
+
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
 			if($body) {
@@ -459,12 +462,6 @@ class HTTP {
 			} elseif(!headers_sent()) {
 				header("$k: $v");
 			}
-		}
-
-		if ($body) {
-			$cacheControl->applyToResponse($body);
-		} elseif (!headers_sent()) {
-			header('Cache-Control: ' . $cacheControl->generateCacheHeader());
 		}
 	}
 

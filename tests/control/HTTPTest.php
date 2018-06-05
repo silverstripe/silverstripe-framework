@@ -65,10 +65,11 @@ class HTTPTest extends FunctionalTest {
 		$v = $response->getHeader('Vary');
 		$this->assertNotEmpty($v);
 
-		$this->assertContains("Cookie", $v);
 		$this->assertContains("X-Forwarded-Protocol", $v);
-		$this->assertContains("User-Agent", $v);
-		$this->assertContains("Accept", $v);
+		$this->assertContains("X-Requested-With", $v);
+		$this->assertNotContains("Cookie", $v);
+		$this->assertNotContains("User-Agent", $v);
+		$this->assertNotContains("Accept", $v);
 
 		Config::inst()->update('HTTP', 'vary', '');
 
