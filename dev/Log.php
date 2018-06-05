@@ -131,8 +131,8 @@ class SS_Log {
 	/**
 	 * Add a writer instance to the logger.
 	 * @param object $writer Zend_Log_Writer_Abstract instance
-	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
-	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
+	 * @param int $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
+	 * @param string $comparison Priority comparison operator.  Acts on the integer values of the error
 	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only
 	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least*
 	 * the given priority.
@@ -151,7 +151,7 @@ class SS_Log {
 	 * error code, error line, error context (backtrace).
 	 *
 	 * @param mixed $message Exception object or array of error context variables
-	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
+	 * @param int $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 * @param  mixed    $extras    Extra information to log in event
 	 */
 	public static function log($message, $priority, $extras = null) {

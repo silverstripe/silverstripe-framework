@@ -432,5 +432,4 @@ class HTTPCacheControl extends SS_Object {
 			'Cache-Control' => $this->generateCacheHeader(),
 		);
 	}
-
 }

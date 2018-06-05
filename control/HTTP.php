@@ -16,7 +16,7 @@ class HTTP {
 	protected static $cache_age = 0;
 
 	/**
-	 * @var timestamp $modification_date
+	 * @var int $modification_date
 	 */
 	protected static $modification_date = null;
 
@@ -37,14 +37,41 @@ class HTTP {
 	private static $disable_http_cache = false;
 
 	/**
+	 * Mapping of extension to mime types
+	 *
+	 * @var array
+	 * @config
+	 */
+	private static $MimeTypes = array();
+
+	/**
+	 * List of names to add to the Cache-Control header.
+	 *
+	 * @see HTTPCacheControl::__construct()
+	 * @config
+	 * @var array Keys are cache control names, values are boolean flags
+	 */
+	private static $cache_control = array();
+
+	/**
+	 * Vary string; A comma separated list of var header names
+	 *
+	 * @config
+	 * @var string|null
+	 */
+	private static $vary = null;
+
+	/**
 	 * Turns a local system filename into a URL by comparing it to the script
 	 * filename.
 	 *
 	 * @param string
+	 * @return string
 	 */
 	public static function filename2url($filename) {
 		$slashPos = -1;
 
+		$commonLength = null;
 		while(($slashPos = strpos($filename, "/", $slashPos+1)) !== false) {
 			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'],0,$slashPos)) {
 				$commonLength = $slashPos;
@@ -70,6 +97,9 @@ class HTTP {
 
 	/**
 	 * Turn all relative URLs in the content to absolute URLs
+	 *
+	 * @param string $html
+	 * @return string
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
@@ -106,7 +136,7 @@ class HTTP {
 	 * @param string|callable $code Either a string that can evaluate to an expression
 	 * to rewrite links (depreciated), or a callable that takes a single
 	 * parameter and returns the rewritten URL
-	 * @return The content with all links rewritten as per the logic specified in $code
+	 * @return string The content with all links rewritten as per the logic specified in $code
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
@@ -114,6 +144,7 @@ class HTTP {
 		}
 
 		// Replace attributes
+		$regExps = array();
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
@@ -139,6 +170,7 @@ class HTTP {
 			} else {
 				// Expose the $URL variable to be used by the $code expression
 				$URL = $matches[2];
+				array($URL); // Ensure $URL is available to scope of below code
 				$rewritten = eval("return ($code);");
 			}
 			return $matches[1] . $rewritten . $matches[3];
@@ -292,6 +324,8 @@ class HTTP {
 
 	/**
 	 * Set the maximum age of this page in web caches, in seconds
+	 *
+	 * @param int $age
 	 */
 	public static function set_cache_age($age) {
 		self::$cache_age = $age;
@@ -357,32 +391,22 @@ class HTTP {
 		// why are we using apache_request_headers here when we use `$_SERVER` later to inspect request headers?
 		if (!$config->get('cache_ajax_requests') && function_exists('apache_request_headers')) {
 			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
-
 			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
 				$cacheControl->disableCache(true);
 			}
 		}
 
-		$vary = $config->get('vary');
-		if ($vary && strlen($vary)) {
-			if ($body) {
-				// split the current vary header into it's parts and merge it with the config settings
-				// to create a list of unique vary values
-				if ($body->getHeader('Vary')) {
-					$currentVary = explode(',', $body->getHeader('Vary'));
-				} else {
-					$currentVary = array();
-				}
-				$vary = explode(',', $vary);
-				$vary = array_merge($currentVary, $vary);
-				$vary = array_map('trim', $vary);
-				$vary = array_unique($vary);
-				$vary = implode(', ', $vary);
-			}
+		// split the current vary header into it's parts and merge it with the config settings
+		// to create a list of unique vary values
+		$configVary = $config->get('vary');
+		$bodyVary = $body ? $body->getHeader('Vary') : '';
+		$vary = self::combineVary($configVary, $bodyVary);
+		if ($vary) {
 			$responseHeaders['Vary'] = $vary;
 		}
 
 		// deal with IE6-IE8 problems with https and no-cache
+		$contentDisposition = null;
 		if($body) {
 			// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
 			$contentDisposition = $body->getHeader('Content-Disposition', true);
@@ -408,7 +432,6 @@ class HTTP {
 
 		// if we can store the cache responses we should generate and send etags
 		if (!$cacheControl->hasDirective('no-store')) {
-
 			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
 			// which means that if you log out, you get redirected back to a page which Chrome then checks against
 			// last-modified (which passes, getting a 304)
@@ -488,18 +511,38 @@ class HTTP {
 	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the
 	 * GMT timezone (a timestamp is always in GMT: the number of seconds
 	 * since January 1 1970 00:00:00 GMT)
+	 *
+	 * @param int $timestamp
+	 * @return string
 	 */
 	public static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
 	}
 
-	/*
+	/**
 	 * Return static variable cache_age in second
+	 *
+	 * @return int
 	 */
 	public static function get_cache_age() {
 		return self::$cache_age;
 	}
 
+	/**
+	 * Combine vary strings
+	 *
+	 * @param string $vary1
+	 * @param string $vary2
+	 * @return string
+	 */
+	protected static function combineVary($vary1, $vary2)
+	{
+		$vary1Array = preg_split("/\s*,\s*/", $vary1);
+		$vary2Array = preg_split("/\s*,\s*/", $vary2);
+		$vary1Array = array_unique(array_filter(array_map(
+			'trim',
+			array_merge($vary2Array, $vary1Array)
+		)));
+		return implode(', ', $vary1Array);
+	}
 }
-
-
