@@ -7,6 +7,13 @@
  */
 class HTTPTest extends FunctionalTest {
 
+	public function setUp()
+	{
+		parent::setUp();
+		// Remove dev-only config
+		Config::inst()->remove('HTTP', 'disable_http_cache');
+	}
+
 	public function testAddCacheHeaders() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
 		$response = new SS_HTTPResponse($body, 200);
@@ -17,17 +24,19 @@ class HTTPTest extends FunctionalTest {
 		HTTP::add_cache_headers($response);
 		$this->assertNotEmpty($response->getHeader('Cache-Control'));
 
-		// Ensure max-age is zero for development.
-		Config::inst()->update('Director', 'environment_type', 'dev');
+		// Ensure cache is disabled and max-age is ignored when disabled (e.g. when dev)
+		Config::inst()->update('HTTP', 'disable_http_cache', true);
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
-		$this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
+		$this->assertContains('no-cache', $response->getHeader('Cache-Control'));
+		$this->assertContains('no-store', $response->getHeader('Cache-Control'));
+		$this->assertContains('must-revalidate', $response->getHeader('Cache-Control'));
 
 		// Ensure max-age setting is respected in production.
-		Config::inst()->update('Director', 'environment_type', 'live');
+		Config::inst()->remove('HTTP', 'disable_http_cache');
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
-		$this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
+		$this->assertContains('max-age=30', $response->getHeader('Cache-Control'));
 		$this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
 
 		// Still "live": Ensure header's aren't overridden if already set (using purposefully different values).
@@ -50,7 +59,6 @@ class HTTPTest extends FunctionalTest {
     public function testConfigVary() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
 		$response = new SS_HTTPResponse($body, 200);
-		Config::inst()->update('Director', 'environment_type', 'live');
 		HTTP::set_cache_age(30);
 		HTTP::add_cache_headers($response);
 
