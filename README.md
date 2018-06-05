@@ -6,8 +6,6 @@
 [![codecov](https://codecov.io/gh/silverstripe/silverstripe-framework/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-framework)
 [![Total Downloads](https://poser.pugx.org/silverstripe/framework/downloads.svg)](https://packagist.org/packages/silverstripe/framework)
 [![License](https://poser.pugx.org/silverstripe/framework/license.svg)](https://github.com/silverstripe/silverstripe-framework#license)
-[![Dependency Status](https://www.versioneye.com/php/silverstripe:framework/badge.svg)](https://www.versioneye.com/php/silverstripe:framework)
-[![Reference Status](https://www.versioneye.com/php/silverstripe:framework/reference_badge.svg?style=flat)](https://www.versioneye.com/php/silverstripe:framework/references)
 
 PHP framework forming the base for the SilverStripe CMS ([https://silverstripe.org](https://silverstripe.org)). 
 Requires a [`silverstripe-installer`](https://github.com/silverstripe/silverstripe-installer) base project. Typically used alongside the [`cms`](https://github.com/silverstripe/silverstripe-cms) module.
