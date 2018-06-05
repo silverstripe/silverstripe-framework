@@ -111,13 +111,21 @@ class DataObjectDuplicationTest extends SapphireTest {
 			"Match between relation of copy and the original");
 		$this->assertEquals(0, $oneCopy->twos()->Count(),
 			"Many-to-one relation not copied (has_many)");
-		$this->assertEquals($three->ID, $oneCopy->threes()->First()->ID,
-			"Match between relation of copy and the original");
-		$this->assertEquals($one->ID, $threeCopy->ones()->First()->ID,
-			"Match between relation of copy and the original");
-
-		$this->assertEquals('three', $oneCopy->threes()->First()->TestExtra,
-			"Match between extra field of copy and the original");
+		$this->assertContains(
+			$three->ID,
+			$oneCopy->threes()->column('ID'),
+			"Match between relation of copy and the original"
+		);
+		$this->assertContains(
+			$one->ID,
+			$threeCopy->ones()->column('ID'),
+			"Match between relation of copy and the original"
+		);
+		$this->assertContains(
+			'three',
+			$oneCopy->threes()->column('TestExtra'),
+			"Match between extra field of copy and the original"
+		);
 	}
 
 }

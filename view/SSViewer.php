@@ -31,10 +31,10 @@ class SSViewer_Scope {
 	const UP_INDEX = 4;
 	const CURRENT_INDEX = 5;
 	const ITEM_OVERLAY = 6;
-	
+
 	// The stack of previous "global" items
 	// An indexed array of item, item iterator, item iterator total, pop index, up index, current index & parent overlay
-	private $itemStack = array(); 
+	private $itemStack = array();
 
 	// The current "global" item (the one any lookup starts from)
 	protected $item;
@@ -1017,6 +1017,14 @@ class SSViewer implements Flushable {
 	}
 
 	/**
+	 * @return Zend_Cache_Core
+	 */
+	protected static function defaultPartialCacheStore()
+	{
+		return SS_Cache::factory('cacheblock', 'Output', array('disable-segmentation' => true));
+	}
+
+	/**
 	 * Call this to disable rewriting of <a href="#xxx"> links.  This is useful in Ajax applications.
 	 * It returns the SSViewer objects, so that you can call new SSViewer("X")->dontRewriteHashlinks()->process();
 	 */
@@ -1082,7 +1090,7 @@ class SSViewer implements Flushable {
 	 */
 	public static function flush_cacheblock_cache($force = false) {
 		if (!self::$cacheblock_cache_flushed || $force) {
-			$cache = SS_Cache::factory('cacheblock');
+			$cache = self::defaultPartialCacheStore();
 			$backend = $cache->getBackend();
 
 			if(
@@ -1120,7 +1128,7 @@ class SSViewer implements Flushable {
 	 * @return Zend_Cache_Core
 	 */
 	public function getPartialCacheStore() {
-		return $this->partialCacheStore ? $this->partialCacheStore : SS_Cache::factory('cacheblock');
+		return $this->partialCacheStore ? $this->partialCacheStore : self::defaultPartialCacheStore();
 	}
 
 	/**
