@@ -85,7 +85,21 @@ class HTTPCacheControl extends SS_Object {
 		}
 	}
 
-	protected function allowChange($level, $force)
+	/**
+	 * Instruct the cache to apply a change with a given level, optionally
+	 * modifying it with a force flag to increase priority of this action.
+	 *
+	 * If the apply level was successful, the change is made and the internal level
+	 * threshold is incremented.
+	 *
+	 * @param int $level Priority of the given change
+	 * @param bool $force If usercode has requested this action is forced to a higher priority.
+	 * Note: Even if $force is set to true, other higher-priority forced changes can still
+	 * cause a change to be rejected if it is below the required threshold.
+	 * @return bool True if the given change is accepted, and that the internal
+	 * level threshold is updated (if necessary) to the new minimum level.
+	 */
+	protected function applyChangeLevel($level, $force)
 	{
 		$forcingLevel = $level + ($force ? self::LEVEL_FORCED : 0);
 		if ($forcingLevel < $this->forcingLevel) {
@@ -283,7 +297,7 @@ class HTTPCacheControl extends SS_Object {
 	public function enableCache($force = false)
 	{
 		// Only execute this if its forcing level is high enough
-		if (!$this->allowChange(self::LEVEL_ENABLED, $force)) {
+		if (!$this->applyChangeLevel(self::LEVEL_ENABLED, $force)) {
 			SS_Log::log("Call to enableCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return $this;
 		}
@@ -311,7 +325,7 @@ class HTTPCacheControl extends SS_Object {
 	public function disableCache($force = false)
 	{
 		// Only execute this if its forcing level is high enough
-		if (!$this->allowChange(self::LEVEL_DISABLED, $force )) {
+		if (!$this->applyChangeLevel(self::LEVEL_DISABLED, $force )) {
 			SS_Log::log("Call to disableCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return $this;
 		}
@@ -336,7 +350,7 @@ class HTTPCacheControl extends SS_Object {
 	public function privateCache($force = false)
 	{
 		// Only execute this if its forcing level is high enough
-		if (!$this->allowChange(self::LEVEL_PRIVATE, $force)) {
+		if (!$this->applyChangeLevel(self::LEVEL_PRIVATE, $force)) {
 			SS_Log::log("Call to privateCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return $this;
 		}
@@ -361,7 +375,7 @@ class HTTPCacheControl extends SS_Object {
 	public function publicCache($force = false)
 	{
 		// Only execute this if its forcing level is high enough
-		if (!$this->allowChange(self::LEVEL_PUBLIC, $force)) {
+		if (!$this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
 			SS_Log::log("Call to publicCache($force) didn't execute as it's lower priority than a previous call", SS_Log::DEBUG);
 			return $this;
 		}
