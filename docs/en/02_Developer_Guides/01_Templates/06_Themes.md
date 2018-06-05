@@ -32,8 +32,7 @@ As you've added new files to your SilverStripe installation, make sure you clear
 ### Configuring themes
 
 After installing the files through either method, update the current theme in SilverStripe. This can be done by 
-either altering the `SSViewer.themes` setting in a [config.yml](../configuration) or by changing the current theme in 
-the Site Configuration panel (http://yoursite.com/admin/settings)
+altering the `SSViewer.themes` setting in a [config.yml](../configuration)
 
 **mysite/_config/app.yml**
 

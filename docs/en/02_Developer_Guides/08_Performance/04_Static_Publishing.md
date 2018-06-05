@@ -15,6 +15,4 @@ If you want to cache part of a page, or your site has interactive elements such 
 By publishing the page as HTML it's possible to run SilverStripe from behind a corporate firewall, on a low performance 
 server or serve millions of hits an hour without expensive hardware.
 
-This functionality is available through the [StaticPublisher](https://github.com/silverstripe-labs/silverstripe-staticpublisher)
-module. The module provides hooks for developers to generate static HTML files for the whole application or publish key
-pages (e.g a web applications home page) as HTML to reduce load on the server.
+This functionality is available through the [Static Publisher with Queue](https://github.com/silverstripe/silverstripe-staticpublishqueue) module. The module provides hooks for developers to generate static HTML files for the whole application or publish key pages (e.g a web applications home page) as HTML to reduce load on the server.

@@ -230,4 +230,13 @@ class ManyManyThroughList extends RelationList
         $joinClass = $this->manipulator->getJoinClass();
         return Config::inst()->get($joinClass, 'db');
     }
+
+    /**
+     * @return string
+     */
+    public function getJoinTable()
+    {
+        $joinClass = $this->manipulator->getJoinClass();
+        return DataObject::getSchema()->tableName($joinClass);
+    }
 }
