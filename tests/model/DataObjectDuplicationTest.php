@@ -83,6 +83,13 @@ class DataObjectDuplicationTest extends SapphireTest {
 		$two = DataObject::get_by_id("DataObjectDuplicateTestClass2", $two->ID);
 		$three = DataObject::get_by_id("DataObjectDuplicateTestClass3", $three->ID);
 
+		$this->assertCount(1, $one->twos(),
+			"Many-to-one relation not copied (has_many)");
+		$this->assertCount(1, $one->threes(),
+			"Object has the correct number of relations");
+		$this->assertCount(1, $three->ones(),
+			"Object has the correct number of relations");
+
 		//test duplication
 		$oneCopy = $one->duplicate();
 		$twoCopy = $two->duplicate();
@@ -100,16 +107,16 @@ class DataObjectDuplicationTest extends SapphireTest {
 		$this->assertEquals($text2, $twoCopy->text);
 		$this->assertEquals($text3, $threeCopy->text);
 
-		$this->assertNotEquals($one->twos()->Count(), $oneCopy->twos()->Count(),
+		$this->assertCount(0, $oneCopy->twos(),
 			"Many-to-one relation not copied (has_many)");
-		$this->assertEquals($one->threes()->Count(), $oneCopy->threes()->Count(),
+		$this->assertCount(2, $oneCopy->threes(),
 			"Object has the correct number of relations");
-		$this->assertEquals($three->ones()->Count(), $threeCopy->ones()->Count(),
+		$this->assertCount(2, $threeCopy->ones(),
 			"Object has the correct number of relations");
 
 		$this->assertEquals($one->ID, $twoCopy->one()->ID,
 			"Match between relation of copy and the original");
-		$this->assertEquals(0, $oneCopy->twos()->Count(),
+		$this->assertCount(0, $oneCopy->twos(),
 			"Many-to-one relation not copied (has_many)");
 		$this->assertContains(
 			$three->ID,
@@ -150,6 +157,8 @@ class DataObjectDuplicateTestClass1 extends DataObject implements TestOnly {
             'TestExtra' => 'Varchar'
         )
 	);
+
+	private static $default_sort = '"ID" ASC';
 }
 
 class DataObjectDuplicateTestClass2 extends DataObject implements TestOnly {
@@ -162,6 +171,8 @@ class DataObjectDuplicateTestClass2 extends DataObject implements TestOnly {
 		'one' => 'DataObjectDuplicateTestClass1'
 	);
 
+	private static $default_sort = '"ID" ASC';
+
 }
 
 class DataObjectDuplicateTestClass3 extends DataObject implements TestOnly {
@@ -173,6 +184,8 @@ class DataObjectDuplicateTestClass3 extends DataObject implements TestOnly {
 	private static $belongs_many_many = array(
 		'ones' => 'DataObjectDuplicateTestClass1'
 	);
+
+	private static $default_sort = '"ID" ASC';
 }
 
 
