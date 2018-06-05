@@ -19,6 +19,7 @@ class Item extends DataObject implements TestOnly
     ];
 
     private static $belongs_many_many = [
-        'Objects' => 'SilverStripe\\ORM\\Tests\\ManyManyThroughListTest\\TestObject.Items'
+        // Intentionally omit parent `.Items` specifier to ensure it's not mandatory
+        'Objects' => TestObject::class,
     ];
 }
