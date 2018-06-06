@@ -982,9 +982,17 @@ class DataObjectSchema
         if (!$otherManyMany) {
             return null;
         }
-        foreach ($otherManyMany as $inverseComponentName => $nextClass) {
-            if ($nextClass === $parentClass) {
-                return $inverseComponentName;
+        foreach ($otherManyMany as $inverseComponentName => $manyManySpec) {
+            // Normal many-many
+            if ($manyManySpec === $parentClass) {
+                 return $inverseComponentName;
+            }
+            // many-many through, inspect 'to' for the many_many
+            if (is_array($manyManySpec)) {
+                $toClass = $this->hasOneComponent($manyManySpec['through'], $manyManySpec['to']);
+                if ($toClass === $parentClass) {
+                    return $inverseComponentName;
+                }
             }
         }
         return null;
