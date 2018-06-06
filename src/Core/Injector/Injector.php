@@ -584,6 +584,11 @@ class Injector implements ContainerInterface
         $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
         $object = $factory->create($class, $constructorParams);
 
+        // Handle empty factory responses
+        if (!$object) {
+            return null;
+        }
+
         // figure out if we have a specific id set or not. In some cases, we might be instantiating objects
         // that we don't manage directly; we don't want to store these in the service cache below
         if (!$id) {
