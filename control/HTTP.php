@@ -392,8 +392,20 @@ class HTTP {
 		if (!$config->get('cache_ajax_requests') && function_exists('apache_request_headers')) {
 			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
 			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
-				$cacheControl->disableCache(true);
+				$cacheControl->disableCache();
 			}
+		}
+
+		// Errors disable cache (unless some errors are cached intentionally by usercode)
+		if ($body && $body->isError()) {
+			$cacheControl->disableCache();
+		}
+
+		// If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
+		// likely to be supplying information relevant to the current user only
+		if (Session::get_all()) {
+			// Don't force in case user code chooses to opt in to public caching
+			$cacheControl->privateCache();
 		}
 
 		// split the current vary header into it's parts and merge it with the config settings

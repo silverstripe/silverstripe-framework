@@ -5,7 +5,7 @@
  */
 class HTTPCacheControlTest extends SapphireTest
 {
-	function testCachingPriorities()
+	public function testCachingPriorities()
 	{
 		$hcc = new HTTPCacheControl();
 		$this->assertTrue($this->isDisabled($hcc), 'caching starts as disabled');

@@ -12,6 +12,7 @@ class HTTPTest extends FunctionalTest {
 		parent::setUp();
 		// Remove dev-only config
 		Config::inst()->remove('HTTP', 'disable_http_cache');
+		Injector::inst()->unregisterNamedObject('HTTPCacheControl');
 	}
 
 	public function testAddCacheHeaders() {
@@ -54,7 +55,6 @@ class HTTPTest extends FunctionalTest {
 			$this->assertEquals($value, $response->getHeader($name));
 		}
 	}
-
 
     public function testConfigVary() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
