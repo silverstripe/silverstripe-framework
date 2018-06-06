@@ -229,7 +229,5 @@ class GridFieldDeleteActionTest extends SapphireTest
 
         $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
         $this->assertNull($group, 'A menu group does not exist when the user cannot delete');
-
-
     }
 }
