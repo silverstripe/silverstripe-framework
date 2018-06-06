@@ -360,7 +360,6 @@ class HTTP {
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
-
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
@@ -370,6 +369,10 @@ class HTTP {
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) {
+			return;
+		}
+		// Skip already assigned cache-control headers
+		if ($body && $body->getHeader('Cache-Control')) {
 			return;
 		}
 
