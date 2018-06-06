@@ -25,7 +25,7 @@ class HTTPTest extends FunctionalTest {
 		HTTP::add_cache_headers($response);
 		$this->assertNotEmpty($response->getHeader('Cache-Control'));
 
-		// Ensure cache is disabled and max-age is ignored when disabled (e.g. when dev)
+		// Ensure cache headers are set correctly when disabled via config (e.g. when dev)
 		Config::inst()->update('HTTP', 'disable_http_cache', true);
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
