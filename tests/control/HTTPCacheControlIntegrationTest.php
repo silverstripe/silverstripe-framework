@@ -12,6 +12,9 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest {
 		// CSRF sets caching to disabled
 		$response = $this->get('HTTPCacheControlIntegrationTest_SessionController/showform');
 		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
+		$this->assertNotContains('public', $header);
+		$this->assertNotContains('private', $header);
 		$this->assertContains('no-cache', $header);
 		$this->assertContains('no-store', $header);
 		$this->assertContains('must-revalidate', $header);
@@ -21,6 +24,7 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest {
 		// Public forms (http get) allow public caching
 		$response = $this->get('HTTPCacheControlIntegrationTest_SessionController/showpublicform');
 		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
 		$this->assertContains('public', $header);
 		$this->assertContains('must-revalidate', $header);
 		$this->assertNotContains('no-cache', $response->getHeader('Cache-Control'));
@@ -32,6 +36,7 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest {
 		// disallowed private actions don't cache
 		$response = $this->get('HTTPCacheControlIntegrationTest_SessionController/privateaction');
 		$header = $response->getHeader('Cache-Control');
+		$this->assertTrue($response->isError());
 		$this->assertContains('no-cache', $header);
 		$this->assertContains('no-store', $header);
 		$this->assertContains('must-revalidate', $header);
@@ -43,10 +48,43 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest {
 		// Authenticated actions are private cache
 		$response = $this->get('HTTPCacheControlIntegrationTest_SessionController/privateaction');
 		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
 		$this->assertContains('private', $header);
 		$this->assertContains('must-revalidate', $header);
-		$this->assertNotContains('no-cache', $response->getHeader('Cache-Control'));
-		$this->assertNotContains('no-store', $response->getHeader('Cache-Control'));
+		$this->assertNotContains('no-cache', $header);
+		$this->assertNotContains('no-store', $header);
+	}
+
+	public function testPrivateCache() {
+		$response = $this->get('HTTPCacheControlIntegrationTest_RuleController/privateaction');
+		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
+		$this->assertContains('private', $header);
+		$this->assertContains('must-revalidate', $header);
+		$this->assertNotContains('no-cache', $header);
+		$this->assertNotContains('no-store', $header);
+	}
+
+	public function testPublicCache() {
+		$response = $this->get('HTTPCacheControlIntegrationTest_RuleController/publicaction');
+		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
+		$this->assertContains('public', $header);
+		$this->assertContains('must-revalidate', $header);
+		$this->assertNotContains('no-cache', $header);
+		$this->assertNotContains('no-store', $header);
+		$this->assertContains('max-age=9000', $header);
+	}
+
+	public function testDisabledCache() {
+		$response = $this->get('HTTPCacheControlIntegrationTest_RuleController/disabledaction');
+		$header = $response->getHeader('Cache-Control');
+		$this->assertFalse($response->isError());
+		$this->assertNotContains('public', $header);
+		$this->assertNotContains('private', $header);
+		$this->assertContains('no-cache', $header);
+		$this->assertContains('no-store', $header);
+		$this->assertContains('must-revalidate', $header);
 	}
 }
 
@@ -138,12 +176,14 @@ class HTTPCacheControlIntegrationTest_RuleController extends Controller implemen
 		return 'private content';
 	}
 
-	private function publicaction() {
-		HTTPCacheControl::singleton()->publicCache();
+	public function publicaction() {
+		HTTPCacheControl::singleton()
+			->publicCache()
+			->setMaxAge(9000);
 		return 'public content';
 	}
 
-	private function disabledaction() {
+	public function disabledaction() {
 		HTTPCacheControl::singleton()->disableCache();
 		return 'uncached content';
 	}
