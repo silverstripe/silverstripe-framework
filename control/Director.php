@@ -384,8 +384,9 @@ class Director implements TemplateGlobalProvider {
 					try {
 						$result = $controllerObj->handleRequest($request, $model);
 					} catch(SS_HTTPResponse_Exception $responseException) {
-						HTTPCacheControl::singleton()->disableCache();
 						$result = $responseException->getResponse();
+						// If catching controller exception, retroactively add cache-breaking for errors
+						HTTP::add_cache_headers($result);
 					}
 					if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
 

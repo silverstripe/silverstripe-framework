@@ -398,7 +398,8 @@ class HTTP {
 
 		// Errors disable cache (unless some errors are cached intentionally by usercode)
 		if ($body && $body->isError()) {
-			$cacheControl->disableCache();
+			// Even if publicCache(true) is specfied, errors will be uncachable
+			$cacheControl->disableCache(true);
 		}
 
 		// If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
