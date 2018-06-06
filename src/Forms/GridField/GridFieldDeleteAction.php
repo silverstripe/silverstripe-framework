@@ -64,7 +64,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getGroup($gridField, $record, $columnName)
     {
-        return GridField_ActionMenuItem::DEFAULT_GROUP;
+        $field = $this->getRemoveAction($gridField, $record, $columnName);
+
+        return $field ? GridField_ActionMenuItem::DEFAULT_GROUP: null;
     }
 
     /**

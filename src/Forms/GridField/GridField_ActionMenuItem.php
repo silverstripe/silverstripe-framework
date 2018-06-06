@@ -40,14 +40,15 @@ interface GridField_ActionMenuItem extends GridFieldComponent
     public function getExtraData($gridField, $record, $columnName);
 
     /**
-     * Gets the group this menu item will belong to
+     * Gets the group this menu item will belong to. A null value should indicate
+     * the button should not display.
      *
      * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
      * @param DataObject $record
      *
-     * @return string $group
+     * @return string|null $group
      */
     public function getGroup($gridField, $record, $columnName);
 }
