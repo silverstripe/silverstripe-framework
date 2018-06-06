@@ -258,12 +258,11 @@ class HTMLText extends Text {
 	 * @return boolean
 	 */
 	public function exists() {
-		// If it's blank, it's blank
-		if(!parent::exists()) {
-			return false;
-		}
+		$value = $this->value;
 
-		$value = $this->RAW();
+		if (!$this->isPopulated($value)) {
+		    return false;
+        }
 
 		// If it's got a content tag
 		if(preg_match('/<(img|embed|object|iframe|meta|source|link)[^>]*>/i', $value)) {

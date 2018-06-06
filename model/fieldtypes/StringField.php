@@ -85,9 +85,7 @@ abstract class StringField extends DBField {
 	 */
 	public function exists() {
 		$value = $this->RAW();
-		return $value // All truthy values exist
-			|| (is_string($value) && strlen($value)) // non-empty strings exist ('0' but not (int)0)
-			|| (!$this->getNullifyEmpty() && $value === ''); // Remove this stupid exemption in 4.0
+		return $this->isPopulated($value);
 	}
 
 	/**
@@ -229,4 +227,16 @@ abstract class StringField extends DBField {
 	public function NoHTML() {
 		return strip_tags($this->RAW());
 	}
+
+    /**
+     * Returns true if the value meets all the criteria of not being empty, as defined by
+     * the class
+     * @param $value
+     * @return bool
+     */
+	protected function isPopulated($value) {
+        return $value // All truthy values exist
+            || (is_string($value) && strlen($value)) // non-empty strings exist ('0' but not (int)0)
+            || (!$this->getNullifyEmpty() && $value === ''); // Remove this stupid exemption in 4.0
+    }
 }

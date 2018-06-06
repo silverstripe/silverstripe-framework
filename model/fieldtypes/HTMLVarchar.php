@@ -35,7 +35,7 @@ class HTMLVarchar extends Varchar {
 	}
 
 	public function exists() {
-		return parent::exists() && $this->RAW() != '<p></p>';
+	    return $this->isPopulated($this->value) && $this->value != '<p></p>';
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
