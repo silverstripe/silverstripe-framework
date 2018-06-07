@@ -1857,6 +1857,8 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 		'DateField.Nice' => 'Date'
 	);
 
+	private static $default_sort = '"DataObjectTest_Fixture"."ID" ASC';
+
 	private static $searchable_fields = array();
 
 	public function populateDefaults() {
