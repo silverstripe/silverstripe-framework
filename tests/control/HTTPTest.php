@@ -12,7 +12,7 @@ class HTTPTest extends FunctionalTest {
 		parent::setUp();
 		// Remove dev-only config
 		Config::inst()->remove('HTTP', 'disable_http_cache');
-		Injector::inst()->unregisterNamedObject('HTTPCacheControl');
+		HTTPCacheControl::reset();
 	}
 
 	public function testAddCacheHeaders() {
@@ -27,6 +27,7 @@ class HTTPTest extends FunctionalTest {
 
 		// Ensure cache headers are set correctly when disabled via config (e.g. when dev)
 		Config::inst()->update('HTTP', 'disable_http_cache', true);
+		HTTPCacheControl::reset();
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('no-cache', $response->getHeader('Cache-Control'));
@@ -35,6 +36,7 @@ class HTTPTest extends FunctionalTest {
 
 		// Ensure max-age setting is respected in production.
 		Config::inst()->remove('HTTP', 'disable_http_cache');
+		HTTPCacheControl::reset();
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=30', $response->getHeader('Cache-Control'));
@@ -46,6 +48,7 @@ class HTTPTest extends FunctionalTest {
 			'Pragma' => 'no-cache',
 			'Cache-Control' => 'max-age=0, no-cache, no-store',
 		);
+		HTTPCacheControl::reset();
 		$response = new SS_HTTPResponse($body, 200);
 		foreach($headers as $name => $value) {
 			$response->addHeader($name, $value);
@@ -72,6 +75,7 @@ class HTTPTest extends FunctionalTest {
 		$this->assertNotContains("Accept", $v);
 
 		Config::inst()->update('HTTP', 'vary', '');
+		HTTPCacheControl::reset();
 
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);

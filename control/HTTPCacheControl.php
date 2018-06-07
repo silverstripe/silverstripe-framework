@@ -432,4 +432,11 @@ class HTTPCacheControl extends SS_Object {
 			'Cache-Control' => $this->generateCacheHeader(),
 		);
 	}
+
+	/**
+	 * Reset registered http cache control and force a fresh instance to be built
+	 */
+	public static function reset() {
+		Injector::inst()->unregisterNamedObject(__CLASS__);
+	}
 }

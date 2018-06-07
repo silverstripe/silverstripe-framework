@@ -5,7 +5,7 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest {
 	public function setUp() {
 		parent::setUp();
 		Config::inst()->remove('HTTP', 'disable_http_cache');
-		Injector::inst()->unregisterNamedObject('HTTPCacheControl');
+		HTTPCacheControl::reset();
 	}
 
 	public function testFormCSRF() {

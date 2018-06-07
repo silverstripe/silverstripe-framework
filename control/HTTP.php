@@ -378,8 +378,8 @@ class HTTP {
 
 		$config = Config::inst()->forClass(__CLASS__);
 
-		// Get current cache control state, and clone it for modification
-		$cacheControl = clone HTTPCacheControl::singleton();
+		// Get current cache control state
+		$cacheControl = HTTPCacheControl::singleton();
 
 		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
 		// templates and other data. will be overridden by forced publicCache() or privateCache() calls
@@ -391,12 +391,8 @@ class HTTP {
 		$responseHeaders = array();
 
 		// if no caching ajax requests, disable ajax if is ajax request
-		// why are we using apache_request_headers here when we use `$_SERVER` later to inspect request headers?
-		if (!$config->get('cache_ajax_requests') && function_exists('apache_request_headers')) {
-			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
-			if (array_key_exists('x-requested-with', $requestHeaders) && strtolower($requestHeaders['x-requested-with']) == 'xmlhttprequest') {
-				$cacheControl->disableCache();
-			}
+		if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
+			$cacheControl->disableCache();
 		}
 
 		// Errors disable cache (unless some errors are cached intentionally by usercode)
@@ -547,18 +543,16 @@ class HTTP {
 	/**
 	 * Combine vary strings
 	 *
-	 * @param string $vary1
-	 * @param string $vary2
+	 * @param string ...$vary Each vary as a separate arg
 	 * @return string
 	 */
-	protected static function combineVary($vary1, $vary2)
+	protected static function combineVary($vary)
 	{
-		$vary1Array = preg_split("/\s*,\s*/", $vary1);
-		$vary2Array = preg_split("/\s*,\s*/", $vary2);
-		$vary1Array = array_unique(array_filter(array_map(
-			'trim',
-			array_merge($vary2Array, $vary1Array)
-		)));
-		return implode(', ', $vary1Array);
+		$varies = array();
+		foreach (func_get_args() as $arg) {
+			$argVaries = preg_split("/\s*,\s*/", trim($arg));
+			$varies = array_merge($varies, $argVaries);
+		}
+		return implode(', ', array_unique($varies));
 	}
 }
