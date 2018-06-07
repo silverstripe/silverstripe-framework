@@ -371,8 +371,10 @@ class HTTP {
 		if(headers_sent() && !$body) {
 			return;
 		}
-		// Skip already assigned cache-control headers
+
+		// Warn if already assigned cache-control headers
 		if ($body && $body->getHeader('Cache-Control')) {
+			trigger_error("Cache-Control header has already been set", E_USER_WARNING);
 			return;
 		}
 

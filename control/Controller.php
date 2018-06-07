@@ -169,10 +169,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$response->setBody($body);
 		}
 
-
 		ContentNegotiator::process($response);
-		HTTP::add_cache_headers($response);
-
 		$this->popCurrent();
 		return $response;
 	}

@@ -57,10 +57,10 @@ class HTTPTest extends FunctionalTest {
 		foreach($headers as $name => $value) {
 			$response->addHeader($name, $value);
 		}
+
+		// Expect a warning if the header is already set
+		$this->setExpectedException('PHPUnit_Framework_Error_Warning', 'Cache-Control header has already been set');
 		HTTP::add_cache_headers($response);
-		foreach($headers as $name => $value) {
-			$this->assertEquals($value, $response->getHeader($name));
-		}
 	}
 
     public function testConfigVary() {
