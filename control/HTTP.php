@@ -543,7 +543,7 @@ class HTTP {
 	/**
 	 * Combine vary strings
 	 *
-	 * @param string ...$vary Each vary as a separate arg
+	 * @param string $vary,... Each vary as a separate arg
 	 * @return string
 	 */
 	protected static function combineVary($vary)
@@ -551,7 +551,9 @@ class HTTP {
 		$varies = array();
 		foreach (func_get_args() as $arg) {
 			$argVaries = preg_split("/\s*,\s*/", trim($arg));
-			$varies = array_merge($varies, $argVaries);
+			if ($argVaries) {
+				$varies = array_merge($varies, $argVaries);
+			}
 		}
 		return implode(', ', array_unique($varies));
 	}
