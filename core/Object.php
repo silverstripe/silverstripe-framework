@@ -213,6 +213,9 @@ abstract class SS_Object {
 	 * Returns a 2-elemnent array, with classname and arguments
 	 */
 	public static function parse_class_spec($classSpec) {
+		if ($classSpec === array()) {
+			$classSpec = '';
+		}
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();
