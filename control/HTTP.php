@@ -374,7 +374,11 @@ class HTTP {
 
 		// Warn if already assigned cache-control headers
 		if ($body && $body->getHeader('Cache-Control')) {
-			trigger_error("Cache-Control header has already been set", E_USER_WARNING);
+			trigger_error(
+				'Cache-Control header has already been set. '
+				. 'Please use HTTPCacheControl API to set caching options instead.',
+				E_USER_WARNING
+			);
 			return;
 		}
 

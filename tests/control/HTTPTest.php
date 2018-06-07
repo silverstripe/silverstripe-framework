@@ -59,7 +59,11 @@ class HTTPTest extends FunctionalTest {
 		}
 
 		// Expect a warning if the header is already set
-		$this->setExpectedException('PHPUnit_Framework_Error_Warning', 'Cache-Control header has already been set');
+		$this->setExpectedException(
+			'PHPUnit_Framework_Error_Warning',
+			'Cache-Control header has already been set. '
+			. 'Please use HTTPCacheControl API to set caching options instead.'
+		);
 		HTTP::add_cache_headers($response);
 	}
 
