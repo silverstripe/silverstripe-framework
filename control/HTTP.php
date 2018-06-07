@@ -550,7 +550,7 @@ class HTTP {
 	{
 		$varies = array();
 		foreach (func_get_args() as $arg) {
-			$argVaries = preg_split("/\s*,\s*/", trim($arg));
+			$argVaries = array_filter(preg_split("/\s*,\s*/", trim($arg)));
 			if ($argVaries) {
 				$varies = array_merge($varies, $argVaries);
 			}
