@@ -192,7 +192,7 @@ class SSViewer_Scope
         switch ($name) {
             case 'Up':
                 if ($this->upIndex === null) {
-                    user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+                    throw new \LogicException('Up called when we\'re already at the top of the scope');
                 }
 
                 list(
@@ -258,6 +258,9 @@ class SSViewer_Scope
         $this->popIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::POP_INDEX] = $this->localIndex;
         $this->localIndex = $newLocalIndex;
 
+        // $Up now becomes the parent scope - the parent of the current <% loop %> or <% with %>
+        $this->upIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::UP_INDEX] = $this->popIndex;
+
         // We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
         // once we enter a new global scope, we need to make sure we use a new one
         $this->itemIterator = $this->itemStack[$newLocalIndex][SSViewer_Scope::ITEM_ITERATOR] = null;
@@ -291,7 +294,7 @@ class SSViewer_Scope
 
         if (!$this->itemIterator) {
             // Note: it is important that getIterator() is called before count() as implemenations may rely on
-            // this to efficiency get both the number of records and an iterator (e.g. DataList does this)
+            // this to efficiently get both the number of records and an iterator (e.g. DataList does this)
 
             // Item may be an array or a regular IteratorAggregate
             if (is_array($this->item)) {
