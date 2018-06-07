@@ -1959,7 +1959,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$items = isset($items) ? array_merge((array) $items, $dbItems) : $dbItems;
 			}
 		}
-
+		// If we requested a non-existant named field return null instead of all fields
+		if ($fieldName) {
+			return null;
+		}
 		return $items;
 	}
 
@@ -3433,16 +3436,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					if ($table && strtolower($table) !== strtolower($this->class)) {
 						continue;
 					}
-
-					list($fieldType) = SS_Object::parse_class_spec($this->db($column));
-					$isAutoIndexable = (Config::inst()->get($fieldType, 'auto_indexable')
-						|| Config::inst()->get("DB{$fieldType}", 'auto_indexable'));
-
-					if (
-						$this->hasOwnTableDatabaseField($column)
-						&& !array_key_exists($column, $indexes)
-						&& $isAutoIndexable
-					) {
+					// Skip already indexed columns
+					if (array_key_exists($column, $indexes)) {
+						continue;
+					}
+					// Get field type (including fixed fields) on this table, if it exists
+					$fieldType = $this->hasOwnTableDatabaseField($column);
+					if (!$fieldType) {
+						continue;
+					}
+					$isAutoIndexable = Config::inst()->get($fieldType, 'auto_indexable')
+						|| Config::inst()->get("DB{$fieldType}", 'auto_indexable');
+					if ($isAutoIndexable) {
 						$indexes[$column] = true;
 					}
 				} catch (InvalidArgumentException $e) { }
