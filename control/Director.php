@@ -386,7 +386,14 @@ class Director implements TemplateGlobalProvider {
 					} catch(SS_HTTPResponse_Exception $responseException) {
 						$result = $responseException->getResponse();
 					}
-					if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
+					// Ensure cache headers are added
+					if ($result instanceof SS_HTTPResponse) {
+						HTTP::add_cache_headers($result);
+						return $result;
+					}
+					if(!is_object($result)) {
+						return $result;
+					}
 
 					user_error("Bad result from url " . $request->getURL() . " handled by " .
 						get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);

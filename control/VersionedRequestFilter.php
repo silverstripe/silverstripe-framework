@@ -34,6 +34,7 @@ class VersionedRequestFilter implements RequestFilter {
 			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
 				throw new SS_HTTPResponse_Exception($response);
 			}
+			HTTP::add_cache_headers($response);
 			$response->output();
 			die;
 		}
@@ -44,6 +45,9 @@ class VersionedRequestFilter implements RequestFilter {
 	}
 
 	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+		if (Versioned::current_stage() !== Versioned::LIVE && !HTTPCacheControl::singleton()->hasDirective('no-store')) {
+			HTTPCacheControl::singleton()->privateCache(true);
+		}
 		return true;
 	}
 

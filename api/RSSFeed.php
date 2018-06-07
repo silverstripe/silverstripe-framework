@@ -204,10 +204,7 @@ class RSSFeed extends ViewableData {
 			HTTP::register_etag($this->etag);
 		}
 
-		if(!headers_sent()) {
-			HTTP::add_cache_headers();
-			$response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
-		}
+		$response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
 
 		Config::inst()->update('SSViewer', 'source_file_comments', $prevState);
 

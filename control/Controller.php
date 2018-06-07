@@ -169,10 +169,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$response->setBody($body);
 		}
 
-
 		ContentNegotiator::process($response);
-		HTTP::add_cache_headers($response);
-
 		$this->popCurrent();
 		return $response;
 	}
@@ -502,7 +499,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function redirectBack() {
 		// Don't cache the redirect back ever
-		HTTP::set_cache_age(0);
+		HTTPCacheControl::singleton()->disableCache(true);
 
 		$url = null;
 
