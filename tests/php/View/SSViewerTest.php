@@ -1510,21 +1510,21 @@ after'
 
         // Two level with block, up refers to internally referenced Bar
         $this->assertEquals(
-            'BarFoo',
+            'BarTop',
             $this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data)
         );
 
         // Stepping up & back down the scope tree
         $this->assertEquals(
-            'BazBarQux',
-            $this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data)
+            'BazFooBar',
+            $this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Foo.Name}{$Up.Foo.Bar.Name}<% end_with %>', $data)
         );
 
         // Using $Up in a with block
         $this->assertEquals(
-            'BazBarQux',
+            'BazTopBar',
             $this->render(
-                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
+                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Foo.Bar.Name}<% end_with %>'
                 . '<% end_with %>',
                 $data
             )
@@ -1532,9 +1532,9 @@ after'
 
         // Stepping up & back down the scope tree with with blocks
         $this->assertEquals(
-            'BazBarQuxBarBaz',
+            'BazTopBarTopBaz',
             $this->render(
-                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>'
+                '<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Foo.Bar %>{$Name}<% end_with %>'
                 . '{$Name}<% end_with %>{$Name}<% end_with %>',
                 $data
             )
@@ -1544,16 +1544,37 @@ after'
         $this->assertEquals(
             'Foo',
             $this->render(
-                '<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %>'
+                '<% with Foo %><% with Bar %><% with Baz %>{$Up.Up.Name}<% end_with %><% end_with %>'
                 . '<% end_with %>',
                 $data
             )
         );
 
-        // Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo
+        // Using $Up as part of a lookup chain in <% with %>
+        $this->assertEquals(
+            'Top',
+            $this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Name}<% end_with %>', $data)
+        );
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Up called when we're already at the top of the scope
+     */
+    public function testTooManyUps()
+    {
+        $data = new ArrayData([
+            'Foo' => new ArrayData([
+                'Name' => 'Foo',
+                'Bar' => new ArrayData([
+                    'Name' => 'Bar'
+                ])
+            ])
+        ]);
+
         $this->assertEquals(
             'Foo',
-            $this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data)
+            $this->render('<% with Foo.Bar %>{$Up.Up.Name}<% end_with %>', $data)
         );
     }
 

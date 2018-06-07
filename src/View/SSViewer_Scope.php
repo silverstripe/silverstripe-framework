@@ -257,6 +257,9 @@ class SSViewer_Scope
         $this->popIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::POP_INDEX] = $this->localIndex;
         $this->localIndex = $newLocalIndex;
 
+        // $Up now becomes the parent scope - the parent of the current <% loop %> or <% with %>
+        $this->upIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::UP_INDEX] = $this->popIndex;
+
         // We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
         // once we enter a new global scope, we need to make sure we use a new one
         $this->itemIterator = $this->itemStack[$newLocalIndex][SSViewer_Scope::ITEM_ITERATOR] = null;
