@@ -16,4 +16,6 @@ class Class2 extends DataObject implements TestOnly
     private static $has_one = array(
         'one' => Class1::class
     );
+
+    private static $default_sort = '"ID" ASC';
 }

@@ -26,4 +26,6 @@ class Class1 extends DataObject implements TestOnly
             'TestExtra' => 'Varchar'
         )
     );
+
+    private static $default_sort = '"ID" ASC';
 }

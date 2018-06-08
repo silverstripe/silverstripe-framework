@@ -16,4 +16,6 @@ class Class3 extends DataObject implements TestOnly
     private static $belongs_many_many = array(
         'ones' => Class1::class
     );
+
+    private static $default_sort = '"ID" ASC';
 }

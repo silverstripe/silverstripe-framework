@@ -108,6 +108,10 @@ class DataObjectDuplicationTest extends SapphireTest
         $two = DataObject::get_by_id(DataObjectDuplicationTest\Class2::class, $two->ID);
         $three = DataObject::get_by_id(DataObjectDuplicationTest\Class3::class, $three->ID);
 
+        $this->assertCount(1, $one->twos());
+        $this->assertCount(1, $one->threes());
+        $this->assertCount(1, $three->ones());
+
         //test duplication
         $oneCopy = $one->duplicate(true, true);
         $twoCopy = $two->duplicate(true, true);
@@ -125,19 +129,19 @@ class DataObjectDuplicationTest extends SapphireTest
         $this->assertEquals($text2, $twoCopy->text);
         $this->assertEquals($text3, $threeCopy->text);
 
-        $this->assertNotEquals(
-            $one->twos()->Count(),
-            $oneCopy->twos()->Count(),
+        $this->assertCount(
+            0,
+            $oneCopy->twos(),
             "Many-to-one relation not copied (has_many)"
         );
-        $this->assertEquals(
-            $one->threes()->Count(),
-            $oneCopy->threes()->Count(),
+        $this->assertCount(
+            2,
+            $oneCopy->threes(),
             "Object has the correct number of relations"
         );
-        $this->assertEquals(
-            $three->ones()->Count(),
-            $threeCopy->ones()->Count(),
+        $this->assertCount(
+            2,
+            $threeCopy->ones(),
             "Object has the correct number of relations"
         );
 
@@ -146,9 +150,9 @@ class DataObjectDuplicationTest extends SapphireTest
             $twoCopy->one()->ID,
             "Match between relation of copy and the original"
         );
-        $this->assertEquals(
+        $this->assertCount(
             0,
-            $oneCopy->twos()->Count(),
+            $oneCopy->twos(),
             "Many-to-one relation not copied (has_many)"
         );
         $this->assertContains(

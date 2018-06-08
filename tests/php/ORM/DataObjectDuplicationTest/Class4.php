@@ -26,4 +26,6 @@ class Class4 extends DataObject implements TestOnly
     private static $belongs_many_many = [
         'Parents' => Class4::class,
     ];
+
+    private static $default_sort = '"ID" ASC';
 }
