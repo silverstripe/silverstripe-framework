@@ -30,4 +30,6 @@ class Dingo extends DataObject implements TestOnly
     private static $belongs_many_many = [
         'Parents' => Dingo::class,
     ];
+
+    private static $default_sort = '"ID" ASC';
 }
