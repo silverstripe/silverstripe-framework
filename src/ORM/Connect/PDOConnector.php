@@ -176,9 +176,11 @@ class PDOConnector extends DBConnector
         if (!isset($charset)) {
             $charset = $connCharset;
         }
-        $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation
-        );
+
+        $options = [];
+        if ($parameters['driver'] === 'mysql') {
+            $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation;
+        }
 
         // Set SSL options if they are defined
         if (array_key_exists('ssl_key', $parameters) &&
