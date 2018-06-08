@@ -30,6 +30,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\SSViewer_FromString;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
+use SilverStripe\View\Tests\SSViewerTest\TestViewableData;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -683,6 +684,65 @@ $ItemOnItsOwnLine
 after'
             )
         );
+    }
+
+    public function testTypesArePreserved()
+    {
+        $data = new ArrayData([
+            'Test' => new TestViewableData()
+        ]);
+
+        // Booleans
+        $this->assertEquals('boolean:1', $this->render('$Test.Type(true)', $data));
+        $this->assertEquals('boolean:', $this->render('$Test.Type(false)', $data));
+
+        // Strings which loosely look like booleans
+        $this->assertEquals('string:truthy', $this->render('$Test.Type(truthy)', $data));
+        $this->assertEquals('string:falsy', $this->render('$Test.Type(falsy)', $data));
+
+        // Integers
+        $this->assertEquals('integer:0', $this->render('$Test.Type(0)', $data));
+        $this->assertEquals('integer:1', $this->render('$Test.Type(1)', $data));
+        $this->assertEquals('integer:15', $this->render('$Test.Type(15)', $data));
+        $this->assertEquals('integer:-15', $this->render('$Test.Type(-15)', $data));
+
+        # Octal integers
+        $this->assertEquals('integer:83', $this->render('$Test.Type(0123)', $data));
+        $this->assertEquals('integer:-83', $this->render('$Test.Type(-0123)', $data));
+
+        # Hexadecimal integers
+        $this->assertEquals('integer:26', $this->render('$Test.Type(0x1A)', $data));
+        $this->assertEquals('integer:-26', $this->render('$Test.Type(-0x1A)', $data));
+
+        # Binary integers
+        $this->assertEquals('integer:255', $this->render('$Test.Type(0b11111111)', $data));
+        $this->assertEquals('integer:-255', $this->render('$Test.Type(-0b11111111)', $data));
+
+        // Floats (aka doubles)
+        $this->assertEquals('double:0', $this->render('$Test.Type(0.0)', $data));
+        $this->assertEquals('double:1', $this->render('$Test.Type(1.0)', $data));
+        $this->assertEquals('double:15.25', $this->render('$Test.Type(15.25)', $data));
+        $this->assertEquals('double:-15.25', $this->render('$Test.Type(-15.25)', $data));
+        $this->assertEquals('double:1200', $this->render('$Test.Type(1.2e3)', $data));
+        $this->assertEquals('double:-1200', $this->render('$Test.Type(-1.2e3)', $data));
+        $this->assertEquals('double:0.07', $this->render('$Test.Type(7E-2)', $data));
+        $this->assertEquals('double:-0.07', $this->render('$Test.Type(-7E-2)', $data));
+
+        // Explicitly quoted strings
+        $this->assertEquals('string:0', $this->render('$Test.Type("0")', $data));
+        $this->assertEquals('string:1', $this->render('$Test.Type(\'1\')', $data));
+        $this->assertEquals('string:foobar', $this->render('$Test.Type("foobar")', $data));
+        $this->assertEquals('string:foo bar baz', $this->render('$Test.Type("foo bar baz")', $data));
+
+        // Implicit strings
+        $this->assertEquals('string:foobar', $this->render('$Test.Type(foobar)', $data));
+        $this->assertEquals('string:foo bar baz', $this->render('$Test.Type(foo bar baz)', $data));
+
+        // Types in conditionals
+        $this->assertEquals('pass', $this->render('<% if true %>pass<% else %>fail<% end_if %>', $data));
+        $this->assertEquals('pass', $this->render('<% if false %>fail<% else %>pass<% end_if %>', $data));
+        $this->assertEquals('pass', $this->render('<% if 1 %>pass<% else %>fail<% end_if %>', $data));
+        $this->assertEquals('pass', $this->render('<% if 0 %>fail<% else %>pass<% end_if %>', $data));
     }
 
     public function testControls()
