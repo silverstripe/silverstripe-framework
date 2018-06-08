@@ -30,14 +30,12 @@ class DirectorTest extends SapphireTest
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
 
-        // Ensure redirects enabled on all environments
-        $middleware = CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
-        $this->expectedRedirect = null;
-
-        // Ensure global state doesn't affect this test
-        $middleware
+        // Ensure redirects enabled on all environments and global state doesn't affect the tests
+	CanonicalURLMiddleware::singleton()
             ->setForceSSLDomain(null)
-            ->setForceSSLPatterns([]);
+            ->setForceSSLPatterns([])
+            ->setEnabledEnvs(true);
+        $this->expectedRedirect = null;
     }
 
     protected function getExtraRoutes()
