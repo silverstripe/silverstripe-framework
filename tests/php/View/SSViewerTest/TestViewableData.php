@@ -28,4 +28,9 @@ class TestViewableData extends ViewableData implements TestOnly
     {
         return "arg1:{$arg1},arg2:{$arg2}";
     }
+
+    public function Type($arg)
+    {
+        return gettype($arg) . ':' . $arg;
+    }
 }
