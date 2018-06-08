@@ -31,8 +31,13 @@ class DirectorTest extends SapphireTest
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
 
         // Ensure redirects enabled on all environments
-        CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
+        $middleware = CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
         $this->expectedRedirect = null;
+
+        // Ensure global state doesn't affect this test
+        $middleware
+            ->setForceSSLDomain(null)
+            ->setForceSSLPatterns([]);
     }
 
     protected function getExtraRoutes()
@@ -593,6 +598,7 @@ class DirectorTest extends SapphireTest
         }, 'http://www.mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
+        $this->assertInstanceOf(HTTPResponse::class, $response);
         $this->assertEquals('https://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }
