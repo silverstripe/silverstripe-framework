@@ -1,46 +1,66 @@
 {
-	"name": "silverstripe/framework",
-	"type": "silverstripe-module",
-	"description": "The SilverStripe framework",
-	"homepage": "http://silverstripe.org",
-	"license": "BSD-3-Clause",
-	"keywords": ["silverstripe", "framework"],
-	"authors": [
-		{
-			"name": "SilverStripe",
-			"homepage": "http://silverstripe.com"
-		},
-		{
-			"name": "The SilverStripe Community",
-			"homepage": "http://silverstripe.org"
-		}
-	],
-	"require": {
-		"php": "^5.3.3 || ^7",
-		"composer/installers": "~1.0",
-		"mustangostang/spyc": "^0.6.2"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "^3 || ^4 || ^5"
-	},
-	"extra": {
-		"branch-alias": {
-			"3.x-dev": "3.7.x-dev"
-		}
-	},
-	"autoload": {
-		"psr-0": {
-			"SilverStripe\\": "src/",
-			"Zend_": "thirdparty/Zend/"
-		},
-		"classmap": [
-			"tests/behat/features/bootstrap",
-			"admin/code", "api", "cache", "cli", "control", "core", "dev", "email",  "filesystem",
-			"forms", "i18n", "model", "oembed", "parsers", "search", "security", "tasks", "view",
-			"thirdparty/php-peg", "thirdparty/simpletest", "thirdparty/zend_translate_railsyaml"
-		],
-		"exclude-from-classmap": [
-			"view/SSTemplateParser.php.inc", "dev/phpunit/PhpUnitWrapper.php", "model/fieldtypes/compat", "core/compat"
-		]
-	}
+    "name": "silverstripe/framework",
+    "type": "silverstripe-module",
+    "description": "The SilverStripe framework",
+    "homepage": "http://silverstripe.org",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "silverstripe",
+        "framework"
+    ],
+    "authors": [
+        {
+            "name": "SilverStripe",
+            "homepage": "http://silverstripe.com"
+        },
+        {
+            "name": "The SilverStripe Community",
+            "homepage": "http://silverstripe.org"
+        }
+    ],
+    "require": {
+        "php": "^5.3.3 || ^7",
+        "composer/installers": "~1.0",
+        "mustangostang/spyc": "^0.6.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^3 || ^4 || ^5"
+    },
+    "extra": [],
+    "autoload": {
+        "psr-0": {
+            "SilverStripe\\": "src/",
+            "Zend_": "thirdparty/Zend/"
+        },
+        "classmap": [
+            "tests/behat/features/bootstrap",
+            "admin/code",
+            "api",
+            "cache",
+            "cli",
+            "control",
+            "core",
+            "dev",
+            "email",
+            "filesystem",
+            "forms",
+            "i18n",
+            "model",
+            "oembed",
+            "parsers",
+            "search",
+            "security",
+            "tasks",
+            "view",
+            "thirdparty/php-peg",
+            "thirdparty/simpletest",
+            "thirdparty/zend_translate_railsyaml"
+        ],
+        "exclude-from-classmap": [
+            "view/SSTemplateParser.php.inc",
+            "dev/phpunit/PhpUnitWrapper.php",
+            "model/fieldtypes/compat",
+            "core/compat"
+        ]
+    }
 }
