@@ -1216,7 +1216,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function choose_site_stage(SS_HTTPRequest $request = null) {
 		if (!$request) {
-			throw new InvalidArgumentException("Request not found");
+			$request = Controller::curr()->getRequest();
 		}
 		$mode = static::get_default_reading_mode();
 
