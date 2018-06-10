@@ -638,7 +638,6 @@ class ShortcodeParser
      */
     public function parse($content)
     {
-
         $this->extend('onBeforeParse', $content);
 
         $continue = true;

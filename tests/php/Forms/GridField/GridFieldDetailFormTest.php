@@ -2,20 +2,19 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
-use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 
 /**
  * @skipUpgrade
@@ -35,6 +34,8 @@ class GridFieldDetailFormTest extends FunctionalTest
         TestController::class,
         GroupController::class,
     ];
+
+    protected static $disable_themes = true;
 
     public function testValidator()
     {

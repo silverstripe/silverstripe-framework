@@ -992,9 +992,9 @@ class DataObjectSchema
             if (is_array($manyManySpec)) {
                 $toClass = $this->hasOneComponent($manyManySpec['through'], $manyManySpec['to']);
                 if ($toClass === $parentClass) {
-                    return $inverseComponentName;
-                }
+                return $inverseComponentName;
             }
+        }
         }
         return null;
     }

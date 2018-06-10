@@ -30,8 +30,11 @@ class DirectorTest extends SapphireTest
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
 
-        // Ensure redirects enabled on all environments
-        CanonicalURLMiddleware::singleton()->setEnabledEnvs(true);
+        // Ensure redirects enabled on all environments and global state doesn't affect the tests
+        CanonicalURLMiddleware::singleton()
+            ->setForceSSLDomain(null)
+            ->setForceSSLPatterns([])
+            ->setEnabledEnvs(true);
         $this->expectedRedirect = null;
     }
 
@@ -593,6 +596,7 @@ class DirectorTest extends SapphireTest
         }, 'http://www.mysite.com:9090/some-url');
 
         // Middleware returns non-exception redirect
+        $this->assertInstanceOf(HTTPResponse::class, $response);
         $this->assertEquals('https://www.mysite.com:9090/some-url', $response->getHeader('Location'));
         $this->assertEquals(301, $response->getStatusCode());
     }

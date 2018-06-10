@@ -236,7 +236,7 @@ class InstallConfig
             'lv_LV' => 'Latvian (Latvia)',
             'lt_LT' => 'Lithuanian (Lithuania)',
             'ms_MY' => 'Malay (Malaysia)',
-            'mi_NZ' => 'Maori (New Zealand)',
+            'mi_NZ' => 'Māori (New Zealand)',
             'ne_NP' => 'Nepali (Nepal)',
             'nb_NO' => 'Norwegian',
             'fa_IR' => 'Persian (Iran)',

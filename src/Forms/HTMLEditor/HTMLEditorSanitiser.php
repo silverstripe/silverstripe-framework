@@ -4,7 +4,6 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 use DOMAttr;
 use DOMElement;
-use DOMNode;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
@@ -122,8 +121,7 @@ class HTMLEditorSanitiser
 
                             // Default value
                             if ($prefix) {
-                                // Default value
-                                if ($prefix === '=') {
+                                if ($prefix === '=') { // Default value
                                     $element->attributesDefault[$attrName] = $value;
                                     $attr->defaultValue = $value;
                                 } elseif ($prefix === ':') {

@@ -20,7 +20,7 @@ class CurrencyField_Readonly extends ReadonlyField
     {
         if ($this->value) {
             $val = Convert::raw2xml($this->value);
-            $val = _t('SilverStripe\\Forms\\CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/', "", $val), 2);
+            $val = _t('SilverStripe\\Forms\\CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.-]/', "", $val), 2);
             $valforInput = Convert::raw2att($val);
         } else {
             $val = '<i>' . _t('SilverStripe\\Forms\\CurrencyField.CURRENCYSYMBOL', '$') . '0.00</i>';
