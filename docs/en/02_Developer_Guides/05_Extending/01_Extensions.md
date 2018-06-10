@@ -182,6 +182,7 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\ORM\DataExtension;
