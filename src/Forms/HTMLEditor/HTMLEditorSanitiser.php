@@ -114,8 +114,8 @@ class HTMLEditorSanitiser
                             if ($attrType === '!') {
                                 $element->attributesRequired[] = $attrName;
                                 $attr->required = true;
-                            } // Denied from global
-                            elseif ($attrType === '-') {
+                            } elseif ($attrType === '-') {
+                                // Denied from global
                                 unset($element->attributes[$attrName]);
                                 continue;
                             }
@@ -126,12 +126,12 @@ class HTMLEditorSanitiser
                                 if ($prefix === '=') {
                                     $element->attributesDefault[$attrName] = $value;
                                     $attr->defaultValue = $value;
-                                } // Forced value
-                                elseif ($prefix === ':') {
+                                } elseif ($prefix === ':') {
+                                    // Forced value
                                     $element->attributesForced[$attrName] = $value;
                                     $attr->forcedValue = $value;
-                                } // Required values
-                                elseif ($prefix === '<') {
+                                } elseif ($prefix === '<') {
+                                    // Required values
                                     $attr->validValues = explode('?', $value);
                                 }
                             }
@@ -290,8 +290,8 @@ class HTMLEditorSanitiser
                 // If it's a script or style, we don't keep contents
                 if ($el->tagName === 'script' || $el->tagName === 'style') {
                     $el->parentNode->removeChild($el);
-                } // Otherwise we replace this node with all it's children
-                else {
+                } else {
+                    // Otherwise we replace this node with all it's children
                     // First, create a new fragment with all of $el's children moved into it
                     $frag = $doc->createDocumentFragment();
                     while ($el->firstChild) {
@@ -301,8 +301,8 @@ class HTMLEditorSanitiser
                     // Then replace $el with the frags contents (which used to be it's children)
                     $el->parentNode->replaceChild($frag, $el);
                 }
-            } // Otherwise tidy the element
-            else {
+            } else {
+                // Otherwise tidy the element
                 // First, if we're supposed to pad & this element is empty, fix that
                 if ($elementRule->paddEmpty && !$el->firstChild) {
                     $el->nodeValue = '&nbsp;';

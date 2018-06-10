@@ -622,8 +622,8 @@ class SQLSelect extends SQLConditionalExpression
         if (!empty($this->having)) {
             $records = $this->execute();
             return $records->numRecords();
-        } // Choose a default column
-        elseif ($column == null) {
+        } elseif ($column == null) {
+            // Choose a default column
             if ($this->groupby) {
                 $column = 'DISTINCT ' . implode(", ", $this->groupby);
             } else {
