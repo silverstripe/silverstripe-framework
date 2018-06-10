@@ -220,6 +220,8 @@ class DateField extends TextField
             );
         }
 
+
+
         if ($this->getHTML5() && $this->locale) {
             throw new \LogicException(
                 'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
@@ -353,9 +355,12 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy(DateField_Disabled::class);
-        $field->setValue($this->dataValue());
-        $field->setReadonly(true);
+        $field = $this
+            ->castedCopy(DateField_Disabled::class)
+            ->setValue($this->dataValue())
+            ->setLocale($this->getLocale())
+            ->setReadonly(true);
+
         return $field;
     }
 
