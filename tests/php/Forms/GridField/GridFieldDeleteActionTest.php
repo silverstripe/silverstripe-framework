@@ -223,4 +223,20 @@ class GridFieldDeleteActionTest extends SapphireTest
             'User should be able to delete records with ADMIN permission.'
         );
     }
+
+    public function testMenuGroup()
+    {
+        $this->logInWithPermission('ADMIN');
+
+        $config = GridFieldConfig::create()->addComponent($action = new GridFieldDeleteAction(true));
+        $gridField = new GridField('testfield', 'testfield', $this->list, $config);
+        new Form(null, 'mockform', new FieldList(array($gridField)), new FieldList());
+        $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
+        $this->assertNotNull($group, 'A menu group exists when the user can delete');
+
+        $this->logOut();
+
+        $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
+        $this->assertNull($group, 'A menu group does not exist when the user cannot delete');
+    }
 }

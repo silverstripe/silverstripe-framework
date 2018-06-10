@@ -575,8 +575,8 @@ class ShortcodeParser
         } elseif ($location == self::AFTER) {
             // Move after block parent
             $this->insertAfter($node, $parent);
-        } // Split parent at node
-        elseif ($location == self::SPLIT) {
+        } elseif ($location == self::SPLIT) {
+            // Split parent at node
             $at = $node;
             $splitee = $node->parentNode;
 
@@ -595,8 +595,8 @@ class ShortcodeParser
             }
 
             $this->insertAfter($node, $parent);
-        } // Do nothing
-        elseif ($location == self::INLINE) {
+        } elseif ($location == self::INLINE) {
+            // Do nothing
             if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
                 user_error(
                     'Requested to insert block tag ' . $node->tagName
@@ -641,7 +641,6 @@ class ShortcodeParser
      */
     public function parse($content)
     {
-
         $this->extend('onBeforeParse', $content);
 
         $continue = true;
@@ -649,11 +648,11 @@ class ShortcodeParser
         // If no shortcodes defined, don't try and parse any
         if (!$this->shortcodes) {
             $continue = false;
-        } // If no content, don't try and parse it
-        elseif (!trim($content)) {
+        } elseif (!trim($content)) {
+            // If no content, don't try and parse it
             $continue = false;
-        } // If no shortcode tag, don't try and parse it
-        elseif (strpos($content, '[') === false) {
+        } elseif (strpos($content, '[') === false) {
+            // If no shortcode tag, don't try and parse it
             $continue = false;
         }
 

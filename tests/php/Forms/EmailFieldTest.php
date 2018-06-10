@@ -69,21 +69,14 @@ class EmailFieldTest extends FunctionalTest
      */
     public function testEmailFieldPopulation()
     {
-
         $this->get('EmailFieldTest_Controller');
-        $this->submitForm(
+
+        $response = $this->submitForm(
             'Form_Form',
             null,
-            array(
-            'Email' => 'test@test.com'
-            )
+            ['Email' => 'test@test.com']
         );
 
-        $this->assertPartialMatchBySelector(
-            'p.good',
-            array(
-            'Test save was successful'
-            )
-        );
+        $this->assertContains('Test save was successful', $response->getBody());
     }
 }

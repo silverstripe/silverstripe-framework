@@ -6,6 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -260,5 +261,20 @@ class ManyManyThroughListTest extends SapphireTest
             ['Title' => 'item 1'],
             ['Title' => 'New Item'],
         ], $objB2->Items());
+    }
+
+    public function testGetJoinTable()
+    {
+        $joinTable = DataObject::getSchema()->tableName(PolyJoinObject::class);
+        /** @var ManyManyThroughListTest\PolyObjectA $objA1 */
+        $objA1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectA::class, 'obja1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB1 */
+        $objB1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB2 */
+        $objB2 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb2');
+
+        $this->assertEquals($joinTable, $objA1->Items()->getJoinTable());
+        $this->assertEquals($joinTable, $objB1->Items()->getJoinTable());
+        $this->assertEquals($joinTable, $objB2->Items()->getJoinTable());
     }
 }

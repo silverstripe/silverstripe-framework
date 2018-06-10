@@ -35,6 +35,8 @@ class GridFieldDetailFormTest extends FunctionalTest
         GroupController::class,
     ];
 
+    protected static $disable_themes = true;
+
     public function testValidator()
     {
         $this->logInWithPermission('ADMIN');

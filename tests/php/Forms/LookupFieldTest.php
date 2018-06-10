@@ -5,90 +5,85 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\LookupField;
+use SilverStripe\Security\Member;
 
 class LookupFieldTest extends SapphireTest
 {
-
     protected static $fixture_file = 'LookupFieldTest.yml';
 
     public function testNullValueWithNumericArraySource()
     {
         $source = array(1 => 'one', 2 => 'two', 3 => 'three');
-        $f = new LookupField('test', 'test', $source);
-        $f->setValue(null);
+        $field = new LookupField('test', 'test', $source);
+        $field->setValue(null);
+        $result = trim($field->Field()->getValue());
 
-        $this->assertEquals(
-            '<span class="readonly" id="test"><i>(none)</i></span><input type="hidden" name="test" value="" />',
-            trim($f->Field()->getValue())
-        );
+        $this->assertContains('<span class="readonly" id="test"><i>(none)</i></span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="" />', $result);
     }
 
     public function testStringValueWithNumericArraySource()
     {
         $source = array(1 => 'one', 2 => 'two', 3 => 'three');
-        $f = new LookupField('test', 'test', $source);
-        $f->setValue(1);
-        $this->assertEquals(
-            '<span class="readonly" id="test">one</span><input type="hidden" name="test" value="1" />',
-            trim($f->Field()->getValue())
-        );
+        $field = new LookupField('test', 'test', $source);
+        $field->setValue(1);
+        $result = trim($field->Field()->getValue());
+        $this->assertContains('<span class="readonly" id="test">one</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="1" />', $result);
     }
 
     public function testUnknownStringValueWithNumericArraySource()
     {
         $source = array(1 => 'one', 2 => 'two', 3 => 'three');
-        $f = new LookupField('test', 'test', $source);
-        $f->setValue('w00t');
-        $this->assertEquals(
-            '<span class="readonly" id="test">w00t</span><input type="hidden" name="test" value="" />',
-            trim($f->Field()->getValue())
-        );
+        $field = new LookupField('test', 'test', $source);
+        $field->setValue('w00t');
+        $result = trim($field->Field()->getValue());
+
+        $this->assertContains('<span class="readonly" id="test">w00t</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="" />', $result);
     }
 
     public function testArrayValueWithAssociativeArraySource()
     {
         // Array values (= multiple selections) might be set e.g. from ListboxField
         $source = array('one' => 'one val', 'two' => 'two val', 'three' => 'three val');
-        $f = new LookupField('test', 'test', $source);
-        $f->setValue(array('one','two'));
-        $this->assertEquals(
-            '<span class="readonly" id="test">one val, two val</span>'
-            . '<input type="hidden" name="test" value="one, two" />',
-            trim($f->Field()->getValue())
-        );
+        $field = new LookupField('test', 'test', $source);
+        $field->setValue(array('one','two'));
+        $result = trim($field->Field()->getValue());
+
+        $this->assertContains('<span class="readonly" id="test">one val, two val</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="one, two" />', $result);
     }
 
     public function testArrayValueWithNumericArraySource()
     {
         // Array values (= multiple selections) might be set e.g. from ListboxField
         $source = array(1 => 'one', 2 => 'two', 3 => 'three');
-        $f = new LookupField('test', 'test', $source);
-        $f->setValue(array(1,2));
-        $this->assertEquals(
-            '<span class="readonly" id="test">one, two</span><input type="hidden" name="test" value="1, 2" />',
-            trim($f->Field()->getValue())
-        );
+        $field = new LookupField('test', 'test', $source);
+        $field->setValue(array(1,2));
+        $result = trim($field->Field()->getValue());
+
+        $this->assertContains('<span class="readonly" id="test">one, two</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="1, 2" />', $result);
     }
 
     public function testArrayValueWithSqlMapSource()
     {
-        $member1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member1');
-        $member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member2');
-        $member3 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member3');
+        $member1 = $this->objFromFixture(Member::class, 'member1');
+        $member2 = $this->objFromFixture(Member::class, 'member2');
+        $member3 = $this->objFromFixture(Member::class, 'member3');
 
-        $source = DataObject::get('SilverStripe\\Security\\Member');
-        $f = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
-        $f->setValue(array($member1->ID, $member2->ID));
+        $source = DataObject::get(Member::class);
+        $field = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
+        $field->setValue(array($member1->ID, $member2->ID));
+        $result = trim($field->Field()->getValue());
 
-        $this->assertEquals(
-            sprintf(
-                '<span class="readonly" id="test">member1, member2</span>'
-                    . '<input type="hidden" name="test" value="%s, %s" />',
-                $member1->ID,
-                $member2->ID
-            ),
-            trim($f->Field()->getValue())
-        );
+        $this->assertContains('<span class="readonly" id="test">member1, member2</span>', $result);
+        $this->assertContains(sprintf(
+            '<input type="hidden" name="test" value="%s, %s" />',
+            $member1->ID,
+            $member2->ID
+        ), $result);
     }
 
     public function testWithMultiDimensionalSource()
@@ -105,23 +100,17 @@ class LookupFieldTest extends SapphireTest
             )
         );
 
-        $f = new LookupField('test', 'test', $choices);
-        $f->setValue(3);
+        $field = new LookupField('test', 'test', $choices);
+        $field->setValue(3);
+        $result = trim($field->Field()->getValue());
 
-        $this->assertEquals(
-            '<span class="readonly" id="test">Carrots</span><input type="hidden" name="test" value="3" />',
-            trim($f->Field()->getValue())
-        );
+        $this->assertContains('<span class="readonly" id="test">Carrots</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="3" />', $result);
 
-        $f->setValue(
-            array(
-            3, 9
-            )
-        );
+        $field->setValue([3, 9]);
+        $result = trim($field->Field()->getValue());
 
-        $this->assertEquals(
-            '<span class="readonly" id="test">Carrots, Vegan</span><input type="hidden" name="test" value="3, 9" />',
-            trim($f->Field()->getValue())
-        );
+        $this->assertContains('<span class="readonly" id="test">Carrots, Vegan</span>', $result);
+        $this->assertContains('<input type="hidden" name="test" value="3, 9" />', $result);
     }
 }

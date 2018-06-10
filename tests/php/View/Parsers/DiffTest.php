@@ -54,6 +54,27 @@ class DiffTest extends SapphireTest
         $compare = preg_replace('/[\s\t\n\r]*/', '', $compare);
         $expected = preg_replace('/[\s\t\n\r]*/', '', $expected);
 
-        $this->assertEquals($compare, $expected);
+        $this->assertEquals($expected, $compare);
+    }
+
+    /**
+     * @see https://github.com/silverstripe/silverstripe-framework/issues/8053
+     */
+    public function testLegacyEachStatement()
+    {
+        $sentenceOne =
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+        $sentenceTwo =
+            'Nulla porttitor, ex quis commodo pharetra, diam dui efficitur justo, eu gravida elit eros vel libero.';
+
+        $from = "$sentenceOne $sentenceTwo";
+        $to = "$sentenceTwo $sentenceOne";
+
+        // We're cheating our test a little bit here, because depending on what HTML cleaner you have, you'll get
+        // spaces added or not added around the tags.
+        $expected = "/^ *<del>$sentenceOne<\/del> *$sentenceTwo *<ins>$sentenceOne<\/ins> *$/";
+        $actual = Diff::compareHTML($from, $to);
+
+        $this->assertRegExp($expected, $actual);
     }
 }

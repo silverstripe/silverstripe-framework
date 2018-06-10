@@ -58,6 +58,7 @@ class SelectionGroupTest extends SapphireTest
         $field->setValue('two');
 
         $parser = new CSSContentParser($field->FieldHolder());
+
         $listEls = $parser->getBySelector('li');
         $listElOne = $listEls[0];
         $listElTwo = $listEls[1];

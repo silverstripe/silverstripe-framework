@@ -31,17 +31,23 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
             return null;
         }
 
-        $schema = array_map(function (GridField_ActionMenuItem $item) use ($gridField, $record, $columnName) {
-            return [
+        $schema = [];
+        /* @var GridField_ActionMenuItem $item */
+        foreach ($items as $item) {
+            $group = $item->getGroup($gridField, $record, $columnName);
+            if (!$group) {
+                continue;
+            }
+            $schema[] = [
                 'type' => $item instanceof GridField_ActionMenuLink ? 'link' : 'submit',
                 'title' => $item->getTitle($gridField, $record, $columnName),
                 'url' => $item instanceof GridField_ActionMenuLink
                     ? $item->getUrl($gridField, $record, $columnName)
                     : null,
-                'group' => $item->getGroup($gridField, $record, $columnName),
+                'group' => $group,
                 'data' => $item->getExtraData($gridField, $record, $columnName),
             ];
-        }, $items);
+        }
 
         $templateData = ArrayData::create([
             'Schema' => Convert::raw2json($schema),

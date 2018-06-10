@@ -2,33 +2,31 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FileField;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LookupField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\Tests\FormTest\TestController;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
 use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
+use SilverStripe\Forms\Tests\FormTest\TestController;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
-use SilverStripe\Security\Security;
-use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\LookupField;
-use SilverStripe\Forms\FileField;
-use SilverStripe\Forms\FormAction;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -49,6 +47,8 @@ class FormTest extends FunctionalTest
         ControllerWithSecurityToken::class,
         ControllerWithStrictPostCheck::class,
     ];
+
+    protected static $disable_themes = true;
 
     protected function setUp()
     {
