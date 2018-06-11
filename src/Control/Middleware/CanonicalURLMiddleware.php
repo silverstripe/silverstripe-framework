@@ -349,6 +349,10 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      */
     protected function isEnabled()
     {
+        if (Director::is_cli()) {
+            return false;
+        }
+
         // At least one redirect must be enabled
         if (!$this->getForceWWW() && !$this->getForceSSL()) {
             return false;
