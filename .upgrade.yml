@@ -1171,8 +1171,6 @@ warnings:
       message: 'moved to SilverStripe\View\HTML->createTag()'
     'SilverStripe\Forms\Form->transformTo()':
       message: 'Removed'
-    'SilverStripe\Forms\Form->callfieldmethod()':
-      message: 'Removed'
     'SilverStripe\Forms\Form::single_field_required()':
       message: 'Removed'
     'SilverStripe\Forms\Form::current_action()':
@@ -1323,8 +1321,6 @@ warnings:
       message: 'Use new asset abstraction'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage'
   constants:
-    'SS_TRUSTED_PROXY_HOST_HEADER':
-      message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_PROTOCOL_HEADER':
       message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_IP_HEADER':
