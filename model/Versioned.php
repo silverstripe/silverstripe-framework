@@ -1481,7 +1481,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
 			$containerClass = 'DataList') {
-
+		VersionedReadingMode::validateStage($stage);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		return $result->setDataQueryParam(array(
 			'Versioned.mode' => 'stage',
