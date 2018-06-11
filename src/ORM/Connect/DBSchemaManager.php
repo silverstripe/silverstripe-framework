@@ -454,16 +454,22 @@ MESSAGE
      */
     public function dontRequireTable($table)
     {
-        if (isset($this->tableList[strtolower($table)])) {
-            $suffix = '';
-            while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
-                $suffix = $suffix
-                        ? ((int)$suffix + 1)
-                        : 2;
-            }
-            $this->renameTable($table, "_obsolete_{$table}$suffix");
-            $this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix", "obsolete");
+        if (!isset($this->tableList[strtolower($table)])) {
+            return;
         }
+
+        if (Config::inst()->get(static::class, 'fix_table_case_on_build')) {
+            $this->fixTableCase($table);
+        }
+
+        $suffix = '';
+        while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
+            $suffix = $suffix
+                    ? ((int)$suffix + 1)
+                    : 2;
+        }
+        $this->renameTable($table, "_obsolete_{$table}$suffix");
+        $this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix", "obsolete");
     }
 
     /**
