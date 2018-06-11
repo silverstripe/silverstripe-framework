@@ -26,7 +26,6 @@
     "require-dev": {
         "phpunit/phpunit": "^3 || ^4 || ^5"
     },
-    "extra": [],
     "autoload": {
         "psr-0": {
             "SilverStripe\\": "src/",
