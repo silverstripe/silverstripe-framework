@@ -19,6 +19,14 @@ if(isset($_SERVER['HTTP_HOST'])) {
 }
 
 /**
+ * Ensure errors are reported to users via CLI, as this script can only be run via CLI risk of surfacing
+ * errors to end users is minimised - requires 'errorstocli' to be set in original call i.e. framework/sake dev errorstocli
+ */
+if (in_array('errorstocli', $_SERVER['argv'])) {
+	ini_set('display_errors', 'stderr');
+}
+
+/**
  * Identify the cli-script.php file and change to its container directory, so that require_once() works
  */
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
