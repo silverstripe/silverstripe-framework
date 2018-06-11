@@ -1171,8 +1171,6 @@ warnings:
       message: 'moved to SilverStripe\View\HTML->createTag()'
     'SilverStripe\Forms\Form->transformTo()':
       message: 'Removed'
-    'SilverStripe\Forms\Form->callfieldmethod()':
-      message: 'Removed'
     'SilverStripe\Forms\Form::single_field_required()':
       message: 'Removed'
     'SilverStripe\Forms\Form::current_action()':
