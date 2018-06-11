@@ -46,6 +46,12 @@ $gf_grid_x:	16px;
 				margin-bottom:$gf_grid_y;
 			}
 		}
+			&.ss-gridfield-buttonrow:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+
 			&.ss-gridfield-buttonrow-before{
 				margin-bottom: 0;
 				.action {
