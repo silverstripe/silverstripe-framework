@@ -486,49 +486,6 @@ class DirectorTest extends SapphireTest
         $this->assertFalse(Director::is_site_url('http://google.com:pass/@test.com'));
     }
 
-    /**
-     * Tests isDev, isTest, isLive set from querystring
-     */
-    public function testQueryIsEnvironment()
-    {
-        if (!isset($_SESSION)) {
-            $_SESSION = [];
-        }
-        // Reset
-        unset($_SESSION['isDev']);
-        unset($_SESSION['isLive']);
-        unset($_GET['isTest']);
-        unset($_GET['isDev']);
-
-        /** @var Kernel $kernel */
-        $kernel = Injector::inst()->get(Kernel::class);
-        $kernel->setEnvironment(null);
-
-        // Test isDev=1
-        $_GET['isDev'] = '1';
-        $this->assertTrue(Director::isDev());
-        $this->assertFalse(Director::isTest());
-        $this->assertFalse(Director::isLive());
-
-        // Test persistence
-        unset($_GET['isDev']);
-        $this->assertTrue(Director::isDev());
-        $this->assertFalse(Director::isTest());
-        $this->assertFalse(Director::isLive());
-
-        // Test change to isTest
-        $_GET['isTest'] = '1';
-        $this->assertFalse(Director::isDev());
-        $this->assertTrue(Director::isTest());
-        $this->assertFalse(Director::isLive());
-
-        // Test persistence
-        unset($_GET['isTest']);
-        $this->assertFalse(Director::isDev());
-        $this->assertTrue(Director::isTest());
-        $this->assertFalse(Director::isLive());
-    }
-
     public function testResetGlobalsAfterTestRequest()
     {
         $_GET = array('somekey' => 'getvalue');

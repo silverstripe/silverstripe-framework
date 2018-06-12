@@ -5,17 +5,21 @@ From time to time, things will go wrong.  Here's a few things to try when you're
 ## The output shows only "Website Error"
 
 This first and foremost means that your environment is set to "live mode" (see [environment-management]), which disallows
-detailed error messages for security reasons. You'll typically need to get your environment into "dev mode" to see more
-information.
+detailed error messages for security reasons.
 
-If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL to temporarily set your browsing session into
-"dev mode". If you can't log-in in the first place because of the error, please
-configure an `SS_ENVIRONMENT_TYPE` through [environment-management] (don't forget to remove it afterwards!).
+If you get this error while running your site locally, make sure you set your environment to dev mode via
+the below setting in your `.env` variable.
 
-<div class="warning" markdown='1'>
-On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly
-(and potentially security sensitive) PHP errors as well.
-</div>
+```
+SS_ENVIRONMENT_TYPE="dev"
+```
+
+If you get this error while running your site on a live or test environment you should set up error logging
+to capture these errors. For information on setting up standard error logging on your website see
+[error handling](/developer_guides/debugging/error_handling).
+
+It is highly recommended that you have separate environments for debugging issues, in order
+to prevent vulnerability disclosure on your live site.
 
 ## mod_rewrite isn't working but it's installed (prior to SilverStripe 3.1.11)
 

@@ -133,55 +133,12 @@ class CoreKernel implements Kernel
             return $this->enviroment;
         }
 
-        // Check saved session
-        $env = $this->sessionEnvironment();
-        if ($env) {
-            return $env;
-        }
-
         // Check getenv
         if ($env = Environment::getEnv('SS_ENVIRONMENT_TYPE')) {
             return $env;
         }
 
         return self::LIVE;
-    }
-
-    /**
-     * Check or update any temporary environment specified in the session.
-     *
-     * @return null|string
-     */
-    protected function sessionEnvironment()
-    {
-        // Check isDev in querystring
-        if (isset($_GET['isDev'])) {
-            if (isset($_SESSION)) {
-                unset($_SESSION['isTest']); // In case we are changing from test mode
-                $_SESSION['isDev'] = $_GET['isDev'];
-            }
-            return self::DEV;
-        }
-
-        // Check isTest in querystring
-        if (isset($_GET['isTest'])) {
-            if (isset($_SESSION)) {
-                unset($_SESSION['isDev']); // In case we are changing from dev mode
-                $_SESSION['isTest'] = $_GET['isTest'];
-            }
-            return self::TEST;
-        }
-
-        // Check session
-        if (!empty($_SESSION['isDev'])) {
-            return self::DEV;
-        }
-        if (!empty($_SESSION['isTest'])) {
-            return self::TEST;
-        }
-
-        // no session environment
-        return null;
     }
 
     public function boot($flush = false)

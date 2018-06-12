@@ -36,7 +36,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
 
         // Prepare tokens and execute chain
         $reloadToken = ParameterConfirmationToken::prepare_tokens(
-            ['isTest', 'isDev', 'flush'],
+            ['flush'],
             $request
         );
         $chain = new ErrorControlChain();
