@@ -7,6 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
@@ -884,7 +885,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // If we need to disable cache, do it
         if ($needsCacheDisabled) {
-            HTTP::set_cache_age(0);
+            HTTPCacheControlMiddleware::singleton()->disableCache();
         }
 
         $attrs = $this->getAttributes();
