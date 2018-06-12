@@ -571,7 +571,7 @@ class HTTP
             ? $response->getBody()
             : $response;
         if ($body) {
-            return sprintf('"%s"', md5($response));
+            return sprintf('"%s"', md5($body));
         }
         return false;
     }
