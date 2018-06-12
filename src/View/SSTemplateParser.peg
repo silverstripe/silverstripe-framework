@@ -286,7 +286,8 @@ class SSTemplateParser extends Parser implements TemplateParser
 
         $property = $sub['Call']['Method']['text'];
 
-        if (isset($sub['Call']['CallArguments']) && $arguments = $sub['Call']['CallArguments']['php']) {
+        if (isset($sub['Call']['CallArguments']) && isset($sub['Call']['CallArguments']['php'])) {
+            $arguments = $sub['Call']['CallArguments']['php'];
             $res['php'] .= "->$method('$property', array($arguments), true)";
         } else {
             $res['php'] .= "->$method('$property', null, true)";
@@ -405,6 +406,24 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     QuotedString: q:/['"]/   String:/ (\\\\ | \\. | [^$q\\])* /   '$q'
 
+    # Booleans
+
+    Boolean: / (true|false) /i
+
+    # Integers and floats
+
+    Sign: / [+-] /
+
+    Float: / [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)? /
+    Hexadecimal: / 0[xX][0-9a-fA-F]+ /
+    Octal: / 0[0-7]+ /
+    Binary: / 0[bB][01]+ /
+    Decimal: / 0 | [1-9][0-9]* /
+
+    # The order of the below statements is important. E.g. with Float first, the '0' in a '0x1A' hexadecimal would
+    # match the first part of the float regexp, so would stop matching there
+    IntegerOrFloat: ( Sign )? ( Hexadecimal | Binary | Float | Octal | Decimal )
+
     # In order to support 2.4's base syntax, we also need to detect free strings - strings not surrounded by
     # quotes, and containing spaces or punctuation, but supported as a single string. We support almost as flexible
     # a string as 2.4 - we don't attempt to determine the closing character by context, but just break on any
@@ -419,6 +438,8 @@ class SSTemplateParser extends Parser implements TemplateParser
     Argument:
         :DollarMarkedLookup |
         :QuotedString |
+        :Boolean |
+        :IntegerOrFloat |
         :Lookup !(< FreeString)|
         :FreeString
     */
@@ -447,6 +468,18 @@ class SSTemplateParser extends Parser implements TemplateParser
     {
         $res['ArgumentMode'] = 'string';
         $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
+    }
+
+    function Argument_Boolean(&$res, $sub)
+    {
+        $res['ArgumentMode'] = 'string';
+        $res['php'] = $sub['text'];
+    }
+
+    function Argument_IntegerOrFloat(&$res, $sub)
+    {
+        $res['ArgumentMode'] = 'string';
+        $res['php'] = $sub['text'];
     }
 
     function Argument_Lookup(&$res, $sub)

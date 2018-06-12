@@ -412,7 +412,7 @@ class ViewableData implements IteratorAggregate
     protected function objCacheName($fieldName, $arguments)
     {
         return $arguments
-            ? $fieldName . ":" . implode(',', $arguments)
+            ? $fieldName . ":" . var_export($arguments, true)
             : $fieldName;
     }
 
