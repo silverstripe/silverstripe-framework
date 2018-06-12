@@ -407,7 +407,6 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         // Force redirect
         $response = HTTPResponse::create();
         $response->redirect($url, $this->getRedirectType());
-        HTTP::add_cache_headers($response);
 
         return $response;
     }

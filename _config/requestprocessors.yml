@@ -11,6 +11,7 @@ SilverStripe\Core\Injector\Injector:
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
         RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
         FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
+        HTTPCacheControleMiddleware: '%$SilverStripe\Control\Middleware\HTTPCacheControlMiddleware'
         CanonicalURLMiddleware: '%$SilverStripe\Control\Middleware\CanonicalURLMiddleware'
   SilverStripe\Control\Middleware\AllowedHostsMiddleware:
     properties:
@@ -46,4 +47,12 @@ SilverStripe\Core\Injector\Injector:
     properties:
       ForceSSL: false
       ForceWWW: false
-
+---
+Name: httpcache-dev
+Only:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
+    Properties:
+      Enabled: false
