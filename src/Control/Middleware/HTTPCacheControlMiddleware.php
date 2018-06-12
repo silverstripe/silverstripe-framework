@@ -33,6 +33,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param HTTPRequest $request
      * @param callable $delegate
      * @return HTTPResponse
+     * @throws HTTPResponse_Exception
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
@@ -50,6 +51,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         }
 
         HTTP::add_cache_headers($response);
+        if (isset($ex)) {
+            throw $ex;
+        }
         return $response;
     }
 
