@@ -51,7 +51,8 @@ class CanonicalURLMiddleware implements HTTPMiddleware
 
     /**
      * Environment variables this middleware is enabled in, or a fixed boolean flag to
-     * apply to all environments
+     * apply to all environments. cli is disabled unless present here as `cli`, or set to true
+     * to force enabled.
      *
      * @var array|bool
      */
@@ -325,7 +326,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     }
 
     /**
-     * Get enabled flag, or list of environments to enable in
+     * Get enabled flag, or list of environments to enable in.
      *
      * @return array|bool
      */
@@ -335,6 +336,10 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     }
 
     /**
+     * Set enabled flag, or list of environments to enable in.
+     * Note: CLI is disabled by default, so `"cli"(string)` or `true(bool)` should be specified if you wish to
+     * enable for testing.
+     *
      * @param array|bool $enabledEnvs
      * @return $this
      */
@@ -359,6 +364,13 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         if (is_bool($enabledEnvs)) {
             return $enabledEnvs;
         }
+
+        // If CLI, EnabledEnvs must contain CLI
+        if (Director::is_cli() && !in_array('cli', $enabledEnvs)) {
+            return false;
+        }
+
+        // Check other envs
         return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs);
     }
 
