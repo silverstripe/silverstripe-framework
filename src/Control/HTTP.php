@@ -39,36 +39,36 @@ class HTTP
      */
     private static $cache_ajax_requests = true;
 
-	/**
-	 * @config
-	 * @var bool
-	 */
-	private static $disable_http_cache = false;
+    /**
+     * @config
+     * @var bool
+     */
+    private static $disable_http_cache = false;
 
-	/**
-	 * Mapping of extension to mime types
-	 *
-	 * @var array
-	 * @config
-	 */
-	private static $MimeTypes = array();
+    /**
+     * Mapping of extension to mime types
+     *
+     * @var array
+     * @config
+     */
+    private static $MimeTypes = [];
 
-	/**
-	 * List of names to add to the Cache-Control header.
-	 *
-	 * @see HTTPCacheControlMiddleware::__construct()
-	 * @config
-	 * @var array Keys are cache control names, values are boolean flags
-	 */
-	private static $cache_control = array();
+    /**
+     * List of names to add to the Cache-Control header.
+     *
+     * @see HTTPCacheControlMiddleware::__construct()
+     * @config
+     * @var array Keys are cache control names, values are boolean flags
+     */
+    private static $cache_control = [];
 
-	/**
-	 * Vary string; A comma separated list of var header names
-	 *
-	 * @config
-	 * @var string|null
-	 */
-	private static $vary = null;
+    /**
+     * Vary string; A comma separated list of var header names
+     *
+     * @config
+     * @var string|null
+     */
+    private static $vary = null;
 
     /**
      * Turns a local system filename into a URL by comparing it to the script filename.
@@ -146,7 +146,7 @@ class HTTP
         }
 
         // Replace attributes
-        $attribs = array("src", "background", "a" => "href", "link" => "href", "base" => "href");
+        $attribs = ["src", "background", "a" => "href", "link" => "href", "base" => "href"];
         $regExps = [];
         foreach ($attribs as $tag => $attrib) {
             if (!is_numeric($tag)) {
@@ -161,7 +161,7 @@ class HTTP
         }
         // Replace css styles
         // @todo - http://www.css3.info/preview/multiple-backgrounds/
-        $styles = array('background-image', 'background', 'list-style-image', 'list-style', 'content');
+        $styles = ['background-image', 'background', 'list-style-image', 'list-style', 'content'];
         foreach ($styles as $style) {
             $regExps[] = "/($style:[^;]*url *\\(\")([^\"]+)(\"\\))/i";
             $regExps[] = "/($style:[^;]*url *\\(')([^']+)('\\))/i";
@@ -222,7 +222,7 @@ class HTTP
         }
 
         // Parse params and add new variable
-        $params = array();
+        $params = [];
         if (isset($parts['query'])) {
             parse_str($parts['query'], $params);
         }
@@ -230,7 +230,7 @@ class HTTP
 
         // Generate URI segments and formatting
         $scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
-        $user = (isset($parts['user']) && $parts['user'] != '')  ? $parts['user'] : '';
+        $user = (isset($parts['user']) && $parts['user'] != '') ? $parts['user'] : '';
 
         if ($user != '') {
             // format in either user:pass@host.com or user@host.com
@@ -242,13 +242,13 @@ class HTTP
         $path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
 
         // handle URL params which are existing / new
-        $params = ($params) ?  '?' . http_build_query($params, null, $separator) : '';
+        $params = ($params) ? '?' . http_build_query($params, null, $separator) : '';
 
         // keep fragments (anchors) intact.
-        $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#' . $parts['fragment'] : '';
+        $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ? '#' . $parts['fragment'] : '';
 
         // Recompile URI segments
-        $newUri =  $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
+        $newUri = $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
 
         if ($isRelative) {
             return Director::makeRelative($newUri);
@@ -281,14 +281,14 @@ class HTTP
      */
     public static function findByTagAndAttribute($content, $attributes)
     {
-        $regexes = array();
+        $regexes = [];
 
         foreach ($attributes as $tag => $attribute) {
             $regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
             $regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
         }
 
-        $result = array();
+        $result = [];
 
         if ($regexes) {
             foreach ($regexes as $regex) {
@@ -308,7 +308,7 @@ class HTTP
      */
     public static function getLinksIn($content)
     {
-        return self::findByTagAndAttribute($content, array("a" => "href"));
+        return self::findByTagAndAttribute($content, ["a" => "href"]);
     }
 
     /**
@@ -318,7 +318,7 @@ class HTTP
      */
     public static function getImagesIn($content)
     {
-        return self::findByTagAndAttribute($content, array("img" => "src"));
+        return self::findByTagAndAttribute($content, ["img" => "src"]);
     }
 
     /**
@@ -423,148 +423,146 @@ class HTTP
         }
 
         // Warn if already assigned cache-control headers
-		if ($body && $body->getHeader('Cache-Control')) {
-			trigger_error(
-				'Cache-Control header has already been set. '
-				. 'Please use HTTPCacheControlMiddleware API to set caching options instead.',
-				E_USER_WARNING
-			);
-			return;
-		}
+        if ($body && $body->getHeader('Cache-Control')) {
+            trigger_error(
+                'Cache-Control header has already been set. '
+                . 'Please use HTTPCacheControlMiddleware API to set caching options instead.',
+                E_USER_WARNING
+            );
+            return;
+        }
 
-		$config = Config::forClass(__CLASS__);
+        $config = Config::forClass(__CLASS__);
 
-		// Get current cache control state
-		$cacheControl = HTTPCacheControlMiddleware::singleton();
+        // Get current cache control state
+        $cacheControl = HTTPCacheControlMiddleware::singleton();
 
-		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
-		// templates and other data. will be overridden by forced publicCache() or privateCache() calls
-		if ($config->get('disable_http_cache')) {
-			$cacheControl->disableCache();
-		}
+        // if http caching is disabled by config, disable it - used on dev environments due to frequently changing
+        // templates and other data. will be overridden by forced publicCache() or privateCache() calls
+        if ($config->get('disable_http_cache')) {
+            $cacheControl->disableCache();
+        }
 
-		// Populate $responseHeaders with all the headers that we want to build
-		$responseHeaders = array();
+        // Populate $responseHeaders with all the headers that we want to build
+        $responseHeaders = [];
 
-		// if no caching ajax requests, disable ajax if is ajax request
-		if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
-			$cacheControl->disableCache();
-		}
+        // if no caching ajax requests, disable ajax if is ajax request
+        if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
+            $cacheControl->disableCache();
+        }
 
-		// Errors disable cache (unless some errors are cached intentionally by usercode)
-		if ($body && $body->isError()) {
-			// Even if publicCache(true) is specfied, errors will be uncachable
-			$cacheControl->disableCache(true);
-		}
+        // Errors disable cache (unless some errors are cached intentionally by usercode)
+        if ($body && $body->isError()) {
+            // Even if publicCache(true) is specfied, errors will be uncachable
+            $cacheControl->disableCache(true);
+        }
 
-		// split the current vary header into it's parts and merge it with the config settings
-		// to create a list of unique vary values
-		$configVary = $config->get('vary');
-		$bodyVary = $body ? $body->getHeader('Vary') : '';
-		$vary = self::combineVary($configVary, $bodyVary);
-		if ($vary) {
-			$responseHeaders['Vary'] = $vary;
-		}
+        // split the current vary header into it's parts and merge it with the config settings
+        // to create a list of unique vary values
+        $configVary = $config->get('vary');
+        $bodyVary = $body ? $body->getHeader('Vary') : '';
+        $vary = self::combineVary($configVary, $bodyVary);
+        if ($vary) {
+            $responseHeaders['Vary'] = $vary;
+        }
 
-		// deal with IE6-IE8 problems with https and no-cache
-		$contentDisposition = null;
-		if($body) {
-			// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
-			$contentDisposition = $body->getHeader('Content-Disposition');
-		}
+        // deal with IE6-IE8 problems with https and no-cache
+        $contentDisposition = null;
+        if ($body) {
+            // Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
+            $contentDisposition = $body->getHeader('Content-Disposition');
+        }
 
-		if(
-			$body &&
-			Director::is_https() &&
-			isset($_SERVER['HTTP_USER_AGENT']) &&
-			strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') == true &&
-			strstr($contentDisposition, 'attachment;') == true &&
-			($cacheControl->hasDirective('no-cache') || $cacheControl->hasDirective('no-store'))
-		) {
-			// IE6-IE8 have problems saving files when https and no-cache/no-store are used
-			// (http://support.microsoft.com/kb/323308)
-			// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-			$cacheControl->privateCache(true);
-		}
+        if ($body &&
+            Director::is_https() &&
+            isset($_SERVER['HTTP_USER_AGENT']) &&
+            strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') == true &&
+            strstr($contentDisposition, 'attachment;') == true &&
+            ($cacheControl->hasDirective('no-cache') || $cacheControl->hasDirective('no-store'))
+        ) {
+            // IE6-IE8 have problems saving files when https and no-cache/no-store are used
+            // (http://support.microsoft.com/kb/323308)
+            // Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
+            $cacheControl->privateCache(true);
+        }
 
-		if (self::$modification_date) {
-			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
-		}
+        if (self::$modification_date) {
+            $responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
+        }
 
-		// if we can store the cache responses we should generate and send etags
-		if (!$cacheControl->hasDirective('no-store')) {
-			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-			// which means that if you log out, you get redirected back to a page which Chrome then checks against
-			// last-modified (which passes, getting a 304)
-			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
-			// By also using and etag that includes both the modification date and all the varies
-			// values which we also check against we can catch this and not return a 304
-			$etag = self::generateETag($body);
-			if ($etag) {
-				$responseHeaders['ETag'] = $etag;
+        // if we can store the cache responses we should generate and send etags
+        if (!$cacheControl->hasDirective('no-store')) {
+            // Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
+            // which means that if you log out, you get redirected back to a page which Chrome then checks against
+            // last-modified (which passes, getting a 304)
+            // when it shouldn't be trying to use that page at all because it's the "logged in" version.
+            // By also using and etag that includes both the modification date and all the varies
+            // values which we also check against we can catch this and not return a 304
+            $etag = self::generateETag($body);
+            if ($etag) {
+                $responseHeaders['ETag'] = $etag;
 
-				// 304 response detection
-				if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-					// As above, only 304 if the last request had all the same varies values
-					// (or the etag isn't passed as part of the request - but with chrome it always is)
-					$matchesEtag = $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
+                // 304 response detection
+                if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+                    // As above, only 304 if the last request had all the same varies values
+                    // (or the etag isn't passed as part of the request - but with chrome it always is)
+                    $matchesEtag = $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
 
-					if ($matchesEtag) {
-						if ($body) {
-							$body->setStatusCode(304);
-							$body->setBody('');
-						} else {
-							// this is wrong, we need to send the same vary headers and so on
-							header('HTTP/1.0 304 Not Modified');
-							die();
-						}
-					}
-				}
-			}
-		}
+                    if ($matchesEtag) {
+                        if ($body) {
+                            $body->setStatusCode(304);
+                            $body->setBody('');
+                        } else {
+                            // this is wrong, we need to send the same vary headers and so on
+                            header('HTTP/1.0 304 Not Modified');
+                            die();
+                        }
+                    }
+                }
+            }
+        }
 
-		if ($cacheControl->hasDirective('max-age')) {
-			$expires = time() + $cacheControl->getDirective('max-age');
-			$responseHeaders["Expires"] = self::gmt_date($expires);
-		}
+        if ($cacheControl->hasDirective('max-age')) {
+            $expires = time() + $cacheControl->getDirective('max-age');
+            $responseHeaders["Expires"] = self::gmt_date($expires);
+        }
 
-		// etag needs to be a quoted string according to HTTP spec
-		if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
-			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
-		}
+        // etag needs to be a quoted string according to HTTP spec
+        if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
+            $responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
+        }
 
-		// Merge with cache control headers
-		$responseHeaders = array_merge($responseHeaders, $cacheControl->generateHeaders());
+        // Merge with cache control headers
+        $responseHeaders = array_merge($responseHeaders, $cacheControl->generateHeaders());
 
-		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
-		foreach($responseHeaders as $k => $v) {
-			if($body) {
-				// Set the header now if it's not already set.
-				if ($body->getHeader($k) === null) {
-					$body->addHeader($k, $v);
-				}
-			} elseif(!headers_sent()) {
-				header("$k: $v");
-			}
-		}
+        // Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
+        foreach ($responseHeaders as $k => $v) {
+            if ($body) {
+                // Set the header now if it's not already set.
+                if ($body->getHeader($k) === null) {
+                    $body->addHeader($k, $v);
+                }
+            } elseif (!headers_sent()) {
+                header("$k: $v");
+            }
+        }
     }
 
 
+    /**
+     * @param HTTPResponse|string $response
+     *
+     * @return string|false
+     */
+    protected static function generateETag($response)
+    {
+        // Explicit etag
+        if (self::$etag) {
+            return self::$etag;
+        }
 
-	/**
-	 * @param HTTPResponse|string $response
-	 *
-	 * @return string|false
-	 */
-	protected static function generateETag($response)
-	{
-	    // Explicit etag
-		if (self::$etag) {
-			return self::$etag;
-		}
-
-		// Existing e-tag
-		if ($response instanceof HTTPResponse && $response->getHeader('ETag')) {
+        // Existing e-tag
+        if ($response instanceof HTTPResponse && $response->getHeader('ETag')) {
             return $response->getHeader('ETag');
         }
 
@@ -572,11 +570,11 @@ class HTTP
         $body = $response instanceof HTTPResponse
             ? $response->getBody()
             : $response;
-		if ($body) {
-			return sprintf('"%s"', md5($response));
-		}
-		return false;
-	}
+        if ($body) {
+            return sprintf('"%s"', md5($response));
+        }
+        return false;
+    }
 
 
     /**
@@ -602,21 +600,21 @@ class HTTP
         return self::$cache_age;
     }
 
-	/**
-	 * Combine vary strings
-	 *
-	 * @param string $vary,... Each vary as a separate arg
-	 * @return string
-	 */
-	protected static function combineVary($vary)
-	{
-		$varies = array();
-		foreach (func_get_args() as $arg) {
-			$argVaries = array_filter(preg_split("/\s*,\s*/", trim($arg)));
-			if ($argVaries) {
-				$varies = array_merge($varies, $argVaries);
-			}
-		}
-		return implode(', ', array_unique($varies));
-	}
+    /**
+     * Combine vary strings
+     *
+     * @param string $vary,... Each vary as a separate arg
+     * @return string
+     */
+    protected static function combineVary($vary)
+    {
+        $varies = [];
+        foreach (func_get_args() as $arg) {
+            $argVaries = array_filter(preg_split("/\s*,\s*/", trim($arg)));
+            if ($argVaries) {
+                $varies = array_merge($varies, $argVaries);
+            }
+        }
+        return implode(', ', array_unique($varies));
+    }
 }
