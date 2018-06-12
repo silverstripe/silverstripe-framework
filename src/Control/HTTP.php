@@ -603,18 +603,18 @@ class HTTP
     /**
      * Combine vary strings
      *
-     * @param string $vary,... Each vary as a separate arg
+     * @param string[] $varies Each vary as a separate arg
      * @return string
      */
-    protected static function combineVary($vary)
+    protected static function combineVary(...$varies)
     {
-        $varies = [];
-        foreach (func_get_args() as $arg) {
-            $argVaries = array_filter(preg_split("/\s*,\s*/", trim($arg)));
+        $cleanVaries = [];
+        foreach ($varies as $vary) {
+            $argVaries = array_filter(preg_split("/\s*,\s*/", trim($vary)));
             if ($argVaries) {
-                $varies = array_merge($varies, $argVaries);
+                $cleanVaries = array_merge($cleanVaries, $argVaries);
             }
         }
-        return implode(', ', array_unique($varies));
+        return implode(', ', array_unique($cleanVaries));
     }
 }
