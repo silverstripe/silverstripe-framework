@@ -478,21 +478,23 @@ Given the following structure, it will output the text.
 	Page 'Child 2' is a child of 'MyPage'
 
 <div class="notice" markdown="1">
-Additional selectors implicitely change the scope so you need to put additional `$Up` to get what you expect.
+Each `<% loop %>` or `<% with %>` block results in a change of scope, regardless of how the objects are traversed in the opening statement.
+See the example below:
 </div>
 
 ```ss
-<h1>Children of '$Title'</h1>
-<% loop $Children.Sort('Title').First %>
-    <%-- We have two additional selectors in the loop expression so... --%> 
-    <p>Page '$Title' is a child of '$Up.Up.Up.Title'</p>
-<% end_loop %>
+{$Title} <%-- Page title --%>
+<% with $Members.First.Organisation %>
+    {$Title} <%-- Organisation title --%>
+    {$Up.Title} <%-- Page title --%>
+    {$Up.Members.First.Name} <%-- Member name --%>
+<% end_with %>
 ```
 
 #### Top
 
 While `$Up` provides us a way to go up one level of scope, `$Top` is a shortcut to jump to the top most scope of the 
-page. The  previous example could be rewritten to use the following syntax.
+page. For example:
 
 ```ss
 <h1>Children of '$Title'</h1>

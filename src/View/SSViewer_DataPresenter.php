@@ -39,6 +39,14 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     protected $overlay;
 
     /**
+     * Flag for whether overlay should be preserved when pushing a new scope
+     *
+     * @see SSViewer_DataPresenter::pushScope()
+     * @var bool
+     */
+    protected $preserveOverlay = false;
+
+    /**
      * Underlay variables. Concede precedence to overlay variables or anything from the current scope
      *
      * @var array
@@ -199,14 +207,17 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     public function pushScope()
     {
         $scope = parent::pushScope();
-        $upIndex = $this->getUpIndex();
+        $upIndex = $this->getUpIndex() ?: 0;
 
-        if ($upIndex !== null) {
-            $itemStack = $this->getItemStack();
-            $itemStack[$upIndex][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
+        $itemStack = $this->getItemStack();
+        $itemStack[$upIndex][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
+        $this->setItemStack($itemStack);
 
-            $this->setItemStack($itemStack);
-            $this->overlay = array();
+        // Remove the overlay when we're changing to a new scope, as values in
+        // that scope take priority. The exceptions that set this flag are $Up
+        // and $Top as they require that the new scope inherits the overlay
+        if (!$this->preserveOverlay) {
+            $this->overlay = [];
         }
 
         return $scope;
@@ -225,7 +236,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
 
         if ($upIndex !== null) {
             $itemStack = $this->getItemStack();
-            $this->overlay = $itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY];
+            $this->overlay = $itemStack[$upIndex][SSViewer_Scope::ITEM_OVERLAY];
         }
 
         return parent::popScope();
@@ -249,13 +260,17 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             case 'Up':
                 $upIndex = $this->getUpIndex();
                 if ($upIndex === null) {
-                    user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+                    throw new \LogicException('Up called when we\'re already at the top of the scope');
                 }
-
                 $overlayIndex = $upIndex; // Parent scope
+                $this->preserveOverlay = true; // Preserve overlay
                 break;
             case 'Top':
                 $overlayIndex = 0; // Top-level scope
+                $this->preserveOverlay = true; // Preserve overlay
+                break;
+            default:
+                $this->preserveOverlay = false;
                 break;
         }
 
