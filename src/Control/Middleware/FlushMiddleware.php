@@ -17,6 +17,9 @@ class FlushMiddleware implements HTTPMiddleware
     public function process(HTTPRequest $request, callable $delegate)
     {
         if (array_key_exists('flush', $request->getVars())) {
+            // Disable cache when flushing
+            HTTPCacheControlMiddleware::singleton()->disableCache(true);
+
             foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
                 /** @var Flushable|string $class */
                 $class::flush();

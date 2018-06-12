@@ -41,6 +41,14 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         } catch (HTTPResponse_Exception $ex) {
             $response = $ex->getResponse();
         }
+
+		// If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
+		// likely to be supplying information relevant to the current user only
+		if ($request->getSession()->getAll()) {
+			// Don't force in case user code chooses to opt in to public caching
+			$this->privateCache();
+		}
+
         HTTP::add_cache_headers($response);
         return $response;
     }
@@ -262,6 +270,17 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         return isset($this->stateDirectives[$state][$directive]);
 	}
 
+    /**
+     * Check if the current state has the given directive.
+     *
+     * @param string $directive
+     * @return bool
+     */
+	public function hasDirective($directive)
+    {
+        return $this->hasStateDirective($this->getState(), $directive);
+    }
+
 	/**
 	 * Low level method to get the value of a directive for a state.
      * Returns false if there is no directive.
@@ -279,6 +298,38 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         }
         return false;
 	}
+
+    /**
+     * Get the value of the given directive for the current state
+     *
+     * @param string $directive
+     * @return bool|int|string
+     */
+    public function getDirective($directive)
+    {
+	    return $this->getStateDirective($this->getState(), $directive);
+    }
+
+    /**
+     * Get directives for the given state
+     *
+     * @param string $state
+     * @return array
+     */
+    public function getStateDirectives($state)
+    {
+        return $this->stateDirectives[$state];
+    }
+
+    /**
+     * Get all directives for the currently active state
+     *
+     * @return array
+     */
+    public function getDirectives()
+    {
+        return $this->getStateDirectives($this->getState());
+    }
 
 	/**
 	 * The cache should not store anything about the client request or server response.
@@ -473,9 +524,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 	 */
 	protected function generateCacheHeader()
 	{
-		$cacheControl = array();
-		foreach ($this->state as $directive => $value) {
-			if (is_null($value)) {
+		$cacheControl = [];
+		foreach ($this->getDirectives() as $directive => $value) {
+			if ($value === true) {
 				$cacheControl[] = $directive;
 			} else {
 				$cacheControl[] = $directive . '=' . $value;

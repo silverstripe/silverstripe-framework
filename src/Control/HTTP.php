@@ -3,6 +3,8 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
@@ -36,6 +38,37 @@ class HTTP
      * @var bool
      */
     private static $cache_ajax_requests = true;
+
+	/**
+	 * @config
+	 * @var bool
+	 */
+	private static $disable_http_cache = false;
+
+	/**
+	 * Mapping of extension to mime types
+	 *
+	 * @var array
+	 * @config
+	 */
+	private static $MimeTypes = array();
+
+	/**
+	 * List of names to add to the Cache-Control header.
+	 *
+	 * @see HTTPCacheControlMiddleware::__construct()
+	 * @config
+	 * @var array Keys are cache control names, values are boolean flags
+	 */
+	private static $cache_control = array();
+
+	/**
+	 * Vary string; A comma separated list of var header names
+	 *
+	 * @config
+	 * @var string|null
+	 */
+	private static $vary = null;
 
     /**
      * Turns a local system filename into a URL by comparing it to the script filename.
@@ -328,6 +361,7 @@ class HTTP
     public static function set_cache_age($age)
     {
         self::$cache_age = $age;
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(self::$cache_age);
     }
 
     /**
@@ -376,18 +410,10 @@ class HTTP
      */
     public static function add_cache_headers($body = null)
     {
-        $cacheAge = self::$cache_age;
-
         // Validate argument
         if ($body && !($body instanceof HTTPResponse)) {
             user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
             $body = null;
-        }
-
-        // Development sites have frequently changing templates; this can get stuffed up by the code
-        // below.
-        if (Director::isDev()) {
-            $cacheAge = 0;
         }
 
         // The headers have been sent and we don't have an HTTPResponse object to attach things to; no point in
@@ -396,147 +422,161 @@ class HTTP
             return;
         }
 
-        // Populate $responseHeaders with all the headers that we want to build
-        $responseHeaders = array();
+        // Warn if already assigned cache-control headers
+		if ($body && $body->getHeader('Cache-Control')) {
+			trigger_error(
+				'Cache-Control header has already been set. '
+				. 'Please use HTTPCacheControlMiddleware API to set caching options instead.',
+				E_USER_WARNING
+			);
+			return;
+		}
 
-        $cacheControlHeaders = HTTP::config()->uninherited('cache_control');
+		$config = Config::forClass(__CLASS__);
 
+		// Get current cache control state
+		$cacheControl = HTTPCacheControlMiddleware::singleton();
 
-        // currently using a config setting to cancel this, seems to be so that the CMS caches ajax requests
-        if (function_exists('apache_request_headers') && static::config()->uninherited('cache_ajax_requests')) {
-            $requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
-            if (isset($requestHeaders['x-requested-with'])
-                && $requestHeaders['x-requested-with']=='XMLHttpRequest'
-            ) {
-                $cacheAge = 0;
-            }
-        }
+		// if http caching is disabled by config, disable it - used on dev environments due to frequently changing
+		// templates and other data. will be overridden by forced publicCache() or privateCache() calls
+		if ($config->get('disable_http_cache')) {
+			$cacheControl->disableCache();
+		}
 
-        if ($cacheAge > 0) {
-            $cacheControlHeaders['max-age'] = self::$cache_age;
+		// Populate $responseHeaders with all the headers that we want to build
+		$responseHeaders = array();
 
-            // Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
-            // defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
-            // Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
-            // prefer the caching information indicated through the "Cache-Control" header.
-            $responseHeaders["Pragma"] = "";
+		// if no caching ajax requests, disable ajax if is ajax request
+		if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
+			$cacheControl->disableCache();
+		}
 
-            // To do: User-Agent should only be added in situations where you *are* actually
-            // varying according to user-agent.
-            $vary = HTTP::config()->uninherited('vary');
-            if ($vary && strlen($vary)) {
-                $responseHeaders['Vary'] = $vary;
-            }
-        } else {
-            $contentDisposition = null;
-            if ($body) {
-                // Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
-                $contentDisposition = $body->getHeader('Content-disposition');
-                if (!$contentDisposition) {
-                    $contentDisposition = $body->getHeader('Content-Disposition');
-                }
-            }
+		// Errors disable cache (unless some errors are cached intentionally by usercode)
+		if ($body && $body->isError()) {
+			// Even if publicCache(true) is specfied, errors will be uncachable
+			$cacheControl->disableCache(true);
+		}
 
-            if ($body &&
-                Director::is_https() &&
-                isset($_SERVER['HTTP_USER_AGENT']) &&
-                strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')==true &&
-                strstr($contentDisposition, 'attachment;')==true
-            ) {
-                // IE6-IE8 have problems saving files when https and no-cache are used
-                // (http://support.microsoft.com/kb/323308)
-                // Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-                $cacheControlHeaders['max-age'] = 3;
+		// split the current vary header into it's parts and merge it with the config settings
+		// to create a list of unique vary values
+		$configVary = $config->get('vary');
+		$bodyVary = $body ? $body->getHeader('Vary') : '';
+		$vary = self::combineVary($configVary, $bodyVary);
+		if ($vary) {
+			$responseHeaders['Vary'] = $vary;
+		}
 
-                // Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
-                // defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
-                // Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
-                // prefer the caching information indicated through the "Cache-Control" header.
-                $responseHeaders["Pragma"] = "";
-            } else {
-                $cacheControlHeaders['no-cache'] = "true";
-                $cacheControlHeaders['no-store'] = "true";
-            }
-        }
+		// deal with IE6-IE8 problems with https and no-cache
+		$contentDisposition = null;
+		if($body) {
+			// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
+			$contentDisposition = $body->getHeader('Content-Disposition');
+		}
 
-        foreach ($cacheControlHeaders as $header => $value) {
-            if (is_null($value)) {
-                unset($cacheControlHeaders[$header]);
-            } elseif ((is_bool($value) && $value) || $value === "true") {
-                $cacheControlHeaders[$header] = $header;
-            } else {
-                $cacheControlHeaders[$header] = $header . "=" . $value;
-            }
-        }
+		if(
+			$body &&
+			Director::is_https() &&
+			isset($_SERVER['HTTP_USER_AGENT']) &&
+			strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') == true &&
+			strstr($contentDisposition, 'attachment;') == true &&
+			($cacheControl->hasDirective('no-cache') || $cacheControl->hasDirective('no-store'))
+		) {
+			// IE6-IE8 have problems saving files when https and no-cache/no-store are used
+			// (http://support.microsoft.com/kb/323308)
+			// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
+			$cacheControl->privateCache(true);
+		}
 
-        $responseHeaders['Cache-Control'] = implode(', ', $cacheControlHeaders);
-        unset($cacheControlHeaders, $header, $value);
+		if (self::$modification_date) {
+			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
+		}
 
-        if (self::$modification_date && $cacheAge > 0) {
-            $responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
+		// if we can store the cache responses we should generate and send etags
+		if (!$cacheControl->hasDirective('no-store')) {
+			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
+			// which means that if you log out, you get redirected back to a page which Chrome then checks against
+			// last-modified (which passes, getting a 304)
+			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
+			// By also using and etag that includes both the modification date and all the varies
+			// values which we also check against we can catch this and not return a 304
+			$etag = self::generateETag($body);
+			if ($etag) {
+				$responseHeaders['ETag'] = $etag;
 
-            // Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-            // which means that if you log out, you get redirected back to a page which Chrome then checks against
-            // last-modified (which passes, getting a 304)
-            // when it shouldn't be trying to use that page at all because it's the "logged in" version.
-            // By also using and etag that includes both the modification date and all the varies
-            // values which we also check against we can catch this and not return a 304
-            $etagParts = array(self::$modification_date, serialize($_COOKIE));
-            $etagParts[] = Director::is_https() ? 'https' : 'http';
-            if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                $etagParts[] = $_SERVER['HTTP_USER_AGENT'];
-            }
-            if (isset($_SERVER['HTTP_ACCEPT'])) {
-                $etagParts[] = $_SERVER['HTTP_ACCEPT'];
-            }
+				// 304 response detection
+				if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+					// As above, only 304 if the last request had all the same varies values
+					// (or the etag isn't passed as part of the request - but with chrome it always is)
+					$matchesEtag = $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
 
-            $etag = sha1(implode(':', $etagParts));
-            $responseHeaders["ETag"] = $etag;
+					if ($matchesEtag) {
+						if ($body) {
+							$body->setStatusCode(304);
+							$body->setBody('');
+						} else {
+							// this is wrong, we need to send the same vary headers and so on
+							header('HTTP/1.0 304 Not Modified');
+							die();
+						}
+					}
+				}
+			}
+		}
 
-            // 304 response detection
-            if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-                $ifModifiedSince = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
+		if ($cacheControl->hasDirective('max-age')) {
+			$expires = time() + $cacheControl->getDirective('max-age');
+			$responseHeaders["Expires"] = self::gmt_date($expires);
+		}
 
-                // As above, only 304 if the last request had all the same varies values
-                // (or the etag isn't passed as part of the request - but with chrome it always is)
-                $matchesEtag = !isset($_SERVER['HTTP_IF_NONE_MATCH']) || $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
+		// etag needs to be a quoted string according to HTTP spec
+		if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
+			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
+		}
 
-                if ($ifModifiedSince >= self::$modification_date && $matchesEtag) {
-                    if ($body) {
-                        $body->setStatusCode(304);
-                        $body->setBody('');
-                    } else {
-                        header('HTTP/1.0 304 Not Modified');
-                        die();
-                    }
-                }
-            }
+		// Merge with cache control headers
+		$responseHeaders = array_merge($responseHeaders, $cacheControl->generateHeaders());
 
-            $expires = time() + $cacheAge;
-            $responseHeaders["Expires"] = self::gmt_date($expires);
-        }
-
-        if (self::$etag) {
-            $responseHeaders['ETag'] = self::$etag;
-        }
-
-        // etag needs to be a quoted string according to HTTP spec
-        if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
-            $responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
-        }
-
-        // Now that we've generated them, either output them or attach them to the HTTPResponse as appropriate
-        foreach ($responseHeaders as $k => $v) {
-            if ($body) {
-                // Set the header now if it's not already set.
-                if ($body->getHeader($k) === null) {
-                    $body->addHeader($k, $v);
-                }
-            } elseif (!headers_sent()) {
-                header("$k: $v");
-            }
-        }
+		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
+		foreach($responseHeaders as $k => $v) {
+			if($body) {
+				// Set the header now if it's not already set.
+				if ($body->getHeader($k) === null) {
+					$body->addHeader($k, $v);
+				}
+			} elseif(!headers_sent()) {
+				header("$k: $v");
+			}
+		}
     }
+
+
+
+	/**
+	 * @param HTTPResponse|string $response
+	 *
+	 * @return string|false
+	 */
+	protected static function generateETag($response)
+	{
+	    // Explicit etag
+		if (self::$etag) {
+			return self::$etag;
+		}
+
+		// Existing e-tag
+		if ($response instanceof HTTPResponse && $response->getHeader('ETag')) {
+            return $response->getHeader('ETag');
+        }
+
+        // Generate etag from body
+        $body = $response instanceof HTTPResponse
+            ? $response->getBody()
+            : $response;
+		if ($body) {
+			return sprintf('"%s"', md5($response));
+		}
+		return false;
+	}
 
 
     /**
@@ -561,4 +601,22 @@ class HTTP
     {
         return self::$cache_age;
     }
+
+	/**
+	 * Combine vary strings
+	 *
+	 * @param string $vary,... Each vary as a separate arg
+	 * @return string
+	 */
+	protected static function combineVary($vary)
+	{
+		$varies = array();
+		foreach (func_get_args() as $arg) {
+			$argVaries = array_filter(preg_split("/\s*,\s*/", trim($arg)));
+			if ($argVaries) {
+				$varies = array_merge($varies, $argVaries);
+			}
+		}
+		return implode(', ', array_unique($varies));
+	}
 }
