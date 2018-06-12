@@ -1181,8 +1181,6 @@ warnings:
       message: 'Renamed to restoreFormState()'
     'SilverStripe\Forms\Form->resetValidation()':
       message: 'Renamed to clearFormState()'
-    'SilverStripe\Forms\Form->transformTo()':
-      message: 'Removed'
     'SilverStripe\Forms\Form->callfieldmethod()':
       message: 'Removed'
     'SilverStripe\Forms\Form->addErrorMessage()':
