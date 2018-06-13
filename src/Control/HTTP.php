@@ -3,7 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Control\Middleware\ETagMiddleware;
+use SilverStripe\Control\Middleware\ChangeDetectionMiddleware;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -33,7 +33,7 @@ class HTTP
     protected static $modification_date = null;
 
     /**
-     * @deprecated 4.2..5.0 Handled by ETagMiddleware
+     * @deprecated 4.2..5.0 Handled by ChangeDetectionMiddleware
      * @var string
      */
     protected static $etag = null;
@@ -395,12 +395,12 @@ class HTTP
     }
 
     /**
-     * @deprecated 4.2..5.0 Use ETagMiddleware instead
+     * @deprecated 4.2..5.0 Use ChangeDetectionMiddleware instead
      * @param string $etag
      */
     public static function register_etag($etag)
     {
-        Deprecation::notice('5.0', 'Use ETagMiddleware instead');
+        Deprecation::notice('5.0', 'Use ChangeDetectionMiddleware instead');
         if (strpos($etag, '"') !== 0) {
             $etag =  "\"{$etag}\"";
         }
@@ -453,7 +453,7 @@ class HTTP
 
         // Get current cache control state
         $cacheControlMiddleware = HTTPCacheControlMiddleware::singleton();
-        $etagMiddleware = ETagMiddleware::singleton();
+        $changeDetectionMiddleware = ChangeDetectionMiddleware::singleton();
 
         // if http caching is disabled by config, disable it - used on dev environments due to frequently changing
         // templates and other data. will be overridden by forced publicCache(true) or privateCache(true) calls
@@ -491,7 +491,7 @@ class HTTP
         }
 
         // Run middleware
-        $etagMiddleware->process($request, function (HTTPRequest $request) use ($cacheControlMiddleware, $response) {
+        $changeDetectionMiddleware->process($request, function (HTTPRequest $request) use ($cacheControlMiddleware, $response) {
             return $cacheControlMiddleware->process($request, function (HTTPRequest $request) use ($response) {
                 return $response;
             });

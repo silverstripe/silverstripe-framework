@@ -7,9 +7,10 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injectable;
 
 /**
- * Generates and handle responses for etag header.
+ * Handles internal change detection via etag / ifmodifiedsince headers,
+ * conditonally sending a 304 not modified if possible.
  */
-class ETagMiddleware implements HTTPMiddleware
+class ChangeDetectionMiddleware implements HTTPMiddleware
 {
     use Injectable;
 
