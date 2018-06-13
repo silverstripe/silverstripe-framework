@@ -76,6 +76,17 @@ functionality is available as an additional [Spam Protection](https://github.com
 module if required. The module provides an consistent API for allowing third-party spam protection handlers such as 
 [Recaptcha](http://www.google.com/recaptcha/intro/) and [Mollom](https://mollom.com/) to work within the `Form` API. 
 
+## Data disclosure through HTTP Caching (since 4.2.0)
+
+Forms, and particularly their responses, can contain sensitive data (such as when data is pre-populated or re-posted due
+to validation errors). This data can inadvertently be stored either in a user's browser cache or in an intermediary
+cache such as a CDN or other caching-proxy. If incorrect `Cache-Conrol` headers are used, private data may be cached and
+accessible publicly through the CDN.
+
+To ensure this doesn't happen SilverStripe adds `Cache-Control: no-store, no-cache, must-revalidate` headers to any 
+forms that have validators or security tokens (all of them by default) applied to them; this ensures that CDNs
+(and browsers) will not cache these pages.
+
 ## Related Documentation
 
 * [Security](../security)
