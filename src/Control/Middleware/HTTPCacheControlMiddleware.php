@@ -3,7 +3,6 @@
 namespace SilverStripe\Control\Middleware;
 
 use InvalidArgumentException;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
