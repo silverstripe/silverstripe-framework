@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\Tests\HTTPCacheControlIntegrationTest\RuleController;
 use SilverStripe\Control\Tests\HTTPCacheControlIntegrationTest\SessionController;
 use SilverStripe\Core\Config\Config;

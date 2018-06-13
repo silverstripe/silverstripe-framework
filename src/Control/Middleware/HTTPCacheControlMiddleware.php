@@ -92,7 +92,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @var string
      */
-    protected $state = self::STATE_ENABLED;
+    protected $state = self::STATE_DISABLED;
 
     /**
      * Forcing level of previous setting; higher number wins
