@@ -1215,9 +1215,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param SS_HTTPRequest|null $request
 	 */
 	public static function choose_site_stage(SS_HTTPRequest $request = null) {
+		if (!$request && Controller::has_curr()) {
+			$request = Controller::curr()->getRequest();
+		}
 		if (!$request) {
 			throw new InvalidArgumentException("Request not found");
 		}
+		
 		$mode = static::get_default_reading_mode();
 
         // Check any pre-existing session mode
@@ -1481,7 +1485,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
 			$containerClass = 'DataList') {
-
+		VersionedReadingMode::validateStage($stage);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		return $result->setDataQueryParam(array(
 			'Versioned.mode' => 'stage',
