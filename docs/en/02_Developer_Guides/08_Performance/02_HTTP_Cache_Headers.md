@@ -103,7 +103,7 @@ class Page_Controller extends ContentController
 {
     public function init()
     {
-        HTTPCacheControl::inst()
+        HTTPCacheControl::singleton()
            ->enableCache()
            ->setMaxAge(60); // 1 minute
 
@@ -130,7 +130,7 @@ class MyPage_Controller extends Page_Controller
     public function myprivateaction($request)
     {
         $response = $this->myPrivateResponse();
-        HTTPCacheControl::inst()
+        HTTPCacheControl::singleton()
            ->disableCache();
         
         return $response;
@@ -160,7 +160,7 @@ class Page_Controller extends ContentController
 {
     public function init()
     {
-        HTTPCacheControl::inst()
+        HTTPCacheControl::singleton()
            ->enableCache($force=true) // DANGER ZONE
            ->setMaxAge(60); // 1 minute
         
