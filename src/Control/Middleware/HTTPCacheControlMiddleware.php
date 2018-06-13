@@ -623,7 +623,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     }
 
     /**
-     * Generate and add the `Cache-Control` header to a response object
+     * Generate all headers to add to this object
      *
      * @param HTTPResponse $response
      *
@@ -633,7 +633,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     {
         $headers = $this->generateHeadersFor($response);
         foreach ($headers as $name => $value) {
-            $response->addHeader($name, $value);
+            if (!$response->getHeader($name)) {
+                $response->addHeader($name, $value);
+            }
         }
         return $this;
     }

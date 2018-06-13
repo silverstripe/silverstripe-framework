@@ -2,14 +2,13 @@
 
 namespace SilverStripe\Control\Tests;
 
-use PHPUnit_Framework_Error_Warning;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Session;
 use SilverStripe\Dev\FunctionalTest;
 
 /**
@@ -36,7 +35,7 @@ class HTTPTest extends FunctionalTest
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
 
-        HTTP::add_cache_headers($response);
+        $this->addCacheHeaders($response);
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
         // Ensure cache headers are set correctly when disabled via config (e.g. when dev)
@@ -47,7 +46,7 @@ class HTTPTest extends FunctionalTest
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
+        $this->addCacheHeaders($response);
         $this->assertContains('no-cache', $response->getHeader('Cache-Control'));
         $this->assertContains('no-store', $response->getHeader('Cache-Control'));
         $this->assertContains('must-revalidate', $response->getHeader('Cache-Control'));
@@ -60,7 +59,7 @@ class HTTPTest extends FunctionalTest
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
+        $this->addCacheHeaders($response);
         $this->assertContains('max-age=30', $response->getHeader('Cache-Control'));
         $this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
 
@@ -70,45 +69,45 @@ class HTTPTest extends FunctionalTest
             'Pragma' => 'no-cache',
             'Cache-Control' => 'max-age=0, no-cache, no-store',
         );
+        foreach ($headers as $header => $value) {
+            $response->addHeader($header, $value);
+        }
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
-        $response = new HTTPResponse($body, 200);
-        foreach ($headers as $name => $value) {
-            $response->addHeader($name, $value);
+        $this->addCacheHeaders($response);
+        foreach ($headers as $header => $value) {
+            $this->assertEquals($value, $response->getHeader($header));
         }
-        // Expect a warning if the header is already set
-        $this->expectException(PHPUnit_Framework_Error_Warning::class);
-        $this->expectExceptionMessage(
-            'Cache-Control header has already been set. '
-            . 'Please use HTTPCacheControlMiddleware API to set caching options instead.'
-        );
-
-        HTTP::add_cache_headers($response);
     }
 
     public function testConfigVary()
     {
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
-        HTTP::add_cache_headers($response);
+        HTTPCacheControlMiddleware::singleton()
+            ->setMaxAge(30)
+            ->setVary('X-Requested-With, X-Forwarded-Protocol');
+        $this->addCacheHeaders($response);
 
+        // Vary set properly
         $v = $response->getHeader('Vary');
-        $this->assertNotEmpty($v);
-
         $this->assertContains("X-Forwarded-Protocol", $v);
         $this->assertContains("X-Requested-With", $v);
         $this->assertNotContains("Cookie", $v);
         $this->assertNotContains("User-Agent", $v);
         $this->assertNotContains("Accept", $v);
 
-        HTTP::config()->update('vary', '');
+        // No vary
+        HTTPCacheControlMiddleware::singleton()
+            ->setMaxAge(30)
+            ->setVary(null);
         HTTPCacheControlMiddleware::reset();
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultVary', []);
 
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
-
+        $this->addCacheHeaders($response);
         $v = $response->getHeader('Vary');
         $this->assertEmpty($v);
     }
@@ -394,5 +393,24 @@ class HTTPTest extends FunctionalTest
                 );
             }
         );
+    }
+
+    /**
+     * Process cache headers on a response
+     *
+     * @param HTTPResponse $response
+     */
+    protected function addCacheHeaders(HTTPResponse $response)
+    {
+        // Mock request
+        $session = new Session([]);
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession($session);
+
+        // Run middleware
+        HTTPCacheControlMiddleware::singleton()
+            ->process($request, function (HTTPRequest $request) use ($response) {
+            return $response;
+        });
     }
 }
