@@ -5,7 +5,6 @@ namespace SilverStripe\Forms;
 use BadMethodCallException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\NullHTTPRequest;
@@ -869,25 +868,6 @@ class Form extends ViewableData implements HasRequestHandler
     {
         $exclude = (is_string($attrs)) ? func_get_args() : null;
 
-        // Figure out if we can cache this form
-        // - forms with validation shouldn't be cached, cos their error messages won't be shown
-        // - forms with security tokens shouldn't be cached because security tokens expire
-        $needsCacheDisabled = false;
-        if ($this->getSecurityToken()->isEnabled()) {
-            $needsCacheDisabled = true;
-        }
-        if ($this->FormMethod() != 'GET') {
-            $needsCacheDisabled = true;
-        }
-        if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
-            $needsCacheDisabled = true;
-        }
-
-        // If we need to disable cache, do it
-        if ($needsCacheDisabled) {
-            HTTPCacheControlMiddleware::singleton()->disableCache();
-        }
-
         $attrs = $this->getAttributes();
 
         // Remove empty
@@ -1569,6 +1549,10 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function forTemplate()
     {
+        if (!$this->canBeCached()) {
+            HTTPCacheControlMiddleware::singleton()->disableCache();
+        }
+
         $return = $this->renderWith($this->getTemplates());
 
         // Now that we're rendered, clear message
@@ -1823,5 +1807,35 @@ class Form extends ViewableData implements HasRequestHandler
     protected function buildRequestHandler()
     {
         return FormRequestHandler::create($this);
+    }
+
+    /**
+     * Can the body of this form be cached?
+     *
+     * Figure out if we can cache this form
+     * - forms with validation shouldn't be cached, because their error messages won't be shown
+     * - forms with security tokens shouldn't be cached because security tokens expire
+     *
+     * @return bool
+     */
+    public function canBeCached()
+    {
+        if ($this->getSecurityToken()->isEnabled()) {
+            return false;
+        }
+        if ($this->FormMethod() !== 'GET') {
+            return false;
+        }
+
+        // Don't cache if there are required fields, or some other complex validator
+        $validator = $this->getValidator();
+        if ($validator instanceof RequiredFields) {
+            if (count($this->validator->getRequired())) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }
