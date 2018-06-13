@@ -8,13 +8,6 @@ use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Generates and handle responses for etag header.
- *
- * Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
- * which means that if you log out, you get redirected back to a page which Chrome then checks against
- * last-modified (which passes, getting a 304)
- * when it shouldn't be trying to use that page at all because it's the "logged in" version.
- * By also using and etag that includes both the modification date and all the varies
- * values which we also check against we can catch this and not return a 304
  */
 class ETagMiddleware implements HTTPMiddleware
 {
@@ -45,7 +38,7 @@ class ETagMiddleware implements HTTPMiddleware
 
             // Check if we have a match
             $ifNoneMatch = $request->getHeader('If-None-Match');
-            if ($ifNoneMatch && $ifNoneMatch === $etag) {
+            if ($ifNoneMatch === $etag) {
                 return $this->sendNotModified($request, $response);
             }
         }
@@ -67,18 +60,12 @@ class ETagMiddleware implements HTTPMiddleware
     protected function generateETag(HTTPResponse $response)
     {
         // Existing e-tag
-        if ($response instanceof HTTPResponse && $response->getHeader('ETag')) {
-            return $response->getHeader('ETag');
+        if ($etag = $response->getHeader('ETag')) {
+            return $etag;
         }
 
         // Generate etag from body
-        $body = $response instanceof HTTPResponse
-            ? $response->getBody()
-            : $response;
-        if ($body) {
-            return sprintf('"%s"', md5($body));
-        }
-        return false;
+        return sprintf('"%s"', md5($response->getBody()));
     }
 
     /**
