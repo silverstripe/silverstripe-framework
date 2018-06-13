@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Frameworks\Tests\Behaviour;
+namespace SilverStripe\Framework\Tests\Behaviour;
 
 use BadMethodCallException;
 use Behat\Behat\Context\Context;
