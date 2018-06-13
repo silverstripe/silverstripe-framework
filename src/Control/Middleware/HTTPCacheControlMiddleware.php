@@ -43,6 +43,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         } catch (HTTPResponse_Exception $ex) {
             $response = $ex->getResponse();
         }
+        if (!$response) {
+            return null;
+        }
 
         // Update state based on current request and response objects
         $this->augmentState($request, $response);

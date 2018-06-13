@@ -25,6 +25,9 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
     {
         /** @var HTTPResponse $response */
         $response = $delegate($request);
+        if (!$response) {
+            return null;
+        }
 
         // Ignore etag for no-store
         $cacheControl = $response->getHeader('Cache-Control');
