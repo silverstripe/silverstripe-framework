@@ -60,7 +60,8 @@ class ETagMiddleware implements HTTPMiddleware
     protected function generateETag(HTTPResponse $response)
     {
         // Existing e-tag
-        if ($etag = $response->getHeader('ETag')) {
+        $etag = $response->getHeader('ETag');
+        if ($etag) {
             return $etag;
         }
 

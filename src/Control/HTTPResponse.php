@@ -79,7 +79,7 @@ class HTTPResponse
     /**
      * @var string
      */
-    protected $version = '1.0';
+    protected $protocolVersion = '1.0';
 
     /**
      * @var int
@@ -113,31 +113,34 @@ class HTTPResponse
      * @param int $statusCode The numeric status code - 200, 404, etc
      * @param string $statusDescription The text to be given alongside the status code.
      *  See {@link setStatusCode()} for more information.
+     * @param string $protocolVersion
      */
-    public function __construct($body = null, $statusCode = null, $statusDescription = null, $version = null)
+    public function __construct($body = null, $statusCode = null, $statusDescription = null, $protocolVersion = null)
     {
         $this->setBody($body);
         if ($statusCode) {
             $this->setStatusCode($statusCode, $statusDescription);
         }
-        if (!$version) {
-            if (preg_match('/HTTP\/(\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'], $matches)) {
-                $version = $matches[1];
+        if (!$protocolVersion) {
+            if (preg_match('/HTTP\/(?<version>\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'], $matches)) {
+                $protocolVersion = $matches['version'];
             }
         }
-        $this->setVersion($version);
+        if ($protocolVersion) {
+            $this->setProtocolVersion($protocolVersion);
+        }
     }
 
     /**
      * The HTTP version used to respond to this request (typically 1.0 or 1.1)
      *
-     * @param string $version
+     * @param string $protocolVersion
      *
      * @return $this
      */
-    public function setVersion($version)
+    public function setProtocolVersion($protocolVersion)
     {
-        $this->version = $version;
+        $this->protocolVersion = $protocolVersion;
         return $this;
     }
 
@@ -183,9 +186,9 @@ class HTTPResponse
     /**
      * @return string
      */
-    public function getVersion()
+    public function getProtocolVersion()
     {
-        return $this->version;
+        return $this->protocolVersion;
     }
 
     /**
@@ -433,7 +436,7 @@ EOT
             }
         }
         return
-            sprintf('HTTP/%s %s %s', $this->getVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
+            sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
             implode("\r\n", $headers) . "\r\n" . "\r\n" .
             $this->getBody();
     }
