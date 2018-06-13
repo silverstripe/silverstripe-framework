@@ -132,15 +132,17 @@ Sample upgrader commands in this guide assume your working directory is the root
 
 ### Running all the upgrader commands in this guide in on line
 
-The upgrader comes with an `all-in-one` command. This command will attempt to run all the upgrader commands in the same order as this guide. This is unlikely to work on your first try, but can be a good way to get started without going through this entire guide.
+The upgrader comes with an `all` command. This command will attempt to run all the upgrader commands in the same order as this guide. This is unlikely to work on your first try, but can be a good way to get started without going through this entire guide.
 
 ```bash
-upgrade-code all-in-one --recipe-core-constraint=1.1 --namespace="App\\Web"
+upgrade-code all --recipe-core-constraint=1.1 --namespace="App\\Web" --psr4
 ```
 
 * `--recipe-core-constraint` defined your target version of `silverstripe/recipe-core`.
 * `--namespace` allows you to specify what will be the main namespace of your project.
+* `--psr4` allows you to specify that your project structure respect the PSR-4 standard and to use sub-namespaces.
 * `--skip-add-namespace` allows you to skip the `add-namespace` command.
+* `--skip-reorganise` allows you to skip the `reorganise` command.
 * `--skip-webroot` allows you to skip the `webroot` command.
 
 ### Branching your project
