@@ -86,6 +86,7 @@ accessible publicly through the CDN.
 To ensure this doesn't happen SilverStripe adds `Cache-Control: no-store, no-cache, must-revalidate` headers to any 
 forms that have validators or security tokens (all of them by default) applied to them; this ensures that CDNs
 (and browsers) will not cache these pages.
+See [/developer_guides/performance/http_cache_headers](Performance: HTTP Cache Headers).
 
 ## Related Documentation
 
