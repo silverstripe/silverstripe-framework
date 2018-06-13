@@ -140,7 +140,7 @@ upgrade-code all-in-one --recipe-core-constraint=1.1 --namespace="App\\Web"
 
 * `--recipe-core-constraint` defined your target version of `silverstripe/recipe-core`.
 * `--namespace` allows you to specify what will be the main namespace of your project.
-* `--skip-namespace` allows you to skip the `add-namespace` command.
+* `--skip-add-namespace` allows you to skip the `add-namespace` command.
 * `--skip-webroot` allows you to skip the `webroot` command.
 
 ### Branching your project
