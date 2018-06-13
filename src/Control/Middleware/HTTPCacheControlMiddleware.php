@@ -769,7 +769,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
         // Errors disable cache (unless some errors are cached intentionally by usercode)
         if ($response->isError()) {
-            // Even if publicCache(true) is specfied, errors will be uncachable
+            // Even if publicCache(true) is specified, errors will be uncacheable
             $this->disableCache(true);
         }
     }

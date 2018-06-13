@@ -20,11 +20,11 @@ are a great way to learn about HTTP caching.
 ### Overview
 
 In order to support developers in making safe choices around HTTP caching,
-we're using a `HTTPCacheControl` class to control if a response
+we're using a `HTTPCacheControlMiddleware` class to control if a response
 should be considered public or private. This is an abstraction on existing
-lowlevel APIs like `HTTP::add_cache_headers()` and `SS_HTTPResponse->addHeader()`.
+lowlevel APIs like `HTTP::add_cache_headers()` and `HTTPResponse->addHeader()`.
 
-The `HTTPCacheControl` API makes it easier to express your caching preferences
+The `HTTPCacheControlMiddleware` API makes it easier to express your caching preferences
 without running the risk of overriding essential core safety measures.
 Most commonly, these APIs will prevent HTTP caching of draft content.
 
@@ -96,7 +96,7 @@ The priority order is as followed, sorted in descending order
 
 ### Global opt-in for page content 
 
-Enable caching for all page content (through `Page_Controller`).
+Enable caching for all page content (through `PageController`).
 
 ```php
 <?php
@@ -141,7 +141,7 @@ class PageController extends ContentController
         HTTPCacheControlMiddleware::singleton()
            ->disableCache();
         
-        return $this->myPrivateResponse();;
+        return $this->myPrivateResponse();
     }
 }
 ```
@@ -173,7 +173,7 @@ class PageController extends ContentController
 {
     public function init()
     {
-        HTTPCacheControlMiddleware::inst()
+        HTTPCacheControlMiddleware::singleton()
            ->enableCache($force=true) // DANGER ZONE
            ->setMaxAge(60); // 1 minute
         
@@ -199,7 +199,7 @@ headers:
 
 The cache age determines the lifetime of your cache, in seconds.
 It only takes effect if you instruct the cache control
-that your response is public in the first place (via `enableCache()` or via modifying the `HTTP.cache_control` defaults).
+that your response is cacheable in the first place (via `enableCache()` or via modifying the `HTTP.cache_control` defaults).
 
 ```php
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
@@ -222,7 +222,7 @@ HTTP::register_modification_date('2014-10-10');
 ### Vary
 
 A `Vary` header tells caches which aspects of the response should be considered
-when calculating a cache key, usually in addition to the full URL path.
+when calculating a cache key, usually in addition to the full URL.
 By default, SilverStripe will output a `Vary` header with the following content: 
 
 ```
