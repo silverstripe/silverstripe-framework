@@ -756,17 +756,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $this->privateCache();
         }
 
-        // IE6-IE8 have problems saving files when https and no-cache/no-store are used
-        // (http://support.microsoft.com/kb/323308)
-        // Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-        if ($request->getScheme() === 'https' &&
-            preg_match('/.+MSIE (7|8).+/', $request->getHeader('User-Agent')) &&
-            strstr($response->getHeader('Content-Disposition'), 'attachment;') == true &&
-            ($this->hasDirective('no-cache') || $this->hasDirective('no-store'))
-        ) {
-            $this->privateCache(true);
-        }
-
         // Errors disable cache (unless some errors are cached intentionally by usercode)
         if ($response->isError()) {
             // Even if publicCache(true) is specified, errors will be uncacheable
