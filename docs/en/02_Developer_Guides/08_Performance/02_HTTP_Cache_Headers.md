@@ -38,7 +38,8 @@ since there are too many variations under which output could be considered priva
 (e.g. a custom "approval" flag on a comment object). It is up to
 the developer to ensure caching is used appropriately there.
 
-The [api:SilverStripe\Control\Middleware\HTTPCacheControlMiddleware] class supplements the `HTTP` helper class.
+The [api:SilverStripe\Control\Middleware\HTTPCacheControlMiddleware] class replaces
+(deprecated) caching methods in the `HTTP` helper class.
 It comes with methods which let developers safely interact with the `Cache-Control` header.
 
 ### disableCache()
