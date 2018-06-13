@@ -74,14 +74,11 @@ Never update a website on the live server. Get it working on a development copy 
 
 ### Install composer
 
-Most of the steps in this guide assume you are tracking your project dependencies through composer.
+SilverStripe 4 requires the use of composer for dependency management.
 
-While it is possible to upgrade to SilverStripe 4 without using composer, you will save a lot of time if you do.
+[Learn how to use composer with SilverStripe](/getting_started/composer)
 
-[composer is becoming the preferred way to manage your code](/getting_started/composer).
-
-For projects managed through Composer, we recommend using `recipe-cms` in your `composer.json` file to help you keep
-up to date and run `composer update`.
+We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date and run `composer update`.
 
 ```json
 {
