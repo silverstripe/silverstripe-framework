@@ -34,6 +34,12 @@ class DBDate extends DBField
      */
     const ISO_DATE = 'y-MM-dd';
 
+    /**
+     * Fixed locale to use for ISO date formatting. This is necessary to prevent
+     * locale-specific numeric localisation breaking internal date strings.
+     */
+    const ISO_LOCALE = 'en_NZ';
+
     public function setValue($value, $record = null, $markChanged = true)
     {
         $value = $this->parseDate($value);
@@ -77,8 +83,7 @@ class DBDate extends DBField
         }
 
         // Format as iso8601
-        $formatter = $this->getFormatter();
-        $formatter->setPattern($this->getISOFormat());
+        $formatter = $this->getInternalFormatter();
         return $formatter->format($source);
     }
 
@@ -203,7 +208,43 @@ class DBDate extends DBField
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return $this->getCustomFormatter(null, $dateLength, $timeLength);
+    }
+
+    /**
+     * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @param string|null $locale The current locale, or null to use default
+     * @param string|null $pattern Custom pattern to use for this, if required
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getCustomFormatter(
+        $locale = null,
+        $pattern = null,
+        $dateLength = IntlDateFormatter::MEDIUM,
+        $timeLength = IntlDateFormatter::NONE
+    ) {
+        $locale = $locale ?: i18n::get_locale();
+        $formatter = IntlDateFormatter::create($locale, $dateLength, $timeLength);
+        if ($pattern) {
+            $formatter->setPattern($pattern);
+        }
+        return $formatter;
+    }
+
+    /**
+     * Formatter used internally
+     *
+     * @internal
+     * @return IntlDateFormatter
+     */
+    protected function getInternalFormatter()
+    {
+        $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDate::ISO_DATE);
+        $formatter->setLenient(false);
+        return $formatter;
     }
 
     /**
@@ -271,7 +312,8 @@ class DBDate extends DBField
 
         // Get user format
         $format = $member->getDateFormat();
-        return $this->Format($format);
+        $formatter = $this->getCustomFormatter($format, $member->getLocale());
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
@@ -319,7 +361,9 @@ class DBDate extends DBField
      */
     public function Rfc2822()
     {
-        return $this->Format('y-MM-dd HH:mm:ss');
+        $formatter = $this->getInternalFormatter();
+        $formatter->setPattern('y-MM-dd HH:mm:ss');
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
@@ -420,7 +464,7 @@ class DBDate extends DBField
                 );
 
             case "minutes":
-                $span = round($ago/60);
+                $span = round($ago / 60);
                 return _t(
                     __CLASS__ . '.MINUTES_SHORT_PLURALS',
                     '{count} min|{count} mins',
@@ -428,7 +472,7 @@ class DBDate extends DBField
                 );
 
             case "hours":
-                $span = round($ago/3600);
+                $span = round($ago / 3600);
                 return _t(
                     __CLASS__ . '.HOURS_SHORT_PLURALS',
                     '{count} hour|{count} hours',
@@ -436,7 +480,7 @@ class DBDate extends DBField
                 );
 
             case "days":
-                $span = round($ago/86400);
+                $span = round($ago / 86400);
                 return _t(
                     __CLASS__ . '.DAYS_SHORT_PLURALS',
                     '{count} day|{count} days',
@@ -444,7 +488,7 @@ class DBDate extends DBField
                 );
 
             case "months":
-                $span = round($ago/86400/30);
+                $span = round($ago / 86400 / 30);
                 return _t(
                     __CLASS__ . '.MONTHS_SHORT_PLURALS',
                     '{count} month|{count} months',
@@ -452,7 +496,7 @@ class DBDate extends DBField
                 );
 
             case "years":
-                $span = round($ago/86400/365);
+                $span = round($ago / 86400 / 365);
                 return _t(
                     __CLASS__ . '.YEARS_SHORT_PLURALS',
                     '{count} year|{count} years',
@@ -466,8 +510,8 @@ class DBDate extends DBField
 
     public function requireField()
     {
-        $parts=array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
-        $values=array('type'=>'date', 'parts'=>$parts);
+        $parts = array('datatype' => 'date', 'arrayValue' => $this->arrayValue);
+        $values = array('type' => 'date', 'parts' => $parts);
         DB::require_field($this->tableName, $this->name, $values);
     }
 

@@ -228,6 +228,38 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
     }
 
+
+    /**
+     * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @param string|null $locale The current locale, or null to use default
+     * @param string|null $pattern Custom pattern to use for this, if required
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getCustomFormatter(
+        $locale = null,
+        $pattern = null,
+        $dateLength = IntlDateFormatter::MEDIUM,
+        $timeLength = IntlDateFormatter::MEDIUM
+    ) {
+        return parent::getCustomFormatter($locale, $pattern, $dateLength, $timeLength);
+    }
+
+    /**
+     * Formatter used internally
+     *
+     * @internal
+     * @return IntlDateFormatter
+     */
+    protected function getInternalFormatter()
+    {
+        $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDatetime::ISO_DATETIME);
+        $formatter->setLenient(false);
+        return $formatter;
+    }
+
     /**
      * Get standard ISO date format string
      *
