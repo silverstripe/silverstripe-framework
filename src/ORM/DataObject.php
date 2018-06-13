@@ -7,6 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -382,7 +383,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Keep track of the modification date of all the data sourced to make this page
         // From this we create a Last-Modified HTTP header
         if (isset($record['LastEdited'])) {
-            HTTP::register_modification_date($record['LastEdited']);
+            HTTPCacheControlMiddleware::singleton()
+                ->registerModificationDate($record['LastEdited']);
         }
 
         // Must be called after parent constructor

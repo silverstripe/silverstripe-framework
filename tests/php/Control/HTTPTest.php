@@ -22,8 +22,10 @@ class HTTPTest extends FunctionalTest
     protected function setUp()
     {
         parent::setUp();
-        // Remove dev-only config
-        Config::modify()->remove(HTTP::class, 'disable_http_cache');
+        // Set to disabled at null forcing level
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
         HTTPCacheControlMiddleware::reset();
     }
 
@@ -38,7 +40,9 @@ class HTTPTest extends FunctionalTest
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
         // Ensure cache headers are set correctly when disabled via config (e.g. when dev)
-        Config::modify()->set(HTTP::class, 'disable_http_cache', true);
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', HTTPCacheControlMiddleware::LEVEL_DISABLED);
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
@@ -49,7 +53,9 @@ class HTTPTest extends FunctionalTest
         $this->assertContains('must-revalidate', $response->getHeader('Cache-Control'));
 
         // Ensure max-age setting is respected in production.
-        Config::modify()->remove(HTTP::class, 'disable_http_cache');
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);

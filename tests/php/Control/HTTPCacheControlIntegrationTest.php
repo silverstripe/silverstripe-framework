@@ -19,7 +19,9 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
     protected function setUp()
     {
         parent::setUp();
-        Config::modify()->remove(HTTP::class, 'disable_http_cache');
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
         HTTPCacheControlMiddleware::reset();
     }
 

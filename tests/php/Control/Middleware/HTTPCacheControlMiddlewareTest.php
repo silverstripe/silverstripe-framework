@@ -7,6 +7,16 @@ use SilverStripe\Dev\SapphireTest;
 
 class HTTPCacheControlMiddlewareTest extends SapphireTest
 {
+    protected function setUp()
+    {
+        parent::setUp();
+        // Set to disabled at null forcing level
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
+        HTTPCacheControlMiddleware::reset();
+    }
+
     public function testCachingPriorities()
     {
         $hcc = new HTTPCacheControlMiddleware();

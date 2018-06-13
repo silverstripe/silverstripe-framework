@@ -3,12 +3,14 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Control\Middleware\ETagMiddleware;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 use finfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -19,30 +21,35 @@ class HTTP
     use Configurable;
 
     /**
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @var int
      */
     protected static $cache_age = 0;
 
     /**
+     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware
      * @var int
      */
     protected static $modification_date = null;
 
     /**
+     * @deprecated 4.2..5.0 Handled by ETagMiddleware
      * @var string
      */
     protected static $etag = null;
 
     /**
      * @config
-     *
      * @var bool
+     * @deprecated 4.2..5.0 'HTTP.cache_ajax_requests config is deprecated.
+     * Use HTTPCacheControlMiddleware::disableCache() instead'
      */
-    private static $cache_ajax_requests = true;
+    private static $cache_ajax_requests = false;
 
     /**
      * @config
      * @var bool
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware.defaultState/.defaultForcingLevel instead
      */
     private static $disable_http_cache = false;
 
@@ -66,6 +73,7 @@ class HTTP
     /**
      * Vary string; A comma separated list of var header names
      *
+     * @deprecated 4.2..5.0 Handled by HTTPCacheMiddleware instead
      * @config
      * @var string|null
      */
@@ -328,7 +336,6 @@ class HTTP
      * commonly known MIME types.
      *
      * @param string $filename
-     *
      * @return string
      */
     public static function get_mime_type($filename)
@@ -369,32 +376,33 @@ class HTTP
 
     /**
      * @param string $dateString
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_date($dateString)
     {
-        $timestamp = strtotime($dateString);
-        if ($timestamp > self::$modification_date) {
-            self::$modification_date = $timestamp;
-        }
+        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
+        HTTPCacheControlMiddleware::singleton()->registerModificationDate($dateString);
     }
 
     /**
      * @param int $timestamp
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_timestamp($timestamp)
     {
-        if ($timestamp > self::$modification_date) {
-            self::$modification_date = $timestamp;
-        }
+        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
+        HTTPCacheControlMiddleware::singleton()->registerModificationDate($timestamp);
     }
 
     /**
+     * @deprecated 4.2..5.0 Use ETagMiddleware instead
      * @param string $etag
      */
     public static function register_etag($etag)
     {
-        if (0 !== strpos($etag, '"')) {
-            $etag = sprintf('"%s"', $etag);
+        Deprecation::notice('5.0', 'Use ETagMiddleware instead');
+        if (strpos($etag, '"') !== 0) {
+            $etag =  "\"{$etag}\"";
         }
         self::$etag = $etag;
     }
@@ -409,24 +417,21 @@ class HTTP
      * Omitting the $body argument or passing a string is deprecated; in these cases, the headers are
      * output directly.
      *
-     * @param HTTPResponse $body
+     * @param HTTPResponse $response
+     * @deprecated 4.2..5.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
      */
-    public static function add_cache_headers($body = null)
+    public static function add_cache_headers($response = null)
     {
-        // Validate argument
-        if ($body && !($body instanceof HTTPResponse)) {
-            user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
-            $body = null;
-        }
+        Deprecation::notice('5.0', 'Headers are added automatically by HTTPCacheControlMiddleware instead.');
 
-        // The headers have been sent and we don't have an HTTPResponse object to attach things to; no point in
-        // us trying.
-        if (headers_sent() && !$body) {
+        // Ensure a valid response object is provided
+        if (!$response instanceof HTTPResponse) {
+            user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
             return;
         }
 
         // Warn if already assigned cache-control headers
-        if ($body && $body->getHeader('Cache-Control')) {
+        if ($response->getHeader('Cache-Control')) {
             trigger_error(
                 'Cache-Control header has already been set. '
                 . 'Please use HTTPCacheControlMiddleware API to set caching options instead.',
@@ -435,157 +440,70 @@ class HTTP
             return;
         }
 
+        // Ensure a valid request object exists in the current context
+        if (!Injector::inst()->has(HTTPRequest::class)) {
+            user_error("HTTP::add_cache_headers() cannot work without a current HTTPRequest object", E_USER_WARNING);
+            return;
+        }
+
+        /** @var HTTPRequest $request */
+        $request = Injector::inst()->get(HTTPRequest::class);
+
         $config = Config::forClass(__CLASS__);
 
         // Get current cache control state
-        $cacheControl = HTTPCacheControlMiddleware::singleton();
+        $cacheControlMiddleware = HTTPCacheControlMiddleware::singleton();
+        $etagMiddleware = ETagMiddleware::singleton();
 
         // if http caching is disabled by config, disable it - used on dev environments due to frequently changing
-        // templates and other data. will be overridden by forced publicCache() or privateCache() calls
+        // templates and other data. will be overridden by forced publicCache(true) or privateCache(true) calls
         if ($config->get('disable_http_cache')) {
-            $cacheControl->disableCache();
+            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware.defaultState/.defaultForcingLevel instead');
+            $cacheControlMiddleware->disableCache();
         }
-
-        // Populate $responseHeaders with all the headers that we want to build
-        $responseHeaders = [];
 
         // if no caching ajax requests, disable ajax if is ajax request
         if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
-            $cacheControl->disableCache();
+            Deprecation::notice(
+                '5.0',
+                'HTTP.cache_ajax_requests config is deprecated. Use HTTPCacheControlMiddleware::disableCache() instead'
+            );
+            $cacheControlMiddleware->disableCache();
         }
 
-        // Errors disable cache (unless some errors are cached intentionally by usercode)
-        if ($body && $body->isError()) {
-            // Even if publicCache(true) is specfied, errors will be uncachable
-            $cacheControl->disableCache(true);
-        }
-
-        // split the current vary header into it's parts and merge it with the config settings
-        // to create a list of unique vary values
+        // Pass vary to middleware
         $configVary = $config->get('vary');
-        $bodyVary = $body ? $body->getHeader('Vary') : '';
-        $vary = self::combineVary($configVary, $bodyVary);
-        if ($vary) {
-            $responseHeaders['Vary'] = $vary;
+        if ($configVary) {
+            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware.defaultVary instead');
+            $cacheControlMiddleware->addVary($configVary);
         }
 
-        // deal with IE6-IE8 problems with https and no-cache
-        $contentDisposition = null;
-        if ($body) {
-            // Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
-            $contentDisposition = $body->getHeader('Content-Disposition');
-        }
-
-        if ($body &&
-            Director::is_https() &&
-            isset($_SERVER['HTTP_USER_AGENT']) &&
-            strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') == true &&
-            strstr($contentDisposition, 'attachment;') == true &&
-            ($cacheControl->hasDirective('no-cache') || $cacheControl->hasDirective('no-store'))
-        ) {
-            // IE6-IE8 have problems saving files when https and no-cache/no-store are used
-            // (http://support.microsoft.com/kb/323308)
-            // Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-            $cacheControl->privateCache(true);
-        }
-
+        // Set modification date
         if (self::$modification_date) {
-            $responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
+            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
+            $cacheControlMiddleware->registerModificationDate(self::$modification_date);
         }
 
-        // if we can store the cache responses we should generate and send etags
-        if (!$cacheControl->hasDirective('no-store')) {
-            // Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-            // which means that if you log out, you get redirected back to a page which Chrome then checks against
-            // last-modified (which passes, getting a 304)
-            // when it shouldn't be trying to use that page at all because it's the "logged in" version.
-            // By also using and etag that includes both the modification date and all the varies
-            // values which we also check against we can catch this and not return a 304
-            $etag = self::generateETag($body);
-            if ($etag) {
-                $responseHeaders['ETag'] = $etag;
-
-                // 304 response detection
-                if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-                    // As above, only 304 if the last request had all the same varies values
-                    // (or the etag isn't passed as part of the request - but with chrome it always is)
-                    $matchesEtag = $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
-
-                    if ($matchesEtag) {
-                        if ($body) {
-                            $body->setStatusCode(304);
-                            $body->setBody('');
-                        } else {
-                            // this is wrong, we need to send the same vary headers and so on
-                            header('HTTP/1.0 304 Not Modified');
-                            die();
-                        }
-                    }
-                }
-            }
+        // Ensure deprecated $etag property is assigned
+        if (self::$etag && !$cacheControlMiddleware->hasDirective('no-store') && !$response->getHeader('ETag')) {
+            Deprecation::notice('5.0', 'Etag should not be set explicitly');
+            $response->addHeader('ETag', self::$etag);
         }
 
-        if ($cacheControl->hasDirective('max-age')) {
-            $expires = time() + $cacheControl->getDirective('max-age');
-            $responseHeaders["Expires"] = self::gmt_date($expires);
-        }
-
-        // etag needs to be a quoted string according to HTTP spec
-        if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
-            $responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
-        }
-
-        // Merge with cache control headers
-        $responseHeaders = array_merge($responseHeaders, $cacheControl->generateHeaders());
-
-        // Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
-        foreach ($responseHeaders as $k => $v) {
-            if ($body) {
-                // Set the header now if it's not already set.
-                if ($body->getHeader($k) === null) {
-                    $body->addHeader($k, $v);
-                }
-            } elseif (!headers_sent()) {
-                header("$k: $v");
-            }
-        }
+        // Run middleware
+        $etagMiddleware->process($request, function (HTTPRequest $request) use ($cacheControlMiddleware, $response) {
+            return $cacheControlMiddleware->process($request, function (HTTPRequest $request) use ($response) {
+                return $response;
+            });
+        });
     }
-
-
-    /**
-     * @param HTTPResponse|string $response
-     *
-     * @return string|false
-     */
-    protected static function generateETag($response)
-    {
-        // Explicit etag
-        if (self::$etag) {
-            return self::$etag;
-        }
-
-        // Existing e-tag
-        if ($response instanceof HTTPResponse && $response->getHeader('ETag')) {
-            return $response->getHeader('ETag');
-        }
-
-        // Generate etag from body
-        $body = $response instanceof HTTPResponse
-            ? $response->getBody()
-            : $response;
-        if ($body) {
-            return sprintf('"%s"', md5($body));
-        }
-        return false;
-    }
-
 
     /**
      * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the GMT timezone (a timestamp
      * is always in GMT: the number of seconds since January 1 1970 00:00:00 GMT)
      *
      * @param int $timestamp
-     *
+     * @deprecated 4.2..5.0 Inline if you need this
      * @return string
      */
     public static function gmt_date($timestamp)
@@ -601,23 +519,5 @@ class HTTP
     public static function get_cache_age()
     {
         return self::$cache_age;
-    }
-
-    /**
-     * Combine vary strings
-     *
-     * @param string[] $varies Each vary as a separate arg
-     * @return string
-     */
-    protected static function combineVary(...$varies)
-    {
-        $cleanVaries = [];
-        foreach ($varies as $vary) {
-            $argVaries = array_filter(preg_split("/\s*,\s*/", trim($vary)));
-            if ($argVaries) {
-                $cleanVaries = array_merge($cleanVaries, $argVaries);
-            }
-        }
-        return implode(', ', array_unique($cleanVaries));
     }
 }

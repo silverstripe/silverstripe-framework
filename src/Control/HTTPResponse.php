@@ -217,7 +217,7 @@ class HTTPResponse
      * Return the HTTP header of the given name.
      *
      * @param string $header
-     * @returns string
+     * @return string
      */
     public function getHeader($header)
     {

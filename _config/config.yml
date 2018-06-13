@@ -1,12 +1,6 @@
 ---
 Name: coreconfig
 ---
-SilverStripe\Control\HTTP:
-  cache_control:
-    no-cache: true
-    no-store: true
-    must-revalidate: true
-  vary: "X-Requested-With, X-Forwarded-Protocol"
 SilverStripe\Core\Manifest\VersionProvider:
   modules:
     silverstripe/framework: Framework
@@ -15,5 +9,7 @@ Name: httpconfig-dev
 Only:
   environment: dev
 ---
-SilverStripe\Control\HTTP:
-  disable_http_cache: true
+# Set dev level to disabled with a higher forcing level
+SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
+  defaultState: 'disabled'
+  defaultForcingLevel: 3

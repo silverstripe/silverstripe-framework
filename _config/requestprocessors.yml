@@ -11,6 +11,7 @@ SilverStripe\Core\Injector\Injector:
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
         RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
         FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
+        ETagMiddleware: '%$SilverStripe\Control\Middleware\ETagMiddleware'
         HTTPCacheControleMiddleware: '%$SilverStripe\Control\Middleware\HTTPCacheControlMiddleware'
         CanonicalURLMiddleware: '%$SilverStripe\Control\Middleware\CanonicalURLMiddleware'
   SilverStripe\Control\Middleware\AllowedHostsMiddleware:

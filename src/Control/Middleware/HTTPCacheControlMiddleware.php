@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 {
@@ -43,14 +44,12 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $response = $ex->getResponse();
         }
 
-        // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
-        // likely to be supplying information relevant to the current user only
-        if ($request->getSession()->getAll()) {
-            // Don't force in case user code chooses to opt in to public caching
-            $this->privateCache();
-        }
+        // Update state based on current request and response objects
+        $this->augmentState($request, $response);
 
-        HTTP::add_cache_headers($response);
+        // Add all headers to this response object
+        $this->applyToResponse($response);
+
         if (isset($ex)) {
             throw $ex;
         }
@@ -88,11 +87,19 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     ];
 
     /**
+     * Set default state
+     *
+     * @config
+     * @var string
+     */
+    protected static $defaultState = self::STATE_DISABLED;
+
+    /**
      * Current state
      *
      * @var string
      */
-    protected $state = self::STATE_DISABLED;
+    protected $state = null;
 
     /**
      * Forcing level of previous setting; higher number wins
@@ -100,7 +107,39 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *w
      * @var int
      */
-    protected $forcingLevel = 0;
+    protected $forcingLevel = null;
+
+    /**
+     * List of vary keys
+     *
+     * @var array|null
+     */
+    protected $vary = null;
+
+    /**
+     * Latest modification date for this response
+     *
+     * @var int
+     */
+    protected $modificationDate;
+
+    /**
+     * Default vary
+     *
+     * @var array
+     */
+    private static $defaultVary = [
+        "X-Requested-With" => true,
+        "X-Forwarded-Protocol" => true,
+    ];
+
+    /**
+     * Default forcing level
+     *
+     * @config
+     * @var int
+     */
+    private static $defaultForcingLevel = 0;
 
     /**
      * Forcing level forced, optionally combined with one of the below.
@@ -149,6 +188,84 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     ];
 
     /**
+     * Get current vary keys
+     *
+     * @return array
+     */
+    public function getVary()
+    {
+        // Explicitly set vary
+        if (isset($this->vary)) {
+            return $this->vary;
+        }
+
+        // Load default from config
+        $defaultVary = $this->config()->get('defaultVary');
+        return array_keys(array_filter($defaultVary));
+    }
+
+    /**
+     * Add a vary
+     *
+     * @param string|array $vary
+     * @return $this
+     */
+    public function addVary($vary)
+    {
+        $combied = $this->combineVary($this->getVary(), $vary);
+        $this->setVary($combied);
+        return $this;
+    }
+
+    /**
+     * Set vary
+     *
+     * @param array|string $vary
+     * @return $this
+     */
+    public function setVary($vary)
+    {
+        $this->vary = $this->combineVary($vary);
+        return $this;
+    }
+
+    /**
+     * Combine vary strings/arrays into a single array, or normalise a single vary
+     *
+     * @param string|array[] $varies Each vary as a separate arg
+     * @return array
+     */
+    protected function combineVary(...$varies)
+    {
+        $merged = [];
+        foreach ($varies as $vary) {
+            if ($vary && is_string($vary)) {
+                $vary = array_filter(preg_split("/\s*,\s*/", trim($vary)));
+            }
+            if ($vary && is_array($vary)) {
+                $merged = array_merge($merged, $vary);
+            }
+        }
+        return array_unique($merged);
+    }
+
+
+    /**
+     * Register a modification date. Used to calculate the Modification-Date http header
+     *
+     * @param string|int $date Date string or timestamp
+     * @return HTTPCacheControlMiddleware
+     */
+    public function registerModificationDate($date)
+    {
+        $timestamp = is_numeric($date) ? $date : strtotime($date);
+        if ($timestamp > $this->modificationDate) {
+            $this->modificationDate = $timestamp;
+        }
+        return $this;
+    }
+
+    /**
      * Set current state. Should only be invoked internally after processing precedence rules.
      *
      * @param string $state
@@ -170,7 +287,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function getState()
     {
-        return $this->state;
+        return $this->state ?: $this->config()->get('defaultState');
     }
 
     /**
@@ -190,7 +307,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     protected function applyChangeLevel($level, $force)
     {
         $forcingLevel = $level + ($force ? self::LEVEL_FORCED : 0);
-        if ($forcingLevel < $this->forcingLevel) {
+        if ($forcingLevel < $this->getForcingLevel()) {
             return false;
         }
         $this->forcingLevel = $forcingLevel;
@@ -514,7 +631,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function applyToResponse($response)
     {
-        $headers = $this->generateHeaders();
+        $headers = $this->generateHeadersFor($response);
         foreach ($headers as $name => $value) {
             $response->addHeader($name, $value);
         }
@@ -542,13 +659,17 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Generate all headers to output
      *
+     * @param HTTPResponse $response
      * @return array
      */
-    public function generateHeaders()
+    public function generateHeadersFor(HTTPResponse $response)
     {
-        return [
+        return array_filter([
+            'Last-Modified' => $this->generateLastModifiedHeader(),
+            'Vary' => $this->generateVaryHeader($response),
             'Cache-Control' => $this->generateCacheHeader(),
-        ];
+            'Expires' => $this->generateExpiresHeader(),
+        ]);
     }
 
     /**
@@ -557,5 +678,99 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public static function reset()
     {
         Injector::inst()->unregisterNamedObject(__CLASS__);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getForcingLevel()
+    {
+        if (isset($this->forcingLevel)) {
+            return $this->forcingLevel;
+        }
+        return $this->config()->get('defaultForcingLevel');
+    }
+
+    /**
+     * Generate vary http header
+     *
+     * @param HTTPResponse $response
+     * @return string|null
+     */
+    protected function generateVaryHeader(HTTPResponse $response)
+    {
+        // split the current vary header into it's parts and merge it with the config settings
+        // to create a list of unique vary values
+        $vary = $this->getVary();
+        if ($response->getHeader('Vary')) {
+            $vary = $this->combineVary($vary, $response->getHeader('Vary'));
+        }
+        if ($vary) {
+            return implode(', ', $vary);
+        }
+        return null;
+    }
+
+    /**
+     * Generate Last-Modified header
+     *
+     * @return string|null
+     */
+    protected function generateLastModifiedHeader()
+    {
+        if (!$this->modificationDate) {
+            return null;
+        }
+        return gmdate('D, d M Y H:i:s', $this->modificationDate) . ' GMT';
+    }
+
+    /**
+     * Generate Expires http header
+     *
+     * @return null|string
+     */
+    protected function generateExpiresHeader()
+    {
+        $maxAge = $this->getDirective('max-age');
+        if ($maxAge === false) {
+            return null;
+        }
+
+        // Add now to max-age to generate expires
+        $expires = DBDatetime::now()->getTimestamp() + $maxAge;
+        return gmdate('D, d M Y H:i:s', $expires) . ' GMT';
+    }
+
+    /**
+     * Update state based on current request and response objects
+     *
+     * @param HTTPRequest $request
+     * @param HTTPResponse $response
+     */
+    protected function augmentState(HTTPRequest $request, HTTPResponse $response)
+    {
+        // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
+        // likely to be supplying information relevant to the current user only
+        if ($request->getSession()->getAll()) {
+            // Don't force in case user code chooses to opt in to public caching
+            $this->privateCache();
+        }
+
+        // IE6-IE8 have problems saving files when https and no-cache/no-store are used
+        // (http://support.microsoft.com/kb/323308)
+        // Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
+        if ($request->getScheme() === 'https' &&
+            preg_match('/.+MSIE (7|8).+/', $request->getHeader('User-Agent')) &&
+            strstr($response->getHeader('Content-Disposition'), 'attachment;') == true &&
+            ($this->hasDirective('no-cache') || $this->hasDirective('no-store'))
+        ) {
+            $this->privateCache(true);
+        }
+
+        // Errors disable cache (unless some errors are cached intentionally by usercode)
+        if ($response->isError()) {
+            // Even if publicCache(true) is specfied, errors will be uncachable
+            $this->disableCache(true);
+        }
     }
 }
