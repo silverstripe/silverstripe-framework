@@ -162,7 +162,8 @@ Use case: By default, forms include a [CSRF token](/developer_guides/forms/form_
 which starts a session with a value that's unique to the visitor, which makes the output uncacheable.
 But any subsequent requests by this visitor will also carry a session, leading to uncacheable output
 for this visitor. This is the case even if the output does not contain any forms,
-and does not vary for this particular visitor.
+and does not vary for this particular visitor. Forms can also contain submission data
+when they're redisplayed after a validation error.
 
 ```php
 <?php

@@ -78,10 +78,12 @@ module if required. The module provides an consistent API for allowing third-par
 
 ## Data disclosure through HTTP Caching (since 4.2.0)
 
-Forms, and particularly their responses, can contain sensitive data (such as when data is pre-populated or re-posted due
-to validation errors). This data can inadvertently be stored either in a user's browser cache or in an intermediary
-cache such as a CDN or other caching-proxy. If incorrect `Cache-Conrol` headers are used, private data may be cached and
-accessible publicly through the CDN.
+Forms, and particularly their responses, can contain sensitive or user-specific data. 
+Forms can prepopulate submissions when a form is redisplayed with validation errors,
+and they by default contain CSRF tokens unique to the user's session.
+This data can inadvertently be stored either in a user's browser cache or in an intermediary
+cache such as a CDN or other caching-proxy. If incorrect `Cache-Control` headers are used, private data may be cached and
+accessible publicly through the CDN.  
 
 To ensure this doesn't happen SilverStripe adds `Cache-Control: no-store, no-cache, must-revalidate` headers to any 
 forms that have validators or security tokens (all of them by default) applied to them; this ensures that CDNs
