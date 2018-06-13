@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Tests;
 
+use PHPUnit_Framework_Error_Warning;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
@@ -9,8 +10,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\FunctionalTest;
 
 /**
@@ -33,18 +32,16 @@ class HTTPTest extends FunctionalTest
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
         HTTPCacheControlMiddleware::singleton()->publicCache();
-        HTTP::set_cache_age(30);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
 
         HTTP::add_cache_headers($response);
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
-        /** @var Kernel $kernel */
-        $kernel = Injector::inst()->get(Kernel::class);
         // Ensure cache headers are set correctly when disabled via config (e.g. when dev)
         Config::modify()->set(HTTP::class, 'disable_http_cache', true);
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
-        HTTP::set_cache_age(30);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('no-cache', $response->getHeader('Cache-Control'));
@@ -55,7 +52,7 @@ class HTTPTest extends FunctionalTest
         Config::modify()->remove(HTTP::class, 'disable_http_cache');
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
-        HTTP::set_cache_age(30);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('max-age=30', $response->getHeader('Cache-Control'));
@@ -69,14 +66,14 @@ class HTTPTest extends FunctionalTest
         );
         HTTPCacheControlMiddleware::reset();
         HTTPCacheControlMiddleware::singleton()->publicCache();
-        HTTP::set_cache_age(30);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
         foreach ($headers as $name => $value) {
             $response->addHeader($name, $value);
         }
         // Expect a warning if the header is already set
-        $this->expectException(
-            \PHPUnit_Framework_Error_Warning::class,
+        $this->expectException(PHPUnit_Framework_Error_Warning::class);
+        $this->expectExceptionMessage(
             'Cache-Control header has already been set. '
             . 'Please use HTTPCacheControl API to set caching options instead.'
         );
@@ -88,7 +85,7 @@ class HTTPTest extends FunctionalTest
     {
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        HTTP::set_cache_age(30);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         HTTP::add_cache_headers($response);
 
         $v = $response->getHeader('Vary');

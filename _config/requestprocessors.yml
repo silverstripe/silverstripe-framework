@@ -47,12 +47,3 @@ SilverStripe\Core\Injector\Injector:
     properties:
       ForceSSL: false
       ForceWWW: false
----
-Name: httpcache-dev
-Only:
-  environment: dev
----
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
-    Properties:
-      Enabled: false

@@ -499,7 +499,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function publicCache($force = false)
     {
         // Only execute this if its forcing level is high enough
-        if (!$this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
+        if ($this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
             $this->setState(self::STATE_PUBLIC);
         }
         return $this;

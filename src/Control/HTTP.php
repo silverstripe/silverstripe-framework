@@ -9,6 +9,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 use finfo;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A class with HTTP-related helpers. Like Debug, this is more a bundle of methods than a class.
@@ -356,12 +357,14 @@ class HTTP
     /**
      * Set the maximum age of this page in web caches, in seconds.
      *
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @param int $age
      */
     public static function set_cache_age($age)
     {
+        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead');
         self::$cache_age = $age;
-        HTTPCacheControlMiddleware::singleton()->setMaxAge(self::$cache_age);
+        HTTPCacheControlMiddleware::singleton()->setMaxAge($age);
     }
 
     /**
