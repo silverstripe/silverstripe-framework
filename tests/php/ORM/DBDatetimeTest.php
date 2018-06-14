@@ -2,10 +2,9 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Member;
 
 /**
  * Tests for {@link Datetime} class.
@@ -68,6 +67,23 @@ class DBDatetimeTest extends SapphireTest
 
         $date = DBDatetime::create_field('Datetime', '3000-10-10 15:32:24');
         $this->assertEquals('10 Oct 3000 15 32 24', $date->Format('d MMM y H m s'));
+    }
+
+    /**
+     * Coverage for dates using hindi-numerals
+     */
+    public function testHindiNumerals()
+    {
+        // Parent locale is english; Can be localised to arabic
+        $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
+        $this->assertEquals('10 Oct 1600 15 32 24', $date->Format('d MMM y H m s'));
+        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s', 'ar'));
+
+        // Parent locale is arabic; Datavalue uses ISO date
+        i18n::set_locale('ar');
+        $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
+        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s'));
+        $this->assertEquals('1600-10-10 15:32:24', $date->getValue());
     }
 
     public function testNice()
