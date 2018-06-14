@@ -16,15 +16,19 @@ If you don't fully understand the configuration presented here, consult the
 Especially be aware of [accidental php-execution](https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/ "Don't trust the tutorials") when extending the configuration.
 </div>
 
-But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
+## Caveats about the sample configuration below
+
+* It does not cover serving securely over HTTPS.
+* It uses the new filesystem layout (with `public` directory) introduced in version 4.1.0. If your installation has been upgraded to 4.1+ from an older version and you have not [upgraded to the public folder](/changelogs/4.1.0.md), see the version of this documentation for version 4.0.
+* The error pages for 502 (Bad Gateway) and 503 (Service Unavailable) need to be manually created and published in the CMS (assuming use of the silverstripe/errorpage module).
 
 ```nginx
 server {
   include mime.types;
   default_type  application/octet-stream;
-  client_max_body_size 0; # Manage this in php.ini
+  client_max_body_size 0; # Manage this in php.ini (upload_max_filesize & post_max_size)
   listen 80;
-  root /path/to/ss/folder;
+  root /path/to/ss/folder/public;
   server_name example.com www.example.com;
 
   # Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
@@ -38,6 +42,10 @@ server {
 
   error_page 404 /assets/error-404.html;
   error_page 500 /assets/error-500.html;
+
+  # See caveats
+  error_page 502 /assets/error-500.html;
+  error_page 503 /assets/error-500.html;
 
   location ^~ /assets/ {
     sendfile on;
@@ -53,37 +61,6 @@ server {
     fastcgi_index  index.php;
     fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
     include        fastcgi_params;
-  }
-
-  # Denials
-  location ~ /\.. {
-    deny all;
-  }
-  location ~ \.ss$ {
-    satisfy any;
-    allow 127.0.0.1;
-    deny all;
-  }
-  location ~ web\.config$ {
-    deny all;
-  }
-  location ~ \.ya?ml$ {
-    deny all;
-  }
-  location ~* README.*$ {
-    deny all;
-  }
-  location ^~ /vendor/ {
-    deny all;
-  }
-  location ~* /silverstripe-cache/ {
-    deny all;
-  }
-  location ~* composer\.(json|lock)$ {
-    deny all;
-  }
-  location ~* /(cms|framework)/silverstripe_version$ {
-    deny all;
   }
 }
 ```

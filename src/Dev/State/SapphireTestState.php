@@ -23,6 +23,36 @@ class SapphireTestState implements TestState
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool|TestState
+     */
+    public function getStateByName($name)
+    {
+        $states = $this->getStates();
+        if (array_key_exists($name, $states)) {
+            return $states[$name];
+        }
+        return false;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return bool|TestState
+     */
+    public function getStateByClass($class)
+    {
+        $lClass = strtolower($class);
+        foreach ($this->getStates() as $state) {
+            if ($lClass === strtolower(get_class($state))) {
+                return $state;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param TestState[] $states
      * @return $this
      */

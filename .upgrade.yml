@@ -222,6 +222,7 @@ mappings:
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
   FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
+  HTTPCacheControl: SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse
@@ -1171,8 +1172,6 @@ warnings:
       message: 'moved to SilverStripe\View\HTML->createTag()'
     'SilverStripe\Forms\Form->transformTo()':
       message: 'Removed'
-    'SilverStripe\Forms\Form->callfieldmethod()':
-      message: 'Removed'
     'SilverStripe\Forms\Form::single_field_required()':
       message: 'Removed'
     'SilverStripe\Forms\Form::current_action()':
@@ -1183,8 +1182,6 @@ warnings:
       message: 'Renamed to restoreFormState()'
     'SilverStripe\Forms\Form->resetValidation()':
       message: 'Renamed to clearFormState()'
-    'SilverStripe\Forms\Form->transformTo()':
-      message: 'Removed'
     'SilverStripe\Forms\Form->callfieldmethod()':
       message: 'Removed'
     'SilverStripe\Forms\Form->addErrorMessage()':
@@ -1323,8 +1320,6 @@ warnings:
       message: 'Use new asset abstraction'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage'
   constants:
-    'SS_TRUSTED_PROXY_HOST_HEADER':
-      message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_PROTOCOL_HEADER':
       message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_IP_HEADER':

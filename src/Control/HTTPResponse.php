@@ -19,7 +19,7 @@ class HTTPResponse
     /**
      * @var array
      */
-    protected static $status_codes = array(
+    protected static $status_codes = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -61,20 +61,25 @@ class HTTPResponse
         503 => 'Service Unavailable',
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected static $redirect_codes = array(
+    protected static $redirect_codes = [
         301,
         302,
         303,
         304,
         305,
         307,
-        308
-    );
+        308,
+    ];
+
+    /**
+     * @var string
+     */
+    protected $protocolVersion = '1.0';
 
     /**
      * @var int
@@ -92,9 +97,9 @@ class HTTPResponse
      * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
      * @var array
      */
-    protected $headers = array(
+    protected $headers = [
         "content-type" => "text/html; charset=utf-8",
-    );
+    ];
 
     /**
      * @var string
@@ -108,13 +113,35 @@ class HTTPResponse
      * @param int $statusCode The numeric status code - 200, 404, etc
      * @param string $statusDescription The text to be given alongside the status code.
      *  See {@link setStatusCode()} for more information.
+     * @param string $protocolVersion
      */
-    public function __construct($body = null, $statusCode = null, $statusDescription = null)
+    public function __construct($body = null, $statusCode = null, $statusDescription = null, $protocolVersion = null)
     {
         $this->setBody($body);
         if ($statusCode) {
             $this->setStatusCode($statusCode, $statusDescription);
         }
+        if (!$protocolVersion) {
+            if (preg_match('/HTTP\/(?<version>\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'], $matches)) {
+                $protocolVersion = $matches['version'];
+            }
+        }
+        if ($protocolVersion) {
+            $this->setProtocolVersion($protocolVersion);
+        }
+    }
+
+    /**
+     * The HTTP version used to respond to this request (typically 1.0 or 1.1)
+     *
+     * @param string $protocolVersion
+     *
+     * @return $this
+     */
+    public function setProtocolVersion($protocolVersion)
+    {
+        $this->protocolVersion = $protocolVersion;
+        return $this;
     }
 
     /**
@@ -123,6 +150,7 @@ class HTTPResponse
      *  No newlines are allowed in the description.
      *  If omitted, will default to the standard HTTP description
      *  for the given $code value (see {@link $status_codes}).
+     *
      * @return $this
      */
     public function setStatusCode($code, $description = null)
@@ -146,12 +174,21 @@ class HTTPResponse
      * Caution: Will be overwritten by {@link setStatusCode()}.
      *
      * @param string $description
+     *
      * @return $this
      */
     public function setStatusDescription($description)
     {
         $this->statusDescription = $description;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocolVersion()
+    {
+        return $this->protocolVersion;
     }
 
     /**
@@ -167,7 +204,7 @@ class HTTPResponse
      */
     public function getStatusDescription()
     {
-        return str_replace(array("\r","\n"), '', $this->statusDescription);
+        return str_replace(["\r", "\n"], '', $this->statusDescription);
     }
 
     /**
@@ -183,11 +220,12 @@ class HTTPResponse
 
     /**
      * @param string $body
+     *
      * @return $this
      */
     public function setBody($body)
     {
-        $this->body = $body ? (string) $body : $body; // Don't type-cast false-ish values, eg null is null not ''
+        $this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
         return $this;
     }
 
@@ -204,6 +242,7 @@ class HTTPResponse
      *
      * @param string $header Example: "content-type"
      * @param string $value Example: "text/xml"
+     *
      * @return $this
      */
     public function addHeader($header, $value)
@@ -217,7 +256,8 @@ class HTTPResponse
      * Return the HTTP header of the given name.
      *
      * @param string $header
-     * @returns string
+     *
+     * @return string
      */
     public function getHeader($header)
     {
@@ -241,6 +281,7 @@ class HTTPResponse
      * e.g. "Content-Type".
      *
      * @param string $header
+     *
      * @return $this
      */
     public function removeHeader($header)
@@ -253,6 +294,7 @@ class HTTPResponse
     /**
      * @param string $dest
      * @param int $code
+     *
      * @return $this
      */
     public function redirect($dest, $code = 302)
@@ -322,7 +364,7 @@ EOT
             );
             header($method);
             foreach ($this->getHeaders() as $header => $value) {
-                    header("{$header}: {$value}", true, $this->getStatusCode());
+                header("{$header}: {$value}", true, $this->getStatusCode());
             }
         } elseif ($this->getStatusCode() >= 300) {
             // It's critical that these status codes are sent; we need to report a failure if not.
@@ -351,9 +393,9 @@ EOT
             /** @var HandlerInterface $handler */
             $handler = Injector::inst()->get(HandlerInterface::class);
             $formatter = $handler->getFormatter();
-            echo $formatter->format(array(
-                'code' => $this->statusCode
-            ));
+            echo $formatter->format([
+                'code' => $this->statusCode,
+            ]);
         } else {
             echo $this->body;
         }
@@ -378,5 +420,24 @@ EOT
     public function isRedirect()
     {
         return in_array($this->getStatusCode(), self::$redirect_codes);
+    }
+
+    /**
+     * The HTTP response represented as a raw string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $headers = [];
+        foreach ($this->getHeaders() as $header => $values) {
+            foreach ((array)$values as $value) {
+                $headers[] = sprintf('%s: %s', $header, $value);
+            }
+        }
+        return
+            sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
+            implode("\r\n", $headers) . "\r\n" . "\r\n" .
+            $this->getBody();
     }
 }

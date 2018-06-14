@@ -41,7 +41,7 @@ class FixtureFactory
     protected $fixtures = array();
 
     /**
-     * @var array Callbacks
+     * @var FixtureBlueprint[] Callbacks
      */
     protected $blueprints = array();
 
@@ -201,15 +201,20 @@ class FixtureFactory
      * If the $class argument is set, limit clearing to items of this class.
      *
      * @param string $limitToClass
+     * @param bool $metadata Clear internal mapping as well as data.
+     * Set to false by default since sometimes data is rolled back by translations.
      */
-    public function clear($limitToClass = null)
+    public function clear($limitToClass = null, $metadata = false)
     {
         $classes = ($limitToClass) ? array($limitToClass) : array_keys($this->fixtures);
         foreach ($classes as $class) {
             $ids = $this->fixtures[$class];
             foreach ($ids as $id => $dbId) {
                 if (class_exists($class)) {
-                    $class::get()->byId($dbId)->delete();
+                    $instance = DataObject::get($class)->byId($dbId);
+                    if ($instance) {
+                        $instance->delete();
+                    }
                 } else {
                     $table = $class;
                     $delete = new SQLDelete("\"$table\"", array(
@@ -218,7 +223,9 @@ class FixtureFactory
                     $delete->execute();
                 }
 
-                unset($this->fixtures[$class][$id]);
+                if ($metadata) {
+                    unset($this->fixtures[$class][$id]);
+                }
             }
         }
     }

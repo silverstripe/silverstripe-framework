@@ -129,6 +129,15 @@ class Session
     private static $cookie_secure = false;
 
     /**
+     * Name of session cache limiter to use.
+     * Defaults to '' to disable cache limiter entirely.
+     *
+     * @see https://secure.php.net/manual/en/function.session-cache-limiter.php
+     * @var string|null
+     */
+    private static $sessionCacheLimiter = '';
+
+    /**
      * Session data.
      * Will be null if session has not been started
      *
@@ -273,6 +282,11 @@ class Session
             // seperate (less secure) session for non-HTTPS requests
             if ($secure) {
                 session_name('SECSESSID');
+            }
+
+            $limiter = $this->config()->get('sessionCacheLimiter');
+            if (isset($limiter)) {
+                session_cache_limiter($limiter);
             }
 
             session_start();

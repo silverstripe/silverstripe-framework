@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use ReflectionClass;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
@@ -656,9 +657,6 @@ class RequestHandler extends ViewableData
      */
     public function redirectBack()
     {
-        // Don't cache the redirect back ever
-        HTTP::set_cache_age(0);
-
         // Prefer to redirect to ?BackURL, but fall back to Referer header
         // As a last resort redirect to base url
         $url = $this->getBackURL()

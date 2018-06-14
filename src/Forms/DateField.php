@@ -353,9 +353,12 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy(DateField_Disabled::class);
-        $field->setValue($this->dataValue());
-        $field->setReadonly(true);
+        $field = $this
+            ->castedCopy(DateField_Disabled::class)
+            ->setValue($this->dataValue())
+            ->setLocale($this->getLocale())
+            ->setReadonly(true);
+
         return $field;
     }
 
