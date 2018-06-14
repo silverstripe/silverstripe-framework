@@ -410,7 +410,7 @@ class HTTPTest extends FunctionalTest
         // Run middleware
         HTTPCacheControlMiddleware::singleton()
             ->process($request, function (HTTPRequest $request) use ($response) {
-            return $response;
-        });
+                return $response;
+            });
     }
 }
