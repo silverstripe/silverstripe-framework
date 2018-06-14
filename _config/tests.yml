@@ -8,7 +8,6 @@ SilverStripe\Core\Injector\Injector:
         globals: '%$SilverStripe\Dev\State\GlobalsTestState'
         extensions: '%$SilverStripe\Dev\State\ExtensionTestState'
         flushable: '%$SilverStripe\Dev\State\FlushableTestState'
-        fixtures: '%$SilverStripe\Dev\State\FixtureTestState'
         requirements: '%$SilverStripe\View\Dev\RequirementsTestState'
         ssviewer: '%$SilverStripe\View\Dev\SSViewerTestState'
 ---
