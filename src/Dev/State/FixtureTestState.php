@@ -155,15 +155,9 @@ class FixtureTestState implements TestState
     {
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
-        $isRelativeToFile
-            = (strpos($fixtureFilePath, '/') === false)
-            || preg_match('/^(\.){1,2}/', $fixtureFilePath);
-
-        if ($isRelativeToFile) {
-            $resolvedPath = realpath($this->getTestAbsolutePath($test) . '/' . $fixtureFilePath);
-            if ($resolvedPath) {
-                return $resolvedPath;
-            }
+        $resolvedPath = realpath($this->getTestAbsolutePath($test) . '/' . $fixtureFilePath);
+        if ($resolvedPath) {
+            return $resolvedPath;
         }
 
         // Check if file exists relative to base dir
@@ -199,6 +193,17 @@ class FixtureTestState implements TestState
      */
     protected function testNeedsDB(SapphireTest $test)
     {
+        // test class explicitly enables DB
+        if ($test->getUsesDatabase()) {
+            return true;
+        }
+
+        // presence of fixture file implicitly enables DB
+        $fixtures = $test::get_fixture_file();
+        if (!empty($fixtures)) {
+            return true;
+        }
+
         $annotations = $test->getAnnotations();
 
         // annotation explicitly disables the DB
@@ -210,17 +215,6 @@ class FixtureTestState implements TestState
         // annotation explicitly enables the DB
         if (array_key_exists('useDatabase', $annotations['method'])
             && $annotations['method']['useDatabase'][0] !== 'false') {
-            return true;
-        }
-
-        // test class explicitly enables DB
-        if ($test->getUsesDatabase()) {
-            return true;
-        }
-
-        // presence of fixture file implicitly enables DB
-        $fixtures = $test::get_fixture_file();
-        if (!empty($fixtures)) {
             return true;
         }
 
