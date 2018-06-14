@@ -54,6 +54,13 @@ class HTTP
     private static $disable_http_cache = false;
 
     /**
+     * Set to true to disable all deprecated HTTP Cache settings
+     *
+     * @var bool
+     */
+    private static $ignoreDeprecatedCaching = false;
+
+    /**
      * Mapping of extension to mime types
      *
      * @var array
@@ -424,6 +431,11 @@ class HTTP
     {
         Deprecation::notice('5.0', 'Headers are added automatically by HTTPCacheControlMiddleware instead.');
 
+        // Skip if deprecated API is disabled
+        if (Config::inst()->get(HTTP::class, 'ignoreDeprecatedCaching')) {
+            return;
+        }
+
         // Ensure a valid response object is provided
         if (!$response instanceof HTTPResponse) {
             user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
@@ -449,11 +461,30 @@ class HTTP
         /** @var HTTPRequest $request */
         $request = Injector::inst()->get(HTTPRequest::class);
 
-        $config = Config::forClass(__CLASS__);
+        // Run middleware
+        ChangeDetectionMiddleware::singleton()->process($request, function (HTTPRequest $request) use ($response) {
+            return HTTPCacheControlMiddleware::singleton()->process($request, function (HTTPRequest $request) use ($response) {
+                return $response;
+            });
+        });
+    }
 
-        // Get current cache control state
+    /**
+     * Ensure that all deprecated HTTP cache settings are respected
+     *
+     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware instead
+     * @param HTTPRequest $request
+     * @param HTTPResponse $response
+     */
+    public static function augmentState(HTTPRequest $request, HTTPResponse $response)
+    {
+        // Skip if deprecated API is disabled
+        $config = Config::forClass(HTTP::class);
+        if ($config->get('ignoreDeprecatedCaching')) {
+            return;
+        }
+
         $cacheControlMiddleware = HTTPCacheControlMiddleware::singleton();
-        $changeDetectionMiddleware = ChangeDetectionMiddleware::singleton();
 
         // if http caching is disabled by config, disable it - used on dev environments due to frequently changing
         // templates and other data. will be overridden by forced publicCache(true) or privateCache(true) calls
@@ -489,13 +520,6 @@ class HTTP
             Deprecation::notice('5.0', 'Etag should not be set explicitly');
             $response->addHeader('ETag', self::$etag);
         }
-
-        // Run middleware
-        $changeDetectionMiddleware->process($request, function (HTTPRequest $request) use ($cacheControlMiddleware, $response) {
-            return $cacheControlMiddleware->process($request, function (HTTPRequest $request) use ($response) {
-                return $response;
-            });
-        });
     }
 
     /**

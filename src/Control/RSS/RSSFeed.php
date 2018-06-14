@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\RSS;
 
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -226,11 +227,11 @@ class RSSFeed extends ViewableData
         $response = Controller::curr()->getResponse();
 
         if (is_int($this->lastModified)) {
-            HTTP::register_modification_timestamp($this->lastModified);
+            HTTPCacheControlMiddleware::singleton()->registerModificationDate($this->lastModified);
             $response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
         }
         if (!empty($this->etag)) {
-            HTTP::register_etag($this->etag);
+            $response->addHeader('ETag', "\"{$this->etag}\"");
         }
 
         $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");

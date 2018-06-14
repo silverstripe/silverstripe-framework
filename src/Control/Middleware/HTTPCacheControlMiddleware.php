@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Middleware;
 
 use InvalidArgumentException;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -48,6 +49,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
         // Update state based on current request and response objects
         $this->augmentState($request, $response);
+
+        // Update state based on deprecated HTTP settings
+        HTTP::augmentState($request, $response);
 
         // Add all headers to this response object
         $this->applyToResponse($response);

@@ -380,13 +380,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         $this->original = $this->record;
 
-        // Keep track of the modification date of all the data sourced to make this page
-        // From this we create a Last-Modified HTTP header
-        if (isset($record['LastEdited'])) {
-            HTTPCacheControlMiddleware::singleton()
-                ->registerModificationDate($record['LastEdited']);
-        }
-
         // Must be called after parent constructor
         if (!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
             $this->populateDefaults();
