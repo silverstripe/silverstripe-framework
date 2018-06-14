@@ -657,9 +657,6 @@ class RequestHandler extends ViewableData
      */
     public function redirectBack()
     {
-        // Don't cache the redirect back ever
-        HTTPCacheControlMiddleware::singleton()->disableCache(true);
-
         // Prefer to redirect to ?BackURL, but fall back to Referer header
         // As a last resort redirect to base url
         $url = $this->getBackURL()

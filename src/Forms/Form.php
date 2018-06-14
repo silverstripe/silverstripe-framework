@@ -1812,13 +1812,9 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Can the body of this form be cached?
      *
-     * Figure out if we can cache this form
-     * - forms with validation shouldn't be cached, because their error messages won't be shown
-     * - forms with security tokens shouldn't be cached because security tokens expire
-     *
      * @return bool
      */
-    public function canBeCached()
+    protected function canBeCached()
     {
         if ($this->getSecurityToken()->isEnabled()) {
             return false;
