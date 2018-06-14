@@ -41,7 +41,7 @@ class FixtureFactory
     protected $fixtures = array();
 
     /**
-     * @var FixtureBlueprint[] Callbacks
+     * @var array Callbacks
      */
     protected $blueprints = array();
 
