@@ -21,8 +21,8 @@ are a great way to learn about HTTP caching.
 
 In order to support developers in making safe choices around HTTP caching,
 we're using a `HTTPCacheControlMiddleware` class to control if a response
-should be considered public or private. This is an abstraction on existing
-lowlevel APIs like `HTTP::add_cache_headers()` and `HTTPResponse->addHeader()`.
+should be considered public or private. This is an abstraction on the
+`HTTPResponse->addHeader()` lowlevel API.
 
 The `HTTPCacheControlMiddleware` API makes it easier to express your caching preferences
 without running the risk of overriding essential core safety measures.
