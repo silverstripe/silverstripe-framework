@@ -37,6 +37,8 @@ class DBDate extends DBField
     /**
      * Fixed locale to use for ISO date formatting. This is necessary to prevent
      * locale-specific numeric localisation breaking internal date strings.
+     *
+     * @internal (remove internal in 4.2)
      */
     const ISO_LOCALE = 'en_US';
 
@@ -214,6 +216,8 @@ class DBDate extends DBField
     /**
      * Return formatter in a given locale. Useful if localising in a format other than the current locale.
      *
+     * @internal (Remove internal in 4.2)
+     *
      * @param string|null $locale The current locale, or null to use default
      * @param string|null $pattern Custom pattern to use for this, if required
      * @param int $dateLength
@@ -262,11 +266,14 @@ class DBDate extends DBField
      * for the day of the month ("1st", "2nd", "3rd" etc)
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
-     * @param string $locale Custom locale to use
+     * @param string $locale Custom locale to use (add to signature in 5.0)
      * @return string The date in the requested format
      */
-    public function Format($format, $locale = null)
+    public function Format($format)
     {
+        // Note: soft-arg uses func_get_args() to respect semver. Add to signature in 5.0
+        $locale = func_num_args() > 1 ? func_get_arg(1) : null;
+
         if (!$this->value) {
             return null;
         }

@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use Exception;
 use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Forms\DatetimeField;
-use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Represents a date-time field.
@@ -232,6 +231,8 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
 
     /**
      * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @internal (Remove internal in 4.2)
      *
      * @param string|null $locale The current locale, or null to use default
      * @param string|null $pattern Custom pattern to use for this, if required
