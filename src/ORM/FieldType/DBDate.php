@@ -38,7 +38,7 @@ class DBDate extends DBField
      * Fixed locale to use for ISO date formatting. This is necessary to prevent
      * locale-specific numeric localisation breaking internal date strings.
      */
-    const ISO_LOCALE = 'en_NZ';
+    const ISO_LOCALE = 'en_US';
 
     public function setValue($value, $record = null, $markChanged = true)
     {
@@ -208,7 +208,7 @@ class DBDate extends DBField
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
     {
-        return $this->getCustomFormatter(null, $dateLength, $timeLength);
+        return $this->getCustomFormatter(null, null, $dateLength, $timeLength);
     }
 
     /**
@@ -262,9 +262,10 @@ class DBDate extends DBField
      * for the day of the month ("1st", "2nd", "3rd" etc)
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
+     * @param string $locale Custom locale to use
      * @return string The date in the requested format
      */
-    public function Format($format)
+    public function Format($format, $locale = null)
     {
         if (!$this->value) {
             return null;
@@ -275,9 +276,8 @@ class DBDate extends DBField
             $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format);
         }
 
-        $formatter = $this->getFormatter();
-        $formatter->setPattern($format);
-        return $formatter->format($this->getTimestamp());
+        $formatter = $this->getCustomFormatter($locale, $format);
+        return $formatter->Format($this->getTimestamp());
     }
 
     /**
@@ -311,9 +311,7 @@ class DBDate extends DBField
         }
 
         // Get user format
-        $format = $member->getDateFormat();
-        $formatter = $this->getCustomFormatter($format, $member->getLocale());
-        return $formatter->format($this->getTimestamp());
+        return $this->Format($member->getDateFormat(), $member->getLocale());
     }
 
     /**
@@ -549,7 +547,7 @@ class DBDate extends DBField
      */
     public function URLDate()
     {
-        return rawurlencode($this->Format(self::ISO_DATE));
+        return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE));
     }
 
     public function scaffoldFormField($title = null, $params = null)

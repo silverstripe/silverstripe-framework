@@ -111,7 +111,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         $timeFormat = $member->getTimeFormat();
 
         // Get user format
-        return $this->Format($dateFormat . ' ' . $timeFormat);
+        return $this->Format($dateFormat . ' ' . $timeFormat, $member->getLocale());
     }
 
     public function requireField()
@@ -135,16 +135,17 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function URLDatetime()
     {
-        return rawurlencode($this->Format(self::ISO_DATETIME));
+        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE));
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
         $dateTimeFormat = $field->getDatetimeFormat();
+        $locale = $field->getLocale();
 
         // Set date formatting hints and example
-        $date = static::now()->Format($dateTimeFormat);
+        $date = static::now()->Format($dateTimeFormat, $locale);
         $field
             ->setDescription(_t(
                 'SilverStripe\\Forms\\FormField.EXAMPLE',
@@ -225,7 +226,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::MEDIUM)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return parent::getFormatter($dateLength, $timeLength);
     }
 
 
