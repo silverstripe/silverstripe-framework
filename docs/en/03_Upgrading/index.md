@@ -83,7 +83,7 @@ We recommend using `recipe-cms` in your `composer.json` file to help you keep up
 ```json
 {
     "require": {
-        "silverstripe/recipe-cms": "^1"
+        "silverstripe/recipe-cms": "^4"
     }
 }
 ```
@@ -177,7 +177,7 @@ Take for example the following SilverStripe 3 `composer.json` file.
 
 You can upgrade the `composer.json` file with this command:
 ```bash
-upgrade-code recompose --recipe-core-constraint=1.1 --write
+upgrade-code recompose --recipe-core-constraint=4.1 --write
 ```
 
 The `--recipe-core-constraint` flag can be use to target a specific version of `silverstripe/recipe-core`. If this flag is omitted, the project will be upgraded to the latest stable version. You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
@@ -191,7 +191,7 @@ Your upgraded `composer.json` file will look like this.
     "require": {
         "dnadesign/silverstripe-elemental": "^2.1",
         "php": ">=5.6",
-        "silverstripe/recipe-cms": "^1.1"
+        "silverstripe/recipe-cms": "^4.1"
     }
 }
 ```
@@ -206,16 +206,16 @@ The instruction in this section assumed you'll be editing your `composer.json` f
 
 Where possible, we recommend you use recipes.
 
-If your SilverStripe 3 project requires the `silverstripe/cms` module, replace that dependency with `silverstripe/recipe-cms`. Set the version constraint for `silverstripe/recipe-cms` to:
-* `~1.0.0` to upgrade to SilverStripe 4.0
-* `~1.1.0` to upgrade to SilverStripe 4.1
-* `~1.2.0` to upgrade to SilverStripe 4.2
+If your SilverStripe 3 project requires the `silverstripe/cms` module, replace that dependency with `silverstripe/recipe-cms`. The version constraint for `silverstripe/recipe-cms` must match your targeted version of SilverStripe:
+* `~4.0.0` to upgrade to SilverStripe 4.0
+* `~4.1.0` to upgrade to SilverStripe 4.1
+* `~4.2.0` to upgrade to SilverStripe 4.2
 * and so on.
 
-If your SilverStripe 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/framework` with `silverstripe/recipe-core`. Set the version constraint for `silverstripe/recipe-core` to:
-* `~1.0.0` to upgrade to SilverStripe 4.0
-* `~1.1.0` to upgrade to SilverStripe 4.1
-* `~1.2.0` to upgrade to SilverStripe 4.2
+If your SilverStripe 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/framework` with `silverstripe/recipe-core`.  The version constraint for `silverstripe/recipe-core` must match your targeted version of SilverStripe:
+* `~4.0.0` to upgrade to SilverStripe 4.0
+* `~4.1.0` to upgrade to SilverStripe 4.1
+* `~4.2.0` to upgrade to SilverStripe 4.2
 * and so on.
 
 The following modules are implicitly required by `silverstripe/recipe-core`. They can be removed from your `composer.json` dependencies if you are using `silverstripe/recipe-core` or `silverstripe/recipe-cms`.
@@ -253,7 +253,7 @@ After switching to SilverStripe 4 recipes, the `composer.json` file should look 
 {
     "name": "app/cms-website",
     "require": {
-        "silverstripe/recipe-cms": "~1.1.0"
+        "silverstripe/recipe-cms": "~4.1.0"
     }
 }
 ```
