@@ -109,8 +109,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     /**
      * Forcing level of previous setting; higher number wins
-     * Combination of consts belo
-     *w
+     * Combination of consts below
+     *
      * @var int
      */
     protected $forcingLevel = null;
@@ -257,7 +257,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
 
     /**
-     * Register a modification date. Used to calculate the Modification-Date http header
+     * Register a modification date. Used to calculate the "Last-Modified" HTTP header.
+     * Can be called multiple times, and will automatically retain the most recent date.
      *
      * @param string|int $date Date string or timestamp
      * @return HTTPCacheControlMiddleware
