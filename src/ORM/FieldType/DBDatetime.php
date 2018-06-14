@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use Exception;
 use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Forms\DatetimeField;
-use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Represents a date-time field.
@@ -111,7 +110,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         $timeFormat = $member->getTimeFormat();
 
         // Get user format
-        return $this->Format($dateFormat . ' ' . $timeFormat);
+        return $this->Format($dateFormat . ' ' . $timeFormat, $member->getLocale());
     }
 
     public function requireField()
@@ -135,16 +134,17 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function URLDatetime()
     {
-        return rawurlencode($this->Format(self::ISO_DATETIME));
+        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE));
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
         $dateTimeFormat = $field->getDatetimeFormat();
+        $locale = $field->getLocale();
 
         // Set date formatting hints and example
-        $date = static::now()->Format($dateTimeFormat);
+        $date = static::now()->Format($dateTimeFormat, $locale);
         $field
             ->setDescription(_t(
                 'SilverStripe\\Forms\\FormField.EXAMPLE',
@@ -225,7 +225,41 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::MEDIUM)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return parent::getFormatter($dateLength, $timeLength);
+    }
+
+
+    /**
+     * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @internal (Remove internal in 4.2)
+     *
+     * @param string|null $locale The current locale, or null to use default
+     * @param string|null $pattern Custom pattern to use for this, if required
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getCustomFormatter(
+        $locale = null,
+        $pattern = null,
+        $dateLength = IntlDateFormatter::MEDIUM,
+        $timeLength = IntlDateFormatter::MEDIUM
+    ) {
+        return parent::getCustomFormatter($locale, $pattern, $dateLength, $timeLength);
+    }
+
+    /**
+     * Formatter used internally
+     *
+     * @internal
+     * @return IntlDateFormatter
+     */
+    protected function getInternalFormatter()
+    {
+        $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDatetime::ISO_DATETIME);
+        $formatter->setLenient(false);
+        return $formatter;
     }
 
     /**
