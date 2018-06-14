@@ -136,19 +136,25 @@ class FixtureFactoryTest extends SapphireTest
     public function testClear()
     {
         $factory = new FixtureFactory();
+        $table = TestDataObject::singleton()->baseTable();
         $obj1Id = $factory->createRaw(
-            TestDataObject::singleton()->baseTable(),
+            $table,
             'one',
             array('Name' => 'My Name')
         );
         $obj2 = $factory->createObject(TestDataObject::class, 'two');
 
+        // Clear models only
         $factory->clear();
-
-        $this->assertFalse($factory->getId(TestDataObject::class, 'one'));
+        $this->assertEquals($obj1Id, $factory->getId($table, 'one'));
         $this->assertNull(TestDataObject::get()->byID($obj1Id));
-        $this->assertFalse($factory->getId(TestDataObject::class, 'two'));
+        $this->assertEquals($obj2->ID, $factory->getId(TestDataObject::class, 'two'));
         $this->assertNull(TestDataObject::get()->byID($obj2->ID));
+
+        // Force metadata clear
+        $factory->clear(null, true);
+        $this->assertFalse($factory->getId($table, 'one'));
+        $this->assertFalse($factory->getId(TestDataObject::class, 'two'));
     }
 
     public function testClearWithClass()
