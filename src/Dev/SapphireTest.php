@@ -1191,15 +1191,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
-        $isRelativeToFile
-            = (strpos('/', $fixtureFilePath) === false)
-            || preg_match('/^(\.){1,2}/', $fixtureFilePath);
-
-        if ($isRelativeToFile) {
-            $resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
-            if ($resolvedPath) {
-                return $resolvedPath;
-            }
+        $resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
+        if ($resolvedPath) {
+            return $resolvedPath;
         }
 
         // Check if file exists relative to base dir
