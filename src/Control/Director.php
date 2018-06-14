@@ -932,7 +932,6 @@ class Director implements TemplateGlobalProvider
         // Redirect to installer
         $response = new HTTPResponse();
         $response->redirect($destURL, 301);
-        HTTP::add_cache_headers($response);
         throw new HTTPResponse_Exception($response);
     }
 

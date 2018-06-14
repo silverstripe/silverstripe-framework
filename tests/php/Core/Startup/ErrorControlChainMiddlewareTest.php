@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Core\Tests\Startup;
 
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;

@@ -222,6 +222,7 @@ mappings:
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
   FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
+  HTTPCacheControl: SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse
