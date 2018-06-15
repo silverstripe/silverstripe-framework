@@ -346,7 +346,7 @@ class Form extends ViewableData implements HasRequestHandler
         // load data in from previous submission upon error
         $data = $this->getSessionData();
         if (isset($data)) {
-            $this->loadDataFrom($data);
+            $this->loadDataFrom($data, self::MERGE_AS_INTERNAL_VALUE);
         }
         return $this;
     }
@@ -1332,9 +1332,10 @@ class Form extends ViewableData implements HasRequestHandler
         return $result;
     }
 
-    const MERGE_DEFAULT = 0;
-    const MERGE_CLEAR_MISSING = 1;
-    const MERGE_IGNORE_FALSEISH = 2;
+    const MERGE_DEFAULT = 0b0000;
+    const MERGE_CLEAR_MISSING = 0b0001;
+    const MERGE_IGNORE_FALSEISH = 0b0010;
+    const MERGE_AS_INTERNAL_VALUE = 0b0100;
 
     /**
      * Load data from the given DataObject or array.
@@ -1355,6 +1356,7 @@ class Form extends ViewableData implements HasRequestHandler
      * {@link saveInto()}.
      *
      * @uses FieldList->dataFields()
+     * @uses FormField->setSubmittedValue()
      * @uses FormField->setValue()
      *
      * @param array|DataObject $data
@@ -1373,6 +1375,10 @@ class Form extends ViewableData implements HasRequestHandler
      *
      *  Passing IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
      *  a field's value.
+     *
+     *  Passing MERGE_AS_INTERNAL_VALUE forces the data to be parsed using the internal representation of the matching
+     *  form field. This is helpful if you are loading an array of values retrieved from `Form::getData()` and you
+     *   do not want them parsed as submitted data.
      *
      *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
      *  CLEAR_MISSING
@@ -1483,7 +1489,7 @@ class Form extends ViewableData implements HasRequestHandler
 
             // pass original data as well so composite fields can act on the additional information
             if ($setValue) {
-                if ($submitted) {
+                if ($submitted && ($mergeStrategy & self::MERGE_AS_INTERNAL_VALUE) != self::MERGE_AS_INTERNAL_VALUE) {
                     $field->setSubmittedValue($val, $data);
                 } else {
                     $field->setValue($val, $data);
