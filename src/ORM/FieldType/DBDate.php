@@ -37,8 +37,6 @@ class DBDate extends DBField
     /**
      * Fixed locale to use for ISO date formatting. This is necessary to prevent
      * locale-specific numeric localisation breaking internal date strings.
-     *
-     * @internal (remove internal in 4.2)
      */
     const ISO_LOCALE = 'en_US';
 
@@ -215,8 +213,6 @@ class DBDate extends DBField
 
     /**
      * Return formatter in a given locale. Useful if localising in a format other than the current locale.
-     *
-     * @internal (Remove internal in 4.2)
      *
      * @param string|null $locale The current locale, or null to use default
      * @param string|null $pattern Custom pattern to use for this, if required

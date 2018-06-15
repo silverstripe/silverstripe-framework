@@ -232,8 +232,6 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     /**
      * Return formatter in a given locale. Useful if localising in a format other than the current locale.
      *
-     * @internal (Remove internal in 4.2)
-     *
      * @param string|null $locale The current locale, or null to use default
      * @param string|null $pattern Custom pattern to use for this, if required
      * @param int $dateLength
