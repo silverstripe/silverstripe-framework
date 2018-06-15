@@ -283,6 +283,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $fixtureFiles = $this->getFixturePaths();
 
         if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
+            // Assign fixture factory to deprecated prop in case old tests use it over the getter
+            /** @var FixtureTestState $fixtureState */
+            $fixtureState = static::$state->getStateByName('fixtures');
+            $this->fixtureFactory = $fixtureState->getFixtureFactory(static::class);
+
             $this->logInWithPermission('ADMIN');
         }
 
