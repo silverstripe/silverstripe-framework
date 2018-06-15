@@ -261,6 +261,8 @@ eo:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
     NoPassword: 'Mankas pasvorto por ĉi tiu membro.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Retpoŝtadreso kaj pasvorto'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Membraj pasvortoj'
     PLURALS:

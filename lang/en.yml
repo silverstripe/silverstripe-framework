@@ -37,8 +37,6 @@ en:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'not set'
-    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
@@ -86,7 +84,6 @@ en:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Delete
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
