@@ -129,7 +129,8 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected function getItemRequestHandler($gridField, $record, $requestHandler)
     {
         $class = $this->getItemRequestClass();
-        $this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler);
+        $assignedClass = $this->itemRequestClass;
+        $this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler, $assignedClass);
         /** @var GridFieldDetailForm_ItemRequest $handler */
         $handler = Injector::inst()->createWithArgs(
             $class,
@@ -234,7 +235,7 @@ class GridFieldDetailForm implements GridField_URLHandler
         } elseif (ClassInfo::exists(static::class . "_ItemRequest")) {
             return static::class . "_ItemRequest";
         } else {
-            return __CLASS__ . '_ItemRequest';
+            return GridFieldDetailForm_ItemRequest::class;
         }
     }
 
