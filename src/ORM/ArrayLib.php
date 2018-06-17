@@ -75,28 +75,22 @@ class ArrayLib
     }
 
     /**
-     * @todo Improve documentation
+     * Flattens a nested array to a one level array
      *
-     * @param array $arr
+     * @param array $array
      * @return array
      */
-    public static function array_values_recursive($arr)
+    public static function array_values_recursive($array)
     {
-        $lst = array();
+        $valuesArray = [];
 
-        foreach (array_keys($arr) as $k) {
-            $v = $arr[$k];
-            if (is_scalar($v)) {
-                $lst[] = $v;
-            } elseif (is_array($v)) {
-                $lst = array_merge(
-                    $lst,
-                    self::array_values_recursive($v)
-                );
+        array_walk_recursive($array, function($value, $key) use (&$valuesArray) {
+            if (is_scalar($value)) {
+                array_push($valuesArray, $value);
             }
-        }
+        });
 
-        return $lst;
+        return $valuesArray;
     }
 
     /**
