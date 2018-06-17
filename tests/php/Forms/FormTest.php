@@ -31,6 +31,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -279,21 +280,8 @@ class FormTest extends FunctionalTest
             'SomeTimeField' => '17:28:05'
         ];
 
-        // Test loading our data with the MERGE_FORCE_SET_VALUE
-        $form = new Form(
-            Controller::curr(),
-            'Form',
-            new FieldList(
-                $dateField = DatetimeField::create('SomeDateTimeField')
-                    ->setHTML5(false)
-                    ->setDatetimeFormat("EEE, MMM d, ''yy HH:mm:ss"),
-                $timeField = TimeField::create('SomeTimeField')
-                    ->setHTML5(false)
-                    ->setTimeFormat("hh 'o''clock' a mm ss") // Swatch Internet Time format
-            ),
-            new FieldList()
-        );
-
+        // Test loading our data with the MERGE_AS_INTERNAL_VALUE
+        $form = $this->getStubFormWithWeirdValueFormat();
         $form->loadDataFrom($dataInInternalValue, Form::MERGE_AS_INTERNAL_VALUE);
 
         $this->assertEquals(
@@ -301,22 +289,16 @@ class FormTest extends FunctionalTest
             $form->getData()
         );
 
-
-        // Test loading our data without the MERGE_FORCE_SET_VALUE
-        $form = new Form(
-            Controller::curr(),
-            'Form',
-            new FieldList(
-                $dateField = DatetimeField::create('SomeDateTimeField')
-                    ->setHTML5(false)
-                    ->setDatetimeFormat("EEE, MMM d, ''yy HH:mm:ss"),
-                $timeField = TimeField::create('SomeTimeField')
-                    ->setHTML5(false)
-                    ->setTimeFormat("hh 'o''clock' a mm ss") // Swatch Internet Time format
-            ),
-            new FieldList()
+        // Test loading our data with the MERGE_AS_SUBMITTED_VALUE and an data passed as an object
+        $form = $this->getStubFormWithWeirdValueFormat();
+        $form->loadDataFrom(ArrayData::create($dataInSubmittedValue), Form::MERGE_AS_SUBMITTED_VALUE);
+        $this->assertEquals(
+            $dataInInternalValue,
+            $form->getData()
         );
 
+        // Test loading our data without the MERGE_AS_INTERNAL_VALUE and without MERGE_AS_SUBMITTED_VALUE
+        $form = $this->getStubFormWithWeirdValueFormat();
         $form->loadDataFrom($dataInSubmittedValue);
 
         $this->assertEquals(
@@ -339,10 +321,10 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom(
             array(
             'Players' => array(
-                14,
-                18,
-                22
-            ),
+                    14,
+                    18,
+                    22
+                ),
             )
         );
         $form->saveInto($object);
@@ -1098,6 +1080,30 @@ class FormTest extends FunctionalTest
             new FormTest\TestController(),
             'Form',
             new FieldList(new TextField('key1')),
+            new FieldList()
+        );
+    }
+
+    /**
+     * Some fields handle submitted values differently from their internal values. This forms contains 2 such fields
+     * * a SomeDateTimeField that expect a date such as `Fri, Jun 15, '18 17:28:05`,
+     * * a SomeTimeField that expects it's time as `05 o'clock PM 28 05`
+     *
+     * @return Form
+     */
+    protected function getStubFormWithWeirdValueFormat()
+    {
+        return new Form(
+            Controller::curr(),
+            'Form',
+            new FieldList(
+                $dateField = DatetimeField::create('SomeDateTimeField')
+                    ->setHTML5(false)
+                    ->setDatetimeFormat("EEE, MMM d, ''yy HH:mm:ss"),
+                $timeField = TimeField::create('SomeTimeField')
+                    ->setHTML5(false)
+                    ->setTimeFormat("hh 'o''clock' a mm ss") // Swatch Internet Time format
+            ),
             new FieldList()
         );
     }
