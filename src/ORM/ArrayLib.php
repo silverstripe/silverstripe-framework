@@ -75,22 +75,14 @@ class ArrayLib
     }
 
     /**
-     * Flattens a nested array to a one level array
+     * Flattens a multi-dimensional array to a one level array without preserving the keys
      *
      * @param array $array
      * @return array
      */
     public static function array_values_recursive($array)
     {
-        $valuesArray = [];
-
-        array_walk_recursive($array, function($value, $key) use (&$valuesArray) {
-            if (is_scalar($value)) {
-                array_push($valuesArray, $value);
-            }
-        });
-
-        return $valuesArray;
+        return self::flatten($array, false);
     }
 
     /**
@@ -240,17 +232,18 @@ class ArrayLib
      */
     public static function flatten($array, $preserveKeys = true, &$out = array())
     {
-        foreach ($array as $key => $child) {
-            if (is_array($child)) {
-                $out = self::flatten($child, $preserveKeys, $out);
-            } else {
-                if ($preserveKeys) {
-                    $out[$key] = $child;
+        array_walk_recursive(
+            $array,
+            function ($value, $key) use (&$out, $preserveKeys) {
+                if (!is_scalar($value)) {
+                    // Do nothing
+                } elseif ($preserveKeys) {
+                    $out[$key] = $value;
                 } else {
-                    $out[] = $child;
+                    $out[] = $value;
                 }
             }
-        }
+        );
 
         return $out;
     }
