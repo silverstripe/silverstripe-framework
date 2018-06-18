@@ -101,7 +101,7 @@ class DBHTMLTextTest extends SapphireTest
      * @dataProvider providerLimitCharactersToClosestWord
      *
      * @param string $originalValue Raw string input
-     * @param int    $limit
+     * @param int $limit
      * @param string $expectedValue Expected template value
      */
     public function testLimitCharactersToClosestWord($originalValue, $limit, $expectedValue)
@@ -163,13 +163,19 @@ class DBHTMLTextTest extends SapphireTest
                 5,
                 'A sentence is.',
             ],
+            [
+                '<p>新西兰是一个拥有160余种语言的国家，这体现了我们国家的多元性。总结字段也应根据中文表意句号来分割。</p><p>这个测试应该有助于掩盖它。</p>',
+                50,
+                '新西兰是一个拥有160余种语言的国家，这体现了我们国家的多元性。 总结字段也应根据中文表意句号来分割。'
+
+            ]
         ];
     }
 
     /**
      * @dataProvider providerSummary
      * @param string $originalValue
-     * @param int    $limit
+     * @param int $limit
      * @param string $expectedValue
      */
     public function testSummary($originalValue, $limit, $expectedValue)
@@ -196,7 +202,6 @@ class DBHTMLTextTest extends SapphireTest
             $this->assertEquals($match . Convert::raw2xml($add), $result);
         }
     }
-
 
 
     public function providerFirstSentence()
@@ -277,8 +282,8 @@ class DBHTMLTextTest extends SapphireTest
     public function testToPlain($html, $plain)
     {
         /**
- * @var DBHTMLText $textObj
-*/
+         * @var DBHTMLText $textObj
+         */
         $textObj = DBField::create_field('HTMLFragment', $html);
         $this->assertEquals($plain, $textObj->Plain());
     }
@@ -340,8 +345,8 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * @dataProvider providerContextSummary
      * @param string $originalValue Input
-     * @param int    $limit         Numer of characters
-     * @param string $keywords      Keywords to highlight
+     * @param int $limit Numer of characters
+     * @param string $keywords Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */
     public function testContextSummary($originalValue, $limit, $keywords, $expectedValue)
@@ -397,8 +402,8 @@ class DBHTMLTextTest extends SapphireTest
     public function testShortcodesProcessed()
     {
         /**
- * @var DBHTMLText $obj
-*/
+         * @var DBHTMLText $obj
+         */
         $obj = DBField::create_field(
             'HTMLText',
             '<p>Some content <strong>[test_shortcode]</strong> with shortcode</p>'
@@ -446,14 +451,14 @@ class DBHTMLTextTest extends SapphireTest
 
     function testWhitelist()
     {
-        $textObj = new DBHTMLText('Test', ['whitelist'=> 'meta,link']);
+        $textObj = new DBHTMLText('Test', ['whitelist' => 'meta,link']);
         $this->assertEquals(
             '<meta content="Keep"><link href="Also Keep">',
             $textObj->whitelistContent('<meta content="Keep"><p>Remove</p><link href="Also Keep" />Remove Text'),
             'Removes any elements not in whitelist excluding text elements'
         );
 
-        $textObj = new DBHTMLText('Test', ['whitelist'=> 'meta,link,text()']);
+        $textObj = new DBHTMLText('Test', ['whitelist' => 'meta,link,text()']);
         $this->assertEquals(
             '<meta content="Keep"><link href="Also Keep">Keep Text',
             $textObj->whitelistContent('<meta content="Keep"><p>Remove</p><link href="Also Keep" />Keep Text'),
@@ -472,15 +477,15 @@ class DBHTMLTextTest extends SapphireTest
         );
         ShortcodeParser::set_active('HTMLTextTest');
         /**
- * @var DBHTMLText $field
-*/
+         * @var DBHTMLText $field
+         */
         $field = DBField::create_field('HTMLText', '<p>[shortcode]</p>');
         $this->assertEquals('<p>replaced</p>', $field->RAW());
         $this->assertEquals('<p>replaced</p>', (string)$field);
 
         $field->setOptions(
             array(
-            'shortcodes' => false,
+                'shortcodes' => false,
             )
         );
 
@@ -502,8 +507,8 @@ class DBHTMLTextTest extends SapphireTest
         );
         ShortcodeParser::set_active('HTMLTextTest');
         /**
- * @var DBHTMLText $field
-*/
+         * @var DBHTMLText $field
+         */
         $field = DBField::create_field('HTMLText', '<p>[shortcode]</p>');
 
         $this->assertEquals(
@@ -611,7 +616,8 @@ class DBHTMLTextTest extends SapphireTest
             return;
         }
 
-        $problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT, 'UTF-8');
+        $problematicText = html_entity_decode('<p>This is a&nbsp;Test with non-breaking&nbsp;space!</p>', ENT_COMPAT,
+            'UTF-8');
 
         $textObj = new DBHTMLText('Test');
         $textObj->setValue($problematicText);

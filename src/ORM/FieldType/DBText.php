@@ -129,12 +129,21 @@ class DBText extends DBString
         // Split on sentences (don't remove period)
         $sentences = array_filter(array_map(function ($str) {
             return trim($str);
-        }, preg_split('@(?<=\.)@', $value)));
-        $wordCount = count(preg_split('#\s+#u', $sentences[0]));
+        }, preg_split('@(?<=\.)|(?<=。)@', $value)));
+        $wordCount = str_word_count($sentences[0]);
 
         // if the first sentence is too long, show only the first $maxWords words
         if ($wordCount > $maxWords) {
-            return implode(' ', array_slice(explode(' ', $sentences[0]), 0, $maxWords)) . $add;
+            // Split the sentence by words (could be kanji, could be english words)
+            $words = str_word_count($sentences[0], $wordArray = 2);
+
+            // Get the string index of the last word before our maximum.
+            $wordIndexes = array_slice($words, 0, $maxWords + 1, true);
+            end($wordIndexes);
+            $key = key($wordIndexes);
+
+            // Return the stripped string
+            return mb_substr($value, 0, $key - 1, "utf-8") . $add;
         }
 
         // add each sentence while there are enough words to do so
@@ -145,7 +154,7 @@ class DBText extends DBString
 
             // If more sentences to process, count number of words
             if ($sentences) {
-                $wordCount += count(preg_split('#\s+#u', $sentences[0]));
+                $wordCount += str_word_count($sentences[0]);
             }
         } while ($wordCount < $maxWords && $sentences && trim($sentences[0]));
 
@@ -198,7 +207,7 @@ class DBText extends DBString
         $keywords = Convert::raw2xml($keywords);
 
         // Find the search string
-        $position = empty($keywords) ? 0 : (int) mb_stripos($text, $keywords);
+        $position = empty($keywords) ? 0 : (int)mb_stripos($text, $keywords);
 
         // We want to search string to be in the middle of our block to give it some context
         $position = max(0, $position - ($characters / 2));
@@ -206,8 +215,8 @@ class DBText extends DBString
         if ($position > 0) {
             // We don't want to start mid-word
             $position = max(
-                (int) mb_strrpos(substr($text, 0, $position), ' '),
-                (int) mb_strrpos(substr($text, 0, $position), "\n")
+                (int)mb_strrpos(substr($text, 0, $position), ' '),
+                (int)mb_strrpos(substr($text, 0, $position), "\n")
             );
         }
 
