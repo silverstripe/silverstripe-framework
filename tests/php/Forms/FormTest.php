@@ -1071,7 +1071,6 @@ class FormTest extends FunctionalTest
             $this->mainSession->session()->get('FormInfo.Form_Form'),
             'Our form was reloaded successfully. That should have cleared our session.'
         );
-
     }
 
     protected function getStubForm()
