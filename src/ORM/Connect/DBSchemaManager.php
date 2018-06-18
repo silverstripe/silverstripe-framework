@@ -454,16 +454,21 @@ MESSAGE
      */
     public function dontRequireTable($table)
     {
-        if (isset($this->tableList[strtolower($table)])) {
-            $suffix = '';
-            while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
-                $suffix = $suffix
-                        ? ((int)$suffix + 1)
-                        : 2;
-            }
-            $this->renameTable($table, "_obsolete_{$table}$suffix");
-            $this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix", "obsolete");
+        if (!isset($this->tableList[strtolower($table)])) {
+            return;
         }
+        $prefix = "_obsolete_{$table}";
+        $suffix = '';
+        $renameTo = $prefix . $suffix;
+        while (isset($this->tableList[strtolower($renameTo)])) {
+            $suffix = $suffix
+                    ? ((int)$suffix + 1)
+                    : 2;
+            $renameTo = $prefix . $suffix;
+        }
+        $renameFrom = $this->tableList[strtolower($table)];
+        $this->renameTable($renameFrom, $renameTo);
+        $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
     }
 
     /**
