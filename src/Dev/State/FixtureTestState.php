@@ -31,7 +31,14 @@ class FixtureTestState implements TestState
         }
         $tmpDB = $test::tempDB();
         if (!$tmpDB->isUsed()) {
+            // Build base db
             $tmpDB->build();
+
+            // Reset schema
+            $extraObjects = $test->getExtraDataObjects();
+            if ($extraObjects) {
+                $tmpDB->resetDBSchema($extraObjects);
+            }
         }
         DataObject::singleton()->flushCache();
 
