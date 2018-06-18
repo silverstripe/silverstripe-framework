@@ -37,13 +37,25 @@ whenever that page is.
 
 The solution to this problem is the ownership API, which declares a two-way relationship between
 objects along database relations. This relationship is similar to many_many/belongs_many_many
-and has_one/has_many, however it relies on a pre-existing relationship to function.
+and has_one/has_many, however it relies on a pre-existing relationship to function. 
 
-When a DataObject is published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication, will also cascade to children of children and so on. 
+### Cascade publishing
+
+If a DataObject object "owns" other DataObjects, you'll usually want to publish the children DataObject when the parent DataObject gets published. If those children DataObjects themselves own other DataObjects, you'll want the grand-children to be published along with the parent.
+
+SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish a DataObject. When a DataObject is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication, will also cascade to children of children and so on.
+
+Note that a versioned DataObject may own unversioned DataObjects. In this case, if the parent DataObject gets recursively published, SilverStripe will check if the children unversioned DataObjects own any versioned grand-children. The versioned grand-children will be published along with the parent DataObject. This behavior can be helpful if you wish to group multiple versioned records together.
+
+A non-recursive publish operation is also available if you want to publish a new version of a DataObject without cascade publishing all its children.
 
 ### Grouping versioned DataObjects into a ChangeSet (aka Campaigns)
 
-Changes to many DataObjects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object, better known by its frontend name, "Campaign" (provided the `campaign-admin` module is installed). By grouping a series of content changes together as one cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
+Sometimes, multiple pages or records may be related in organic ways that can not be properly expressed through an ownership relation. There's still value in being able to publish those as a block. 
+
+For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsors records, etc. All this content needs to become visible simultaneously. 
+
+Changes to many DataObjects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet` through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as on74e cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
