@@ -105,7 +105,8 @@ class TempDatabase
      *
      * @return bool True if successfully rolled back, false otherwise. On error the DB is
      * killed and must be re-created. Note that calling rollbackTransaction() when there
-     * is no transaction is counted as a failure, and will kill the DB.
+     * is no transaction is counted as a failure, user code should either kill or flush the DB
+     * as necessary
      */
     public function rollbackTransaction()
     {
@@ -119,9 +120,6 @@ class TempDatabase
             } catch (DatabaseException $ex) {
                 $success = false;
             }
-        }
-        if (!$success) {
-            static::kill();
         }
         return $success;
     }
@@ -247,7 +245,12 @@ class TempDatabase
         // pgsql doesn't allow schema updates inside transactions
         // so we need to rollback any transactions before commencing a schema reset
         if ($this->hasStarted()) {
-            $this->rollbackTransaction();
+            // Sometimes transactions fail, rebuild
+            $success = $this->rollbackTransaction();
+            if (!$success) {
+                $this->kill();
+                $this->build();
+            }
         }
         if (!$this->isUsed()) {
             return;
