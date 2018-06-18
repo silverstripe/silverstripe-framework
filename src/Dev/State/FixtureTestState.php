@@ -26,25 +26,31 @@ class FixtureTestState implements TestState
      */
     public function setUp(SapphireTest $test)
     {
-        if ($this->testNeedsDB($test)) {
-            $tmpDB = $test::tempDB();
-            if (!$tmpDB->isUsed()) {
-                $tmpDB->build();
-            }
-            DataObject::singleton()->flushCache();
+        if (!$this->testNeedsDB($test)) {
+            return;
+        }
+        $tmpDB = $test::tempDB();
+        if (!$tmpDB->isUsed()) {
+            $tmpDB->build();
+        }
+        DataObject::singleton()->flushCache();
 
-            if (!$tmpDB->hasStarted()) {
-                foreach ($test->getRequireDefaultRecordsFrom() as $className) {
-                    $instance = singleton($className);
-                    if (method_exists($instance, 'requireDefaultRecords')) {
-                        $instance->requireDefaultRecords();
-                    }
-                    if (method_exists($instance, 'augmentDefaultRecords')) {
-                        $instance->augmentDefaultRecords();
-                    }
+        // Ensure DB is built and populated
+        if (!$tmpDB->hasStarted()) {
+            foreach ($test->getRequireDefaultRecordsFrom() as $className) {
+                $instance = singleton($className);
+                if (method_exists($instance, 'requireDefaultRecords')) {
+                    $instance->requireDefaultRecords();
                 }
-                $this->loadFixtures($test);
+                if (method_exists($instance, 'augmentDefaultRecords')) {
+                    $instance->augmentDefaultRecords();
+                }
             }
+            $this->loadFixtures($test);
+        }
+
+        // Begin transactions if enabled
+        if ($test->getUsesTransactions()) {
             $tmpDB->startTransaction();
         }
     }
@@ -56,9 +62,21 @@ class FixtureTestState implements TestState
      */
     public function tearDown(SapphireTest $test)
     {
-        if ($this->testNeedsDB($test)) {
-            $test::tempDB()->rollbackTransaction();
+        if (!$this->testNeedsDB($test)) {
+            return;
         }
+
+        // For transactional states, rollback if possible
+        if ($test->getUsesTransactions()) {
+            $success = $test::tempDB()->rollbackTransaction();
+            if ($success) {
+                return;
+            }
+        }
+
+        // Force reset if transaction failed, or disabled
+        $test::tempDB()->kill();
+        $this->resetFixtureFactory(get_class($test));
     }
 
     /**
@@ -68,7 +86,7 @@ class FixtureTestState implements TestState
      */
     public function setUpOnce($class)
     {
-        $this->fixtureFactories[strtolower($class)] = Injector::inst()->create(FixtureFactory::class);
+        $this->resetFixtureFactory($class);
     }
 
     /**
@@ -219,5 +237,15 @@ class FixtureTestState implements TestState
         }
 
         return false;
+    }
+
+    /**
+     * Bootstrap a clean fixture factory for the given class
+     *
+     * @param string $class
+     */
+    protected function resetFixtureFactory($class)
+    {
+        $this->fixtureFactories[strtolower($class)] = Injector::inst()->create(FixtureFactory::class);
     }
 }
