@@ -102,15 +102,28 @@ class TempDatabase
 
     /**
      * Rollback a transaction (or trash all data if the DB doesn't support databases
+     *
+     * @return bool True if successfully rolled back, false otherwise. On error the DB is
+     * killed and must be re-created. Note that calling rollbackTransaction() when there
+     * is no transaction is counted as a failure, and will kill the DB.
      */
     public function rollbackTransaction()
     {
-        if (static::getConn()->supportsTransactions()) {
-            static::getConn()->transactionRollback();
-        } else {
-            $this->hasStarted = false;
-            static::clearAllData();
+        $success = $this->hasStarted() && static::getConn()->supportsTransactions();
+        if ($success) {
+            try {
+                // Explicit false = gnostic error from transactionRollback
+                if (static::getConn()->transactionRollback() === false) {
+                    $success = false;
+                }
+            } catch (DatabaseException $ex) {
+                $success = false;
+            }
         }
+        if (!$success) {
+            static::kill();
+        }
+        return $success;
     }
 
     /**
@@ -118,6 +131,8 @@ class TempDatabase
      */
     public function kill()
     {
+        $this->hasStarted = false;
+
         // Delete our temporary database
         if (!$this->isUsed()) {
             return;
