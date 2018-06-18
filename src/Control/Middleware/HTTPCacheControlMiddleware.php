@@ -26,6 +26,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     const STATE_DISABLED = 'disabled';
 
+    const STATE_DEFAULT = 'default';
+
     /**
      * Generate response for the given request
      *
@@ -90,6 +92,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         self::STATE_ENABLED => [
             'must-revalidate' => true,
         ],
+        self::STATE_DEFAULT => [
+            'no-cache' => true,
+        ],
     ];
 
     /**
@@ -98,7 +103,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @config
      * @var string
      */
-    protected static $defaultState = self::STATE_DISABLED;
+    protected static $defaultState = self::STATE_DEFAULT;
 
     /**
      * Current state
