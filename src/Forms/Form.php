@@ -1416,7 +1416,7 @@ class Form extends ViewableData implements HasRequestHandler
         // `setValue` method to use.
         if (($mergeStrategy & self::MERGE_AS_INTERNAL_VALUE) == self::MERGE_AS_INTERNAL_VALUE) {
             $submitted = false;
-        } else if (($mergeStrategy & self::MERGE_AS_SUBMITTED_VALUE) == self::MERGE_AS_SUBMITTED_VALUE) {
+        } elseif (($mergeStrategy & self::MERGE_AS_SUBMITTED_VALUE) == self::MERGE_AS_SUBMITTED_VALUE) {
             $submitted = true;
         }
 
