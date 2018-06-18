@@ -457,19 +457,18 @@ MESSAGE
         if (!isset($this->tableList[strtolower($table)])) {
             return;
         }
-
-        if (Config::inst()->get(static::class, 'fix_table_case_on_build')) {
-            $this->fixTableCase($table);
-        }
-
+        $prefix = "_obsolete_{$table}";
         $suffix = '';
-        while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
+        $renameTo = $prefix . $suffix;
+        while (isset($this->tableList[strtolower($renameTo)])) {
             $suffix = $suffix
                     ? ((int)$suffix + 1)
                     : 2;
+            $renameTo = $prefix . $suffix;
         }
-        $this->renameTable($table, "_obsolete_{$table}$suffix");
-        $this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix", "obsolete");
+        $renameFrom = $this->tableList[strtolower($table)];
+        $this->renameTable($renameFrom, $renameTo);
+        $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
     }
 
     /**
