@@ -988,7 +988,7 @@ warnings:
     'HTMLEditorField_Toolbar':
       message: 'replaced With SilverStripe\Admin\ModalController'
     'HTMLEditorField_Embed':
-      message: 'replaced with SilverStripe\AssetAdmin\Model\EmbedResource'
+      message: 'replaced with SilverStripe\View\Embed\EmbedResource'
     'HTMLEditorField_File':
       message: 'Removed'
     'HTMLEditorField_Flash':

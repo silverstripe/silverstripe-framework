@@ -1,0 +1,6 @@
+---
+Name: coreoembed
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\View\Embed\Embeddable:
+    class: SilverStripe\View\Embed\EmbedResource
