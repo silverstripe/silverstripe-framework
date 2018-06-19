@@ -160,4 +160,17 @@ abstract class SingleSelectField extends SelectField
         }
         return $field;
     }
+
+    /**
+     * @return SingleLookupField
+     */
+    public function performReadonlyTransformation()
+    {
+        /** @var SingleLookupField $field */
+        $field = $this->castedCopy(SingleLookupField::class);
+        $field->setSource($this->getSource());
+        $field->setReadonly(true);
+
+        return $field;
+    }
 }
