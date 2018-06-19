@@ -360,7 +360,10 @@ class MySQLDatabase extends Database
             return false;
         }
         --$this->transactionNesting;
-        $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        if ($this->transactionNesting <= 0) {
+            $this->transactionNesting = 0;
+            $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        }
         return true;
     }
 
