@@ -119,7 +119,7 @@ class.
                 $Title
                 <% end_if %>
             </a>
-            <p>$Content.LimitWordCountXML</p>
+            <p>$Content.LimitWordCount.XML</p>
             <a class="readMoreLink" href="$Link" 
                 title="Read more about &quot;{$Title}&quot;"
                 >Read more about &quot;{$Title}&quot;...</a>
