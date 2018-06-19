@@ -20,6 +20,11 @@ class GroupTest extends FunctionalTest
         TestMember::class
     ];
 
+    protected function setUp()
+    {
+        parent::setUp();
+    }
+
     public function testGroupCodeDefaultsToTitle()
     {
         $g1 = new Group();
