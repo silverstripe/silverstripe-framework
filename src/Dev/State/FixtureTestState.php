@@ -20,6 +20,13 @@ class FixtureTestState implements TestState
     private $fixtureFactories = [];
 
     /**
+     * Set if fixtures have been loaded
+     *
+     * @var bool
+     */
+    protected $loaded = [];
+
+    /**
      * Called on setup
      *
      * @param SapphireTest $test
@@ -29,6 +36,8 @@ class FixtureTestState implements TestState
         if (!$this->testNeedsDB($test)) {
             return;
         }
+
+        // Ensure DB is built
         $tmpDB = $test::tempDB();
         if (!$tmpDB->isUsed()) {
             // Build base db
@@ -40,10 +49,11 @@ class FixtureTestState implements TestState
                 $tmpDB->resetDBSchema($extraObjects);
             }
         }
+
         DataObject::singleton()->flushCache();
 
         // Ensure DB is built and populated
-        if (!$tmpDB->hasStarted()) {
+        if (!$this->getIsLoaded(get_class($test))) {
             foreach ($test->getRequireDefaultRecordsFrom() as $className) {
                 $instance = singleton($className);
                 if (method_exists($instance, 'requireDefaultRecords')) {
@@ -155,6 +165,8 @@ class FixtureTestState implements TestState
         foreach ($paths as $fixtureFile) {
             $this->loadFixture($fixtureFile, $test);
         }
+        // Flag as loaded
+        $this->loaded[get_class($test)] = true;
     }
 
     /**
@@ -254,5 +266,17 @@ class FixtureTestState implements TestState
     protected function resetFixtureFactory($class)
     {
         $this->fixtureFactories[strtolower($class)] = Injector::inst()->create(FixtureFactory::class);
+        $this->loaded[$class] = false;
+    }
+
+    /**
+     * Check if fixtures need to be loaded for this class
+     *
+     * @param string $class Name of test to check
+     * @return bool
+     */
+    protected function getIsLoaded($class)
+    {
+        return !empty($this->loaded[$class]);
     }
 }
