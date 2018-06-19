@@ -166,7 +166,7 @@ class FixtureTestState implements TestState
             $this->loadFixture($fixtureFile, $test);
         }
         // Flag as loaded
-        $this->loaded[get_class($test)] = true;
+        $this->loaded[strtolower(get_class($test))] = true;
     }
 
     /**
@@ -265,7 +265,8 @@ class FixtureTestState implements TestState
      */
     protected function resetFixtureFactory($class)
     {
-        $this->fixtureFactories[strtolower($class)] = Injector::inst()->create(FixtureFactory::class);
+        $class = strtolower($class);
+        $this->fixtureFactories[$class] = Injector::inst()->create(FixtureFactory::class);
         $this->loaded[$class] = false;
     }
 
@@ -277,6 +278,6 @@ class FixtureTestState implements TestState
      */
     protected function getIsLoaded($class)
     {
-        return !empty($this->loaded[$class]);
+        return !empty($this->loaded[strtolower($class)]);
     }
 }
