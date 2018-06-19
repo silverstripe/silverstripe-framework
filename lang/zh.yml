@@ -10,8 +10,6 @@ zh:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: 货币字符
   SilverStripe\Forms\DateField:
-    NOTSET: 未设置
-    TODAY: 今天
     VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
     VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
     VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
@@ -46,7 +44,6 @@ zh:
     RelationSearch: 关系搜索
     ResetFilter: 重设
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: 删除
     Delete: 删除
     DeletePermissionsFailure: 没有删除权限
     EditPermissionsFailure: 没有解除记录链接的权限
@@ -58,8 +55,6 @@ zh:
     DeletePermissionsFailure: 没有删除权限
     Deleted: '已删除的 {type} {name}'
     Save: 保存
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 编辑
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 金额
     FIELDLABELCURRENCY: 货币

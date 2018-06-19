@@ -2,9 +2,6 @@ th:
   SilverStripe\Forms\ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
-  SilverStripe\Forms\DateField:
-    NOTSET: ไม่ต้องตั้งค่า
-    TODAY: วันนี้
   SilverStripe\Forms\DropdownField:
     CHOOSE: (เลือก)
   SilverStripe\Forms\EmailField:
@@ -30,7 +27,6 @@ th:
     Print: พิมพ์
     ResetFilter: รีเซ็ต
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: ลบ
     Delete: ลบ
     DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
     UnlinkRelation: ยกเลิกการลิงก์

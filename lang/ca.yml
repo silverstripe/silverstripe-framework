@@ -3,9 +3,6 @@ ca:
     SHOWONCLICKTITLE: 'Canvia la contrasenya'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €E
-  SilverStripe\Forms\DateField:
-    NOTSET: 'no definit'
-    TODAY: avui
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Trieu)
   SilverStripe\Forms\Form:

@@ -7,8 +7,6 @@ mi:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'kāore i tautuhia'
-    TODAY: 'tēnei rā'
     VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
@@ -41,7 +39,6 @@ mi:
     RelationSearch: 'Rapu whanaunga'
     ResetFilter: 'Tautuhi anō'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Muku
     Delete: Muku
     DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
     EditPermissionsFailure: 'Kāore ō whakaaetanga kia wetehono pūkete'
@@ -53,8 +50,6 @@ mi:
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Kua mukua {type} {name}'
     Save: Tiaki
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Whakatika
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Rahinga
     FIELDLABELCURRENCY: Moni

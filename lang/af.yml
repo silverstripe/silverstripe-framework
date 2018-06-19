@@ -4,8 +4,6 @@ af:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: R
   SilverStripe\Forms\DateField:
-    NOTSET: 'Nie gestel nie'
-    TODAY: vandag
     VALIDDATEFORMAT2: 'Sleutel asseblief ''n geldige datum formaat in ({format})'
     VALIDDATEMAXDATE: 'Jou datum moet gelykstaande of ouer wees as die maksimum toelaatbare datum ({date})'
     VALIDDATEMINDATE: 'Jou datum moet net so out of nuwer wees as die minimum toelaatbare datum ({date})'
@@ -36,7 +34,6 @@ af:
     RelationSearch: 'Soek vir verwantskap'
     ResetFilter: Herstel
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Verwyder
     Delete: Verwyder
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     UnlinkRelation: Ontkoppel

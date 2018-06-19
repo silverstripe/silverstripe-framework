@@ -13,8 +13,6 @@ cs:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Kč
   SilverStripe\Forms\DateField:
-    NOTSET: nenastaveno
-    TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající maximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
@@ -51,7 +49,6 @@ cs:
     RelationSearch: 'Vztah hledání'
     ResetFilter: Resetovat
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Smazat
     Delete: Smazat
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
     EditPermissionsFailure: 'Žádné oprávnění pro rozpojení záznamu'
@@ -63,8 +60,6 @@ cs:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
     Deleted: 'Smazáno {type} {name}'
     Save: Uložit
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editovat
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Částka
     FIELDLABELCURRENCY: Měna
