@@ -5,8 +5,6 @@ ar:
     MAXIMUM: 'يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً.'
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
   SilverStripe\Forms\DateField:
-    NOTSET: 'غير محدد'
-    TODAY: اليوم
     VALIDDATEFORMAT2: 'الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})'
     VALIDDATEMAXDATE: 'التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})'
     VALIDDATEMINDATE: 'التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})'
@@ -39,7 +37,6 @@ ar:
     RelationSearch: 'ابحث عن علاقة'
     ResetFilter: 'إعادة تعيين'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: حذف
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد أية تصريحات حذف'
     EditPermissionsFailure: 'لا يوجد تصريح لإلغاء الربط بين السجلات'
@@ -51,8 +48,6 @@ ar:
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
     Deleted: '{type} {name} تم حذفه'
     Save: حفظ
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: تعديل
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: الكمية
     FIELDLABELCURRENCY: العملة

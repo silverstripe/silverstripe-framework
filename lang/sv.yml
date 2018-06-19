@@ -37,8 +37,6 @@ sv:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'inte angivet'
-    TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
@@ -84,7 +82,6 @@ sv:
     RelationSearch: Relationssökning
     ResetFilter: Rensa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Radera
     Delete: Radera
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     EditPermissionsFailure: 'Rättigheter för avlänkning saknas'
@@ -96,8 +93,6 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade {type} {name}'
     Save: Spara
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Redigera
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Sida
     View: Visa

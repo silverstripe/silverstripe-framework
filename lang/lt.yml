@@ -10,8 +10,6 @@ lt:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
-    NOTSET: nenustatyta
-    TODAY: šiandien
     VALIDDATEFORMAT2: 'Prašome suvesti datą reikiamu formatu ({format})'
     VALIDDATEMAXDATE: 'Data privalo būti senesnė arba lygi vėliausiai galimai datai ({date})'
     VALIDDATEMINDATE: 'Data privalo būti naujesnė arba lygi anksčiausiai galimai datai ({date})'
@@ -47,7 +45,6 @@ lt:
     RelationSearch: 'Sąryšių paieška'
     ResetFilter: Atstatyti
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Ištrinti
     Delete: Ištrinti
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     EditPermissionsFailure: 'Nėra leidimų atjungti įrašą'
@@ -59,8 +56,6 @@ lt:
     DeletePermissionsFailure: 'Nėra leidimų trynimui'
     Deleted: 'Ištrinta {type} {name}'
     Save: Išsaugoti
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Redaguoti
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kiekis
     FIELDLABELCURRENCY: Valiuta

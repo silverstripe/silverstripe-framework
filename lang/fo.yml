@@ -1,9 +1,6 @@
 fo:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Broyt loyniorð'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'ikki ásett'
-    TODAY: 'í dag'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Áset)
   SilverStripe\Forms\Form:

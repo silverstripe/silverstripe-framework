@@ -15,8 +15,6 @@ es:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Símbolo
   SilverStripe\Forms\DateField:
-    NOTSET: 'sin establecer'
-    TODAY: hoy
     VALIDDATEFORMAT2: 'Por favor, introduzca un formato de fecha válido ({format})'
     VALIDDATEMAXDATE: 'La fecha tiene que ser mayor o igual a la fecha máxima permitida ({date})'
     VALIDDATEMINDATE: 'La fecha tiene que ser posterior o coincidente a la fecha mínima permitida ({date})'
@@ -55,7 +53,6 @@ es:
     RelationSearch: 'Búsqueda de relación'
     ResetFilter: Restaurar
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Borrar
     Delete: Borrar
     DeletePermissionsFailure: 'Sin permiso para borrar'
     EditPermissionsFailure: 'No se pudo editar permisos'
@@ -67,8 +64,6 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado {type} {name}'
     Save: Guardar
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editar
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda

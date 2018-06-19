@@ -4,9 +4,6 @@ bs:
     YESANSWER: Da
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: KM
-  SilverStripe\Forms\DateField:
-    NOTSET: 'nije postavljeno'
-    TODAY: danas
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izaberite)
   SilverStripe\Forms\Form:
