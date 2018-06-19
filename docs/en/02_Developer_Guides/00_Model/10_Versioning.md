@@ -287,7 +287,7 @@ class Page extends SiteTree
 
 ## Interacting with versioned DataObjects
 
-This section deals with specialised oeprations that can be perform on versioned DataObjects.
+This section deals with specialised oeprations that can be performed on versioned DataObjects.
 
 ### Reading latest versions by stage
 
