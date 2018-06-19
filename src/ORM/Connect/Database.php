@@ -669,6 +669,20 @@ abstract class Database
     abstract public function transactionEnd($chain = false);
 
     /**
+     * Return depth of current transaction
+     *
+     * @return int Nesting level, or 0 if not in a transaction
+     */
+    public function transactionDepth()
+    {
+        // Placeholder error for transactional DBs that don't expose depth
+        if ($this->supportsTransactions()) {
+            user_error(get_class($this) . " does not support transactionDepth", E_USER_WARNING);
+        }
+        return 0;
+    }
+
+    /**
      * Determines if the used database supports application-level locks,
      * which is different from table- or row-level locking.
      * See {@link getLock()} for details.

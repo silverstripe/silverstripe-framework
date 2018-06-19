@@ -348,6 +348,11 @@ class MySQLDatabase extends Database
         return true;
     }
 
+    public function transactionDepth()
+    {
+        return $this->transactionNesting;
+    }
+
     public function transactionEnd($chain = false)
     {
         // Fail if transaction isn't available
@@ -365,7 +370,7 @@ class MySQLDatabase extends Database
     /**
      * In error condition, set transactionNesting to zero
      */
-    protected function discardTransactions()
+    protected function resetTransactionNesting()
     {
         $this->transactionNesting = 0;
     }
@@ -394,7 +399,7 @@ class MySQLDatabase extends Database
         // on why we need to be over-eager
         $isDDL = $this->getConnector()->isQueryDDL($sql);
         if ($isDDL) {
-            $this->discardTransactions();
+            $this->resetTransactionNesting();
         }
     }
 
