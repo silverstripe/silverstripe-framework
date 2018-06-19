@@ -3,9 +3,6 @@ is:
     SHOWONCLICKTITLE: 'Breyta lykliorði'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: kr
-  SilverStripe\Forms\DateField:
-    NOTSET: 'ekki valið'
-    TODAY: 'í dag'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Veldu)
   SilverStripe\Forms\Form:

@@ -4,8 +4,6 @@ ro:
     BETWEEN: 'Parola trebuie să conțină între {min} și {max} caractere.'
     MAXIMUM: 'Parola trebuie să conțină cel mult {max} caractere.'
     SHOWONCLICKTITLE: 'Schimbare Parola'
-  SilverStripe\Forms\DateField:
-    TODAY: astăzi
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Alege)
   SilverStripe\Forms\GridField\GridField:

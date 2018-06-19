@@ -7,8 +7,6 @@ sr_RS@latin:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: din.
   SilverStripe\Forms\DateField:
-    NOTSET: 'nije podešeno'
-    TODAY: danas
     VALIDDATEFORMAT2: 'Molimo Vas da unesete ispravan format datuma ({format})'
     VALIDDATEMAXDATE: 'Datum ne sme biti posle ({date})'
     VALIDDATEMINDATE: 'Datum ne sme biti pre ({date})'
@@ -41,7 +39,6 @@ sr_RS@latin:
     RelationSearch: 'Pretraživanje relacije'
     ResetFilter: 'Vrati u pređašnje stanje'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
     DeletePermissionsFailure: 'Nemate dozvolu za brisanje'
     EditPermissionsFailure: 'Nemate dozvolu da raskinete link sa zapisom'
@@ -53,8 +50,6 @@ sr_RS@latin:
     DeletePermissionsFailure: 'Nemate pravo brisanja'
     Deleted: 'Izbrisano {type} {name}'
     Save: Sačuvaj
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Izmeni
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Iznos
     FIELDLABELCURRENCY: Valuta

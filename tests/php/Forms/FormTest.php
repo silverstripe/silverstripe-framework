@@ -8,6 +8,7 @@ use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\Form;
@@ -17,16 +18,20 @@ use SilverStripe\Forms\LookupField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
+use SilverStripe\Forms\Tests\FormTest\ControllerWithSpecialSubmittedValueFields;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
 use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
 use SilverStripe\Forms\Tests\FormTest\TestController;
+use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -46,6 +51,7 @@ class FormTest extends FunctionalTest
         TestController::class,
         ControllerWithSecurityToken::class,
         ControllerWithStrictPostCheck::class,
+        ControllerWithSpecialSubmittedValueFields::class
     ];
 
     protected static $disable_themes = true;
@@ -261,6 +267,46 @@ class FormTest extends FunctionalTest
         );
     }
 
+    public function testLoadDataFromWithForceSetValueFlag()
+    {
+        // Get our data formatted in internal value and in submitted value
+        // We're using very esoteric date and time format
+        $dataInSubmittedValue = [
+            'SomeDateTimeField' => 'Fri, Jun 15, \'18 17:28:05',
+            'SomeTimeField' => '05 o\'clock PM 28 05'
+        ];
+        $dataInInternalValue = [
+            'SomeDateTimeField' => '2018-06-15 17:28:05',
+            'SomeTimeField' => '17:28:05'
+        ];
+
+        // Test loading our data with the MERGE_AS_INTERNAL_VALUE
+        $form = $this->getStubFormWithWeirdValueFormat();
+        $form->loadDataFrom($dataInInternalValue, Form::MERGE_AS_INTERNAL_VALUE);
+
+        $this->assertEquals(
+            $dataInInternalValue,
+            $form->getData()
+        );
+
+        // Test loading our data with the MERGE_AS_SUBMITTED_VALUE and an data passed as an object
+        $form = $this->getStubFormWithWeirdValueFormat();
+        $form->loadDataFrom(ArrayData::create($dataInSubmittedValue), Form::MERGE_AS_SUBMITTED_VALUE);
+        $this->assertEquals(
+            $dataInInternalValue,
+            $form->getData()
+        );
+
+        // Test loading our data without the MERGE_AS_INTERNAL_VALUE and without MERGE_AS_SUBMITTED_VALUE
+        $form = $this->getStubFormWithWeirdValueFormat();
+        $form->loadDataFrom($dataInSubmittedValue);
+
+        $this->assertEquals(
+            $dataInInternalValue,
+            $form->getData()
+        );
+    }
+
     public function testLookupFieldDisabledSaving()
     {
         $object = new Team();
@@ -275,10 +321,10 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom(
             array(
             'Players' => array(
-                14,
-                18,
-                22
-            ),
+                    14,
+                    18,
+                    22
+                ),
             )
         );
         $form->saveInto($object);
@@ -969,12 +1015,94 @@ class FormTest extends FunctionalTest
         }
     }
 
+    /**
+     * This test confirms that when a form validation fails, the submitted value are stored in the session and are
+     * reloaded correctly once the form is re-rendered. This indirectly test `Form::restoreFormState`,
+     * `Form::setSessionData`, `Form::getSessionData` and `Form::clearFormState`.
+     */
+    public function testRestoreFromState()
+    {
+        // Use a specially crafted controlled for this request. The associated form contains fields that override the
+        // `setSubmittedValue` and require an internal format that differs from the submitted format.
+        $this->get('FormTest_ControllerWithSpecialSubmittedValueFields')->getBody();
+
+        // Posting our form. This should fail and redirect us to the form page and preload our submit value
+        $response = $this->post(
+            'FormTest_ControllerWithSpecialSubmittedValueFields/Form',
+            array(
+                'SomeDateField' => '15/06/2018',
+                'SomeFrenchNumericField' => '9 876,5432',
+                'SomeFrenchMoneyField' => [
+                    'Amount' => '9 876,54',
+                    'Currency' => 'NZD'
+                ]
+                // Validation will fail because we leave out SomeRequiredField
+            ),
+            []
+        );
+
+        // Test our reloaded form field
+        $body = $response->getBody();
+        $this->assertContains(
+            '<input type="text" name="SomeDateField" value="15/06/2018"',
+            $body,
+            'Our reloaded form should contain a SomeDateField with the value "15/06/2018"'
+        );
+
+        $this->assertContains(
+            '<input type="text" name="SomeFrenchNumericField" value="9 876,5432" ',
+            $body,
+            'Our reloaded form should contain a SomeFrenchNumericField with the value "9 876,5432"'
+        );
+
+        $this->assertContains(
+            '<input type="text" name="SomeFrenchMoneyField[Currency]" value="NZD"',
+            $body,
+            'Our reloaded form should contain a SomeFrenchMoneyField[Currency] with the value "NZD"'
+        );
+
+        $this->assertContains(
+            '<input type="text" name="SomeFrenchMoneyField[Amount]" value="9 876,54" ',
+            $body,
+            'Our reloaded form should contain a SomeFrenchMoneyField[Amount] with the value "9 876,54"'
+        );
+
+        $this->assertEmpty(
+            $this->mainSession->session()->get('FormInfo.Form_Form'),
+            'Our form was reloaded successfully. That should have cleared our session.'
+        );
+    }
+
     protected function getStubForm()
     {
         return new Form(
             new FormTest\TestController(),
             'Form',
             new FieldList(new TextField('key1')),
+            new FieldList()
+        );
+    }
+
+    /**
+     * Some fields handle submitted values differently from their internal values. This forms contains 2 such fields
+     * * a SomeDateTimeField that expect a date such as `Fri, Jun 15, '18 17:28:05`,
+     * * a SomeTimeField that expects it's time as `05 o'clock PM 28 05`
+     *
+     * @return Form
+     */
+    protected function getStubFormWithWeirdValueFormat()
+    {
+        return new Form(
+            Controller::curr(),
+            'Form',
+            new FieldList(
+                $dateField = DatetimeField::create('SomeDateTimeField')
+                    ->setHTML5(false)
+                    ->setDatetimeFormat("EEE, MMM d, ''yy HH:mm:ss"),
+                $timeField = TimeField::create('SomeTimeField')
+                    ->setHTML5(false)
+                    ->setTimeFormat("hh 'o''clock' a mm ss") // Swatch Internet Time format
+            ),
             new FieldList()
         );
     }

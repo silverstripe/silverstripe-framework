@@ -13,8 +13,6 @@ nl:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'niet ingesteld'
-    TODAY: vandaag
     VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
     VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
     VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
@@ -51,7 +49,6 @@ nl:
     RelationSearch: 'Zoek relatie'
     ResetFilter: Resetten
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Verwijderen
     Delete: Verwijder
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     EditPermissionsFailure: 'Geen toelating om te ontkoppelen'
@@ -63,8 +60,6 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '{type} {name} verwijderd'
     Save: Opslaan
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Bewerken
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid

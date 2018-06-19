@@ -10,8 +10,6 @@ id_ID:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'tidak diatur'
-    TODAY: 'hari ini'
     VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
     VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
@@ -47,7 +45,6 @@ id_ID:
     RelationSearch: 'Cari yang terkait'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Hapus
     Delete: Hapus
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     EditPermissionsFailure: 'Tidak ada ijin membuka tautan'
@@ -59,8 +56,6 @@ id_ID:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     Deleted: '{type} {name} dihapus'
     Save: Simpan
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Edit
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Jumlah
     FIELDLABELCURRENCY: 'Mata Uang'

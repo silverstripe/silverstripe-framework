@@ -5,8 +5,6 @@ ja:
     MAXIMUM: 'パスワードは{max} 文字以内でなければなりません。'
     SHOWONCLICKTITLE: パスワード変更
   SilverStripe\Forms\DateField:
-    NOTSET: セットされていません
-    TODAY: 今日
     VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
@@ -39,7 +37,6 @@ ja:
     RelationSearch: 関連検索
     ResetFilter: リセット
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: 削除
     Delete: 削除
     DeletePermissionsFailure: 削除権限がありません
     EditPermissionsFailure: レコードのリンクを解除するための権限がありません
@@ -51,8 +48,6 @@ ja:
     DeletePermissionsFailure: 削除権限がありません
     Deleted: '削除済み {type} {name}'
     Save: 保存
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 編集
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨

@@ -2,8 +2,6 @@ es_MX:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   SilverStripe\Forms\DateField:
-    NOTSET: 'no especificada'
-    TODAY: ahora
     VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
     VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'

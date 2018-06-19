@@ -7,8 +7,6 @@ pl:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'nie ustawiono'
-    TODAY: dzisiaj
     VALIDDATEFORMAT2: 'Proszę wprowadź prawidłowy format daty ({format})'
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
@@ -41,7 +39,6 @@ pl:
     RelationSearch: 'Wyszukiwanie powiązań'
     ResetFilter: Resetuj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Usuń
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
@@ -53,8 +50,6 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Edytuj
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Ilość
     FIELDLABELCURRENCY: waluta

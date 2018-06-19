@@ -8,8 +8,6 @@ et_EE:
     MAXIMUM: 'Parool võib olla kuni {max} märki pikk.'
     SHOWONCLICKTITLE: 'Muuda parool'
   SilverStripe\Forms\DateField:
-    NOTSET: 'Pole seadistatud'
-    TODAY: Täna
     VALIDDATEFORMAT2: 'Sisestage sobivas vormingus kuupäev ({format})'
     VALIDDATEMAXDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) varasem või ühtima sellega.'
     VALIDDATEMINDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) hilisem või ühtima sellega.'
@@ -41,7 +39,6 @@ et_EE:
     RelationSearch: 'Seose otsing'
     ResetFilter: Lähtesta
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Kustuta
     Delete: Kustuta
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     UnlinkRelation: 'Tühista linkimine'
@@ -52,8 +49,6 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '{type} {name} on kustutatud'
     Save: Salvesta
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Redigeeri
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Hulk
     FIELDLABELCURRENCY: Valuuta

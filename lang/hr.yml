@@ -7,8 +7,6 @@ hr:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'nije postavljeno'
-    TODAY: danas
     VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Odaberite)
@@ -26,7 +24,6 @@ hr:
     Find: Pronađi
     Print: Ispiši
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Obriši
     Delete: Obriši
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Odustani
@@ -35,8 +32,6 @@ hr:
     DeletePermissionsFailure: 'Nema dozvole brisanja'
     Deleted: 'Obrisano {type} {name}'
     Save: Spremi
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Uredi
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
   SilverStripe\ORM\FieldType\DBBoolean:
