@@ -97,6 +97,10 @@ class FunctionalTest extends SapphireTest {
 		BasicAuth::protect_entire_site(false);
 
 		SecurityToken::disable();
+
+		if (!Versioned::get_reading_mode()) {
+			Versioned::set_reading_mode('Stage.Stage');
+		}
 	}
 
 	public function tearDown() {
