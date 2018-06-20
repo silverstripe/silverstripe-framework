@@ -28,10 +28,8 @@ class PDOQuery extends Query
 
     public function getIterator()
     {
-        if (is_object($this->statement)) {
-            while ($data = $this->statement->fetch(PDO::FETCH_ASSOC)) {
-                yield $data;
-            }
+        while ($data = $this->statement->fetch(PDO::FETCH_ASSOC)) {
+            yield $data;
         }
     }
 
