@@ -1,0 +1,34 @@
+# Run framework behat tests with this command (installed with silverstripe/installer)
+# Note that framework behat tests require CMS module
+# ========================================================================= #
+# vendor/bin/selenium-server-standalone -Dwebdriver.firefox.bin="/Applications/Firefox31.app/Contents/MacOS/firefox-bin"
+# vendor/bin/serve --bootstrap-file vendor/silverstripe/framework/tests/behat/serve-bootstrap.php
+# vendor/bin/behat @framework
+# ========================================================================= #
+default:
+  suites:
+    framework:
+      paths:
+        - %paths.modules.admin%/tests/behat/features
+      contexts:
+        - SilverStripe\Framework\Tests\Behaviour\FeatureContext
+        - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
+        - SilverStripe\Framework\Tests\Behaviour\CmsUiContext
+        - SilverStripe\BehatExtension\Context\BasicContext
+        - SilverStripe\BehatExtension\Context\EmailContext
+        - SilverStripe\BehatExtension\Context\LoginContext
+        -
+          SilverStripe\BehatExtension\Context\FixtureContext:
+            - %paths.modules.admin%/tests/behat/features/files/
+
+  extensions:
+    SilverStripe\BehatExtension\MinkExtension:
+      default_session: facebook_web_driver
+      javascript_session: facebook_web_driver
+      facebook_web_driver:
+        browser: chrome
+        wd_host: "http://127.0.0.1:9515" #chromedriver port
+
+    SilverStripe\BehatExtension\Extension:
+      screenshot_path: %paths.base%/artifacts/screenshots
+      bootstrap_file: "tests/behat/serve-bootstrap.php"
