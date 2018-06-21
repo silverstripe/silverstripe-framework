@@ -292,7 +292,7 @@ class DBMoneyTest extends SapphireTest
             )->value()
         );
         $this->assertEquals(
-            '1.23',
+            '1.2300',
             DB::query(
                 sprintf(
                     'SELECT "MyMoneyAmount" FROM "MoneyTest_DataObject" WHERE "ID" = %d',

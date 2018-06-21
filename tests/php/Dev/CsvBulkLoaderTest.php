@@ -216,8 +216,8 @@ class CsvBulkLoaderTest extends SapphireTest
         // Test nested setting of relation properties
         $contractAmount = DBField::create_field('Currency', $compareRow[5])->RAW();
         $this->assertEquals(
-            $testPlayer->Contract()->Amount,
             $contractAmount,
+            $testPlayer->Contract()->Amount,
             'Setting nested values in a relation works'
         );
 
