@@ -676,7 +676,7 @@ abstract class Database
     public function transactionDepth()
     {
         // Placeholder error for transactional DBs that don't expose depth
-        if (!$this->supportsTransactions()) {
+        if ($this->supportsTransactions()) {
             user_error(get_class($this) . " does not support transactionDepth", E_USER_WARNING);
         }
         return 0;
