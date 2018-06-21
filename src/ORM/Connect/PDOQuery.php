@@ -26,6 +26,11 @@ class PDOQuery extends Query
         $this->statement = $statement;
     }
 
+    public function __destruct()
+    {
+        $this->statement->closeCursor();
+    }
+
     public function getIterator()
     {
         while ($data = $this->statement->fetch(PDO::FETCH_ASSOC)) {
