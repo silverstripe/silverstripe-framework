@@ -118,7 +118,6 @@ class Hierarchy extends DataExtension {
 	 *                                            overload this function
 	 * @param bool            $limitToMarked      Display only marked children
 	 * @param string          $childrenMethod     The name of the method used to get children from each object
-	 * @param string          $numChildrenMethod The name of the instance method to call to count the object's children
 	 * @param bool            $rootCall           Set to true for this first call, and then to false for calls inside
 	 *                                            the recursion. You should not change this.
 	 * @param int             $nodeCountThreshold See {@link self::$node_threshold_total}
@@ -126,14 +125,12 @@ class Hierarchy extends DataExtension {
 	 *                                            intercept the query. Useful e.g. to avoid excessive children listings
 	 *                                            (Arguments: $parent, $numChildren)
 	 *
-	 * @param array $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
-	 *
 	 * @return string
 	 */
 	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null,
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted",
 			$numChildrenMethod = "numChildren", $rootCall = true,
-			$nodeCountThreshold = null, $nodeCountCallback = null, array $filteredIds = array()) {
+			$nodeCountThreshold = null, $nodeCountCallback = null) {
 
 		if(!is_numeric($nodeCountThreshold)) {
 			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
@@ -152,18 +149,6 @@ class Hierarchy extends DataExtension {
 
 		if($this->owner->hasMethod($childrenMethod)) {
 			$children = $this->owner->$childrenMethod($extraArg);
-
-			// apply filter before any further processing to limit excessive amount of items
-			// filter is applied only after limit has been reached
-			if (count($filteredIds) > 0 && $nodeCountThreshold && $children->count() > $nodeCountThreshold) {
-				$children = $children->filter(array('ID' => $filteredIds));
-			}
-
-			// too many children, display nothing
-			if ($nodeCountThreshold && $children->count() > $nodeCountThreshold) {
-				$children = null;
-			}
-
 		} else {
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children",
 				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
@@ -203,7 +188,7 @@ class Hierarchy extends DataExtension {
 							$child->markClosed();
 						} else {
 							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
-								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold, null, $filteredIds);
+								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold);
 						}
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
@@ -231,14 +216,10 @@ class Hierarchy extends DataExtension {
 	 * {@link isExpanded()} and {@link isMarked()} on individual nodes.
 	 *
 	 * @param int $nodeCountThreshold See {@link getChildrenAsUL()}
-	 * @param mixed $context
-	 * @param string $childrenMethod The name of the instance method to call to get the object's list of children
-	 * @param string $numChildrenMethod The name of the instance method to call to count the object's children
-	 * @param array $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
 	 * @return int The actual number of nodes marked.
 	 */
 	public function markPartialTree($nodeCountThreshold = null, $context = null,
-			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren", array $filteredIds = array()) {
+			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
 
 		if(!is_numeric($nodeCountThreshold)) {
 			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
@@ -251,19 +232,7 @@ class Hierarchy extends DataExtension {
 
 		// foreach can't handle an ever-growing $nodes list
 		do {
-			// first determine the number of children, if it's too high the tree view can't be used
-			// so will will not even bother to display the subtree
-			// this covers two cases:
-			// either no search filter is in use or search filter is in use but it's too broad
-			$numberOfChildren = $node->$numChildrenMethod();
-			if ($nodeCountThreshold && $numberOfChildren > $nodeCountThreshold
-				&& (count($filteredIds) == 0 || count($filteredIds) > $nodeCountThreshold)) {
-				break;
-			}
-
-			$children = $this->markChildren(
-			    $node, $context, $childrenMethod, $numChildrenMethod, $nodeCountThreshold, $filteredIds
-			);
+			$children = $this->markChildren($node, $context, $childrenMethod, $numChildrenMethod);
 			if($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
 				// Undo marking children as opened since they're lazy loaded
 				if($children) foreach($children as $child) $child->markClosed();
@@ -334,20 +303,12 @@ class Hierarchy extends DataExtension {
 	 * @param mixed      $context
 	 * @param string     $childrenMethod    The name of the instance method to call to get the object's list of children
 	 * @param string     $numChildrenMethod The name of the instance method to call to count the object's children
-	 * @param int        $nodeCountThreshold
-	 * @param array      $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
 	 * @return DataList
 	 */
 	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted",
-			$numChildrenMethod = "numChildren", $nodeCountThreshold = null, array $filteredIds = array()) {
-
+			$numChildrenMethod = "numChildren") {
 		if($node->hasMethod($childrenMethod)) {
 			$children = $node->$childrenMethod($context);
-
-			// apply filter before any further processing
-			if (count($filteredIds) > 0 && $nodeCountThreshold && $children->count() > $nodeCountThreshold) {
-				$children = $children->filter(array('ID' => $filteredIds));
-			}
 		} else {
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children",
 				$childrenMethod, get_class($node)), E_USER_ERROR);
@@ -418,18 +379,11 @@ class Hierarchy extends DataExtension {
 	 *
 	 * @param int  $id   ID of parent node
 	 * @param bool $open If this is true, mark the parent node as opened
-	 * @param string $childrenMethod The name of the instance method to call to get the object's list of children
-	 * @param string $numChildrenMethod The name of the instance method to call to count the object's children
-	 * @param int $nodeCountThreshold
-	 * @param array $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
 	 * @return bool
 	 */
-	public function markById($id, $open = false, $childrenMethod = "AllChildrenIncludingDeleted",
-							$numChildrenMethod = "numChildren", $nodeCountThreshold = null, array $filteredIds = array()) {
+	public function markById($id, $open = false) {
 		if(isset($this->markedNodes[$id])) {
-			$this->markChildren(
-				$this->markedNodes[$id], null, $childrenMethod, $numChildrenMethod, $nodeCountThreshold, $filteredIds
-			);
+			$this->markChildren($this->markedNodes[$id]);
 			if($open) {
 				$this->markedNodes[$id]->markOpened();
 			}
@@ -443,19 +397,12 @@ class Hierarchy extends DataExtension {
 	 * Expose the given object in the tree, by marking this page and all it ancestors.
 	 *
 	 * @param DataObject $childObj
-	 * @param string $childrenMethod The name of the instance method to call to get the object's list of children
-	 * @param string $numChildrenMethod The name of the instance method to call to count the object's children
-	 * @param int $nodeCountThreshold
-	 * @param array $filteredIds list of ids that will be used to filter list items (reduce the result set before processing)
 	 */
-	public function markToExpose($childObj, $childrenMethod = "AllChildrenIncludingDeleted",
-								$numChildrenMethod = "numChildren", $nodeCountThreshold = null, array $filteredIds = array()) {
+	public function markToExpose($childObj) {
 		if(is_object($childObj)){
 			$stack = array_reverse($childObj->parentStack());
 			foreach($stack as $stackItem) {
-				$this->markById(
-					$stackItem->ID, true, $childrenMethod, $numChildrenMethod, $nodeCountThreshold, $filteredIds
-				);
+				$this->markById($stackItem->ID, true);
 			}
 		}
 	}
