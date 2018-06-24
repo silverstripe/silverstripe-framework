@@ -28,10 +28,10 @@ These are not included in the standard archive downloads provided from silverstr
 Tests are run from the commandline, in your webroot folder:
 
  * `vendor/bin/phpunit`: Runs all tests (as defined by `phpunit.xml`)
- * `vendor/bin/phpunit framework/tests/`: Run all tests of a specific module
- * `vendor/bin/phpunit framework/tests/filesystem`: Run specific tests within a specific module
- * `vendor/bin/phpunit framework/tests/filesystem/FolderTest.php`: Run a specific test 
- * `vendor/bin/phpunit framework/tests '' flush=all`: Run tests with optional request parameters (note the empty second argument)
+ * `vendor/bin/phpunit vendor/silverstripe/framework/tests/`: Run all tests of a specific module
+ * `vendor/bin/phpunit vendor/silverstripe/framework/tests/filesystem`: Run specific tests within a specific module
+ * `vendor/bin/phpunit vendor/silverstripe/framework/tests/filesystem/FolderTest.php`: Run a specific test 
+ * `vendor/bin/phpunit vendor/silverstripe/framework/tests '' flush=all`: Run tests with optional request parameters (note the empty second argument)
 
 Check the PHPUnit manual for all available [command line arguments](http://www.phpunit.de/manual/current/en/textui.html).
 
@@ -54,12 +54,12 @@ some `thirdparty/` directories add the following to the `phpunit.xml` configurat
 	:::xml
 	<filter>
 		<blacklist>
-			<directory suffix=".php">framework/dev/</directory>
-			<directory suffix=".php">framework/thirdparty/</directory>
-			<directory suffix=".php">cms/thirdparty/</directory>
+			<directory suffix=".php">vendor/silverstripe/framework/dev/</directory>
+			<directory suffix=".php">vendor/silverstripe/framework/thirdparty/</directory>
+			<directory suffix=".php">vendor/silverstripe/cms/thirdparty/</directory>
 
 			<!-- Add your custom rules here -->
-			<directory suffix=".php">mysite/thirdparty/</directory>
+			<directory suffix=".php">app/thirdparty/</directory>
 		</blacklist>
 	</filter>
 
@@ -86,11 +86,11 @@ should have the appropriate permissions to create new databases on your server, 
 ## Writing Tests
 
 Tests are written by creating subclasses of [SapphireTest](api:SilverStripe\Dev\SapphireTest).  You should put tests for your site in the
-`mysite/tests` directory.  If you are writing tests for a module, put them in the `(modulename)/tests` directory.
+`app/tests` directory.  If you are writing tests for a module, put them in the `tests/` directory of your module (in `vendor/`).
 
 Generally speaking, there should be one test class for each application class.  The name of the test class should be the
 application class, with "Test" as a suffix.  For instance, we have all the tests for `SiteTree` in
-`framework/tests/SiteTreeTest.php`
+`vendor/silverstripe/framework/tests/SiteTreeTest.php`
 
 You will generally write two different kinds of test classes.
 
