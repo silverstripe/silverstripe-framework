@@ -17,7 +17,7 @@ also be used in other areas of your application.
 Let's assume we want to manage a simple product listing as a sample data model: A product can have a name, price, and
 a category.
 
-**mysite/code/Product.php**
+**app/code/Product.php**
 
 
 ```php
@@ -38,7 +38,7 @@ class Product extends DataObject
 }
 ```
 
-**mysite/code/Category.php**
+**app/code/Category.php**
 
 
 ```php
@@ -62,7 +62,7 @@ DataObject's you want to scaffold an interface for. The class can manage multipl
 
 We'll name it `MyAdmin`, but the class name can be anything you want.
 
-**mysite/code/MyAdmin.php**
+**app/code/MyAdmin.php**
 
 
 ```php
@@ -103,7 +103,7 @@ The [DataObject](api:SilverStripe\ORM\DataObject) API has more granular permissi
 Available checks are `canEdit()`, `canCreate()`, `canView()` and `canDelete()`. Models check for administrator
 permissions by default. For most cases, less restrictive checks make sense, e.g. checking for general CMS access rights.
 
-**mysite/code/Category.php**
+**app/code/Category.php**
 
 
 ```php
@@ -144,7 +144,7 @@ class makes a guess at how those fields should be searched, e.g. showing a check
 To remove, add or modify searchable fields, define a new [DataObject::$searchable_fields](api:SilverStripe\ORM\DataObject::$searchable_fields) static on your model
 class (see [SearchContext](../search/searchcontext) docs for details).
 
-**mysite/code/Product.php**
+**app/code/Product.php**
 
 
 ```php
@@ -170,7 +170,7 @@ The results are shown in a tabular listing, powered by the [GridField](../forms/
 the [GridFieldDataColumns](api:SilverStripe\Forms\GridField\GridFieldDataColumns) component. This component looks for a [DataObject::$summary_fields](api:SilverStripe\ORM\DataObject::$summary_fields) static on your
 model class, where you can add or remove columns. To change the title, use [DataObject::$field_labels](api:SilverStripe\ORM\DataObject::$field_labels).
 
-**mysite/code/Product.php**
+**app/code/Product.php**
 
 
 ```php
@@ -195,7 +195,7 @@ can be customized by additional SQL filters, joins.
 
 For example, we might want to exclude all products without prices in our sample `MyAdmin` implementation.
 
-**mysite/code/MyAdmin.php**
+**app/code/MyAdmin.php**
 
 
 ```php
@@ -220,7 +220,7 @@ class MyAdmin extends ModelAdmin
 You can also customize the search behavior directly on your `ModelAdmin` instance. For example, we might want to have a
 checkbox which limits search results to expensive products (over $100).
 
-**mysite/code/MyAdmin.php**
+**app/code/MyAdmin.php**
 
 ```php
 use SilverStripe\Forms\CheckboxField;
@@ -257,7 +257,7 @@ class MyAdmin extends ModelAdmin
 To alter how the results are displayed (via [GridField](api:SilverStripe\Forms\GridField\GridField)), you can also overload the `getEditForm()` method. For
 example, to add a new component.
 
-**mysite/code/MyAdmin.php**
+**app/code/MyAdmin.php**
 
 
 ```php
@@ -294,7 +294,7 @@ class MyAdmin extends ModelAdmin
 The above example will add the component to all `GridField`s (of all managed models). Alternatively we can also add it
 to only one specific `GridField`:
 
-**mysite/code/MyAdmin.php**
+**app/code/MyAdmin.php**
 
 
 ```php

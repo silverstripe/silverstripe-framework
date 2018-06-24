@@ -176,7 +176,7 @@ You can also use any of the below options in order to tweak this behaviour:
 
 In some cases it may be necessary to create a new storage backend for combined files, if the default location
 is not appropriate. Normally a single backend is used for all site assets, so a number of objects must be
-replaced. For instance, the below will set a new set of dependencies to write to `mysite/javascript/combined`
+replaced. For instance, the below will set a new set of dependencies to write to `app/javascript/combined`
 
 
 ```yaml
@@ -194,7 +194,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter:
     class: SilverStripe\Assets\Flysystem\PublicAssetAdapter
     constructor:
-      Root: ./mysite/javascript
+      Root: ./app/javascript
   # Set flysystem filesystem that uses this adapter
   League\Flysystem\Filesystem.custom-filesystem:
     class: 'League\Flysystem\Filesystem'

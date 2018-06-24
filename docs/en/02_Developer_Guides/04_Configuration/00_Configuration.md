@@ -25,7 +25,7 @@ Configuration values are static properties on any SilverStripe class. These shou
 marked with a `@config` docblock. The API documentation will also list the static properties for the class. They should
 be marked `private static` and follow the `lower_case_with_underscores` structure.
 
-**mysite/code/MyClass.php**
+**app/code/MyClass.php**
 
 
 ```php
@@ -62,7 +62,7 @@ $config = $this->config()->get('property')';
 
 You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` method.
 
-**mysite/code/MyOtherClass.php**
+**app/code/MyOtherClass.php**
 
 ```php
 use SilverStripe\Core\Config\Configurable;
@@ -94,7 +94,7 @@ And mutable methods:
 
 To set those configuration options on our previously defined class we can define it in a `YAML` file.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml
@@ -210,7 +210,7 @@ directory you can add YAML files that contain values for the configuration syste
 
 <div class="info" markdown="1">
 The name of the files within the applications `_config` directly are arbitrary. Our examples use 
-`mysite/_config/app.yml` but you can break this file down into smaller files, or clearer patterns like `extensions.yml`, 
+`app/_config/app.yml` but you can break this file down into smaller files, or clearer patterns like `extensions.yml`, 
 `email.yml` if you want. For add-on's and modules, it is recommended that you name them with `<module_name>.yml`.
 </div>
 

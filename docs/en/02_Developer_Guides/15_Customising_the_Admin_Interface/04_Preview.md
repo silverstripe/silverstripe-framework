@@ -38,7 +38,7 @@ feature.
 Like most of the CMS, the preview UI is powered by
 [jQuery entwine](https://github.com/hafriedlander/jquery.entwine). This means
 its defaults are configured through JavaScript, by setting entwine properties.
-In order to achieve this, create a new file `mysite/javascript/MyLeftAndMain.Preview.js`.
+In order to achieve this, create a new file `app/javascript/MyLeftAndMain.Preview.js`.
 
 In the following example we configure three aspects:
 
@@ -75,14 +75,14 @@ Note how the configuration happens in different entwine namespaces
 }(jQuery));
 ```
 
-Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'
+Load the file in the CMS via setting adding 'app/javascript/MyLeftAndMain.Preview.js'
 to the `LeftAndMain.extra_requirements_javascript` [configuration value](../configuration)
 
 
 ```yml
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
-    - mysite/javascript/MyLeftAndMain.Preview.js
+    - app/javascript/MyLeftAndMain.Preview.js
 ```
 
 In order to find out which configuration values are available, the source code

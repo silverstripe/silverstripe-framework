@@ -12,10 +12,9 @@ See our [upgrade notes and changelogs](/changelogs/4.0.0) for 4.0.0 specific inf
 
 ## Composer
 
-SilverStripe CMS is becoming more modular, and
-[composer is becoming the preferred way to manage your code](/getting_started/composer).
-
-For projects managed through Composer, we recommend using `recipe-cms` in your `composer.json` file to help you keep
+SilverStripe CMS is a modular system, and [Composer](http://getcomposer.org)
+is the default way to manage your modules ([instructions](/getting_started/composer)).
+We recommend using `recipe-cms` in your `composer.json` file to help you keep
 up to date and run `composer update`.
 
 ```json
@@ -44,11 +43,11 @@ through the [Composer dependency update section](/changelogs/4.0.0#deps)
 * Backup your webroot files.
 * Download the new release and uncompress it to a temporary folder.
 * Leave custom folders like *themes* in place.
-* Rename `mysite/code` folder to `app/src`, updating your `app/_config/mysite.yml` config to set the new project name.
+* Rename `app/code` folder to `app/src`, updating your `app/_config/app.yml` config to set the new project name.
 * Identify system folders in your webroot (`cms`, `framework` and any additional modules).
 * Delete existing system folders (or move them outside of your webroot).
 * Add a `private static $table_name = 'MyDataObject'` for any custom DataObjects in your code that are namespaced. This ensures that your database table name will be `MyDataObject` instead of `Me_MyPackage_Model_MyDataObject` (converts your namespace to the table_name).
-* Ensure you add [namespaces](http://php.net/manual/en/language.namespaces.php) to any custom classes in your `mysite` folder. Your namespaces should follow the pattern of `Vendor\Package` with anything additional defined at your discretion. **Note:** The `Page` and `PageController` classes *must* be defined in the global namespace (or without a namespace).
+* Ensure you add [namespaces](http://php.net/manual/en/language.namespaces.php) to any custom classes in your `app/` folder. Your namespaces should follow the pattern of `Vendor\Package` with anything additional defined at your discretion. **Note:** The `Page` and `PageController` classes *must* be defined in the global namespace (or without a namespace).
 * Install the updated framework, CMS and any other modules you require by updating your `composer.json` configuration and running `composer update`. Some features have been split into their own modules, such as `asset-admin` and `errorpage`. Please refer to [`recipe-cms` composer.json](https://github.com/silverstripe/recipe-cms) and [`recipe-core` composer.json](https://github.com/silverstripe/recipe-core) for a list of recommended modules to include.
 * Check if you need to adapt your code to changed PHP APIs. For more information please refer to [the changelog](/changelogs/4.0.0). There is an upgrader tool available to help you with most of the changes required (see below).
 * Visit http://yoursite.com/dev/build/?flush=1 to rebuild the website database.
@@ -191,7 +190,7 @@ SilverStripe 4 introduces [PSR-3](http://www.php-fig.org/psr/psr-3/) compatible 
 
 Please see the changelogs for more details on how to implement logging.
 
-[Upgrade `mysite/_config.php`](/changelogs/4.0.0#config-php)
+[Upgrade `app/_config.php`](/changelogs/4.0.0#config-php)
 The globals `$database` and `$databaseConfig` are deprecated. You should upgrade your site `_config.php` files to use the [.env configuration](#env).  
 `conf/ConfigureFromEnv.php` is no longer used, and references to this file should be deleted.
 

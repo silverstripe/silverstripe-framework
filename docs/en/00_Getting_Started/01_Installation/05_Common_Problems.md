@@ -79,7 +79,7 @@ The php installer needs to be able to write files during installation, which sho
 needs to create/have write-access to:
 
  * The main installation directory (for creating .htaccess file and assets directory)
- * The mysite folder (to create _config.php)
+ * The `app/` folder (to create _config.php)
  * After the install, the assets directory is the only directory that needs write access.
  * Image thumbnails will not show in the CMS if permission is not given
  
@@ -103,7 +103,7 @@ You could enable other users to access these files with the below config.
 Note: Please adjust the values below to those appropriate for your server configuration.
 You may require `0666` for combined files generated during requests where they are cleared or refreshed only during a flush.
 
-*mysite/_config/assetperms.yml*
+*app/_config/assetperms.yml*
 
 ```yaml
 ---

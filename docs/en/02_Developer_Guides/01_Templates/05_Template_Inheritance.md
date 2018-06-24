@@ -44,7 +44,7 @@ Our site looks mostly the same across both templates with just the main content 
 footer and navigation will remain the same and we don't want to replicate this work across more than one spot. The 
 `$Layout` function allows us to define the child template area which can be overridden.
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <html>
@@ -62,7 +62,7 @@ footer and navigation will remain the same and we don't want to replicate this w
 </body>
 ```
 
-**mysite/templates/Layout/Page.ss**
+**app/templates/Layout/Page.ss**
 
 ```ss
 <p>You are on a $Title page</p>
@@ -70,7 +70,7 @@ footer and navigation will remain the same and we don't want to replicate this w
 $Content
 ```
 
-**mysite/templates/Layout/HomePage.ss**
+**app/templates/Layout/HomePage.ss**
 
 ```ss
 <h1>This is the homepage!</h1>
@@ -100,7 +100,7 @@ to determine resolution priority. This search is based on the following three co
    the module author, and does not normally need to be customised. This includes the `$project` and
    `$other_modules` placeholder values.
  - `SilverStripe\Core\Manifest\ModuleManifest.project` - The name of the `$project` module, which
-   defaults to `mysite`.
+   defaults to `app`.
 
 ### ThemeResourceLoader
 
@@ -161,18 +161,10 @@ will only defer to our modules templates folder if not found elsewhere.
 
 ### Declaring project
 
-It is a good idea to define one of your modules as the `project`. Commonly, this is the
-`mysite/` module, but there is nothing compulsory about that module name. 
-
-*myapp/_config/config.yml*
-
-```yml
----
-Name: myproject
----
-SilverStripe\Core\Manifest\ModuleManifest:
-  project: 'myapp'
-```
+The default project structure contains an `app/` folder,
+which also acts as as a module in terms of template priorities.
+See [/getting_started/directory_structure](Directory Structure)
+to find out how to rename this folder.
 
 ### About module "names"
 

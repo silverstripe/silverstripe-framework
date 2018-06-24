@@ -179,9 +179,9 @@ assets/
 
 The urls for these two files, however, do not reflect the physical structure directly.
 
-* `http://www.mysite.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
+* `http://www.myapp.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
   and will not invoke a php request.
-* `http://www.mysite.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
+* `http://www.myapp.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
   which will be passed to the `[ProtectedFileController](api:SilverStripe\Assets\Storage\ProtectedFileController)` controller, which will serve
   up the content of the hidden file, conditional on a permission check.
 
@@ -240,11 +240,11 @@ to deny any and all direct web requests.
 In order to better ensure these files are protected, it's recommended to move this outside of the web
 root altogether.
 
-For instance, given your web root is in the folder `/sites/mysite/www`, you can tell the asset store
-to put protected files into `/sites/mysite/protected` with the below `.env` setting:
+For instance, given your web root is in the folder `/sites/myapp/www`, you can tell the asset store
+to put protected files into `/sites/myapp/protected` with the below `.env` setting:
 
 ```
-SS_PROTECTED_ASSETS_PATH="/sites/mysite/protected"
+SS_PROTECTED_ASSETS_PATH="/sites/myapp/protected"
 ```
 
 ### Configuring: File types

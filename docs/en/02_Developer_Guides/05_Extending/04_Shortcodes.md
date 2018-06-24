@@ -48,7 +48,7 @@ ShortcodeParser::get_active()->parse($text);
  
 First we need to define a callback for the shortcode.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php
@@ -81,7 +81,7 @@ These parameters are passed to the `MyShortCodeMethod` callback:
 
 To register a shortcode you call the following.
 
-**mysite/_config.php**
+**app/_config.php**
 
 
 ```php

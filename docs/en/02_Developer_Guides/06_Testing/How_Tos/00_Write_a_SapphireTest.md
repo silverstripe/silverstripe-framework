@@ -5,7 +5,7 @@ title: How to write a SapphireTest
 Here is an example of a test which extends [SapphireTest](api:SilverStripe\Dev\SapphireTest) to test the URL generation of the page. It also showcases
 how you can load default records into the test database.
 
-**mysite/tests/PageTest.php**
+**app/tests/PageTest.php**
 
 ```php
 use SilverStripe\Dev\SapphireTest;

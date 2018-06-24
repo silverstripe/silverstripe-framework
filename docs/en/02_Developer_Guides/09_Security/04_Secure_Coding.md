@@ -450,9 +450,9 @@ given variable is done safely, with the assumption that it's an integer.
 
 To cast the variable as an integer, place `(int)` or `(integer)` before the variable.
 
-For example: a page with the URL paramaters *mysite.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
+For example: a page with the URL paramaters *myapp.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
 integer. We cast it by adding `(int)` - ''(int)Director::urlParams['ID']''. If a value other than an integer is
-passed, such as *mysite.com/home/add/dfsdfdsfd*, then it returns 0.
+passed, such as *myapp.com/home/add/dfsdfdsfd*, then it returns 0.
 
 Below is an example with different ways you would use this casting technique:
 
@@ -461,7 +461,7 @@ Below is an example with different ways you would use this casting technique:
 public function CaseStudies() 
 {
 
-    // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
+    // cast an ID from URL parameters e.g. (myapp.com/home/action/ID)
     $anotherID = (int)Director::urlParam['ID'];
     
     // perform a calculation, the prerequisite being $anotherID must be an integer
@@ -612,7 +612,7 @@ this whitelist in your `.env` file, any request presenting a `Host` header that 
 _not_ in this list will be blocked with a HTTP 400 error:
 
 ```
-SS_ALLOWED_HOSTS="www.mysite.com,mysite.com,subdomain.mysite.com"
+SS_ALLOWED_HOSTS="www.myapp.com,myapp.com,subdomain.myapp.com"
 ```
 
 Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)

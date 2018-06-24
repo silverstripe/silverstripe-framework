@@ -5,7 +5,7 @@ title: How to Create a Navigation Menu
 In this how-to, we'll create a simple menu which you can use as the primary navigation for your website. This outputs a
 top level menu with a nested second level using the `Menu` loop and a `Children` loop.
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <ul>

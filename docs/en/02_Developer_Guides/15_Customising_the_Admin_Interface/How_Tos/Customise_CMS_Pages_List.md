@@ -18,7 +18,7 @@ Here's a brief example on how to add sorting and a new column for a
 hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
-**mysite/code/NewsPageHolder.php**
+**app/code/NewsPageHolder.php**
 
 ```php
 class NewsPageHolder extends Page 
@@ -27,7 +27,7 @@ class NewsPageHolder extends Page
 }
 ```
 
-**mysite/code/NewsPage.php**
+**app/code/NewsPage.php**
 
 ```php
 class NewsPage extends Page 
@@ -44,7 +44,7 @@ before its rendered. In this case, we limit our logic to the desired page type,
 although it's just as easy to implement changes which apply to all page types,
 or across page types with common characteristics.
 
-**mysite/code/NewsPageHolderCMSMainExtension.php**
+**app/code/NewsPageHolderCMSMainExtension.php**
 
 ```php
 use SilverStripe\Core\Extension;
@@ -78,7 +78,7 @@ class NewsPageHolderCMSMainExtension extends Extension
 Now you just need to enable the extension in your [configuration file](../../configuration).
 
 ```yml
-// mysite/_config/config.yml
+// app/_config/config.yml
 SilverStripe\Admin\LeftAndMain:
   extensions:
     - NewsPageHolderCMSMainExtension

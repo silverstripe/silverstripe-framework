@@ -6,7 +6,7 @@ summary: Move users around your site using automatic redirection.
 Controllers can facilitate redirecting users from one place to another using `HTTP` redirection using the `Location` 
 HTTP header.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php

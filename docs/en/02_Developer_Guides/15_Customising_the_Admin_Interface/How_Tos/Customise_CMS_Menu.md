@@ -18,7 +18,7 @@ provide a custom title and icon.
 
 First we'll need a custom icon. For this purpose SilverStripe uses 16x16
 black-and-transparent PNG graphics. In this case we'll place the icon in
-`mysite/images`, but you are free to use any location.
+`app/images`, but you are free to use any location.
 
 
 ```php
@@ -27,7 +27,7 @@ use SilverStripe\Admin\ModelAdmin;
 class ProductAdmin extends ModelAdmin 
 {
     // ...
-    private static $menu_icon = 'mysite/images/product-icon.png';
+    private static $menu_icon = 'app/images/product-icon.png';
 }
 ```
 

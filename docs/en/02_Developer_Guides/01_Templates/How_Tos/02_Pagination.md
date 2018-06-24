@@ -8,7 +8,7 @@ all your record, then wraps it in a [PaginatedList](api:SilverStripe\ORM\Paginat
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 ```php
 use SilverStripe\ORM\PaginatedList;
@@ -34,7 +34,7 @@ There are two ways to generate pagination controls: [PaginatedList::Pages()](api
 
 The first step is to simply list the objects in the template:
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <ul>
@@ -46,7 +46,7 @@ The first step is to simply list the objects in the template:
 By default this will display 10 pages at a time. The next step is to add pagination controls below this so the user can 
 switch between pages:
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <% if $PaginatedPages.MoreThanOnePage %>

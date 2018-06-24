@@ -44,7 +44,7 @@ template caching when modifying this config, as this key is cached within the te
 For example, to ensure that the cache is configured to respect another variable, and if the current logged in
 user does not influence your template content, you can update this key as below;
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml

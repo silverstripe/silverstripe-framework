@@ -114,9 +114,9 @@ SilverStripe\Core\Injector\Injector:
   MailHandler:
       class: Monolog\Handler\NativeMailerHandler
       constructor:
-        - me@example.com
+        - me@myapp.com
         - There was an error on your test site
-        - me@example.com
+        - me@myapp.com
         - error
       properties:
         ContentType: text/html

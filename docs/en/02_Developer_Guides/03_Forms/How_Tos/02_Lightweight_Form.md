@@ -9,7 +9,7 @@ For example, a basic search form. We want to use the [Form](api:SilverStripe\For
 totally custom template to meet our needs. To do this, we'll provide the class with a unique template through 
 `setTemplate`.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php
@@ -30,7 +30,7 @@ public function SearchForm()
 }
 ```
 
-**mysite/templates/Includes/SearchForm.ss**
+**app/templates/Includes/SearchForm.ss**
 
 
 ```ss

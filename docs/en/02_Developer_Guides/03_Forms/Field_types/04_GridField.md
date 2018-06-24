@@ -27,7 +27,7 @@ a `GridField` has almost no functionality. The `GridFieldConfig` instance and th
 responsible for all the user interactions including formatting data to be readable, modifying data and performing any 
 actions such as deleting records.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php
@@ -63,7 +63,7 @@ This will display a bare bones `GridField` instance under `Pages` tab in the CMS
 The configuration of those `GridFieldComponent` instances and the addition or subtraction of components is done through 
 the `getConfig()` method on `GridField`.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php

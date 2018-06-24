@@ -31,7 +31,7 @@ you want to set.
 ```php
 use SilverStripe\i18n\i18n;
 
-// mysite/_config.php
+// app/_config.php
 i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
 i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
 ```

@@ -188,7 +188,7 @@ SilverStripe\Assets\Storage\DBFile:
 #### Resampled image quality
 
 To adjust the quality of the generated images when they are resampled, add the
-following to your `mysite/config/config.yml` file:
+following to your `app/_config/config.yml` file:
 
 
 ```yml

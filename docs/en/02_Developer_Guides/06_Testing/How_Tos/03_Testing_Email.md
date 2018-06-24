@@ -13,7 +13,7 @@ use SilverStripe\Control\Email\Email;
 public function MyMethod() 
 {
     $e = new Email();
-    $e->To = "someone@example.com";
+    $e->To = "someone@myapp.com";
     $e->Subject = "Hi there";
     $e->Body = "I just really wanted to email you and say hi.";
     $e->send();
@@ -27,7 +27,7 @@ To test that `MyMethod` sends the correct email, use the [SapphireTest::assertEm
 $this->assertEmailSent($to, $from, $subject, $body);
 
 // to assert that the email is sent to the correct person
-$this->assertEmailSent("someone@example.com", null, "/th.*e$/");
+$this->assertEmailSent("someone@myapp.com", null, "/th.*e$/");
 ```
 
 Each of the arguments (`$to`, `$from`, `$subject` and `$body`) can be either one of the following.
