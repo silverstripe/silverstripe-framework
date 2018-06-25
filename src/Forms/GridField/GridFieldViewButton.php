@@ -11,8 +11,41 @@ use SilverStripe\View\SSViewer;
  * disabled by default and intended for use in readonly {@link GridField}
  * instances.
  */
-class GridFieldViewButton implements GridField_ColumnProvider
+class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionMenuLink
 {
+    /**
+     * @inheritdoc
+     */
+    public function getTitle($gridField, $record, $columnName)
+    {
+        return _t(__CLASS__ . '.VIEW', "View");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getGroup($gridField, $record, $columnName)
+    {
+        return GridField_ActionMenuItem::DEFAULT_GROUP;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtraData($gridField, $record, $columnName)
+    {
+        return [
+            "classNames" => "font-icon-eye action-detail view-link"
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUrl($gridField, $record, $columnName)
+    {
+        return Controller::join_links($gridField->Link('item'), $record->ID, 'view');
+    }
 
     public function augmentColumns($field, &$columns)
     {
