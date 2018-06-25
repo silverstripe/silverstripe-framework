@@ -112,7 +112,7 @@ The above query is almost self-descriptive. It gets a user by ID, returns his or
 {
     "user": {
         "name": "Test user",
-        "email": "test@myapp.com",
+        "email": "test@example.com",
         "blogPosts": [
             {
                 "title": "How to be awesome at GraphQL",

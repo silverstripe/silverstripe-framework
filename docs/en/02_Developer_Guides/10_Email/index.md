@@ -130,7 +130,7 @@ You can set the default sender address of emails through the `Email.admin_email`
 
 ```yaml
 SilverStripe\Control\Email\Email:
-  admin_email: support@myapp.com
+  admin_email: support@example.com
 ```
 
 <div class="alert" markdown="1">
@@ -157,9 +157,9 @@ Configuration of those properties looks like the following:
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 if(Director::isLive()) {
-    Config::modify()->set(Email::class, 'bcc_all_emails_to', "client@myapp.com");
+    Config::modify()->set(Email::class, 'bcc_all_emails_to', "client@example.com");
 } else {
-    Config::modify()->set(Email::class, 'send_all_emails_to', "developer@myapp.com");
+    Config::modify()->set(Email::class, 'send_all_emails_to', "developer@example.com");
 }
 ```
 
@@ -172,7 +172,7 @@ marked as spam.
 
 ```php
 $email = new Email(..);
-$email->setReplyTo('reply@myapp.com');
+$email->setReplyTo('reply@example.com');
 ```
 
 ### Setting Custom Headers

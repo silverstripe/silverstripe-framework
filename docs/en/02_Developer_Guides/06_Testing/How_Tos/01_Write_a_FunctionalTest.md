@@ -28,7 +28,7 @@ class HomePageTest extends FunctionalTest
 
         // We should see a login form
         $login = $this->submitForm("LoginFormID", null, [
-            'Email' => 'test@myapp.com',
+            'Email' => 'test@example.com',
             'Password' => 'wrongpassword'
         ]);
 

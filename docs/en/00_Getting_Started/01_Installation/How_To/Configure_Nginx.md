@@ -29,7 +29,7 @@ server {
   client_max_body_size 0; # Manage this in php.ini (upload_max_filesize & post_max_size)
   listen 80;
   root /path/to/ss/folder/public;
-  server_name myapp.com www.myapp.com;
+  server_name example.com www.example.com;
 
   # Defend against SS-2015-013 -- http://www.silverstripe.org/software/download/security-releases/ss-2015-013
   if ($http_x_forwarded_host) {
@@ -65,7 +65,7 @@ server {
 }
 ```
 
-The above configuration sets up a virtual host `myapp.com` with
+The above configuration sets up a virtual host `example.com` with
 rewrite rules suited for SilverStripe. The location block for index.php
 passes the php script to the FastCGI-wrapper via a TCP socket.
 

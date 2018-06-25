@@ -75,7 +75,7 @@ e.g. `/etc/nginx/sites-enabled/mysite`:
 	server {
 		listen 80;
 		root /var/www/mysite/public;
-		server_name www.myapp.com;
+		server_name www.example.com;
 
 		error_log /var/log/nginx/mysite.error.log;
 		access_log /var/log/nginx/mysite.access.log;

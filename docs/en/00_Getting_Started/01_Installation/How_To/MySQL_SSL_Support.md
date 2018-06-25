@@ -127,7 +127,7 @@ On your Silverstripe instance:
 
 	:::bash
 	# Secure copy over SSH via rsync command. You may use an alternative method if desired. 
-	rsync -avP user@db1.myapp.com:/path/to/client/certs /path/to/secure/folder
+	rsync -avP user@db1.example.com:/path/to/client/certs /path/to/secure/folder
 
 	#  Depending on your web server configuration, allow web server to read to SSL files
 	sudo chown -R www-data:www-data /path/to/secure/folder
@@ -148,7 +148,7 @@ Add or edit your `_ss_environment.php` configuration file. (See [Environment Man
 	// These four define set the database connection details.
 	define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
 
-	define('SS_DATABASE_SERVER', 'db1.myapp.com');
+	define('SS_DATABASE_SERVER', 'db1.example.com');
 	define('SS_DATABASE_USERNAME', 'dbuser');
 	define('SS_DATABASE_PASSWORD', '<password>');
 

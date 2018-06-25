@@ -179,9 +179,9 @@ assets/
 
 The urls for these two files, however, do not reflect the physical structure directly.
 
-* `http://www.myapp.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
+* `http://www.example.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
   and will not invoke a php request.
-* `http://www.myapp.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
+* `http://www.example.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
   which will be passed to the `[ProtectedFileController](api:SilverStripe\Assets\Storage\ProtectedFileController)` controller, which will serve
   up the content of the hidden file, conditional on a permission check.
 

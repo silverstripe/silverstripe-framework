@@ -340,7 +340,7 @@ values based on other fixture data.
 $factory->define('Member', [
     'Email' => function($obj, $data, $fixtures) {
         if(isset($data['FirstName']) {
-            $obj->Email = strtolower($data['FirstName']) . '@myapp.com';
+            $obj->Email = strtolower($data['FirstName']) . '@example.com';
         }
     },
     'Score' => function($obj, $data, $fixtures) {
