@@ -6,10 +6,6 @@ introduction: Upgrade your project SilverStripe 4 and keep it up to date with th
 SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to
 your SilverStripe installation means overwriting files, flushing the cache and updating your database schema.
 
-<div class="info" markdown="1">
-See our [upgrade notes and changelogs](/changelogs/4.0.0) for 4.0.0 specific information, bugfixes and API changes.
-</div>
-
 ## Understanding and planning your upgrade {#planning}
 
 How easy will it be to update my project? It's a fair question, and sometimes a difficult one to answer.
