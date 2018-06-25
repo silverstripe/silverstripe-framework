@@ -219,7 +219,7 @@ If your SilverStripe 3 project requires the `silverstripe/framework` module with
 * and so on.
 
 The following modules are implicitly required by `silverstripe/recipe-core`. They can be removed from your `composer.json` dependencies if you are using `silverstripe/recipe-core` or `silverstripe/recipe-cms`.
-* `sivlerstripe/framework`
+* `silverstripe/framework`
 * `silverstripe/config`
 * `silverstripe/assets`
 
