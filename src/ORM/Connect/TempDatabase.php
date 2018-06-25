@@ -24,11 +24,6 @@ class TempDatabase
     protected $name = null;
 
     /**
-     * @var bool If a transaction has been started
-     */
-    protected $hasStarted = false;
-
-    /**
      * Create a new temp database
      *
      * @param string $name DB Connection name to use
@@ -76,14 +71,6 @@ class TempDatabase
     /**
      * @return bool
      */
-    public function hasStarted()
-    {
-        return $this->hasStarted;
-    }
-
-    /**
-     * @return bool
-     */
     public function supportsTransactions()
     {
         return static::getConn()->supportsTransactions();
@@ -94,7 +81,6 @@ class TempDatabase
      */
     public function startTransaction()
     {
-        $this->hasStarted = true;
         if (static::getConn()->supportsTransactions()) {
             static::getConn()->transactionStart();
         }
@@ -102,14 +88,28 @@ class TempDatabase
 
     /**
      * Rollback a transaction (or trash all data if the DB doesn't support databases
+     *
+     * @return bool True if successfully rolled back, false otherwise. On error the DB is
+     * killed and must be re-created. Note that calling rollbackTransaction() when there
+     * is no transaction is counted as a failure, user code should either kill or flush the DB
+     * as necessary
      */
     public function rollbackTransaction()
     {
-        if (static::getConn()->supportsTransactions()) {
-            static::getConn()->transactionRollback();
-        } else {
-            $this->hasStarted = false;
-            static::clearAllData();
+        // Ensure a rollback can be performed
+        $success = static::getConn()->supportsTransactions()
+            && static::getConn()->transactionDepth();
+        if (!$success) {
+            return false;
+        }
+        try {
+            // Explicit false = gnostic error from transactionRollback
+            if (static::getConn()->transactionRollback() === false) {
+                return false;
+            }
+            return true;
+        } catch (DatabaseException $ex) {
+            return false;
         }
     }
 
@@ -118,10 +118,13 @@ class TempDatabase
      */
     public function kill()
     {
-        // Delete our temporary database
+        // Nothing to kill
         if (!$this->isUsed()) {
             return;
         }
+
+        // Rollback any transactions (note: Success ignored)
+        $this->rollbackTransaction();
 
         // Check the database actually exists
         $dbConn = $this->getConn();
@@ -147,7 +150,6 @@ class TempDatabase
      */
     public function clearAllData()
     {
-        $this->hasStarted = false;
         if (!$this->isUsed()) {
             return;
         }
@@ -205,39 +207,12 @@ class TempDatabase
     }
 
     /**
-     * Clear all temp DBs on this connection
+     * Rebuild all database tables
      *
-     * Note: This will output results to stdout unless suppressOutput
-     * is set on the current db schema
+     * @param array $extraDataObjects
      */
-    public function deleteAll()
+    protected function rebuildTables($extraDataObjects = [])
     {
-        $schema = $this->getConn()->getSchemaManager();
-        foreach ($schema->databaseList() as $dbName) {
-            if ($this->isDBTemp($dbName)) {
-                $schema->dropDatabase($dbName);
-                $schema->alterationMessage("Dropped database \"$dbName\"", 'deleted');
-                flush();
-            }
-        }
-    }
-
-    /**
-     * Reset the testing database's schema.
-     *
-     * @param array $extraDataObjects List of extra dataobjects to build
-     */
-    public function resetDBSchema(array $extraDataObjects = [])
-    {
-        // pgsql doesn't allow schema updates inside transactions
-        // so we need to rollback any transactions before commencing a schema reset
-        if ($this->hasStarted()) {
-            $this->rollbackTransaction();
-        }
-        if (!$this->isUsed()) {
-            return;
-        }
-
         DataObject::reset();
 
         // clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
@@ -272,5 +247,46 @@ class TempDatabase
 
         ClassInfo::reset_db_cache();
         DataObject::singleton()->flushCache();
+    }
+
+    /**
+     * Clear all temp DBs on this connection
+     *
+     * Note: This will output results to stdout unless suppressOutput
+     * is set on the current db schema
+     */
+    public function deleteAll()
+    {
+        $schema = $this->getConn()->getSchemaManager();
+        foreach ($schema->databaseList() as $dbName) {
+            if ($this->isDBTemp($dbName)) {
+                $schema->dropDatabase($dbName);
+                $schema->alterationMessage("Dropped database \"$dbName\"", 'deleted');
+                flush();
+            }
+        }
+    }
+
+    /**
+     * Reset the testing database's schema.
+     *
+     * @param array $extraDataObjects List of extra dataobjects to build
+     */
+    public function resetDBSchema(array $extraDataObjects = [])
+    {
+        // Skip if no DB
+        if (!$this->isUsed()) {
+            return;
+        }
+
+        try {
+            $this->rebuildTables($extraDataObjects);
+        } catch (DatabaseException $ex) {
+            // In case of error during build force a hard reset
+            // e.g. pgsql doesn't allow schema updates inside transactions
+            $this->kill();
+            $this->build();
+            $this->rebuildTables($extraDataObjects);
+        }
     }
 }

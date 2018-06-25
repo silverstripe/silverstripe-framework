@@ -4,6 +4,8 @@ namespace SilverStripe\View\Shortcodes;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\Embed\Embeddable;
+use SilverStripe\View\Embed\EmbedResource;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use Embed\Adapters\Adapter;
@@ -60,6 +62,12 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $serviceArguments['min_image_height'] = $arguments['height'];
         }
 
+        /** @var EmbedResource $embed */
+        $embed = Injector::inst()->create(Embeddable::class, $serviceURL);
+        if (!empty($serviceArguments)) {
+            $embed->setOptions(array_merge($serviceArguments, (array) $embed->getOptions()));
+        }
+
         // Allow resolver to be mocked
         $dispatcher = null;
         if (isset($extra['resolver'])) {
@@ -68,10 +76,11 @@ class EmbedShortcodeProvider implements ShortcodeHandler
                 $serviceURL,
                 $extra['resolver']['config']
             );
+            $embed->setDispatcher($dispatcher);
         }
 
         // Process embed
-        $embed = Embed::create($serviceURL, $serviceArguments, $dispatcher);
+        $embed = $embed->getEmbed();
 
         // Convert embed object into HTML
         if ($embed && $embed instanceof Adapter) {
