@@ -14,28 +14,31 @@ How easy will it be to update my project? It's a fair question, and sometimes a 
   * "Major" releases introduces API change that may break your application.
   * "Minor" releases (x.y) introduces API changes in a backward compatible way and can mark some API as deprecated.
   * "Patch" releases (x.y.z) fix bugs without introducing any API changes.
-* If you've made custom branches of SilverStripe core, or any thirdparty module, it's going to be harder to upgrade.
-* The more custom features you have, the harder it will be to upgrade. You will have to re-test all of those features, and adapt to API changes in core.
-* Customizations of a well defined type - such as custom page types or custom blog widgets - are going to be easier to upgrade than customisations that modify deep system internals like rewriting SQL queries.
+* If you've made custom branches of SilverStripe core, or any thirdparty module, upgrades are going to be more complex.
+* More custom features mean more work to re-test all of those features, and adapt to API changes in core.
+* Customisations of a well defined type - such as custom page types or custom blog widgets - 
+  are going to be easier to upgrade than customisations that modify deep system internals like rewriting SQL queries.
 
 ### Overview of changes
 
-If you've already had a look over the changelog, you will see that there are some fundamental changes that need to be implemented to upgrade from 3.x. Here's a couple of the most important ones to consider.
+There are some fundamental changes in SilverStripe 4:
 
-* PHP 5.6 is now the minimum required version and up to PHP 7.2.x is supported.
+* PHP 5.6 is now the minimum required version and up to PHP 7.2 is supported.
 * SilverStripe is now even more modular which allows you to remove functionality your project might not need.
 * Common functionality sets can now be installed via SilverStripe _recipes_.
-* SilverStripe modules can now be installed in the vendor folder along with your regular PHP packages.
-* The SilverStripe codebase is now completely namespaced.
-* SilverStripe 4 makes usage of PHP _traits_ making it easy to apply common patterns to your classes.
-* Publicly facing files can now be served from a public webroot for added security.  
-* The concept of `ChangeSet` has been added to versioning along with version ownership.
+* SilverStripe modules can now be installed in the `vendor/` folder along with your regular PHP packages.
+* All classes are namespaced: You have to use these, but can decide if you namespace your project code.
+* PHP _traits_ replace a few core classes (e.g. `Object`) and make it easy to apply common patterns 
+* Public files can now be served from a `public/` webroot for added security.  
+* Versioning is more powerful through an "ownership" concept, and available for all DataObject classes.
+* Changes across objects can be collected in a "campaign" for batch publication.
 * GraphQL is now the favourite way of creating web services with SilverStripe.
-* Asset management has been completely redone with a brand new react-based UI and the introduction of versioned files.
-* Parts of the CMS UI are now build in react and entwine is in the process of being faded out.
-* SilverStripe 4 now supports PSR-4 auto-loading for modules and for your main project.
+* Asset management has been completely redone with a brand new React-based UI, protected draft files and versioning.
+* Parts of the CMS UI are now build in React and Bootstrap instead of Entwine and custom CSS.
+* PSR-4 auto-loading is supported for modules and for your project code.
 
-[Learn more about major API changes introduced by SilverStripe 4](#list-of-major-api-changes)
+[Learn more about major API changes introduced by SilverStripe 4](#list-of-major-api-changes),
+and dig into the changelogs for [4.0.0](/changelogs/4.0.0), [4.1.0](/changelogs/4.1.0) and [4.2.0](/changelogs/4.2.0).
 
 ### Using recipes instead of requiring individual modules
 The SilverStripe CMS and SilverStripe Framework are becoming more modular. Many of the secondary features contained in SilverStripe CMS 3 and SilverStripe Framework 3 have been moved to separate modules.  
@@ -46,23 +49,18 @@ Read the [Switching to recipes](#switching-to-recipes) section of this guide for
 
 ### Automating your upgrades using the SilverStripe Upgrader tool
 We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help
-with the upgrade process to SilverStripe 4. The upgrader is unlikely to completely upgrade your project to SilverStripe 4, however it can take care of the most tedious part of the upgrade.
-
-It can also be use to upgrade your existing SilverStripe 4 to a newer minor release.
-
-Each step in this upgrade guide explains how to use
-
-[Learn how to install the upgrader tool](#install-the-upgrader-tool-(optional))
+with the upgrade process. The upgrader is unlikely to completely upgrade your project, however it can take care of the most tedious part of the upgrade.
+It can also be use to upgrade your existing SilverStripe 4 project to a newer minor release.
 
 ## Step 0 - Pre-requisites and background work {#step0}
 
-Before you begin the upgrade process, make sure you meat these pre-requisites
+Before you begin the upgrade process, make sure you meet these pre-requisites.
 
 ### Back up your files and database
 
-* Set up your project in your development environment.
+* Set up your codebase in your development environment.
 * Backup your database content.
-* Backup your webroot files.
+* Backup your codebase (use version control if possible).
 
 <div class="warning" markdown="1">
 Never update a website on the live server. Get it working on a development copy first!
@@ -70,10 +68,7 @@ Never update a website on the live server. Get it working on a development copy 
 
 ### Install composer
 
-SilverStripe 4 requires the use of composer for dependency management.
-
-[Learn how to use composer with SilverStripe](/getting_started/composer)
-
+SilverStripe 4 requires the use of [Composer](http://getcomposer.org) for dependency management ([details](/getting_started/composer)).
 We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date and run `composer update`.
 
 ```json
@@ -88,15 +83,17 @@ This will also add extra dependencies, such as the `admin`, `asset-admin`, `repo
 modules.
 
 If you want more granular control over what gets installed,
-reading through the README documentation in the [recipe plugin repository](https://github.com/silverstripe/recipe-plugin)
-and also checking the `composer.json` files in [recipe-core](https://github.com/silverstripe/recipe-core) and
+check out the [recipe plugin repository](https://github.com/silverstripe/recipe-plugin)
+as well as the `composer.json` files in [recipe-core](https://github.com/silverstripe/recipe-core) and
 [recipe-cms](https://github.com/silverstripe/recipe-cms).
 
 For a description on how to handle issues with pre-existing composer installs or upgrading other modules, please read
 through the [Composer dependency update section](/changelogs/4.0.0#deps)
 
 ### Install the upgrader tool (optional)
-Using the upgrader is not mandatory, but it can speed up the upgrade process. To install the upgrader globally run this command.
+Using the upgrader is not mandatory, but it can speed up the process.
+Although SilverStripe 4 can run in both PHP 5.6 and PHP 7, the upgrader itself requires PHP 7.
+To install the upgrader globally run this command.
 
 ```bash
 composer global require silverstripe/upgrader
@@ -114,13 +111,12 @@ echo 'export PATH=$PATH:~/.composer/vendor/bin/' >> ~/.bash_profile
 
 Each command in the upgrader has somewhat different arguments. However, most of them accept these two options:
 * `--write` which tells the upgrader to apply changes to your code base
-* `-d` which can be use to explicitly specify the root of your project — if not specified the current working directory is assume to be the root of the project.
+* `--root-dir` which can be use to explicitly specify the root of your project — if not specified the current working directory is assume to be the root of the project.
 
 You can run `upgrade-code help` to get more information about the upgrader or `upgrade-code help command-name` to information about a specific command.
 
-
 <div class="info" markdown="1">
-Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `-d` flag if that's not the case.
+Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
 </div>
 
 ### Running all the upgrader commands in this guide in on line
@@ -128,11 +124,11 @@ Sample upgrader commands in this guide assume your working directory is the root
 The upgrader comes with an `all` command. This command will attempt to run all the upgrader commands in the same order as this guide. This is unlikely to work on your first try, but can be a good way to get started without going through this entire guide.
 
 ```bash
-upgrade-code all --recipe-core-constraint=1.1 --namespace="App\\Web" --psr4
+upgrade-code all --namespace="App\\Web" --psr4
 ```
 
-* `--recipe-core-constraint` defined your target version of `silverstripe/recipe-core`.
-* `--namespace` allows you to specify what will be the main namespace of your project.
+* `--recipe-core-constraint` defines your SilverStripe release version (optional, will default to the most recent stable release).
+* `--namespace` allows you to specify how your project will be namespaced (optional).
 * `--psr4` allows you to specify that your project structure respect the PSR-4 standard and to use sub-namespaces.
 * `--skip-add-namespace` allows you to skip the `add-namespace` command.
 * `--skip-reorganise` allows you to skip the `reorganise` command.
@@ -140,11 +136,11 @@ upgrade-code all --recipe-core-constraint=1.1 --namespace="App\\Web" --psr4
 
 ### Branching your project
 
-Setting a dedicated branch in your source control system to track your upgrade work can help you manage your upgrade. If you're upgrading a big project, you should consider creating individual branches for each step.
+Setting a dedicated branch in your source control system to track your upgrade work can help you manage your upgrade. If you're upgrading a big project, you should consider creating individual branches or commits for each step.
 
-## Step 1 - Upgrade your dependencies
+## Step 1 - Upgrade your dependencies {#step1}
 
-The first step is to update your dependencies' constraints in your `composer.json` file to require the latest version of the SilverStripe modules.
+The first step is to update your dependencies' constraints in your `composer.json` file to require the latest version of modules.
 
 ### Automatically upgrade dependencies with the `recompose` upgrader command
 
@@ -173,10 +169,10 @@ Take for example the following SilverStripe 3 `composer.json` file.
 
 You can upgrade the `composer.json` file with this command:
 ```bash
-upgrade-code recompose --recipe-core-constraint=4.1 --write
+upgrade-code recompose --write
 ```
 
-The `--recipe-core-constraint` flag can be use to target a specific version of `silverstripe/recipe-core`. If this flag is omitted, the project will be upgraded to the latest stable version. You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
+You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
 
 Your upgraded `composer.json` file will look like this.
 ```json
@@ -192,7 +188,9 @@ Your upgraded `composer.json` file will look like this.
 }
 ```
 
-If the `recompose` command can't find a SilverStripe 4 compatible version for one of your module, it will keep this dependency in your `composer.json` file with its existing constraint.
+If the `recompose` command can't find a compatible version for one of your module, it will keep this dependency in your `composer.json` file with its existing constraint.
+
+[Continue to Step 2](#step2)
 
 ### Manually upgrading your dependencies
 
@@ -338,9 +336,9 @@ If you're going to install development version of third party modules, you shoul
 </div>
 
 To resolve a conflict you can either:
-* remove the module from your project, if it is not essential
-* integrate the affected module into your project's codebase
-* fork the affected module and maintain it yourself.
+* fork the affected module and upgrade it yourself. Don't forget to send a pull request to the original module!
+* Integrate the affected module into your project's codebase
+* Remove the module from your project, if it is not essential
 
 To integrate a third party module in your project, remove it from your `composer.json` file and from your `.gitignore` file. Then track the module's codebase in your project source control. You'll need to upgrade the module's code to be compatible with SilverStripe 4. 
 
@@ -362,8 +360,8 @@ This is a good point to commit your changes to your source control system before
 
 ## Step 2 - Update your environment configuration {#env}{#step2}
 
-The php configuration `_ss_environment.php` file has been replaced in favour of a non-executable
-`.env` file, which follows a syntax similar to a `.ini` file for key/value pair assignment. Your `.env` file may be placed in your project root, or one level above your project root.
+The php configuration `_ss_environment.php` file has been replaced with a non-executable
+`.env` file. It follows a syntax similar to a `.ini` file for key/value pair assignment. Your `.env` file may be placed in your project root, or one level above your project root ([details](/getting_started/environment_management/))
 
 ### Automatically convert `_ss_environment.php` to `.env`
 
@@ -373,9 +371,9 @@ If you have installed the upgrader tool, you can use the `environment` command t
 upgrade-code environment --write
 ```
 
-If your `_ss_environment.php` file contains unusual logic (conditional statements or loops), you will get a warning. `upgrade-code` will still try to convert the file, but you should double-check the output.
+If your `_ss_environment.php` file contains unusual logic (conditional statements or loops), you will get a warning. `upgrade-code` will still try to convert the file, but you should double-check the output. Omit the `--write` flag to do a dry-run.
 
-Omit the `--write` flag to do a dry-run.
+[Continue to "Cleaning up `mysite/_config.php`"](#env-config-cleanup)
 
 ### Manually convert `_ss_environment.php` to `.env`
 
@@ -421,9 +419,10 @@ SS_DATABASE_PASSWORD=""
 SS_DATABASE_SERVER="127.0.0.1"
 ```
 
-### Cleaning up `mysite/_config.php` after your environment configuration upgrade
+### Cleaning up `mysite/_config.php` after your environment configuration upgrade {#env-config-cleanup}
 
-You'll need to clean up your `mysite/_config.php` file after upgrading your environment file.
+Regardless if you've used the automated or manual path,
+you'll need to clean up your `mysite/_config.php` file after upgrading your environment file.
 
 The global values `$database` and `$databaseConfig` have been deprecated. Your database configuration details should be stored in your `.env` file. If you want to keep your database configuration in `_config.php`, you can use the new `DB::setConfig()` api, however this is discouraged.
 
@@ -437,24 +436,19 @@ To access environment variables, use the `SilverStripe\Core\Environment::getEnv(
 ### Finalising your environment upgrade
 It's inadvisable to track your `.env` file in your source control system as it might contain sensitive information.
 
-You should ignore the `.env` file by adding an entry to your `.gitignore` file. You can create a sample environment configuration by duplicating your `.env` file as `.env.sample`, and removing sensitive information from it.
-
-You can safely delete your legacy `_ss_environement.php` if you want.
+You should ignore the `.env` file by adding an entry to your `.gitignore` file. You can create a sample environment configuration by duplicating your `.env` file as `.env.sample`, and removing sensitive information from it. You can safely delete your legacy `_ss_environement.php` if you want.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.  
 
 ## Step 3 - Namespacing your project (optional) {#step3}
 
 Namespacing your code is an optional step. It is recommended and will help future-proof your code base.
-
-To learn more about PHP namespace:
-* Read the [official Namespace PHP documentation](http://php.net/manual/en/language.namespaces.php)
-* Read the [PSR-4: Autoloader standard](https://www.php-fig.org/psr/psr-4/).
+Read more about [PHP Namespaces](http://php.net/manual/en/language.namespaces.php)
+and the [PSR-4 Autoloader Standard](https://www.php-fig.org/psr/psr-4/).
 
 ### Before you start namespacing your codebase
 
 You need to choose a root namespace for your project. We recommend following the `Vendor\Package` pattern.
-
 The `Page` and `PageController` classes *must* be defined in the global namespace (or without a namespace).
 
 If you want your codebase to comply with the PSR-4 standard, make sure sub-directories of your code folder are using the _UpperCamelCase_ naming convention. For example, `mysite/code/page_types` should be renamed to `mysite/code/PageTypes`.
@@ -464,22 +458,19 @@ If you want your codebase to comply with the PSR-4 standard, make sure sub-direc
 The `add-namespace` command of the [upgrader tool](https://github.com/silverstripe/silverstripe-upgrader/) provides a feature
 to namespace your codebase and to automatic update references to those classes.
 
-```
-composer global require silverstripe/upgrader
+```bash
 upgrade-code add-namespace "App\\Web" ./mysite/code --recursive --write
 ```
 
 This task will do the following:
 * Add the given namespace to all files in the code class, and subdirectories
 * All references to classes in any namespaced files will be safely retained with additional `use` directives added as necessary
-* A `mysite/.upgrade.yml` file be created/updated to record the new fully qualified name of each class.
+* A `mysite/.upgrade.yml` file will be created/updated to record the new fully qualified name of each class. 
+  This will be used in later steps to update references to the outdated class names in your own project code.
 
-`.upgrade.yml` will be used in later steps to update references to the old non-namespaced classes.
+By default, the same namespace will be applied to all your classes regardless of which directory they are in. If you want to apply different namespaces to different folders to be compliant with PSR-4, combine the `--recursive` with the `--psr4`. Your folder structure has to be PSR4 compliant for this to work. If you want to do a dry-run, omit the `--write` option to see a preview of all changed project files.
 
-If you want to do a dry-run, omit the `--write` option to see a preview of all changed project files.
-
-By default, the same namespace will be applied to all your classes regardless of which directory they are in. If you want to apply different namespaces to different folders to be compliant with PSR-4, combine the `--recursive` with the `--psr4`. Your folder structure has to be PSR4 compliant for this to work.
-
+[Continue to Step 4](#step4)
 
 ### Manually namespacing your codebase
 
@@ -529,7 +520,6 @@ class ProductService
 
 ### Enable PSR-4 auto-loading in your `composer.json` file
 If you have namespaced your project and followed the PSR-4 convention, you have the option to enable PSR-4 auto-loading in your composer.json file.
-
 Enabling PSR-4 auto-loading is optional. It will provide better auto-loading of your classes in your development environment and will future proof your code.
 
 For example, let's say you have defined the following namespaces for the following folders:
@@ -570,7 +560,6 @@ This is a good point to commit your changes to your source control system before
 ## Step 4 - Update codebase with references to newly namespaced classes {#step4}
 
 All core PHP classes in SilverStripe 4 have been namespaced. For example, `DataObject` is now called `SilverStripe\ORM\DataObject`. Your project codebase, config files and language files need be updated to reference those newly namespaced classes. This will include explicit references in your PHP code, but also string that contain the name of a class.
-
 If you've opted to namespace your own code in the previous step, those references will need to be updated as well.
 
 ### Automatically update namespaced references with the `upgrade` command
@@ -579,10 +568,7 @@ If you've installed the upgrader, you can use the `upgrade` command to update re
 
 The `upgrade` command will update PHP files, YML configuration files, and YML language files.
 
-#### Before running the `upgrade` command
-Each core SilverStripe 4 module includes a `.upgrade.yml` that defines the equivalent fully qualified name of each class. Most third party SilverStripe modules that have been upgraded to be compatible with SilverStripe 4, also include a `.upgrade.yml`.
-
-If you've namespaced your own project, you'll need to provide your own `.upgrade.yml` file . If you've used the upgrader to namespace your project, that file will have been created for you.
+Each core SilverStripe 4 module includes a `.upgrade.yml` that defines the equivalent fully qualified name of each class. Most third party SilverStripe modules that have been upgraded to be compatible with SilverStripe 4, also include a `.upgrade.yml`. If you've namespaced your own project, you'll need to provide your own `.upgrade.yml` file . If you've used the upgrader to namespace your project, that file will have been created for you.
 
 The `upgrade` command will try to update some strings that reference the old name of some classes. In some cases this might not be what you want. You can tell the upgrader to skip specific strings by using the `@skipUpgrade` flag in your PHPDoc comment. For example:  
 
@@ -590,8 +576,6 @@ The `upgrade` command will try to update some strings that reference the old nam
 /** @skipUpgrade */
 return Injector::inst()->get('ProductService');
 ```
-
-#### Running the `upgrade` command
 
 Execute the upgrade command with this command.
 
@@ -601,12 +585,14 @@ upgrade-code upgrade ./mysite/ --write
 
 If you omit the `--write` flag you will get a preview of what change the upgrader will apply to your codebase. This can be helpful if you if you are tweaking your `.upgrade.yml` or if you are trying to identify areas where you should add a `@skipUpgrade` statement,
 
-You can also tweak which rules to apply with the `--rule` flag. There's 3 options that can be provided: `code`, `config`, and `lang`. For example, the following command will only upgrade `lang` and `config` files:
+You can also tweak which rules to apply with the `--rule` flag: `code`, `config`, and `lang`. For example, the following command will only upgrade `lang` and `config` files:
 ```bash
 upgrade-code upgrade ./mysite/ --rule=config --rule=lang
 ```
 
 The `upgrade` command can alter big chunks of your codebase. While it works reasonably well in most use case, you should not trust it blindly. You should take time to review all changes applied by the `upgrade` command and confirm you are happy with them.
+
+[Continue to "Finalising namespace updates"](#namespace-finalise)
 
 ### Manually update namespaced references
 
@@ -789,12 +775,12 @@ en:
     SALUTATION: Beep Beep
 ```
 
-### Finalising namespace updates
-You'll need to perform the following steps manually, even if you've used the automated rewrite of namespaces previously.
+### Finalising namespace updates {#namespace-finalise}
+You'll need to perform the following steps manually, even if you've used the automated rewrite of namespaces.
 
 DataObject database tables will default to use a namespaced name. For example, if you have a class under `App\Web\Products\ExplosiveTennisBall` that extends `DataObject`, the matching table in your database will be called `App_Web_Products_ExplosiveTennisBall`.
-
-You can define a `private static $table_name` property on your DataObjects to use more convenient table names. For example, `private static $table_name = 'ExplosiveTennisBall';`.
+You can define a `private static $table_name` property on your DataObjects to use more convenient table names.
+For example, `private static $table_name = 'ExplosiveTennisBall';`.
 
 In your PHP code, calls to the `_t()` method should be updated to use the full namespace of the target class.
 
@@ -832,11 +818,9 @@ Avoid using `static::class` or `parent::class` to retrieve translated string. It
 </div>
 
 If your template files contain translatable strings, they also need to be updated to referenced the namespaced classes.
-
 For example, `<%t Member.SINGULARNAME 'Member' %>` would become `<%t SilverStripe\Security\Member.SINGULARNAME 'Member' %>`.
 
 Your codebase should now be referencing valid SilverStripe 4 classes. This means that your classes can be loaded at runtime. However, your codebase will still be using an outdated API.
-
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 5 - Updating your codebase to use SilverStripe 4 API {#step5}
@@ -883,9 +867,9 @@ Changes not saved; Run with --write to commit to disk
 
 ### Manually update deprecated API references
 
-SilverStripe 4 introduces many of small and big API changes. To update deprecated API references manually, you have to go through each one of your project files.
-
-[Read the SilverStripe 4 change logs](/changelogs/4.0.0/) for a comprehensive list of what has changed.
+SilverStripe 4 introduces many API changes. To update deprecated API references manually, you have to go through each one of your project files.
+Read the changelogs for [4.0.0](/changelogs/4.0.0/), [4.1.0](/changelogs/4.1.0/) and [4.2.0](/changelogs/4.2.0/)
+for a comprehensive overview.
 
 ### Finalising the deprecated API update
 At this stage, your site should be using only SilverStripe 4 API logic.
@@ -899,18 +883,18 @@ The location of SilverStripe's _entry file_ has changed. Your project and server
 to adjust the path to this file from `framework/main.php` to `index.php`.
 
 ### Update your `index.php` file
-You can get a copy of the SilverStripe 4 `index.php` file at:
-* `vendor/silverstripe/recipe-core/public/index.php` if you are upgrading to SilverStripe 4.1 or above
-* `vendor/silverstripe/recipe-core/index.php` if you are upgrading to SilverStripe 4.0
+You can get a copy of the SilverStripe 4 `index.php` file at
+`vendor/silverstripe/recipe-core/public/index.php`.
 
-If you've modified your SilverStripe 3 `index.php`, you'll need to reconcile those changes with the `index.php` file you got from `recipe-core`. Otherwise, just use the generic `index.php` file `recipe-core` provides.
+If you've created your own `index.php` or modified version of `main.php`,
+you'll need to reconcile those changes with the `index.php` file you got from `recipe-core`.
+Otherwise, just use the generic `index.php` file `recipe-core` provides.
 
 Copy your new `index.php` to your project's web root. Unlike SilverStripe 3, `index.php` must be present in your web root.
 
 ### Update your server configuration
-If you're using a `.htaccess` file or `web.config` file to handle your server configuration, you can get the generic SilverStripe 4 version of those file from:
-* `vendor/silverstripe/recipe-core/public` if you are upgrading to SilverStripe 4.1 or above
-* `vendor/silverstripe/recipe-core/` if you are upgrading to SilverStripe 4.0
+If you're using a `.htaccess` file or `web.config` file to handle your server configuration, you can get the generic SilverStripe 4 version of those file from
+`vendor/silverstripe/recipe-core/public`.
 
 Just like `index.php`, if you've modified your server configuration file from the one that shipped with SilverStripe 3, you'll need to reconcile your changes into the version retrieve from `recipe-core`.
 
@@ -923,9 +907,10 @@ At this stage, you could in theory run your project in SilverStripe 4.
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 7 - Update project structure (optional) {#step7}
-SilverStripe 4 introduces a new recommended project structure. Adopting the recommended project structure is optional, but will become mandatory in SilverStripe 5.
+SilverStripe 4 introduces a new recommended project structure ([details](/changelogs/4.2.0#app-folder-name)).
+Adopting the recommended project structure is optional, but will become mandatory in SilverStripe 5.
 
-You may skip this step if you want.
+[Skip to Step 8](#step8)
 
 ### Automatically switch to the new structure with the `reorganise` command
 The reorganise command can automatically update your project to use the new recommended structure.
@@ -987,16 +972,19 @@ SilverStripe\Core\Manifest\ModuleManifest:
 ```
 
 At this stage, your project should be functional with the recommended project structure.
-
 Note, that if you've explicitly reference any static assets (images, css, js) under `mysite`, you'll need to rewrite those references.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 8 - Switch to public web-root (optional){#step8}
 
-SilverStripe 4.1 introduces the concept of _public web-root_ this allows you to move all publicly accessible assets under a `public` folder. This has security benefits as it minimises the possibility that files that are not meant to be access directly get accidentally exposed.
+SilverStripe 4.1 introduces the concept of _public web-root_ this allows you to move
+all publicly accessible assets under a `public` folder ([details](/changelogs/4.1.0#public-folder)).
+This has security benefits as it minimises the possibility that files that are not meant to be access directly get accidentally exposed.
 
 This step is optional and requires SilverStripe 4.1 or greater. It will become mandatory in SilverStripe 5.
+
+[Skip to Step 9](#step9)
 
 ### Automatically switch to the public web root
 
@@ -1026,22 +1014,19 @@ If you are upgrading from SilverStripe 4.0 to SilverStripe 4.1 (or above), you'l
 
 ### Finalising the web root migration
 You'll need to update your server configuration to point to the public directory rather than the root of your project.
-
 Update your `.gitignore` file so `assets` and `resources` are still ignored when located under the `public` folder.
-
 Your project should still be functional, although you may now be missing some static assets.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 9 - Move away from hardcoded paths for referencing static assets {#step9}
 
-SilverStripe 4 introduces a new way to reference static assets like images and css. This enable innovations like moving SilverStripe module vendor folder or the public web root.
+SilverStripe 4 introduces a new way to reference static assets like images and css. 
+This enable innovations like moving SilverStripe module [vendor folder](/changelogs/4.0.0#vendor-folder) or the [public web root](/changelogs/4.1.0#public-folder).
 
-This change is mandatory if you've completed either:
-* Step 7 - Update project structure
-* Step 8 - Switch to public web-root
-
-Otherwise, it is strongly recommended, but not mandatory.
+This change is mandatory if you've completed either
+[step 7](#step7) (update project structure) or [step 8](#step8) (switch to public web-root).
+If you have skipped these steps, it is strongly recommended, but not mandatory.
 
 ### Exposing your project static assets
 If you have folders under `app` or `mysite` that need to be accessible for your project's web root, you need to say so in your `composer.json` file by adding an entry under `extra.expose`.
@@ -1131,13 +1116,13 @@ This is a good point to commit your changes to your source control system before
 You're almost across the finish line.  
 
 ### Run a dev build
-Rnn a `dev/build` either on the command line or in your browser.
+Run a `dev/build` either on the command line or in your browser.
 
 ```bash
 ./vendor/bin/sake dev/build
 ```
 
-This should migrate your existing data to the new SilverStripe 4 structure.
+This should migrate your existing data (non-destructively) to the new SilverStripe 4 structure.
 
 #### Migrating files
 
