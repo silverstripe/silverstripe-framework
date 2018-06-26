@@ -81,8 +81,8 @@ before_script:
   - mkdir ./public
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:3.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:3.x-dev --no-update; fi
-  - composer require silverstripe/recipe-testing:^2 silverstripe/recipe-core:2.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:2.x-dev --no-update; fi
+  - composer require silverstripe/recipe-testing:^2 silverstripe/recipe-core:5.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
+  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:5.x-dev --no-update; fi
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
