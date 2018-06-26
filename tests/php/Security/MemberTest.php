@@ -239,7 +239,7 @@ class MemberTest extends FunctionalTest
 
         // We should get redirected to Security/passwordsent
         $this->assertContains(
-            'Security/lostpassword/passwordsent/testuser@example.com',
+            'Security/lostpassword/passwordsent',
             urldecode($response->getHeader('Location'))
         );
 
