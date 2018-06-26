@@ -27,8 +27,8 @@ class LostPasswordHandler extends RequestHandler
      * @var array
      */
     private static $url_handlers = [
-        'passwordsent/$EmailAddress' => 'passwordsent',
-        ''                           => 'lostpassword',
+        'passwordsent' => 'passwordsent',
+        '' => 'lostpassword',
     ];
 
     /**
@@ -101,27 +101,17 @@ class LostPasswordHandler extends RequestHandler
      */
     public function passwordsent()
     {
-        $request = $this->getRequest();
-        $email = Convert::raw2xml(rawurldecode($request->param('EmailAddress')));
-        if ($request->getExtension()) {
-            $email = $email . '.' . Convert::raw2xml($request->getExtension());
-        }
-
         $message = _t(
-            'SilverStripe\\Security\\Security.PASSWORDSENTTEXT',
-            "Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
-            . " address.",
-            ['email' => Convert::raw2xml($email)]
+            'SilverStripe\\Security\\Security.PASSWORDRESETSENTTEXT',
+            "Thank you. A reset link has been sent, provided an account exists for this email address."
         );
 
         return [
-            'Title'   => _t(
-                'SilverStripe\\Security\\Security.PASSWORDSENTHEADER',
-                "Password reset link sent to '{email}'",
-                array('email' => $email)
+            'Title' => _t(
+                'SilverStripe\\Security\\Security.PASSWORDRESETSENTHEADER',
+                "Password reset link sent"
             ),
             'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
-            'Email'   => $email
         ];
     }
 
@@ -263,11 +253,7 @@ class LostPasswordHandler extends RequestHandler
      */
     protected function redirectToSuccess(array $data)
     {
-        $link = Controller::join_links(
-            $this->Link('passwordsent'),
-            rawurlencode($data['Email']),
-            '/'
-        );
+        $link = $this->link('passwordsent');
 
         return $this->redirect($this->addBackURLParam($link));
     }
