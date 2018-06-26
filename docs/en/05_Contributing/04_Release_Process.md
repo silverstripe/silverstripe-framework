@@ -90,7 +90,7 @@ turned off via either `.env` or in your _config.php. Deprecation
 notices are always disabled on both live and test.
 
 
-`mysite/_config.php`
+`app/_config.php`
 
 
 

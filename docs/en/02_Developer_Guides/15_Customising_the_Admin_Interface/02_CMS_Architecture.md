@@ -390,7 +390,7 @@ in a single Ajax request.
 ```php
 use SilverStripe\Admin\LeftAndMain;
 
-// mysite/code/MyAdmin.php
+// app/code/MyAdmin.php
 class MyAdmin extends LeftAndMain 
 {
     private static $url_segment = 'myadmin';

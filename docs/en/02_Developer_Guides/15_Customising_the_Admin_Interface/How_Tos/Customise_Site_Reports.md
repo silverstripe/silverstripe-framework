@@ -28,7 +28,7 @@ Modules may come with their own additional reports.
 Custom reports can be created quickly and easily. A general knowledge of SilverStripe's
 [datamodel and ORM](../../model/data_model_and_orm) is useful before creating a custom report. 
 
-Inside the *mysite/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
+Inside the *app/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
 
 The following example will create a report to list every page on the current site.
 

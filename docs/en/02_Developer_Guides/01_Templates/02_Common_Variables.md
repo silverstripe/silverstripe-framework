@@ -349,7 +349,7 @@ of the `silverstripe/cms` module.
 <div class="info" markdown="1">
 To customise the markup that the `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
  from the `silverstripe/cms` module to 
-`mysite/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
+`app/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 </div>
 
 ## Forms

@@ -7,7 +7,7 @@ core of these tests are the same as `SapphireTest` unit tests but add several me
 and receiving [HTTPResponse](api:SilverStripe\Control\HTTPResponse) objects. In this How To, we'll see how to write a test to query a page, check the
 response and modify the session within a test.
 
-**mysite/tests/HomePageTest.php**
+**app/tests/HomePageTest.php**
 
 
 ```php
@@ -28,7 +28,7 @@ class HomePageTest extends FunctionalTest
 
         // We should see a login form
         $login = $this->submitForm("LoginFormID", null, [
-            'Email' => 'test@test.com',
+            'Email' => 'test@example.com',
             'Password' => 'wrongpassword'
         ]);
 

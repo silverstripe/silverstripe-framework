@@ -11,7 +11,7 @@ about how to store its data in the database and how to format the information co
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
 
-**mysite/code/Player.php**
+**app/code/Player.php**
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -104,7 +104,7 @@ output. You can manually create instances of a Data Type and pass it through to 
 If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
-**mysite/code/Player.php**
+**app/code/Player.php**
 
 ```php
 use SilverStripe\ORM\FieldType\DBField;

@@ -28,7 +28,7 @@ $object = Injector::inst()->create('MyClassName');
 The benefit of constructing objects through this syntax is `ClassName` can be swapped out using the 
 [Configuration API](../configuration) by developers.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:
@@ -104,7 +104,7 @@ echo (is_string($object->textProperty));
 
 The [Configuration YAML](../configuration) does the hard work of configuring those `$dependencies` for us.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 Injector:
@@ -160,7 +160,7 @@ the `factory` key in the service definition, and the factory service will be use
 
 An example using the `MyFactory` service to create instances of the `MyService` service is shown below:
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:
@@ -168,7 +168,7 @@ SilverStripe\Core\Injector\Injector:
     factory: MyFactory
 ```
 
-**mysite/code/MyFactory.php**
+**app/code/MyFactory.php**
 
 
 ```php
@@ -189,7 +189,7 @@ $instance = Injector::inst()->get('MyService');
 
 To override the `$dependency` declaration for a class, define the following configuration file.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 MyController:

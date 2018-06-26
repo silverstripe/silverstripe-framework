@@ -43,7 +43,7 @@ This doesn't cover all cases used by SilverStripe so is not a complete solution,
 used. 
 </div>
 
-**mysite/code/MySQLWriteDbAspect.php**
+**app/code/MySQLWriteDbAspect.php**
 
 
 ```php
@@ -77,7 +77,7 @@ class MySQLWriteDbAspect implements BeforeCallAspect
 To actually make use of this class, a few different objects need to be configured. First up, define the `writeDb`
 object that's made use of above.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml
@@ -97,7 +97,7 @@ of type `MySQLDatabase`, configured to point at the 'write_database'.
 
 Next, this should be bound into an instance of the `Aspect` class
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:
@@ -108,7 +108,7 @@ SilverStripe\Core\Injector\Injector:
 
 Next, we need to define the database connection that will be used for all non-write queries
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:
@@ -125,7 +125,7 @@ SilverStripe\Core\Injector\Injector:
 The final piece that ties everything together is the [AopProxyService](api:SilverStripe\Core\Injector\AopProxyService) instance that will be used as the replacement
 object when the framework creates the database connection.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:
@@ -146,7 +146,7 @@ defined method\_name
 
 Overall configuration for this would look as follows
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\Core\Injector\Injector:

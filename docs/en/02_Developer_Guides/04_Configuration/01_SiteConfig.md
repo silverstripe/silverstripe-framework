@@ -35,7 +35,7 @@ echo $config->Title;
 
 To extend the options available in the panel, define your own fields via a [DataExtension](api:SilverStripe\ORM\DataExtension).
 
-**mysite/code/extensions/CustomSiteConfig.php**
+**app/code/extensions/CustomSiteConfig.php**
 
 
 ```php
@@ -61,7 +61,7 @@ class CustomSiteConfig extends DataExtension
 
 Then activate the extension.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml

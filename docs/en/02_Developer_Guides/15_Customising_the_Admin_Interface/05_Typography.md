@@ -4,7 +4,7 @@ summary: Add custom CSS properties to the rich-text editor.
 # WYSIWYG Styles
 
 SilverStripe lets you customise the style of content in the CMS. This is done by setting up a CSS file called
-`editor.css` in either your theme or in your `mysite` folder. This is set through yaml config:
+`editor.css` in either your theme or in your `app/` folder. This is set through yaml config:
 
 ```yaml
 ---
@@ -12,22 +12,22 @@ name: MyCSS
 ---
 SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
   editor_css:
-    - 'mysite/css/editor.css'
+    - 'app/css/editor.css'
 ```
 
-Will load the `mysite/css/editor.css` file.
+Will load the `app/css/editor.css` file.
 
 Alternatively, you can set this on a specific `TinyMCEConfig` instance via `setContentCSS` method.
 
 ```php
 $config = new TinyMCEConfig();
-$config->setContentCSS([ '/mysite/client/css/editor.css' ]);
+$config->setContentCSS([ '/app/client/css/editor.css' ]);
 ```
 
 ## Custom style dropdown
 
 The custom style dropdown can be enabled via the `importcss` plugin bundled with admin module. ([Doc](https://www.tinymce.com/docs/plugins/importcss/))  
-Use the below code in `mysite/_config.php`:
+Use the below code in `app/_config.php`:
 
 ```php
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;

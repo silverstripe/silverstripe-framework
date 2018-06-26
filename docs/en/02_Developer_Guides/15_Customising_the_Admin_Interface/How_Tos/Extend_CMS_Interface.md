@@ -16,7 +16,7 @@ guide on [CMS Architecture](/developer_guides/customising_the_admin_interface/cm
 ## Overload a CMS template
 
 If you place a template with an identical name into your application template
-directory (usually `mysite/templates/`), it'll take priority over the built-in
+directory (usually `app/templates/`), it'll take priority over the built-in
 one.
 
 CMS templates are inherited based on their controllers, similar to subclasses of
@@ -26,7 +26,7 @@ We can use this to create a different base template with `LeftAndMain.ss`
 
 Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_Menu.ss`
 from the `silverstripe/admin` module
-into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
+into `app/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
 the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 
 
@@ -52,7 +52,7 @@ hardcoded links underneath the left-hand menu. We'll make these dynamic further 
 In order to show the links a bit separated from the other menu entries,
 we'll add some CSS, and get it to load
 with the CMS interface. Paste the following content into a new file called
-`mysite/css/BookmarkedPages.css`:
+`app/css/BookmarkedPages.css`:
 
 
 ```css
@@ -66,14 +66,14 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 ```yml
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
-    - mysite/css/BookmarkedPages.css
+    - app/css/BookmarkedPages.css
 ```
 
 ## Create a "bookmark" flag on pages
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in
 the database. For this we need to decorate the page record with a
-`DataExtension`. Create a new file called `mysite/code/BookmarkedPageExtension.php`
+`DataExtension`. Create a new file called `app/code/BookmarkedPageExtension.php`
 and insert the following code.
 
 
@@ -117,7 +117,7 @@ pages from the database into the template we've already created (with hardcoded
 links)? Again, we extend a core class: The main CMS controller called
 `LeftAndMain`.
 
-Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension.php`;
+Add the following code to a new file `app/code/BookmarkedLeftAndMainExtension.php`;
 
 
 ```php
@@ -143,7 +143,7 @@ SilverStripe\Admin\LeftAndMain:
 ```
 
 As the last step, replace the hardcoded links with our list from the database.
-Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`
+Find the `<ul>` you created earlier in `app/admin/templates/LeftAndMain.ss`
 and replace it with the following:
 
 

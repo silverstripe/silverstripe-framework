@@ -543,7 +543,7 @@ In templates, you don't need to worry about this distinction. The `$Content` var
 default, and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS, or by adding ?stage=Stage to the URL). If you want 
 to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
 
-**mysite/code/MyController.php**
+**app/code/MyController.php**
 ```php
 public function init() 
 {
@@ -569,7 +569,7 @@ You can opt for a session base stage setting through the `Versioned.use_session`
 Warning: This can lead to leaking of unpublished information, if a live URL is viewed in draft mode,
 and the result is cached due to agressive cache settings (not varying on cookie values).   
 
-*mysite/src/MyObject.php*
+*app/src/MyObject.php*
 
 ```php
 use SilverStripe\Core\Injector\Injector;
@@ -603,7 +603,7 @@ class MyObject extends DataObject {
 }
 ```
 
-*mysite/src/MyObjectController.php*
+*app/src/MyObjectController.php*
 
 ```php
 use SilverStripe\Control\Controller;
@@ -638,7 +638,7 @@ class MyObjectController extends Controller
 }
 ```
 
-*mysite/_config/routes.yml*
+*app/_config/routes.yml*
 
 ```yml
 SilverStripe\Control\Director:

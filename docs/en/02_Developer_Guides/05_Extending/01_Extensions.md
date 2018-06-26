@@ -15,7 +15,7 @@ For performance reasons a few classes are excluded from receiving extensions, in
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
 </div>
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/code/extensions/MyMemberExtension.php**
 
 
 ```php
@@ -43,7 +43,7 @@ Convention is for extension class names to end in `Extension`. This isn't a requ
 After this class has been created, it does not yet apply it to any object. We need to tell SilverStripe what classes 
 we want to add the `MyMemberExtension` too. To activate this extension, add the following via the [Configuration API](../configuration).
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml
@@ -76,7 +76,7 @@ Extra database fields can be added with a extension in the same manner as if the
 they're applied to. These will be added to the table of the base object - the extension will actually edit the $db, 
 $has_one etc.
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/code/extensions/MyMemberExtension.php**
 
 
 ```php
@@ -101,7 +101,7 @@ class MyMemberExtension extends DataExtension
 }
 ```
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 
 ```ss
@@ -114,14 +114,14 @@ $CurrentMember.Image
 Methods that have a unique name will be called as part of the `__call` method on [Object](api:Object). In the previous example
 we added a `SayHi` method which is unique to our extension.
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <p>$CurrentMember.SayHi</p>
 // "Hi Sam"
 ```
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 ```php
 use SilverStripe\Security\Security;
@@ -157,7 +157,7 @@ variables at that given point. In this case, the core function `getValidator` on
 `updateValidator` hook for developers to modify the core method. The `MyMemberExtension` would modify the core member's
 validator by defining the `updateValidator` method.
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/code/extensions/MyMemberExtension.php**
 
 
 ```php

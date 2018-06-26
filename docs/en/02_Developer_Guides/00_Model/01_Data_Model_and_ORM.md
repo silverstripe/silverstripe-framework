@@ -17,7 +17,7 @@ along with any [relationships](relations) defined as `$has_one`, `$has_many`, `$
 
 Let's look at a simple example:
 
-**mysite/code/Player.php**
+**app/code/Player.php**
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -73,7 +73,7 @@ automatically set on the `DataObject`.
 *  Created: A date/time field set to the creation date of this record
 *  LastEdited: A date/time field set to the date this record was last edited through `write()`
 
-**mysite/code/Player.php**
+**app/code/Player.php**
 
 ```php
 use SilverStripe\ORM\DataObject;

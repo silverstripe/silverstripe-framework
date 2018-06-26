@@ -12,7 +12,7 @@ fixtures - all we have to do is define them.
 To include your fixture file in your tests, you should define it as your `$fixture_file`:
 
 
-**mysite/tests/MyNewTest.php**
+**app/tests/MyNewTest.php**
 
 
 ```php
@@ -29,7 +29,7 @@ You can also use an array of fixture files, if you want to use parts of multiple
 If you are using [api:SilverStripe\Dev\TestOnly] dataobjects in your fixtures, you must
 declare these classes within the $extra_dataobjects variable.
 
-**mysite/tests/MyNewTest.php**
+**app/tests/MyNewTest.php**
 
 ```php
 use SilverStripe\Dev\SapphireTest;
@@ -84,7 +84,7 @@ class Team extends DataObject implements TestOnly
 
 We can represent multiple instances of them in `YAML` as follows:
 
-**mysite/tests/fixtures.yml**
+**app/tests/fixtures.yml**
 
 ```yml
 
@@ -340,7 +340,7 @@ values based on other fixture data.
 $factory->define('Member', [
     'Email' => function($obj, $data, $fixtures) {
         if(isset($data['FirstName']) {
-            $obj->Email = strtolower($data['FirstName']) . '@example.org';
+            $obj->Email = strtolower($data['FirstName']) . '@example.com';
         }
     },
     'Score' => function($obj, $data, $fixtures) {

@@ -16,7 +16,7 @@ $field = new TextField(..);
 $field->setTemplate('MyCustomTextField');
 ```
 
-Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **mysite/templates/** or the same directory as the core.
+Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **app/templates/** or the same directory as the core.
 
 <div class="notice" markdown="1">
 It's recommended to copy the contents of the template you're going to replace and use that as a start. For instance, if

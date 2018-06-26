@@ -30,7 +30,7 @@ $form = new Form(
 
 In practice, this looks like:
 
-**mysite/code/PageController.php**
+**app/code/PageController.php**
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -73,7 +73,7 @@ class PageController extends ContentController
 
 ```
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 $HelloForm

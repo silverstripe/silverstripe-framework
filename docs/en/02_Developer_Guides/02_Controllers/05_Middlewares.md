@@ -16,7 +16,7 @@ In addition, you should return an `HTTPResponse` object. In normal cases, this s
 `$response` object returned by `$delegate`, perhaps with some modification. However, sometimes you
 will deliberately return a different response, e.g. an error response or a redirection.
 
-**mysite/code/CustomMiddleware.php**
+**app/code/CustomMiddleware.php**
 
 ```php
 use SilverStripe\Control\Middleware\HTTPMiddleware;
@@ -57,7 +57,7 @@ use of it.
 By adding the service or class name to the `Director.Middlewares` property via injector,
 array, a middleware will be executed on every request:
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yaml
@@ -77,7 +77,7 @@ SilverStripe\Core\Injector\Injector:
 Because these are service names, you can configure properties into a custom service if you would
 like:
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
@@ -99,7 +99,7 @@ as a replacement for your controller, and register it as a service with a `Middl
 property. The controller which does the work should be registered under the
 `RequestHandler` property.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yaml
 SilverStripe\Core\Injector\Injector:

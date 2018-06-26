@@ -6,7 +6,7 @@ summary: A brief look at the definition of a Controller, creating actions and ho
 The following example is for a simple [Controller](api:SilverStripe\Control\Controller) class. When building off the SilverStripe Framework you will
 subclass the base `Controller` class.
 
-**mysite/code/controllers/TeamController.php**
+**app/code/controllers/TeamController.php**
 
 ```php
 use SilverStripe\Control\Controller;
@@ -47,11 +47,11 @@ routing.
 Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `?flush=1`.
 </div>
 
-**mysite/_config/routes.yml**
+**app/_config/routes.yml**
 
 ```yml
 ---
-Name: mysiteroutes
+Name: approutes
 After: framework/_config/routes#coreroutes
 ---
 SilverStripe\Control\Director:
@@ -77,7 +77,7 @@ Action methods can return one of four main things:
 * an [HTTPResponse](api:SilverStripe\Control\HTTPResponse) containing a manually defined `status code` and `body`.
 * an [HTTPResponse_Exception](api:SilverStripe\Control\HTTPResponse_Exception). A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
-**mysite/code/controllers/TeamController.php**
+**app/code/controllers/TeamController.php**
 
 ```php
 /**
@@ -163,7 +163,7 @@ For more information about templates, inheritance and how to render into views, 
 Each controller should define a `Link()` method. This should be used to avoid hard coding your routing in views,
 as well as give other features in SilverStripe the ability to influence link behaviour.
 
-**mysite/code/controllers/TeamController.php**
+**app/code/controllers/TeamController.php**
 
 ```php
 public function Link($action = null) 
