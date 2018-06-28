@@ -1639,6 +1639,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if($this->model) $result->setDataModel($this->model);
+		
+		$this->extend('updateComponents', $result);
 
 		return $result
 			->forForeignID($this->ID)
