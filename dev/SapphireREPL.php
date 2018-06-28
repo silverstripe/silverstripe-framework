@@ -43,7 +43,7 @@ class SapphireREPL extends Controller {
 
 
 		/* Try using PHP_Shell if it exists */
-		@include 'php-shell-cmd.php' ;
+		@include 'scripts/php-shell-cmd.php' ;
 
 		/* Fall back to our simpler interface */
 		if( empty( $__shell ) ) {
