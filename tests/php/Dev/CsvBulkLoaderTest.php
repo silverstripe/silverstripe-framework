@@ -214,10 +214,10 @@ class CsvBulkLoaderTest extends SapphireTest
         $this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 
         // Test nested setting of relation properties
-        $contractAmount = DBField::create_field('Currency', $compareRow[5])->RAW();
+        $contractAmount = DBField::create_field('Currency', $compareRow[5])->Nice();
         $this->assertEquals(
-            $testPlayer->Contract()->Amount,
             $contractAmount,
+            $testPlayer->Contract()->dbObject('Amount')->Nice(),
             'Setting nested values in a relation works'
         );
 

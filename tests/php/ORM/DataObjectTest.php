@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\Connect\PDOQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\DB;

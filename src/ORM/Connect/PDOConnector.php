@@ -58,48 +58,6 @@ class PDOConnector extends DBConnector
     protected $lastStatementError = null;
 
     /**
-     * List of prepared statements, cached by SQL string
-     *
-     * @var array
-     */
-    protected $cachedStatements = array();
-
-    /**
-     * Flush all prepared statements
-     */
-    public function flushStatements()
-    {
-        $this->cachedStatements = array();
-    }
-
-    /**
-     * Retrieve a prepared statement for a given SQL string, or return an already prepared version if
-     * one exists for the given query
-     *
-     * @param string $sql
-     * @return PDOStatement
-     */
-    public function getOrPrepareStatement($sql)
-    {
-        // Return cached statements
-        if (isset($this->cachedStatements[$sql])) {
-            return $this->cachedStatements[$sql];
-        }
-
-        // Generate new statement
-        $statement = $this->pdoConnection->prepare(
-            $sql,
-            array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
-        );
-
-        // Only cache select statements
-        if (preg_match('/^(\s*)select\b/i', $sql)) {
-            $this->cachedStatements[$sql] = $statement;
-        }
-        return $statement;
-    }
-
-    /**
      * Is PDO running in emulated mode
      *
      * @return boolean
@@ -111,8 +69,6 @@ class PDOConnector extends DBConnector
 
     public function connect($parameters, $selectDB = false)
     {
-        $this->flushStatements();
-
         // Build DSN string
         // Note that we don't select the database here until explicitly
         // requested via selectDatabase
@@ -247,11 +203,6 @@ class PDOConnector extends DBConnector
         // Reset state
         $this->rowCount = 0;
         $this->lastStatementError = null;
-
-        // Flush if necessary
-        if ($this->isQueryDDL($sql)) {
-            $this->flushStatements();
-        }
     }
 
     /**
@@ -353,7 +304,10 @@ class PDOConnector extends DBConnector
         $this->beforeQuery($sql);
 
         // Prepare statement
-        $statement = $this->getOrPrepareStatement($sql);
+        $statement = $this->pdoConnection->prepare(
+            $sql,
+            array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+        );
 
         // Bind and invoke statement safely
         if ($statement) {
