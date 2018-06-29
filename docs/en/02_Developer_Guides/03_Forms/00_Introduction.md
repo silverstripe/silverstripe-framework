@@ -7,7 +7,7 @@ The HTML `Form` is the most used way to interact with a user. SilverStripe provi
 the [Form](api:SilverStripe\Forms\Form) class, [FormField](api:SilverStripe\Forms\FormField) instances to capture data and submissions through [FormAction](api:SilverStripe\Forms\FormAction).
 
 <div class="notice" markdown="1">
-See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of creating a `Form`
+See the [Introduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1) lesson for a step by step process of creating a `Form`
 </div>
 
 ## Creating a Form
@@ -347,7 +347,7 @@ $form = new Form($this, 'MyForm', $fields, $actions, $validator);
 ```
 
 ## Related Lessons
-* [Intoduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
+* [Introduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
 
 ## API Documentation
 
