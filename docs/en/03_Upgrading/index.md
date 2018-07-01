@@ -87,8 +87,8 @@ check out the [recipe plugin repository](https://github.com/silverstripe/recipe-
 as well as the `composer.json` files in [recipe-core](https://github.com/silverstripe/recipe-core) and
 [recipe-cms](https://github.com/silverstripe/recipe-cms).
 
-For a description on how to handle issues with pre-existing composer installs or upgrading other modules, please read
-through the [Step 1 - Upgrade your dependencies](index.md#step1)
+For a description on how to handle issues with pre-existing composer installs or upgrading other modules, read
+through the [Step 1 - Upgrade your dependencies](#step1) section.
 
 ### Install the upgrader tool (optional)
 Using the upgrader is not mandatory, but it can speed up the process.
