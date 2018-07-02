@@ -103,7 +103,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @config
      * @var string
      */
-    protected static $defaultState = self::STATE_DEFAULT;
+    private static $defaultState = self::STATE_DEFAULT;
 
     /**
      * Current state
