@@ -30,34 +30,34 @@ You can disable stages if your DataObject doesn't require a published version. T
 ### Ownership and relations between DataObject
 
 Typically when publishing versioned DataObjects, it is necessary to ensure that some linked components
-are published along with it. Unless this is done, site front-end content can appear incorrectly published.
+are published along with it. Unless this is done, site content can appear incorrectly published.
 
-For instance, a page which has a list of rotating banners will require that those banners are published
+For instance, a page which has a list of rotating banners will require them to be published
 whenever that page is.
 
-The solution to this problem is the ownership API, which declares a two-way relationship between
+This is solved through the Ownership API, which declares a two-way relationship between
 objects along database relations. This relationship is similar to many_many/belongs_many_many
 and has_one/has_many, however it relies on a pre-existing relationship to function. 
 
 #### Cascade publishing
 
-If a DataObject object "owns" other DataObjects, you'll usually want to publish the children DataObject when the parent DataObject gets published. If those children DataObjects themselves own other DataObjects, you'll want the grand-children to be published along with the parent.
+If an object "owns" other objects, you'll usually want to publish the children object when the parent object gets published. If those children objects themselves own other objects, you'll want the grand-children to be published along with the parent.
 
-SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish a DataObject. When a DataObject is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication, will also cascade to children of children and so on.
+SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish a object. When a object is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication, will also cascade to children of children and so on.
 
-A non-recursive publish operation is also available if you want to publish a new version of a DataObject without cascade publishing all its children.
+A non-recursive publish operation is also available if you want to publish a new version of a object without cascade publishing all its children.
 
-#### Ownership of unversioned DataObject
+#### Ownership of unversioned object
 
-An unversioned DataObject can own other versioned DataObject. An unversioned DataObject can be configured to automatically publish children versioned DataObjects on save.
+An unversioned object can own other versioned object. An unversioned object can be configured to automatically publish children versioned objects on save.
 
-An unversioned DataObject can also be owned by a versioned DataObject. This can be used to recursively publish _children-of-children_ DataObject without requiring the intermediate relationship to go through a versioned DataObject. This behavior can be helpful if you wish to group multiple versioned DataObject together.
+An unversioned object can also be owned by a versioned object. This can be used to recursively publish _children-of-children_ object without requiring the intermediate relationship to go through a versioned object. This behavior can be helpful if you wish to group multiple versioned object together.
 
 #### Ownership through media insertion in content
 
-Images and other files are tracked as versioned DataObject. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. SilverStripe will automatically pick up when a DataObject references a files through an HTML text field and recursively publish those files.
+Images and other files are tracked as versioned object. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. SilverStripe will automatically pick up when a object references a files through an HTML text field and recursively publish those files.
 
-This behavior works both for versioned and unversioned DataObjects.
+This behavior works both for versioned and unversioned objects.
 
 ### Grouping versioned DataObjects into a ChangeSet (aka Campaigns)
 
@@ -65,13 +65,15 @@ Sometimes, multiple pages or records may be related in organic ways that can not
 
 For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsors records, etc. All this content needs to become visible simultaneously. 
 
-Changes to many DataObjects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet` through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as on74e cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
+Changes to many objects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet` through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
 
 <div class="info" markdown="1">
-Any DataObject can exist in any number of changesets, and even added to a changeset in advance of being published. While a record need not have modifications to be part of a changeset, for practical purposes, changesets are only concerned with records that have modifications.
+DataObjects can be added to more than one ChangeSet.
+Most of the time, these objects contain changes.
+A ChangeSet can contain unchanged objects as well.
 </div>
 
 #### Implicit vs. Explicit inclusions
@@ -173,7 +175,9 @@ If a `MyPage` gets published, all its related `Banners` will also be published, 
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`.
 
-#### Unversioned DataObject ownership (SilverStripe 4.1 and above)
+#### Unversioned DataObject ownership
+
+*Requires SilverStripe 4.1 or newer*
 
 Ownership can be used with non-versioned DataObjects, as the necessary functionality is included by default
 by the versioned object through the [`RecursivePublishable`](api:SilverStripe\Versioned\RecursivePublishable) extension which is
@@ -182,15 +186,15 @@ applied to all objects.
 However, it is important to note that even when saving un-versioned objects, it is necessary to use
 `->publishRecursive()` to trigger a recursive publish.
 
-`owns` works the same regardless of whether these objects are versioned, so you can use any combination of
+The `owns` feature works the same regardless of whether these objects are versioned, so you can use any combination of
 versioned or unversioned dataobjects. You only need to call `->publishRecursive()` on the top most
 object in the tree.
 
 #### DataObject ownership with custom relations
 
-In some cases you might need to apply ownership where there is no underlying db relation, such as
+In some cases you might need to apply ownership where there is no underlying database relation, such as
 those calculated at runtime based on business logic. In cases where you are not backing ownership
-with standard relations (has_one, has_many, etc) it is necessary to declare ownership on both
+with standard relations (`has_one`, `has_many`, etc) it is necessary to declare ownership on both
 sides of the relation.
 
 This can be done by creating methods on both sides of your relation (e.g. parent and child class)
@@ -232,7 +236,7 @@ class MyChild extends DataObject
 }
 ```
 
-#### DataObject Ownership in HTML Content
+#### DataObject ownership in HTML content
 
 If you are using [`DBHTMLText`](api:SilverStripe\ORM\FieldType\DBHTMLText) or [`DBHTMLVarchar`](api:SilverStripe\ORM\FieldType\DBHTMLVarchar) fields in your `DataObject::$db` definitions,
 it's likely that your authors can insert images into those fields via the CMS interface.
@@ -259,8 +263,8 @@ class MyBanner extends DataObject {
 }
 ```
 
-This can be manually enabled for a single gridfield, alternatively, by setting the following option on the
-GridFieldDetailForm component.
+This can be manually enabled for a single `GridField`, alternatively, by setting the following option on the
+`GridFieldDetailForm` component.
 
 ```php
 <?php
@@ -287,7 +291,7 @@ class Page extends SiteTree
 
 ## Interacting with versioned DataObjects
 
-This section deals with specialised oeprations that can be performed on versioned DataObjects.
+This section deals with specialised operations that can be performed on versioned DataObjects.
 
 ### Reading latest versions by stage
 
@@ -410,12 +414,13 @@ use SilverStripe\Versioned\Versioned;
 
 $record = MyRecord::get()->byID(99);
 
-// This will take the current live version of record ID 99 - and all it's associated DataObjects - and copy it to the
+// This will take the current live version of a record - and all it's associated DataObjects - and copy it to the
 // "Stage" stage. This is equivalent to dismissing any draft work and reverting to what was last published.
 $record->rollbackRecursive(Versioned::LIVE);
 
-// This will restore version 10 of record ID 99 to "Stage" without affecting any owned DataObjects.
-$record->rollbackSingle(10);
+// This will restore a specific version of the record to "Stage" without affecting any owned DataObjects.
+$versionToRestore = 10;
+$record->rollbackSingle($versionToRestore);
 
 // The live version of the record won't be affected unless you publish you're rolled back record.
 $record->publishRecursive();
