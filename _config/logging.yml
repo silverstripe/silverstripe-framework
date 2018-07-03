@@ -1,21 +1,34 @@
 ---
 Name: logging
 ---
-# Logging is built up of a chain containing:
+# Core error logging is built up of a chain containing:
 # - A top level \ErrorHandler which registers the error service
 # - A \Logger which acts as the error service
 # - A \HandlerInterface which handles errors for the logger
 # - One or more \FormatterInterface which format errors for the handler
+#
+# Logging for use outside of core error handling also uses the same implementations,
+# but is available without the HandlerInterfaces attached
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Logging\ErrorHandler:
     class: SilverStripe\Logging\MonologErrorHandler
-    properties:
-      Logger: '%$Psr\Log\LoggerInterface'
+    calls:
+      pushDefaultLogger: [ pushHandler, [ '%$Psr\Log\LoggerInterface' ] ]
+      pushErrorHandler: [ pushHandler, [ '%$Psr\Log\LoggerInterface.errorhandler' ] ]
+
+  # Default implementation for use as a standard logger. Up to developers to attach their own
+  # handlers
   Psr\Log\LoggerInterface:
     type: singleton
     class: Monolog\Logger
     constructor:
       - "error-log"
+  # Core error handling
+  Psr\Log\LoggerInterface.errorhandler:
+    type: singleton
+    class: Monolog\Logger
+    constructor:
+      - "error-handler"
     calls:
       pushDisplayErrorHandler: [ pushHandler, [ '%$Monolog\Handler\HandlerInterface' ] ]
 ---
