@@ -3495,7 +3495,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
      *
-     * @return array Array of all element labels if no argument given, otherwise the label of the field
+     * @return array Array of all element labels
      */
     public function fieldLabels($includerelations = true)
     {
