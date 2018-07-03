@@ -89,7 +89,7 @@ en:
     EditPermissionsFailure: 'No permission to unlink record'
     UnlinkRelation: Unlink
   SilverStripe\Forms\GridField\GridFieldRestoreAction:
-    RESTORE: Restore
+    RESTORE: Restore draft
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create

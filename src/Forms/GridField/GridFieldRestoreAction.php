@@ -3,22 +3,20 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\CMS\Controllers\CMSMain;
-use SilverStripe\Control\Controller;
+use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridFieldFooter;
+use SilverStripe\Forms\RestoreAction;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
 
 /**
- * Provides the entry point to editing a single record presented by the
- * {@link GridField}.
- *
- * Doesn't show an edit view on its own or modifies the record, but rather
- * relies on routing conventions established in {@link getColumnContent()}.
- *
- * The default routing applies to the {@link GridFieldDetailForm} component,
- * which has to be added separately to the {@link GridField} configuration.
+ * This class is a {@link GridField} component that adds a restore action for
+ * versioned objects.
  */
 class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
 {
@@ -27,7 +25,7 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
      */
     public function getTitle($gridField, $record, $columnName)
     {
-        return _t(__CLASS__ . '.RESTORE', "Restore");
+        return _t(__CLASS__ . '.RESTORE', "Restore draft");
     }
 
     /**
@@ -35,7 +33,9 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
      */
     public function getGroup($gridField, $record, $columnName)
     {
-        return GridField_ActionMenuItem::DEFAULT_GROUP;
+        $field = $this->getRestoreAction($gridField, $record, $columnName);
+
+        return $field ? GridField_ActionMenuItem::DEFAULT_GROUP: null;
     }
 
     /**
@@ -45,19 +45,7 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
     {
         $field = $this->getRestoreAction($gridField, $record, $columnName);
 
-        if ($field) {
-            return $field->getAttributes();
-        }
-
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getUrl($gridField, $record, $columnName)
-    {
-        return Controller::join_links($gridField->Link('item'), $record->ID, 'edit');
+        return $field ? $field->getAttributes() : [];
     }
 
     /**
@@ -131,26 +119,21 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
      * @param string $columnName
      * @return GridField_FormAction|null
      */
-    public function getRestoreAction($gridField, $record, $columnName) {
-
+    public function getRestoreAction($gridField, $record, $columnName)
+    {
         $isOnDraft = $record->isOnDraft();
         $isPublished = $record->isPublished();
         $canEdit = $record->canEdit();
 
         if ($canEdit && !$isOnDraft && !$isPublished) {
-            // Determine if we should force a restore to root (where once it was a subpage)
+            $restoreToRoot = RestoreAction::shouldRestoreToRoot($record);
 
-            $parentPage = Versioned::get_latest_version($record->classname, $record->ParentID);
-            $restoreToRoot = (!$parentPage || !$parentPage->isOnDraft());
-
-            // "restore"
             $title = $restoreToRoot
-                ? _t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORE_TO_ROOT', 'Restore draft at top level')
-                : _t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORE', 'Restore draft');
+                ? _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_TO_ROOT', 'Restore draft at top level')
+                : _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE', 'Restore draft');
             $description = $restoreToRoot
-                ? _t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORE_TO_ROOT_DESC', 'Restore the archived version to draft as a top level page')
-                : _t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORE_DESC', 'Restore the archived version to draft');
-
+                ? _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_TO_ROOT_DESC', 'Restore the archived version to draft as a top level item')
+                : _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_DESC', 'Restore the archived version to draft');
 
             $field = GridField_FormAction::create(
                 $gridField,
@@ -159,14 +142,14 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
                 "restore",
                 ['RecordID' => $record->ID]
             )
-                ->addExtraClass('btn btn--no-text btn--icon-md font-icon-back-in-time grid-field__icon-action action-menu--handled')
-                ->setAttribute('classNames', 'font-icon-back-in-time')
+                ->addExtraClass('btn btn--no-text btn--icon-md font-icon-back-in-time grid-field__icon-action action-menu--handled action-restore')
+                ->setAttribute('classNames', 'font-icon-back-in-time action-restore')
                 ->setAttribute('data-to-root', $restoreToRoot)
                 ->setDescription($description)
                 ->setAttribute('aria-label', $title);
         }
 
-        return $field ?: null;
+        return isset($field) ? $field : null;
     }
 
     /**
@@ -194,28 +177,22 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        /** @var DataObject $item */
-        $item = $gridField->getList()->byID($arguments['RecordID']);
-        if (!$item) {
-            return;
+        if ($actionName == 'restore') {
+            /** @var DataObject $item */
+            $item = $gridField->getList()->byID($arguments['RecordID']);
+            if (!$item) {
+                return;
+            }
+
+            $message = RestoreAction::restore($item);
+
+            // If this is handled in a form context then show a message
+            if ($message && $controller = $gridField->form->controller) {
+                $controller->getResponse()->addHeader('X-Message-Text', $message['text']);
+                $controller->getResponse()->addHeader('X-Message-Type', $message['type']);
+            }
+
+            $gridField->getList()->remove($item);
         }
-
-        $id = (int)$arguments['RecordID'];
-        /** @var SiteTree $restoredPage */
-        $restoredItem = Versioned::get_latest_version($item->classname, $id);
-        if (!$restoredItem) {
-            return new ValidationException($item->classname . " #$id not found", 400);
-        }
-
-        if (method_exists($restoredItem, 'doRestoreToStage')) {
-            $restoredItem = $restoredItem->doRestoreToStage();
-        } else {
-            $restoredItem->writeToStage(Versioned::DRAFT);
-            $restoredItem = Versioned::get_by_stage($restoredItem->classname, Versioned::DRAFT)
-                ->byID($restoredItem->ID);
-        }
-
-
-        $gridField->getList()->remove($item);
     }
 }
