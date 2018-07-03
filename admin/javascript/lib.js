@@ -183,7 +183,9 @@
 					parts = search ? search.split( '&' ) : [], i, tmp;
 				for(i=0; i < parts.length; i++) {
 					tmp = parts[i].split( '=' );
-					params[tmp[0]] = tmp[1];
+					// if key already exists, do not override its value but try to build url query instead
+					if (params.hasOwnProperty(tmp[0])) params[tmp[0]] += "&" + tmp[0] + "=" + tmp[1];
+					else params[tmp[0]] = tmp[1];
 				}
 				return params;
 			},
