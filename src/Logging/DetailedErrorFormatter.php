@@ -79,7 +79,7 @@ class DetailedErrorFormatter implements FormatterInterface
 
     /**
      * Render a developer facing error page, showing the stack trace and details
-     * of the code where the error occured.
+     * of the code where the error occurred.
      *
      * @param int $errno
      * @param string $errstr
