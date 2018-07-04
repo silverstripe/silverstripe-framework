@@ -13,8 +13,8 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Logging\ErrorHandler:
     class: SilverStripe\Logging\MonologErrorHandler
     calls:
-      pushDefaultLogger: [ pushHandler, [ '%$Psr\Log\LoggerInterface' ] ]
-      pushErrorHandler: [ pushHandler, [ '%$Psr\Log\LoggerInterface.errorhandler' ] ]
+      pushDefaultLogger: [ pushLogger, [ '%$Psr\Log\LoggerInterface' ] ]
+      pushErrorHandler: [ pushLogger, [ '%$Psr\Log\LoggerInterface.errorhandler' ] ]
 
   # Default implementation for use as a standard logger. Up to developers to attach their own
   # handlers
