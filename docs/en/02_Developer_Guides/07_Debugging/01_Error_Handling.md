@@ -163,7 +163,8 @@ SilverStripe\Core\Injector\Injector:
       - "info"
 ```
 
-The log file will be relative to the vendor/ path, so "../silverstripe.log" will create a file in your project root.
+The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will
+create a file in your project root.
 
 The `info` argument provides the minimum level to start logging at.
 
