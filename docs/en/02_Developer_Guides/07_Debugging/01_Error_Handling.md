@@ -269,7 +269,7 @@ definition. For example:
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  Monolog\Logger:
+  SilverStripe\Logging\ErrorHandler:
     class: Logging\Logger
     constructor:
      - 'alternative-logger'
