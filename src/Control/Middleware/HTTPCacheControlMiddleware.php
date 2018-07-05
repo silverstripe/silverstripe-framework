@@ -513,7 +513,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
         $this->setStateDirective($applyTo, 'max-age', $age);
         return $this;
     }
@@ -529,7 +529,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setSharedMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
         $this->setStateDirective($applyTo, 's-maxage', $age);
         return $this;
     }
@@ -543,7 +543,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function setMustRevalidate($mustRevalidate = true)
     {
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
         $this->setStateDirective($applyTo, 'must-revalidate', $mustRevalidate);
         return $this;
     }
