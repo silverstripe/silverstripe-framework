@@ -94,6 +94,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         ],
         self::STATE_DEFAULT => [
             'no-cache' => true,
+            'must-revalidate' => true,
         ],
     ];
 
