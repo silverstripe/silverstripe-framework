@@ -522,6 +522,10 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
         $this->setStateDirective($applyTo, 'max-age', $age);
+        if ($age) {
+            $this->removeStateDirective($applyTo, 'no-cache');
+            $this->removeStateDirective($applyTo, 'no-store');
+        }
         return $this;
     }
 
@@ -538,6 +542,10 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
         $this->setStateDirective($applyTo, 's-maxage', $age);
+        if ($age) {
+            $this->removeStateDirective($applyTo, 'no-cache');
+            $this->removeStateDirective($applyTo, 'no-store');
+        }
         return $this;
     }
 
