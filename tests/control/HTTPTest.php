@@ -77,7 +77,6 @@ class HTTPTest extends FunctionalTest {
 		$this->assertNotEmpty($v);
 
 		$this->assertContains("X-Forwarded-Protocol", $v);
-		$this->assertContains("X-Requested-With", $v);
 		$this->assertNotContains("Cookie", $v);
 		$this->assertNotContains("User-Agent", $v);
 		$this->assertNotContains("Accept", $v);

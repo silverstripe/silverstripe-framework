@@ -209,7 +209,7 @@ when calculating a cache key, usually in addition to the full URL path.
 By default, SilverStripe will output a `Vary` header with the following content: 
 
 ```
-Vary: X-Requested-With, X-Forwarded-Protocol
+Vary: X-Forwarded-Protocol
 ```
 
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration.
@@ -218,3 +218,6 @@ To change the value of the `Vary` header, you can change this value by specifyin
 HTTP:
   vary: ""
 ```
+
+Note that if you use `Director::is_ajax()` on cached pages then you should add `X-Requested-With` to the vary
+header.
