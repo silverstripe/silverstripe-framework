@@ -778,17 +778,16 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function augmentState(HTTPRequest $request, HTTPResponse $response)
     {
-        // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
-        // likely to be supplying information relevant to the current user only
-        if ($request->getSession()->getAll()) {
-            // Don't force in case user code chooses to opt in to public caching
-            $this->privateCache();
-        }
-
         // Errors disable cache (unless some errors are cached intentionally by usercode)
         if ($response->isError() || $response->isRedirect()) {
             // Even if publicCache(true) is specified, errors will be uncacheable
             $this->disableCache(true);
+        } elseif ($request->getSession()->getAll()) {
+            // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
+            // likely to be supplying information relevant to the current user only
+
+            // Don't force in case user code chooses to opt in to public caching
+            $this->privateCache();
         }
     }
 }
