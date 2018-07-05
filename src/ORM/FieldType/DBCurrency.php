@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\CurrencyField;
+
 /**
  * Represents a decimal field containing a currency amount.
  * The currency class only supports single currencies.  For multi-currency support, use {@link Money}
@@ -66,5 +68,16 @@ class DBCurrency extends DBDecimal
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $title
+     * @param array $params
+     *
+     * @return CurrencyField
+     */
+    public function scaffoldFormField($title = null, $params = null)
+    {
+        return CurrencyField::create($this->getName(), $title);
     }
 }
