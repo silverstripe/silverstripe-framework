@@ -26,8 +26,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     const STATE_DISABLED = 'disabled';
 
-    const STATE_DEFAULT = 'default';
-
     /**
      * Generate response for the given request
      *
@@ -90,12 +88,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             'must-revalidate' => true,
         ],
         self::STATE_ENABLED => [
-            'must-revalidate' => true,
-        ],
-        self::STATE_DEFAULT => [
             'no-cache' => true,
             'must-revalidate' => true,
-        ],
+        ]
     ];
 
     /**
@@ -104,7 +99,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @config
      * @var string
      */
-    private static $defaultState = self::STATE_DEFAULT;
+    private static $defaultState = self::STATE_ENABLED;
 
     /**
      * Current state
@@ -520,7 +515,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'max-age', $age);
         if ($age) {
             $this->removeStateDirective($applyTo, 'no-cache');
@@ -540,7 +535,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setSharedMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 's-maxage', $age);
         if ($age) {
             $this->removeStateDirective($applyTo, 'no-cache');
@@ -558,7 +553,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function setMustRevalidate($mustRevalidate = true)
     {
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC, self::STATE_DEFAULT];
+        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'must-revalidate', $mustRevalidate);
         return $this;
     }
