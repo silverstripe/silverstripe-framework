@@ -92,7 +92,7 @@ through the [Step 1 - Upgrade your dependencies](#step1) section.
 
 ### Install the upgrader tool (optional)
 Using the upgrader is not mandatory, but it can speed up the process.
-Although SilverStripe 4 can run in both PHP 5.6 and PHP 7, the upgrader itself requires PHP 7.
+Although SilverStripe 4 can run in both PHP 5.6 and PHP 7, the upgrader itself requires PHP 7.1.
 To install the upgrader globally run this command.
 
 ```bash
@@ -118,6 +118,16 @@ You can run `upgrade-code help` to get more information about the upgrader or `u
 <div class="info" markdown="1">
 Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
 </div>
+
+#### Install the upgrader as a PHAR executable
+
+The upgrader is also available as a phar executable. This can be helpful if installing the upgrader globally through composer conflicts with other libraries.
+
+To install the PHAR executable:
+
+1. [Download the upgrader as a PHAR executable](releases/download/1.2.1/upgrade-code.phar) or `wget https://github.com/silverstripe/silverstripe-upgrader/releases/download/1.2.1/upgrade-code.phar`
+2. Make the file executable `chmod +x upgrade-code.phar`
+3. Move the file to a folder in your path, for example `sudo mv upgrade-code.phar /usr/local/bin/upgrade-code` 
 
 ### Running all the upgrader commands in this guide in on line
 
