@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Tests\Middleware;
 
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Dev\SapphireTest;
 
@@ -12,15 +13,177 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         parent::setUp();
         // Set to disabled at null forcing level
         HTTPCacheControlMiddleware::config()
-            ->set('defaultState', 'disabled')
+            ->set('defaultState', HTTPCacheControlMiddleware::STATE_ENABLED)
             ->set('defaultForcingLevel', 0);
         HTTPCacheControlMiddleware::reset();
+    }
+
+    public function provideCacheStates()
+    {
+        return [
+            ['enableCache', false],
+            ['publicCache', false],
+            ['privateCache', false],
+            ['disableCache', true],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testCheckDefaultStates($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->{$state}();
+
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertContains('must-revalidate', $response->getHeader('cache-control'));
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testSetMaxAge($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->{$state}();
+
+        $originalResponse = new HTTPResponse();
+        $cc->applyToResponse($originalResponse);
+
+        $cc->setMaxAge('300');
+
+        $response = new HTTPResponse();
+
+        $cc->applyToResponse($response);
+
+        if ($immutable) {
+            $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
+        } else {
+            $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+            $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
+            $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+        }
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testSetNoStore($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->setMaxAge('300');
+        $cc->setSharedMaxAge('300');
+
+        $cc->{$state}();
+
+        $originalResponse = new HTTPResponse();
+        $cc->applyToResponse($originalResponse);
+
+        $cc->setNoStore();
+
+        $response = new HTTPResponse();
+
+        $cc->applyToResponse($response);
+
+        if ($immutable) {
+            $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
+        } else {
+            $this->assertContains('no-store', $response->getHeader('cache-control'));
+            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
+            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+        }
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testSetNoCache($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->setMaxAge('300');
+        $cc->setSharedMaxAge('300');
+
+        $cc->{$state}();
+
+        $originalResponse = new HTTPResponse();
+        $cc->applyToResponse($originalResponse);
+
+        $cc->setNoCache();
+
+        $response = new HTTPResponse();
+
+        $cc->applyToResponse($response);
+
+        if ($immutable) {
+            $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
+        } else {
+            $this->assertContains('no-cache', $response->getHeader('cache-control'));
+            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
+            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+        }
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testSetSharedMaxAge($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+
+        $cc->{$state}();
+
+        $originalResponse = new HTTPResponse();
+        $cc->applyToResponse($originalResponse);
+
+        $cc->setSharedMaxAge('300');
+
+        $response = new HTTPResponse();
+
+        $cc->applyToResponse($response);
+
+        if ($immutable) {
+            $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
+        } else {
+            $this->assertContains('s-maxage=300', $response->getHeader('cache-control'));
+            $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
+            $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+        }
+    }
+
+    /**
+     * @dataProvider provideCacheStates
+     */
+    public function testSetMustRevalidate($state, $immutable)
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+
+        $cc->{$state}();
+
+        $originalResponse = new HTTPResponse();
+        $cc->applyToResponse($originalResponse);
+
+        $cc->setMustRevalidate();
+
+        $response = new HTTPResponse();
+
+        $cc->applyToResponse($response);
+
+        if ($immutable) {
+            $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
+        } else {
+            $this->assertContains('must-revalidate', $response->getHeader('cache-control'));
+            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
+            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+        }
     }
 
     public function testCachingPriorities()
     {
         $hcc = new HTTPCacheControlMiddleware();
-        $this->assertTrue($this->isDisabled($hcc), 'caching starts as disabled');
+        $this->assertFalse($this->isDisabled($hcc), 'caching starts as disabled');
 
         $hcc->enableCache();
         $this->assertFalse($this->isDisabled($hcc));
@@ -74,6 +237,6 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
 
     protected function isDisabled(HTTPCacheControlMiddleware $hcc)
     {
-        return $hcc->hasDirective('no-cache') && !$hcc->hasDirective('private') && !$hcc->hasDirective('public');
+        return $hcc->hasDirective('no-store') && !$hcc->hasDirective('private') && !$hcc->hasDirective('public');
     }
 }
