@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
@@ -121,19 +120,17 @@ class GridFieldRestoreAction implements GridField_ColumnProvider, GridField_Acti
      */
     public function getRestoreAction($gridField, $record, $columnName)
     {
-        $isOnDraft = $record->isOnDraft();
-        $isPublished = $record->isPublished();
-        $canEdit = $record->canEdit();
+        $canRestoreToDraft = $record->canRestoreToDraft();
 
-        if ($canEdit && !$isOnDraft && !$isPublished) {
+        if ($canRestoreToDraft) {
             $restoreToRoot = RestoreAction::shouldRestoreToRoot($record);
 
             $title = $restoreToRoot
-                ? _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_TO_ROOT', 'Restore draft at top level')
-                : _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE', 'Restore draft');
+                ? _t('SilverStripe\\Forms\\RestoreAction.RESTORE_TO_ROOT', 'Restore draft at top level')
+                : _t('SilverStripe\\Forms\\RestoreAction.RESTORE', 'Restore draft');
             $description = $restoreToRoot
-                ? _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_TO_ROOT_DESC', 'Restore the archived version to draft as a top level item')
-                : _t('SilverStripe\\Admin\\ArchiveAdmin.RESTORE_DESC', 'Restore the archived version to draft');
+                ? _t('SilverStripe\\Forms\\RestoreAction.RESTORE_TO_ROOT_DESC', 'Restore the archived version to draft as a top level item')
+                : _t('SilverStripe\\Forms\\RestoreAction.RESTORE_DESC', 'Restore the archived version to draft');
 
             $field = GridField_FormAction::create(
                 $gridField,

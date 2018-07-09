@@ -15,15 +15,14 @@ class RestoreAction
      * and if anything has changed
      *
      * @param Object $item
-     * @return Array $message
+     * @return array $message
      */
     public static function restore($item)
     {
-        $isOnDraft = $item->isOnDraft();
-        $isPublished = $item->isPublished();
-        $canEdit = $item->canEdit();
+        $isArchived = $item->isArchived();
+        $canRestoreToDraft = $item->canRestoreToDraft();
 
-        if (!$canEdit) {
+        if (!$canRestoreToDraft) {
             throw new ValidationException(
                 _t(
                     'SilverStripe\\Admin\\ArchiveAdmin.RESTORE_FALIURE_PERMISSION',
@@ -32,7 +31,7 @@ class RestoreAction
             );
         }
 
-        if ($isOnDraft || $isPublished) {
+        if (!$isArchived) {
             throw new ValidationException(
                 _t(
                     'SilverStripe\\Admin\\ArchiveAdmin.RESTORE_FALIURE_STATE',
@@ -75,7 +74,7 @@ class RestoreAction
      * and if anything has changed
      *
      * @param $record
-     * @return bool
+     * @return array $message
      */
     public static function getRestoreMessage($originalItem, $restoredItem, $changedLocation = false)
     {

@@ -117,6 +117,11 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  SilverStripe\Forms\RestoreAction:
+    RESTORE_TO_ROOT: 'Restore draft at top level'
+    RESTORE: 'Restore draft'
+    RESTORE_TO_ROOT_DESC: 'Restore the archived version to draft as a top level item'
+    RESTORE_DESC: 'Restore the archived version to draft'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   SilverStripe\ORM\DataObject:
