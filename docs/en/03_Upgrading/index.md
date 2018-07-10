@@ -125,7 +125,7 @@ The upgrader is also available as a phar executable. This can be helpful if inst
 
 To install the PHAR executable:
 
-1. [Download the upgrader as a PHAR executable](releases/download/1.2.1/upgrade-code.phar) or `wget https://github.com/silverstripe/silverstripe-upgrader/releases/download/1.2.1/upgrade-code.phar`
+1. [Download the upgrader as a PHAR executable](https://silverstripe.github.io/silverstripe-upgrader/upgrade-code.phar) or `wget https://silverstripe.github.io/silverstripe-upgrader/upgrade-code.phar`
 2. Make the file executable `chmod +x upgrade-code.phar`
 3. Move the file to a folder in your path, for example `sudo mv upgrade-code.phar /usr/local/bin/upgrade-code` 
 
