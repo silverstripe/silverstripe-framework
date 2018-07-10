@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Forms\CurrencyField;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\Dev\SapphireTest;
 
@@ -40,5 +41,14 @@ class DBCurrencyTest extends SapphireTest
             $this->assertEquals($niceValues[0], $c->Nice());
             $this->assertEquals($niceValues[1], $c->Whole());
         }
+    }
+
+    public function testScaffoldedField()
+    {
+        // Test DBCurrency scaffolds a CurrencyField
+        $currencyDbField = DBCurrency::create('Currency');
+        $scaffoldedField = $currencyDbField->scaffoldFormField();
+
+        $this->assertInstanceOf(CurrencyField::class, $scaffoldedField);
     }
 }
