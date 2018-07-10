@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Versioned\Versioned;
 
@@ -49,7 +50,6 @@ class RestoreAction
 
         $changedLocation = self::shouldRestoreToRoot($item);
 
-        /** @var DataObject $restoredItem */
         $archivedItem = Versioned::get_latest_version($classname, $id);
 
         if (!$archivedItem) {
@@ -73,7 +73,9 @@ class RestoreAction
      * Returns a message which notifies the user of a successful restoration
      * and if anything has changed
      *
-     * @param $record
+     * @param $originalItem
+     * @param $restoredItem,
+     * @param bool $changedLocation
      * @return array $message
      */
     public static function getRestoreMessage($originalItem, $restoredItem, $changedLocation = false)
@@ -142,13 +144,12 @@ class RestoreAction
      */
     public static function shouldRestoreToRoot($record)
     {
-        if ($parentID = $record->ParentID) {
-            $parentItem = Versioned::get_latest_version($record->Parent()->classname, $parentID);
-            if (!$parentItem || !$parentItem->isOnDraft()) {
-                return true;
-            }
+        // If the record had a parent and that no longer exists in draft then yes
+        if ($record->hasExtension(Hierarchy::class) && $record->ParentID != false) {
+            return $record->getParent() === null;
         }
 
+        // Otherwise it should be restored normally
         return false;
     }
 }
