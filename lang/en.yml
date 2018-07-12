@@ -97,6 +97,8 @@ en:
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldPaginator:
