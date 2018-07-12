@@ -276,6 +276,18 @@ class UnsavedRelationList extends ArrayList implements Relation
     }
 
     /**
+     * Returns a unique array of a single field value for all items in the list.
+     *
+     * @param  string $colName
+     * @return array
+     */
+    public function columnUnique($colName = "ID")
+    {
+        $list = new ArrayList($this->toArray());
+        return $list->columnUnique($colName);
+    }
+
+    /**
      * Returns a copy of this list with the relationship linked to the given foreign ID.
      * @param int|array $id An ID or an array of IDs.
      * @return Relation

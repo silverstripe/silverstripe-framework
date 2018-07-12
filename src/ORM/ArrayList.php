@@ -371,6 +371,17 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
+     * Returns a unique array of a single field value for all the items in the list
+     *
+     * @param string $colName
+     * @return array
+     */
+    public function columnUnique($colName = 'ID')
+    {
+        return array_unique($this->column($colName));
+    }
+
+    /**
      * You can always sort a ArrayList
      *
      * @param string $by

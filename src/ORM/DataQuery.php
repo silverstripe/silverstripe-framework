@@ -1147,7 +1147,6 @@ class DataQuery
     {
         $fieldExpression = $this->expressionForField($field);
         $query = $this->getFinalisedQuery(array($field));
-        $query->setDistinct(false);
         $originalSelect = $query->getSelect();
         $query->setSelect(array());
         $query->selectField($fieldExpression, $field);

@@ -990,7 +990,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function column($colName = "ID")
     {
-        return $this->dataQuery->column($colName);
+        return $this->dataQuery->distinct(false)->column($colName);
+    }
+
+    /**
+     * Returns a unque array of a single field value for all items in the list.
+     *
+     * @param string $colName
+     * @return array
+     */
+    public function columnUnique($colName = "ID")
+    {
+        return $this->dataQuery->distinct(true)->column($colName);
     }
 
     // Member altering methods
