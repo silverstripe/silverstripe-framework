@@ -428,6 +428,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Get duplicates
         if ($relations === null) {
             $relations = $this->config()->get('cascade_duplicates');
+            // Remove any duplicate entries before duplicating them
+            if (is_array($relations)) {
+                $relations = array_unique($relations);
+            }
         }
 
         // Create unsaved raw duplicate
