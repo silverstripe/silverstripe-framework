@@ -17,21 +17,37 @@ Directory            | Description
 
 ## Custom Code Structure
 
-We're using `<mysite>` as an example - arbitrary directory-names are allowed, as long as they don't collide with
-existing modules or the directories lists in "Core Structure".
+We're using `app/` as the default folder.
+Note that until SilverStripe 4.2, this directory was named `mysite/`,
+and PHP code was stored in a `code/` rather than `src/` folder.
 
  | Directory             | Description                                                         |
  | ---------             | -----------                                                         |
- | `<mysite>/`           | This directory contains all of your code that defines your website. |
- | `<mysite>/_config`    | YAML configuration specific to  your application                    |
- | `<mysite>/src`        | PHP code for model and controller (subdirectories are optional)     |
- | `<mysite>/tests`      | PHP Unit tests                                                      |
- | `<mysite>/templates`  | HTML [templates](/developer_guides/templates) with *.ss-extension for the `$default` theme   |
- | `<mysite>/css `       | CSS files                                                           |
- | `<mysite>/images `    | Images used in the HTML templates                                   |
- | `<mysite>/javascript` | Javascript and other script files                                   |
- | `<mysite>/client`     | More complex projects can alternatively contain frontend assets in a common `client` folder |
- | `<mysite>/themes/<yourtheme>` | Custom nested themes (note: theme structure is described below)     |
+ | `app/`           | This directory contains all of your code that defines your website. |
+ | `app/_config`    | YAML configuration specific to  your application                    |
+ | `app/src`        | PHP code for model and controller (subdirectories are optional)     |
+ | `app/tests`      | PHP Unit tests                                                      |
+ | `app/templates`  | HTML [templates](/developer_guides/templates) with *.ss-extension for the `$default` theme   |
+ | `app/css `       | CSS files                                                           |
+ | `app/images `    | Images used in the HTML templates                                   |
+ | `app/javascript` | Javascript and other script files                                   |
+ | `app/client`     | More complex projects can alternatively contain frontend assets in a common `client` folder |
+ | `app/themes/<yourtheme>` | Custom nested themes (note: theme structure is described below)     |
+
+
+Arbitrary directory-names are allowed, as long as they don't collide with
+existing modules or the directories lists in "Core Structure".
+Here's how you would reconfigure your default folder to `myspecialapp`.
+
+*myspecialapp/_config/config.yml*
+
+```yml
+---
+Name: myspecialapp
+---
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: 'myspecialapp'
+```
 
 Check our [JavaScript Coding Conventions](javascript_coding_conventions) for more details
 on folder and file naming in SilverStripe core modules.
@@ -77,18 +93,18 @@ separate language they wish to write documentation for (usually just `en`). Insi
 each languages' subfolder, developers then have freedom to create whatever structure
 they wish for organising the documentation they wish.
 
-Example Forum Documentation:
+Example Blog Documentation:
 
  | Directory  | Description                                                         |
  | ---------  | -----------                                                         |
- | `blog/docs` | |
- | `blog/docs/_manifest_exclude` | Empty file to signify that SilverStripe does not need to load classes from this folder |
- | `blog/docs/en/`       | English documentation  |
- | `blog/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
- | `blog/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
- | `blog/docs/en/_images/` | Folder to store any images or media |
- | `blog/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
- | `blog/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
+ | `vendor/silverstripe/blog/docs` | |
+ | `vendor/silverstripe/blog/docs/_manifest_exclude` | Empty file to signify that SilverStripe does not need to load classes from this folder |
+ | `vendor/silverstripe/blog/docs/en/`       | English documentation  |
+ | `vendor/silverstripe/blog/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
+ | `vendor/silverstripe/blog/docs/en/Getting_Started.md` | Documentation page. Naming convention is Uppercase and underscores. |
+ | `vendor/silverstripe/blog/docs/en/_images/` | Folder to store any images or media |
+ | `vendor/silverstripe/blog/docs/en/Some_Topic/` | You can organise documentation into nested folders. Naming convention is Uppercase and underscores. |
+ | `vendor/silverstripe/blog/docs/en/04_Some_Topic/00_Getting_Started.md`|Structure is created by use of numbered prefixes. This applies to nested folders and documentations pages, index.md should not have a prefix.|
 
 
 ## Autoloading

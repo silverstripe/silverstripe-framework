@@ -100,7 +100,7 @@ class ContactPageController extends PageController
     { 
         $email = new Email(); 
          
-        $email->setTo('siteowner@mysite.com'); 
+        $email->setTo('test@example.com'); 
         $email->setFrom($data['Email']); 
         $email->setSubject("Contact Message from {$data["Name"]}"); 
          

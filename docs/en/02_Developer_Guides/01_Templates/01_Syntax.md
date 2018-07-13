@@ -9,7 +9,7 @@ processed through [SSViewer](api:SilverStripe\View\SSViewer). This process repla
 
 An example of a SilverStripe template is below:
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 <html>
@@ -48,7 +48,7 @@ text-based format.
 ## Template file location
 
 SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of
-a module, theme, or your `mysite` folder.
+a module, theme, or your `app/` folder.
 
 By default, templates will have the same name as the class they are used to render. So, your `Page` class will
 be rendered with the `templates/Page.ss` template.
@@ -98,7 +98,7 @@ For more detail around how variables are inserted and formatted into a template 
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 ```php
 public function UsersIpAddress()
@@ -107,7 +107,7 @@ public function UsersIpAddress()
 }
 ```
 
-**mysite/code/Page.ss**
+**app/code/Page.ss**
 
 ```html
 <p>You are coming from $UsersIpAddress.</p>
@@ -122,7 +122,7 @@ object the methods get called on. For the standard `Page.ss` template the scope 
 class. This object gives you access to all the database fields on [PageController](api:SilverStripe\CMS\Model\SiteTree\PageController), its corresponding [Page](api:SilverStripe\CMS\Model\SiteTree\Page)
 record and any subclasses of those two.
 
-**mysite/code/Layout/Page.ss**
+**app/code/Layout/Page.ss**
 
 ```ss
 $Title

@@ -37,8 +37,6 @@ eo:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'ne agordita'
-    TODAY: hodiaŭ
     VALIDDATEFORMAT2: 'Bonvole enigu validan datan formaton ({format})'
     VALIDDATEMAXDATE: 'Necesas ke via dato estu pli aĝa ol, aŭ egala al la maksimuma permesita dato ({date})'
     VALIDDATEMINDATE: 'Necesas ke via dato estu pli nova ol, aŭ egala al la minimuma permesita dato ({date})'
@@ -86,7 +84,6 @@ eo:
     RelationSearch: 'Serĉi rilatojn'
     ResetFilter: Restartigi
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Forigi
     Delete: Forigi
     DeletePermissionsFailure: 'Mankas permeso forigi'
     EditPermissionsFailure: 'Mankas permeso malligi rikordon'
@@ -98,8 +95,6 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita {type} {name}'
     Save: Konservi
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Redakti
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -261,6 +256,8 @@ eo:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
     NoPassword: 'Mankas pasvorto por ĉi tiu membro.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Retpoŝtadreso kaj pasvorto'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Membraj pasvortoj'
     PLURALS:

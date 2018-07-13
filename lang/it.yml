@@ -37,8 +37,6 @@ it:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'non impostato'
-    TODAY: oggi
     VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
     VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
     VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
@@ -86,7 +84,6 @@ it:
     RelationSearch: 'Cerca relazione'
     ResetFilter: Azzera
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Elimina
     Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     EditPermissionsFailure: 'Non hai i permessi per modificare'
@@ -98,8 +95,6 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato {type} {name}'
     Save: Salva
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Modifica
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: di
     Page: Pagina

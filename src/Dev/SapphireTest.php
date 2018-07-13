@@ -23,6 +23,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
+use SilverStripe\Dev\State\FixtureTestState;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
@@ -76,6 +77,14 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @var bool
      */
     protected $usesDatabase = null;
+
+    /**
+     * This test will cleanup its state via transactions.
+     * If set to false a full schema is forced between tests, but at a performance cost.
+     *
+     * @var bool
+     */
+    protected $usesTransactions = true;
 
     /**
      * @var bool
@@ -148,7 +157,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * State management container for SapphireTest
      *
-     * @var TestState
+     * @var SapphireTestState
      */
     protected static $state = null;
 
@@ -158,6 +167,17 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * @var TempDatabase
      */
     protected static $tempDB = null;
+
+    /**
+     * @return TempDatabase
+     */
+    public static function tempDB()
+    {
+        if (!static::$tempDB) {
+            static::$tempDB = TempDatabase::create();
+        }
+        return static::$tempDB;
+    }
 
     /**
      * Gets illegal extensions for this class
@@ -209,6 +229,30 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
+     * @return bool
+     */
+    public function getUsesDatabase()
+    {
+        return $this->usesDatabase;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUsesTransactions()
+    {
+        return $this->usesTransactions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequireDefaultRecordsFrom()
+    {
+        return $this->requireDefaultRecordsFrom;
+    }
+
+    /**
      * Setup  the test.
      * Always sets up in order:
      *  - Reset php state
@@ -248,31 +292,10 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         $fixtureFiles = $this->getFixturePaths();
 
-        // Set up fixture
         if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
-            if (!static::$tempDB->isUsed()) {
-                static::$tempDB->build();
-            }
-
-            DataObject::singleton()->flushCache();
-
-            static::$tempDB->clearAllData();
-
-            foreach ($this->requireDefaultRecordsFrom as $className) {
-                $instance = singleton($className);
-                if (method_exists($instance, 'requireDefaultRecords')) {
-                    $instance->requireDefaultRecords();
-                }
-                if (method_exists($instance, 'augmentDefaultRecords')) {
-                    $instance->augmentDefaultRecords();
-                }
-            }
-
-            foreach ($fixtureFiles as $fixtureFilePath) {
-                $fixture = YamlFixture::create($fixtureFilePath);
-                $fixture->writeInto($this->getFixtureFactory());
-            }
-
+            /** @var FixtureTestState $fixtureState */
+            $fixtureState = static::$state->getStateByName('fixtures');
+            $this->setFixtureFactory($fixtureState->getFixtureFactory(static::class));
             $this->logInWithPermission('ADMIN');
         }
 
@@ -387,24 +410,29 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * @return FixtureFactory
+     * @deprecated 4.0..5.0
+     * @return FixtureFactory|false
      */
     public function getFixtureFactory() : FixtureFactory
     {
-        if (!$this->fixtureFactory) {
-            $this->fixtureFactory = Injector::inst()->create(FixtureFactory::class);
-        }
-        return $this->fixtureFactory;
+        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        return $state->getFixtureFactory(static::class);
     }
 
     /**
      * Sets a new fixture factory
-     *
+     * @deprecated 4.0..5.0
      * @param FixtureFactory $factory
      * @return $this
      */
     public function setFixtureFactory(FixtureFactory $factory) : SapphireTest
     {
+        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        $state->setFixtureFactory($factory, static::class);
         $this->fixtureFactory = $factory;
         return $this;
     }
@@ -472,11 +500,13 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * Load a YAML fixture file into the database.
      * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
      * Doesn't clear existing fixtures.
+     * @deprecated 4.0...5.0
      *
      * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
      */
     public function loadFixture(string $fixtureFile) : void
     {
+        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory());
     }
@@ -983,7 +1013,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         // Register state
         static::$state = SapphireTestState::singleton();
         // Register temp DB holder
-        static::$tempDB = TempDatabase::create();
+        static::tempDB();
     }
 
     /**
@@ -1187,15 +1217,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
-        $isRelativeToFile
-            = (strpos('/', $fixtureFilePath) === false)
-            || preg_match('/^(\.){1,2}/', $fixtureFilePath);
-
-        if ($isRelativeToFile) {
-            $resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
-            if ($resolvedPath) {
-                return $resolvedPath;
-            }
+        $resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
+        if ($resolvedPath) {
+            return $resolvedPath;
         }
 
         // Check if file exists relative to base dir

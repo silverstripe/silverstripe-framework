@@ -14,27 +14,51 @@ class DateField_Disabled extends DateField
 
     protected $disabled = true;
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        if ($this->valueObj) {
-            if ($this->valueObj->isToday()) {
-                $val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-                    . ' (' . _t('SilverStripe\\Forms\\DateField.TODAY', 'today') . ')');
+        // Default display value
+        $displayValue = '<i>(' . _t(DateField::class . '.NOTSET', 'not set') . ')</i>';
+
+        $value = $this->dataValue();
+
+        if ($value) {
+            $value = $this->tidyInternal($value);
+            $df = new DBDate($this->name);
+            $df->setValue($value);
+
+            if ($df->IsToday()) {
+                // e.g. 2018-06-01 (today)
+                $format = '%s (%s)';
+                $infoComplement = _t(DateField::class . '.TODAY', 'today');
             } else {
-                $df = new DBDate($this->name);
-                $df->setValue($this->dataValue());
-                $val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-                    . ', ' . $df->Ago());
+                // e.g. 2018-06-01, 5 days ago
+                $format = '%s, %s';
+                $infoComplement = $df->Ago();
             }
-        } else {
-            $val = '<i>(' . _t('SilverStripe\\Forms\\DateField.NOTSET', 'not set') . ')</i>';
+
+            // Render the display value with some complement of info
+            $displayValue = Convert::raw2xml(sprintf(
+                $format,
+                $this->Value(),
+                $infoComplement
+            ));
         }
 
-        return "<span class=\"readonly\" id=\"" . $this->ID() . "\">$val</span>";
+        return sprintf(
+            "<span class=\"readonly\" id=\"%s\">%s</span>",
+            $this->ID(),
+            $displayValue
+        );
     }
 
     public function Type()
     {
-        return "date_disabled readonly";
+        return "date_disabled readonly " . parent::Type();
+    }
+
+    public function getHTML5()
+    {
+        // Always disable HTML5 feature when using the readonly field.
+        return false;
     }
 }

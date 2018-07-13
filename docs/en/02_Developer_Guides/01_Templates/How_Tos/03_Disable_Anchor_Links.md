@@ -30,7 +30,7 @@ There are cases where this can be unhelpful. HTML anchors created from Ajax resp
 situations, you can disable anchor link rewriting by setting the `SSViewer.rewrite_hash_links` configuration value to 
 `false`.
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 ```yml
 SilverStripe\View\SSViewer:

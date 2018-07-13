@@ -258,9 +258,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         //deal with content if appropriate
         ContentNegotiator::process($this->getResponse());
-
-        //add cache headers
-        HTTP::add_cache_headers($this->getResponse());
     }
 
     /**

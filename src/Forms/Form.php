@@ -5,8 +5,8 @@ namespace SilverStripe\Forms;
 use BadMethodCallException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
@@ -346,7 +346,7 @@ class Form extends ViewableData implements HasRequestHandler
         // load data in from previous submission upon error
         $data = $this->getSessionData();
         if (isset($data)) {
-            $this->loadDataFrom($data);
+            $this->loadDataFrom($data, self::MERGE_AS_INTERNAL_VALUE);
         }
         return $this;
     }
@@ -868,25 +868,6 @@ class Form extends ViewableData implements HasRequestHandler
     {
         $exclude = (is_string($attrs)) ? func_get_args() : null;
 
-        // Figure out if we can cache this form
-        // - forms with validation shouldn't be cached, cos their error messages won't be shown
-        // - forms with security tokens shouldn't be cached because security tokens expire
-        $needsCacheDisabled = false;
-        if ($this->getSecurityToken()->isEnabled()) {
-            $needsCacheDisabled = true;
-        }
-        if ($this->FormMethod() != 'GET') {
-            $needsCacheDisabled = true;
-        }
-        if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
-            $needsCacheDisabled = true;
-        }
-
-        // If we need to disable cache, do it
-        if ($needsCacheDisabled) {
-            HTTP::set_cache_age(0);
-        }
-
         $attrs = $this->getAttributes();
 
         // Remove empty
@@ -1336,9 +1317,11 @@ class Form extends ViewableData implements HasRequestHandler
         return $result;
     }
 
-    const MERGE_DEFAULT = 0;
-    const MERGE_CLEAR_MISSING = 1;
-    const MERGE_IGNORE_FALSEISH = 2;
+    const MERGE_DEFAULT             = 0b0000;
+    const MERGE_CLEAR_MISSING       = 0b0001;
+    const MERGE_IGNORE_FALSEISH     = 0b0010;
+    const MERGE_AS_INTERNAL_VALUE   = 0b0100;
+    const MERGE_AS_SUBMITTED_VALUE  = 0b1000;
 
     /**
      * Load data from the given DataObject or array.
@@ -1359,6 +1342,7 @@ class Form extends ViewableData implements HasRequestHandler
      * {@link saveInto()}.
      *
      * @uses FieldList->dataFields()
+     * @uses FormField->setSubmittedValue()
      * @uses FormField->setValue()
      *
      * @param array|DataObject $data
@@ -1377,6 +1361,11 @@ class Form extends ViewableData implements HasRequestHandler
      *
      *  Passing IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
      *  a field's value.
+     *
+     *  Passing MERGE_AS_INTERNAL_VALUE forces the data to be parsed using the internal representation of the matching
+     *  form field. This is helpful if you are loading an array of values retrieved from `Form::getData()` and you
+     *  do not want them parsed as submitted data. MERGE_AS_SUBMITTED_VALUE does the opposite and forces the data to be
+     *  parsed as it would be submitted from a form.
      *
      *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
      *  CLEAR_MISSING
@@ -1406,6 +1395,14 @@ class Form extends ViewableData implements HasRequestHandler
         if (is_object($data)) {
             $this->record = $data;
             $submitted = false;
+        }
+
+        // Using the `MERGE_AS_INTERNAL_VALUE` or `MERGE_AS_SUBMITTED_VALUE` flags users can explicitly specify which
+        // `setValue` method to use.
+        if (($mergeStrategy & self::MERGE_AS_INTERNAL_VALUE) == self::MERGE_AS_INTERNAL_VALUE) {
+            $submitted = false;
+        } elseif (($mergeStrategy & self::MERGE_AS_SUBMITTED_VALUE) == self::MERGE_AS_SUBMITTED_VALUE) {
+            $submitted = true;
         }
 
         // dont include fields without data
@@ -1568,6 +1565,10 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function forTemplate()
     {
+        if (!$this->canBeCached()) {
+            HTTPCacheControlMiddleware::singleton()->disableCache();
+        }
+
         $return = $this->renderWith($this->getTemplates());
 
         // Now that we're rendered, clear message
@@ -1822,5 +1823,31 @@ class Form extends ViewableData implements HasRequestHandler
     protected function buildRequestHandler()
     {
         return FormRequestHandler::create($this);
+    }
+
+    /**
+     * Can the body of this form be cached?
+     *
+     * @return bool
+     */
+    protected function canBeCached()
+    {
+        if ($this->getSecurityToken()->isEnabled()) {
+            return false;
+        }
+        if ($this->FormMethod() !== 'GET') {
+            return false;
+        }
+
+        // Don't cache if there are required fields, or some other complex validator
+        $validator = $this->getValidator();
+        if ($validator instanceof RequiredFields) {
+            if (count($this->validator->getRequired())) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }

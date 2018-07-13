@@ -13,6 +13,7 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\CircularOne;
 use SilverStripe\Core\Tests\Injector\InjectorTest\CircularTwo;
 use SilverStripe\Core\Tests\Injector\InjectorTest\ConstructableObject;
 use SilverStripe\Core\Tests\Injector\InjectorTest\DummyRequirements;
+use SilverStripe\Core\Tests\Injector\InjectorTest\EmptyFactory;
 use SilverStripe\Core\Tests\Injector\InjectorTest\MyChildClass;
 use SilverStripe\Core\Tests\Injector\InjectorTest\MyParentClass;
 use SilverStripe\Core\Tests\Injector\InjectorTest\NeedsBothCirculars;
@@ -97,6 +98,21 @@ class InjectorTest extends SapphireTest
             SampleService::class,
             $myObject->sampleService
         );
+    }
+
+    public function testEmptyFactory()
+    {
+        $this->expectException(InjectorNotFoundException::class);
+        $injector = new Injector();
+        $services = array(
+            'SomeClass' => array(
+                'class' => AnotherService::class,
+                'factory' => EmptyFactory::class,
+            )
+        );
+
+        $injector->load($services);
+        $injector->create('SomeClass');
     }
 
     public function testConfiguredInjector()

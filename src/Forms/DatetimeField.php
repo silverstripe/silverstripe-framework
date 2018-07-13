@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 
@@ -300,7 +301,7 @@ class DatetimeField extends TextField
         }
 
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            DBDate::ISO_LOCALE,
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::MEDIUM,
             $timezone
@@ -340,10 +341,10 @@ class DatetimeField extends TextField
         $internalFormatter = $this->getInternalFormatter();
         $timestamp = $internalFormatter->parse($value);
 
-        // Retry without "T" separator
+        // Retry with "T" separator
         if (!$timestamp) {
             $fallbackFormatter = $this->getInternalFormatter();
-            $fallbackFormatter->setPattern(DBDatetime::ISO_DATETIME);
+            $fallbackFormatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
             $timestamp = $fallbackFormatter->parse($value);
         }
 

@@ -173,9 +173,9 @@ class DateField extends TextField
      */
     public function getDateFormat()
     {
+        // Browsers expect ISO 8601 dates, localisation is handled on the client
         if ($this->getHTML5()) {
-            // Browsers expect ISO 8601 dates, localisation is handled on the client
-            $this->setDateFormat(DBDate::ISO_DATE);
+            return DBDate::ISO_DATE;
         }
 
         if ($this->dateFormat) {
@@ -220,7 +220,7 @@ class DateField extends TextField
             );
         }
 
-        if ($this->getHTML5() && $this->locale) {
+        if ($this->getHTML5() && $this->locale && $this->locale !== DBDate::ISO_LOCALE) {
             throw new \LogicException(
                 'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
             );
@@ -252,9 +252,8 @@ class DateField extends TextField
      */
     protected function getInternalFormatter()
     {
-        $locale = i18n::config()->uninherited('default_locale');
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            DBDate::ISO_LOCALE,
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::NONE
         );
@@ -353,9 +352,12 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy(DateField_Disabled::class);
-        $field->setValue($this->dataValue());
-        $field->setReadonly(true);
+        $field = $this
+            ->castedCopy(DateField_Disabled::class)
+            ->setValue($this->dataValue())
+            ->setLocale($this->getLocale())
+            ->setReadonly(true);
+
         return $field;
     }
 
@@ -443,6 +445,10 @@ class DateField extends TextField
      */
     public function getLocale()
     {
+        // Use iso locale for html5
+        if ($this->getHTML5()) {
+            return DBDate::ISO_LOCALE;
+        }
         return $this->locale ?: i18n::get_locale();
     }
 

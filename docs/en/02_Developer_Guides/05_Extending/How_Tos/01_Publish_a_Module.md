@@ -12,31 +12,35 @@ of your module containing the meta-data about your module.
 For more information about what your `composer.json` file should include, consult the 
 [Composer Documentation](http://getcomposer.org/doc/01-basic-usage.md).
 
-A basic usage of a module for 3.1 that requires the CMS would look similar to
-this:
-
 **mycustommodule/composer.json**
 
 ```json
 {
-  "name": "your-vendor-name/module-name",
+  "name": "my-vendor/my-module",
   "description": "One-liner describing your module",
-  "type": "silverstripe-module",
-  "homepage": "http://github.com/your-vendor-name/module-name",
+  "homepage": "http://github.com/my-vendor/my-module",
   "keywords": ["silverstripe", "some-tag", "some-other-tag"],
   "license": "BSD-3-Clause",
   "authors": [
     {"name": "Your Name","email": "your@email.com"}
   ],
   "support": {
-    "issues": "http://github.com/your-vendor-name/module-name/issues"
+    "issues": "http://github.com/my-vendor/my-module/issues"
   },
   "require": {
     "silverstripe/cms": "^4",
     "silverstripe/framework": "^4"
   },
+  "autoload": {
+    "psr-4": {
+        "MyVendor\\MyModule\\": "src/"
+    }
+  },
   "extra": {
-    "installer-name": "module-name",
+    "installer-name": "my-module",
+    "expose": [
+        "client"
+    ],
     "screenshots": [
       "relative/path/screenshot1.png",
       "http://myhost.com/screenshot2.png"
@@ -45,48 +49,19 @@ this:
 }
 ```
 
-Once your module is published online with a service like Github.com or Bitbucket.com, submit the repository to 
+
+
+Once your module is published online with a service like github.com or bitbucket.com, submit the repository to 
 [Packagist](https://packagist.org/) to have the module accessible to developers. It'll automatically get picked
-up by [addons.silverstripe.org](http://addons.silverstripe.org/) website.
+up by [addons.silverstripe.org](http://addons.silverstripe.org/) website due to the `silverstripe` keyword in the file.
 
-## Vendor modules
+Note that SilverStripe modules have the following distinct characteristics:
 
-By default `silverstripe-module` type libraries are installed to the root web folder, however a new type
-`silverstripe-vendormodule` allows you to publish your module to the vendor directory.
-
-The below is an example of a vendor module composer.json:
-
-```json
-{
-    "name": "tractorcow/test-vendor-module",
-    "description": "Test module for silverstripe/vendor-plugin",
-    "type": "silverstripe-vendormodule",
-    "require": {
-        "silverstripe/vendor-plugin": "^1.0",
-        "silverstripe/cms": "^4.0"
-    },
-    "license": "BSD-3-Clause",
-    "autoload": {
-        "psr-4": {
-            "TractorCow\\TestVendorModule\\": "src/"
-        }
-    },
-    "extra": {
-        "expose": [
-            "client"
-        ]
-    },
-    "minimum-stability": "dev"
-}
-```
-
-Note that these modules have the following distinct characteristics:
-
- - Library type is `silverstripe-vendormodule`
+ - SilverStripe can hook in to the composer installation process by declaring `type: silverstripe/vendormodule`.
  - Any folder which should be exposed to the public webroot must be declared in the `extra.expose` config.
    These paths will be automatically rewritten to public urls which don't directly serve files from the `vendor`
-   folder. For instance, `vendor/tractorcow/test-vendor-module/client` will be rewritten to
-   `resources/tractorcow/test-vendor-module/client`.
+   folder. For instance, `vendor/my-vendor/my-module/client` will be rewritten to
+   `resources/my-vendor/my-module/client`.
  - Any module which uses the folder expose feature must require `silverstripe/vendor-plugin` in order to
    support automatic rewriting and linking. For more information on this plugin you can see the
    [silverstripe/vendor-plugin github page](https://github.com/silverstripe/vendor-plugin).
@@ -97,7 +72,7 @@ this is how you would require a script in this module:
 ```php
 use SilverStripe\View\Requirements;
 
-Requirements::javascript('tractorcow/test-vendor-module:client/js/script.js');
+Requirements::javascript('my-vendor/my-module:client/js/script.js');
 ```
 
 ## Releasing versions

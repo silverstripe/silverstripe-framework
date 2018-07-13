@@ -10,7 +10,7 @@ subclasses).
 
 The following will render the given data into a template. Given the template:
 
-**mysite/templates/Coach_Message.ss**
+**app/templates/Coach_Message.ss**
     
 ```ss
 <strong>$Name</strong> is the $Role on our team.
@@ -19,7 +19,7 @@ The following will render the given data into a template. Given the template:
 Our application code can render into that view using `renderWith`. This method is called on the [ViewableData](api:SilverStripe\View\ViewableData) 
 instance with a template name or an array of templates to render. 
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 ```php
 $arrayData = new SilverStripe\View\ArrayData([

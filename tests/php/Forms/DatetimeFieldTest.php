@@ -109,11 +109,11 @@ class DatetimeFieldTest extends SapphireTest
     {
         $f = new DatetimeField('Datetime', 'Datetime');
         $f->setValue('2003-03-29 23:59:38');
-        $this->assertEquals($f->dataValue(), '2003-03-29 23:59:38', 'Accepts ISO');
+        $this->assertEquals('2003-03-29 23:59:38', $f->dataValue(), 'Accepts ISO');
 
         $f = new DatetimeField('Datetime', 'Datetime');
         $f->setValue('2003-03-29T23:59:38');
-        $this->assertNull($f->dataValue(), 'Rejects normalised ISO');
+        $this->assertEquals('2003-03-29 23:59:38', $f->dataValue(), 'Accepts normalised ISO');
     }
 
     public function testSubmittedValue()
@@ -152,7 +152,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertTrue($f->validate(new RequiredFields()));
 
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29T23:59:38');
-        $this->assertFalse($f->validate(new RequiredFields()), 'Normalised ISO');
+        $this->assertTrue($f->validate(new RequiredFields()), 'Normalised ISO');
 
         $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29');
         $this->assertFalse($f->validate(new RequiredFields()), 'Leaving out time');

@@ -10,7 +10,7 @@ All objects that are being rendered in a template should be a [ViewableData](api
 For instance, if we provide a [DBHtmlText](api:SilverStripe\ORM\FieldType\DBHtmlText) instance to the template we can call the `FirstParagraph` method. This will 
 output the result of the [DBHtmlText::FirstParagraph()](api:SilverStripe\ORM\FieldType\DBHtmlText::FirstParagraph()) method to the template.
 
-**mysite/code/Page.ss**
+**app/code/Page.ss**
 
 ```ss
 $Content.FirstParagraph
@@ -44,7 +44,7 @@ your text instances. For other objects such as [DBDatetime](api:SilverStripe\ORM
 When rendering an object to the template such as `$Me` the `forTemplate` method is called. This method can be used to 
 provide default template for an object.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 ```php
 use SilverStripe\CMS\Model\SiteTree;
@@ -59,7 +59,7 @@ class Page extends SiteTree
 }
 ```
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 $Me

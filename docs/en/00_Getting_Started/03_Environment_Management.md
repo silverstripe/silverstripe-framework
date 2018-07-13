@@ -51,14 +51,14 @@ Environment::setEnv('API_KEY', 'AABBCCDDEEFF012345');
 ## Including an extra `.env` file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
-database credentials could be the same. To do this, you can add this snippet to your `mysite/_config.php` file:
+database credentials could be the same. To do this, you can add this snippet to your `app/_config.php` file:
 
 Note that by default variables cannot be overloaded from this file; Existing values will be preferred
 over values in this file.
 
 ```php
 use SilverStripe\Core\EnvironmentLoader;
-$env = BASE_PATH . '/mysite/.env';
+$env = BASE_PATH . '/app/.env';
 $loader = new EnvironmentLoader();
 $loader->loadFile($env);
 ```

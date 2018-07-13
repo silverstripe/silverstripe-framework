@@ -1103,72 +1103,88 @@ class DataObjectTest extends SapphireTest
 
         // Test logical fields (including composite)
         $teamSpecifications = $schema->fieldSpecs(DataObjectTest\Team::class);
+        $expected = array(
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID'
+        );
+        $actual = array_keys($teamSpecifications);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID'
-            ),
-            array_keys($teamSpecifications),
+            $expected,
+            $actual,
             'fieldSpecifications() contains all fields defined on instance: base, extended and foreign keys'
         );
 
         $teamFields = $schema->databaseFields(DataObjectTest\Team::class, false);
+        $expected = array(
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID'
+        );
+        $actual = array_keys($teamFields);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID'
-            ),
-            array_keys($teamFields),
+            $expected,
+            $actual,
             'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
         );
 
         $subteamSpecifications = $schema->fieldSpecs(DataObjectTest\SubTeam::class);
+        $expected = array(
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID',
+            'SubclassDatabaseField',
+            'ParentTeamID',
+        );
+        $actual = array_keys($subteamSpecifications);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID',
-                'SubclassDatabaseField',
-                'ParentTeamID',
-            ),
-            array_keys($subteamSpecifications),
+            $expected,
+            $actual,
             'fieldSpecifications() on subclass contains all fields, including base, extended  and foreign keys'
         );
 
         $subteamFields = $schema->databaseFields(DataObjectTest\SubTeam::class, false);
+        $expected = array(
+            'ID',
+            'SubclassDatabaseField',
+            'ParentTeamID',
+        );
+        $actual = array_keys($subteamFields);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'SubclassDatabaseField',
-                'ParentTeamID',
-            ),
-            array_keys($subteamFields),
+            $expected,
+            $actual,
             'databaseFields() on subclass contains only fields defined on instance'
         );
     }

@@ -7,6 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -378,12 +379,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         $this->original = $this->record;
-
-        // Keep track of the modification date of all the data sourced to make this page
-        // From this we create a Last-Modified HTTP header
-        if (isset($record['LastEdited'])) {
-            HTTP::register_modification_date($record['LastEdited']);
-        }
 
         // Must be called after parent constructor
         if (!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
@@ -3513,7 +3508,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
      *
-     * @return array|string Array of all element labels if no argument given, otherwise the label of the field
+     * @return array Array of all element labels
      */
     public function fieldLabels($includerelations = true)
     {

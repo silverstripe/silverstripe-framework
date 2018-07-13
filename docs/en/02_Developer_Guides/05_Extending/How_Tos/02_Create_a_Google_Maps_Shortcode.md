@@ -13,7 +13,7 @@ address. We want our CMS authors to be able to embed the map using the following
 So we've got the address as "content" of our new `googlemap` shortcode tags, plus some `width` and `height` arguments. 
 We'll add defaults to those in our shortcode parser so they're optional.
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 use SilverStripe\View\Parsers\ShortcodeParser;

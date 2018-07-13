@@ -9,7 +9,7 @@ default:
   suites:
     framework:
       paths:
-        - %paths.modules.framework%/tests/behat/features
+        - %paths.modules.admin%/tests/behat/features
       contexts:
         - SilverStripe\Framework\Tests\Behaviour\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
@@ -19,7 +19,7 @@ default:
         - SilverStripe\BehatExtension\Context\LoginContext
         -
           SilverStripe\BehatExtension\Context\FixtureContext:
-            - %paths.modules.framework%/tests/behat/features/files/
+            - %paths.modules.admin%/tests/behat/features/files/
 
   extensions:
     SilverStripe\BehatExtension\MinkExtension:

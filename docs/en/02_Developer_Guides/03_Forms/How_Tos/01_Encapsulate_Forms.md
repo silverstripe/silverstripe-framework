@@ -7,7 +7,7 @@ to reuse the `Form` across multiple `Controller` classes rather than just one. A
 code for a `Form` is to create it as a subclass to `Form`. Let's look at a example of a `Form` which is on our 
 `Controller` but would be better written as a subclass.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php
@@ -75,7 +75,7 @@ class PageController extends ContentController
 Now that is a bit of code to include on our controller and generally makes the file look much more complex than it 
 should be. Good practice would be to move this to a subclass and create a new instance for your particular controller.
 
-**mysite/code/forms/SearchForm.php**
+**app/code/forms/SearchForm.php**
 
 ```php
 use SilverStripe\Forms\FieldList;
@@ -147,7 +147,7 @@ class SearchForm extends Form
 
 Our controller will now just have to create a new instance of this form object. Keeping the file light and easy to read.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php

@@ -13,7 +13,7 @@ information about inserted images or media elements.
 The framework comes with a [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField) form field class which encapsulates most of the required
 functionality. It is usually added through the [DataObject::getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method:
 
-**mysite/code/MyObject.php**
+**app/code/MyObject.php**
 
 
 ```php
@@ -99,7 +99,7 @@ In its simplest form, the configuration of the editor includes adding and removi
 You can add plugins to the editor using the Framework's [HtmlEditorConfig::enablePlugins()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()) method. This will
 transparently generate the relevant underlying TinyMCE code.
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
@@ -116,7 +116,7 @@ details).
 Plugins and advanced themes can provide additional buttons that can be added (or removed) through the
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
@@ -124,7 +124,7 @@ HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
 
 Buttons can also be removed:
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
@@ -145,7 +145,7 @@ One example of the usage of this capability is to redefine the TinyMCE's [whitel
 tags](http://www.tinymce.com/wiki.php/Configuration:extended_valid_elements) - the tags that will not be stripped
 from the HTML source by the editor.
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 // Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
@@ -172,10 +172,10 @@ The default setting for the CMS's `extended_valid_elements` we are overriding he
 It is also possible to add custom plugins to TinyMCE, for example toolbar buttons.
 You can enable them through [HtmlEditorConfig::enablePlugins()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::enablePlugins()):
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
-HtmlEditorConfig::get('cms')->enablePlugins(['myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js']);
+HtmlEditorConfig::get('cms')->enablePlugins(['myplugin' => '../../../app/javascript/myplugin/editor_plugin.js']);
 ```
 
 You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) from the TinyMCE documentation.
@@ -288,7 +288,7 @@ Example: Remove field for "image captions"
 ```php
 use SilverStripe\Core\Extension;
 
-// File: mysite/code/MyToolbarExtension.php
+// File: app/code/MyToolbarExtension.php
 class MyToolbarExtension extends Extension 
 {
     public function updateFieldsForImage(&$fields, $url, $file) 
@@ -299,7 +299,7 @@ class MyToolbarExtension extends Extension
 ```
 
 ```php
-// File: mysite/_config.php
+// File: app/_config.php
 use SilverStripe\Admin\ModalController;
 
 ModalController::add_extension('MyToolbarExtension');
@@ -333,7 +333,7 @@ of the CMS you have to take care of instantiate yourself:
 use SilverStripe\Admin\ModalController;
 use SilverStripe\Control\Controller;
 
-// File: mysite/code/MyController.php
+// File: app/code/MyController.php
 class MyObjectController extends Controller 
 {
     public function Modals() 
@@ -347,7 +347,7 @@ Note: The dialogs rely on CMS-access, e.g. for uploading and browsing files,
 so this is considered advanced usage of the field.
 
 ```php
-// File: mysite/_config.php
+// File: app/_config.php
 HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
 HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
 HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');

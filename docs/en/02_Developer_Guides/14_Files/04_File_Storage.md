@@ -74,7 +74,7 @@ This corresponds to a file with the following properties:
 - Variant: FitWzYwLDYwXQ (corresponds to Fit[60,60])
 
 The URL for this file will match the physical location on disk:
-`http://www.mysite.com/assets/Uploads/b63923d8d4/BannerHeader__FitWzYwLDYwXQ.jpg`.
+`http://www.example.com/assets/Uploads/b63923d8d4/BannerHeader__FitWzYwLDYwXQ.jpg`.
 
 For more information on how protected files are stored see the [file security](/developer_guides/files/file_security)
 section.

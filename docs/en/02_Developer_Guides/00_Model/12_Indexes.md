@@ -51,7 +51,7 @@ support the following:
  * `unique`: Index plus uniqueness constraint on the value
  * `fulltext`: Fulltext content index
 
-**mysite/code/MyTestObject.php**
+**app/code/MyTestObject.php**
 
 ```php
 use SilverStripe\ORM\DataObject;

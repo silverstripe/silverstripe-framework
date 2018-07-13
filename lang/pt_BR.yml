@@ -3,9 +3,6 @@ pt_BR:
     SHOWONCLICKTITLE: 'Trocar senha'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: R$
-  SilverStripe\Forms\DateField:
-    NOTSET: 'não informado'
-    TODAY: hoje
   SilverStripe\Forms\DropdownField:
     CHOOSE: Selecione
   SilverStripe\Forms\Form:

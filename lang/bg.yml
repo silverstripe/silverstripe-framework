@@ -37,8 +37,6 @@ bg:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не е зададена'
-    TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
@@ -86,7 +84,6 @@ bg:
     RelationSearch: 'Търсене на връзка'
     ResetFilter: Изчистване
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Изтриване
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     EditPermissionsFailure: 'Нямате права за премахване на връзката'
@@ -98,8 +95,6 @@ bg:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити {type} {name}'
     Save: Запис
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Редактиране
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: от
     Page: Страница

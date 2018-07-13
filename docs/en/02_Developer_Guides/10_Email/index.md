@@ -18,7 +18,7 @@ SilverStripe\Core\Injector\Injector:
   Swift_Transport: Swift_SendmailTransport
 ```
 
-For example, to use SMTP, create a file mysite/_config/email.yml:
+For example, to use SMTP, create a file app/_config/email.yml:
 
 ```yml
 ---
@@ -65,7 +65,7 @@ $email->send();
 
 <div class="info" markdown="1">
 The default HTML template for emails is named `GenericEmail` and is located in `vendor/silverstripe/framework/templates/SilverStripe/Email/`.
-To customise this template, copy it to the `mysite/templates/Email/` folder or use `setHTMLTemplate` when you create the 
+To customise this template, copy it to the `app/templates/Email/` folder or use `setHTMLTemplate` when you create the 
 `Email` instance.
 </div>
 
@@ -75,7 +75,7 @@ To customise this template, copy it to the `mysite/templates/Email/` folder or u
 HTML emails can use custom templates using the same template language as your website template. You can also pass the
 email object additional information using the `setData` and `addData` methods. 
 
-**mysite/templates/Email/MyCustomEmail.ss**
+**app/templates/Email/MyCustomEmail.ss**
 
 
 ```ss
@@ -125,12 +125,12 @@ $this->send();
 
 You can set the default sender address of emails through the `Email.admin_email` [configuration setting](/developer_guides/configuration).
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yaml
 SilverStripe\Control\Email\Email:
-  admin_email: support@silverstripe.org
+  admin_email: support@example.com
 ```
 
 <div class="alert" markdown="1">
@@ -151,7 +151,7 @@ live systems.
 
 Configuration of those properties looks like the following:
 
-**mysite/_config.php**
+**app/_config.php**
 
 ```php
 use SilverStripe\Control\Email\Email;
@@ -172,7 +172,7 @@ marked as spam.
 
 ```php
 $email = new Email(..);
-$email->setReplyTo('me@address.com');
+$email->setReplyTo('reply@example.com');
 ```
 
 ### Setting Custom Headers

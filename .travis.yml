@@ -2,10 +2,6 @@ language: php
 
 dist: trusty
 
-before_install:
- - sudo apt-get update
- - sudo apt-get install chromium-chromedriver
-
 cache:
   directories:
     - $HOME/.composer/cache/files
@@ -14,19 +10,19 @@ addons:
   apt:
     packages:
       - tidy
-  firefox: "31.0"
 
 env:
   global:
     - COMPOSER_ROOT_VERSION=5.x-dev
-    - DISPLAY=":99"
-    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
-    - SS_BASE_URL="http://localhost:8080/"
-    - SS_ENVIRONMENT_TYPE="dev"
 
 matrix:
   fast_finish: true
   include:
+    - php: 7.1
+      env:
+        - DB=MYSQL
+        - PHPCS_TEST=1
+        - PHPUNIT_TEST=framework
     - php: 7.1
       env:
         - DB=PGSQL
@@ -35,7 +31,7 @@ matrix:
       if: type IN (cron)
       env:
         - DB=MYSQL
-        - PHPCS_TEST=1
+        - PDO=1
         - PHPUNIT_COVERAGE_TEST=framework
     - php: 7.2
       env:
@@ -49,16 +45,8 @@ matrix:
         - PHPUNIT_TEST=framework
     - php: 7.1
       env:
-       - DB=MYSQL
-       - BEHAT_TEST=framework
-    - php: 7.1
-      env:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
-    - php: 7.1
-      env:
-        - DB=MYSQL
-        - BEHAT_TEST=cms
   allow_failures:
     - php: nightly
       env:
@@ -68,7 +56,7 @@ matrix:
 
 before_script:
 # Extra $PATH
-  - export PATH=/usr/lib/chromium-browser/:$PATH
+  - export PATH=~/.composer/vendor/bin:$PATH
 
 # Init PHP
   - pecl channel-update pecl.php.net
@@ -83,24 +71,16 @@ before_script:
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:3.x-dev --no-update; fi
   - composer require silverstripe/recipe-testing:^2 silverstripe/recipe-core:5.x-dev silverstripe/admin:2.x-dev silverstripe/versioned:2.x-dev --no-update
   - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:5.x-dev --no-update; fi
+  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
   - php ./tests/dump_constants.php
 
-# Start behat services
-  - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
-  - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
-  - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
-  - if [[ $BEHAT_TEST ]]; then (chromedriver > artifacts/chromedriver.log 2>&1 &); fi
-  - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
-  - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
 
 script:
   - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
-  - if [[ $BEHAT_TEST == framework ]]; then vendor/bin/behat @framework; fi
-  - if [[ $BEHAT_TEST == cms ]]; then vendor/bin/behat @cms; fi
   - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
   - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
   - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
@@ -109,5 +89,3 @@ script:
 after_success:
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
 
-after_failure:
-  - if [[ $BEHAT_TEST ]]; then php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/ --artifacts-path ./artifacts/; fi

@@ -5,8 +5,6 @@ sl:
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
   SilverStripe\Forms\DateField:
-    NOTSET: 'ni nastavljeno'
-    TODAY: danes
     VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
     VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
     VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
@@ -40,7 +38,6 @@ sl:
     RelationSearch: 'Povezano iskanje'
     ResetFilter: Ponastavi
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     UnlinkRelation: 'Odstrani povezavo'
@@ -51,8 +48,6 @@ sl:
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
     Deleted: 'Izbrisanih {type} {name}'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Uredi
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Znesek
     FIELDLABELCURRENCY: Valuta

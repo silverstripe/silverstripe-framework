@@ -6,7 +6,7 @@ summary: Test models, database logic and your object methods.
 A Unit Test is an automated piece of code that invokes a unit of work in the application and then checks the behavior 
 to ensure that it works as it should. A simple example would be to test the result of a PHP method.
 
-**mysite/code/Page.php**
+**app/code/Page.php**
 
 
 ```php
@@ -21,7 +21,7 @@ class Page extends SiteTree
 }
 ```
 
-**mysite/tests/PageTest.php**
+**app/tests/PageTest.php**
 
 
 ```php
@@ -37,7 +37,7 @@ class PageTest extends SapphireTest
 ```
 
 <div class="info" markdown="1">
-Tests for your application should be stored in the `mysite/tests` directory. Test cases for add-ons should be stored in 
+Tests for your application should be stored in the `app/tests` directory. Test cases for add-ons should be stored in 
 the `(modulename)/tests` directory. 
 
 Test case classes should end with `Test` (e.g `PageTest`) and test methods must start with `test` (e.g `testMyMethod`).
@@ -88,7 +88,7 @@ needs.
 
 <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
     <testsuite name="Default">
-        <directory>mysite/tests</directory>
+        <directory>app/tests</directory>
     </testsuite>
     <groups>
         <exclude>
