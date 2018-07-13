@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Shortcodes;
 
+use Embed\Http\DispatcherInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Embed\Embeddable;
@@ -76,6 +77,11 @@ class EmbedShortcodeProvider implements ShortcodeHandler
                 $serviceURL,
                 $extra['resolver']['config']
             );
+        } elseif (Injector::inst()->has(DispatcherInterface::class)) {
+            $dispatcher = Injector::inst()->get(DispatcherInterface::class);
+        }
+
+        if ($dispatcher) {
             $embed->setDispatcher($dispatcher);
         }
 
