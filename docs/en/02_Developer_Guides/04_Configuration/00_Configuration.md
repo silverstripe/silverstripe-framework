@@ -168,12 +168,12 @@ the result will be the higher priority false-ish value.
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
 
-- Any values set via a call to Config#merge / Config#set
+- Runtime modifications, ie: any values set via a call to `Config::inst()->update()`
 - The configuration values taken from the YAML files in `_config/` directories (internally sorted in before / after 
 order, where the item that is latest is highest priority)
-- Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
 - Any static set on the class named the same as the name of the property
 - The composite configuration value of the parent class of this class
+- Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
 
 <div class="notice">
 It is an error to have mixed types of the same named property in different locations. An error will not necessarily
