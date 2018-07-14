@@ -45,6 +45,7 @@ class Backtrace
         array('SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'salt'),
         array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'encrypt'),
         array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'salt'),
+        array('*', 'updateValidatePassword'),
     );
 
     /**
@@ -106,7 +107,10 @@ class Backtrace
             $match = false;
             if (!empty($bt[$i]['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
-                    if (is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) {
+                    if (is_array($fnSpec) &&
+                        ('*' == $fnSpec[0] || $bt[$i]['class'] == $fnSpec[0]) &&
+                        $bt[$i]['function'] == $fnSpec[1]
+                    ) {
                         $match = true;
                     }
                 }
