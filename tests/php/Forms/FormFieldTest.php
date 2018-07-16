@@ -384,4 +384,22 @@ class FormFieldTest extends SapphireTest
         $this->assertFalse($field->hasClass('banana'));
         $this->assertTrue($field->hasClass('cool-BAnana'));
     }
+
+    public function testLinkWithForm()
+    {
+        $field = new FormField('Test');
+        $form = new Form(null, 'Test', new FieldList, new FieldList);
+        $form->setFormAction('foo');
+        $field->setForm($form);
+        $this->assertSame('foo/field/Test/bar', $field->Link('bar'));
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testLinkWithoutForm()
+    {
+        $field = new FormField('Test');
+        $field->Link('bar');
+    }
 }

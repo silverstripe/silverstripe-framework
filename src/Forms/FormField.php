@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use LogicException;
 use ReflectionClass;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\RequestHandler;
@@ -355,14 +356,20 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Return a link to this field.
+     * Return a link to this field
      *
      * @param string $action
-     *
      * @return string
+     * @throws LogicException If no form is set yet
      */
     public function Link($action = null)
     {
+        if (!$this->form) {
+            throw new LogicException(
+                'Field must be associated with a form to call Link(). Please use $field->setForm($form);'
+            );
+        }
+
         $link = Controller::join_links($this->form->FormAction(), 'field/' . $this->name, $action);
         $this->extend('updateLink', $link, $action);
         return $link;
