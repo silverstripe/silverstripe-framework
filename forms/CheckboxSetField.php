@@ -61,19 +61,17 @@ class CheckboxSetField extends OptionsetField {
 	 * @return ArrayList
 	 */
 	public function getOptions() {
-		$odd = 0;
-
 		$source = $this->source;
 		$values = $this->value;
 		$items = array();
 
 		// Get values from the join, if available
-		if(is_object($this->form)) {
+		if (is_object($this->form)) {
 			$record = $this->form->getRecord();
-			if(!$values && $record && $record->hasMethod($this->name)) {
+			if (!$values && $record && $record->hasMethod($this->name)) {
 				$funcName = $this->name;
 				$join = $record->$funcName();
-				if($join) {
+				if ($join) {
 					foreach($join as $joinItem) {
 						$values[] = $joinItem->ID;
 					}
@@ -82,19 +80,19 @@ class CheckboxSetField extends OptionsetField {
 		}
 
 		// Source is not an array
-		if(!is_array($source) && !is_a($source, 'SQLMap')) {
-			if(is_array($values)) {
+		if (!is_array($source)) {
+			if (is_array($values)) {
 				$items = $values;
 			} else {
 				// Source and values are DataObject sets.
-				if($values && is_a($values, 'SS_List')) {
-					foreach($values as $object) {
-						if(is_a($object, 'DataObject')) {
+				if ($values && $values instanceof SS_List) {
+					foreach ($values as $object) {
+						if ($object instanceof DataObject) {
 							$items[] = $object->ID;
 						}
 					}
-				} elseif($values && is_string($values)) {
-					if(!empty($values)) {
+				} elseif ($values && is_string($values)) {
+					if (!empty($values)) {
 						$items = explode(',', $values);
 						$items = str_replace('{comma}', ',', $items);
 					} else {
@@ -104,14 +102,13 @@ class CheckboxSetField extends OptionsetField {
 			}
 		} else {
 			// Sometimes we pass a singluar default value thats ! an array && !SS_List
-			if($values instanceof SS_List || is_array($values)) {
+			if ($values instanceof SS_List || is_array($values)) {
 				$items = $values;
 			} else {
-				if($values === null) {
+				if ($values === null) {
 					$items = array();
-				}
-				else {
-					if(!empty($values)) {
+				} else {
+					if (!empty($values)) {
 						$items = explode(',', $values);
 						$items = str_replace('{comma}', ',', $items);
 					} else {
@@ -121,7 +118,7 @@ class CheckboxSetField extends OptionsetField {
 			}
 		}
 
-		if(is_array($source)) {
+		if (is_array($source)) {
 			unset($source['']);
 		}
 
@@ -131,9 +128,10 @@ class CheckboxSetField extends OptionsetField {
 			$source = array();
 		}
 
-		foreach($source as $value => $item) {
+		$odd = false;
+		foreach ($source as $value => $item) {
 			// Ensure $title is cast for template
-			if($item instanceof DataObject) {
+			if ($item instanceof DataObject) {
 				$value = $item->ID;
 				$title = $item->obj('Title');
 			} elseif ($item instanceof DBField) {
@@ -143,11 +141,11 @@ class CheckboxSetField extends OptionsetField {
 			}
 
 			$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
-			$odd = ($odd + 1) % 2;
 			$extraClass = $odd ? 'odd' : 'even';
+			$odd = !$odd;
 			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
 
-			$options[] = new ArrayData(array(
+			$options[] = ArrayData::create(array(
 				'ID' => $itemID,
 				'Class' => $extraClass,
 				'Name' => "{$this->name}[{$value}]",
@@ -158,7 +156,7 @@ class CheckboxSetField extends OptionsetField {
 			));
 		}
 
-		$options = new ArrayList($options);
+		$options = ArrayList::create($options);
 
 		$this->extend('updateGetOptions', $options);
 
