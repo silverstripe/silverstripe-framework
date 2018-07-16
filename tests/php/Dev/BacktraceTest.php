@@ -68,4 +68,45 @@ class BacktraceTest extends SapphireTest
         $this->assertEquals('<filtered>', $filtered[1]['args']['password'], 'Filters class functions');
         $this->assertEquals('myval', $filtered[2]['args']['myarg'], 'Doesnt filter other functions');
     }
+
+    public function testFilteredWildCard()
+    {
+        $bt = array(
+            array(
+                'type' => '->',
+                'file' => 'MyFile.php',
+                'line' => 99,
+                'function' => 'myIgnoredGlobalFunction',
+                'args' => array('password' => 'secred',)
+            ),
+            array(
+                'class' => 'MyClass',
+                'type' => '->',
+                'file' => 'MyFile.php',
+                'line' => 99,
+                'function' => 'myIgnoredClassFunction',
+                'args' => array('password' => 'secred',)
+            ),
+            array(
+                'class' => 'MyClass',
+                'type' => '->',
+                'file' => 'MyFile.php',
+                'line' => 99,
+                'function' => 'myFunction',
+                'args' => array('myarg' => 'myval')
+            )
+        );
+        Backtrace::config()->update(
+            'ignore_function_args',
+            array(
+                array('*', 'myIgnoredClassFunction'),
+            )
+        );
+
+        $filtered = Backtrace::filter_backtrace($bt);
+
+        $this->assertEquals('secred', $filtered[0]['args']['password']);
+        $this->assertEquals('<filtered>', $filtered[1]['args']['password']);
+        $this->assertEquals('myval', $filtered[2]['args']['myarg']);
+    }
 }
