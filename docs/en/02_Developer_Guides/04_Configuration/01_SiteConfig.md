@@ -24,6 +24,8 @@ To access variables in the PHP:
 
 
 ```php
+use Silverstripe\SiteConfig\SiteConfig;
+
 $config = SiteConfig::current_site_config(); 
 
 echo $config->Title;
