@@ -379,4 +379,42 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals('Last', $second['Title']);
         $this->assertEmpty(array_shift($arrayResult));
     }
+
+    public function testColumnReturnsAllValues()
+    {
+        $first = new DataQueryTest\ObjectA();
+        $first->Name = 'Bar';
+        $first->write();
+
+        $second = new DataQueryTest\ObjectA();
+        $second->Name = 'Foo';
+        $second->write();
+
+        $third = new DataQueryTest\ObjectA();
+        $third->Name = 'Bar';
+        $third->write();
+
+        $result = DataQueryTest\ObjectA::get()->column('Name');
+        $this->assertEquals(['Bar', 'Foo', 'Bar'], $result);
+    }
+
+    public function testColumnUniqueReturnsAllValues()
+    {
+        $first = new DataQueryTest\ObjectA();
+        $first->Name = 'Bar';
+        $first->write();
+
+        $second = new DataQueryTest\ObjectA();
+        $second->Name = 'Foo';
+        $second->write();
+
+        $third = new DataQueryTest\ObjectA();
+        $third->Name = 'Bar';
+        $third->write();
+
+        $result = DataQueryTest\ObjectA::get()->columnUnique('Name');
+        $this->assertCount(2, $result);
+        $this->assertContains('Bar', $result);
+        $this->assertContains('Foo', $result);
+    }
 }

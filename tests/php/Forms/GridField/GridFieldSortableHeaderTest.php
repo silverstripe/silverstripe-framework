@@ -68,7 +68,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
     public function testGetManipulatedData()
     {
-        $list = new DataList(Team::class);
+        $list = Team::get()->filter([ 'ClassName' => Team::class ]);
         $config = new GridFieldConfig_RecordEditor();
         $gridField = new GridField('testfield', 'testfield', $list, $config);
 
