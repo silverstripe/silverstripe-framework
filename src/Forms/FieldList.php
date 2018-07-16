@@ -248,7 +248,7 @@ class FieldList extends ArrayList
         } else {
             $tab->push($field);
         }
-        
+
         return $this;
     }
 
@@ -282,7 +282,7 @@ class FieldList extends ArrayList
                 $tab->push($field);
             }
         }
-        
+
         return $this;
     }
 
@@ -299,9 +299,11 @@ class FieldList extends ArrayList
         $this->flushFieldsCache();
 
         // Find the tab
-        $tab = $this->findOrMakeTab($tabName);
-        $tab->removeByName($fieldName);
-        
+        $tab = $this->findTab($tabName);
+        if ($tab) {
+            $tab->removeByName($fieldName);
+        }
+
         return $this;
     }
 
@@ -318,13 +320,14 @@ class FieldList extends ArrayList
         $this->flushFieldsCache();
 
         // Find the tab
-        $tab = $this->findOrMakeTab($tabName);
-
-        // Add the fields to the end of this set
-        foreach ($fields as $field) {
-            $tab->removeByName($field);
+        $tab = $this->findTab($tabName);
+        if ($tab) {
+            // Add the fields to the end of this set
+            foreach ($fields as $field) {
+                $tab->removeByName($field);
+            }
         }
-        
+
         return $this;
     }
 
@@ -367,7 +370,7 @@ class FieldList extends ArrayList
                 $child->removeByName($fieldName, $dataFieldOnly);
             }
         }
-        
+
         return $this;
     }
 
@@ -426,6 +429,28 @@ class FieldList extends ArrayList
         }
 
         return false;
+    }
+
+    /**
+     * Returns the specified tab object, if it exists
+     *
+     * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
+     * @return Tab|null The found or null
+     */
+    public function findTab($tabName)
+    {
+        $parts = explode('.', $tabName);
+        $last_idx = count($parts) - 1;
+
+        $currentPointer = $this;
+
+        foreach ($parts as $k => $part) {
+            $parentPointer = $currentPointer;
+            /** @var FormField $currentPointer */
+            $currentPointer = $currentPointer->fieldByName($part);
+        }
+
+        return $currentPointer;
     }
 
     /**
