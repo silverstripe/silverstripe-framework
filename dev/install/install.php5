@@ -1232,11 +1232,11 @@ class InstallRequirements {
 	}
 
 	public function hasErrors() {
-		return sizeof($this->errors);
+		return empty($this->errors) ? 0 : sizeof($this->errors);
 	}
 
 	public function hasWarnings() {
-		return sizeof($this->warnings);
+		return empty($this->warnings) ? 0 : sizeof($this->warnings);
 	}
 
 }
