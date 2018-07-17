@@ -16,7 +16,7 @@ HTTP:
     no-cache: "true"
     no-store: "true"
     must-revalidate: "true"
-  vary: "X-Requested-With, X-Forwarded-Protocol"
+  vary: "X-Forwarded-Protocol"
 LeftAndMain:
   dependencies:
     versionProvider: %$SilverStripeVersionProvider
