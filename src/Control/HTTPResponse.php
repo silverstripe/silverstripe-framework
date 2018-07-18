@@ -435,9 +435,13 @@ EOT
                 $headers[] = sprintf('%s: %s', $header, $value);
             }
         }
-        return
-            sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
-            implode("\r\n", $headers) . "\r\n" . "\r\n" .
-            $this->getBody();
+        return sprintf(
+            'HTTP/%s %s %s',
+            $this->getProtocolVersion(),
+            $this->getStatusCode(),
+            $this->getStatusDescription()
+        ) . "\r\n"
+            . implode("\r\n", $headers) . "\r\n" . "\r\n"
+            . $this->getBody();
     }
 }
