@@ -35,11 +35,7 @@ class LookupField extends DropdownField {
 
 		$mapped = array();
 
-		if($source instanceof SQLMap) {
-			foreach($values as $value) {
-				$mapped[] = $source->getItem($value);
-			}
-		} else if($source instanceof ArrayAccess || is_array($source)) {
+		if($source instanceof ArrayAccess || is_array($source)) {
 			$source = ArrayLib::flatten($source);
 
 			foreach($values as $value) {
