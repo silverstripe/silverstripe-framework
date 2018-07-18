@@ -262,8 +262,8 @@ class Session
     public function requestContainsSessionId(HTTPRequest $request)
     {
         $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
-		$name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
-		return (bool)Cookie::get($name);
+        $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
+        return (bool)Cookie::get($name);
     }
 
     /**
@@ -330,9 +330,9 @@ class Session
                 $this->recursivelyApply((array)$this->data, $data);
             } else {
                 // Use in-memory data if the session is lazy started
-                $data = isset($this->data) ? $this->data : [];
+                $data = $this->data;
             }
-            $this->data = $data;
+            $this->data = $data ?: [];
         } else {
             $this->data = [];
         }
@@ -615,6 +615,7 @@ class Session
      */
     protected function recursivelyApplyChanges($changes, $source, &$destination)
     {
+        $source = $source ?: [];
         foreach ($changes as $key => $changed) {
             if ($changed === true) {
                 // Determine if replacement or removal
