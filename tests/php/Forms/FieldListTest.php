@@ -247,6 +247,32 @@ class FieldListTest extends SapphireTest
         $this->assertTrue($tabbedFields->hasTabSet());
     }
 
+    public function testFindTab()
+    {
+        $fields = new FieldList(
+            $root = new TabSet(
+                'Root',
+                $tab1 = new Tab('Tab1'),
+                $tab2 = new Tab('Tab2'),
+                $tab3 = new Tab('Tab3'),
+                $more = new TabSet(
+                    'More',
+                    $tab4 = new Tab('Tab4')
+                )
+            )
+        );
+
+        $this->assertEquals($fields->findTab('Root'), $root);
+        $this->assertNull($fields->findTab('Tab5'));
+
+        $this->assertNull($fields->findTab('Tab3'));
+        $this->assertEquals($fields->findTab('Root.Tab3'), $tab3);
+
+        $this->assertNull($fields->findTab('More'));
+        $this->assertEquals($fields->findTab('Root.More'), $more);
+        $this->assertEquals($fields->findTab('Root.More.Tab4'), $tab4);
+    }
+
     /**
      * Test removing an array of fields from a tab in a set.
      */

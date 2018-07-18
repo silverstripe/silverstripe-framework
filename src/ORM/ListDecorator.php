@@ -142,6 +142,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->column($value);
     }
 
+    public function columnUnique($value = "ID")
+    {
+        return $this->list->columnUnique($value);
+    }
+
     public function each($callback)
     {
         return $this->list->each($callback);
