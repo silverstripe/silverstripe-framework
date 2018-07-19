@@ -81,7 +81,10 @@ class HTTPCacheControl extends SS_Object {
 
 		// If we've not been provided an initial state, then grab HTTP.cache_contrpl from config
 		if (!$this->state) {
-			$this->setDirectivesFromArray(Config::inst()->get('HTTP', 'cache_control'));
+			$defaultDirectives = Config::inst()->get('HTTP', 'cache_control');
+			if (!empty($defaultDirectives)) {
+				$this->setDirectivesFromArray($defaultDirectives);
+			}
 		}
 	}
 
