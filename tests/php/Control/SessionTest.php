@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Control\Tests;
 
+use http\Exception\BadMessageException;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
@@ -20,6 +22,127 @@ class SessionTest extends SapphireTest
     {
         $this->session = new Session([]);
         return parent::setUp();
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInitDoesNotStartSessionWithoutIdentifier()
+    {
+        $req = new HTTPRequest('GET', '/');
+        $session = new Session(null); // unstarted session
+        $session->init($req);
+        $this->assertFalse($session->isStarted());
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInitStartsSessionWithIdentifier()
+    {
+        $req = new HTTPRequest('GET', '/');
+        Cookie::set(session_name(), '1234');
+        $session = new Session(null); // unstarted session
+        $session->init($req);
+        $this->assertTrue($session->isStarted());
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInitStartsSessionWithData()
+    {
+        $req = new HTTPRequest('GET', '/');
+        $session = new Session([]);
+        $session->init($req);
+        $this->assertTrue($session->isStarted());
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testStartUsesDefaultCookieNameWithHttp()
+    {
+        $req = (new HTTPRequest('GET', '/'))
+            ->setScheme('http');
+        Cookie::set(session_name(), '1234');
+        $session = new Session(null); // unstarted session
+        $session->start($req);
+        $this->assertNotEquals(session_name(), $session->config()->get('cookie_name_secure'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testStartUsesDefaultCookieNameWithHttpsAndCookieSecureOff()
+    {
+        $req = (new HTTPRequest('GET', '/'))
+            ->setScheme('https');
+        Cookie::set(session_name(), '1234');
+        $session = new Session(null); // unstarted session
+        $session->start($req);
+        $this->assertNotEquals(session_name(), $session->config()->get('cookie_name_secure'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testStartUsesSecureCookieNameWithHttpsAndCookieSecureOn()
+    {
+        $req = (new HTTPRequest('GET', '/'))
+            ->setScheme('https');
+        Cookie::set(session_name(), '1234');
+        $session = new Session(null); // unstarted session
+        $session->config()->update('cookie_secure', true);
+        $session->start($req);
+        $this->assertEquals(session_name(), $session->config()->get('cookie_name_secure'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage Session has already started
+     */
+    public function testStartErrorsWhenStartingTwice()
+    {
+        $req = new HTTPRequest('GET', '/');
+        $session = new Session(null); // unstarted session
+        $session->start($req);
+        $session->start($req);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testStartRetainsInMemoryData()
+    {
+        $this->markTestIncomplete('Test');
+        // TODO Figure out how to simulate session vars without a session_start() resetting them
+        // $_SESSION['existing'] = true;
+        // $_SESSION['merge'] = 1;
+        $req = new HTTPRequest('GET', '/');
+        $session = new Session(null); // unstarted session
+        $session->set('new', true);
+        $session->set('merge', 2);
+        $session->start($req); // simulate lazy start
+        $this->assertEquals(
+            [
+                // 'existing' => true,
+                'new' => true,
+                'merge' => 2
+            ],
+            $session->getAll()
+        );
+
+        unset($_SESSION);
     }
 
     public function testGetSetBasics()
@@ -122,6 +245,25 @@ class SessionTest extends SapphireTest
             null, // Should be removed not just empty array
             $s->get('something')
         );
+    }
+
+    public function testRequestContainsSessionId()
+    {
+        $req = new HTTPRequest('GET', '/');
+        $session = new Session(null); // unstarted session
+        $this->assertFalse($session->requestContainsSessionId($req));
+        Cookie::set(session_name(), '1234');
+        $this->assertTrue($session->requestContainsSessionId($req));
+    }
+
+    public function testRequestContainsSessionIdRespectsCookieNameSecure()
+    {
+        $req = (new HTTPRequest('GET', '/'))
+            ->setScheme('https');
+        $session = new Session(null); // unstarted session
+        Cookie::set($session->config()->get('cookie_name_secure'), '1234');
+        $session->config()->update('cookie_secure', true);
+        $this->assertTrue($session->requestContainsSessionId($req));
     }
 
     public function testUserAgentLockout()

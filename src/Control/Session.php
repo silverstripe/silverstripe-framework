@@ -49,6 +49,9 @@ use SilverStripe\Dev\Deprecation;
  *
  * Once you have saved a value to the Session you can access it by using the {@link Session::get()} function.
  * Like the {@link Session::set()} function you can use this anywhere in your PHP files.
+ * Note that session data isn't persisted in PHP's own session store (via $_SESSION)
+ * until {@link Session::save()} is called, which happens automatically at the end of a standard request
+ * through {@link SilverStripe\Control\Middleware\SessionMiddleware}.
  *
  * The values in the comments are the values stored from the previous example.
  *
@@ -84,7 +87,6 @@ use SilverStripe\Dev\Deprecation;
  * </code>
  *
  * @see Cookie
- * @todo This class is currently really basic and could do with a more well-thought-out implementation.
  */
 class Session
 {
@@ -129,6 +131,12 @@ class Session
     private static $cookie_secure = false;
 
     /**
+     * @config
+     * @var string
+     */
+    private static $cookie_name_secure = 'SECSESSID';
+
+    /**
      * Name of session cache limiter to use.
      * Defaults to '' to disable cache limiter entirely.
      *
@@ -144,6 +152,11 @@ class Session
      * @var array|null
      */
     protected $data = null;
+
+    /**
+     * @var bool
+     */
+    protected $started = false;
 
     /**
      * List of keys changed. This is a nested array which represents the
@@ -192,16 +205,21 @@ class Session
         }
 
         $this->data = $data;
+        $this->started = isset($data);
     }
 
     /**
-     * Init this session instance before usage
+     * Init this session instance before usage,
+     * if a session identifier is part of the passed in request.
+     * Otherwise, a session might be started in {@link save()}
+     * if session data needs to be written with a new session identifier.
      *
      * @param HTTPRequest $request
      */
     public function init(HTTPRequest $request)
     {
-        if (!$this->isStarted()) {
+
+        if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
             $this->start($request);
         }
 
@@ -210,6 +228,7 @@ class Session
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
                 $this->destroy();
+                $this->started = false;
                 $this->start($request);
             }
         }
@@ -233,11 +252,24 @@ class Session
      */
     public function isStarted()
     {
-        return isset($this->data);
+        return $this->started;
     }
 
     /**
-     * Begin session
+     * @param HTTPRequest $request
+     * @return bool
+     */
+    public function requestContainsSessionId(HTTPRequest $request)
+    {
+        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
+        $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
+        return (bool)Cookie::get($name);
+    }
+
+    /**
+     * Begin session, regardless if a session identifier is present in the request,
+     * or whether any session data needs to be written.
+     * See {@link init()} if you want to "lazy start" a session.
      *
      * @param HTTPRequest $request The request for which to start a session
      */
@@ -281,7 +313,7 @@ class Session
             // If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
             // seperate (less secure) session for non-HTTPS requests
             if ($secure) {
-                session_name('SECSESSID');
+                session_name($this->config()->get('cookie_name_secure'));
             }
 
             $limiter = $this->config()->get('sessionCacheLimiter');
@@ -291,7 +323,16 @@ class Session
 
             session_start();
 
-            $this->data = isset($_SESSION) ? $_SESSION : array();
+            if (isset($_SESSION)) {
+                // Initialise data from session store if present
+                $data = $_SESSION;
+                // Merge in existing in-memory data, taking priority over session store data
+                $this->recursivelyApply((array)$this->data, $data);
+            } else {
+                // Use in-memory data if the session is lazy started
+                $data = $this->data;
+            }
+            $this->data = $data ?: [];
         } else {
             $this->data = [];
         }
@@ -302,6 +343,8 @@ class Session
             Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
                 : null, $secure, true);
         }
+
+        $this->started = true;
     }
 
     /**
@@ -335,9 +378,6 @@ class Session
      */
     public function set($name, $val)
     {
-        if (!$this->isStarted()) {
-            throw new BadMethodCallException("Session cannot be modified until it's started");
-        }
         $var = &$this->nestedValueRef($name, $this->data);
 
         // Mark changed
@@ -380,10 +420,6 @@ class Session
      */
     public function addToArray($name, $val)
     {
-        if (!$this->isStarted()) {
-            throw new BadMethodCallException("Session cannot be modified until it's started");
-        }
-
         $names = explode('.', $name);
 
         // We still want to do this even if we have strict path checking for legacy code
@@ -407,9 +443,6 @@ class Session
      */
     public function get($name)
     {
-        if (!$this->isStarted()) {
-            throw new BadMethodCallException("Session cannot be accessed until it's started");
-        }
         return $this->nestedValue($name, $this->data);
     }
 
@@ -421,10 +454,6 @@ class Session
      */
     public function clear($name)
     {
-        if (!$this->isStarted()) {
-            throw new BadMethodCallException("Session cannot be modified until it's started");
-        }
-
         // Get var by path
         $var = $this->nestedValue($name, $this->data);
 
@@ -449,10 +478,6 @@ class Session
      */
     public function clearAll()
     {
-        if (!$this->isStarted()) {
-            throw new BadMethodCallException("Session cannot be modified until it's started");
-        }
-
         if ($this->data && is_array($this->data)) {
             foreach (array_keys($this->data) as $key) {
                 $this->clear($key);
@@ -495,7 +520,7 @@ class Session
                 $this->start($request);
             }
 
-            // Apply all changes recursively
+            // Apply all changes recursively, implicitly writing them to the actual PHP session store.
             $this->recursivelyApplyChanges($this->changedData, $this->data, $_SESSION);
         }
     }
@@ -590,6 +615,7 @@ class Session
      */
     protected function recursivelyApplyChanges($changes, $source, &$destination)
     {
+        $source = $source ?: [];
         foreach ($changes as $key => $changed) {
             if ($changed === true) {
                 // Determine if replacement or removal
