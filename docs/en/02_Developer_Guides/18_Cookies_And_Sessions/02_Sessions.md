@@ -76,7 +76,7 @@ $object = unserialize($session->get('MyObject', $object));
 
 ```
 
-## get_all
+## getAll
 
 You can also get all the values in the session at once. This is useful for debugging.
 ```php
