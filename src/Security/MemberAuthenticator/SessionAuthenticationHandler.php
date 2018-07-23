@@ -45,9 +45,16 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      */
     public function authenticateRequest(HTTPRequest $request)
     {
+        $session = $request->getSession();
+
+        // Sessions are only started when a session cookie is detected
+        if (!$session->isStarted()) {
+            return null;
+        }
+
         // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
         // ValidationException
-        $id = $request->getSession()->get($this->getSessionVariable());
+        $id = $session->get($this->getSessionVariable());
         if (!$id) {
             return null;
         }
