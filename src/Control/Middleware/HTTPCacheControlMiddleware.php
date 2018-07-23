@@ -26,8 +26,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     const STATE_DISABLED = 'disabled';
 
-    const STATE_DEFAULT = 'default';
-
     /**
      * Generate response for the given request
      *
@@ -90,11 +88,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             'must-revalidate' => true,
         ],
         self::STATE_ENABLED => [
-            'must-revalidate' => true,
-        ],
-        self::STATE_DEFAULT => [
             'no-cache' => true,
-        ],
+            'must-revalidate' => true,
+        ]
     ];
 
     /**
@@ -103,7 +99,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @config
      * @var string
      */
-    private static $defaultState = self::STATE_DEFAULT;
+    private static $defaultState = self::STATE_ENABLED;
 
     /**
      * Current state
@@ -498,7 +494,13 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     {
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
-        $this->setStateDirective($applyTo, 'no-cache', $noCache);
+        if ($noCache) {
+            $this->setStateDirective($applyTo, 'no-cache');
+            $this->removeStateDirective($applyTo, 'max-age');
+            $this->removeStateDirective($applyTo, 's-maxage');
+        } else {
+            $this->removeStateDirective($applyTo, 'no-cache');
+        }
         return $this;
     }
 
@@ -515,6 +517,10 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'max-age', $age);
+        if ($age) {
+            $this->removeStateDirective($applyTo, 'no-cache');
+            $this->removeStateDirective($applyTo, 'no-store');
+        }
         return $this;
     }
 
@@ -531,6 +537,10 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 's-maxage', $age);
+        if ($age) {
+            $this->removeStateDirective($applyTo, 'no-cache');
+            $this->removeStateDirective($applyTo, 'no-store');
+        }
         return $this;
     }
 
@@ -763,17 +773,16 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function augmentState(HTTPRequest $request, HTTPResponse $response)
     {
-        // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
-        // likely to be supplying information relevant to the current user only
-        if ($request->getSession()->getAll()) {
-            // Don't force in case user code chooses to opt in to public caching
-            $this->privateCache();
-        }
-
         // Errors disable cache (unless some errors are cached intentionally by usercode)
         if ($response->isError() || $response->isRedirect()) {
             // Even if publicCache(true) is specified, errors will be uncacheable
             $this->disableCache(true);
+        } elseif ($request->getSession()->getAll()) {
+            // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
+            // likely to be supplying information relevant to the current user only
+
+            // Don't force in case user code chooses to opt in to public caching
+            $this->privateCache();
         }
     }
 }
