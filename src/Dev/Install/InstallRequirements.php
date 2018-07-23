@@ -387,6 +387,13 @@ class InstallRequirements
             'SimpleXML support not included in PHP.'
         ));
 
+        // Check for INTL support
+        $this->requireClass('IntlTimeZone', array(
+            'PHP Configuration',
+            'Intl support',
+            'Internationalization (php-intl) support not included in PHP.'
+        ));
+
         // Check for token_get_all
         $this->requireFunction('token_get_all', array(
             "PHP Configuration",
