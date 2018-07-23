@@ -20,31 +20,54 @@ class FixtureTestState implements TestState
     private $fixtureFactories = [];
 
     /**
+     * Set if fixtures have been loaded
+     *
+     * @var bool
+     */
+    protected $loaded = [];
+
+    /**
      * Called on setup
      *
      * @param SapphireTest $test
      */
     public function setUp(SapphireTest $test)
     {
-        if ($this->testNeedsDB($test)) {
-            $tmpDB = $test::tempDB();
-            if (!$tmpDB->isUsed()) {
-                $tmpDB->build();
-            }
-            DataObject::singleton()->flushCache();
+        if (!$this->testNeedsDB($test)) {
+            return;
+        }
 
-            if (!$tmpDB->hasStarted()) {
-                foreach ($test->getRequireDefaultRecordsFrom() as $className) {
-                    $instance = singleton($className);
-                    if (method_exists($instance, 'requireDefaultRecords')) {
-                        $instance->requireDefaultRecords();
-                    }
-                    if (method_exists($instance, 'augmentDefaultRecords')) {
-                        $instance->augmentDefaultRecords();
-                    }
-                }
-                $this->loadFixtures($test);
+        // Ensure DB is built
+        $tmpDB = $test::tempDB();
+        if (!$tmpDB->isUsed()) {
+            // Build base db
+            $tmpDB->build();
+
+            // Reset schema
+            $extraObjects = $test->getExtraDataObjects();
+            if ($extraObjects) {
+                $tmpDB->resetDBSchema($extraObjects);
             }
+        }
+
+        DataObject::singleton()->flushCache();
+
+        // Ensure DB is built and populated
+        if (!$this->getIsLoaded(get_class($test))) {
+            foreach ($test->getRequireDefaultRecordsFrom() as $className) {
+                $instance = singleton($className);
+                if (method_exists($instance, 'requireDefaultRecords')) {
+                    $instance->requireDefaultRecords();
+                }
+                if (method_exists($instance, 'augmentDefaultRecords')) {
+                    $instance->augmentDefaultRecords();
+                }
+            }
+            $this->loadFixtures($test);
+        }
+
+        // Begin transactions if enabled
+        if ($test->getUsesTransactions()) {
             $tmpDB->startTransaction();
         }
     }
@@ -56,9 +79,21 @@ class FixtureTestState implements TestState
      */
     public function tearDown(SapphireTest $test)
     {
-        if ($this->testNeedsDB($test)) {
-            $test::tempDB()->rollbackTransaction();
+        if (!$this->testNeedsDB($test)) {
+            return;
         }
+
+        // For transactional states, rollback if possible
+        if ($test->getUsesTransactions()) {
+            $success = $test::tempDB()->rollbackTransaction();
+            if ($success) {
+                return;
+            }
+        }
+
+        // Force reset if transaction failed, or disabled
+        $test::tempDB()->kill();
+        $this->resetFixtureFactory(get_class($test));
     }
 
     /**
@@ -68,7 +103,7 @@ class FixtureTestState implements TestState
      */
     public function setUpOnce($class)
     {
-        $this->fixtureFactories[strtolower($class)] = Injector::inst()->create(FixtureFactory::class);
+        $this->resetFixtureFactory($class);
     }
 
     /**
@@ -130,6 +165,8 @@ class FixtureTestState implements TestState
         foreach ($paths as $fixtureFile) {
             $this->loadFixture($fixtureFile, $test);
         }
+        // Flag as loaded
+        $this->loaded[strtolower(get_class($test))] = true;
     }
 
     /**
@@ -219,5 +256,28 @@ class FixtureTestState implements TestState
         }
 
         return false;
+    }
+
+    /**
+     * Bootstrap a clean fixture factory for the given class
+     *
+     * @param string $class
+     */
+    protected function resetFixtureFactory($class)
+    {
+        $class = strtolower($class);
+        $this->fixtureFactories[$class] = Injector::inst()->create(FixtureFactory::class);
+        $this->loaded[$class] = false;
+    }
+
+    /**
+     * Check if fixtures need to be loaded for this class
+     *
+     * @param string $class Name of test to check
+     * @return bool
+     */
+    protected function getIsLoaded($class)
+    {
+        return !empty($this->loaded[strtolower($class)]);
     }
 }

@@ -654,22 +654,40 @@ abstract class Database
      *
      * @param string|boolean $savepoint Name of savepoint, or leave empty to rollback
      * to last savepoint
+     * @return bool|null Boolean is returned if success state is known, or null if
+     * unknown. Note: For error checking purposes null should not be treated as error.
      */
     abstract public function transactionRollback($savepoint = false);
 
     /**
      * Commit everything inside this transaction so far
      *
-     * @param boolean $chain
+     * @param bool $chain
+     * @return bool|null Boolean is returned if success state is known, or null if
+     * unknown. Note: For error checking purposes null should not be treated as error.
      */
     abstract public function transactionEnd($chain = false);
+
+    /**
+     * Return depth of current transaction
+     *
+     * @return int Nesting level, or 0 if not in a transaction
+     */
+    public function transactionDepth()
+    {
+        // Placeholder error for transactional DBs that don't expose depth
+        if ($this->supportsTransactions()) {
+            user_error(get_class($this) . " does not support transactionDepth", E_USER_WARNING);
+        }
+        return 0;
+    }
 
     /**
      * Determines if the used database supports application-level locks,
      * which is different from table- or row-level locking.
      * See {@link getLock()} for details.
      *
-     * @return boolean Flag indicating that locking is available
+     * @return bool Flag indicating that locking is available
      */
     public function supportsLocks()
     {
@@ -681,7 +699,7 @@ abstract class Database
      * See {@link supportsLocks()} to check if locking is generally supported.
      *
      * @param string $name Name of the lock
-     * @return boolean
+     * @return bool
      */
     public function canLock($name)
     {
@@ -703,7 +721,7 @@ abstract class Database
      *
      * @param string $name Name of lock
      * @param integer $timeout Timeout in seconds
-     * @return boolean
+     * @return bool
      */
     public function getLock($name, $timeout = 5)
     {
@@ -715,7 +733,7 @@ abstract class Database
      * (if the execution aborts (e.g. due to an error) all locks are automatically released).
      *
      * @param string $name Name of the lock
-     * @return boolean Flag indicating whether the lock was successfully released
+     * @return bool Flag indicating whether the lock was successfully released
      */
     public function releaseLock($name)
     {
@@ -756,7 +774,7 @@ abstract class Database
      * Determine if the database with the specified name exists
      *
      * @param string $name Name of the database to check for
-     * @return boolean Flag indicating whether this database exists
+     * @return bool Flag indicating whether this database exists
      */
     public function databaseExists($name)
     {
@@ -778,12 +796,12 @@ abstract class Database
      * database if it doesn't exist in the current schema.
      *
      * @param string $name Name of the database
-     * @param boolean $create Flag indicating whether the database should be created
+     * @param bool $create Flag indicating whether the database should be created
      * if it doesn't exist. If $create is false and the database doesn't exist
      * then an error will be raised
-     * @param int|boolean $errorLevel The level of error reporting to enable for the query, or false if no error
+     * @param int|bool $errorLevel The level of error reporting to enable for the query, or false if no error
      * should be raised
-     * @return boolean Flag indicating success
+     * @return bool Flag indicating success
      */
     public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR)
     {

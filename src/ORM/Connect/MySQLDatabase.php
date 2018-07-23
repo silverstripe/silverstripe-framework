@@ -329,24 +329,77 @@ class MySQLDatabase extends Database
 
     public function transactionRollback($savepoint = false)
     {
+        // Named transaction
         if ($savepoint) {
             $this->query('ROLLBACK TO ' . $savepoint);
-        } else {
-            --$this->transactionNesting;
-            if ($this->transactionNesting > 0) {
-                $this->transactionRollback('NESTEDTRANSACTION' . $this->transactionNesting);
-            } else {
-                $this->query('ROLLBACK');
-            }
+            return true;
         }
+
+        // Fail if transaction isn't available
+        if (!$this->transactionNesting) {
+            return false;
+        }
+        --$this->transactionNesting;
+        if ($this->transactionNesting > 0) {
+            $this->transactionRollback('NESTEDTRANSACTION' . $this->transactionNesting);
+        } else {
+            $this->query('ROLLBACK');
+        }
+        return true;
+    }
+
+    public function transactionDepth()
+    {
+        return $this->transactionNesting;
     }
 
     public function transactionEnd($chain = false)
     {
+        // Fail if transaction isn't available
+        if (!$this->transactionNesting) {
+            return false;
+        }
         --$this->transactionNesting;
         if ($this->transactionNesting <= 0) {
             $this->transactionNesting = 0;
             $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        }
+        return true;
+    }
+
+    /**
+     * In error condition, set transactionNesting to zero
+     */
+    protected function resetTransactionNesting()
+    {
+        $this->transactionNesting = 0;
+    }
+
+    public function query($sql, $errorLevel = E_USER_ERROR)
+    {
+        $this->inspectQuery($sql);
+        return parent::query($sql, $errorLevel);
+    }
+
+    public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
+    {
+        $this->inspectQuery($sql);
+        return parent::preparedQuery($sql, $parameters, $errorLevel);
+    }
+
+    /**
+     * Inspect a SQL query prior to execution
+     *
+     * @param string $sql
+     */
+    protected function inspectQuery($sql)
+    {
+        // Any DDL discards transactions.
+        // See https://dev.mysql.com/doc/internals/en/transactions-notes-on-ddl-and-normal-transaction.html
+        // on why we need to be over-eager
+        $isDDL = $this->getConnector()->isQueryDDL($sql);
+        if ($isDDL) {
+            $this->resetTransactionNesting();
         }
     }
 

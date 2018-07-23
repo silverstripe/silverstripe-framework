@@ -79,6 +79,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected $usesDatabase = null;
 
     /**
+     * This test will cleanup its state via transactions.
+     * If set to false a full schema is forced between tests, but at a performance cost.
+     *
+     * @var bool
+     */
+    protected $usesTransactions = true;
+
+    /**
      * @var bool
      */
     protected static $is_running_test = false;
@@ -226,6 +234,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     public function getUsesDatabase()
     {
         return $this->usesDatabase;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUsesTransactions()
+    {
+        return $this->usesTransactions;
     }
 
     /**
@@ -1188,7 +1204,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         if (strpos($fixtureFilePath, ':') !== false) {
             return ModuleResourceLoader::singleton()->resolvePath($fixtureFilePath);
         }
-        
+
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
         $resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
