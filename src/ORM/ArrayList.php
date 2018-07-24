@@ -253,6 +253,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         if ($renumberKeys) {
             $this->items = array_values($this->items);
         }
+        
+        return $this;
     }
 
     /**
