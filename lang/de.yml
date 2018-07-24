@@ -11,8 +11,6 @@ de:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
-    NOTSET: 'nicht gesetzt'
-    TODAY: heute
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
     VALIDDATEMINDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({date}) liegen oder gleich sein'
@@ -49,7 +47,6 @@ de:
     RelationSearch: Relationssuche
     ResetFilter: Zurücksetzen
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Löschen
     Delete: Löschen
     DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
     EditPermissionsFailure: 'Sie haben keine Berechtigung, die Verknüpfung zu lösen'
@@ -61,8 +58,6 @@ de:
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht {type} {name}'
     Save: Speichern
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Bearbeiten
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung

@@ -84,6 +84,7 @@ en:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Delete
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
@@ -95,7 +96,7 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
-  SilverStripe\Forms\GridField\GridFieldEditButton:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
@@ -149,8 +150,6 @@ en:
       other: '{count} years'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Any
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Too many related objects; fallback field in use'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -325,5 +324,5 @@ en:
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDRESETSENTHEADER: 'Password reset link sent'
-    PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'

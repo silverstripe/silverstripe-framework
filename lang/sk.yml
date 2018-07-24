@@ -37,8 +37,6 @@ sk:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: nezadané
-    TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
@@ -78,7 +76,6 @@ sk:
     RelationSearch: 'Vzťah hľadania'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Zmazať
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     EditPermissionsFailure: 'Žiadne oprávnenie pre odpojenie záznamu'
@@ -90,8 +87,6 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané {type} {name}'
     Save: Uložiť
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editovať
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Stránka
   SilverStripe\Forms\MoneyField:

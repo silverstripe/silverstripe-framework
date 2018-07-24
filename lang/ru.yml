@@ -33,8 +33,6 @@ ru:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не установлено'
-    TODAY: сегодня
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
     VALIDDATEMINDATE: 'Требуется значение даты, совпадающее с минимальным ({date}) или более новое'
@@ -82,7 +80,6 @@ ru:
     RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Удалить
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
@@ -94,8 +91,6 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено {type} {name}'
     Save: Сохранить
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Редактировать
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница

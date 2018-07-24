@@ -37,8 +37,6 @@ fr:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'non renseigné'
-    TODAY: 'aujourd''hui'
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({date})'
@@ -99,7 +97,7 @@ fr:
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editer
+    EDIT: Éditer
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:
