@@ -216,6 +216,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		if($renumberKeys) $this->items = array_values($this->items);
+		
+		return $this;
 	}
 
 	/**
