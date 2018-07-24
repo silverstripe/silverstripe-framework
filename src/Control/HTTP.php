@@ -463,9 +463,10 @@ class HTTP
 
         // Run middleware
         ChangeDetectionMiddleware::singleton()->process($request, function (HTTPRequest $request) use ($response) {
-            return HTTPCacheControlMiddleware::singleton()->process($request, function (HTTPRequest $request) use ($response) {
-                return $response;
-            });
+            return HTTPCacheControlMiddleware::singleton()
+                ->process($request, function (HTTPRequest $request) use ($response) {
+                    return $response;
+                });
         });
     }
 

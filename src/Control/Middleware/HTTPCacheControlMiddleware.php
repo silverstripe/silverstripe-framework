@@ -563,8 +563,10 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * The resulting cache-control headers will be chosen from the 'enabled' set of directives.
      *
-     * Does not set `public` directive. Usually, `setMaxAge()` is sufficient. Use `publicCache()` if this is explicitly required.
-     * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private
+     * Does not set `public` directive. Usually, `setMaxAge()` is sufficient. Use `publicCache()` if this is
+     * explicitly required.
+     * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency...
+     *      /http-caching#public_vs_private
      *
      * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
      * @param bool $force Force the cache to public even if its unforced private or public
@@ -587,10 +589,12 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * The resulting cache-control headers will be chosen from the 'disabled' set of directives.
      *
      * Removes all state and replaces it with `no-cache, no-store, must-revalidate`. Although `no-store` is sufficient
-     * the others are added under recommendation from Mozilla (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)
+     * the others are added under recommendation from Mozilla
+     * (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)
      *
      * Does not set `private` directive, use `privateCache()` if this is explicitly required.
-     * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private
+     * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency...
+     *       /http-caching#public_vs_private
      *
      * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
      * @param bool $force Force the cache to diabled even if it's forced private or public

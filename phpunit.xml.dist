@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Standard module phpunit configuration.
-Requires PHPUnit ^5.7
+Requires PHPUnit ^7.1
 -->
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
-	<testsuite name="Default">
-		<directory>tests/php</directory>
+<phpunit
+  bootstrap="tests/bootstrap.php"
+  colors="true"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.1/phpunit.xsd"
+>
+  <testsuites>
+    <testsuite name="Default">
+      <directory>tests/php</directory>
     </testsuite>
     <testsuite name="framework">
-        <directory>tests/php</directory>
+      <directory>tests/php</directory>
     </testsuite>
     <testsuite name="cms">
-        <directory>vendor/silverstripe/cms/tests</directory>
+      <directory>vendor/silverstripe/cms/tests</directory>
     </testsuite>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">tests/</directory>
-                <directory suffix=".php">thirdparty/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+  </testsuites>
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">.</directory>
+      <exclude>
+        <directory suffix=".php">tests/</directory>
+        <directory suffix=".php">thirdparty/</directory>
+      </exclude>
+    </whitelist>
+  </filter>
 </phpunit>

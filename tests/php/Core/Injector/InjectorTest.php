@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\SampleService;
