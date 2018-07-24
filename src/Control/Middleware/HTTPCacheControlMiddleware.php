@@ -507,7 +507,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Specifies the maximum amount of time (seconds) a resource will be considered fresh.
      * This directive is relative to the time of the request.
-     * Affects all non-disabled states. Use setStateDirective() instead to set for a single state.
+     * Affects all non-disabled states. Use enableCache(), publicCache() or
+     * setStateDirective() instead to set the max age for a single state.
      *
      * @param int $age
      * @return $this
@@ -560,6 +561,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     /**
      * Simple way to set cache control header to a cacheable state.
+     * Needs either `setMaxAge()` or the `$maxAge` method argument in order to activate caching.
      *
      * The resulting cache-control headers will be chosen from the 'enabled' set of directives.
      *
@@ -568,14 +570,20 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
      * @param bool $force Force the cache to public even if its unforced private or public
+     * @param int $maxAge Shortcut for `setMaxAge()`, which is required to actually enable the cache.
      * @return $this
      */
-    public function enableCache($force = false)
+    public function enableCache($force = false, $maxAge = null)
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_ENABLED, $force)) {
             $this->setState(self::STATE_ENABLED);
         }
+
+        if (!is_null($maxAge)) {
+            $this->setMaxAge($maxAge);
+        }
+
         return $this;
     }
 
@@ -627,20 +635,27 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
     /**
      * Advanced way to set cache control header to a cacheable state.
-     * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers)
+     * Indicates that the response may be cached by any cache. (eg: CDNs, Proxies, Web browsers).
+     * Needs either `setMaxAge()` or the `$maxAge` method argument in order to activate caching.
      *
      * The resulting cache-control headers will be chosen from the 'private' set of directives.
      *
      * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
      * @param bool $force Force the cache to public even if it's private, unless it's been forced private
+     * @param int $maxAge Shortcut for `setMaxAge()`, which is required to actually enable the cache.
      * @return $this
      */
-    public function publicCache($force = false)
+    public function publicCache($force = false, $maxAge = null)
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
             $this->setState(self::STATE_PUBLIC);
         }
+
+        if (!is_null($maxAge)) {
+            $this->setMaxAge($maxAge);
+        }
+
         return $this;
     }
 
