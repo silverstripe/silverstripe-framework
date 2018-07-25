@@ -299,6 +299,8 @@ class ManyManyList extends RelationList
             $manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
             $manipulation[$this->joinTable]['fields'][$this->foreignKey] = $foreignID;
 
+            $this->extend('onBeforeAdd', $manipulation, $itemID);
+
             DB::manipulate($manipulation);
         }
     }
@@ -345,6 +347,9 @@ class ManyManyList extends RelationList
         $query->addWhere(array(
             "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
         ));
+
+        $this->extend('onBeforeRemove', $query, $itemID);
+
         $query->execute();
     }
 
