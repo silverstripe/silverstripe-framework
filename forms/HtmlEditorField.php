@@ -125,7 +125,7 @@ class HtmlEditorField extends TextareaField {
 	 * @return HtmlEditorField_Readonly
 	 */
 	public function performReadonlyTransformation() {
-		$field = $this->castedCopy('HtmlEditorField_Readonly');
+		$field = parent::performReadonlyTransformation();
 		$field->dontEscape = true;
 
 		return $field;

@@ -333,7 +333,7 @@ class DatetimeField extends FormField {
 	}
 
 	public function performReadonlyTransformation() {
-		$field = $this->castedCopy('DatetimeField_Readonly');
+		$field = parent::performReadonlyTransformation();
 		$field->setValue($this->dataValue());
 
 		$dateFieldConfig = $this->getDateField()->getConfig();

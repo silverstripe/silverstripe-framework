@@ -23,10 +23,6 @@ class InlineFormAction extends FormField {
 		parent::__construct($action, $title);
 	}
 
-	public function performReadonlyTransformation() {
-		return $this->castedCopy('InlineFormAction_ReadOnly');
-	}
-
 	/**
 	 * @param array $properties
 	 * @return HTMLText
