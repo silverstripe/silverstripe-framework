@@ -324,7 +324,7 @@ class Team extends DataObject
 {
     private static $many_many = [
         "Supporters" => [
-            'through' => 'TeamSupporter',
+            'through' => TeamSupporter::class,
             'from' => 'Team',
             'to' => 'Supporter',
         ]
@@ -332,8 +332,10 @@ class Team extends DataObject
 }
 class Supporter extends DataObject
 {
+    // Prior to 4.2.0, this also needs to include the reverse relation name via dot-notation
+    // i.e. 'Supports' => Team::class . '.Supporters'
     private static $belongs_many_many = [
-        "Supports" => "Team",
+        'Supports' => Team::class,
     ];
 }
 class TeamSupporter extends DataObject
@@ -343,8 +345,8 @@ class TeamSupporter extends DataObject
     ];
 
     private static $has_one = [
-        'Team' => 'Team',
-        'Supporter' => 'Supporter',
+        'Team' => Team::class,
+        'Supporter' => Supporter::class,
     ];
 }
 ```
