@@ -19,6 +19,7 @@ class SS_Backtrace {
 		array('PDO', '__construct'),
 		array('mysqli', 'mysqli'),
 		array('mysqli', 'select_db'),
+		array('mysqli', 'real_connect'),
 		array('DB', 'connect'),
 		array('Security', 'check_default_admin'),
 		array('Security', 'encrypt_password'),
