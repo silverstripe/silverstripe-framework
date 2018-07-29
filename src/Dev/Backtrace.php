@@ -26,6 +26,7 @@ class Backtrace
         array('PDO', '__construct'),
         array('mysqli', 'mysqli'),
         array('mysqli', 'select_db'),
+        array('mysqli', 'real_connect'),
         array('SilverStripe\\ORM\\DB', 'connect'),
         array('SilverStripe\\Security\\Security', 'check_default_admin'),
         array('SilverStripe\\Security\\Security', 'encrypt_password'),
