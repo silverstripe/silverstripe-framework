@@ -71,6 +71,7 @@ class HTTP
     /**
      * List of names to add to the Cache-Control header.
      *
+     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware instead
      * @see HTTPCacheControlMiddleware::__construct()
      * @config
      * @var array Keys are cache control names, values are boolean flags
@@ -80,7 +81,7 @@ class HTTP
     /**
      * Vary string; A comma separated list of var header names
      *
-     * @deprecated 4.2..5.0 Handled by HTTPCacheMiddleware instead
+     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware instead
      * @config
      * @var string|null
      */
@@ -473,6 +474,7 @@ class HTTP
      * Ensure that all deprecated HTTP cache settings are respected
      *
      * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware instead
+     * @throws \LogicException
      * @param HTTPRequest $request
      * @param HTTPResponse $response
      */
@@ -507,6 +509,37 @@ class HTTP
         if ($configVary) {
             Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware.defaultVary instead');
             $cacheControlMiddleware->addVary($configVary);
+        }
+
+        // Pass cache_control to middleware
+        $configCacheControl = $config->get('cache_control');
+        if ($configCacheControl) {
+            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware API instead');
+
+            $supportedDirectives = ['max-age', 'no-cache', 'no-store', 'must-revalidate'];
+            if ($foundUnsupported = array_diff(array_keys($configCacheControl), $supportedDirectives)) {
+                throw new \LogicException(
+                    'Found unsupported legacy directives in HTTP.cache_control: ' .
+                    implode(', ', $foundUnsupported) .
+                    '. Please use HTTPCacheControlMiddleware API instead'
+                );
+            }
+
+            if (isset($configCacheControl['max-age'])) {
+                $cacheControlMiddleware->setMaxAge($configCacheControl['max-age']);
+            }
+
+            if (isset($configCacheControl['no-cache'])) {
+                $cacheControlMiddleware->setNoCache((bool)$configCacheControl['no-cache']);
+            }
+
+            if (isset($configCacheControl['no-store'])) {
+                $cacheControlMiddleware->setNoStore((bool)$configCacheControl['no-store']);
+            }
+
+            if (isset($configCacheControl['must-revalidate'])) {
+                $cacheControlMiddleware->setMustRevalidate((bool)$configCacheControl['must-revalidate']);
+            }
         }
 
         // Set modification date

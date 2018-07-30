@@ -1,7 +1,37 @@
 pl:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: Nieznany
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Rozmiar
+    EDIT: Edytuj
+    EDITINFO: 'Edytuj plik'
+    REMOVE: Usuń
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Hasło do konta o adresie e-mail {email} zostało zmienione. Jeśli nie zmieniłeś swojego hasła, zmień hasło, korzystając z poniższego linku'
+    CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
+    CHANGEPASSWORDTEXT3: 'Zmień hasło'
+    HELLO: 'Witaj,'
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 'Witaj,'
+    TEXT1: 'Oto twój'
+    TEXT2: 'link zmiany hasła'
+    TEXT3: dla
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Nieprawidłowe żądanie'
+    REQUEST_ABORTED: 'Żądanie zostało przerwane'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Nieznany
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Nie
+    YESANSWER: Tak
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Brak dostępnych opcji'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hasła muszą mieć przynajmniej {min} znaków.'
     BETWEEN: 'Hasła muszą mieć długość pomiędzy {min} a {max} znaków.'
+    CURRENT_PASSWORD_ERROR: 'Podane hasło jest nieprawidłowe'
+    CURRENT_PASSWORD_MISSING: 'Musisz podać swoje aktualne hasło.'
+    LOGGED_IN_ERROR: 'Musisz być zalogowany aby zmienić hasło'
     MAXIMUM: 'Hasła mogą mieć co najwyżej {max} znaków.'
     SHOWONCLICKTITLE: 'Zmiana Hasła'
   SilverStripe\Forms\CurrencyField:
@@ -10,23 +40,38 @@ pl:
     VALIDDATEFORMAT2: 'Proszę wprowadź prawidłowy format daty ({format})'
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
+  SilverStripe\Forms\DatetimeField:
+    VALIDDATEMAXDATETIME: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
+    VALIDDATETIMEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
+    VALIDDATETIMEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (wybierz)
+    CHOOSE_MODEL: '(Wybierz {name})'
+    SOURCE_VALIDATION: 'Wybierz wartość z podanej listy. {value} nie jest poprawną opcją'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Nie znaleziono informacji o pliku'
   SilverStripe\Forms\Form:
+    BAD_METHOD: 'Ten formularz wymaga {metody} przesłania'
+    CSRF_EXPIRED_MESSAGE: 'Twoja sesja wygasła. Prześlij ponownie formularz.'
+    CSRF_FAILED_MESSAGE: 'Wygląda na to, że wystąpił błąd techniczny. Kliknij przycisk wstecz, następnie odśwież przeglądarkę aby wczytać stronę ponownie.'
     VALIDATIONPASSWORDSDONTMATCH: 'Hasła nie są takie same'
     VALIDATIONPASSWORDSNOTEMPTY: 'Hasło nie może być puste'
     VALIDATIONSTRONGPASSWORD: 'Hasła muszą mieć przynajmniej jedną cyfrę oraz jeden znak alfanumeryczny.'
     VALIDATOR: Walidator
     VALIDCURRENCY: 'Proszę podaj prawidłową walutę'
   SilverStripe\Forms\FormField:
+    EXAMPLE: 'na przykład {format}'
     NONE: brak
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Główny
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Eksportuj do CSV'
+    CSVIMPORT: 'Import z CSV'
     Filter: Filtr
-    FilterBy: 'Filtruj wg'
+    FilterBy: 'Filtruj wg '
     Find: Wyszukaj
     LinkExisting: 'Linkuj istniejący'
     NewRecord: 'Nowy {type}'
@@ -39,6 +84,7 @@ pl:
     RelationSearch: 'Wyszukiwanie powiązań'
     ResetFilter: Resetuj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Usuń
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
@@ -50,55 +96,147 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    EDIT: Edytuj
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Nie możesz usunąć siebie z tej grupy, stracone zostałby prawa administratora'
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: z
+    Page: Strona
+    View: Widok
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Ilość
     FIELDLABELCURRENCY: waluta
+    INVALID_CURRENCY: 'Waluta {currency} nie znajduje się na liście dozwolonych walut'
+  SilverStripe\Forms\MultiSelectField:
+    SOURCE_VALIDATION: 'Wybierz wartości z podanej listy. Podano niepoprawną opcję {value}'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Jest Pusty'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Obiekty danych'
+    PLURALS:
+      one: 'Obiekt danych'
+      few: 'Obiektów danych'
+      many: 'Obiektów danych'
+      other: 'Obiektów danych {count}'
+    SINGULARNAME: 'Obiekt danych'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakikolwiek
+    NOANSWER: Nie
+    YESANSWER: Tak
   SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} dzień'
+      few: '{count} dni'
+      many: '{count} dni'
+      other: '{count} dni'
+    HOURS_SHORT_PLURALS:
+      one: '{count} godzina'
+      few: '{count} godzin'
+      many: '{count} godzin'
+      other: '{count} godzin'
     LessThanMinuteAgo: 'mniej niż minuta'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} minuta'
+      few: '{count} minut'
+      many: '{count} minut'
+      other: '{count} minut'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} miesiąc'
+      few: '{count} miesięcy'
+      many: '{count} miesięcy'
+      other: '{count} miesięcy'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sekunda'
+      few: '{count} sekund'
+      many: '{count} sekund'
+      other: '{count} sekund'
     TIMEDIFFAGO: '{difference} temu'
     TIMEDIFFIN: 'w {difference}'
+    YEARS_SHORT_PLURALS:
+      one: '{count} rok'
+      few: '{count} lat'
+      many: '{count} lat'
+      other: '{count} lat'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Jakikolwiek
+  SilverStripe\ORM\Hierarchy:
+    LIMITED_TITLE: 'Zbyt wiele dzieci ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Znaleziono nieskończoną pętlę wewnątrz hierarchii "{type}". Proszę zmień rodzica by to rozwiązać.'
+    LIMITED_TITLE: 'Zbyt wiele dzieci ({count})'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Niepoprawne dane'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Wprowadź username i hasło'
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
+  SilverStripe\Security\CMSMemberLoginForm:
+    PASSWORDEXPIRED: '<p>Twoje hasło wygasło. <a target="_top" href="{link}">Prosimy wybrać nowe.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Niepoprawny użytkownik. <a target="_top" href="{link}">Prosimy o ponownie uwierzytelnienie</a> – aby kontynuować.</p>'
+    LOGIN_MESSAGE: '<p>Twoja sesja wygasła z powodu braku aktywności</p>'
+    LOGIN_TITLE: 'Wróć do strony, z którym połączenie zostało przerwane, logując się ponownie'
+    SUCCESS: Sukces
+    SUCCESSCONTENT: '<p>Zalogowano poprawnie! Jeżeli nie zostaniesz automatycznie przekierowany <a target="_top" href="{link}">kliknij tutaj</a></p>'
+    SUCCESS_TITLE: 'Zalogowano poprawne'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Domyślny administrator'
   SilverStripe\Security\Group:
     AddRole: 'Dodaj rolę dla tej grupy'
     Code: 'Kod Grupy'
     DefaultGroupTitleAdministrators: Administratorzy
     DefaultGroupTitleContentAuthors: 'Autor treści'
     Description: Opis
+    GROUPNAME: 'Nazwa Grupy'
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
     HierarchyPermsError: 'Nie można przyporządkować uprzywilejowanej grupy "{group}" (wymagane uprawnienie ADMIN)'
     Locked: 'Zablokowana?'
+    MEMBERS: Użytkownicy
+    NEWGROUP: 'Nowa grupa'
     NoRoles: 'Nie znaleziono ról'
+    PERMISSIONS: Uprawnienia
+    PLURALNAME: Grupy
+    PLURALS:
+      one: Grupa
+      few: Grup
+      many: Grup
+      other: '{count} grup'
     Parent: 'Grupa nadrzędna'
+    ROLES: Role
+    ROLESDESCRIPTION: 'Role są wstępnie zdefiniowanymi zestawami uprawnień i można je przypisać do grup.<br />TW razie potrzeby są one dziedziczone z grup nadrzędnych.'
     RolesAddEditLink: 'Zarządzaj rolami'
+    SINGULARNAME: Grupa
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Użytkownicy
   SilverStripe\Security\LoginAttempt:
+    Email: 'Adres e-mail'
+    EmailHashed: 'Adres e-mail (hashed)'
     IP: 'Adres IP'
+    PLURALNAME: 'Próby logowania'
+    PLURALS:
+      one: 'Próba logowania'
+      few: 'Prób logowania'
+      many: 'Próby logowania {count}'
+      other: 'Próby logowania {count}'
+    SINGULARNAME: 'Próba logowania'
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
     BUTTONLOGIN: Zaloguj
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
+    BUTTONLOGOUT: 'Wyloguj się'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
+    CURRENT_PASSWORD: 'Aktualne hasło'
+    EDIT_PASSWORD: 'Nowe hasło'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nowe hasło nie może być puste, spróbuj ponownie.'
     ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać link do zmiany hasła.'
@@ -108,12 +246,23 @@ pl:
     ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
     FIRSTNAME: Imię
     INTERFACELANG: 'Język interfejsu'
+    KEEPMESIGNEDIN: 'Zapamiętaj mnie'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
     PASSWORD: Hasło
+    PASSWORDEXPIRED: 'Twoje hasło wygasło. Prosimy ustawić nowe.'
+    PLURALNAME: Użytkownicy
+    PLURALS:
+      one: Użytkownik
+      few: '{count} użytkowników'
+      many: '{count} użytkowników'
+      other: '{count} użytkowników'
+    REMEMBERME: 'Pamiętaj mnie następnym razem? (przez {count} dni na tym urządzeniu)'
+    SINGULARNAME: Użytkownik
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
+    VALIDATIONADMINLOSTACCESS: 'Nie można usunąć wszystkich grup administracyjnych z Twojego profilu'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego użytkownika #{id} o identycznym identyfikatorze ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
@@ -122,15 +271,42 @@ pl:
     db_LockedOutUntil: 'Zablokowany do'
     db_Password: Hasło
     db_PasswordExpiry: 'Data wygaśnięcia hasła'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'Formularz logowania użytkownika CMS'
+    BUTTONFORGOTPASSWORD: 'Zapomniałeś hasła?'
+    BUTTONLOGIN: 'Zaloguj mnie spowrotem'
+    BUTTONLOGOUT: 'Wyloguj się'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
+    NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'E-mail i hasło'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Hasła użytkownika'
+    PLURALS:
+      one: 'Hasło użytkownika'
+      few: 'Haseł użytkownika'
+      many: 'Haseł użytkownika'
+      other: '{count} haseł użytkownika '
+    SINGULARNAME: 'Hasło użytkownika'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
     TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'Dostęp do CMS''a'
     CONTENT_CATEGORY: 'Uprawnienie edycji treści'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
+    PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
+    PLURALNAME: Uprawnienia
+    PLURALS:
+      one: Uprawnienie
+      few: Uprawnień
+      many: Uprawnień
+      other: '{count} uprawnień'
+    SINGULARNAME: Uprawnienie
     UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
@@ -139,17 +315,41 @@ pl:
     FromRoleOnGroup: 'odziedziczone z roli "{roletitle}" w grupie "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Tylko administrator może to zastosować'
+    PLURALNAME: Role
+    PLURALS:
+      one: Rola
+      few: ról
+      many: ról
+      other: '{count} ról'
+    SINGULARNAME: Rola
     Title: Tytuł
   SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Kod roli uprawnienia'
+    PLURALS:
+      one: 'Kod roli uprawnienia'
+      few: 'Kodów ról uprawnień'
+      many: 'Kodów ról uprawnień'
+      other: '{count} kodów ról uprawnień'
     PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "{code}" (wymagane uprawnienie ADMIN)'
+    SINGULARNAME: 'Kod roli uprawnienia'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Hasła logowania'
+    PLURALS:
+      one: 'Hasło logowania'
+      few: 'Haseł logowania'
+      many: 'Haseł logowania'
+      other: '{count} haseł logowania'
+    SINGULARNAME: 'Hasło logowania'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
     CHANGEPASSWORDBELOW: 'Możesz zmienić swoje hasło poniżej'
     CHANGEPASSWORDHEADER: 'Zmień swoje hasło'
+    CONFIRMLOGOUT: 'Kliknij przycisk poniżej, aby potwierdzić, że chcesz się wylogować.'
     ENTERNEWPASSWORD: 'Proszę wprowadż nowe hasło'
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
     LOGIN: Logowanie
+    LOGOUT: 'Wyloguj się'
     LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
     NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'

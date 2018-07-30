@@ -68,6 +68,65 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         }
     }
 
+    public function testEnableCacheWithMaxAge()
+    {
+        $maxAge = 300;
+
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->enableCache(false, $maxAge);
+
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+        $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
+        $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+    }
+
+    public function testEnableCacheWithMaxAgeAppliesWhenLevelDoesNot()
+    {
+        $maxAge = 300;
+
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->privateCache(true);
+        $cc->enableCache(false, $maxAge);
+
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+    }
+
+    public function testPublicCacheWithMaxAge()
+    {
+        $maxAge = 300;
+
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->publicCache(false, $maxAge);
+
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+        // STATE_PUBLIC doesn't contain no-cache or no-store headers to begin with,
+        // so can't test their removal effectively
+        $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
+    }
+
+    public function testPublicCacheWithMaxAgeAppliesWhenLevelDoesNot()
+    {
+        $maxAge = 300;
+
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $cc->privateCache(true);
+        $cc->publicCache(false, $maxAge);
+
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+    }
+
     /**
      * @dataProvider provideCacheStates
      */

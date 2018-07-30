@@ -84,6 +84,7 @@ en:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Delete
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
@@ -95,7 +96,7 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
-  SilverStripe\Forms\GridField\GridFieldEditButton:
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
@@ -151,8 +152,6 @@ en:
       other: '{count} years'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Any
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Too many related objects; fallback field in use'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:

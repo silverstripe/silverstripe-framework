@@ -8,7 +8,7 @@ summary: Set the correct HTTP cache headers for your responses.
 By default, SilverStripe sends headers which signal to HTTP caches
 that the response should be not considered cacheable.
 HTTP caches can either be intermediary caches (e.g. CDNs and proxies), or clients (e.g. browsers).
-The cache headers sent are `Cache-Control: no-store, no-cache, must-revalidate`;
+The cache headers sent are `Cache-Control: no-cache, must-revalidate`;
 
 HTTP caching can be a great way to speed up your website, but needs to be properly applied.
 Getting it wrong can accidentally expose draft pages or other protected content.
@@ -59,8 +59,8 @@ Does not set `private` directive, use `privateCache()` if this is explicitly req
 Simple way to set cache control header to a cacheable state.
 Use this method over `publicCache()` if you are unsure about caching details.
 
-Removes `no-store` and `no-cache` directives; other directives will remain in place.
-Use alongside `setMaxAge()` to indicate caching.
+Removes the `no-store` directive unless a `max-age` is set; other directives will remain in place.
+Use alongside `setMaxAge()` to activate caching.
 
 Does not set `public` directive. Usually, `setMaxAge()` is sufficient. Use `publicCache()` if this is explicitly required
 ([details](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private))
@@ -184,24 +184,13 @@ class PageController extends ContentController
 }
 ```
 
-## Defaults
-
-By default, PHP adds caching headers that make the page appear purely dynamic. This isn't usually appropriate for most 
-sites, even ones that are updated reasonably frequently. SilverStripe overrides the default settings with the following 
-headers:
-
-  * The `Last-Modified` date is set to be most recent modification date of any database record queried in the generation 
-  of the page.
-  * The `Expiry` date is set by taking the age of the page and adding that to the current time.
-  * `Cache-Control` is set to `max-age=86400, must-revalidate`
-  * Since a visitor cookie is set, the site won't be cached by proxies.
-  * Ajax requests are never cached.
-
 ## Max Age
 
 The cache age determines the lifetime of your cache, in seconds.
 It only takes effect if you instruct the cache control
-that your response is cacheable in the first place (via `enableCache()` or via modifying the `HTTP.cache_control` defaults).
+that your response is cacheable in the first place
+(via `enableCache()`, `publicCache()` or `privateCache()`), 
+or via modifying the `HTTP.cache_control` defaults).
 
 ```php
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
@@ -209,7 +198,8 @@ HTTPCacheControlMiddleware::singleton()
     ->setMaxAge(60)
 ```
 
-Note that `setMaxAge(0)` is NOT sufficient to disable caching in all cases.
+Note that `setMaxAge(0)` is NOT sufficient to disable caching in all cases,
+use `disableCache()` instead.
 
 ### Last Modified
 
@@ -228,7 +218,7 @@ when calculating a cache key, usually in addition to the full URL.
 By default, SilverStripe will output a `Vary` header with the following content: 
 
 ```
-Vary: X-Requested-With, X-Forwarded-Protocol
+Vary: X-Forwarded-Protocol
 ```
 
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration.
@@ -237,3 +227,6 @@ To change the value of the `Vary` header, you can change this value by specifyin
 SilverStripe\Control\HTTP:
   vary: ""
 ```
+
+Note that if you use `Director::is_ajax()` on cached pages
+then you should add `X-Requested-With` to the vary header.
