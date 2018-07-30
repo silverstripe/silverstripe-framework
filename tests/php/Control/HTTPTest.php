@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 
 /**
@@ -110,6 +111,79 @@ class HTTPTest extends FunctionalTest
         $this->addCacheHeaders($response);
         $v = $response->getHeader('Vary');
         $this->assertEmpty($v);
+    }
+
+    public function testDeprecatedVaryHandling()
+    {
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'vary',
+            'X-Foo'
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Vary');
+        $this->assertContains('X-Foo', $header);
+    }
+
+    public function testDeprecatedCacheControlHandling()
+    {
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                'no-store' => true,
+                'no-cache' => true,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Cache-Control');
+        $this->assertContains('no-store', $header);
+        $this->assertContains('no-cache', $header);
+    }
+
+    public function testDeprecatedCacheControlHandlingOnMaxAge()
+    {
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                // Needs to be separate from no-cache and no-store,
+                // since that would unset max-age
+                'max-age' => 99,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Cache-Control');
+        $this->assertContains('max-age=99', $header);
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Found unsupported legacy directives in HTTP\.cache_control: unknown/
+     */
+    public function testDeprecatedCacheControlHandlingThrowsWithUnknownDirectives()
+    {
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                'no-store' => true,
+                'unknown' => true,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
     }
 
     /**

@@ -6,8 +6,6 @@ use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
-use SilverStripe\Control\HTTP;
-use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
