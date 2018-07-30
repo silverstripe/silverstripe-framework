@@ -68,7 +68,8 @@ Never update a website on the live server. Get it working on a development copy 
 
 ### Install composer
 
-SilverStripe 4 requires the use of [Composer](http://getcomposer.org) for dependency management ([details](/getting_started/composer)).
+[Composer](http://getcomposer.org) is a tool for managing PHP dependencies. SilverStripe 4 requires composer version _1.1_ or greater. Read the [SilverStripe _Getting started_ guide](/getting_started/composer) for more details.
+
 We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date and run `composer update`.
 
 ```json
