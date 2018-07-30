@@ -84,6 +84,7 @@ fr:
     RelationSearch: 'Rechercher relations'
     ResetFilter: Réinitialiser
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Supprimer
     Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     EditPermissionsFailure: 'Pas de permissions pour délier l''enregistrement'
@@ -95,6 +96,8 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    EDIT: Éditer
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:

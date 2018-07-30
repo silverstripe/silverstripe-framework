@@ -993,6 +993,9 @@ class Director implements TemplateGlobalProvider
      * Checks if the current HTTP-Request is an "Ajax-Request" by checking for a custom header set by
      * jQuery or whether a manually set request-parameter 'ajax' is present.
      *
+     * Note that if you plan to use this to alter your HTTP response on a cached page,
+     * you should add X-Requested-With to the Vary header.
+     *
      * @param HTTPRequest $request
      * @return bool
      */
