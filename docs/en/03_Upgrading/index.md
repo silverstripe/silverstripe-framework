@@ -1149,4 +1149,4 @@ has been added to assist in migration of legacy files (see [file migration docum
 
 ### Any other script that needs running.
 
-Some third party modules may include their own migration tasks. Take a minute to consult the release notes of your third party dependencies to make sure you have miss anything.
+Some third party modules may include their own migration tasks. Take a minute to consult the release notes of your third party dependencies to make sure you haven't missed anything.
