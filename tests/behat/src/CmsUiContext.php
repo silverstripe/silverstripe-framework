@@ -321,17 +321,17 @@ class CmsUiContext implements Context
     public function iExpandTheContentFilters($action)
     {
         $page = $this->getSession()->getPage();
-        $filterButton = $page->find('css', '#filters-button');
+        $filterButton = $page->find('css', '.search-box__filter-trigger');
         assertNotNull($filterButton, sprintf('Filter button link not found'));
 
-        $filterButtonCssClass = $filterButton->getAttribute('class');
+        $filterButtonExpanded = $filterButton->getAttribute('aria-expanded');
 
         if ($action === 'expand') {
-            if (strpos($filterButtonCssClass, 'active') === false) {
+            if ($filterButtonExpanded === false) {
                 $filterButton->click();
             }
         } else {
-            if (strpos($filterButtonCssClass, 'active') !== false) {
+            if ($filterButtonExpanded === true) {
                 $filterButton->click();
             }
         }
@@ -348,6 +348,18 @@ class CmsUiContext implements Context
 SCRIPT
             );
         }
+    }
+
+    /**
+     * @Given /^I press the "([^"]*)" key in the "([^"]*)" field$/
+     */
+    public function iPressTheKeyInTheField($key, $field)
+    {
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('[name=\"%s\"]')[0].dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: \"%s\" }))",
+            $field,
+            $key
+        ));
     }
 
     /**

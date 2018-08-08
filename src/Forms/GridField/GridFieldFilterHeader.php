@@ -2,14 +2,21 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
-use LogicException;
 
 /**
  * GridFieldFilterHeader alters the {@link GridField} with some filtering
@@ -17,15 +24,40 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
 {
-
     /**
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
      */
     protected $throwExceptionOnBadDataType = true;
+
+    /**
+     * Indicates that this component should revert to displaying it's legacy
+     * table header style rather than the react driven search box
+     *
+     * @var bool
+     */
+    public $useLegacyFilterHeader = false;
+
+    /**
+     * @inheritDoc
+     */
+    public function getURLHandlers($gridField)
+    {
+        return [
+            'GET schema/SearchForm' => 'getSearchFormSchema'
+        ];
+    }
+
+    /**
+     * @param bool $useLegacy
+     */
+    public function __construct($useLegacy = false)
+    {
+        $this->useLegacyFilterHeader = $useLegacy;
+    }
 
     /**
      * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
@@ -161,21 +193,130 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
         return false;
     }
 
-    public function getHTMLFragments($gridField)
+
+    /**
+     * @return \SilverStripe\ORM\Search\SearchContext
+     */
+    public function getSearchContext($gridField)
+    {
+        $context = singleton($gridField->getModelClass())->getDefaultSearchContext();
+
+        return $context;
+    }
+
+    /**
+     * Returns the search field schema for the component
+     *
+     * @return string
+     */
+    public function getSearchFieldSchema($gridField)
+    {
+        $schemaUrl = Controller::join_links($gridField->Link(), 'schema/SearchForm');
+
+        $context = $this->getSearchContext($gridField);
+        $params = $gridField->getRequest()->postVar('filter') ?: [];
+        if (array_key_exists($gridField->getName(), $params)) {
+            $params = $params[$gridField->getName()];
+        }
+        $context->setSearchParams($params);
+
+        $searchField = $context->getSearchFields()->first();
+        $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
+
+        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+
+        $schema = [
+            'formSchemaUrl' => $schemaUrl,
+            'name' => $searchField,
+            'placeholder' => sprintf('Search "%s"', $name),
+            'filters' => $context->getSearchParams() ?: null,
+            'gridfield' => $gridField->getName(),
+            'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
+            'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)->getAttribute('name')
+        ];
+
+        return Convert::raw2json($schema);
+    }
+
+    /**
+     * Returns the search form schema for the component
+     *
+     * @return HTTPResponse
+     */
+    public function getSearchFormSchema($gridField)
     {
         $list = $gridField->getList();
         if (!$this->checkDataType($list)) {
             return null;
         }
 
-        /** @var Filterable $list */
-        $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayList();
+        $columns = $gridField->getColumns();
+        $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
+        $canFilter = false;
+        $fields = FieldList::create([]);
+
+        foreach ($columns as $columnField) {
+            $metadata = $gridField->getColumnMetadata($columnField);
+            $title = $metadata['title'];
+
+            if ($title && $list->canFilterBy($columnField)) {
+                $canFilter = true;
+
+                $value = '';
+                if (isset($filterArguments[$columnField])) {
+                    $value = $filterArguments[$columnField];
+                }
+
+                $field = TextField::create($columnField, $title, $value)
+                    ->addExtraClass('stacked');
+
+                $fields->push($field);
+            }
+        }
+
+        if (!$canFilter) {
+            return null;
+        }
+
+        $form = new Form(
+            $gridField,
+            "SearchForm",
+            $fields,
+            new FieldList()
+        );
+        $form->setFormMethod('get');
+        $form->setFormAction($gridField->Link());
+        $form->addExtraClass('cms-search-form form--no-dividers');
+        $form->disableSecurityToken();
+        $form->loadDataFrom($gridField->getRequest()->getVars());
+
+        $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
+        $schemaID = $gridField->getRequest()->getURL();
+        $data = FormSchema::singleton()
+            ->getMultipartSchema($parts, $schemaID, $form);
+
+        $response = new HTTPResponse(Convert::raw2json($data));
+        $response->addHeader('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * Generate fields for the legacy filter header row
+     *
+     * @return ArrayList|null
+     */
+    public function getLegacyFilterHeader($gridField)
+    {
+        $list = $gridField->getList();
+        if (!$this->checkDataType($list)) {
+            return null;
+        }
 
         $columns = $gridField->getColumns();
         $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
         $currentColumn = 0;
         $canFilter = false;
+        $fieldsList = new ArrayList();
 
         foreach ($columns as $columnField) {
             $currentColumn++;
@@ -225,16 +366,28 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                 $fields->addExtraClass('no-change-track');
             }
 
-            $forTemplate->Fields->push($fields);
+            $fieldsList->push($fields);
         }
 
-        if (!$canFilter) {
-            return null;
-        }
+        return $canFilter ? $fieldsList : null;
+    }
 
-        $templates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
-        return array(
-            'header' => $forTemplate->renderWith($templates),
-        );
+    public function getHTMLFragments($gridField)
+    {
+        $forTemplate = new ArrayData([]);
+
+        if ($this->useLegacyFilterHeader) {
+            $fieldsList = $this->getLegacyFilterHeader($gridField);
+            $forTemplate->Fields = $fieldsList;
+            $filterTemplates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+            return ['header' => $forTemplate->renderWith($filterTemplates)];
+        } else {
+            $forTemplate->SearchFieldSchema = $this->getSearchFieldSchema($gridField);
+            $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', __CLASS__);
+            return [
+                'before' => $forTemplate->renderWith($searchTemplates),
+                'buttons-before-right' => '<button type="button" title="Open search and filter" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
+            ];
+        }
     }
 }
