@@ -1032,7 +1032,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
-		$this->getResponse()->addHeader('Content-Type', 'text/json');
+		$this->getResponse()->addHeader('Content-Type', 'application/json');
 		return Convert::raw2json($data);
 	}
 
