@@ -84,7 +84,9 @@ en:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Archive: Archive
     Delete: Delete
+    ArchivePermissionsFailure: 'No archive permissions'
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
     UnlinkRelation: Unlink
