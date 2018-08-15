@@ -705,6 +705,20 @@ SilverStripe\Control\Session:
   cookie_secure: true
 ```
 
+The same treatment should be applied to the cookie responsible for remembering logins across sessions:
+
+```yml
+---
+Name: secure-alc
+Except:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler:
+    properties:
+      TokenCookieSecure: true
+```
+
 For other cookies set by your application we should also ensure the users are provided with secure cookies by setting 
 the "Secure" and "HTTPOnly" flags. These flags prevent them from being stolen by an attacker through javascript. 
 

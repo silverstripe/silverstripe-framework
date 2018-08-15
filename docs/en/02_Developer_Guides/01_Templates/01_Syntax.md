@@ -178,11 +178,22 @@ Conditionals can also provide the `else` case.
 
 ### Negation
 
-The inverse of `<% if %>` is `<% if not %>`.
+You can check if a variable is false with `<% if not %>`.
 
 ```ss
 <% if not $DinnerInOven %>
     I'm going out for dinner tonight.
+<% end_if %>
+```
+
+Note that you cannot combine this with other operators such as `==`.
+
+
+For more nuanced check you can use the `!` operator.
+
+```ss
+<% if $MyDinner != "quiche" %>
+    Lets go out
 <% end_if %>
 ```
 
