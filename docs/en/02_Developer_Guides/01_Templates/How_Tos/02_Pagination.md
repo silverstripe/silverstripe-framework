@@ -63,7 +63,7 @@ switch between pages:
                 ...
             <% end_if %>
         <% end_if %>
-        <% end_loop %>
+    <% end_loop %>
     <% if $PaginatedPages.NotLastPage %>
         <a class="next" href="$PaginatedPages.NextLink">Next</a>
     <% end_if %>
