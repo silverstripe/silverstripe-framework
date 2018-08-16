@@ -147,7 +147,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function getActions($gridField)
     {
-        return ['archiverecord', 'deleterecord', 'unlinkrelation'];
+        return ['deleterecord', 'unlinkrelation'];
     }
 
     /**
@@ -179,52 +179,30 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        $handledActions = $this->getActions($gridField);
-
-        if (in_array($actionName, $handledActions)) {
+        if ($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
             /** @var DataObject $item */
             $item = $gridField->getList()->byID($arguments['RecordID']);
             if (!$item) {
                 return;
             }
 
-            switch ($actionName) {
-                case 'archiverecord':
-                    if (!$item->canArchive()) {
-                        throw new ValidationException(
-                            _t(__CLASS__ . '.ArchivePermissionsFailure', "No archive permissions")
-                        );
-                    }
-
-                    $item->doArchive();
-                    break;
-
-                case 'deleterecord':
-                    if (!$item->canDelete()) {
-                        throw new ValidationException(
-                            _t(__CLASS__ . '.DeletePermissionsFailure', "No delete permissions")
-                        );
-                    }
-
-                    $item->delete();
-                    break;
-
-                case 'unlinkrelation':
-                    if (!$item->canEdit()) {
-                        throw new ValidationException(
-                            _t(__CLASS__ . '.EditPermissionsFailure', "No permission to unlink record")
-                        );
-                    }
-
-                    $gridField->getList()->remove($item);
-                    break;
-
-                default:
-                    throw new LogicException(
-                        _t(__CLASS__ . '.HandleActionFaliure', "No handler for this action")
+            if ($actionName == 'deleterecord') {
+                if (!$item->canDelete()) {
+                    throw new ValidationException(
+                        _t(__CLASS__ . '.DeletePermissionsFailure', "No delete permissions")
                     );
-                    break;
+                }
+
+                $item->delete();
+            } else {
+                if (!$item->canEdit()) {
+                    throw new ValidationException(
+                        _t(__CLASS__ . '.EditPermissionsFailure', "No permission to unlink record")
+                    );
+                }
             }
+
+            $gridField->getList()->remove($item);
         }
     }
 
@@ -252,20 +230,6 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             )
                 ->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink action-menu--handled')
                 ->setAttribute('classNames', 'gridfield-button-unlink font-icon-link-broken')
-                ->setDescription($title)
-                ->setAttribute('aria-label', $title);
-        } elseif ($record->hasMethod('canArchive') && $record->canArchive()) {
-            $title = _t(__CLASS__ . '.Archive', "Archive");
-
-            $field = GridField_FormAction::create(
-                $gridField,
-                'ArchiveRecord' . $record->ID,
-                false,
-                "archiverecord",
-                ['RecordID' => $record->ID]
-            )
-                ->addExtraClass('action--archive btn--icon-md font-icon-box btn--no-text grid-field__icon-action action-menu--handled')
-                ->setAttribute('classNames', 'action--archive font-icon-box')
                 ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         } else {
