@@ -239,7 +239,14 @@ JS;
         $session = $this->getSession();
         $element = $session->getPage()->find('xpath', $xpath);
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+            // If it can't find the exact name, find one that starts with the phrase
+            // Helpful for "Insert link" which has a conditional label for keyboard shortcut
+            $xpath = "//*[@aria-label^='" . $button . "']";
+            $element = $session->getPage()->find('xpath', $xpath);
+
+            if (null === $element) {
+                throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+            };
         }
 
         $element->click();
