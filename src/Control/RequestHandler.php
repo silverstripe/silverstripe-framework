@@ -272,7 +272,7 @@ class RequestHandler extends ViewableData
                         }
 
                         return [
-                            'rule' => $rule, 
+                            'rule' => $rule,
                             'action' => $action,
                         ];
                     }
