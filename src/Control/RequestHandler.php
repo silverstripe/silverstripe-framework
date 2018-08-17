@@ -386,7 +386,7 @@ class RequestHandler extends ViewableData
         }
 
         // Don't allow access to any non-public methods (inspect instance plus all extensions)
-        $insts = array_merge([$this] (array) $this->getExtensionInstances());
+        $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
             if (!method_exists($inst, $action)) {
                 continue;
