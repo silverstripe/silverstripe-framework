@@ -200,9 +200,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                         _t(__CLASS__ . '.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
-            }
 
-            $gridField->getList()->remove($item);
+                $gridField->getList()->remove($item);
+            }
         }
     }
 

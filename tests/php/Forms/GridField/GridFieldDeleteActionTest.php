@@ -85,7 +85,7 @@ class GridFieldDeleteActionTest extends SapphireTest
     {
         $this->logInWithPermission('ADMIN');
         $content = new CSSContentParser($this->gridField->FieldHolder());
-        $deleteButtons = $content->getBySelector('.gridfield-button-delete');
+        $deleteButtons = $content->getBySelector('.action--delete');
         $this->assertEquals(3, count($deleteButtons), 'Delete buttons should show when logged in.');
     }
 
