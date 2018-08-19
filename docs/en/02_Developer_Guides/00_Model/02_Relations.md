@@ -12,11 +12,17 @@ SilverStripe supports a number of relationship types and each relationship type 
 
 ## has_one
 
-A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in the example below this would be
-"TeamID" on the "Player"-table.
+Many-to-1 and 1-to-1 relationships create a database-column called "`<relationship-name>`ID", in the example below this would be "TeamID" on the "Player"-table.
 
 ```php
 use SilverStripe\ORM\DataObject;
+
+class Player extends DataObject
+{
+    private static $has_one = [
+        "Team" => "Team",
+    ];
+}
 
 class Team extends DataObject
 {
@@ -26,12 +32,6 @@ class Team extends DataObject
 
     private static $has_many = [
         'Players' => 'Player'
-    ];
-}
-class Player extends DataObject
-{
-    private static $has_one = [
-        "Team" => "Team",
     ];
 }
 ```
