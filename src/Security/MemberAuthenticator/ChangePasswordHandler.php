@@ -122,7 +122,7 @@ class ChangePasswordHandler extends RequestHandler
                     'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
                     '<p>The password reset link is invalid or expired.</p>'
                     . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                    . ' you <a href="{link2}">logged in</a>.</p>',
+                    . ' you <a href="{link2}">log in</a>.</p>',
                     [
                         'link1' => Security::lost_password_url(),
                         'link2' => Security::login_url(),
