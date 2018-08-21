@@ -21,11 +21,11 @@ class ErrorDirector extends Director
      * Redirect with token if allowed, or null if not allowed
      *
      * @param HTTPRequest $request
-     * @param ParameterConfirmationToken $token
+     * @param ConfirmationToken $token
      * @param Kernel $kernel
      * @return null|HTTPResponse Redirection response, or null if not able to redirect
      */
-    public function handleRequestWithToken(HTTPRequest $request, ParameterConfirmationToken $token, Kernel $kernel)
+    public function handleRequestWithToken(HTTPRequest $request, ConfirmationToken $token, Kernel $kernel)
     {
         Injector::inst()->registerService($request, HTTPRequest::class);
 
