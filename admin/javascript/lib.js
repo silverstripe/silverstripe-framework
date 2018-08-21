@@ -175,7 +175,6 @@
 			},
 
 			// Converts query strings (foo=bar&baz=bla) to a hash.
-			// TODO Handle repeating elements (e.g. arr[]=one&arr[]=two)
 			// 2013-12-06 ischommer: Added to allow merge with existing keys
 			convertSearchToArray: function(search) {
 				var params = {},
@@ -183,6 +182,7 @@
 					parts = search ? search.split( '&' ) : [], i, tmp;
 				for(i=0; i < parts.length; i++) {
 					tmp = parts[i].split( '=' );
+					// Handle repeating elements (e.g. arr[]=one&arr[]=two)
 					// if key already exists, do not override its value but try to build url query instead
 					if (params.hasOwnProperty(tmp[0])) params[tmp[0]] += "&" + tmp[0] + "=" + tmp[1];
 					else params[tmp[0]] = tmp[1];
