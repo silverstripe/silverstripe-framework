@@ -73,4 +73,52 @@ class ErrorControlChainMiddlewareTest extends SapphireTest
         $this->assertNotContains('?flush=1&flushtoken=', $location);
         $this->assertContains('Security/login', $location);
     }
+
+    public function testLiveBuildAdmin()
+    {
+        // Mock admin
+        $adminID = $this->logInWithPermission('ADMIN');
+        $this->logOut();
+
+        // Mock app
+        $app = new HTTPApplication(new BlankKernel(BASE_PATH));
+        $app->getKernel()->setEnvironment(Kernel::LIVE);
+
+        // Test being logged in as admin
+        $chain = new ErrorControlChainMiddleware($app);
+        $request = new HTTPRequest('GET', '/dev/build/');
+        $request->setSession(new Session(['loggedInAs' => $adminID]));
+        $result = $chain->process($request, function () {
+            return null;
+        });
+
+        $this->assertInstanceOf(HTTPResponse::class, $result);
+        $location = $result->getHeader('Location');
+        $this->assertContains('/dev/build', $location);
+        $this->assertContains('?devbuildtoken=', $location);
+        $this->assertNotContains('Security/login', $location);
+    }
+
+    public function testLiveBuildUnauthenticated()
+    {
+        // Mock app
+        $app = new HTTPApplication(new BlankKernel(BASE_PATH));
+        $app->getKernel()->setEnvironment(Kernel::LIVE);
+
+        // Test being logged in as no one
+        Security::setCurrentUser(null);
+        $chain = new ErrorControlChainMiddleware($app);
+        $request = new HTTPRequest('GET', '/dev/build');
+        $request->setSession(new Session(['loggedInAs' => 0]));
+        $result = $chain->process($request, function () {
+            return null;
+        });
+
+        // Should be directed to login, not to flush
+        $this->assertInstanceOf(HTTPResponse::class, $result);
+        $location = $result->getHeader('Location');
+        $this->assertNotContains('/dev/build', $location);
+        $this->assertNotContains('?devbuildtoken=', $location);
+        $this->assertContains('Security/login', $location);
+    }
 }
