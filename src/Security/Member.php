@@ -907,6 +907,7 @@ class Member extends DataObject
             && $this->isChanged('Password')
             && $this->record['Password']
             && static::config()->get('notify_password_change')
+            && $this->isInDB()
         ) {
             Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
