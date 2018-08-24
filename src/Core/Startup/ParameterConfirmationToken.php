@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Startup;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
@@ -15,7 +16,7 @@ use SilverStripe\Security\RandomGenerator;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  */
-class ParameterConfirmationToken extends ConfirmationToken
+class ParameterConfirmationToken extends AbstractConfirmationToken
 {
     /**
      * The name of the parameter
@@ -140,19 +141,22 @@ class ParameterConfirmationToken extends ConfirmationToken
         }
         return $params;
     }
+
+    public function getRedirectUrlBase()
+    {
+        return ($this->existsInReferer() && !$this->parameterProvided()) ? Director::baseURL() : $this->currentURL();
+    }
+
+    public function getRedirectUrlParams()
+    {
+        return ($this->existsInReferer() && !$this->parameterProvided())
+            ? $this->params()
+            : array_merge($this->request->getVars(), $this->params());
+    }
     
     protected function redirectURL()
     {
-        // If url is encoded via BackURL, defer to home page (prevent redirect to form action)
-        if ($this->existsInReferer() && !$this->parameterProvided()) {
-            $url = BASE_URL ?: '/';
-            $params = $this->params();
-        } else {
-            $url = $this->currentURL();
-            $params = array_merge($this->request->getVars(), $this->params());
-        }
-
-        // Merge get params with current url
-        return Controller::join_links($url, '?' . http_build_query($params));
+        $query = http_build_query($this->getRedirectUrlParams());
+        return Controller::join_links($this->getRedirectUrlBase(), '?' . $query);
     }
 }
