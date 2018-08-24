@@ -12,7 +12,7 @@ use SilverStripe\Control\HTTPRequest;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  */
-class URLConfirmationToken extends ConfirmationToken
+class URLConfirmationToken extends AbstractConfirmationToken
 {
     /**
      * @var string
@@ -60,7 +60,7 @@ class URLConfirmationToken extends ConfirmationToken
      */
     protected function getURLExistsInBackURL(HTTPRequest $request)
     {
-        $backURL = $request->getVar('BackURL');
+        $backURL = ltrim($request->getVar('BackURL'), '/');
         return (strpos($backURL, $this->urlToCheck) === 0);
     }
 
@@ -119,18 +119,21 @@ class URLConfirmationToken extends ConfirmationToken
         return Controller::join_links(Director::baseURL(), $this->currentURL);
     }
 
+    public function getRedirectUrlBase()
+    {
+        return ($this->urlExistsInBackURL && !$this->urlMatches()) ? Director::baseURL() : $this->currentURL();
+    }
+
+    public function getRedirectUrlParams()
+    {
+        return ($this->urlExistsInBackURL && !$this->urlMatches())
+            ? $this->params()
+            : array_merge($this->request->getVars(), $this->params());
+    }
+
     protected function redirectURL()
     {
-        // If url is encoded via BackURL, defer to home page (prevent redirect to form action)
-        if ($this->urlExistsInBackURL && !$this->urlMatches()) {
-            $url = BASE_URL ?: '/';
-            $params = $this->params();
-        } else {
-            $url = $this->currentURL();
-            $params = array_merge($this->request->getVars(), $this->params());
-        }
-
-        // Merge get params with current url
-        return Controller::join_links($url, '?' . http_build_query($params));
+        $query = http_build_query($this->getRedirectUrlParams());
+        return Controller::join_links($this->getRedirectUrlBase(), '?' . $query);
     }
 }
