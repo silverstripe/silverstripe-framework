@@ -15,7 +15,7 @@ use SilverStripe\Security\RandomGenerator;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  */
-abstract class ConfirmationToken
+abstract class AbstractConfirmationToken
 {
     /**
      * @var HTTPRequest
@@ -172,6 +172,16 @@ HTML;
      * @return array List of querystring parameters, possibly including token parameter
      */
     abstract public function params($includeToken = true);
+
+    /**
+     * @return string
+     */
+    abstract public function getRedirectUrlBase();
+
+    /**
+     * @return array
+     */
+    abstract public function getRedirectUrlParams();
 
     /**
      * Get redirection URL
