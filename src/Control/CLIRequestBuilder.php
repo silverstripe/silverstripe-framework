@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Core\Environment;
+
 /**
  * CLI specific request building logic
  */
@@ -65,5 +67,20 @@ class CLIRequestBuilder extends HTTPRequestBuilder
 
         // Parse rest of variables as standard
         return parent::cleanEnvironment($variables);
+    }
+
+    /**
+     * @param array $variables
+     * @param string $input
+     * @return HTTPRequest
+     */
+    public static function createFromVariables(array $variables, $input)
+    {
+        $request = parent::createFromVariables($variables, $input);
+        // unset scheme so that SS_BASE_URL can provide `is_https` information if required
+        $scheme = parse_url(Environment::getEnv('SS_BASE_URL'), PHP_URL_SCHEME);
+        $request->setScheme($scheme);
+
+        return $request;
     }
 }
