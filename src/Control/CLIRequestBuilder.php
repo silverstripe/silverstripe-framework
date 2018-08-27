@@ -74,9 +74,9 @@ class CLIRequestBuilder extends HTTPRequestBuilder
      * @param string $input
      * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input)
+    public static function createFromVariables(array $variables, $input, $url = null)
     {
-        $request = parent::createFromVariables($variables, $input);
+        $request = parent::createFromVariables($variables, $input, $url);
         // unset scheme so that SS_BASE_URL can provide `is_https` information if required
         $scheme = parse_url(Environment::getEnv('SS_BASE_URL'), PHP_URL_SCHEME);
         $request->setScheme($scheme);
