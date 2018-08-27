@@ -325,7 +325,7 @@ en:
     LOGOUT: 'Log out'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">log in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDRESETSENTHEADER: 'Password reset link sent'
     PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'

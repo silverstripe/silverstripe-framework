@@ -577,8 +577,8 @@ class Security extends Controller implements TemplateGlobalProvider
         $holderPage->ID = -1 * random_int(1, 10000000);
 
         $controller = ModelAsController::controller_for($holderPage);
-        $controller->doInit();
         $controller->setRequest($this->getRequest());
+        $controller->doInit();
 
         return $controller;
     }
