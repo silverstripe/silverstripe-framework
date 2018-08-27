@@ -87,9 +87,9 @@ class RequestHandler extends ViewableData
      * the named parameter of the parsed URL wil be used to determine the method name.
      * @config
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action' => '$Action',
-    );
+    ];
 
 
     /**
@@ -97,7 +97,7 @@ class RequestHandler extends ViewableData
      * The variable should be an array of action names. This sample shows the different values that it can contain:
      *
      * <code>
-     * array(
+     * [
      *      // someaction can be accessed by anyone, any time
      *      'someaction',
      *      // So can otheraction
@@ -105,8 +105,8 @@ class RequestHandler extends ViewableData
      *      // restrictedaction can only be people with ADMIN privilege
      *      'restrictedaction' => 'ADMIN',
      *      // complexaction can only be accessed if $this->canComplexAction() returns true
-     *      'complexaction' '->canComplexAction'
-     *  );
+     *      'complexaction' '->canComplexAction',
+     * ];
      * </code>
      *
      * Form getters count as URL actions as well, and should be included in allowed_actions.
@@ -196,7 +196,7 @@ class RequestHandler extends ViewableData
             if (!$this->hasAction($action)) {
                 return $this->httpError(404, "Action '$action' isn't available $classMessage.");
             }
-            if (!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action), ['run', 'doInit'])) {
                 return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
             }
             $result = $this->handleAction($request, $action);
@@ -275,7 +275,10 @@ class RequestHandler extends ViewableData
                             );
                         }
 
-                        return array('rule' => $rule, 'action' => $action);
+                        return [
+                            'rule' => $rule,
+                            'action' => $action,
+                        ];
                     }
                 }
             }
@@ -387,7 +390,7 @@ class RequestHandler extends ViewableData
         }
 
         // Don't allow access to any non-public methods (inspect instance plus all extensions)
-        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
             if (!method_exists($inst, $action)) {
                 continue;
@@ -434,7 +437,7 @@ class RequestHandler extends ViewableData
         $action = strtolower($actionOrigCasing);
 
         $definingClass = null;
-        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
             if (!method_exists($inst, $action)) {
                 continue;
@@ -476,7 +479,7 @@ class RequestHandler extends ViewableData
             } elseif (substr($test, 0, 2) == '->') {
                 // Determined by custom method with "->" prefix
                 list($method, $arguments) = ClassInfo::parse_class_spec(substr($test, 2));
-                $isAllowed = call_user_func_array(array($this, $method), $arguments);
+                $isAllowed = call_user_func_array([$this, $method], $arguments);
             } else {
                 // Value is a permission code to check the current member against
                 $isAllowed = Permission::check($test);

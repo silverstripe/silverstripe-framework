@@ -248,10 +248,10 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
                 ['RecordID' => $record->ID]
             )
                 ->addExtraClass(
-                    'gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text '
+                    'action--delete btn--icon-md font-icon-trash-bin btn--no-text '
                     . 'grid-field__icon-action action-menu--handled'
                 )
-                ->setAttribute('classNames', 'gridfield-button-delete font-icon-trash')
+                ->setAttribute('classNames', 'action--delete font-icon-trash')
                 ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         }

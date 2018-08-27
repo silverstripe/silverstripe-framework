@@ -297,7 +297,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                         _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete')
                     )
                         ->setUseButtonTag(true)
-                        ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action-delete')
+                        ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete')
                 );
             }
         } else { // adding new record

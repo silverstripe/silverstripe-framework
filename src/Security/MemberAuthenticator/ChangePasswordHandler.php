@@ -74,7 +74,7 @@ class ChangePasswordHandler extends RequestHandler
         }
         $token = $request->getVar('t');
 
-        // Check whether we are merely changin password, or resetting.
+        // Check whether we are merely changing password, or resetting.
         if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
             $this->setSessionToken($member, $token);
 
@@ -122,10 +122,10 @@ class ChangePasswordHandler extends RequestHandler
                     'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
                     '<p>The password reset link is invalid or expired.</p>'
                     . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                    . ' you <a href="{link2}">logged in</a>.</p>',
+                    . ' you <a href="{link2}">log in</a>.</p>',
                     [
-                        'link1' => $this->Link('lostpassword'),
-                        'link2' => $this->Link('login')
+                        'link1' => Security::lost_password_url(),
+                        'link2' => Security::login_url(),
                     ]
                 )
             );

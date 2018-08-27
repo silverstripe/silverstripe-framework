@@ -246,8 +246,10 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             // First page button
             $firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
             $firstPage->addExtraClass(
-                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-left ss-gridfield-firstpage'
+                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-left '
+                . 'ss-gridfield-pagination-action ss-gridfield-firstpage'
             );
+
             if ($state->currentPage == 1) {
                 $firstPage = $firstPage->performDisabledTransformation();
             }
@@ -262,7 +264,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
                 $previousPageNum
             );
             $previousPage->addExtraClass(
-                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-left ss-gridfield-previouspage'
+                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-left '
+                . 'ss-gridfield-pagination-action ss-gridfield-previouspage'
             );
             if ($state->currentPage == 1) {
                 $previousPage = $previousPage->performDisabledTransformation();
@@ -278,7 +281,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
                 $nextPageNum
             );
             $nextPage->addExtraClass(
-                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-right ss-gridfield-nextpage'
+                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-right '
+                . 'ss-gridfield-pagination-action ss-gridfield-nextpage'
             );
             if ($state->currentPage == $totalPages) {
                 $nextPage = $nextPage->performDisabledTransformation();
@@ -293,7 +297,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
                 $totalPages
             );
             $lastPage->addExtraClass(
-                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-right ss-gridfield-lastpage'
+                'btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-right '
+                . 'ss-gridfield-pagination-action ss-gridfield-lastpage'
             );
             if ($state->currentPage == $totalPages) {
                 $lastPage = $lastPage->performDisabledTransformation();

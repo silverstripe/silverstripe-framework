@@ -270,7 +270,7 @@ class GridFieldAddExistingAutocompleter implements
         }
         Config::unnest();
         $response = new HTTPResponse(Convert::array2json($json));
-        $response->addHeader('Content-Type', 'text/json');
+        $response->addHeader('Content-Type', 'application/json');
         return $response;
     }
 
