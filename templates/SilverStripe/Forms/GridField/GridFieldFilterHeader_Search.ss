@@ -1,1 +1,1 @@
-<div class="search-holder grid-field__search-holder" data-schema="$SearchFieldSchema" style="display: none;"></div>
+<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden" data-schema="$SearchFieldSchema"></div>
