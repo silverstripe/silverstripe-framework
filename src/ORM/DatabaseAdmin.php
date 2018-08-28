@@ -407,7 +407,7 @@ class DatabaseAdmin extends Controller
 
         // Remap versioned table class name values as well
         /** @var Versioned|DataObject $class */
-        $class = DataObject::singleton($newClassName);
+        $class = DataObject::singleton($dataClass);
         if ($class->hasExtension(Versioned::class)) {
             if ($class->hasStages()) {
                 $updateQueries[] = sprintf($updateQuery, '_Live');
