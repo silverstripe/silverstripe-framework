@@ -237,7 +237,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
             'placeholder' => sprintf('Search "%s"', $name),
-            'filters' => $context->getSearchParams() ?: null,
+            'filters' => $context->getSearchParams() ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
             'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)->getAttribute('name')
