@@ -1,7 +1,7 @@
 ## Affected Version
 
 Show version numbers by pasting the output of `composer info --direct`.
-Alternatively, hover over the SilverStripe logo in the CMS to basic version information.
+Alternatively, hover over the SilverStripe logo in the CMS to find basic version information.
 
 ## Description
 
