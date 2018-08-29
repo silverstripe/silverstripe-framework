@@ -210,11 +210,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     protected $brokenOnWrite = false;
 
     /**
-     * @config
-     * @var boolean Should dataobjects be validated before they are written?
+     * Should dataobjects be validated before they are written?
+     *
      * Caution: Validation can contain safeguards against invalid/malicious data,
      * and check permission levels (e.g. on {@link Group}). Therefore it is recommended
      * to only disable validation for very specific use cases.
+     *
+     * @config
+     * @var boolean
      */
     private static $validation_enabled = true;
 
@@ -3736,7 +3739,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Inserts standard column-values when a DataObject
-     * is instanciated. Does not insert default records {@see $default_records}.
+     * is instantiated. Does not insert default records {@see $default_records}.
      * This is a map from fieldname to default value.
      *
      *  - If you would like to change a default value in a sub-class, just specify it.
@@ -3878,6 +3881,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  );
      * </code>
      * @config
+     * @var array
      */
     private static $searchable_fields = null;
 
@@ -3885,6 +3889,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * User defined labels for searchable_fields, used to override
      * default display in the search form.
      * @config
+     * @var array
      */
     private static $field_labels = [];
 
@@ -3892,6 +3897,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Provides a default list of fields to be used by a 'summary'
      * view of this object.
      * @config
+     * @var array
      */
     private static $summary_fields = [];
 
