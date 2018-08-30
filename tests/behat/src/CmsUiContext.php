@@ -356,7 +356,10 @@ SCRIPT
     public function iPressTheKeyInTheField($key, $field)
     {
         $this->getSession()->evaluateScript(sprintf(
-            "jQuery('[name=\"%s\"]')[0].dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: \"%s\" }))",
+            "jQuery('[name=\"%s\"]')[0].dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: \"%s\" }));
+            jQuery('[name=\"%s\"]')[0].dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: \"%s\" }));",
+            $field,
+            $key,
             $field,
             $key
         ));
