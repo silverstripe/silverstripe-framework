@@ -216,8 +216,46 @@ class TinyMCEConfig extends HTMLEditorConfig
      *
      * @var array
      */
-    protected $settings = array(
+    protected $settings = [
         'fix_list_elements' => true, // https://www.tinymce.com/docs/configure/content-filtering/#fix_list_elements
+        'formats' => [
+            'alignleft' => [
+                [
+                    'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
+                    'classes' =>'text-left'
+                ],
+                [
+                    'selector' => 'div,ul,ol,table,img,figure',
+                    'classes' =>'left'
+                ]
+            ],
+            'aligncenter' => [
+                [
+                    'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
+                    'classes' =>'text-center'
+                ],
+                [
+                    'selector' => 'div,ul,ol,table,img,figure',
+                    'classes' =>'center'
+                ]
+            ],
+            'alignright' => [
+                [
+                    'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
+                    'classes' =>'text-right'
+                ],
+                [
+                    'selector' => 'div,ul,ol,table,img,figure',
+                    'classes' =>'right'
+                ]
+            ],
+            'alignjustify' => [
+                [
+                    'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
+                    'classes' =>'text-justify'
+                ],
+            ],
+        ],
         'friendly_name' => '(Please set a friendly name for this config)',
         'priority' => 0, // used for Per-member config override
         'browser_spellcheck' => true,
@@ -230,7 +268,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         'menubar' => false,
         'language' => 'en',
         'branding' => false,
-    );
+    ];
 
     /**
      * Holder list of enabled plugins
