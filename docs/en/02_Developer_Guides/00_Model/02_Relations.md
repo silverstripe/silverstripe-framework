@@ -592,6 +592,13 @@ As these lists are not backed by the database, most of the filtering methods on 
 this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an object, not
 for displaying the objects contained in the relation.
 
+## Link Tracking
+
+You can control the visibility of the `Link Tracking` tab by setting the `show_sitetree_link_tracking` config.
+This defaults to `false` for most `DataObject`'s.
+
+It is also possible to control the visibility of the `File Tracking` tab by setting the `show_file_link_tracking` config.
+
 ## Related Lessons
 * [Working with data relationships -- has_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-has-many-1)
 * [Working with data relationships -- many_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-many-many-1)
@@ -606,3 +613,4 @@ for displaying the objects contained in the relation.
 * [HasManyList](api:SilverStripe\ORM\HasManyList)
 * [ManyManyList](api:SilverStripe\ORM\ManyManyList)
 * [DataObject](api:SilverStripe\ORM\DataObject)
+* [LinkTracking](api:SilverStripe\CMS\Model\SiteTreeLinkTracking)
