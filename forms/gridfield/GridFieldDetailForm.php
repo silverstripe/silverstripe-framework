@@ -388,7 +388,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		
 		// If we are creating a new record in a has-many list, then
 		// pre-populate the record's foreign key.
-		if($list instanceof HasManyList && !$this->record->isInDB()) {
+		if ($list instanceof PolymorphicHasManyList && !$this->record->isInDB()) {	
+			$idKey = $list->getForeignKey();
+			$classKey = substr($idKey, 0, -2) . "Class";
+			$class = $list->getForeignClass();
+			$id = $list->getForeignID();
+			$this->record->$classKey = $class;
+			$this->record->$idKey = $id;
+		} else if ($list instanceof HasManyList && !$this->record->isInDB()) {
 			$key = $list->getForeignKey();
 			$id = $list->getForeignID();
 			$this->record->$key = $id;
@@ -399,9 +406,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		// If we are creating a new record in a has-many list, then
 		// Disable the form field as it has no effect.
-		if($list instanceof HasManyList) {
-			$key = $list->getForeignKey();
 
+		if ($list instanceof PolymorphicHasManyList) {
+			$idKey = $list->getForeignKey();
+			$classKey = substr($idKey, 0, -2) . "Class";
+			if($classField = $fields->dataFieldByName($classKey)) {
+				$fields->makeFieldReadonly($classField);
+			}
+			if($idField = $fields->dataFieldByName($idKey)) {
+				$fields->makeFieldReadonly($idField);
+			}
+		} else if($list instanceof HasManyList) {
+			$key = $list->getForeignKey();
 			if($field = $fields->dataFieldByName($key)) {
 				$fields->makeFieldReadonly($field);
 			}
