@@ -7,6 +7,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -37,6 +38,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * Indicates that this component should revert to displaying it's legacy
      * table header style rather than the react driven search box
      *
+     * @deprecated 5.0
      * @var bool
      */
     public $useLegacyFilterHeader = false;
@@ -306,11 +308,14 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Generate fields for the legacy filter header row
      *
+     * @deprecated 5.0
      * @param GridField $gridfield
      * @return ArrayList|null
      */
     public function getLegacyFilterHeader(GridField $gridField)
     {
+        Deprecation::notice('5.0', 'Table row based filter header will be removed in favor of search field in 5.0');
+
         $list = $gridField->getList();
         if (!$this->checkDataType($list)) {
             return null;
