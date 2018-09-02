@@ -96,7 +96,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
         $this->assertEquals('Name', $searchSchema->name);
         $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
-        $this->assertEquals(null, $searchSchema->filters);
+        $this->assertEquals(new \stdClass, $searchSchema->filters);
 
         $request = new HTTPRequest(
             'POST',

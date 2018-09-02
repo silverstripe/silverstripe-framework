@@ -90,7 +90,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * @param SS_List $dataList
      * @return bool
      */
-    protected function checkDataType(SS_List $dataList)
+    protected function checkDataType($dataList)
     {
         if ($dataList instanceof Filterable) {
             return true;
