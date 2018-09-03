@@ -713,6 +713,12 @@ class TinyMCEConfig extends HTMLEditorConfig
         Requirements::javascript($this->getScriptURL());
     }
 
+    public function getConfigSchemaData()
+    {
+        $data = parent::getConfigSchemaData();
+        $data['editorjs'] = $this->getScriptURL();
+        return $data;
+    }
 
     /**
      * Get the current tinyMCE language
