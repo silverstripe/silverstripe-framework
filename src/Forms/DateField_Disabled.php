@@ -17,7 +17,7 @@ class DateField_Disabled extends DateField
     public function Field($properties = [])
     {
         // Default display value
-        $displayValue = '<i>(' . _t(DateField::class . '.NOTSET', 'not set') . ')</i>';
+        $displayValue = '<i>(' . _t('SilverStripe\\Forms\\DateField.NOTSET', 'not set') . ')</i>';
 
         $value = $this->dataValue();
 
@@ -29,7 +29,7 @@ class DateField_Disabled extends DateField
             if ($df->IsToday()) {
                 // e.g. 2018-06-01 (today)
                 $format = '%s (%s)';
-                $infoComplement = _t(DateField::class . '.TODAY', 'today');
+                $infoComplement = _t('SilverStripe\\Forms\\DateField.TODAY', 'today');
             } else {
                 // e.g. 2018-06-01, 5 days ago
                 $format = '%s, %s';
