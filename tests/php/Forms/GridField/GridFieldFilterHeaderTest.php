@@ -71,10 +71,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
 
         // Check that the output is the new search field
         $this->assertContains('<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden"', $htmlFragment['before']);
-        $this->assertContains(
-            '<button type="button" title="Open search and filter" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
-            $htmlFragment['buttons-before-right']
-        );
+        $this->assertContains('Open search and filter', $htmlFragment['buttons-before-right']);
 
         $this->gridField->getConfig()->removeComponentsByType(GridFieldFilterHeader::class);
         $this->gridField->getConfig()->addComponent(new GridFieldFilterHeader(true));

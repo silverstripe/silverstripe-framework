@@ -238,7 +238,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
-            'placeholder' => sprintf('Search "%s"', $name),
+            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
             'filters' => $context->getSearchParams() ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
@@ -406,7 +406,12 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', __CLASS__);
             return [
                 'before' => $forTemplate->renderWith($searchTemplates),
-                'buttons-before-right' => '<button type="button" title="' ._t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter") . '" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
+                'buttons-before-right' => sprintf(
+                    '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
+                    ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
+                    _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter"),
+                    _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
+                )
             ];
         }
     }
