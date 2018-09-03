@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
@@ -81,6 +82,7 @@ class GridFieldTest extends SapphireTest
 
         $expectedComponents = new ArrayList([
             new GridFieldToolbarHeader(),
+            new GridFieldButtonRow(),
             $sort = new GridFieldSortableHeader(),
             $filter = new GridFieldFilterHeader(),
             new GridFieldDataColumns(),
