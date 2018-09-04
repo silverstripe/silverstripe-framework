@@ -221,6 +221,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function init() {
 		parent::init();
 
+		HTTPCacheControl::singleton()->disableCache();
+
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);
 		Config::inst()->update('ContentNegotiator', 'enabled', false);
 
