@@ -266,8 +266,8 @@ class DateField extends TextField
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
-
-        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+        $lang = $this->getHTML5() ? DBDate::ISO_LOCALE : $this->getLocale();
+        $attributes['lang'] = i18n::convert_rfc1766($lang);
 
         if ($this->getHTML5()) {
             $attributes['min'] = $this->getMinDate();
@@ -284,6 +284,7 @@ class DateField extends TextField
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
             'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'isoLang' => i18n::convert_rfc1766(DBDate::ISO_LOCALE),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->getMinDate(),
@@ -445,10 +446,6 @@ class DateField extends TextField
      */
     public function getLocale()
     {
-        // Use iso locale for html5
-        if ($this->getHTML5()) {
-            return DBDate::ISO_LOCALE;
-        }
         return $this->locale ?: i18n::get_locale();
     }
 
