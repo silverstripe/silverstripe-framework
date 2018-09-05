@@ -131,17 +131,21 @@ The current GitHub labels are grouped into five sections:
 | change/major | A change for the next major release (eg: 4.0) |
 | change/minor | A change for the next minor release (eg: 3.x) |
 | change/patch | A change for the next patch release (eg: 3.1.x) |
-| impact/critical | Broken functionality for which no work around can be produced |
-| impact/high | Broken functionality but can be mitigated by other non-core code changes |
-| impact/medium | Unexpected behaviour but does not break functionality |
+| impact/critical | Broken functionality without workarounds, affecting major usage flows. Should target all [supported minor releases](release-process#supported-versions) |
+| impact/high | Broken functionality with workarounds available, affecting major usage flows |
+| impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
 | impact/low | A nuisance but doesn't break any functionality (typos, etc) |
 | effort/easy | Someone with limited SilverStripe experience could resolve |
 | effort/medium | Someone with a good understanding of SilverStripe could resolve |
 | effort/hard | Only an expert with SilverStripe could resolve |
 | type/docs | A docs change |
 | type/frontend | A change to front-end (CSS, HTML, etc) |
+| type/ux | User experience impact |
 | feedback-required/core-team | Core team members need to give an in-depth consideration |
 | feedback-required/author | This issue is awaiting feedback from the original author of the PR |
+| rfc/draft | An [request-for-comment](RFC) under discussion |
+| rfc/accepted | An [request-for-comment](RFC) where agreement has been reached |
+| affects/* | Issue has been observed on a specific release line |
 
 ### Quickfire Do's and Don't's
 
