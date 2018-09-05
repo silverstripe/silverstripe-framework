@@ -23,7 +23,7 @@ As a core contributor it is necessary to have installed the following set of too
 
 ### First time setup: Standard releases
 
-* PHP 5.3+ (for SilverStripe 3.x) or PHP 5.6+ (for SilverStripe 4.x)
+* PHP 5.6+
 * Python 2.7 / 3.5
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
