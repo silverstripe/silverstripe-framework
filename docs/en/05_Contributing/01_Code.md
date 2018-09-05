@@ -76,34 +76,15 @@ there are any problems they will follow up with you, so please ensure they have 
 
 ### Picking the right version
 
-SilverStripe core and module releases (since the 3.1.8 release) follow the [Semantic Versioning](http://semver.org) 
-(SemVer) specification for releases. Using this specification declares to the entire development community the severity 
-and intention of each release. It gives developers the ability to safely declare their dependencies and understand the
-scope involved in each upgrade.
+The SilverStripe project follows the [Semantic Versioning](http://semver.org) (SemVer) specification for releases. 
+It clarifies what to expect from different releases, and also guides you in choosing the right branch
+to base your pull request on. In short, most pull requests should be based on the "default branch"
+which gets automatically chosen when creating a new pull request. This ensures your code
+gets into the next minor release of the current major release.
 
-Each release is labeled in the format `$MAJOR`.`$MINOR`.`$PATCH`. For example, 3.1.8 or 3.2.0.
-
-* `$MAJOR` version is incremented if any backwards incompatible changes are introduced to the public API. 
-* `$MINOR` version is incremented if new, backwards compatible **functionality** is introduced to the public API or 
-  improvements are introduced within the private code. 
-* `$PATCH` version is incremented if only backwards compatible **bug fixes** are introduced. A bug fix is defined as 
-  an internal change that fixes incorrect behavior.
-
-**Public API** refers to any aspect of the system that has been designed to be used by SilverStripe modules & site developers. In SilverStripe 3, because we haven't been clear, in principle we have to treat every public or protected method as *potentially* part of the public API, but sometimes it comes to a judgement call about how likely it is that a given method will have been used in a particular way. If we were strict about never changing publicly exposed behaviour, it would be difficult to fix any bug whatsoever, which isn't in the interests of our user community.
-
-In future major releases of SilverStripe, we will endeavour to be more explicit about documenting the public API.
-
-**Contributing bug fixes**
-
-Bug fixes should be raised against the most recent MINOR release branch. For example, If your project is on 3.3.1 and 3.4.0 is released, please raise your bugfix against the `3.4` branch. Older MINOR release branches are primarily intended for critical bugfixes and security issues.
-
-**Contributing features**
-
-When contributing a backwards compatible change, raise it against the same MAJOR branch as your project. For example, if your project is on 3.3.1, raise it against the `3` branch. It will be included in the next MINOR release, e.g. 3.4.0. And then when it is released, you should upgrade your project to use it. As it is a MINOR change, it shouldn't break anything, and be a relatively painless upgrade.
-
-**Contributing backwards-incompatible public API changes, and removing or radically changing existing feautres**
-
-When contributing a backwards incompatible change, you must raise it against the `master` branch.
+If you are changing existing APIs, introducing new APIs or major new features,
+please review our guidance on [supported versions](release-process#supported-versions).
+You will need to change the branch for your pull request accordingly.
 
 
 ### The Pull Request Process
