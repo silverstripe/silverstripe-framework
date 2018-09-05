@@ -182,6 +182,8 @@ Follow these instructions in sequence as much as possible:
    * Send out a note on the pre-announce list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
    * Link to silverstripe.org security release page in the changelog.
    * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+ * Perform release
+   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
  * After release
    * Publish silverstripe.org security release page
    * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
