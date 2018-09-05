@@ -94,7 +94,8 @@ class DatetimeField extends TextField
     {
         $attributes = parent::getAttributes();
 
-        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+        $lang = $this->getHTML5() ? DBDate::ISO_LOCALE : $this->getLocale();
+        $attributes['lang'] = i18n::convert_rfc1766($lang);
 
         if ($this->getHTML5()) {
             $attributes['min'] = $this->internalToFrontend($this->getMinDatetime());
@@ -114,6 +115,7 @@ class DatetimeField extends TextField
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
             'lang' => i18n::convert_rfc1766($this->getLocale()),
+            'isoLang' => i18n::convert_rfc1766(DBDate::ISO_LOCALE),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->internalToFrontend($this->getMinDatetime()),
