@@ -124,8 +124,8 @@ The current GitHub labels are grouped into five sections:
 | type/ux | User experience impact |
 | feedback-required/core-team | Core team members need to give an in-depth consideration |
 | feedback-required/author | This issue is awaiting feedback from the original author of the PR |
-| rfc/draft | An [request-for-comment](RFC) under discussion |
-| rfc/accepted | An [request-for-comment](RFC) where agreement has been reached |
+| rfc/draft | [RFC](request-for-comment) under discussion |
+| rfc/accepted | [RFC](request-for-comment) where agreement has been reached |
 | affects/* | Issue has been observed on a specific release line |
 
 ### Quickfire Do's and Don't's
