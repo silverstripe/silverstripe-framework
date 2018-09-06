@@ -25,7 +25,11 @@ use SilverStripe\View\SSViewer;
  *
  * @see GridField
  */
-class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldFilterHeader implements
+    GridField_URLHandler,
+    GridField_HTMLProvider,
+    GridField_DataManipulator,
+    GridField_ActionProvider
 {
     /**
      * See {@link setThrowExceptionOnBadDataType()}
@@ -241,8 +245,10 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
             'filters' => $context->getSearchParams() ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
-            'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
-            'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)->getAttribute('name')
+            'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
+                ->getAttribute('name'),
+            'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
+                ->getAttribute('name')
         ];
 
         return Convert::raw2json($schema);
@@ -415,7 +421,8 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
                 'before' => $forTemplate->renderWith($searchTemplates),
                 'buttons-before-right' => sprintf(
                     '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
-                    ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
+                    ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large'
+                    . ' grid-field__filter-open"></button>',
                     _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter"),
                     _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
                 )
