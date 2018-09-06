@@ -16,6 +16,7 @@ class GridFieldConfig_Base extends GridFieldConfig
     {
         parent::__construct();
         $this->addComponent(new GridFieldToolbarHeader());
+        $this->addComponent(new GridFieldButtonRow('before'));
         $this->addComponent($sort = new GridFieldSortableHeader());
         $this->addComponent($filter = new GridFieldFilterHeader());
         $this->addComponent(new GridFieldDataColumns());

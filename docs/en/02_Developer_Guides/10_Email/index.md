@@ -133,6 +133,14 @@ SilverStripe\Control\Email\Email:
   admin_email: support@example.com
 ```
 
+To add a display name, set `admin_email` as follow.
+
+```yaml
+SilverStripe\Control\Email\Email:
+  admin_email:
+    support@example.com: 'Support team'
+```
+
 <div class="alert" markdown="1">
 Remember, setting a `from` address that doesn't come from your domain (such as the users email) will likely see your
 email marked as spam. If you want to send from another address think about using the `setReplyTo` method.

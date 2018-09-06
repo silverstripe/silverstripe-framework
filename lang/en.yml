@@ -83,6 +83,10 @@ en:
     Print: Print
     RelationSearch: 'Relation search'
     ResetFilter: Reset
+    OpenFilter: 'Open search and filter'
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Search "{name}"'
+    SearchFormFaliure: 'No search form could be generated'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'

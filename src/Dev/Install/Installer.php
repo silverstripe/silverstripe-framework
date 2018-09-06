@@ -602,7 +602,7 @@ TEXT;
         $token = new ParameterConfirmationToken('flush', new HTTPRequest('GET', '/'));
         $params = http_build_query($token->params());
 
-        $destinationURL = BASE_URL . '/' . (
+        $destinationURL = rtrim(BASE_URL, '/') . '/' . (
             $this->checkModuleExists('cms')
                 ? "home/successfullyinstalled?$params"
                 : "?$params"
