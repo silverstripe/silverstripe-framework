@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The directory-structure in SilverStripe it built on "convention over configuration", so the placement of some files and
+The directory-structure in SilverStripe is built on "convention over configuration", so the placement of some files and
 directories is meaningful to its logic.
 
 ## Core Structure
