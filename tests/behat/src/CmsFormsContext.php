@@ -156,11 +156,11 @@ class CmsFormsContext implements Context
 		if($formatting == 'bold') {
 			call_user_func($assertFn, 'strong', $matchedNode->nodeName);
 		} else if($formatting == 'left aligned') {
-			if($matchedNode->getAttribute('style')) {
-				call_user_func($assertFn, 'text-align: left;', $matchedNode->getAttribute('style'));
+			if($matchedNode->getAttribute('class')) {
+				call_user_func($assertFn, 'text-left', $matchedNode->getAttribute('class'));
 			}
 		} else if($formatting == 'right aligned') {
-			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));
+			call_user_func($assertFn, 'text-right', $matchedNode->getAttribute('class'));
 		}
 	}
 	// @codingStandardsIgnoreEnd

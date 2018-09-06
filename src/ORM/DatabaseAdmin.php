@@ -7,9 +7,11 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
@@ -337,35 +339,12 @@ class DatabaseAdmin extends Controller
             }
 
             // Remap obsolete class names
-            $schema = DataObject::getSchema();
-            foreach ($this->config()->classname_value_remapping as $oldClassName => $newClassName) {
-                $baseDataClass = $schema->baseDataClass($newClassName);
-                $badRecordCount = DataObject::get($baseDataClass)
-                    ->filter(["ClassName" => $oldClassName ])
-                    ->count();
-                if ($badRecordCount > 0) {
-                    if (Director::is_cli()) {
-                        echo " * Correcting $badRecordCount obsolete classname values for $newClassName\n";
-                    } else {
-                        echo "<li>Correcting $badRecordCount obsolete classname values for $newClassName</li>\n";
-                    }
-                    $table = $schema->baseDataTable($baseDataClass);
-
-                    $updateQuery = "UPDATE \"$table%s\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?";
-                    $updateQueries = [sprintf($updateQuery, '')];
-
-                    // Remap versioned table ClassName values as well
-                    /** @var Versioned|DataObject $class */
-                    $class = DataObject::singleton($newClassName);
-                    if ($class->hasExtension(Versioned::class)) {
-                        if ($class->hasStages()) {
-                            $updateQueries[] = sprintf($updateQuery, '_Live');
-                        }
-                        $updateQueries[] = sprintf($updateQuery, '_Versions');
-                    }
-
-                    foreach ($updateQueries as $query) {
-                        DB::prepared_query($query, [$newClassName, $oldClassName]);
+            $remappingConfig = $this->config()->get('classname_value_remapping');
+            $remappingFields = $this->getClassNameRemappingFields();
+            foreach ($remappingFields as $className => $fieldNames) {
+                foreach ($fieldNames as $fieldName) {
+                    foreach ($remappingConfig as $oldClassName => $newClassName) {
+                        $this->updateLegacyClassNames($className, $fieldName, $oldClassName, $newClassName);
                     }
                 }
             }
@@ -406,6 +385,81 @@ class DatabaseAdmin extends Controller
         }
 
         ClassInfo::reset_db_cache();
+    }
+
+    /**
+     * Given a base data class, a field name and an old and new class name (value), look for obsolete ($oldClassName)
+     * values in the $dataClass's $fieldName column and replace it with $newClassName.
+     *
+     * @param string $dataClass    The data class to look up
+     * @param string $fieldName    The field name to look in for obsolete class names
+     * @param string $oldClassName The old class name
+     * @param string $newClassName The new class name
+     */
+    protected function updateLegacyClassNames($dataClass, $fieldName, $oldClassName, $newClassName)
+    {
+        $schema = DataObject::getSchema();
+        // Check first to ensure that the class has the specified field to update
+        if (!$schema->databaseField($dataClass, $fieldName, false)) {
+            return;
+        }
+
+        // Load a list of any records that have obsolete class names
+        $badRecordCount = DataObject::get($dataClass)
+            ->filter([$fieldName => $oldClassName])
+            ->count();
+
+        if (!$badRecordCount) {
+            return;
+        }
+
+        if (Director::is_cli()) {
+            echo " * Correcting {$badRecordCount} obsolete {$fieldName} values for {$newClassName}\n";
+        } else {
+            echo "<li>Correcting {$badRecordCount} obsolete {$fieldName} values for {$newClassName}</li>\n";
+        }
+        $table = $schema->tableName($dataClass);
+
+        $updateQuery = "UPDATE \"{$table}%s\" SET \"{$fieldName}\" = ? WHERE \"{$fieldName}\" = ?";
+        $updateQueries = [sprintf($updateQuery, '')];
+
+        // Remap versioned table class name values as well
+        /** @var Versioned|DataObject $class */
+        $class = DataObject::singleton($dataClass);
+        if ($class->hasExtension(Versioned::class)) {
+            if ($class->hasStages()) {
+                $updateQueries[] = sprintf($updateQuery, '_Live');
+            }
+            $updateQueries[] = sprintf($updateQuery, '_Versions');
+        }
+
+        foreach ($updateQueries as $query) {
+            DB::prepared_query($query, [$newClassName, $oldClassName]);
+        }
+    }
+
+    /**
+     * Find all DBClassName fields on valid subclasses of DataObject that should be remapped. This includes
+     * `ClassName` fields as well as polymorphic class name fields.
+     *
+     * @return array[]
+     */
+    protected function getClassNameRemappingFields()
+    {
+        $dataClasses = ClassInfo::getValidSubClasses(DataObject::class);
+        $schema = DataObject::getSchema();
+        $remapping = [];
+
+        foreach ($dataClasses as $className) {
+            $fieldSpecs = $schema->fieldSpecs($className);
+            foreach ($fieldSpecs as $fieldName => $fieldSpec) {
+                if (Injector::inst()->create($fieldSpec, 'Dummy') instanceof DBClassName) {
+                    $remapping[$className][] = $fieldName;
+                }
+            }
+        }
+
+        return $remapping;
     }
 
     /**
