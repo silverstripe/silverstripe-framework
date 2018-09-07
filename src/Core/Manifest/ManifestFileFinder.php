@@ -22,7 +22,7 @@ class ManifestFileFinder extends FileFinder
     const LANG_DIR = 'lang';
     const TESTS_DIR = 'tests';
     const VENDOR_DIR = 'vendor';
-    const RESOURCES_DIR = 'resources';
+    const RESOURCES_DIR = '_resources';
 
     protected static $default_options = array(
         'include_themes' => false,

@@ -200,7 +200,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
 
     /**
      * Resolve a resource that may either exist in a public/ folder, or be exposed from the base path to
-     * public/resources/
+     * public/_resources/
      *
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]

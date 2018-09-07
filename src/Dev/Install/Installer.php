@@ -55,8 +55,8 @@ class Installer
     protected function installHeader()
     {
         $clientPath = PUBLIC_DIR
-            ? 'resources/vendor/silverstripe/framework/src/Dev/Install/client'
-            : 'resources/silverstripe/framework/src/Dev/Install/client';
+            ? '_resources/vendor/silverstripe/framework/src/Dev/Install/client'
+            : '_resources/silverstripe/framework/src/Dev/Install/client';
         ?>
         <html>
         <head>

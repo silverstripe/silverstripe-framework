@@ -49,7 +49,7 @@
         "ext-session": "*",
         "psr/container-implementation": "1.0.0",
         "psr/container": "1.0.0",
-        "silverstripe/vendor-plugin": "^1.0"
+        "silverstripe/vendor-plugin": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "7.1.3",

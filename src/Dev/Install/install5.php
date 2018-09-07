@@ -107,8 +107,8 @@ if ($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 // Path to client resources (copied through silverstripe/vendor-plugin)
 $base = rtrim(BASE_URL, '/') . '/';
 $clientPath = PUBLIC_DIR
-    ? 'resources/vendor/silverstripe/framework/src/Dev/Install/client'
-    : 'resources/silverstripe/framework/src/Dev/Install/client';
+    ? '_resources/vendor/silverstripe/framework/src/Dev/Install/client'
+    : '_resources/silverstripe/framework/src/Dev/Install/client';
 
 // If already installed, ensure the user clicked "reinstall"
 $expectedArg = $alreadyInstalled ? 'reinstall' : 'go';
