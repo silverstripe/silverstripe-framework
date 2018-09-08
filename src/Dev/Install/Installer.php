@@ -249,6 +249,12 @@ use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
 
+if (file_exists(__DIR__ . '/bootstrap.php')) {
+    require __DIR__ . '/bootstrap.php';
+} elseif (file_exists(__DIR__ . '/../bootstrap.php')) {
+    require __DIR__ . '/../bootstrap.php';
+}
+
 // Find autoload.php
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require __DIR__ . '/vendor/autoload.php';
