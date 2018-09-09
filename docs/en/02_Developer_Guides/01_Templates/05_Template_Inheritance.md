@@ -135,7 +135,7 @@ SilverStripe\View\SSViewer:
 
 ### Declaring module priority
 
-The order in which templates are selected from themes can be explicitly declared
+The order in which templates are selected from modules can be explicitly declared
 through configuration. To specify the order you want, make a list of the module
 names under `SilverStripe\Core\Manifest\ModuleManifest.module_priority` in a
 configuration YAML file.
@@ -168,7 +168,7 @@ to find out how to rename this folder.
 
 ### About module "names"
 
-Module names are derived their local `composer.json` files using the following precedence:
+Module names are derived from their local `composer.json` files using the following precedence:
 * The value of the `name` attribute in `composer.json`
 * The value of `extras.installer_name` in `composer.json`
 * The basename of the directory that contains the module
