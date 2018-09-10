@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -22,6 +23,10 @@ class HTMLEditorField extends TextareaField
     private static $casting = [
         'Value' => 'HTMLText',
     ];
+
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HTML;
+
+    protected $schemaComponent = 'HtmlEditorField';
 
     /**
      * Use TinyMCE's GZIP compressor
@@ -184,5 +189,13 @@ class HTMLEditorField extends TextareaField
         // Include requirements
         $this->getEditorConfig()->init();
         return parent::Field($properties);
+    }
+
+    public function getSchemaStateDefaults()
+    {
+        $stateDefaults = parent::getSchemaStateDefaults();
+        $config = $this->getEditorConfig();
+        $stateDefaults['data'] = $config->getConfigSchemaData();
+        return $stateDefaults;
     }
 }

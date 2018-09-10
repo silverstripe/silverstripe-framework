@@ -224,4 +224,17 @@ abstract class HTMLEditorConfig
      * Initialise the editor on the client side
      */
     abstract public function init();
+
+    /**
+     * Provide additional schema data for the field this object configures
+     *
+     * @return array
+     */
+    public function getConfigSchemaData()
+    {
+        return [
+            'attributes' => $this->getAttributes(),
+            'editorjs' => null,
+        ];
+    }
 }
