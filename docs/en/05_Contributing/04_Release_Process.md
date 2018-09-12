@@ -40,7 +40,7 @@ At any point in time, the core development team will support a set of releases t
  * The latest minor release is supported as long as the underlying major release
  * API changes and major new features are applied to the master branch, to be included in the next major release
  * New APIs can be applied to the current minor release of major releases in "active development", but should usually be marked as "internal" APIs until they're considered stable
- * Enhancements are applied to the latest minor release of major releases in "active development"
+ * Enhancements are applied to the next minor release of major releases in "active development"
  * Non-critical bugfixes are applied to all supported minor releases of major releases in "active development" or "full support"
  * Critical bugfixes and security fixes are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
  * Any patches applied to older minor releases are merged up regularly to newer minor releases (in the same major release)
