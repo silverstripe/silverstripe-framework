@@ -3,7 +3,7 @@ summary: Extensions and DataExtensions let you modify and augment objects transp
 
 # Extensions and DataExtensions
 
-An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a [Object](api:Object) or modifying existing functionality 
+An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to an [Object](api:Object) or modifying existing functionality 
 without the hassle of creating a subclass. Developers can add Extensions to any [Object](api:Object) subclass within core, modules
 or even their own code to make it more reusable.
 
