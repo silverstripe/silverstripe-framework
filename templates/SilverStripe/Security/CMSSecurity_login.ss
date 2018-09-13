@@ -7,7 +7,7 @@
 	<body class="cms cms-security fill-height">
         <% with $Form %>
             <% if $Message %>
-                <div class="cms-security__container__error message $MessageType">
+                <div class="cms-security__container__error alert $AlertType">
                     <p id="{$FormName}_error">$Message</p>
                 </div>
             <% end_if %>
