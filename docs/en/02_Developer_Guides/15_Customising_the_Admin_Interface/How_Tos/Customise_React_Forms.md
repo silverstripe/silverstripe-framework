@@ -17,7 +17,7 @@ const HideableComponent = ({Component, ...props}) => (
 );
 
 HideableComponent.propTypes = {
-  shouldHide: React.PropTypes.boolean
+  shouldHide: PropTypes.boolean
 };
 
 HideableComponent.defaultProps = {
