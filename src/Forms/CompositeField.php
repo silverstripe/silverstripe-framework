@@ -214,7 +214,8 @@ class CompositeField extends FormField
                 'tabindex' => null,
                 'type' => null,
                 'value' => null,
-                'title' => ($this->tag == 'fieldset') ? null : $this->legend
+                'title' => ($this->tag == 'fieldset') ? null : $this->legend,
+                'name' => null,
             )
         );
     }
