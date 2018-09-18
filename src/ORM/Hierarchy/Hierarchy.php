@@ -10,7 +10,10 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DB;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use Exception;
 
 /**
@@ -72,6 +75,15 @@ class Hierarchy extends DataExtension
     private static $hide_from_cms_tree = array();
 
     /**
+     * Used to enable or disable the prepopulation of the numchildren cache.
+     * Defaults to true.
+     *
+     * @config
+     * @var boolean
+     */
+    private static $prepopulate_numchildren_cache = true;
+
+    /**
      * Prevent virtual page virtualising these fields
      *
      * @config
@@ -79,8 +91,16 @@ class Hierarchy extends DataExtension
      */
     private static $non_virtual_fields = [
         '_cache_children',
-        '_cache_numChildren',
     ];
+
+    /**
+     * A cache used by numChildren().
+     * Clear through {@link flushCache()}.
+     * version (int)0 means not on this stage.
+     *
+     * @var array
+     */
+    protected static $cache_numChildren = [];
 
     public static function get_extra_config($class, $extension, $args)
     {
@@ -271,12 +291,14 @@ class Hierarchy extends DataExtension
      */
     public function numChildren($cache = true)
     {
-        // Load if caching
-        if ($cache) {
-            $numChildren = $this->owner->_cache_numChildren;
-            if (isset($numChildren)) {
-                return $numChildren;
-            }
+
+        $baseClass = $this->owner->baseClass();
+        $stage = 'Stage';
+        $id = $this->owner->ID;
+
+        // cached call
+        if ($cache && isset(self::$cache_numChildren[$baseClass][$stage][$id])) {
+            return self::$cache_numChildren[$baseClass][$stage][$id];
         }
 
         // We call stageChildren(), because Children() has canView() filtering
@@ -284,9 +306,91 @@ class Hierarchy extends DataExtension
 
         // Save if caching
         if ($cache) {
-            $this->owner->_cache_numChildren = $numChildren;
+            self::$cache_numChildren[$baseClass][$stage][$id] = $numChildren;
         }
+
         return $numChildren;
+    }
+
+    /**
+     * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for
+     * a list of record IDs, for more efficient database querying.  If $idList
+     * is null, then every record will be pre-cached.
+     *
+     * @param string $class
+     * @param string $stage
+     * @param array $idList
+     */
+    public static function prepopulate_numchildren_cache($baseClass, $stage, $idList = null)
+    {
+        if (!Config::inst()->get(static::class, 'prepopulate_numchildren_cache')) {
+            return;
+        }
+
+        /** @var Versioned|DataObject $singleton */
+        $dummyObject = new $baseClass();
+        $dummyObject->ID = -23478234; // going to use this for search & replace
+        $baseTable = $dummyObject->baseTable();
+
+        $idColumn = Convert::symbol2sql("{$baseTable}.ID");
+        $parentIdColumn = Convert::symbol2sql("ParentID");
+
+
+        // Get the stageChildren() result of a dummy object and break down into a generic query
+        $query = $dummyObject->stageChildren(true)->dataQuery()->query();
+        $where = $query->getWhere();
+
+        $newWhere = [];
+
+        foreach ($where as $i => $compoundClause) {
+            foreach ($compoundClause as $clause => $params) {
+                // Skip any "WHERE ParentID = [marker]" clauses as this will be replaced with a GROUP BY
+                if (!(preg_match('/^"[^"]+"\."ParentID" = \?$/', $clause) && $clause[1] == $dummyObject->ID)) {
+                    // Replace any marker IDs with "<basetable>"."ID"
+                    $paramNum = 0;
+                    foreach ($params as $j => $param) {
+                        if ($param == $dummyObject->ID) {
+                            unset($params[$j]);
+                            $clause = DB::replace_parameter($clause, $paramNum, $parentIdColumn, true);
+                        } else {
+                            $paramNum++;
+                        }
+                    }
+
+                    $newWhere[] = [ $clause => $params ];
+                }
+            }
+        }
+
+        // optional ID-list filter
+        if ($idList) {
+            // Validate the ID list
+            foreach ($idList as $id) {
+                if (!is_numeric($id)) {
+                    user_error(
+                        "Bad ID passed to Versioned::prepopulate_numchildren_cache() in \$idList: " . $id,
+                        E_USER_ERROR
+                    );
+                }
+            }
+            $newWhere[] = ['"ParentID" IN (' . DB::placeholders($idList) . ')' => $idList];
+        }
+
+        $query->setWhere($newWhere);
+        $query->setOrderBy(null);
+
+        $query->setSelect([
+            '"ParentID"',
+            "COUNT(DISTINCT $idColumn) AS \"NumChildren\"",
+        ]);
+        $query->setGroupBy([
+            "ParentID
+        "]);
+
+        $numChildrens = $query->execute()->map();
+        foreach ($numChildrens as $id => $numChildren) {
+            self::$cache_numChildren[$baseClass][$stage][$id] = $numChildren;
+        }
     }
 
     /**
@@ -439,6 +543,6 @@ class Hierarchy extends DataExtension
     public function flushCache()
     {
         $this->owner->_cache_children = null;
-        $this->owner->_cache_numChildren = null;
+        self::$cache_numChildren = [];
     }
 }
