@@ -46,6 +46,10 @@ class LoginAttempt extends DataObject
         'Member' => Member::class, // only linked if the member actually exists
     );
 
+    private static $indexes = array(
+        "EmailHashed" => true
+    );
+
     private static $table_name = "LoginAttempt";
 
     /**
@@ -86,7 +90,6 @@ class LoginAttempt extends DataObject
     public static function getByEmail($email)
     {
         return static::get()->filterAny(array(
-            'Email' => $email,
             'EmailHashed' => sha1($email),
         ));
     }
