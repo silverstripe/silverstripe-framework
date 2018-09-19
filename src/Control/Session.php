@@ -298,11 +298,20 @@ class Session
             }
         }
 
-        if (!session_id() && !headers_sent()) {
-            if ($domain) {
-                session_set_cookie_params($timeout, $path, $domain, $secure, true);
+        // If the session cookie is already set, then the session can be read even if headers_sent() = true
+        // This helps with edge-case such as debugging.
+        if (!session_id() && (!headers_sent() || !empty($_COOKIE[ini_get('session.name')]))) {
+            if (!headers_sent()) {
+                session_set_cookie_params($timeout, $path, $domain ?: null, $secure, true);
+
+                $limiter = $this->config()->get('sessionCacheLimiter');
+                if (isset($limiter)) {
+                    session_cache_limiter($limiter);
+                }
+
+            // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
             } else {
-                session_set_cookie_params($timeout, $path, null, $secure, true);
+                session_cache_limiter(null);
             }
 
             // Allow storing the session in a non standard location
@@ -311,14 +320,11 @@ class Session
             }
 
             // If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
-            // seperate (less secure) session for non-HTTPS requests
+            // seperate (less secure) session for non-HTTPS requests. Note that if this causes problems
+            // if headers_sent() is true then it's best to throw the resulting error rather than risk
+            // a security hole.
             if ($secure) {
                 session_name($this->config()->get('cookie_name_secure'));
-            }
-
-            $limiter = $this->config()->get('sessionCacheLimiter');
-            if (isset($limiter)) {
-                session_cache_limiter($limiter);
             }
 
             session_start();
