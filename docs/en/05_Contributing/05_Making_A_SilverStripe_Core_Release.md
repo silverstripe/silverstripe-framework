@@ -314,7 +314,7 @@ Further manual work on major or minor releases:
  * Check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
 the right major version. This should match the major version of the current release. E.g. all versions of 4.x
 should be set to `4.0.0`.
- * Update the [userhelp.silverstripe.org](userhelp.silverstripe.org) version link in `LeftAndMain.help_link`
+ * Update the [userhelp.silverstripe.org](userhelp.silverstripe.org) version link in `LeftAndMain.help_links`
 
 *Updating markdown files*
 
