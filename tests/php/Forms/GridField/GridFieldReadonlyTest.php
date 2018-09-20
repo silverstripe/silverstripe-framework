@@ -80,7 +80,7 @@ class GridFieldReadonlyTest extends SapphireTest
         $readonlyComponents = $readonlyGridField->getReadonlyComponents();
 
         // assert that all the components in the readonly version are present in the whitelist.
-        foreach($readonlyGridField->getConfig()->getComponents() as $component){
+        foreach ($readonlyGridField->getConfig()->getComponents() as $component) {
             $this->assertTrue(in_array(get_class($component), $readonlyComponents));
         }
     }

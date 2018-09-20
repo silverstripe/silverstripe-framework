@@ -111,13 +111,16 @@ class GridField extends FormField
      * @var array
      */
     protected $readonlyComponents = array(
+        GridField_ActionMenu::class,
+        GridState_Component::class,
+        GridFieldConfig_RecordViewer::class,
         GridFieldDetailForm::class,
         GridFieldDataColumns::class,
-        GridFieldConfig_RecordViewer::class,
-        GridFieldToolbarHeader::class,
         GridFieldPageCount::class,
         GridFieldPaginator::class,
-        GridState_Component::class
+        GridFieldSortableHeader::class,
+        GridFieldToolbarHeader::class,
+        GridFieldViewButton::class,
     );
 
     /**
@@ -241,7 +244,6 @@ class GridField extends FormField
         // get the whitelist for allowable readonly components
         $allowedComponents = $this->getReadonlyComponents();
         foreach ($this->getConfig()->getComponents() as $component) {
-
             // if a component doesn't exist, remove it from the readonly version.
             if (!in_array(get_class($component), $allowedComponents)) {
                 $copy->getConfig()->removeComponent($component);
@@ -256,7 +258,8 @@ class GridField extends FormField
      *
      * @return GridField
      */
-    public function performDisabledTransformation(){
+    public function performDisabledTransformation()
+    {
         parent::performDisabledTransformation();
 
         return $this->performReadonlyTransformation();
