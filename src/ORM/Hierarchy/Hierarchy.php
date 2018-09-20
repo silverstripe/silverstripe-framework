@@ -297,8 +297,13 @@ class Hierarchy extends DataExtension
         $id = $this->owner->ID;
 
         // cached call
-        if ($cache && isset(self::$cache_numChildren[$baseClass][$stage][$id])) {
-            return self::$cache_numChildren[$baseClass][$stage][$id];
+        if ($cache) {
+            if (isset(self::$cache_numChildren[$baseClass][$stage][$id])) {
+                return self::$cache_numChildren[$baseClass][$stage][$id];
+            } elseif (isset(self::$cache_numChildren[$baseClass][$stage]['_complete'])) {
+                // If the cache is complete and we didn't find our ID in the cache, it means this object is childless.
+                return 0;
+            }
         }
 
         // We call stageChildren(), because Children() has canView() filtering
@@ -387,9 +392,12 @@ class Hierarchy extends DataExtension
             "ParentID
         "]);
 
-        $numChildrens = $query->execute()->map();
-        foreach ($numChildrens as $id => $numChildren) {
-            self::$cache_numChildren[$baseClass][$stage][$id] = $numChildren;
+        $numChildren = $query->execute()->map();
+        self::$cache_numChildren[$baseClass][$stage] = $numChildren;
+        if (!$idList) {
+            // If all objects are being cached, mark this cache as complete
+            // to avoid counting children of childless object.
+            self::$cache_numChildren[$baseClass][$stage]['_complete'] = true;
         }
     }
 
