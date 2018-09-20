@@ -430,6 +430,69 @@ class DB
         return $joined;
     }
 
+
+    /**
+     * Replace 1 parameter with the given value
+     * For example, you can use this to replace a parameter with a column name instead of a literal
+     * @param string $sql The parameterised query
+     * @param int $paramIdx The 0-based position of the parameter
+     * @param array $replacement The value to insert into the queyr
+     * @param bool $skipEscaping Set to true to insert the value as-is, with no escaping. Use with caution!
+     *
+     * @return string
+     */
+    public static function replace_parameter($sql, $paramIdx, $replacement, $skipEscaping = false)
+    {
+        $segments = preg_split('/\?/', $sql);
+        $joined = '';
+        $inString = false;
+        $numSegments = count($segments);
+        $currentParamIdx = 0;
+
+        for ($i = 0; $i < $numSegments; $i++) {
+            $input = $segments[$i];
+            // Append next segment
+            $joined .= $segments[$i];
+            // Don't add placeholder after last segment
+            if ($i === $numSegments - 1) {
+                break;
+            }
+            // check string escape on previous fragment
+            // Remove escaped backslashes, count them!
+            $input = preg_replace('/\\\\\\\\/', '', $input);
+            // Count quotes
+            $totalQuotes = substr_count($input, "'"); // Includes double quote escaped quotes
+            $escapedQuotes = substr_count($input, "\\'");
+            if ((($totalQuotes - $escapedQuotes) % 2) !== 0) {
+                $inString = !$inString;
+            }
+
+            // Append placeholder replacement
+            if ($inString) {
+                // Literal question mark
+                $joined .= '?';
+                continue;
+            }
+
+            // If we've found the right parameter, replace it
+            if ($currentParamIdx == $paramIdx) {
+                if ($skipEscaping) {
+                    $value = $replacement;
+                } elseif (is_bool($replacement)) {
+                    $value = $replacement ? '1' : '0';
+                } elseif (is_int($replacement)) {
+                    $value = $replacement;
+                } else {
+                    $value = (DB::get_conn() !== null) ? Convert::raw2sql($replacement, true) : $replacement;
+                }
+                $joined .= $value;
+            }
+
+            $currentParamIdx++;
+        }
+        return $joined;
+    }
+
     /**
      * Execute the given SQL parameterised query with the specified arguments
      *
