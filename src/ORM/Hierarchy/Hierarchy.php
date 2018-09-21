@@ -293,14 +293,14 @@ class Hierarchy extends DataExtension
     {
 
         $baseClass = $this->owner->baseClass();
-        $stage = 'Stage';
+        $cacheType = 'numChildren';
         $id = $this->owner->ID;
 
         // cached call
         if ($cache) {
-            if (isset(self::$cache_numChildren[$baseClass][$stage][$id])) {
-                return self::$cache_numChildren[$baseClass][$stage][$id];
-            } elseif (isset(self::$cache_numChildren[$baseClass][$stage]['_complete'])) {
+            if (isset(self::$cache_numChildren[$baseClass][$cacheType][$id])) {
+                return self::$cache_numChildren[$baseClass][$cacheType][$id];
+            } elseif (isset(self::$cache_numChildren[$baseClass][$cacheType]['_complete'])) {
                 // If the cache is complete and we didn't find our ID in the cache, it means this object is childless.
                 return 0;
             }
@@ -311,10 +311,31 @@ class Hierarchy extends DataExtension
 
         // Save if caching
         if ($cache) {
-            self::$cache_numChildren[$baseClass][$stage][$id] = $numChildren;
+            self::$cache_numChildren[$baseClass][$cacheType][$id] = $numChildren;
         }
 
         return $numChildren;
+    }
+
+    /**
+     * Pre-populate any appropriate caches prior to rendering a tree.
+     * This is used to allow for the efficient rendering of tree views, notably in the CMS.
+     * In the cace of Hierarchy, it caches numChildren values. Other extensions can provide an
+     * onPrepopulateTreeDataCache(DataList $recordList = null, array $options) methods to hook
+     * into this event as well.
+     *
+     * @param DataList $recordList The list of records to prepopulate caches for. Null for all records.
+     * @param array $options A map of hints about what should be cached. "numChildrenMethod" and
+     *                       "childrenMethod" are allowed keys.
+     */
+    public function prepopulateTreeDataCache(DataList $recordList = null, array $options = [])
+    {
+        if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
+            $idList = $recordList ? $recordList->column('ID') : null;
+            self::prepopulate_numchildren_cache($this->owner->baseClass(), $idList);
+        }
+
+        $this->owner->extend('onPrepopulateTreeDataCache', $recordList, $options);
     }
 
     /**
@@ -326,7 +347,7 @@ class Hierarchy extends DataExtension
      * @param string $stage
      * @param array $idList
      */
-    public static function prepopulate_numchildren_cache($baseClass, $stage, $idList = null)
+    public static function prepopulate_numchildren_cache($baseClass, $idList = null)
     {
         if (!Config::inst()->get(static::class, 'prepopulate_numchildren_cache')) {
             return;
@@ -393,11 +414,11 @@ class Hierarchy extends DataExtension
         "]);
 
         $numChildren = $query->execute()->map();
-        self::$cache_numChildren[$baseClass][$stage] = $numChildren;
+        self::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
         if (!$idList) {
             // If all objects are being cached, mark this cache as complete
             // to avoid counting children of childless object.
-            self::$cache_numChildren[$baseClass][$stage]['_complete'] = true;
+            self::$cache_numChildren[$baseClass]['numChildren']['_complete'] = true;
         }
     }
 
