@@ -430,13 +430,12 @@ class DB
         return $joined;
     }
 
-
     /**
-     * Replace 1 parameter with the given value
+     * Replace a single parameter with the given value.
      * For example, you can use this to replace a parameter with a column name instead of a literal
-     * @param string $sql The parameterised query
-     * @param int $paramIdx The 0-based position of the parameter
-     * @param array $replacement The value to insert into the queyr
+     * @param string $sql Parameterised query
+     * @param int $paramIdx Zero-based position of the parameter
+     * @param mixed $replacement Value to insert into the query
      * @param bool $skipEscaping Set to true to insert the value as-is, with no escaping. Use with caution!
      *
      * @return string
@@ -486,6 +485,8 @@ class DB
                     $value = (DB::get_conn() !== null) ? Convert::raw2sql($replacement, true) : $replacement;
                 }
                 $joined .= $value;
+            } elseif ($i < $numSegments -1) {
+                $joined .= '?';
             }
 
             $currentParamIdx++;
