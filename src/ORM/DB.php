@@ -442,7 +442,7 @@ class DB
      */
     public static function replace_parameter($sql, $paramIdx, $replacement, $skipEscaping = false)
     {
-        $segments = preg_split('/\?/', $sql);
+        $segments = explode('?', $sql);
         $joined = '';
         $inString = false;
         $numSegments = count($segments);
