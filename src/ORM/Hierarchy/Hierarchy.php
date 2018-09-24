@@ -361,9 +361,7 @@ class Hierarchy extends DataExtension
             '"ParentID"',
             "COUNT(DISTINCT $idColumn) AS \"NumChildren\"",
         ]);
-        $query->setGroupBy([
-            "ParentID
-        "]);
+        $query->setGroupBy(['"ParentID"']);
 
         $numChildren = $query->execute()->map();
         self::$cache_numChildren[$baseClass][$stage] = $numChildren;
