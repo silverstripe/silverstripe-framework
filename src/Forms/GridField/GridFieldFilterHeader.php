@@ -178,7 +178,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * @param GridField $gridField
      * @return boolean
      */
-    public function canFilterAnyColumns(GridField $gridField)
+    public function canFilterAnyColumns($gridField)
     {
         $list = $gridField->getList();
 
