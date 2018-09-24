@@ -983,6 +983,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         // Test application
         $kernel = new TestKernel(BASE_PATH);
         $app = new HTTPApplication($kernel);
+        $flush = array_key_exists('flush', $request->getVars());
 
         // Custom application
         $app->execute($request, function (HTTPRequest $request) {
@@ -998,7 +999,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $controller->setRequest($request);
             $controller->pushCurrent();
             $controller->doInit();
-        }, true);
+        }, $flush);
 
         // Register state
         static::$state = SapphireTestState::singleton();

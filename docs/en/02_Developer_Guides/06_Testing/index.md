@@ -31,7 +31,7 @@ Tests are run from the commandline, in your webroot folder:
  * `vendor/bin/phpunit vendor/silverstripe/framework/tests/`: Run all tests of a specific module
  * `vendor/bin/phpunit vendor/silverstripe/framework/tests/filesystem`: Run specific tests within a specific module
  * `vendor/bin/phpunit vendor/silverstripe/framework/tests/filesystem/FolderTest.php`: Run a specific test 
- * `vendor/bin/phpunit vendor/silverstripe/framework/tests '' flush=all`: Run tests with optional request parameters (note the empty second argument)
+ * `vendor/bin/phpunit vendor/silverstripe/framework/tests '' flush=1`: Run tests with optional request parameters (note the empty second argument)
 
 Check the PHPUnit manual for all available [command line arguments](http://www.phpunit.de/manual/current/en/textui.html).
 
