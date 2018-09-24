@@ -422,9 +422,12 @@ class Hierarchy extends DataExtension
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
         $baseClass = $this->owner->baseClass();
+        $baseTable = $this->owner->baseTable();
         $staged = DataObject::get($baseClass)->where(sprintf(
-            '%s <> %s',
+            '%s.%s <> %s.%s',
+            Convert::symbol2sql($baseTable),
             Convert::symbol2sql("ParentID"),
+            Convert::symbol2sql($baseTable),
             Convert::symbol2sql("ID")
         ));
 
