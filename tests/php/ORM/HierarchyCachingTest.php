@@ -3,6 +3,7 @@
 namespace SilverStripe\Versioned\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
@@ -77,52 +78,52 @@ class HierachyCacheTest extends SapphireTest
     {
         return [
             [
-                TestObject::class, 'Stage', [],
-                TestObject::class, 'obj1', false, 0, 'childless object should have a numChildren of 0'
+                TestObject::class, [],
+                'obj1', false, 0, 'childless object should have a numChildren of 0'
             ],
             [
-                TestObject::class, 'Stage', [],
-                TestObject::class, 'obj1', true, 0, 'childless object should have a numChildren of 0 when cache'
+                TestObject::class, [],
+               'obj1', true, 0, 'childless object should have a numChildren of 0 when cache'
             ],
             [
-                TestObject::class, 'Stage', [2],
-                TestObject::class, 'obj1', false, 0, 'childless object should have a numChildren of 0'
+                TestObject::class, [2],
+                'obj1', false, 0, 'childless object should have a numChildren of 0'
             ],
             [
-                TestObject::class, 'Stage', [2],
-                TestObject::class, 'obj1', true, 0, 'childless object should have a numChildren of 0 when cache'
+                TestObject::class, [2],
+                'obj1', true, 0, 'childless object should have a numChildren of 0 when cache'
             ],
             [
-                TestObject::class, 'Stage', [],
-                TestObject::class, 'obj2', false, 2, 'Root object numChildren should count direct children'
+                TestObject::class, [],
+                'obj2', false, 2, 'Root object numChildren should count direct children'
             ],
             [
-                TestObject::class, 'Stage', [],
-                TestObject::class, 'obj2', true, 2, 'Root object numChildren should count direct children when cache'
+                TestObject::class, [],
+                'obj2', true, 2, 'Root object numChildren should count direct children when cache'
             ],
             [
-                TestObject::class, 'Stage', [2],
-                TestObject::class, 'obj2', false, 2, 'Root object numChildren should count direct children'
+                TestObject::class, [2],
+                'obj2', false, 2, 'Root object numChildren should count direct children'
             ],
             [
-                TestObject::class, 'Stage', [2],
-                TestObject::class, 'obj2', true, 2, 'Root object numChildren should count direct children when cache'
+                TestObject::class, [2],
+                'obj2', true, 2, 'Root object numChildren should count direct children when cache'
             ],
             [
-                HideTestObject::class, 'Stage', [],
-                HideTestObject::class, 'obj4', false, 1, 'Hidden object should not be included in count'
+                HideTestObject::class, [],
+                'obj4', false, 1, 'Hidden object should not be included in count'
             ],
             [
-                HideTestObject::class, 'Stage', [],
-                HideTestObject::class, 'obj4', true, 1, 'Hidden object should not be included in count when cache'
+                HideTestObject::class, [],
+                'obj4', true, 1, 'Hidden object should not be included in count when cache'
             ],
             [
-                HideTestObject::class, 'Stage', [2],
-                HideTestObject::class, 'obj4', false, 1, 'Hidden object should not be included in count'
+                HideTestObject::class, [2],
+                'obj4', false, 1, 'Hidden object should not be included in count'
             ],
             [
-                HideTestObject::class, 'Stage', [2],
-                HideTestObject::class, 'obj4', true, 1, 'Hidden object should not be included in count when cache'
+                HideTestObject::class, [2],
+                'obj4', true, 1, 'Hidden object should not be included in count when cache'
             ]
         ];
     }
@@ -131,16 +132,14 @@ class HierachyCacheTest extends SapphireTest
      * @dataProvider prepopulateCacheNumChildrenDataProvider
      */
     public function testPrepopulatedNumChildrenCache(
-        $baseClass,
-        $stage,
-        $idList,
         $className,
+        $idList,
         $identifier,
         $cache,
         $expected,
         $message
     ) {
-        Hierarchy::prepopulate_numchildren_cache($baseClass, $stage, $idList);
+        DataObject::singleton($className)->prepopulateTreeDataCache($idList, ['numChildrenMethod' => 'numChildren']);
         $node = $this->objFromFixture($className, $identifier);
 
         $actual = $node->numChildren($cache);

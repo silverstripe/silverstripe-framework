@@ -324,14 +324,15 @@ class Hierarchy extends DataExtension
      * onPrepopulateTreeDataCache(DataList $recordList = null, array $options) methods to hook
      * into this event as well.
      *
-     * @param DataList $recordList The list of records to prepopulate caches for. Null for all records.
+     * @param DataList|array $recordList The list of records to prepopulate caches for. Null for all records.
      * @param array $options A map of hints about what should be cached. "numChildrenMethod" and
      *                       "childrenMethod" are allowed keys.
      */
-    public function prepopulateTreeDataCache(DataList $recordList = null, array $options = [])
+    public function prepopulateTreeDataCache($recordList = null, array $options = [])
     {
         if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
-            $idList = $recordList ? $recordList->column('ID') : null;
+            $idList = is_array($recordList) ? $recordList :
+                ($recordList instanceof DataList ? $recordList->column('ID') : null);
             self::prepopulate_numchildren_cache($this->owner->baseClass(), $idList);
         }
 
@@ -382,7 +383,7 @@ class Hierarchy extends DataExtension
             '"ParentID"',
             "COUNT(DISTINCT $idColumn) AS \"NumChildren\"",
         ]);
-        $query->setGroupBy(['"ParentID"']);
+        $query->setGroupBy([Convert::symbol2sql("ParentID")]);
 
         $numChildren = $query->execute()->map();
         self::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
@@ -413,21 +414,23 @@ class Hierarchy extends DataExtension
      *
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
-     * @param bool $IDLess Set to true to supress the ParentID and ID where statements.
+     * @param bool $skipParentIDFilter Set to true to supress the ParentID and ID where statements.
      * @return DataList
      */
-    public function stageChildren($showAll = false, $IDLess = false)
+    public function stageChildren($showAll = false, $skipParentIDFilter = false)
     {
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
         $baseClass = $this->owner->baseClass();
-        $staged = DataObject::get($baseClass);
+        $staged = DataObject::get($baseClass)->where(sprintf(
+            '%s <> %s',
+            Convert::symbol2sql("ParentID"),
+            Convert::symbol2sql("ID")
+        ));
 
-        if (!$IDLess) {
+        if (!$skipParentIDFilter) {
             // There's no filtering by ID if we don't have an ID.
-            $staged = $staged
-                ->filter('ParentID', (int)$this->owner->ID)
-                ->exclude('ID', (int)$this->owner->ID);
+            $staged = $staged->filter('ParentID', (int)$this->owner->ID);
         }
 
         if ($hideFromHierarchy) {
