@@ -46,7 +46,7 @@ class HierachyCacheTest extends SapphireTest
             [TestObject::class, 'obj2', false, 2, 'Root object numChildren should count direct children'],
             [TestObject::class, 'obj2', true, 2, 'Root object numChildren should count direct children when cache'],
             [TestObject::class, 'obj3a', false, 2, 'Sub object numChildren should count direct children'],
-            [TestObject::class, 'obj3a', false, 2, 'Sub object numChildren should count direct children when cache'],
+            [TestObject::class, 'obj3a', true, 2, 'Sub object numChildren should count direct children when cache'],
             [TestObject::class, 'obj3d', false, 0, 'Childess Sub object numChildren should be 0'],
             [TestObject::class, 'obj3d', true, 0, 'Childess Sub object numChildren should be 0 when cache'],
             [HideTestObject::class, 'obj4', false, 1, 'Hidden object should not be included in count'],

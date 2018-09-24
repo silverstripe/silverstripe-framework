@@ -333,39 +333,13 @@ class Hierarchy extends DataExtension
         }
 
         /** @var Versioned|DataObject $singleton */
-        $dummyObject = new $baseClass();
-        $dummyObject->ID = -23478234; // going to use this for search & replace
+        $dummyObject = DataObject::singleton($baseClass);
         $baseTable = $dummyObject->baseTable();
 
         $idColumn = Convert::symbol2sql("{$baseTable}.ID");
-        $parentIdColumn = Convert::symbol2sql("ParentID");
-
 
         // Get the stageChildren() result of a dummy object and break down into a generic query
-        $query = $dummyObject->stageChildren(true)->dataQuery()->query();
-        $where = $query->getWhere();
-
-        $newWhere = [];
-
-        foreach ($where as $i => $compoundClause) {
-            foreach ($compoundClause as $clause => $params) {
-                // Skip any "WHERE ParentID = [marker]" clauses as this will be replaced with a GROUP BY
-                if (!(preg_match('/^"[^"]+"\."ParentID" = \?$/', $clause) && $clause[1] == $dummyObject->ID)) {
-                    // Replace any marker IDs with "<basetable>"."ID"
-                    $paramNum = 0;
-                    foreach ($params as $j => $param) {
-                        if ($param == $dummyObject->ID) {
-                            unset($params[$j]);
-                            $clause = DB::replace_parameter($clause, $paramNum, $parentIdColumn, true);
-                        } else {
-                            $paramNum++;
-                        }
-                    }
-
-                    $newWhere[] = [ $clause => $params ];
-                }
-            }
-        }
+        $query = $dummyObject->stageChildren(true, true)->dataQuery()->query();
 
         // optional ID-list filter
         if ($idList) {
@@ -378,10 +352,9 @@ class Hierarchy extends DataExtension
                     );
                 }
             }
-            $newWhere[] = ['"ParentID" IN (' . DB::placeholders($idList) . ')' => $idList];
+            $query->addWhere(['"ParentID" IN (' . DB::placeholders($idList) . ')' => $idList]);
         }
 
-        $query->setWhere($newWhere);
         $query->setOrderBy(null);
 
         $query->setSelect([
@@ -421,16 +394,23 @@ class Hierarchy extends DataExtension
      *
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
+     * @param bool $IDLess Set to true to supress the ParentID and ID where statements.
      * @return DataList
      */
-    public function stageChildren($showAll = false)
+    public function stageChildren($showAll = false, $IDLess = false)
     {
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
         $baseClass = $this->owner->baseClass();
-        $staged = DataObject::get($baseClass)
+        $staged = DataObject::get($baseClass);
+
+        if (!$IDLess) {
+            // There's no filtering by ID if we don't have an ID.
+            $staged = $staged
                 ->filter('ParentID', (int)$this->owner->ID)
                 ->exclude('ID', (int)$this->owner->ID);
+        }
+
         if ($hideFromHierarchy) {
             $staged = $staged->exclude('ClassName', $hideFromHierarchy);
         }
