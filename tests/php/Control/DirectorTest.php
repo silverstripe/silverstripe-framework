@@ -1,4 +1,5 @@
 <?php
+
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Cookie_Backend;
@@ -193,24 +194,26 @@ class DirectorTest extends SapphireTest
 
     /**
      * Tests that {@link Director::is_absolute()} works under different environment types
+     * @dataProvider provideAbsolutePaths
      */
-    public function testIsAbsolute()
+    public function testIsAbsolute($path, $result)
     {
-        $expected = array (
-            'C:/something' => true,
-            'd:\\'         => true,
-            'e/'           => false,
-            's:/directory' => true,
-            '/var/www'     => true,
-            '\\Something'  => true,
-            'something/c:' => false,
-            'folder'       => false,
-            'a/c:/'        => false
-        );
+        $this->assertEquals($result, Director::is_absolute($path));
+    }
 
-        foreach ($expected as $path => $result) {
-            $this->assertEquals(Director::is_absolute($path), $result, "Test result for $path");
-        }
+    public function provideAbsolutePaths()
+    {
+        return [
+            ['C:/something', true],
+            ['d:\\', true],
+            ['e/', false],
+            ['s:/directory', true],
+            ['/var/www', true],
+            ['\\Something', true],
+            ['something/c:', false],
+            ['folder', false],
+            ['a/c:/', false],
+        ];
     }
 
     public function testIsAbsoluteUrl()
@@ -486,7 +489,7 @@ class DirectorTest extends SapphireTest
     public function providerTestTestRequestCarriesGlobals()
     {
         $tests = [];
-        $fixture = [ 'somekey' => 'sometestvalue' ];
+        $fixture = ['somekey' => 'sometestvalue'];
         foreach (array('get', 'post') as $method) {
             foreach (array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
                 $url = 'TestController/' . sprintf($testfunction, ucfirst($method))
@@ -761,7 +764,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                [ 'X-Forwarded-Protocol' => 'https' ]
+                ['X-Forwarded-Protocol' => 'https']
             )->getBody()
         );
 
@@ -773,7 +776,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                [ 'X-Forwarded-Protocol' => 'http' ]
+                ['X-Forwarded-Protocol' => 'http']
             )->getBody()
         );
 
@@ -785,7 +788,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                [ 'X-Forwarded-Protocol' => 'ftp' ]
+                ['X-Forwarded-Protocol' => 'ftp']
             )->getBody()
         );
 
@@ -925,7 +928,7 @@ class DirectorTest extends SapphireTest
 
         // Global middleware
         $middleware = new DirectorTest\TestMiddleware;
-        Director::singleton()->setMiddlewares([ $middleware ]);
+        Director::singleton()->setMiddlewares([$middleware]);
 
         // URL rules, one of which has a specific middleware
         Config::modify()->set(
