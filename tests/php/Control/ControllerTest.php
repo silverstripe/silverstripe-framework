@@ -59,7 +59,7 @@ class ControllerTest extends FunctionalTest
     {
         /* For a controller with a template, the default action will simple run that template. */
         $response = $this->get("TestController/");
-        $this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
+        $this->assertContains("This is the main template. Content is 'default content'", $response->getBody());
     }
 
     public function testMethodActions()
@@ -67,19 +67,19 @@ class ControllerTest extends FunctionalTest
         /* The Action can refer to a method that is called on the object.  If a method returns an array, then it
         * will be used to customise the template data */
         $response = $this->get("TestController/methodaction");
-        $this->assertRegExp("/This is the main template. Content is 'methodaction content'./", $response->getBody());
+        $this->assertContains("This is the main template. Content is 'methodaction content'.", $response->getBody());
 
         /* If the method just returns a string, then that will be used as the response */
         $response = $this->get("TestController/stringaction");
-        $this->assertRegExp("/stringaction was called./", $response->getBody());
+        $this->assertContains("stringaction was called.", $response->getBody());
     }
 
     public function testTemplateActions()
     {
         /* If there is no method, it can be used to point to an alternative template. */
         $response = $this->get("TestController/templateaction");
-        $this->assertRegExp(
-            "/This is the template for templateaction. Content is 'default content'./",
+        $this->assertContains(
+            "This is the template for templateaction. Content is 'default content'.",
             $response->getBody()
         );
     }
