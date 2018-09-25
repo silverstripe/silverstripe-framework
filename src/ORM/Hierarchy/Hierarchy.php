@@ -10,7 +10,10 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DB;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use Exception;
 
 /**
@@ -72,6 +75,15 @@ class Hierarchy extends DataExtension
     private static $hide_from_cms_tree = array();
 
     /**
+     * Used to enable or disable the prepopulation of the numchildren cache.
+     * Defaults to true.
+     *
+     * @config
+     * @var boolean
+     */
+    private static $prepopulate_numchildren_cache = true;
+
+    /**
      * Prevent virtual page virtualising these fields
      *
      * @config
@@ -79,8 +91,16 @@ class Hierarchy extends DataExtension
      */
     private static $non_virtual_fields = [
         '_cache_children',
-        '_cache_numChildren',
     ];
+
+    /**
+     * A cache used by numChildren().
+     * Clear through {@link flushCache()}.
+     * version (int)0 means not on this stage.
+     *
+     * @var array
+     */
+    protected static $cache_numChildren = [];
 
     public static function get_extra_config($class, $extension, $args)
     {
@@ -271,11 +291,18 @@ class Hierarchy extends DataExtension
      */
     public function numChildren($cache = true)
     {
-        // Load if caching
+
+        $baseClass = $this->owner->baseClass();
+        $cacheType = 'numChildren';
+        $id = $this->owner->ID;
+
+        // cached call
         if ($cache) {
-            $numChildren = $this->owner->_cache_numChildren;
-            if (isset($numChildren)) {
-                return $numChildren;
+            if (isset(self::$cache_numChildren[$baseClass][$cacheType][$id])) {
+                return self::$cache_numChildren[$baseClass][$cacheType][$id];
+            } elseif (isset(self::$cache_numChildren[$baseClass][$cacheType]['_complete'])) {
+                // If the cache is complete and we didn't find our ID in the cache, it means this object is childless.
+                return 0;
             }
         }
 
@@ -284,9 +311,87 @@ class Hierarchy extends DataExtension
 
         // Save if caching
         if ($cache) {
-            $this->owner->_cache_numChildren = $numChildren;
+            self::$cache_numChildren[$baseClass][$cacheType][$id] = $numChildren;
         }
+
         return $numChildren;
+    }
+
+    /**
+     * Pre-populate any appropriate caches prior to rendering a tree.
+     * This is used to allow for the efficient rendering of tree views, notably in the CMS.
+     * In the cace of Hierarchy, it caches numChildren values. Other extensions can provide an
+     * onPrepopulateTreeDataCache(DataList $recordList = null, array $options) methods to hook
+     * into this event as well.
+     *
+     * @param DataList|array $recordList The list of records to prepopulate caches for. Null for all records.
+     * @param array $options A map of hints about what should be cached. "numChildrenMethod" and
+     *                       "childrenMethod" are allowed keys.
+     */
+    public function prepopulateTreeDataCache($recordList = null, array $options = [])
+    {
+        if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
+            $idList = is_array($recordList) ? $recordList :
+                ($recordList instanceof DataList ? $recordList->column('ID') : null);
+            self::prepopulate_numchildren_cache($this->owner->baseClass(), $idList);
+        }
+
+        $this->owner->extend('onPrepopulateTreeDataCache', $recordList, $options);
+    }
+
+    /**
+     * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for
+     * a list of record IDs, for more efficient database querying.  If $idList
+     * is null, then every record will be pre-cached.
+     *
+     * @param string $class
+     * @param string $stage
+     * @param array $idList
+     */
+    public static function prepopulate_numchildren_cache($baseClass, $idList = null)
+    {
+        if (!Config::inst()->get(static::class, 'prepopulate_numchildren_cache')) {
+            return;
+        }
+
+        /** @var Versioned|DataObject $singleton */
+        $dummyObject = DataObject::singleton($baseClass);
+        $baseTable = $dummyObject->baseTable();
+
+        $idColumn = Convert::symbol2sql("{$baseTable}.ID");
+
+        // Get the stageChildren() result of a dummy object and break down into a generic query
+        $query = $dummyObject->stageChildren(true, true)->dataQuery()->query();
+
+        // optional ID-list filter
+        if ($idList) {
+            // Validate the ID list
+            foreach ($idList as $id) {
+                if (!is_numeric($id)) {
+                    user_error(
+                        "Bad ID passed to Versioned::prepopulate_numchildren_cache() in \$idList: " . $id,
+                        E_USER_ERROR
+                    );
+                }
+            }
+            $query->addWhere(['"ParentID" IN (' . DB::placeholders($idList) . ')' => $idList]);
+        }
+
+        $query->setOrderBy(null);
+
+        $query->setSelect([
+            '"ParentID"',
+            "COUNT(DISTINCT $idColumn) AS \"NumChildren\"",
+        ]);
+        $query->setGroupBy([Convert::symbol2sql("ParentID")]);
+
+        $numChildren = $query->execute()->map();
+        self::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
+        if (!$idList) {
+            // If all objects are being cached, mark this cache as complete
+            // to avoid counting children of childless object.
+            self::$cache_numChildren[$baseClass]['numChildren']['_complete'] = true;
+        }
     }
 
     /**
@@ -309,16 +414,28 @@ class Hierarchy extends DataExtension
      *
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
+     * @param bool $skipParentIDFilter Set to true to supress the ParentID and ID where statements.
      * @return DataList
      */
-    public function stageChildren($showAll = false)
+    public function stageChildren($showAll = false, $skipParentIDFilter = false)
     {
         $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
         $baseClass = $this->owner->baseClass();
-        $staged = DataObject::get($baseClass)
-                ->filter('ParentID', (int)$this->owner->ID)
-                ->exclude('ID', (int)$this->owner->ID);
+        $baseTable = $this->owner->baseTable();
+        $staged = DataObject::get($baseClass)->where(sprintf(
+            '%s.%s <> %s.%s',
+            Convert::symbol2sql($baseTable),
+            Convert::symbol2sql("ParentID"),
+            Convert::symbol2sql($baseTable),
+            Convert::symbol2sql("ID")
+        ));
+
+        if (!$skipParentIDFilter) {
+            // There's no filtering by ID if we don't have an ID.
+            $staged = $staged->filter('ParentID', (int)$this->owner->ID);
+        }
+
         if ($hideFromHierarchy) {
             $staged = $staged->exclude('ClassName', $hideFromHierarchy);
         }
@@ -439,6 +556,6 @@ class Hierarchy extends DataExtension
     public function flushCache()
     {
         $this->owner->_cache_children = null;
-        $this->owner->_cache_numChildren = null;
+        self::$cache_numChildren = [];
     }
 }
