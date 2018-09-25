@@ -10,20 +10,10 @@ use SilverStripe\Control\Cookie;
 class CookieTest extends SapphireTest
 {
 
-    private $cookieInst;
-
     protected function setUp()
     {
         parent::setUp();
-        Injector::nest();
         Injector::inst()->registerService(new CookieJar($_COOKIE), 'SilverStripe\\Control\\Cookie_Backend');
-    }
-
-    protected function tearDown()
-    {
-        //restore the cookie_backend
-        Injector::unnest();
-        parent::tearDown();
     }
 
     /**
