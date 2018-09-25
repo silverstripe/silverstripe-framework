@@ -122,7 +122,7 @@ class CookieTest extends SapphireTest
         //load with a cookie
         $cookieJar = new CookieJar(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             )
         );
         Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
@@ -146,8 +146,8 @@ class CookieTest extends SapphireTest
         //check we can get all cookies
         $this->assertEquals(
             array(
-            'cookieExisting' => 'i woz changed',
-            'cookieNew' => 'i am new',
+                'cookieExisting' => 'i woz changed',
+                'cookieNew' => 'i am new',
             ),
             Cookie::get_all()
         );
@@ -155,7 +155,7 @@ class CookieTest extends SapphireTest
         //check we can get all original cookies
         $this->assertEquals(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             ),
             Cookie::get_all(false)
         );
@@ -169,7 +169,7 @@ class CookieTest extends SapphireTest
         //load an existing cookie
         $cookieJar = new CookieJar(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             )
         );
         Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
