@@ -8,22 +8,50 @@ addons:
   apt:
     packages:
       - tidy
-  firefox: "31.0"
 
 matrix:
   include:
+    # Framework tests
     - php: 5.4
-      env: DB=MYSQL PDO=1
+      env: DB=PGSQL
+      services:
+       - postgresql
+
     - php: 7.0
       env: DB=SQLITE
+
+    - php: 7.1
+      env: DB=SQLITE
+
     - php: 7.2
-      env: DB=PGSQL
-    - php: 5.6
-      env: DB=MYSQL BEHAT_TEST=1
+      env: DB=MYSQL PDO=1
+      services:
+       - mysql
+
+    - php: 7.3.0RC1
+      env: DB=SQLITE
+      sudo: required
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - libzip4
+
+    # CMS test
     - php: 5.5
       env: DB=MYSQL CMS_TEST=1
+      services:
+       - mysql
+
+    # Behat tests
+    - php: 5.6
+      env: DB=MYSQL BEHAT_TEST=1
+      addons:
+        firefox: "31.0"
     - php: 7.1
       env: DB=MYSQL BEHAT_TEST=1 CMS_TEST=1
+      addons:
+        firefox: "31.0"
 
 before_script:
  # Fix bug in Selenium with duplicate localhost definitions: https://github.com/travis-ci/travis-ci/issues/3054
@@ -34,7 +62,7 @@ before_script:
  - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick-3.3.0; fi
  - composer self-update || true
  - phpenv rehash
- - phpenv config-rm xdebug.ini
+ - phpenv config-rm xdebug.ini || true
  - echo 'memory_limit = 2G' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - "if [ \"$BEHAT_TEST\" = \"\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
