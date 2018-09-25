@@ -220,7 +220,7 @@ If your SilverStripe 3 project requires the `silverstripe/cms` module, replace t
 * `~4.2.0` to upgrade to SilverStripe 4.2
 * and so on.
 
-If your SilverStripe 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/framework` with `silverstripe/recipe-core`.  The version constraint for `silverstripe/recipe-core` must match your targeted version of SilverStripe:
+If your SilverStripe 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/recipe-cms` with `silverstripe/recipe-core`.  The version constraint for `silverstripe/recipe-core` must match your targeted version of SilverStripe:
 * `~4.0.0` to upgrade to SilverStripe 4.0
 * `~4.1.0` to upgrade to SilverStripe 4.1
 * `~4.2.0` to upgrade to SilverStripe 4.2
