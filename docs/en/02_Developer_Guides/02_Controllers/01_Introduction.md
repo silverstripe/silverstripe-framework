@@ -169,7 +169,7 @@ as well as give other features in SilverStripe the ability to influence link beh
 public function Link($action = null) 
 {
     // Construct link with graceful handling of GET parameters
-    $link = Controller::join_links('teams', $ction);
+    $link = Controller::join_links('teams', $action);
     
     // Allow Versioned and other extension to update $link by reference.
     $this->extend('updateLink', $link, $action);
