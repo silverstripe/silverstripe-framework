@@ -408,14 +408,6 @@ class ControllerTest extends FunctionalTest
         );
     }
 
-    /* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this
-    * code was supposed to test
-    public function testBaseURL() {
-    Config::modify()->merge('Director', 'alternate_base_url', '/baseurl/');
-    $this->assertEquals(Controller::BaseURL(), Director::BaseURL());
-    }
-    */
-
     public function testRedirectBackByReferer()
     {
         $internalRelativeUrl = Controller::join_links(Director::baseURL(), '/some-url');
