@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control\Tests;
 
-use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Tests\ControllerTest\AccessBaseController;
@@ -15,7 +14,6 @@ use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -47,7 +45,6 @@ class ControllerTest extends FunctionalTest
     {
         parent::setUp();
         Director::config()->update('alternate_base_url', '/');
-        $this->depSettings = Deprecation::dump_settings();
 
         // Add test theme
         $themeDir = substr(__DIR__, strlen(FRAMEWORK_DIR)) . '/ControllerTest/';
@@ -56,12 +53,6 @@ class ControllerTest extends FunctionalTest
             SSViewer::DEFAULT_THEME
         ];
         SSViewer::set_themes($themes);
-    }
-
-    protected function tearDown()
-    {
-        Deprecation::restore_settings($this->depSettings);
-        parent::tearDown();
     }
 
     public function testDefaultAction()
