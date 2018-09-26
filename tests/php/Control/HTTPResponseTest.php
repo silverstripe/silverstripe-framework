@@ -23,29 +23,17 @@ class HTTPResponseTest extends SapphireTest
         $response = new HTTPResponse("Test", 200, 'OK');
 
         // Confirm that the exception's statusCode and statusDescription take precedence
-        try {
-            throw new HTTPResponse_Exception($response, 404, 'not even found');
-        } catch (HTTPResponse_Exception $e) {
-            $this->assertEquals(404, $e->getResponse()->getStatusCode());
-            $this->assertEquals('not even found', $e->getResponse()->getStatusDescription());
-            return;
-        }
-        // Fail if we get to here
-        $this->assertFalse(true, 'Something went wrong with our test exception');
+        $e = new HTTPResponse_Exception($response, 404, 'not even found');
+        $this->assertEquals(404, $e->getResponse()->getStatusCode());
+        $this->assertEquals('not even found', $e->getResponse()->getStatusDescription());
     }
 
     public function testExceptionContentPlainByDefault()
     {
 
         // Confirm that the exception's statusCode and statusDescription take precedence
-        try {
-            throw new HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
-        } catch (HTTPResponse_Exception $e) {
-            $this->assertEquals("text/plain", $e->getResponse()->getHeader("Content-Type"));
-            return;
-        }
-        // Fail if we get to here
-        $this->assertFalse(true, 'Something went wrong with our test exception');
+        $e = new HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
+        $this->assertEquals("text/plain", $e->getResponse()->getHeader("Content-Type"));
     }
 
     public function testRemoveHeader()
