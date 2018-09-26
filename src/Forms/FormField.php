@@ -1326,13 +1326,14 @@ class FormField extends RequestHandler
      */
     public function debug()
     {
+        $strValue = is_string($this->value) ? $this->value : print_r($this->value, true);
         return sprintf(
             '%s (%s: %s : <span style="color:red;">%s</span>) = %s',
             static::class,
             $this->name,
             $this->title,
             $this->message,
-            $this->value
+            $strValue
         );
     }
 
