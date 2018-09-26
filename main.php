@@ -121,16 +121,28 @@ if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url 
 /**
  * Include SilverStripe's core code
  */
+require_once('core/startup/ConfirmationTokenChain.php');
 require_once('core/startup/ErrorControlChain.php');
 require_once('core/startup/ParameterConfirmationToken.php');
+require_once('core/startup/URLConfirmationToken.php');
 
 // Prepare tokens and execute chain
-$reloadToken = ParameterConfirmationToken::prepare_tokens(array('isTest', 'isDev', 'flush'));
+$confirmationTokenChain = new ConfirmationTokenChain();
+$confirmationTokenChain->pushToken(new URLConfirmationToken('dev/build'));
+
+foreach (array('isTest', 'isDev', 'flush') as $parameter) {
+	$confirmationTokenChain->pushToken(new ParameterConfirmationToken($parameter));
+}
+
 $chain = new ErrorControlChain();
 $chain
-	->then(function($chain) use ($reloadToken) {
-		// If no redirection is necessary then we can disable error supression
-		if (!$reloadToken) $chain->setSuppression(false);
+	->then(function($chain) use ($confirmationTokenChain) {
+		if ($confirmationTokenChain->suppressionRequired()) {
+			$confirmationTokenChain->suppressTokens();
+		} else {
+			// If no redirection is necessary then we can disable error supression
+			$chain->setSuppression(false);
+		}
 
 		// Load in core
 		require_once('core/Core.php');
@@ -141,7 +153,7 @@ $chain
 		if ($databaseConfig) DB::connect($databaseConfig);
 
 		// Check if a token is requesting a redirect
-		if (!$reloadToken) return;
+		if (!$confirmationTokenChain->reloadRequired()) return;
 
 		// Otherwise, we start up the session if needed
 		if(!isset($_SESSION) && Session::request_contains_session_id()) {
@@ -150,19 +162,24 @@ $chain
 
 		// Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
 		if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
-			return $reloadToken->reloadWithToken();
+			return $confirmationTokenChain->reloadWithToken();
 		}
 
 		// Fail and redirect the user to the login page
-		$loginPage = Director::absoluteURL(Config::inst()->get('Security', 'login_url'));
-		$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
+		$params = array_merge($_GET, $confirmationTokenChain->params(false));
+		if (isset($params['url'])) {
+			unset($params['url']);
+		}
+		$backURL = $confirmationTokenChain->getRedirectUrlBase() . '?' . http_build_query($params);
+		$loginPage = Director::absoluteURL(Security::config()->get('login_url'));
+		$loginPage .= "?BackURL=" . urlencode($backURL);
 		header('location: '.$loginPage, true, 302);
 		die;
 	})
 	// Finally if a token was requested but there was an error while figuring out if it's allowed, do it anyway
-	->thenIfErrored(function() use ($reloadToken){
-		if ($reloadToken) {
-			$reloadToken->reloadWithToken();
+	->thenIfErrored(function() use ($confirmationTokenChain){
+		if ($confirmationTokenChain->reloadRequired()) {
+			$confirmationTokenChain->reloadWithToken();
 		}
 	})
 	->execute();
