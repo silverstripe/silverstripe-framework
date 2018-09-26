@@ -176,7 +176,7 @@ class CliDebugView extends DebugView
 
         // Format object
         if (is_object($val)) {
-            return var_export($val, true);
+            return print_r($val, true);
         }
 
         // Format bool
