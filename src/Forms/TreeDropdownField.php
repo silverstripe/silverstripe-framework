@@ -453,6 +453,8 @@ class TreeDropdownField extends FormField
         /** @var DataObject|Hierarchy $obj */
         $obj = null;
         $sourceObject = $this->getSourceObject();
+
+        Hierarchy::prepopulate_numchildren_cache($sourceObject);
         if ($id && !$request->requestVar('forceFullTree')) {
             $obj = DataObject::get_by_id($sourceObject, $id);
             $isSubTree = true;
