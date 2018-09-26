@@ -219,7 +219,7 @@ class HTTPTest extends FunctionalTest
         sort($result);
         sort($expected);
 
-        $this->assertTrue(is_array($result));
+        $this->assertInternalType('array', $result);
         $this->assertEquals($expected, $result, 'Test that all links within the content are found.');
     }
 
