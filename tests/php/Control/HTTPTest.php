@@ -459,7 +459,7 @@ class HTTPTest extends FunctionalTest
     {
         $this->withBaseURL(
             'http://www.silverstripe.org/',
-            function ($test) {
+            function () {
                 $frameworkTests = ltrim(FRAMEWORK_DIR . '/tests', '/');
                 $this->assertEquals(
                     "http://www.silverstripe.org/$frameworkTests/php/Control/HTTPTest.php",
@@ -483,7 +483,7 @@ class HTTPTest extends FunctionalTest
 
         // Run middleware
         HTTPCacheControlMiddleware::singleton()
-            ->process($request, function (HTTPRequest $request) use ($response) {
+            ->process($request, function () use ($response) {
                 return $response;
             });
     }
