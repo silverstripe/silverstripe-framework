@@ -32,7 +32,9 @@ class SimpleResourceURLGeneratorTest extends SapphireTest
     {
         /** @var SimpleResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
-        $mtime = filemtime(__DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js');
+        $mtime = filemtime(
+            __DIR__ . '/SimpleResourceURLGeneratorTest/_fakewebroot/basemodule/client/file.js'
+        );
         $this->assertEquals(
             '/resources/basemodule/client/file.js?m=' . $mtime,
             $generator->urlForResource('basemodule/client/file.js')

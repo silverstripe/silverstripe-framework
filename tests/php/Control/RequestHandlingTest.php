@@ -3,16 +3,16 @@
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\ErrorPage\ErrorPageControllerExtension;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Tests\RequestHandlingTest\AllowedController;
 use SilverStripe\Control\Tests\RequestHandlingTest\ControllerFormWithAllowedActions;
 use SilverStripe\Control\Tests\RequestHandlingTest\FieldController;
 use SilverStripe\Control\Tests\RequestHandlingTest\FormActionController;
 use SilverStripe\Control\Tests\RequestHandlingTest\TestController;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Director;
+use SilverStripe\ErrorPage\ErrorPageControllerExtension;
 use SilverStripe\Forms\Form;
 use SilverStripe\Security\SecurityToken;
 
@@ -24,25 +24,25 @@ class RequestHandlingTest extends FunctionalTest
 {
     protected static $fixture_file = null;
 
-    protected static $illegal_extensions = array(
+    protected static $illegal_extensions = [
         // Suppress CMS error page handling
-        Controller::class => array(
+        Controller::class => [
             ErrorPageControllerExtension::class,
-        ),
-        Form::class => array(
+        ],
+        Form::class => [
             ErrorPageControllerExtension::class,
-        ),
-        LeftAndMain::class => array(
+        ],
+        LeftAndMain::class => [
             ErrorPageControllerExtension::class,
-        ),
-    );
+        ],
+    ];
 
     protected static $extra_controllers = [
         TestController::class,
         AllowedController::class,
         ControllerFormWithAllowedActions::class,
         FieldController::class,
-        FormActionController::class
+        FormActionController::class,
     ];
 
     public function getExtraRoutes()
@@ -99,13 +99,16 @@ class RequestHandlingTest extends FunctionalTest
         /* In addition, these values are availalbe in $controller->urlParams.  This is mainly for backward
         * compatability. */
         $response = Director::test("testGoodBase1/legacymethod/3/4");
-        $this->assertEquals("\$this->urlParams can be used, for backward compatibility: 3, 4", $response->getBody());
+        $this->assertEquals(
+            "\$this->urlParams can be used, for backward compatibility: 3, 4",
+            $response->getBody()
+        );
     }
 
     public function testPostRequests()
     {
         /* The HTTP Request handler can trigger special behaviour for GET and POST. */
-        $response = Director::test("testGoodBase1/TestForm", array("MyField" => 3), null, "POST");
+        $response = Director::test("testGoodBase1/TestForm", ["MyField" => 3], null, "POST");
         $this->assertEquals("Form posted", $response->getBody());
 
         $response = Director::test("testGoodBase1/TestForm");
@@ -120,7 +123,7 @@ class RequestHandlingTest extends FunctionalTest
         $this->assertEquals("MyField requested", $response->getBody());
 
         /* We can also make a POST request on a form field, which could be used for in-place editing, for example. */
-        $response = Director::test("testGoodBase1/TestForm/fields/MyField", array("MyField" => 5));
+        $response = Director::test("testGoodBase1/TestForm/fields/MyField", ["MyField" => 5]);
         $this->assertEquals("MyField posted, update to 5", $response->getBody());
     }
 
@@ -128,7 +131,7 @@ class RequestHandlingTest extends FunctionalTest
     {
         $this->withBaseFolder(
             '/silverstripe',
-            function ($test) {
+            function () {
                 $this->assertEquals(
                     'MyField requested',
                     Director::test('/silverstripe/testGoodBase1/TestForm/fields/MyField')->getBody()
@@ -136,7 +139,10 @@ class RequestHandlingTest extends FunctionalTest
 
                 $this->assertEquals(
                     'MyField posted, update to 5',
-                    Director::test('/silverstripe/testGoodBase1/TestForm/fields/MyField', array('MyField' => 5))->getBody()
+                    Director::test(
+                        '/silverstripe/testGoodBase1/TestForm/fields/MyField',
+                        ['MyField' => 5]
+                    )->getBody()
                 );
             }
         );
@@ -148,7 +154,7 @@ class RequestHandlingTest extends FunctionalTest
         $response = Director::test("testBadBase/method/1/2");
         $this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
-        $response = Director::test("testBadBase/TestForm", array("MyField" => 3), null, "POST");
+        $response = Director::test("testBadBase/TestForm", ["MyField" => 3], null, "POST");
         $this->assertNotEquals("Form posted", $response->getBody());
 
         $response = Director::test("testBadBase/TestForm/fields/MyField");
@@ -254,7 +260,7 @@ class RequestHandlingTest extends FunctionalTest
         $tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
         $securityId = (string)$tokenEls[0]['value'];
 
-        $data = array('action_formaction' => 1);
+        $data = ['action_formaction' => 1];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(
             400,
@@ -262,7 +268,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should fail: Invocation through POST form handler, not contained in $allowed_actions, without CSRF token'
         );
 
-        $data = array('action_disallowedcontrollermethod' => 1, 'SecurityID' => $securityId);
+        $data = ['action_disallowedcontrollermethod' => 1, 'SecurityID' => $securityId];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(
             403,
@@ -271,7 +277,7 @@ class RequestHandlingTest extends FunctionalTest
             . ' not contained in $allowed_actions, with CSRF token'
         );
 
-        $data = array('action_formaction' => 1, 'SecurityID' => $securityId);
+        $data = ['action_formaction' => 1, 'SecurityID' => $securityId];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(
@@ -280,16 +286,16 @@ class RequestHandlingTest extends FunctionalTest
             'Should pass: Invocation through POST form handler, not contained in $allowed_actions, with CSRF token'
         );
 
-        $data = array('action_controlleraction' => 1, 'SecurityID' => $securityId);
+        $data = ['action_controlleraction' => 1, 'SecurityID' => $securityId];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(
             200,
             $response->getStatusCode(),
             'Should pass: Invocation through POST form handler, controller action instead of form action, contained in'
-                . ' $allowed_actions, with CSRF token'
+            . ' $allowed_actions, with CSRF token'
         );
 
-        $data = array('action_formactionInAllowedActions' => 1);
+        $data = ['action_formactionInAllowedActions' => 1];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(
             400,
@@ -297,7 +303,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should fail: Invocation through POST form handler, contained in $allowed_actions, without CSRF token'
         );
 
-        $data = array('action_formactionInAllowedActions' => 1, 'SecurityID' => $securityId);
+        $data = ['action_formactionInAllowedActions' => 1, 'SecurityID' => $securityId];
         $response = $this->post('FormActionController/Form', $data);
         $this->assertEquals(
             200,
@@ -305,7 +311,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should pass: Invocation through POST form handler, contained in $allowed_actions, with CSRF token'
         );
 
-        $data = array();
+        $data = [];
         $response = $this->post('FormActionController/formaction', $data);
         $this->assertEquals(
             404,
@@ -313,7 +319,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should fail: Invocation through POST URL, not contained in $allowed_actions, without CSRF token'
         );
 
-        $data = array();
+        $data = [];
         $response = $this->post('FormActionController/formactionInAllowedActions', $data);
         $this->assertEquals(
             200,
@@ -321,7 +327,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should pass: Invocation of form action through POST URL, contained in $allowed_actions, without CSRF token'
         );
 
-        $data = array('SecurityID' => $securityId);
+        $data = ['SecurityID' => $securityId];
         $response = $this->post('FormActionController/formactionInAllowedActions', $data);
         $this->assertEquals(
             200,
@@ -329,7 +335,7 @@ class RequestHandlingTest extends FunctionalTest
             'Should pass: Invocation of form action through POST URL, contained in $allowed_actions, with CSRF token'
         );
 
-        $data = array(); // CSRF protection doesnt kick in for direct requests
+        $data = []; // CSRF protection doesnt kick in for direct requests
         $response = $this->post('FormActionController/formactionInAllowedActions', $data);
         $this->assertEquals(
             200,
@@ -342,12 +348,12 @@ class RequestHandlingTest extends FunctionalTest
 
     public function testAllowedActionsEnforcedOnForm()
     {
-        $data = array('action_allowedformaction' => 1);
+        $data = ['action_allowedformaction' => 1];
         $response = $this->post('ControllerFormWithAllowedActions/Form', $data);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('allowedformaction', $response->getBody());
 
-        $data = array('action_disallowedformaction' => 1);
+        $data = ['action_disallowedformaction' => 1];
         $response = $this->post('ControllerFormWithAllowedActions/Form', $data);
         $this->assertEquals(403, $response->getStatusCode());
         // Note: Looks for a specific 403 thrown by Form->httpSubmission(), not RequestHandler->handleRequest()
@@ -356,12 +362,12 @@ class RequestHandlingTest extends FunctionalTest
 
     public function testActionHandlingOnField()
     {
-        $data = array('action_actionOnField' => 1);
+        $data = ['action_actionOnField' => 1];
         $response = $this->post('FieldController/TestForm', $data);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Test method on MyField', $response->getBody());
 
-        $data = array('action_actionNotAllowedOnField' => 1);
+        $data = ['action_actionNotAllowedOnField' => 1];
         $response = $this->post('FieldController/TestForm', $data);
         $this->assertEquals(404, $response->getStatusCode());
     }

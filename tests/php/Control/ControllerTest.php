@@ -16,7 +16,6 @@ use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
 class ControllerTest extends FunctionalTest
@@ -50,7 +49,7 @@ class ControllerTest extends FunctionalTest
         $themeDir = substr(__DIR__, strlen(FRAMEWORK_DIR)) . '/ControllerTest/';
         $themes = [
             "silverstripe/framework:{$themeDir}",
-            SSViewer::DEFAULT_THEME
+            SSViewer::DEFAULT_THEME,
         ];
         SSViewer::set_themes($themes);
     }
