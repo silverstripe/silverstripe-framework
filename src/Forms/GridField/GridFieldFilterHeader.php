@@ -264,6 +264,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
         }
 
+        // Append a prefix to search field names to prevent conflicts with other fields in the search form
+        foreach ($searchFields as $field) {
+            $field->setName('Search__' . $field->getName());
+        }
+
         $columns = $gridField->getColumns();
 
         // Update field titles to match column titles
