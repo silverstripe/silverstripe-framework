@@ -72,88 +72,83 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
     }
 
-    public function testSortingOnJoinTable()
+    /**
+     * @param string $sort
+     * @param array $expected
+     * @dataProvider sortingProvider
+     */
+    public function testSorting($sort, $expected)
     {
         /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
 
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
-            ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
-            ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
-            ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
-            ],
-            $items
-        );
+        $items = $parent->Items()->sort($sort);
+        $this->assertListEquals($expected, $items);
     }
 
-    public function testSortingOnJoinTableWithoutTableAlias()
+    /**
+     * @return array[]
+     */
+    public function sortingProvider()
     {
-        /** @var ManyManyThroughListTest\TestObject $parent */
-        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
-
-        $items = $parent->Items()->sort('"Sort"');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
+        return [
+            'table with default column' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort"',
+                [
+                    ['Title' => 'item 2'],
+                    ['Title' => 'item 1'],
+                ]
             ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"Sort" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
+            'table with default column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" ASC',
+                [
+                    ['Title' => 'item 1'],
+                    ['Title' => 'item 2'],
+                ]
             ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"Title" DESC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
+            'table with column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" DESC',
+                [
+                    ['Title' => 'item 2'],
+                    ['Title' => 'item 1'],
+                ]
             ],
-            $items
-        );
-
-        $items = $parent->Items()->sort('"Title" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
+            'table with column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" ASC',
+                [
+                    ['Title' => 'item 1'],
+                    ['Title' => 'item 2'],
+                ]
             ],
-            $items
-        );
+            'default column' => [
+                '"Sort"',
+                [
+                    ['Title' => 'item 2'],
+                    ['Title' => 'item 1'],
+                ]
+            ],
+            'default column ascending' => [
+                '"Sort" ASC',
+                [
+                    ['Title' => 'item 1'],
+                    ['Title' => 'item 2'],
+                ]
+            ],
+            'column descending' => [
+                '"Title" DESC',
+                [
+                    ['Title' => 'item 2'],
+                    ['Title' => 'item 1'],
+                ]
+            ],
+            'column ascending' => [
+                '"Title" ASC',
+                [
+                    ['Title' => 'item 1'],
+                    ['Title' => 'item 2'],
+                ]
+            ],
+        ];
     }
 
     public function testAdd()
