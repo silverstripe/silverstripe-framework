@@ -31,13 +31,13 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @var array
      */
-    protected $items = array();
+    protected $items = [];
 
     /**
      *
      * @param array $items - an initial array to fill this object with
      */
-    public function __construct(array $items = array())
+    public function __construct(array $items = [])
     {
         $this->items = array_values($items);
         parent::__construct();
@@ -133,7 +133,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function toNestedArray()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->items as $item) {
             if (is_object($item)) {
@@ -236,7 +236,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function removeDuplicates($field = 'ID')
     {
-        $seen = array();
+        $seen = [];
         $renumberKeys = false;
 
         foreach ($this->items as $key => $item) {
@@ -253,7 +253,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         if ($renumberKeys) {
             $this->items = array_values($this->items);
         }
-        
+
         return $this;
     }
 
@@ -363,7 +363,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function column($colName = 'ID')
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->items as $item) {
             $result[] = $this->extractValue($item, $colName);
@@ -492,13 +492,13 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $originalKeys = array_keys($this->items);
 
         // This the main sorting algorithm that supports infinite sorting params
-        $multisortArgs = array();
-        $values = array();
+        $multisortArgs = [];
+        $values = [];
         $firstRun = true;
         foreach ($columnsToSort as $column => $direction) {
             // The reason these are added to columns is of the references, otherwise when the foreach
             // is done, all $values and $direction look the same
-            $values[$column] = array();
+            $values[$column] = [];
             $sortDirection[$column] = $direction;
             // We need to subtract every value into a temporary array for sorting
             foreach ($this->items as $index => $item) {
@@ -559,9 +559,9 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     public function filter()
     {
 
-        $keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+        $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
 
-        $itemsToKeep = array();
+        $itemsToKeep = [];
         foreach ($this->items as $item) {
             $keepItem = true;
             foreach ($keepUs as $column => $value) {
@@ -601,9 +601,9 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function filterAny()
     {
-        $keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+        $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
 
-        $itemsToKeep = array();
+        $itemsToKeep = [];
 
         foreach ($this->items as $item) {
             foreach ($keepUs as $column => $value) {
@@ -636,18 +636,18 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
             throw new InvalidArgumentException('filter takes one array or two arguments');
         }
 
-        if (count(func_get_args()) == 1 && !is_array(func_get_arg(0))) {
+        if (count(func_get_args()) === 1 && !is_array(func_get_arg(0))) {
             throw new InvalidArgumentException('filter takes one array or two arguments');
         }
 
-        $keepUs = array();
-        if (count(func_get_args())==2) {
+        $keepUs = [];
+        if (count(func_get_args()) === 2) {
             $keepUs[func_get_arg(0)] = func_get_arg(1);
         }
 
-        if (count(func_get_args())==1 && is_array(func_get_arg(0))) {
-            foreach (func_get_arg(0) as $column => $value) {
-                $keepUs[$column] = $value;
+        if (count(func_get_args()) === 1 && is_array(func_get_arg(0))) {
+            foreach (func_get_arg(0) as $key => $val) {
+                $keepUs[$key] = $val;
             }
         }
 
@@ -719,23 +719,23 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     public function exclude()
     {
 
-        $removeUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+        $removeUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
 
         $hitsRequiredToRemove = count($removeUs);
-        $matches = array();
+        $matches = [];
         foreach ($removeUs as $column => $excludeValue) {
             foreach ($this->items as $key => $item) {
                 if (!is_array($excludeValue) && $this->extractValue($item, $column) == $excludeValue) {
-                    $matches[$key]=isset($matches[$key])?$matches[$key]+1:1;
+                    $matches[$key] = isset($matches[$key]) ? $matches[$key] + 1 : 1;
                 } elseif (is_array($excludeValue) && in_array($this->extractValue($item, $column), $excludeValue)) {
-                    $matches[$key]=isset($matches[$key])?$matches[$key]+1:1;
+                    $matches[$key] = isset($matches[$key]) ? $matches[$key] + 1 : 1;
                 }
             }
         }
 
         $keysToRemove = array_keys($matches, $hitsRequiredToRemove);
 
-        $itemsToKeep = array();
+        $itemsToKeep = [];
         foreach ($this->items as $key => $value) {
             if (!in_array($key, $keysToRemove)) {
                 $itemsToKeep[] = $value;
@@ -817,11 +817,12 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
                 return $item->{$key}();
             }
             return $item->{$key};
-        } else {
-            if (array_key_exists($key, $item)) {
-                return $item[$key];
-            }
         }
+
+        if (array_key_exists($key, $item)) {
+            return $item[$key];
+        }
+
         return null;
     }
 }
