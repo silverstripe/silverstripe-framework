@@ -70,8 +70,13 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertNotNull($item2->getJoin());
         $this->assertEquals('join 2', $item2->getJoin()->Title);
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
+    }
 
-        // Test sorting on join table
+    public function testSortingOnJoinTable()
+    {
+        /** @var ManyManyThroughListTest\TestObject $parent */
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+
         $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
         $this->assertListEquals(
             [
@@ -89,11 +94,63 @@ class ManyManyThroughListTest extends SapphireTest
             ],
             $items
         );
+
         $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
         $this->assertListEquals(
             [
                 ['Title' => 'item 2'],
                 ['Title' => 'item 1'],
+            ],
+            $items
+        );
+
+        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" ASC');
+        $this->assertListEquals(
+            [
+                ['Title' => 'item 1'],
+                ['Title' => 'item 2'],
+            ],
+            $items
+        );
+    }
+
+    public function testSortingOnJoinTableWithoutTableAlias()
+    {
+        /** @var ManyManyThroughListTest\TestObject $parent */
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+
+        $items = $parent->Items()->sort('"Sort"');
+        $this->assertListEquals(
+            [
+                ['Title' => 'item 2'],
+                ['Title' => 'item 1'],
+            ],
+            $items
+        );
+
+        $items = $parent->Items()->sort('"Sort" ASC');
+        $this->assertListEquals(
+            [
+                ['Title' => 'item 1'],
+                ['Title' => 'item 2'],
+            ],
+            $items
+        );
+
+        $items = $parent->Items()->sort('"Title" DESC');
+        $this->assertListEquals(
+            [
+                ['Title' => 'item 2'],
+                ['Title' => 'item 1'],
+            ],
+            $items
+        );
+
+        $items = $parent->Items()->sort('"Title" ASC');
+        $this->assertListEquals(
+            [
+                ['Title' => 'item 1'],
+                ['Title' => 'item 2'],
             ],
             $items
         );
