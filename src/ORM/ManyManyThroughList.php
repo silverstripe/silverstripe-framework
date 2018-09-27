@@ -154,7 +154,7 @@ class ManyManyThroughList extends RelationList
     {
         // Ensure nulls or empty strings are correctly treated as empty arrays
         if (empty($extraFields)) {
-            $extraFields = array();
+            $extraFields = [];
         }
 
         // Determine ID of new record
