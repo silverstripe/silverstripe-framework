@@ -63,13 +63,13 @@ otherwise. By using aggregates, we do that like this:
 
 
 ```ss
-<% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
+<% cached 'navigation', $List('SilverStripe\CMS\Model\SiteTree').max('LastEdited'), $List('SilverStripe\CMS\Model\SiteTree').count() %>
 ```
 
-The cache for this will update whenever a page is added, removed or edited.
+The cache for this will update whenever a page is added, removed or edited.  (Note:  The use of the fully qualified classname is necessary).
 
 If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added 
-or edited
+or edited:
 
 
 ```ss
