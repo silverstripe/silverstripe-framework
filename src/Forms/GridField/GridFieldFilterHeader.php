@@ -38,7 +38,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * Indicates that this component should revert to displaying it's legacy
      * table header style rather than the react driven search box
      *
-     * @deprecated 5.0
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
      * @var bool
      */
     public $useLegacyFilterHeader = false;
@@ -55,13 +55,15 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
     /**
      * @var callable
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
      */
-    protected $updateSearchContext = null;
+    protected $updateSearchContextCallback = null;
 
     /**
      * @var callable
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
      */
-    protected $updateSearchForm = null;
+    protected $updateSearchFormCallback = null;
 
     /**
      * @inheritDoc
@@ -75,6 +77,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
     /**
      * @param bool $useLegacy
+     * @param callable|null $updateSearchContext This will be removed in 5.0
      * @param callable|null $updateSearchForm This will be removed in 5.0
      */
     public function __construct(
