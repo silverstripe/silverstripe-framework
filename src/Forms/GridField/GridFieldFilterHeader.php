@@ -44,6 +44,26 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     public $useLegacyFilterHeader = false;
 
     /**
+     * @var \SilverStripe\ORM\Search\SearchContext
+     */
+    protected $searchContext = null;
+
+    /**
+     * @var Form
+     */
+    protected $searchForm = null;
+
+    /**
+     * @var callable
+     */
+    protected $updateSearchContext = null;
+
+    /**
+     * @var callable
+     */
+    protected $updateSearchForm = null;
+
+    /**
      * @inheritDoc
      */
     public function getURLHandlers($gridField)
@@ -55,10 +75,16 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
     /**
      * @param bool $useLegacy
+     * @param callable|null $updateSearchForm This will be removed in 5.0
      */
-    public function __construct($useLegacy = false)
-    {
+    public function __construct(
+        $useLegacy = false,
+        callable $updateSearchContext = null,
+        callable $updateSearchForm = null
+    ) {
         $this->useLegacyFilterHeader = $useLegacy;
+        $this->updateSearchContextCallback = $updateSearchContext;
+        $this->updateSearchFormCallback = $updateSearchForm;
     }
 
     /**
@@ -208,9 +234,15 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      */
     public function getSearchContext(GridField $gridField)
     {
-        $context = singleton($gridField->getModelClass())->getDefaultSearchContext();
+        if (!$this->searchContext) {
+            $this->searchContext = singleton($gridField->getModelClass())->getDefaultSearchContext();
 
-        return $context;
+            if ($this->updateSearchContextCallback) {
+                call_user_func($this->updateSearchContextCallback, $this->searchContext);
+            }
+        }
+
+        return $this->searchContext;
     }
 
     /**
@@ -227,6 +259,9 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         $params = $gridField->getRequest()->postVar('filter') ?: [];
         if (array_key_exists($gridField->getName(), $params)) {
             $params = $params[$gridField->getName()];
+        }
+        if ($context->getSearchParams()) {
+            $params = array_merge($context->getSearchParams(), $params);
         }
         $context->setSearchParams($params);
 
@@ -257,19 +292,22 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     }
 
     /**
-     * Returns the search form schema for the component
+     * Returns the search form for the component
      *
-     * @param GridField $gridfield
-     * @return HTTPResponse
+     * @param GridField $gridField
+     * @return Form|null
      */
-    public function getSearchFormSchema(GridField $gridField)
+    public function getSearchForm(GridField $gridField)
     {
         $searchContext = $this->getSearchContext($gridField);
         $searchFields = $searchContext->getSearchFields();
 
-        // If there are no filterable fields, return a 400 response
         if ($searchFields->count() === 0) {
-            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+            return null;
+        }
+
+        if ($this->searchForm) {
+            return $this->searchForm;
         }
 
         // Append a prefix to search field names to prevent conflicts with other fields in the search form
@@ -296,7 +334,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $field->addExtraClass('stacked');
         }
 
-        $form = new Form(
+        $this->searchForm = $form = new Form(
             $gridField,
             "SearchForm",
             $searchFields,
@@ -307,7 +345,29 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         $form->setFormAction($gridField->Link());
         $form->addExtraClass('cms-search-form form--no-dividers');
         $form->disableSecurityToken(); // This form is not tied to session so we disable this
-        $form->loadDataFrom($gridField->getRequest()->getVars());
+        $form->loadDataFrom($searchContext->getSearchParams());
+
+        if ($this->updateSearchFormCallback) {
+            call_user_func($this->updateSearchFormCallback, $form);
+        }
+
+        return $this->searchForm;
+    }
+
+    /**
+     * Returns the search form schema for the component
+     *
+     * @param GridField $gridfield
+     * @return HTTPResponse
+     */
+    public function getSearchFormSchema(GridField $gridField)
+    {
+        $form = $this->getSearchForm($gridField);
+
+        // If there are no filterable fields, return a 400 response
+        if (!$form) {
+            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+        }
 
         $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
         $schemaID = $gridField->getRequest()->getURL();
