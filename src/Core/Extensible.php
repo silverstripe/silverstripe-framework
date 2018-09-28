@@ -108,7 +108,7 @@ trait Extensible
     }
 
     /**
-     * @deprecated 4.0..5.0 Extensions and methods are now lazy-loaded
+     * @deprecated 4.0.0:5.0.0 Extensions and methods are now lazy-loaded
      */
     protected function constructExtensions()
     {

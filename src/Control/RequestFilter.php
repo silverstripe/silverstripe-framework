@@ -9,7 +9,7 @@ namespace SilverStripe\Control;
  *
  * @author marcus@silverstripe.com.au
  * @license BSD License http://silverstripe.org/bsd-license/
- * @deprecated 4.0..5.0 Use HTTPMiddleware instead
+ * @deprecated 4.0.0:5.0.0 Use HTTPMiddleware instead
  */
 interface RequestFilter
 {

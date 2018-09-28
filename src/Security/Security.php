@@ -1062,7 +1062,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return Member
      *
-     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
+     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
      */
     public static function findAnAdministrator()
     {
@@ -1075,7 +1075,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Flush the default admin credentials
      *
-     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
+     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
      */
     public static function clear_default_admin()
     {
@@ -1096,7 +1096,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password The password (in cleartext)
      * @return bool True if successfully set
      *
-     * @deprecated 4.0.0..5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
+     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
      */
     public static function setDefaultAdmin($username, $password)
     {
@@ -1114,7 +1114,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password
      * @return bool
      *
-     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::isDefaultAdminCredentials() instead
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::isDefaultAdminCredentials() instead
      */
     public static function check_default_admin($username, $password)
     {
@@ -1127,7 +1127,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Check that the default admin account has been set.
      *
-     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::hasDefaultAdmin() instead
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::hasDefaultAdmin() instead
      */
     public static function has_default_admin()
     {
@@ -1139,7 +1139,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin username
      *
-     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::getDefaultAdminUsername()
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminUsername()
      * @return string
      */
     public static function default_admin_username()
@@ -1152,7 +1152,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin password
      *
-     * @deprecated 4.0.0..5.0.0 Use DefaultAdminService::getDefaultAdminPassword()
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminPassword()
      * @return string
      */
     public static function default_admin_password()

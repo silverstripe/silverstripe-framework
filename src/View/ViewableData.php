@@ -615,7 +615,7 @@ class ViewableData implements IteratorAggregate
      * project directory.
      *
      * @return string URL to the current theme
-     * @deprecated 4.0.0..5.0.0 Use $resourcePath or $resourceURL template helpers instead
+     * @deprecated 4.0.0:5.0.0 Use $resourcePath or $resourceURL template helpers instead
      */
     public function ThemeDir()
     {

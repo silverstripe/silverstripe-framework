@@ -107,7 +107,7 @@ trait InstallEnvironmentAware
     {
         $base = $this->getBaseDir();
         if (is_dir($base . 'mysite')) {
-            /** @deprecated 4.2..5.0 */
+            /** @deprecated 4.2.0:5.0.0 */
             return 'mysite';
         }
 
@@ -124,7 +124,7 @@ trait InstallEnvironmentAware
     {
         $projectDir = $this->getProjectDir();
         if ($projectDir === 'mysite') {
-            /** @deprecated 4.2..5.0 */
+            /** @deprecated 4.2.0:5.0.0 */
             return $projectDir . DIRECTORY_SEPARATOR . 'code';
         }
 
