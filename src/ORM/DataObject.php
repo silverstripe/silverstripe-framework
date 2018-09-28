@@ -3112,9 +3112,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         if ($cache) {
             return self::$_cache_get_one[$callerClass][$cacheKey] ?: null;
-        } else {
-            return $item;
         }
+
+        return $item;
     }
 
     /**
