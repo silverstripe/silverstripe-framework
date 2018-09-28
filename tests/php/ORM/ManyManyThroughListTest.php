@@ -82,8 +82,11 @@ class ManyManyThroughListTest extends SapphireTest
         /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
 
-        $items = $parent->Items()->sort($sort);
-        $this->assertListEquals($expected, $items);
+        $items = $parent->Items();
+        if ($sort) {
+            $items = $items->sort($sort);
+        }
+        $this->assertSame($expected, $items->column('Title'));
     }
 
     /**
@@ -92,61 +95,41 @@ class ManyManyThroughListTest extends SapphireTest
     public function sortingProvider()
     {
         return [
+            'nothing passed (default)' => [
+                null,
+                ['item 2', 'item 1'],
+            ],
             'table with default column' => [
                 '"ManyManyThroughListTest_JoinObject"."Sort"',
-                [
-                    ['Title' => 'item 2'],
-                    ['Title' => 'item 1'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'table with default column ascending' => [
                 '"ManyManyThroughListTest_JoinObject"."Sort" ASC',
-                [
-                    ['Title' => 'item 1'],
-                    ['Title' => 'item 2'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'table with column descending' => [
                 '"ManyManyThroughListTest_JoinObject"."Title" DESC',
-                [
-                    ['Title' => 'item 2'],
-                    ['Title' => 'item 1'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'table with column ascending' => [
                 '"ManyManyThroughListTest_JoinObject"."Title" ASC',
-                [
-                    ['Title' => 'item 1'],
-                    ['Title' => 'item 2'],
-                ]
+                ['item 1', 'item 2'],
             ],
             'default column' => [
                 '"Sort"',
-                [
-                    ['Title' => 'item 2'],
-                    ['Title' => 'item 1'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'default column ascending' => [
                 '"Sort" ASC',
-                [
-                    ['Title' => 'item 1'],
-                    ['Title' => 'item 2'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'column descending' => [
                 '"Title" DESC',
-                [
-                    ['Title' => 'item 2'],
-                    ['Title' => 'item 1'],
-                ]
+                ['item 2', 'item 1'],
             ],
             'column ascending' => [
                 '"Title" ASC',
-                [
-                    ['Title' => 'item 1'],
-                    ['Title' => 'item 2'],
-                ]
+                ['item 1', 'item 2'],
             ],
         ];
     }
