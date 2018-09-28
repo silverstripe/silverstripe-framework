@@ -107,6 +107,10 @@ class ManyManyThroughListTest extends SapphireTest
                 '"ManyManyThroughListTest_JoinObject"."Sort" ASC',
                 ['item 2', 'item 1'],
             ],
+            'table with default column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" DESC',
+                ['item 1', 'item 2'],
+            ],
             'table with column descending' => [
                 '"ManyManyThroughListTest_JoinObject"."Title" DESC',
                 ['item 2', 'item 1'],
@@ -122,6 +126,10 @@ class ManyManyThroughListTest extends SapphireTest
             'default column ascending' => [
                 '"Sort" ASC',
                 ['item 2', 'item 1'],
+            ],
+            'default column descending' => [
+                '"Sort" DESC',
+                ['item 1', 'item 2'],
             ],
             'column descending' => [
                 '"Title" DESC',
