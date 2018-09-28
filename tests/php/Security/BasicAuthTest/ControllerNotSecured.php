@@ -15,7 +15,7 @@ class ControllerNotSecured extends Controller implements TestOnly
     /**
      * Disable legacy global-enable
      *
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @var bool
      */
     protected $basicAuthEnabled = false;

@@ -331,7 +331,7 @@ class Requirements implements Flushable
      *                         'framework/javascript/lang'
      * @param bool   $return   Return all relative file paths rather than including them in
      *                         requirements
-     * @param bool $langOnly @deprecated 4.1...5.0 as i18n.js should be included manually in your project
+     * @param bool $langOnly @deprecated 4.1.0:5.0.0 as i18n.js should be included manually in your project
      *
      * @return array
      */

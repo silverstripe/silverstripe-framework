@@ -183,7 +183,7 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @deprecated 4.1..5.0 Please use dataFields or saveableFields
+     * @deprecated 4.1.0:5.0.0 Please use dataFields or saveableFields
      * @param $list
      * @param bool $saveableOnly
      */

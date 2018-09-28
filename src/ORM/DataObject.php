@@ -139,7 +139,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_classname = null;
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @var bool
      */
     public $destroyed = false;
@@ -498,7 +498,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object.
      *
-     * @deprecated 4.1...5.0 Use duplicateRelations() instead
+     * @deprecated 4.1.0:5.0.0 Use duplicateRelations() instead
      * @param DataObject $sourceObject the source object to duplicate from
      * @param DataObject $destinationObject the destination object to populate with the duplicated relations
      * @param bool|string $filter

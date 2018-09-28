@@ -529,7 +529,7 @@ class Session
      * Recursively apply the changes represented in $data to $dest.
      * Used to update $_SESSION
      *
-     * @deprecated 4.1...5.0 Use recursivelyApplyChanges() instead
+     * @deprecated 4.1.0:5.0.0 Use recursivelyApplyChanges() instead
      * @param array $data
      * @param array $dest
      */

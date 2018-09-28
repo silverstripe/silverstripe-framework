@@ -11,7 +11,7 @@ use SilverStripe\Dev\Deprecation;
 class Module implements Serializable
 {
     /**
-     * @deprecated 4.1..5.0 Use Path::normalise() instead
+     * @deprecated 4.1.0:5.0.0 Use Path::normalise() instead
      */
     const TRIM_CHARS = ' /\\';
 
@@ -207,7 +207,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0...5.0 Use getResource($path)->getRelativePath() instead
+     * @deprecated 4.0.0:5.0.0 Use getResource($path)->getRelativePath() instead
      * @param string $path
      * @return string
      */
@@ -220,7 +220,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0...5.0 Use ->getResource($path)->getPath() instead
+     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getPath() instead
      * @param string $path
      * @return string
      */
@@ -233,7 +233,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0...5.0 Use ->getResource($path)->getURL() instead
+     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getURL() instead
      * @param string $path
      * @return string
      */
@@ -246,7 +246,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0...5.0 Use ->getResource($path)->exists() instead
+     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->exists() instead
      * @param string $path
      * @return string
      */

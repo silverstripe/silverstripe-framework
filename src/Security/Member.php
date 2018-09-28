@@ -282,7 +282,7 @@ class Member extends DataObject
     /**
      * Get the default admin record if it exists, or creates it otherwise if enabled
      *
-     * @deprecated 4.0.0...5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
      * @return Member
      */
     public static function default_admin()
@@ -294,7 +294,7 @@ class Member extends DataObject
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
+     * @deprecated 4.0.0:5.0.0 Use Authenticator::checkPassword() instead
      *
      * @param  string $password
      * @return ValidationResult

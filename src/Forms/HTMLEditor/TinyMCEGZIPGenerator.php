@@ -11,7 +11,7 @@ use TinyMCE_Compressor;
 /**
  * Uses the default tiny_mc_gzip.php handler
  *
- * @deprecated 4.0..5.0
+ * @deprecated 4.0.0:5.0.0
  */
 class TinyMCEGZIPGenerator implements TinyMCEScriptGenerator
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @deprecated 4.0...5.0
+ * @deprecated 4.0.0:5.0.0
  *
  * Placeholder empty file
  */
