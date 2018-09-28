@@ -131,6 +131,7 @@ composer global config bin-dir
 On *nix system, the following command will add your global composer bin directory to your path if `bash` is your default shell environment:
 ```bash
 echo 'export PATH=$PATH:~/.composer/vendor/bin/' >> ~/.bash_profile
+source  ~/.bash_profile
 ```
 
 ### Running all the upgrader commands in this guide in on line
