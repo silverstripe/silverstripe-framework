@@ -132,7 +132,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $list->inAlterDataQueryCall = true;
 
         try {
-            $res = call_user_func($callback, $list->dataQuery, $list);
+            $res = $callback($list->dataQuery, $list);
             if ($res) {
                 $list->dataQuery = $res;
             }

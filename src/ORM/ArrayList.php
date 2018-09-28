@@ -601,7 +601,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function filterAny()
     {
-        $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
+        $keepUs = $this->normaliseFilterArgs(...func_get_args());
 
         $itemsToKeep = [];
 
@@ -632,21 +632,22 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     protected function normaliseFilterArgs($column, $value = null)
     {
-        if (count(func_get_args())>2) {
+        $args = func_get_args();
+        if (count($args) > 2) {
             throw new InvalidArgumentException('filter takes one array or two arguments');
         }
 
-        if (count(func_get_args()) === 1 && !is_array(func_get_arg(0))) {
+        if (count($args) === 1 && !is_array($args[0])) {
             throw new InvalidArgumentException('filter takes one array or two arguments');
         }
 
         $keepUs = [];
-        if (count(func_get_args()) === 2) {
-            $keepUs[func_get_arg(0)] = func_get_arg(1);
+        if (count($args) === 2) {
+            $keepUs[$args[0]] = $args[1];
         }
 
-        if (count(func_get_args()) === 1 && is_array(func_get_arg(0))) {
-            foreach (func_get_arg(0) as $key => $val) {
+        if (count($args) === 1 && is_array($args[0])) {
+            foreach ($args[0] as $key => $val) {
                 $keepUs[$key] = $val;
             }
         }
@@ -718,8 +719,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function exclude()
     {
-
-        $removeUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
+        $removeUs = $this->normaliseFilterArgs(...func_get_args());
 
         $hitsRequiredToRemove = count($removeUs);
         $matches = [];
