@@ -1755,6 +1755,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             // Update local ID
             $joinField = $componentName . 'ID';
+            if ($item) {
+                unset($this->record[$joinField . '_Lazy']);
+            }
             $this->setField($joinField, $item ? $item->ID : null);
             // Update Class (Polymorphic has_one)
             // Extract class name for polymorphic relations
