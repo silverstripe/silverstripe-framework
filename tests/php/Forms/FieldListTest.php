@@ -615,6 +615,12 @@ class FieldListTest extends SapphireTest
 
         /* The position of the Surname field is at number 4 */
         $this->assertEquals('Surname', $fields[3]->getName());
+
+        /* Test that inserting before a field that doesn't exist simply appends
+         * Confirm that a composite field doesn't break this */
+        $fields->push(new CompositeField([ new TextField('Nested1'), new TextField('Nested2')]));
+        $this->assertTrue((bool)$fields->insertBefore('DoesNotExist', new TextField('MyName')));
+        $this->assertEquals('MyName', $fields->Last()->Name);
     }
 
     public function testInsertBeforeMultipleFields()
@@ -688,6 +694,12 @@ class FieldListTest extends SapphireTest
 
         /* The position of the Surname field is at number 5 */
         $this->assertEquals('Surname', $fields[4]->getName());
+
+        /* Test that inserting before a field that doesn't exist simply appends
+         * Confirm that a composite field doesn't break this */
+        $fields->push(new CompositeField([ new TextField('Nested1'), new TextField('Nested2')]));
+        $this->assertTrue((bool)$fields->insertAfter('DoesNotExist', new TextField('MyName')));
+        $this->assertEquals('MyName', $fields->Last()->Name);
     }
 
     public function testrootFieldList()
