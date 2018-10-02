@@ -114,8 +114,8 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
         $this->assertEquals('Name', $searchSchema->name);
         $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
-        $this->assertEquals('test', $searchSchema->filters->Name);
-        $this->assertEquals('place', $searchSchema->filters->City);
+        $this->assertEquals('test', $searchSchema->filters->Search__Name);
+        $this->assertEquals('place', $searchSchema->filters->Search__City);
         $this->assertEquals('testfield', $searchSchema->gridfield);
     }
 }

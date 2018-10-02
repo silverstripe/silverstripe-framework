@@ -235,11 +235,19 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
 
+        // Prefix "Search__" onto the filters for the React component
+        $filters = $context->getSearchParams();
+        if (!$this->useLegacyFilterHeader && !empty($filters)) {
+            $filters = array_combine(array_map(function ($key) {
+                return 'Search__' . $key;
+            }, array_keys($filters)), $filters);
+        }
+
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
             'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
-            'filters' => $context->getSearchParams() ?: new \stdClass, // stdClass maps to empty json object '{}'
+            'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
             'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)->getAttribute('name')
@@ -262,6 +270,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         // If there are no filterable fields, return a 400 response
         if ($searchFields->count() === 0) {
             return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+        }
+
+        // Append a prefix to search field names to prevent conflicts with other fields in the search form
+        foreach ($searchFields as $field) {
+            $field->setName('Search__' . $field->getName());
         }
 
         $columns = $gridField->getColumns();
@@ -289,6 +302,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $searchFields,
             new FieldList()
         );
+
         $form->setFormMethod('get');
         $form->setFormAction($gridField->Link());
         $form->addExtraClass('cms-search-form form--no-dividers');
