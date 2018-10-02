@@ -100,12 +100,20 @@ class CmsFormsContext extends BehatContext {
 	}
 
 	/**
-	 * @Then /^the "(?P<locator>(?:[^"]|\\")*)" HTML field should(?P<negative> not? |\s*)contain "(?P<html>.*)"$/
+	 * @Then /^the "(?P<locator>(?:[^"]|\\")*)" HTML field should(?P<negative> not? |\s*)contain (["\/]?P<html>.*)["\/]$/
 	 */
 	public function theHtmlFieldShouldContain($locator, $negative, $html) {
+		// Allow both regex and string literal input
+		$stringType = $html[0];
+		$html = substr($html, 1);
+		if ($stringType === '/') {
+			$regex = '/' . $html . '/ui';
+		} else {
+			$regex = '/'.preg_quote($html, '/').'/ui';
+		}
+
 		$element = $this->getHtmlField($locator);
 		$actual = $element->getValue();
-		$regex = '/'.preg_quote($html, '/').'/ui';
 		$failed = false;
 
 		if(trim($negative)) {
