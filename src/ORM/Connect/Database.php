@@ -403,7 +403,7 @@ abstract class Database
      */
     public function clearTable($table)
     {
-        $this->query("DELETE FROM \"$table\"");
+        $this->query("TRUNCATE \"$table\"");
     }
 
     /**
