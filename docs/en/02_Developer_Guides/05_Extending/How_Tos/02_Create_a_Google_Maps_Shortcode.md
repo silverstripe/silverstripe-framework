@@ -20,7 +20,7 @@ use SilverStripe\View\Parsers\ShortcodeParser;
  
 ShortcodeParser::get('default')->register('googlemap', function($arguments, $address, $parser, $shortcode) {
     $iframeUrl = sprintf(
-        'http://maps.google.com/maps?q=%s&amp;hnear=%s&amp;ie=UTF8&hq=&amp;t=m&amp;z=14&amp;output=embed',
+        '//maps.google.com/maps?q=%s&amp;hnear=%s&amp;ie=UTF8&hq=&amp;t=m&amp;z=14&amp;output=embed',
         urlencode($address),
         urlencode($address)
     );
