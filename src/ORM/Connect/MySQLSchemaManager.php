@@ -167,7 +167,7 @@ class MySQLSchemaManager extends DBSchemaManager
             "Table $tableName: repaired",
             "repaired"
         );
-        return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
+        return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\"");
     }
 
     /**
