@@ -12,7 +12,7 @@ function getTempFolder($base = null) {
 	$parent = getTempParentFolder($base);
 
 	// The actual temp folder is a subfolder of getTempParentFolder(), named by username and suffixed with currently used php-version
-	$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+	$phpversion = '-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION);
 	$subfolder = $parent . DIRECTORY_SEPARATOR . getTempFolderUsername() . $phpversion;
 
 	if(!@file_exists($subfolder)) {
