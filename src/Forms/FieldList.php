@@ -563,12 +563,14 @@ class FieldList extends ArrayList
 
     /**
      * Inserts a field before a particular field in a FieldList.
+     * Will traverse CompositeFields depth-first to find the maching $name, and insert before the first match
      *
      * @param string $name Name of the field to insert before
      * @param FormField $item The form field to insert
-     * @return FormField|false
+     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
+     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertBefore($name, $item)
+    public function insertBefore($name, $item, $appendIfMissing = true)
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
@@ -584,7 +586,7 @@ class FieldList extends ArrayList
                 array_splice($this->items, $i, 0, array($item));
                 return $item;
             } elseif ($child instanceof CompositeField) {
-                $ret = $child->insertBefore($name, $item);
+                $ret = $child->insertBefore($name, $item, false);
                 if ($ret) {
                     return $ret;
                 }
@@ -592,17 +594,25 @@ class FieldList extends ArrayList
             $i++;
         }
 
+        // $name not found, append if needed
+        if ($appendIfMissing) {
+            $this->push($item);
+            return $item;
+        }
+
         return false;
     }
 
     /**
      * Inserts a field after a particular field in a FieldList.
+     * Will traverse CompositeFields depth-first to find the maching $name, and insert after the first match
      *
      * @param string $name Name of the field to insert after
      * @param FormField $item The form field to insert
-     * @return FormField|false
+     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
+     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertAfter($name, $item)
+    public function insertAfter($name, $item, $appendIfMissing = true)
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
@@ -618,12 +628,18 @@ class FieldList extends ArrayList
                 array_splice($this->items, $i+1, 0, array($item));
                 return $item;
             } elseif ($child instanceof CompositeField) {
-                $ret = $child->insertAfter($name, $item);
+                $ret = $child->insertAfter($name, $item, false);
                 if ($ret) {
                     return $ret;
                 }
             }
             $i++;
+        }
+
+        // $name not found, append if needed
+        if ($appendIfMissing) {
+            $this->push($item);
+            return $item;
         }
 
         return false;

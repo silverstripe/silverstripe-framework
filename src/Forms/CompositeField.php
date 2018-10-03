@@ -347,9 +347,9 @@ class CompositeField extends FormField
      * @param FormField $field
      * @return false|FormField
      */
-    public function insertBefore($insertBefore, $field)
+    public function insertBefore($insertBefore, $field, $appendIfMissing = true)
     {
-        return $this->children->insertBefore($insertBefore, $field);
+        return $this->children->insertBefore($insertBefore, $field, $appendIfMissing);
     }
 
     /**
@@ -358,9 +358,9 @@ class CompositeField extends FormField
      * @param FormField $field
      * @return false|FormField
      */
-    public function insertAfter($insertAfter, $field)
+    public function insertAfter($insertAfter, $field, $appendIfMissing = true)
     {
-        return $this->children->insertAfter($insertAfter, $field);
+        return $this->children->insertAfter($insertAfter, $field, $appendIfMissing);
     }
 
     /**
