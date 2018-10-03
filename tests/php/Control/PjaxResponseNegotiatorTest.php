@@ -13,11 +13,11 @@ class PjaxResponseNegotiatorTest extends SapphireTest
     public function testDefaultCallbacks()
     {
         $negotiator = new PjaxResponseNegotiator(
-            array(
-            'default' => function () {
-                return 'default response';
-            },
-            )
+            [
+                'default' => function () {
+                    return 'default response';
+                },
+            ]
         );
         $request = new HTTPRequest('GET', '/'); // not setting pjax header
         $request->setSession(new Session([]));
@@ -28,14 +28,14 @@ class PjaxResponseNegotiatorTest extends SapphireTest
     public function testSelectsFragmentByHeader()
     {
         $negotiator = new PjaxResponseNegotiator(
-            array(
-            'default' => function () {
-                return 'default response';
-            },
-            'myfragment' => function () {
-                return 'myfragment response';
-            },
-            )
+            [
+                'default' => function () {
+                    return 'default response';
+                },
+                'myfragment' => function () {
+                    return 'myfragment response';
+                },
+            ]
         );
         $request = new HTTPRequest('GET', '/');
         $request->setSession(new Session([]));
@@ -47,17 +47,17 @@ class PjaxResponseNegotiatorTest extends SapphireTest
     public function testMultipleFragments()
     {
         $negotiator = new PjaxResponseNegotiator(
-            array(
-            'default' => function () {
-                return 'default response';
-            },
-            'myfragment' => function () {
-                return 'myfragment response';
-            },
-            'otherfragment' => function () {
-                return 'otherfragment response';
-            },
-            )
+            [
+                'default' => function () {
+                    return 'default response';
+                },
+                'myfragment' => function () {
+                    return 'myfragment response';
+                },
+                'otherfragment' => function () {
+                    return 'otherfragment response';
+                },
+            ]
         );
         $request = new HTTPRequest('GET', '/');
         $request->setSession(new Session([]));
@@ -74,14 +74,14 @@ class PjaxResponseNegotiatorTest extends SapphireTest
     public function testFragmentsOverride()
     {
         $negotiator = new PjaxResponseNegotiator(
-            array(
-            'alpha' => function () {
-                return 'alpha response';
-            },
-            'beta' => function () {
-                return 'beta response';
-            }
-            )
+            [
+                'alpha' => function () {
+                    return 'alpha response';
+                },
+                'beta' => function () {
+                    return 'beta response';
+                },
+            ]
         );
 
         $request = new HTTPRequest('GET', '/');
@@ -89,7 +89,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest
         $request->addHeader('X-Pjax', 'alpha');
         $request->addHeader('Accept', 'application/json');
 
-        $response = $negotiator->setFragmentOverride(array('beta'))->respond($request);
+        $response = $negotiator->setFragmentOverride(['beta'])->respond($request);
         $json = json_decode($response->getBody());
         $this->assertFalse(isset($json->alpha));
         $this->assertObjectHasAttribute('beta', $json);

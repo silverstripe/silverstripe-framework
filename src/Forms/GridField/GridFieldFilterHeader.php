@@ -42,10 +42,32 @@ class GridFieldFilterHeader implements
      * Indicates that this component should revert to displaying it's legacy
      * table header style rather than the react driven search box
      *
-     * @deprecated 5.0
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
      * @var bool
      */
     public $useLegacyFilterHeader = false;
+
+    /**
+     * @var \SilverStripe\ORM\Search\SearchContext
+     */
+    protected $searchContext = null;
+
+    /**
+     * @var Form
+     */
+    protected $searchForm = null;
+
+    /**
+     * @var callable
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
+     */
+    protected $updateSearchContextCallback = null;
+
+    /**
+     * @var callable
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
+     */
+    protected $updateSearchFormCallback = null;
 
     /**
      * @inheritDoc
@@ -59,10 +81,17 @@ class GridFieldFilterHeader implements
 
     /**
      * @param bool $useLegacy
+     * @param callable|null $updateSearchContext This will be removed in 5.0
+     * @param callable|null $updateSearchForm This will be removed in 5.0
      */
-    public function __construct($useLegacy = false)
-    {
+    public function __construct(
+        $useLegacy = false,
+        callable $updateSearchContext = null,
+        callable $updateSearchForm = null
+    ) {
         $this->useLegacyFilterHeader = $useLegacy;
+        $this->updateSearchContextCallback = $updateSearchContext;
+        $this->updateSearchFormCallback = $updateSearchForm;
     }
 
     /**
@@ -182,7 +211,7 @@ class GridFieldFilterHeader implements
      * @param GridField $gridField
      * @return boolean
      */
-    public function canFilterAnyColumns(GridField $gridField)
+    public function canFilterAnyColumns($gridField)
     {
         $list = $gridField->getList();
 
@@ -212,9 +241,15 @@ class GridFieldFilterHeader implements
      */
     public function getSearchContext(GridField $gridField)
     {
-        $context = singleton($gridField->getModelClass())->getDefaultSearchContext();
+        if (!$this->searchContext) {
+            $this->searchContext = singleton($gridField->getModelClass())->getDefaultSearchContext();
 
-        return $context;
+            if ($this->updateSearchContextCallback) {
+                call_user_func($this->updateSearchContextCallback, $this->searchContext);
+            }
+        }
+
+        return $this->searchContext;
     }
 
     /**
@@ -232,6 +267,9 @@ class GridFieldFilterHeader implements
         if (array_key_exists($gridField->getName(), $params)) {
             $params = $params[$gridField->getName()];
         }
+        if ($context->getSearchParams()) {
+            $params = array_merge($context->getSearchParams(), $params);
+        }
         $context->setSearchParams($params);
 
         $searchField = $context->getSearchFields()->first();
@@ -239,11 +277,19 @@ class GridFieldFilterHeader implements
 
         $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
 
+        // Prefix "Search__" onto the filters for the React component
+        $filters = $context->getSearchParams();
+        if (!$this->useLegacyFilterHeader && !empty($filters)) {
+            $filters = array_combine(array_map(function ($key) {
+                return 'Search__' . $key;
+            }, array_keys($filters)), $filters);
+        }
+
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
             'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
-            'filters' => $context->getSearchParams() ?: new \stdClass, // stdClass maps to empty json object '{}'
+            'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
                 ->getAttribute('name'),
@@ -255,19 +301,27 @@ class GridFieldFilterHeader implements
     }
 
     /**
-     * Returns the search form schema for the component
+     * Returns the search form for the component
      *
-     * @param GridField $gridfield
-     * @return HTTPResponse
+     * @param GridField $gridField
+     * @return Form|null
      */
-    public function getSearchFormSchema(GridField $gridField)
+    public function getSearchForm(GridField $gridField)
     {
         $searchContext = $this->getSearchContext($gridField);
         $searchFields = $searchContext->getSearchFields();
 
-        // If there are no filterable fields, return a 400 response
         if ($searchFields->count() === 0) {
-            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+            return null;
+        }
+
+        if ($this->searchForm) {
+            return $this->searchForm;
+        }
+
+        // Append a prefix to search field names to prevent conflicts with other fields in the search form
+        foreach ($searchFields as $field) {
+            $field->setName('Search__' . $field->getName());
         }
 
         $columns = $gridField->getColumns();
@@ -289,17 +343,40 @@ class GridFieldFilterHeader implements
             $field->addExtraClass('stacked');
         }
 
-        $form = new Form(
+        $this->searchForm = $form = new Form(
             $gridField,
             "SearchForm",
             $searchFields,
             new FieldList()
         );
+
         $form->setFormMethod('get');
         $form->setFormAction($gridField->Link());
         $form->addExtraClass('cms-search-form form--no-dividers');
         $form->disableSecurityToken(); // This form is not tied to session so we disable this
-        $form->loadDataFrom($gridField->getRequest()->getVars());
+        $form->loadDataFrom($searchContext->getSearchParams());
+
+        if ($this->updateSearchFormCallback) {
+            call_user_func($this->updateSearchFormCallback, $form);
+        }
+
+        return $this->searchForm;
+    }
+
+    /**
+     * Returns the search form schema for the component
+     *
+     * @param GridField $gridfield
+     * @return HTTPResponse
+     */
+    public function getSearchFormSchema(GridField $gridField)
+    {
+        $form = $this->getSearchForm($gridField);
+
+        // If there are no filterable fields, return a 400 response
+        if (!$form) {
+            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+        }
 
         $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
         $schemaID = $gridField->getRequest()->getURL();

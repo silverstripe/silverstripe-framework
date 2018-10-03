@@ -268,7 +268,7 @@ class Member extends DataObject
     public function populateDefaults()
     {
         parent::populateDefaults();
-        $this->Locale = i18n::get_locale();
+        $this->Locale = i18n::config()->get('default_locale');
     }
 
     public function requireDefaultRecords()
@@ -282,7 +282,7 @@ class Member extends DataObject
     /**
      * Get the default admin record if it exists, or creates it otherwise if enabled
      *
-     * @deprecated 4.0.0...5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
      * @return Member
      */
     public static function default_admin()
@@ -294,7 +294,7 @@ class Member extends DataObject
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
+     * @deprecated 4.0.0:5.0.0 Use Authenticator::checkPassword() instead
      *
      * @param  string $password
      * @return ValidationResult
@@ -933,7 +933,7 @@ class Member extends DataObject
 
         // save locale
         if (!$this->Locale) {
-            $this->Locale = i18n::get_locale();
+            $this->Locale = i18n::config()->get('default_locale');
         }
 
         parent::onBeforeWrite();
@@ -1232,7 +1232,7 @@ class Member extends DataObject
 
     /**
      * Return the date format based on the user's chosen locale,
-     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
+     * falling back to the default format defined by the i18n::config()->get('default_locale') config setting.
      *
      * @return string ISO date format
      */
@@ -1251,7 +1251,7 @@ class Member extends DataObject
     }
 
     /**
-     * Get user locale
+     * Get user locale, falling back to the configured default locale
      */
     public function getLocale()
     {
@@ -1260,12 +1260,12 @@ class Member extends DataObject
             return $locale;
         }
 
-        return i18n::get_locale();
+        return i18n::config()->get('default_locale');
     }
 
     /**
      * Return the time format based on the user's chosen locale,
-     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
+     * falling back to the default format defined by the i18n::config()->get('default_locale') config setting.
      *
      * @return string ISO date format
      */

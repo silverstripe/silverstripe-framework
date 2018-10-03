@@ -751,6 +751,12 @@ class TinyMCEConfig extends HTMLEditorConfig
         Requirements::javascript($this->getScriptURL());
     }
 
+    public function getConfigSchemaData()
+    {
+        $data = parent::getConfigSchemaData();
+        $data['editorjs'] = $this->getScriptURL();
+        return $data;
+    }
 
     /**
      * Get the current tinyMCE language
@@ -821,7 +827,7 @@ class TinyMCEConfig extends HTMLEditorConfig
     }
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      */
     public function getTinyMCEPath()
     {
@@ -831,7 +837,7 @@ class TinyMCEConfig extends HTMLEditorConfig
 
     /**
      * @return Module
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      */
     protected function getAdminModule()
     {

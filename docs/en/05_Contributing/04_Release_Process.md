@@ -31,18 +31,27 @@ announced on the ["releases" forum category](https://forum.silverstripe.org/c/re
 
 SilverStripe follows [Semantic Versioning](http://semver.org).
 
-## Supported versions
+## Supported versions {#supported-versions}
 
-Our version support is outlined on [silverstripe.org/roadmap](http://silverstripe.org/roadmap).
 At any point in time, the core development team will support a set of releases to varying levels:
 
-*  The current *master* will get new features, bug fixes and API changes that might require major refactoring before going
-into a release. At the moment, bugfixing and feature development might happen on the current major release branch (e.g. *4*), to be
-merged forward to master regularly.
-*  Applicable bugfixes on master will also be merged back to the last major release branch, to be released as the next
-patch release
-*  Security fixes will be applied to the current master,
-   as well as patch releases for SilverStripe versions in "active development", "full support" or "limited support".
+ * The status of major releases is determined by the [roadmap](http://silverstripe.org/roadmap)
+ * Minor releases of major releases in "active development" or "full support" are released roughly every three months, and their End-of-Life (EOL) is announced at least six months in advance
+ * The latest minor release is supported as long as the underlying major release
+ * API changes and major new features are applied to the master branch, to be included in the next major release
+ * New APIs can be applied to the current minor release of major releases in "active development", but should usually be marked as "internal" APIs until they're considered stable
+ * Enhancements are applied to the next minor release of major releases in "active development"
+ * Non-critical bugfixes are applied to all supported minor releases of major releases in "active development" or "full support"
+ * Critical bugfixes and security fixes are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
+ * Any patches applied to older minor releases are merged up regularly to newer minor releases (in the same major release)
+ * Any patches applied to older major releases are merged up regularly to newer major releases
+
+Note that this only applies to the "core" recipe
+(the modules included by [silverstripe/recipe-core](https://github.com/silverstripe/recipe-core)
+and [silverstripe/recipe-cms](https://github.com/silverstripe/recipe-cms)).
+For [supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/) outside of this recipe,
+please refer to our [supported modules definition](https://www.silverstripe.org/software/addons/supported-modules-definition/).
+
 
 ## Deprecation
 
@@ -162,15 +171,19 @@ Follow these instructions in sequence as much as possible:
    * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794) on silverstripe.org. Describe the issue in a readable way, make the impact clear. Credit the author if applicable. 
    * Clarify who picks up owns the issue resolution
  * When developing a fix:
+   * Ensure you're working on the oldest supported minor release branch of every supported major release (see [Supported Versions](#supported-versions))
    * Move the issue into "In Progress" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
    * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo
    * Ensure that all security commit messages are prefixed with the CVE. E.g. "[ss-2015-001] Fixed invalid XSS"
    * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
  * Before release (or release candidate)
    * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
+   * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
    * Send out a note on the pre-announce list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
    * Link to silverstripe.org security release page in the changelog.
    * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+ * Perform release
+   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
  * After release
    * Publish silverstripe.org security release page
    * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)

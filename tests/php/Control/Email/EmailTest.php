@@ -58,18 +58,34 @@ class EmailTest extends SapphireTest
         $this->assertEquals('foo.txt', $child->getFilename());
     }
 
-    public function testValidEmailAddress()
+    /**
+     * @dataProvider provideValidEmailAddresses
+     */
+    public function testValidEmailAddress($email)
     {
-        $validEmails = array('test@example.com', 'test-123@example.sub.com');
-        $invalidEmails = array('foo.bar@', '@example.com', 'foo@');
+        $this->assertTrue(Email::is_valid_address($email));
+    }
 
-        foreach ($validEmails as $email) {
-            $this->assertTrue(Email::is_valid_address($email));
-        }
+    /**
+     * @dataProvider provideInvalidEmailAddresses
+     */
+    public function testInvalidEmailAddress($email)
+    {
+        $this->assertFalse(Email::is_valid_address($email));
+    }
 
-        foreach ($invalidEmails as $email) {
-            $this->assertFalse(Email::is_valid_address($email));
-        }
+    public function provideValidEmailAddresses()
+    {
+        return [
+            ['test@example.com', 'test-123@sub.example.com'],
+        ];
+    }
+
+    public function provideInvalidEmailAddresses()
+    {
+        return [
+            ['foo.bar@', '@example.com', 'foo@'],
+        ];
     }
 
     public function testObfuscate()

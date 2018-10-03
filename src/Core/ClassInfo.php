@@ -155,7 +155,7 @@ class ClassInfo
     }
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @param string $class
      * @return string
      */
@@ -368,7 +368,7 @@ class ClassInfo
     }
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      */
     public static function table_for_object_field($candidateClass, $fieldName)
     {

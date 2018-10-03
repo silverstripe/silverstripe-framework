@@ -221,12 +221,12 @@ class TabSet extends CompositeField
      * @param FormField $field The form field to insert
      * @return FormField|null
      */
-    public function insertBefore($insertBefore, $field)
+    public function insertBefore($insertBefore, $field, $appendIfMissing = true)
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
         }
-        return parent::insertBefore($insertBefore, $field);
+        return parent::insertBefore($insertBefore, $field, $appendIfMissing);
     }
 
     /**
@@ -236,11 +236,26 @@ class TabSet extends CompositeField
      * @param FormField $field The form field to insert
      * @return FormField|null
      */
-    public function insertAfter($insertAfter, $field)
+    public function insertAfter($insertAfter, $field, $appendIfMissing = true)
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
         }
-        return parent::insertAfter($insertAfter, $field);
+        return parent::insertAfter($insertAfter, $field, $appendIfMissing);
+    }
+
+    /**
+     * Sets an additional default for $schemaData.
+     * The existing keys are immutable. HideNav is added in this overriding method to ensure it is not ignored by
+     * {@link setSchemaData()}
+     * It allows hiding of the navigation in the Tabs.js React component.
+     *
+     * @return array
+     */
+    public function getSchemaStateDefaults()
+    {
+        $defaults = parent::getSchemaStateDefaults();
+        $defaults['hideNav'] = false;
+        return $defaults;
     }
 }

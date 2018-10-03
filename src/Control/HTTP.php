@@ -21,19 +21,19 @@ class HTTP
     use Configurable;
 
     /**
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @var int
      */
     protected static $cache_age = 0;
 
     /**
-     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware
+     * @deprecated 4.2.0:5.0.0 Handled by HTTPCacheControlMiddleware
      * @var int
      */
     protected static $modification_date = null;
 
     /**
-     * @deprecated 4.2..5.0 Handled by ChangeDetectionMiddleware
+     * @deprecated 4.2.0:5.0.0 Handled by ChangeDetectionMiddleware
      * @var string
      */
     protected static $etag = null;
@@ -41,7 +41,7 @@ class HTTP
     /**
      * @config
      * @var bool
-     * @deprecated 4.2..5.0 'HTTP.cache_ajax_requests config is deprecated.
+     * @deprecated 4.2.0:5.0.0 'HTTP.cache_ajax_requests config is deprecated.
      * Use HTTPCacheControlMiddleware::disableCache() instead'
      */
     private static $cache_ajax_requests = false;
@@ -49,7 +49,7 @@ class HTTP
     /**
      * @config
      * @var bool
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware.defaultState/.defaultForcingLevel instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware.defaultState/.defaultForcingLevel instead
      */
     private static $disable_http_cache = false;
 
@@ -71,7 +71,7 @@ class HTTP
     /**
      * List of names to add to the Cache-Control header.
      *
-     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware instead
+     * @deprecated 4.2.0:5.0.0 Handled by HTTPCacheControlMiddleware instead
      * @see HTTPCacheControlMiddleware::__construct()
      * @config
      * @var array Keys are cache control names, values are boolean flags
@@ -81,7 +81,7 @@ class HTTP
     /**
      * Vary string; A comma separated list of var header names
      *
-     * @deprecated 4.2..5.0 Handled by HTTPCacheControlMiddleware instead
+     * @deprecated 4.2.0:5.0.0 Handled by HTTPCacheControlMiddleware instead
      * @config
      * @var string|null
      */
@@ -372,7 +372,7 @@ class HTTP
     /**
      * Set the maximum age of this page in web caches, in seconds.
      *
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @param int $age
      */
     public static function set_cache_age($age)
@@ -384,7 +384,7 @@ class HTTP
 
     /**
      * @param string $dateString
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_date($dateString)
     {
@@ -394,7 +394,7 @@ class HTTP
 
     /**
      * @param int $timestamp
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_timestamp($timestamp)
     {
@@ -403,7 +403,7 @@ class HTTP
     }
 
     /**
-     * @deprecated 4.2..5.0 Use ChangeDetectionMiddleware instead
+     * @deprecated 4.2.0:5.0.0 Use ChangeDetectionMiddleware instead
      * @param string $etag
      */
     public static function register_etag($etag)
@@ -426,7 +426,7 @@ class HTTP
      * output directly.
      *
      * @param HTTPResponse $response
-     * @deprecated 4.2..5.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
+     * @deprecated 4.2.0:5.0.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
      */
     public static function add_cache_headers($response = null)
     {
@@ -474,7 +474,7 @@ class HTTP
     /**
      * Ensure that all deprecated HTTP cache settings are respected
      *
-     * @deprecated 4.2..5.0 Use HTTPCacheControlMiddleware instead
+     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware instead
      * @throws \LogicException
      * @param HTTPRequest $request
      * @param HTTPResponse $response
@@ -561,7 +561,7 @@ class HTTP
      * is always in GMT: the number of seconds since January 1 1970 00:00:00 GMT)
      *
      * @param int $timestamp
-     * @deprecated 4.2..5.0 Inline if you need this
+     * @deprecated 4.2.0:5.0.0 Inline if you need this
      * @return string
      */
     public static function gmt_date($timestamp)

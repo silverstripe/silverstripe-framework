@@ -137,7 +137,7 @@ class SessionTest extends SapphireTest
             [
                 // 'existing' => true,
                 'new' => true,
-                'merge' => 2
+                'merge' => 2,
             ],
             $session->getAll()
         );
@@ -183,17 +183,17 @@ class SessionTest extends SapphireTest
         $session = $this->session->getAll();
         unset($session['HTTP_USER_AGENT']);
 
-        $this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
+        $this->assertEquals($session, ['Test' => 'Test', 'Test-2' => 'Test-2']);
     }
 
     public function testSettingExistingDoesntClear()
     {
-        $s = new Session(array('something' => array('does' => 'exist')));
+        $s = new Session(['something' => ['does' => 'exist']]);
 
         $s->set('something.does', 'exist');
         $result = $s->changedData();
         unset($result['HTTP_USER_AGENT']);
-        $this->assertEquals(array(), $result);
+        $this->assertEmpty($result);
     }
 
     /**
@@ -206,7 +206,7 @@ class SessionTest extends SapphireTest
 
         // Clear without existing data
         $data = $s->get('something.doesnt.exist');
-        $this->assertEquals(array(), $s->changedData());
+        $this->assertEmpty($s->changedData());
         $this->assertNull($data);
 
         // Clear with existing change
@@ -273,7 +273,7 @@ class SessionTest extends SapphireTest
         $req1->addHeader('User-Agent', 'Test Agent');
 
         // Generate our session
-        $s = new Session(array());
+        $s = new Session([]);
         $s->init($req1);
         $s->set('val', 123);
         $s->finalize($req1);
@@ -312,13 +312,13 @@ class SessionTest extends SapphireTest
                 'something' => [
                     'another' => 'newanother',
                     'newkey' => 'new value',
-                ]
+                ],
             ],
             $_SESSION
         );
 
         // Test cleared keys are restorable
-        $s = new Session($_SESSION = ['bookmarks' => [ 1 => 1, 2 => 2]]);
+        $s = new Session($_SESSION = ['bookmarks' => [1 => 1, 2 => 2]]);
         $s->clear('bookmarks');
         $s->set('bookmarks', [
             1 => 1,
@@ -330,7 +330,7 @@ class SessionTest extends SapphireTest
                 'bookmarks' => [
                     1 => 1,
                     3 => 3,
-                ]
+                ],
             ],
             $_SESSION
         );

@@ -56,6 +56,8 @@ class MemberTest extends FunctionalTest
 
         Member::config()->set('unique_identifier_field', 'Email');
         Member::set_password_validator(null);
+
+        i18n::set_locale('en_US');
     }
 
     public function testPasswordEncryptionUpdatedOnChangedPassword()
@@ -1536,5 +1538,21 @@ class MemberTest extends FunctionalTest
         $result = $member->changePassword('my-second-secret-password');
         $this->assertInstanceOf(ValidationResult::class, $result);
         $this->assertFalse($result->isValid());
+    }
+
+    public function testNewMembersReceiveTheDefaultLocale()
+    {
+        // Set a different current locale to the default
+        i18n::set_locale('de_DE');
+
+        $newMember = Member::create();
+        $newMember->update([
+            'FirstName' => 'Leslie',
+            'Surname' => 'Longly',
+            'Email' => 'longly.leslie@example.com',
+        ]);
+        $newMember->write();
+
+        $this->assertSame('en_US', $newMember->Locale, 'New members receive the default locale');
     }
 }

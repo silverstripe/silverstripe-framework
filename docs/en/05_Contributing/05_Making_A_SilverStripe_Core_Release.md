@@ -23,7 +23,7 @@ As a core contributor it is necessary to have installed the following set of too
 
 ### First time setup: Standard releases
 
-* PHP 5.3+ (for SilverStripe 3.x) or PHP 5.6+ (for SilverStripe 4.x)
+* PHP 5.6+
 * Python 2.7 / 3.5
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
@@ -161,7 +161,7 @@ Check all tickets assigned to that milestone are either closed or reassigned to 
 Use the [list of all issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
 as a starting point, and add a `milestone:"your-milestone"` filter.
 
-Merge up from other older supported release branches (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
+Merge up from other older [supported release branches](release-process#supported-versions) (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
 
 This is the part of the release that prepares and tests everything locally, but
 doe not make any upstream changes (so it's safe to run without worrying about

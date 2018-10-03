@@ -569,11 +569,11 @@ $EditForm <%-- Some hidden comment about the form --%>
 
 ## Related Documentation
 
-[CHILDREN]
+[CHILDREN Exclude="How_Tos"]
 
 ## How to's
 
-[CHILDREN How_Tos]
+[CHILDREN Folder="How_Tos"]
 
 ## API Documentation
 

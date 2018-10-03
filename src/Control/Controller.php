@@ -63,7 +63,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $templates = [];
 
     /**
-     * @deprecated 4.1.0...5.0.0 Add this controller's url to
+     * @deprecated 4.1.0:5.0.0 Add this controller's url to
      * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      * @var bool
      */
@@ -531,7 +531,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * called before Controller::init(). That is, you must call it in your controller's init method
      * before it calls parent::init().
      *
-     * @deprecated 4.1.0...5.0.0 Add this controller's url to
+     * @deprecated 4.1.0:5.0.0 Add this controller's url to
      * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      */
     public function disableBasicAuth()

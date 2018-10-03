@@ -39,6 +39,7 @@ session variables, used templates and much more.
  | URL Variable | | Values | | Description                                                                                  | 
  | ------------ | | --------- | | -----------                                                                                  | 
  | showqueries  | | 1&vert;inline | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries          | 
+ | showqueries  | | 1&vert;backtrace | | List all SQL queries executed, the `backtrace` option will do a fudge replacement of parameterised queries *and* show a backtrace of every query          |
  | previewwrite | | 1      | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
 
 ## Security Redirects

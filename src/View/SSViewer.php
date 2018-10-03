@@ -74,7 +74,7 @@ class SSViewer implements Flushable
      * The used "theme", which usually consists of templates, images and stylesheets.
      * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
      *
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @config
      * @var string
      */

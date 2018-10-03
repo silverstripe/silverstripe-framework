@@ -44,7 +44,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
     /**
      * Set this to true on your sub-class to use the draft site by default for every test in this class.
      *
-     * @deprecated 4.2..5.0 Use ?stage=Stage in your ->get() querystring requests instead
+     * @deprecated 4.2.0:5.0.0 Use ?stage=Stage in your ->get() querystring requests instead
      * @var bool
      */
     protected static $use_draft_site = false;
@@ -407,7 +407,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.
      *
-     * @deprecated 4.2..5.0 Use ?stage=Stage querystring arguments instead of useDraftSite
+     * @deprecated 4.2.0:5.0.0 Use ?stage=Stage querystring arguments instead of useDraftSite
      * @param bool $enabled toggle the use of the draft site
      */
     public function useDraftSite($enabled = true)
@@ -431,7 +431,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
     }
 
     /**
-     * @deprecated 4.2..5.0 Use ?stage=Stage in your querystring arguments instead
+     * @deprecated 4.2.0:5.0.0 Use ?stage=Stage in your querystring arguments instead
      * @return bool
      */
     public static function get_use_draft_site()

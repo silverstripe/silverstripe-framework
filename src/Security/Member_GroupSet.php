@@ -29,7 +29,7 @@ class Member_GroupSet extends ManyManyList
      * Recursively selects all groups applied to this member, as well as any
      * parent groups of any applied groups
      *
-     * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current
+     * @param array|int|string|null $id (optional) An ID or an array of IDs - if not provided, will use the current
      * ids as per getForeignID
      * @return array Condition In array(SQL => parameters format)
      */
@@ -41,24 +41,24 @@ class Member_GroupSet extends ManyManyList
 
         // Find directly applied groups
         $manyManyFilter = parent::foreignIDFilter($id);
-        $query = new SQLSelect('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
+        $query = SQLSelect::create('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
         $groupIDs = $query->execute()->column();
 
         // Get all ancestors, iteratively merging these into the master set
-        $allGroupIDs = array();
+        $allGroupIDs = [];
         while ($groupIDs) {
             $allGroupIDs = array_merge($allGroupIDs, $groupIDs);
-            $groupIDs = DataObject::get("SilverStripe\\Security\\Group")->byIDs($groupIDs)->column("ParentID");
+            $groupIDs = DataObject::get(Group::class)->byIDs($groupIDs)->column("ParentID");
             $groupIDs = array_filter($groupIDs);
         }
 
         // Add a filter to this DataList
         if (!empty($allGroupIDs)) {
             $allGroupIDsPlaceholders = DB::placeholders($allGroupIDs);
-            return array("\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs);
-        } else {
-            return array('"Group"."ID"' => 0);
+            return ["\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs];
         }
+
+        return ['"Group"."ID"' => 0];
     }
 
     public function foreignIDWriteFilter($id = null)
@@ -81,7 +81,7 @@ class Member_GroupSet extends ManyManyList
         }
 
         // Check if this group is allowed to be added
-        if ($this->canAddGroups(array($itemID))) {
+        if ($this->canAddGroups([$itemID])) {
             parent::add($item, $extraFields);
         }
     }
@@ -106,13 +106,13 @@ class Member_GroupSet extends ManyManyList
 
         // Use a sub-query as SQLite does not support setting delete targets in
         // joined queries.
-        $delete = new SQLDelete();
+        $delete = SQLDelete::create();
         $delete->setFrom("\"{$this->joinTable}\"");
         $delete->addWhere(parent::foreignIDFilter());
         $subSelect = $selectQuery->sql($parameters);
-        $delete->addWhere(array(
+        $delete->addWhere([
             "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
-        ));
+        ]);
         $delete->execute();
     }
 

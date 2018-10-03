@@ -730,7 +730,11 @@ class FormField extends RequestHandler
             if ($value === true) {
                 $parts[] = sprintf('%s="%s"', $name, $name);
             } else {
-                $parts[] = sprintf('%s="%s"', $name, Convert::raw2att($value));
+                $strValue = Convert::raw2att($value);
+                if (!is_string($strValue)) {
+                    $strValue = json_encode($strValue);
+                }
+                $parts[] = sprintf('%s="%s"', $name, $strValue);
             }
         }
 
@@ -1327,13 +1331,14 @@ class FormField extends RequestHandler
      */
     public function debug()
     {
+        $strValue = is_string($this->value) ? $this->value : print_r($this->value, true);
         return sprintf(
             '%s (%s: %s : <span style="color:red;">%s</span>) = %s',
             static::class,
             $this->name,
             $this->title,
             $this->message,
-            $this->value
+            $strValue
         );
     }
 

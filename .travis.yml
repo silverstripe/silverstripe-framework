@@ -23,36 +23,43 @@ matrix:
         - DB=MYSQL
         - PHPCS_TEST=1
         - PHPUNIT_TEST=framework
+
     - php: 7.1
       env:
         - DB=PGSQL
         - PHPUNIT_TEST=framework
+
     - php: 7.1
       if: type IN (cron)
       env:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_COVERAGE_TEST=framework
+
     - php: 7.2
       env:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_TEST=framework
-    - php: nightly
-      env:
-        - DB=MYSQL
-        - PDO=1
-        - PHPUNIT_TEST=framework
+
     - php: 7.1
       env:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
-  allow_failures:
-    - php: nightly
+
+    - php: 7.3.0RC1
       env:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_TEST=framework
+      sudo: required
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - libzip4
+      services:
+       - mysql
 
 before_script:
 # Extra $PATH
@@ -76,7 +83,6 @@ before_script:
 
 # Log constants to CI for debugging purposes
   - php ./tests/dump_constants.php
-
 
 script:
   - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi

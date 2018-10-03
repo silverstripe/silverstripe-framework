@@ -3,15 +3,15 @@ summary: Extensions and DataExtensions let you modify and augment objects transp
 
 # Extensions and DataExtensions
 
-An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a [Object](api:Object) or modifying existing functionality 
-without the hassle of creating a subclass. Developers can add Extensions to any [Object](api:Object) subclass within core, modules
-or even their own code to make it more reusable.
+An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a class or modifying existing functionality 
+without the hassle of creating a subclass. Developers can add Extensions to any PHP class that has the [Extensible](api:SilverStripe\Core\Extensible)
+trait applied within core, modules or even their own code to make it more reusable.
 
 Extensions are defined as subclasses of either [DataExtension](api:SilverStripe\ORM\DataExtension) for extending a [DataObject](api:SilverStripe\ORM\DataObject) subclass or 
 the [Extension](api:SilverStripe\Core\Extension) class for non DataObject subclasses (such as [Controller](api:SilverStripe\Control\Controller))
 
 <div class="info" markdown="1">
-For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
+For performance reasons a few classes are excluded from receiving extensions, including `ViewableData` 
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
 </div>
 
@@ -25,7 +25,7 @@ class MyMemberExtension extends DataExtension
 {
 
     private static $db = [
-        'DateOfBirth' => 'SS_Datetime'
+        'DateOfBirth' => 'DBDatetime'
     ];
 
     public function SayHi() 

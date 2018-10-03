@@ -135,23 +135,23 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             }
 
             return $list;
-        } else {
-            $list = clone $this;
-            $list->inAlterDataQueryCall = true;
-
-            try {
-                $res = call_user_func($callback, $list->dataQuery, $list);
-                if ($res) {
-                    $list->dataQuery = $res;
-                }
-            } catch (Exception $e) {
-                $list->inAlterDataQueryCall = false;
-                throw $e;
-            }
-
-            $list->inAlterDataQueryCall = false;
-            return $list;
         }
+
+        $list = clone $this;
+        $list->inAlterDataQueryCall = true;
+
+        try {
+            $res = $callback($list->dataQuery, $list);
+            if ($res) {
+                $list->dataQuery = $res;
+            }
+        } catch (Exception $e) {
+            $list->inAlterDataQueryCall = false;
+            throw $e;
+        }
+
+        $list->inAlterDataQueryCall = false;
+        return $list;
     }
 
     /**
@@ -179,8 +179,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $clone = clone $this;
 
         if (is_array($keyOrArray)) {
-            foreach ($keyOrArray as $key => $val) {
-                $clone->dataQuery->setQueryParam($key, $val);
+            foreach ($keyOrArray as $key => $value) {
+                $clone->dataQuery->setQueryParam($key, $value);
             }
         } else {
             $clone->dataQuery->setQueryParam($keyOrArray, $val);
@@ -195,7 +195,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Out variable for parameters required for this query
      * @return string The resulting SQL query (may be paramaterised)
      */
-    public function sql(&$parameters = array())
+    public function sql(&$parameters = [])
     {
         return $this->dataQuery->query()->sql($parameters);
     }
@@ -339,11 +339,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             list($col, $dir) = func_get_args();
 
             // Validate direction
-            if (!in_array(strtolower($dir), array('desc','asc'))) {
+            if (!in_array(strtolower($dir), ['desc', 'asc'])) {
                 user_error('Second argument to sort must be either ASC or DESC');
             }
 
-            $sort = array($col => $dir);
+            $sort = [$col => $dir];
         } else {
             $sort = func_get_arg(0);
         }
@@ -351,7 +351,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
 
             if (is_string($sort) && $sort) {
-                if (stristr($sort, ' asc') || stristr($sort, ' desc')) {
+                if (false !== stripos($sort, ' asc') || false !== stripos($sort, ' desc')) {
                     $query->sort($sort);
                 } else {
                     $list->applyRelation($sort, $column, true);
@@ -402,7 +402,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
                 break;
             case 2:
-                $filters = array($arguments[0] => $arguments[1]);
+                $filters = [$arguments[0] => $arguments[1]];
 
                 break;
             default:
@@ -424,7 +424,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         foreach ($filterArray as $expression => $value) {
             $filter = $this->createSearchFilter($expression, $value);
-            $list = $list->alterDataQuery(array($filter, 'apply'));
+            $list = $list->alterDataQuery([$filter, 'apply']);
         }
 
         return $list;
@@ -457,7 +457,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function filterAny()
     {
         $numberFuncArgs = count(func_get_args());
-        $whereArguments = array();
+        $whereArguments = [];
 
         if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
@@ -615,7 +615,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function exclude()
     {
         $numberFuncArgs = count(func_get_args());
-        $whereArguments = array();
+        $whereArguments = [];
 
         if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
@@ -653,7 +653,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function excludeAny()
     {
         $numberFuncArgs = count(func_get_args());
-        $whereArguments = array();
+        $whereArguments = [];
 
         if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
@@ -704,7 +704,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array())
+    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->innerJoin($table, $onClause, $alias, $order, $parameters);
@@ -723,7 +723,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array())
+    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->leftJoin($table, $onClause, $alias, $order, $parameters);
@@ -740,7 +740,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         $query = $this->dataQuery->query();
         $rows = $query->execute();
-        $results = array();
+        $results = [];
 
         foreach ($rows as $row) {
             $results[] = $this->createDataObject($row);
@@ -756,7 +756,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toNestedArray()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this as $item) {
             $result[] = $item->toMap();
@@ -1073,7 +1073,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function setByIDList($idList)
     {
-        $has = array();
+        $has = [];
 
         // Index current data
         foreach ($this->column() as $id) {
@@ -1107,7 +1107,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function getIDList()
     {
         $ids = $this->column("ID");
-        return $ids ? array_combine($ids, $ids) : array();
+        return $ids ? array_combine($ids, $ids) : [];
     }
 
     /**
@@ -1196,7 +1196,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * list manipulation
      *
      * @param mixed $item
-     * @param array|null $extraFields Any extra fields, if supported by this list
      */
     public function add($item)
     {

@@ -151,7 +151,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
     /**
      * Resolve resource in the absence of a public/ folder
      *
-     * @deprecated 4.1.0...5.0.0 Will be removed in 5.0 when public/ folder becomes mandatory
+     * @deprecated 4.1.0:5.0.0 Will be removed in 5.0 when public/ folder becomes mandatory
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]
      */

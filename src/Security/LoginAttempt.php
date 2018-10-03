@@ -15,7 +15,7 @@ use SilverStripe\ORM\DataObject;
  * complies with your privacy standards. We're logging
  * username and IP.
  *
- * @property string $Email Email address used for login attempt. @deprecated 3.0...5.0
+ * @property string $Email Email address used for login attempt. @deprecated 3.0.0:5.0.0
  * @property string $EmailHashed sha1 hashed Email address used for login attempt
  * @property string $Status Status of the login attempt, either 'Success' or 'Failure'
  * @property string $IP IP address of user attempting to login
@@ -44,6 +44,10 @@ class LoginAttempt extends DataObject
 
     private static $has_one = array(
         'Member' => Member::class, // only linked if the member actually exists
+    );
+
+    private static $indexes = array(
+        "EmailHashed" => true
     );
 
     private static $table_name = "LoginAttempt";
@@ -86,7 +90,6 @@ class LoginAttempt extends DataObject
     public static function getByEmail($email)
     {
         return static::get()->filterAny(array(
-            'Email' => $email,
             'EmailHashed' => sha1($email),
         ));
     }
