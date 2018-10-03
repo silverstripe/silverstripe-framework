@@ -23,4 +23,6 @@ class JoinObject extends DataObject implements TestOnly
         'Parent' => TestObject::class,
         'Child' => Item::class,
     ];
+
+    private static $default_sort = '"Sort" ASC';
 }

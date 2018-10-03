@@ -70,33 +70,76 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertNotNull($item2->getJoin());
         $this->assertEquals('join 2', $item2->getJoin()->Title);
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
+    }
 
-        // Test sorting on join table
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
-            ],
-            $items
-        );
+    /**
+     * @param string $sort
+     * @param array $expected
+     * @dataProvider sortingProvider
+     */
+    public function testSorting($sort, $expected)
+    {
+        /** @var ManyManyThroughListTest\TestObject $parent */
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
 
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
+        $items = $parent->Items();
+        if ($sort) {
+            $items = $items->sort($sort);
+        }
+        $this->assertSame($expected, $items->column('Title'));
+    }
+
+    /**
+     * @return array[]
+     */
+    public function sortingProvider()
+    {
+        return [
+            'nothing passed (default)' => [
+                null,
+                ['item 2', 'item 1'],
             ],
-            $items
-        );
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
+            'table with default column' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort"',
+                ['item 2', 'item 1'],
             ],
-            $items
-        );
+            'table with default column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" ASC',
+                ['item 2', 'item 1'],
+            ],
+            'table with default column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" DESC',
+                ['item 1', 'item 2'],
+            ],
+            'table with column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" DESC',
+                ['item 2', 'item 1'],
+            ],
+            'table with column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" ASC',
+                ['item 1', 'item 2'],
+            ],
+            'default column' => [
+                '"Sort"',
+                ['item 2', 'item 1'],
+            ],
+            'default column ascending' => [
+                '"Sort" ASC',
+                ['item 2', 'item 1'],
+            ],
+            'default column descending' => [
+                '"Sort" DESC',
+                ['item 1', 'item 2'],
+            ],
+            'column descending' => [
+                '"Title" DESC',
+                ['item 2', 'item 1'],
+            ],
+            'column ascending' => [
+                '"Title" ASC',
+                ['item 1', 'item 2'],
+            ],
+        ];
     }
 
     public function testAdd()
