@@ -44,6 +44,13 @@ class TabSet extends CompositeField
     protected $schemaComponent = 'Tabs';
 
     /**
+     * Alter datatype from structural to track the current tab in redux state.
+     *
+     * @var string
+     */
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRING;
+
+    /**
      * @var TabSet
      */
     protected $tabSet;
