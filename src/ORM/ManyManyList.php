@@ -421,7 +421,7 @@ class ManyManyList extends RelationList
         }
         $query->addWhere([
             "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
-        ));
+        ]);
         $queryResult = $query->execute()->record();
         if ($queryResult) {
             foreach ($queryResult as $fieldName => $value) {
