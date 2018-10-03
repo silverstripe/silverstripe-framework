@@ -730,7 +730,11 @@ class FormField extends RequestHandler
             if ($value === true) {
                 $parts[] = sprintf('%s="%s"', $name, $name);
             } else {
-                $parts[] = sprintf('%s="%s"', $name, Convert::raw2att($value));
+                $strValue = Convert::raw2att($value);
+                if (!is_string($strValue)) {
+                    $strValue = json_encode($strValue);
+                }
+                $parts[] = sprintf('%s="%s"', $name, $strValue);
             }
         }
 
