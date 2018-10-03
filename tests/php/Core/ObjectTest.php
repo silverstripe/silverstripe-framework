@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Tests\ObjectTest\BaseObject;
@@ -13,6 +14,7 @@ use SilverStripe\Core\Tests\ObjectTest\ExtendTest3;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest4;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest5;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionRemoveTest;
+use SilverStripe\Core\Tests\ObjectTest\ExtensionService;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest2;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest3;
@@ -545,5 +547,27 @@ class ObjectTest extends SapphireTest
         $this->assertInstanceOf($mockClass, $object->getExtensionInstance(TestExtension::class));
         $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance($mockClass));
         $this->assertInstanceOf($mockClass, $object->getExtensionInstance($mockClass));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testExtensionsAppliedViaANonExistentServiceAsAControl()
+    {
+        Config::modify()->set(BaseObject::class, 'extensions', ['NotAService']);
+        BaseObject::create();
+    }
+
+    public function testExtensionsCanBeAppliedViaInjectorServices()
+    {
+        $config = Config::modify();
+        $config->set(Injector::class, 'ATestService', [
+            'class' => ExtensionService::class,
+            'constructor' => ['nonsense'],
+        ]);
+        $config->set(BaseObject::class, 'extensions', ['ATestService']);
+
+        $nonsense = BaseObject::create();
+        $this->assertEquals('This extension is nonsense', $nonsense->aMethod());
     }
 }

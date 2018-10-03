@@ -10,6 +10,7 @@ use SilverStripe\Config\Middleware\MiddlewareCommon;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataExtension;
 
 class ExtensionMiddleware implements Middleware
@@ -66,6 +67,9 @@ class ExtensionMiddleware implements Middleware
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             // Strip service name specifier
             $extensionClass = strtok($extensionClass, '.');
+            if ($extensionSpec = Injector::inst()->getServiceSpec($extensionClass)) {
+                $extensionClass = $extensionSpec['class'];
+            }
             if (!class_exists($extensionClass)) {
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in 'extensions'");
             }

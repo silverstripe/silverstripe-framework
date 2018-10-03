@@ -178,10 +178,13 @@ trait Extensible
             $extension = $classOrExtension;
         }
 
-        if (!preg_match('/^([^(]*)/', $extension, $matches)) {
+        if (!preg_match('/^(%\$)?([^(]+)/', $extension, $matches)) {
             return false;
         }
-        $extensionClass = $matches[1];
+        $extensionClass = $matches[2];
+        if ($extensionSpec = Injector::inst()->getServiceSpec($extensionClass)) {
+            $extensionClass = $extensionSpec['class'];
+        }
         if (!class_exists($extensionClass)) {
             user_error(
                 sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
@@ -338,6 +341,10 @@ trait Extensible
             // Strip service name specifier
             $extensionClass = strtok($extensionClass, '.');
             $sources[] = $extensionClass;
+
+            if ($extensionSpec = Injector::inst()->getServiceSpec($extensionClass)) {
+                $extensionClass = $extensionSpec['class'];
+            }
 
             if (!class_exists($extensionClass)) {
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in \$extensions");
