@@ -66,7 +66,7 @@ class CookieJarTest extends SapphireTest
         //PHP will replace an incoming COOKIE called 'var.with.dots' to 'var_with_dots'
         $cookieJar = new CookieJar(
             array(
-            'var_with_dots' => 'value',
+                'var_with_dots' => 'value',
             )
         );
 
@@ -87,7 +87,7 @@ class CookieJarTest extends SapphireTest
         //load with a cookie
         $cookieJar = new CookieJar(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             )
         );
 
@@ -110,8 +110,8 @@ class CookieJarTest extends SapphireTest
         //check we can get all cookies
         $this->assertEquals(
             array(
-            'cookieExisting' => 'i woz changed',
-            'cookieNew' => 'i am new',
+                'cookieExisting' => 'i woz changed',
+                'cookieNew' => 'i am new',
             ),
             $cookieJar->getAll()
         );
@@ -119,7 +119,7 @@ class CookieJarTest extends SapphireTest
         //check we can get all original cookies
         $this->assertEquals(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             ),
             $cookieJar->getAll(false)
         );
@@ -133,7 +133,7 @@ class CookieJarTest extends SapphireTest
         //load an existing cookie
         $cookieJar = new CookieJar(
             array(
-            'cookieExisting' => 'i woz here',
+                'cookieExisting' => 'i woz here',
             )
         );
 

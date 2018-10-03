@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control\Tests;
 
-use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Tests\ControllerTest\AccessBaseController;
@@ -15,10 +14,8 @@ use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
 class ControllerTest extends FunctionalTest
@@ -47,28 +44,21 @@ class ControllerTest extends FunctionalTest
     {
         parent::setUp();
         Director::config()->update('alternate_base_url', '/');
-        $this->depSettings = Deprecation::dump_settings();
 
         // Add test theme
         $themeDir = substr(__DIR__, strlen(FRAMEWORK_DIR)) . '/ControllerTest/';
         $themes = [
             "silverstripe/framework:{$themeDir}",
-            SSViewer::DEFAULT_THEME
+            SSViewer::DEFAULT_THEME,
         ];
         SSViewer::set_themes($themes);
-    }
-
-    protected function tearDown()
-    {
-        Deprecation::restore_settings($this->depSettings);
-        parent::tearDown();
     }
 
     public function testDefaultAction()
     {
         /* For a controller with a template, the default action will simple run that template. */
         $response = $this->get("TestController/");
-        $this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
+        $this->assertContains("This is the main template. Content is 'default content'", $response->getBody());
     }
 
     public function testMethodActions()
@@ -76,19 +66,19 @@ class ControllerTest extends FunctionalTest
         /* The Action can refer to a method that is called on the object.  If a method returns an array, then it
         * will be used to customise the template data */
         $response = $this->get("TestController/methodaction");
-        $this->assertRegExp("/This is the main template. Content is 'methodaction content'./", $response->getBody());
+        $this->assertContains("This is the main template. Content is 'methodaction content'.", $response->getBody());
 
         /* If the method just returns a string, then that will be used as the response */
         $response = $this->get("TestController/stringaction");
-        $this->assertRegExp("/stringaction was called./", $response->getBody());
+        $this->assertContains("stringaction was called.", $response->getBody());
     }
 
     public function testTemplateActions()
     {
         /* If there is no method, it can be used to point to an alternative template. */
         $response = $this->get("TestController/templateaction");
-        $this->assertRegExp(
-            "/This is the template for templateaction. Content is 'default content'./",
+        $this->assertContains(
+            "This is the template for templateaction. Content is 'default content'.",
             $response->getBody()
         );
     }
@@ -188,15 +178,15 @@ class ControllerTest extends FunctionalTest
             'Access denied on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
         );
 
-        Security::setCurrentUser($adminUser);
-        $response = $this->get("AccessSecuredController/templateaction");
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            'Access granted for logged in admin on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
-        );
+        Member::actAs($adminUser, function () {
+            $response = $this->get("AccessSecuredController/templateaction");
+            $this->assertEquals(
+                200,
+                $response->getStatusCode(),
+                'Access granted for logged in admin on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
+            );
+        });
 
-        Security::setCurrentUser(null);
         $response = $this->get("AccessSecuredController/adminonly");
         $this->assertEquals(
             403,
@@ -218,15 +208,15 @@ class ControllerTest extends FunctionalTest
             "Access denied to protected method even if its listed in allowed_actions"
         );
 
-        Security::setCurrentUser($adminUser);
-        $response = $this->get("AccessSecuredController/adminonly");
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            "Permission codes are respected when set in \$allowed_actions"
-        );
+        Member::actAs($adminUser, function () {
+            $response = $this->get("AccessSecuredController/adminonly");
+            $this->assertEquals(
+                200,
+                $response->getStatusCode(),
+                "Permission codes are respected when set in \$allowed_actions"
+            );
+        });
 
-        Security::setCurrentUser(null);
         $response = $this->get('AccessBaseController/extensionmethod1');
         $this->assertEquals(
             200,
@@ -262,14 +252,14 @@ class ControllerTest extends FunctionalTest
             "Access denied when index action is limited through allowed_actions, " . "and doesn't satisfy checks"
         );
 
-        Security::setCurrentUser($adminUser);
-        $response = $this->get('IndexSecuredController/');
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            "Access granted when index action is limited through allowed_actions, " . "and does satisfy checks"
-        );
-        Security::setCurrentUser(null);
+        Member::actAs($adminUser, function () {
+            $response = $this->get('IndexSecuredController/');
+            $this->assertEquals(
+                200,
+                $response->getStatusCode(),
+                "Access granted when index action is limited through allowed_actions, " . "and does satisfy checks"
+            );
+        });
     }
 
     /**
@@ -416,14 +406,6 @@ class ControllerTest extends FunctionalTest
             'Method is not visible when defined on an extension, part of allowed_actions, ' . 'but with protected visibility'
         );
     }
-
-    /* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this
-    * code was supposed to test
-    public function testBaseURL() {
-    Config::modify()->merge('Director', 'alternate_base_url', '/baseurl/');
-    $this->assertEquals(Controller::BaseURL(), Director::BaseURL());
-    }
-    */
 
     public function testRedirectBackByReferer()
     {
