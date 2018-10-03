@@ -103,7 +103,12 @@ class TreeMultiselectField extends TreeDropdownField
 
         // cannot rely on $this->value as this could be a many-many relationship
         $value = array_column($values, 'id');
-        $data['value'] = ($value) ? $value : 'unchanged';
+        if ($value) {
+            sort($value);
+            $data['value'] = $value;
+        } else {
+            $data['value'] = 'unchanged';
+        }
 
         return $data;
     }
@@ -182,6 +187,7 @@ class TreeMultiselectField extends TreeDropdownField
             }
 
             $title = implode(", ", $titleArray);
+            sort($idArray);
             $value = implode(",", $idArray);
         } else {
             $title = $emptyTitle;
