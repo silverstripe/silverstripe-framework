@@ -223,7 +223,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param int $timeLength
      * @return IntlDateFormatter
      */
-    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::MEDIUM)
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::SHORT)
     {
         return parent::getFormatter($dateLength, $timeLength);
     }

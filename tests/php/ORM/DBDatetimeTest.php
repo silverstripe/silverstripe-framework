@@ -88,9 +88,14 @@ class DBDatetimeTest extends SapphireTest
 
     public function testNice()
     {
-        $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
+        $date = DBDatetime::create_field('Datetime', '2001-12-11 22:10:59');
+
         // note: Some localisation packages exclude the ',' in default medium format
-        $this->assertRegExp('#31/12/2001(,)? 10:10:59 PM#i', $date->Nice());
+        i18n::set_locale('en_NZ');
+        $this->assertRegExp('#11/12/2001(,)? 10:10 PM#i', $date->Nice());
+
+        i18n::set_locale('en_US');
+        $this->assertRegExp('#Dec 11(,)? 2001(,)? 10:10 PM#i', $date->Nice());
     }
 
     public function testDate()
