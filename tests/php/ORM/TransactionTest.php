@@ -11,6 +11,8 @@ class TransactionTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
+    protected $usesTransactions = false;
+
     protected static $extra_dataobjects = [
         TransactionTest\TestObject::class,
     ];
@@ -51,6 +53,7 @@ class TransactionTest extends SapphireTest
 
     public function testCreateWithTransaction()
     {
+        // First/Second in a successful transaction
         DB::get_conn()->transactionStart();
         $obj = new TransactionTest\TestObject();
         $obj->Title = 'First page';
@@ -59,10 +62,10 @@ class TransactionTest extends SapphireTest
         $obj = new TransactionTest\TestObject();
         $obj->Title = 'Second page';
         $obj->write();
+        DB::get_conn()->transactionEnd();
 
-        //Create a savepoint here:
-        DB::get_conn()->transactionSavepoint('rollback');
-
+        // Third/Fourth in a rolled back transaction
+        DB::get_conn()->transactionStart();
         $obj = new TransactionTest\TestObject();
         $obj->Title = 'Third page';
         $obj->write();
@@ -70,11 +73,8 @@ class TransactionTest extends SapphireTest
         $obj = new TransactionTest\TestObject();
         $obj->Title = 'Fourth page';
         $obj->write();
+        DB::get_conn()->transactionRollback();
 
-        //Revert to a savepoint:
-        DB::get_conn()->transactionRollback('rollback');
-
-        DB::get_conn()->transactionEnd();
 
         $first = DataObject::get(TransactionTest\TestObject::class, "\"Title\"='First page'");
         $second = DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Second page'");
@@ -85,7 +85,7 @@ class TransactionTest extends SapphireTest
         $this->assertTrue(is_object($first) && $first->exists());
         $this->assertTrue(is_object($second) && $second->exists());
 
-        //These pages should NOT exist, we reverted to a savepoint:
+        //These pages should NOT exist, we rolled back
         $this->assertFalse(is_object($third) && $third->exists());
         $this->assertFalse(is_object($fourth) && $fourth->exists());
     }

@@ -21,6 +21,11 @@ class DatabaseTest extends SapphireTest
 
     protected $usesDatabase = true;
 
+    /**
+     * Disable transactions so that we can test them
+     */
+    protected $usesTransactions = false;
+
     public function testDontRequireField()
     {
         $schema = DB::get_schema();
