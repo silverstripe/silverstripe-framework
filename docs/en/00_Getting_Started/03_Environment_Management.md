@@ -87,7 +87,7 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you define this constant, all emails will be sent from this address.|
 | `SS_ERROR_LOG` | Relative path to the log file. |
-| `SS_PROTECTED_ASSETS_PATH` | Path to secured assets - defaults to ASSET_PATH/.protected |
+| `SS_PROTECTED_ASSETS_PATH` | Path to secured assets - defaults to ASSETS_PATH/.protected |
 | `SS_DATABASE_MEMORY` | Used for SQLite3 DBs |
 | `SS_TRUSTED_PROXY_IPS` | IP address or CIDR range to trust proxy headers from. If left blank no proxy headers are trusted. Can be set to 'none' (trust none) or '*' (trust all) |
 | `SS_ALLOWED_HOSTS` | A comma deliminated list of hostnames the site is allowed to respond to |
