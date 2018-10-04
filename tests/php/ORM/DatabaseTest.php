@@ -231,4 +231,38 @@ class DatabaseTest extends SapphireTest
         $this->assertInstanceOf('Exception', $ex);
         $this->assertEquals('error', $ex->getMessage());
     }
+
+
+    public function testFieldTypes()
+    {
+        // Scaffold some data
+        $obj = new MyObject();
+        $obj->MyField = "value";
+        $obj->MyInt = 5;
+        $obj->MyFloat = 6.0;
+        $obj->MyBoolean = true;
+        $obj->write();
+
+        $record = DB::prepared_query(
+            'SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ?',
+            [ $obj->ID ]
+        )->record();
+
+        // IDs and ints are returned as ints
+        $this->assertInternalType('int', $record['ID']);
+        $this->assertInternalType('int', $record['MyInt']);
+
+        $this->assertInternalType('float', $record['MyFloat']);
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertInternalType('int', $record['MyBoolean']);
+
+        // Strings and enums are returned as strings
+        $this->assertInternalType('string', $record['MyField']);
+        $this->assertInternalType('string', $record['ClassName']);
+
+        // Dates are returned as strings
+        $this->assertInternalType('string', $record['Created']);
+        $this->assertInternalType('string', $record['LastEdited']);
+    }
 }

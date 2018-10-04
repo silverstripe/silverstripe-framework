@@ -65,6 +65,12 @@ class PDOConnector extends DBConnector
     protected $cachedStatements = array();
 
     /**
+     * Driver
+     * @var string
+     */
+    private $driver = null;
+
+    /**
      * Flush all prepared statements
      */
     public function flushStatements()
@@ -113,10 +119,11 @@ class PDOConnector extends DBConnector
     {
         $this->flushStatements();
 
-        // Build DSN string
         // Note that we don't select the database here until explicitly
         // requested via selectDatabase
-        $driver = $parameters['driver'] . ":";
+        $this->driver = $parameters['driver'];
+
+        // Build DSN string
         $dsn = array();
 
         // Typically this is false, but some drivers will request this
@@ -195,13 +202,18 @@ class PDOConnector extends DBConnector
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : self::config()->get('ssl_cipher_default');
         }
 
-        if (self::is_emulate_prepare()) {
-            $options[PDO::ATTR_EMULATE_PREPARES] = true;
+        // Set emulate prepares (unless null / default)
+        $isEmulatePrepares = self::is_emulate_prepare();
+        if (isset($isEmulatePrepares)) {
+            $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
         }
+
+        // Disable stringified fetches
+        $options[PDO::ATTR_STRINGIFY_FETCHES] = false;
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
-            $driver . implode(';', $dsn),
+            $this->driver . ':' . implode(';', $dsn),
             empty($parameters['username']) ? '' : $parameters['username'],
             empty($parameters['password']) ? '' : $parameters['password'],
             $options
@@ -211,6 +223,16 @@ class PDOConnector extends DBConnector
         if ($this->pdoConnection && $selectDB && !empty($parameters['database'])) {
             $this->databaseName = $parameters['database'];
         }
+    }
+
+
+    /**
+     * Return the driver for this connector
+     * E.g. 'mysql', 'sqlsrv', 'pgsql'
+     */
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     public function getVersion()
@@ -383,7 +405,7 @@ class PDOConnector extends DBConnector
         } elseif ($statement) {
             // Count and return results
             $this->rowCount = $statement->rowCount();
-            return new PDOQuery($statement);
+            return new PDOQuery($statement, $this);
         }
 
         // Ensure statement is closed
