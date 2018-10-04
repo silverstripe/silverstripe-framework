@@ -167,6 +167,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     const CHANGE_NONE = 0;
 
     /**
+     * Represents a field that has had a change forced
+     */
+    const CHANGE_FORCED = 0.5;
+
+    /**
      * Represents a field that has changed type, although not the loosely defined value.
      * (before !== after && before == after)
      * E.g. change 1 to true or "true" to true, but not true to 0.
@@ -1126,7 +1131,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         foreach ($fieldNames as $fieldName) {
             if (!isset($this->changed[$fieldName])) {
-                $this->changed[$fieldName] = self::CHANGE_STRICT;
+                $this->changed[$fieldName] = self::CHANGE_FORCED;
             }
             // Populate the null values in record so that they actually get written
             if (!isset($this->record[$fieldName])) {
@@ -1520,7 +1525,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // If there's any relations that couldn't be saved before, save them now (we have an ID here)
             $this->writeRelations();
             $this->onAfterWrite();
-            $this->changed = array();
+
+            // Reset isChanged data
+            // DBComposites properly bound to the parent record will also have their isChanged value reset
+            $this->changed = [];
+            $this->original = $this->record;
         } else {
             if ($showDebug) {
                 Debug::message("no changes for DataObject");
@@ -2487,7 +2496,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Return the fields that have changed.
+     * Return the fields that have changed since the last write.
      *
      * The change level affects what the functions defines as "changed":
      * - Level CHANGE_STRICT (integer 1) will return strict changes, even !== ones.
@@ -2628,22 +2637,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
 
             // if a field is not existing or has strictly changed
-            if (!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
+            if (!isset($this->original[$fieldName]) || $this->original[$fieldName] !== $val) {
                 // TODO Add check for php-level defaults which are not set in the db
                 // TODO Add check for hidden input-fields (readonly) which are not set in the db
                 // At the very least, the type has changed
                 $this->changed[$fieldName] = self::CHANGE_STRICT;
 
-                if ((!isset($this->record[$fieldName]) && $val)
-                    || (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
+                if ((!isset($this->original[$fieldName]) && $val)
+                    || (isset($this->original[$fieldName]) && $this->original[$fieldName] != $val)
                 ) {
                     // Value has changed as well, not just the type
                     $this->changed[$fieldName] = self::CHANGE_VALUE;
                 }
-
-                // Value is always saved back when strict check succeeds.
-                $this->record[$fieldName] = $val;
+            // Value has been restored to its original, remove any record of the change
+            } elseif (isset($this->changed[$fieldName]) && $this->changed[$fieldName] !== self::CHANGE_FORCED) {
+                unset($this->changed[$fieldName]);
             }
+
+            // Value is saved regardless, since the change detection relates to the last write
+            $this->record[$fieldName] = $val;
         }
         return $this;
     }
