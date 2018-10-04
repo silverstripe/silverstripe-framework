@@ -18,6 +18,13 @@ class ThemeResourceLoader
     private static $instance;
 
     /**
+     * Internal memory cache for large sets of repeated calls
+     *
+     * @var array
+     */
+    protected static $cacheData = [];
+
+    /**
      * The base path of the application
      *
      * @var string
@@ -174,6 +181,12 @@ class ThemeResourceLoader
      */
     public function findTemplate($template, $themes = null)
     {
+        // Look for a cached result for this data set
+        $cacheKey = json_encode($template) . json_encode($themes);
+        if (isset(static::$cacheData[$cacheKey])) {
+            return static::$cacheData[$cacheKey];
+        }
+
         if ($themes === null) {
             $themes = SSViewer::get_themes();
         }
@@ -196,7 +209,7 @@ class ThemeResourceLoader
             if (is_array($template)) {
                 $path = $this->findTemplate($template, $themes);
                 if ($path) {
-                    return $path;
+                    return static::$cacheData[$cacheKey] = $path;
                 }
                 continue;
             }
@@ -205,7 +218,7 @@ class ThemeResourceLoader
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
             if (substr($template, -3) == '.ss' && file_exists($template)) {
-                return $template;
+                return static::$cacheData[$cacheKey] = $template;
             }
 
             // Check string template identifier
@@ -220,13 +233,13 @@ class ThemeResourceLoader
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
                 $path = Path::join($pathParts) . '.ss';
                 if (file_exists($path)) {
-                    return $path;
+                    return static::$cacheData[$cacheKey] = $path;
                 }
             }
         }
 
         // No template found
-        return null;
+        return static::$cacheData[$cacheKey] = null;
     }
 
     /**
