@@ -54,6 +54,9 @@ class ThemeResourceLoaderTest extends SapphireTest
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
+
+        // Flush any cached values
+        ThemeResourceLoader::flushCache();
     }
 
     protected function tearDown()

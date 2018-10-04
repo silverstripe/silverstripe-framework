@@ -350,4 +350,12 @@ class ThemeResourceLoader
         }
         return $paths;
     }
+
+    /**
+     * Clear any internally cached data from memory
+     */
+    public static function flushCache()
+    {
+        static::$cacheData = [];
+    }
 }
