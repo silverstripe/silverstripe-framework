@@ -49,6 +49,11 @@ class ViewableData_Customised extends ViewableData
         $this->customised->$property = $this->original->$property = $value;
     }
 
+    public function __isset($property)
+    {
+        return isset($this->customised->$property) || isset($this->original->$property) || parent::__isset($property);
+    }
+
     public function hasMethod($method)
     {
         return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
