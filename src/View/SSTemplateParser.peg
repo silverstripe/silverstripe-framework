@@ -416,6 +416,10 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     QuotedString: q:/['"]/   String:/ (\\\\ | \\. | [^$q\\])* /   '$q'
 
+    # Null
+
+    Null: / null /i
+
     # Booleans
 
     Boolean: / (true|false) /i
@@ -448,6 +452,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     Argument:
         :DollarMarkedLookup |
         :QuotedString |
+        :Null |
         :Boolean |
         :IntegerOrFloat |
         :Lookup !(< FreeString)|
@@ -478,6 +483,12 @@ class SSTemplateParser extends Parser implements TemplateParser
     {
         $res['ArgumentMode'] = 'string';
         $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
+    }
+
+    function Argument_Null(&$res, $sub)
+    {
+        $res['ArgumentMode'] = 'string';
+        $res['php'] = $sub['text'];
     }
 
     function Argument_Boolean(&$res, $sub)
