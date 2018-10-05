@@ -397,7 +397,7 @@ class ThemeResourceLoaderTest extends SapphireTest
     public function testFindTemplateWithCacheHit()
     {
         $mockCache = $this->createMock(CacheInterface::class);
-        $mockCache->expects($this->once())->method('has')->willReturn(true);;
+        $mockCache->expects($this->once())->method('has')->willReturn(true);
         $mockCache->expects($this->never())->method('set');
         $mockCache->expects($this->once())->method('get')->willReturn('mock_template.ss');
 
