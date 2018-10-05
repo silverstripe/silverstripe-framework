@@ -697,9 +697,12 @@ after'
             ['boolean:1', 'TRUE'],
             ['boolean:', 'false'],
             ['boolean:', 'FALSE'],
-            // Strings which loosely look like booleans
-            ['string:truthy', 'truthy'],
-            ['string:falsy', 'falsy'],
+            // Strings which may look like booleans/null to the parser
+            ['string:nullish', 'nullish'],
+            ['string:notnull', 'notnull'],
+            ['string:truethy', 'truethy'],
+            ['string:untrue', 'untrue'],
+            ['string:falsey', 'falsey'],
             // Integers
             ['integer:0', '0'],
             ['integer:1', '1'],

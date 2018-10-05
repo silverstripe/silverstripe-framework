@@ -408,11 +408,11 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     # Null
 
-    Null: / null /i
+    Null: / (null)\b /i
 
     # Booleans
 
-    Boolean: / (true|false) /i
+    Boolean: / (true|false)\b  /i
 
     # Integers and floats
 

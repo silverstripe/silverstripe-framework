@@ -1151,11 +1151,11 @@ class SSTemplateParser extends Parser implements TemplateParser
     }
 
 
-    /* Null: / null /i */
+    /* Null: / (null)\b /i */
     protected $match_Null_typestack = array('Null');
     function match_Null ($stack = array()) {
     	$matchrule = "Null"; $result = $this->construct($matchrule, $matchrule, null);
-    	if (( $subres = $this->rx( '/ null /i' ) ) !== FALSE) {
+    	if (( $subres = $this->rx( '/ (null)\b /i' ) ) !== FALSE) {
     		$result["text"] .= $subres;
     		return $this->finalise($result);
     	}
@@ -1163,11 +1163,11 @@ class SSTemplateParser extends Parser implements TemplateParser
     }
 
 
-    /* Boolean: / (true|false) /i */
+    /* Boolean: / (true|false)\b  /i */
     protected $match_Boolean_typestack = array('Boolean');
     function match_Boolean ($stack = array()) {
     	$matchrule = "Boolean"; $result = $this->construct($matchrule, $matchrule, null);
-    	if (( $subres = $this->rx( '/ (true|false) /i' ) ) !== FALSE) {
+    	if (( $subres = $this->rx( '/ (true|false)\b  /i' ) ) !== FALSE) {
     		$result["text"] .= $subres;
     		return $this->finalise($result);
     	}
