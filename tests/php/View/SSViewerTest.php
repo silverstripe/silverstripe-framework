@@ -692,8 +692,14 @@ after'
             'Test' => new TestViewableData()
         ]);
 
+        // Null
+        $this->assertEquals('NULL:', $this->render('$Test.Type(null)', $data));
+        $this->assertEquals('NULL:', $this->render('$Test.Type(NULL)', $data));
+
         // Booleans
+        $this->assertEquals('boolean:1', $this->render('$Test.Type(TRUE)', $data));
         $this->assertEquals('boolean:1', $this->render('$Test.Type(true)', $data));
+        $this->assertEquals('boolean:', $this->render('$Test.Type(FALSE)', $data));
         $this->assertEquals('boolean:', $this->render('$Test.Type(false)', $data));
 
         // Strings which loosely look like booleans
