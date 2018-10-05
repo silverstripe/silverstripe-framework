@@ -191,14 +191,14 @@ class ThemeResourceLoader implements Flushable
      */
     public function findTemplate($template, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         // Look for a cached result for this data set
         $cacheKey = md5(json_encode($template) . json_encode($themes));
         if ($this->getCache()->has($cacheKey)) {
             return $this->getCache()->get($cacheKey);
-        }
-
-        if ($themes === null) {
-            $themes = SSViewer::get_themes();
         }
 
         $type = '';
