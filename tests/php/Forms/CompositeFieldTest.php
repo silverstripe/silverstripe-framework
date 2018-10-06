@@ -93,7 +93,7 @@ class CompositeFieldTest extends SapphireTest
     public function testValidation()
     {
         $field = CompositeField::create(
-            $fieldOne = DropdownField::create('A'),
+            $fieldOne = DropdownField::create('A', '', [ 'value' => 'value' ]),
             $fieldTwo = TextField::create('B')
         );
         $validator = new RequiredFields();
