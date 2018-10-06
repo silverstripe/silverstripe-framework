@@ -505,7 +505,7 @@ class DropdownFieldTest extends SapphireTest
      */
     public function testRequiredDropdownHasEmptyDefault()
     {
-        $field = new \SilverStripe\Forms\DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
+        $field = new DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
 
         $form = new Form(
             Controller::curr(),
@@ -516,5 +516,34 @@ class DropdownFieldTest extends SapphireTest
         );
 
         $this->assertTrue($field->getHasEmptyDefault());
+    }
+
+    public function testEmptySourceDoesntBlockValidation()
+    {
+        // Empty source
+        $field = new DropdownField("EmptySource", "", []);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with a setEmptyString
+        $field = new DropdownField("EmptySource", "", []);
+        $field->setEmptyString('(Select one)');
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with an empty value
+        $field = new DropdownField("SourceWithBlankVal", "", [ "" => "(Choose)" ]);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with all items disabled
+        $field = new DropdownField("SourceWithBlankVal", "", [ "A" => "A", "B" => "B" ]);
+        $field->setDisabledItems([ 'A', 'B' ]);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
     }
 }
