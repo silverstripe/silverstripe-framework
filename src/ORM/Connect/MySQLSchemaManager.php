@@ -151,7 +151,7 @@ class MySQLSchemaManager extends DBSchemaManager
     public function renameTable($oldTableName, $newTableName)
     {
         if (!$this->hasTable($oldTableName)) {
-            throw new LogicException('Table '. $oldTableName . ' does not exist.');
+            throw new LogicException('Table ' . $oldTableName . ' does not exist.');
         }
 
         return $this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
