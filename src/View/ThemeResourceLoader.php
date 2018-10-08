@@ -21,13 +21,6 @@ class ThemeResourceLoader implements Flushable
     private static $instance;
 
     /**
-     * Internal memory cache for large sets of repeated calls
-     *
-     * @var array
-     */
-    protected static $cacheData = [];
-
-    /**
      * The base path of the application
      *
      * @var string
