@@ -19,6 +19,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -3197,7 +3198,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public static function reset()
     {
         // @todo Decouple these
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         ClassInfo::reset_db_cache();
         static::getSchema()->reset();
         self::$_cache_get_one = array();

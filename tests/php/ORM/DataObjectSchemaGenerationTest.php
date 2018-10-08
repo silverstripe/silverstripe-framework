@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\SortedObject;
@@ -208,7 +208,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $schema = DataObject::getSchema();
 
         // Test with blank entries
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $do1 = new TestObject();
         $fields = $schema->databaseFields(TestObject::class, false);
         $this->assertEquals("DBClassName", $fields['ClassName']);
@@ -224,7 +224,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of subclass
         $item1 = new TestIndexObject();
         $item1->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -237,7 +237,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of main class
         $item2 = new TestObject();
         $item2->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -252,7 +252,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $item1->write();
         $item2 = new TestObject();
         $item2->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
