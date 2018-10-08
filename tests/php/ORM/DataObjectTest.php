@@ -802,17 +802,30 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($obj->isChanged('FirstName'));
         $this->assertFalse($obj->isChanged('Surname'));
 
+        // Force change marks the records as changed
         $obj->forceChange();
         $this->assertTrue($obj->isChanged('FirstName'));
         $this->assertTrue($obj->isChanged('Surname'));
 
+        // ...but not if we explicitly ask if the value has changed
         $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
         $this->assertFalse($obj->isChanged('Surname', DataObject::CHANGE_VALUE));
 
+        // Not overwritten by setting the value to is original value
         $obj->FirstName = 'Captain';
         $this->assertTrue($obj->isChanged('FirstName'));
         $this->assertTrue($obj->isChanged('Surname'));
 
+        // Not overwritten by changing it to something else and back again
+        $obj->FirstName = 'Captain-changed';
+        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+
+        $obj->FirstName = 'Captain';
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // Cleared after write
         $obj->write();
         $this->assertFalse($obj->isChanged('FirstName'));
         $this->assertFalse($obj->isChanged('Surname'));

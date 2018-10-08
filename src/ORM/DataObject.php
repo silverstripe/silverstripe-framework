@@ -167,11 +167,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     const CHANGE_NONE = 0;
 
     /**
-     * Represents a field that has had a change forced
-     */
-    const CHANGE_FORCED = 0.5;
-
-    /**
      * Represents a field that has changed type, although not the loosely defined value.
      * (before !== after && before == after)
      * E.g. change 1 to true or "true" to true, but not true to 0.
@@ -193,14 +188,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @var array
      */
-    private $changed;
+    private $changed = [];
+
+    /**
+     * A flag to indicate that a "strict" change of the entire record been forced
+     * Use {@link getChangedFields()} and {@link isChanged()} to inspect
+     * the changed state.
+     *
+     * @var boolean
+     */
+    private $changeForced = false;
 
     /**
      * The database record (in the same format as $record), before
      * any changes.
      * @var array
      */
-    protected $original;
+    protected $original = [];
 
     /**
      * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
@@ -392,7 +396,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // prevent populateDefaults() and setField() from marking overwritten defaults as changed
-        $this->changed = array();
+        $this->changed = [];
+        $this->changeForced = false;
     }
 
     /**
@@ -1112,8 +1117,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Forces the record to think that all its data has changed.
-     * Doesn't write to the database. Only sets fields as changed
-     * if they are not already marked as changed.
+     * Doesn't write to the database. Force-change preseved until
+     * next write. Existing CHANGE_VALUE or CHANGE_STRICT values
+     * are preserved.
      *
      * @return $this
      */
@@ -1121,28 +1127,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         // Ensure lazy fields loaded
         $this->loadLazyFields();
-        $fields = static::getSchema()->fieldSpecs(static::class);
 
-        // $this->record might not contain the blank values so we loop on $this->inheritedDatabaseFields() as well
-        $fieldNames = array_unique(array_merge(
-            array_keys($this->record),
-            array_keys($fields)
-        ));
-
-        foreach ($fieldNames as $fieldName) {
-            if (!isset($this->changed[$fieldName])) {
-                $this->changed[$fieldName] = self::CHANGE_FORCED;
-            }
-            // Populate the null values in record so that they actually get written
+        // Populate the null values in record so that they actually get written
+        foreach (array_keys(static::getSchema()->fieldSpecs(static::class)) as $fieldName) {
             if (!isset($this->record[$fieldName])) {
                 $this->record[$fieldName] = null;
             }
         }
 
-        // @todo Find better way to allow versioned to write a new version after forceChange
-        if ($this->isChanged('Version')) {
-            unset($this->changed['Version']);
-        }
+        $this->changeForced = true;
+
         return $this;
     }
 
@@ -1379,11 +1373,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $table = $schema->tableName($class);
         $manipulation[$table] = array();
 
+        $changed = $this->getChangedFields();
+
         // Extract records for this table
         foreach ($this->record as $fieldName => $fieldValue) {
             // we're not attempting to reset the BaseTable->ID
             // Ignore unchanged fields or attempts to reset the BaseTable->ID
-            if (empty($this->changed[$fieldName]) || ($table === $baseTable && $fieldName === 'ID')) {
+            if (empty($changed[$fieldName]) || ($table === $baseTable && $fieldName === 'ID')) {
                 continue;
             }
 
@@ -1529,6 +1525,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // Reset isChanged data
             // DBComposites properly bound to the parent record will also have their isChanged value reset
             $this->changed = [];
+            $this->changeForced = false;
             $this->original = $this->record;
         } else {
             if ($showDebug) {
@@ -2530,13 +2527,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
+        // If change was forced, then derive change data from $this->record
+        if ($this->changeForced && $changeLevel <= self::CHANGE_STRICT) {
+            $changed = array_combine(
+                array_keys($this->record),
+                array_fill(0, count($this->record), self::CHANGE_STRICT)
+            );
+            // @todo Find better way to allow versioned to write a new version after forceChange
+            unset($changed['Version']);
+        } else {
+            $changed = $this->changed;
+        }
+
         if (is_array($databaseFieldsOnly)) {
-            $fields = array_intersect_key((array)$this->changed, array_flip($databaseFieldsOnly));
+            $fields = array_intersect_key($changed, array_flip($databaseFieldsOnly));
         } elseif ($databaseFieldsOnly) {
             $fieldsSpecs = static::getSchema()->fieldSpecs(static::class);
-            $fields = array_intersect_key((array)$this->changed, $fieldsSpecs);
+            $fields = array_intersect_key($changed, $fieldsSpecs);
         } else {
-            $fields = $this->changed;
+            $fields = $changed;
         }
 
         // Filter the list to those of a certain change level
@@ -2650,7 +2659,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     $this->changed[$fieldName] = self::CHANGE_VALUE;
                 }
             // Value has been restored to its original, remove any record of the change
-            } elseif (isset($this->changed[$fieldName]) && $this->changed[$fieldName] !== self::CHANGE_FORCED) {
+            } elseif (isset($this->changed[$fieldName])) {
                 unset($this->changed[$fieldName]);
             }
 
