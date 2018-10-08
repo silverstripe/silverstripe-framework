@@ -1176,4 +1176,18 @@ class FieldListTest extends SapphireTest
         // put all your HiddenFields at the top level.
         $this->assertNotNull($visible->dataFieldByName('D2'));
     }
+
+    public function testContainerField()
+    {
+        $fieldlist = new FieldList();
+        $container = CompositeField::create();
+
+        $this->assertNull($fieldlist->getContainerField());
+
+        $fieldlist->setContainerField($container);
+        $this->assertEquals($container, $fieldlist->getContainerField());
+
+        $fieldlist->setContainerField(null);
+        $this->assertNull($fieldlist->getContainerField());
+    }
 }
