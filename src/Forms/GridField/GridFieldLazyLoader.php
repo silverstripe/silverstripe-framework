@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Limitable;
 use SilverStripe\ORM\SS_List;
 
@@ -22,11 +23,11 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
-        // If we are lazy loading, empty the list
+        // If we are lazy loading an empty the list
         if ($this->isLazy($gridField)) {
-            if ($dataList instanceof Limitable) {
-                // If our original list can be limited, set the limit to 0.
-                $dataList = $dataList->limit(0);
+            if ($dataList instanceof Filterable) {
+                // If our original list can be filtered, filter out all results.
+                $dataList = $dataList->byIDs([-1]);
             } else {
                 // If not, create an empty list instead.
                 $dataList = ArrayList::create([]);
