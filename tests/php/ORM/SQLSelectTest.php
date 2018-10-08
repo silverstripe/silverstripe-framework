@@ -267,20 +267,23 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
     public function testZeroLimit()
     {
+        Deprecation::notification_version('4.3.0');
         $query = new SQLSelect();
         $query->setFrom("MyTable");
         $query->setLimit(0);
-
-        $this->assertSQLEquals(
-            'SELECT * FROM MyTable',
-            $query->sql($parameters)
-        );
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
     public function testZeroLimitWithOffset()
     {
+        Deprecation::notification_version('4.3.0');
         if (!(DB::get_conn() instanceof MySQLDatabase || DB::get_conn() instanceof SQLite3Database
             || DB::get_conn() instanceof PostgreSQLDatabase)
         ) {
@@ -290,11 +293,6 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom("MyTable");
         $query->setLimit(0, 99);
-
-        $this->assertSQLEquals(
-            'SELECT * FROM MyTable LIMIT 0 OFFSET 99',
-            $query->sql($parameters)
-        );
     }
 
     /**
