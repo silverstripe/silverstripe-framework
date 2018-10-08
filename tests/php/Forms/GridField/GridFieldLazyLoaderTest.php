@@ -113,7 +113,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
      * This GridField will be lazy because it doesn't have a `X-Pjax` header.
      * @return GridField
      */
-    private function getHeaderlessGridField() {
+    private function getHeaderlessGridField()
+    {
         $this->gridField->setRequest(new HTTPRequest('GET', 'admin/pages/edit/show/9999'));
         $fieldList = FieldList::create(new TabSet("Root", new Tab("Main")));
         $fieldList->addFieldToTab('Root.GridField', $this->gridField);
@@ -149,5 +150,4 @@ class GridFieldLazyLoaderTest extends SapphireTest
         Form::create(null, 'Form', $fieldList, FieldList::create());
         return $this->gridField;
     }
-
 }

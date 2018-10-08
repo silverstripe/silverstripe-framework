@@ -74,6 +74,5 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
         } else {
             return false;
         }
-
     }
 }
