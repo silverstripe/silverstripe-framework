@@ -173,6 +173,18 @@ class DBHTMLTextTest extends SapphireTest
     }
 
     /**
+     * Test that str_word_count() is correctly handling non-latin words
+     */
+    public function testInternalWordCount()
+    {
+        $this->assertEquals(
+            47,
+            str_word_count('新西兰是一个拥有160余种语言的国家，这体现了我们国家的多元性。 总结字段也应根据中文表意句号来分割。'),
+            "This test environment isn't returning correct str_word_count() results for non-latin words."
+        );
+    }
+
+    /**
      * @dataProvider providerSummary
      * @param string $originalValue
      * @param int $limit
