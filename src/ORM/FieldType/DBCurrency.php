@@ -25,6 +25,18 @@ class DBCurrency extends DBDecimal
      */
     private static $currency_symbol = '$';
 
+    /**
+     * @config
+     * @var string
+     */
+    private static $decimal_point = '.';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $thousands_separator = ',';
+    
     public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0)
     {
         parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
@@ -36,7 +48,7 @@ class DBCurrency extends DBDecimal
     public function Nice()
     {
         // return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
+        $val = $this->config()->currency_symbol . number_format(abs($this->value), 2, $this->config()->decimal_point, $this->config()->thousands_separator);
         if ($this->value < 0) {
             return "($val)";
         }
@@ -49,7 +61,7 @@ class DBCurrency extends DBDecimal
      */
     public function Whole()
     {
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
+        $val = $this->config()->currency_symbol . number_format(abs($this->value), 0, $this->config()->decimal_point, $this->config()->thousands_separator);
         if ($this->value < 0) {
             return "($val)";
         }
