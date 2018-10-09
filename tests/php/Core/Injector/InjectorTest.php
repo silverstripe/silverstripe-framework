@@ -21,12 +21,13 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\NeedsBothCirculars;
 use SilverStripe\Core\Tests\Injector\InjectorTest\NewRequirementsBackend;
 use SilverStripe\Core\Tests\Injector\InjectorTest\OriginalRequirementsBackend;
 use SilverStripe\Core\Tests\Injector\InjectorTest\OtherTestObject;
+use SilverStripe\Core\Tests\Injector\InjectorTest\SomeCustomisedExtension;
+use SilverStripe\Core\Tests\Injector\InjectorTest\SomeExtension;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestObject;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestSetterInjections;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestStaticInjections;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use stdClass;
+use SilverStripe\Security\Member;
 
 define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
 
@@ -1046,5 +1047,24 @@ class InjectorTest extends SapphireTest
         // Return to nestingLevel 0
         Injector::unnest();
         $this->nestingLevel--;
+    }
+
+    /**
+     * Tests that overloaded extensions work, see {@link Extensible::getExtensionInstance()}
+     */
+    public function testExtendedExtensions()
+    {
+        Config::modify()
+            ->set(Injector::class, SomeExtension::class, [
+                'class' => SomeCustomisedExtension::class,
+            ])
+            ->merge(Member::class, 'extensions', [
+                SomeExtension::class,
+            ]);
+
+        /** @var Member|SomeExtension $member */
+        $member = new Member();
+        $this->assertTrue($member->hasExtension(SomeExtension::class));
+        $this->assertSame('bar', $member->someMethod());
     }
 }
