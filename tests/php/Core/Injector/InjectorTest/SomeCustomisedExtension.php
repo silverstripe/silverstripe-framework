@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Core\Tests\Injector\InjectorTest;
 
-class SomeCustomisedExtension extends SomeExtension
+use SilverStripe\Dev\TestOnly;
+
+class SomeCustomisedExtension extends SomeExtension implements TestOnly
 {
     public function someMethod()
     {

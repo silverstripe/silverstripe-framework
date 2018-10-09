@@ -1065,6 +1065,7 @@ class InjectorTest extends SapphireTest
         /** @var Member|SomeExtension $member */
         $member = new Member();
         $this->assertTrue($member->hasExtension(SomeExtension::class));
+        $this->assertTrue($member->hasMethod('someMethod'));
         $this->assertSame('bar', $member->someMethod());
     }
 }

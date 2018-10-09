@@ -30,6 +30,7 @@ class ExtensionTestState implements TestState
      */
     public function setUp(SapphireTest $test)
     {
+        DataObject::flush_extra_methods_cache();
     }
 
     public function tearDown(SapphireTest $test)
@@ -104,23 +105,5 @@ class ExtensionTestState implements TestState
 
     public function tearDownOnce($class)
     {
-        // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
-        // Object::$extra_methods is properly flushed. This should be replaced with a simple
-        // flush mechanism for each $class.
-        /** @var string|DataObject $dataClass */
-
-        // Remove extensions added for testing
-        foreach ($this->extensionsToRemove as $dataClass => $extensions) {
-            foreach ($extensions as $extension) {
-                $dataClass::remove_extension($extension);
-            }
-        }
-
-        // Reapply ones removed
-        foreach ($this->extensionsToReapply as $dataClass => $extensions) {
-            foreach ($extensions as $extension) {
-                $dataClass::add_extension($extension);
-            }
-        }
     }
 }
