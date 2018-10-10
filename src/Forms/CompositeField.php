@@ -155,6 +155,7 @@ class CompositeField extends FormField
     public function setChildren($children)
     {
         $this->children = $children;
+        $children->setContainerField($this);
         return $this;
     }
 
