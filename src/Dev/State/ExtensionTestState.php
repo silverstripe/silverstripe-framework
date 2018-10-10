@@ -14,16 +14,6 @@ use SilverStripe\ORM\DataObject;
 class ExtensionTestState implements TestState
 {
     /**
-     * @var array
-     */
-    protected $extensionsToReapply = [];
-
-    /**
-     * @var array
-     */
-    protected $extensionsToRemove = [];
-
-    /**
      * Called on setup
      *
      * @param SapphireTest $test
@@ -41,8 +31,6 @@ class ExtensionTestState implements TestState
     {
         // May be altered by another class
         $isAltered = false;
-        $this->extensionsToReapply = [];
-        $this->extensionsToRemove = [];
 
         /** @var string|SapphireTest $class */
         /** @var string|DataObject $dataClass */
@@ -58,10 +46,6 @@ class ExtensionTestState implements TestState
                 if (!class_exists($extension) || !$dataClass::has_extension($extension)) {
                     continue;
                 }
-                if (!isset($this->extensionsToReapply[$dataClass])) {
-                    $this->extensionsToReapply[$dataClass] = [];
-                }
-                $this->extensionsToReapply[$dataClass][] = $extension;
                 $dataClass::remove_extension($extension);
                 $isAltered = true;
             }
@@ -78,10 +62,6 @@ class ExtensionTestState implements TestState
                     throw new LogicException("Test {$class} requires extension {$extension} which doesn't exist");
                 }
                 if (!$dataClass::has_extension($extension)) {
-                    if (!isset($this->extensionsToRemove[$dataClass])) {
-                        $this->extensionsToRemove[$dataClass] = [];
-                    }
-                    $this->extensionsToRemove[$dataClass][] = $extension;
                     $dataClass::add_extension($extension);
                     $isAltered = true;
                 }
