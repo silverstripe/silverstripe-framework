@@ -159,16 +159,15 @@ rules:
   would be if there was no key clash. Other than in this key-clash situation, within the particular array, order is preserved. To override a value that is an array, the value must first be set to `null`, and then set again to the new array.
 ```yml
 ---
-Name: rulereset
+Name: arrayreset
 ---
 Class\With\Array\Config:
   an_array: null
 ---
-Name: rule
+Name: array
 ---
 Class\With\Array\Config:
   an_array: ['value_a', 'value_b']
----
 ```
 
 - If the value is not an array, the highest priority value is used without any attempt to merge
