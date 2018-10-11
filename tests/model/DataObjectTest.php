@@ -29,6 +29,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'DataObjectTest_Sortable',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
