@@ -31,7 +31,7 @@ class FieldList extends ArrayList
      * If this fieldlist is owned by a parent field (e.g. CompositeField)
      * this is the parent field.
      *
-     * @var FieldList|FormField
+     * @var CompositeField
      */
     protected $containerField;
 
@@ -790,7 +790,15 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @param $field
+     * @return CompositeField|null
+     */
+    public function getContainerField()
+    {
+        return $this->containerField;
+    }
+
+    /**
+     * @param CompositeField|null $field
      * @return $this
      */
     public function setContainerField($field)
