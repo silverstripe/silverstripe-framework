@@ -156,7 +156,21 @@ rules:
 - If the value is an array, each array is added to the _beginning_ of the composite array in ascending priority order.
   If a higher priority item has a non-integer key which is the same as a lower priority item, the value of those items
   is merged using these same rules, and the result of the merge is located in the same location the higher priority item
-  would be if there was no key clash. Other than in this key-clash situation, within the particular array, order is preserved.
+  would be if there was no key clash. Other than in this key-clash situation, within the particular array, order is preserved. To override a value that is an array, the value must first be set to `null`, and then set again to the new array.
+```yml
+---
+Name: rulereset
+---
+Class\With\Array\Config:
+  an_array: null
+---
+Name: rule
+---
+Class\With\Array\Config:
+  an_array: ['value_a', 'value_b']
+---
+```
+
 - If the value is not an array, the highest priority value is used without any attempt to merge
 
 
