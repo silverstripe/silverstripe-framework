@@ -74,7 +74,6 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_USERNAME`| The database username (mandatory).|
 | `SS_DATABASE_PASSWORD`| The database password (mandatory).|
 | `SS_DATABASE_PORT`|     The database port.|
-| `SS_DATABASE_SUFFIX`|   A suffix to add to the database name.|
 | `SS_DATABASE_PREFIX`|   A prefix to add to the database name.|
 | `SS_DATABASE_TIMEZONE`| Set the database timezone to something other than the system timezone.
 | `SS_DATABASE_NAME` | Set the database name. Assumes the `$database` global variable in your config is missing or empty. |
