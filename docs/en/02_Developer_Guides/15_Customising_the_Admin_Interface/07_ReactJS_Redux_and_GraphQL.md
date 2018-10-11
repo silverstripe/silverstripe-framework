@@ -1080,13 +1080,67 @@ Now, let's update the query to fetch our new field.
 *my-other-app/client/transformReadNotes.js*
 ```js
 const transformReadNotes = (manager) => {
-  manager.addField('Priority');
+  manager.addField('root', 'Priority');
 };
 
 export default transformReadNotes;
 ```
 
-Simple! The transformation passes us a `ApolloGraphQLManager` instance that provides a fluent API for updating a query definition the same way the `FormStateManager` allows us to update Redux form state. In this case, our need is really straightforward. We'l just add a new field and be done with it. 
+Simple! The transformation passes us a `ApolloGraphQLManager` instance that provides a fluent API for updating a query definition the same way the `FormStateManager` allows us to update Redux form state.
+
+#### Adding fields
+
+In the above example, we added a single field to a query. Here's how that works:
+
+
+```js
+manager.addField(fieldPath, fieldName)
+```
+
+The `fieldPath` argument tells the manager at what level to add the field. In this case, since the `Priority` field is going on the root query (`readNotes`), we'll use `root` as the path. But suppose we had a more complex query like this:
+
+```
+query readMembers {
+	FirstName
+	Surname
+	Friends {
+		Email
+		Company {
+			Name
+		}
+	}
+}
+```
+
+If we wanted to add a field to the nested `Company` query on `Friends`, we would use a path syntax.
+
+```js
+manager.addField('root/Friends/Company', 'Tagline');
+```
+
+#### Adding field arguments
+
+Let's suppose we had the following query:
+
+```
+query ReadMembers($ImageSize: String!) {
+	readMembers {
+		FirstName
+		Avatar(Size: $ImageSize)
+		Company {
+			Name
+		}
+	}
+}
+```
+
+Maybe the `Company` type has a `Logo`, and we want to apply the `ImageSize` parameter as an argument to that field.
+
+```js
+manager.addArg('root/Company/Logo', 'Size', 'ImageSize');
+```
+
+Where `root/Company/Logo` is the path to the field, `Size` is the name of the argument on that field, and `ImageSize` is the name of the variable.
 
 #### Applying the transforms
 
@@ -1260,7 +1314,7 @@ We've extended the `onAdd` callback to take two parameters -- one for the note c
 *my-other-app/client/transformCreateNote.js*
 ```js
 const transformCreateNote = (manager) => {
-  manager.addField('Priority');
+  manager.addField('root', 'Priority');
   manager.transformApolloConfig('props', ({ mutate }) => (prevProps) => {
     const onAdd = (content, priority) => {
       mutate({
