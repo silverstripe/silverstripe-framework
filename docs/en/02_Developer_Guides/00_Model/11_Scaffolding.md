@@ -196,9 +196,9 @@ class MyDataObject extends DataObject
     ];
     
     private static $summary_fields = [
-        'Name' => 'Name',
-        'Description.Summary' => 'Description (summary)',
-        'OtherObject.Title' => 'Other Object Title',
+        'Name',
+        'Description.Summary',
+        'OtherObject.Title',
     ];
 }
 
@@ -220,8 +220,8 @@ class MyDataObject extends DataObject
     ];
     
     private static $summary_fields = [
-        'Name' => 'Name',
-        'HeroImage.CMSThumbnail' => 'Hero Image',
+        'Name',
+        'HeroImage.CMSThumbnail',
     ];
 }
 
