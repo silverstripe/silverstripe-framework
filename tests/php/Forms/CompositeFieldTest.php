@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DropdownField;
@@ -106,5 +107,21 @@ class CompositeFieldTest extends SapphireTest
             $field->validate($validator),
             "Validates when children are valid"
         );
+    }
+
+    public function testChildren()
+    {
+        $field = CompositeField::create();
+
+        $this->assertInstanceOf(FieldList::class, $field->getChildren());
+        $this->assertEquals($field, $field->getChildren()->getContainerField());
+
+        $expectedChildren = FieldList::create(
+            $fieldOne = DropdownField::create('A', '', [ 'value' => 'value' ]),
+            $fieldTwo = TextField::create('B')
+        );
+        $field->setChildren($expectedChildren);
+        $this->assertEquals($expectedChildren, $field->getChildren());
+        $this->assertEquals($field, $expectedChildren->getContainerField());
     }
 }

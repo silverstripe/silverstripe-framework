@@ -53,16 +53,15 @@ class CompositeField extends FormField
 
     public function __construct($children = null)
     {
-        if ($children instanceof FieldList) {
-            $this->children = $children;
-        } elseif (is_array($children)) {
-            $this->children = new FieldList($children);
-        } else {
-            //filter out null/empty items
-            $children = array_filter(func_get_args());
-            $this->children = new FieldList($children);
+        // Normalise $children to a FieldList
+        if (!$children instanceof FieldList) {
+            if (!is_array($children)) {
+                // Fields are provided as a list of arguments
+                $children = array_filter(func_get_args());
+            }
+            $children = new FieldList($children);
         }
-        $this->children->setContainerField($this);
+        $this->setChildren($children);
 
         parent::__construct(null, false);
     }
