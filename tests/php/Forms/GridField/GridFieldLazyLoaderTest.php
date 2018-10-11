@@ -15,11 +15,11 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 
 class GridFieldLazyLoaderTest extends SapphireTest
 {
-
     /**
      * @var ArrayList
      */
@@ -69,7 +69,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $this->assertSameSize(
             $this->list,
             $this->component->getManipulatedData($gridField, $this->list)->toArray(),
-            'GridFieldLazyLoader::getManipulatedData should return a proper list if gridifield is not in a tab'
+            'GridFieldLazyLoader::getManipulatedData should return a proper list if GridField is not in a tab'
         );
     }
 
@@ -79,7 +79,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $this->assertSameSize(
             $this->list,
             $this->component->getManipulatedData($gridField, $this->list),
-            'GridFieldLazyLoader::getManipulatedData should return a proper list if gridifield is in a tab with the pajax header'
+            'GridFieldLazyLoader::getManipulatedData should return a proper list if GridField'
+            . ' is in a tab with the pajax header'
         );
     }
 
@@ -88,8 +89,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getHeaderlessGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loadable', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loaded', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loaded', $gridField->extraClass());
     }
 
     public function testGetHTMLFragmentsWithoutTabSet()
@@ -97,8 +98,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getOutOfTabSetGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loadable', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     public function testGetHTMLFragmentsNonLazy()
@@ -106,8 +107,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getNonLazyGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loadable', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
 
@@ -117,7 +118,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $this->assertCount(
             0,
             $this->component->getManipulatedData($gridField, $this->list)->toArray(),
-            'Redonly GridFieldLazyLoader::getManipulatedData should return an empty list if the X-Pjax is unset'
+            'Readonly GridFieldLazyLoader::getManipulatedData should return an empty list if the X-Pjax'
+            . ' is unset'
         );
     }
 
@@ -127,7 +129,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $this->assertSameSize(
             $this->list,
             $this->component->getManipulatedData($gridField, $this->list)->toArray(),
-            'Redonly GridFieldLazyLoader::getManipulatedData should return a proper list if gridifield is not in a tab'
+            'Readonly GridFieldLazyLoader::getManipulatedData should return a proper list if GridField is'
+            . ' not in a tab'
         );
     }
 
@@ -137,7 +140,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $this->assertSameSize(
             $this->list,
             $this->component->getManipulatedData($gridField, $this->list),
-            'Redonly GridFieldLazyLoader::getManipulatedData should return a proper list if gridifield is in a tab with the pajax header'
+            'Readonly GridFieldLazyLoader::getManipulatedData should return a proper list if GridField is in'
+            . ' a tab with the pajax header'
         );
     }
 
@@ -146,8 +150,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getHeaderlessGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loadable', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loaded', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loaded', $gridField->extraClass());
     }
 
     public function testReadOnlyGetHTMLFragmentsWithoutTabSet()
@@ -155,8 +159,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getOutOfTabSetGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loadable', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     public function testReadOnlyGetHTMLFragmentsNonLazy()
@@ -164,8 +168,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getNonLazyGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field-lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field-lazy-loadable', $gridField->extraClass());
+        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     /**
@@ -175,7 +179,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
     private function getHeaderlessGridField()
     {
         $this->gridField->setRequest(new HTTPRequest('GET', 'admin/pages/edit/show/9999'));
-        $fieldList = FieldList::create(new TabSet("Root", new Tab("Main")));
+        $fieldList = FieldList::create(new TabSet('Root', new Tab('Main')));
         $fieldList->addFieldToTab('Root.GridField', $this->gridField);
         Form::create(null, 'Form', $fieldList, FieldList::create());
         return $this->gridField;
@@ -204,7 +208,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $r = new HTTPRequest('POST', 'admin/pages/edit/EditForm/9999/field/testfield');
         $r->addHeader('X-Pjax', 'CurrentField');
         $this->gridField->setRequest($r);
-        $fieldList = new FieldList(new TabSet("Root", new Tab("Main")));
+        $fieldList = new FieldList(new TabSet('Root', new Tab('Main')));
         $fieldList->addFieldToTab('Root', $this->gridField);
         Form::create(null, 'Form', $fieldList, FieldList::create());
         return $this->gridField;
@@ -223,7 +227,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $form = $gridField->getForm()->makeReadonly();
         $fields = $form->Fields()->dataFields();
         foreach ($fields as $field) {
-            if ($field->getName() == 'testfield') {
+            if ($field->getName() === 'testfield') {
                 return $field;
             }
         }
