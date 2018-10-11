@@ -6,7 +6,6 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Filterable;
-use SilverStripe\ORM\Limitable;
 use SilverStripe\ORM\SS_List;
 
 /**
@@ -19,7 +18,11 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
 {
 
     /**
-     * @inheritDoc
+     * Empty $datalist if the current request should be lazy loadable.
+     *
+     * @param GridField $gridField
+     * @param SS_List $dataList
+     * @return SS_List
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
@@ -37,13 +40,16 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
     }
 
     /**
-     * @inheritDoc
+     * Apply an appropriate CSS class to `$gridField` based on whatever the current request is lazy loadable or not.
+     *
+     * @param GridField $gridField
+     * @return array
      */
     public function getHTMLFragments($gridField)
     {
         $gridField->addExtraClass($this->isLazy($gridField) ?
-            'grid-field-lazy-loadable' :
-            'grid-field-lazy-loaded');
+            'grid-field--lazy-loadable' :
+            'grid-field--lazy-loaded');
         return [];
     }
 
@@ -71,8 +77,8 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
             // Classes that extends TabSet might not have the expected JS to lazy load.
             return get_class($containerField) === TabSet::class
                 ?: $this->isInTabSet($containerField);
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
