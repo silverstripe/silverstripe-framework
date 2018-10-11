@@ -75,6 +75,10 @@ class CmsFormsContext implements Context
             $inputField->getAttribute('id'),
             addcslashes($value, "'")
         ));
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('#%s').entwine('ss').getEditor().save()",
+            $inputField->getAttribute('id')
+        ));
     }
 
     /**
