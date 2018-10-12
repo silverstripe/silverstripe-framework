@@ -170,16 +170,17 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     public function getInjectedValue($property, array $params, $cast = true)
     {
         // Get source for this value
-        $source = $this->getValueSource($property);
-        if (!$source) {
+        $result = $this->getValueSource($property);
+        if (!array_key_exists('source', $result)) {
             return null;
         }
 
         // Look up the value - either from a callable, or from a directly provided value
+        $source = $result['source'];
         $res = [];
         if (isset($source['callable'])) {
             $res['value'] = $source['callable'](...$params);
-        } elseif (isset($source['value'])) {
+        } elseif (array_key_exists('value', $source)) {
             $res['value'] = $source['value'];
         } else {
             throw new InvalidArgumentException(
@@ -313,6 +314,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             $obj = $val['obj'];
             if ($name === 'hasValue') {
                 $result = ($obj instanceof ViewableData) ? $obj->exists() : (bool)$obj;
+            } elseif (is_null($obj) || (is_scalar($obj) && !is_string($obj))) {
+                $result = $obj; // Nulls and non-string scalars don't need casting
             } else {
                 $result = $obj->forTemplate(); // XML_val
             }
@@ -325,16 +328,18 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     }
 
     /**
-     * Evaluate a template override
+     * Evaluate a template override. Returns an array where the presence of
+     * a 'value' key indiciates whether an override was successfully found,
+     * as null is a valid override value
      *
      * @param string $property Name of override requested
      * @param array $overrides List of overrides available
-     * @return null|array Null if not provided, or array with 'value' or 'callable' key
+     * @return array An array with a 'value' key if a value has been found, or empty if not
      */
     protected function processTemplateOverride($property, $overrides)
     {
-        if (!isset($overrides[$property])) {
-            return null;
+        if (!array_key_exists($property, $overrides)) {
+            return [];
         }
 
         // Detect override type
@@ -346,38 +351,40 @@ class SSViewer_DataPresenter extends SSViewer_Scope
 
             // Late override may yet return null
             if (!isset($override)) {
-                return null;
+                return [];
             }
         }
 
-        return [ 'value' => $override ];
+        return ['value' => $override];
     }
 
     /**
-     * Determine source to use for getInjectedValue
+     * Determine source to use for getInjectedValue. Returns an array where the presence of
+     * a 'source' key indiciates whether a value source was successfully found, as a source
+     * may be a null value returned from an override
      *
      * @param string $property
-     * @return array|null
+     * @return array An array with a 'source' key if a value source has been found, or empty if not
      */
     protected function getValueSource($property)
     {
         // Check for a presenter-specific override
-        $overlay = $this->processTemplateOverride($property, $this->overlay);
-        if (isset($overlay)) {
-            return $overlay;
+        $result = $this->processTemplateOverride($property, $this->overlay);
+        if (array_key_exists('value', $result)) {
+            return ['source' => $result];
         }
 
         // Check if the method to-be-called exists on the target object - if so, don't check any further
         // injection locations
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
         if (isset($on->$property) || method_exists($on, $property)) {
-            return null;
+            return [];
         }
 
         // Check for a presenter-specific override
-        $underlay = $this->processTemplateOverride($property, $this->underlay);
-        if (isset($underlay)) {
-            return $underlay;
+        $result = $this->processTemplateOverride($property, $this->underlay);
+        if (array_key_exists('value', $result)) {
+            return ['source' => $result];
         }
 
         // Then for iterator-specific overrides
@@ -396,16 +403,19 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                 // If we don't actually have an iterator at the moment, act like a list of length 1
                 $implementor->iteratorProperties(0, 1);
             }
-            return $source;
+
+            return ($source) ? ['source' => $source] : [];
         }
 
         // And finally for global overrides
         if (array_key_exists($property, self::$globalProperties)) {
-            return self::$globalProperties[$property];  //get the method call
+            return [
+                'source' => self::$globalProperties[$property] // get the method call
+            ];
         }
 
         // No value
-        return null;
+        return [];
     }
 
     /**
@@ -417,8 +427,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     protected function castValue($value, $source)
     {
-        // Already cast
-        if (is_object($value)) {
+        // If the value has already been cast, is null, or is a non-string scalar
+        if (is_object($value) || is_null($value) || (is_scalar($value) && !is_string($value))) {
             return $value;
         }
 

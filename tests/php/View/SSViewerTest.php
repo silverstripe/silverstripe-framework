@@ -686,57 +686,89 @@ after'
         );
     }
 
-    public function testTypesArePreserved()
+    public function typePreservationDataProvider()
+    {
+        return [
+            // Null
+            ['NULL:', 'null'],
+            ['NULL:', 'NULL'],
+            // Booleans
+            ['boolean:1', 'true'],
+            ['boolean:1', 'TRUE'],
+            ['boolean:', 'false'],
+            ['boolean:', 'FALSE'],
+            // Strings which may look like booleans/null to the parser
+            ['string:nullish', 'nullish'],
+            ['string:notnull', 'notnull'],
+            ['string:truethy', 'truethy'],
+            ['string:untrue', 'untrue'],
+            ['string:falsey', 'falsey'],
+            // Integers
+            ['integer:0', '0'],
+            ['integer:1', '1'],
+            ['integer:15', '15'],
+            ['integer:-15', '-15'],
+            // Octal integers
+            ['integer:83', '0123'],
+            ['integer:-83', '-0123'],
+            // Hexadecimal integers
+            ['integer:26', '0x1A'],
+            ['integer:-26', '-0x1A'],
+            // Binary integers
+            ['integer:255', '0b11111111'],
+            ['integer:-255', '-0b11111111'],
+            // Floats (aka doubles)
+            ['double:0', '0.0'],
+            ['double:1', '1.0'],
+            ['double:15.25', '15.25'],
+            ['double:-15.25', '-15.25'],
+            ['double:1200', '1.2e3'],
+            ['double:-1200', '-1.2e3'],
+            ['double:0.07', '7E-2'],
+            ['double:-0.07', '-7E-2'],
+            // Explicitly quoted strings
+            ['string:0', '"0"'],
+            ['string:1', '\'1\''],
+            ['string:foobar', '"foobar"'],
+            ['string:foo bar baz', '"foo bar baz"'],
+            // Implicit strings
+            ['string:foobar', 'foobar'],
+            ['string:foo bar baz', 'foo bar baz']
+        ];
+    }
+
+    /**
+     * @dataProvider typePreservationDataProvider
+     */
+    public function testTypesArePreserved($expected, $templateArg)
     {
         $data = new ArrayData([
             'Test' => new TestViewableData()
         ]);
 
-        // Booleans
-        $this->assertEquals('boolean:1', $this->render('$Test.Type(true)', $data));
-        $this->assertEquals('boolean:', $this->render('$Test.Type(false)', $data));
+        $this->assertEquals($expected, $this->render("\$Test.Type({$templateArg})", $data));
+    }
 
-        // Strings which loosely look like booleans
-        $this->assertEquals('string:truthy', $this->render('$Test.Type(truthy)', $data));
-        $this->assertEquals('string:falsy', $this->render('$Test.Type(falsy)', $data));
+    /**
+     * @dataProvider typePreservationDataProvider
+     */
+    public function testTypesArePreservedAsIncludeArguments($expected, $templateArg)
+    {
+        $data = new ArrayData([
+            'Test' => new TestViewableData()
+        ]);
 
-        // Integers
-        $this->assertEquals('integer:0', $this->render('$Test.Type(0)', $data));
-        $this->assertEquals('integer:1', $this->render('$Test.Type(1)', $data));
-        $this->assertEquals('integer:15', $this->render('$Test.Type(15)', $data));
-        $this->assertEquals('integer:-15', $this->render('$Test.Type(-15)', $data));
+        $this->assertEquals(
+            $expected,
+            $this->render("<% include SSViewerTestTypePreservation Argument={$templateArg} %>", $data)
+        );
+    }
 
-        # Octal integers
-        $this->assertEquals('integer:83', $this->render('$Test.Type(0123)', $data));
-        $this->assertEquals('integer:-83', $this->render('$Test.Type(-0123)', $data));
-
-        # Hexadecimal integers
-        $this->assertEquals('integer:26', $this->render('$Test.Type(0x1A)', $data));
-        $this->assertEquals('integer:-26', $this->render('$Test.Type(-0x1A)', $data));
-
-        # Binary integers
-        $this->assertEquals('integer:255', $this->render('$Test.Type(0b11111111)', $data));
-        $this->assertEquals('integer:-255', $this->render('$Test.Type(-0b11111111)', $data));
-
-        // Floats (aka doubles)
-        $this->assertEquals('double:0', $this->render('$Test.Type(0.0)', $data));
-        $this->assertEquals('double:1', $this->render('$Test.Type(1.0)', $data));
-        $this->assertEquals('double:15.25', $this->render('$Test.Type(15.25)', $data));
-        $this->assertEquals('double:-15.25', $this->render('$Test.Type(-15.25)', $data));
-        $this->assertEquals('double:1200', $this->render('$Test.Type(1.2e3)', $data));
-        $this->assertEquals('double:-1200', $this->render('$Test.Type(-1.2e3)', $data));
-        $this->assertEquals('double:0.07', $this->render('$Test.Type(7E-2)', $data));
-        $this->assertEquals('double:-0.07', $this->render('$Test.Type(-7E-2)', $data));
-
-        // Explicitly quoted strings
-        $this->assertEquals('string:0', $this->render('$Test.Type("0")', $data));
-        $this->assertEquals('string:1', $this->render('$Test.Type(\'1\')', $data));
-        $this->assertEquals('string:foobar', $this->render('$Test.Type("foobar")', $data));
-        $this->assertEquals('string:foo bar baz', $this->render('$Test.Type("foo bar baz")', $data));
-
-        // Implicit strings
-        $this->assertEquals('string:foobar', $this->render('$Test.Type(foobar)', $data));
-        $this->assertEquals('string:foo bar baz', $this->render('$Test.Type(foo bar baz)', $data));
+    public function testTypePreservationInConditionals()
+    {
+        $data = new ArrayData([
+            'Test' => new TestViewableData()
+        ]);
 
         // Types in conditionals
         $this->assertEquals('pass', $this->render('<% if true %>pass<% else %>fail<% end_if %>', $data));
