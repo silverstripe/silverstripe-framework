@@ -51,8 +51,9 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function dataClass()
     {
-        if (count($this->items) > 0) {
-            return get_class($this->items[0]);
+        $items = $this->toArray();
+        if (count($items) > 0) {
+            return get_class($items[0]);
         }
         return null;
     }
@@ -64,7 +65,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function count()
     {
-        return count($this->items);
+        return count($this->toArray());
     }
 
     /**
@@ -74,7 +75,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function exists()
     {
-        return !empty($this->items);
+        return !empty($this->toArray());
     }
 
     /**
@@ -89,7 +90,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
             function ($item) {
                 return is_array($item) ? new ArrayData($item) : $item;
             },
-            $this->items
+            $this->toArray()
         );
         return new ArrayIterator($items);
     }
@@ -137,7 +138,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     {
         $result = [];
 
-        foreach ($this->items as $item) {
+        foreach ($this->toArray() as $item) {
             if (is_object($item)) {
                 if (method_exists($item, 'toMap')) {
                     $result[] = $item->toMap();
@@ -176,6 +177,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
             );
         }
 
+        $items = $this->toArray();
         if (!$length) {
             if ($length === 0) {
                 Deprecation::notice(
@@ -184,11 +186,11 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
                 );
             }
 
-            $length = count($this->items);
+            $length = count($items);
         }
 
         $list = clone $this;
-        $list->items = array_slice($this->items, $offset, $length);
+        $list->items = array_slice($items, $offset, $length);
 
         return $list;
     }
@@ -231,7 +233,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function replace($item, $with)
     {
-        foreach ($this->items as $key => $candidate) {
+        foreach ($this->toArray() as $key => $candidate) {
             if ($candidate === $item) {
                 $this->items[$key] = $with;
                 return;
@@ -328,11 +330,12 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function first()
     {
-        if (empty($this->items)) {
+        $items = $this->toArray();
+        if (empty($items)) {
             return null;
         }
 
-        return reset($this->items);
+        return reset($items);
     }
 
     /**
@@ -342,11 +345,12 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function last()
     {
-        if (empty($this->items)) {
+        $items = $this->toArray();
+        if (empty($items)) {
             return null;
         }
 
-        return end($this->items);
+        return end($items);
     }
 
     /**
@@ -371,7 +375,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function find($key, $value)
     {
-        foreach ($this->items as $item) {
+        foreach ($this->toArray() as $item) {
             if ($this->extractValue($item, $key) == $value) {
                 return $item;
             }
@@ -389,7 +393,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     {
         $result = [];
 
-        foreach ($this->items as $item) {
+        foreach ($this->toArray() as $item) {
             $result[] = $this->extractValue($item, $colName);
         }
 
@@ -426,7 +430,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     public function reverse()
     {
         $list = clone $this;
-        $list->items = array_reverse($this->items);
+        $list->items = array_reverse($this->toArray());
 
         return $list;
     }
@@ -559,7 +563,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function canFilterBy($by)
     {
-        if (empty($this->items)) {
+        if (empty($this->toArray())) {
             return false;
         }
 
@@ -586,7 +590,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
 
         $itemsToKeep = [];
-        foreach ($this->items as $item) {
+        foreach ($this->toArray() as $item) {
             $keepItem = true;
             foreach ($keepUs as $column => $value) {
                 if ((is_array($value) && !in_array($this->extractValue($item, $column), $value))
@@ -629,7 +633,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
         $itemsToKeep = [];
 
-        foreach ($this->items as $item) {
+        foreach ($this->toArray() as $item) {
             foreach ($keepUs as $column => $value) {
                 $extractedValue = $this->extractValue($item, $column);
                 $matches = is_array($value) ? in_array($extractedValue, $value) : $extractedValue == $value;
@@ -748,7 +752,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $hitsRequiredToRemove = count($removeUs);
         $matches = [];
         foreach ($removeUs as $column => $excludeValue) {
-            foreach ($this->items as $key => $item) {
+            foreach ($this->toArray() as $key => $item) {
                 if (!is_array($excludeValue) && $this->extractValue($item, $column) == $excludeValue) {
                     $matches[$key] = isset($matches[$key]) ? $matches[$key] + 1 : 1;
                 } elseif (is_array($excludeValue) && in_array($this->extractValue($item, $column), $excludeValue)) {
@@ -760,7 +764,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $keysToRemove = array_keys($matches, $hitsRequiredToRemove);
 
         $itemsToKeep = [];
-        foreach ($this->items as $key => $value) {
+        foreach ($this->toArray() as $key => $value) {
             if (!in_array($key, $keysToRemove)) {
                 $itemsToKeep[] = $value;
             }
@@ -784,7 +788,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->items);
+        return array_key_exists($offset, $this->toArray());
     }
 
     /**
@@ -795,8 +799,9 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function offsetGet($offset)
     {
+        $items = $this->toArray();
         if ($this->offsetExists($offset)) {
-            return $this->items[$offset];
+            return $items[$offset];
         }
         return null;
     }
