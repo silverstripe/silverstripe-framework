@@ -154,7 +154,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
-     * @return array
+     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
@@ -163,14 +163,13 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         $state = $gridField->State->GridFieldFilterHeader;
+        $state->Columns = null;
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
                 foreach ($data['filter'][$gridField->getName()] as $key => $filter) {
                     $state->Columns->$key = $filter;
                 }
             }
-        } elseif ($actionName === 'reset') {
-            $state->Columns = null;
         }
     }
 
@@ -193,12 +192,10 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         $filterArguments = $columns->toArray();
         $dataListClone = clone($dataList);
-        foreach ($filterArguments as $columnName => $value) {
-            if ($dataList->canFilterBy($columnName) && $value) {
-                $dataListClone = $dataListClone->filter($columnName . ':PartialMatch', $value);
-            }
-        }
-        return $dataListClone;
+        $results = $this->getSearchContext($gridField)
+            ->getQuery($filterArguments, false, false, $dataListClone);
+
+        return $results;
     }
 
     /**
@@ -337,9 +334,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $field->addExtraClass('stacked');
         }
 
+        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+
         $this->searchForm = $form = new Form(
             $gridField,
-            "SearchForm",
+            $name . "SearchForm",
             $searchFields,
             new FieldList()
         );
