@@ -3090,8 +3090,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @return DataObject|null The first item matching the query
      */
-    public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "")
+    public static function get_one($callerClass = null, $filter = "", $cache = true, $orderby = "")
     {
+        if ($callerClass === null) {
+            $callerClass = static::class;
+        }
         $SNG = singleton($callerClass);
 
         $cacheComponents = array($filter, $orderby, $SNG->extend('cacheKeyComponent'));
