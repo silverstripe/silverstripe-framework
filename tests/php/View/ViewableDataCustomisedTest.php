@@ -14,13 +14,19 @@ class ViewableDataCustomisedTest extends SapphireTest
 {
     public function testNestedViewableDataCustomisedAsCustomised()
     {
-        $outerCustomised = ViewableData_Customised::create($this->makeOuterOriginal(), $this->makeInnerViewableDataCustomised());
+        $outerCustomised = ViewableData_Customised::create(
+            $this->makeOuterOriginal(),
+            $this->makeInnerViewableDataCustomised()
+        );
         $this->assertThat($outerCustomised, $this->makeTestConstraint());
     }
 
     public function testNestedViewableDataCustomisedAsOriginal()
     {
-        $outerCustomised = ViewableData_Customised::create($this->makeInnerViewableDataCustomised(), $this->makeOuterOriginal());
+        $outerCustomised = ViewableData_Customised::create(
+            $this->makeInnerViewableDataCustomised(),
+            $this->makeOuterOriginal()
+        );
         $this->assertThat($outerCustomised, $this->makeTestConstraint());
     }
 
