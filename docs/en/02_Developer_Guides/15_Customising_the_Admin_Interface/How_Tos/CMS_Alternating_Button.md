@@ -136,8 +136,13 @@ extras.
 Continuing our example let's add a "constructive" style to our *Clean-up* button. First you need to be able to add
 custom JS code into the CMS. You can do this by adding a new source file, here
 `app/javascript/CMSMain.CustomActionsExtension.js`, and requiring it
-through a YAML configuration value: `LeftAndMain.extra_requirements_javascript`.
-Set it to 'app/javascript/CMSMain.CustomActionsExtension.js'.
+through a YAML configuration value:
+
+```yml
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - app/javascript/CMSMain.CustomActionsExtension.js
+```
 
 You can now add the styling in response to `afterrefreshalternate` event. Let's use entwine to avoid accidental memory
 leaks. The only complex part here is how the entwine handle is constructed. `onbuttonafterrefreshalternate` can be

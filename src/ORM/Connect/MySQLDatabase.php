@@ -523,4 +523,24 @@ class MySQLDatabase extends Database
     {
         return 'RAND()';
     }
+
+    /**
+     * Clear all data in a given table
+     *
+     * @param string $table Name of table
+     */
+    public function clearTable($table)
+    {
+        $this->query("DELETE FROM \"$table\"");
+
+        // Check if resetting the auto-increment is needed
+        $autoIncrement = $this->preparedQuery(
+            'SELECT "AUTO_INCREMENT" FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+            [ $this->getSelectedDatabase(), $table]
+        )->value();
+
+        if ($autoIncrement > 1) {
+            $this->query("ALTER TABLE \"$table\" AUTO_INCREMENT = 1");
+        }
+    }
 }

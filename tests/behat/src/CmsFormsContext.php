@@ -75,6 +75,10 @@ class CmsFormsContext implements Context
             $inputField->getAttribute('id'),
             addcslashes($value, "'")
         ));
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('#%s').entwine('ss').getEditor().save()",
+            $inputField->getAttribute('id')
+        ));
     }
 
     /**
@@ -310,9 +314,36 @@ JS;
     {
         $locator = $this->fixStepArgument($locator);
         $page = $this->getSession()->getPage();
+        
+        // Searching by name is usually good...
         $element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
+        
+        if ($element === null) {
+            $element = $this->findInputByLabelContent($locator);
+        }
+        
         assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
+    }
+
+    protected function findInputByLabelContent($locator)
+    {
+        $page = $this->getSession()->getPage();
+        $label = $page->findAll('xpath', sprintf('//label[contains(text(), \'%s\')]', $locator));
+
+        if (empty($label)) {
+            return null;
+        }
+
+        assertCount(1, $label, sprintf(
+            'Found more than one element containing the phrase "%s".',
+            $locator
+        ));
+
+        $label = array_shift($label);
+
+        $fieldId = $label->getAttribute('for');
+        return $page->find('css', '#' . $fieldId);
     }
 
     /**

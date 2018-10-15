@@ -227,6 +227,32 @@ class MyDataObject extends DataObject
 
 ```
 
+In order to re-label any summary fields, you can use the $field_labels static.
+
+```php
+use SilverStripe\ORM\DataObject;
+
+class MyDataObject extends DataObject 
+{   
+    private static $db = [
+        'Name' => 'Text',
+    ];
+    
+    private static $has_one = [
+        'HeroImage' => 'Image',
+    ];
+    
+    private static $summary_fields = [
+        'Name',
+        'HeroImage.CMSThumbnail',
+    ];
+    
+    private static $field_labels = [
+        'Name' => 'Name',
+        'HeroImage.CMSThumbnail' => 'Hero',
+    ];
+}
+
 ## Related Documentation
 
 * [SearchFilters](searchfilters)

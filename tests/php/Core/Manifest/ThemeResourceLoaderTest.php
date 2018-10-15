@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
@@ -54,6 +55,9 @@ class ThemeResourceLoaderTest extends SapphireTest
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
+
+        // Ensure the cache is flushed between tests
+        ThemeResourceLoader::flush();
     }
 
     protected function tearDown()
@@ -376,5 +380,29 @@ class ThemeResourceLoaderTest extends SapphireTest
     public function testGetPath($name, $path)
     {
         $this->assertEquals($path, $this->loader->getPath($name));
+    }
+
+    public function testFindTemplateWithCacheMiss()
+    {
+        $mockCache = $this->createMock(CacheInterface::class);
+        $mockCache->expects($this->once())->method('has')->willReturn(false);
+        $mockCache->expects($this->never())->method('get');
+        $mockCache->expects($this->once())->method('set');
+
+        $loader = new ThemeResourceLoader();
+        $loader->setCache($mockCache);
+        $loader->findTemplate('Page', ['$default']);
+    }
+
+    public function testFindTemplateWithCacheHit()
+    {
+        $mockCache = $this->createMock(CacheInterface::class);
+        $mockCache->expects($this->once())->method('has')->willReturn(true);
+        $mockCache->expects($this->never())->method('set');
+        $mockCache->expects($this->once())->method('get')->willReturn('mock_template.ss');
+
+        $loader = new ThemeResourceLoader();
+        $loader->setCache($mockCache);
+        $this->assertSame('mock_template.ss', $loader->findTemplate('Page', ['$default']));
     }
 }

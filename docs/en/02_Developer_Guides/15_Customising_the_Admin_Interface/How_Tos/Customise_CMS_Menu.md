@@ -24,7 +24,7 @@ black-and-transparent PNG graphics. In this case we'll place the icon in
 ```php
 use SilverStripe\Admin\ModelAdmin;
 
-class ProductAdmin extends ModelAdmin 
+class ProductAdmin extends ModelAdmin
 {
     // ...
     private static $menu_icon = 'app/images/product-icon.png';
@@ -41,7 +41,7 @@ controller, removing the "Admin" bit at the end.
 ```php
 use SilverStripe\Admin\ModelAdmin;
 
-class ProductAdmin extends ModelAdmin 
+class ProductAdmin extends ModelAdmin
 {
     // ...
     private static $menu_title = 'My Custom Admin';
@@ -69,10 +69,10 @@ button configuration.
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Admin\LeftAndMainExtension;
 
-class CustomLeftAndMain extends LeftAndMainExtension 
+class CustomLeftAndMain extends LeftAndMainExtension
 {
 
-    public function init() 
+    public function init()
     {
         // unique identifier for this item. Will have an ID of Menu-$ID
         $id = 'LinkToGoogle';
@@ -105,6 +105,23 @@ class. For more information about configuring extensions see the
 
 ```php
 LeftAndMain::add_extension('CustomLeftAndMain')
+```
+
+## Customising the CMS help menu
+
+The CMS help menu links in the south toolbar are configurable via your [configuration file](../../configuration).
+You can edit, add or remove existing links as shown in the examples below:
+
+```yml
+# app/_config/config.yml
+SilverStripe\Admin\LeftAndMain:
+  help_links:
+    # Edit an existing link
+    'CMS User help': 'https://example.com'
+    # Add a new link
+    'Additional link': 'https://example.org'
+    # Remove an existing link
+    'Feedback': ''
 ```
 
 ## Related

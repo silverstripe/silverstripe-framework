@@ -3,13 +3,16 @@
 namespace SilverStripe\View;
 
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Path;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
  */
-class ThemeResourceLoader
+class ThemeResourceLoader implements Flushable
 {
 
     /**
@@ -31,6 +34,11 @@ class ThemeResourceLoader
      * @var ThemeList[]
      */
     protected $sets = [];
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cache;
 
     /**
      * @return ThemeResourceLoader
@@ -161,6 +169,8 @@ class ThemeResourceLoader
      * format "type/name", where type is the type of template to search for
      * (e.g. Includes, Layout).
      *
+     * The results of this method will be cached for future use.
+     *
      * @param string|array $template Template name, or template spec in array format with the keys
      * 'type' (type string) and 'templates' (template hierarchy in order of precedence).
      * If 'templates' is ommitted then any other item in the array will be treated as the template
@@ -176,6 +186,12 @@ class ThemeResourceLoader
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
+        }
+
+        // Look for a cached result for this data set
+        $cacheKey = md5(json_encode($template) . json_encode($themes));
+        if ($this->getCache()->has($cacheKey)) {
+            return $this->getCache()->get($cacheKey);
         }
 
         $type = '';
@@ -196,6 +212,7 @@ class ThemeResourceLoader
             if (is_array($template)) {
                 $path = $this->findTemplate($template, $themes);
                 if ($path) {
+                    $this->getCache()->set($cacheKey, $path);
                     return $path;
                 }
                 continue;
@@ -205,6 +222,7 @@ class ThemeResourceLoader
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
             if (substr($template, -3) == '.ss' && file_exists($template)) {
+                $this->getCache()->set($cacheKey, $template);
                 return $template;
             }
 
@@ -220,12 +238,14 @@ class ThemeResourceLoader
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
                 $path = Path::join($pathParts) . '.ss';
                 if (file_exists($path)) {
+                    $this->getCache()->set($cacheKey, $path);
                     return $path;
                 }
             }
         }
 
         // No template found
+        $this->getCache()->set($cacheKey, null);
         return null;
     }
 
@@ -337,5 +357,34 @@ class ThemeResourceLoader
             }
         }
         return $paths;
+    }
+
+    /**
+     * Flush any cached data
+     */
+    public static function flush()
+    {
+        self::inst()->getCache()->clear();
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    public function getCache()
+    {
+        if (!$this->cache) {
+            $this->setCache(Injector::inst()->get(CacheInterface::class . '.ThemeResourceLoader'));
+        }
+        return $this->cache;
+    }
+
+    /**
+     * @param CacheInterface $cache
+     * @return ThemeResourceLoader
+     */
+    public function setCache(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+        return $this;
     }
 }

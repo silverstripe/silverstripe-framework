@@ -238,8 +238,8 @@ class SQLSelect extends SQLConditionalExpression
      * Pass LIMIT clause either as SQL snippet or in array format.
      * Internally, limit will always be stored as a map containing the keys 'start' and 'limit'
      *
-     * @param int|string|array $limit If passed as a string or array, assumes SQL escaped data.
-     * Only applies for positive values, or if an $offset is set as well.
+     * @param int|string|array|null $limit If passed as a string or array, assumes SQL escaped data.
+     * Only applies for positive values.
      * @param int $offset
      * @throws InvalidArgumentException
      * @return $this Self reference
@@ -250,10 +250,18 @@ class SQLSelect extends SQLConditionalExpression
             throw new InvalidArgumentException("SQLSelect::setLimit() only takes positive values");
         }
 
+        if ($limit === 0) {
+            Deprecation::notice(
+                '4.3',
+                "setLimit(0) is deprecated in SS4. To clear limit, call setLimit(null). " .
+                    "In SS5 a limit of 0 will instead return no records."
+            );
+        }
+
         if (is_numeric($limit) && ($limit || $offset)) {
             $this->limit = array(
-                'start' => $offset,
-                'limit' => $limit,
+                'start' => (int)$offset,
+                'limit' => (int)$limit,
             );
         } elseif ($limit && is_string($limit)) {
             if (strpos($limit, ',') !== false) {
@@ -263,12 +271,12 @@ class SQLSelect extends SQLConditionalExpression
             }
 
             $this->limit = array(
-                'start' => trim($start),
-                'limit' => trim($innerLimit),
+                'start' => (int)$start,
+                'limit' => (int)$innerLimit,
             );
         } elseif ($limit === null && $offset) {
             $this->limit = array(
-                'start' => $offset,
+                'start' => (int)$offset,
                 'limit' => $limit
             );
         } else {

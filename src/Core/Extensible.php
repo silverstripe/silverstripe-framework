@@ -3,11 +3,8 @@
 namespace SilverStripe\Core;
 
 use InvalidArgumentException;
-use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -200,6 +197,14 @@ trait Extensible
 
         Injector::inst()->unregisterNamedObject($class);
         return true;
+    }
+
+    /**
+     * Clears all cached extra_methods cache data
+     */
+    public static function flush_extra_methods_cache()
+    {
+        self::$extra_methods = [];
     }
 
 

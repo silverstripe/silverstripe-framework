@@ -110,18 +110,19 @@ class GridField extends FormField
      *
      * @var array
      */
-    protected $readonlyComponents = array(
+    protected $readonlyComponents = [
         GridField_ActionMenu::class,
-        GridState_Component::class,
         GridFieldConfig_RecordViewer::class,
-        GridFieldDetailForm::class,
         GridFieldDataColumns::class,
+        GridFieldDetailForm::class,
+        GridFieldLazyLoader::class,
         GridFieldPageCount::class,
         GridFieldPaginator::class,
         GridFieldSortableHeader::class,
         GridFieldToolbarHeader::class,
         GridFieldViewButton::class,
-    );
+        GridState_Component::class,
+    ];
 
     /**
      * Pattern used for looking up

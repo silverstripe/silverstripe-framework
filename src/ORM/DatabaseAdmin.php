@@ -11,6 +11,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -261,9 +262,25 @@ class DatabaseAdmin extends Controller
             }
             $database = $parameters['database'];
 
-            // Establish connection and create database in two steps
+            // Establish connection
             unset($parameters['database']);
             DB::connect($parameters);
+
+            // Check to ensure that the re-instated SS_DATABASE_SUFFIX functionality won't unexpectedly
+            // rename the database. To be removed for SS5
+            if ($suffix = Environment::getEnv('SS_DATABASE_SUFFIX')) {
+                $previousName = preg_replace("/{$suffix}$/", '', $database);
+
+                if (!isset($_GET['force_suffix_rename']) && DB::get_conn()->databaseExists($previousName)) {
+                    throw new DatabaseException(
+                        "SS_DATABASE_SUFFIX was previously broken, but has now been fixed. This will result in your "
+                        . "database being named \"{$database}\" instead of \"{$previousName}\" from now on. If this "
+                        . "change is intentional, please visit dev/build?force_suffix_rename=1 to continue"
+                    );
+                }
+            }
+
+            // Create database
             DB::create_database($database);
         }
 

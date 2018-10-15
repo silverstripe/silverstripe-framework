@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 /**
  * TextareaField creates a multi-line text field,
  * allowing more data to be entered than a standard
- * text field. It creates the <textarea> tag in the
+ * text field. It creates the `<textarea>` tag in the
  * form HTML.
  *
  * <code>
