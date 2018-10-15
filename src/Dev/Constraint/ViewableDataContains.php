@@ -59,7 +59,7 @@ class ViewableDataContains extends Constraint implements TestOnly
      *
      * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false) : bool
+    public function evaluate($other, $description = '', $returnResult = false) : ?bool
     {
         $success = true;
 
