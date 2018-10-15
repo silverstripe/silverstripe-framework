@@ -273,7 +273,7 @@ class SQLSelectTest extends SapphireTest
     }
 
     /**
-     * @expectedException \PHPUnit\Framework\Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      */
     public function testZeroLimit()
     {
@@ -284,7 +284,7 @@ class SQLSelectTest extends SapphireTest
     }
 
     /**
-     * @expectedException \PHPUnit\Framework\Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      */
     public function testZeroLimitWithOffset()
     {
