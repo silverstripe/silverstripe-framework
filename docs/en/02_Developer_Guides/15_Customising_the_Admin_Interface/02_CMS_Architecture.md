@@ -67,7 +67,7 @@ Then browse to `http://localhost:6006/`
 
 ## The Admin URL
 
-The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own Director routing rule to the [AdminRootController](api:SilverStripe\Admin\AdminRootController) and clear the old rule like in the example below.
+The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting the `$url_base` config for the [AdminRootController](api:SilverStripe\Admin\AdminRootController), creating your own [Director](api:SilverStripe\Control\Director) routing rule and clearing the old rule as per the example below:
 
 
 ```yml
@@ -81,6 +81,9 @@ SilverStripe\Control\Director:
   rules:
     'admin': ''
     'newAdmin': 'SilverStripe\Admin\AdminRootController'
+    
+SilverStripe\Admin\AdminRootController:
+  url_base: 'newAdmin'    
 ---
 ```
 
