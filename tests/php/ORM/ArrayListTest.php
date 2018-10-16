@@ -7,6 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Dev\Deprecation;
 use stdClass;
 
 class ArrayListTest extends SapphireTest
@@ -131,6 +132,19 @@ class ArrayListTest extends SapphireTest
             array('Key' => 2), array('Key' => 3)
             )
         );
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
+    public function testZeroLimit()
+    {
+        Deprecation::notification_version('4.3.0');
+        $list = new ArrayList([
+            ['Key' => 1],
+            ['Key' => 2],
+        ]);
+        $list->limit(0);
     }
 
     public function testAddRemove()
