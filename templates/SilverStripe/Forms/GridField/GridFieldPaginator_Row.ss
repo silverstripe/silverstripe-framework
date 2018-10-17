@@ -6,7 +6,7 @@
 				$FirstPage $PreviousPage
 				<span class="pagination-page-number">
 					<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.Page 'Page' %>
-					<input class="text" title="Current page" value="$CurrentPageNum" data-skip-autofocus="true" />
+					<input class="text no-change-track" title="Current page" value="$CurrentPageNum" data-skip-autofocus="true" />
 					<%t SilverStripe\\Forms\\GridField\\GridFieldPaginator.OF 'of' is 'Example: View 1 of 2' %>
 					$NumPages
 				</span>
