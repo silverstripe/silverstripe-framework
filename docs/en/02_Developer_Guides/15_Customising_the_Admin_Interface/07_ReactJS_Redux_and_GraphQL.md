@@ -1080,7 +1080,7 @@ Now, let's update the query to fetch our new field.
 *my-other-app/client/transformReadNotes.js*
 ```js
 const transformReadNotes = (manager) => {
-  manager.addField('root', 'Priority');
+  manager.addField('Priority');
 };
 
 export default transformReadNotes;
@@ -1094,7 +1094,7 @@ In the above example, we added a single field to a query. Here's how that works:
 
 
 ```js
-manager.addField(fieldPath, fieldName)
+manager.addField(fieldName, fieldPath = 'root')
 ```
 
 The `fieldPath` argument tells the manager at what level to add the field. In this case, since the `Priority` field is going on the root query (`readNotes`), we'll use `root` as the path. But suppose we had a more complex query like this:
@@ -1115,7 +1115,7 @@ query readMembers {
 If we wanted to add a field to the nested `Company` query on `Friends`, we would use a path syntax.
 
 ```js
-manager.addField('root/Friends/Company', 'Tagline');
+manager.addField('Tagline', 'root/Friends/Company');
 ```
 
 #### Adding field arguments
@@ -1137,7 +1137,7 @@ query ReadMembers($ImageSize: String!) {
 Maybe the `Company` type has a `Logo`, and we want to apply the `ImageSize` parameter as an argument to that field.
 
 ```js
-manager.addArg('root/Company/Logo', 'Size', 'ImageSize');
+manager.addArg('Size', 'ImageSize', 'root/Company/Logo');
 ```
 
 Where `root/Company/Logo` is the path to the field, `Size` is the name of the argument on that field, and `ImageSize` is the name of the variable.
@@ -1314,7 +1314,7 @@ We've extended the `onAdd` callback to take two parameters -- one for the note c
 *my-other-app/client/transformCreateNote.js*
 ```js
 const transformCreateNote = (manager) => {
-  manager.addField('root', 'Priority');
+  manager.addField('Priority');
   manager.transformApolloConfig('props', ({ mutate }) => (prevProps) => {
     const onAdd = (content, priority) => {
       mutate({
