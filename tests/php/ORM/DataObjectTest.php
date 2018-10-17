@@ -325,7 +325,10 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Phil', $comment->Name);
 
         // Test get_one() without passing classname
-        $this->assertEquals(DataObjectTest\TeamComment::get_one(), DataObject::get_one(DataObjectTest\TeamComment::class));
+        $this->assertEquals(
+            DataObjectTest\TeamComment::get_one(),
+            DataObject::get_one(DataObjectTest\TeamComment::class)
+        );
     }
 
     public function testGetByIDCallerClass()

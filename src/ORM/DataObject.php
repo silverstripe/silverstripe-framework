@@ -3088,6 +3088,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($callerClass === null) {
             $callerClass = static::class;
         }
+
+        // Validate class
+        if ($callerClass === self::class) {
+            throw new InvalidArgumentException('DataObject::get_one() cannot query non-subclass DataObject directly');
+        }
         $SNG = singleton($callerClass);
 
         $cacheComponents = array($filter, $orderBy, $SNG->extend('cacheKeyComponent'));
