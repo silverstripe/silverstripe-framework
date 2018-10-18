@@ -21,11 +21,6 @@ class DatabaseTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    /**
-     * Disable transactions so that we can test them
-     */
-    protected $usesTransactions = false;
-
     public function testDontRequireField()
     {
         $schema = DB::get_schema();
@@ -191,52 +186,6 @@ class DatabaseTest extends SapphireTest
         $db->releaseLock('DatabaseTest');
         $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock again after releasing it');
     }
-
-    public function testTransactions()
-    {
-        $conn = DB::get_conn();
-        if (!$conn->supportsTransactions()) {
-            $this->markTestSkipped("DB Doesn't support transactions");
-            return;
-        }
-
-        // Test that successful transactions are comitted
-        $obj = new DatabaseTest\MyObject();
-        $failed = false;
-        $conn->withTransaction(
-            function () use (&$obj) {
-                $obj->MyField = 'Save 1';
-                $obj->write();
-            },
-            function () use (&$failed) {
-                $failed = true;
-            }
-        );
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertFalse($failed);
-
-        // Test failed transactions are rolled back
-        $ex = null;
-        $failed = false;
-        try {
-            $conn->withTransaction(
-                function () use (&$obj) {
-                    $obj->MyField = 'Save 2';
-                    $obj->write();
-                    throw new Exception("error");
-                },
-                function () use (&$failed) {
-                    $failed = true;
-                }
-            );
-        } catch (Exception $ex) {
-        }
-        $this->assertTrue($failed);
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertInstanceOf('Exception', $ex);
-        $this->assertEquals('error', $ex->getMessage());
-    }
-
 
     public function testFieldTypes()
     {
