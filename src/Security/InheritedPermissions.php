@@ -354,10 +354,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 
         // Get the uninherited permissions
         $typeField = $this->getPermissionField($type);
+        $baseTable = DataObject::getSchema()->baseDataTable($this->getBaseClass());
+
         if ($member && $member->ID) {
             // Determine if this member matches any of the group or other rules
             $groupJoinTable = $this->getJoinTable($type);
-            $baseTable = DataObject::getSchema()->baseDataTable($this->getBaseClass());
             $uninheritedPermissions = $stageRecords
                 ->where([
                     "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
@@ -383,25 +384,35 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             $result = array_fill_keys($uninheritedPermissions, true) + $result;
         }
 
-        // Group $potentiallyInherited by ParentID; we'll look at the permission of all those parents and
-        // then see which ones the user has permission on
+        // This looks for any of our subjects who has their permission set to "inherited" in the CMS.
+        // We group these and run a batch permission check on all parents. This gives us the result
+        // of whether the user has permission to edit this object.
         $groupedByParent = [];
-        $potentiallyInherited = $stageRecords->filter($typeField, self::INHERIT);
+        $potentiallyInherited = $stageRecords->filter($typeField, self::INHERIT)
+            ->sort("\"{$baseTable}\".\"ID\"")
+            ->dataQuery()
+            ->query()
+            ->setSelect([
+                "\"{$baseTable}\".\"ID\"",
+                "\"{$baseTable}\".\"ParentID\""
+            ])
+            ->execute();
+
         foreach ($potentiallyInherited as $item) {
             /** @var DataObject|Hierarchy $item */
-            if ($item->ParentID) {
-                if (!isset($groupedByParent[$item->ParentID])) {
-                    $groupedByParent[$item->ParentID] = [];
+            if ($item['ParentID']) {
+                if (!isset($groupedByParent[$item['ParentID']])) {
+                    $groupedByParent[$item['ParentID']] = [];
                 }
-                $groupedByParent[$item->ParentID][] = $item->ID;
+                $groupedByParent[$item['ParentID']][] = $item['ID'];
             } else {
                 // Fail over to default permission check for Inherit and ParentID = 0
-                $result[$item->ID] = $this->checkDefaultPermissions($type, $member);
+                $result[$item['ID']] = $this->checkDefaultPermissions($type, $member);
             }
         }
 
         // Copy permissions from parent to child
-        if ($groupedByParent) {
+        if (!empty($groupedByParent)) {
             $actuallyInherited = $this->batchPermissionCheck(
                 $type,
                 array_keys($groupedByParent),
