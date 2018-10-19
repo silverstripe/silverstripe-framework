@@ -401,7 +401,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         // Bind and invoke statement safely
         if ($statement) {
             $this->bindParameters($statement, $parameters);
-            $statement->execute($parameters);
+            $statement->execute();
         }
 
         // Generate results
