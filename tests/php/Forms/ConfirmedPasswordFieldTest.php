@@ -83,33 +83,40 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $field = new ConfirmedPasswordField(
             'Test',
             'Testing',
-            array(
-            "_Password" => "abc123",
-            "_ConfirmPassword" => "abc123"
-            )
+            [
+                '_Password' => 'abc123',
+                '_ConfirmPassword' => 'abc123',
+            ]
         );
         $validator = new RequiredFields();
-        /** @skipUpgrade */
-        new Form(Controller::curr(), 'Form', new FieldList($field), new FieldList(), $validator);
         $this->assertTrue(
             $field->validate($validator),
-            "Validates when both passwords are the same"
+            'Validates when both passwords are the same'
         );
-        $field->setName("TestNew"); //try changing name of field
+        $field->setName('TestNew'); //try changing name of field
         $this->assertTrue(
             $field->validate($validator),
-            "Validates when field name is changed"
+            'Validates when field name is changed'
         );
         //non-matching password should make the field invalid
-        $field->setValue(
-            array(
-            "_Password" => "abc123",
-            "_ConfirmPassword" => "123abc"
-            )
-        );
+        $field->setValue([
+            '_Password' => 'abc123',
+            '_ConfirmPassword' => '123abc',
+        ]);
         $this->assertFalse(
             $field->validate($validator),
-            "Does not validate when passwords differ"
+            'Does not validate when passwords differ'
+        );
+
+        // Empty passwords should make the field invalid
+        $field->setCanBeEmpty(false);
+        $field->setValue([
+            '_Password' => '',
+            '_ConfirmPassword' => '',
+        ]);
+        $this->assertFalse(
+            $field->validate($validator),
+            'Empty passwords should not be allowed when canBeEmpty is false'
         );
     }
 
@@ -123,17 +130,121 @@ class ConfirmedPasswordFieldTest extends SapphireTest
             new FieldList()
         );
 
-        $form->loadDataFrom(
-            array(
-            'Password' => array(
+        $form->loadDataFrom([
+            'Password' => [
                 '_Password' => '123',
                 '_ConfirmPassword' => '999',
-            )
-            )
-        );
+            ],
+        ]);
 
         $this->assertEquals('123', $field->children->first()->Value());
         $this->assertEquals('999', $field->children->last()->Value());
         $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+    }
+
+    /**
+     * @param int|null $minLength
+     * @param int|null $maxLength
+     * @param bool $expectValid
+     * @param string $expectedMessage
+     * @dataProvider lengthValidationProvider
+     */
+    public function testLengthValidation($minLength, $maxLength, $expectValid, $expectedMessage = '')
+    {
+        $field = new ConfirmedPasswordField('Test', 'Testing', [
+            '_Password' => 'abc123',
+            '_ConfirmPassword' => 'abc123',
+        ]);
+        $field->setMinLength($minLength)->setMaxLength($maxLength);
+
+        $validator = new RequiredFields();
+        $result = $field->validate($validator);
+
+        $this->assertSame($expectValid, $result, 'Validate method should return its result');
+        $this->assertSame($expectValid, $validator->getResult()->isValid());
+        if ($expectedMessage) {
+            $this->assertContains($expectedMessage, $validator->getResult()->serialize());
+        }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function lengthValidationProvider()
+    {
+        return [
+            'valid: within min and max' => [3, 8, true],
+            'invalid: lower than min with max' => [8, 12, false, 'Passwords must be 8 to 12 characters long'],
+            'valid: greater than min' => [3, null, true],
+            'invalid: lower than min' => [8, null, false, 'Passwords must be at least 8 characters long'],
+            'valid: less than max' => [null, 8, true],
+            'invalid: greater than max' => [null, 4, false, 'Passwords must be at most 4 characters long'],
+
+        ];
+    }
+
+    public function testStrengthValidation()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Testing', [
+            '_Password' => 'abc',
+            '_ConfirmPassword' => 'abc',
+        ]);
+        $field->setRequireStrongPassword(true);
+
+        $validator = new RequiredFields();
+        $result = $field->validate($validator);
+
+        $this->assertFalse($result, 'Validate method should return its result');
+        $this->assertFalse($validator->getResult()->isValid());
+        $this->assertContains(
+            'Passwords must have at least one digit and one alphanumeric character',
+            $validator->getResult()->serialize()
+        );
+    }
+
+    public function testTitle()
+    {
+        $this->assertNull(ConfirmedPasswordField::create('Test')->Title(), 'Should not have it\'s own title');
+    }
+
+    public function testSetTitlePropagatesToPasswordField()
+    {
+        /** @var ConfirmedPasswordField $field */
+        $field = ConfirmedPasswordField::create('Test')
+            ->setTitle('My password');
+
+        $this->assertSame('My password', $field->getPasswordField()->Title());
+    }
+
+    public function testSetRightTitlePropagatesToChildren()
+    {
+        /** @var ConfirmedPasswordField $field */
+        $field = ConfirmedPasswordField::create('Test');
+
+        $this->assertCount(2, $field->getChildren());
+        foreach ($field->getChildren() as $child) {
+            $this->assertEmpty($child->RightTitle());
+        }
+
+        $field->setRightTitle('Please confirm');
+        foreach ($field->getChildren() as $child) {
+            $this->assertSame('Please confirm', $child->RightTitle());
+        }
+    }
+
+    public function testSetChildrenTitles()
+    {
+        /** @var ConfirmedPasswordField $field */
+        $field = ConfirmedPasswordField::create('Test');
+        $field->setRequireExistingPassword(true);
+        $field->setChildrenTitles([
+            'Current Password',
+            'Password',
+            'Confirm Password',
+        ]);
+
+        $this->assertSame('Current Password', $field->getChildren()->shift()->Title());
+        $this->assertSame('Password', $field->getChildren()->shift()->Title());
+        $this->assertSame('Confirm Password', $field->getChildren()->shift()->Title());
     }
 }
