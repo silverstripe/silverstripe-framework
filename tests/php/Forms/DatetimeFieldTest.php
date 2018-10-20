@@ -86,6 +86,13 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertEquals('2003-01-30 11:59:38', $f->dataValue()); // server timezone (Berlin)
     }
 
+    public function testSetSubmittedValueNull()
+    {
+        $field = new DatetimeField('Datetime');
+        $field->setSubmittedValue(false);
+        $this->assertNull($field->Value());
+    }
+
     public function testConstructorWithoutArgs()
     {
         $f = new DatetimeField('Datetime');
@@ -148,21 +155,24 @@ class DatetimeFieldTest extends SapphireTest
 
     public function testValidate()
     {
-        $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
-        $this->assertTrue($f->validate(new RequiredFields()));
+        $field = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
+        $this->assertTrue($field->validate(new RequiredFields()));
 
-        $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29T23:59:38');
-        $this->assertTrue($f->validate(new RequiredFields()), 'Normalised ISO');
+        $field = new DatetimeField('Datetime', 'Datetime', '2003-03-29T23:59:38');
+        $this->assertTrue($field->validate(new RequiredFields()), 'Normalised ISO');
 
-        $f = new DatetimeField('Datetime', 'Datetime', '2003-03-29');
-        $this->assertFalse($f->validate(new RequiredFields()), 'Leaving out time');
+        $field = new DatetimeField('Datetime', 'Datetime', '2003-03-29');
+        $this->assertFalse($field->validate(new RequiredFields()), 'Leaving out time');
 
-        $f = (new DatetimeField('Datetime', 'Datetime'))
+        $field = (new DatetimeField('Datetime', 'Datetime'))
             ->setSubmittedValue('2003-03-29T00:00');
-        $this->assertTrue($f->validate(new RequiredFields()), 'Leaving out seconds (like many browsers)');
+        $this->assertTrue($field->validate(new RequiredFields()), 'Leaving out seconds (like many browsers)');
 
-        $f = new DatetimeField('Datetime', 'Datetime', 'wrong');
-        $this->assertFalse($f->validate(new RequiredFields()));
+        $field = new DatetimeField('Datetime', 'Datetime', 'wrong');
+        $this->assertFalse($field->validate(new RequiredFields()));
+
+        $field = new DatetimeField('Datetime', 'Datetime', false);
+        $this->assertTrue($field->validate(new RequiredFields()));
     }
 
     public function testSetMinDate()
@@ -444,6 +454,51 @@ class DatetimeFieldTest extends SapphireTest
         $attrs = $field->getAttributes();
         $this->assertEquals($attrs['min'], '2009-01-31T23:00:00'); // frontend timezone
         $this->assertEquals($attrs['max'], '2010-01-31T23:00:00'); // frontend timezone
+    }
+
+    public function testAttributesNonHTML5()
+    {
+        $field = new DatetimeField('Datetime');
+        $field->setHTML5(false);
+        $result = $field->getAttributes();
+        $this->assertSame('text', $result['type']);
+    }
+
+    public function testFrontendToInternalEdgeCases()
+    {
+        $field = new DatetimeField('Datetime');
+
+        $this->assertNull($field->frontendToInternal(false));
+        $this->assertNull($field->frontendToInternal('sdfsdfsfs$%^&*'));
+    }
+
+    public function testInternalToFrontendEdgeCases()
+    {
+        $field = new DatetimeField('Datetime');
+
+        $this->assertNull($field->internalToFrontend(false));
+        $this->assertNull($field->internalToFrontend('sdfsdfsfs$%^&*'));
+    }
+
+    public function testPerformReadonlyTransformation()
+    {
+        $field = new DatetimeField('Datetime');
+
+        $result = $field->performReadonlyTransformation();
+        $this->assertInstanceOf(DatetimeField::class, $result);
+        $this->assertNotSame($result, $field, 'Readonly field should be cloned');
+        $this->assertTrue($result->isReadonly());
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Can't change timezone after setting a value
+     */
+    public function testSetTimezoneThrowsExceptionWhenChangingTimezoneAfterSettingValue()
+    {
+        date_default_timezone_set('Europe/Berlin');
+        $field = new DatetimeField('Datetime', 'Time', '2003-03-29 23:59:38');
+        $field->setTimezone('Pacific/Auckland');
     }
 
     protected function getMockForm()

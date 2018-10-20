@@ -2,10 +2,8 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use IntlDateFormatter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField_Disabled;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
@@ -75,5 +73,13 @@ class DateField_DisabledTest extends SapphireTest
 
         $actual = DateField_Disabled::create('Test')->setValue('This is not a date')->Field();
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testType()
+    {
+        $field = new DateField_Disabled('Test');
+        $result = $field->Type();
+        $this->assertContains('readonly', $result, 'Disabled field should be treated as readonly');
+        $this->assertContains('date_disabled', $result, 'Field should contain date_disabled class');
     }
 }
