@@ -7,12 +7,12 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
-
     public function testSetValue()
     {
         $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA');
@@ -25,6 +25,9 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertEquals('valueB', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
     }
 
+    /**
+     * @useDatabase true
+     */
     public function testHashHidden()
     {
         $field = new ConfirmedPasswordField('Password', 'Password', 'valueA');
@@ -202,6 +205,73 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         );
     }
 
+    public function testCurrentPasswordValidation()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Testing', [
+            '_Password' => 'abc',
+            '_ConfirmPassword' => 'abc',
+        ]);
+        $field->setRequireExistingPassword(true);
+
+        $validator = new RequiredFields();
+        $result = $field->validate($validator);
+
+        $this->assertFalse($result, 'Validate method should return its result');
+        $this->assertFalse($validator->getResult()->isValid());
+        $this->assertContains(
+            'You must enter your current password',
+            $validator->getResult()->serialize()
+        );
+    }
+
+    public function testMustBeLoggedInToChangePassword()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Testing');
+        $field->setRequireExistingPassword(true);
+        $field->setValue([
+            '_CurrentPassword' => 'foo',
+            '_Password' => 'abc',
+            '_ConfirmPassword' => 'abc',
+        ]);
+
+        $validator = new RequiredFields();
+        $this->logOut();
+        $result = $field->validate($validator);
+
+        $this->assertFalse($result, 'Validate method should return its result');
+        $this->assertFalse($validator->getResult()->isValid());
+        $this->assertContains(
+            'You must be logged in to change your password',
+            $validator->getResult()->serialize()
+        );
+    }
+
+    /**
+     * @useDatabase true
+     */
+    public function testValidateCorrectPassword()
+    {
+        $this->logInWithPermission('ADMIN');
+
+        $field = new ConfirmedPasswordField('Test', 'Testing');
+        $field->setRequireExistingPassword(true);
+        $field->setValue([
+            '_CurrentPassword' => 'foo-not-going-to-be-the-correct-password',
+            '_Password' => 'abc',
+            '_ConfirmPassword' => 'abc',
+        ]);
+
+        $validator = new RequiredFields();
+        $result = $field->validate($validator);
+
+        $this->assertFalse($result, 'Validate method should return its result');
+        $this->assertFalse($validator->getResult()->isValid());
+        $this->assertContains(
+            'The current password you have entered is not correct',
+            $validator->getResult()->serialize()
+        );
+    }
+
     public function testTitle()
     {
         $this->assertNull(ConfirmedPasswordField::create('Test')->Title(), 'Should not have it\'s own title');
@@ -218,8 +288,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
     public function testSetRightTitlePropagatesToChildren()
     {
-        /** @var ConfirmedPasswordField $field */
-        $field = ConfirmedPasswordField::create('Test');
+        $field = new ConfirmedPasswordField('Test');
 
         $this->assertCount(2, $field->getChildren());
         foreach ($field->getChildren() as $child) {
@@ -234,8 +303,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
     public function testSetChildrenTitles()
     {
-        /** @var ConfirmedPasswordField $field */
-        $field = ConfirmedPasswordField::create('Test');
+        $field = new ConfirmedPasswordField('Test');
         $field->setRequireExistingPassword(true);
         $field->setChildrenTitles([
             'Current Password',
@@ -246,5 +314,39 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertSame('Current Password', $field->getChildren()->shift()->Title());
         $this->assertSame('Password', $field->getChildren()->shift()->Title());
         $this->assertSame('Confirm Password', $field->getChildren()->shift()->Title());
+    }
+
+    public function testPerformReadonlyTransformation()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Change it');
+        $result = $field->performReadonlyTransformation();
+
+        $this->assertInstanceOf(ReadonlyField::class, $result);
+        $this->assertSame('Change it', $result->Title());
+        $this->assertContains('***', $result->Value());
+    }
+
+    public function testPerformDisabledTransformation()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Change it');
+        $result = $field->performDisabledTransformation();
+
+        $this->assertInstanceOf(ReadonlyField::class, $result);
+    }
+
+    public function testSetRequireExistingPasswordOnlyRunsOnce()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Change it');
+
+        $this->assertCount(2, $field->getChildren());
+
+        $field->setRequireExistingPassword(true);
+        $this->assertCount(3, $field->getChildren(), 'Current password field was not pushed');
+
+        $field->setRequireExistingPassword(true);
+        $this->assertCount(3, $field->getChildren(), 'Current password field should not be pushed again');
+
+        $field->setRequireExistingPassword(false);
+        $this->assertCount(2, $field->getChildren(), 'Current password field should not be removed');
     }
 }
