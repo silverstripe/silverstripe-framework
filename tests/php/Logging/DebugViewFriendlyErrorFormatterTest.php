@@ -6,7 +6,6 @@ use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\DebugView;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\DebugViewFriendlyErrorFormatter;
 
