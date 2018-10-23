@@ -75,9 +75,9 @@ before_script:
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.2.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.x-dev --no-update; fi
   - composer require silverstripe/recipe-testing:^1 silverstripe/recipe-core:4.4.x-dev silverstripe/admin:1.4.x-dev silverstripe/versioned:1.4.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]]; then composer require silverstripe/recipe-cms:4.4.x-dev --no-update; fi
-  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
-  - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
+  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest --no-update -o; fi
+  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
+  - if [[ $PHPUNIT_TEST == cms ]]; then composer require --prefer-source silverstripe/recipe-cms:4.4.x-dev; fi
 
 # Log constants to CI for debugging purposes
   - php ./tests/dump_constants.php
