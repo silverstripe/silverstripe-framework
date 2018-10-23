@@ -1424,7 +1424,7 @@ class FormField extends RequestHandler
         $field = $classOrCopy;
 
         if (!is_object($field)) {
-            $field = new $classOrCopy($this->name);
+            $field = $classOrCopy::create($this->name);
         }
 
         $field
