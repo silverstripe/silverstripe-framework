@@ -121,6 +121,13 @@ class MySQLiConnector extends DBConnector
         if (!empty($collation)) {
             $this->dbConn->query("SET collation_connection = {$collation}");
         }
+
+        // We need to do this otherwise the client character set doesn't get applied correctly since we may be
+        // using a different collation to the default.
+        // @see http://php.net/manual/en/mysqli.set-charset.php#121647
+        if (!empty($collation) && !empty($charset)) {
+            $this->dbConn->query("SET NAMES {$charset} COLLATE {$collation}");
+        }
     }
 
     public function __destruct()
