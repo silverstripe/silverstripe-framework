@@ -17,26 +17,7 @@ TextField::create('MyText', 'My Text Label')
     ->setDescription('More <strong>detailed</strong> help');
 ```
 
-To show the help text as a tooltip instead of inline,
-add a `.cms-description-tooltip` class.
-
-
-```php
-TextField::create('MyText', 'My Text Label')
-    ->setDescription('More <strong>detailed</strong> help')
-    ->addExtraClass('cms-description-tooltip');
-```
-
-Tooltips are only supported
-for native, focusable input elements, which excludes
-more complex fields like `GridField`
-or `DropdownField` with the chosen.js behaviour applied.
-
-Sometimes a field requires a longer description to provied the user with context.
-Tooltips can be unwieldy when dealing with large blocks of text, especially if
-you're including interactive elements like links.
-
-Another option you have available is making the field's description togglable. This keeps
+Sometimes a field requires a longer description to provied the user with context. Another option you have available is making the field's description togglable. This keeps
 the UI tidy by hiding the description until the user requests more information
 by clicking the 'info' icon displayed alongside the field.
 
@@ -45,17 +26,6 @@ by clicking the 'info' icon displayed alongside the field.
 TextField::create('MyText', 'My Text Label')
     ->setDescription('More <strong>detailed</strong> help')
     ->addExtraClass('cms-description-toggle');
-```
-
-If you want to provide a custom icon for toggling the description, you can do that
-by setting an additional `RightTitle`.
-
-
-```php
-TextField::create('MyText', 'My Text Label')
-    ->setDescription('More <strong>detailed</strong> help')
-    ->addExtraClass('cms-description-toggle')
-    ->setRightTitle('<a class="cms-description-trigger">My custom icon</a>');
 ```
 
 Note: For more advanced help text we recommend using
