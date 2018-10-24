@@ -27,6 +27,7 @@ use SilverStripe\Core\TempFolder;
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
+ * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_ressources"
  */
 
 require_once __DIR__ . '/functions.php';
@@ -197,4 +198,18 @@ if (!defined('TEMP_PATH')) {
 // Define the temporary folder for backwards compatibility
 if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', TEMP_PATH);
+}
+
+// Define the Ressource Dir constant that will be use to exposed vendor assets
+if (!defined('RESOURCES_DIR')) {
+    $resourceDir = Environment::getEnv('SS_RESOURCES_DIR') ?: '_resources';
+    $resourceDir = trim($resourceDir);
+    if (preg_match('/[_\-a-z0-9]+/i', $resourceDir)) {
+        define('RESOURCES_DIR', $resourceDir);
+    } else {
+        throw new Exception(sprintf(
+            'Resource dir error: SS_RESOURCES_DIR %s can only contain alphanumeric characters or underscore or dash.',
+            $resourceDir
+        ));
+    }
 }
