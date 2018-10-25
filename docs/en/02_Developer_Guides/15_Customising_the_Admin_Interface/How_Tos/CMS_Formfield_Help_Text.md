@@ -17,7 +17,7 @@ TextField::create('MyText', 'My Text Label')
     ->setDescription('More <strong>detailed</strong> help');
 ```
 
-Sometimes a field requires a longer description to provied the user with context. Another option you have available is making the field's description togglable. This keeps
+Sometimes a field requires a longer description to provide the user with context. Another option you have available is making the field's description togglable. This keeps
 the UI tidy by hiding the description until the user requests more information
 by clicking the 'info' icon displayed alongside the field.
 
