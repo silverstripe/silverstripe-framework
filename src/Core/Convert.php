@@ -150,6 +150,7 @@ class Convert
      * Encode a value as a JSON encoded string. You can optionally pass a bitmask of
      * JSON constants as options through to the encode function.
      *
+     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
      * @param  mixed $val     Value to be encoded
      * @param  int   $options Optional bitmask of JSON constants
      * @return string           JSON encoded string
@@ -161,15 +162,15 @@ class Convert
 
     /**
      * Encode an array as a JSON encoded string.
-     * This is an alias to {@link raw2json()}
      *
+     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
      * @param  array  $val     Array to convert
      * @param  int    $options Optional bitmask of JSON constants
      * @return string          JSON encoded string
      */
     public static function array2json($val, $options = 0)
     {
-        return self::raw2json($val, $options);
+        return json_encode($val, $options);
     }
 
     /**
@@ -240,6 +241,7 @@ class Convert
     /**
      * Convert a JSON encoded string into an object.
      *
+     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
      * @param string $val
      * @return object|boolean
      */
@@ -251,7 +253,7 @@ class Convert
     /**
      * Convert a JSON string into an array.
      *
-     * @uses json2obj
+     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
      * @param string $val JSON string to convert
      * @return array|boolean
      */
