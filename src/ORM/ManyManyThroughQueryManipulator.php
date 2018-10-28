@@ -254,13 +254,6 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
             );
         }
 
-        // Set a default sort from the join model if available and nothing is already set
-        if (empty($sqlSelect->getOrderBy())
-            && $sort = Config::inst()->get($this->getJoinClass(), 'default_sort')
-        ) {
-            $sqlSelect->setOrderBy($sort);
-        }
-
         // Apply join and record sql for later insertion (at end of replacements)
         // By using a string placeholder $$_SUBQUERY_$$ we protect field/table rewrites from interfering twice
         // on the already-finalised inner list
