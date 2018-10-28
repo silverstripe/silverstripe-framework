@@ -487,7 +487,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function JSON()
     {
-        return Convert::raw2json($this->RAW());
+        return json_encode($this->RAW());
     }
 
     /**
