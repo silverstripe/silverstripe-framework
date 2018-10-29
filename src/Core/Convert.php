@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use InvalidArgumentException;
@@ -157,6 +158,8 @@ class Convert
      */
     public static function raw2json($val, $options = 0)
     {
+        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+
         return json_encode($val, $options);
     }
 
@@ -170,6 +173,8 @@ class Convert
      */
     public static function array2json($val, $options = 0)
     {
+        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+
         return json_encode($val, $options);
     }
 
@@ -247,6 +252,8 @@ class Convert
      */
     public static function json2obj($val)
     {
+        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+
         return json_decode($val);
     }
 
@@ -259,6 +266,8 @@ class Convert
      */
     public static function json2array($val)
     {
+        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+
         return json_decode($val, true);
     }
 
