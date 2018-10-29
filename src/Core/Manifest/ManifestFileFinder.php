@@ -24,7 +24,7 @@ class ManifestFileFinder extends FileFinder
     const VENDOR_DIR = 'vendor';
 
     /**
-     * @deprecated 4.3.0:5.0.0 Use global `RESOURCES_DIR` instead.
+     * @deprecated 4.4.0:5.0.0 Use global `RESOURCES_DIR` instead.
      */
     const RESOURCES_DIR = RESOURCES_DIR;
 

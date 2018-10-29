@@ -1029,7 +1029,7 @@ If you are upgrading from SilverStripe 4.0 to SilverStripe 4.1 (or above), you'l
 
 ### Finalising the web root migration
 You'll need to update your server configuration to point to the public directory rather than the root of your project.
-Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre SilverStripe 4.3 release) are still ignored when located under the `public` folder.
+Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre SilverStripe 4.4 release) are still ignored when located under the `public` folder.
 Your project should still be functional, although you may now be missing some static assets.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.

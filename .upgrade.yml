@@ -1374,5 +1374,5 @@ warnings:
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'SilverStripe\Core\Manifest\ManifestFileFinder::RESOURCES_DIR':
       message: 'Use global const RESOURCES_DIR'
-      url: 'https://docs.silverstripe.org/en/4/changelogs/4.3.0#resources-dir'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.4.0#resources-dir'
       replacement: 'RESOURCES_DIR'
