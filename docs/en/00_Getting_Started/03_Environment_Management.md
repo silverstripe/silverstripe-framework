@@ -114,3 +114,4 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_SSL_CERT` | Absolute path to SSL certificate file |
 | `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
 | `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |
+| `SS_RESOURCES_DIR` | Most SilverStripe modules need to make some static files (e.g.: CSS, Images, JS) publicly available. These files are _exposed_ via a resource folder in the web root of a SilverStripe project. From SilverStripe 4.4 onwards, the name of this location can be customised via the `SS_RESOURCES_DIR` envrionement variable. Otherwise, it defaults to `resources` for SilverStripe 4.3 and below or to `_resources` for SilverStripe 4.4 and above. |
