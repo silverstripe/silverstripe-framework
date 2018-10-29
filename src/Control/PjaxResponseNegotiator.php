@@ -102,7 +102,7 @@ class PjaxResponseNegotiator
                 throw new HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
             }
         }
-        $response->setBody(Convert::raw2json($responseParts));
+        $response->setBody(json_encode($responseParts));
         $response->addHeader('Content-Type', 'application/json');
 
         return $response;

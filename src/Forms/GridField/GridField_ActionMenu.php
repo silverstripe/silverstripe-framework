@@ -48,7 +48,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
         }
 
         $templateData = ArrayData::create([
-            'Schema' => Convert::raw2json($schema),
+            'Schema' => json_encode($schema),
         ]);
 
         $template = SSViewer::get_templates_by_class($this, '', static::class);

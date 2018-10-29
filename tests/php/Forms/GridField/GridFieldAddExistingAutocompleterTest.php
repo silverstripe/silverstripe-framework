@@ -64,7 +64,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             array((string)$btns[0]['name'] => 1)
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
+        $result = json_decode($response->getBody(), true);
         $this->assertEquals(1, count($result));
         $this->assertEquals(
             array(array(
@@ -81,7 +81,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             array((string)$btns[0]['name'] => 1)
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
+        $result = json_decode($response->getBody(), true);
         $this->assertEquals(1, count($result), "The relational filter did not work");
 
         $response = $this->post(
@@ -90,7 +90,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             array((string)$btns[0]['name'] => 1)
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
+        $result = json_decode($response->getBody(), true);
         $this->assertEmpty($result, 'The output is either an empty array or boolean FALSE');
     }
 
