@@ -6,6 +6,7 @@ use LogicException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
@@ -44,6 +45,16 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     public $useLegacyFilterHeader = false;
 
     /**
+     * Forces all filter components to revert to displaying the legacy
+     * table header style rather than the react driven search box
+     *
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
+     * @config
+     * @var bool
+     */
+    private static $force_legacy = false;
+
+    /**
      * @var \SilverStripe\ORM\Search\SearchContext
      */
     protected $searchContext = null;
@@ -76,7 +87,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     }
 
     /**
-     * @param bool $useLegacy
+     * @param bool $useLegacy This will be removed in 5.0
      * @param callable|null $updateSearchContext This will be removed in 5.0
      * @param callable|null $updateSearchForm This will be removed in 5.0
      */
@@ -85,7 +96,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         callable $updateSearchContext = null,
         callable $updateSearchForm = null
     ) {
-        $this->useLegacyFilterHeader = $useLegacy;
+        $this->useLegacyFilterHeader = Config::inst()->get(self::class, 'force_legacy') || $useLegacy;
         $this->updateSearchContextCallback = $updateSearchContext;
         $this->updateSearchFormCallback = $updateSearchForm;
     }
