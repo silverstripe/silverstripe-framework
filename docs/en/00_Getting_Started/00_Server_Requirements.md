@@ -61,11 +61,15 @@ redundancy.
 
 For more information on how to scale SilverStripe see the [Performance](/developer_guides/performance/) Guide.
 
-## Client side (CMS) requirements
+## Client side (CMS) browser requirements
 
-SilverStripe CMS is designed to work well with Google Chrome, Mozilla Firefox and Internet Explorer 11+. We aim to
-provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating
-systems.
+SilverStripe CMS supports the following web browsers:
+* Google Chrome
+* Internet Explorer 11
+* Microsoft Edge 
+* Mozilla Firefox.
+ 
+We aim to provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating systems.
 
 ## End user requirements
 
