@@ -299,19 +299,13 @@ class Session
         }
 
         if (!session_id() && !headers_sent()) {
-            if ($domain) {
-                session_set_cookie_params($timeout, $path, $domain, $secure, true);
-            } else {
-                session_set_cookie_params($timeout, $path, null, $secure, true);
-            }
-
             // Allow storing the session in a non standard location
             if ($session_path) {
                 session_save_path($session_path);
             }
 
-            // If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
-            // seperate (less secure) session for non-HTTPS requests
+            // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
+            // separate (less secure) session for non-HTTPS requests
             if ($secure) {
                 session_name($this->config()->get('cookie_name_secure'));
             }
@@ -321,27 +315,29 @@ class Session
                 session_cache_limiter($limiter);
             }
 
-            session_start();
+            $sessionParameters = [
+                "cookie_path" => $path,
+                "cookie_domain" => $domain ?: "",
+                "cookie_secure" => $secure,
+                "cookie_httponly" => true
+            ];
+
+            if ($timeout) {
+                $sessionParameters["cookie_lifetime"] = $timeout;
+            }
+
+            session_start($sessionParameters);
 
             if (isset($_SESSION)) {
                 // Initialise data from session store if present
                 $data = $_SESSION;
                 // Merge in existing in-memory data, taking priority over session store data
                 $this->recursivelyApply((array)$this->data, $data);
-            } else {
-                // Use in-memory data if the session is lazy started
-                $data = $this->data;
+                $this->data = $data;
             }
-            $this->data = $data ?: [];
         } else {
+            // Use in-memory data if the session is lazy started
             $this->data = [];
-        }
-
-        // Modify the timeout behaviour so it's the *inactive* time before the session expires.
-        // By default it's the total session lifetime
-        if ($timeout && !headers_sent()) {
-            Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
-                : null, $secure, true);
         }
 
         $this->started = true;
@@ -497,9 +493,7 @@ class Session
 
     /**
      * Set user agent key
-     *
-     * @param HTTPRequest $request
-     */
+*/
     public function finalize(HTTPRequest $request)
     {
         $this->set('HTTP_USER_AGENT', $this->userAgent($request));
