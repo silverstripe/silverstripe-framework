@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Core\Convert;
@@ -367,6 +368,46 @@ class ManyManyListTest extends SapphireTest
             . ' "ManyManyListTest_ExtraFields"."ID"';
 
         $this->assertSQLEquals($expected, $list->sql($parameters));
+    }
+
+    /**
+     * This tests that we can set a default sort on a join table, even though the class doesn't exist.
+     *
+     * @return void
+     */
+    public function testSortByExtraFieldsDefaultSort()
+    {
+        $obj = new ManyManyListTest\ExtraFieldsObject();
+        $obj->write();
+
+        $obj2 = new ManyManyListTest\ExtraFieldsObject();
+        $obj2->write();
+
+        $money = new DBMoney();
+        $money->setAmount(100);
+        $money->setCurrency('USD');
+
+        // Add two objects as relations (first is linking back to itself)
+        $obj->Clients()->add($obj, ['Worth' => $money, 'Reference' => 'A']);
+        $obj->Clients()->add($obj2, ['Worth' => $money, 'Reference' => 'B']);
+
+        // Set the default sort for this relation
+        Config::inst()->update('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference ASC');
+        $clients = $obj->Clients();
+        $this->assertCount(2, $clients);
+
+        list($first, $second) = $obj->Clients();
+        $this->assertEquals('A', $first->Reference);
+        $this->assertEquals('B', $second->Reference);
+
+        // Now we ensure the default sort is being respected by reversing its order
+        Config::inst()->update('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference DESC');
+        $reverseClients = $obj->Clients();
+        $this->assertCount(2, $reverseClients);
+
+        list($reverseFirst, $reverseSecond) = $obj->Clients();
+        $this->assertEquals('B', $reverseFirst->Reference);
+        $this->assertEquals('A', $reverseSecond->Reference);
     }
 
     public function testFilteringOnPreviouslyJoinedTable()
