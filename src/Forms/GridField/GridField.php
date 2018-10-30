@@ -255,7 +255,7 @@ class GridField extends FormField
         }
 
         // As the edit button may have been removed, add a view button if it doesn't have one
-        if ($copyConfig->getComponentsByType(GridFieldViewButton::class)->count() === 0) {
+        if (!$copyConfig->getComponentByType(GridFieldViewButton::class)) {
             $copyConfig->addComponent(new GridFieldViewButton);
         }
 
@@ -306,7 +306,7 @@ class GridField extends FormField
     public function setReadonly($readonly)
     {
         parent::setReadonly($readonly);
-        $this->getState()->Readonly($readonly);
+        $this->getState()->Readonly = $readonly;
         return $this;
     }
 
@@ -1029,7 +1029,7 @@ class GridField extends FormField
         }
 
         if ($request->getHeader('X-Pjax') === 'CurrentField') {
-            if ($this->getState(true)->Readonly) {
+            if ($this->getState()->Readonly) {
                 $this->performDisabledTransformation();
             }
             return $this->FieldHolder();
