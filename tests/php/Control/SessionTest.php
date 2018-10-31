@@ -335,4 +335,35 @@ class SessionTest extends SapphireTest
             $_SESSION
         );
     }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testSessionOutput()
+    {
+        if (!function_exists('xdebug_get_headers')) {
+            $this->markTestSkipped("This test requires the xdebug_get_headers function");
+        }
+
+        $req = new HTTPRequest('GET', '/');
+
+        // fresh session
+        $session = new Session(null);
+        $session->init($req);
+
+        // save a value to session
+        $session->set('val', 'my value');
+
+        // Session save should emit a Set-Cookie header as part of session_start.
+        $session->save($req);
+
+        $headers = xdebug_get_headers();
+        $sessionHeaderCount = array_reduce($headers, function ($carry, $header) {
+            $carry += (int)preg_match("/Set-Cookie: " . session_name() . "/", $header);
+            return $carry;
+        });
+
+        $this->assertEquals(1, $sessionHeaderCount);
+    }
 }
