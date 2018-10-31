@@ -203,13 +203,14 @@ if (!defined('TEMP_FOLDER')) {
 // Define the Ressource Dir constant that will be use to exposed vendor assets
 if (!defined('RESOURCES_DIR')) {
     $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
-    $resourceDir = $project->getResourcesDir() ?: '_resources';
-    if (preg_match('/[_\-a-z0-9]+/i', $resourceDir)) {
+    $resourceDir = $project->getResourcesDir() ?: 'resources';
+    if (preg_match('/^[_\-a-z0-9]+$/i', $resourceDir)) {
         define('RESOURCES_DIR', $resourceDir);
     } else {
-        throw new Exception(sprintf(
-            'Resource dir error: SS_RESOURCES_DIR %s can only contain alphanumeric characters or underscore or dash.',
-            $resourceDir
+        throw new LogicException(sprintf(
+            'Resources dir error: "%s" is not a valid resources directory name. Update the ' .
+            '`extra.resources-dir` key in your composer.json file',
+            $resourcesDir
         ));
     }
 }
