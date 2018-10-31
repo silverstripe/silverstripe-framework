@@ -1281,6 +1281,12 @@ warnings:
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
     'days_between()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
+    'SilverStripe\Security\Permission::get_declared_permissions_list()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::get_label_for_permission()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::traverse_declared_permissions()':
+      message: 'Deprecated'
   props:
     'class':
       message: '$this->class access has been removed'
@@ -1312,6 +1318,10 @@ warnings:
       replacement: 'writeJavascriptToBody'
     'SilverStripe\Forms\Formfield->dontEscape':
       message: 'FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.'
+    'SilverStripe\Security\Permission::$declared_permissions':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::$declared_permissions_list':
+      message: 'Deprecated'
   functions:
     'file_get_contents()':
       message: 'Use new asset abstraction'

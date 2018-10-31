@@ -69,6 +69,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Method to globally disable "strict" checking, which means a permission
      * will be granted if the key does not exist at all.
      *
+     * @deprecated 4.4.0..5.0.0
      * @var array
      */
     private static $declared_permissions = null;
@@ -76,6 +77,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Linear list of declared permissions in the system.
      *
+     * @deprecated 4.4.0..5.0.0
      * @var array
      */
     private static $declared_permissions_list = null;
@@ -650,6 +652,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Get a linear list of the permissions in the system.
      *
      * @return array Linear list of declared permissions in the system.
+     * @deprecated 4.4.0..5.0.0
      */
     public static function get_declared_permissions_list()
     {
@@ -673,6 +676,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param string $perm Permission code
      * @return string Label for the given permission, or the permission itself if the label doesn't exist
+     * @deprecated 4.4.0..5.0.0
      */
     public static function get_label_for_permission($perm)
     {
@@ -690,6 +694,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param array $declared Nested structure of permissions.
      * @param array $list List of permissions in the structure. The result will be
      *              written to this array.
+     * @deprecated 4.4.0..5.0.0
      */
     protected static function traverse_declared_permissions($declared, &$list)
     {
