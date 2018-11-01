@@ -2051,6 +2051,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $query->setQueryParam('Component.ExtraFields', $extraFields);
         });
 
+        // If we have a default sort set for our "join" then we should overwrite any default already set.
+        $joinSort = Config::inst()->get($manyManyComponent['join'], 'default_sort');
+        if (!empty($joinSort)) {
+            $result = $result->sort($joinSort);
+        }
+
         $this->extend('updateManyManyComponents', $result);
 
         // If this is called on a singleton, then we return an 'orphaned relation' that can have the
