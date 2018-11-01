@@ -2,11 +2,14 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -20,6 +23,8 @@ class ManyManyThroughListTest extends SapphireTest
         ManyManyThroughListTest\PolyJoinObject::class,
         ManyManyThroughListTest\PolyObjectA::class,
         ManyManyThroughListTest\PolyObjectB::class,
+        ManyManyThroughListTest\Locale::class,
+        ManyManyThroughListTest\FallbackLocale::class,
     ];
 
     protected function setUp()
@@ -319,5 +324,33 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals($joinTable, $objA1->Items()->getJoinTable());
         $this->assertEquals($joinTable, $objB1->Items()->getJoinTable());
         $this->assertEquals($joinTable, $objB2->Items()->getJoinTable());
+    }
+
+    /**
+     * This tests that default sort works when the join table has a default sort set, and the main
+     * dataobject has a default sort set.
+     *
+     * @return void
+     */
+    public function testDefaultSortOnJoinAndMain()
+    {
+        // We have spanish mexico with two fall back locales; argentina and international sorted in that order.
+        $mexico = $this->objFromFixture(Locale::class, 'mexico');
+
+        $fallbacks = $mexico->Fallbacks();
+        $this->assertCount(2, $fallbacks);
+
+        // Ensure the default sort is is correct
+        list($first, $second) = $fallbacks;
+        $this->assertSame('Argentina', $first->Title);
+        $this->assertSame('International', $second->Title);
+
+        // Ensure that we're respecting the default sort by reversing it
+        Config::inst()->update(FallbackLocale::class, 'default_sort', '"ManyManyThroughTest_FallbackLocale"."Sort" DESC');
+
+        $reverse = $mexico->Fallbacks();
+        list($firstReverse, $secondReverse) = $reverse;
+        $this->assertSame('International', $firstReverse->Title);
+        $this->assertSame('Argentina', $secondReverse->Title);
     }
 }

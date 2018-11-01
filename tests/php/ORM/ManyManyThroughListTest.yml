@@ -51,3 +51,28 @@ SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject:
     Sort: 2
     Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectB.objb2
     Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem.child2
+SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale:
+  international:
+    Title: 'International'
+    Locale: 'en_NZ'
+    URLSegment: 'international'
+    IsGlobalDefault: 1
+  mexico:
+    Title: 'Mexico'
+    Locale: 'es_MX'
+    URLSegment: 'mexico'
+    IsGlobalDefault: 0
+  argentina:
+    Title: 'Argentina'
+    Locale: 'es_AR'
+    URLSegment: 'argentina'
+    IsGlobalDefault: 0
+SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale:
+  mexico_international:
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale.mexico
+    Locale: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale.international
+  mexico_argentina:
+    Sort: 1
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale.mexico
+    Locale: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale.argentina
