@@ -1029,7 +1029,7 @@ class GridField extends FormField
         }
 
         if ($request->getHeader('X-Pjax') === 'CurrentField') {
-            if ($this->getState()->Readonly) {
+            if ($this->getState()->Readonly === true) {
                 $this->performDisabledTransformation();
             }
             return $this->FieldHolder();
