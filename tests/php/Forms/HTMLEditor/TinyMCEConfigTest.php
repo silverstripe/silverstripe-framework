@@ -9,6 +9,13 @@ use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class TinyMCEConfigTest extends SapphireTest
 {
+
+    public function testEditorIdentifier()
+    {
+        $config = TinyMCEConfig::get('myconfig');
+        $this->assertEquals('myconfig', $config->getOption('editorIdentifier'));
+    }
+
     /**
      * Ensure that all TinyMCEConfig.tinymce_lang are valid
      */
