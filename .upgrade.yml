@@ -958,6 +958,9 @@ warnings:
     'Object':
       message: 'Replaced with traits'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
+    'SS_Object':
+      message: 'Replaced with traits'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
     'SS_Log':
       message: 'Replaced with a PSR-3 logger'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#psr3-logging'
