@@ -93,6 +93,10 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function handleItem($gridField, $request)
     {
+        if ($gridStateStr = $request->getVar('gridState')) {
+            $gridField->getState(false)->setValue($gridStateStr);
+        }
+
         // Our getController could either give us a true Controller, if this is the top-level GridField.
         // It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
         // nested GridField.

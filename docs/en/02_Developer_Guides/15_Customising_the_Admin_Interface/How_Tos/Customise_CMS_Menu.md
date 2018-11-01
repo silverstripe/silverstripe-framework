@@ -124,6 +124,17 @@ SilverStripe\Admin\LeftAndMain:
     'Feedback': ''
 ```
 
+## Customising the CMS form actions
+
+The `Previous`, `Next` and `Add` actions on the edit form are visible by default but can be hidden by adding the following `.yml` config:
+
+```yml
+FormActions:
+  showPrevious: false
+  showNext: false
+  showAdd: false
+```
+
 ## Related
 
  * [How to extend the CMS interface](extend_cms_interface)

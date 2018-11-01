@@ -1,0 +1,8 @@
+---
+Name: buttons
+---
+SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+  formActions:
+    showPrevious: true
+    showNext: true
+    showAdd: true
