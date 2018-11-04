@@ -82,7 +82,7 @@ class MyController extends Controller
 
     // we declare the types for each of the properties on the object. Anything we pass in via the Injector API must
     // match these data types.
-    static $dependencies = [
+    private static $dependencies = [
         'textProperty'        => 'a string value',
         'permissions'        => '%$PermissionService',
     ];
@@ -137,6 +137,51 @@ SilverStripe\Core\Injector\Injector:
     calls:
       - [ pushHandler, [ %$DefaultHandler ] ]
 ```
+
+## Constructor dependency injection
+
+Any class resolved through `Injector` may optionally have constructor parameters resolved and auto-provided with `Injector`. Injector will attempt this on constructors that are tagged with `@Injectable` in the docblock.
+
+```php
+use SilverStripe\Control\Controller;
+use My\Project\PermissionService;
+
+class MyController extends Controller 
+{
+    protected $permissions;
+    
+    /**
+     * @Injectable
+     */
+    public function __construct(PermissionService $permissions) 
+    {
+        $this->permissions = $permissions;
+    }
+}
+```
+
+Additionally, overriding constructors that already take some arguments is also supported. For example, when overriding `ContentController` from silverstripe/cms:
+
+```php
+use SilverStripe\CMS\Controllers\ContentController;
+
+class MyPageController extends ContentController 
+{
+    protected $cacheFactory;
+    
+    /**
+     * @Injectable
+     */
+    public function __construct(CacheFactory $factory, $dataRecord = null)
+    {
+        $this->cacheFactory = $factory;
+        
+        parent::__construct($dataRecord);
+    } 
+}
+```
+
+You may also used tagged injections
 
 ## Using constants as variables
 

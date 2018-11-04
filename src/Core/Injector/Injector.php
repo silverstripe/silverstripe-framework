@@ -41,7 +41,7 @@ use SilverStripe\ORM\DataObject;
  *      public $permissions;
  *      public $defaultText;
  *
- *      static $dependencies = array(
+ *      private static $dependencies = array(
  *          'defaultText'       => 'Override in configuration',
  *          'permissions'       => '%$PermissionService',
  *      );

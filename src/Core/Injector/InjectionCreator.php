@@ -10,13 +10,20 @@ use ReflectionException;
  */
 class InjectionCreator implements Factory
 {
-
-    public function create($class, array $params = array())
+    public function create($class, array $params = [])
     {
         try {
             $reflector = new ReflectionClass($class);
         } catch (ReflectionException $e) {
             throw new InjectorNotFoundException($e);
+        }
+
+        if ($constructor = $reflector->getConstructor()) {
+            $constructorInjector = new MethodInjector($constructor);
+
+            if ($constructorInjector->isMarkedInjectable()) {
+                $params = $constructorInjector->provideMethodParams($params);
+            }
         }
 
         if (count($params)) {
