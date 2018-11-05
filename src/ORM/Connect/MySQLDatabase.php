@@ -495,8 +495,9 @@ class MySQLDatabase extends Database
     {
         $id = $this->getLockIdentifier($name);
 
-        // MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
-        // in contrast to PostgreSQL and SQL Server who stack the locks.
+        // MySQL 5.7.4 and below auto-releases existing locks on subsequent GET_LOCK() calls.
+        // MySQL 5.7.5 and newer allow multiple locks per sessions even with the same name.
+        // https://dev.mysql.com/doc/refman/5.7/en/miscellaneous-functions.html#function_get-lock
         return (bool) $this->query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
     }
 
