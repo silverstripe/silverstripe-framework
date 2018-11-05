@@ -1456,6 +1456,13 @@ class DataObjectTest extends SapphireTest
             'Default Value',
             'Defaults are populated from overloaded populateDefaults() method'
         );
+
+        // Test populate defaults on subclasses
+        $staffObj = new DataObjectTest\Staff();
+        $this->assertEquals('Staff', $staffObj->EmploymentType);
+
+        $ceoObj = new DataObjectTest\CEO();
+        $this->assertEquals('Staff', $ceoObj->EmploymentType);
     }
 
     /**

@@ -9,6 +9,7 @@ class Staff extends DataObject implements TestOnly
 {
     private static $db = array(
         'Salary' => 'BigInt',
+        'EmploymentType' => 'Varchar',
     );
 
     private static $table_name = 'DataObjectTest_Staff';
@@ -17,4 +18,8 @@ class Staff extends DataObject implements TestOnly
         'CurrentCompany' => Company::class,
         'PreviousCompany' => Company::class
     );
+
+    private static $defaults = [
+        'EmploymentType' => 'Staff',
+    ];
 }
