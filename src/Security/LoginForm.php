@@ -39,10 +39,18 @@ abstract class LoginForm extends Form
     public function setAuthenticatorClass($class)
     {
         $this->authenticatorClass = $class;
-        $authenticatorField = $this->Fields()->dataFieldByName('AuthenticationMethod');
+
+        /** @var FieldList|null $fields */
+        $fields = $this->Fields();
+        if (!$fields) {
+            return $this;
+        }
+
+        $authenticatorField = $fields->dataFieldByName('AuthenticationMethod');
         if ($authenticatorField) {
             $authenticatorField->setValue($class);
         }
+
         return $this;
     }
 
