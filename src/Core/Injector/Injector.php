@@ -13,6 +13,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DataObject;
 
 /**
  * A simple injection manager that manages creating objects and injecting
@@ -579,6 +580,14 @@ class Injector implements ContainerInterface
         $constructorParams = array();
         if (isset($spec['constructor']) && is_array($spec['constructor'])) {
             $constructorParams = $spec['constructor'];
+        }
+
+        // If we're dealing with a DataObject singleton without specific constructor params, pass through Singleton
+        // flag as second argument
+        if ((!$type || $type !== self::PROTOTYPE)
+            && empty($constructorParams)
+            && is_subclass_of($class, DataObject::class)) {
+            $constructorParams = array(null, true);
         }
 
         $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
