@@ -564,6 +564,7 @@ class Convert
 
     /**
      * Turn a memory string, such as 512M into an actual number of bytes.
+     * Preserves integer values like "1024" or "-1"
      *
      * @param string $memString A memory limit string, such as "64M"
      * @return float
@@ -573,7 +574,7 @@ class Convert
         // Remove  non-unit characters from the size
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString);
         // Remove non-numeric characters from the size
-        $size = preg_replace('/[^0-9\.]/', '', $memString);
+        $size = preg_replace('/[^0-9\.\-]/', '', $memString);
 
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power

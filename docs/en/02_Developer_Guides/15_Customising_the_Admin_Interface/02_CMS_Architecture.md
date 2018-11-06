@@ -55,15 +55,35 @@ coding conventions.
 
 A pattern library is a collection of user interface design elements, this helps developers and designers collaborate and to provide a quick preview of elements as they were intended without the need to build an entire interface to see it.
 Components built in React and used by the CMS are actively being added to the pattern library.
+The pattern library can be used to preview React components without including them in the SilverStripe CMS.
 
-To access the pattern library, starting from your project root:
+### Viewing the latest pattern library
 
+The easiest way to access the pattern library is to view it online. The pattern library for the latest SilverStripe 4 development branch is automatically built and deployed. Note that this may include new components that are not yet available in a stable release.
+
+[Browse the SilverStripe pattern library online](https://silverstripe.github.io/silverstripe-admin).
+
+### Running the pattern library
+
+If you're developing a new React component, running the pattern library locally is a good way to interact with it. 
+
+The pattern library is built from the `silverstripe/admin` module, but it also requires `silverstripe/asset-admin`, `silversrtipe/cms` and `silverstripe/campaign-admin`.
+
+To run the pattern library locally, you'll need a SilverStripe project based on `silverstripe/recipe-cms` and `yarn` installed locally. The pattern library requires the JS source files so you'll need to use the `--prefer-source` flag when installing your dependencies with Composer.
+
+```bash
+composer install --prefer-source
+(cd vendor/silverstripe/asset-admin && yarn install)
+(cd vendor/silverstripe/campaign-admin && yarn install)
+(cd vendor/silverstripe/cms && yarn install)
+cd vendor/silverstripe/admin && yarn install && yarn pattern-lib
 ```
-cd vendor/silverstripe/admin && yarn pattern-lib
-```
 
-Then browse to `http://localhost:6006/`
+The pattern library will be available at [http://localhost:6006](http://localhost:6006). The JS source files will be watched, so every time you make a change to a JavaScript file, the pattern library will automatically update itself.
 
+If you want to build a static version of the pattern library, you can replace `yarn pattern-lib` with `yarn build-storybook`. This will output the pattern library files to a `storybook-static` folder.
+
+The SilverStripe pattern library is built using the [StoryBook JS library](https://storybook.js.org/). You can read the StoryBook documentation to learn about more advanced features and customisation options. 
 
 ## The Admin URL
 

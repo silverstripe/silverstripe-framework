@@ -94,7 +94,7 @@ class SingleLookupField extends SingleSelectField
             return $label;
         }
 
-        return $value;
+        return parent::Value();
     }
 
     /**
