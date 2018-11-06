@@ -576,6 +576,7 @@ XML
     public function memString2BytesProvider()
     {
         return [
+            ['-1', (float)-1],
             ['2048', (float)(2 * 1024)],
             ['2k', (float)(2 * 1024)],
             ['512M', (float)(512 * 1024 * 1024)],
