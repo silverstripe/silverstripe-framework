@@ -378,7 +378,7 @@ class FormRequestHandler extends RequestHandler
         $acceptType = $this->getRequest()->getHeader('Accept');
         if (strpos($acceptType, 'application/json') !== false) {
             // Send validation errors back as JSON with a flag at the start
-            $response = new HTTPResponse(Convert::array2json($result->getMessages()));
+            $response = new HTTPResponse(json_encode($result->getMessages()));
             $response->addHeader('Content-Type', 'application/json');
             return $response;
         }

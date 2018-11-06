@@ -130,11 +130,13 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 
         // Register vars for config
         $baseDirJS = Convert::raw2js(Director::absoluteBaseURL());
+        $name = Convert::raw2js($this->checkName($config));
         $buffer = [];
         $buffer[] = <<<SCRIPT
 (function() {
   var baseTag = window.document.getElementsByTagName('base');
   var baseURL = baseTag.length ? baseTag[0].baseURI : '$baseDirJS';
+  var editorIdentifier = '$name';
 SCRIPT;
         $buffer[] = <<<SCRIPT
 (function() {

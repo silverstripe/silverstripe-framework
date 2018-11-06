@@ -85,5 +85,6 @@ class ExtensionTestState implements TestState
 
     public function tearDownOnce($class)
     {
+        DataObject::flush_extra_methods_cache();
     }
 }

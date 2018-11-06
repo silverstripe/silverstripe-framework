@@ -126,6 +126,10 @@ trait Extensible
                 $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
                     /** @var Extensible $inst */
                     $extension = $inst->getExtensionInstance($extensionClass);
+                    if (!$extension) {
+                        return null;
+                    }
+
                     try {
                         $extension->setOwner($inst);
                         return call_user_func_array([$extension, $method], $args);

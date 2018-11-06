@@ -47,7 +47,7 @@ Look for the line which describes the box you are going to use:
 config.vm.box = "base"
 ```
 
-This defines what pre-built Operating System the vagrant machine will be using. We'll be changing `base` to something closer to what we’d like, perhaps similar to your production server, you can find a range of boxes [listed here](https://atlas.hashicorp.com/search)
+This defines what pre-built Operating System the vagrant machine will be using. We'll be changing `base` to something closer to what we’d like, perhaps similar to your production server, you can find a range of boxes [listed here](https://app.vagrantup.com/boxes/search)
 
 We've chosen to use `RHEL7.0`, but you can easily change it to suit your needs.
 ```ruby

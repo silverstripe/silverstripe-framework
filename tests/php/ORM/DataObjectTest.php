@@ -66,6 +66,51 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    /**
+     * @dataProvider provideSingletons
+     */
+    public function testSingleton($inst, $defaultValue, $altDefaultValue)
+    {
+        $inst = $inst();
+        // Test that populateDefaults() isn't called on singletons
+        // which can lead to SQL errors during build, and endless loops
+        if ($defaultValue) {
+            $this->assertEquals($defaultValue, $inst->MyFieldWithDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithDefault);
+        }
+
+        if ($altDefaultValue) {
+            $this->assertEquals($altDefaultValue, $inst->MyFieldWithAltDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithAltDefault);
+        }
+    }
+
+    public function provideSingletons()
+    {
+        // because PHPUnit evalutes test providers *before* setUp methods
+        // any extensions added in the setUp methods won't be available
+        // we must return closures to generate the arguments at run time
+        return array(
+            'create() static method' => array(function () {
+                return DataObjectTest\Fixture::create();
+            }, 'Default Value', 'Default Value'),
+            'New object creation' => array(function () {
+                return new DataObjectTest\Fixture();
+            }, 'Default Value', 'Default Value'),
+            'singleton() function' => array(function () {
+                return singleton(DataObjectTest\Fixture::class);
+            }, null, null),
+            'singleton() static method' => array(function () {
+                return DataObjectTest\Fixture::singleton();
+            }, null, null),
+            'Manual constructor args' => array(function () {
+                return new DataObjectTest\Fixture(null, true);
+            }, null, null),
+        );
+    }
+
     public function testDb()
     {
         $schema = DataObject::getSchema();
@@ -766,6 +811,75 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    public function testChangedFieldsWhenRestoringData()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $obj->FirstName = 'Captain-changed';
+        $obj->FirstName = 'Captain';
+
+        $this->assertEquals(
+            [],
+            $obj->getChangedFields(true, DataObject::CHANGE_STRICT)
+        );
+    }
+
+    public function testChangedFieldsAfterWrite()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $obj->FirstName = 'Captain-changed';
+        $obj->write();
+        $obj->FirstName = 'Captain';
+
+        $this->assertEquals(
+            array(
+                'FirstName' => array(
+                    'before' => 'Captain-changed',
+                    'after' => 'Captain',
+                    'level' => DataObject::CHANGE_VALUE,
+                ),
+            ),
+            $obj->getChangedFields(true, DataObject::CHANGE_VALUE)
+        );
+    }
+
+    public function testForceChangeCantBeCancelledUntilWrite()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $this->assertFalse($obj->isChanged('FirstName'));
+        $this->assertFalse($obj->isChanged('Surname'));
+
+        // Force change marks the records as changed
+        $obj->forceChange();
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // ...but not if we explicitly ask if the value has changed
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+        $this->assertFalse($obj->isChanged('Surname', DataObject::CHANGE_VALUE));
+
+        // Not overwritten by setting the value to is original value
+        $obj->FirstName = 'Captain';
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // Not overwritten by changing it to something else and back again
+        $obj->FirstName = 'Captain-changed';
+        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+
+        $obj->FirstName = 'Captain';
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // Cleared after write
+        $obj->write();
+        $this->assertFalse($obj->isChanged('FirstName'));
+        $this->assertFalse($obj->isChanged('Surname'));
+
+        $obj->FirstName = 'Captain';
+        $this->assertFalse($obj->isChanged('FirstName'));
+    }
+
     /**
      * @skipUpgrade
      */
@@ -1457,6 +1571,13 @@ class DataObjectTest extends SapphireTest
             'Default Value',
             'Defaults are populated from overloaded populateDefaults() method'
         );
+
+        // Test populate defaults on subclasses
+        $staffObj = new DataObjectTest\Staff();
+        $this->assertEquals('Staff', $staffObj->EmploymentType);
+
+        $ceoObj = new DataObjectTest\CEO();
+        $this->assertEquals('Staff', $ceoObj->EmploymentType);
     }
 
     /**

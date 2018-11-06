@@ -106,7 +106,7 @@ class PDOConnector extends DBConnector
      */
     public static function is_emulate_prepare()
     {
-        return Config::inst()->get('SilverStripe\ORM\Connect\PDOConnector', 'emulate_prepare');
+        return self::config()->get('emulate_prepare');
     }
 
     public function connect($parameters, $selectDB = false)
@@ -159,8 +159,8 @@ class PDOConnector extends DBConnector
         }
 
         // Connection charset and collation
-        $connCharset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_charset');
-        $connCollation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_collation');
+        $connCharset = Config::inst()->get(MySQLDatabase::class, 'connection_charset');
+        $connCollation = Config::inst()->get(MySQLDatabase::class, 'connection_collation');
 
         // Set charset if given and not null. Can explicitly set to empty string to omit
         if (!in_array($parameters['driver'], ['sqlsrv', 'pgsql'])) {
@@ -327,7 +327,8 @@ class PDOConnector extends DBConnector
     public function bindParameters(PDOStatement $statement, $parameters)
     {
         // Bind all parameters
-        for ($index = 0; $index < count($parameters); $index++) {
+        $parameterCount = count($parameters);
+        for ($index = 0; $index < $parameterCount; $index++) {
             $value = $parameters[$index];
             $phpType = gettype($value);
 
@@ -340,7 +341,7 @@ class PDOConnector extends DBConnector
             // Check type of parameter
             $type = $this->getPDOParamType($phpType);
             if ($type === PDO::PARAM_STR) {
-                $value = strval($value);
+                $value = (string) $value;
             }
 
             // Bind this value
@@ -390,7 +391,6 @@ class PDOConnector extends DBConnector
         // Ensure statement is closed
         if ($statement) {
             $statement->closeCursor();
-            unset($statement);
         }
 
         // Report any errors

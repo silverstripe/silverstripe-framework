@@ -371,7 +371,7 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         return [
             'data-editor' => 'tinyMCE', // Register ss.editorWrappers.tinyMCE
-            'data-config' => Convert::array2json($this->getConfig()),
+            'data-config' => json_encode($this->getConfig()),
         ];
     }
 

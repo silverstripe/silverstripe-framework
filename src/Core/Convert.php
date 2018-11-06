@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use InvalidArgumentException;
@@ -150,26 +151,31 @@ class Convert
      * Encode a value as a JSON encoded string. You can optionally pass a bitmask of
      * JSON constants as options through to the encode function.
      *
+     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
      * @param  mixed $val     Value to be encoded
      * @param  int   $options Optional bitmask of JSON constants
      * @return string           JSON encoded string
      */
     public static function raw2json($val, $options = 0)
     {
+        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+
         return json_encode($val, $options);
     }
 
     /**
      * Encode an array as a JSON encoded string.
-     * This is an alias to {@link raw2json()}
      *
+     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
      * @param  array  $val     Array to convert
      * @param  int    $options Optional bitmask of JSON constants
      * @return string          JSON encoded string
      */
     public static function array2json($val, $options = 0)
     {
-        return self::raw2json($val, $options);
+        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+
+        return json_encode($val, $options);
     }
 
     /**
@@ -240,23 +246,28 @@ class Convert
     /**
      * Convert a JSON encoded string into an object.
      *
+     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
      * @param string $val
      * @return object|boolean
      */
     public static function json2obj($val)
     {
+        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+
         return json_decode($val);
     }
 
     /**
      * Convert a JSON string into an array.
      *
-     * @uses json2obj
+     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
      * @param string $val JSON string to convert
      * @return array|boolean
      */
     public static function json2array($val)
     {
+        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+
         return json_decode($val, true);
     }
 
@@ -553,6 +564,7 @@ class Convert
 
     /**
      * Turn a memory string, such as 512M into an actual number of bytes.
+     * Preserves integer values like "1024" or "-1"
      *
      * @param string $memString A memory limit string, such as "64M"
      * @return float
@@ -562,7 +574,7 @@ class Convert
         // Remove  non-unit characters from the size
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString);
         // Remove non-numeric characters from the size
-        $size = preg_replace('/[^0-9\.]/', '', $memString);
+        $size = preg_replace('/[^0-9\.\-]/', '', $memString);
 
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power

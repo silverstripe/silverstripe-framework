@@ -295,6 +295,15 @@ class Supporter extends DataObject
 }
 ```
 
+To ensure this `many_many` is sorted by "Ranking" by default you can add this to your config:
+
+```yaml
+Team_Supporters:
+  default_sort: '"Team_Supporter"."Ranking" ASC'
+```
+
+`Team_Supporters` is the table name automatically generated for the many_many relation in this case.
+
 ### many_many through relationship joined on a separate DataObject
 
 If necessary, a third DataObject class can instead be specified as the joining table,
@@ -311,6 +320,9 @@ This is declared via array syntax, with the following keys on the many_many:
  - `through` Class name of the mapping table
  - `from` Name of the has_one relationship pointing back at the object declaring many_many
  - `to` Name of the has_one relationship pointing to the object declaring belongs_many_many.
+
+Just like a any normal DataObject, you can apply a default sort which will be applied when
+accessing many many through relations.
 
 Note: The `through` class must not also be the name of any field or relation on the parent
 or child record.
@@ -348,6 +360,8 @@ class TeamSupporter extends DataObject
         'Team' => Team::class,
         'Supporter' => Supporter::class,
     ];
+
+    private static $default_sort = '"TeamSupporter"."Ranking" ASC'
 }
 ```
 
@@ -467,6 +481,7 @@ the best way to think about it is that the object where the relationship will be
 (i.e. via checkboxes) should contain the `many_many`. For instance, in a `many_many` of
 Product => Categories, the `Product` should contain the `many_many`, because it is much
 more likely that the user will select Categories for a Product than vice-versa.
+
 
 ## Cascading deletions
 

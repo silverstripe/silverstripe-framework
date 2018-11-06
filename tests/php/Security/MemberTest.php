@@ -659,10 +659,14 @@ class MemberTest extends FunctionalTest
         $member = $this->objFromFixture(Member::class, 'test');
         $member->setName('Test Some User');
         $this->assertEquals('Test Some User', $member->getName());
+        $this->assertEquals('Test Some', $member->FirstName);
+        $this->assertEquals('User', $member->Surname);
         $member->setName('Test');
         $this->assertEquals('Test', $member->getName());
         $member->FirstName = 'Test';
         $member->Surname = '';
+        $this->assertEquals('Test', $member->FirstName);
+        $this->assertEquals('', $member->Surname);
         $this->assertEquals('Test', $member->getName());
     }
 

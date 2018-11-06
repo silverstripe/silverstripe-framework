@@ -37,6 +37,12 @@ abstract class DBComposite extends DBField
     private static $composite_db = array();
 
     /**
+     * Marker as to whether this record has changed
+     * Only used when deference to the parent object isn't possible
+     */
+    protected $isChanged = false;
+
+    /**
      * Either the parent dataobject link, or a record of saved values for each field
      *
      * @var array|DataObject
@@ -113,6 +119,10 @@ abstract class DBComposite extends DBField
     }
 
 
+    /**
+     * Returns true if this composite field has changed.
+     * For fields bound to a DataObject, this will be cleared when the DataObject is written.
+     */
     public function isChanged()
     {
         // When unbound, use the local changed flag

@@ -69,7 +69,7 @@ class HTMLEditorConfigTest extends SapphireTest
             )
         );
         $attributes = $c->getAttributes();
-        $config = Convert::json2array($attributes['data-config']);
+        $config = json_decode($attributes['data-config'], true);
         $plugins = $config['external_plugins'];
         $this->assertNotEmpty($plugins);
 
@@ -140,7 +140,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertNotContains('plugin1', array_keys($plugins));
         $this->assertNotContains('plugin2', array_keys($plugins));
     }
-
+    
     public function testRequireJSIncludesAllConfigs()
     {
         $a = HTMLEditorConfig::get('configA');

@@ -6,6 +6,7 @@ use LogicException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
@@ -48,6 +49,16 @@ class GridFieldFilterHeader implements
     public $useLegacyFilterHeader = false;
 
     /**
+     * Forces all filter components to revert to displaying the legacy
+     * table header style rather than the react driven search box
+     *
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
+     * @config
+     * @var bool
+     */
+    private static $force_legacy = false;
+
+    /**
      * @var \SilverStripe\ORM\Search\SearchContext
      */
     protected $searchContext = null;
@@ -80,7 +91,7 @@ class GridFieldFilterHeader implements
     }
 
     /**
-     * @param bool $useLegacy
+     * @param bool $useLegacy This will be removed in 5.0
      * @param callable|null $updateSearchContext This will be removed in 5.0
      * @param callable|null $updateSearchForm This will be removed in 5.0
      */
@@ -89,7 +100,7 @@ class GridFieldFilterHeader implements
         callable $updateSearchContext = null,
         callable $updateSearchForm = null
     ) {
-        $this->useLegacyFilterHeader = $useLegacy;
+        $this->useLegacyFilterHeader = Config::inst()->get(self::class, 'force_legacy') || $useLegacy;
         $this->updateSearchContextCallback = $updateSearchContext;
         $this->updateSearchFormCallback = $updateSearchForm;
     }
@@ -158,7 +169,7 @@ class GridFieldFilterHeader implements
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
-     * @return array
+     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
@@ -167,14 +178,13 @@ class GridFieldFilterHeader implements
         }
 
         $state = $gridField->State->GridFieldFilterHeader;
+        $state->Columns = null;
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
                 foreach ($data['filter'][$gridField->getName()] as $key => $filter) {
                     $state->Columns->$key = $filter;
                 }
             }
-        } elseif ($actionName === 'reset') {
-            $state->Columns = null;
         }
     }
 
@@ -197,12 +207,10 @@ class GridFieldFilterHeader implements
 
         $filterArguments = $columns->toArray();
         $dataListClone = clone($dataList);
-        foreach ($filterArguments as $columnName => $value) {
-            if ($dataList->canFilterBy($columnName) && $value) {
-                $dataListClone = $dataListClone->filter($columnName . ':PartialMatch', $value);
-            }
-        }
-        return $dataListClone;
+        $results = $this->getSearchContext($gridField)
+            ->getQuery($filterArguments, false, false, $dataListClone);
+
+        return $results;
     }
 
     /**
@@ -297,7 +305,7 @@ class GridFieldFilterHeader implements
                 ->getAttribute('name')
         ];
 
-        return Convert::raw2json($schema);
+        return json_encode($schema);
     }
 
     /**
@@ -343,9 +351,11 @@ class GridFieldFilterHeader implements
             $field->addExtraClass('stacked');
         }
 
+        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+
         $this->searchForm = $form = new Form(
             $gridField,
-            "SearchForm",
+            $name . "SearchForm",
             $searchFields,
             new FieldList()
         );
@@ -383,7 +393,7 @@ class GridFieldFilterHeader implements
         $data = FormSchema::singleton()
             ->getMultipartSchema($parts, $schemaID, $form);
 
-        $response = new HTTPResponse(Convert::raw2json($data));
+        $response = new HTTPResponse(json_encode($data));
         $response->addHeader('Content-Type', 'application/json');
         return $response;
     }
