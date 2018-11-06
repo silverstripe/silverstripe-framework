@@ -494,7 +494,7 @@ class Session
 
     /**
      * Set user agent key
-*/
+     */
     public function finalize(HTTPRequest $request)
     {
         $this->set('HTTP_USER_AGENT', $this->userAgent($request));
