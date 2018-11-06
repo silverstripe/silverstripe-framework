@@ -101,6 +101,7 @@ class GridField_FormAction extends FormAction
                 // will strip it from the requests
                 'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
                 'data-url' => $this->gridField->Link(),
+                'type' => "button",
             )
         );
     }

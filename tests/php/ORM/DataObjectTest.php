@@ -66,6 +66,51 @@ class DataObjectTest extends SapphireTest
         );
     }
 
+    /**
+     * @dataProvider provideSingletons
+     */
+    public function testSingleton($inst, $defaultValue, $altDefaultValue)
+    {
+        $inst = $inst();
+        // Test that populateDefaults() isn't called on singletons
+        // which can lead to SQL errors during build, and endless loops
+        if ($defaultValue) {
+            $this->assertEquals($defaultValue, $inst->MyFieldWithDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithDefault);
+        }
+
+        if ($altDefaultValue) {
+            $this->assertEquals($altDefaultValue, $inst->MyFieldWithAltDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithAltDefault);
+        }
+    }
+
+    public function provideSingletons()
+    {
+        // because PHPUnit evalutes test providers *before* setUp methods
+        // any extensions added in the setUp methods won't be available
+        // we must return closures to generate the arguments at run time
+        return array(
+            'create() static method' => array(function () {
+                return DataObjectTest\Fixture::create();
+            }, 'Default Value', 'Default Value'),
+            'New object creation' => array(function () {
+                return new DataObjectTest\Fixture();
+            }, 'Default Value', 'Default Value'),
+            'singleton() function' => array(function () {
+                return singleton(DataObjectTest\Fixture::class);
+            }, null, null),
+            'singleton() static method' => array(function () {
+                return DataObjectTest\Fixture::singleton();
+            }, null, null),
+            'Manual constructor args' => array(function () {
+                return new DataObjectTest\Fixture(null, true);
+            }, null, null),
+        );
+    }
+
     public function testDb()
     {
         $schema = DataObject::getSchema();
