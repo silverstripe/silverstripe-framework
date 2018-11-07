@@ -346,7 +346,11 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertSame('International', $second->Title);
 
         // Ensure that we're respecting the default sort by reversing it
-        Config::inst()->update(FallbackLocale::class, 'default_sort', '"ManyManyThroughTest_FallbackLocale"."Sort" DESC');
+        Config::modify()->set(
+            FallbackLocale::class,
+            'default_sort',
+            '"ManyManyThroughTest_FallbackLocale"."Sort" DESC'
+        );
 
         $reverse = $mexico->Fallbacks();
         list($firstReverse, $secondReverse) = $reverse;
