@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use Error;
 use Exception;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Convenience class for generating cryptographically secure pseudo-random strings/tokens
@@ -13,9 +14,12 @@ class RandomGenerator
     /**
      * @return string A 128-character, randomly generated ASCII string
      * @throws Exception If no suitable CSPRNG is installed
+     * @deprecated 4.4.0:5.0.0
      */
     public function generateEntropy()
     {
+        Deprecation::notice('4.4', __METHOD__ . ' has been deprecated. Use random_bytes instead');
+
         try {
             return bin2hex(random_bytes(64));
         } catch (Error $e) {
@@ -38,9 +42,10 @@ class RandomGenerator
      *
      * @param string $algorithm Any identifier listed in hash_algos() (Default: whirlpool)
      * @return string Returned length will depend on the used $algorithm
+     * @throws Exception When there is no valid source of CSPRNG
      */
     public function randomToken($algorithm = 'whirlpool')
     {
-        return hash($algorithm, $this->generateEntropy());
+        return hash($algorithm, random_bytes(64));
     }
 }
