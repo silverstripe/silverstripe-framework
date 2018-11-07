@@ -146,7 +146,4 @@ ja:
     ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
     LOGIN: ログイン
     NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
-    NOTERESETLINKINVALID: '<p>パスワードのリセットリンクは有効でないか期限切れです。</p><p> 新しいパスワードを要求することができます <a href="{link1}"> ここ </a> もしくはパスワードを変更することができます <a href="{link2}"> ログインした後 </a>.</p>'
     NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
-    PASSWORDSENTHEADER: 'パスワードリセットリンクは ''{email}'' に送信されました'
-    PASSWORDSENTTEXT: 'ありがとうございました！　リセットリンクは、''{email}'' に、このアカウントが存在することを前提として送信されました。'

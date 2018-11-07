@@ -228,7 +228,4 @@ sk:
     LOGIN: Prihlásiť
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
-    NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je vypršala jeho platnosť.</p><p>Môžete požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo po <a href="{link2}">prihlásení</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
-    PASSWORDSENTHEADER: 'Odkaz na resetovanie hesla bol odoslaný na ''{email}'''
-    PASSWORDSENTTEXT: 'Ďakujeme! Resetovací odkaz bol odoslaný na ''''{email}'''', pokiaľ účet existuje pre túto emailovú adresu.'

@@ -166,7 +166,4 @@ zh:
     LOGIN: 登录
     LOSTPASSWORDHEADER: 忘记密码
     NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
-    NOTERESETLINKINVALID: '<p>密码重设链接无效或已过期。</p><p>您可以在<a href="{link1}">这里</a> 要求一个新的或在<a href="{link2}">登录</a>后更改您的密码。</p>'
     NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码
-    PASSWORDSENTHEADER: '密码重设链接已发送至''{email}'''
-    PASSWORDSENTTEXT: '谢谢！复位链接已发送到 ''{email}''，假定此电子邮件地址存在一个帐户。'

@@ -1,5 +1,328 @@
 da:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: ukendt
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensioner
+    EDIT: Rediger
+    EDITINFO: 'Rediger denne fil'
+    REMOVE: Fjern
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Koden for kontoen med  email addressen {email} er ændret. Hvis du ikke har skiftet din kode, så skift venligst din kode ved at klikke på linket herunder'
+    CHANGEPASSWORDTEXT1: 'Du skiftede dit kodeord for'
+    CHANGEPASSWORDTEXT3: 'Skift kodeord'
+    HELLO: Hej
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hej
+    TEXT1: 'Her er din'
+    TEXT2: 'link til at nulstille dit kodeord'
+    TEXT3: for
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Ugyldig forespørgsel'
+    REQUEST_ABORTED: 'Forespørgsel annulleret'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Ukendt
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Nej
+    YESANSWER: Ja
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Ingen tilgængelige muligheder'
+  SilverStripe\Forms\ConfirmedPasswordField:
+    ATLEAST: 'Kodeord skal være mindst {min} tegn lang.'
+    BETWEEN: 'Kodeord skal være {min} til {max} karakterer lang.'
+    CURRENT_PASSWORD_ERROR: 'Det nuværende kodeord du har indtastet er ikke korrekt.'
+    CURRENT_PASSWORD_MISSING: 'Du skal indtaste dit nuværende kodeord.'
+    LOGGED_IN_ERROR: 'Du skal være logget ind for at skifte dit kodeord.'
+    MAXIMUM: 'Kodeord må maks være {max} tegn lang'
+    SHOWONCLICKTITLE: 'Skift kodeord'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: DKK
+  SilverStripe\Forms\DateField:
+    VALIDDATEFORMAT2: 'Indtats venligst et gyldigt datoformat ({format})'
+    VALIDDATEMAXDATE: 'Din dato skal være ældre end eller matche den maksimalt tilladte dato ({date})'
+    VALIDDATEMINDATE: 'Din dato skal være yngre end eller matche den minimum tilladte dato ({date})'
+  SilverStripe\Forms\DatetimeField:
+    VALIDDATEMAXDATETIME: 'Din dato skal være ældre end eller matche den maksimalt tilladte dato ({datetime})'
+    VALIDDATETIMEFORMAT: 'Indtats venligst et gyldigt dato- og tidsformat ({format})'
+    VALIDDATETIMEMINDATE: 'Din dato skal være yngre end eller matche den minimum tilladte dato og tid ({datetime})'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Vælg)
+    CHOOSE_MODEL: '(Vælg {name})'
+    SOURCE_VALIDATION: 'Venligst vælg en eksisterende værdi fra listen. {value} er ikke en tilladt mulighed'
+  SilverStripe\Forms\EmailField:
+    VALIDATION: 'Indtast venligst en emailadresse'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Fil information ikke fundet'
+  SilverStripe\Forms\Form:
+    BAD_METHOD: 'Denne form kræver en {method} indsendelse'
+    CSRF_EXPIRED_MESSAGE: 'Din session er udløbet. Venligst gensend formularen.'
+    CSRF_FAILED_MESSAGE: 'Det ser ud til der har været et teknisk problem. Klik venligst på tilbageknappen, tryk opdater i din browser og prøv igen.'
+    VALIDATIONPASSWORDSDONTMATCH: 'Kodeordene er ikke identiske'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Kodeord kan ikke være tomme'
+    VALIDATIONSTRONGPASSWORD: 'Kodeord skal mindst have et tal og et alfanumerisk tegn'
+    VALIDATOR: Validering
+    VALIDCURRENCY: 'Indtast venligst en gyldig valuta'
+  SilverStripe\Forms\FormField:
+    EXAMPLE: 'f.eks. {format}'
+    NONE: ingen
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Primær
   SilverStripe\Forms\GridField\GridField:
-    Filter: Filter
+    Add: 'Tilføj {name}'
+    CSVEXPORT: 'Eksporter til CSV'
+    CSVIMPORT: 'Importer CSV'
+    Filter: Filtrer
+    FilterBy: 'Filtrer på'
+    Find: Find
+    LinkExisting: 'Link eksisterende'
+    NewRecord: 'Ny {type}'
+    NoItemsFound: 'Ingen elementer fundet'
+    PRINTEDAT: 'Printet d.'
+    PRINTEDBY: 'Printet af'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} på {name}'
+    Print: Print
+    RelationSearch: Relationssøgning
+    ResetFilter: Nulstil
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Slet
+    DeletePermissionsFailure: 'Ingen slette rettigheder'
+    EditPermissionsFailure: 'Ingen rettighed til at fjerne emnet'
+    UnlinkRelation: Fjern
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Annuller
+    Create: Opret
+    Delete: Slet
+    DeletePermissionsFailure: 'Ingen slette rettigheder'
+    Deleted: 'Slet {type} {name}'
+    Save: Gem
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Rediger
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Kan ikke fjerne dig selv fra denne gruppe, du vil miste administrator rettigheder'
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: af
+    Page: Side
+    View: Vis
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Beløb
+    FIELDLABELCURRENCY: Valuta
+    INVALID_CURRENCY: 'Valuta {currency} er ikke i listen over tilladte valutaer'
+  SilverStripe\Forms\MultiSelectField:
+    SOURCE_VALIDATION: 'Vælg venligst eksisterende værdier fra listen. Ugyldig mulighed(er) {value} valgt'
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Er Null'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' er ikke et tal, kun tal accepteres i dette felt'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Indtats venligst et gyldigt tidsformat ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: Dataobjekter
+    PLURALS:
+      one: 'Et dataobjekt'
+      other: '{count} dataobjekter'
+    SINGULARNAME: Dataobjekt
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Enhver
+    NOANSWER: Nej
+    YESANSWER: Ja
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} dag'
+      other: '{count} dage'
+    HOURS_SHORT_PLURALS:
+      one: '{count} time'
+      other: '{count} timer'
+    LessThanMinuteAgo: 'mindre end et minut'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} minut'
+      other: '{count} minutter'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} måned'
+      other: '{count} måneder'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sekund'
+      other: '{count} sekunder'
+    TIMEDIFFAGO: '{difference} siden'
+    TIMEDIFFIN: 'i {difference}'
+    YEARS_SHORT_PLURALS:
+      one: '{count} år'
+      other: '{count} år'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Enhver
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'For mange relaterede objekter; fallback felt i brug'
+  SilverStripe\ORM\Hierarchy:
+    LIMITED_TITLE: 'For mange underelementer ({count})'
+  SilverStripe\ORM\Hierarchy\Hierarchy:
+    InfiniteLoopNotAllowed: 'Uendeligt løkke fundet i "{type}" hierarkiet. Ændre venligst det overliggende element for at løse dette'
+    LIMITED_TITLE: 'For mange underelementer ({count})'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: Valideringsfejl
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Indtast venligst et brugernavn og kodeord.'
+    ERRORNOTADMIN: 'Den bruger er ikke en administrator.'
+    ERRORNOTREC: 'Brugernavn / kodeord kunne ikke genkendes'
+  SilverStripe\Security\CMSMemberLoginForm:
+    PASSWORDEXPIRED: '<p>Dit kodeord er udløbet. <a target="_top" href="{link}">Vælg venligst et nyt.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Ugyldig bruger. <a target="_top" href="{link}">Log venligst ind igen her</a> for at fortsætte.</p>'
+    LOGIN_MESSAGE: '<p>Din session er løbet ud pga. inaktivitet</p>'
+    LOGIN_TITLE: 'Log ind igen, for at fortsætte hvor du slap.'
+    SUCCESS: Succes
+    SUCCESSCONTENT: '<p>Logget ind. Hvis du ikke automatisk viderestilles så <a target="_top" href="{link}">klik her</a></p>'
+    SUCCESS_TITLE: 'Logget ind med sucess'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Standard admin'
+  SilverStripe\Security\Group:
+    AddRole: 'Tilføj en rolle for denne gruppe'
+    Code: 'Gruppe kode'
+    DefaultGroupTitleAdministrators: Administratorer
+    DefaultGroupTitleContentAuthors: Indholdsforfattere
+    Description: Beskrivelse
+    GROUPNAME: Gruppenavn
+    GroupReminder: 'Hvis du vælger en overliggende gruppe, får denne gruppe alle dens roller'
+    HierarchyPermsError: 'Kan ikke tildele overliggende gruppe "{group}" med fortrinsrettigheder (kræver ADMIN adgang)'
+    Locked: 'Låst?'
+    MEMBERS: Brugere
+    NEWGROUP: 'Ny gruppe'
+    NoRoles: 'Ingen roller fundet'
+    PERMISSIONS: Rettigheder
+    PLURALNAME: Grupper
+    PLURALS:
+      one: 'En gruppe'
+      other: '{count} grupper'
+    Parent: 'Overliggende gruppe'
+    ROLES: Roller
+    ROLESDESCRIPTION: 'Roller er et prædefineret sæt af rettigheder, som kan tildeles grupper.<br />De bliver nedarvet fra en overliggende grupper hvis krævet.'
+    RolesAddEditLink: 'Administrer roller'
+    SINGULARNAME: Gruppe
+    Sort: Sortering
+    has_many_Permissions: Rettigheder
+    many_many_Members: Brugere
+  SilverStripe\Security\LoginAttempt:
+    Email: 'Email adresse'
+    EmailHashed: 'Email adresse (hashed)'
+    IP: 'IP addresse'
+    PLURALNAME: Loginforsøg
+    PLURALS:
+      one: 'Et loginforsøg'
+      other: '{count} loginforsøg'
+    SINGULARNAME: 'Login forsøg'
+    Status: Status
+  SilverStripe\Security\Member:
+    ADDGROUP: 'Tilføj gruppe'
+    BUTTONCHANGEPASSWORD: 'Skift kodeord'
+    BUTTONLOGIN: 'Log ind'
+    BUTTONLOGINOTHER: 'Log ind med en anden bruger'
+    BUTTONLOGOUT: 'Log ud'
+    BUTTONLOSTPASSWORD: 'Jeg har glemt mit kodeord'
+    CONFIRMNEWPASSWORD: 'Bekræft nyt kodeord'
+    CONFIRMPASSWORD: 'Bekræft kodeord'
+    CURRENT_PASSWORD: 'Nuværende kodeord'
+    EDIT_PASSWORD: 'Nyt kodeord'
+    EMAIL: Email
+    EMPTYNEWPASSWORD: 'Det nye kodeord kan ikke være tom, prøv venligst igen'
+    ENTEREMAIL: 'Indtast venligst en email adresse for at få et nulstillingslink.'
+    ERRORLOCKEDOUT2: 'Din konto er blevet midlertidigt deaktiveret pga. for mange fejlslagne loginforsøg. Forsøg venligst igen om {count} minutter.'
+    ERRORNEWPASSWORD: 'Du har indtastet dit nye kodeord forskelligt, forsøg igen'
+    ERRORPASSWORDNOTMATCH: 'Dit nuværende kodeord matcher ikke, forsøg venligst igen'
+    ERRORWRONGCRED: 'De indtastede værdier ser ikke ud til at være korrekte. Forsøg venligst igen.'
+    FIRSTNAME: Fornavn
+    INTERFACELANG: 'Sprog i brugerfladen'
+    KEEPMESIGNEDIN: 'Hold mig logget ind'
+    LOGGEDINAS: 'Du er logget ind som {name}.'
+    NEWPASSWORD: 'Nyt kodeord'
+    PASSWORD: Kodeord
+    PASSWORDEXPIRED: 'Dit kodeord er udløbet. Vælg venligst et nyt.'
+    PLURALNAME: Brugere
+    PLURALS:
+      one: 'En bruger'
+      other: '{count} brugere'
+    REMEMBERME: 'Husk mig til næste gang? (i {count} dage på denne enhed)'
+    SINGULARNAME: Bruger
+    SUBJECTPASSWORDCHANGED: 'Dit kodeord er blevet ændret'
+    SUBJECTPASSWORDRESET: 'Link til at nulstille dit kodeord'
+    SURNAME: Efternavn
+    VALIDATIONADMINLOSTACCESS: 'Kan ikke fjerne alle admin grupper fra din profil'
+    ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende bruger #{id} med identisk identifikator ({name} = {value}))'
+    WELCOMEBACK: 'Velkommen tilbage, {firstname}'
+    YOUROLDPASSWORD: 'Dit gamle kodeord'
+    belongs_many_many_Groups: Grupper
+    db_Locale: 'Sprog i brugerfladen'
+    db_LockedOutUntil: 'Låst ude indtil'
+    db_Password: Kodeord
+    db_PasswordExpiry: Kodeordsudløbsdato
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'CMS bruger loginform'
+    BUTTONFORGOTPASSWORD: 'Glemt kodeord'
+    BUTTONLOGIN: 'Log mig ind igen'
+    BUTTONLOGOUT: 'Log ud'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'De indtastede værdier ser ikke ud til at være korrekte. Forsøg venligst igen.'
+    NoPassword: 'Der er ikke en kode på denne bruger.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Email og kodeord'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Bruger kodeord'
+    PLURALS:
+      one: 'Et bruger kodeord'
+      other: '{count} bruger kodeord'
+    SINGULARNAME: 'Bruger kodeord'
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: 'Forøg venligst kodeordets styrke, ved at tilføje nogle af følgende tegn: {chars}'
+    PREVPASSWORD: 'Du har tidligere brugt dette kodeord, vælg venligst et nyt kodeord'
+    TOOSHORT: 'Kodeordet er for kort, det skal mindst være {minimum} eller flere tegn langt'
   SilverStripe\Security\Permission:
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS Adgang'
     CONTENT_CATEGORY: Indholdsrettigheder
+    FULLADMINRIGHTS: 'Fuld administrator rettighed'
+    FULLADMINRIGHTS_HELP: 'Indebærer og overskriver alle andre tildelte rettigheder.'
+    PERMISSIONS_CATEGORY: 'Roller og adgangsrettigheder'
+    PLURALNAME: Rettigheder
+    PLURALS:
+      one: 'En rettighed'
+      other: '{count} rettigheder'
+    SINGULARNAME: Rettighed
+    UserPermissionsIntro: 'Tildeling af grupper til denne bruger, ændrer de rettigheder brugeren har. Se gruppe området for rettigheds detaljer på de individuelle grupper.'
+  SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: 'tildelt til "{title}"'
+    FromGroup: 'nedarvet fra gruppen "{title}"'
+    FromRole: 'nedarvet fra rollen "{title}"'
+    FromRoleOnGroup: 'nedarvet fra rollen "{roletitle}" på gruppen "{grouptitle}"'
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 'Kun administratorer kan tilføje'
+    PLURALNAME: Roller
+    PLURALS:
+      one: 'En rolle'
+      other: '{count} roller'
+    SINGULARNAME: Rolle
+    Title: Titel
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Rettigheds rolle koder'
+    PLURALS:
+      one: 'En rettigheds rolle kode'
+      other: '{count} rettigheds rolle koder'
+    PermsError: 'Kan ikke tildele koden "{code}" med fortrinsrettigheder (kræver ADMIN adgang)'
+    SINGULARNAME: 'Rettighed rolle kode'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Login hashes'
+    PLURALS:
+      one: 'Et login hash'
+      other: '{count} Login Hashes'
+    SINGULARNAME: 'Login hash'
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Du har ikke adgang til denne side. Hvis du har en anden bruger der har adgang til denne side, kan du logge ind med denne herunder.'
+    BUTTONSEND: 'Send mig linket til at nulstille kodeordet'
+    CHANGEPASSWORDBELOW: 'Du kan ændre dit kodeord herunder.'
+    CHANGEPASSWORDHEADER: 'Skift dit kodeord'
+    CONFIRMLOGOUT: 'Klik venligst på knappen herunder, for at bekræfte at du vil logge ud.'
+    ENTERNEWPASSWORD: 'Indtast venligst et nyt kodeord.'
+    ERRORPASSWORDPERMISSION: 'Du skal være logget ind, for at kunne ændre dit kodeord!'
+    LOGIN: 'Log ind'
+    LOGOUT: 'Log ud'
+    LOSTPASSWORDHEADER: 'Glemt kodeord'
+    NOTEPAGESECURED: 'Denne side er beskyttet. Indtast dine loginoplysninger herunder for at få adgang.'
+    NOTERESETPASSWORD: 'Indtast din email adresse, så sender vi dig et link som du kan nulstille dit kodeord med'
+    PASSWORDRESETSENTHEADER: 'link til at nulstille kodeord afsendt'
+    PASSWORDRESETSENTTEXT: 'Tak for det. Et link til at nulstille dit kodeord er afsendt, hvis der findes en bruger med denne email adresse.'

@@ -319,7 +319,4 @@ fr:
     LOGOUT: 'Se déconnecter'
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
-    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation du mot de passe n’est pas valide ou a expiré.</p><p>Vous pouvez en demander un nouveau <a href="{link1}">en suivant ce lien</a> ou changer de mot de passe après <a href="{link2}">connexion</a>.</p>'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-    PASSWORDSENTHEADER: "Lien de réinitialisation de mot de passe envoyé  à «\_{email}\_»"
-    PASSWORDSENTTEXT: "Merci\_! Un lien de réinitialisation vient d’être envoyé à «\_{email}\_», à condition que cette adresse existe."
