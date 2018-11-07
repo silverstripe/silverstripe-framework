@@ -139,7 +139,4 @@ et_EE:
     ERRORPASSWORDPERMISSION: 'Pead olema sisseloginud, et parooli muuta!'
     LOGIN: 'Logi sisse'
     NOTEPAGESECURED: 'See leht on turvatud. Sisesta enda andmed allpool ja me saadame sind otse edasi'
-    NOTERESETLINKINVALID: '<p>Parooli lähtestamise link on kehtetu või aegunud.</p><p>Saate taotleda uut linki <a href="{link1}">siin</a> või muuta parooli pärast <a href="{link2}">sisselogimist</a>.</p>'
     NOTERESETPASSWORD: 'Sisesta oma email ja me saadame sulle lingi kus saad oma parooli tühistada.'
-    PASSWORDSENTHEADER: 'Parooli lähtestamise link saadeti aadressile ''{email}'''
-    PASSWORDSENTTEXT: 'Aitäh! Lähtestamislink saadeti aadressile ''{email}'' eeldusel, et selle e-posti aadressiga seotud konto on olemas.'

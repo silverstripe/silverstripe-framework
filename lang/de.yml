@@ -190,7 +190,4 @@ de:
     LOGIN: Anmelden
     LOSTPASSWORDHEADER: 'Passwort vergessen'
     NOTEPAGESECURED: 'Diese Seite ist geschützt. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.'
-    NOTERESETLINKINVALID: '<p>Der Link zum Zurücksetzen des Passworts ist entweder nicht korrekt oder abgelaufen</p><p>Sie können <a href="{link1}">einen neuen Link anfordern</a> oder Ihr Passwort nach dem <a href="{link2}">einloggen</a> ändern.</p>'
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'
-    PASSWORDSENTHEADER: 'Der Link zum Zurücksetzen des Passworts wurde an ''{email}'' gesendet'
-    PASSWORDSENTTEXT: 'Vielen Dank! Wenn ein Account zu der E-Mail Adresse ''{email}'' existiert, wurde eine E-Mail mit dem Link zum Zurücksetzen des Passworts verschickt.'
