@@ -133,7 +133,7 @@ class ConvertTest extends SapphireTest
         $this->assertEquals(
             "That's absolutely correct",
             Convert::html2raw($val7),
-            "Single quotes are decoded correctly"
+            'Single quotes are decoded correctly'
         );
 
         $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' . 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud ' . 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute ' . 'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' . 'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia ' . 'deserunt mollit anim id est laborum.';
@@ -280,7 +280,7 @@ PHP
     protected function assertEqualsQuoted($expected, $actual)
     {
         $message = sprintf(
-            "Expected \"%s\" but given \"%s\"",
+            'Expected "%s" but given "%s"',
             addcslashes($expected, "\r\n"),
             addcslashes($actual, "\r\n")
         );
@@ -296,8 +296,8 @@ PHP
         foreach (array("\r\n", "\r", "\n") as $nl) {
             // Base case: no action
             $this->assertEqualsQuoted(
-                "Base case",
-                Convert::nl2os("Base case", $nl)
+                'Base case',
+                Convert::nl2os('Base case', $nl)
             );
 
             // Mixed formats
@@ -426,7 +426,7 @@ XML
         // Test without doctype validation
         $expected = array(
          'result' => array(
-          "Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure",
+             'Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure',
           array(
         'long' => array(
          array(
@@ -607,11 +607,11 @@ XML
     {
         return [
             [200, '200B'],
-            [(2 * 1024), '2K'],
-            [(512 * 1024 * 1024), '512M'],
-            [(512 * 1024 * 1024 * 1024), '512G'],
-            [(512 * 1024 * 1024 * 1024 * 1024), '512T'],
-            [(512 * 1024 * 1024 * 1024 * 1024 * 1024), '512P']
+            [2 * 1024, '2K'],
+            [512 * 1024 * 1024, '512M'],
+            [512 * 1024 * 1024 * 1024, '512G'],
+            [512 * 1024 * 1024 * 1024 * 1024, '512T'],
+            [512 * 1024 * 1024 * 1024 * 1024 * 1024, '512P']
         ];
     }
 
