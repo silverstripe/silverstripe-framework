@@ -95,6 +95,10 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato {type} {name}'
     Save: Salva
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Modifica
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Non è possibile rimuovere te stesso da questo gruppo, perderesti i diritti di admin'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: di
     Page: Pagina
@@ -145,6 +149,8 @@ it:
       other: '{count} anni'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Qualsiasi
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Troppi oggetti correlati; campo di fallback in uso'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Troppi figli ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -195,6 +201,7 @@ it:
     many_many_Members: Membri
   SilverStripe\Security\LoginAttempt:
     Email: 'Indirizzo e-mail'
+    EmailHashed: 'Indirizzo email (hash)'
     IP: 'Indirizzo IP'
     PLURALNAME: 'Tentativi d''accesso'
     PLURALS:
@@ -236,6 +243,7 @@ it:
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
+    VALIDATIONADMINLOSTACCESS: 'Non è possibile rimuovere tutti i gruppi admin dal tuo profilo'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
     WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
@@ -252,6 +260,8 @@ it:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     NoPassword: 'Manca la password per questo utente.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'E-mail & Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     PLURALS:
@@ -313,7 +323,6 @@ it:
     LOGOUT: Scollegati
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
-    NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
-    PASSWORDSENTHEADER: 'Link per azzeramento della password inviato a ''{email}'''
-    PASSWORDSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato a ''{email}'', fornito un account esistente per questo indirizzo e-mail.'
+    PASSWORDRESETSENTHEADER: 'Link di azzeramento password inviato'
+    PASSWORDRESETSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato, supponendo un account esista a quell''indirizzo e-mail.'

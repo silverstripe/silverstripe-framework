@@ -150,7 +150,4 @@ sr@latin:
     ERRORPASSWORDPERMISSION: 'Morate da budete prijavljeni da biste promenili svoju lozinku!'
     LOGIN: Prijavljivanje
     NOTEPAGESECURED: 'Ova strana je obezbeđena. Unesite svoje podatke i mi ćemo vam poslati sadržaj.'
-    NOTERESETLINKINVALID: '<p>Link za resetovanje lozinke je pogrešan ili je isteklo vreme za njegovo korišćenje.</p><p>Možete da zahtevate novi <a href="{link1}">ovde</a> ili da promenite Vašu lozinku nakon što se <a href="{link2}">prijavite</a>.</p>'
     NOTERESETPASSWORD: 'Unesite svoju adresu e-pošte i mi ćemo vam poslati link pomoću kojeg možete da promenite svoju lozinku'
-    PASSWORDSENTHEADER: 'Link za resetovanje lozinke poslat je na adresu e-pošte: ''{email}'''
-    PASSWORDSENTTEXT: 'Hvala Vam! Link za resetovanje lozinke je poslat ne adresu e-pošte ''{email}''. Poruka će stići primaocu samo ako postoji registrovan nalog sa tom adresom e-pošte.'

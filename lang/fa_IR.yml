@@ -168,4 +168,3 @@ fa_IR:
     ERRORPASSWORDPERMISSION: 'جهت تغییر گذرواژه خود باید وارد شده باشید!'
     LOGIN: ورود
     LOSTPASSWORDHEADER: 'فراموشی گذرواژه'
-    PASSWORDSENTHEADER: 'لینک ازنوسازی گذرواژه به ''{email}'' ارسال شد'
