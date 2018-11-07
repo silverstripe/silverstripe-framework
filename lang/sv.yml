@@ -93,7 +93,12 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade {type} {name}'
     Save: Spara
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Ändra
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Du kan inte radera dig själv från den här gruppen, då du då kommer att förlora dina admin-rättigheter'
   SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: av
     Page: Sida
     View: Visa
   SilverStripe\Forms\MoneyField:
@@ -108,6 +113,12 @@ sv:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: Dataobjekt
+    PLURALS:
+      one: 'Ett dataobjekt'
+      other: '{count} Dataobjekt'
+    SINGULARNAME: Dataobjekt
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Vilken som helst'
     NOANSWER: Nej
@@ -136,6 +147,8 @@ sv:
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Vilken som helst'
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'För många relaterade objekt; använder fallback-fält'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'För många barn ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -221,6 +234,7 @@ sv:
     PLURALS:
       one: 'En medlem'
       other: '{count} medlemmar'
+    REMEMBERME: 'Kom ihåg mig nästa gång? (i {count} dagar på denna enhet)'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
@@ -288,7 +302,6 @@ sv:
     LOGOUT: 'Logga ut'
     LOSTPASSWORDHEADER: 'Bortglömt lösenord'
     NOTEPAGESECURED: 'Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare.'
-    NOTERESETLINKINVALID: '<p>Återställningslänk för lösenord är felaktig eller för gammal.</p><p>Du kan begära en ny <a href="{link1}">här</a> eller ändra ditt lösenord när du <a href="{link2}">loggat in</a>.</p>'
     NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
-    PASSWORDSENTHEADER: 'Återställningslänk för lösenord har skickats till ''{email}'''
-    PASSWORDSENTTEXT: 'Tack en återställningslänk har skickats till ''{email}'', förutsatt att ett konto med den addressen finns.'
+    PASSWORDRESETSENTHEADER: 'Återställningslänk för lösenord skickad'
+    PASSWORDRESETSENTTEXT: 'Tack. En återställningslänk har skickats, förutsatt att ett konto med denna adress existerar.'
