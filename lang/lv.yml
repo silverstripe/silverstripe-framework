@@ -3,9 +3,6 @@ lv:
     SHOWONCLICKTITLE: 'Mainīt paroli'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Ls
-  SilverStripe\Forms\DateField:
-    NOTSET: 'nav uzstādīts'
-    TODAY: šodien
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izvēlieties)
   SilverStripe\Forms\Form:

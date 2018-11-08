@@ -37,8 +37,6 @@ fr:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'non renseigné'
-    TODAY: 'aujourd''hui'
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({date})'
@@ -86,7 +84,6 @@ fr:
     RelationSearch: 'Rechercher relations'
     ResetFilter: Réinitialiser
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Supprimer
     Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     EditPermissionsFailure: 'Pas de permissions pour délier l''enregistrement'
@@ -98,23 +95,12 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editer
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Page
     View: Vue
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'L''élément n''a pas encore été publié'
-    ADDEDTODRAFTSHORT: Brouillon
-    ARCHIVEDPAGEHELP: 'Elément retiré du brouillon et du site public'
-    ARCHIVEDPAGESHORT: Archivé
-    MODIFIEDONDRAFTHELP: 'L''élément comporte des modifications non sauvegardées'
-    MODIFIEDONDRAFTSHORT: Modifié
-    ONLIVEONLYSHORT: 'Site public uniquement'
-    ONLIVEONLYSHORTHELP: 'L''élément a été publié, mais sa version brouillon a été supprimée'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Quantité
     FIELDLABELCURRENCY: Devise
@@ -211,6 +197,7 @@ fr:
     many_many_Members: Membres
   SilverStripe\Security\LoginAttempt:
     Email: 'Adresse email'
+    EmailHashed: 'Adresse Email (hashed)'
     IP: 'Adresse IP'
     PLURALNAME: 'Tentatives de connexion'
     PLURALS:
@@ -269,6 +256,8 @@ fr:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Les renseignements fournis semblent incorrects. Merci de réessayer.'
     NoPassword: 'Ce membre n''a pas de mot de passe'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Email & Mot de passe'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Mots de passe utilisateur'
     PLURALS:
@@ -330,7 +319,4 @@ fr:
     LOGOUT: 'Se déconnecter'
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
-    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation du mot de passe n’est pas valide ou a expiré.</p><p>Vous pouvez en demander un nouveau <a href="{link1}">en suivant ce lien</a> ou changer de mot de passe après <a href="{link2}">connexion</a>.</p>'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-    PASSWORDSENTHEADER: "Lien de réinitialisation de mot de passe envoyé  à «\_{email}\_»"
-    PASSWORDSENTTEXT: "Merci\_! Un lien de réinitialisation vient d’être envoyé à «\_{email}\_», à condition que cette adresse existe."

@@ -13,8 +13,6 @@ fa_IR:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: ﷼
   SilverStripe\Forms\DateField:
-    NOTSET: نامشخص
-    TODAY: امروز
     VALIDDATEFORMAT2: 'لطفاً یک قالب تاریخ معتبر وارد نمایید ({format})'
     VALIDDATEMAXDATE: 'تاریخ شما باید قدیمی‌تر یا برابر با حداکثر تاریخ مجاز ({date}) باشد'
     VALIDDATEMINDATE: 'تاریخ شما باید جدیدتر یا برابر با حداقل تاریخ مجاز ({date}) باشد'
@@ -50,7 +48,6 @@ fa_IR:
     RelationSearch: 'جستجوی رابط'
     ResetFilter: 'از نو'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: حذف
     Delete: حذف
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     EditPermissionsFailure: 'دسترسی‌های حذف لینک وجود ندارد'
@@ -62,8 +59,6 @@ fa_IR:
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     Deleted: 'حذف شده {type} {name}'
     Save: ذخیره
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: ویرایش
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: مقدار
     FIELDLABELCURRENCY: 'واحد پول'
@@ -173,4 +168,3 @@ fa_IR:
     ERRORPASSWORDPERMISSION: 'جهت تغییر گذرواژه خود باید وارد شده باشید!'
     LOGIN: ورود
     LOSTPASSWORDHEADER: 'فراموشی گذرواژه'
-    PASSWORDSENTHEADER: 'لینک ازنوسازی گذرواژه به ''{email}'' ارسال شد'

@@ -37,8 +37,6 @@ fi:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'ei asetettu'
-    TODAY: tänään
     VALIDDATEFORMAT2: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
     VALIDDATEMAXDATE: 'Päivämäärän on oltava vanhempi tai sovittava asetettuun maksimiin ({date})'
     VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun minimiin ({date})'
@@ -86,7 +84,6 @@ fi:
     RelationSearch: Relaatiohaku
     ResetFilter: Nollaa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Poista
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     EditPermissionsFailure: 'Ei oikeuksia purkaa linkitystä tietueeseen'
@@ -98,23 +95,12 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Muokkaa
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Et voi siirtää itseäsi pois tästä ryhmästä: menettäisit pääkäyttäjän oikeudet'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: /
     Page: Sivu
     View: Näytä
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Kohdetta ei ole julkaistu vielä'
-    ADDEDTODRAFTSHORT: Luonnos
-    ARCHIVEDPAGEHELP: 'Kohde on poistettu luonnoksista ja julkaisusta'
-    ARCHIVEDPAGESHORT: Arkistoitu
-    MODIFIEDONDRAFTHELP: 'Kohteella on julkaisemattomia muutoksia'
-    MODIFIEDONDRAFTSHORT: Muokattu
-    ONLIVEONLYSHORT: 'Vain julkaistuna'
-    ONLIVEONLYSHORTHELP: 'Kohde on julkaistu, mutta poistettu luonnoksista'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -211,6 +197,7 @@ fi:
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
     Email: Sähköpostiosoite
+    EmailHashed: 'Sähköpostiosoite (tiivistetty)'
     IP: IP-osoite
     PLURALNAME: Kirjautumisyritykset
     PLURALS:
@@ -269,6 +256,8 @@ fi:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Sähköpostiosoite & salasana'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Käyttäjän salasanat'
     PLURALS:
@@ -330,7 +319,4 @@ fi:
     LOGOUT: 'Kirjaudu ulos'
     LOSTPASSWORDHEADER: 'Unohtunut salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
-    NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
-    PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'

@@ -15,8 +15,6 @@ es:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Símbolo
   SilverStripe\Forms\DateField:
-    NOTSET: 'sin establecer'
-    TODAY: hoy
     VALIDDATEFORMAT2: 'Por favor, introduzca un formato de fecha válido ({format})'
     VALIDDATEMAXDATE: 'La fecha tiene que ser mayor o igual a la fecha máxima permitida ({date})'
     VALIDDATEMINDATE: 'La fecha tiene que ser posterior o coincidente a la fecha mínima permitida ({date})'
@@ -55,7 +53,6 @@ es:
     RelationSearch: 'Búsqueda de relación'
     ResetFilter: Restaurar
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Borrar
     Delete: Borrar
     DeletePermissionsFailure: 'Sin permiso para borrar'
     EditPermissionsFailure: 'No se pudo editar permisos'
@@ -67,8 +64,6 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado {type} {name}'
     Save: Guardar
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editar
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda
@@ -254,7 +249,4 @@ es:
     LOGIN: Entrar
     LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
-    NOTERESETLINKINVALID: '<p>El enlace para restablecer la contraseña es inválido o ha expirado.</p><p>Usted puede solicitar uno nuevo <a href="{link1}">aqui</a> o cambiar su contraseña después de que se haya <a href="{link2}">conectado</a>.</p>'
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'
-    PASSWORDSENTHEADER: 'Un enlace para restablecer la contraseña ha sido enviado a ''{email}'''
-    PASSWORDSENTTEXT: 'Gracias! Un enlace para restablecer la contraseña ha sido enviado a ''{email}'', siempre que una cuenta exista para la dirección de email indicada.'

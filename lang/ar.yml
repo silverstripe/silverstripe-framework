@@ -5,8 +5,6 @@ ar:
     MAXIMUM: 'يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً.'
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
   SilverStripe\Forms\DateField:
-    NOTSET: 'غير محدد'
-    TODAY: اليوم
     VALIDDATEFORMAT2: 'الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})'
     VALIDDATEMAXDATE: 'التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})'
     VALIDDATEMINDATE: 'التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})'
@@ -39,7 +37,6 @@ ar:
     RelationSearch: 'ابحث عن علاقة'
     ResetFilter: 'إعادة تعيين'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: حذف
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد أية تصريحات حذف'
     EditPermissionsFailure: 'لا يوجد تصريح لإلغاء الربط بين السجلات'
@@ -51,8 +48,6 @@ ar:
     DeletePermissionsFailure: 'لا يوجد تصريحات بالحذف'
     Deleted: '{type} {name} تم حذفه'
     Save: حفظ
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: تعديل
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: الكمية
     FIELDLABELCURRENCY: العملة
@@ -155,7 +150,4 @@ ar:
     LOGIN: دخول
     LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
-    NOTERESETLINKINVALID: "<p> رابط إعادة تعيين كلمة المرور غير صحيح أو نفذت صلاحيته.</p>\n<p> \nيمكنك طلب رابط جديد <\"{a href=\"{link1\"> هنا </a>\n أو تغيير كلمة المرور الخاصة بك بعد <\"{a href=\"{link2\"> تسجيل دخولك</a>.\n</p>"
     NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '
-    PASSWORDSENTHEADER: 'رابط استعادة كلمة المرور تم إرساله إلى ''{بريدك}'''
-    PASSWORDSENTTEXT: 'شكرا لك! تم إرسال رابط إعادة تعيين إلى ''{بريدك}''، بشرط وجود حساب قائم بالنسبة لعنوان هذا البريد الإلكتروني .'

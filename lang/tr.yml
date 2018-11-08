@@ -6,9 +6,6 @@ tr:
     SHOWONCLICKTITLE: 'Parola Değiştir'
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: USD
-  SilverStripe\Forms\DateField:
-    NOTSET: ayarlanmamış
-    TODAY: bugün
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçiniz)
   SilverStripe\Forms\Form:

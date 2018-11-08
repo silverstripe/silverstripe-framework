@@ -7,8 +7,6 @@ nb:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'Ikke satt'
-    TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
     VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
@@ -41,7 +39,6 @@ nb:
     RelationSearch: Relasjonssøk
     ResetFilter: Tilbakestille
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Slett
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     EditPermissionsFailure: 'Ikke tilgang til å fjerne oppføringer'
@@ -53,8 +50,6 @@ nb:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     Deleted: 'Slettet {type} {name}'
     Save: Lagre
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Rediger
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Valuta
@@ -157,7 +152,4 @@ nb:
     LOGIN: 'Logg inn'
     LOSTPASSWORDHEADER: 'Mistet passord'
     NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
-    NOTERESETLINKINVALID: '<p>Lenken for å nullstille passordet er ugyldig eller utgått.</p><p>Du kan kreve en ny <a href="{link1}">her</a> eller endre passordet etter at du har <a href="{link2}">logget inn</a>.</p>'
     NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'
-    PASSWORDSENTHEADER: 'Lenke for nullstilling av passord ble sendt til ''{email}'''
-    PASSWORDSENTTEXT: 'Takk! En lenke for å lage nytt passord er sendt til ''{email}'', forutsatt at det eksisterer en konto for denne epostadressen.'

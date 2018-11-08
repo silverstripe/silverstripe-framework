@@ -7,8 +7,6 @@ sr:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: дин.
   SilverStripe\Forms\DateField:
-    NOTSET: 'није подешено'
-    TODAY: данас
     VALIDDATEFORMAT2: 'Молимо Вас да унесете исправан формат датума ({format})'
     VALIDDATEMAXDATE: 'Датум не сме бити после ({date})'
     VALIDDATEMINDATE: 'Датум не сме бити пре ({date})'
@@ -41,7 +39,6 @@ sr:
     RelationSearch: 'Претраживање релације'
     ResetFilter: 'Врати у пређашње стање'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Избриши
     Delete: Избриши
     DeletePermissionsFailure: 'Немате дозволу за брисање'
     EditPermissionsFailure: 'Немате дозволу да раскинете линк са записом'
@@ -53,8 +50,6 @@ sr:
     DeletePermissionsFailure: 'Немате право брисања'
     Deleted: 'Избрисано {type} {name}'
     Save: Сачувај
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Измени
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Износ
     FIELDLABELCURRENCY: Валута
@@ -156,7 +151,4 @@ sr:
     ERRORPASSWORDPERMISSION: 'Морате да будете пријављени да бисте променили своју лозинку!'
     LOGIN: Пријављивање
     NOTEPAGESECURED: 'Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај.'
-    NOTERESETLINKINVALID: '<p>Линк за ресетовање лозинке је погрешан или је истекло време за његово коришћење.</p><p>Можете да захтевате нови <a href="{link1}">овде</a> или да промените Вашу лозинку након што се <a href="{link2}">пријавите</a>.</p>'
     NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'
-    PASSWORDSENTHEADER: 'Линк за ресетовање лозинке послат је на адресу е-поште: ''{email}'''
-    PASSWORDSENTTEXT: 'Хвала Вам! Линк за ресетовање лозинке је послат не адресу е-поште ''{email}''. Порука ће стићи примаоцу само ако постоји регистрован налог са том адресом е-поште.'

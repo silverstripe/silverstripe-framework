@@ -33,8 +33,6 @@ ru:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не установлено'
-    TODAY: сегодня
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
     VALIDDATEMINDATE: 'Требуется значение даты, совпадающее с минимальным ({date}) или более новое'
@@ -82,7 +80,6 @@ ru:
     RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Удалить
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
@@ -94,8 +91,6 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено {type} {name}'
     Save: Сохранить
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Редактировать
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница
@@ -344,7 +339,4 @@ ru:
     LOGOUT: Выйти
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
-    NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p> '
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
-    PASSWORDSENTHEADER: 'Ссылка для переустановки пароля выслана на ''{email}'''
-    PASSWORDSENTTEXT: 'Ссылка переустановки пароля была выслана на адрес ''{email}'' (письмо дойдет до получателя только в том случае, если аккаунт с таким электронным адресом действительно зарегистрирован).'

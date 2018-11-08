@@ -37,8 +37,6 @@ bg:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не е зададена'
-    TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
@@ -86,7 +84,6 @@ bg:
     RelationSearch: 'Търсене на връзка'
     ResetFilter: Изчистване
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Изтриване
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     EditPermissionsFailure: 'Нямате права за премахване на връзката'
@@ -98,8 +95,6 @@ bg:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити {type} {name}'
     Save: Запис
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Редактиране
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: от
     Page: Страница
@@ -318,7 +313,4 @@ bg:
     LOGOUT: Изход
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
-    NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
-    PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
-    PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'
