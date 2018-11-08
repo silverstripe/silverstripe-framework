@@ -308,10 +308,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $previousAndNextGroup->addExtraClass('rounded');
             $previousAndNextGroup->setFieldHolderTemplate(get_class($previousAndNextGroup) . '_holder_buttongroup');
 
+
+            $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
             $formActionsConfig = $this->config()->get("formActions");
-            $showPrevious = $formActionsConfig["showPrevious"];
-            $showNext = $formActionsConfig["showNext"];
-            $showAdd = $formActionsConfig["showAdd"];
+
+            $showPrevious = is_bool($component->getShowPrevious()) ? $component->getShowPrevious() : $formActionsConfig["showPrevious"];
+            $showNext = is_bool($component->getShowNext()) ? $component->getShowNext() : $formActionsConfig["showNext"];
+            $showAdd = is_bool($component->getShowAdd()) ? $component->getShowAdd() : $formActionsConfig["showAdd"];
 
             if ($showPrevious) {
                 $previousAndNextGroup->push(FormAction::create('doPrevious')
@@ -515,7 +518,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $this->gridField->Link(),
             "item",
             $id,
-            // todo: use http header instead
             '?gridState=' . urlencode($this->gridField->getState(false)->Value())
         );
     }

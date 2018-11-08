@@ -44,6 +44,24 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $name;
 
     /**
+     *
+     * @var bool
+     */
+    protected $showPrevious;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $showNext;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $showAdd;
+
+    /**
      * @var Validator The form validator used for both add and edit fields.
      */
     protected $validator;
@@ -79,10 +97,16 @@ class GridFieldDetailForm implements GridField_URLHandler
      * controller who wants to display the getCMSFields
      *
      * @param string $name The name of the edit form to place into the pop-up form
+     * @param bool $showPrevious Whether the `Previous` button should display or not, leave as null to use default
+     * @param bool $showNext Whether the `Next` button should display or not, leave as null to use default
+     * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($name = 'DetailForm')
+    public function __construct($name = null, $showPrevious = null, $showNext = null, $showAdd = null)
     {
-        $this->name = $name;
+        $this->name = $name ?: 'DetailForm';
+        $this->showPrevious = $showPrevious;
+        $this->showNext = $showNext;
+        $this->showAdd = $showAdd;
     }
 
     /**
@@ -181,6 +205,30 @@ class GridFieldDetailForm implements GridField_URLHandler
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowPrevious()
+    {
+        return $this->showPrevious;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowNext()
+    {
+        return $this->showNext;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowAdd()
+    {
+        return $this->showAdd;
     }
 
     /**

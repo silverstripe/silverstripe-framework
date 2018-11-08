@@ -126,13 +126,23 @@ SilverStripe\Admin\LeftAndMain:
 
 ## Customising the CMS form actions
 
-The `Previous`, `Next` and `Add` actions on the edit form are visible by default but can be hidden by adding the following `.yml` config:
+The `Previous`, `Next` and `Add` actions on the edit form are visible by default but can be hidden globally by adding the following `.yml` config:
 
 ```yml
 FormActions:
   showPrevious: false
   showNext: false
   showAdd: false
+```
+
+You can also configure this for a specific `GridField` instance when using the `GridFieldConfig_RecordEditor` constructor:
+
+```php
+$grid = new GridField(
+    "pages", 
+    "All Pages", 
+    SiteTree::get(), 
+    GridFieldConfig_RecordEditor::create(null, false, false, false));
 ```
 
 ## Related
