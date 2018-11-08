@@ -145,6 +145,16 @@ $grid = new GridField(
     GridFieldConfig_RecordEditor::create(null, false, false));
 ```
 
+You can also configure this for a specific `GridField` instance when using the `GridFieldConfig_RecordEditor` constructor:
+
+```php
+$grid = new GridField(
+    "pages", 
+    "All Pages", 
+    SiteTree::get(), 
+    GridFieldConfig_RecordEditor::create(null, false, false, false));
+```
+
 ## Related
 
  * [How to extend the CMS interface](extend_cms_interface)

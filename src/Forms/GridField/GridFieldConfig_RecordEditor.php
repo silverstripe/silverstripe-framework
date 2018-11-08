@@ -13,7 +13,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
      * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($itemsPerPage = null, $showPagination = null, $showAdd = null)
+    public function __construct($itemsPerPage = null)
     {
         parent::__construct();
 
