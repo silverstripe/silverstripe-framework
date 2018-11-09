@@ -20,7 +20,11 @@ class Fixture extends DataObject implements TestOnly
         'DatetimeField' => 'Datetime',
 
         'MyFieldWithDefault' => 'Varchar',
-        'MyFieldWithAltDefault' => 'Varchar'
+        'MyFieldWithAltDefault' => 'Varchar',
+
+        'MyInt' => 'Int',
+        'MyCurrency' => 'Currency',
+        'MyDecimal'=> 'Decimal',
     );
 
     private static $defaults = array(
