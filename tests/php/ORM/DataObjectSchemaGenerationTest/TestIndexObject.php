@@ -8,7 +8,7 @@ class TestIndexObject extends TestObject implements TestOnly
 {
     private static $table_name = 'DataObjectSchemaGenerationTest_IndexDO';
     private static $db = [
-        'Title' => 'Varchar(255)',
+        'Title' => 'Varchar(192)',
         'Content' => 'Text',
     ];
 
