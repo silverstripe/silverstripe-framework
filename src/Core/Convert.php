@@ -556,7 +556,7 @@ class Convert
      * Preserves integer values like "1024" or "-1"
      *
      * @param string $memString A memory limit string, such as "64M"
-     * @return float
+     * @return int
      */
     public static function memstring2bytes($memString)
     {
@@ -568,10 +568,10 @@ class Convert
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power
             // of magnitude to multiply a kilobyte by
-            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            return (int)round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
 
-        return round($size);
+        return (int)round($size);
     }
 
     /**
