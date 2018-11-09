@@ -456,11 +456,8 @@ class DataQuery
      */
     public function max($field)
     {
-        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
-        if (!$table) {
-            return $this->aggregate("MAX(\"$field\")");
-        }
-        return $this->aggregate("MAX(\"$table\".\"$field\")");
+        $quotedField = $this->joinSubclassTableForField($field);
+        return $this->aggregate("MAX($quotedField)");
     }
 
     /**
@@ -472,11 +469,8 @@ class DataQuery
      */
     public function min($field)
     {
-        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
-        if (!$table) {
-            return $this->aggregate("MIN(\"$field\")");
-        }
-        return $this->aggregate("MIN(\"$table\".\"$field\")");
+        $quotedField = $this->joinSubclassTableForField($field);
+        return $this->aggregate("MIN($quotedField)");
     }
 
     /**
@@ -488,11 +482,8 @@ class DataQuery
      */
     public function avg($field)
     {
-        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
-        if (!$table) {
-            return $this->aggregate("AVG(\"$field\")");
-        }
-        return $this->aggregate("AVG(\"$table\".\"$field\")");
+        $quotedField = $this->joinSubclassTableForField($field);
+        return $this->aggregate("AVG($quotedField)");
     }
 
     /**
@@ -504,11 +495,8 @@ class DataQuery
      */
     public function sum($field)
     {
-        $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
-        if (!$table) {
-            return $this->aggregate("SUM(\"$field\")");
-        }
-        return $this->aggregate("SUM(\"$table\".\"$field\")");
+        $quotedField = $this->joinSubclassTableForField($field);
+        return $this->aggregate("SUM($quotedField)");
     }
 
     /**
@@ -680,6 +668,8 @@ class DataQuery
      */
     public function sort($sort = null, $direction = null, $clear = true)
     {
+        $this->joinSubclassTableForField($sort);
+
         if ($clear) {
             $this->query->setOrderBy($sort, $direction);
         } else {
@@ -766,7 +756,7 @@ class DataQuery
     }
 
     /**
-     * Prefix of all joined table aliases. E.g. ->filter('Banner.Image.Title)'
+     * Return the prefix of all joined table aliases. E.g. ->filter('Banner.Image.Title)'
      * Will join the Banner, and then Image relations
      * `$relationPrefx` will be `banner_image_`
      * Each table in the Image chain will be suffixed to this prefix. E.g.
@@ -876,6 +866,54 @@ class DataQuery
         }
 
         return $modelClass;
+    }
+
+    /**
+     * Ensure that the subclass table for the given field is joined
+     * In the case of a field contained in multiple subclasses, all will be joined and a COALESCE() will be returned
+     *
+     * @return string The table-qualified, quoted field name
+     */
+    public function joinSubclassTableForField($field)
+    {
+        $schema = DataObject::getSchema();
+        $tables = $schema->tablesForField($this->dataClass, $field);
+
+        // Can't find a subclass table(s)
+        if (!$tables) {
+            return "\"$field\"";
+        }
+
+        $baseDataClass = $schema->baseDataClass($this->dataClass());
+        $baseIDColumn = $schema->sqlColumnForField($baseDataClass, 'ID');
+
+        // Join any tables that haven't already been joined
+        foreach ($tables as $table) {
+            if (!$this->query->isJoinedTo($table)) {
+                $this->query->addLeftJoin(
+                    $table,
+                    "\"{$table}\".\"ID\" = {$baseIDColumn}",
+                    $table,
+                    // Priority 11 comes after the getFinalisedQuery() joins, but before all others
+                    11
+                );
+            }
+        }
+
+        // Return the fully qualified column name
+        if (count($tables) === 1) {
+            return "\"$table\".\"$field\"";
+
+        // If multiple tables share the same column, COALESCE() them together
+        } else {
+            $columns = array_map(
+                function ($table) use ($field) {
+                    return "\"$table\".\"$field\"";
+                },
+                $tables
+            );
+            return "COALESCE(" . implode($columns, ', ') . ")";
+        }
     }
 
     /**

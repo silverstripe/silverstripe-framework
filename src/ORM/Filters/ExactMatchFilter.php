@@ -52,7 +52,7 @@ class ExactMatchFilter extends SearchFilter
     protected function oneFilter(DataQuery $query, $inclusive)
     {
         $this->model = $query->applyRelation($this->relation);
-        $field = $this->getDbName();
+        $field = $this->getDbNameAndAddToQuery($query);
         $value = $this->getValue();
 
         // Null comparison check
@@ -77,7 +77,7 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $clause = [$where => $value];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);
@@ -120,7 +120,7 @@ class ExactMatchFilter extends SearchFilter
         $caseSensitive = $this->getCaseSensitive();
 
         // Check values for null
-        $field = $this->getDbName();
+        $field = $this->getDbNameAndAddToQuery($query);
         $values = $this->getValue();
         if (empty($values)) {
             throw new \InvalidArgumentException("Cannot filter {$field} against an empty set");
@@ -138,7 +138,7 @@ class ExactMatchFilter extends SearchFilter
         } elseif ($caseSensitive === null) {
             // For queries using the default collation (no explicit case) we can use the WHERE .. NOT IN .. syntax,
             // providing simpler SQL than many WHERE .. AND .. fragments.
-            $column = $this->getDbName();
+            $column = $this->getDbNameAndAddToQuery($query);
             $placeholders = DB::placeholders($values);
             if ($inclusive) {
                 $predicate = "$column IN ($placeholders)";
@@ -148,7 +148,7 @@ class ExactMatchFilter extends SearchFilter
         } else {
             // Generate reusable comparison clause
             $comparisonClause = DB::get_conn()->comparisonClause(
-                $this->getDbName(),
+                $this->getDbNameAndAddToQuery($query),
                 null,
                 true, // exact?
                 !$inclusive, // negate?

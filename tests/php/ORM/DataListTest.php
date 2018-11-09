@@ -1570,7 +1570,7 @@ class DataListTest extends SapphireTest
 
         $sql = $list->sql($parameters);
         $this->assertSQLContains(
-            'WHERE ("DataObjectTest_TeamComment"."Comment" = ?) AND (("DataObjectTest_TeamComment"."Name" != ? '
+            'WHERE (COALESCE("DataObjectTest_TeamComment"."Comment", "DataObjectTest_ExtendedTeamComment"."Comment") = ?) AND (("DataObjectTest_TeamComment"."Name" != ? '
             . 'OR "DataObjectTest_TeamComment"."Name" IS NULL))',
             $sql
         );
@@ -1614,8 +1614,8 @@ class DataListTest extends SapphireTest
             'WHERE ("DataObjectTest_TeamComment"."Name" IN (?, ?)) '
             . 'AND (("DataObjectTest_TeamComment"."Name" NOT IN (?, ?) '
             . 'OR "DataObjectTest_TeamComment"."Name" IS NULL) '
-            . 'OR ("DataObjectTest_TeamComment"."Comment" NOT IN (?, ?) '
-            . 'OR "DataObjectTest_TeamComment"."Comment" IS NULL))',
+            . 'OR (COALESCE("DataObjectTest_TeamComment"."Comment", "DataObjectTest_ExtendedTeamComment"."Comment") NOT IN (?, ?) '
+            . 'OR COALESCE("DataObjectTest_TeamComment"."Comment", "DataObjectTest_ExtendedTeamComment"."Comment") IS NULL))',
             $sql
         );
         $this->assertEquals(array('Phil', 'Bob', 'Joe', 'Phil', 'Matches no comments', 'Not a matching comment'), $parameters);

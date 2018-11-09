@@ -50,7 +50,7 @@ class PartialMatchFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $comparisonClause = DB::get_conn()->comparisonClause(
-            $this->getDbName(),
+            $this->getDbNameAndAddToQuery($query),
             null,
             false, // exact?
             false, // negate?
@@ -59,7 +59,7 @@ class PartialMatchFilter extends SearchFilter
         );
 
         $clause = [$comparisonClause => $this->getMatchPattern($this->getValue())];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);
@@ -70,7 +70,7 @@ class PartialMatchFilter extends SearchFilter
         $this->model = $query->applyRelation($this->relation);
         $whereClause = array();
         $comparisonClause = DB::get_conn()->comparisonClause(
-            $this->getDbName(),
+            $this->getDbNameAndAddToQuery($query),
             null,
             false, // exact?
             false, // negate?
@@ -87,7 +87,7 @@ class PartialMatchFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $comparisonClause = DB::get_conn()->comparisonClause(
-            $this->getDbName(),
+            $this->getDbNameAndAddToQuery($query),
             null,
             false, // exact?
             true, // negate?
@@ -104,7 +104,7 @@ class PartialMatchFilter extends SearchFilter
         $this->model = $query->applyRelation($this->relation);
         $values = $this->getValue();
         $comparisonClause = DB::get_conn()->comparisonClause(
-            $this->getDbName(),
+            $this->getDbNameAndAddToQuery($query),
             null,
             false, // exact?
             true, // negate?

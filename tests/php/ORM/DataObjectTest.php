@@ -2311,4 +2311,19 @@ class DataObjectTest extends SapphireTest
             ['"DataObjectTest_TeamComment"."Name"' => 'does not exists']
         ));
     }
+
+    /**
+     * Test that fields of a subclass can be used to filter a base class query.
+     * Most commonly appears in CMS, when filtering SiteTree queries by Page columns
+     * https://github.com/silverstripe/silverstripe-framework/issues/1683
+     */
+    public function testFilterBySubclassFields()
+    {
+        $subteams = DataObjectTest\Team::get()->filter('SubclassDatabaseField', 'Subclassed 1');
+        $this->assertEquals(1, $subteams->count());
+        $this->assertEquals(
+            $this->idFromFixture(DataObjectTest\SubTeam::class, 'subteam1'),
+            $subteams->First()->ID
+        );
+    }
 }

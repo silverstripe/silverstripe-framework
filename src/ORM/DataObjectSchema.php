@@ -669,7 +669,7 @@ class DataObjectSchema
     }
 
     /**
-     * Returns the table name in the class hierarchy which contains a given
+     * Returns the table name in the class ancestry which contains a given
      * field column for a {@link DataObject}. If the field does not exist, this
      * will return null.
      *
@@ -688,7 +688,30 @@ class DataObjectSchema
     }
 
     /**
-     * Returns the class name in the class hierarchy which contains a given
+     * Returns the table name(s) in the class ancestry and descendants which contain a given
+     * field column for a {@link DataObject}. If the field does not exist, this will return null.
+     *
+     * @param string $candidateClass
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function tablesForField($candidateClass, $fieldName)
+    {
+        $classes = $this->classesForField($candidateClass, $fieldName);
+        if ($classes) {
+            return array_map(
+                function ($class) {
+                    return $this->tableName($class);
+                },
+                $classes
+            );
+        }
+        return null;
+    }
+
+    /**
+     * Returns the class name in the class ancestors which contains a given
      * field column for a {@link DataObject}. If the field does not exist, this
      * will return null.
      *
@@ -720,6 +743,42 @@ class DataObjectSchema
             $candidateClass = get_parent_class($candidateClass);
         }
         return null;
+    }
+
+    /**
+     * Returns the class(es) name in the class ancestors and descendants which contain a given
+     * field column for a {@link DataObject}. If the field does not exist, this will return null.
+     *
+     * @param string $candidateClass
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function classesForField($candidateClass, $fieldName)
+    {
+        // normalise class name
+        $candidateClass = ClassInfo::class_name($candidateClass);
+        if ($candidateClass === DataObject::class) {
+            return null;
+        }
+
+        // Short circuit for fixed fields
+        $fixed = DataObject::config()->uninherited('fixed_fields');
+        if (isset($fixed[$fieldName])) {
+            return [ $this->baseDataClass($candidateClass) ];
+        }
+
+        $dataClasses = ClassInfo::dataClassesFor($candidateClass);
+
+        // Find regular fields
+        $classes = [];
+        foreach ($dataClasses as $dataClass) {
+            $fields = $this->databaseFields($dataClass, false);
+            if (isset($fields[$fieldName])) {
+                $classes[] = $dataClass;
+            }
+        }
+        return $classes ? $classes : null;
     }
 
     /**

@@ -310,6 +310,32 @@ abstract class SearchFilter
     }
 
     /**
+     * Return getDbName() and ensures that the passed query has all the joins necessary to reference it.
+     *
+     * @param $query The DataQuery to add joins to
+     * @return string A table-qualified, quoted field name
+     */
+    public function getDbNameAndAddToQuery(DataQuery $query)
+    {
+        $field = null;
+
+        // TODO: Add support for dot syntax
+        if (!$this->relation) {
+            if ($this->aggregate) {
+                $field = sprintf(
+                    '%s(%s)',
+                    $this->aggregate['function'],
+                    $query->joinSubclassTableForField($this->aggregate['column'])
+                );
+            } else {
+                $field = $query->joinSubclassTableForField($this->name);
+            }
+        }
+
+        return $field ? $field : $this->getDbName();
+    }
+
+    /**
      * Return the value of the field as processed by the DBField class
      *
      * @return string

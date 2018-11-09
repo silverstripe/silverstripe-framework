@@ -43,7 +43,7 @@ abstract class ComparisonFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
 
-        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
+        $predicate = sprintf("%s %s ?", $this->getDbNameAndAddToQuery($query), $this->getOperator());
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?
@@ -62,7 +62,7 @@ abstract class ComparisonFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
 
-        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
+        $predicate = sprintf("%s %s ?", $this->getDbNameAndAddToQuery($query), $this->getInverseOperator());
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?
