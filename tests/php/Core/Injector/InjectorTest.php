@@ -1062,6 +1062,11 @@ class InjectorTest extends SapphireTest
                 SomeExtension::class,
             ]);
 
+        // Since we've changed config for the extension's class name after it has been loaded (via
+        // fixtures in setUp()) we must regenerate the extra_methods cache for it by reapplying the
+        // extension to Member:
+        Member::add_extension(SomeExtension::class);
+
         /** @var Member|SomeExtension $member */
         $member = new Member();
         $this->assertTrue($member->hasExtension(SomeExtension::class));

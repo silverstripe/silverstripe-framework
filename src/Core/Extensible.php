@@ -216,15 +216,6 @@ trait Extensible
     }
 
     /**
-     * Clears all cached extra_methods cache data
-     */
-    public static function flush_extra_methods_cache()
-    {
-        self::$extra_methods = [];
-    }
-
-
-    /**
      * Remove an extension from a class.
      * Note: This will not remove extensions from parent classes, and must be called
      * directly on the class assigned the extension.
