@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Core\Tests;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Test various functions on the {@link Convert} class.
@@ -576,15 +576,15 @@ XML
     public function memString2BytesProvider()
     {
         return [
-            ['-1', (float)-1],
-            ['2048', (float)(2 * 1024)],
-            ['2k', (float)(2 * 1024)],
-            ['512M', (float)(512 * 1024 * 1024)],
-            ['512MiB', (float)(512 * 1024 * 1024)],
-            ['512 mbytes', (float)(512 * 1024 * 1024)],
-            ['512 megabytes', (float)(512 * 1024 * 1024)],
-            ['1024g', (float)(1024 * 1024 * 1024 * 1024)],
-            ['1024G', (float)(1024 * 1024 * 1024 * 1024)]
+            'infinite' => ['-1', -1],
+            'integer' => ['2048', 2 * 1024],
+            'kilo' => ['2k', 2 * 1024],
+            'mega' => ['512M', 512 * 1024 * 1024],
+            'MiB' => ['512MiB', 512 * 1024 * 1024],
+            'mbytes' => ['512 mbytes', 512 * 1024 * 1024],
+            'megabytes' => ['512 megabytes', 512 * 1024 * 1024],
+            'giga' => ['1024g', 1024 * 1024 * 1024 * 1024],
+            'G' => ['1024G', 1024 * 1024 * 1024 * 1024]
         ];
     }
 

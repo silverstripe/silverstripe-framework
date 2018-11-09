@@ -329,7 +329,6 @@ fi:
     LOGOUT: 'Kirjaudu ulos'
     LOSTPASSWORDHEADER: 'Unohtunut salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
-    NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
     PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
     PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'
