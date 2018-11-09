@@ -21,7 +21,7 @@ use Exception;
  * You are advised to backup your tables if changing settings on an existing database
  * `connection_charset` and `charset` should be equal, similarly so should `connection_collation` and `collation`
  */
-class MySQLDatabase extends Database
+class MySQLDatabase extends Database implements TransactionManager
 {
     use Configurable;
 
@@ -50,17 +50,19 @@ class MySQLDatabase extends Database
     private static $charset = 'utf8';
 
     /**
+     * Cache for getTransactionManager()
+     *
+     * @var TransactionManager
+     */
+    private $transactionManager = null;
+
+    /**
      * Default collation
      *
      * @config
      * @var string
      */
     private static $collation = 'utf8_general_ci';
-
-    /**
-     * @var bool
-     */
-    protected $transactionNesting = 0;
 
     public function connect($parameters)
     {
@@ -298,73 +300,64 @@ class MySQLDatabase extends Database
         return $list;
     }
 
+
+    /**
+     * Returns the TransactionManager to handle transactions for this database.
+     *
+     * @return TransactionManager
+     */
+    protected function getTransactionManager()
+    {
+        if (!$this->transactionManager) {
+            // PDOConnector providers this
+            if ($this->connector instanceof TransactionManager) {
+                $this->transactionManager = new NestedTransactionManager($this->connector);
+            // Direct database access does not
+            } else {
+                $this->transactionManager = new NestedTransactionManager(new MySQLTransactionManager($this));
+            }
+        }
+        return $this->transactionManager;
+    }
     public function supportsTransactions()
     {
         return true;
     }
+    public function supportsSavepoints()
+    {
+        return $this->getTransactionManager()->supportsSavepoints();
+    }
 
     public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
     {
-        if ($this->transactionNesting > 0) {
-            $this->transactionSavepoint('NESTEDTRANSACTION' . $this->transactionNesting);
-        } else {
-            // This sets the isolation level for the NEXT transaction, not the current one.
-            if ($transactionMode) {
-                $this->query('SET TRANSACTION ' . $transactionMode);
-            }
-
-            $this->query('START TRANSACTION');
-
-            if ($sessionCharacteristics) {
-                $this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics);
-            }
-        }
-        ++$this->transactionNesting;
+        $this->getTransactionManager()->transactionStart($transactionMode, $sessionCharacteristics);
     }
 
     public function transactionSavepoint($savepoint)
     {
-        $this->query("SAVEPOINT $savepoint");
+        $this->getTransactionManager()->transactionSavepoint($savepoint);
     }
 
     public function transactionRollback($savepoint = false)
     {
-        // Named transaction
-        if ($savepoint) {
-            $this->query('ROLLBACK TO ' . $savepoint);
-            return true;
-        }
-
-        // Fail if transaction isn't available
-        if (!$this->transactionNesting) {
-            return false;
-        }
-        --$this->transactionNesting;
-        if ($this->transactionNesting > 0) {
-            $this->transactionRollback('NESTEDTRANSACTION' . $this->transactionNesting);
-        } else {
-            $this->query('ROLLBACK');
-        }
-        return true;
+        return $this->getTransactionManager()->transactionRollback($savepoint);
     }
 
     public function transactionDepth()
     {
-        return $this->transactionNesting;
+        return $this->getTransactionManager()->transactionDepth();
     }
 
     public function transactionEnd($chain = false)
     {
-        // Fail if transaction isn't available
-        if (!$this->transactionNesting) {
-            return false;
+        $result = $this->getTransactionManager()->transactionEnd();
+
+        if ($chain) {
+            Deprecation::notice('4.4', '$chain argument is deprecated');
+            return $this->getTransactionManager()->transactionStart();
         }
-        --$this->transactionNesting;
-        if ($this->transactionNesting <= 0) {
-            $this->transactionNesting = 0;
-            $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
-        }
-        return true;
+
+        return $result;
     }
 
     /**
@@ -372,6 +365,12 @@ class MySQLDatabase extends Database
      */
     protected function resetTransactionNesting()
     {
+        // Check whether to use a connector's built-in transaction methods
+        if ($this->connector instanceof TransactionalDBConnector) {
+            if ($this->transactionNesting > 0) {
+                $this->connector->transactionRollback();
+            }
+        }
         $this->transactionNesting = 0;
     }
 
