@@ -18,7 +18,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     /**
      * @var string
      */
-    private $contentType = "text/html";
+    private $contentType = 'text/html';
 
     /**
      * @var int
@@ -155,8 +155,8 @@ class HTTPOutputHandler extends AbstractProcessingHandler
 
         // If headers have been sent then these won't be used, and may throw errors that we wont' want to see.
         if (!headers_sent()) {
-            $response->setStatusCode($this->statusCode);
-            $response->addHeader("Content-Type", $this->contentType);
+            $response->setStatusCode($this->getStatusCode());
+            $response->addHeader('Content-Type', $this->getContentType());
         } else {
             // To supress errors aboot errors
             $response->setStatusCode(200);
@@ -165,6 +165,6 @@ class HTTPOutputHandler extends AbstractProcessingHandler
         $response->setBody($record['formatted']);
         $response->output();
 
-        return false === $this->bubble;
+        return false === $this->getBubble();
     }
 }

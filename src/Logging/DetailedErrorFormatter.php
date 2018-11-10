@@ -25,7 +25,7 @@ class DetailedErrorFormatter implements FormatterInterface
             );
         } else {
             $context = isset($record['context']) ? $record['context'] : $record;
-            foreach (array('code','message','file','line') as $key) {
+            foreach (['code', 'message', 'file', 'line'] as $key) {
                 if (!isset($context[$key])) {
                     $context[$key] = isset($record[$key]) ? $record[$key] : null;
                 }
@@ -57,7 +57,7 @@ class DetailedErrorFormatter implements FormatterInterface
 
     public function formatBatch(array $records)
     {
-        return implode("\n", array_map(array($this, 'format'), $records));
+        return implode("\n", array_map([$this, 'format'], $records));
     }
 
     /**

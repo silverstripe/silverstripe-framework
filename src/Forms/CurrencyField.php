@@ -39,9 +39,8 @@ class CurrencyField extends TextField
     {
         if ($this->value) {
             return preg_replace('/[^0-9.\-]/', '', $this->value);
-        } else {
-            return 0.00;
         }
+        return 0.00;
     }
 
     public function Type()
@@ -54,7 +53,7 @@ class CurrencyField extends TextField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy('SilverStripe\\Forms\\CurrencyField_Readonly');
+        return $this->castedCopy(CurrencyField_Readonly::class);
     }
 
     public function validate($validator)

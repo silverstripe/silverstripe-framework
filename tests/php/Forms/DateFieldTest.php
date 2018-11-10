@@ -5,8 +5,10 @@ namespace SilverStripe\Forms\Tests;
 use IntlDateFormatter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\DateField_Disabled;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -224,5 +226,55 @@ class DateFieldTest extends SapphireTest
         $dateField->setValue('2010-03-31');
         $dateField->setLocale('de_DE');
         $dateField->Value();
+    }
+
+    public function testGetDateFormatHTML5()
+    {
+        $field = new DateField('Date');
+        $field->setHTML5(true);
+        $this->assertSame(DBDate::ISO_DATE, $field->getDateFormat());
+    }
+
+    public function testGetDateFormatViaSetter()
+    {
+        $field = new DateField('Date');
+        $field->setHTML5(false);
+        $field->setDateFormat('d-m-Y');
+        $this->assertSame('d-m-Y', $field->getDateFormat());
+    }
+
+    public function testGetAttributes()
+    {
+        $field = new DateField('Date');
+        $field
+            ->setHTML5(true)
+            ->setMinDate('1980-05-10')
+            ->setMaxDate('1980-05-20');
+
+        $result = $field->getAttributes();
+        $this->assertSame('1980-05-10', $result['min']);
+        $this->assertSame('1980-05-20', $result['max']);
+    }
+
+    public function testSetSubmittedValueNull()
+    {
+        $field = new DateField('Date');
+        $field->setSubmittedValue(false);
+        $this->assertNull($field->Value());
+    }
+
+    public function testPerformReadonlyTransformation()
+    {
+        $field = new DateField('Date');
+        $result = $field->performReadonlyTransformation();
+        $this->assertInstanceOf(DateField_Disabled::class, $result);
+        $this->assertTrue($result->isReadonly());
+    }
+
+    public function testValidateWithoutValueReturnsTrue()
+    {
+        $field = new DateField('Date');
+        $validator = new RequiredFields();
+        $this->assertTrue($field->validate($validator));
     }
 }
