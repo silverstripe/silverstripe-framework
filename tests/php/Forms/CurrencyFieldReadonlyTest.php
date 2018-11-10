@@ -6,7 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CurrencyField_Readonly;
 use SilverStripe\ORM\FieldType\DBCurrency;
 
-class CurrencyField_ReadonlyTest extends SapphireTest
+class CurrencyFieldReadonlyTest extends SapphireTest
 {
     public function testPerformReadonlyTransformation()
     {

@@ -10,7 +10,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 /**
  * @skipUpgrade
  */
-class DateField_DisabledTest extends SapphireTest
+class DateFieldDisabledTest extends SapphireTest
 {
     protected function setUp()
     {

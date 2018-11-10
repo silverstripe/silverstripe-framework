@@ -6,7 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CurrencyField_Disabled;
 use SilverStripe\ORM\FieldType\DBCurrency;
 
-class CurrencyField_DisabledTest extends SapphireTest
+class CurrencyFieldDisabledTest extends SapphireTest
 {
     public function testFieldWithValue()
     {

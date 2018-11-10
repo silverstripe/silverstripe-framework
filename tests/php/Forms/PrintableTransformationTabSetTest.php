@@ -7,7 +7,7 @@ use SilverStripe\Forms\PrintableTransformation_TabSet;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 
-class PrintableTransformation_TabSetTest extends SapphireTest
+class PrintableTransformationTabSetTest extends SapphireTest
 {
     public function testFieldHolder()
     {
