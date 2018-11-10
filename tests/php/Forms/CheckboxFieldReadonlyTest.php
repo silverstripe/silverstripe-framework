@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CheckboxField_Readonly;
 
-class CheckboxField_ReadonlyTest extends SapphireTest
+class CheckboxFieldReadonlyTest extends SapphireTest
 {
     public function testPerformReadonlyTransformation()
     {
