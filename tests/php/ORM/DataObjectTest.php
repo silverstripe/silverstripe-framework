@@ -206,8 +206,8 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('John', $player->FirstName);
         $this->assertEquals('Doe', $player->Surname);
 
-        // IDs should be stored as integers, not strings
-        $player = new DataObjectTest\Player(['ID' => '5']);
+        // Note that automatic conversion of IDs to integer no longer happens as the DB layer does that for us now
+        $player = new DataObjectTest\Player(['ID' => 5]);
         $this->assertSame(5, $player->ID);
     }
 
@@ -2519,5 +2519,40 @@ class DataObjectTest extends SapphireTest
             $root->WriteCount,
             'Root is 2 step remove from grand children. It was not written on a shallow recursive write.'
         );
+    }
+
+    /**
+     * Test the different methods for creating DataObjects.
+     * Note that using anything other than the default option should generally be left to ORM interanls.
+     */
+    public function testDataObjectCreationTypes()
+    {
+
+        // Test the default (DataObject::CREATE_OBJECT)
+        // Defaults are used, changes of non-default fields are tracked
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ]);
+        $this->assertEquals('Staff', $staff->EmploymentType);
+        $this->assertEquals(['Salary'], array_keys($staff->getChangedFields()));
+
+
+        // Test hydration (DataObject::CREATE_HYDRATED)
+        // Defaults are not used, changes are not tracked
+        $staff = new DataObjectTest\Staff([
+            'ID' => 5,
+            'Salary' => 50,
+        ], DataObject::CREATE_HYDRATED);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals([], $staff->getChangedFields());
+
+        // Test singleton (DataObject::CREATE_SINGLETON)
+        // Values are ingored
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_SINGLETON);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals(null, $staff->Salary);
+        $this->assertEquals([], $staff->getChangedFields());
     }
 }
