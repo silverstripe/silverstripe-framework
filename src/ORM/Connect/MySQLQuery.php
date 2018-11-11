@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
+ * Note that this class is only used for the results of non-prepared statements
  */
 class MySQLQuery extends Query
 {
@@ -18,6 +19,11 @@ class MySQLQuery extends Query
     protected $handle;
 
     /**
+     * Metadata about the columns of this query
+     */
+    protected $columns;
+
+    /**
      * Hook the result-set given into a Query class, suitable for use by SilverStripe.
      *
      * @param MySQLiConnector $database The database object that created this query.
@@ -27,6 +33,9 @@ class MySQLQuery extends Query
     public function __construct($database, $handle)
     {
         $this->handle = $handle;
+        if (is_object($this->handle)) {
+            $this->columns = $this->handle->fetch_fields();
+        }
     }
 
     public function __destruct()
@@ -40,7 +49,7 @@ class MySQLQuery extends Query
     {
         if (is_object($this->handle)) {
             $this->handle->data_seek($row);
-            return $this->handle->fetch_assoc();
+            return $this->nextRecord();
         }
         return null;
     }
@@ -55,7 +64,19 @@ class MySQLQuery extends Query
 
     public function nextRecord()
     {
-        if (is_object($this->handle) && ($data = $this->handle->fetch_assoc())) {
+        $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
+
+        if (is_object($this->handle) && ($row = $this->handle->fetch_array(MYSQLI_NUM))) {
+            $data = [];
+            foreach ($row as $i => $value) {
+                if (!isset($this->columns[$i])) {
+                    throw new DatabaseException("Can't get metadata for column $i");
+                }
+                if (in_array($this->columns[$i]->type, $floatTypes)) {
+                    $value = (float)$value;
+                }
+                $data[$this->columns[$i]->name] = $value;
+            }
             return $data;
         } else {
             return false;
