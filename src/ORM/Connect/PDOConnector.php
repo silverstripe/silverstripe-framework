@@ -427,7 +427,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         } elseif ($statement) {
             // Count and return results
             $this->rowCount = $statement->rowCount();
-            return new PDOQuery($statement, $this);
+            return new PDOQuery($statement);
         }
 
         // Ensure statement is closed
