@@ -503,7 +503,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doNew($data, $form)
     {
-        return Controller::curr()->redirect($this->Link('addnew'));
+        return Controller::curr()->redirect(Controller::join_links($this->gridField->Link("item"), "new"));
     }
 
     /**
