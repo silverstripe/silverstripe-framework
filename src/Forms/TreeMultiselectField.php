@@ -265,7 +265,7 @@ class TreeMultiselectField extends TreeDropdownField
     /**
      * {@inheritdoc}
      *
-     * @deprecated 4.0..5.0
+     * @internal To be removed in 5.0
      */
     protected function objectForKey($key)
     {
@@ -281,7 +281,7 @@ class TreeMultiselectField extends TreeDropdownField
          * This fix is not ideal, but supposed to keep backward compatibility for SS4.
          * Since SS5 this method should be removed and NULL should be used instead of 'unchanged'.
          */
-        if ($this->getKeyField() ==='ID' && $key === 'unchanged') {
+        if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
             $key = null;
         }
 
