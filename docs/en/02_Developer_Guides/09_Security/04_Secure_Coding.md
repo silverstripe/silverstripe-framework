@@ -549,22 +549,49 @@ salt values generated with the strongest entropy generators available on the pla
 (see [RandomGenerator](api:SilverStripe\Security\RandomGenerator)). This prevents brute force attacks with
 [Rainbow tables](http://en.wikipedia.org/wiki/Rainbow_table).
 
-Strong passwords are a crucial part of any system security.
-So in addition to storing the password in a secure fashion,
-you can also enforce specific password policies by configuring
-a [PasswordValidator](api:SilverStripe\Security\PasswordValidator):
+Strong passwords are a crucial part of any system security. So in addition to storing the password in a secure fashion,
+you can also enforce specific password policies by configuring a 
+[PasswordValidator](api:SilverStripe\Security\PasswordValidator). This can be done through a `_config.php` file
+at runtime, or via YAML configuration.
 
+From SilverStripe 4.3 onwards, the default password validation rules are configured in the framework's `passwords.yml`
+file. You will need to ensure that your config file is processed after it. For SilverStripe <4.3 you will need to
+use a `_config.php` file to modify the class's config at runtime (see `_config.php` installed in your mysite/app folder
+if you're using silverstripe/recipe-core).
 
-```php
-use SilverStripe\Security\Member;
-use SilverStripe\Security\PasswordValidator;
+```yaml
+---
+Name: mypasswords
+After: '#corepasswords'
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\PasswordValidator:
+    properties:
+      MinLength: 7
+      HistoricCount: 6
+      MinTestScore: 3
 
-$validator = new PasswordValidator();
-$validator->minLength(7);
-$validator->checkHistoricalPasswords(6);
-$validator->characterStrength(3, ["lowercase", "uppercase", "digits", "punctuation"]);
-Member::set_password_validator($validator);
+# In the case someone uses `new PasswordValidator` instead of Injector, provide some safe defaults through config.
+SilverStripe\Security\PasswordValidator:
+  min_length: 7
+  historic_count: 6
+  min_test_score: 3
 ```
+
+### Configuring custom password validator tests
+
+The default password validation character strength tests can be seen in the `PasswordValidator.character_strength_tests`
+configuration property. You can add your own with YAML config, by providing a name for it and a regex pattern to match:
+
+```yaml
+SilverStripe\Security\PasswordValidator:
+  character_strength_tests:
+    contains_secret_word: '/1337pw/'
+```
+
+This will ensure that a password contains `1337pw` somewhere in the string before validation will succeed.
+
+### Other options
 
 In addition, you can tighten password security with the following configuration settings:
 
