@@ -5,6 +5,7 @@ namespace SilverStripe\Logging;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Monolog\ErrorHandler as MonologHandler;
+use SilverStripe\Dev\Deprecation;
 
 class MonologErrorHandler implements ErrorHandler
 {
@@ -23,6 +24,8 @@ class MonologErrorHandler implements ErrorHandler
      */
     public function setLogger(LoggerInterface $logger)
     {
+        Deprecation::notice('4.4.0', 'Please use pushHandler() instead');
+
         $this->loggers = [$logger];
         return $this;
     }
@@ -35,6 +38,8 @@ class MonologErrorHandler implements ErrorHandler
      */
     public function getLogger()
     {
+        Deprecation::notice('4.4.0', 'Please use getHandlers() instead');
+
         return reset($this->loggers);
     }
 
