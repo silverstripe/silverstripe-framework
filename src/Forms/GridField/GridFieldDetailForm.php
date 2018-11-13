@@ -225,6 +225,17 @@ class GridFieldDetailForm implements GridField_URLHandler
     {
         $this->showPagination = $showPagination;
         return $this;
+        return is_bool($this->showPagination) ? $this->showPagination : $this->getDefaultShowPagination();
+    }
+
+    /**
+     * @param mixed $showPagination
+     * @return GridFieldDetailForm
+     */
+    public function setShowPagination($showPagination)
+    {
+        $this->showPagination = $showPagination;
+        return $this;
     }
 
     /**

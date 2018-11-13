@@ -536,8 +536,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return false;
         }
 
-        $currentPage = $data->getData('GridFieldPaginator')->getData('currentPage');
-        $itemsPerPage = $data->getData('GridFieldPaginator')->getData('itemsPerPage');
+        $currentPage = $paginator->getData('currentPage');
+        $itemsPerPage = $paginator->getData('itemsPerPage');
 
         $limit = $itemsPerPage + 2;
         $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
