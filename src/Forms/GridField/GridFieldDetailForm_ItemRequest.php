@@ -310,36 +310,28 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
 
             $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
-            $formActionsConfig = $this->config()->get("formActions");
 
-            $showPrevious = is_bool($component->getShowPrevious()) ? $component->getShowPrevious() : $formActionsConfig["showPrevious"];
-            $showNext = is_bool($component->getShowNext()) ? $component->getShowNext() : $formActionsConfig["showNext"];
-            $showAdd = is_bool($component->getShowAdd()) ? $component->getShowAdd() : $formActionsConfig["showAdd"];
-
-            if ($showPrevious) {
+            if ($component->getShowPagination()) {
                 $previousAndNextGroup->push(FormAction::create('doPrevious')
                     ->setUseButtonTag(true)
                     ->setAttribute('data-grid-state', $gridStateStr)
                     ->setDisabled(!$this->getPreviousRecordID())
-                    ->addExtraClass('btn btn-secondary font-icon-left-open action--previous cms-panel-link'));
-            }
+                    ->addExtraClass('btn btn-secondary font-icon-left-open action--previous discard-confirmation'));
 
-            if ($showNext) {
                 $previousAndNextGroup->push(FormAction::create('doNext')
                     ->setUseButtonTag(true)
                     ->setAttribute('data-grid-state', $gridStateStr)
                     ->setDisabled(!$this->getNextRecordID())
-                    ->addExtraClass('btn btn-secondary font-icon-right-open action--next cms-panel-link'));
+                    ->addExtraClass('btn btn-secondary font-icon-right-open action--next discard-confirmation'));
             }
 
             $rightGroup->push($previousAndNextGroup);
 
-
-            if ($showAdd) {
+            if ($component->getShowAdd()) {
                 $rightGroup->push(FormAction::create('doNew')
                     ->setUseButtonTag(true)
                     ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
-                    ->addExtraClass('btn btn-primary font-icon-plus rounded cms-panel-link'));
+                    ->addExtraClass('btn btn-primary font-icon-plus rounded action--new discard-confirmation'));
             }
         } else { // adding new record
             //Change the Save label to 'Create'
@@ -475,9 +467,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doPrevious($data, $form)
     {
-        Controller::curr()->getResponse()->addHeader("X-Pjax", "Content");
+        $this->getToplevelController()->getResponse()->addHeader("X-Pjax", "Content");
         $link = $this->getEditLink($this->getPreviousRecordID());
-        return Controller::curr()->redirect($link);
+        return $this->redirect($link);
     }
 
     /**
@@ -488,9 +480,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doNext($data, $form)
     {
-        Controller::curr()->getResponse()->addHeader("X-Pjax", "Content");
+        $this->getToplevelController()->getResponse()->addHeader("X-Pjax", "Content");
         $link = $this->getEditLink($this->getNextRecordID());
-        return Controller::curr()->redirect($link);
+        return $this->redirect($link);
     }
 
     /**
@@ -503,7 +495,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doNew($data, $form)
     {
-        return Controller::curr()->redirect(Controller::join_links($this->gridField->Link("item"), "new"));
+        return $this->redirect(Controller::join_links($this->gridField->Link("item"), "new"));
     }
 
     /**
@@ -523,19 +515,36 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
+     * @param int $offset The offset from the current record
+     * @return bool
+     */
+    private function getAdjacentRecordID($offset)
+    {
+        $gridField = $this->gridField;
+        $gridStateStr = $this->getRequest()->requestVar('gridState');
+        $state = $gridField->getState(false);
+        $state->setValue($gridStateStr);
+
+        $data = $state->getData();
+        $currentPage = $data->getData('GridFieldPaginator')->getData('currentPage');
+        $itemsPerPage = $data->getData('GridFieldPaginator')->getData('itemsPerPage');
+
+        $limit = $itemsPerPage + 2;
+        $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
+
+        $map = $gridField->getManipulatedList()->limit($limit, $limitOffset)->column('ID');
+        $index = array_search($this->record->ID, $map);
+        return isset($map[$index+$offset]) ? $map[$index+$offset] : false;
+    }
+
+    /**
      * Gets the ID of the previous record in the list.
      *
      * @return int
      */
     public function getPreviousRecordID()
     {
-        $gridField = $this->gridField;
-        $gridStateStr = $this->getRequest()->postVar('gridState');
-        $gridField->getState(false)->setValue($gridStateStr);
-
-        $map = $gridField->getManipulatedList()->limit(PHP_INT_MAX, 0)->column('ID');
-        $offset = array_search($this->record->ID, $map);
-        return isset($map[$offset-1]) ? $map[$offset-1] : false;
+        return $this->getAdjacentRecordID(-1);
     }
 
     /**
@@ -545,13 +554,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function getNextRecordID()
     {
-        $gridField = $this->gridField;
-        $gridStateStr = $this->getRequest()->postVar('gridState');
-        $gridField->getState(false)->setValue($gridStateStr);
-
-        $map = $gridField->getManipulatedList()->limit(PHP_INT_MAX, 0)->column('ID');
-        $offset = array_search($this->record->ID, $map);
-        return isset($map[$offset+1]) ? $map[$offset+1] : false;
+        return $this->getAdjacentRecordID(1);
     }
 
     /**

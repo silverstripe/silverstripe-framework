@@ -10,11 +10,10 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
     /**
      *
      * @param int $itemsPerPage - How many items per page should show up
-     * @param bool $showPrevious Whether the `Previous` button should display or not, leave as null to use default
-     * @param bool $showNext Whether the `Next` button should display or not, leave as null to use default
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($itemsPerPage = null, $showPrevious = null, $showNext = null, $showAdd = null)
+    public function __construct($itemsPerPage = null, $showPagination = null, $showAdd = null)
     {
         parent::__construct();
 
@@ -29,7 +28,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
         $this->addComponent(new GridField_ActionMenu());
         $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
         $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-        $this->addComponent(new GridFieldDetailForm(null, $showPrevious, $showNext, $showAdd));
+        $this->addComponent(new GridFieldDetailForm(null, $showPagination, $showAdd));
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);

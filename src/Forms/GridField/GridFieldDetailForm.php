@@ -38,25 +38,16 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $template = null;
 
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
      * @var bool
      */
-    protected $showPrevious;
+    protected $showPagination;
 
     /**
-     *
-     * @var bool
-     */
-    protected $showNext;
-
-    /**
-     *
      * @var bool
      */
     protected $showAdd;
@@ -97,16 +88,14 @@ class GridFieldDetailForm implements GridField_URLHandler
      * controller who wants to display the getCMSFields
      *
      * @param string $name The name of the edit form to place into the pop-up form
-     * @param bool $showPrevious Whether the `Previous` button should display or not, leave as null to use default
-     * @param bool $showNext Whether the `Next` button should display or not, leave as null to use default
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($name = null, $showPrevious = null, $showNext = null, $showAdd = null)
+    public function __construct($name = null, $showPagination = null, $showAdd = null)
     {
-        $this->name = $name ?: 'DetailForm';
-        $this->showPrevious = $showPrevious;
-        $this->showNext = $showNext;
-        $this->showAdd = $showAdd;
+        $this->setName($name ?: 'DetailForm');
+        $this->setShowPagination($showPagination);
+        $this->setShowAdd($showAdd);
     }
 
     /**
@@ -210,17 +199,37 @@ class GridFieldDetailForm implements GridField_URLHandler
     /**
      * @return bool
      */
-    public function getShowPrevious()
+    private function getDefaultShowPagination()
     {
-        return $this->showPrevious;
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get("formActions");
+        return $formActionsConfig["showPagination"];
     }
 
     /**
      * @return bool
      */
-    public function getShowNext()
+    public function getShowPagination()
     {
-        return $this->showNext;
+        return is_bool($this->showPagination) ? $this->showPagination : $this->getDefaultShowPagination();
+    }
+
+    /**
+     * @param mixed $showPagination
+     * @return GridFieldDetailForm
+     */
+    public function setShowPagination($showPagination)
+    {
+        $this->showPagination = $showPagination;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    private function getDefaultShowAdd()
+    {
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get("formActions");
+        return $formActionsConfig["showAdd"];
     }
 
     /**
@@ -228,7 +237,17 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function getShowAdd()
     {
-        return $this->showAdd;
+        return is_bool($this->showAdd) ? $this->showAdd : $this->getDefaultShowAdd();
+    }
+
+    /**
+     * @param mixed $showAdd
+     * @return GridFieldDetailForm
+     */
+    public function setShowAdd($showAdd)
+    {
+        $this->showAdd = $showAdd;
+        return $this;
     }
 
     /**

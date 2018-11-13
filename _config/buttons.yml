@@ -3,6 +3,5 @@ Name: buttons
 ---
 SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
   formActions:
-    showPrevious: true
-    showNext: true
+    showPagination: true
     showAdd: true
