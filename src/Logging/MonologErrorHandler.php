@@ -23,7 +23,7 @@ class MonologErrorHandler implements ErrorHandler
      */
     public function setLogger(LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->loggers = [$logger];
         return $this;
     }
 

@@ -10,7 +10,7 @@ class MonologErrorHandlerTest extends SapphireTest
 {
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /No Logger property passed to MonologErrorHandler/
+     * @expectedExceptionMessageRegExp /No Logger properties passed to MonologErrorHandler/
      */
     public function testStartThrowsExceptionWithoutLoggerDefined()
     {
