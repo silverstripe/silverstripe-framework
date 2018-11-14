@@ -6,6 +6,8 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 class DBEnumTest extends SapphireTest
 {
@@ -33,7 +35,7 @@ class DBEnumTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        DB::create_table('require_test', ['ID' => 'int(11)']);
+        DB::create_table('require_test', ['ID' => 'int']);
     }
 
     protected function tearDown()
@@ -51,10 +53,9 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
+        SQLInsert::create('require_test', ['"ID"' => 1])->execute();
 
-        DB::query('INSERT INTO require_test (ID) VALUE (1)');
-
-        $val = DB::query('SELECT testEnum from require_test where ID = 1')->value();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
 
         $this->assertEquals('Two', $val);
     }
@@ -69,18 +70,18 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        DB::query('INSERT INTO require_test (ID) VALUE (1)');
+        SQLInsert::create('require_test', ['"ID"' => 1])->execute();
 
         $enum->setDefault('Three');
         DB::get_schema()->schemaUpdate(function () use ($enum) {
             $enum->requireField();
         });
 
-        $val = DB::query('SELECT testEnum from require_test where ID = 1')->value();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
         $this->assertEquals('Two', $val);
 
-        DB::query('INSERT INTO require_test (ID) VALUE (2)');
-        $val = DB::query('SELECT testEnum from require_test where ID = 2')->value();
+        SQLInsert::create('require_test', ['"ID"' => 2])->execute();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 2])->execute()->value();
         $this->assertEquals('Three', $val);
     }
 
@@ -94,7 +95,7 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        DB::prepared_query('INSERT INTO require_test (ID, testEnum) VALUE (1, ?)', ['One']);
+        SQLInsert::create('require_test', ['"ID"' => 1, '"testEnum"' => 'One'])->execute();
 
         $enum->setEnum(['Two', 'Three']);
         $enum->setDefault('Three');
@@ -102,11 +103,11 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        $val = DB::query('SELECT testEnum from require_test where ID = 1')->value();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
         $this->assertEquals('Three', $val);
 
-        DB::query('INSERT INTO require_test (ID) VALUE (2)');
-        $val = DB::query('SELECT testEnum from require_test where ID = 2')->value();
+        SQLInsert::create('require_test', ['"ID"' => 2])->execute();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 2])->execute()->value();
         $this->assertEquals('Three', $val);
     }
 
@@ -120,7 +121,7 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        DB::query('INSERT INTO require_test (ID) VALUE (1)');
+        SQLInsert::create('require_test', ['"ID"' => 1])->execute();
 
         $enum->setEnum(['One', 'Three']);
         $enum->setDefault('Three');
@@ -128,11 +129,11 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        $val = DB::query('SELECT testEnum from require_test where ID = 1')->value();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
         $this->assertEquals('Three', $val);
 
-        DB::query('INSERT INTO require_test (ID) VALUE (2)');
-        $val = DB::query('SELECT testEnum from require_test where ID = 2')->value();
+        SQLInsert::create('require_test', ['"ID"' => 2])->execute();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 2])->execute()->value();
         $this->assertEquals('Three', $val);
     }
 
@@ -146,7 +147,7 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        DB::query('INSERT INTO require_test (ID) VALUE (1)');
+        SQLInsert::create('require_test', ['"ID"' => 1])->execute();
 
         $enum->setEnum(['One', 'Three']);
         $enum->setDefault(null);
@@ -154,11 +155,11 @@ class DBEnumTest extends SapphireTest
             $enum->requireField();
         });
 
-        $val = DB::query('SELECT testEnum from require_test where ID = 1')->value();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
         $this->assertEmpty($val);
 
-        DB::query('INSERT INTO require_test (ID) VALUE (2)');
-        $val = DB::query('SELECT testEnum from require_test where ID = 2')->value();
+        SQLInsert::create('require_test', ['"ID"' => 2])->execute();
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 2])->execute()->value();
         $this->assertEmpty($val);
     }
 }
