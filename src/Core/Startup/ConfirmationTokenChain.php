@@ -139,9 +139,10 @@ class ConfirmationTokenChain
      */
     public function getRedirectUrlParams()
     {
-        $params = [];
+        $params = $_GET;
+        unset($params['url']); // CLIRequestBuilder may add this
         foreach ($this->filteredTokens() as $token) {
-            $params = array_merge($params, $token->getRedirectUrlParams());
+            $params = array_merge($params, $token->params());
         }
 
         return $params;
