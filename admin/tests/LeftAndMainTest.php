@@ -243,7 +243,7 @@ class LeftAndMainTest extends FunctionalTest {
 		// Check page
 		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page1->ID);
 		$this->assertEquals(200, $result->getStatusCode());
-		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$this->assertEquals('application/json', $result->getHeader('Content-Type'));
 		$data = json_decode($result->getBody(), true);
 		$pageData = $data[$page1->ID];
 		$this->assertEquals(0, $pageData['ParentID']);
@@ -253,7 +253,7 @@ class LeftAndMainTest extends FunctionalTest {
 		// check subpage
 		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page31->ID);
 		$this->assertEquals(200, $result->getStatusCode());
-		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$this->assertEquals('application/json', $result->getHeader('Content-Type'));
 		$data = json_decode($result->getBody(), true);
 		$pageData = $data[$page31->ID];
 		$this->assertEquals($page3->ID, $pageData['ParentID']);
@@ -263,14 +263,14 @@ class LeftAndMainTest extends FunctionalTest {
 		// Multiple pages
 		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids='.$page1->ID.','.$page2->ID);
 		$this->assertEquals(200, $result->getStatusCode());
-		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$this->assertEquals('application/json', $result->getHeader('Content-Type'));
 		$data = json_decode($result->getBody(), true);
 		$this->assertEquals(2, count($data));
 
 		// Invalid IDs
 		$result = $this->get('LeftAndMainTest_Controller/updatetreenodes?ids=-3');
 		$this->assertEquals(200, $result->getStatusCode());
-		$this->assertEquals('text/json', $result->getHeader('Content-Type'));
+		$this->assertEquals('application/json', $result->getHeader('Content-Type'));
 		$data = json_decode($result->getBody(), true);
 		$this->assertEquals(0, count($data));
 	}

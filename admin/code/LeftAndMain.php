@@ -221,6 +221,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function init() {
 		parent::init();
 
+		HTTPCacheControl::singleton()->disableCache();
+
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);
 		Config::inst()->update('ContentNegotiator', 'enabled', false);
 
@@ -1032,7 +1034,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
-		$this->getResponse()->addHeader('Content-Type', 'text/json');
+		$this->getResponse()->addHeader('Content-Type', 'application/json');
 		return Convert::raw2json($data);
 	}
 

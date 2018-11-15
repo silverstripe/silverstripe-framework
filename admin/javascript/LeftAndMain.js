@@ -748,7 +748,7 @@ jQuery.noConflict();
 				if(title) document.title = decodeURIComponent(title.replace(/\+/g, ' '));
 
 				var newFragments = {}, newContentEls;
-				// If content type is text/json (ignoring charset and other parameters)
+				// If content type is application/json (ignoring charset and other parameters)
 				if(xhr.getResponseHeader('Content-Type').match(/^((text)|(application))\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
