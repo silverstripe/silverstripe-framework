@@ -32,7 +32,7 @@ use LogicException;
  *
  * Subclasses of DataList may add other methods that have the same effect.
  */
-class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
+class DataList extends ViewableData implements GenericList
 {
 
     /**

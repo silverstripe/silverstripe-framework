@@ -24,7 +24,7 @@ use SilverStripe\Dev\Deprecation;
  *   - filter
  *   - exclude
  */
-class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
+class ArrayList extends ViewableData implements GenericList
 {
 
     /**

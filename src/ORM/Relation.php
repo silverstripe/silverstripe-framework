@@ -13,7 +13,7 @@ use SilverStripe\ORM\FieldType\DBField;
  * @method Relation forForeignID($id)
  * @method string dataClass()
  */
-interface Relation extends SS_List, Filterable, Sortable, Limitable
+interface Relation extends GenericList
 {
 
     /**
