@@ -9,9 +9,18 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordValidator;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
+    protected $usesDatabase = true;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        PasswordValidator::singleton()->setMinLength(0);
+    }
 
     public function testSetValue()
     {
