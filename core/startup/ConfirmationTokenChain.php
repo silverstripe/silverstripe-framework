@@ -123,9 +123,10 @@ class ConfirmationTokenChain
 	 * @return array
 	 */
 	public function getRedirectUrlParams() {
-		$params = array();
+		$params = $_GET;
+		unset($params['url']);
 		foreach ($this->filteredTokens() as $token) {
-			$params = array_merge($params, $token->getRedirectUrlParams());
+			$params = array_merge($params, $token->params());
 		}
 
 		return $params;
