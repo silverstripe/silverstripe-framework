@@ -56,8 +56,16 @@ class DBEnumTest extends SapphireTest
         SQLInsert::create('require_test', ['"ID"' => 1])->execute();
 
         $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
-
         $this->assertEquals('Two', $val);
+
+        // Things should not have changed
+        DB::get_schema()->schemaUpdate(function () {
+            $enum = new DBEnum('testEnum', ['One', 'Two', 'Three'], 'Two');
+            $enum->setTable('require_test');
+            $enum->requireField();
+        });
+        $val = SQLSelect::create('"testEnum"', 'require_test', ['"ID"' => 1])->execute()->value();
+        $this->assertEquals('Two', $val, 'If recreate exactly the same field, nothing should change');
     }
 
     public function testSwitchToNewDefaultRequireField()
