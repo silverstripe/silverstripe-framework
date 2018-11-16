@@ -98,7 +98,7 @@ class PDOConnector extends DBConnector implements TransactionManager
      * one exists for the given query
      *
      * @param string $sql
-     * @return PDOStatement
+     * @return PDOStatementHandle|false
      */
     public function getOrPrepareStatement($sql)
     {
@@ -113,11 +113,14 @@ class PDOConnector extends DBConnector implements TransactionManager
             array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
         );
 
+        // Wrap in a PDOStatementHandle, to cache column metadata
+        $statementHandle = ($statement === false) ? false : new PDOStatementHandle($statement);
+
         // Only cache select statements
         if (preg_match('/^(\s*)select\b/i', $sql)) {
-            $this->cachedStatements[$sql] = $statement;
+            $this->cachedStatements[$sql] = $statementHandle;
         }
-        return $statement;
+        return $statementHandle;
     }
 
     /**
@@ -214,7 +217,10 @@ class PDOConnector extends DBConnector implements TransactionManager
                 $options[PDO::MYSQL_ATTR_SSL_CA] = $parameters['ssl_ca'];
             }
             // use default cipher if not provided
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : self::config()->get('ssl_cipher_default');
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] =
+                array_key_exists('ssl_cipher', $parameters) ?
+                $parameters['ssl_cipher'] :
+                self::config()->get('ssl_cipher_default');
         }
 
         if (static::config()->get('legacy_types')) {
@@ -328,7 +334,11 @@ class PDOConnector extends DBConnector implements TransactionManager
         $statement = $this->pdoConnection->query($sql);
 
         // Generate results
-        return $this->prepareResults($statement, $errorLevel, $sql);
+        if ($statement === false) {
+            $this->databaseError($this->getLastError(), $errorLevel, $sql);
+        } else {
+            return $this->prepareResults(new PDOStatementHandle($statement), $errorLevel, $sql);
+        }
     }
 
     /**
@@ -395,52 +405,49 @@ class PDOConnector extends DBConnector implements TransactionManager
     {
         $this->beforeQuery($sql);
 
-        // Prepare statement
-        $statement = $this->getOrPrepareStatement($sql);
+        // Fetch cached statement, or create it
+        $statementHandle = $this->getOrPrepareStatement($sql);
 
-        // Bind and invoke statement safely
-        if ($statement) {
-            $this->bindParameters($statement, $parameters);
-            $statement->execute($parameters);
+        // Error handling
+        if ($statementHandle === false) {
+            $this->databaseError($this->getLastError(), $errorLevel, $sql, $this->parameterValues($parameters));
+            return null;
         }
 
+        // Bind parameters
+        $this->bindParameters($statementHandle->getPDOStatement(), $parameters);
+        $statementHandle->execute($parameters);
+
         // Generate results
-        return $this->prepareResults($statement, $errorLevel, $sql);
+        return $this->prepareResults($statementHandle, $errorLevel, $sql);
     }
 
     /**
      * Given a PDOStatement that has just been executed, generate results
      * and report any errors
      *
-     * @param PDOStatement $statement
+     * @param PDOStatementHandle $statement
      * @param int $errorLevel
      * @param string $sql
      * @param array $parameters
      * @return PDOQuery
      */
-    protected function prepareResults($statement, $errorLevel, $sql, $parameters = array())
+    protected function prepareResults(PDOStatementHandle $statement, $errorLevel, $sql, $parameters = array())
     {
 
-        // Record row-count and errors of last statement
+        // Catch error
         if ($this->hasError($statement)) {
             $this->lastStatementError = $statement->errorInfo();
-        } elseif ($statement) {
-            // Count and return results
-            $this->rowCount = $statement->rowCount();
-            return new PDOQuery($statement);
-        }
-
-        // Ensure statement is closed
-        if ($statement) {
             $statement->closeCursor();
+
+            $this->databaseError($this->getLastError(), $errorLevel, $sql, $this->parameterValues($parameters));
+
+            return null;
         }
 
-        // Report any errors
-        if ($parameters) {
-            $parameters = $this->parameterValues($parameters);
-        }
-        $this->databaseError($this->getLastError(), $errorLevel, $sql, $parameters);
-        return null;
+        // Count and return results
+        $this->rowCount = $statement->rowCount();
+        return new PDOQuery($statement);
     }
 
     /**
