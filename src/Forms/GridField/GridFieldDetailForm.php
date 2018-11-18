@@ -229,7 +229,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     }
 
     /**
-     * @param mixed $showPagination
+     * @param bool|null $showPagination
      * @return GridFieldDetailForm
      */
     public function setShowPagination($showPagination)
