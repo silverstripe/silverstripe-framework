@@ -119,7 +119,7 @@ class GridFieldDetailForm implements GridField_URLHandler
         if (is_numeric($request->param('ID'))) {
             /** @var Filterable $dataList */
             $dataList = $gridField->getList();
-            $record = $dataList->byID($request->param("ID"));
+            $record = $dataList->byID($request->param('ID'));
         } else {
             $record = Injector::inst()->create($gridField->getModelClass());
         }
@@ -199,10 +199,10 @@ class GridFieldDetailForm implements GridField_URLHandler
     /**
      * @return bool
      */
-    private function getDefaultShowPagination()
+    protected function getDefaultShowPagination()
     {
-        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get("formActions");
-        return $formActionsConfig["showPagination"];
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showPagination']) ? (boolean) $formActionsConfig['showPagination'] : false;
     }
 
     /**
@@ -210,11 +210,15 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function getShowPagination()
     {
-        return is_bool($this->showPagination) ? $this->showPagination : $this->getDefaultShowPagination();
+        if ($this->showPagination === null) {
+            return $this->getDefaultShowPagination();
+        }
+
+        return (boolean) $this->showPagination;
     }
 
     /**
-     * @param mixed $showPagination
+     * @param bool|null $showPagination
      * @return GridFieldDetailForm
      */
     public function setShowPagination($showPagination)
@@ -226,10 +230,10 @@ class GridFieldDetailForm implements GridField_URLHandler
     /**
      * @return bool
      */
-    private function getDefaultShowAdd()
+    protected function getDefaultShowAdd()
     {
-        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get("formActions");
-        return $formActionsConfig["showAdd"];
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showAdd']) ? (boolean) $formActionsConfig['showAdd'] : false;
     }
 
     /**
@@ -237,11 +241,15 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function getShowAdd()
     {
-        return is_bool($this->showAdd) ? $this->showAdd : $this->getDefaultShowAdd();
+        if ($this->showAdd === null) {
+            return $this->getDefaultShowAdd();
+        }
+
+        return (boolean) $this->showAdd;
     }
 
     /**
-     * @param mixed $showAdd
+     * @param bool|null $showAdd
      * @return GridFieldDetailForm
      */
     public function setShowAdd($showAdd)
@@ -303,8 +311,8 @@ class GridFieldDetailForm implements GridField_URLHandler
     {
         if ($this->itemRequestClass) {
             return $this->itemRequestClass;
-        } elseif (ClassInfo::exists(static::class . "_ItemRequest")) {
-            return static::class . "_ItemRequest";
+        } elseif (ClassInfo::exists(static::class . '_ItemRequest')) {
+            return static::class . '_ItemRequest';
         } else {
             return GridFieldDetailForm_ItemRequest::class;
         }

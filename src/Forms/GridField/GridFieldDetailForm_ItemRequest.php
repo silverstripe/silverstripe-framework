@@ -467,7 +467,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doPrevious($data, $form)
     {
-        $this->getToplevelController()->getResponse()->addHeader("X-Pjax", "Content");
+        $this->getToplevelController()->getResponse()->addHeader('X-Pjax', 'Content');
         $link = $this->getEditLink($this->getPreviousRecordID());
         return $this->redirect($link);
     }
@@ -480,7 +480,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doNext($data, $form)
     {
-        $this->getToplevelController()->getResponse()->addHeader("X-Pjax", "Content");
+        $this->getToplevelController()->getResponse()->addHeader('X-Pjax', 'Content');
         $link = $this->getEditLink($this->getNextRecordID());
         return $this->redirect($link);
     }
@@ -495,7 +495,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doNew($data, $form)
     {
-        return $this->redirect(Controller::join_links($this->gridField->Link("item"), "new"));
+        return $this->redirect(Controller::join_links($this->gridField->Link('item'), 'new'));
     }
 
     /**
@@ -508,7 +508,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     {
         return Controller::join_links(
             $this->gridField->Link(),
-            "item",
+            'item',
             $id,
             '?gridState=' . urlencode($this->gridField->getState(false)->Value())
         );
@@ -516,16 +516,20 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
     /**
      * @param int $offset The offset from the current record
-     * @return bool
+     * @return int|bool
      */
     private function getAdjacentRecordID($offset)
     {
-        $gridField = $this->gridField;
+        $gridField = $this->getGridField();
         $gridStateStr = $this->getRequest()->requestVar('gridState');
         $state = $gridField->getState(false);
         $state->setValue($gridStateStr);
-
         $data = $state->getData();
+        $paginator = $data->getData('GridFieldPaginator');
+        if (!$paginator) {
+            return false;
+        }
+
         $currentPage = $data->getData('GridFieldPaginator')->getData('currentPage');
         $itemsPerPage = $data->getData('GridFieldPaginator')->getData('itemsPerPage');
 
