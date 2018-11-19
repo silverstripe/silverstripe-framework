@@ -202,7 +202,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected function getDefaultShowPagination()
     {
         $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
-        return isset($formActionsConfig['showPagination']) ? (boolean) $formActionsConfig['showPagination'] : false;
+        return isset($formActionsConfig['showPagination']) ? (bool) $formActionsConfig['showPagination'] : false;
     }
 
     /**
@@ -214,7 +214,7 @@ class GridFieldDetailForm implements GridField_URLHandler
             return $this->getDefaultShowPagination();
         }
 
-        return (boolean) $this->showPagination;
+        return (bool) $this->showPagination;
     }
 
     /**
@@ -233,7 +233,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected function getDefaultShowAdd()
     {
         $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
-        return isset($formActionsConfig['showAdd']) ? (boolean) $formActionsConfig['showAdd'] : false;
+        return isset($formActionsConfig['showAdd']) ? (bool) $formActionsConfig['showAdd'] : false;
     }
 
     /**
@@ -245,7 +245,7 @@ class GridFieldDetailForm implements GridField_URLHandler
             return $this->getDefaultShowAdd();
         }
 
-        return (boolean) $this->showAdd;
+        return (bool) $this->showAdd;
     }
 
     /**
@@ -313,9 +313,8 @@ class GridFieldDetailForm implements GridField_URLHandler
             return $this->itemRequestClass;
         } elseif (ClassInfo::exists(static::class . '_ItemRequest')) {
             return static::class . '_ItemRequest';
-        } else {
-            return GridFieldDetailForm_ItemRequest::class;
         }
+        return GridFieldDetailForm_ItemRequest::class;
     }
 
     /**
