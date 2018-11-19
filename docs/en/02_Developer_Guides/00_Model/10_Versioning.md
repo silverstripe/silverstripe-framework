@@ -1013,7 +1013,6 @@ SilverStripe\GraphQL\Manager:
           MyVersionedObject:
             fields: [ID, LastEdited]
             operations:
-              copyToStage: true
               readOne: true
           SilverStripe\Security\Member:
             fields: [ID, FirstName, Surname]
@@ -1147,13 +1146,11 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const mutation = gql`
-mutation revertMyVersionedObjectToVersion($id:ID!, $fromStage:VersionedStage!, $toStage:VersionedStage!, $fromVersion:Int!) {
-  copyMyVersionedObjectToStage(Input: {
+mutation revertMyVersionedObjectToVersion($id:ID!, $toVersion:Int!) {
+  rollbackMyVersionedObject(
     ID: $id
-    FromVersion: $fromVersion
-    FromStage: $fromStage
-    ToStage: $toStage
-  }) {
+    ToVersion: $toVersion
+  ) {
     ID
   }
 }
@@ -1161,12 +1158,10 @@ mutation revertMyVersionedObjectToVersion($id:ID!, $fromStage:VersionedStage!, $
 
 const config = {
   props: ({ mutate, ownProps: { actions } }) => {
-    const revertToVersion = (id, fromVersion, fromStage, toStage) => mutate({
+    const revertToVersion = (id, toVersion) => mutate({
       variables: {
         id,
-        fromVersion,
-        fromStage,
-        toStage,
+        toVersion,
       },
     });
 
