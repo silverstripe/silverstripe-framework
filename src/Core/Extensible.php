@@ -245,9 +245,9 @@ trait Extensible
     {
         $class = get_called_class();
 
-        // Build filtered extension list
+        // Build extension list
         $found = false;
-        $config = Config::inst()->get($class, 'extensions', Config::EXCLUDE_EXTRA_SOURCES | Config::UNINHERITED) ?: [];
+        $config = Config::inst()->get($class, 'extensions') ?: [];
         foreach ($config as $key => $candidate) {
             // extensions with parameters will be stored in config as ExtensionName("Param").
             if (strcasecmp($candidate, $extension) === 0 ||
@@ -255,6 +255,7 @@ trait Extensible
             ) {
                 $found = true;
                 unset($config[$key]);
+                break;
             }
         }
         // Don't dirty cache if no changes
