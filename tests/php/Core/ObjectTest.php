@@ -329,6 +329,39 @@ class ObjectTest extends SapphireTest
         );
     }
 
+    public function testRemoveExtensionPreservesParentExtensions()
+    {
+        ObjectTest\ExtensionRemoveTestSubclass::add_extension(ExtendTest2::class);
+        $this->assertTrue(
+            ObjectTest\ExtensionRemoveTestSubclass::has_extension(ExtendTest1::class),
+            'Extensions should be inherited from parent classes'
+        );
+        $this->assertTrue(
+            ObjectTest\ExtensionRemoveTestSubclass::has_extension(ExtendTest2::class),
+            'Extensions added to a subclass should be registered to the subclass'
+        );
+
+        ObjectTest\ExtensionRemoveTestSubclass::remove_extension(ExtendTest2::class);
+        $this->assertTrue(
+            ObjectTest\ExtensionRemoveTestSubclass::has_extension(ExtendTest1::class),
+            'Non-specified extensions inherited from a parent class should not be removed from subclass'
+        );
+        $this->assertFalse(
+            ObjectTest\ExtensionRemoveTestSubclass::has_extension(ExtendTest2::class),
+            'Specified extensions should be removed from specified class'
+        );
+
+        ObjectTest\ExtensionRemoveTestSubclass::remove_extension(ExtendTest1::class);
+        $this->assertFalse(
+            ObjectTest\ExtensionRemoveTestSubclass::has_extension(ExtendTest1::class),
+            'Specified extensions inherited from parent class should be removed from specified class'
+        );
+        $this->assertTrue(
+            ObjectTest\ExtensionRemoveTest::has_extension(ExtendTest1::class),
+            'Parent class should still have an extension that is removed from its children'
+        );
+    }
+
     public function testRemoveExtensionWithParameters()
     {
         ObjectTest\ExtensionRemoveTest::add_extension(ExtendTest2::class . '("MyParam")');
