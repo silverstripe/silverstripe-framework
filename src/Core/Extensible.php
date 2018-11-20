@@ -255,7 +255,6 @@ trait Extensible
             ) {
                 $found = true;
                 unset($config[$key]);
-                break;
             }
         }
         // Don't dirty cache if no changes
