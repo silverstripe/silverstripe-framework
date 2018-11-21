@@ -20,6 +20,9 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(['id' => 'TestTree', 'name' => 'TestTree', 'value' => 'unchanged'], $schemaStateDefaults, $strict = true);
 
+        $items = $field->getItems();
+        $this->assertCount(0, $items, $message = 'there must be no items selected');
+
         $html = $field->performReadonlyTransformation()->Field();
 
         $this->assertEquals(
@@ -44,6 +47,9 @@ HTML
 
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(['id' => 'TestTree', 'name' => 'TestTree', 'value' => [$asdf->ID, $subfolderfile1->ID]], $schemaStateDefaults, $strict = true);
+
+        $items = $field->getItems();
+        $this->assertCount(2, $items, $message = 'there must be exactly 2 items selected');
 
         $html = (string)$field->performReadonlyTransformation()->Field();
 

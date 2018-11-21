@@ -279,10 +279,14 @@ class TreeMultiselectField extends TreeDropdownField
          * of numeric types with string values, issuing a database error.
          *
          * This fix is not ideal, but supposed to keep backward compatibility for SS4.
-         * Since SS5 this method should be removed and NULL should be used instead of 'unchanged'.
+         *
+         * In 5.0 this method to be removed and NULL should be used instead of 'unchanged' (or an empty array. to be decided).
+         * In 5.0 this class to be refactored so that $this->value is always an array of values (or null)
          */
         if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
             $key = null;
+        } elseif (is_string($key)) {
+            $key = preg_split('/\s*,\s*/', trim($key));
         }
 
         return parent::objectForKey($key);
