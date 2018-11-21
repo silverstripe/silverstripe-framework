@@ -733,45 +733,17 @@ MESSAGE
     }
 
     /**
-     * Determine if the provided column specification is for an enum and return a suitable SQL Query string to update
-     * legacy values if necessary.
+     * Determine if the provided column specification is for an enum and update invalidated values if need be.
      *
-     * @param string $specValue Specification for a column
-     * @return Query
+     * @param string $specValue Updated specification for the column.
+     * @param string $spec_orig Original specification for the column.
+     * @param string $fieldValue Current specification for the column.
+     * @param string $table Name of the table.
+     * @param string $field Name of the field.
+     * @return Query|null
      */
     protected function resetInvalidatedEnumValue($specValue, $spec_orig, $fieldValue, $table, $field)
     {
-        // If enums/sets are being modified, then we need to fix existing data in the table.
-        // Update any records where the enum is set to a legacy value to be set to the default.
-        foreach (array('enum', 'set') as $enumtype) {
-            if (preg_match("/^$enumtype/i", $specValue)) {
-                $newStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $spec_orig);
-                $new = preg_split("/'\\s*,\\s*'/", $newStr);
-
-                $oldStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $fieldValue);
-                $old = preg_split("/'\\s*,\\s*'/", $oldStr);
-
-                $holder = array();
-                foreach ($old as $check) {
-                    if (!in_array($check, $new)) {
-                        $holder[] = $check;
-                    }
-                }
-                if (count($holder) && strpos($spec_orig, 'default ') !== false) {
-                    $default = explode('default ', $spec_orig);
-                    $default = $default[1];
-                    $query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
-                    for ($i = 0; $i + 1 < count($holder); $i++) {
-                        for ($i = 0; $i + 1 < count($holder); $i++) {
-                            $query .= "'{$holder[$i]}', ";
-                            $query .= "'{$holder[$i]}', ";
-                        }
-                    }
-                    $query .= "'{$holder[$i]}')";
-                    return $this->query($query);
-                }
-            }
-        }
     }
 
     /**
