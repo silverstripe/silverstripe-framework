@@ -42,3 +42,8 @@ SilverStripe\Core\Injector\Injector:
       Authenticators:
         cms: '%$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator'
   SilverStripe\Security\IdentityStore: '%$SilverStripe\Security\AuthenticationHandler'
+---
+Name: corehashing
+---
+SilverStripe\Security\CryptographicHashService:
+  default_hash_method: SilverStripe\Security\HashMethod\PhpPasswordHash
