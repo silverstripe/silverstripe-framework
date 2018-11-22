@@ -108,11 +108,7 @@ class GridField_FormAction extends FormAction
 
         // Create a "store" for the "state" of this action
         /** @var StateStore $store */
-        $store = Injector::inst()->create(
-            StateStore::class . '.' . $this->gridField->getName(),
-            // For some reason `getRequest` on GridField_FormAction does not return the correct request
-            Controller::curr()->getRequest()
-        );
+        $store = Injector::inst()->create(StateStore::class . '.' . $this->gridField->getName());
         // Store the state and update attributes as required
         $attributes += $store->save($key, $state);
 

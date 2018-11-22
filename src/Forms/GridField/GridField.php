@@ -1014,7 +1014,7 @@ class GridField extends FormField
 
         // Fetch the store for the "state" of actions (not the GridField)
         /** @var StateStore $store */
-        $store = Injector::inst()->create(StateStore::class . '.' . $this->getName(), $request);
+        $store = Injector::inst()->create(StateStore::class . '.' . $this->getName());
 
         foreach ($data as $dataKey => $dataValue) {
             if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey, $matches)) {

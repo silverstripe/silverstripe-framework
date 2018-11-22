@@ -6,21 +6,8 @@ use SilverStripe\Control\HTTPRequest;
 /**
  * Stores GridField action state on an attribute on the action and then analyses request parameters to load it back
  */
-class AttributeStore implements StateStore
+class AttributeStore extends AbstractRequestAwareStore implements StateStore
 {
-    /**
-     * @var HTTPRequest
-     */
-    protected $request;
-
-    /**
-     * @param HTTPRequest $request
-     */
-    public function __construct(HTTPRequest $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Save the given state against the given ID returning an associative array to be added as attributes on the form
      * action
@@ -41,11 +28,11 @@ class AttributeStore implements StateStore
      * Load state for a given ID
      *
      * @param string $id
-     * @return mixed
+     * @return array
      */
     public function load($id)
     {
         // Check the request
-        return json_decode($this->request->requestVar('ActionState'), true);
+        return (array) json_decode((string) $this->getRequest()->requestVar('ActionState'), true);
     }
 }
