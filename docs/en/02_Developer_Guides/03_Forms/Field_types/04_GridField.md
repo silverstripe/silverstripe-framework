@@ -472,10 +472,28 @@ functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_grid
 
 ## Saving the GridField State
 
-`GridState` is a class that is used to contain the current state and actions on the `GridField`. It's transfered 
+`GridState` is a class that is used to contain the current state and actions on the `GridField`. It's transferred 
 between page requests by being inserted as a hidden field in the form.
 
 The `GridState_Component` sets and gets data from the `GridState`.
+
+## Saving GridField_FormAction state
+
+By default state used for performing form actions is saved in the session and tagged with a key like `gf_abcd1234`. In 
+some cases session may not be an appropriate storage method. The storage method can be configured:
+
+```yaml
+Name: mysitegridfieldconfig
+After: gridfieldconfig
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\GridField\FormAction\StateStore:
+    class: SilverStripe\Forms\GridField\FormAction\AttributeStore
+```
+
+The `AttributeStore` class configures action state to be stored in the DOM and sent back on the request that performs 
+the action. Custom storage methods can be created and used by implementing the `StateStore` interface and configuring 
+`Injector` in a similar fasion.
 
 ## API Documentation
 
