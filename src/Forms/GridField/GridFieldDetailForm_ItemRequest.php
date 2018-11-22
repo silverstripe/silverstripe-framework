@@ -272,72 +272,78 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
+     * @return CompositeField Returns the right aligned toolbar group field along with its FormAction's
+     */
+    private function getRightGroupField()
+    {
+        $rightGroup = CompositeField::create()->setName('RightGroup');
+        $rightGroup->addExtraClass('ml-auto');
+        $rightGroup->setFieldHolderTemplate(get_class($rightGroup) . '_holder_buttongroup');
+
+        $previousAndNextGroup = CompositeField::create()->setName('PreviousAndNextGroup');
+        $previousAndNextGroup->addExtraClass('circular-group mr-2');
+        $previousAndNextGroup->setFieldHolderTemplate(get_class($previousAndNextGroup) . '_holder_buttongroup');
+
+        $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $gridState = $this->getRequest()->requestVar('gridState');
+        if ($component->getShowPagination()) {
+            $previousAndNextGroup->push(FormAction::create('doPrevious')
+                ->setUseButtonTag(true)
+                ->setAttribute('data-grid-state', $gridState)
+                ->setDisabled(!$this->getPreviousRecordID())
+                ->addExtraClass('btn btn-secondary font-icon-left-open action--previous discard-confirmation'));
+
+            $previousAndNextGroup->push(FormAction::create('doNext')
+                ->setUseButtonTag(true)
+                ->setAttribute('data-grid-state', $gridState)
+                ->setDisabled(!$this->getNextRecordID())
+                ->addExtraClass('btn btn-secondary font-icon-right-open action--next discard-confirmation'));
+        }
+
+        $rightGroup->push($previousAndNextGroup);
+
+        if ($component->getShowAdd()) {
+            $rightGroup->push(FormAction::create('doNew')
+                ->setUseButtonTag(true)
+                ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
+                ->addExtraClass('btn btn-primary font-icon-plus-thin circular action--new discard-confirmation'));
+        }
+
+        return $rightGroup;
+    }
+
+    /**
      * Build the set of form field actions for this DataObject
      *
      * @return FieldList
      */
     protected function getFormActions()
     {
-        $canEdit = $this->record->canEdit();
-        $canDelete = $this->record->canDelete();
         $actions = new FieldList();
 
-        if ($this->record->ID !== 0) {
-            if ($canEdit) {
+        if ($this->record->ID !== 0) { // existing record
+            if ($this->record->canEdit()) {
                 $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-primary font-icon-save'));
             }
 
-            if ($canDelete) {
+            if ($this->record->canDelete()) {
                 $actions->push(FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
             }
 
-            $gridStateStr = $this->getRequest()->requestVar('gridState');
+            $gridState = $this->getRequest()->requestVar('gridState');
+            $this->gridField->getState(false)->setValue($gridState);
+            $actions->push(HiddenField::create('gridState', null, $gridState));
 
-            $this->gridField->getState(false)->setValue($gridStateStr);
-            $actions->push(HiddenField::create('gridState', null, $gridStateStr));
-
-            $rightGroup = CompositeField::create()->setName('RightGroup');
-            $rightGroup->addExtraClass('right');
-            $rightGroup->setFieldHolderTemplate(get_class($rightGroup) . '_holder_buttongroup');
-
-            $previousAndNextGroup = CompositeField::create()->setName('PreviousAndNextGroup');
-            $previousAndNextGroup->addExtraClass('rounded');
-            $previousAndNextGroup->setFieldHolderTemplate(get_class($previousAndNextGroup) . '_holder_buttongroup');
-
-
-            $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
-
-            if ($component->getShowPagination()) {
-                $previousAndNextGroup->push(FormAction::create('doPrevious')
-                    ->setUseButtonTag(true)
-                    ->setAttribute('data-grid-state', $gridStateStr)
-                    ->setDisabled(!$this->getPreviousRecordID())
-                    ->addExtraClass('btn btn-secondary font-icon-left-open action--previous discard-confirmation'));
-
-                $previousAndNextGroup->push(FormAction::create('doNext')
-                    ->setUseButtonTag(true)
-                    ->setAttribute('data-grid-state', $gridStateStr)
-                    ->setDisabled(!$this->getNextRecordID())
-                    ->addExtraClass('btn btn-secondary font-icon-right-open action--next discard-confirmation'));
-            }
-
-            $rightGroup->push($previousAndNextGroup);
-
-            if ($component->getShowAdd()) {
-                $rightGroup->push(FormAction::create('doNew')
-                    ->setUseButtonTag(true)
-                    ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
-                    ->addExtraClass('btn btn-primary font-icon-plus rounded action--new discard-confirmation'));
-            }
+            $actions->push($this->getRightGroupField());
         } else { // adding new record
             //Change the Save label to 'Create'
             $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)
-                ->addExtraClass('btn-primary font-icon-plus'));
+                ->addExtraClass('btn-primary font-icon-plus-thin'));
 
             // Add a Cancel link which is a button-like link and link back to one level up.
             $crumbs = $this->Breadcrumbs();
@@ -530,8 +536,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return false;
         }
 
-        $currentPage = $data->getData('GridFieldPaginator')->getData('currentPage');
-        $itemsPerPage = $data->getData('GridFieldPaginator')->getData('itemsPerPage');
+        $currentPage = $paginator->getData('currentPage');
+        $itemsPerPage = $paginator->getData('itemsPerPage');
 
         $limit = $itemsPerPage + 2;
         $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
