@@ -8,6 +8,7 @@ SilverStripe\Assets\Folder:
   folder1-subfolder1:
     Name: FileTest-folder1-subfolder1
     ParentID: =>SilverStripe\Assets\Folder.folder1
+
 SilverStripe\Assets\File:
   asdf:
     Filename: assets/FileTest.txt
@@ -24,3 +25,40 @@ SilverStripe\Assets\File:
     Filename: assets/FileTest-folder1/File1.txt
     Name: File1.txt
     ParentID: =>SilverStripe\Assets\Folder.folder1
+
+SilverStripe\ORM\Tests\HierarchyTest\TestObject:
+  zero:
+    Title: Zero MatchSearchCriteria
+  zeroA:
+    Title: Child A of Zero
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.zero
+  zeroB:
+    Title: Child B of Zero
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.zero
+  zeroC:
+    Title: Child C of Zero
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.zero
+  one:
+    Title: One
+  oneA:
+    Title: Child A of One MatchSearchCriteria
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.one
+  oneB:
+    Title: Child B of One
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.one
+  oneC:
+    Title: Child C of One
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.one
+  oneD:
+    Title: Child C of One
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.one
+  two:
+    Title: Two
+  twoA:
+    Title: Child A of Two
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.two
+  twoAi:
+    Title: Grandchild i of Child A of Two MatchSearchCriteria
+    ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.twoA
+  three:
+    Title: Three MatchSearchCriteria
