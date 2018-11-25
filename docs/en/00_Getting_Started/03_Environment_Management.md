@@ -59,6 +59,11 @@ SilverStripe\Core\Injector\Injector:
       MyProperty: '`ENV_VAR_HERE`'
 ```
 
+<div class="info">
+<p>Environment variables cannot be used outside of Injector config as of version 4.2.</p>
+</div>
+
+
 ## Including an extra `.env` file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
