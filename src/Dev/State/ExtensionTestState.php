@@ -14,13 +14,22 @@ use SilverStripe\ORM\DataObject;
 class ExtensionTestState implements TestState
 {
     /**
+     * @var array
+     */
+    protected $extensionsToReapply = [];
+
+    /**
+     * @var array
+     */
+    protected $extensionsToRemove = [];
+
+    /**
      * Called on setup
      *
      * @param SapphireTest $test
      */
     public function setUp(SapphireTest $test)
     {
-        DataObject::flush_extra_methods_cache();
     }
 
     public function tearDown(SapphireTest $test)
@@ -31,6 +40,8 @@ class ExtensionTestState implements TestState
     {
         // May be altered by another class
         $isAltered = false;
+        $this->extensionsToReapply = [];
+        $this->extensionsToRemove = [];
 
         /** @var string|SapphireTest $class */
         /** @var string|DataObject $dataClass */
@@ -46,6 +57,10 @@ class ExtensionTestState implements TestState
                 if (!class_exists($extension) || !$dataClass::has_extension($extension)) {
                     continue;
                 }
+                if (!isset($this->extensionsToReapply[$dataClass])) {
+                    $this->extensionsToReapply[$dataClass] = [];
+                }
+                $this->extensionsToReapply[$dataClass][] = $extension;
                 $dataClass::remove_extension($extension);
                 $isAltered = true;
             }
@@ -62,6 +77,10 @@ class ExtensionTestState implements TestState
                     throw new LogicException("Test {$class} requires extension {$extension} which doesn't exist");
                 }
                 if (!$dataClass::has_extension($extension)) {
+                    if (!isset($this->extensionsToRemove[$dataClass])) {
+                        $this->extensionsToRemove[$dataClass] = [];
+                    }
+                    $this->extensionsToRemove[$dataClass][] = $extension;
                     $dataClass::add_extension($extension);
                     $isAltered = true;
                 }
@@ -85,6 +104,23 @@ class ExtensionTestState implements TestState
 
     public function tearDownOnce($class)
     {
-        DataObject::flush_extra_methods_cache();
+        // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
+        // Object::$extra_methods is properly flushed. This should be replaced with a simple
+        // flush mechanism for each $class.
+        /** @var string|DataObject $dataClass */
+
+        // Remove extensions added for testing
+        foreach ($this->extensionsToRemove as $dataClass => $extensions) {
+            foreach ($extensions as $extension) {
+                $dataClass::remove_extension($extension);
+            }
+        }
+
+        // Reapply ones removed
+        foreach ($this->extensionsToReapply as $dataClass => $extensions) {
+            foreach ($extensions as $extension) {
+                $dataClass::add_extension($extension);
+            }
+        }
     }
 }
