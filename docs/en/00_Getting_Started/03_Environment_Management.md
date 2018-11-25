@@ -48,6 +48,17 @@ use SilverStripe\Core\Environment;
 Environment::setEnv('API_KEY', 'AABBCCDDEEFF012345');
 ```
 
+### Using environment variables in config
+
+To use environment variables in `.yaml` configs you can reference them using backticks.
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  MyServiceClass:
+    properties:
+      MyProperty: '`ENV_VAR_HERE`'
+```
+
 ## Including an extra `.env` file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
