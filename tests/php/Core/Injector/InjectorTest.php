@@ -1047,4 +1047,20 @@ class InjectorTest extends SapphireTest
         Injector::unnest();
         $this->nestingLevel--;
     }
+
+    public function testServiceConfigFallback()
+    {
+        $config = [
+            SomeService::class . '.Another' => AnotherService::class,
+        ];
+        $injector = new Injector($config);
+
+        // test 'sub-service'
+        $subservice = $injector->create(SomeService::class . '.Another');
+        $this->assertInstanceOf(AnotherService::class, $subservice, 'dot notation service should work as normal');
+
+        // test falling back
+        $fallback = $injector->create(AnotherService::class . '.Fallback');
+        $this->assertInstanceOf(AnotherService::class, $fallback, 'undefined dot notation should fall back');
+    }
 }

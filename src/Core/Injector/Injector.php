@@ -1037,7 +1037,7 @@ class Injector implements ContainerInterface
         } else {
             // Late-generate config spec for non-configured spec
             $spec = [
-                'class' => $name,
+                'class' => strtok($name, '.'),
                 'constructor' => $constructorArgs,
             ];
         }
