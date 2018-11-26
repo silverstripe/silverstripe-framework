@@ -167,19 +167,21 @@ class ConfirmationTokenChainTest extends SapphireTest
 
     public function testGetRedirectUrlParams()
     {
-        $mockToken = $this->getTokenRequiringReload(true, ['getRedirectUrlParams']);
+        $mockToken = $this->getTokenRequiringReload(true, ['params']);
         $mockToken->expects($this->once())
-            ->method('getRedirectUrlParams')
+            ->method('params')
             ->will($this->returnValue(['mockTokenParam' => '1']));
 
-        $secondMockToken = $this->getTokenRequiringReload(true, ['getRedirectUrlParams']);
+        $secondMockToken = $this->getTokenRequiringReload(true, ['params']);
         $secondMockToken->expects($this->once())
-            ->method('getRedirectUrlParams')
+            ->method('params')
             ->will($this->returnValue(['secondMockTokenParam' => '2']));
 
         $chain = new ConfirmationTokenChain();
         $chain->pushToken($mockToken);
         $chain->pushToken($secondMockToken);
-        $this->assertEquals(['mockTokenParam' => '1', 'secondMockTokenParam' => '2'], $chain->getRedirectUrlParams());
+        $params = $chain->getRedirectUrlParams();
+        $this->assertEquals('1', $params['mockTokenParam']);
+        $this->assertEquals('2', $params['secondMockTokenParam']);
     }
 }

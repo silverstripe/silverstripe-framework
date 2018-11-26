@@ -48,7 +48,7 @@ class ErrorControlChainMiddlewareTest extends SapphireTest
 
         $this->assertInstanceOf(HTTPResponse::class, $result);
         $location = $result->getHeader('Location');
-        $this->assertContains('?flush=1&flushtoken=', $location);
+        $this->assertContains('flush=1&flushtoken=', $location);
         $this->assertNotContains('Security/login', $location);
     }
 
@@ -95,7 +95,7 @@ class ErrorControlChainMiddlewareTest extends SapphireTest
         $this->assertInstanceOf(HTTPResponse::class, $result);
         $location = $result->getHeader('Location');
         $this->assertContains('/dev/build', $location);
-        $this->assertContains('?devbuildtoken=', $location);
+        $this->assertContains('devbuildtoken=', $location);
         $this->assertNotContains('Security/login', $location);
     }
 

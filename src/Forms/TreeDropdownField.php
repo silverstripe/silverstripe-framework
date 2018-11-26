@@ -499,6 +499,17 @@ class TreeDropdownField extends FormField
         // Begin marking
         $markingSet->markPartialTree();
 
+        // Explicitely mark our search results if necessary
+        foreach ($this->searchIds as $id => $marked) {
+            if ($marked) {
+                $object = $this->objectForKey($id);
+                if (!$object) {
+                    continue;
+                }
+                $markingSet->markToExpose($object);
+            }
+        }
+
         // Allow to pass values to be selected within the ajax request
         $value = $request->requestVar('forceValue') ?: $this->value;
         if ($value && ($values = preg_split('/,\s*/', $value))) {
