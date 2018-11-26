@@ -20,20 +20,20 @@ matrix:
   include:
     - php: 7.1
       env:
-        - DB=MYSQL
+        - DB=PGSQL
         - PHPCS_TEST=1
         - PHPUNIT_TEST=framework
 
     - php: 7.1
       env:
         - DB=PGSQL
+        - PDO=1
         - PHPUNIT_TEST=framework
 
     - php: 7.1
       if: type IN (cron)
       env:
         - DB=MYSQL
-        - PDO=1
         - PHPUNIT_COVERAGE_TEST=framework
 
     - php: 7.2
@@ -50,7 +50,6 @@ matrix:
     - php: 7.3.0RC1
       env:
         - DB=MYSQL
-        - PDO=1
         - PHPUNIT_TEST=framework
       sudo: required
       dist: xenial

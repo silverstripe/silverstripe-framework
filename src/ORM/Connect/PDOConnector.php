@@ -10,7 +10,7 @@ use InvalidArgumentException;
 /**
  * PDO driver database connector
  */
-class PDOConnector extends DBConnector
+class PDOConnector extends DBConnector implements TransactionManager
 {
 
     /**
@@ -20,6 +20,15 @@ class PDOConnector extends DBConnector
      * @var boolean
      */
     private static $emulate_prepare = false;
+
+    /**
+     * Should we return everything as a string in order to allow transaction savepoints?
+     * This preserves the behaviour of <= 4.3, including some bugs.
+     *
+     * @config
+     * @var boolean
+     */
+    private static $legacy_types = false;
 
     /**
      * Default strong SSL cipher to be used
@@ -63,6 +72,18 @@ class PDOConnector extends DBConnector
      * @var array
      */
     protected $cachedStatements = array();
+
+    /**
+     * Driver
+     * @var string
+     */
+    protected $driver = null;
+
+    /*
+     * Is a transaction currently active?
+     * @var bool
+     */
+    protected $inTransaction = false;
 
     /**
      * Flush all prepared statements
@@ -113,10 +134,11 @@ class PDOConnector extends DBConnector
     {
         $this->flushStatements();
 
-        // Build DSN string
         // Note that we don't select the database here until explicitly
         // requested via selectDatabase
-        $driver = $parameters['driver'] . ":";
+        $this->driver = $parameters['driver'];
+
+        // Build DSN string
         $dsn = array();
 
         // Typically this is false, but some drivers will request this
@@ -197,13 +219,23 @@ class PDOConnector extends DBConnector
                 : self::config()->get('ssl_cipher_default');
         }
 
-        if (self::is_emulate_prepare()) {
+        if (static::config()->get('legacy_types')) {
+            $options[PDO::ATTR_STRINGIFY_FETCHES] = true;
             $options[PDO::ATTR_EMULATE_PREPARES] = true;
+        } else {
+            // Set emulate prepares (unless null / default)
+            $isEmulatePrepares = self::is_emulate_prepare();
+            if (isset($isEmulatePrepares)) {
+                $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
+            }
+
+            // Disable stringified fetches
+            $options[PDO::ATTR_STRINGIFY_FETCHES] = false;
         }
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
-            $driver . implode(';', $dsn),
+            $this->driver . ':' . implode(';', $dsn),
             empty($parameters['username']) ? '' : $parameters['username'],
             empty($parameters['password']) ? '' : $parameters['password'],
             $options
@@ -213,6 +245,18 @@ class PDOConnector extends DBConnector
         if ($this->pdoConnection && $selectDB && !empty($parameters['database'])) {
             $this->databaseName = $parameters['database'];
         }
+    }
+
+
+    /**
+     * Return the driver for this connector
+     * E.g. 'mysql', 'sqlsrv', 'pgsql'
+     *
+     * @return string
+     */
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     public function getVersion()
@@ -385,7 +429,7 @@ class PDOConnector extends DBConnector
         } elseif ($statement) {
             // Count and return results
             $this->rowCount = $statement->rowCount();
-            return new PDOQuery($statement);
+            return new PDOQuery($statement, $this);
         }
 
         // Ensure statement is closed
@@ -469,5 +513,61 @@ class PDOConnector extends DBConnector
     public function isActive()
     {
         return $this->databaseName && $this->pdoConnection;
+    }
+
+    public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
+    {
+        $this->inTransaction = true;
+
+        if ($transactionMode) {
+            $this->query("SET TRANSACTION $transactionMode");
+        }
+
+        if ($this->pdoConnection->beginTransaction()) {
+            if ($sessionCharacteristics) {
+                $this->query("SET SESSION CHARACTERISTICS AS TRANSACTION $sessionCharacteristics");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function transactionEnd()
+    {
+        $this->inTransaction = false;
+        return $this->pdoConnection->commit();
+    }
+
+    public function transactionRollback($savepoint = null)
+    {
+        if ($savepoint) {
+            if ($this->supportsSavepoints()) {
+                $this->exec("ROLLBACK TO SAVEPOINT $savepoint");
+            } else {
+                throw new DatabaseException("Savepoints not supported on this PDO connection");
+            }
+        }
+
+        $this->inTransaction = false;
+        return $this->pdoConnection->rollBack();
+    }
+
+    public function transactionDepth()
+    {
+        return (int)$this->inTransaction;
+    }
+
+    public function transactionSavepoint($savepoint = null)
+    {
+        if ($this->supportsSavepoints()) {
+            $this->exec("SAVEPOINT $savepoint");
+        } else {
+            throw new DatabaseException("Savepoints not supported on this PDO connection");
+        }
+    }
+
+    public function supportsSavepoints()
+    {
+        return static::config()->get('legacy_types');
     }
 }

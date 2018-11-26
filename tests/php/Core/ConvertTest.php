@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Core\Tests;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Test various functions on the {@link Convert} class.
@@ -133,7 +133,7 @@ class ConvertTest extends SapphireTest
         $this->assertEquals(
             "That's absolutely correct",
             Convert::html2raw($val7),
-            "Single quotes are decoded correctly"
+            'Single quotes are decoded correctly'
         );
 
         $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor '
@@ -285,7 +285,7 @@ PHP
     protected function assertEqualsQuoted($expected, $actual)
     {
         $message = sprintf(
-            "Expected \"%s\" but given \"%s\"",
+            'Expected "%s" but given "%s"',
             addcslashes($expected, "\r\n"),
             addcslashes($actual, "\r\n")
         );
@@ -301,8 +301,8 @@ PHP
         foreach (array("\r\n", "\r", "\n") as $nl) {
             // Base case: no action
             $this->assertEqualsQuoted(
-                "Base case",
-                Convert::nl2os("Base case", $nl)
+                'Base case',
+                Convert::nl2os('Base case', $nl)
             );
 
             // Mixed formats
@@ -431,7 +431,7 @@ XML
         // Test without doctype validation
         $expected = array(
          'result' => array(
-          "Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure",
+             'Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure',
           array(
         'long' => array(
          array(
@@ -585,15 +585,15 @@ XML
     public function memString2BytesProvider()
     {
         return [
-            ['-1', (float)-1],
-            ['2048', (float)(2 * 1024)],
-            ['2k', (float)(2 * 1024)],
-            ['512M', (float)(512 * 1024 * 1024)],
-            ['512MiB', (float)(512 * 1024 * 1024)],
-            ['512 mbytes', (float)(512 * 1024 * 1024)],
-            ['512 megabytes', (float)(512 * 1024 * 1024)],
-            ['1024g', (float)(1024 * 1024 * 1024 * 1024)],
-            ['1024G', (float)(1024 * 1024 * 1024 * 1024)]
+            'infinite' => ['-1', -1],
+            'integer' => ['2048', 2 * 1024],
+            'kilo' => ['2k', 2 * 1024],
+            'mega' => ['512M', 512 * 1024 * 1024],
+            'MiB' => ['512MiB', 512 * 1024 * 1024],
+            'mbytes' => ['512 mbytes', 512 * 1024 * 1024],
+            'megabytes' => ['512 megabytes', 512 * 1024 * 1024],
+            'giga' => ['1024g', 1024 * 1024 * 1024 * 1024],
+            'G' => ['1024G', 1024 * 1024 * 1024 * 1024]
         ];
     }
 
@@ -616,11 +616,11 @@ XML
     {
         return [
             [200, '200B'],
-            [(2 * 1024), '2K'],
-            [(512 * 1024 * 1024), '512M'],
-            [(512 * 1024 * 1024 * 1024), '512G'],
-            [(512 * 1024 * 1024 * 1024 * 1024), '512T'],
-            [(512 * 1024 * 1024 * 1024 * 1024 * 1024), '512P']
+            [2 * 1024, '2K'],
+            [512 * 1024 * 1024, '512M'],
+            [512 * 1024 * 1024 * 1024, '512G'],
+            [512 * 1024 * 1024 * 1024 * 1024, '512T'],
+            [512 * 1024 * 1024 * 1024 * 1024 * 1024, '512P']
         ];
     }
 

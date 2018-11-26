@@ -9,11 +9,16 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
 
 class TreeDropdownFieldTest extends SapphireTest
 {
 
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
+
+    protected static $extra_dataobjects = [
+        TestObject::class
+    ];
 
     public function testSchemaStateDefaults()
     {
@@ -95,6 +100,38 @@ class TreeDropdownFieldTest extends SapphireTest
             array_column($tree['children'], 'title'),
             $folder1Subfolder1->Name . ' is found in the json'
         );
+    }
+
+    public function testTreeSearchJsonFlatlistWithLowNodeThreshold()
+    {
+        // Initialise our TreeDropDownField
+        $field = new TreeDropdownField('TestTree', 'Test tree', TestObject::class);
+        $field->config()->set('node_threshold_total', 2);
+
+        // Search for all Test object matching our criteria
+        $request = new HTTPRequest(
+            'GET',
+            'url',
+            ['search' => 'MatchSearchCriteria', 'format' => 'json', 'flatList' => '1']
+        );
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = json_decode($response->getBody(), true);
+        $actualNodeIDs = array_column($tree['children'], 'id');
+
+
+        // Get the list of expected node IDs from the YML Fixture
+        $expectedNodeIDs = array_map(
+            function ($key) {
+                return $this->objFromFixture(TestObject::class, $key)->ID;
+            },
+            ['zero', 'oneA', 'twoAi', 'three'] // Those are the identifiers of the object we expect our search to find
+        );
+
+        sort($actualNodeIDs);
+        sort($expectedNodeIDs);
+
+        $this->assertEquals($expectedNodeIDs, $actualNodeIDs);
     }
 
     public function testTreeSearch()

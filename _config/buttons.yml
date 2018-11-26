@@ -1,0 +1,7 @@
+---
+Name: buttons
+---
+SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+  formActions:
+    showPagination: true
+    showAdd: true

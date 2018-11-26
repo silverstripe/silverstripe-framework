@@ -22,6 +22,7 @@ use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor_Blowfish;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
@@ -55,7 +56,8 @@ class MemberTest extends FunctionalTest
         parent::setUp();
 
         Member::config()->set('unique_identifier_field', 'Email');
-        Member::set_password_validator(null);
+
+        PasswordValidator::singleton()->setMinLength(0);
 
         i18n::set_locale('en_US');
     }

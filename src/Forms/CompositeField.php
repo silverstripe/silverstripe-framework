@@ -21,11 +21,13 @@ class CompositeField extends FormField
 
     /**
      * Set to true when this field is a readonly field
+     *
+     * @var bool
      */
     protected $readonly;
 
     /**
-     * @var $columnCount int Toggle different css-rendering for multiple columns
+     * @var int Toggle different css-rendering for multiple columns
      * ("onecolumn", "twocolumns", "threecolumns"). The content is determined
      * by the $children-array, so wrap all items you want to have grouped in a
      * column inside a CompositeField.
@@ -35,12 +37,12 @@ class CompositeField extends FormField
     protected $columnCount = null;
 
     /**
-     * @var String custom HTML tag to render with, e.g. to produce a <fieldset>.
+     * @var string custom HTML tag to render with, e.g. to produce a <fieldset>.
      */
     protected $tag = 'div';
 
     /**
-     * @var String Optional description for this set of fields.
+     * @var string Optional description for this set of fields.
      * If the {@link $tag} property is set to use a 'fieldset', this will be
      * rendered as a <legend> tag, otherwise its a 'title' attribute.
      */
@@ -215,7 +217,7 @@ class CompositeField extends FormField
                 'tabindex' => null,
                 'type' => null,
                 'value' => null,
-                'title' => ($this->tag == 'fieldset') ? null : $this->legend
+                'title' => ($this->tag === 'fieldset') ? null : $this->legend
             )
         );
     }

@@ -56,7 +56,7 @@ Alternatively, we can add extensions through PHP code (in the `_config.php` file
 
 
 ```php
-SilverStripe\Security\Member::add_extension('MyMemberExtension');
+SilverStripe\Security\Member::add_extension(MyMemberExtension::class);
 ```
 
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
@@ -256,7 +256,7 @@ $member = Security::getCurrentUser();
 
 print_r($member->getExtensionInstances());
 
-if($member->hasExtension('MyCustomMemberExtension')) {
+if ($member->hasExtension(MyCustomMemberExtension::class)) {
     // ..
 }
 ```
@@ -282,7 +282,7 @@ if not specified in `self::$defaults`, but before extensions have been called:
 public function __construct() 
 {
     $this->beforeExtending('populateDefaults', function() {
-        if(empty($this->MyField)) {
+        if (empty($this->MyField)) {
             $this->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
         }
     });
@@ -301,9 +301,9 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 ```php
 public function getCMSFields() 
 {
-    $this->beforeUpdateCMSFields(function($fields) {
+    $this->beforeUpdateCMSFields(function ($fields) {
         // Include field which must be present when updateCMSFields is called on extensions
-        $fields->addFieldToTab("Root.Main", new TextField('Detail', 'Details', null, 255));
+        $fields->addFieldToTab('Root.Main', new TextField('Detail', 'Details', null, 255));
     });
 
     $fields = parent::getCMSFields();
@@ -312,9 +312,45 @@ public function getCMSFields()
 }
 ```
 
-## Related Lessons
-* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
+## Extending extensions {#extendingextensions}
 
+Extension classes can be overloaded using the Injector, if you want to modify the way that an extension in one of
+your modules works:
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  Company\Vendor\SomeExtension:
+    class: App\Project\CustomisedSomeExtension
+```
+
+**app/src/CustomisedSomeExtension.php**
+
+```php
+namespace App\Project;
+
+use Company\Vendor\SomeExtension;
+
+class CustomisedSomeExtension extends SomeExtension
+{
+    public function someMethod()
+    {
+        $result = parent::someMethod();
+        // modify result;
+        return $result;
+    }
+}
+```
+
+<div class="notice" markdown="1">
+Please note that modifications such as this should be done in YAML configuration only. It is not recommended
+to use `Config::modify()->set()` to adjust the implementation class name of an extension after the configuration
+manifest has been loaded, and may not work consistently due to the "extra methods" cache having already been
+populated.
+</div>
+
+## Related Lessons
+
+* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
 
 ## Related Documentaion
 

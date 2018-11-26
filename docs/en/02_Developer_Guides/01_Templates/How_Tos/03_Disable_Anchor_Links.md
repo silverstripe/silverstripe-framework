@@ -45,7 +45,7 @@ use SilverStripe\View\SSViewer;
 public function RenderCustomTemplate() 
 {
     SSViewer::setRewriteHashLinks(false);
-    $html = $this->renderWith('MyCustomTemplate');
+    $html = $this->renderWith('My/Namespace/MyCustomTemplate');
     SSViewer::setRewriteHashLinks(true);
 
     return $html;

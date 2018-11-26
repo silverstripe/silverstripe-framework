@@ -3,7 +3,6 @@
 namespace SilverStripe\Logging\Tests;
 
 use Monolog\Handler\HandlerInterface;
-use PhpParser\Node\Scalar\MagicConst\Dir;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -13,14 +12,12 @@ use SilverStripe\Logging\HTTPOutputHandler;
 
 class HTTPOutputHandlerTest extends SapphireTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
-        if (!Director::is_cli()) {
-            $this->markTestSkipped("This test only runs in CLI mode");
-        }
+
         if (!Director::isDev()) {
-            $this->markTestSkipped("This test only runs in dev mode");
+            $this->markTestSkipped('This test only runs in dev mode');
         }
     }
 

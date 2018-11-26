@@ -838,7 +838,420 @@ $obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 Versioned::set_reading_mode($origMode); // reset current mode
 ```
 
+## Using the history viewer
+
+Since SilverStripe 4.3 you can use the React and GraphQL driven history viewer UI to display historic changes and
+comparisons for a versioned DataObject. This is automatically enabled for SiteTree objects and content blocks in
+[dnadesign/silverstripe-elemental](https://github.com/dnadesign/silverstripe-elemental).
+
+If you want to enable the history viewer for a custom versioned DataObject, you will need to:
+
+* Expose GraphQL scaffolding
+* Add the necessary GraphQL queries and mutations to your module
+* Register your GraphQL queries and mutations with Injector
+* Add a HistoryViewerField to the DataObject's `getCMSFields`
+
+**Please note:** these examples are given in the context of project-level customisation. You may need to adjust
+the webpack configuration slightly for use in a module. They are also designed to be used on SilverStripe 4.3 or
+later.
+
+For these examples, you can use this simple DataObject and create a ModelAdmin for it:
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+
+class MyVersionedObject extends DataObject
+{
+    private static $db = [
+        'Title' => 'Varchar',
+    ];
+
+    private static $extensions = [
+        Versioned::class,
+    ];
+}
+```
+
+### Configure frontend asset building
+
+If you haven't already configured frontend asset building for your project, you will need to configure some basic
+packages to be built via webpack in order to enable history viewer functionality. If you have this configured for
+your project already, ensure you have the `react-apollo` and `graphql-tag` libraries in your `package.json`
+requirements, and skip this section.
+
+You can configure your directory structure like so:
+
+**package.json**
+
+```json
+{
+  "name": "my-project",
+  "scripts": {
+    "build": "yarn && NODE_ENV=production webpack -p --bail --progress",
+    "watch": "yarn && NODE_ENV=development webpack --watch --progress"
+  },
+  "dependencies": {
+    "react-apollo": "^0.7.1",
+    "graphql-tag": "^0.1.17"
+  },
+  "devDependencies": {
+    "@silverstripe/webpack-config": "^0.4.1",
+    "webpack": "^2.6.1"
+  },
+  "jest": {
+    "roots": [
+      "client/src"
+    ],
+    "moduleDirectories": [
+      "app/client/src",
+      "node_modules",
+      "node_modules/@silverstripe/webpack-config/node_modules",
+      "vendor/silverstripe/admin/client/src",
+      "vendor/silverstripe/admin/node_modules"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
+  "engines": {
+    "node": "^6.x"
+  }
+}
+```
+
+**webpack.config.js**
+
+```json
+const Path = require('path');
+// Import the core config
+const webpackConfig = require('@silverstripe/webpack-config');
+const {
+  resolveJS,
+  externalJS,
+  moduleJS,
+  pluginJS,
+} = webpackConfig;
+
+const ENV = process.env.NODE_ENV;
+const PATHS = {
+  MODULES: 'node_modules',
+  FILES_PATH: '../',
+  ROOT: Path.resolve(),
+  SRC: Path.resolve('app/client/src'),
+  DIST: Path.resolve('app/client/dist'),
+};
+
+const config = [
+  {
+    name: 'js',
+    entry: {
+      bundle: `${PATHS.SRC}/boot/index.js`,
+    },
+    output: {
+      path: PATHS.DIST,
+      filename: 'js/[name].js',
+    },
+    devtool: (ENV !== 'production') ? 'source-map' : '',
+    resolve: resolveJS(ENV, PATHS),
+    externals: externalJS(ENV, PATHS),
+    module: moduleJS(ENV, PATHS),
+    plugins: pluginJS(ENV, PATHS),
+  }
+];
+
+// Use WEBPACK_CHILD=js or WEBPACK_CHILD=css env var to run a single config
+module.exports = (process.env.WEBPACK_CHILD)
+  ? config.find((entry) => entry.name === process.env.WEBPACK_CHILD)
+  : module.exports = config;
+```
+
+**composer.json**
+
+```json
+"extra": {
+    "expose": [
+        "app/client/dist"
+    ]
+}
+```
+
+**app/client/src/boot/index.js**
+
+```js
+console.log('Hello world');
+```
+
+**.eslintrc.js**
+
+```js
+module.exports = require('@silverstripe/webpack-config/.eslintrc');
+```
+
+At this stage, running `yarn build` should show you a linting warning for the console statement, and correctly build
+`app/client/dist/js/bundle.js`.
+
+### Expose GraphQL scaffolding
+
+Only a minimal amount of data is required to be exposed via GraphQL scaffolding, and only to the "admin" GraphQL
+schema. For more information, see [ReactJS, Redux and GraphQL](../../customising_the_admin_interface/react_redux_and_graphql).
+
+**app/_config/graphql.yml**
+
+```yaml
+SilverStripe\GraphQL\Manager:
+  schemas:
+    admin:
+      scaffolding:
+        types:
+          MyVersionedObject:
+            fields: [ID, LastEdited]
+            operations:
+              readOne: true
+          SilverStripe\Security\Member:
+            fields: [ID, FirstName, Surname]
+            operations:
+              readOne: true
+```
+
+Once configured, flush your cache and explore the new GraphQL schema to ensure it loads correctly. You can use a GraphQL
+application such as GraphiQL, or [silverstripe-graphql-devtools](https://github.com/silverstripe/silverstripe-graphql-devtools)
+for a browser solution:
+
+```
+composer require --dev silverstripe/graphql-devtools dev-master
+```
+
+### Configure the necessary GraphQL queries and mutations
+
+The history viewer interface uses two main operations:
+
+* Read a list of versions for a DataObject
+* Revert to an older version of a DataObject
+
+For this we need one query and one mutation:
+
+**app/client/src/state/readOneMyVersionedObjectQuery.js**
+
+```js
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+
+// GraphQL query for retrieving the version history of a specific object. The results of
+// the query must be set to the "versions" prop on the component that this HOC is
+// applied to for binding implementation.
+const query = gql`
+query ReadHistoryViewerMyVersionedObject ($id: ID!, $limit: Int!, $offset: Int!) {
+  readOneMyVersionedObject(
+    Versioning: {
+      Mode: LATEST
+    },
+    ID: $id
+  ) {
+    ID
+    Versions (limit: $limit, offset: $offset) {
+      pageInfo {
+        totalCount
+      }
+      edges {
+        node {
+          Version
+          Author {
+            FirstName
+            Surname
+          }
+          Publisher {
+            FirstName
+            Surname
+          }
+          Published
+          LiveVersion
+          LatestDraftVersion
+          LastEdited
+        }
+      }
+    }
+  }
+}
+`;
+
+const config = {
+  options({recordId, limit, page}) {
+    return {
+      variables: {
+        limit,
+        offset: ((page || 1) - 1) * limit,
+        block_id: recordId,
+      }
+    };
+  },
+  props(
+    {
+      data: {
+        error,
+        refetch,
+        readOneMyVersionedObject,
+        loading: networkLoading,
+      },
+      ownProps: {
+        actions = {
+          versions: {}
+        },
+        limit,
+        recordId,
+      },
+    }
+  ) {
+    const versions = readOneMyVersionedObject || null;
+
+    const errors = error && error.graphQLErrors &&
+      error.graphQLErrors.map((graphQLError) => graphQLError.message);
+
+    return {
+      loading: networkLoading || !versions,
+      versions,
+      graphQLErrors: errors,
+      actions: {
+        ...actions,
+        versions: {
+          ...versions,
+          goToPage(page) {
+            refetch({
+              offset: ((page || 1) - 1) * limit,
+              limit,
+              block_id: recordId,
+            });
+          }
+        },
+      },
+    };
+  },
+};
+
+export { query, config };
+
+export default graphql(query, config);
+```
+
+**app/client/src/state/revertToMyVersionedObjectVersionMutation.js**
+
+```js
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const mutation = gql`
+mutation revertMyVersionedObjectToVersion($id:ID!, $toVersion:Int!) {
+  rollbackMyVersionedObject(
+    ID: $id
+    ToVersion: $toVersion
+  ) {
+    ID
+  }
+}
+`;
+
+const config = {
+  props: ({ mutate, ownProps: { actions } }) => {
+    const revertToVersion = (id, toVersion) => mutate({
+      variables: {
+        id,
+        toVersion,
+      },
+    });
+
+    return {
+      actions: {
+        ...actions,
+        revertToVersion,
+      },
+    };
+  },
+  options: {
+    // Refetch versions after mutation is completed
+    refetchQueries: ['ReadHistoryViewerMyVersionedObject']
+  }
+};
+
+export { mutation, config };
+
+export default graphql(mutation, config);
+````
+
+### Register your GraphQL query and mutation with Injector
+
+Once your GraphQL query and mutation are created, you will need to tell the JavaScript Injector about them.
+This does two things:
+
+* Allow them to be loaded by core components.
+* Allow Injector to provide them in certain contexts. They should be available for `MyVersionedObject` history viewer
+  instances, but not for CMS pages for example.
+
+**app/client/src/boot/index.js**
+
+```js
+/* global window */
+import Injector from 'lib/Injector';
+import readOneMyVersionedObjectQuery from 'state/readOneMyVersionedObjectQuery';
+import revertToMyVersionedObjectVersionMutation from 'state/revertToMyVersionedObjectVersionMutation';
+
+window.document.addEventListener('DOMContentLoaded', () => {
+  // Register GraphQL operations with Injector as transformations
+  Injector.transform(
+    'myversionedobject-history', (updater) => {
+      updater.component(
+        'HistoryViewer.Form_ItemEditForm',
+        readOneMyVersionedObjectQuery, 'ElementHistoryViewer');
+    }
+  );
+
+  Injector.transform(
+    'myversionedobject-history-revert', (updater) => {
+      updater.component(
+        'HistoryViewerToolbar.VersionedAdmin.HistoryViewer.MyVersionedObject.HistoryViewerVersionDetail',
+        revertToMyVersionedObjectVersionMutation,
+        'MyVersionedObjectRevertMutation'
+      );
+    }
+  );
+});
+```
+
+For more information, see [ReactJS, Redux and GraphQL](../../customising_the_admin_interface/react_redux_and_graphql).
+
+### Adding the HistoryViewerField
+
+You can add the [HistoryViewerField](api:SilverStripe\VersionedAdmin\Forms\HistoryViewerField) to your object's CMS
+fields in the same way as any other form field:
+
+```php
+use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
+use SilverStripe\View\Requirements;
+
+public function getCMSFields()
+{
+    $fields = parent::getCMSFields();
+
+    Requirements::javascript('app/client/dist/js/bundle.js');
+    $fields->addFieldToTab('Root.History', HistoryViewerField::create('MyObjectHistory'));
+
+    return $fields;
+}
+```
+
+### Previewable DataObjects
+
+History viewer will automatically detect and render a side-by-side preview panel for DataObjects that implement
+[CMSPreviewable](api:SilverStripe\ORM\CMSPreviewable). Please note that if you are adding this functionality, you
+will also need to expose the `AbsoluteLink` field in your GraphQL read scaffolding, and add it to the fields in
+`readOneMyVersionedObjectQuery`.
 
 ## API Documentation
 
 * [Versioned](api:SilverStripe\Versioned\Versioned)
+* [HistoryViewerField](api:SilverStripe\VersionedAdmin\Forms\HistoryViewerField)

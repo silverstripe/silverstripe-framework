@@ -167,7 +167,4 @@ id:
     LOGIN: Masuk
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
-    NOTERESETLINKINVALID: '<p>Tautan penggantian kata kunci tidak valid atau sudah kadaluarsa.</p><p>Anda dapat meminta yang baru <a href="{link1}">di sini</a> atau mengganti kata kunci setelah Anda <a href="{link2}">masuk</a>.</p>'
     NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'
-    PASSWORDSENTHEADER: 'Tautan penggantian kata kunci dikirimkan ke ''{email}'''
-    PASSWORDSENTTEXT: 'Terimakasih! Tautan reset telah dikirim ke ''{email}'', berisi informasi akun untuk alamat email ini.'

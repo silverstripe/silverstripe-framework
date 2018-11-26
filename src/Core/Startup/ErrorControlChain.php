@@ -15,8 +15,7 @@ use Exception;
  * $chain = new ErrorControlChain();
  * $chain->then($callback1)->then($callback2)->thenIfErrored($callback3)->execute();
  *
- * WARNING: This class is experimental and designed specifically for use pre-startup.
- * It will likely be heavily refactored before the release of 3.2
+ * @internal This class is designed specifically for use pre-startup and may change without warning
  */
 class ErrorControlChain
 {

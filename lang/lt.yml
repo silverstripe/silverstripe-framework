@@ -167,7 +167,4 @@ lt:
     LOGIN: Prisijungti
     LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
     NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
-    NOTERESETLINKINVALID: '<p>Neteisinga arba negaliojanti slaptažodžio atstatymo nuoroda.</p><p>Galite atsisiųsti naują <a href="{link1}">čia</a> arba pasikeisti slaptažodį po to, kai <a href="{link2}">prisijungsite</a>.</p>'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'
-    PASSWORDSENTHEADER: 'Slaptažodžio atstatymo nuoroda nusiųsta į ''{email}'''
-    PASSWORDSENTTEXT: 'Atstatymo nuoroda nusiųsta į ''{email}'''

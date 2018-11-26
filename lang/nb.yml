@@ -152,7 +152,4 @@ nb:
     LOGIN: 'Logg inn'
     LOSTPASSWORDHEADER: 'Mistet passord'
     NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
-    NOTERESETLINKINVALID: '<p>Lenken for å nullstille passordet er ugyldig eller utgått.</p><p>Du kan kreve en ny <a href="{link1}">her</a> eller endre passordet etter at du har <a href="{link2}">logget inn</a>.</p>'
     NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'
-    PASSWORDSENTHEADER: 'Lenke for nullstilling av passord ble sendt til ''{email}'''
-    PASSWORDSENTTEXT: 'Takk! En lenke for å lage nytt passord er sendt til ''{email}'', forutsatt at det eksisterer en konto for denne epostadressen.'

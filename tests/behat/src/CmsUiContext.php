@@ -85,7 +85,13 @@ class CmsUiContext implements Context
      */
     public function iShouldSeeAMessage($message)
     {
-        $this->getMainContext()->assertElementContains('.message', $message);
+        $page = $this->getMainContext()->getSession()->getPage();
+        if ($page->find('css', '.message')) {
+            $this->getMainContext()->assertElementContains('.message', $message);
+        } else {
+            // Support for new Bootstrap alerts
+            $this->getMainContext()->assertElementContains('.alert', $message);
+        }
     }
 
     protected function getCmsTabsElement()

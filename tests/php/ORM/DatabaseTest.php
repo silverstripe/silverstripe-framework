@@ -190,48 +190,36 @@ class DatabaseTest extends SapphireTest
         $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock again after releasing it');
     }
 
-    public function testTransactions()
+    public function testFieldTypes()
     {
-        $conn = DB::get_conn();
-        if (!$conn->supportsTransactions()) {
-            $this->markTestSkipped("DB Doesn't support transactions");
-            return;
-        }
+        // Scaffold some data
+        $obj = new MyObject();
+        $obj->MyField = "value";
+        $obj->MyInt = 5;
+        $obj->MyFloat = 6.0;
+        $obj->MyBoolean = true;
+        $obj->write();
 
-        // Test that successful transactions are comitted
-        $obj = new DatabaseTest\MyObject();
-        $failed = false;
-        $conn->withTransaction(
-            function () use (&$obj) {
-                $obj->MyField = 'Save 1';
-                $obj->write();
-            },
-            function () use (&$failed) {
-                $failed = true;
-            }
-        );
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertFalse($failed);
+        $record = DB::prepared_query(
+            'SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ?',
+            [ $obj->ID ]
+        )->record();
 
-        // Test failed transactions are rolled back
-        $ex = null;
-        $failed = false;
-        try {
-            $conn->withTransaction(
-                function () use (&$obj) {
-                    $obj->MyField = 'Save 2';
-                    $obj->write();
-                    throw new Exception("error");
-                },
-                function () use (&$failed) {
-                    $failed = true;
-                }
-            );
-        } catch (Exception $ex) {
-        }
-        $this->assertTrue($failed);
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertInstanceOf('Exception', $ex);
-        $this->assertEquals('error', $ex->getMessage());
+        // IDs and ints are returned as ints
+        $this->assertInternalType('int', $record['ID']);
+        $this->assertInternalType('int', $record['MyInt']);
+
+        $this->assertInternalType('float', $record['MyFloat']);
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertInternalType('int', $record['MyBoolean']);
+
+        // Strings and enums are returned as strings
+        $this->assertInternalType('string', $record['MyField']);
+        $this->assertInternalType('string', $record['ClassName']);
+
+        // Dates are returned as strings
+        $this->assertInternalType('string', $record['Created']);
+        $this->assertInternalType('string', $record['LastEdited']);
     }
 }
