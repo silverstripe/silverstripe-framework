@@ -10,7 +10,8 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
     /**
      *
      * @param int $itemsPerPage - How many items per page should show up
-     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as
+     *                             null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
     public function __construct($itemsPerPage = null, $showPagination = null, $showAdd = null)

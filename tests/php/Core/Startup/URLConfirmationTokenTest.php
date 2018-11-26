@@ -21,7 +21,10 @@ class URLConfirmationTokenTest extends SapphireTest
         $this->assertTrue($validToken->tokenProvided()); // Actually forced to true for this test
         $this->assertFalse($validToken->reloadRequired());
         $this->assertFalse($validToken->reloadRequiredIfError());
-        $this->assertStringStartsWith(Controller::join_links(BASE_URL, '/', 'token/test/url'), $validToken->redirectURL());
+        $this->assertStringStartsWith(
+            Controller::join_links(BASE_URL, '/', 'token/test/url'),
+            $validToken->redirectURL()
+        );
     }
 
     public function testTokenWithLeadingSlashInUrl()
@@ -87,7 +90,11 @@ class URLConfirmationTokenTest extends SapphireTest
         );
         // Test no invalid tokens
         $this->assertEquals('test/url', $token->getURLToCheck());
-        $this->assertNotEquals('test/url', $request->getURL(false), 'prepare_tokens() did not suppress URL');
+        $this->assertNotEquals(
+            'test/url',
+            $request->getURL(false),
+            'prepare_tokens() did not suppress URL'
+        );
     }
 
     public function testPrepareTokensDoesntSuppressWhenNotMatched()
@@ -98,7 +105,11 @@ class URLConfirmationTokenTest extends SapphireTest
             $request
         );
         $this->assertEmpty($token);
-        $this->assertEquals('test/url', $request->getURL(false), 'prepare_tokens() incorrectly suppressed URL');
+        $this->assertEquals(
+            'test/url',
+            $request->getURL(false),
+            'prepare_tokens() incorrectly suppressed URL'
+        );
     }
 
     public function testPrepareTokensWithUrlMatchedInBackUrl()
@@ -111,7 +122,11 @@ class URLConfirmationTokenTest extends SapphireTest
         );
         $this->assertNotEmpty($token);
         $this->assertEquals('back/url', $token->getURLToCheck());
-        $this->assertNotEquals('back/url', $request->getURL(false), 'prepare_tokens() did not suppress URL');
+        $this->assertNotEquals(
+            'back/url',
+            $request->getURL(false),
+            'prepare_tokens() did not suppress URL'
+        );
     }
 
     public function dataProviderURLs()

@@ -46,8 +46,16 @@ class ConfirmationTokenChainTest extends SapphireTest
 
         $this->assertContains($tokenRequiringReload, $tokens, 'Token requiring a reload was not returned');
         $this->assertNotContains($tokenNotRequiringReload, $tokens, 'Token not requiring a reload was returned');
-        $this->assertContains($tokenRequiringReloadIfError, $tokens, 'Token requiring a reload on error was not returned');
-        $this->assertNotContains($tokenNotRequiringReloadIfError, $tokens, 'Token not requiring a reload on error was returned');
+        $this->assertContains(
+            $tokenRequiringReloadIfError,
+            $tokens,
+            'Token requiring a reload on error was not returned'
+        );
+        $this->assertNotContains(
+            $tokenNotRequiringReloadIfError,
+            $tokens,
+            'Token not requiring a reload on error was returned'
+        );
     }
 
     public function testSuppressionRequired()
@@ -137,7 +145,10 @@ class ConfirmationTokenChainTest extends SapphireTest
 
     public function testGetRedirectUrlBase()
     {
-        $mockUrlToken = $this->createPartialMock(URLConfirmationToken::class, ['reloadRequired', 'getRedirectUrlBase']);
+        $mockUrlToken = $this->createPartialMock(
+            URLConfirmationToken::class,
+            ['reloadRequired', 'getRedirectUrlBase']
+        );
         $mockUrlToken->expects($this->any())
             ->method('reloadRequired')
             ->will($this->returnValue(true));
@@ -145,7 +156,10 @@ class ConfirmationTokenChainTest extends SapphireTest
             ->method('getRedirectUrlBase')
             ->will($this->returnValue('url-base'));
 
-        $mockParameterToken = $this->createPartialMock(ParameterConfirmationToken::class, ['reloadRequired', 'getRedirectUrlBase']);
+        $mockParameterToken = $this->createPartialMock(
+            ParameterConfirmationToken::class,
+            ['reloadRequired', 'getRedirectUrlBase']
+        );
         $mockParameterToken->expects($this->any())
             ->method('reloadRequired')
             ->will($this->returnValue(true));
@@ -156,13 +170,21 @@ class ConfirmationTokenChainTest extends SapphireTest
         $chain = new ConfirmationTokenChain();
         $chain->pushToken($mockParameterToken);
         $chain->pushToken($mockUrlToken);
-        $this->assertEquals('url-base', $chain->getRedirectUrlBase(), 'URLConfirmationToken url base should take priority');
+        $this->assertEquals(
+            'url-base',
+            $chain->getRedirectUrlBase(),
+            'URLConfirmationToken url base should take priority'
+        );
 
         // Push them in reverse order to check priority still correct
         $chain = new ConfirmationTokenChain();
         $chain->pushToken($mockUrlToken);
         $chain->pushToken($mockParameterToken);
-        $this->assertEquals('url-base', $chain->getRedirectUrlBase(), 'URLConfirmationToken url base should take priority');
+        $this->assertEquals(
+            'url-base',
+            $chain->getRedirectUrlBase(),
+            'URLConfirmationToken url base should take priority'
+        );
     }
 
     public function testGetRedirectUrlParams()

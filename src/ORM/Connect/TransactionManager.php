@@ -8,7 +8,7 @@ namespace SilverStripe\ORM\Connect;
  * The TransactionManager might be the database connection itself, calling queries to orchestrate
  * transactions, or a connector such as the PDOConnector.
  *
- * Generally speaking you should rely on your Database object to manage the creation of a TansactionManager
+ * Generally speaking you should rely on your Database object to manage the creation of a TransactionManager
  * for you; unless you are building new database connectors this should be treated as an internal API.
  */
 interface TransactionManager
@@ -16,8 +16,10 @@ interface TransactionManager
     /**
      * Start a prepared transaction
      *
-     * @param string|boolean $transactionMode Transaction mode, or false to ignore. Deprecated and will be removed in SS5.
-     * @param string|boolean $sessionCharacteristics Session characteristics, or false to ignore. Deprecated and will be removed in SS5.
+     * @param string|boolean $transactionMode Transaction mode, or false to ignore. Deprecated and will be
+     *                                        removed in SS5.
+     * @param string|boolean $sessionCharacteristics Session characteristics, or false to ignore. Deprecated and
+     *                                               will be removed in SS5.
      * @throws DatabaseException on failure
      * @return bool True on success
      */

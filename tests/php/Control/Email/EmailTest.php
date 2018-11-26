@@ -100,7 +100,7 @@ class EmailTest extends SapphireTest
         $this->assertEquals('test [dash] 1 [at] example [dot] com', $visible);
         $this->assertEquals(
             '&#x74;&#x65;&#x73;&#x74;&#x2d;&#x31;&#x40;&#x65;&#x78;&#x61;&#x6d;&#x70;'
-            .   '&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;',
+            . '&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;',
             $hex
         );
     }

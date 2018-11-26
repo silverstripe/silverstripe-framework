@@ -88,7 +88,8 @@ class GridFieldDetailForm implements GridField_URLHandler
      * controller who wants to display the getCMSFields
      *
      * @param string $name The name of the edit form to place into the pop-up form
-     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as
+     *                             null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
     public function __construct($name = null, $showPagination = null, $showAdd = null)

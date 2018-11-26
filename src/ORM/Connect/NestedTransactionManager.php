@@ -8,7 +8,8 @@ namespace SilverStripe\ORM\Connect;
  *   - Committing a nested transaction won't change anything until the parent transaction is committed
  *   - Rolling back a nested transaction means that the parent transaction must be rolled backed
  *
- * DBAL describes this behaviour nicely in their docs: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/transactions.html#transaction-nesting
+ * DBAL describes this behaviour nicely in their docs:
+ * https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/transactions.html#transaction-nesting
  */
 
 class NestedTransactionManager implements TransactionManager
