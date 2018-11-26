@@ -274,7 +274,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return CompositeField Returns the right aligned toolbar group field along with its FormAction's
      */
-    private function getRightGroupField()
+    protected function getRightGroupField()
     {
         $rightGroup = CompositeField::create()->setName('RightGroup');
         $rightGroup->addExtraClass('ml-auto');
@@ -360,10 +360,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         $this->extend('updateFormActions', $actions);
-
-        if (isset($rightGroup)) {
-            $actions->push($rightGroup);
-        }
 
         return $actions;
     }
