@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use PHPUnit_Framework_Error;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CompositeField;
@@ -162,7 +161,7 @@ class CompositeFieldTest extends SapphireTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException \PHPUnit\Framework\Error\Error
      * @expectedExceptionMessageRegExp /a field called 'Test' appears twice in your form.*TextField.*TextField/
      */
     public function testCollateDataFieldsThrowsErrorOnDuplicateChildren()
