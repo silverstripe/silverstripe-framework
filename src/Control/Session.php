@@ -300,6 +300,7 @@ class Session
 
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
+        $data = [];
         if (!session_id() && (!headers_sent() || !empty($_COOKIE[ini_get('session.name')]))) {
             if (!headers_sent()) {
                 session_set_cookie_params($timeout, $path, $domain ?: null, $secure, true);
@@ -319,36 +320,38 @@ class Session
                 session_save_path($session_path);
             }
 
-            // If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
-            // seperate (less secure) session for non-HTTPS requests. Note that if this causes problems
+            // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
+            // separate (less secure) session for non-HTTPS requests
             // if headers_sent() is true then it's best to throw the resulting error rather than risk
             // a security hole.
             if ($secure) {
                 session_name($this->config()->get('cookie_name_secure'));
             }
 
-            session_start();
+            $sessionParameters = [
+                "cookie_path" => $path,
+                "cookie_domain" => $domain ?: "",
+                "cookie_secure" => $secure,
+                "cookie_httponly" => true
+            ];
+
+            if ($timeout) {
+                $sessionParameters["cookie_lifetime"] = $timeout;
+            }
+
+            session_start($sessionParameters);
 
             if (isset($_SESSION)) {
                 // Initialise data from session store if present
                 $data = $_SESSION;
+
                 // Merge in existing in-memory data, taking priority over session store data
                 $this->recursivelyApply((array)$this->data, $data);
-            } else {
-                // Use in-memory data if the session is lazy started
-                $data = $this->data;
             }
-            $this->data = $data ?: [];
-        } else {
-            $this->data = [];
         }
 
-        // Modify the timeout behaviour so it's the *inactive* time before the session expires.
-        // By default it's the total session lifetime
-        if ($timeout && !headers_sent()) {
-            Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
-                : null, $secure, true);
-        }
+        // Save any modified session data back to the session store if present, otherwise initialise it to an array.
+        $this->data = $data;
 
         $this->started = true;
     }
