@@ -133,7 +133,7 @@ class Category extends DataObject
     }
 }
 ```
-## Custom ModelAdmin css menu icons using built in icon font
+## Custom ModelAdmin CSS menu icons using built in icon font
 
 An extended ModelAdmin class supports adding a custom menu icon to the CMS.
 
