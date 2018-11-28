@@ -133,20 +133,19 @@ class Category extends DataObject
     }
 }
 ```
-## Custom ModelAdmin CSS Menu Icons using built in Icon Font
+## Custom ModelAdmin css menu icons using built in icon font
 
 An extended ModelAdmin class supports adding a custom menu icon to the CMS.
 
 ```
 class NewsAdmin extends ModelAdmin
 {
-...
-private static $menu_icon_class = 'font-icon-news';
+    ...
+    private static $menu_icon_class = 'font-icon-news';
 }
 ```
 A complete list of supported font icons is available to view in the SilverStripe Design System Manager here:
-https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6
-
+[Design System Manager](https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6)
 
 ## Searching Records
 
