@@ -15,10 +15,7 @@ class TreeMultiselectFieldTest extends SapphireTest
     protected $formId = 'TheFormID';
     protected $fieldName = 'TestTree';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
