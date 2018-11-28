@@ -105,6 +105,17 @@ if (SilverStripe\Security\Permission::checkMember($member, 'CMS_ACCESS')) {
 
 Internally, this checks that the user has any of the defined `CMS_ACCESS_*` permissions.
 
+For example if your Namespace is Company\Website then the canView() method of your DataObject will look like this for a ModelAdmin sub class named NewsAdmin:
+
+```
+	public function canView($member = null)
+	{
+		return Permission::check('CMS_ACCESS_Company\Website\NewsAdmin', 'any', $member);
+	}
+```
+
+It is also useful to look in your database table named "Permission" for the available check Codes.
+
 
 ## API Documentation
 [Permission](api:SilverStripe\Security\Permission)
