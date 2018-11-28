@@ -144,8 +144,7 @@ class NewsAdmin extends ModelAdmin
     private static $menu_icon_class = 'font-icon-news';
 }
 ```
-A complete list of supported font icons is available to view in the SilverStripe Design System Manager here:
-[Design System Manager](https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6)
+A complete list of supported font icons is available to view in the [SilverStripe Design System Manager](https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6)
 
 ## Searching Records
 
