@@ -3,7 +3,7 @@ namespace SilverStripe\Forms\GridField\FormAction;
 
 use SilverStripe\Control\HTTPRequest;
 
-abstract class AbstractRequestAwareStore
+abstract class AbstractRequestAwareStore implements StateStore
 {
     private static $dependencies = [
         'request' => '%$' . HTTPRequest::class,

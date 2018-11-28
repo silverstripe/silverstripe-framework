@@ -493,7 +493,7 @@ SilverStripe\Core\Injector\Injector:
 
 The `AttributeStore` class configures action state to be stored in the DOM and sent back on the request that performs 
 the action. Custom storage methods can be created and used by implementing the `StateStore` interface and configuring 
-`Injector` in a similar fasion.
+`Injector` in a similar fashion.
 
 ## API Documentation
 

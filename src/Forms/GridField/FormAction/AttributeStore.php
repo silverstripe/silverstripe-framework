@@ -1,12 +1,10 @@
 <?php
 namespace SilverStripe\Forms\GridField\FormAction;
 
-use SilverStripe\Control\HTTPRequest;
-
 /**
  * Stores GridField action state on an attribute on the action and then analyses request parameters to load it back
  */
-class AttributeStore extends AbstractRequestAwareStore implements StateStore
+class AttributeStore extends AbstractRequestAwareStore
 {
     /**
      * Save the given state against the given ID returning an associative array to be added as attributes on the form
