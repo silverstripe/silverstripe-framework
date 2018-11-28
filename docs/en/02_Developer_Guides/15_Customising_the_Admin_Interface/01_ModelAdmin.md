@@ -114,25 +114,39 @@ class Category extends DataObject
 {
     public function canView($member = null) 
     {
-        return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        return Permission::check('CMS_ACCESS_Company\Website\MyAdmin', 'any', $member);
     }
 
     public function canEdit($member = null) 
     {
-        return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        return Permission::check('CMS_ACCESS_Company\Website\MyAdmin', 'any', $member);
     }
 
     public function canDelete($member = null) 
     {
-        return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        return Permission::check('CMS_ACCESS_Company\Website\MyAdmin', 'any', $member);
     }
 
     public function canCreate($member = null) 
     {
-        return Permission::check('CMS_ACCESS_MyAdmin', 'any', $member);
+        return Permission::check('CMS_ACCESS_Company\Website\MyAdmin', 'any', $member);
     }
 }
 ```
+## Custom ModelAdmin CSS Menu Icons using built in Icon Font
+
+An extended ModelAdmin class supports adding a custom menu icon to the CMS.
+
+```
+class NewsAdmin extends ModelAdmin
+{
+...
+private static $menu_icon_class = 'font-icon-news';
+}
+```
+A complete list of supported font icons is available to view in the SilverStripe Design System Manager here:
+https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6
+
 
 ## Searching Records
 
