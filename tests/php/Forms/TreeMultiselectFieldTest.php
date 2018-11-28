@@ -15,6 +15,41 @@ class TreeMultiselectFieldTest extends SapphireTest
     protected $formId = 'TheFormID';
     protected $fieldName = 'TestTree';
 
+    /**
+     * Mock object of a generic form
+     *
+     * @var Form
+     */
+    protected $form;
+
+    /**
+     * Instance of the TreeMultiselectField
+     *
+     * @var TreeMultiselectField
+     */
+    protected $field;
+
+    /**
+     * The File objects of folders loaded from the fixture
+     *
+     * @var File[]
+     */
+    protected $folders;
+
+    /**
+     * The array of folder ids
+     *
+     * @var int[]
+     */
+    protected $folderIds;
+
+    /**
+     * Concatenated folder ids for use as a value for the field
+     *
+     * @var string
+     */
+    protected $fieldValue;
+
     protected function setUp()
     {
         parent::setUp();
