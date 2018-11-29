@@ -411,7 +411,7 @@ class ShortcodeParser extends SS_Object {
 			$extra = array('node' => $node, 'element' => $node->ownerElement);
 
 			if($tags) {
-				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags,
+				$node->nodeValue = $this->replaceTagsWithText(htmlspecialchars($node->nodeValue), $tags,
 					function($idx, $tag) use ($parser, $extra) {
 						return $parser->getShortcodeReplacementText($tag, $extra, false);
 					}
