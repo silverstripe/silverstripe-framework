@@ -41,6 +41,11 @@ class ManifestFileFinder extends FileFinder
         // Keep searching inside vendor
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
         if ($inVendor) {
+            // Skip nested vendor folders (e.g. vendor/silverstripe/framework/vendor)
+            if ($depth == 4 && basename($pathname) === self::VENDOR_DIR) {
+                return false;
+            }
+
             // Keep searching if we could have a subdir module
             if ($depth < 3) {
                 return true;
