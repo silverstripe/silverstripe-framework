@@ -180,9 +180,9 @@ You can turn this on with the below config:
 Name: resamplefiles
 ---
 SilverStripe\Assets\File:
-  force_resample: false
+  force_resample: true
 SilverStripe\Assets\Storage\DBFile:
-  force_resample: false
+  force_resample: true
 ```
 
 #### Resampled image quality
