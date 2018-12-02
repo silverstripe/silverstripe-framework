@@ -301,42 +301,34 @@ class Session
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
         $data = [];
-        if (!session_id() && (!headers_sent() || !empty($_COOKIE[ini_get('session.name')]))) {
+        if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
             if (!headers_sent()) {
-                session_set_cookie_params($timeout, $path, $domain ?: null, $secure, true);
+                session_set_cookie_params($timeout ?: 0, $path, $domain ?: null, $secure, true);
 
                 $limiter = $this->config()->get('sessionCacheLimiter');
                 if (isset($limiter)) {
                     session_cache_limiter($limiter);
                 }
 
-            // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
+                // Allow storing the session in a non standard location
+                if ($session_path) {
+                    session_save_path($session_path);
+                }
+
+                // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
+                // separate (less secure) session for non-HTTPS requests
+                // if headers_sent() is true then it's best to throw the resulting error rather than risk
+                // a security hole.
+                if ($secure) {
+                    session_name($this->config()->get('cookie_name_secure'));
+                }
+
+                session_start();
+
             } else {
+                // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
                 session_cache_limiter(null);
             }
-
-            // Allow storing the session in a non standard location
-            if ($session_path) {
-                session_save_path($session_path);
-            }
-
-            // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
-            // separate (less secure) session for non-HTTPS requests
-            // if headers_sent() is true then it's best to throw the resulting error rather than risk
-            // a security hole.
-            if ($secure) {
-                session_name($this->config()->get('cookie_name_secure'));
-            }
-
-            $sessionParameters = [
-                "cookie_path" => $path,
-                "cookie_domain" => $domain ?: "",
-                "cookie_lifetime" => $timeout ?: 0,
-                "cookie_secure" => $secure,
-                "cookie_httponly" => true
-            ];
-
-            session_start($sessionParameters);
 
             if (isset($_SESSION)) {
                 // Initialise data from session store if present
