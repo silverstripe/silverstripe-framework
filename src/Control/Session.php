@@ -331,13 +331,10 @@ class Session
             $sessionParameters = [
                 "cookie_path" => $path,
                 "cookie_domain" => $domain ?: "",
+                "cookie_lifetime" => $timeout ?: 0,
                 "cookie_secure" => $secure,
                 "cookie_httponly" => true
             ];
-
-            if ($timeout) {
-                $sessionParameters["cookie_lifetime"] = $timeout;
-            }
 
             session_start($sessionParameters);
 
