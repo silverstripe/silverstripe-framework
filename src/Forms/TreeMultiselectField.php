@@ -286,7 +286,8 @@ class TreeMultiselectField extends TreeDropdownField
          *
          * This fix is not ideal, but supposed to keep backward compatibility for SS4.
          *
-         * In 5.0 this method to be removed and NULL should be used instead of 'unchanged' (or an empty array. to be decided).
+         * In 5.0 this method to be removed and NULL should be used instead of 'unchanged' (or an empty array.
+         *        to be decided).
          * In 5.0 this class to be refactored so that $this->value is always an array of values (or null)
          */
         if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
