@@ -267,4 +267,34 @@ class TreeMultiselectField extends TreeDropdownField
         $copy->setTitleField($this->getTitleField());
         return $copy;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @internal To be removed in 5.0
+     */
+    protected function objectForKey($key)
+    {
+        /**
+         * Fixes https://github.com/silverstripe/silverstripe-framework/issues/8332
+         *
+         * Due to historic reasons, the default (empty) value for this field is 'unchanged', even though
+         * the field is usually integer on the database side.
+         * MySQL handles that gracefully and returns an empty result in that case,
+         * whereas some other databases (e.g. PostgreSQL) do not support comparison
+         * of numeric types with string values, issuing a database error.
+         *
+         * This fix is not ideal, but supposed to keep backward compatibility for SS4.
+         *
+         * In 5.0 this method to be removed and NULL should be used instead of 'unchanged' (or an empty array. to be decided).
+         * In 5.0 this class to be refactored so that $this->value is always an array of values (or null)
+         */
+        if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
+            $key = null;
+        } elseif (is_string($key)) {
+            $key = preg_split('/\s*,\s*/', trim($key));
+        }
+
+        return parent::objectForKey($key);
+    }
 }

@@ -274,7 +274,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return CompositeField Returns the right aligned toolbar group field along with its FormAction's
      */
-    private function getRightGroupField()
+    protected function getRightGroupField()
     {
         $rightGroup = CompositeField::create()->setName('RightGroup');
         $rightGroup->addExtraClass('ml-auto');
@@ -284,9 +284,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $previousAndNextGroup->addExtraClass('circular-group mr-2');
         $previousAndNextGroup->setFieldHolderTemplate(get_class($previousAndNextGroup) . '_holder_buttongroup');
 
+        /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
         $gridState = $this->getRequest()->requestVar('gridState');
-        if ($component->getShowPagination()) {
+        if ($component && $component->getShowPagination()) {
             $previousAndNextGroup->push(FormAction::create('doPrevious')
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $gridState)
@@ -302,7 +303,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $rightGroup->push($previousAndNextGroup);
 
-        if ($component->getShowAdd()) {
+        if ($component && $component->getShowAdd()) {
             $rightGroup->push(FormAction::create('doNew')
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
@@ -376,10 +377,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         $this->extend('updateFormActions', $actions);
-
-        if (isset($rightGroup)) {
-            $actions->push($rightGroup);
-        }
 
         return $actions;
     }

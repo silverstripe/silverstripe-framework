@@ -254,16 +254,20 @@ Please ensure that any required plurals are exposed via provideI18nEntities.
 
 ```php
 // Simple string translation
-_t('LeftAndMain.FILESIMAGES','Files & Images');
+_t('SilverStripe\\Admin\\LeftAndMain.FILESIMAGES','Files & Images');
 
 // Using injection to add variables into the translated strings.
-_t('CMSMain.RESTORED',
+_t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORED',
     "Restored {value} successfully",
     ['value' => $itemRestored]
 );
 
 // Plurals are invoked via a `|` pipe-delimeter with a {count} argument
 _t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => $count ]);
+
+// You can use __CLASS__ or self::class to reference the current (early bound) class name
+_t(self::class . '.GREETING', 'Welcome!');
+_t(__CLASS__ . '.GREETING', 'Welcome!');
 ```
 
 #### Usage in Template Files

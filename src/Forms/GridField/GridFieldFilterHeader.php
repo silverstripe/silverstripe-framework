@@ -293,16 +293,18 @@ class GridFieldFilterHeader implements
             }, array_keys($filters)), $filters);
         }
 
+        $searchAction = GridField_FormAction::create($gridField, 'filter', false, 'filter', null);
+        $clearAction = GridField_FormAction::create($gridField, 'reset', false, 'reset', null);
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
             'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
             'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
-            'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
-                ->getAttribute('name'),
-            'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-                ->getAttribute('name')
+            'searchAction' => $searchAction->getAttribute('name'),
+            'searchActionState' => $searchAction->getAttribute('data-action-state'),
+            'clearAction' => $clearAction->getAttribute('name'),
+            'clearActionState' => $clearAction->getAttribute('data-action-state'),
         ];
 
         return json_encode($schema);

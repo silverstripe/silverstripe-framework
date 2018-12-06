@@ -14,7 +14,7 @@ use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ValidationResult;
@@ -680,7 +680,7 @@ class SecurityTest extends FunctionalTest
     public function testDatabaseIsReadyWithInsufficientMemberColumns()
     {
         Security::clear_database_is_ready();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
 
         // Assumption: The database has been built correctly by the test runner,
         // and has all columns present in the ORM
