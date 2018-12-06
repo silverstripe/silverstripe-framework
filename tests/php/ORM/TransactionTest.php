@@ -153,44 +153,4 @@ class TransactionTest extends SapphireTest
         $this->assertFalse(is_object($third) && $third->exists());
         $this->assertFalse(is_object($fourth) && $fourth->exists());
     }
-
-    public function testReadOnlyTransaction()
-    {
-        if (!DB::get_conn()->supportsTransactions()) {
-            $this->markTestSkipped('Current database is doesn\'t support transactions');
-            return;
-        }
-
-        // This feature is deprecated in 4.4, but we're still testing it.
-        Deprecation::notification_version('4.3.0');
-
-        $page = new TestObject();
-        $page->Title = 'Read only success';
-        $page->write();
-
-        DB::get_conn()->transactionStart('READ ONLY');
-
-        try {
-            $page = new TestObject();
-            $page->Title = 'Read only page failed';
-            $page->write();
-            DB::get_conn()->transactionEnd();
-        } catch (\Exception $e) {
-            //could not write this record
-            //We need to do a rollback or a commit otherwise we'll get error messages
-            DB::get_conn()->transactionRollback();
-        }
-
-        DataObject::flush_and_destroy_cache();
-
-        $success = DataObject::get_one(TestObject::class, "\"Title\"='Read only success'");
-        $fail = DataObject::get_one(TestObject::class, "\"Title\"='Read only page failed'");
-
-        //This page should be in the system
-        $this->assertInternalType('object', $success);
-        $this->assertTrue($success->exists());
-
-        //This page should NOT exist, we had 'read only' permissions
-        $this->assertNull($fail);
-    }
 }

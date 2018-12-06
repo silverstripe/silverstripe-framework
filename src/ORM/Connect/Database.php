@@ -652,6 +652,10 @@ abstract class Database
      * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on
      * transaction isolation options
      *
+     * Note that transactionMode does not work in MySQL <= 5.5 or SQLite. Both transancationMode
+     * and sessionCharacteristics are deprecated and neither of these features are included in the
+     * core unit suite. We recommend that you avoid their use.
+     *
      * @param string|boolean $transactionMode Transaction mode, or false to ignore
      * @param string|boolean $sessionCharacteristics Session characteristics, or false to ignore
      */
