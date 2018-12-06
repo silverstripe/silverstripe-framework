@@ -34,6 +34,14 @@ matrix:
       dist: xenial
       services:
         - mysql
+    - php: 7.2
+      env:
+        - DB=MARIADB
+        - DBV=10.0
+        - PHPUNIT_TEST=framework
+      addons:
+        mariadb: "10.0"
+      addions:
     - php: 7.1
       env:
         - DB=PGSQL
@@ -52,6 +60,14 @@ matrix:
         - DBV=5.6
         - PDO=1
         - PHPUNIT_TEST=framework
+    - php: 7.3
+      env:
+        - DB=MARIADB
+        - DBV=10.3
+        - PDO=1
+        - PHPUNIT_TEST=framework
+      addons:
+        mariadb: "10.3"
     - php: 7.2
       env:
         - DB=PGSQL
