@@ -13,6 +13,7 @@ use SilverStripe\Control\HTTPRequest;
  */
 class SessionTest extends SapphireTest
 {
+
     /**
      * @var Session
      */
@@ -24,10 +25,6 @@ class SessionTest extends SapphireTest
         return parent::setUp();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitDoesNotStartSessionWithoutIdentifier()
     {
         $req = new HTTPRequest('GET', '/');
@@ -36,10 +33,6 @@ class SessionTest extends SapphireTest
         $this->assertFalse($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitStartsSessionWithIdentifier()
     {
         $req = new HTTPRequest('GET', '/');
@@ -49,10 +42,6 @@ class SessionTest extends SapphireTest
         $this->assertTrue($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitStartsSessionWithData()
     {
         $req = new HTTPRequest('GET', '/');
@@ -61,10 +50,6 @@ class SessionTest extends SapphireTest
         $this->assertTrue($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testStartUsesDefaultCookieNameWithHttp()
     {
         $req = (new HTTPRequest('GET', '/'))
@@ -75,10 +60,6 @@ class SessionTest extends SapphireTest
         $this->assertNotEquals(session_name(), $session->config()->get('cookie_name_secure'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testStartUsesDefaultCookieNameWithHttpsAndCookieSecureOff()
     {
         $req = (new HTTPRequest('GET', '/'))
@@ -105,8 +86,6 @@ class SessionTest extends SapphireTest
     }
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      * @expectedException BadMethodCallException
      * @expectedExceptionMessage Session has already started
      */
@@ -118,10 +97,6 @@ class SessionTest extends SapphireTest
         $session->start($req);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testStartRetainsInMemoryData()
     {
         $this->markTestIncomplete('Test');

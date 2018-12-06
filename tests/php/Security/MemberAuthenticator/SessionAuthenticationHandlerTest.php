@@ -13,10 +13,6 @@ class SessionAuthenticationHandlerTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testAuthenticateRequestDefersSessionStartWithoutSessionIdentifier()
     {
         $member = new Member(['Email' => 'test@example.com']);
@@ -34,10 +30,6 @@ class SessionAuthenticationHandlerTest extends SapphireTest
         $this->assertNull($matchedMember);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testAuthenticateRequestStartsSessionWithSessionIdentifier()
     {
         $member = new Member(['Email' => 'test@example.com']);
@@ -51,7 +43,10 @@ class SessionAuthenticationHandlerTest extends SapphireTest
         $req = new HTTPRequest('GET', '/');
         $req->setSession($session);
 
+        // Set up global state
         Cookie::set(session_name(), '1234');
+        $_COOKIE[session_name()] = '1234';
+
         $session->start($req); // simulate detection of session cookie
 
         $matchedMember = $handler->authenticateRequest($req);
