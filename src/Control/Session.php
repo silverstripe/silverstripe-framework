@@ -324,7 +324,6 @@ class Session
                 }
 
                 session_start();
-
             } else {
                 // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
                 session_cache_limiter(null);
@@ -430,7 +429,7 @@ class Session
         }
 
         $var[] = $val;
-        $diffVar[sizeof($var)-1] = $val;
+        $diffVar[sizeof($var) - 1] = $val;
     }
 
     /**
