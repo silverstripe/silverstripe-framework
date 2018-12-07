@@ -310,7 +310,8 @@ class Session
                 }
 
             // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
-            } else {
+            // This behaviour flipped in PHP 7.2
+            } elseif (version_compare(phpversion(), '7.2.0', '<')) {
                 session_cache_limiter(null);
             }
 
