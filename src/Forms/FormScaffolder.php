@@ -110,7 +110,9 @@ class FormScaffolder
         }
 
         // add has_one relation fields
-        if ($this->obj->hasOne()) {
+        if ($this->obj->hasOne()
+           && ($this->includeRelations === true || ! empty($this->includeRelations['has_one']))
+           ) {
             foreach ($this->obj->hasOne() as $relationship => $component) {
                 if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
                     continue;
@@ -140,9 +142,12 @@ class FormScaffolder
         if ($this->obj->ID) {
             // add has_many relation fields
             if ($this->obj->hasMany()
-                && ($this->includeRelations === true || isset($this->includeRelations['has_many']))
+                && ($this->includeRelations === true || ! empty($this->includeRelations['has_many']))
             ) {
                 foreach ($this->obj->hasMany() as $relationship => $component) {
+                    if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
+                        continue;
+                    }                    
                     if ($this->tabbed) {
                         $fields->findOrMakeTab(
                             "Root.$relationship",
@@ -169,9 +174,12 @@ class FormScaffolder
             }
 
             if ($this->obj->manyMany()
-                && ($this->includeRelations === true || isset($this->includeRelations['many_many']))
+                && ($this->includeRelations === true || ! empty($this->includeRelations['many_many']))
             ) {
                 foreach ($this->obj->manyMany() as $relationship => $component) {
+                    if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
+                        continue;
+                    }                    
                     static::addManyManyRelationshipFields(
                         $fields,
                         $relationship,
@@ -182,6 +190,24 @@ class FormScaffolder
                     );
                 }
             }
+
+            if ($this->obj->belongsManyMany()
+                && ($this->includeRelations === true || ! empty($this->includeRelations['belongs_many_many']))
+            ) {
+                foreach ($this->obj->belongsManyMany() as $relationship => $component) {
+                    if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
+                        continue;
+                    }                    
+                    static::addManyManyRelationshipFields(
+                        $fields,
+                        $relationship,
+                        (isset($this->fieldClasses[$relationship]))
+                            ? $this->fieldClasses[$relationship] : null,
+                        $this->tabbed,
+                        $this->obj
+                    );
+                }
+            }            
         }
 
         return $fields;
