@@ -18,7 +18,7 @@ class AttributeStore extends AbstractRequestAwareStore
     {
         // Just save the state in the attributes of the action
         return [
-            'data-action-state' => json_encode($state),
+            'data-action-state' => addcslashes(json_encode($state), '\\'),
         ];
     }
 
