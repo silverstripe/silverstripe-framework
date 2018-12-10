@@ -58,7 +58,10 @@ class CmsUiContext implements Context
         $timeoutMs = $this->getMainContext()->getAjaxTimeout();
         $this->getSession()->wait(
             $timeoutMs,
-            "document.getElementsByClassName('cms-content-loading-overlay').length == 0"
+            "(".
+            "document.getElementsByClassName('cms-content-loading-overlay').length +".
+            "document.getElementsByClassName('cms-loading-container').length".
+            ") == 0"
         );
     }
 
