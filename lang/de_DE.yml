@@ -27,8 +27,6 @@ de_DE:
     ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
     BETWEEN: 'Passwörter müssen {min} bis {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
-  SilverStripe\Forms\DateField:
-    TODAY: heute
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswählen)
     CHOOSE_MODEL: '({name} auswählen)'
@@ -45,10 +43,6 @@ de_DE:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Abbrechen
     Save: Speichern
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Bearbeiten
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Suche "{name}"'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Seite
   SilverStripe\Forms\MoneyField:
