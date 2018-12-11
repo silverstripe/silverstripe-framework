@@ -84,6 +84,7 @@ da:
     RelationSearch: Relationssøgning
     ResetFilter: Nulstil
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Slet
     Delete: Slet
     DeletePermissionsFailure: 'Ingen slette rettigheder'
     EditPermissionsFailure: 'Ingen rettighed til at fjerne emnet'
@@ -95,12 +96,23 @@ da:
     DeletePermissionsFailure: 'Ingen slette rettigheder'
     Deleted: 'Slet {type} {name}'
     Save: Gem
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    EDIT: Rediger
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Kan ikke fjerne dig selv fra denne gruppe, du vil miste administrator rettigheder'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: af
     Page: Side
     View: Vis
+  SilverStripe\Forms\GridField\GridFieldVersionedState:
+    ADDEDTODRAFTHELP: 'Elementet er endnu ikke udgivet'
+    ADDEDTODRAFTSHORT: Kladde
+    ARCHIVEDPAGEHELP: 'Elementet er fjernet fra kladde og udgivet version'
+    ARCHIVEDPAGESHORT: Arkiveret
+    MODIFIEDONDRAFTHELP: 'Elementet har ikke udgivne ændringer'
+    MODIFIEDONDRAFTSHORT: Ændret
+    ONLIVEONLYSHORT: 'Kun på udgivet version'
+    ONLIVEONLYSHORTHELP: 'Elementet er udgivet, men er slette fra kladde'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Beløb
     FIELDLABELCURRENCY: Valuta
@@ -319,4 +331,7 @@ da:
     LOGOUT: 'Log ud'
     LOSTPASSWORDHEADER: 'Glemt kodeord'
     NOTEPAGESECURED: 'Denne side er beskyttet. Indtast dine loginoplysninger herunder for at få adgang.'
+    NOTERESETLINKINVALID: '<p>Kodeordets nulstillingslink er ugyldigt eller udløbet.</p><p>Du kan anmode om et nyt link <a href="{link1}">her</a> eller skifte dit kodeord efter du er <a href="{link2}">logget ind</a>.</p>'
     NOTERESETPASSWORD: 'Indtast din email adresse, så sender vi dig et link som du kan nulstille dit kodeord med'
+    PASSWORDSENTHEADER: 'Link til nulstilling af kodeord er sendt til ''{email}'''
+    PASSWORDSENTTEXT: 'Tak for det! Et link til at nulstille kodeordet er sendt til ''{email}'', forudsat at en konto eksisterer med denne email adresse.'
