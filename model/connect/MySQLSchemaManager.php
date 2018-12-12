@@ -336,7 +336,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	public function tableList() {
 		$tables = array();
-		foreach ($this->query("SHOW FULL TABLES WHERE Table_Type != 'VIEW'") as $record) {
+		foreach ($this->query("SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = database()") as $record) {
 			$table = reset($record);
 			$tables[strtolower($table)] = $table;
 		}
