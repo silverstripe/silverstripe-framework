@@ -8,6 +8,7 @@ use LogicException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -125,7 +126,7 @@ class DataObjectSchema
         $tables = $this->getTableNames();
         $class = ClassInfo::class_name($class);
         if (isset($tables[$class])) {
-            return $tables[$class];
+            return Convert::raw2sql($tables[$class]);
         }
         return null;
     }
