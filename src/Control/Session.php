@@ -9,7 +9,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Handles all manipulation of the session.
  *
- * An instance of `Session` object can be retrieve via an `HTTPRequest` by calling the `getSession()` method.
+ * An instance of a `Session` object can be retrieved via an `HTTPRequest` by calling the `getSession()` method.
  *
  * In order to support things like testing, the session is associated with a particular Controller.  In normal usage,
  * this is loaded from and saved to the regular PHP session, but for things like static-page-generation and
