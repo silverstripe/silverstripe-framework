@@ -71,6 +71,55 @@ class DataQuery
     protected $filterByClassName = true;
 
     /**
+     * Additional selected fields
+     */
+    private $selectedFields = [];
+
+    /**
+     * Where clauses
+     * @var array
+     */
+    private $where = [];
+
+    /**
+     * WhereAny clauses
+     * @var array
+     */
+    private $whereAny = [];
+
+    /**
+     * Sort clause
+     * Each item is a [sort, direction] pair
+     * @var array
+     */
+    private $sort = [];
+
+    /**
+     * Limit clause. If set, 2 element array of [limit, offset]
+     * @var null|array
+     */
+    private $limit = null;
+
+    /**
+     * Applied relations, inner joins, and left joins
+     * Array of 2-element arrays. First elemenet of each item is 'left', 'inner', or 'applyReleation' [tbc]
+     * @var array
+     */
+    private $joins = null;
+
+    /**
+     * Group by clausees
+     * @var array
+     */
+    private $groupBy = [];
+
+    /**
+     * SELECT vs SELECT DISTINCT
+     * @var bool
+     */
+    private $distinct = true;
+
+    /**
      * Create a new DataQuery.
      *
      * @param string $dataClass The name of the DataObject class that you wish to query
@@ -78,15 +127,22 @@ class DataQuery
     public function __construct($dataClass)
     {
         $this->dataClass = $dataClass;
-        $this->initialiseQuery();
     }
 
-    /**
-     * Clone this object
-     */
-    public function __clone()
+    public function getSignature()
     {
-        $this->query = clone $this->query;
+        return json_encode([
+            'dataClass' => $this->dataClass,
+            'where' => $this->where,
+            'whereAny' => $this->whereAny,
+            'sort' => $this->sort,
+            'limit' => $this->limit,
+            'joins' => $this->joins,
+            'groupBy' => $this->groupBy,
+            'queriedColumns' => $this->queriedColumns,
+            'distinct' => $this->distinct,
+            'selectedFields' => $this->selectedFields,
+        ]);
     }
 
     /**
@@ -110,14 +166,6 @@ class DataQuery
         return $this->getFinalisedQuery();
     }
 
-    // HACK ..  remove when implemented
-    //////////////////////////////////////
-    public function getSignature()
-    {
-        return md5($this->dataClass);
-    }
-    //////////////////////////////////
-
     /**
      * Remove a filter from the query
      *
@@ -136,9 +184,8 @@ class DataQuery
             $fieldExpression = key($fieldExpression);
         }
 
-        $where = $this->query->getWhere();
         // Iterate through each condition
-        foreach ($where as $i => $condition) {
+        foreach ($this->where as $i => $condition) {
             // Rewrite condition groups as plain conditions before comparison
             if ($condition instanceof SQLConditionGroup) {
                 $predicate = $condition->conditionSQL($parameters);
@@ -150,7 +197,7 @@ class DataQuery
             foreach ($condition as $predicate => $parameters) {
                 // @see SQLSelect::addWhere for why this is required here
                 if (strpos($predicate, $fieldExpression) !== false) {
-                    unset($where[$i]);
+                    unset($this->where[$i]);
                     $matched = true;
                 }
                 // Enforce single-item condition predicate => parameters structure
@@ -159,9 +206,7 @@ class DataQuery
         }
 
         // set the entire where clause back, but clear the original one first
-        if ($matched) {
-            $this->query->setWhere($where);
-        } else {
+        if (!$matched) {
             throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
         }
 
@@ -181,11 +226,7 @@ class DataQuery
 
         // Build our intial query
         $this->query = new SQLSelect([]);
-        $this->query->setDistinct(true);
-
-        if ($sort = singleton($this->dataClass)->config()->get('default_sort')) {
-            $this->sort($sort);
-        }
+        $this->query->setDistinct($this->distinct);
 
         $baseTable = DataObject::getSchema()->tableName($baseClass);
         $this->query->setFrom("\"{$baseTable}\"");
@@ -204,6 +245,78 @@ class DataQuery
         return $this;
     }
 
+    private function processQuerySettings()
+    {
+        if ($this->where) {
+            foreach ($this->where as $filter) {
+                $this->query->addWhere($filter);
+            }
+        }
+
+        if ($this->whereAny) {
+            foreach ($this->whereAny as $filter) {
+                $this->query->addWhereAny($filter);
+            }
+        }
+
+        if ($this->groupBy) {
+            foreach ($this->groupBy as $groupBy) {
+                $this->query->addGroupBy($groupBy);
+            }
+        }
+
+        if ($this->limit) {
+            $this->query->setLimit($this->limit[0], $this->limit[1]);
+        }
+
+        if ($this->sort) {
+            foreach ($this->sort as $sort) {
+                $this->query->addOrderBy($sort[0], $sort[1]);
+            }
+        } else {
+            if ($sort = singleton($this->dataClass)->config()->get('default_sort')) {
+                $this->query->addOrderBy($sort);
+            }
+        }
+
+        if ($this->joins) {
+            foreach ($this->joins as $join) {
+                switch ($join[0]) {
+                    case 'leftJoin':
+                        $this->query->addLeftJoin($join[1], $join[2], $join[3], $join[4], $join[5]);
+                        break;
+
+                    case 'innerJoin':
+                        $this->query->addInnerJoin($join[1], $join[2], $join[3], $join[4], $join[5]);
+                        break;
+
+                    case 'joinHasManyRelation':
+                        $this->joinHasManyRelation($join[1], $join[2], $join[3], $join[4], $join[5], $join[6]);
+                        break;
+
+                    case 'joinManyManyRelationship':
+                        $this->joinManyManyRelationship(
+                            $join[1],
+                            $join[2],
+                            $join[3],
+                            $join[4],
+                            $join[5],
+                            $join[6],
+                            $join[7],
+                            $join[8]
+                        );
+                        break;
+                }
+            }
+        }
+
+        if ($this->selectedFields) {
+            foreach ($this->selectedFields as $field) {
+                $this->query->selectField($field[0], $field[1]);
+            }
+        }
+    }
+
     /**
      * Ensure that the query is ready to execute.
      *
@@ -212,6 +325,12 @@ class DataQuery
      */
     public function getFinalisedQuery($queriedColumns = null)
     {
+        // TO DO: this doesn't need to be here any more
+        $this->initialiseQuery();
+
+        // This is a temporary method to refactor the legacy code into
+        $this->processQuerySettings();
+
         if (!$queriedColumns) {
             $queriedColumns = $this->queriedColumns;
         }
@@ -458,6 +577,8 @@ class DataQuery
      */
     public function count()
     {
+        // TODO: queryExectuor should have a getCount()
+
         $quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
         return $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}");
     }
@@ -570,6 +691,8 @@ class DataQuery
      */
     public function aggregate($expression)
     {
+        // TODO: aggregate should be a setter
+
         return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
     }
 
@@ -581,6 +704,8 @@ class DataQuery
      */
     public function firstRow()
     {
+         // TODO: executor has getFirstRow()
+
         return $this->getFinalisedQuery()->firstRow();
     }
 
@@ -592,6 +717,8 @@ class DataQuery
      */
     public function lastRow()
     {
+        // TODO: executor has getLastRow()
+
         return $this->getFinalisedQuery()->lastRow();
     }
 
@@ -642,7 +769,8 @@ class DataQuery
      */
     public function groupby($groupby)
     {
-        $this->query->addGroupBy($groupby);
+        $this->groupBy[] = $groupby;
+
         return $this;
     }
 
@@ -654,6 +782,8 @@ class DataQuery
      */
     public function having($having)
     {
+        // TODO: Internal setter
+
         $this->query->addHaving($having);
         return $this;
     }
@@ -695,7 +825,7 @@ class DataQuery
     public function where($filter)
     {
         if ($filter) {
-            $this->query->addWhere($filter);
+            $this->where[] = $filter;
         }
         return $this;
     }
@@ -713,7 +843,7 @@ class DataQuery
     public function whereAny($filter)
     {
         if ($filter) {
-            $this->query->addWhereAny($filter);
+            $this->whereAny[] = $filter;
         }
         return $this;
     }
@@ -731,9 +861,9 @@ class DataQuery
     public function sort($sort = null, $direction = null, $clear = true)
     {
         if ($clear) {
-            $this->query->setOrderBy($sort, $direction);
+            $this->sort = [ [$sort, $direction] ];
         } else {
-            $this->query->addOrderBy($sort, $direction);
+            $this->sort[] = [$sort, $direction];
         }
 
         return $this;
@@ -746,6 +876,8 @@ class DataQuery
      */
     public function reverseSort()
     {
+        // TO DO: move to setter
+
         $this->query->reverseOrderBy();
         return $this;
     }
@@ -759,19 +891,21 @@ class DataQuery
      */
     public function limit($limit, $offset = 0)
     {
-        $this->query->setLimit($limit, $offset);
+        $this->limit = [$limit, $offset];
+
         return $this;
     }
 
     /**
      * Set whether this query should be distinct or not.
      *
-     * @param bool $value
+     * @param bool $distinct
      * @return $this
      */
-    public function distinct($value)
+    public function distinct($distinct)
     {
-        $this->query->setDistinct($value);
+        $this->distinct = $distinct;
+
         return $this;
     }
 
@@ -789,8 +923,10 @@ class DataQuery
      */
     public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
+        // TO DO: move to setter
+
         if ($table) {
-            $this->query->addInnerJoin($table, $onClause, $alias, $order, $parameters);
+            $this->joins[] = ['innerJoin', $table, $onClause, $alias, $order, $parameters];
         }
         return $this;
     }
@@ -810,7 +946,7 @@ class DataQuery
     public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
         if ($table) {
-            $this->query->addLeftJoin($table, $onClause, $alias, $order, $parameters);
+            $this->joins[] = ['leftJoin', $table, $onClause, $alias, $order, $parameters];
         }
         return $this;
     }
@@ -888,7 +1024,10 @@ class DataQuery
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
                 }
                 // Join via has_many
-                $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'has_many');
+                $this->joins[] = [
+                    'joinHasManyRelation',
+                    $modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'has_many'
+                ];
                 $modelClass = $component;
                 continue;
             }
@@ -896,7 +1035,10 @@ class DataQuery
             // check belongs_to (like has_many but linear safe)
             if ($component = $schema->belongsToComponent($modelClass, $rel)) {
                 // Piggy back off has_many logic
-                $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'belongs_to');
+                $this->joins[] = [
+                    'joinHasManyRelation',
+                    $modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'belongs_to',
+                ];
                 $modelClass = $component;
                 continue;
             }
@@ -907,7 +1049,8 @@ class DataQuery
                 if ($linearOnly) {
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
                 }
-                $this->joinManyManyRelationship(
+                $this->joins[] = [
+                    'joinManyManyRelationship',
                     $component['relationClass'],
                     $component['parentClass'],
                     $component['childClass'],
@@ -916,7 +1059,7 @@ class DataQuery
                     $component['join'],
                     $parentPrefix,
                     $tablePrefix
-                );
+                ];
                 $modelClass = $component['childClass'];
                 continue;
             }
@@ -1170,7 +1313,9 @@ class DataQuery
             return Convert::symbol2sql("{$table}.{$item}");
         }, $fields);
 
-        $this->query->setSelect($fieldExpressions);
+        foreach ($fieldExpressions as $idx => $field) {
+            $this->selectField($field, is_numeric($idx) ? null : $idx);
+        }
 
         return $this;
     }
@@ -1188,7 +1333,9 @@ class DataQuery
             return Convert::symbol2sql("{$table}.{$item}");
         }, $fields);
 
-        $this->query->addSelect($fieldExpressions);
+        foreach ($fieldExpressions as $idx => $field) {
+            $this->selectField($field, is_numeric($idx) ? null : $idx);
+        }
 
         return $this;
     }
@@ -1273,7 +1420,9 @@ class DataQuery
      */
     public function selectField($fieldExpression, $alias = null)
     {
-        $this->query->selectField($fieldExpression, $alias);
+        $this->selectedFields[] = [$fieldExpression, $alias];
+
+        return $this;
     }
 
     //// QUERY PARAMS
