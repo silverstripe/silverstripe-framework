@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Filters\SearchFilter;
@@ -34,6 +35,11 @@ use LogicException;
  */
 class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
+    use Injectable;
+
+    private static $dependencies = [
+        'dataQueryExecutor' => '%$' . DataQueryExecutorInterface::class,
+    ];
 
     /**
      * The DataObject class name that this data list is querying
@@ -50,6 +56,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected $dataQuery;
 
     /**
+     * @var DataQueryExecutorInterface
+     */
+    protected $dataQueryExecutor;
+
+    /**
      * Create a new DataList.
      * No querying is done on construction, but the initial query schema is set up.
      *
@@ -58,7 +69,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function __construct($dataClass)
     {
         $this->dataClass = $dataClass;
-        $this->dataQuery = new DataQuery($this->dataClass);
+        $this->dataQuery = DataQuery::create($this->dataClass);
 
         parent::__construct();
     }
@@ -159,6 +170,31 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * @param DataQueryExecutorInterface $executor
+     * @return $this
+     */
+    public function setDataQueryExecutor(DataQueryExecutorInterface $executor)
+    {
+        $this->dataQueryExecutor = $executor;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed|DataQueryExecutorInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getDataQueryExecutor()
+    {
+        // Backward compatability
+        if (!$this->dataQueryExecutor) {
+            $this->dataQueryExecutor = Injector::inst()->get(DataQueryExecutorInterface::class);
+        }
+
+        return $this->dataQueryExecutor;
+    }
+
+    /**
      * Returns a new DataList instance with the specified query parameter assigned
      *
      * @param string|array $keyOrArray Either the single key to set, or an array of key value pairs to set
@@ -227,8 +263,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $query->whereAny($filter);
         });
     }
-
-
 
     /**
      * Returns true if this DataList can be sorted by the given field.
