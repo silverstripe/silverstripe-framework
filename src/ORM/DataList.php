@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\ORM\EagerLoading\DataQueryStoreInterface;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\View\ViewableData;
@@ -1139,6 +1140,20 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         /** @var HasManyList|ManyManyList $relation */
         $relation = $singleton->$relationName($ids);
         return $relation;
+    }
+
+    public function with($relations = [])
+    {
+        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
+            throw new BadMethodCallException(sprintf(
+                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
+                __CLASS__,
+                __FUNCTION__,
+                DataQueryStoreInterface::class
+            ));
+        }
+
+
     }
 
     public function dbObject($fieldName)

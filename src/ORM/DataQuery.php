@@ -110,6 +110,13 @@ class DataQuery
         return $this->getFinalisedQuery();
     }
 
+    // HACK ..  remove when implemented
+    //////////////////////////////////////
+    public function getSignature()
+    {
+        return md5($this->dataClass);
+    }
+    //////////////////////////////////
 
     /**
      * Remove a filter from the query
