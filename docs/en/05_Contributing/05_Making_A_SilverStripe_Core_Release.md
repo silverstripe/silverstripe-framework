@@ -28,10 +28,10 @@ As a core contributor it is necessary to have installed the following set of too
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
   docs on the cow repo for more setup details.
-  `composer global require silverstripe/cow dev-master`
+  `composer global require silverstripe/cow ^2`
 * [satis repository tool](https://github.com/composer/satis). This should be installed
   globally for minimum maintenance.
-  `composer global require composer/satis ^1@dev` (or `^1@alpha` for php 5)
+  `composer global require composer/satis ^1`
 * [transifex client](http://docs.transifex.com/client/).
   `pip install transifex-client`
   If you're on OSX 10.10+, the standard Python installer is locked down.
@@ -149,9 +149,8 @@ this we use [satis](https://github.com/composer/satis).
 
 To setup a Satis project for a release:
 
-* Ensure Satis is installed globally: `composer global require composer/satis ^1@dev` (or `^1@alpha` if you
-  are running php 5)
-* `cd ~/Sites/` (or whereever your web-root is located)
+* Ensure Satis is installed globally: `composer global require composer/satis ^1` 
+* `cd ~/Sites/` (or wherever your web-root is located)
 * `mkdir satis-security && cd satis-security` (or some directory specific to your release)
 * Create a config file (e.g. config.json) of the given format (add only those repositories necessary).
 
@@ -200,11 +199,6 @@ The release process, at a high level, involves creating a release, publishing it
 reviewing the need for either another pre-release or a final stable tag within a short period
 (normally within 3-5 business days).
 
-During the pre-release cycle a temporary branch is created, and should only receive
-absolutely critical fixes during the cycle. Any changes to this branch should
-result in the requirement for a new release, thus a higher level of scrutiny is typically
-placed on any pull request to these branches.
-
 When creating a new pre-release or stable, the following process is broken down into two
 main sets of commands:
 
@@ -222,7 +216,7 @@ Check all tickets ([framework](https://github.com/silverstripe/silverstripe-fram
 [installer](https://github.com/silverstripe/silverstripe-installer/milestones)) assigned to that milestone are
 either closed or reassigned to another milestone.
 
-Merge up from other older supported release branches (e.g. merge `3.1`->`3.2`, `3.2`->`3.3`, `3.3`->`3`, `3`->`master`).
+Merge up from other older supported release branches (e.g. merge `4.0`->`4.1`, `4.1`->`4.2`, `4.2`->`4`, `4`->`master`).
 
 This is the part of the release that prepares and tests everything locally, but
 doe not make any upstream changes (so it's safe to run without worrying about
@@ -230,13 +224,14 @@ any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
 
-`cow release <version> -vvv`
+`cow release <version> [recipe] -vvv`
 
 E.g.
 
 `cow release 4.0.1 -vvv`
 
-* `<version>` is mandatory and must be the exact tag name to release including rc/alpha/beta if applicable.
+* `<version>` The version that is to be released. E.g. `4.1.4` or `4.3.0-rc1`
+* `<recipe>` `Optional: the recipe that is being released (default: "silverstripe/installer")
 
 This command has these options (note that --repository option is critical for security releases):
 
@@ -265,11 +260,12 @@ and needs to be manually advanced):
   know to install dev-master, and installing 3.3.0 will install from 3.x-dev.
   If installing pre-release versions for stabilisation, it will use the correct
   temporary release branch.
-* `release:plan` The release plan will be auto-generated, and presented on the screen
-  for the user to modify or confirm. At this stage you can also modify the branching
-  behaviour to be performed in the next step.
-* `release:branch` This will branch all released modules to the correct branch, if necessary.
-  E.g. branching 3.7 from 3 branch in order to create the new minor version.
+* `release:plan` The release planning will take place, this reads the various dependencies of the recipe being released
+  and determines what new versions of those dependencies need to be tagged to create the final release. The conclusion
+  of the planning step is output to the screen and requires user confirmation.
+* `release:branch` If release:create installed from a non-rc branch, it will
+  create the new temporary release branch (via `--branch-auto`). You can also customise this branch
+  with `--branch=<branchname>`, but it's best to use the standard.
 * `release:translate` All upstream transifex strings will be pulled into the
   local master strings, and then the [i18nTextCollector](api:SilverStripe\i18n\TextCollection\i18nTextCollector)
   task will be invoked and will merge these strings together, before pushing all
@@ -298,9 +294,7 @@ for the various modules (e.g. [framework](https://travis-ci.org/silverstripe/sil
 and [cms](https://travis-ci.org/silverstripe/silverstripe-cms)).
 
 It's also ideal to eyeball the git changes generated by the release tool, making sure
-that no translation strings were unintentionally lost, no malicious changes were
-introduced in the (community contributed) translations, and that the changelog
-was generated correctly.
+that no translation strings were unintentionally lost, and that the changelog was generated correctly.
 
 In particular, double check that all necessary information is included in the release notes,
 including:
@@ -320,11 +314,11 @@ building an archive, and uploading to
 
 Invoked by running `cow release:publish` in the format as below:
 
-`cow release:publish <version> -vvv`
+`cow release:publish <version> [<recipe>] -vvv`
 
 E.g.
 
-`cow release:publish 4.0.1`
+`cow release:publish 4.0.1 silverstripe/installer`
 
 This command has these options:
 
@@ -341,8 +335,8 @@ This command has these options:
 As with the `cow release` command, this step is broken down into the following
 subtasks which are invoked in sequence:
 
-* `release:tag` Each module will have the appropriate tag applied (except the theme).
-* `release:push` The temporary release branches and all tags are pushed up to origin on github.
+* `release:tag` Each module will have the appropriate tag applied (except the theme). All tags are pushed up to origin
+  on github.
 * `release:archive` This will generate a new tar.gz and zip archive, each for
   cms and framework-only installations. These will be copied to the root folder
   of the release directory, although the actual build will be created in temporary
@@ -359,7 +353,7 @@ subtasks which are invoked in sequence:
 Once all of these commands have completed there are a couple of final tasks left that
 aren't strictly able to be automated:
 
-* If this is a stable release, it will be necessary to perform a post-release merge
+* It will be necessary to perform a post-release merge
   on open source. This normally will require you to merge the temporary release branch into the
   source branch (e.g. merge 3.2.4 into 3.2), or sometimes create new branches if
   releasing a new minor version, and bumping up the branch-alias in composer.json.
@@ -370,7 +364,7 @@ aren't strictly able to be automated:
   SemVer pattern (e.g. 3.2.4 > 3.2 > 3.3 > 3 > master). The more often this is
   done the easier it is, but this can sometimes be left for when you have
   more free time. Branches not receiving regular stable versions anymore (e.g.
-  3.0 or 3.1) should usually be omitted.
+  3.0 or 3.1) can be omitted.
 * Set the github milestones to completed, and create placeholders for the next
   minor versions. It may be necessary to re-assign any issues assigned to the prior
   milestones to these new ones.
