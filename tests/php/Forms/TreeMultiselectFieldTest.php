@@ -10,7 +10,7 @@ use SilverStripe\Forms\TreeMultiselectField;
 
 class TreeMultiselectFieldTest extends SapphireTest
 {
-    protected static $fixture_file = 'TreeDropdownFieldTest.yml';
+    protected static $fixture_file = 'TreeMultiselectFieldTest.yml';
 
     protected $formId = 'TheFormID';
     protected $fieldName = 'TestTree';
@@ -128,7 +128,7 @@ class TreeMultiselectFieldTest extends SapphireTest
             [
                 'id' => $fieldId,
                 'name' => $this->fieldName,
-                'value' => 'unchanged'
+                'value' => null
             ],
             $schemaStateDefaults,
             true
@@ -162,7 +162,6 @@ class TreeMultiselectFieldTest extends SapphireTest
 
         $html = $field->Field();
         $this->assertContains($field->ID(), $html);
-        $this->assertContains('unchanged', $html);
     }
 
 
@@ -206,7 +205,7 @@ class TreeMultiselectFieldTest extends SapphireTest
             [
                 'id' => $field->ID(),
                 'name' => 'TestTree',
-                'value' => 'unchanged'
+                'value' => null
             ],
             $schemaStateDefaults,
             true
