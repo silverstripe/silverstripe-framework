@@ -774,6 +774,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
+        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
+            throw new BadMethodCallException(sprintf(
+                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
+                __CLASS__,
+                __FUNCTION__,
+                DataQueryStoreInterface::class
+            ));
+        }
+
+        $this->getEagerLoader()->loadRelationsIntoStore($relations, $this->getDataQueryExecutor());
+
+        $this->getEagerLoader()->execute($this->with);
         $rows = $this->getDataQueryExecutor()->execute($this->dataQuery);
         $results = [];
 
@@ -1144,16 +1156,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     public function with($relations = [])
     {
-        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
-            throw new BadMethodCallException(sprintf(
-                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
-                __CLASS__,
-                __FUNCTION__,
-                DataQueryStoreInterface::class
-            ));
-        }
-
-
+        $this->with = $relations;
     }
 
     public function dbObject($fieldName)
