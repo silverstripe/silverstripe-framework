@@ -1284,6 +1284,10 @@ warnings:
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
     'days_between()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
+    'SilverStripe\Control\Session::get_all()':
+      message: 'Session can not be accessed statically and `get_all()` is now called `getAll()'
+    'SilverStripe\Control\Session::clear_all()':
+      message: 'Session can not be accessed statically and `clear_all()` is now called `clearAll()'
   props:
     'class':
       message: '$this->class access has been removed'
