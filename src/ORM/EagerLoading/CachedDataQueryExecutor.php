@@ -2,6 +2,9 @@
 
 namespace SilverStripe\ORM\EagerLoading;
 
+use SilverStripe\ORM\DataQueryExecutorInterface;
+use SilverStripe\ORM\DataQuery;
+
 class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQueryStoreInterface
 {
     /**

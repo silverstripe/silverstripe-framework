@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\EagerLoading;
 
+use SilverStripe\ORM\DataQuery;
+
 interface DataQueryStoreInterface
 {
     /**
