@@ -68,7 +68,8 @@
                 "min": null,
                 "max": null,
                 "maxlength": null
-            }
+            },
+            "isoLang": "en-US"
         },
         {
             "name": "Number",
