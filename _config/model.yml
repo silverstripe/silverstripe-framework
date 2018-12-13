@@ -97,3 +97,9 @@ SilverStripe\Core\Injector\Injector:
   PartialMatchFilter: '%$DataListFilter.PartialMatch'
   StartsWithFilter: '%$DataListFilter.StartsWith'
   WithinRangeFilter: '%$DataListFilter.WithinRange'
+---
+Name: query
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\ORM\DataQueryExecutorInterface:
+    class: SilverStripe\ORM\NaiveDataQueryExecutor

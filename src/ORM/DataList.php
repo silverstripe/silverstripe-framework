@@ -773,8 +773,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
-        $query = $this->dataQuery->query();
-        $rows = $query->execute();
+        $rows = $this->getDataQueryExecutor()->execute($this->dataQuery);
         $results = [];
 
         foreach ($rows as $row) {
