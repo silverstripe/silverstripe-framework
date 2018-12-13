@@ -94,7 +94,7 @@ class DatetimeField extends TextField
     {
         $attributes = parent::getAttributes();
 
-        $lang = $this->getHTML5() ? DBDate::ISO_LOCALE : $this->getLocale();
+        $lang = $this->getLocale();
         $attributes['lang'] = i18n::convert_rfc1766($lang);
 
         if ($this->getHTML5()) {
@@ -520,6 +520,11 @@ class DatetimeField extends TextField
      */
     public function getLocale()
     {
+        // Use iso locale for html5
+        if ($this->getHTML5()) {
+            return DBDate::ISO_LOCALE;
+        }
+
         return $this->locale ?: i18n::get_locale();
     }
 
