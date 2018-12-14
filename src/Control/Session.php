@@ -65,7 +65,7 @@ use SilverStripe\Dev\Deprecation;
  * You can also get all the values in the session at once. This is useful for debugging.
  *
  * <code>
- * $session::getAll(); // returns an array of all the session values.
+ * $session->getAll(); // returns an array of all the session values.
  * </code>
  *
  * <b>Clearing Data</b>
