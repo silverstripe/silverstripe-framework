@@ -245,7 +245,7 @@ class DataQuery
         return $this;
     }
 
-    private function processQuerySettings()
+    protected function processQuerySettings()
     {
         if ($this->where) {
             foreach ($this->where as $filter) {
@@ -281,30 +281,22 @@ class DataQuery
 
         if ($this->joins) {
             foreach ($this->joins as $join) {
-                switch ($join[0]) {
+                $type = array_shift($join);
+                switch ($type) {
                     case 'leftJoin':
-                        $this->query->addLeftJoin($join[1], $join[2], $join[3], $join[4], $join[5]);
+                        $this->query->addLeftJoin(...$join);
                         break;
 
                     case 'innerJoin':
-                        $this->query->addInnerJoin($join[1], $join[2], $join[3], $join[4], $join[5]);
+                        $this->query->addInnerJoin(...$join);
                         break;
 
                     case 'joinHasManyRelation':
-                        $this->joinHasManyRelation($join[1], $join[2], $join[3], $join[4], $join[5], $join[6]);
+                        $this->joinHasManyRelation(...$join);
                         break;
 
                     case 'joinManyManyRelationship':
-                        $this->joinManyManyRelationship(
-                            $join[1],
-                            $join[2],
-                            $join[3],
-                            $join[4],
-                            $join[5],
-                            $join[6],
-                            $join[7],
-                            $join[8]
-                        );
+                        $this->joinManyManyRelationship(...$join);
                         break;
                 }
             }

@@ -101,5 +101,8 @@ SilverStripe\Core\Injector\Injector:
 Name: query
 ---
 SilverStripe\Core\Injector\Injector:
+  SilverStripe\ORM\EagerLoading\QueryEagerLoaderInterface:
+    class: SilverStripe\ORM\EagerLoading\DataListEagerLoader
   SilverStripe\ORM\DataQueryExecutorInterface:
-    class: SilverStripe\ORM\NaiveDataQueryExecutor
+    #class: SilverStripe\ORM\NaiveDataQueryExecutor
+    class: SilverStripe\ORM\QueryCache\CachedDataQueryExecutor

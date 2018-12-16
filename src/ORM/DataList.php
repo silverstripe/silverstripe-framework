@@ -5,7 +5,9 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\EagerLoading\DataQueryStoreInterface;
+use SilverStripe\ORM\EagerLoading\DataListEagerLoader;
+use SilverStripe\ORM\EagerLoading\QueryEagerLoaderInterface;
+use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\View\ViewableData;
@@ -13,6 +15,7 @@ use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use BadMethodCallException;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -60,6 +63,12 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @var DataQueryExecutorInterface
      */
     protected $dataQueryExecutor;
+
+    /**
+     * @var QueryEagerLoaderInterface
+     */
+    protected $eagerLoader;
+
 
     /**
      * Create a new DataList.
@@ -179,6 +188,29 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $this->dataQueryExecutor = $executor;
 
         return $this;
+    }
+
+    /**
+     * @param QueryEagerLoaderInterface $eagerLoader
+     * @return $this
+     */
+    public function setEagerLoader(QueryEagerLoaderInterface $eagerLoader)
+    {
+        $this->eagerLoader = $eagerLoader;
+
+        return $this;
+    }
+
+    /**
+     * @return QueryEagerLoaderInterface
+     */
+    public function getEagerLoader()
+    {
+        if (!$this->eagerLoader) {
+            $this->eagerLoader = Injector::inst()->create(QueryEagerLoaderInterface::class);
+        }
+
+        return $this->eagerLoader;
     }
 
     /**
@@ -774,18 +806,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
-        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
-            throw new BadMethodCallException(sprintf(
-                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
-                __CLASS__,
-                __FUNCTION__,
-                DataQueryStoreInterface::class
-            ));
-        }
-
-        $this->getEagerLoader()->loadRelationsIntoStore($relations, $this->getDataQueryExecutor());
-
-        $this->getEagerLoader()->execute($this->with);
+        $this->performEagerLoading();
         $rows = $this->getDataQueryExecutor()->execute($this->dataQuery);
         $results = [];
 
@@ -794,6 +815,23 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         return $results;
+    }
+
+    protected function performEagerLoading()
+    {
+        if (empty($this->getEagerLoader()->getRelations())) {
+            return;
+        }
+
+        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
+            throw new BadMethodCallException(sprintf(
+                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
+                __CLASS__,
+                __FUNCTION__,
+                DataQueryStoreInterface::class
+            ));
+        }
+        $this->getEagerLoader()->execute($this, $this->getDataQueryExecutor());
     }
 
     /**
@@ -872,6 +910,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function createDataObject($row)
     {
+        // Hack.. figure out how to move this into the executor
+        if ($row instanceof DataObject) {
+            return $row;
+        }
+
         $class = $this->dataClass;
 
         if (empty($row['ClassName'])) {
@@ -924,7 +967,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function count()
     {
-        return $this->dataQuery->count();
+        return $this->getDataQueryExecutor()->getCount($this->dataQuery);
     }
 
     /**
@@ -981,9 +1024,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function first()
     {
-        foreach ($this->dataQuery->firstRow()->execute() as $row) {
+        $rows = $this->getDataQueryExecutor()->getFirstRow($this->dataQuery);
+        foreach($rows as $row) {
             return $this->createDataObject($row);
         }
+
         return null;
     }
 
@@ -996,9 +1041,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function last()
     {
-        foreach ($this->dataQuery->lastRow()->execute() as $row) {
+        $rows = $this->getDataQueryExecutor()->getLastRow($this->dataQuery);
+        foreach($rows as $row) {
             return $this->createDataObject($row);
         }
+
         return null;
     }
 
@@ -1154,9 +1201,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $relation;
     }
 
+    /**
+     * @param array $relations
+     * @return $this
+     */
     public function with($relations = [])
     {
-        $this->with = $relations;
+        $this->getEagerLoader()->addRelations($relations);
+
+        return $this;
     }
 
     public function dbObject($fieldName)
