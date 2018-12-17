@@ -514,7 +514,7 @@ class TreeDropdownField extends FormField
         $value = $request->requestVar('forceValue') ?: $this->value;
         if ($value && ($values = preg_split('/,\s*/', $value))) {
             foreach ($values as $value) {
-                if (!$value || $value == 'unchanged') {
+                if (!$value) {
                     continue;
                 }
 

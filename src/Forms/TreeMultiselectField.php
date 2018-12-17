@@ -66,7 +66,28 @@ class TreeMultiselectField extends TreeDropdownField
         parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
         $this->removeExtraClass('single');
         $this->addExtraClass('multiple');
-        $this->value = 'unchanged';
+        $this->setValue(null);
+    }
+
+    public function setValue($value, $data = null)
+    {
+        if (is_null($value)) {
+            $this->value = [];
+        } elseif (is_array($value)) {
+            $this->value = $value;
+        } elseif (is_string($value)) {
+            $value = trim($value);
+
+            if (!strlen($value)) {
+                $this->value = [];
+            } else {
+                $this->value = preg_split('/\s*,\s*/', $value);
+            }
+        } else {
+            $this->value = [$value];
+        }
+
+        return $this;
     }
 
     public function getSchemaDataDefaults()
@@ -107,7 +128,7 @@ class TreeMultiselectField extends TreeDropdownField
             sort($value);
             $data['value'] = $value;
         } else {
-            $data['value'] = 'unchanged';
+            $data['value'] = null;
         }
 
         return $data;
@@ -122,10 +143,10 @@ class TreeMultiselectField extends TreeDropdownField
         $items = new ArrayList();
 
         // If the value has been set, use that
-        if ($this->value != 'unchanged') {
+        if (count($this->Value())) {
             $sourceObject = $this->getSourceObject();
             if (is_array($sourceObject)) {
-                $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
+                $values = $this->Value();
 
                 foreach ($values as $value) {
                     $item = new stdClass;
@@ -137,19 +158,16 @@ class TreeMultiselectField extends TreeDropdownField
             }
 
             // Otherwise, look data up from the linked relation
-            if (is_string($this->value)) {
-                $ids = explode(',', $this->value);
-                foreach ($ids as $id) {
-                    if (!is_numeric($id)) {
-                        continue;
-                    }
-                    $item = DataObject::get_by_id($sourceObject, $id);
-                    if ($item) {
-                        $items->push($item);
-                    }
+            foreach ($this->Value() as $id) {
+                if (!is_numeric($id)) {
+                    continue;
                 }
-                return $items;
+                $item = DataObject::get_by_id($sourceObject, $id);
+                if ($item) {
+                    $items->push($item);
+                }
             }
+            return $items;
         }
 
         if ($this->form) {
@@ -221,7 +239,7 @@ class TreeMultiselectField extends TreeDropdownField
      */
     public function saveInto(DataObjectInterface $record)
     {
-        $items = [];
+        $items = $this->Value();
         $fieldName = $this->name;
         $saveDest = $record->$fieldName();
 
@@ -234,15 +252,6 @@ class TreeMultiselectField extends TreeDropdownField
             );
         }
 
-        // Detect whether this field has actually been updated
-        if ($this->value !== 'unchanged') {
-            if (is_array($this->value)) {
-                $items = $this->value;
-            } elseif ($this->value) {
-                $items = preg_split("/ *, */", trim($this->value));
-            }
-        }
-
         // Allows you to modify the items on your object before save
         $funcName = "onChange$fieldName";
         if ($record->hasMethod($funcName)) {
@@ -251,6 +260,7 @@ class TreeMultiselectField extends TreeDropdownField
                 return;
             }
         }
+
         $saveDest->setByIDList($items);
     }
 
@@ -266,36 +276,5 @@ class TreeMultiselectField extends TreeDropdownField
         $copy->setSourceObject($this->getSourceObject());
         $copy->setTitleField($this->getTitleField());
         return $copy;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @internal To be removed in 5.0
-     */
-    protected function objectForKey($key)
-    {
-        /**
-         * Fixes https://github.com/silverstripe/silverstripe-framework/issues/8332
-         *
-         * Due to historic reasons, the default (empty) value for this field is 'unchanged', even though
-         * the field is usually integer on the database side.
-         * MySQL handles that gracefully and returns an empty result in that case,
-         * whereas some other databases (e.g. PostgreSQL) do not support comparison
-         * of numeric types with string values, issuing a database error.
-         *
-         * This fix is not ideal, but supposed to keep backward compatibility for SS4.
-         *
-         * In 5.0 this method to be removed and NULL should be used instead of 'unchanged' (or an empty array.
-         *        to be decided).
-         * In 5.0 this class to be refactored so that $this->value is always an array of values (or null)
-         */
-        if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
-            $key = null;
-        } elseif (is_string($key)) {
-            $key = preg_split('/\s*,\s*/', trim($key));
-        }
-
-        return parent::objectForKey($key);
     }
 }
