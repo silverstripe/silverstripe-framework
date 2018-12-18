@@ -286,6 +286,9 @@ class Form extends ViewableData implements HasRequestHandler
     ) {
         parent::__construct();
 
+        $fields = $fields ? $fields : FieldList::create();
+        $actions = $actions ? $actions : FieldList::create();
+
         $fields->setForm($this);
         $actions->setForm($this);
 
@@ -484,11 +487,13 @@ class Form extends ViewableData implements HasRequestHandler
         // Set message on either a field or the parent form
         foreach ($result->getMessages() as $message) {
             $fieldName = $message['fieldName'];
+
             if ($fieldName) {
                 $owner = $this->fields->dataFieldByName($fieldName) ?: $this;
             } else {
                 $owner = $this;
             }
+
             $owner->setMessage($message['message'], $message['messageType'], $message['messageCast']);
         }
         return $this;
@@ -772,7 +777,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setFields($fields)
     {
+        $fields->setForm($this);
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -794,7 +801,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setActions($actions)
     {
+        $actions->setForm($this);
         $this->actions = $actions;
+
         return $this;
     }
 
@@ -1405,8 +1414,9 @@ class Form extends ViewableData implements HasRequestHandler
             $submitted = true;
         }
 
-        // dont include fields without data
+        // Don't include fields without data
         $dataFields = $this->Fields()->dataFields();
+
         if (!$dataFields) {
             return $this;
         }
