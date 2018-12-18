@@ -134,7 +134,7 @@ This also applies for any modules staying compatible with SilverStripe 2.x.
 
 ## Contact
 
-Translators have their own [mailinglist](https://groups.google.com/forum/#!forum/silverstripe-translators), but you can 
+Translators have their own [mailing list](https://groups.google.com/forum/#!forum/silverstripe-translators), but you can 
 also reach a core member on [IRC](https://irc.silverstripe.org). The transifex.com interface has a built-in discussion 
 board if you have specific comments on a translation.
 

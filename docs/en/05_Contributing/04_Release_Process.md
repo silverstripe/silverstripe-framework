@@ -136,7 +136,7 @@ timeline and ask the reporter to keep the issue confidential until we announce i
    Additionally, [CVE](http://cve.mitre.org) numbers are accepted.
 *  Halt all other development as long as is needed to develop a fix, including patches against the current and one
 previous major release (if applicable).
-* Pre-announce the upcoming security release to a private mailing list of important stakeholders (see below).
+* Pre-announce the upcoming security release to aprivate pre-announcement mailing list of important stakeholders (see below).
 *  We will inform you about resolution and [announce](https://forum.silverstripe.org/c/releases) a 
 [new release](http://silverstripe.org/security-releases/) publically.
 
