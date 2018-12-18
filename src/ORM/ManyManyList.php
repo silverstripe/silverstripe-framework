@@ -300,6 +300,20 @@ class ManyManyList extends RelationList
             $manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
             $manipulation[$this->joinTable]['fields'][$this->foreignKey] = $foreignID;
 
+            // Make sure none of our field assignments are arrays
+            foreach ($manipulation as $tableManipulation) {
+                if (!isset($tableManipulation['fields'])) {
+                    continue;
+                }
+                foreach ($tableManipulation['fields'] as $fieldValue) {
+                    if (is_array($fieldValue)) {
+                        throw new InvalidArgumentException(
+                            'ManyManyList::add: parameterised field assignments are disallowed'
+                        );
+                    }
+                }
+            }
+
             DB::manipulate($manipulation);
         }
     }
