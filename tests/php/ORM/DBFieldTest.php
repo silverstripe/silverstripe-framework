@@ -2,17 +2,32 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Assets\Image;
 use SilverStripe\ORM\FieldType\DBBigInt;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBCurrency;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBDecimal;
 use SilverStripe\ORM\FieldType\DBDouble;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBFloat;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
+use SilverStripe\ORM\FieldType\DBInt;
+use SilverStripe\ORM\FieldType\DBLocale;
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\FieldType\DBMultiEnum;
+use SilverStripe\ORM\FieldType\DBPercentage;
+use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\ORM\FieldType\DBTime;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBYear;
 
 /**
  * Tests for DBField objects.
@@ -187,6 +202,54 @@ class DBFieldTest extends SapphireTest
         $bigInt = DBBigInt::create();
         $bigInt->setValue(PHP_INT_MAX);
         $this->assertEquals(PHP_INT_MAX, $bigInt->getValue());
+    }
+
+    /**
+     * @dataProvider dataProviderPrepValueForDBArrayValue
+     */
+    public function testPrepValueForDBArrayValue($dbFieldName, $scalarValueOnly, $extraArgs = [])
+    {
+        $reflection = new \ReflectionClass($dbFieldName);
+        /**
+         * @var DBField
+         */
+        $dbField = $reflection->newInstanceArgs($extraArgs);
+        $dbField->setName('SomeField');
+        $payload = ['GREATEST(0,?)' => '2'];
+        $preparedValue = $dbField->prepValueForDB($payload);
+        $this->assertTrue(
+            !$scalarValueOnly || !is_array($preparedValue),
+            '`prepValueForDB` can not return an array if scalarValueOnly is true'
+        );
+        $this->assertEquals($scalarValueOnly, $dbField->scalarValueOnly());
+    }
+
+    public function dataProviderPrepValueForDBArrayValue()
+    {
+        return [
+            [DBBigInt::class, true],
+            [DBBoolean::class, true],
+            [DBCurrency::class, true],
+            [DBDate::class, true],
+            [DBDatetime::class, true],
+            [DBDecimal::class, true],
+            [DBDouble::class, true],
+            [DBEnum::class, true],
+            [DBFloat::class, true],
+            [DBForeignKey::class, true, ['SomeField']],
+            [DBHTMLText::class, true],
+            [DBHTMLVarchar::class, true],
+            [DBInt::class, true],
+            [DBLocale::class, true],
+            [DBMoney::class, false],
+            [DBMultiEnum::class, true, ['SomeField', ['One', 'Two', 'Three']]],
+            [DBPercentage::class, true],
+            [DBPolymorphicForeignKey::class, false, ['SomeField']],
+            [DBText::class, true],
+            [DBTime::class, true],
+            [DBVarchar::class, true],
+            [DBYear::class, true],
+        ];
     }
 
     public function testExists()
