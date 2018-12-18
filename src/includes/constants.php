@@ -203,9 +203,9 @@ if (!defined('TEMP_FOLDER')) {
 // Define the Ressource Dir constant that will be use to exposed vendor assets
 if (!defined('RESOURCES_DIR')) {
     $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
-    $resourceDir = $project->getResourcesDir() ?: 'resources';
-    if (preg_match('/^[_\-a-z0-9]+$/i', $resourceDir)) {
-        define('RESOURCES_DIR', $resourceDir);
+    $resourcesDir = $project->getResourcesDir() ?: 'resources';
+    if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir)) {
+        define('RESOURCES_DIR', $resourcesDir);
     } else {
         throw new LogicException(sprintf(
             'Resources dir error: "%s" is not a valid resources directory name. Update the ' .
