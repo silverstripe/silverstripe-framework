@@ -1307,6 +1307,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string $baseTable Base table
      * @param string $now Timestamp to use for the current time
      * @param bool $isNewRecord If this is a new record
+     * @throws InvalidArgumentException
      */
     protected function writeManipulation($baseTable, $now, $isNewRecord)
     {
@@ -1323,6 +1324,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // generated ID on to the rest of the manipulation
         if ($isNewRecord) {
             $manipulation[$baseTable]['command'] = 'update';
+        }
+
+        // Make sure none of our field assignment are arrays
+        foreach ($manipulation as $tableManipulation) {
+            if (!isset($tableManipulation['fields'])) {
+                continue;
+            }
+            foreach ($tableManipulation['fields'] as $fieldValue) {
+                if (is_array($fieldValue)) {
+                    throw new InvalidArgumentException(
+                        'DataObject::writeManipulation: parameterised field assignments are disallowed'
+                    );
+                }
+            }
         }
 
         // Perform the manipulation
@@ -2401,6 +2416,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // If this is a proper database field, we shouldn't be getting non-DBField objects
             if (is_object($val) && static::getSchema()->fieldSpec(static::class, $fieldName)) {
                 throw new InvalidArgumentException('DataObject::setField: passed an object that is not a DBField');
+            }
+
+            if (!empty($val) && !is_scalar($val)) {
+                $dbField = $this->dbObject($fieldName);
+                if ($dbField && $dbField->scalarValueOnly()) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'DataObject::setField: %s only accepts scalars',
+                            $fieldName
+                        )
+                    );
+                }
             }
 
             // if a field is not existing or has strictly changed
