@@ -129,10 +129,10 @@ class Module implements Serializable
     }
 
     /**
-     * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resourcesDir`
+     * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resources-dir`
      * key in the composer file. A blank string will will be returned if the key is undefined.
      *
-     * Only applicaple when reading the composer file for the main project.
+     * Only applicable when reading the composer file for the main project.
      * @return string
      */
     public function getResourcesDir()
