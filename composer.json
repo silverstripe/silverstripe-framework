@@ -67,8 +67,7 @@
             "client/images",
             "client/styles",
             "src/Dev/Install/client"
-        ],
-        "resources-dir": "_resources"
+        ]
     },
     "autoload": {
         "psr-4": {
