@@ -10,7 +10,9 @@ class Company extends DataObject implements TestOnly
     private static $table_name = 'DataObjectTest_Company';
 
     private static $db = [
-        'Name' => 'Varchar'
+        'Name' => 'Varchar',
+        'MarketValue' => 'Money',
+        'FoundationYear' => 'Year'
     ];
 
     private static $has_one = [
