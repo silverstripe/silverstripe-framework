@@ -179,7 +179,7 @@ Follow these instructions in sequence as much as possible:
  * Before release (or release candidate)
    * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
    * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
-   * Send out a note on the pre-announce list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
+   * Send out a note on the pre-announcement mailing list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
    * Link to silverstripe.org security release page in the changelog.
    * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
  * Perform release
@@ -189,20 +189,20 @@ Follow these instructions in sequence as much as possible:
    * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
    * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
 
-### Pre-announce Mailinglist
+### Pre-announcement mailing list
 
 In addition to our public disclosure process, we maintain a private mailinglist
-where upcoming security releases will be pre-announced. Members in this list will receive a security 
+where upcoming security releases are pre-announced. Members of this list will receive a security 
 pre-announcement as soon as it has been sufficiently researched,
-alongside a timeline for the upcoming release. This will happen a few days before 
+with a timeline for the upcoming release. This will happen a few days before 
 the announcement goes public alongside new release, and most likely before a patch has been developed.
 
-Since we’ll distribute sensitive info on unpatched vulnerabilities in this list,
+Since we’ll distribute sensitive information on unpatched vulnerabilities in this list,
 the selection criteria for joining naturally has to be strict.
 Applicants should provide references within the community,
-as well as a demonstrated need for this level of information (e.g. a large website with sensitive customer data).
+as well as a demonstrated need for this level of information (e.g. involvement with a large website with sensitive customer data).
 You don’t need to be a client of SilverStripe Ltd to get on board, 
-but we will need to perform some low-touch background checks to ensure identity.
+but we will need to perform some low-touch background checks to verify your identity.
 Please contact security@silverstripe.org for details.
 
 ## Quality Assurance and Testing
