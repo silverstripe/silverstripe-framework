@@ -286,8 +286,13 @@ class Form extends ViewableData implements HasRequestHandler
     ) {
         parent::__construct();
 
-        $fields->setForm($this);
-        $actions->setForm($this);
+        if ($fields) {
+            $fields->setForm($this);
+        }
+
+        if ($actions) {
+            $actions->setForm($this);
+        }
 
         $this->fields = $fields;
         $this->actions = $actions;
