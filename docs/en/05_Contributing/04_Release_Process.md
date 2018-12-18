@@ -191,19 +191,21 @@ Follow these instructions in sequence as much as possible:
 
 ### Pre-announcement mailing list
 
-In addition to our public disclosure process, we maintain a private mailinglist
-where upcoming security releases are pre-announced. Members of this list will receive a security 
-pre-announcement as soon as it has been sufficiently researched,
-with a timeline for the upcoming release. This will happen a few days before 
-the announcement goes public alongside new release, and most likely before a patch has been developed.
+In addition to our public disclosure process, we maintain a private mailing list where upcoming security releases
+are pre-announced. Members of this list will receive a security pre-announcement, as soon as it has been
+sufficiently researched, with a timeline for the upcoming release. 
+This will happen a few days before the announcement goes public alongside a new release, 
+and most likely before a patch has been developed.
 
-Since we’ll distribute sensitive information on unpatched vulnerabilities in this list,
-the selection criteria for joining naturally has to be strict.
-Applicants should provide references within the community,
-as well as a demonstrated need for this level of information (e.g. involvement with a large website with sensitive customer data).
+Since we’ll distribute sensitive information on unpatched vulnerabilities in this list, 
+the selection criteria for joining naturally has to be strict. 
+Applicants should provide references within the community, 
+as well as a demonstrated need for this level of information 
+(e.g. involvement with a large website with sensitive customer data). 
 You don’t need to be a client of SilverStripe Ltd to get on board, 
-but we will need to perform some low-touch background checks to verify your identity.
+but we will need to perform some low-touch background checks to verify your identity. 
 Please contact security@silverstripe.org for details.
+
 
 ## Quality Assurance and Testing
 
