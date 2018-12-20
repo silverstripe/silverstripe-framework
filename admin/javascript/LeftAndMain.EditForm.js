@@ -99,27 +99,54 @@
 			},
 			'from .cms-tabset': {
 				onafterredrawtabs: function () {
-					// Show validation errors if necessary
-					if(this.hasClass('validationerror')) {
-						// Ensure the first validation error is visible
-						var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
-						$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
+					// Show validation errors if necessary (and if not already done).
+					if(this.hasClass('validationerror') && !this.getValidationErrorShown()) {
+						this.setValidationErrorShown(true);
+						var $allErrors = this.find('.message.validation, .message.required');
 
-						// Attempt #1: Look for nearest .ss-tabset (usually nested deeper underneath a .cms-tabset).
-						var $tabSet = tabError.closest('.ss-tabset');
+						// Clear tab state to avoid any override later on (e.g. form submission re-selects last visible tab).
+						$('.cms-container').clearCurrentTabState();
 
-						// Attempt #2: Next level in tab-ception, try to select the tab within this higher level .cms-tabset if possible
-						if (!$tabSet.length) {
-							$tabSet = tabError.closest('.cms-tabset');
-						}
+						// Push to end of stack now. Allows time for the tabs to initialize so we can use CSS to select panels.
+						setTimeout(function() {
 
-						if ($tabSet.length) {
-							$tabSet.tabs('option', 'active', tabError.index('.tab'));
-						} else if (!this.getValidationErrorShown()) {
-							// Ensure that this error message popup won't be added more than once
-							this.setValidationErrorShown(true);
-							errorMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'));
-						}
+							// Build an array of each tab element that contains an error (using element so we can easily de-duplicate).
+							var tabs = [];
+							$allErrors.each(function() {
+								var tab = $(this).closest('.ui-tabs-panel')[0];
+								if (tabs.indexOf(tab) === -1) tabs.push(tab);
+							});
+
+							// Display error pop-up but ONLY if there are at least two errors that aren't on the same tab. This
+							// allows the user to recognize that there are multiple errors in other places than the one we
+							// are initially focusing on.
+							if (tabs.length > 1) {
+								$allErrors.each(function() {
+									errorMessage('<strong>' + ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error') + ':</strong><br><br>' + $(this).text());
+								});
+							}
+
+							// Ensure the first validation error is visible. To do so, we'll recursively select tabs starting
+							// from the inside out until there are no more parent tab sets to toggle.
+
+							// Iterate up the DOM for each tab, selecting each tab IN REVERSE so that deeper tabs will
+							// be more immediately visible as the user searches for the error :)
+							tabs = tabs.reverse();
+							for(var i = 0; i < tabs.length; i++) {
+								var tabEl = tabs[i];
+								var $panel = $(tabEl);
+								var $tabSet = $panel.closest('.ss-tabset, .cms-tabset').first();
+
+								while($tabSet.length > 0) {
+									var panelIndex = $panel.prevAll('.ui-tabs-panel').length;
+									$tabSet.tabs('option', 'active', panelIndex);
+
+									// Bubble up the DOM, starting at parent to current tab set.
+									$panel = $tabSet.closest('.ui-tabs-panel');
+									$tabSet = $tabSet.parent().closest('.ss-tabset, .cms-tabset').first();
+								}
+							}
+						}, 0);
 					}
 				}
 			},
