@@ -482,29 +482,29 @@ class FieldListTest extends SapphireTest
         );
 
         $this->assertEquals(
-            $tabSetWithTitle->Title(),
             'My TabSet Title',
-            'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
+            $tabSetWithTitle->Title(),
+            'Existing field title should be used'
         );
 
         $tabWithoutTitle = $set->findOrMakeTab('Root.TabWithoutTitle');
         $this->assertEquals(
+            'Tab without title',
             $tabWithoutTitle->Title(),
-            'Tab Without Title',
             'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
         );
 
         $tabWithTitle = $set->findOrMakeTab('Root.TabWithTitle', 'My Tab with Title');
         $this->assertEquals(
-            $tabWithTitle->Title(),
             'My Tab with Title',
+            $tabWithTitle->Title(),
             'Setting of simple tab titles through findOrMakeTab()'
         );
 
         $childTabWithTitle = $set->findOrMakeTab('Root.TabSetWithoutTitle.NewChildTab', 'My Child Tab Title');
         $this->assertEquals(
-            $childTabWithTitle->Title(),
             'My Child Tab Title',
+            $childTabWithTitle->Title(),
             'Setting of nested tab titles through findOrMakeTab() works on last child tab'
         );
     }
