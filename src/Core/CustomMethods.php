@@ -279,7 +279,9 @@ trait CustomMethods
         $methods = $this->findMethodsFromExtension($extension);
         if ($methods) {
             foreach ($methods as $method) {
-                if (!isset(self::$extra_methods[$class][$method])) continue;
+                if (!isset(self::$extra_methods[$class][$method])) {
+                    continue;
+                }
                     
                 $methodInfo = self::$extra_methods[$class][$method];
 
