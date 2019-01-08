@@ -908,12 +908,14 @@ abstract class SS_Object {
 		$methods = $this->findMethodsFromExtension($extension);
 		if ($methods) {
 			foreach ($methods as $method) {
-				if (isset(self::$extra_methods[$this->class][$method])) {
-					$methodInfo = self::$extra_methods[$this->class][$method];
+				if (!isset(self::$extra_methods[$this->class][$method])) {
+					continue;
+				}
+				
+				$methodInfo = self::$extra_methods[$this->class][$method];
 
-					if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
-						unset(self::$extra_methods[$this->class][$method]);
-					}
+				if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
+					unset(self::$extra_methods[$this->class][$method]);
 				}
 			}
 
