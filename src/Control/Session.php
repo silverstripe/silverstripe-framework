@@ -17,7 +17,8 @@ use SilverStripe\Dev\Deprecation;
  *
  * <b>Saving Data</b>
  *
- * Once you've retrieved a session instance, you can write a value to a users session using the function {@link Session::set()}.
+ * Once you've retrieved a session instance, you can write a value to a users session using the function
+ * {@link Session::set()}.
  *
  * <code>
  *  $request->getSession()->set('MyValue', 6);
