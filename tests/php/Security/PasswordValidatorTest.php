@@ -18,10 +18,10 @@ class PasswordValidatorTest extends SapphireTest
     {
         parent::setUp();
 
-        // Unset framework default values
         PasswordValidator::config()
             ->remove('min_length')
-            ->remove('historic_count');
+            ->remove('historic_count')
+            ->set('min_test_score', 0);
     }
 
     public function testValidate()

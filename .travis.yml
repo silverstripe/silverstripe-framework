@@ -47,18 +47,10 @@ matrix:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
 
-    - php: 7.3.0RC1
+    - php: 7.3
       env:
         - DB=MYSQL
         - PHPUNIT_TEST=framework
-      sudo: required
-      dist: xenial
-      addons:
-        apt:
-          packages:
-            - libzip4
-      services:
-       - mysql
 
 before_script:
 # Extra $PATH

@@ -76,7 +76,6 @@ fi:
     LinkExisting: 'Linkitä olemassaoleva'
     NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
-    OpenFilter: 'Avaa haku ja suodatus'
     PRINTEDAT: Tulostettu
     PRINTEDBY: Tulostaja
     PlaceHolder: 'Etsi {type}'
@@ -96,19 +95,12 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Muokkaa
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Haku "{name}"'
-    SearchFormFaliure: 'Hakulomaketta ei pystytty luomaan.'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Et voi siirtää itseäsi pois tästä ryhmästä: menettäisit pääkäyttäjän oikeudet'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: /
     Page: Sivu
     View: Näytä
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Avaa
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -155,8 +147,6 @@ fi:
       other: '{count} vuotta'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Yhtään
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Liian monta samaan liittyvää objektia: oletuskenttä käytössä'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Liian monta lapsiobjektia ({count}}'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -330,5 +320,3 @@ fi:
     LOSTPASSWORDHEADER: 'Unohtunut salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
-    PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'

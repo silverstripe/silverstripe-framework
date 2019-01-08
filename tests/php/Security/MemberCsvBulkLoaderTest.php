@@ -6,12 +6,22 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\SapphireTest;
 
 class MemberCsvBulkLoaderTest extends SapphireTest
 {
     protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
+    }
 
     public function testNewImport()
     {
