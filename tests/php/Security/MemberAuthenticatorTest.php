@@ -17,6 +17,7 @@ use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 
 /**
@@ -43,6 +44,10 @@ class MemberAuthenticatorTest extends SapphireTest
             $this->defaultPassword = null;
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
+
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
     }
 
     protected function tearDown()

@@ -402,4 +402,31 @@ class FormFieldTest extends SapphireTest
         $field = new FormField('Test');
         $field->Link('bar');
     }
+
+    /**
+     * @param string $name
+     * @param string $expected
+     * @dataProvider nameToLabelProvider
+     */
+    public function testNameToLabel($name, $expected)
+    {
+        $this->assertSame($expected, FormField::name_to_label($name));
+    }
+
+    /**
+     * @return array[]
+     */
+    public function nameToLabelProvider()
+    {
+        return [
+            ['TotalAmount', 'Total amount'],
+            ['Organisation.ZipCode', 'Organisation zip code'],
+            ['Organisation.zipCode', 'Organisation zip code'],
+            ['FooBarBaz', 'Foo bar baz'],
+            ['URLSegment', 'URL segment'],
+            ['ONLYCAPS', 'ONLYCAPS'],
+            ['onlylower', 'Onlylower'],
+            ['SpecialURL', 'Special URL'],
+        ];
+    }
 }

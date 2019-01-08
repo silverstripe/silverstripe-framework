@@ -57,6 +57,5 @@ read our guide on [how to write secure code](/developer_guides/security/secure_c
 
 ## Sharing your Opinion
 
-* [silverstripe.org/forums](http://www.silverstripe.org/community/forums/): Forums on silverstripe.org
-* [silverstripe-dev](http://groups.google.com/group/silverstripe-dev/): Core development mailinglist
+* [forum.silverstripe.org](http://forum.silverstripe.org): Forums on silverstripe.org
 * [All issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)

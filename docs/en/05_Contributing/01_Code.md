@@ -93,7 +93,7 @@ Once your pull request is issued, it's not the end of the road. A [core committe
 If you've been naughty and not adhered to the [coding conventions](coding_conventions), 
 expect a few requests to make changes so your code is in-line.
 
-If your change is particularly significant, it may be referred to the [mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev) for further community discussion.
+If your change is particularly significant, it may be referred to the [forum](https://forum.silverstripe.org) for further community discussion.
 
 A core committer will also "label" your PR using the labels defined in GitHub, these are to correctly classify and help find your work at a later date.
 
@@ -165,7 +165,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 [API documentation](https://api.silverstripe.org/) for good examples.
 * Check and update documentation on [docs.silverstripe.org](https://docs.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * When introducing something "noteworthy" (new feature, API change), [update the release changelog](/changelogs) for the next release this commit will be included in.
-* If you get stuck, please post to the [forum](https://www.silverstripe.org/community/forums) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+* If you get stuck, please post to the [forum](https://www.silverstripe.org/community/forums)
 * When working with the CMS, please read the ["CMS Architecture Guide"](/developer_guides/customising_the_admin_interface/cms_architecture) first
 
 ## Commit Messages

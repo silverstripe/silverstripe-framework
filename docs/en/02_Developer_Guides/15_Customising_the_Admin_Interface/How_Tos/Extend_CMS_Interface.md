@@ -24,10 +24,10 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_Menu.ss`
+Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`
 from the `silverstripe/admin` module
-into `app/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
-the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
+into `app/templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`. It will automatically be picked up by
+the CMS logic. Add a new section into the `<ul class="cms-menu__list">`	
 
 
 ```ss
@@ -69,26 +69,42 @@ SilverStripe\Admin\LeftAndMain:
     - app/css/BookmarkedPages.css
 ```
 
+In order to let the frontend have the access to our `css` files, we need to `expose` them in the `composer.json`:
+
+```javascript
+    "extra": {
+        ...
+        "expose": [
+            "app/css"
+        ]
+    },
+```
+
+Then run `composer vendor-expose`. This command will publish all the `css` files under the `app/css` folder to their public-facing paths.
+
+> Note: don't forget to `flush`.
+
 ## Create a "bookmark" flag on pages
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in
 the database. For this we need to decorate the page record with a
-`DataExtension`. Create a new file called `app/code/BookmarkedPageExtension.php`
+`DataExtension`. Create a new file called `app/src/BookmarkedPageExtension.php`
 and insert the following code.
 
 
 ```php
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 
-class BookmarkedPageExtension extends DataExtension 
+class BookmarkedPageExtension extends DataExtension
 {
 
     private static $db = [
         'IsBookmarked' => 'Boolean'
     ];
 
-    public function updateCMSFields(FieldList $fields) 
+    public function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldToTab('Root.Main',
             new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
@@ -117,7 +133,7 @@ pages from the database into the template we've already created (with hardcoded
 links)? Again, we extend a core class: The main CMS controller called
 `LeftAndMain`.
 
-Add the following code to a new file `app/code/BookmarkedLeftAndMainExtension.php`;
+Add the following code to a new file `app/src/BookmarkedLeftAndMainExtension.php`;
 
 
 ```php
@@ -143,12 +159,12 @@ SilverStripe\Admin\LeftAndMain:
 ```
 
 As the last step, replace the hardcoded links with our list from the database.
-Find the `<ul>` you created earlier in `app/admin/templates/LeftAndMain.ss`
+Find the `<ul>` you created earlier in `app/templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`
 and replace it with the following:
 
 
 ```ss
-<ul class="cms-menu-list">
+<ul class="cms-menu__list">
     <!-- ... -->
     <% loop $BookmarkedPages %>
     <li class="bookmarked-link $FirstLast">
@@ -168,7 +184,7 @@ The following conventions apply:
 
 * New actions can be added by redefining `getCMSActions`, or adding an extension
 with `updateCMSActions`.
-* It is required the actions are contained in a `FieldSet` (`getCMSActions`
+* It is required the actions are contained in a `FieldList` (`getCMSActions`
 returns this already).
 * Standalone buttons are created by adding a top-level `FormAction` (no such
 button is added by default).

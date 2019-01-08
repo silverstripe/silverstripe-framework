@@ -67,7 +67,7 @@ check our [community help options](https://www.silverstripe.org/community/).
 
 ## Related Lessons
 * [Up and running](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
-* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [Creating your first project](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-project)
 * [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
 * [Working with multiple templates](https://www.silverstripe.org/learn/lessons/v4/working-with-multiple-templates-1)
 

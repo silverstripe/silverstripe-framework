@@ -9,46 +9,43 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Handles all manipulation of the session.
  *
- * The static methods are used to manipulate the currently active controller's session.
- * The instance methods are used to manipulate a particular session.  There can be more than one of these created.
+ * An instance of a `Session` object can be retrieved via an `HTTPRequest` by calling the `getSession()` method.
  *
  * In order to support things like testing, the session is associated with a particular Controller.  In normal usage,
  * this is loaded from and saved to the regular PHP session, but for things like static-page-generation and
  * unit-testing, you can create multiple Controllers, each with their own session.
  *
- * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session
- * data.
- *
  * <b>Saving Data</b>
  *
- * You can write a value to a users session from your PHP code using the static function {@link Session::set()}. You
- * can add this line in any function or file you wish to save the value.
+ * Once you've retrieved a session instance, you can write a value to a users session using the function {@link Session::set()}.
  *
  * <code>
- *  Session::set('MyValue', 6);
+ *  $request->getSession()->set('MyValue', 6);
  * </code>
  *
  * Saves the value of "6" to the MyValue session data. You can also save arrays or serialized objects in session (but
  * note there may be size restrictions as to how much you can save)
  *
  * <code>
+ *
+ *  $session = $request->getSession();
+ *
  *  // save a variable
  *  $var = 1;
- *  Session::set('MyVar', $var);
+ *  $session->set('MyVar', $var);
  *
  *  // saves an array
- *  Session::set('MyArrayOfValues', array('1', '2', '3'));
+ *  $session->set('MyArrayOfValues', array('1', '2', '3'));
  *
  *  // saves an object (you'll have to unserialize it back)
  *  $object = new Object();
  *
- *  Session::set('MyObject', serialize($object));
+ *  $session->set('MyObject', serialize($object));
  * </code>
  *
  * <b>Accessing Data</b>
  *
  * Once you have saved a value to the Session you can access it by using the {@link Session::get()} function.
- * Like the {@link Session::set()} function you can use this anywhere in your PHP files.
  * Note that session data isn't persisted in PHP's own session store (via $_SESSION)
  * until {@link Session::save()} is called, which happens automatically at the end of a standard request
  * through {@link SilverStripe\Control\Middleware\SessionMiddleware}.
@@ -57,17 +54,18 @@ use SilverStripe\Dev\Deprecation;
  *
  * <code>
  * public function bar() {
- *  $value = Session::get('MyValue'); // $value = 6
- *  $var   = Session::get('MyVar'); // $var = 1
- *  $array = Session::get('MyArrayOfValues'); // $array = array(1,2,3)
- *  $object = Session::get('MyObject', unserialize($object)); // $object = Object()
+ *  $session = $this->getRequest()->getSession();
+ *  $value = $session->get('MyValue'); // $value = 6
+ *  $var   = $session->get('MyVar'); // $var = 1
+ *  $array = $session->get('MyArrayOfValues'); // $array = array(1,2,3)
+ *  $object = $session->get('MyObject', unserialize($object)); // $object = Object()
  * }
  * </code>
  *
  * You can also get all the values in the session at once. This is useful for debugging.
  *
  * <code>
- * Session::get_all(); // returns an array of all the session values.
+ * $session->getAll(); // returns an array of all the session values.
  * </code>
  *
  * <b>Clearing Data</b>
@@ -76,17 +74,18 @@ use SilverStripe\Dev\Deprecation;
  * to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
  *
  * <code>
- * Session::clear('MyValue'); // MyValue is no longer 6.
+ * $session->clear('MyValue'); // MyValue is no longer 6.
  * </code>
  *
  * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
- * including form and page comment information. None of this is vital but clear_all will clear everything.
+ * including form and page comment information. None of this is vital but `clearAll()` will clear everything.
  *
  * <code>
- *  Session::clear_all();
+ *  $session->clearAll();
  * </code>
  *
  * @see Cookie
+ * @see HTTPRequest
  */
 class Session
 {
@@ -300,55 +299,46 @@ class Session
 
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
-        if (!session_id() && (!headers_sent() || !empty($_COOKIE[ini_get('session.name')]))) {
+        $data = [];
+        if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
             if (!headers_sent()) {
-                session_set_cookie_params($timeout, $path, $domain ?: null, $secure, true);
+                session_set_cookie_params($timeout ?: 0, $path, $domain ?: null, $secure, true);
 
                 $limiter = $this->config()->get('sessionCacheLimiter');
                 if (isset($limiter)) {
                     session_cache_limiter($limiter);
                 }
 
-            // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
+                // Allow storing the session in a non standard location
+                if ($session_path) {
+                    session_save_path($session_path);
+                }
+
+                // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
+                // separate (less secure) session for non-HTTPS requests
+                // if headers_sent() is true then it's best to throw the resulting error rather than risk
+                // a security hole.
+                if ($secure) {
+                    session_name($this->config()->get('cookie_name_secure'));
+                }
+
+                session_start();
             } else {
+                // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
                 session_cache_limiter(null);
             }
-
-            // Allow storing the session in a non standard location
-            if ($session_path) {
-                session_save_path($session_path);
-            }
-
-            // If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
-            // seperate (less secure) session for non-HTTPS requests. Note that if this causes problems
-            // if headers_sent() is true then it's best to throw the resulting error rather than risk
-            // a security hole.
-            if ($secure) {
-                session_name($this->config()->get('cookie_name_secure'));
-            }
-
-            session_start();
 
             if (isset($_SESSION)) {
                 // Initialise data from session store if present
                 $data = $_SESSION;
+
                 // Merge in existing in-memory data, taking priority over session store data
                 $this->recursivelyApply((array)$this->data, $data);
-            } else {
-                // Use in-memory data if the session is lazy started
-                $data = $this->data;
             }
-            $this->data = $data ?: [];
-        } else {
-            $this->data = [];
         }
 
-        // Modify the timeout behaviour so it's the *inactive* time before the session expires.
-        // By default it's the total session lifetime
-        if ($timeout && !headers_sent()) {
-            Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
-                : null, $secure, true);
-        }
+        // Save any modified session data back to the session store if present, otherwise initialise it to an array.
+        $this->data = $data;
 
         $this->started = true;
     }
@@ -438,7 +428,7 @@ class Session
         }
 
         $var[] = $val;
-        $diffVar[sizeof($var)-1] = $val;
+        $diffVar[sizeof($var) - 1] = $val;
     }
 
     /**

@@ -19,7 +19,7 @@ and [installation from source](https://doc.silverstripe.org/framework/en/install
 ## Bugtracker ##
 
 Bugs are tracked on [github.com](https://github.com/silverstripe/silverstripe-framework/issues). 
-Please read our [issue reporting guidelines](https://doc.silverstripe.org/framework/en/misc/contributing/issues).
+Please read our [issue reporting guidelines](https://docs.silverstripe.org/en/4/contributing/issues_and_bugs/).
 
 ## Development and Contribution ##
 

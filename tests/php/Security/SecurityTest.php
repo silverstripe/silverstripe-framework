@@ -21,6 +21,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 
@@ -55,6 +56,13 @@ class SecurityTest extends FunctionalTest
          * @skipUpgrade
          */
         Member::config()->set('unique_identifier_field', 'Email');
+
+        PasswordValidator::config()
+            ->remove('min_length')
+            ->remove('historic_count')
+            ->remove('min_test_score');
+
+        Member::set_password_validator(null);
 
         parent::setUp();
 
@@ -393,7 +401,7 @@ class SecurityTest extends FunctionalTest
 
         // Test external redirection on ChangePasswordForm
         $this->get('Security/changepassword?BackURL=http://myspoofedhost.com');
-        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');
         $this->assertNotRegExp(
             '/^' . preg_quote('http://myspoofedhost.com', '/') . '/',
             (string)$changedResponse->getHeader('Location'),
@@ -440,7 +448,7 @@ class SecurityTest extends FunctionalTest
 
         // Make sure it redirects correctly after the password has been changed
         $this->mainSession->followRedirection();
-        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');
         $this->assertEquals(302, $changedResponse->getStatusCode());
         $this->assertEquals(
             Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
@@ -454,7 +462,7 @@ class SecurityTest extends FunctionalTest
 
         // Change the password
         $this->get('Security/changepassword?BackURL=test/back');
-        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+        $changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');
         $this->assertEquals(302, $changedResponse->getStatusCode());
         $this->assertEquals(
             Controller::join_links(Director::absoluteBaseURL(), 'test/back'),
@@ -464,7 +472,7 @@ class SecurityTest extends FunctionalTest
 
         // Check if we can login with the new password
         $this->logOut();
-        $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
+        $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword#123');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals(
             Controller::join_links(Director::absoluteBaseURL(), 'test/link'),
@@ -506,12 +514,12 @@ class SecurityTest extends FunctionalTest
 
         // Follow redirection to form without hash in GET parameter
         $this->get('Security/changepassword');
-        $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+        $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
         // Check if we can login with the new password
         $this->logOut();
-        $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword');
+        $goodResponse = $this->doTestLoginForm('testuser@example.com', 'changedPassword#123');
         $this->assertEquals(302, $goodResponse->getStatusCode());
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 

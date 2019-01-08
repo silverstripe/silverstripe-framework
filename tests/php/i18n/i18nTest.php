@@ -102,7 +102,7 @@ class i18nTest extends SapphireTest
             $obj->fieldLabel('MyProperty')
         );
         $this->assertEquals(
-            'My Untranslated Property',
+            'My untranslated property',
             $obj->fieldLabel('MyUntranslatedProperty')
         );
     }
