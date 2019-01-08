@@ -344,13 +344,11 @@ will need to be regularly updated.
   you can run the [CoreReleaseUpdateTask](http://www.silverstripe.org/dev/tasks/CoreReleaseUpdateTask)
   to synchronise with packagist.
 * Ensure that [docs.silverstripe.org](http://docs.silverstripe.org) has the
-  updated documentation by running the build task in the root folder. If
-  you do not have ssh access to this server, then contact a SilverStripe staff member
-  to update this for you. Make sure that the download link below links to the
-  correct changelog page. E.g.
-  [https://docs.silverstripe.org/en/3.2/changelogs/3.2.1/](https://docs.silverstripe.org/en/3.2/changelogs/3.2.1/)
-* Post a release announcement on the [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce)
-  google group.
+  updated documentation and the changelog link in your announcement works.
+* Announce the release on the ["Releases" forum](https://forum.silverstripe.org/c/releases).
+  Needs to happen on every minor release for previous releases, see [supported versions](https://docs.silverstripe.org/en/4/contributing/release_process/#supported-versions)
+* Announce any new EOLs for minor versions on the ["Releases" forum](https://forum.silverstripe.org/c/releases).
+* Update the [roadmap](https://www.silverstripe.org/roadmap) with new dates for EOL versions ([CMS edit link](https://www.silverstripe.org/admin/pages/edit/EditForm/3103/field/TableComponentItems/item/670/edit))
 * Update the [Slack](https://www.silverstripe.org/community/slack-signup/) topic to include the new release version.
 * For major or minor releases: Work with SilverStripe marketing to get a blog post out.
   They might choose to announce the release on social media as well. 
