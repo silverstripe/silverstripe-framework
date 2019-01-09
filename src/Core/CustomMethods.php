@@ -282,10 +282,15 @@ trait CustomMethods
                 if (!isset(self::$extra_methods[$class][$method])) {
                     continue;
                 }
-                    
+
                 $methodInfo = self::$extra_methods[$class][$method];
 
-                if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
+                if (
+                    // always check for property
+                    (isset($methodInfo['property']) && $methodInfo['property'] === $property) &&
+                    // check for index only if provided (otherwise assume true)
+                    (($index && isset($methodInfo['index']) && $methodInfo['index'] === $index) || true)
+                ) {
                     unset(self::$extra_methods[$class][$method]);
                 }
             }
