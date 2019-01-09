@@ -13,7 +13,7 @@ The `Requirements` class can work with arbitrary file paths.
 
 ## Exposing static assets
 
-Before requiring a static assets file in PHP code or in a template, those assets need to be "exposed". This process allows SilverStripe projects and SilverStripe modules to make static asset files available via the web server without directly exposing PHP files.
+Before requiring static asset files in PHP code or in a template, those assets need to be "exposed". This process allows SilverStripe projects and SilverStripe modules to make static asset files available via the web server from locations that would otherwise be blocked from web server access, such as the `vendor` folder.
 
 ### Configuring your project "exposed" folders
 
@@ -21,7 +21,7 @@ Exposed assets are made available in your web root in a dedicated "resources" di
 
 Each folder that needs to be exposed must be entered under the `extra.expose` key in your `composer.json` file. Module developers should use a path relative to the root of their module (don't include the "vendor/package-developer/package-name" path).
 
-This is a sample `composer.json` configured to expose some assets.
+This is a sample SilverStripe project `composer.json` file configured to expose some assets.
 
 ```json
 {
@@ -46,20 +46,21 @@ SilverStripe projects should not track the "resources" directory in their source
 
 ### Exposing assets in the web root
 
-SilverStripe projects ship with `silverstripe/vendor-plugin`. This composer plugin automatically tries to expose assets of modules after installation or after an update.
+SilverStripe projects ship with `silverstripe/vendor-plugin`. This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
 
 Developers can explicitly expose static assets by calling `composer vendor-expose`. This is necessary after updating your `resources-dir` or `expose` configuration in your `composer.json` file.
 
 `composer vendor-expose` accepts an optional `method` argument (e.g.: `composer vendor-expose auto`). This controls how the files are exposed in the "resources" directory:
-* `none` disables all symlink / copy,
-* `copy` copy the exposed files,
-* `symlink` create symlinks to the exposed folder,
-* `junction` uses a junction (windows only),
-* `auto` performs symlink (or junction on windows), but fail over to copy.
+* `none` disables all symlink / copy
+* `copy` copies the exposed files
+* `symlink` create symbolic links to the exposed folder
+* `junction` uses a junction (Windows only)
+* `auto` creates symbolic links (or junctions on Windows), but fails over to copy.
 
 ### Referencing exposed assets
 
-When referencing exposed assets, you should not use their web server path. e.g.:
+When referencing exposed static assets, use either the project file path (relative to the project root folder) or a module name and relative file path to that module's root folder. E.g.:
+
 ```php
 // When referencing project files, use the same path defined in your `composer.json` file.
 Requirements::javascript('app/client/dist/bundle.js');
