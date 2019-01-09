@@ -1022,14 +1022,14 @@ If you are using a modified `index.php`, `.htaccess`, or `web.config`, you will 
   * `assets`
   * Any `favicon` files
   * Other common files that should be accssible in your project webroot (example: `robots.txt`)
-* Delete the root `resources` directory if present.
+* Delete the root `resources` or `_resources` directories if present.
 * Run the following command `composer vendor-expose` to make static assets files accessible via the `public` directory.
 
 If you are upgrading from SilverStripe 4.0 to SilverStripe 4.1 (or above), you'll need to update `index.php` before moving it to the public folder. You can get a copy of the generic `index.php` file from `vendor/silverstripe/recipe-core/public`. If you've made modifications to your `index.php` file, you'll need to replicate those into the new `public/index.php` file.
 
 ### Finalising the web root migration
 You'll need to update your server configuration to point to the public directory rather than the root of your project.
-Update your `.gitignore` file so `assets` and `resources` are still ignored when located under the `public` folder.
+Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre SilverStripe 4.4 release) are still ignored when located under the `public` folder.
 Your project should still be functional, although you may now be missing some static assets.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.

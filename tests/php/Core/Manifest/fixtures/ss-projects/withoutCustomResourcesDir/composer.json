@@ -1,0 +1,28 @@
+{
+    "name": "silverstripe/ss44",
+    "type": "silverstripe-project",
+    "description": "Fake project using SS 4.4",
+    "homepage": "https://www.silverstripe.org",
+    "license": "BSD-3-Clause",
+    "require": {
+        "silverstripe/recipe-cms": "4.4.x-dev as 4.4.0"
+    },
+    "extra": {
+        "project-files-installed": [
+            "app/.htaccess",
+            "app/_config.php",
+            "app/_config/mysite.yml",
+            "app/src/Page.php",
+            "app/src/PageController.php"
+        ],
+        "public-files-installed": [
+            ".htaccess",
+            "index.php",
+            "install-frameworkmissing.html",
+            "install.php",
+            "web.config"
+        ]
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}
