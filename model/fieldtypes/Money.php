@@ -306,4 +306,10 @@ class Money extends DBField implements CompositeDBField {
 	public function __toString() {
 		return (string)$this->getAmount();
 	}
+
+    public function scalarValueOnly()
+    {
+        return false;
+    }
+
 }

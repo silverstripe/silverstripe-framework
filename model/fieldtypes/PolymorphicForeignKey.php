@@ -190,4 +190,9 @@ class PolymorphicForeignKey extends ForeignKey implements CompositeDBField {
 	public function exists() {
 		return $this->getClassValue() && $this->getIDValue();
 	}
+
+    public function scalarValueOnly()
+    {
+        return false;
+    }
 }
