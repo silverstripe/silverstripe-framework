@@ -167,6 +167,53 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals(PHP_INT_MAX, $bigInt->getValue());
 	}
 
+    /**
+     * @dataProvider dataProviderPrepValueForDBArrayValue
+     */
+    public function testPrepValueForDBArrayValue($dbFieldName, $scalarValueOnly, $extraArgs = array())
+    {
+        $reflection = new ReflectionClass($dbFieldName);
+        /** @var DBField $dbField  */
+        $dbField = $reflection->newInstanceArgs($extraArgs);
+        $dbField->setName('SomeField');
+        $payload = array('GREATEST(0,?)' => '2');
+        $preparedValue = $dbField->prepValueForDB($payload);
+        $this->assertTrue(
+            !$scalarValueOnly || !is_array($preparedValue),
+            '`prepValueForDB` can not return an array if scalarValueOnly is true'
+        );
+        $this->assertEquals($scalarValueOnly, $dbField->scalarValueOnly());
+    }
+
+    public function dataProviderPrepValueForDBArrayValue()
+    {
+        return array(
+            array('BigInt', true),
+            array('Boolean', true),
+            array('Currency', true),
+            array('Date', true),
+            array('SS_Datetime', true),
+            array('DBLocale', true),
+            array('Decimal', true),
+            array('Double', true),
+            array('Enum', true),
+            array('Float', true),
+            array('ForeignKey', true, array('SomeField')),
+            array('HTMLText', true),
+            array('HTMLVarchar', true),
+            array('Int', true),
+            array('Money', false),
+            array('MultiEnum', true, array('SomeField', array('One', 'Two', 'Three'))),
+            array('Percentage', true),
+            array('PolymorphicForeignKey', false, array('SomeField')),
+            array('PrimaryKey', true, array('SomeField', singleton('Image'))),
+            array('Text', true),
+            array('Time', true),
+            array('Varchar', true),
+            array('Year', true),
+        );
+    }
+
 	public function testExists() {
 		$varcharField = new Varchar("testfield");
 		$this->assertTrue($varcharField->getNullifyEmpty());

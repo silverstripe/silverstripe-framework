@@ -1357,6 +1357,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$manipulation[$baseTable]['command'] = 'update';
 		}
 
+		// Make sure none of our field assignment are arrays
+		foreach ($manipulation as $tableManipulation) {
+			if (!isset($tableManipulation['fields'])) {
+				continue;
+			}
+			foreach ($tableManipulation['fields'] as $fieldValue) {
+				if (is_array($fieldValue)) {
+					user_error(
+						'DataObject::writeManipulation: parameterised field assignments are disallowed',
+						E_USER_ERROR
+					);
+				}
+			}
+		}
+
 		// Perform the manipulation
 		DB::manipulate($manipulation);
 	}
@@ -2662,6 +2677,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(is_object($val) && $this->db($fieldName)) {
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
+
+			$dbField = $this->dbObject($fieldName);
+			if ($dbField && $dbField->scalarValueOnly() && !empty($val) && !is_scalar($val)){
+			    $val = null;
+                user_error(
+                    sprintf(
+                        'DataObject::setField: %s only accepts scalars',
+                        $fieldName
+                    ),
+                    E_USER_WARNING
+                );
+            }
 
 			// if a field is not existing or has strictly changed
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
