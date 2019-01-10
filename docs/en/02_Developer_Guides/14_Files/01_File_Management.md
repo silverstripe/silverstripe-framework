@@ -124,7 +124,7 @@ As with storage, there are also different ways of loading the content (or proper
 
 ### Additional file types
 
-There may be some file extensions not recognised by the framework, which will return "unknown" on `File::getFileType`.
+SilverStripe has a pre-defined list of common file types. `File::getFileType` will return "unknown" for files outside that list.
 
 You can add your own file extensions and it's description with the following configuration.
 
