@@ -120,6 +120,20 @@ As with storage, there are also different ways of loading the content (or proper
 | `File::getAbsoluteURL`   | Gets the absolute URL to this resource                     |
 | `File::getMimeType`      | Get the mime type of this file                             |
 | `File::getMetaData`      | Gets other metadata from the file as an array              |
+| `File::getFileType`      | Return the type of file for the given extension            |
+
+### Additional file types
+
+SilverStripe has a pre-defined list of common file types. `File::getFileType` will return "unknown" for files outside that list.
+
+You can add your own file extensions and its description with the following configuration.
+
+```yml
+SilverStripe\Assets\File:
+  file_types:
+    ai: 'Adobe Illustrator'
+    psd: 'Adobe Photoshop File'
+```
 
 ## Modifying files
 
