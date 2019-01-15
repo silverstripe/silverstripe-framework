@@ -1016,7 +1016,9 @@ class Requirements_Backend
         );
 
         $candidates = array_map(
-            function ($candiate) { return $candiate . '.js'; },
+            function ($candidate) {
+                return $candidate . '.js';
+            },
             $candidates
         );
 
