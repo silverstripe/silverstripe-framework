@@ -91,7 +91,7 @@ class Car extends DataObject
     private static $db = [
         'Wheels' => 'Int(4)',
         'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
-        'Make' => 'Varchar(["default" => "Honda"]),
+        'Make' => 'Varchar(["default" => "Honda"])',
     );
 }
 ```
