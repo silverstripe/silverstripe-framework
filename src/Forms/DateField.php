@@ -446,11 +446,6 @@ class DateField extends TextField
      */
     public function getLocale()
     {
-        // Use iso locale for html5
-        if ($this->getHTML5()) {
-            return DBDate::ISO_LOCALE;
-        }
-
         return $this->locale ?: i18n::get_locale();
     }
 

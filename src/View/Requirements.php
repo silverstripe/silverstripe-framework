@@ -327,17 +327,18 @@ class Requirements implements Flushable
      * directory will contain a number of JavaScript files named by language: en_US.js, de_DE.js,
      * etc.
      *
-     * @param string $langDir  The JavaScript lang directory, relative to the site root, e.g.,
+     * @param string $langDir The JavaScript lang directory, relative to the site root, e.g.,
      *                         'framework/javascript/lang'
-     * @param bool   $return   Return all relative file paths rather than including them in
+     * @param bool $return Return all relative file paths rather than including them in
      *                         requirements
      * @param bool $langOnly @deprecated 4.1.0:5.0.0 as i18n.js should be included manually in your project
      *
+     * @param bool $convertRFC1766 converts file candidates to be RFC1766 compatible
      * @return array
      */
-    public static function add_i18n_javascript($langDir, $return = false, $langOnly = false)
+    public static function add_i18n_javascript($langDir, $return = false, $langOnly = false, $convertRFC1766 = false)
     {
-        return self::backend()->add_i18n_javascript($langDir, $return);
+        return self::backend()->add_i18n_javascript($langDir, $return, $convertRFC1766);
     }
 
     /**

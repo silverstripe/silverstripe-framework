@@ -303,7 +303,7 @@ class i18n implements TemplateGlobalProvider
      */
     public static function convert_rfc1766($locale)
     {
-        return str_replace('_', '-', $locale);
+        return strtolower(str_replace('_', '-', $locale));
     }
 
     /**

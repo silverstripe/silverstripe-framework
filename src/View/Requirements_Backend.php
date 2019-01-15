@@ -996,9 +996,10 @@ class Requirements_Backend
      * @param bool $return Return all relative file paths rather than including them in
      *                         requirements
      *
+     * @param bool $convertRFC1766 converts file candidates to be RFC1766 compatible
      * @return array|null All relative files if $return is true, or null otherwise
      */
-    public function add_i18n_javascript($langDir, $return = false)
+    public function add_i18n_javascript($langDir, $return = false, $convertRFC1766 = false)
     {
         $langDir = ModuleResourceLoader::singleton()->resolvePath($langDir);
 
@@ -1012,6 +1013,9 @@ class Requirements_Backend
             i18n::get_locale() . '.js',
         );
         foreach ($candidates as $candidate) {
+            if ($convertRFC1766) {
+                $candidate = i18n::convert_rfc1766($candidate);
+            }
             $relativePath = Path::join($langDir, $candidate);
             $absolutePath = Director::getAbsFile($relativePath);
             if (file_exists($absolutePath)) {
