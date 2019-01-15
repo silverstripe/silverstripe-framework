@@ -60,22 +60,52 @@ abstract class DataExtension extends Extension
     {
     }
 
+    /**
+     * Optional extension hook called by SilverStripe directly before a database write operation.
+     * Any logic expressed here, will be executed by SilverStripe.
+     *
+     * @return void
+     */
     public function onBeforeWrite()
     {
     }
 
+    /**
+     * Optional extension hook called by SilverStripe directly after a database write operation.
+     * Any logic expressed here, will be executed by SilverStripe.
+     *
+     * @return void
+     */
     public function onAfterWrite()
     {
     }
 
+    /**
+     * Optional extension hook called by SilverStripe directly before deleting a database write operation.
+     * Any logic expressed here, will be executed by SilverStripe.
+     *
+     * @return void
+     */
     public function onBeforeDelete()
     {
     }
 
+    /**
+     * Optional extension hook called by SilverStripe directly after deleting a database write operation.
+     * Any logic expressed here, will be executed by SilverStripe.
+     *
+     * @return void
+     */
     public function onAfterDelete()
     {
     }
 
+    /**
+     * Optional extension hook called by SilverStripe directly during a dev/build operation.
+     * Any logic expressed here, will be executed by SilverStripe.
+     *
+     * @return void
+     */
     public function requireDefaultRecords()
     {
     }
@@ -84,18 +114,37 @@ abstract class DataExtension extends Extension
     {
     }
 
+
     public function can($member)
     {
     }
 
+    /**
+     * Whether or not the given $member is able to edit this decorated object.
+     *
+     * @param  Member $member
+     * @return bool
+     */
     public function canEdit($member)
     {
     }
 
+    /**
+     * Whether or not the given $member is able to delete this decorated object.
+     *
+     * @param  Member $member
+     * @return bool
+     */
     public function canDelete($member)
     {
     }
 
+    /**
+     * Whether or not the given $member is able to create this decorated object.
+     *
+     * @param  Member $member
+     * @return bool
+     */
     public function canCreate($member)
     {
     }
