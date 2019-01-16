@@ -139,6 +139,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     private static $default_classname = null;
 
+    private static $reserved_field_names = [
+        'Data',
+    ];
     /**
      * @deprecated 4.0.0:5.0.0
      * @var bool
@@ -3419,7 +3422,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database default data
+        // Protect devs from falling into the trap of naming a DB field after a reserved word
+        foreach ($this->getSchema()->databaseFields($this->getClassName()) as $name => $field) {
+          if (in_array($name, $this->config()->get('reserved_field_names'))) {
+            throw new Exception(sprintf('%s is a reserved field name', $name));
+          }
+        }
+            // Let any extentions make their own database default data
         $this->extend('requireDefaultRecords', $dummy);
     }
 
