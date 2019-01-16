@@ -89,3 +89,22 @@ __'Scheduled To Publish'__ status. The look of the page node will be changed
 from ![Normal Page Node](../../../_images/page_node_normal.png) to ![Scheduled Page Node](../../../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
 extension point, so the flags can be modified through `DataExtension` rather than
 inheritance as well. Deleting existing flags works by simply unsetting the array key.
+
+## Customising page icons
+
+The page tree in the CMS is a central element to manage page hierarchies, hence its display of pages can be customised as well. You can specify a custom page icon to make it easier for CMS authors to identify pages of this type, when navigating the tree or adding a new page:
+
+```php
+class HomePage extends Page
+{
+    private static $icon_class = 'font-icon-p-home';
+}
+```
+
+The CMS uses an icon set from [Fontastic](http://fontastic.me/). New icons may be [requested](https://github.com/silverstripe/silverstripe-admin/issues/new) and added to the [core icon set](https://silverstripe.github.io/silverstripe-admin/?selectedKind=Admin%2FIcons&selectedStory=Icon%20reference&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel). The benefit of having icons added to the core set is that you can use icons more consistently across different modules allowing every module to use a different icon with the same style.
+
+You can also add your own icon by specifying an image path to override the Fontastic icon set:
+
+```php
+    private static $icon = 'app/images/homepage-icon.svg';
+```
