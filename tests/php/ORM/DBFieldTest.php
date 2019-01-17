@@ -13,6 +13,7 @@ use SilverStripe\ORM\FieldType\DBTime;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Dev\SapphireTest;
+use InvalidArgumentException;
 
 /**
  * Tests for DBField objects.
@@ -28,6 +29,17 @@ class DBFieldTest extends SapphireTest
         /* Float and Double use 0 for "null" value representation */
         $this->assertEquals(0, singleton('Float')->nullValue());
         $this->assertEquals(0, singleton('Double')->nullValue());
+    }
+
+    public function testConstructorParam()
+    {
+        // Legitimate use cases
+        $this->assertInstanceOf(DBText::class, new DBText('mychar'));
+        $this->assertInstanceOf(DBText::class, new DBText('mychar88'));
+
+        // All invalid input shoulf throw an exception
+        $this->expectException(InvalidArgumentException::class);
+        $badDbField = new DBText('mychar"');
     }
 
     /**

@@ -136,6 +136,10 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function __construct($name = null, $options = [])
     {
+        if (preg_match("#[^\w]#", $name)) {
+            throw new InvalidArgumentException("Invalid character found in constructor.");
+        }
+
         $this->name = $name;
 
         if ($options) {
