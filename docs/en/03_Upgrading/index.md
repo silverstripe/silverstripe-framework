@@ -190,7 +190,9 @@ upgrade-code recompose --write
 
 You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. If you are upgrading a CWP project, you can use `--cwp-constraint` instead to target a specific version of `cwp/cwp-core`.
 
-You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
+The upgrader uses [carret version constraint](https://getcomposer.org/doc/articles/versions.md#caret-version-range-) by default. This will cause composer to install compatible minor releases. You can use the `--strict` option if you want to use the more conservative [tilde version constraints](https://getcomposer.org/doc/articles/versions.md#tilde-version-range-).
+
+Omit the `--write` flag to preview your changes.
 
 Your upgraded `composer.json` file will look like this.
 ```json
