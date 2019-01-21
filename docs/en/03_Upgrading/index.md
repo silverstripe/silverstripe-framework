@@ -143,6 +143,7 @@ upgrade-code all --namespace="App\\Web" --psr4
 ```
 
 * `--recipe-core-constraint` defines your SilverStripe release version (optional, will default to the most recent stable release).
+* `--cwp-constraint` can be used instead `--recipe-core-constraint` when upgrading a CWP project.
 * `--namespace` allows you to specify how your project will be namespaced (optional).
 * `--psr4` allows you to specify that your project structure respect the PSR-4 standard and to use sub-namespaces.
 * `--skip-add-namespace` allows you to skip the `add-namespace` command.
@@ -187,7 +188,11 @@ You can upgrade the `composer.json` file with this command:
 upgrade-code recompose --write
 ```
 
-You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
+You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. If you are upgrading a CWP project, you can use `--cwp-constraint` instead to target a specific version of `cwp/cwp-core`.
+
+The upgrader uses [carret version constraint](https://getcomposer.org/doc/articles/versions.md#caret-version-range-) by default. This will cause composer to install compatible minor releases. You can use the `--strict` option if you want to use the more conservative [tilde version constraints](https://getcomposer.org/doc/articles/versions.md#tilde-version-range-).
+
+Omit the `--write` flag to preview your changes.
 
 Your upgraded `composer.json` file will look like this.
 ```json
