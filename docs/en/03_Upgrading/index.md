@@ -603,16 +603,35 @@ Execute the upgrade command with this command.
 upgrade-code upgrade ./mysite/ --write
 ```
 
-If you omit the `--write` flag you will get a preview of what change the upgrader will apply to your codebase. This can be helpful if you if you are tweaking your `.upgrade.yml` or if you are trying to identify areas where you should add a `@skipUpgrade` statement,
+If you omit the `--write` flag you will get a preview of what change the upgrader will apply to your codebase. This can be helpful if you are tweaking your `.upgrade.yml` or if you are trying to identify areas where you should add a `@skipUpgrade` statement,
 
 You can also tweak which rules to apply with the `--rule` flag: `code`, `config`, and `lang`. For example, the following command will only upgrade `lang` and `config` files:
 ```bash
 upgrade-code upgrade ./mysite/ --rule=config --rule=lang
 ```
 
-The `upgrade` command can alter big chunks of your codebase. While it works reasonably well in most use case, you should not trust it blindly. You should take time to review all changes applied by the `upgrade` command and confirm you are happy with them.
+The `upgrade` command can alter big chunks of your codebase. While it works reasonably well in most use cases, you should not trust it blindly. You should take time to review all changes applied by the `upgrade` command and confirm you are happy with them.
 
 [Continue to "Finalising namespace updates"](#namespace-finalise)
+
+#### Rename Warnings
+
+You can also show extra warnings for potentially ambiguous mappings with the `renameWarnings` property:
+
+```yaml
+renameWarnings:
+  - File
+  - Image
+```
+
+An example of an ambiguous rename would be:
+```PHP
+private static $has_one = [
+    'Image' => 'Image',
+];
+```
+
+Add the `--prompt` flag to manually approve ambiguous class renames.
 
 ### Manually update namespaced references
 
