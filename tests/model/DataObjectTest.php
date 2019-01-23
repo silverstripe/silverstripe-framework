@@ -29,6 +29,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'DataObjectTest_Sortable',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
@@ -38,6 +39,13 @@ class DataObjectTest extends SapphireTest {
 	 */
 	public function testSingleton($inst, $defaultValue, $altDefaultValue)
 	{
+		// Calls to scaffold the test database may have cached service specs for DataObjects
+		// with the incorrect 'type' set (singleton instead of prototype)
+		Injector::nest();
+		$reflectionProp = new ReflectionProperty('Injector', 'specs');
+		$reflectionProp->setAccessible(true);
+		$reflectionProp->setValue(Injector::inst(), array());
+
 		$inst = $inst();
 		// Test that populateDefaults() isn't called on singletons
 		// which can lead to SQL errors during build, and endless loops
@@ -52,6 +60,8 @@ class DataObjectTest extends SapphireTest {
 		} else {
 			$this->assertEmpty($inst->MyFieldWithAltDefault);
 		}
+
+		Injector::unnest();
 	}
 
 	public function provideSingletons()
