@@ -22,6 +22,8 @@ Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **app
 It's recommended to copy the contents of the template you're going to replace and use that as a start. For instance, if
 you want to create a `MyCustomFormTemplate` copy the contents of `Form.ss` to a `MyCustomFormTemplate.ss` file and 
 modify as you need.
+
+*The default Form.ss can be found in `/vendor/silverstripe/framework/templates/SilverStripe/Forms/Includes/`*
 </div>
 
 By default, Form and Fields follow the SilverStripe Template convention and are rendered into templates of the same 
