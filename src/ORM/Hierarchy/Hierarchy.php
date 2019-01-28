@@ -296,6 +296,10 @@ class Hierarchy extends DataExtension
         $cacheType = 'numChildren';
         $id = $this->owner->ID;
 
+        if (!$this->owner->isInDB()) {
+            return 0;
+        }
+
         // cached call
         if ($cache) {
             if (isset(self::$cache_numChildren[$baseClass][$cacheType][$id])) {
