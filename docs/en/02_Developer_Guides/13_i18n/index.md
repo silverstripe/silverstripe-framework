@@ -414,6 +414,11 @@ Requirements::javascript('silverstripe/admin:client/dist/js/i18n.js');
 Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 ```
 
+You can also include the language files from the public resources folder with the resource url syntax:
+```php
+Requirements::add_i18n_javascript('vendor/module:path/to/lang');
+```
+
 ###  Translation Tables in JavaScript
 
 Translation tables are automatically included as required, depending on the configured locale in `i18n::get_locale()`.
