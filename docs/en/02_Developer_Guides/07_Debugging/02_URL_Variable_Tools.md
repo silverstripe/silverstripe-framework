@@ -28,7 +28,8 @@ session variables, used templates and much more.
  | isDev         | | 1      | | Put the site into [development mode](../), enabling debugging messages to the browser on a live server.  For security, you'll be asked to log in with an administrator log-in. Will persist for the current browser session. | 
  | isTest        | | 1      | | See above. | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
- | debug_request | | 1      | | Show all steps of the request from initial [HTTPRequest](api:SilverStripe\Control\HTTPRequest) to [Controller](api:SilverStripe\Control\Controller) to Template Rendering  | 
+ | debug_request | | 1      | | Show all steps of the request from initial [HTTPRequest](api:SilverStripe\Control\HTTPRequest) to [Controller](api:SilverStripe\Control\Controller) to Template Rendering  |
+ | execmetric    | | 1      | | Display the execution time and peak memory usage for the request |  
 
 ## Classes and Objects
 
