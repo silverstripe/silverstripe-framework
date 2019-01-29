@@ -133,7 +133,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $this->extend('updatePrintData', $data);
 
         if ($data) {
-            return $data->renderWith(get_class($gridField) . "_print");
+            return $data->renderWith([
+                get_class($gridField) . '_print',
+                GridField::class . '_print',
+            ]);
         }
 
         return null;
