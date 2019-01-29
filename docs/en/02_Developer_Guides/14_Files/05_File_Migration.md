@@ -77,3 +77,26 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
 ```
 
 Note that this will not allow you to utilise certain file versioning features in 4.0.
+
+## Migrating substantial number of files
+
+The time it takes to run the file migration will depend on the number of files and their size. The generation of thumbnails will depend on the number and dimension of your images.
+
+If you are migrating a substantial number of files, you should run file migration task either as a queued job or on the command line. If the migration task fails or times out, you can start it again and it will pick up where it left off.
+
+If your environement supports the _Imagick_ PHP library, you may want to use that library instead of _GD_. Imagick is considerably faster when resizing images. You can switch back to _GD_ after running the file migration task.
+
+[Changing the image manipulation driver to Imagick](images#changing-the-manipulation-driver-to-imagick)
+
+If your project hosts big images (e.g. 4K images), this can also affect the amount of memory used to generate the thumbnails. The file migration task assumes that it will have at least 512MB of memory available. 
+
+By default the file migration task will not generate thumbnails for files greater than 9MB to avoid exhausting the available memory. To increase this limit, add the following code to your YML configuration:
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper:
+    constructor:
+      0: '100MB'
+```
+
+You can also set this to `0` to disable the limit.
