@@ -476,7 +476,7 @@ class ShortcodeParser
 
             if ($tags) {
                 $node->nodeValue = $this->replaceTagsWithText(
-                    $node->nodeValue,
+                    htmlspecialchars($node->nodeValue),
                     $tags,
                     function ($idx, $tag) use ($parser, $extra) {
                         return $parser->getShortcodeReplacementText($tag, $extra, false);
