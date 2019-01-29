@@ -9,8 +9,11 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\GridField\FormAction\SessionStore;
+use SilverStripe\Forms\GridField\FormAction\StateStore;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -113,11 +116,13 @@ class GridField extends FormField
     protected $readonlyComponents = [
         GridField_ActionMenu::class,
         GridFieldConfig_RecordViewer::class,
+        GridFieldButtonRow::class,
         GridFieldDataColumns::class,
         GridFieldDetailForm::class,
         GridFieldLazyLoader::class,
         GridFieldPageCount::class,
         GridFieldPaginator::class,
+        GridFieldFilterHeader::class,
         GridFieldSortableHeader::class,
         GridFieldToolbarHeader::class,
         GridFieldViewButton::class,
@@ -241,14 +246,20 @@ class GridField extends FormField
     {
         $copy = clone $this;
         $copy->setReadonly(true);
+        $copyConfig = $copy->getConfig();
 
         // get the whitelist for allowable readonly components
         $allowedComponents = $this->getReadonlyComponents();
         foreach ($this->getConfig()->getComponents() as $component) {
             // if a component doesn't exist, remove it from the readonly version.
             if (!in_array(get_class($component), $allowedComponents)) {
-                $copy->getConfig()->removeComponent($component);
+                $copyConfig->removeComponent($component);
             }
+        }
+
+        // As the edit button may have been removed, add a view button if it doesn't have one
+        if (!$copyConfig->getComponentByType(GridFieldViewButton::class)) {
+            $copyConfig->addComponent(new GridFieldViewButton);
         }
 
         return $copy;
@@ -287,6 +298,18 @@ class GridField extends FormField
             $this->config->addComponent(new GridState_Component());
         }
 
+        return $this;
+    }
+
+    /**
+     * @param bool $readonly
+     *
+     * @return $this
+     */
+    public function setReadonly($readonly)
+    {
+        parent::setReadonly($readonly);
+        $this->getState()->Readonly = $readonly;
         return $this;
     }
 
@@ -989,9 +1012,14 @@ class GridField extends FormField
             $state->setValue($fieldData['GridState']);
         }
 
+        // Fetch the store for the "state" of actions (not the GridField)
+        /** @var StateStore $store */
+        $store = Injector::inst()->create(StateStore::class . '.' . $this->getName());
+
         foreach ($data as $dataKey => $dataValue) {
             if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey, $matches)) {
-                $stateChange = $request->getSession()->get($matches[1]);
+                $stateChange = $store->load($matches[1]);
+
                 $actionName = $stateChange['actionName'];
 
                 $arguments = array();
@@ -1009,6 +1037,9 @@ class GridField extends FormField
         }
 
         if ($request->getHeader('X-Pjax') === 'CurrentField') {
+            if ($this->getState()->Readonly === true) {
+                $this->performDisabledTransformation();
+            }
             return $this->FieldHolder();
         }
 

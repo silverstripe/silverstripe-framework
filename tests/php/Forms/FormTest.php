@@ -415,7 +415,7 @@ class FormTest extends FunctionalTest
         // Firstly, assert that required fields still work when not using an exempt action
         $this->assertPartialMatchBySelector(
             '#Form_Form_SomeRequiredField_Holder .required',
-            array('"Some Required Field" is required'),
+            array('"Some required field" is required'),
             'Required fields show a notification on field when left blank'
         );
 
@@ -487,7 +487,7 @@ class FormTest extends FunctionalTest
         $this->assertPartialMatchBySelector(
             '#Form_Form_SomeRequiredField_Holder span.required',
             array(
-                '"Some Required Field" is required'
+                '"Some required field" is required'
             ),
             'Required fields show a notification on field when left blank'
         );

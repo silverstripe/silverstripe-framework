@@ -584,6 +584,17 @@ abstract class Database
     abstract public function supportsTransactions();
 
     /**
+     * Does this database support savepoints in transactions
+     * By default it is assumed that they don't unless they are explicitly enabled.
+     *
+     * @return boolean Flag indicating support for savepoints in transactions
+     */
+    public function supportsSavepoints()
+    {
+        return false;
+    }
+
+    /**
      * Invoke $callback within a transaction
      *
      * @param callable $callback Callback to run

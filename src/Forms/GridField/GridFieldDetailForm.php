@@ -38,10 +38,19 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $template = null;
 
     /**
-     *
      * @var string
      */
     protected $name;
+
+    /**
+     * @var bool
+     */
+    protected $showPagination;
+
+    /**
+     * @var bool
+     */
+    protected $showAdd;
 
     /**
      * @var Validator The form validator used for both add and edit fields.
@@ -79,10 +88,14 @@ class GridFieldDetailForm implements GridField_URLHandler
      * controller who wants to display the getCMSFields
      *
      * @param string $name The name of the edit form to place into the pop-up form
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
+     * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($name = 'DetailForm')
+    public function __construct($name = null, $showPagination = null, $showAdd = null)
     {
-        $this->name = $name;
+        $this->setName($name ?: 'DetailForm');
+        $this->setShowPagination($showPagination);
+        $this->setShowAdd($showAdd);
     }
 
     /**
@@ -93,6 +106,10 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function handleItem($gridField, $request)
     {
+        if ($gridStateStr = $request->getVar('gridState')) {
+            $gridField->getState(false)->setValue($gridStateStr);
+        }
+
         // Our getController could either give us a true Controller, if this is the top-level GridField.
         // It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
         // nested GridField.
@@ -102,7 +119,7 @@ class GridFieldDetailForm implements GridField_URLHandler
         if (is_numeric($request->param('ID'))) {
             /** @var Filterable $dataList */
             $dataList = $gridField->getList();
-            $record = $dataList->byID($request->param("ID"));
+            $record = $dataList->byID($request->param('ID'));
         } else {
             $record = Injector::inst()->create($gridField->getModelClass());
         }
@@ -180,6 +197,68 @@ class GridFieldDetailForm implements GridField_URLHandler
     }
 
     /**
+     * @return bool
+     */
+    protected function getDefaultShowPagination()
+    {
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showPagination']) ? (bool) $formActionsConfig['showPagination'] : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowPagination()
+    {
+        if ($this->showPagination === null) {
+            return $this->getDefaultShowPagination();
+        }
+
+        return (bool) $this->showPagination;
+    }
+
+    /**
+     * @param bool|null $showPagination
+     * @return GridFieldDetailForm
+     */
+    public function setShowPagination($showPagination)
+    {
+        $this->showPagination = $showPagination;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getDefaultShowAdd()
+    {
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showAdd']) ? (bool) $formActionsConfig['showAdd'] : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowAdd()
+    {
+        if ($this->showAdd === null) {
+            return $this->getDefaultShowAdd();
+        }
+
+        return (bool) $this->showAdd;
+    }
+
+    /**
+     * @param bool|null $showAdd
+     * @return GridFieldDetailForm
+     */
+    public function setShowAdd($showAdd)
+    {
+        $this->showAdd = $showAdd;
+        return $this;
+    }
+
+    /**
      * @param Validator $validator
      * @return $this
      */
@@ -232,11 +311,10 @@ class GridFieldDetailForm implements GridField_URLHandler
     {
         if ($this->itemRequestClass) {
             return $this->itemRequestClass;
-        } elseif (ClassInfo::exists(static::class . "_ItemRequest")) {
-            return static::class . "_ItemRequest";
-        } else {
-            return GridFieldDetailForm_ItemRequest::class;
+        } elseif (ClassInfo::exists(static::class . '_ItemRequest')) {
+            return static::class . '_ItemRequest';
         }
+        return GridFieldDetailForm_ItemRequest::class;
     }
 
     /**

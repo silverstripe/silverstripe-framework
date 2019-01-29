@@ -78,6 +78,7 @@ en:
     LinkExisting: 'Link Existing'
     NewRecord: 'New {type}'
     NoItemsFound: 'No items found'
+    OpenFilter: 'Open search and filter'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
@@ -85,10 +86,6 @@ en:
     Print: Print
     RelationSearch: 'Relation search'
     ResetFilter: Reset
-    OpenFilter: 'Open search and filter'
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Search "{name}"'
-    SearchFormFaliure: 'No search form could be generated'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
@@ -103,6 +100,9 @@ en:
     Save: Save
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Search "{name}"'
+    SearchFormFaliure: 'No search form could be generated'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldPaginator:

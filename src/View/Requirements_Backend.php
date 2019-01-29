@@ -18,6 +18,7 @@ use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBField;
 
 class Requirements_Backend
 {
@@ -1004,13 +1005,23 @@ class Requirements_Backend
 
         $files = array();
         $candidates = array(
-            'en.js',
-            'en_US.js',
-            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')) . '.js',
-            i18n::config()->get('default_locale') . '.js',
-            i18n::getData()->langFromLocale(i18n::get_locale()) . '.js',
-            i18n::get_locale() . '.js',
+            'en',
+            'en_US',
+            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')),
+            i18n::config()->get('default_locale'),
+            i18n::getData()->langFromLocale(i18n::get_locale()),
+            i18n::get_locale(),
+            strtolower(DBField::create_field('Locale', i18n::get_locale())->RFC1766()),
+            strtolower(DBField::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766())
         );
+
+        $candidates = array_map(
+            function ($candidate) {
+                return $candidate . '.js';
+            },
+            $candidates
+        );
+
         foreach ($candidates as $candidate) {
             $relativePath = Path::join($langDir, $candidate);
             $absolutePath = Director::getAbsFile($relativePath);

@@ -20,7 +20,7 @@ class DBEnum extends DBString
      *
      * @var array
      */
-    protected $enum = array();
+    protected $enum = [];
 
     /**
      * Default value
@@ -30,6 +30,22 @@ class DBEnum extends DBString
     protected $default = null;
 
     private static $default_search_filter_class = 'ExactMatchFilter';
+
+    /**
+     * Internal cache for obsolete enum values. The top level keys are the table, each of which contains
+     * nested arrays with keys mapped to field names. The values of the lowest level array are the enum values
+     *
+     * @var array
+     */
+    protected static $enum_cache = [];
+
+    /**
+     * Clear all cached enum values.
+     */
+    public static function flushCache()
+    {
+        self::$enum_cache = [];
+    }
 
     /**
      * Create a new Enum field, which is a value within a defined set, with an optional default.
@@ -88,7 +104,7 @@ class DBEnum extends DBString
 
         $parts = array(
             'datatype' => 'enum',
-            'enums' => $this->getEnum(),
+            'enums' => $this->getEnumObsolete(),
             'character set' => $charset,
             'collate' => $collation,
             'default' => $this->getDefault(),
@@ -171,6 +187,48 @@ class DBEnum extends DBString
     public function getEnum()
     {
         return $this->enum;
+    }
+
+
+    /**
+     * Get the list of enum values, including obsolete values still present in the database
+     *
+     * If table or name are not set, or if it is not a valid field on the given table,
+     * then only known enum values are returned.
+     *
+     * Values cached in this method can be cleared via `DBEnum::flushCache();`
+     *
+     * @return array
+     */
+    public function getEnumObsolete()
+    {
+        // Without a table or field specified, we can only retrieve known enum values
+        $table = $this->getTable();
+        $name = $this->getName();
+        if (empty($table) || empty($name)) {
+            return $this->getEnum();
+        }
+
+        // Ensure the table level cache exists
+        if (empty(self::$enum_cache[$table])) {
+            self::$enum_cache[$table] = array();
+        }
+
+        // Check existing cache
+        if (!empty(self::$enum_cache[$table][$name])) {
+            return self::$enum_cache[$table][$name];
+        }
+
+        // Get all enum values
+        $enumValues = $this->getEnum();
+        if (DB::get_schema()->hasField($table, $name)) {
+            $existing = DB::query("SELECT DISTINCT \"{$name}\" FROM \"{$table}\"")->column();
+            $enumValues = array_unique(array_merge($enumValues, $existing));
+        }
+
+        // Cache and return
+        self::$enum_cache[$table][$name] = $enumValues;
+        return $enumValues;
     }
 
     /**

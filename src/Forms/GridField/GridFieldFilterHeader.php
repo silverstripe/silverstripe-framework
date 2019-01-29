@@ -6,6 +6,7 @@ use LogicException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
@@ -44,6 +45,16 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     public $useLegacyFilterHeader = false;
 
     /**
+     * Forces all filter components to revert to displaying the legacy
+     * table header style rather than the react driven search box
+     *
+     * @deprecated 4.3.0:5.0.0 Will be removed in 5.0
+     * @config
+     * @var bool
+     */
+    private static $force_legacy = false;
+
+    /**
      * @var \SilverStripe\ORM\Search\SearchContext
      */
     protected $searchContext = null;
@@ -76,7 +87,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     }
 
     /**
-     * @param bool $useLegacy
+     * @param bool $useLegacy This will be removed in 5.0
      * @param callable|null $updateSearchContext This will be removed in 5.0
      * @param callable|null $updateSearchForm This will be removed in 5.0
      */
@@ -85,7 +96,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         callable $updateSearchContext = null,
         callable $updateSearchForm = null
     ) {
-        $this->useLegacyFilterHeader = $useLegacy;
+        $this->useLegacyFilterHeader = Config::inst()->get(self::class, 'force_legacy') || $useLegacy;
         $this->updateSearchContextCallback = $updateSearchContext;
         $this->updateSearchFormCallback = $updateSearchForm;
     }
@@ -154,7 +165,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
-     * @return array
+     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
@@ -163,14 +174,13 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         $state = $gridField->State->GridFieldFilterHeader;
+        $state->Columns = null;
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
                 foreach ($data['filter'][$gridField->getName()] as $key => $filter) {
                     $state->Columns->$key = $filter;
                 }
             }
-        } elseif ($actionName === 'reset') {
-            $state->Columns = null;
         }
     }
 
@@ -193,12 +203,10 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         $filterArguments = $columns->toArray();
         $dataListClone = clone($dataList);
-        foreach ($filterArguments as $columnName => $value) {
-            if ($dataList->canFilterBy($columnName) && $value) {
-                $dataListClone = $dataListClone->filter($columnName . ':PartialMatch', $value);
-            }
-        }
-        return $dataListClone;
+        $results = $this->getSearchContext($gridField)
+            ->getQuery($filterArguments, false, false, $dataListClone);
+
+        return $results;
     }
 
     /**
@@ -281,14 +289,18 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             }, array_keys($filters)), $filters);
         }
 
+        $searchAction = GridField_FormAction::create($gridField, 'filter', false, 'filter', null);
+        $clearAction = GridField_FormAction::create($gridField, 'reset', false, 'reset', null);
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
             'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
             'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
-            'searchAction' => GridField_FormAction::create($gridField, 'filter', false, 'filter', null)->getAttribute('name'),
-            'clearAction' => GridField_FormAction::create($gridField, 'reset', false, 'reset', null)->getAttribute('name')
+            'searchAction' => $searchAction->getAttribute('name'),
+            'searchActionState' => $searchAction->getAttribute('data-action-state'),
+            'clearAction' => $clearAction->getAttribute('name'),
+            'clearActionState' => $clearAction->getAttribute('data-action-state'),
         ];
 
         return json_encode($schema);
@@ -337,9 +349,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $field->addExtraClass('stacked');
         }
 
+        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+
         $this->searchForm = $form = new Form(
             $gridField,
-            "SearchForm",
+            $name . "SearchForm",
             $searchFields,
             new FieldList()
         );

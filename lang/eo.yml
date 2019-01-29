@@ -84,6 +84,7 @@ eo:
     RelationSearch: 'Serĉi rilatojn'
     ResetFilter: Restartigi
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    DELETE_DESCRIPTION: Forigi
     Delete: Forigi
     DeletePermissionsFailure: 'Mankas permeso forigi'
     EditPermissionsFailure: 'Mankas permeso malligi rikordon'
@@ -95,12 +96,23 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita {type} {name}'
     Save: Konservi
+  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    EDIT: Redakti
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Paĝo
     View: Vido
+  SilverStripe\Forms\GridField\GridFieldVersionedState:
+    ADDEDTODRAFTHELP: 'Ero ankoraŭ estas ne publikigita'
+    ADDEDTODRAFTSHORT: Malneto
+    ARCHIVEDPAGEHELP: 'Ero estas forigita el malneta kaj publika'
+    ARCHIVEDPAGESHORT: Enarkivigita
+    MODIFIEDONDRAFTHELP: 'Ero enhavas nepublikigitajn ŝanĝojn'
+    MODIFIEDONDRAFTSHORT: Ŝanĝita
+    ONLIVEONLYSHORT: 'Nur ĉe publika'
+    ONLIVEONLYSHORTHELP: 'Ero estas publikigita, sed ĝi estas forigita el malneto'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo

@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Security\Tests;
 
-use SilverStripe\Security\PasswordValidator;
-use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordValidator;
 
 class PasswordValidatorTest extends SapphireTest
 {
@@ -13,6 +13,16 @@ class PasswordValidatorTest extends SapphireTest
      * @var bool
      */
     protected $usesDatabase = true;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        PasswordValidator::config()
+            ->remove('min_length')
+            ->remove('historic_count')
+            ->set('min_test_score', 0);
+    }
 
     public function testValidate()
     {

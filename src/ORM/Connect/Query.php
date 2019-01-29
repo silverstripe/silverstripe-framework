@@ -6,12 +6,24 @@ use SilverStripe\Core\Convert;
 use Iterator;
 
 /**
- * Abstract query-result class.
+ * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
+ * result.
+ *
+ * The map should be keyed by the column names, and the values should use the following types:
+ *
+ *  - boolean returned as integer 1 or 0 (to ensure consistency with MySQL that doesn't have native booleans)
+ *  - integer types returned as integers
+ *  - floating point / decimal types returned as floats
+ *  - strings returned as strings
+ *  - dates / datetimes returned as strings
+ *
+ * Note that until SilverStripe 4.3, bugs meant that strings were used for every column type.
+ *
  * Once again, this should be subclassed by an actual database implementation.  It will only
  * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object
  * that's returned by DB::SS_Query
  *
- * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
+ * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
  */

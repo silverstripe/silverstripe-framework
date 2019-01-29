@@ -149,14 +149,14 @@ class ParameterConfirmationTokenTest extends SapphireTest
     }
 
     /**
-     * currentAbsoluteURL needs to handle base or url being missing, or any combination of slashes.
+     * currentURL needs to handle base or url being missing, or any combination of slashes.
      *
      * There should always be exactly one slash between each part in the result, and any trailing slash
      * should be preserved.
      *
      * @dataProvider dataProviderURLs
      */
-    public function testCurrentAbsoluteURLHandlesSlashes($url)
+    public function testCurrentURLHandlesSlashes($url)
     {
         $this->request->setUrl($url);
 

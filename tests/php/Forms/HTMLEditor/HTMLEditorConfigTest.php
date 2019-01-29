@@ -140,7 +140,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertNotContains('plugin1', array_keys($plugins));
         $this->assertNotContains('plugin2', array_keys($plugins));
     }
-
+    
     public function testRequireJSIncludesAllConfigs()
     {
         $a = HTMLEditorConfig::get('configA');

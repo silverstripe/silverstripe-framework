@@ -959,6 +959,9 @@ warnings:
     'Object':
       message: 'Replaced with traits'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
+    'SS_Object':
+      message: 'Replaced with traits'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
     'SS_Log':
       message: 'Replaced with a PSR-3 logger'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#psr3-logging'
@@ -1287,6 +1290,10 @@ warnings:
       message: 'Deprecated'
     'SilverStripe\Security\Permission::traverse_declared_permissions()':
       message: 'Deprecated'
+    'SilverStripe\Control\Session::get_all()':
+      message: 'Session can not be accessed statically and `get_all()` is now called `getAll()'
+    'SilverStripe\Control\Session::clear_all()':
+      message: 'Session can not be accessed statically and `clear_all()` is now called `clearAll()'
   props:
     'class':
       message: '$this->class access has been removed'
@@ -1375,3 +1382,9 @@ warnings:
     'THIRDPARTY_DIR':
       message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'SilverStripe\Core\Manifest\ManifestFileFinder::RESOURCES_DIR':
+      message: 'Use global const RESOURCES_DIR'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.4.0#resources-dir'
+      replacement: 'RESOURCES_DIR'
+renameWarnings:
+  - Form

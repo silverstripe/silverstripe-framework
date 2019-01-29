@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 use Silverstripe\Assets\Dev\TestAssetStore;
@@ -1108,5 +1109,78 @@ EOS
                 return $backend->getJavascript();
         }
         return array();
+    }
+
+    public function testAddI18nJavascript()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->add_i18n_javascript('i18n');
+
+        $actual = $backend->getJavascript();
+
+        // English and English US should always be loaded no matter what
+        $this->assertArrayHasKey('i18n/en.js', $actual);
+        $this->assertArrayHasKey('i18n/en_US.js', $actual);
+        $this->assertArrayHasKey('i18n/en-us.js', $actual);
+    }
+
+    public function testAddI18nJavascriptWithDefaultLocale()
+    {
+        i18n::config()->set('default_locale', 'fr_CA');
+
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->add_i18n_javascript('i18n');
+
+        $actual = $backend->getJavascript();
+
+
+        $this->assertArrayHasKey('i18n/en.js', $actual);
+        $this->assertArrayHasKey('i18n/en_US.js', $actual);
+        $this->assertArrayHasKey('i18n/en-us.js', $actual);
+        // Default locale should be loaded
+        $this->assertArrayHasKey('i18n/fr.js', $actual);
+        $this->assertArrayHasKey('i18n/fr_CA.js', $actual);
+        $this->assertArrayHasKey('i18n/fr-ca.js', $actual);
+    }
+
+    public function testAddI18nJavascriptWithMemberLocale()
+    {
+        i18n::set_locale('en_GB');
+
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->add_i18n_javascript('i18n');
+
+        $actual = $backend->getJavascript();
+
+        // The current member's Locale as defined by i18n::get_locale should be loaded
+        $this->assertArrayHasKey('i18n/en.js', $actual);
+        $this->assertArrayHasKey('i18n/en_US.js', $actual);
+        $this->assertArrayHasKey('i18n/en-us.js', $actual);
+        $this->assertArrayHasKey('i18n/en-gb.js', $actual);
+        $this->assertArrayHasKey('i18n/en_GB.js', $actual);
+    }
+
+    public function testAddI18nJavascriptWithMissingLocale()
+    {
+        i18n::set_locale('fr_BE');
+
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->add_i18n_javascript('i18n');
+
+        $actual = $backend->getJavascript();
+
+        // We don't have a file for French Belgium. Regular french should be loaded anyway.
+        $this->assertArrayHasKey('i18n/en.js', $actual);
+        $this->assertArrayHasKey('i18n/en_US.js', $actual);
+        $this->assertArrayHasKey('i18n/en-us.js', $actual);
+        $this->assertArrayHasKey('i18n/fr.js', $actual);
     }
 }

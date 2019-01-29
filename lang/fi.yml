@@ -197,6 +197,7 @@ fi:
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
     Email: Sähköpostiosoite
+    EmailHashed: 'Sähköpostiosoite (tiivistetty)'
     IP: IP-osoite
     PLURALNAME: Kirjautumisyritykset
     PLURALS:
@@ -255,6 +256,8 @@ fi:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Sähköpostiosoite & salasana'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Käyttäjän salasanat'
     PLURALS:
@@ -316,7 +319,4 @@ fi:
     LOGOUT: 'Kirjaudu ulos'
     LOSTPASSWORDHEADER: 'Unohtunut salasana'
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
-    NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
-    PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'

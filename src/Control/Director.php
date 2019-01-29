@@ -1004,12 +1004,12 @@ class Director implements TemplateGlobalProvider
         $request = self::currentRequest($request);
         if ($request) {
             return $request->isAjax();
-        } else {
-            return (
-                isset($_REQUEST['ajax']) ||
-                (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
-            );
         }
+
+        return (
+            isset($_REQUEST['ajax']) ||
+            (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
+        );
     }
 
     /**

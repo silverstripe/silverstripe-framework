@@ -295,8 +295,8 @@ class FormField extends RequestHandler
      *
      * Examples:
      *
-     * - 'TotalAmount' will return 'Total Amount'
-     * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
+     * - 'TotalAmount' will return 'Total amount'
+     * - 'Organisation.ZipCode' will return 'Organisation zip code'
      *
      * @param string $fieldName
      *
@@ -304,15 +304,27 @@ class FormField extends RequestHandler
      */
     public static function name_to_label($fieldName)
     {
+        // Handle dot delimiters
         if (strpos($fieldName, '.') !== false) {
             $parts = explode('.', $fieldName);
-
-            $label = $parts[count($parts) - 2] . ' ' . $parts[count($parts) - 1];
+            // Ensure that any letter following a dot is uppercased, so that the regex below can break it up
+            // into words
+            $label = implode(array_map('ucfirst', $parts));
         } else {
             $label = $fieldName;
         }
 
-        return preg_replace('/([a-z]+)([A-Z])/', '$1 $2', $label);
+        // Replace any capital letter that is followed by a lowercase letter with a space, the lowercased
+        // version of itself then the remaining lowercase letters.
+        $labelWithSpaces = preg_replace_callback('/([A-Z])([a-z]+)/', function ($matches) {
+            return ' ' . strtolower($matches[1]) . $matches[2];
+        }, $label);
+
+        // Add a space before any capital letter block that is at the end of the string
+        $labelWithSpaces = preg_replace('/([a-z])([A-Z]+)$/', '$1 $2', $labelWithSpaces);
+
+        // The first letter should be uppercase
+        return ucfirst(trim($labelWithSpaces));
     }
 
     /**
@@ -1424,7 +1436,7 @@ class FormField extends RequestHandler
         $field = $classOrCopy;
 
         if (!is_object($field)) {
-            $field = new $classOrCopy($this->name);
+            $field = $classOrCopy::create($this->name);
         }
 
         $field

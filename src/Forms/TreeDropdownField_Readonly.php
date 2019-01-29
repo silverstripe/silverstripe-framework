@@ -17,7 +17,7 @@ class TreeDropdownField_Readonly extends TreeDropdownField
         }
 
         $source = [ $this->value => $title ];
-        $field = new LookupField($this->name, $this->title, $source);
+        $field = LookupField::create($this->name, $this->title, $source);
         $field->setValue($this->value);
         $field->setForm($this->form);
         return $field->Field();

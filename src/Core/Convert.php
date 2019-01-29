@@ -70,9 +70,9 @@ class Convert
             }
 
             return $val;
-        } else {
-            return self::raw2att($val);
         }
+
+        return self::raw2att($val);
     }
 
     /**
@@ -93,16 +93,16 @@ class Convert
             }
 
             return $val;
-        } else {
-            return trim(
-                preg_replace(
-                    '/_+/',
-                    '_',
-                    preg_replace('/[^a-zA-Z0-9\-_:.]+/', '_', $val)
-                ),
-                '_'
-            );
         }
+
+        return trim(
+            preg_replace(
+                '/_+/',
+                '_',
+                preg_replace('/[^a-zA-Z0-9\-_:.]+/', '_', $val)
+            ),
+            '_'
+        );
     }
 
     /**
@@ -119,9 +119,9 @@ class Convert
                 $val[$k] = self::raw2xml($v);
             }
             return $val;
-        } else {
-            return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
         }
+
+        return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
     }
 
     /**
@@ -137,14 +137,14 @@ class Convert
                 $val[$k] = self::raw2js($v);
             }
             return $val;
-        } else {
-            return str_replace(
-                // Intercepts some characters such as <, >, and & which can interfere
-                array("\\", '"', "\n", "\r", "'", "<", ">", "&"),
-                array("\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"),
-                $val
-            );
         }
+
+        return str_replace(
+            // Intercepts some characters such as <, >, and & which can interfere
+            array("\\", '"', "\n", "\r", "'", '<', '>', '&'),
+            array("\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"),
+            $val
+        );
     }
 
     /**
@@ -195,13 +195,13 @@ class Convert
                 $val[$k] = self::raw2sql($v, $quoted);
             }
             return $val;
-        } else {
-            if ($quoted) {
-                return DB::get_conn()->quoteString($val);
-            } else {
-                return DB::get_conn()->escapeString($val);
-            }
         }
+
+        if ($quoted) {
+            return DB::get_conn()->quoteString($val);
+        }
+
+        return DB::get_conn()->escapeString($val);
     }
 
     /**
@@ -233,14 +233,14 @@ class Convert
                 $val[$k] = self::xml2raw($v);
             }
             return $val;
-        } else {
-            // More complex text needs to use html2raw instead
-            if (strpos($val, '<') !== false) {
-                return self::html2raw($val);
-            } else {
-                return html_entity_decode($val, ENT_QUOTES, 'UTF-8');
-            }
         }
+
+        // More complex text needs to use html2raw instead
+        if (strpos($val, '<') !== false) {
+            return self::html2raw($val);
+        }
+
+        return html_entity_decode($val, ENT_QUOTES, 'UTF-8');
     }
 
     /**
@@ -332,7 +332,7 @@ class Convert
             $xml = get_object_vars($xml);
         }
         if (is_array($xml)) {
-            if (count($xml) == 0) {
+            if (count($xml) === 0) {
                 return (string)$x;
             } // for CDATA
             $r = [];
@@ -359,9 +359,9 @@ class Convert
     {
         if (preg_match('/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string)) {
             return "<a style=\"white-space: nowrap\" href=\"$string\">$string</a>";
-        } else {
-            return $string;
         }
+
+        return $string;
     }
 
     /**
@@ -387,8 +387,8 @@ class Convert
             $config = $defaultConfig;
         }
 
-        $data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/is", "", $data);
-        $data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/is", "", $data);
+        $data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/is", '', $data);
+        $data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/is", '', $data);
 
         if ($config['ReplaceBoldAsterisk']) {
             $data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i', '*', $data);
@@ -412,7 +412,7 @@ class Convert
 
         // Compress whitespace
         if ($config['CompressWhitespace']) {
-            $data = preg_replace("/\s+/u", " ", $data);
+            $data = preg_replace("/\s+/u", ' ', $data);
         }
 
         // Parse newline tags
@@ -421,9 +421,9 @@ class Convert
         $data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */u", "\n\n", $data);
         $data = preg_replace("/\n\n\n+/", "\n\n", $data);
 
-        $data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
-        $data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
-        $data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
+        $data = preg_replace('/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */', "\n", $data);
+        $data = preg_replace('/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */', "\n", $data);
+        $data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", '    ', $data);
         $data = preg_replace('/<\/p>/i', "\n\n", $data);
 
         // Replace HTML entities
@@ -564,24 +564,25 @@ class Convert
 
     /**
      * Turn a memory string, such as 512M into an actual number of bytes.
+     * Preserves integer values like "1024" or "-1"
      *
      * @param string $memString A memory limit string, such as "64M"
-     * @return float
+     * @return int
      */
     public static function memstring2bytes($memString)
     {
         // Remove  non-unit characters from the size
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString);
         // Remove non-numeric characters from the size
-        $size = preg_replace('/[^0-9\.]/', '', $memString);
+        $size = preg_replace('/[^0-9\.\-]/', '', $memString);
 
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power
             // of magnitude to multiply a kilobyte by
-            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            return (int)round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
 
-        return round($size);
+        return (int)round($size);
     }
 
     /**

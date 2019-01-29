@@ -22,6 +22,7 @@ use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor_Blowfish;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
@@ -55,7 +56,10 @@ class MemberTest extends FunctionalTest
         parent::setUp();
 
         Member::config()->set('unique_identifier_field', 'Email');
-        Member::set_password_validator(null);
+
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
 
         i18n::set_locale('en_US');
     }
@@ -655,10 +659,14 @@ class MemberTest extends FunctionalTest
         $member = $this->objFromFixture(Member::class, 'test');
         $member->setName('Test Some User');
         $this->assertEquals('Test Some User', $member->getName());
+        $this->assertEquals('Test Some', $member->FirstName);
+        $this->assertEquals('User', $member->Surname);
         $member->setName('Test');
         $this->assertEquals('Test', $member->getName());
         $member->FirstName = 'Test';
         $member->Surname = '';
+        $this->assertEquals('Test', $member->FirstName);
+        $this->assertEquals('', $member->Surname);
         $this->assertEquals('Test', $member->getName());
     }
 

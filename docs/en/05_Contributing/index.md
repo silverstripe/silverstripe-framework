@@ -3,7 +3,7 @@ introduction: Any open source product is only as good as the community behind it
 
 ## House rules for everybody contributing to SilverStripe
  * Read over the SilverStripe Community [Code of Conduct](code_of_conduct) 
- * Ask questions on the [forum](http://silverstripe.org/community/forums), and stick to more high-level discussions on the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+ * Ask questions on the [forum](http://silverstripe.org/community/forums)
  * Make sure you know how to [raise good bug reports](issues_and_bugs)
  * Everybody can contribute to SilverStripe! If you do, ensure you can [submit solid pull requests](code)
 

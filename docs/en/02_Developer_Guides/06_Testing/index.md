@@ -38,6 +38,16 @@ Check the PHPUnit manual for all available [command line arguments](http://www.p
 On Linux or OSX, you can avoid typing the full path on every invocation by adding `vendor/bin` 
 to your `$PATH` definition in the shell profile (usually `~/.profile`): `PATH=./vendor/bin:$PATH`
 
+## Caching
+
+Just like on web requests, SilverStripe caches metadata about the execution context.
+This cache can get stale, e.g. when you change YAML configuration or add certain types of PHP code.
+In order to flush the cache, use the `flush=1` CLI parameter:
+
+```
+vendor/bin/phpunit vendor/silverstripe/framework/tests '' flush=1
+```
+
 ## Generating a Coverage Report
 
 PHPUnit can generate a code coverage report ([docs](http://www.phpunit.de/manual/current/en/code-coverage-analysis.html))

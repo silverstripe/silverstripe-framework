@@ -143,6 +143,7 @@ upgrade-code all --namespace="App\\Web" --psr4
 ```
 
 * `--recipe-core-constraint` defines your SilverStripe release version (optional, will default to the most recent stable release).
+* `--cwp-constraint` can be used instead `--recipe-core-constraint` when upgrading a CWP project.
 * `--namespace` allows you to specify how your project will be namespaced (optional).
 * `--psr4` allows you to specify that your project structure respect the PSR-4 standard and to use sub-namespaces.
 * `--skip-add-namespace` allows you to skip the `add-namespace` command.
@@ -187,7 +188,11 @@ You can upgrade the `composer.json` file with this command:
 upgrade-code recompose --write
 ```
 
-You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. You can use the `--strict` option if you want to use more conservative version constraints. Omit the `--write` flag to preview your changes.
+You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. If you are upgrading a CWP project, you can use `--cwp-constraint` instead to target a specific version of `cwp/cwp-core`.
+
+The upgrader uses [carret version constraint](https://getcomposer.org/doc/articles/versions.md#caret-version-range-) by default. This will cause composer to install compatible minor releases. You can use the `--strict` option if you want to use the more conservative [tilde version constraints](https://getcomposer.org/doc/articles/versions.md#tilde-version-range-).
+
+Omit the `--write` flag to preview your changes.
 
 Your upgraded `composer.json` file will look like this.
 ```json
@@ -598,16 +603,35 @@ Execute the upgrade command with this command.
 upgrade-code upgrade ./mysite/ --write
 ```
 
-If you omit the `--write` flag you will get a preview of what change the upgrader will apply to your codebase. This can be helpful if you if you are tweaking your `.upgrade.yml` or if you are trying to identify areas where you should add a `@skipUpgrade` statement,
+If you omit the `--write` flag you will get a preview of what change the upgrader will apply to your codebase. This can be helpful if you are tweaking your `.upgrade.yml` or if you are trying to identify areas where you should add a `@skipUpgrade` statement,
 
 You can also tweak which rules to apply with the `--rule` flag: `code`, `config`, and `lang`. For example, the following command will only upgrade `lang` and `config` files:
 ```bash
 upgrade-code upgrade ./mysite/ --rule=config --rule=lang
 ```
 
-The `upgrade` command can alter big chunks of your codebase. While it works reasonably well in most use case, you should not trust it blindly. You should take time to review all changes applied by the `upgrade` command and confirm you are happy with them.
+The `upgrade` command can alter big chunks of your codebase. While it works reasonably well in most use cases, you should not trust it blindly. You should take time to review all changes applied by the `upgrade` command and confirm you are happy with them.
 
 [Continue to "Finalising namespace updates"](#namespace-finalise)
+
+#### Rename Warnings
+
+You can also show extra warnings for potentially ambiguous mappings with the `renameWarnings` property:
+
+```yaml
+renameWarnings:
+  - File
+  - Image
+```
+
+An example of an ambiguous rename would be:
+```PHP
+private static $has_one = [
+    'Image' => 'Image',
+];
+```
+
+Add the `--prompt` flag to manually approve ambiguous class renames.
 
 ### Manually update namespaced references
 
@@ -1022,14 +1046,14 @@ If you are using a modified `index.php`, `.htaccess`, or `web.config`, you will 
   * `assets`
   * Any `favicon` files
   * Other common files that should be accssible in your project webroot (example: `robots.txt`)
-* Delete the root `resources` directory if present.
+* Delete the root `resources` or `_resources` directories if present.
 * Run the following command `composer vendor-expose` to make static assets files accessible via the `public` directory.
 
 If you are upgrading from SilverStripe 4.0 to SilverStripe 4.1 (or above), you'll need to update `index.php` before moving it to the public folder. You can get a copy of the generic `index.php` file from `vendor/silverstripe/recipe-core/public`. If you've made modifications to your `index.php` file, you'll need to replicate those into the new `public/index.php` file.
 
 ### Finalising the web root migration
 You'll need to update your server configuration to point to the public directory rather than the root of your project.
-Update your `.gitignore` file so `assets` and `resources` are still ignored when located under the `public` folder.
+Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre SilverStripe 4.4 release) are still ignored when located under the `public` folder.
 Your project should still be functional, although you may now be missing some static assets.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
@@ -1126,7 +1150,22 @@ All your assets should be loading properly now.
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 
-## Step 10 - Running your upgraded site for the first time {#step10}
+## Step 10 - Update database class references {#step10}
+
+If you've updated your class names to use namespaces you will need to reflect those changes in any existing database fields. For example, if you've renamed your `HomePage` class to `App\HomePage` then the database `ClassName` column needs to be updated to point to the `App\HomePage` class, otherwise the CMS will tell you that the page is obsolete. This also applies to polymorphic relationships.
+
+There is no automated way to do this, but you can use the list generated in .upgrade.yml and copy it to `app/_config/legacy.yml`, removing any classes that don't extend DataObject.
+
+```
+SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    HomePage: App\HomePage
+```
+
+This will automatically update affected columns when you first build the database.
+
+
+## Step 11 - Running your upgraded site for the first time {#step11}
 
 You're almost across the finish line.  
 

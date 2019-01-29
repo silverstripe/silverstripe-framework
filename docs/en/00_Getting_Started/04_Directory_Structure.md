@@ -11,7 +11,7 @@ Directory            | Description
 ---------            | -----------
 `public/`            | Webserver public webroot
 `public/assets/`     | Images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS.
-`public/resources/`  | Exposed public files added from modules. Folders within this parent will match that of the source root location.
+`public/_resources/` | Exposed public files added from modules. Folders within this parent will match that of the source root location (this can be altered by configuration). 
 `vendor/`            | SilverStripe modules and other supporting libraries (the framework is in `vendor/silverstripe/framework`)
 `themes/`            | Standard theme installation location
 

@@ -97,7 +97,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
     public function format(array $record)
     {
         // Get error code
-        $code = empty($record['code']) ? $this->statusCode : $record['code'];
+        $code = empty($record['code']) ? $this->getStatusCode() : $record['code'];
         return $this->output($code);
     }
 
@@ -127,8 +127,9 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
         $output = $renderer->renderHeader();
         $output .= $renderer->renderInfo("Website Error", $this->getTitle(), $this->getBody());
 
-        if (Email::config()->admin_email) {
-            $mailto = Email::obfuscate(Email::config()->admin_email);
+        $adminEmail = Email::config()->get('admin_email');
+        if ($adminEmail) {
+            $mailto = Email::obfuscate($adminEmail);
             $output .= $renderer->renderParagraph('Contact an administrator: ' . $mailto . '');
         }
 

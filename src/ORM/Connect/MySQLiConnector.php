@@ -78,6 +78,18 @@ class MySQLiConnector extends DBConnector
 
         $this->dbConn = mysqli_init();
 
+        // Use native types (MysqlND only)
+        if (defined('MYSQLI_OPT_INT_AND_FLOAT_NATIVE')) {
+            $this->dbConn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
+
+        // The alternative is not ideal, throw a notice-level error
+        } else {
+            user_error(
+                'mysqlnd PHP library is not available, numeric values will be fetched from the DB as strings',
+                E_USER_NOTICE
+            );
+        }
+
         // Set SSL parameters if they exist. All parameters are required.
         if (array_key_exists('ssl_key', $parameters) &&
             array_key_exists('ssl_cert', $parameters) &&

@@ -57,11 +57,11 @@ up by [addons.silverstripe.org](http://addons.silverstripe.org/) website due to 
 
 Note that SilverStripe modules have the following distinct characteristics:
 
- - SilverStripe can hook in to the composer installation process by declaring `type: silverstripe/vendormodule`.
+ - SilverStripe can hook in to the composer installation process by declaring `type: silverstripe-vendormodule`.
  - Any folder which should be exposed to the public webroot must be declared in the `extra.expose` config.
    These paths will be automatically rewritten to public urls which don't directly serve files from the `vendor`
    folder. For instance, `vendor/my-vendor/my-module/client` will be rewritten to
-   `resources/my-vendor/my-module/client`.
+   `_resources/my-vendor/my-module/client`.
  - Any module which uses the folder expose feature must require `silverstripe/vendor-plugin` in order to
    support automatic rewriting and linking. For more information on this plugin you can see the
    [silverstripe/vendor-plugin github page](https://github.com/silverstripe/vendor-plugin).

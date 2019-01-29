@@ -6,6 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Represents a classname selector, which respects obsolete clasess.
@@ -29,14 +30,6 @@ class DBClassName extends DBEnum
      */
     protected $record = null;
 
-    /**
-     * Classname spec cache for obsolete classes. The top level keys are the table, each of which contains
-     * nested arrays with keys mapped to field names. The values of the lowest level array are the classnames
-     *
-     * @var array
-     */
-    protected static $classname_cache = array();
-
     private static $index = true;
 
     /**
@@ -45,7 +38,8 @@ class DBClassName extends DBEnum
      */
     public static function clear_classname_cache()
     {
-        self::$classname_cache = array();
+        Deprecation::notice('4.3', 'Call DBEnum::flushCache() instead');
+        DBEnum::flushCache();
     }
 
     /**
@@ -147,47 +141,6 @@ class DBClassName extends DBEnum
         $dataobject = strtolower(DataObject::class);
         unset($classNames[$dataobject]);
         return array_values($classNames);
-    }
-
-    /**
-     * Get the list of classnames, including obsolete classes.
-     *
-     * If table or name are not set, or if it is not a valid field on the given table,
-     * then only known classnames are returned.
-     *
-     * Values cached in this method can be cleared via `DBClassName::clear_classname_cache();`
-     *
-     * @return array
-     */
-    public function getEnumObsolete()
-    {
-        // Without a table or field specified, we can only retrieve known classes
-        $table = $this->getTable();
-        $name = $this->getName();
-        if (empty($table) || empty($name)) {
-            return $this->getEnum();
-        }
-
-        // Ensure the table level cache exists
-        if (empty(self::$classname_cache[$table])) {
-            self::$classname_cache[$table] = array();
-        }
-
-        // Check existing cache
-        if (!empty(self::$classname_cache[$table][$name])) {
-            return self::$classname_cache[$table][$name];
-        }
-
-        // Get all class names
-        $classNames = $this->getEnum();
-        if (DB::get_schema()->hasField($table, $name)) {
-            $existing = DB::query("SELECT DISTINCT \"{$name}\" FROM \"{$table}\"")->column();
-            $classNames = array_unique(array_merge($classNames, $existing));
-        }
-
-        // Cache and return
-        self::$classname_cache[$table][$name] = $classNames;
-        return $classNames;
     }
 
     public function setValue($value, $record = null, $markChanged = true)

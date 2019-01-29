@@ -13,6 +13,9 @@ class MyObject extends DataObject implements TestOnly
     private static $create_table_options = array(MySQLSchemaManager::ID => 'ENGINE=InnoDB');
 
     private static $db = array(
-        'MyField' => 'Varchar'
+        'MyField' => 'Varchar',
+        'MyInt' => 'Int',
+        'MyFloat' => 'Float',
+        'MyBoolean' => 'Boolean',
     );
 }

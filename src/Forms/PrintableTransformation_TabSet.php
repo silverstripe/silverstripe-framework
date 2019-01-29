@@ -19,9 +19,9 @@ class PrintableTransformation_TabSet extends TabSet
     public function FieldHolder($properties = array())
     {
         // This gives us support for sub-tabs.
-        $tag = ($this->tabSet) ? "h2>" : "h1>";
+        $tag = $this->getTabSet() ? 'h2>' : 'h1>';
         $retVal = '';
-        foreach ($this->children as $tab) {
+        foreach ($this->getChildren() as $tab) {
             $retVal .= "<$tag" . $tab->Title() . "</$tag\n";
             $retVal .= $tab->FieldHolder();
         }

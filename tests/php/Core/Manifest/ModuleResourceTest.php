@@ -42,7 +42,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/resources/module/client/script.js?m=',
+            '/basefolder/'. RESOURCES_DIR . '/module/client/script.js?m=',
             $resource->getURL()
         );
     }
@@ -60,7 +60,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/resources/vendor/silverstripe/modulec/client/script.js?m=',
+            '/basefolder/'. RESOURCES_DIR . '/vendor/silverstripe/modulec/client/script.js?m=',
             $resource->getURL()
         );
     }
@@ -80,7 +80,7 @@ class ModuleResourceTest extends SapphireTest
             $resource->getPath()
         );
         $this->assertStringStartsWith(
-            '/basefolder/resources/vendor/silverstripe/modulec/client/script.js?m=',
+            '/basefolder/'. RESOURCES_DIR . '/vendor/silverstripe/modulec/client/script.js?m=',
             $resource->getURL()
         );
     }

@@ -144,6 +144,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
         // Force the state to the initial page if none is set
         $state->currentPage(1);
+        $state->itemsPerPage($this->getItemsPerPage());
 
         return $state;
     }

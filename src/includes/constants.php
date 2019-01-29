@@ -27,6 +27,7 @@ use SilverStripe\Core\TempFolder;
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
+ * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_ressources"
  */
 
 require_once __DIR__ . '/functions.php';
@@ -197,4 +198,19 @@ if (!defined('TEMP_PATH')) {
 // Define the temporary folder for backwards compatibility
 if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', TEMP_PATH);
+}
+
+// Define the Ressource Dir constant that will be use to exposed vendor assets
+if (!defined('RESOURCES_DIR')) {
+    $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
+    $resourcesDir = $project->getResourcesDir() ?: 'resources';
+    if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir)) {
+        define('RESOURCES_DIR', $resourcesDir);
+    } else {
+        throw new LogicException(sprintf(
+            'Resources dir error: "%s" is not a valid resources directory name. Update the ' .
+            '`extra.resources-dir` key in your composer.json file',
+            $resourcesDir
+        ));
+    }
 }
