@@ -866,7 +866,7 @@ class Injector {
 			return $this->instantiate($spec, $name);
 		}
 
-		return $this->instantiate($spec);
+		return $this->instantiate($spec, null, 'prototype');
 	}
 
 	/**

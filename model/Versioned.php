@@ -446,7 +446,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
-		$versionableExtensions = $this->owner->config()->versionableExtensions;
+		$versionableExtensions = (array)$this->owner->config()->versionableExtensions;
 		if(count($versionableExtensions)){
 
 			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
@@ -936,7 +936,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public function extendWithSuffix($table) {
-		$versionableExtensions = $this->owner->config()->versionableExtensions;
+		$versionableExtensions = (array)$this->owner->config()->versionableExtensions;
 
 		if(count($versionableExtensions)){
 			foreach ($versionableExtensions as $versionableExtension => $suffixes) {
