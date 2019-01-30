@@ -9,13 +9,11 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\Debug;
 
 /**
- * Secures requests by only allowing a whitelist of Host values
+ * Display execution metricts for the current request if in dev mode and `execmetric` is provided as a request variable.
  */
 class ExecMetricMiddleware implements HTTPMiddleware
 {
-    /**
-     * @inheritdoc
-     */
+
     public function process(HTTPRequest $request, callable $delegate)
     {
         if (!$this->showMetric($request)) {
@@ -38,6 +36,11 @@ class ExecMetricMiddleware implements HTTPMiddleware
         }
     }
 
+    /**
+     * Check if execution metric should be shown.
+     * @param HTTPRequest $request
+     * @return bool
+     */
     private function showMetric(HTTPRequest $request)
     {
         return Director::isDev() && array_key_exists('execmetric', $request->getVars());
