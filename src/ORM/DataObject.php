@@ -2650,14 +2650,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
 
             // if a field is not existing or has strictly changed
-            if (!isset($this->original[$fieldName]) || $this->original[$fieldName] !== $val) {
+            if (!array_key_exists($fieldName, $this->original) || $this->original[$fieldName] !== $val) {
                 // TODO Add check for php-level defaults which are not set in the db
                 // TODO Add check for hidden input-fields (readonly) which are not set in the db
                 // At the very least, the type has changed
                 $this->changed[$fieldName] = self::CHANGE_STRICT;
 
-                if ((!isset($this->original[$fieldName]) && $val)
-                    || (isset($this->original[$fieldName]) && $this->original[$fieldName] != $val)
+                if ((!array_key_exists($fieldName, $this->original) && $val)
+                    || (array_key_exists($fieldName, $this->original) && $this->original[$fieldName] != $val)
                 ) {
                     // Value has changed as well, not just the type
                     $this->changed[$fieldName] = self::CHANGE_VALUE;
