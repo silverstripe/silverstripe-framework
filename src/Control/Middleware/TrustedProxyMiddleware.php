@@ -145,8 +145,15 @@ class TrustedProxyMiddleware implements HTTPMiddleware
             // Replace host
             foreach ($this->getProxyHostHeaders() as $header) {
                 $hostList = $request->getHeader($header);
-                if ($hostList) {
-                    $request->addHeader('Host', strtok($hostList, ','));
+
+                // Get first host (if passed through multiple proxies)
+                $host = $hostList ? strtok($hostList, ',') : null;
+
+                // Ensure the host name is valid
+                $host = filter_var($host, FILTER_VALIDATE_DOMAIN, ['flags' => FILTER_FLAG_HOSTNAME]);
+
+                if ($host) {
+                    $request->addHeader('Host', $host);
                     break;
                 }
             }
