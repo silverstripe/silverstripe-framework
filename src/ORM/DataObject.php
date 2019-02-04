@@ -947,8 +947,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * The field names can be simple names, or you can use a dot syntax to access $has_one relations.
      * For example, array("Author.FirstName" => "Jim") will set $this->Author()->FirstName to "Jim".
      *
-     * update() doesn't write the main object, but if you use the dot syntax, it will write()
+     * Doesn't write the main object, but if you use the dot syntax, it will write()
      * the related objects that it alters.
+     *
+     * When using this method with user supplied data, it's very important to
+     * whitelist the allowed keys.
      *
      * @param array $data A map of field name to data values to update.
      * @return DataObject $this
