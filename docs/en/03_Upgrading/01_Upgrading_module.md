@@ -68,9 +68,9 @@ SilverStripe 4 modules are now installed inside the vendor directory. To get you
 -    "type": "silverstripe-module",
 +    "type": "silverstripe-vendormodule",
     "require": {
-        "silverstripe/framework": "^3",
+-        "silverstripe/framework": "^3"
++        "silverstripe/framework": "^3",
 +        "silverstripe/vendor-plugin": "^1"
-        
     }
 }
 ```
@@ -101,3 +101,164 @@ By this point, your module should be installable in a test SilverStripe 4 projec
 
 From this point, you can either work from a test project or you can keep working directly on your module.
 
+## Step 2 - Update your environment configuration
+
+As a module maintainer, you shouldn't be shipping any environment file with your module. So there's no need for you to run the upgrader `environment` command. If your module requires any environment variables, you should update your documentation accordingly, but otherwise you can move on to the next step.
+
+## Step 3 - Namespacing your module
+
+Namespacing your module is mandatory to get it working with SilverStripe 4. You can use the `add-namespace` upgrader command to achieve this.
+
+```bash
+# If you are working from a test project, you need to specify the `--root-dir` parameter
+upgrade add-namespace --root-dir vendor/example-user/silverstripe-example-module \
+  "ExampleUser\\SilverstripeExampleModule" \
+  vendor/example-user/silverstripe-example-module/code/
+  
+# If you are working directly from the module, you can ommit `--root-dir` parameter
+upgrade add-namespace "ExampleUser\\SilverstripeExampleModule" code/
+```
+
+If your module codebase is structure in folders, you can use the `--psr4` and `--recursive` flag to quickly namespace your entire module in one command. This command will recursively go trough the `code` directory and namespace all files based on their position relative to `code`.
+
+```bash
+upgrade add-namespace --recursive --psr4 "ExampleUser\\SilverstripeExampleModule" code/
+```
+
+### Configuring autoloading
+
+You need to update your `composer.json` file with an autoload entry, so composer knows what folder maps to what namespace.
+
+You can do this manually:
+```diff
+{
+    "name": "example-user/silverstripe-example-module",
+    "type": "silverstripe-vendormodule",
+    "require": {
+        "silverstripe/framework": "^4",
+        "silverstripe/vendor-plugin": "^1"
+-    }
++    },
++    "autoload": {
++        "psr4": {
++            "ExampleUser\\SilverstripeExampleModule\\": "code/"
++        }
++    },
++    "autoload-dev": {
++        "psr4": {
++            "ExampleUser\\SilverstripeExampleModule\\Tests\\": "tests/"
++        }
++    }
+}
+```
+
+Alternatively, you can use the `--autoload` or `--autoload-dev` parameter when calling `add-namespace` to do this for you.
+
+```bash
+upgrade add-namespace --recursive --psr4 --autoload "ExampleUser\\SilverstripeExampleModule" code/
+upgrade add-namespace --recursive --psr4 --autoload-dev "ExampleUser\\SilverstripeExampleModule\\Tests" tests
+```
+
+[Learn more about configuring autoloading](https://getcomposer.org/doc/04-schema.md#autoload) in your `composer.json` file.
+
+### Preparing your `.upgrade.yml` file
+
+`add-namespace` will create a `.upgrade.yml` file that maps your old class names to their new namespaced equivalent. This will be used by the `upgrade` command in the next step.
+
+Depending on the nature of your module, you may have some class names that map to other common names. When the`upgrade` command runs, it will try to substitute any occurrence of the old name with the namespaced one. This can lead to accidental substitution. For example, let's say you have a `Link` class in your module. In many project the word `Link` will be used for other purposes like a field label or property names. You can manually update your `.upgrade.yml` file to define a `renameWarnings` section. This will prompt users upgrading to confirm each substitution.
+
+```yml
+mappings:
+  # Prompt user before replacing references to Link
+  Link: ExampleUser\SilverstripeExampleModule\Model\Link
+  # No prompt when replacing references to ExampleModuleController
+  ExampleModuleController: ExampleUser\SilverstripeExampleModule\Controller
+  
+renameWarnings:
+  - Link
+
+```
+
+Make sure to commit this file and to ship it along with your upgraded module. This will allow your users to update references to your module's classes if they use the upgrader on their project. 
+
+### Finalising your namespaced module
+
+By this point:
+* all your classes should be inside a namespace
+* your `composer.json` file should have an autoload definition
+* you should have a `.upgrade.yml` file.
+
+However, your codebase is still referencing SilverStripe classes by their old non-namespaced names. Commit your changes before proceeding to the next step.
+
+## Step 4 - Update codebase with references to newly namespaced classes
+
+This part of the process is identical for module upgrade and project upgrade.
+
+```bash
+# If upgrading from inside a test project
+upgrade-code upgrade --root-dir vendor/example-user/silverstripe-example-module \
+  vendor/example-user/silverstripe-example-module/
+  
+# If upgrading the module directly
+upgrade-code upgrade ./
+```
+
+Basically, all references to the old class names will be replace with namespaced class names.
+
+By this point, you should be able to load your module with PHP. However, you module will be using deprecated APIs.
+
+## Step 5 - Updating your codebase to use SilverStripe 4 API
+
+This step will allow you to update references to deprecated APIs. If you are planning on making changes to your own module's API, take a minute to define those changes in your `.upgrade.yml`:
+* this will help you to update your own codebase
+* your users will get warned if they are still using your module's deprecated APIs when upgrading.
+
+You can define warnings for deprecated APIs along with a message. If there's a one-to-one equivalent for the deprecated API, you can also define a replacement. e.g.: 
+
+```yml
+warnings:
+  classes:
+    'ExampleUser\SilverstripeExampleModule\Controller':
+      message: 'This warning message will be displayed to your users'
+      url: 'https://github.com/example-users/silverstripe-example-module/en/4/changelogs/#object-replace'
+  methods:
+    'ExampleUser\SilverstripeExampleModule\AmazingClass::deprecatedMethod()':
+      message: 'Replace with a different method'
+      replacement: 'newBetterMethod'
+  props:
+    'ExampleUser\SilverstripeExampleModule\AmazingClass->oldProperty':
+      message: 'Replace with a different property'
+      replacement: 'newProperty'
+```
+
+When you are done updating you're `.upgrade.yml` file, you can call the `inspect` command to search for deprecated APIs.
+
+```bash
+# If upgrading from inside a test project
+upgrade-code inspect --root-dir vendor/example-user/silverstripe-example-module \
+  vendor/example-user/silverstripe-example-module/code/
+  
+# If upgrading the module directly
+upgrade-code inspect code/
+```
+
+## Step 6 - Update your entry point
+
+Module do not have an entry point. So there's nothing to do here.
+
+## Step 7 - Update project structure
+
+This step is optional. We recommend renaming `code` to `src`. This is only a convention and will not affect how your module will be executed.
+
+If you do rename this directory, do not forget to update your `autoload` configuration in your `composer.json` file.
+
+## Step 8 - Switch to public web-root
+
+The public web root does not directly affect module. So you can skip this step.
+
+## Step 9 - Move away from hardcoded paths for referencing static assets
+
+While SilverStripe 4 projects can get away with directly referencing static assets under some conditions, modules must dynamically exposed their static assets. This is necessary to move modules to the vendor folder and to enable the public web root.  
+
+  
+ 
