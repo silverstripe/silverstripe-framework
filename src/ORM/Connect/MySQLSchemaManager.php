@@ -207,7 +207,7 @@ class MySQLSchemaManager extends DBSchemaManager
     public function databaseExists($name)
     {
         // MySQLi doesn't like parameterised queries for some queries
-        $sqlName = $this->database->quoteString($name);
+        $sqlName = addcslashes($this->database->quoteString($name), '%_');
         return !!($this->query("SHOW DATABASES LIKE $sqlName")->value());
     }
 
