@@ -20,12 +20,12 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\State\FixtureTestState;
 use SilverStripe\Dev\State\SapphireTestState;
-use SilverStripe\Dev\State\TestState;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
@@ -38,7 +38,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 if (!class_exists(PHPUnit_Framework_TestCase::class)) {
     return;
@@ -65,6 +64,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected static $fixture_file = null;
 
     /**
+     * @deprecated 4.0..5.0 Use FixtureTestState instead
      * @var FixtureFactory
      */
     protected $fixtureFactory;
@@ -299,9 +299,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $fixtureFiles = $this->getFixturePaths();
 
         if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
+            // Assign fixture factory to deprecated prop in case old tests use it over the getter
             /** @var FixtureTestState $fixtureState */
             $fixtureState = static::$state->getStateByName('fixtures');
-            $this->setFixtureFactory($fixtureState->getFixtureFactory(static::class));
+            $this->fixtureFactory = $fixtureState->getFixtureFactory(static::class);
+
             $this->logInWithPermission('ADMIN');
         }
 
@@ -452,7 +454,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected function idFromFixture($className, $identifier)
     {
-        $id = $this->getFixtureFactory()->getId($className, $identifier);
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        $id = $state->getFixtureFactory(static::class)->getId($className, $identifier);
 
         if (!$id) {
             user_error(sprintf(
@@ -474,7 +478,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected function allFixtureIDs($className)
     {
-        return $this->getFixtureFactory()->getIds($className);
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        return $state->getFixtureFactory(static::class)->getIds($className);
     }
 
     /**
@@ -487,7 +493,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected function objFromFixture($className, $identifier)
     {
-        $obj = $this->getFixtureFactory()->get($className, $identifier);
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        $obj = $state->getFixtureFactory(static::class)->get($className, $identifier);
 
         if (!$obj) {
             user_error(sprintf(
@@ -521,7 +529,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public function clearFixtures()
     {
-        $this->getFixtureFactory()->clear();
+        /** @var FixtureTestState $state */
+        $state = static::$state->getStateByName('fixtures');
+        $state->getFixtureFactory(static::class)->clear();
     }
 
     /**
