@@ -2241,7 +2241,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             // Otherwise, use the database field's scaffolder
             } elseif ($object = $this->relObject($fieldName)) {
-                $field = $object->scaffoldSearchField();
+                if (is_object($object) && $object->hasMethod('scaffoldSearchField')) {
+                    $field = $object->scaffoldSearchField();
+                } else {
+                    throw new Exception(sprintf(
+                        "SearchField '%s' on '%s' does not return a valid DBField instance.",
+                        $fieldName,
+                        get_class($this)
+                    ));
+                }
             }
 
             // Allow fields to opt out of search
