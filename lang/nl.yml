@@ -84,7 +84,6 @@ nl:
     RelationSearch: 'Zoek relatie'
     ResetFilter: Resetten
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Verwijder
     Delete: Verwijder
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     EditPermissionsFailure: 'Geen toelating om te ontkoppelen'
@@ -96,23 +95,12 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '{type} {name} verwijderd'
     Save: Opslaan
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'U kunt uzelf niet verwijderen van deze groep, omdat u dan geen admin-rechten meer heeft.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: van
     Page: Pagina
     View: Bekijk
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Item is nog niet gepubliceerd'
-    ADDEDTODRAFTSHORT: Concept
-    ARCHIVEDPAGEHELP: 'Het item is verwijderd van de concept- en de live site'
-    ARCHIVEDPAGESHORT: Gearchiveerd
-    MODIFIEDONDRAFTHELP: 'Item heeft wijzigingen die nog niet gepubliceerd zijn'
-    MODIFIEDONDRAFTSHORT: Aangepast
-    ONLIVEONLYSHORT: 'Alleen op de live site'
-    ONLIVEONLYSHORTHELP: 'Item is gepubliceerd, maar verwijderd van de concept site'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
@@ -174,8 +162,8 @@ nl:
     PASSWORDEXPIRED: '<p>Uw wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
-    LOGIN_MESSAGE: 'Sessie is verlopen'
-    LOGIN_TITLE: '<p>U kunt verder met wat u aan het doen was, door opnieuw in te loggen.</p>'
+    LOGIN_MESSAGE: '<p>De browsersessie is verlopen wegens inactiviteit</p>'
+    LOGIN_TITLE: 'Log opnieuw in om verder te gaan.'
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>U bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als u niet automatisch wordt doorgestuurd.</p>'
     SUCCESS_TITLE: 'Inloggen is gelukt'
@@ -331,7 +319,4 @@ nl:
     LOGOUT: Uitloggen
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
-    NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt <a href="{link1}">een nieuwe link aanvragen</a> of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
-    PASSWORDSENTHEADER: 'Wachtwoord herstel link verzonden naar {email}'
-    PASSWORDSENTTEXT: 'Bedankt! Er is een link verstuurd naar {email} om uw wachtwoord opnieuw in te stellen, in de veronderstelling dat er een account bestaat voor dit e-mailadres.'
