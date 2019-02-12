@@ -260,5 +260,76 @@ The public web root does not directly affect module. So you can skip this step.
 
 While SilverStripe 4 projects can get away with directly referencing static assets under some conditions, modules must dynamically exposed their static assets. This is necessary to move modules to the vendor folder and to enable the public web root.  
 
-  
- 
+### Exposing your module's static assets
+
+You'll need to update your module's `composer.json` file with a `extra.expose` key.
+
+
+```diff
+{
+    "name": "example-user/silverstripe-example-module",
+    "type": "silverstripe-vendormodule",
+    "require": {
+        "silverstripe/framework": "^4",
+        "silverstripe/vendor-plugin": "^1"
+    },
+    "autoload": {
+        "psr4": {
+            "ExampleUser\\SilverstripeExampleModule\\": "code/"
+        }
+    },
+    "autoload-dev": {
+        "psr4": {
+            "ExampleUser\\SilverstripeExampleModule\\Tests\\": "tests/"
+        }
+-    }
++    },
++    "extra": {
++        "expose": [
++            "images",
++            "styles",
++            "javascript"
++        ]
++    }
+}
+```
+
+### Referencing static assets
+
+This process is essentially the same for projects and modules. The only difference is that module static asset paths must be prefix with the module name as defined in their composer.json file.
+
+```diff
+<?php 
+- Requirements::css('silverstripe-example-module/styles/admin.css');
++ Requirements::css('example-user/silverstripe-example-module: styles/admin.css');
+$pathToImage =
+-    'silverstripe-example-module/images/logo.png';
++    ModuleResourceLoader::singleton()->resolveURL('example-user/silverstripe-example-module: images/logo.png');
+```
+
+## Step 10 - Update database class references {#step10}
+
+Just like SilverStripe projects, your module must define class names remapping for every DataObject child.
+
+```
+SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    ExampleModuleDummyDataObject: ExampleUser\SilverstripeExampleModule\Models\DummyDataObject
+```
+
+On the first `dev/build` after a successful upgrade, the `ClassName` field on each DataObject table will be substituted with the namespaced classname.
+
+    
+## Extra steps
+
+You've been through all the steps covered in the regular project upgrade guide. These 2 additional steps might not be necessary.
+
+### Create migration tasks
+
+Depending on the nature of your module, you might need to perform additional task to complete the upgrade process. For example, the `framework` module ships with a file migration tasks that converts Files from the old SilverStripe 3 structure to the new structure required by SilverStripe 4.
+
+Extend [BuildTasks](api:SilverStripe/Dev/BuildTask) and create your own migration task if your module requires post-upgrade work. Document this clearly for your users so they know they need to run the task after they're done upgrading their project.
+
+### Keep updating your `.upgrade.yml`
+
+The upgrader can be run on project that have already been upgraded to SilverStripe 4. As you introduce new API and deprecate old ones, you can keep updating your `.upgrade.yml` file to make it easy for your users to keep their code up to date. If you do another major release of your module aimed at SilverStripe 4, you can use all the tools in the upgrader to make the upgrade process seamless for your users.

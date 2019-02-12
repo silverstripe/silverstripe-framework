@@ -1091,47 +1091,42 @@ For example, let's say you have `scripts`, `images` and `css` folders under `app
 For the change to take affect, run the following command: `composer vendor-expose`.
 
 ### Referencing static assets in your PHP code
-Wherever you would have use an hardcoded path, you can now use the `projectname: path/to/file.css` syntax.
-
-`projectname` is controlled by the `project` property of `SilverStripe\Core\Manifest\ModuleManifest` in your YML configuration. This configuration file should look like this:
- ```yaml  
- SilverStripe\Core\Manifest\ModuleManifest:
-   project: app
- ```
+Wherever you would have use an hardcoded path, you can now use the `path/to/file.css` syntax. To reference a static file from a module, prefix the path with the module's name (e.g.: `silverstripe/admin:client/dist/js/bundle.js`).
 
 To add some javascript and css files to your requirements from your PHP code, you could use this syntax:
 ```php
 use SilverStripe\View\Requirements;
 
 # Load your own style and scripts
-Requirements::css('app: css/styles.css');
-Requirements::script('app: scripts/client.css');
+Requirements::css('app/css/styles.css');
+Requirements::script('app/scripts/client.css');
 
 # Load some assets from a module.  
 Requirements::script('silverstripe/blog: js/main.bundle.js');
 ```
 
-You can `SilverStripe\Core\Manifest\ModuleLoader` to get the web path of file.
+You can `SilverStripe\Core\Manifest\ModuleResourceLoader` to get the web path of file.
 ```php
-ModuleLoader::getModule('app')->getResource('images/road-runner.jpg')->getRelativePath();
+ModuleResourceLoader::singleton()->resolveURL('app/images/road-runner.jpg');
+ModuleResourceLoader::singleton()->resolveURL('silverstripe/blog: js/main.bundle.js');
 ```
 
 You can use `SilverStripe\View\ThemeResourceLoader` to access files from your theme:
 ```php
-$themeFolderPath = ThemeResourceLoader::inst()->getPath('simple');
-$themesFilePath = ThemeResourceLoader::inst()->findThemedResource('css/styles.css');
+$cssResourcePath = ThemeResourceLoader::inst()->findThemedResource('css/layout.css');
+$relativeUrl = ModuleResourceLoader::singleton()->resolveURL($cssResourcePath);
 ```
 
 For classes that expect icons, you can specify theme with:
 ```php
 class ListingPage extends \Page
 {
-    private static $icon = 'app: images/sitetree_icon.png';
+    private static $icon = 'app/images/sitetree_icon.png';
 }
 
 class MyCustomModelAdmin extends \SilverStripe\Admin\ModelAdmin
 {
-    private static $menu_icon = 'app: images/modeladmin_icon.png';
+    private static $menu_icon = 'app/images/modeladmin_icon.png';
 }
 ```
 
@@ -1139,7 +1134,7 @@ class MyCustomModelAdmin extends \SilverStripe\Admin\ModelAdmin
 SS template files accept a similar format for referencing static assets. Go through your assets files and remove hardcoded references.
 
 ```html
-<img src="$ModulePath(app)/images/coyote.png" />
+<img src="$resourceURL(app/images/coyote.png)" />
 <% require css("app: css/styles.css") %>
 ```
 
