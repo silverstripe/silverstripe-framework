@@ -5,13 +5,13 @@ introduction: Upgrade your module to be compatible with SilverStripe 4 and make 
 
 This guide will help you upgrade a SilverStripe 3 module to be compatible with SilverStripe 4.
 
-You should be familiar with [Upgrading to SilverStripe 4](/upgrading) before reading this guide. The process for upgrading a SilverStripe module is very similar to the process for Upgrading a SilverStripe project. This guide focuses on highlighting ways in which upgrading a module differs from upgrading a regular project.
+You should be familiar with [Upgrading a project to SilverStripe 4](Upgrading_project) before reading this guide. The process for upgrading a SilverStripe module is very similar to the process for Upgrading a SilverStripe project. This guide focuses on highlighting ways in which upgrading a module differs from upgrading a regular project.
 
 ## Improving the upgrade experience of your users with a`.upgrade.yml` file 
 
-Making your module compatible with SilverStripe 4 is only one part of the process. As a module maintainer, you also want to provide a good upgrade experience for your users. Your module can integrate with the [SilverStripe upgrader]() just like the SilverStripe core modules.
+Making your module compatible with SilverStripe 4 is only one part of the process. As a module maintainer, you also want to provide a good upgrade experience for your users. Your module can integrate with the [SilverStripe upgrader](https://github.com/silverstripe/silverstripe-upgrader) just like the SilverStripe core modules.
 
-Your SilverStripe 4 module should ship with a `.upgrade.yml` file. This file is read by the upgrader and will define new APIs introduced by the upgraded version of your module. Each steps in this guide details what entry you should add your module's `.upgrade.yml` file.
+Your SilverStripe 4 module should ship with a `.upgrade.yml` file. This file is read by the upgrader and will define new APIs introduced by the upgraded version of your module. Each steps in this guide details what entry you should add to your module's `.upgrade.yml` file.
 
 ## Step 0 - Branching off your project
 
@@ -52,15 +52,15 @@ If the development branch is hosted on a different GIT remote than the one used 
 }
 ```
 
-Note that you will not be able to install your development branch in a SilverStripe 4 project until you've adjusted its dependencies.
+You will not be able to install your development branch in a SilverStripe 4 project until you've adjusted your module's dependencies.
 
 ## Step 1 - Upgrade your dependencies
 
-Before you can install your module in a SilverStripe 4 project, you must update your module's `composer.json` file to require SilverStripe 4 compatible dependencies. In most cases, you'll be better off updating your module's composer file manually, especially if your module only requires a small number of dependencies. You can use upgrader's `recompose` command if you want, but you'll need to carefulyl validate the resulting `composer.json` file.
+Before you can install your module in a SilverStripe 4 project, you must update your module's `composer.json` file to require SilverStripe 4 compatible dependencies. In most cases, you'll be better off updating your module's composer file manually, especially if your module only requires a small number of dependencies. You can use upgrader's `recompose` command if you want, but you'll need to carefully validate the resulting `composer.json` file.
 
 ### Update module's type 
 
-SilverStripe 4 modules are now installed inside the vendor directory. To get your modules installed in the vendor directory, you'll need to update the its `type` to `silverstripe-vendormodule`. You'll also need to add a dependency to `silverstripe/vendor-plugin`
+SilverStripe 4 modules are now installed inside the vendor directory. To get your module installed in the vendor directory, you'll need to update its `type` to `silverstripe-vendormodule`. You'll also need to add a dependency to `silverstripe/vendor-plugin`.
 
 ```diff
 {
@@ -77,13 +77,13 @@ SilverStripe 4 modules are now installed inside the vendor directory. To get you
 
 ### Prefer specific modules over recipes
 
-When upgrading a project, it is recommended to require recipes over modules. However, when upgrading a module, you want to limit the number the number of additional packages that gets installed along with your module. You should target specific packages that your module dependents on. 
+When upgrading a project, it is recommended to require recipes rather than modules. However, when upgrading a module, you want to limit the number of additional packages that gets installed along with your module. You should target specific packages that your module depends on. 
 
-For example, let's say your module adds a new ModelAdmin to the SilverStripe administration area without interacting with the CMS directly. In this scenario the main module you will need is `silverstripe/admin` which contains the `ModelAdmin` class and related administration functionality. If you update your `composer.json` file to require `silverstripe/recipe-cms`, you'll force your users to install a lot of modules they may not need like `silverstripe/cms`, `silverstripe/campaign-admin`, `silverstripe/asset-admin`, `silverstripe/versioned-admin`.
+For example, let's say your module adds a ModelAdmin to the SilverStripe administration area without interacting with the CMS directly. In this scenario, the main module you need is `silverstripe/admin` which contains the `ModelAdmin` class and related administration functionality. If you update your `composer.json` file to require `silverstripe/recipe-cms`, you'll force your users to install a lot of modules they may not need like `silverstripe/cms`, `silverstripe/campaign-admin`, `silverstripe/asset-admin`, `silverstripe/versioned-admin`.
 
 ### Avoid rigid constraints
 
-Choose constraint based on the minimum version of SilverStripe 4 you are planning on supporting and allow your module to work with future releases. 
+Choose constraints based on the minimum version of SilverStripe 4 you are planning on supporting and allow your module to work with future releases. 
 
 For example, if your module requires an API that got introduced with the 4.1 release of `silverstripe/framework`, then that's the version you should target. You should use the caret symbol (`^`) over the ellipse (`~`) so your module works with more recent releases. In this scenario, your constraint should look like `"silverstripe/framework": "^4.1"`.
 
@@ -97,13 +97,13 @@ While these changes may be useful for testing, they should not be part of the fi
 
 You should commit the changes to your module's `composer.json` and push them to your remote branch.
 
-By this point, your module should be installable in a test SilverStripe 4 project. It will be installed under the vendor directory (e.g.: `vendor/example-user/silverstripe-example-module`). However, it produce exception if you try to run it.
+By this point, your module should be installable in a test SilverStripe 4 project. It will be installed under the vendor directory (e.g.: `vendor/example-user/silverstripe-example-module`). However, it will throw exceptions if you try to run it.
 
 From this point, you can either work from a test project or you can keep working directly on your module.
 
 ## Step 2 - Update your environment configuration
 
-As a module maintainer, you shouldn't be shipping any environment file with your module. So there's no need for you to run the upgrader `environment` command. If your module requires any environment variables, you should update your documentation accordingly, but otherwise you can move on to the next step.
+As a module maintainer, you shouldn't be shipping any environment file with your module. So there's no need for you to run the upgrader `environment` command. If your module requires environment variables, you should update your documentation accordingly, but otherwise you can move on to the next step.
 
 ## Step 3 - Namespacing your module
 
@@ -119,7 +119,7 @@ upgrade add-namespace --root-dir vendor/example-user/silverstripe-example-module
 upgrade add-namespace "ExampleUser\\SilverstripeExampleModule" code/
 ```
 
-If your module codebase is structure in folders, you can use the `--psr4` and `--recursive` flag to quickly namespace your entire module in one command. This command will recursively go trough the `code` directory and namespace all files based on their position relative to `code`.
+If your module codebase is structured in folders, you can use the `--psr4` and `--recursive` flag to quickly namespace your entire module in one command. This command will recursively go trough the `code` directory and namespace all files based on their position relative to `code`.
 
 ```bash
 upgrade add-namespace --recursive --psr4 "ExampleUser\\SilverstripeExampleModule" code/
@@ -161,7 +161,7 @@ upgrade add-namespace --recursive --psr4 --autoload "ExampleUser\\SilverstripeEx
 
 `add-namespace` will create a `.upgrade.yml` file that maps your old class names to their new namespaced equivalent. This will be used by the `upgrade` command in the next step.
 
-Depending on the nature of your module, you may have some class names that map to other common names. When the`upgrade` command runs, it will try to substitute any occurrence of the old name with the namespaced one. This can lead to accidental substitution. For example, let's say you have a `Link` class in your module. In many project the word `Link` will be used for other purposes like a field label or property names. You can manually update your `.upgrade.yml` file to define a `renameWarnings` section. This will prompt users upgrading to confirm each substitution.
+Depending on the nature of your module, you may have some class names that map to other common names. When the `upgrade` command runs, it will try to substitute any occurrence of the old name with the namespaced one. This can lead to accidental substitution. For example, let's say you have a `Link` class in your module. In many project the word `Link` will be used for other purposes like a field label or property names. You can manually update your `.upgrade.yml` file to define a `renameWarnings` section. This will prompt users upgrading to confirm each substitution.
 
 ```yml
 mappings:
@@ -199,15 +199,15 @@ upgrade-code upgrade --root-dir vendor/example-user/silverstripe-example-module 
 upgrade-code upgrade ./
 ```
 
-Basically, all references to the old class names will be replace with namespaced class names.
+Basically, all references to the old class names will be replaced with namespaced class names.
 
-By this point, you should be able to load your module with PHP. However, you module will be using deprecated APIs.
+By this point, you should be able to load your module with PHP. However, your module will be using deprecated APIs.
 
 ## Step 5 - Updating your codebase to use SilverStripe 4 API
 
 This step will allow you to update references to deprecated APIs. If you are planning on making changes to your own module's API, take a minute to define those changes in your `.upgrade.yml`:
-* this will help you to update your own codebase
-* your users will get warned if they are still using your module's deprecated APIs when upgrading.
+* this will help you updating your own codebase
+* your users will be warned when using your module's deprecated APIs.
 
 You can define warnings for deprecated APIs along with a message. If there's a one-to-one equivalent for the deprecated API, you can also define a replacement. e.g.: 
 
@@ -292,7 +292,7 @@ You'll need to update your module's `composer.json` file with a `extra.expose` k
 
 ### Referencing static assets
 
-This process is essentially the same for projects and modules. The only difference is that module static asset paths must be prefix with the module name as defined in their composer.json file.
+This process is essentially the same for projects and modules. The only difference is that module static asset paths must be prefix with the module's name as defined in their `composer.json` file.
 
 ```diff
 <?php 
@@ -322,7 +322,7 @@ You've been through all the steps covered in the regular project upgrade guide. 
 
 ### Create migration tasks
 
-Depending on the nature of your module, you might need to perform additional task to complete the upgrade process. For example, the `framework` module ships with a file migration tasks that converts Files from the old SilverStripe 3 structure to the new structure required by SilverStripe 4.
+Depending on the nature of your module, you might need to perform additional tasks to complete the upgrade process. For example, the `framework` module ships with a file migration tasks that converts files from the old SilverStripe 3 structure to the new structure required by SilverStripe 4.
 
 Extend [BuildTasks](api:SilverStripe/Dev/BuildTask) and create your own migration task if your module requires post-upgrade work. Document this clearly for your users so they know they need to run the task after they're done upgrading their project.
 
