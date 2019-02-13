@@ -68,9 +68,9 @@ SilverStripe 4 modules are now installed inside the vendor directory. To get you
 -    "type": "silverstripe-module",
 +    "type": "silverstripe-vendormodule",
     "require": {
--        "silverstripe/framework": "^3"
-+        "silverstripe/framework": "^3",
-+        "silverstripe/vendor-plugin": "^1"
++        "silverstripe/vendor-plugin": "^1",
++        "silverstripe/framework": "^3"
+
     }
 }
 ```
@@ -141,22 +141,18 @@ You can do this manually:
 +    },
 +    "autoload": {
 +        "psr4": {
-+            "ExampleUser\\SilverstripeExampleModule\\": "code/"
-+        }
-+    },
-+    "autoload-dev": {
-+        "psr4": {
++            "ExampleUser\\SilverstripeExampleModule\\": "code/",
 +            "ExampleUser\\SilverstripeExampleModule\\Tests\\": "tests/"
 +        }
 +    }
 }
 ```
 
-Alternatively, you can use the `--autoload` or `--autoload-dev` parameter when calling `add-namespace` to do this for you.
+Alternatively, you can use the `--autoload` parameter when calling `add-namespace` to do this for you.
 
 ```bash
 upgrade add-namespace --recursive --psr4 --autoload "ExampleUser\\SilverstripeExampleModule" code/
-upgrade add-namespace --recursive --psr4 --autoload-dev "ExampleUser\\SilverstripeExampleModule\\Tests" tests
+upgrade add-namespace --recursive --psr4 --autoload "ExampleUser\\SilverstripeExampleModule\\Tests" tests
 ```
 
 [Learn more about configuring autoloading](https://getcomposer.org/doc/04-schema.md#autoload) in your `composer.json` file.
