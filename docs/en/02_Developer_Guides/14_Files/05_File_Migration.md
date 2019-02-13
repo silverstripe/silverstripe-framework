@@ -107,7 +107,7 @@ The approach to running your file migration depends on your system and how many 
 
 Please use the following estimates to decide how you will run your file migration:
 
-| Number of files | Method | Expected Execution Time | Expected Memory Usage |
+| Number of files | Method | Expected Execution Time | Approximate Memory Usage |
 | --- | --- | --- | --- |
 | < 150 | Web Request | 30 seconds | 6 MB |
 | < 500 | Queued Job | 120 seconds | 8 MB |
