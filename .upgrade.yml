@@ -1368,3 +1368,12 @@ warnings:
     'THIRDPARTY_DIR':
       message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+classToTraits:
+  SS_Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
+  Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
