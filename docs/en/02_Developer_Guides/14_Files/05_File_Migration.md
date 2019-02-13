@@ -111,5 +111,5 @@ Please use the following estimates to decide how you will run your file migratio
 | --- | --- | --- | --- |
 | < 150 | Web Request | 30 seconds | 6 MB |
 | < 500 | Queued Job | 120 seconds | 8 MB |
-| < 10000 | Command Line | 10000 seconds | 916 MB |
+| < 10000 | Command Line | 10000 seconds | 950 MB |
 | 10000+ | Command Line or contact support | n/a | n/a |
