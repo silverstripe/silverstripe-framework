@@ -91,7 +91,7 @@ as well as the `composer.json` files in [recipe-core](https://github.com/silvers
 For a description on how to handle issues with pre-existing composer installs or upgrading other modules, read
 through the [Step 1 - Upgrade your dependencies](#step1) section.
 
-### Install the upgrader tool (optional)
+### Install or update the upgrader tool
 Using the upgrader is not mandatory, but it can speed up the process. Although SilverStripe 4 can run in both PHP 5.6 and PHP 7, the upgrader itself requires PHP 7.1.
 
 The upgrader is available as a phar executable. 
@@ -102,6 +102,7 @@ To install the PHAR executable:
 2. Make the file executable `chmod +x upgrade-code.phar`
 3. Move the file to a folder in your path, for example `sudo mv upgrade-code.phar /usr/local/bin/upgrade-code` 
 
+When starting a new upgrade project, it's a good idea to check if you are using the latest release of the upgrader. Releases from 1.4 and above ship with a `self-update` command and will warn you if you are using an outdated version. If you are upgrading from a prior version, follow the regular installation instructions and override your existing executable.
 
 Each command in the upgrader has somewhat different arguments. However, most of them accept these two options:
 * `--write` which tells the upgrader to apply changes to your code base
