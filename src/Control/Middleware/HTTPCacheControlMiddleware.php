@@ -800,7 +800,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             if ($request->getVar("CMSPreview") === "1") {
                 //Disable caching when rendering the page in the CMS preview pane
                 //this is to prevent browsers from serving the local cache version after a page edit
-                $this->disableCache("true");
+                $this->disableCache(true);
             } else {
                 // If sessions exist we assume that the responses should not be cached by CDNs / proxies as we are
                 // likely to be supplying information relevant to the current user only
