@@ -100,3 +100,18 @@ SilverStripe\Core\Injector\Injector:
 ```
 
 You can also set this to `0` to disable the limit.
+
+## System Requirements
+
+The approach to running your file migration depends on your system and how many files you are migrating.
+
+Use the following estimates to decide how you will run your file migration:
+
+| Number of files | Method | Expected Execution Time | Approximate Memory Usage |
+| --- | --- | --- | --- |
+| < 150 | Web Request | 30 seconds | 6 MB |
+| < 500 | Queued Job | 120 seconds | 8 MB |
+| < 10000 | Command Line | 10000 seconds | 950 MB |
+| 10000+ | Command Line or contact support | n/a | n/a |
+
+Your exact experience will vary based on your host server, the size of your files and other conditions. If your site is hosted on a managed environement (e.g.: [Common Web Platform](https://www.cwp.govt.nz/service-desk) or [SilverStripe Platform](https://docs.platform.silverstripe.com/support/)), you may not have access to the command line to manually run the migration task. Contact your hosting provider's helpdesk if that's your case.
