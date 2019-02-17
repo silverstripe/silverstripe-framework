@@ -255,14 +255,6 @@ class Member extends DataObject
     private static $auto_login_token_lifetime = 172800;
 
     /**
-     * Used to track whether {@link Member::changePassword} has made changed that need to be written. Used to prevent
-     * the write from calling changePassword again.
-     *
-     * @var bool
-     */
-    protected $passwordChangesToWrite = false;
-
-    /**
      * Ensure the locale is set to something sensible by default.
      */
     public function populateDefaults()
@@ -351,7 +343,8 @@ class Member extends DataObject
             $result->addError(
                 _t(
                     __CLASS__ . '.ERRORLOCKEDOUT2',
-                    'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
+                    'Your account has been temporarily disabled because of too many failed attempts at ' .
+                    'logging in. Please try again in {count} minutes.',
                     null,
                     array('count' => static::config()->get('lock_out_delay_mins'))
                 )
@@ -566,6 +559,8 @@ class Member extends DataObject
     /**
      * Utility for generating secure password hashes for this member.
      *
+     * @deprecated 4.4.0 Use CryptographicHashService instead
+     *
      * @param string $string
      * @return string
      * @throws PasswordEncryptor_NotFoundException
@@ -595,6 +590,7 @@ class Member extends DataObject
      * @param int|null $lifetime DEPRECATED: The lifetime of the auto login hash in days. Overrides
      *                           the Member.auto_login_token_lifetime config value
      * @return string Token that should be passed to the client (but NOT persisted).
+     * @throws ValidationException
      */
     public function generateAutologinTokenAndStoreHash($lifetime = null)
     {
@@ -610,10 +606,13 @@ class Member extends DataObject
             $lifetime = $this->config()->auto_login_token_lifetime;
         }
 
+        /** @var CryptographicHashService $hashService */
+        $hashService = Injector::inst()->get(CryptographicHashService::class);
+        
         do {
             $generator = new RandomGenerator();
             $token = $generator->randomToken();
-            $hash = $this->encryptWithUserSettings($token);
+            $hash = $hashService->hash($token);
         } while (DataObject::get_one(Member::class, array(
             '"Member"."AutoLoginHash"' => $hash
         )));
@@ -630,15 +629,22 @@ class Member extends DataObject
      * Check the token against the member.
      *
      * @param string $autologinToken
-     *
-     * @returns bool Is token valid?
+     * @return bool True if the given token is verified
+     * @throws PasswordEncryptor_NotFoundException
      */
     public function validateAutoLoginToken($autologinToken)
     {
-        $hash = $this->encryptWithUserSettings($autologinToken);
-        $member = self::member_from_autologinhash($hash, false);
+        // Verify using the new method
+        /** @var CryptographicHashService $hashService */
+        $hashService = Injector::inst()->get(CryptographicHashService::class);
+        if ($hashService->verify($autologinToken, $this->AutoLoginHash)) {
+            return true;
+        }
 
-        return (bool)$member;
+        // Otherwise fallback to deprecated API
+        // TODO Remove this in 5.0.0
+        $hash = $this->encryptWithUserSettings($autologinToken);
+        return hash_equals($this->AutoLoginHash, $hash);
     }
 
     /**
@@ -770,7 +776,7 @@ class Member extends DataObject
     /**
      * Returns the current logged in user
      *
-     * @deprecated 5.0.0 use Security::getCurrentUser()
+     * @deprecated 4.0.0 use Security::getCurrentUser()
      *
      * @return Member
      */
@@ -820,7 +826,7 @@ class Member extends DataObject
     /**
      * Get the ID of the current logged in user
      *
-     * @deprecated 5.0.0 use Security::getCurrentUser()
+     * @deprecated 4.0.0 use Security::getCurrentUser()
      *
      * @return int Returns the ID of the current logged in user or 0.
      */
@@ -903,8 +909,9 @@ class Member extends DataObject
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
         // @todo some developers use external tools, so emailing might be a good idea anyway
+        $passwordIsChanged = $this->isChanged('Password');
         if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
-            && $this->isChanged('Password')
+            && $passwordIsChanged
             && $this->record['Password']
             && static::config()->get('notify_password_change')
             && $this->isInDB()
@@ -921,11 +928,20 @@ class Member extends DataObject
                 ->send();
         }
 
-        // The test on $this->ID is used for when records are initially created. Note that this only works with
-        // cleartext passwords, as we can't rehash existing passwords. Checking passwordChangesToWrite prevents
-        // recursion between changePassword and this method.
-        if (!$this->ID || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
-            $this->changePassword($this->Password, false);
+
+        if (!$this->isChanged('PasswordExpiry') && (!$this->isInDB() || $passwordIsChanged)) {
+            // then set it for us
+            $passwordExpiryDuration = static::config()->get('password_expiry_days');
+            if ($passwordExpiryDuration) {
+                $this->PasswordExpiry = date('Y-m-d', time() + 86400 * $passwordExpiryDuration);
+            } else {
+                $this->PasswordExpiry = null;
+            }
+        }
+
+        if ($passwordIsChanged) {
+            // Assume the "auto login hash" is no longer required
+            $this->AutoLoginHash = null;
         }
 
         // save locale
@@ -1689,17 +1705,7 @@ class Member extends DataObject
             return ValidationResult::create();
         }
 
-        $valid = parent::validate();
-        $validator = static::password_validator();
-
-        if (!$this->ID || $this->isChanged('Password')) {
-            if ($this->Password && $validator) {
-                $userValid = $validator->validate($this->Password, $this);
-                $valid->combineAnd($userValid);
-            }
-        }
-
-        return $valid;
+        return parent::validate();
     }
 
     /**
@@ -1713,63 +1719,63 @@ class Member extends DataObject
      * @param bool $write Whether to write the member afterwards
      * @return ValidationResult
      */
-    public function changePassword($password, $write = true)
+    public function changePassword($password, $write = true, $skipValidation = false)
     {
-        $this->Password = $password;
-        $valid = $this->validate();
+        /** @var PasswordHashService $hashService */
+        $hashService = Injector::inst()->get(PasswordHashService::class);
 
-        $this->extend('onBeforeChangePassword', $password, $valid);
+        // Create a password validator an check the provided password
+        $validator = static::password_validator();
+        $validationResult = $validator->validate($password, $this);
 
-        if ($valid->isValid()) {
-            $this->AutoLoginHash = null;
+        $this->extend('onBeforeChangePassword', $password, $validationResult);
 
-            $this->encryptPassword();
+        if ($skipValidation || $validationResult->isValid()) {
+            // The hash service will validate the password and set it given it's valid
+            $hashService->setForMember($password, $this, true);
 
             if ($write) {
-                $this->passwordChangesToWrite = true;
                 $this->write();
             }
         }
 
-        $this->extend('onAfterChangePassword', $password, $valid);
+        $this->extend('onAfterChangePassword', $password, $validationResult);
 
-        return $valid;
+        return $validationResult;
+    }
+
+    /**
+     * Catch updates to `Password` on a Member object
+     *
+     * @param string password
+     * @param bool $suppressNotice
+     */
+    public function setPassword($password, $suppressNotice = false)
+    {
+        // Warn against this API and assume plaintext that needs to be hashed
+//        if (!$suppressNotice) {
+//            user_error(
+//                'Setting a Password on a member should no longer be plaintext. To update a password for a member use ' .
+//                    'the changePassword method or use PasswordHashService instead',
+//                E_USER_NOTICE
+//            );
+//        }
+
+        $this->changePassword($password, false, true);
     }
 
     /**
      * Takes a plaintext password (on the Member object) and encrypts it
      *
+     * This method is deprecated from 4.4.0. Member passwords should be hashed when set on the member. Use
+     * PasswordHashService to set passwords for members. Note that existing calls to update a password
+     * (`$member->Password = 'thing'`) will automatically hash now.
+     *
+     * @deprecated 4.4.0
      * @return $this
      */
     protected function encryptPassword()
     {
-        // reset salt so that it gets regenerated - this will invalidate any persistent login cookies
-        // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
-        $this->Salt = '';
-
-        // Password was changed: encrypt the password according the settings
-        $encryption_details = Security::encrypt_password(
-            $this->Password,
-            $this->Salt,
-            $this->isChanged('PasswordEncryption') ? $this->PasswordEncryption : null,
-            $this
-        );
-
-        // Overwrite the Password property with the hashed value
-        $this->Password = $encryption_details['password'];
-        $this->Salt = $encryption_details['salt'];
-        $this->PasswordEncryption = $encryption_details['algorithm'];
-
-        // If we haven't manually set a password expiry
-        if (!$this->isChanged('PasswordExpiry')) {
-            // then set it for us
-            if (static::config()->get('password_expiry_days')) {
-                $this->PasswordExpiry = date('Y-m-d', time() + 86400 * static::config()->get('password_expiry_days'));
-            } else {
-                $this->PasswordExpiry = null;
-            }
-        }
-
         return $this;
     }
 

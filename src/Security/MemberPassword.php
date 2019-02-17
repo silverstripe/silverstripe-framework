@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -52,7 +53,8 @@ class MemberPassword extends DataObject
      */
     public function checkPassword($password)
     {
-        $encryptor = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
-        return $encryptor->check($this->Password, $password, $this->Salt, $this->Member());
+        /** @var PasswordHashService $hashService */
+        $hashService = Injector::inst()->get(PasswordHashService::class);
+        return $hashService->verifyForMember($password, $this);
     }
 }

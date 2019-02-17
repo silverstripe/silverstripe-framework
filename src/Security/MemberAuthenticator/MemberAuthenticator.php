@@ -5,12 +5,14 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use InvalidArgumentException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Security\PasswordHashService;
 use SilverStripe\Security\Security;
 
 /**
@@ -146,8 +148,9 @@ class MemberAuthenticator implements Authenticator
             $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
         }
 
-        $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
-        if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {
+        /** @var PasswordHashService $passwordService */
+        $passwordService = Injector::inst()->get(PasswordHashService::class);
+        if (!$passwordService->verifyForMember($password, $member)) {
             $result->addError(_t(
                 __CLASS__ . '.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'

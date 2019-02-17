@@ -4,11 +4,12 @@ namespace SilverStripe\Security\HashMethod;
 use Exception;
 use SilverStripe\Security\CryptographicHashService;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Security;
 
 /**
- * Provides temporary fallback support for the <4.3 "PasswordEncryptor"s
+ * Provides temporary fallback support for the <4.4 "PasswordEncryptor"s
  */
 class LegacyMemberHash implements HashMethodInterface
 {
@@ -44,7 +45,7 @@ class LegacyMemberHash implements HashMethodInterface
      */
     public function verify($plaintext, $hash)
     {
-        list ($salt, $encryption, $hash) = $this->extractSaltAndEncryption($hash);
+        list($salt, $encryption, $hash) = $this->extractSaltAndEncryption($hash);
 
         $hasher = PasswordEncryptor::create_for_algorithm($encryption);
 
@@ -88,7 +89,11 @@ class LegacyMemberHash implements HashMethodInterface
         return strpos($hash, CryptographicHashService::IDENTIFIER_SEPARATOR) === false;
     }
 
-    public static function prepLegacyHash($hash, Member $member)
+    /**
+     * @param Member|MemberPassword $member
+     * @return string
+     */
+    public static function prepLegacyHash($member)
     {
         return sprintf(
             '%s%s%s,%s,%s',
@@ -96,7 +101,7 @@ class LegacyMemberHash implements HashMethodInterface
             CryptographicHashService::IDENTIFIER_SEPARATOR,
             $member->PasswordEncryption,
             $member->Salt,
-            $hash
+            $member->Password
         );
     }
 

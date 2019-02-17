@@ -42,7 +42,7 @@ class RandomGenerator
      *
      * @param string $algorithm Any identifier listed in hash_algos() (Default: whirlpool)
      * @return string Returned length will depend on the used $algorithm
-     * @throws Exception When there is no valid source of CSPRNG
+     * @throws Exception
      */
     public function randomToken($algorithm = 'whirlpool')
     {

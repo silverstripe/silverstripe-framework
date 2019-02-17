@@ -13,6 +13,7 @@ use SilverStripe\Core\Config\Config;
  * Use {@link register()} to add new implementations.
  *
  * Used in {@link Security::encrypt_password()}.
+ * @deprecated 4.4.0 Use PasswordHashService or CryptographicHashService instead
  */
 abstract class PasswordEncryptor
 {

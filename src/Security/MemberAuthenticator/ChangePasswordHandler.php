@@ -158,8 +158,10 @@ class ChangePasswordHandler extends RequestHandler
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
 
-        // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
-        $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
+        // Store the token for the change password form. Will be unset after reload within the ChangePasswordForm.
+        $session = $this->getRequest()->getSession();
+        $session->set('AutoLoginHash', $token);
+        $session->set('PasswordResetMemberID', $member->ID);
     }
 
     /**
@@ -219,14 +221,15 @@ class ChangePasswordHandler extends RequestHandler
 
         $session = $this->getRequest()->getSession();
         if (!$member) {
-            if ($session->get('AutoLoginHash')) {
-                $member = Member::member_from_autologinhash($session->get('AutoLoginHash'));
+            if ($session->get('AutoLoginHash') && ($memberId = $session->get('PasswordResetMemberID'))) {
+                $member = Member::get()->byID($memberId);
             }
+
+            $session->clear('AutoLoginHash');
+            $session->clear('PasswordResetMemberID');
 
             // The user is not logged in and no valid auto login hash is available
             if (!$member) {
-                $session->clear('AutoLoginHash');
-
                 return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
         }

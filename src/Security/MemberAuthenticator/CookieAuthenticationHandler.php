@@ -151,14 +151,12 @@ class CookieAuthenticationHandler implements AuthenticationHandler
             return null;
         }
 
-        $hash = $member->encryptWithUserSettings($token);
-
         /** @var RememberLoginHash $rememberLoginHash */
         $rememberLoginHash = RememberLoginHash::get()
             ->filter([
                 'MemberID' => $member->ID,
                 'DeviceID' => $deviceID,
-                'Hash' => $hash,
+                'Hash' => $token,
             ])->first();
         if (!$rememberLoginHash) {
             return null;

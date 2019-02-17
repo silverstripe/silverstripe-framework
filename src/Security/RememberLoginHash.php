@@ -4,6 +4,8 @@ namespace SilverStripe\Security;
 
 use DateInterval;
 use DateTime;
+use Exception;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
@@ -97,24 +99,30 @@ class RememberLoginHash extends DataObject
     /**
      * Randomly generates a new ID used for the device
      * @return string A device ID
+     * @throws Exception When there is no valid CSPRNG
      */
     protected function getNewDeviceID()
     {
-        $generator = new RandomGenerator();
-        return $generator->randomToken('sha1');
+        return (new RandomGenerator())->randomToken();
     }
 
     /**
-     * Creates a new random token and hashes it using the
-     * member information
-     * @param Member $member The logged in user
+     * Creates a new random token to be a shared secret between the website and a client cookie
+     *
+     * @param Member $member The logged in user - This parameter is deprecated from 4.4.0
      * @return string The hash to be stored in the database
+     * @throws Exception When there is no valid CSPRNG
      */
-    public function getNewHash(Member $member)
+    public function getNewHash(Member $member = null)
     {
-        $generator = new RandomGenerator();
-        $this->setToken($generator->randomToken('sha1'));
-        return $member->encryptWithUserSettings($this->token);
+        if ($member !== null) {
+            Deprecation::notice('4.4.0', sprintf(
+                'Passing a member into %s has been deprecated. This parameter is now unused.',
+                __METHOD__
+            ));
+        }
+
+        return (new RandomGenerator())->randomToken();
     }
 
     /**
