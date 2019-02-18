@@ -335,18 +335,16 @@ abstract class DBField extends ViewableData implements DBIndexable
      * will be escaped automatically by the prepared query processor, so it
      * should not be escaped or quoted at all.
      *
-     * The field values could also be in paramaterised format, such as
-     * array('MAX(?,?)' => array(42, 69)), allowing the use of raw SQL values such as
-     * array('NOW()' => array()).
-     *
-     * @see SQLWriteExpression::addAssignments for syntax examples
-     *
      * @param $value mixed The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
     public function prepValueForDB($value)
     {
-        if ($value === null || $value === "" || $value === false) {
+        if ($value === null ||
+            $value === "" ||
+            $value === false ||
+            ($this->scalarValueOnly() && !is_scalar($value))
+        ) {
             return null;
         } else {
             return $value;
@@ -652,5 +650,16 @@ DBG;
             ];
         }
         return null;
+    }
+
+    /**
+     * Whether or not this DBField only accepts scalar values.
+     *
+     * Composite DBFields can override this method and return `false` so they can accept arrays of values.
+     * @return boolean
+     */
+    public function scalarValueOnly()
+    {
+        return true;
     }
 }
