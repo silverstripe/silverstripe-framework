@@ -310,7 +310,7 @@ class TreeDropdownField extends FormField {
 		if ($this->filterCallback || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 
-		$obj->markPartialTree($nodeCountThreshold = 30, $context = null,
+		$obj->markPartialTree($this->config()->node_threshold_total, $context = null,
 			$this->childrenMethod, $this->numChildrenMethod);
 
 		// allow to pass values to be selected within the ajax request
