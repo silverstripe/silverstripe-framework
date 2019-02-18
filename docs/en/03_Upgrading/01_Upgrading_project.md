@@ -11,11 +11,11 @@ your SilverStripe installation means overwriting files, flushing the cache and u
 How easy will it be to update my project? It's a fair question, and sometimes a difficult one to answer.
 
 * SilverStripe follows _semantic versioning_ (see our [release process](/contributing/release_process) for details).
-  * "Major" releases introduces API change that may break your application.
-  * "Minor" releases (x.y) introduces API changes in a backward compatible way and can mark some API as deprecated.
+  * "Major" releases introduce API changes that may break your application.
+  * "Minor" releases (x.y) introduce API changes in a backwards compatible way and can mark some API as deprecated.
   * "Patch" releases (x.y.z) fix bugs without introducing any API changes.
 * If you've made custom branches of SilverStripe core, or any thirdparty module, upgrades are going to be more complex.
-* More custom features mean more work to re-test all of those features, and adapt to API changes in core.
+* More custom features will mean more work to re-test all of those features, and adapt to API changes in core.
 * Customisations of a well defined type - such as custom page types or custom blog widgets - 
   are going to be easier to upgrade than customisations that modify deep system internals like rewriting SQL queries.
 
@@ -34,11 +34,11 @@ There are some fundamental changes in SilverStripe 4:
 * Changes across objects can be collected in a "campaign" for batch publication.
 * GraphQL is now the favourite way of creating web services with SilverStripe.
 * Asset management has been completely redone with a brand new React-based UI, protected draft files and versioning.
-* Parts of the CMS UI are now build in React and Bootstrap instead of Entwine and custom CSS.
+* Parts of the CMS UI are now built with React and Bootstrap instead of Entwine and custom CSS.
 * PSR-4 auto-loading is supported for modules and for your project code.
 
 [Learn more about major API changes introduced by SilverStripe 4](#list-of-major-api-changes),
-and dig into the changelogs for [4.0.0](/changelogs/4.0.0), [4.1.0](/changelogs/4.1.0) and [4.2.0](/changelogs/4.2.0).
+and dig into the changelogs for [4.0.0](/changelogs/4.0.0), [4.1.0](/changelogs/4.1.0), [4.2.0](/changelogs/4.2.0), and [4.3.0](/changelogs/4.3.0).
 
 ### Using recipes instead of requiring individual modules
 The SilverStripe CMS and SilverStripe Framework are becoming more modular. Many of the secondary features contained in SilverStripe CMS 3 and SilverStripe Framework 3 have been moved to separate modules.  
@@ -50,7 +50,7 @@ Read the [Switching to recipes](#switching-to-recipes) section of this guide for
 ### Automating your upgrades using the SilverStripe Upgrader tool
 We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help
 with the upgrade process. The upgrader is unlikely to completely upgrade your project, however it can take care of the most tedious part of the upgrade.
-It can also be use to upgrade your existing SilverStripe 4 project to a newer minor release.
+It can also be used to upgrade your existing SilverStripe 4 project to a newer minor release.
 
 ## Step 0 - Pre-requisites and background work {#step0}
 
@@ -70,7 +70,7 @@ Never update a website on the live server. Get it working on a development copy 
 
 [Composer](http://getcomposer.org) is a tool for managing PHP dependencies. SilverStripe 4 requires composer version _1.1_ or greater. Read the [SilverStripe _Getting started_ guide](/getting_started/composer) for more details.
 
-We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date and run `composer update`.
+We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date.
 
 ```json
 {
@@ -106,7 +106,7 @@ When starting a new upgrade project, it's a good idea to check if you are using 
 
 Each command in the upgrader has somewhat different arguments. However, most of them accept these two options:
 * `--write` which tells the upgrader to apply changes to your code base
-* `--root-dir` which can be use to explicitly specify the root of your project — if not specified the current working directory is assume to be the root of the project.
+* `--root-dir` which can be use to explicitly specify the root of your project. If this is not specified then the current working directory is assumed to be the root of the project.
 
 You can run `upgrade-code help` to get more information about the upgrader or `upgrade-code help command-name` to information about a specific command.
 
@@ -132,10 +132,10 @@ composer global config bin-dir
 On *nix system, the following command will add your global composer bin directory to your path if `bash` is your default shell environment:
 ```bash
 echo 'export PATH=$PATH:~/.composer/vendor/bin/' >> ~/.bash_profile
-source  ~/.bash_profile
+source ~/.bash_profile
 ```
 
-### Running all the upgrader commands in this guide in on line
+### Running all the upgrader commands in this guide with one line
 
 The upgrader comes with an `all` command. This command will attempt to run all the upgrader commands in the same order as this guide. This is unlikely to work on your first try, but can be a good way to get started without going through this entire guide.
 
@@ -146,14 +146,14 @@ upgrade-code all --namespace="App\\Web" --psr4
 * `--recipe-core-constraint` defines your SilverStripe release version (optional, will default to the most recent stable release).
 * `--cwp-constraint` can be used instead `--recipe-core-constraint` when upgrading a CWP project.
 * `--namespace` allows you to specify how your project will be namespaced (optional).
-* `--psr4` allows you to specify that your project structure respect the PSR-4 standard and to use sub-namespaces.
+* `--psr4` allows you to specify that your project structure respects the PSR-4 standard and to automatically use sub-namespaces.
 * `--skip-add-namespace` allows you to skip the `add-namespace` command.
 * `--skip-reorganise` allows you to skip the `reorganise` command.
 * `--skip-webroot` allows you to skip the `webroot` command.
 
 ### Branching your project
 
-Setting a dedicated branch in your source control system to track your upgrade work can help you manage your upgrade. If you're upgrading a big project, you should consider creating individual branches or commits for each step.
+Creating a dedicated branch in your source version control system to track your upgrade work can help you manage your upgrade. If you're upgrading a big project, you should consider creating individual branches or commits for each step.
 
 ## Step 1 - Upgrade your dependencies {#step1}
 
@@ -191,7 +191,7 @@ upgrade-code recompose --write
 
 You can add a `--recipe-core-constraint` flag to target a specific version of `silverstripe/recipe-core`. By default, the project will be upgraded to the latest stable version. If you are upgrading a CWP project, you can use `--cwp-constraint` instead to target a specific version of `cwp/cwp-core`.
 
-The upgrader uses [carret version constraint](https://getcomposer.org/doc/articles/versions.md#caret-version-range-) by default. This will cause composer to install compatible minor releases. You can use the `--strict` option if you want to use the more conservative [tilde version constraints](https://getcomposer.org/doc/articles/versions.md#tilde-version-range-).
+The upgrader uses [caret version constraint](https://getcomposer.org/doc/articles/versions.md#caret-version-range-) by default. This will cause composer to install compatible minor releases. You can use the `--strict` option if you want to use the more conservative [tilde version constraints](https://getcomposer.org/doc/articles/versions.md#tilde-version-range-).
 
 Omit the `--write` flag to preview your changes.
 
@@ -209,13 +209,13 @@ Your upgraded `composer.json` file will look like this.
 }
 ```
 
-If the `recompose` command can't find a compatible version for one of your module, it will keep this dependency in your `composer.json` file with its existing constraint.
+If the `recompose` command can't find a compatible version for one of your modules, it will keep this dependency in your `composer.json` file with its existing constraint.
 
 [Continue to Step 2](#step2)
 
 ### Manually upgrading your dependencies
 
-The instruction in this section assumed you'll be editing your `composer.json` file in a text editor.
+The instructions in this section assume that you'll be editing your `composer.json` file in a text editor.
 
 #### Switching to recipes
 
@@ -484,12 +484,12 @@ upgrade-code add-namespace "App\\Web" ./mysite/code --recursive --write
 ```
 
 This task will do the following:
-* Add the given namespace to all files in the code class, and subdirectories
+* Add the given namespace to all files in the code folder, and subdirectories
 * All references to classes in any namespaced files will be safely retained with additional `use` directives added as necessary
 * A `mysite/.upgrade.yml` file will be created/updated to record the new fully qualified name of each class. 
   This will be used in later steps to update references to the outdated class names in your own project code.
 
-By default, the same namespace will be applied to all your classes regardless of which directory they are in. If you want to apply different namespaces to different folders to be compliant with PSR-4, combine the `--recursive` with the `--psr4`. Your folder structure has to be PSR4 compliant for this to work. If you want to do a dry-run, omit the `--write` option to see a preview of all changed project files.
+By default, the same namespace will be applied to all your classes regardless of which directory they are in. If you want to apply different namespaces to different folders to be compliant with PSR-4, combine the `--recursive` option with the `--psr4` option. Your folder structure must be PSR-4 compliant for this to work. If you want to do a dry-run, omit the `--write` option to see a preview of all changed project files.
 
 [Continue to Step 4](#step4)
 
@@ -833,7 +833,7 @@ $translation = _t('CMSMain.ACCESS', "Access to ''{title}'' section", ['title' =>
 # New SilverStripe 4
 use SilverStripe\CMS\Controllers\CMSMain;
 // ...
-$translation = _t(CMSMain::class .'.ACCESS', "Access to ''{title}'' section", ['title' => 'Products']);
+$translation = _t(CMSMain::class . '.ACCESS', "Access to '{title}' section", ['title' => 'Products']);
 ```
 
 If you're calling `_t()` to retrieve a translation for the current class, you can also use `__CLASS__` or `self::class`. For example:
@@ -882,7 +882,7 @@ You can omit the `--write` flag if you just want to view the proposed changes wi
 Like the `upgrade` command, `inspect` gets its list of API changes from `.upgrade.yml` files. So you may get upgrade suggestions and substitution from third party modules. You can even include your own project specific changes in your `.upgrade.yml` if you want.
 
 #### Sample output of the `inspect` command
-Here's some sample output of what you might get back the `inspect` command.
+Here's some sample output of what you might get back from the `inspect` command.
 
 ```bash
 upgrade-code inspect ./mysite/Models/Coyote.php
@@ -955,7 +955,7 @@ Adopting the recommended project structure is optional, but will become mandator
 ### Automatically switch to the new structure with the `reorganise` command
 The reorganise command can automatically update your project to use the new recommended structure.
 
-It will search your code and find any occurrence of `mysite`. It won't replace those occurrence with `app` however.
+It will search your code and find any occurrence of `mysite`. It won't replace those occurrences with `app` however.
 
 ```bash
 upgrade-code reorganise --write
@@ -1012,7 +1012,7 @@ SilverStripe\Core\Manifest\ModuleManifest:
 ```
 
 At this stage, your project should be functional with the recommended project structure.
-Note, that if you've explicitly reference any static assets (images, css, js) under `mysite`, you'll need to rewrite those references.
+Note that if you've explicitly referenced any static assets (images, css, js) under `mysite`, you'll need to rewrite those references.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
@@ -1062,7 +1062,7 @@ This is a good point to commit your changes to your source control system before
 ## Step 9 - Move away from hardcoded paths for referencing static assets {#step9}
 
 SilverStripe 4 introduces a new way to reference static assets like images and css. 
-This enable innovations like moving SilverStripe module [vendor folder](/changelogs/4.0.0#vendor-folder) or the [public web root](/changelogs/4.1.0#public-folder).
+This enables innovations like moving the SilverStripe module [vendor folder](/changelogs/4.0.0#vendor-folder) or the [public web root](/changelogs/4.1.0#public-folder).
 
 This change is mandatory if you've completed either
 [step 7](#step7) (update project structure) or [step 8](#step8) (switch to public web-root).
@@ -1092,7 +1092,7 @@ For example, let's say you have `scripts`, `images` and `css` folders under `app
 For the change to take affect, run the following command: `composer vendor-expose`.
 
 ### Referencing static assets in your PHP code
-Wherever you would have use an hardcoded path, you can now use the `path/to/file.css` syntax. To reference a static file from a module, prefix the path with the module's name (e.g.: `silverstripe/admin:client/dist/js/bundle.js`).
+Wherever you would have use a hardcoded path, you can now use the `path/to/file.css` syntax. To reference a static file from a module, prefix the path with the module's name (e.g.: `silverstripe/admin:client/dist/js/bundle.js`).
 
 To add some javascript and css files to your requirements from your PHP code, you could use this syntax:
 ```php
@@ -1118,7 +1118,7 @@ $cssResourcePath = ThemeResourceLoader::inst()->findThemedResource('css/layout.c
 $relativeUrl = ModuleResourceLoader::singleton()->resolveURL($cssResourcePath);
 ```
 
-For classes that expect icons, you can specify theme with:
+For classes that expect icons, you can specify them with:
 ```php
 class ListingPage extends \Page
 {
@@ -1132,7 +1132,7 @@ class MyCustomModelAdmin extends \SilverStripe\Admin\ModelAdmin
 ```
 
 ### Referencing static assets in template files
-SS template files accept a similar format for referencing static assets. Go through your assets files and remove hardcoded references.
+SilverStripe template files accept a similar format for referencing static assets. You will need to go through your assets files and remove hardcoded references.
 
 ```html
 <img src="$resourceURL(app/images/coyote.png)" />

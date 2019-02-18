@@ -34,7 +34,7 @@ To require the development branch of your module in a SilverStripe 4 project, yo
 composer require example-user/silverstripe-example-module dev-pulls/ss4-upgrade
 ```
 
-If the development branch is hosted on a different GIT remote than the one used to publish your module, you'll need to add a VCS entry to your test project's `composer.json` file.
+If the development branch is hosted on a different Git remote than the one used to publish your module, you'll need to add a VCS entry to your test project's `composer.json` file.
 
 ```json
 {
@@ -85,7 +85,7 @@ For example, let's say your module adds a ModelAdmin to the SilverStripe adminis
 
 Choose constraints based on the minimum version of SilverStripe 4 you are planning on supporting and allow your module to work with future releases. 
 
-For example, if your module requires an API that got introduced with the 4.1 release of `silverstripe/framework`, then that's the version you should target. You should use the caret symbol (`^`) over the ellipse (`~`) so your module works with more recent releases. In this scenario, your constraint should look like `"silverstripe/framework": "^4.1"`.
+For example, if your module requires an API that got introduced with the 4.1 release of `silverstripe/framework`, then that's the version you should target. You should use the caret symbol (`^`) over the tilde (`~`) so your module works with more recent releases. In this scenario, your constraint should look like `"silverstripe/framework": "^4.1"`.
 
 ### Avoid tracking unnecessary files
 
@@ -188,7 +188,7 @@ However, your codebase is still referencing SilverStripe classes by their old no
 
 ## Step 4 - Update codebase with references to newly namespaced classes
 
-This part of the process is identical for module upgrade and project upgrade.
+This part of the process is identical for both module upgrades and project upgrades.
 
 ```bash
 # If upgrading from inside a test project
@@ -199,14 +199,14 @@ upgrade-code upgrade --root-dir vendor/example-user/silverstripe-example-module 
 upgrade-code upgrade ./
 ```
 
-Basically, all references to the old class names will be replaced with namespaced class names.
+All references to the old class names will be replaced with namespaced class names.
 
 By this point, you should be able to load your module with PHP. However, your module will be using deprecated APIs.
 
 ## Step 5 - Updating your codebase to use SilverStripe 4 API
 
 This step will allow you to update references to deprecated APIs. If you are planning on making changes to your own module's API, take a minute to define those changes in your `.upgrade.yml`:
-* this will help you updating your own codebase
+* this will help you with updating your own codebase
 * your users will be warned when using your module's deprecated APIs.
 
 You can define warnings for deprecated APIs along with a message. If there's a one-to-one equivalent for the deprecated API, you can also define a replacement. e.g.: 
@@ -227,7 +227,7 @@ warnings:
       replacement: 'newProperty'
 ```
 
-When you are done updating you're `.upgrade.yml` file, you can call the `inspect` command to search for deprecated APIs.
+When you are done updating your `.upgrade.yml` file, you can run the `inspect` command to search for deprecated APIs.
 
 ```bash
 # If upgrading from inside a test project
@@ -254,11 +254,11 @@ The public web root does not directly affect module. So you can skip this step.
 
 ## Step 9 - Move away from hardcoded paths for referencing static assets
 
-While SilverStripe 4 projects can get away with directly referencing static assets under some conditions, modules must dynamically exposed their static assets. This is necessary to move modules to the vendor folder and to enable the public web root.  
+While SilverStripe 4 projects can get away with directly referencing static assets under some conditions, modules must dynamically expose their static assets. This is necessary to move modules to the vendor folder and to enable the public web root.  
 
 ### Exposing your module's static assets
 
-You'll need to update your module's `composer.json` file with a `extra.expose` key.
+You'll need to update your module's `composer.json` file with an `extra.expose` key.
 
 
 ```diff
@@ -305,7 +305,7 @@ $pathToImage =
 
 ## Step 10 - Update database class references {#step10}
 
-Just like SilverStripe projects, your module must define class names remapping for every DataObject child.
+Just like projects, your module must define class names remapping for every DataObject child.
 
 ```
 SilverStripe\ORM\DatabaseAdmin:
