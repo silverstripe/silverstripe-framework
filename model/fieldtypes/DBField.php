@@ -178,7 +178,7 @@ abstract class DBField extends ViewableData {
 	 * @return mixed The raw value, or escaped parameterised details
 	 */
 	public function prepValueForDB($value) {
-		if($value === null || $value === "" || $value === false) {
+		if($value === null || $value === "" || $value === false || ($this->scalarValueOnly() && !is_scalar($value))) {
 			return null;
 		} else {
 			return $value;
@@ -351,4 +351,15 @@ DBG;
 	public function __toString() {
 		return $this->forTemplate();
 	}
+
+    /**
+     * Whatever this DBField only accepts scalar values.
+     *
+     * Composite DBField to override this method and return `false`. So they can accept arrays of values.
+     * @return boolean
+     */
+	public function scalarValueOnly()
+    {
+        return true;
+    }
 }

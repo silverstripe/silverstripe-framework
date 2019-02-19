@@ -1754,6 +1754,25 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(PHP_INT_MAX, DataObjectTest_Staff::get()->byID($staff->ID)->Salary);
 	}
 
+
+    /**
+     * @expectedException PHPUnit_Framework_Error_Warning
+     */
+	public function testSetFieldWithArrayOnScalarOnlyField()
+    {
+        $do = singleton('DataObjectTest_CompositeDBField');
+        $do->NonCompositeField = 'Some Value';
+        $do->NonCompositeField = array('Amount' => 123, 'Currency' => 'CAD');
+        $this->assertEmpty($do->NonCompositeField);
+    }
+
+    public function testSetFieldWithArrayOnCompositeField()
+    {
+        $do = singleton('DataObjectTest_CompositeDBField');
+        $do->CompositeMoneyField = array('Amount' => 123, 'Currency' => 'CAD');
+        $this->assertNotEmpty($do->CompositeMoneyField);
+    }
+
 }
 
 class DataObjectTest_Sortable extends DataObject implements TestOnly {
@@ -2035,3 +2054,9 @@ class DataObjectTest_Bogey extends DataObject implements TestOnly {}
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
 
+class DataObjectTest_CompositeDBField extends DataObject implements TestOnly {
+    private static $db = array(
+        'NonCompositeField' => 'Varchar',
+        'CompositeMoneyField' => 'Money',
+    );
+}
