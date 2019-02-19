@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\Constraint\ViewableDataContains;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Tests\ViewableDataContainsTest\TestObject;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ArrayData;
 
@@ -99,5 +100,15 @@ class ViewableDataContainsTest extends SapphireTest
         $item = Member::create($this->test_data);
 
         $this->assertFalse($constraint->evaluate($item, '', true));
+    }
+
+    public function testFieldAccess()
+    {
+        $data = new TestObject(['name' => 'Damian']);
+        $constraint = new ViewableDataContains(['name' => 'Damian', 'Something' => 'something']);
+        $this->assertTrue($constraint->evaluate($data, '', true));
+
+        $constraint = new ViewableDataContains(['name' => 'Damian', 'Something' => 'notthing']);
+        $this->assertFalse($constraint->evaluate($data, '', true));
     }
 }
