@@ -123,12 +123,12 @@ To install the upgrader globally run this command.
 composer global require silverstripe/upgrader
 ```
 
-Add your global composer bin directory to your path. On *nix system, this directory is normally located at `$HOME/.composer/vendor/bin`. On Windows system, this directory is normally located at `C:\Users\<COMPUTER NAME>\AppData\Roaming\Composer\vendor\bin`. You can find the exact location by running this command:
+Add your global composer bin directory to your path. On \*nix system, this directory is normally located at `$HOME/.composer/vendor/bin`. On Windows system, this directory is normally located at `C:\Users\<COMPUTER NAME>\AppData\Roaming\Composer\vendor\bin`. You can find the exact location by running this command:
 ```bash
 composer global config bin-dir
 ```
 
-On *nix system, the following command will add your global composer bin directory to your path if `bash` is your default shell environment:
+On \*nix system, the following command will add your global composer bin directory to your path if `bash` is your default shell environment:
 ```bash
 echo 'export PATH=$PATH:~/.composer/vendor/bin/' >> ~/.bash_profile
 source ~/.bash_profile
