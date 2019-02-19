@@ -328,4 +328,4 @@ Extend [BuildTasks](api:SilverStripe/Dev/BuildTask) and create your own migratio
 
 ### Keep updating your `.upgrade.yml`
 
-The upgrader can be run on project that have already been upgraded to SilverStripe 4. As you introduce new API and deprecate old ones, you can keep updating your `.upgrade.yml` file to make it easy for your users to keep their code up to date. If you do another major release of your module aimed at SilverStripe 4, you can use all the tools in the upgrader to make the upgrade process seamless for your users.
+The upgrader can be run on projects that have already been upgraded to SilverStripe 4. As you introduce new API and deprecate old ones, you can keep updating your `.upgrade.yml` file to make it easy for your users to keep their code up to date. If you do another major release of your module aimed at SilverStripe 4, you can use all the tools in the upgrader to make the upgrade process seamless for your users.

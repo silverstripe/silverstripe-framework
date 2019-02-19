@@ -80,8 +80,7 @@ We recommend using `recipe-cms` in your `composer.json` file to help you keep up
 }
 ```
 
-This will also add extra dependencies, such as the `admin`, `asset-admin`, `reports`, `errorpage` and `siteconfig`
-modules.
+Running `composer update` will install additional dependencies, such as the `admin`, `asset-admin`, `reports`, `errorpage`, and `siteconfig` modules.
 
 If you want more granular control over what gets installed,
 check out the [recipe plugin repository](https://github.com/silverstripe/recipe-plugin)
@@ -104,11 +103,11 @@ To install the PHAR executable:
 
 When starting a new upgrade project, it's a good idea to check if you are using the latest release of the upgrader. Releases from 1.4 and above ship with a `self-update` command and will warn you if you are using an outdated version. If you are upgrading from a prior version, follow the regular installation instructions and override your existing executable.
 
+You can run `upgrade-code help` to get more information about the upgrader or `upgrade-code help command-name` to information about a specific command.
+
 Each command in the upgrader has somewhat different arguments. However, most of them accept these two options:
 * `--write` which tells the upgrader to apply changes to your code base
 * `--root-dir` which can be use to explicitly specify the root of your project. If this is not specified then the current working directory is assumed to be the root of the project.
-
-You can run `upgrade-code help` to get more information about the upgrader or `upgrade-code help command-name` to information about a specific command.
 
 <div class="info" markdown="1">
 Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
@@ -202,9 +201,9 @@ Your upgraded `composer.json` file will look like this.
     "description": "The Example website project.",
     "license": "BSD-3",
     "require": {
-        "dnadesign/silverstripe-elemental": "^2.1",
+        "dnadesign/silverstripe-elemental": "^4.0",
         "php": ">=5.6",
-        "silverstripe/recipe-cms": "^4.1"
+        "silverstripe/recipe-cms": "^4.3"
     }
 }
 ```
@@ -382,7 +381,9 @@ This is a good point to commit your changes to your source control system before
 ## Step 2 - Update your environment configuration {#env}{#step2}
 
 The php configuration `_ss_environment.php` file has been replaced with a non-executable
-`.env` file. It follows a syntax similar to a `.ini` file for key/value pair assignment. Your `.env` file may be placed in your project root, or one level above your project root ([details](/getting_started/environment_management/))
+`.env` file. It follows a syntax similar to a `.ini` file for key/value pair assignment. Your `.env` file may be placed in your project root, or one level above your project root.
+
+Read the [Environment management](/getting_started/environment_management/) documentation to learn more about configuring your project's environment.
 
 ### Automatically convert `_ss_environment.php` to `.env`
 
@@ -457,7 +458,7 @@ To access environment variables, use the `SilverStripe\Core\Environment::getEnv(
 ### Finalising your environment upgrade
 It's inadvisable to track your `.env` file in your source control system as it might contain sensitive information.
 
-You should ignore the `.env` file by adding an entry to your `.gitignore` file. You can create a sample environment configuration by duplicating your `.env` file as `.env.sample`, and removing sensitive information from it. You can safely delete your legacy `_ss_environement.php` if you want.
+You should ignore the `.env` file by adding an entry to your `.gitignore` file. You can create a sample environment configuration by duplicating your `.env` file as `.env.sample`, and removing sensitive information from it. You can safely delete your legacy `_ss_environment.php` if you want.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.  
 
@@ -908,8 +909,7 @@ Changes not saved; Run with --write to commit to disk
 ### Manually update deprecated API references
 
 SilverStripe 4 introduces many API changes. To update deprecated API references manually, you have to go through each one of your project files.
-Read the changelogs for [4.0.0](/changelogs/4.0.0/), [4.1.0](/changelogs/4.1.0/) and [4.2.0](/changelogs/4.2.0/)
-for a comprehensive overview.
+Read the changelogs for [4.0.0](/changelogs/4.0.0/) and for [subsequent minor releases](/changelogs)
 
 ### Finalising the deprecated API update
 At this stage, your site should be using only SilverStripe 4 API logic.
