@@ -611,7 +611,7 @@ TEXT;
 <li id="ModRewriteResult">Testing...</li>
 <script>
     if (typeof $ == 'undefined') {
-        document.getElemenyById('ModeRewriteResult').innerHTML = "I can't run jQuery ajax to set rewriting; I will redirect you to the homepage to see if everything is working.";
+        document.getElementById('ModeRewriteResult').innerHTML = "I can't run jQuery ajax to set rewriting; I will redirect you to the homepage to see if everything is working.";
         setTimeout(function() {
             window.location = "$destinationURL";
         }, 10000);
