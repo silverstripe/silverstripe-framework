@@ -101,5 +101,8 @@
         "php-peg": "php thirdparty/php-peg/cli.php src/View/SSTemplateParser.peg > src/View/SSTemplateParser.php"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "conflict": {
+        "phpunit/phpunit": "<5.3 || >=6"
+    }
 }
