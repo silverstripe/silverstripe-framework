@@ -230,3 +230,19 @@ SilverStripe\Control\HTTP:
 
 Note that if you use `Director::is_ajax()` on cached pages
 then you should add `X-Requested-With` to the vary header.
+
+## Testing
+
+HTTP Cache headers are disabled in developer environments by default to prevent any confusion around content not updating. To enable HTTP Cache Headers in dev mode you can add the following in yml config.
+
+```yml
+---
+Name: 'app_httpconfig'
+After: '#httpconfig-dev'
+Only:
+  environment: dev
+---
+SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
+  defaultState: 'disabled'
+  defaultForcingLevel: 0
+```
