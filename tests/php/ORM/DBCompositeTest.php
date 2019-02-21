@@ -5,6 +5,8 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DBCompositeTest\DBDoubleMoney;
+use SilverStripe\ORM\Tests\DBCompositeTest\TestObject;
 
 /**
  * @skipUpgrade
@@ -42,6 +44,18 @@ class DBCompositeTest extends SapphireTest
         $this->assertFalse($obj->dbObject('MyMoney')->hasField('MyMoney'));
     }
 
+    public function testWriteToManipuationIsCalledWhenWritingDataObject()
+    {
+        $obj = TestObject::create();
+        $obj->DoubleMoney = ['Amount' => 10, 'Currency' => 'CAD'];
+        $this->assertEquals(10, $obj->dbObject('DoubleMoney')->getAmount());
+
+        $obj->write();
+
+        // Custom money class should double the amount before writing
+        $this->assertEquals(20, $obj->dbObject('DoubleMoney')->getAmount());
+    }
+
     /**
      * Test DataObject::composite_fields() and DataObject::is_composite_field()
      */
@@ -53,7 +67,8 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals(
             array(
                 'MyMoney' => 'Money',
-                'OverriddenMoney' => 'Money'
+                'OverriddenMoney' => 'Money',
+                'DoubleMoney' => DBDoubleMoney::class
             ),
             $schema->compositeFields(DBCompositeTest\TestObject::class)
         );
@@ -68,6 +83,7 @@ class DBCompositeTest extends SapphireTest
                 'MyMoney' => 'Money',
                 'OtherMoney' => 'Money',
                 'OverriddenMoney' => 'Money',
+                'DoubleMoney' => DBDoubleMoney::class
             ),
             $schema->compositeFields(DBCompositeTest\SubclassedDBFieldObject::class)
         );

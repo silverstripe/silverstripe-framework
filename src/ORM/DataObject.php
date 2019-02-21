@@ -1243,7 +1243,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
 
             // Ensure this field pertains to this table
-            $specification = $schema->fieldSpec($class, $fieldName, DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED);
+            $specification = $schema->fieldSpec($class, $fieldName, DataObjectSchema::UNINHERITED);
             if (!$specification) {
                 continue;
             }
