@@ -796,7 +796,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             // Even if publicCache(true) is specified, errors will be uncacheable
             $this->disableCache(true);
         } elseif ($request->getSession()->getAll()) {
-            if ($request->getVar("CMSPreview") === "1") {
+            if ($request->getVar("CMSPreview") === "1" || $request->getVar("stage") === "Stage") {
                 //Disable caching when rendering the page in the CMS preview pane
                 //this is to prevent browsers from serving the local cache version after a page edit
                 $this->disableCache(true);
