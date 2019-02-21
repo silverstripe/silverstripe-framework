@@ -20,6 +20,7 @@ class ManyManyListTest extends SapphireTest
         ManyManyListTest\Category::class,
         ManyManyListTest\ExtraFieldsObject::class,
         ManyManyListTest\Product::class,
+        DataObjectTest\MockDynamicAssignmentDataObject::class
     ];
 
     public static function getExtraDataObjects()
@@ -377,5 +378,41 @@ class ManyManyListTest extends SapphireTest
         /** @var ManyManyList $productsRelatedToProductB */
         $productsRelatedToProductB = $category->Products()->filter('RelatedProducts.Title', 'Product A');
         $this->assertEquals(1, $productsRelatedToProductB->count());
+    }
+
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $left = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $left->write();
+        $right = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $right->write();
+
+        $left->MockManyMany()->add($right, [
+            'ManyManyStaticScalarOnlyField' => true,
+            'ManyManyDynamicScalarOnlyField' => false,
+            'ManyManyDynamicField' => true,
+        ]);
+
+        $pivot = $left->MockManyMany()->first();
+
+        $this->assertNotFalse($pivot->ManyManyStaticScalarOnlyField);
+        $this->assertNotTrue($pivot->ManyManyDynamicScalarOnlyField);
+        $this->assertNotFalse($pivot->ManyManyDynamicField);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $left = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $left->write();
+        $right = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $right->write();
+
+        $left->MockManyMany()->add($right, [
+            'ManyManyStaticScalarOnlyField' => false,
+            'ManyManyDynamicScalarOnlyField' => true,
+            'ManyManyDynamicField' => false,
+        ]);
     }
 }
