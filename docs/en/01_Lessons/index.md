@@ -1,7 +1,7 @@
 title: Lessons
 introduction: The lessons take a step by step look at how to build a SilverStripe application.
 
-* [How to set up a local development environment in SilverStripe](https://vimeo.com/108861537)
+* [How to set up a local development environment in SilverStripe](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
 * [Lesson 1: Creating your first project](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-project)
 * [Lesson 2: Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
 * [Lesson 3: Adding dynamic content](https://www.silverstripe.org/learn/lessons/v4/adding-dynamic-content-1)
