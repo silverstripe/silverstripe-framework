@@ -23,6 +23,9 @@ that previously visible assets remain visible to the public site.
 If additional security or visibility rules should be applied to File dataobjects, then
 make sure to correctly extend `canView` via extensions.
 
+*IMPORTANT*: There is a [known bug](https://github.com/silverstripe/silverstripe-versioned/issues/177)
+which breaks existing direct links to asset URLs unless `legacy_filenames` is set to `true` (see below).
+
 ## Automatic migration
 
 Migration can be invoked by either this task, or can be configured to automatically run during dev build
@@ -63,20 +66,22 @@ are incompatible with core file security.
 
 ## Support existing paths
 
-Because the filesystem now uses the sha1 of file contents in order to version multiple versions under the same
+Because the filesystem now uses the hash of file contents in order to version multiple versions under the same
 filename, the default storage paths in 4.0 will not be the same as in 3.
 
-Although it is not recommended, it is possible to configure the backend to omit this SHA1 url segment,
+Although it is not recommended, it is possible to configure the backend to omit this hash url segment,
 meaning that file paths and urls will not be modified during the upgrade.
-
-This is done by setting this config:
+This configuration needs to be chosen before starting the file migration,
+and can't be changed after migration.
 
 ```yaml
 SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   legacy_filenames: true
 ```
 
-Note that this will not allow you to utilise certain file versioning features in 4.0.
+This setting will still allow protected (draft) files.
+It'll also keep track of changes to file metadata (e.g. title and description),
+but won't keep track of replaced file contents. 
 
 ## Migrating substantial number of files
 
