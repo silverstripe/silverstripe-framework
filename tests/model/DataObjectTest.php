@@ -1788,6 +1788,10 @@ class DataObjectTest extends SapphireTest {
         $this->assertEquals(1, $do->DynamicField);
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     * @expectedExceptionMessageRegExp /parameterised field assignments are disallowed/
+     */
     public function testWriteManipulationWithNonScalarValuesDisallowed()
     {
 
@@ -1797,12 +1801,7 @@ class DataObjectTest extends SapphireTest {
         $do->DynamicScalarOnlyField = true;
         $do->DynamicField = false;
 
-        try {
-            $do->write();
-            $this->fail("Expected exception \"parameterised field assignments are disallowed\"");
-        } catch (Exception $ex) {
-            $this->assertContains('parameterised field assignments are disallowed', $ex->getMessage());
-        }
+        $do->write();
     }
 }
 

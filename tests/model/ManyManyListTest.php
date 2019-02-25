@@ -324,6 +324,10 @@ class ManyManyListTest extends SapphireTest {
         $this->assertEquals(1, $pivot->ManyManyDynamicField);
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     * @expectedExceptionMessageRegExp /parameterised field assignments are disallowed/
+     */
     public function testWriteManipulationWithNonScalarValuesDisallowed()
     {
         $left = MockDynamicAssignmentDataObject::create();
@@ -331,16 +335,11 @@ class ManyManyListTest extends SapphireTest {
         $right = MockDynamicAssignmentDataObject::create();
         $right->write();
 
-        try {
-            $left->MockManyMany()->add($right, array(
-                'ManyManyStaticScalarOnlyField' => true,
-                'ManyManyDynamicScalarOnlyField' => false,
-                'ManyManyDynamicField' => true
-            ));
-            $this->fail("Expected exception \"parameterised field assignments are disallowed\"");
-        } catch (Exception $ex) {
-            $this->assertContains('parameterised field assignments are disallowed', $ex->getMessage());
-        }
+        $left->MockManyMany()->add($right, array(
+            'ManyManyStaticScalarOnlyField' => false,
+            'ManyManyDynamicScalarOnlyField' => true,
+            'ManyManyDynamicField' => false
+        ));
     }
 }
 

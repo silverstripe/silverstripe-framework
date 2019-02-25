@@ -15,7 +15,7 @@ class MockDynamicAssignmentDBField extends Boolean
     private $dynamicAssignment;
 
     /**
-     * @param $name
+     * @param string $name
      * @param boolean $scalarOnly Whether our fake field should be scalar only.
      * @param boolean $dynamicAssignment Whether our fake field will try to do a dynamic assignment.
      */
@@ -28,7 +28,7 @@ class MockDynamicAssignmentDBField extends Boolean
 
     /**
      * If the field value and dynamicAssignment are true, we'll try to do a dynamic assignment
-     * @param $value
+     * @param mixed $value
      * @return array|int|mixed
      */
     public function prepValueForDB($value)
