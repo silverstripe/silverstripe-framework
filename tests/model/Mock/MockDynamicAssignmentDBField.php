@@ -35,7 +35,7 @@ class MockDynamicAssignmentDBField extends Boolean
     {
         if ($value) {
             return $this->dynamicAssignment
-                ? array('GREATEST(?, ?)' => array(0, 1))
+                ? array('ABS(?)' => array(1))
                 : 1;
         }
 
