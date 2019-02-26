@@ -1471,11 +1471,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (!isset($tableManipulation['fields'])) {
                 continue;
             }
-            foreach ($tableManipulation['fields'] as $fieldValue) {
+            foreach ($tableManipulation['fields'] as $fieldName => $fieldValue) {
                 if (is_array($fieldValue)) {
-                    throw new InvalidArgumentException(
-                        'DataObject::writeManipulation: parameterised field assignments are disallowed'
-                    );
+                    $dbObject = $this->dbObject($fieldName);
+                    // If the field allows non-scalar values we'll let it do dynamic assignments
+                    if ($dbObject && $dbObject->scalarValueOnly()) {
+                        throw new InvalidArgumentException(
+                            'DataObject::writeManipulation: parameterised field assignments are disallowed'
+                        );
+                    }
                 }
             }
         }
