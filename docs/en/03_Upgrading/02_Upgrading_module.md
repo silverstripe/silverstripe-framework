@@ -11,7 +11,7 @@ You should be familiar with [Upgrading a project to SilverStripe 4](Upgrading_pr
 
 Making your module compatible with SilverStripe 4 is only one part of the process. As a module maintainer, you also want to provide a good upgrade experience for your users. Your module can integrate with the [SilverStripe upgrader](https://github.com/silverstripe/silverstripe-upgrader) just like the SilverStripe core modules.
 
-Your SilverStripe 4 module should ship with a `.upgrade.yml` file. This file is read by the upgrader and will define new APIs introduced by the upgraded version of your module. Each steps in this guide details what entry you should add to your module's `.upgrade.yml` file.
+Your SilverStripe 4 module should ship with a `.upgrade.yml` file. This file is read by the upgrader and will define new APIs introduced by the upgraded version of your module. Each step in this guide details what entry you should add to your module's `.upgrade.yml` file.
 
 ## Step 0 - Branching off your project
 
@@ -119,7 +119,7 @@ upgrade add-namespace --root-dir vendor/example-user/silverstripe-example-module
 upgrade add-namespace "ExampleUser\\SilverstripeExampleModule" code/
 ```
 
-If your module codebase is structured in folders, you can use the `--psr4` and `--recursive` flag to quickly namespace your entire module in one command. This command will recursively go trough the `code` directory and namespace all files based on their position relative to `code`.
+If your module codebase is structured in folders, you can use the `--psr4` and `--recursive` flag to quickly namespace your entire module in one command. This command will recursively go through the `code` directory and namespace all files based on their position relative to `code`.
 
 ```bash
 upgrade add-namespace --recursive --psr4 "ExampleUser\\SilverstripeExampleModule" code/
@@ -322,9 +322,9 @@ You've been through all the steps covered in the regular project upgrade guide. 
 
 ### Create migration tasks
 
-Depending on the nature of your module, you might need to perform additional tasks to complete the upgrade process. For example, the `framework` module ships with a file migration tasks that converts files from the old SilverStripe 3 structure to the new structure required by SilverStripe 4.
+Depending on the nature of your module, you might need to perform additional tasks to complete the upgrade process. For example, the `framework` module ships with a file migration task that converts files from the old SilverStripe 3 structure to the new structure required by SilverStripe 4.
 
-Extend [BuildTasks](api:SilverStripe/Dev/BuildTask) and create your own migration task if your module requires post-upgrade work. Document this clearly for your users so they know they need to run the task after they're done upgrading their project.
+Extend [BuildTask](api:SilverStripe/Dev/BuildTask)s and create your own migration task if your module requires post-upgrade work. Document this clearly for your users so they know they need to run the task after they're done upgrading their project.
 
 ### Keep updating your `.upgrade.yml`
 
