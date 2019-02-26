@@ -10,6 +10,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Product;
+use InvalidArgumentException;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -402,7 +403,7 @@ class ManyManyListTest extends SapphireTest
 
     public function testWriteManipulationWithNonScalarValuesDisallowed()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $left = DataObjectTest\MockDynamicAssignmentDataObject::create();
         $left->write();

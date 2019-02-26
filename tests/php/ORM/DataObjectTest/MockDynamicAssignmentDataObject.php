@@ -30,11 +30,11 @@ class MockDynamicAssignmentDataObject extends DataObject implements TestOnly
     ];
 
     private static $many_many = [
-        "MockManyMany" => self::class,
+        'MockManyMany' => self::class,
     ];
 
     private static $belongs_many_many = [
-        "MockBelongsManyMany" => self::class,
+        'MockBelongsManyMany' => self::class,
     ];
 
     private static $many_many_extraFields = [

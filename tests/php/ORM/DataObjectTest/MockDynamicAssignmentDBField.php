@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests\DataObjectTest;
 
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBField;
 
@@ -13,16 +14,16 @@ use SilverStripe\ORM\FieldType\DBField;
  * If the field is set to false, it will try to do a plain assignment. This is so you can save the initial value no
  * matter what. If the field is set to true, it will try to do a dynamic assignment.
  */
-class MockDynamicAssignmentDBField extends DBBoolean
+class MockDynamicAssignmentDBField extends DBBoolean implements TestOnly
 {
 
     private $scalarOnly;
     private $dynamicAssignment;
 
     /**
-     * @param $name
-     * @param $scalarOnly Whether our fake field should be scalar only
-     * @param $dynamicAssigment Wheter our fake field will try to do a dynamic assignement
+     * @param string $name
+     * @param boolean $scalarOnly Whether our fake field should be scalar only.
+     * @param boolean $dynamicAssignment Whether our fake field will try to do a dynamic assignment.
      */
     public function __construct($name = '', $scalarOnly = false, $dynamicAssignment = false)
     {
@@ -32,15 +33,15 @@ class MockDynamicAssignmentDBField extends DBBoolean
     }
 
     /**
-     * If the field value and dynamicAssignment are true, we'll try to do a dynamic assignement
+     * If the field value and $dynamicAssignment are true, we'll try to do a dynamic assignment.
      * @param $value
-     * @return array|int|mixed
+     * @return array|int
      */
     public function prepValueForDB($value)
     {
         if ($value) {
             return $this->dynamicAssignment
-                ? ['GREATEST(?, ?)' => [0, 1]]
+                ? ['ABS(?)' => [1]]
                 : 1;
         }
 
