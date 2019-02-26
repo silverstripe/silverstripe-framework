@@ -58,6 +58,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationParent::class,
         DataObjectTest\RelationChildFirst::class,
         DataObjectTest\RelationChildSecond::class,
+        DataObjectTest\MockDynamicAssignmentDataObject::class
     );
 
     public static function getExtraDataObjects()
@@ -2238,5 +2239,35 @@ class DataObjectTest extends SapphireTest
         $do = Company::singleton();
         $do->SalaryCap = array('Amount' => 123456, 'Currency' => 'CAD');
         $this->assertNotEmpty($do->SalaryCap);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = true;
+        $do->DynamicScalarOnlyField = false;
+        $do->DynamicField = true;
+
+        $do->write();
+
+        $this->assertTrue($do->StaticScalarOnlyField);
+        $this->assertFalse($do->DynamicScalarOnlyField);
+        $this->assertTrue($do->DynamicField);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = false;
+        $do->DynamicScalarOnlyField = true;
+        $do->DynamicField = false;
+
+        $do->write();
     }
 }
