@@ -15,6 +15,8 @@ use SilverStripe\Security\RandomGenerator;
  * redirected URL
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ParameterConfirmationToken extends AbstractConfirmationToken
 {
@@ -24,7 +26,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
      * @var string
      */
     protected $parameterName = null;
-    
+
     /**
      * The parameter given in the main request
      *
@@ -124,7 +126,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
         // Don't reload if token exists
         return $this->reloadRequired() || $this->existsInReferer();
     }
-    
+
     public function suppress()
     {
         unset($_GET[$this->parameterName]);
@@ -153,7 +155,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
             ? $this->params()
             : array_merge($this->request->getVars(), $this->params());
     }
-    
+
     protected function redirectURL()
     {
         $query = http_build_query($this->getRedirectUrlParams());

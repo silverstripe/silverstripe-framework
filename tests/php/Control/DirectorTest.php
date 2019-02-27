@@ -14,6 +14,7 @@ use SilverStripe\Control\RequestProcessor;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
 
@@ -26,10 +27,14 @@ class DirectorTest extends SapphireTest
         TestController::class,
     ];
 
+    private $originalEnvType;
+
     protected function setUp()
     {
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
+
+        $this->originalEnvType = Environment::getEnv('SS_ENVIRONMENT_TYPE');
 
         // Ensure redirects enabled on all environments and global state doesn't affect the tests
         CanonicalURLMiddleware::singleton()
@@ -37,6 +42,12 @@ class DirectorTest extends SapphireTest
             ->setForceSSLPatterns([])
             ->setEnabledEnvs(true);
         $this->expectedRedirect = null;
+    }
+
+    protected function tearDown(...$args)
+    {
+        Environment::setEnv('SS_ENVIRONMENT_TYPE', $this->originalEnvType);
+        parent::tearDown(...$args);
     }
 
     protected function getExtraRoutes()
@@ -406,7 +417,7 @@ class DirectorTest extends SapphireTest
     }
 
     /**
-     * Tests isDev, isTest, isLive set from querystring
+     * Tests isDev, isTest, isLive cannot be set from querystring
      */
     public function testQueryIsEnvironment()
     {
@@ -422,30 +433,33 @@ class DirectorTest extends SapphireTest
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         $kernel->setEnvironment(null);
+        Environment::setEnv('SS_ENVIRONMENT_TYPE', Kernel::LIVE);
+
+        $this->assertTrue(Director::isLive());
 
         // Test isDev=1
         $_GET['isDev'] = '1';
-        $this->assertTrue(Director::isDev());
+        $this->assertFalse(Director::isDev());
         $this->assertFalse(Director::isTest());
-        $this->assertFalse(Director::isLive());
+        $this->assertTrue(Director::isLive());
 
         // Test persistence
         unset($_GET['isDev']);
-        $this->assertTrue(Director::isDev());
+        $this->assertFalse(Director::isDev());
         $this->assertFalse(Director::isTest());
-        $this->assertFalse(Director::isLive());
+        $this->assertTrue(Director::isLive());
 
         // Test change to isTest
         $_GET['isTest'] = '1';
         $this->assertFalse(Director::isDev());
-        $this->assertTrue(Director::isTest());
-        $this->assertFalse(Director::isLive());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
 
         // Test persistence
         unset($_GET['isTest']);
         $this->assertFalse(Director::isDev());
-        $this->assertTrue(Director::isTest());
-        $this->assertFalse(Director::isLive());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
     }
 
     public function testResetGlobalsAfterTestRequest()
