@@ -1,7 +1,7 @@
 # Environment management
 
 As part of website development and hosting it is natural for our sites to be hosted on several different environments.
-These can be our laptops for local development, a testing server for customers to test changes on, or a production 
+These can be our laptops for local development, a testing server for customers to test changes on, or a production
 server.
 
 For each of these environments we may require slightly different configurations for our servers. This could be our debug
@@ -12,7 +12,7 @@ provides a set of APIs and helpers.
 
 ## Security considerations
 
-Sensitive credentials should not be stored in a VCS or project code and should only be stored on the environment in 
+Sensitive credentials should not be stored in a VCS or project code and should only be stored on the environment in
 question. When using live environments the use of `.env` files is discouraged and instead one should use "first class"
 environment variables.
 
@@ -29,7 +29,7 @@ set. An example `.env` file is included in the default installer named `.env.exa
 
 ## Managing environment variables with Apache
 
-You can set "real" environment variables using Apache. Please 
+You can set "real" environment variables using Apache. Please
 [see the Apache docs for more information](https://httpd.apache.org/docs/current/env.html)
 
 ## How to access the environment variables
@@ -98,3 +98,4 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_SSL_CERT` | Absolute path to SSL certificate file |
 | `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
 | `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |
+| `SS_FLUSH_ON_DEPLOY` | Try to detect deployments through file system modifications and flush on the first request after every deploy. Does not run "dev/build", but only "flush". Possible values are `true` (check for a framework PHP file modification time), `false` (no checks, skip deploy detection) or a path to a specific file or folder to be checked. See [DeployFlushDiscoverer](api:SilverStripe\Core\Startup\DeployFlushDiscoverer) for more details.<br /><br />False by default. |

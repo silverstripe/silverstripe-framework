@@ -11,3 +11,5 @@ SilverStripe\Dev\DevelopmentAdmin:
       controller: SilverStripe\Dev\TaskRunner
       links:
         tasks: 'See a list of build tasks to run'
+    confirm:
+      controller: SilverStripe\Dev\DevConfirmationController

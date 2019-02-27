@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Middleware;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
@@ -11,12 +12,9 @@ use SilverStripe\Core\Flushable;
  */
 class FlushMiddleware implements HTTPMiddleware
 {
-    /**
-     * @inheritdoc
-     */
     public function process(HTTPRequest $request, callable $delegate)
     {
-        if (array_key_exists('flush', $request->getVars())) {
+        if (Director::isManifestFlushed()) {
             // Disable cache when flushing
             HTTPCacheControlMiddleware::singleton()->disableCache(true);
 

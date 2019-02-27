@@ -12,6 +12,8 @@ use SilverStripe\Core\Convert;
  * check multiple tokens at once without having to potentially redirect the user for each of them
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ConfirmationTokenChain
 {

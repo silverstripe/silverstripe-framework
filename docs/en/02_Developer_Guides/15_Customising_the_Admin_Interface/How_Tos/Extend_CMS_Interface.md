@@ -26,8 +26,8 @@ We can use this to create a different base template with `LeftAndMain.ss`
 
 Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_Menu.ss`
 from the `silverstripe/admin` module
-into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
-the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
+into `app/templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`. It will automatically be picked up by
+the CMS logic. Add a new section into the `<ul class="cms-menu__list">`
 
 
 ```ss
@@ -123,10 +123,10 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 ```php
 use SilverStripe\Admin\LeftAndMainExtension;
 
-class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
+class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension
 {
 
-    public function BookmarkedPages() 
+    public function BookmarkedPages()
     {
         return Page::get()->filter("IsBookmarked", 1);
     }
@@ -227,7 +227,7 @@ how-to.
 
 ## React-rendered UI
 For sections of the admin that are rendered with React, Redux, and GraphQL, please refer
-to [the introduction on those concepts](../07_ReactJS_Redux_and_GraphQL.md), 
+to [the introduction on those concepts](../../reactjs_redux_and_graphql/),
 as well as their respective How-To's in this section.
 
 ### Implementing handlers
@@ -240,18 +240,18 @@ applicable controller actions to it:
 ```php
 use SilverStripe\Admin\LeftAndMainExtension;
 
-class CustomActionsExtension extends LeftAndMainExtension 
+class CustomActionsExtension extends LeftAndMainExtension
 {
-    
+
     private static $allowed_actions = [
         'sampleAction'
     ];
-    
+
     public function sampleAction()
     {
         // Create the web
     }
-    
+
 }
 
 ```

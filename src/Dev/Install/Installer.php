@@ -13,10 +13,10 @@ use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\EnvironmentLoader;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
-use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\Security;
+use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
 
 /**
  * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
@@ -24,6 +24,7 @@ use SilverStripe\Security\Security;
 class Installer
 {
     use InstallEnvironmentAware;
+    use SessionEnvTypeSwitcher;
 
     /**
      * Errors during install
@@ -203,12 +204,19 @@ PHP
 
         // Check result of install
         if (!$this->errors) {
+            // switch the session to Dev mode so that
+            // flush does not require authentication
+            // for the first time after installation
+            $request['isDev'] = '1';
+            $this->setSessionEnvType($request);
+            unset($request['isDev']);
+            $request->getSession()->save($request);
+
             if (isset($_SERVER['HTTP_HOST']) && $this->hasRewritingCapability()) {
                 $this->statusMessage("Checking that friendly URLs work...");
                 $this->checkRewrite();
             } else {
-                $token = new ParameterConfirmationToken('flush', $request);
-                $params = http_build_query($token->params());
+                $params = http_build_query($request->getVars() + ['flush' => '']);
 
                 $destinationURL = 'index.php/' .
                     ($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
@@ -247,7 +255,6 @@ HTML;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Core\CoreKernel;
-use SilverStripe\Core\Startup\ErrorControlChainMiddleware;
 
 // Find autoload.php
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -265,7 +272,6 @@ $request = HTTPRequestBuilder::createFromEnvironment();
 // Default application
 $kernel = new CoreKernel(BASE_PATH);
 $app = new HTTPApplication($kernel);
-$app->addMiddleware(new ErrorControlChainMiddleware($app));
 $response = $app->handle($request);
 $response->output();
 PHP;
@@ -598,8 +604,7 @@ TEXT;
 
     public function checkRewrite()
     {
-        $token = new ParameterConfirmationToken('flush', new HTTPRequest('GET', '/'));
-        $params = http_build_query($token->params());
+        $params = http_build_query(['flush' => '']);
 
         $destinationURL = BASE_URL . '/' . (
             $this->checkModuleExists('cms')

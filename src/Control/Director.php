@@ -377,6 +377,33 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
+     * Returns indication whether the manifest cache has been flushed
+     * in the beginning of the current request.
+     *
+     * That could mean the current active request has `?flush` parameter.
+     * Another possibility is a race condition when the current request
+     * hits the server in between another request `?flush` authorisation
+     * and a redirect to the actual flush.
+     *
+     * @return bool
+     *
+     * @deprecated 5.0 Kernel::isFlushed to be used instead
+     */
+    public static function isManifestFlushed()
+    {
+        $kernel = Injector::inst()->get(Kernel::class);
+
+        // Only CoreKernel implements this method at the moment
+        // Introducing it to the Kernel interface is a breaking change
+        if (method_exists($kernel, 'isFlushed')) {
+            return $kernel->isFlushed();
+        }
+
+        $classManifest = $kernel->getClassLoader()->getManifest();
+        return $classManifest->isFlushed();
+    }
+
+    /**
      * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree
      * object to return, then this will return the current controller.
      *
@@ -1019,7 +1046,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_cli()
     {
-        return in_array(php_sapi_name(), ['cli', 'phpdbg']);
+        return Environment::isCli();
     }
 
     /**
@@ -1033,6 +1060,33 @@ class Director implements TemplateGlobalProvider
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         return $kernel->getEnvironment();
+    }
+
+
+    /**
+     * Returns the session environment override
+     *
+     * @internal This method is not a part of public API and will be deleted without a deprecation warning
+     *
+     * @param HTTPRequest $request
+     *
+     * @return string|null null if not overridden, otherwise the actual value
+     */
+    public static function get_session_environment_type(HTTPRequest $request = null)
+    {
+        $request = static::currentRequest($request);
+
+        if (!$request) {
+            return null;
+        }
+
+        $session = $request->getSession();
+
+        if (!empty($session->get('isDev'))) {
+            return Kernel::DEV;
+        } elseif (!empty($session->get('isTest'))) {
+            return Kernel::TEST;
+        }
     }
 
     /**
