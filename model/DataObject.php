@@ -2677,8 +2677,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
 
-			$dbField = $this->dbObject($fieldName);
-			if ($dbField && $dbField->scalarValueOnly() && !empty($val) && !is_scalar($val)){
+			if ($this->db($fieldName) && ($dbField = $this->dbObject($fieldName))  && $dbField->scalarValueOnly() && !empty($val) && !is_scalar($val)){
 			    $val = null;
                 user_error(
                     sprintf(
