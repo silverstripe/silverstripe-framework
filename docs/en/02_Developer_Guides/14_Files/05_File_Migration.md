@@ -79,9 +79,10 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   legacy_filenames: true
 ```
 
-This setting will still allow protected (draft) files.
-It'll also keep track of changes to file metadata (e.g. title and description),
-but won't keep track of replaced file contents. 
+This setting will still allow creation of protected (draft) files before publishing them.
+It'll also keep track of changes to file metadata (e.g. title and description).
+But it won't keep track of replaced file contents (not compatible with `keep_archived_assets=true`).
+When replacing an already published file, the new file will be public right away (no draft stage). 
 
 ## Migrating substantial number of files
 
