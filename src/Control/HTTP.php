@@ -268,7 +268,7 @@ class HTTP
         $newUri = $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
 
         if ($isRelative) {
-            return Director::makeRelative($newUri);
+            return Director::baseURL() . Director::makeRelative($newUri);
         }
 
         return $newUri;
