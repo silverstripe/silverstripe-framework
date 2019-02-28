@@ -20,6 +20,7 @@ Especially be aware of [accidental php-execution](https://nealpoole.com/blog/201
 
 * It does not cover serving securely over HTTPS.
 * It uses the new filesystem layout (with `public` directory) introduced in version 4.1.0. If your installation has been upgraded to 4.1+ from an older version and you have not [upgraded to the public folder](/changelogs/4.1.0.md), see the version of this documentation for version 4.0.
+* The regular expression for allowed file types must be manually updated if the File.allowed_extensions list is updated.
 * The error pages for 502 (Bad Gateway) and 503 (Service Unavailable) need to be manually created and published in the CMS (assuming use of the silverstripe/errorpage module).
 
 ```nginx
@@ -47,10 +48,32 @@ server {
   error_page 502 /assets/error-500.html;
   error_page 503 /assets/error-500.html;
 
-  location ^~ /assets/ {
-    sendfile on;
-    try_files $uri =404;
+  # Support assets & resources #
+
+  # Never serve .gitignore, .htaccess, or .method
+  location ~ /\.(gitignore|htaccess|method)$ {
+      return 403;
   }
+
+  # Handle allowed file types (see caveats)
+  # Pass unfound files to SilverStripe to check draft images
+  location ~ ^/assets/.*\.(?i:css|js|ace|arc|arj|asf|au|avi|bmp|bz2|cab|cda|csv|dmg|doc|docx|dotx|flv|gif|gpx|gz|hqx|ico|jpeg|jpg|kml|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mpa|mpeg|mpg|ogg|ogv|pages|pcx|pdf|png|pps|ppt|pptx|potx|ra|ram|rm|rtf|sit|sitx|tar|tgz|tif|tiff|txt|wav|webm|wma|wmv|xls|xlsx|xltx|zip|zipx)$ {
+      sendfile on;
+      try_files $uri /index.php?$query_string;
+  }
+
+  # Allow the error pages. Fail with 404 Not found.
+  location ~ ^/assets/error-\d\d\d\.html$ {
+      try_files $uri =404;
+  }
+
+  # Fail all other assets requests as 404 Not found
+  # Could also use 403 Forbidden or 444 (nginx drops the connection)
+  location ~ ^/assets/ {
+      return 404;
+  }
+
+  # End of assets & resources support #
 
   location /index.php {
     fastcgi_buffer_size 32k;
