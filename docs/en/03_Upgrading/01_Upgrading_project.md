@@ -355,18 +355,35 @@ If you're going to install development version of third party modules, you shoul
 ```
 </div>
 
-To resolve a conflict you can either:
-* fork the affected module and upgrade it yourself. Don't forget to send a pull request to the original module!
-* Integrate the affected module into your project's codebase
-* Remove the module from your project, if it is not essential
+To resolve a conflict you can do any of the following:
 
-To integrate a third party module in your project, remove it from your `composer.json` file and from your `.gitignore` file. Then track the module's codebase in your project source control. You'll need to upgrade the module's code to be compatible with SilverStripe 4. 
+#### Upgrade the module manually
+
+In some cases a module may not be available for SilverStripe 4 yet.
+You can work around this issue by upgrading the module yourself.
+
+First integrate the affected module into your project's codebase:
+
+1. Remove the module from your dependencies: `composer remove <package>` or through `composer.json`.
+2. Recompose again, this should now work without the conflicting module: `bin/upgrade-code recompose`
+3. Clone the module repository into your project root: `git clone <repository>`
+
+Then fork the affected module and upgrade it yourself:
+
+1. Fork the repository: `git fork --remote-name <remote>`
+2. Upgrade the module so it works with version `4` of SilverStripe, commit and push your changes to your forked repository.
 
 <div class="info" markdown="1">
-If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work or releasing your fork as a seperate module.
+If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work or releasing your fork as a separate module.
 
 [Learn about how to publish a SilverStripe module](/developer_guides/extending/how_tos/publish_a_module)
+
+Once your changes have been merged you can remove your forked module and add the dependency through composer again with: `composer require <package>`
 </div>
+
+#### Remove the module from your project, if it is not essential
+You can remove the module completely if you do not need it.
+This can be done simply by removing the dependency: `composer remove <package>`
 
 ### Finalising your dependency upgrade
 
