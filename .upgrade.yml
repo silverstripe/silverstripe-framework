@@ -1388,8 +1388,10 @@ warnings:
       message: 'Use global const RESOURCES_DIR'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.4.0#resources-dir'
       replacement: 'RESOURCES_DIR'
+
 renameWarnings:
   - Form
+
 visibilities:
   'SilverStripe\ORM\DataObject::db':
     visibility: private
@@ -1517,3 +1519,13 @@ visibilities:
     visibility: protected
   'SilverStripe\View\SSViewer::partialCacheStore':
     visibility: protected
+
+classToTraits:
+  SS_Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
+  Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
