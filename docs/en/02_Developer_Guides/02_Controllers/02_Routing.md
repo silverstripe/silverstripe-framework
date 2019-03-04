@@ -214,6 +214,30 @@ Director:
     'feed': 'FeedController'
 ```
 
+## Root URL Handlers
+
+In some cases, the Director rule covers the entire URL you intend to match, and you simply want the controller to respond to a 'root' request. This request will automatically direct to an `index()` method if it exists on the controller, but you can also set a custom method to use in `$url_handlers` with the `'/'` key:
+
+```php
+use SilverStripe\Control\Controller;
+
+class BreadAPIController extends Controller
+{
+    private static $allowed_actions = [
+        'getBreads',
+        'createBread',
+    ];
+
+    private static $url_handlers = [
+        'GET /' => 'getBreads',
+        'POST /' => 'createBread',
+    ];
+```
+
+<div class="alert" markdown="1">
+In SilverStripe Framework versions prior to 4.6, an empty key (`''`) must be used in place of the `'/'` key. When specifying an HTTP method, the empty string must be separated from the method (e.g. `'GET '`). The empty key and slash key are also equivalent in Director rules.
+</div>
+
 ## Related Lessons
 * [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)
 * [Controller actions / DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
