@@ -388,6 +388,9 @@ trait Extensible
             if (!$strict && is_subclass_of($extension, $requiredExtension)) {
                 return true;
             }
+            if (Injector::inst()->get($extension) instanceof $requiredExtension) {
+                return true;
+            }
         }
 
         return false;
