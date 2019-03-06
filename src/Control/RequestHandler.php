@@ -196,7 +196,7 @@ class RequestHandler extends ViewableData
             if (!$this->hasAction($action)) {
                 return $this->httpError(404, "Action '$action' isn't available $classMessage.");
             }
-            if (!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doinit'))) {
                 return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
             }
             $result = $this->handleAction($request, $action);
@@ -411,7 +411,7 @@ class RequestHandler extends ViewableData
 
         $actionsWithoutExtra = $this->config()->get('allowed_actions', true);
         if (!is_array($actions) || !$actionsWithoutExtra) {
-            if ($action != 'doInit' && $action != 'run' && method_exists($this, $action)) {
+            if (!in_array(strtolower($action), array('run', 'doinit')) && method_exists($this, $action)) {
                 return true;
             }
         }
