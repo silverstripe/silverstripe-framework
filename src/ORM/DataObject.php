@@ -1416,8 +1416,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Inserts done one the base table are performed in another step, so the manipulation should instead
         // attempt an update, as though it were a normal update.
         $manipulation[$table]['command'] = $isNewRecord ? 'insert' : 'update';
-        $manipulation[$table]['id'] = $this->record['ID'];
         $manipulation[$table]['class'] = $class;
+        if ($this->isInDB()) {
+            $manipulation[$table]['id'] = $this->record['ID'];
+        }
     }
 
     /**
@@ -1436,10 +1438,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Perform an insert on the base table
-        $insert = new SQLInsert('"' . $baseTable . '"');
-        $insert
-            ->assign('"Created"', $now)
-            ->execute();
+        $manipulation = [];
+        $this->prepareManipulationTable($baseTable, $now, true, $manipulation, $this->baseClass());
+        DB::manipulate($manipulation);
+
         $this->changed['ID'] = self::CHANGE_VALUE;
         $this->record['ID'] = DB::get_generated_id($baseTable);
     }
