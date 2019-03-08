@@ -377,6 +377,15 @@ SS;
         );
     }
 
+    /**
+     * @expectedException SilverStripe\View\SSTemplateParseException
+     * @expectedExceptionMessageRegExp /Malformed bracket injection {\$Value(.*)/
+     */
+    public function testBasicInjectionMismatchedBrackets()
+    {
+        $this->render('A {$Value here');
+        $this->fail("Parser didn't error when encountering mismatched brackets in an injection");
+    }
 
     public function testGlobalVariableCalls()
     {

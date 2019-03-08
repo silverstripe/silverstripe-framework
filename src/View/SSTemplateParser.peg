@@ -216,7 +216,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     # Any new template elements need to be included in this list, if they are to work.
 
     Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
-        OpenBlock | MalformedBlock | Injection | Text)+
+        OpenBlock | MalformedBlock | MalformedBracketInjection | Injection | Text)+
     */
     function Template_STR(&$res, $sub)
     {
@@ -367,6 +367,18 @@ class SSTemplateParser extends Parser implements TemplateParser
         $res['php'] .= ']';
     }
 
+    /*!*
+
+    # This is used to detect a malformed bracket injection - where the closing '}' is missing
+
+    MalformedBracketInjection: "{$" :Lookup !( "}" )
+    */
+    function MalformedBracketInjection__finalise(&$res)
+    {
+        $lookup = $res['text'];
+        throw new SSTemplateParseException("Malformed bracket injection $lookup. Perhaps you have forgotten the " .
+            "closing bracket (})?", $this);
+    }
 
     /*!*
 
