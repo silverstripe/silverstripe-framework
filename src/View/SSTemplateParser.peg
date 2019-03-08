@@ -1156,7 +1156,9 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     # This is used to remove template comments
 
-    Comment: "<%--" (!"--%>" /(?s)./)+ "--%>"
+    CommentWithContent: '<%--' ( !"--%>" /(?s)./ )+ '--%>'
+    EmptyComment: '<%----%>'
+    Comment: :EmptyComment | :CommentWithContent
     */
     function Comment__construct(&$res)
     {

@@ -321,16 +321,33 @@ Some more content
 Mixing content and <%-- multi
 	line comment --%> Final final
 content
+<%--commentwithoutwhitespace--%>last content
 SS;
-        $output = $this->render($input);
-        $shouldbe = <<<SS
+        $actual = $this->render($input);
+        $expected = <<<SS
 This is my templateThis is some contentFinal content
 
 Some more content
 Mixing content and  Final final
 content
+last content
 SS;
-        $this->assertEquals($shouldbe, $output);
+        $this->assertEquals($expected, $actual);
+
+        $input = <<<SS
+<%--
+
+--%>empty comment1
+<%-- --%>empty comment2
+<%----%>empty comment3
+SS;
+        $actual = $this->render($input);
+        $expected = <<<SS
+empty comment1
+empty comment2
+empty comment3
+SS;
+        $this->assertEquals($expected, $actual);
     }
 
     public function testBasicText()
