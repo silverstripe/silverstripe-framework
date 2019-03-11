@@ -17,7 +17,9 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -56,6 +58,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationParent::class,
         DataObjectTest\RelationChildFirst::class,
         DataObjectTest\RelationChildSecond::class,
+        DataObjectTest\MockDynamicAssignmentDataObject::class
     );
 
     public static function getExtraDataObjects()
@@ -917,6 +920,13 @@ class DataObjectTest extends SapphireTest
         $obj->FirstName = null;
         $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT));
         $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+
+        $obj->write();
+        $obj->FirstName = null;
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Unchanged property was marked as changed');
+        $obj->FirstName = 0;
+        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Strict (type) change was not detected');
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE), 'Type-only change was marked as a value change');
 
         /* Test when there's not field provided */
         $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
@@ -2310,5 +2320,51 @@ class DataObjectTest extends SapphireTest
             DataObjectTest\TeamComment::class,
             ['"DataObjectTest_TeamComment"."Name"' => 'does not exists']
         ));
+    }
+
+    public function testSetFieldWithArrayOnScalarOnlyField()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $do = Company::singleton();
+        $do->FoundationYear = '1984';
+        $do->FoundationYear = array('Amount' => 123, 'Currency' => 'CAD');
+        $this->assertEmpty($do->FoundationYear);
+    }
+
+    public function testSetFieldWithArrayOnCompositeField()
+    {
+        $do = Company::singleton();
+        $do->SalaryCap = array('Amount' => 123456, 'Currency' => 'CAD');
+        $this->assertNotEmpty($do->SalaryCap);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = true;
+        $do->DynamicScalarOnlyField = false;
+        $do->DynamicField = true;
+
+        $do->write();
+
+        $this->assertTrue($do->StaticScalarOnlyField);
+        $this->assertFalse($do->DynamicScalarOnlyField);
+        $this->assertTrue($do->DynamicField);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = false;
+        $do->DynamicScalarOnlyField = true;
+        $do->DynamicField = false;
+
+        $do->write();
     }
 }

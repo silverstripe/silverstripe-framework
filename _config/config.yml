@@ -8,8 +8,16 @@ SilverStripe\Core\Manifest\VersionProvider:
 Name: httpconfig-dev
 Only:
   environment: dev
+After:
+  - 'requestprocessors'
 ---
 # Set dev level to disabled with a higher forcing level
 SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
   defaultState: 'disabled'
   defaultForcingLevel: 3
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        ExecMetricMiddleware: '%$SilverStripe\Control\Middleware\ExecMetricMiddleware'

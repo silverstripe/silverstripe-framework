@@ -95,8 +95,6 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato {type} {name}'
     Save: Salva
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Modifica
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Non è possibile rimuovere te stesso da questo gruppo, perderesti i diritti di admin'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -149,8 +147,6 @@ it:
       other: '{count} anni'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Qualsiasi
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Troppi oggetti correlati; campo di fallback in uso'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Troppi figli ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -324,5 +320,3 @@ it:
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
-    PASSWORDRESETSENTHEADER: 'Link di azzeramento password inviato'
-    PASSWORDRESETSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato, supponendo un account esista a quell''indirizzo e-mail.'

@@ -93,8 +93,6 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade {type} {name}'
     Save: Spara
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Ändra
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Du kan inte radera dig själv från den här gruppen, då du då kommer att förlora dina admin-rättigheter'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -147,8 +145,6 @@ sv:
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Vilken som helst'
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'För många relaterade objekt; använder fallback-fält'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'För många barn ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -303,5 +299,3 @@ sv:
     LOSTPASSWORDHEADER: 'Bortglömt lösenord'
     NOTEPAGESECURED: 'Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare.'
     NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
-    PASSWORDRESETSENTHEADER: 'Återställningslänk för lösenord skickad'
-    PASSWORDRESETSENTTEXT: 'Tack. En återställningslänk har skickats, förutsatt att ett konto med denna adress existerar.'

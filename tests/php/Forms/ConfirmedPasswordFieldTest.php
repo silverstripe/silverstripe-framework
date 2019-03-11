@@ -20,7 +20,9 @@ class ConfirmedPasswordFieldTest extends SapphireTest
     {
         parent::setUp();
 
-        PasswordValidator::singleton()->setMinLength(0);
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
     }
 
     public function testSetValue()

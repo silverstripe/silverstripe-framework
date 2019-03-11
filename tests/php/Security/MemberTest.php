@@ -57,7 +57,9 @@ class MemberTest extends FunctionalTest
 
         Member::config()->set('unique_identifier_field', 'Email');
 
-        PasswordValidator::singleton()->setMinLength(0);
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
 
         i18n::set_locale('en_US');
     }

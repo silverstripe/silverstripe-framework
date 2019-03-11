@@ -947,8 +947,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * The field names can be simple names, or you can use a dot syntax to access $has_one relations.
      * For example, array("Author.FirstName" => "Jim") will set $this->Author()->FirstName to "Jim".
      *
-     * update() doesn't write the main object, but if you use the dot syntax, it will write()
+     * Doesn't write the main object, but if you use the dot syntax, it will write()
      * the related objects that it alters.
+     *
+     * When using this method with user supplied data, it's very important to
+     * whitelist the allowed keys.
      *
      * @param array $data A map of field name to data values to update.
      * @return DataObject $this
@@ -1418,8 +1421,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Inserts done one the base table are performed in another step, so the manipulation should instead
         // attempt an update, as though it were a normal update.
         $manipulation[$table]['command'] = $isNewRecord ? 'insert' : 'update';
-        $manipulation[$table]['id'] = $this->record['ID'];
         $manipulation[$table]['class'] = $class;
+        if ($this->isInDB()) {
+            $manipulation[$table]['id'] = $this->record['ID'];
+        }
     }
 
     /**
@@ -1438,10 +1443,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Perform an insert on the base table
-        $insert = new SQLInsert('"' . $baseTable . '"');
-        $insert
-            ->assign('"Created"', $now)
-            ->execute();
+        $manipulation = [];
+        $this->prepareManipulationTable($baseTable, $now, true, $manipulation, $this->baseClass());
+        DB::manipulate($manipulation);
+
         $this->changed['ID'] = self::CHANGE_VALUE;
         $this->record['ID'] = DB::get_generated_id($baseTable);
     }
@@ -1452,6 +1457,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string $baseTable Base table
      * @param string $now Timestamp to use for the current time
      * @param bool $isNewRecord If this is a new record
+     * @throws InvalidArgumentException
      */
     protected function writeManipulation($baseTable, $now, $isNewRecord)
     {
@@ -1468,6 +1474,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // generated ID on to the rest of the manipulation
         if ($isNewRecord) {
             $manipulation[$baseTable]['command'] = 'update';
+        }
+
+        // Make sure none of our field assignment are arrays
+        foreach ($manipulation as $tableManipulation) {
+            if (!isset($tableManipulation['fields'])) {
+                continue;
+            }
+            foreach ($tableManipulation['fields'] as $fieldName => $fieldValue) {
+                if (is_array($fieldValue)) {
+                    $dbObject = $this->dbObject($fieldName);
+                    // If the field allows non-scalar values we'll let it do dynamic assignments
+                    if ($dbObject && $dbObject->scalarValueOnly()) {
+                        throw new InvalidArgumentException(
+                            'DataObject::writeManipulation: parameterised field assignments are disallowed'
+                        );
+                    }
+                }
+            }
         }
 
         // Perform the manipulation
@@ -2238,7 +2262,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             // Otherwise, use the database field's scaffolder
             } elseif ($object = $this->relObject($fieldName)) {
-                $field = $object->scaffoldSearchField();
+                if (is_object($object) && $object->hasMethod('scaffoldSearchField')) {
+                    $field = $object->scaffoldSearchField();
+                } else {
+                    throw new Exception(sprintf(
+                        "SearchField '%s' on '%s' does not return a valid DBField instance.",
+                        $fieldName,
+                        get_class($this)
+                    ));
+                }
             }
 
             // Allow fields to opt out of search
@@ -2646,15 +2678,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 throw new InvalidArgumentException('DataObject::setField: passed an object that is not a DBField');
             }
 
+            if (!empty($val) && !is_scalar($val)) {
+                $dbField = $this->dbObject($fieldName);
+                if ($dbField && $dbField->scalarValueOnly()) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'DataObject::setField: %s only accepts scalars',
+                            $fieldName
+                        )
+                    );
+                }
+            }
+
             // if a field is not existing or has strictly changed
-            if (!isset($this->original[$fieldName]) || $this->original[$fieldName] !== $val) {
+            if (!array_key_exists($fieldName, $this->original) || $this->original[$fieldName] !== $val) {
                 // TODO Add check for php-level defaults which are not set in the db
                 // TODO Add check for hidden input-fields (readonly) which are not set in the db
                 // At the very least, the type has changed
                 $this->changed[$fieldName] = self::CHANGE_STRICT;
 
-                if ((!isset($this->original[$fieldName]) && $val)
-                    || (isset($this->original[$fieldName]) && $this->original[$fieldName] != $val)
+                if ((!array_key_exists($fieldName, $this->original) && $val)
+                    || (array_key_exists($fieldName, $this->original) && $this->original[$fieldName] != $val)
                 ) {
                     // Value has changed as well, not just the type
                     $this->changed[$fieldName] = self::CHANGE_VALUE;

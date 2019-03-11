@@ -53,14 +53,15 @@ The simplest way to use [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) is t
 
 ```php
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Dev\CsvBulkLoader;
 
 class PlayerAdmin extends ModelAdmin 
 {
    private static $managed_models = [
-      'Player'
+      Player::class
    ];
    private static $model_importers = [
-      'Player' => 'CsvBulkLoader',
+      'Player' => CsvBulkLoader::class,
    ];
    private static $url_segment = 'players';
 }

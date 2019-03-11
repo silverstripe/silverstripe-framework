@@ -95,8 +95,6 @@ da:
     DeletePermissionsFailure: 'Ingen slette rettigheder'
     Deleted: 'Slet {type} {name}'
     Save: Gem
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Rediger
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Kan ikke fjerne dig selv fra denne gruppe, du vil miste administrator rettigheder'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -149,8 +147,6 @@ da:
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Enhver
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'For mange relaterede objekter; fallback felt i brug'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'For mange underelementer ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -324,5 +320,3 @@ da:
     LOSTPASSWORDHEADER: 'Glemt kodeord'
     NOTEPAGESECURED: 'Denne side er beskyttet. Indtast dine loginoplysninger herunder for at få adgang.'
     NOTERESETPASSWORD: 'Indtast din email adresse, så sender vi dig et link som du kan nulstille dit kodeord med'
-    PASSWORDRESETSENTHEADER: 'link til at nulstille kodeord afsendt'
-    PASSWORDRESETSENTTEXT: 'Tak for det. Et link til at nulstille dit kodeord er afsendt, hvis der findes en bruger med denne email adresse.'

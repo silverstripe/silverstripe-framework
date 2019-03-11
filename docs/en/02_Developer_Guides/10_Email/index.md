@@ -198,6 +198,22 @@ $email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValu
 See this [Wikipedia](http://en.wikipedia.org/wiki/E-mail#Message_header) entry for a list of header names.
 </div>
 
+## Disabling Emails
+
+If required, you can also disable email sending entirely. This is useful for testing and staging servers where
+you do not wish to send emails out.
+
+```yaml
+---
+Name: myemailconfig
+Only:
+  Environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport:
+    class: Swift_NullTransport
+```
+
 ## SwiftMailer Documentation
 
 For further information on SwiftMailer, consult their docs: http://swiftmailer.org/docs/introduction.html

@@ -16,12 +16,14 @@ $field = new TextField(..);
 $field->setTemplate('MyCustomTextField');
 ```
 
-Both `MyCustomTemplate.ss` and `MyCustomTextField.ss` should be located in **app/templates/** or the same directory as the core.
+To override the template for CMS forms, the custom templates should be located in **/app/templates**. Front-end form templates can be located in **/app/templates** or in the active theme's **/templates** directory.
 
 <div class="notice" markdown="1">
 It's recommended to copy the contents of the template you're going to replace and use that as a start. For instance, if
 you want to create a `MyCustomFormTemplate` copy the contents of `Form.ss` to a `MyCustomFormTemplate.ss` file and 
 modify as you need.
+
+*The default Form.ss can be found in `/vendor/silverstripe/framework/templates/SilverStripe/Forms/Includes/`*
 </div>
 
 By default, Form and Fields follow the SilverStripe Template convention and are rendered into templates of the same 

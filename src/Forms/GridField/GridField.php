@@ -9,8 +9,11 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\GridField\FormAction\SessionStore;
+use SilverStripe\Forms\GridField\FormAction\StateStore;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -1009,9 +1012,14 @@ class GridField extends FormField
             $state->setValue($fieldData['GridState']);
         }
 
+        // Fetch the store for the "state" of actions (not the GridField)
+        /** @var StateStore $store */
+        $store = Injector::inst()->create(StateStore::class . '.' . $this->getName());
+
         foreach ($data as $dataKey => $dataValue) {
             if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey, $matches)) {
-                $stateChange = $request->getSession()->get($matches[1]);
+                $stateChange = $store->load($matches[1]);
+
                 $actionName = $stateChange['actionName'];
 
                 $arguments = array();

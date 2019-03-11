@@ -34,7 +34,7 @@
         "psr/container-implementation": "1.0.0",
         "silverstripe/config": "^1@dev",
         "silverstripe/assets": "^1@dev",
-        "silverstripe/vendor-plugin": "^1.0",
+        "silverstripe/vendor-plugin": "^1.4",
         "swiftmailer/swiftmailer": "~5.4",
         "symfony/cache": "^3.3@dev",
         "symfony/config": "^3.2",

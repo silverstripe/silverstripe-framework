@@ -95,8 +95,6 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita {type} {name}'
     Save: Konservi
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Redakti
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -149,8 +147,6 @@ eo:
       other: '{count} jaroj'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Ajna
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Tro multaj objektoj; retropaŝa kampo uzata'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Tro da idoj ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -324,5 +320,3 @@ eo:
     LOSTPASSWORDHEADER: 'Perdis pasvorton'
     NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
     NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
-    PASSWORDRESETSENTHEADER: 'Pasvorta reagorda ligilo sendiĝis'
-    PASSWORDRESETSENTTEXT: 'Dankon. Reagorda ligilo sendiĝis, kondiĉe ke konto ekzistas por ĉi tiu retadreso.'

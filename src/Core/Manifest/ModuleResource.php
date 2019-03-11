@@ -49,7 +49,7 @@ class ModuleResource
     /**
      * Return the full filesystem path to this resource.
      *
-     * Note: In the case that this resource is mapped to the `resources` folder, this will
+     * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
      *
      * @return string Path with no trailing slash E.g. /var/www/module
@@ -62,7 +62,7 @@ class ModuleResource
     /**
      * Get the path of this resource relative to the base path.
      *
-     * Note: In the case that this resource is mapped to the `resources` folder, this will
+     * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
      *
      * @return string Relative path (no leading /)
@@ -81,7 +81,7 @@ class ModuleResource
      * Public URL to this resource.
      * Note: May be either absolute url, or root-relative url
      *
-     * In the case that this resource is mapped to the `resources` folder this
+     * In the case that this resource is mapped to the `_resources` folder this
      * will be the mapped url rather than the original path.
      *
      * @return string

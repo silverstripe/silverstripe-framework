@@ -39,6 +39,13 @@ SilverStripe\Core\Injector\Injector:
       namespace: "myCache"
 ```
 
+<div class="alert" markdown="1">
+Please note that if you have the `silverstripe/versioned` module installed (automatically installed by the
+`silverstripe/cms` module), caches will automatically be segmented by current “stage”. This ensures that
+any content written to the cache in the _draft_ reading mode isn’t accidentally exposed in the _live_ reading mode.
+Please read the [versioned cache segmentation](#versioned-cache-segmentation) section for more information.
+</div>
+
 Cache objects are instantiated through a [CacheFactory](SilverStripe\Core\Cache\CacheFactory),
 which determines which cache adapter is used (see "Adapters" below for details).
 This factory allows us you to globally define an adapter for all cache instances.  
@@ -208,6 +215,42 @@ SilverStripe\Core\Injector\Injector:
       client: '%$MemcachedClient'
   SilverStripe\Core\Cache\CacheFactory: '%$MemcachedCacheFactory'
 ```
+
+## Versioned cache segmentation
+
+`SilverStripe\Core\Cache\CacheFactory` now maintains separate cache pools for each versioned stage (if you have the
+`silverstripe/versioned` module installed). This prevents developers from caching draft data and then
+accidentally exposing it on the live stage without potentially required authorisation checks. Unless you
+rely on caching across stages, you don't need to change your own code for this change to take effect. Note
+that cache keys will be internally rewritten, causing any existing cache items to become invalid when this
+change is deployed.
+
+```php
+// Before:
+$cache = Injector::inst()->get(CacheInterface::class . '.myapp');
+Versioned::set_stage(Versioned::DRAFT);
+$cache->set('my_key', 'Some draft content. Not for public viewing yet.');
+Versioned::set_stage(Versioned::LIVE);
+$cache->get('my_key'); // 'Some draft content. Not for public viewing yet'
+
+// After:
+$cache = Injector::inst()->get(CacheInterface::class . '.myapp');
+Versioned::set_stage(Versioned::DRAFT);
+$cache->set('my_key', 'Some draft content. Not for public viewing yet.');
+Versioned::set_stage(Versioned::LIVE);
+$cache->get('my_key'); // null
+```
+Data that is not content sensitive can be cached across stages by simply opting out of the segmented cache
+with the `disable-container` argument.
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.myapp:
+    factory: SilverStripe\Core\Cache\CacheFactory     
+    constructor:
+      namespace: "MyInsensitiveData"
+      disable-container: true 
+``` 
 
 ## Additional Caches
 
