@@ -8,11 +8,9 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
- * PHP 5.6 and PHP 7.x
- * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),
-   we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 5.6 support may be dropped in a 4.x minor release after December 2018.
- * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
-     * Note: Some PHP 5.5+ packages already have [Zend OpCache](http://php.net/manual/en/book.opcache.php) installed by default. If this is the case on your system, do not try and run additional opcaches alongside Zend OpCache without first disabling it, as it will likely have unexpected consequences.
+ * PHP 5.6, 7.0, 7.1 or 7.2
+   * Note: Although we do our best to support 5.6 and 7.0, they are deprecated and [unsupported by the PHP Project](http://php.net/supported-versions.php).
+     If you are using these, we strongly recommend you to upgrade.
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * PHP requires a suitable CSPRNG (random number generator) source for generating random tokens, password salts etc. This can be any of the following, and most operating systems will have at least one source available:
    * PHP 7 `random_bytes()`:
@@ -35,9 +33,16 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
  * One of the following databases: 
-   * MySQL 5.0+
-   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
-   * [SQL Server 2008+](http://silverstripe.org/microsoft-sql-server-database/), [Oracle](https://github.com/smindel/silverstripe-oracle) and [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
+   * MySQL 5.6+
+   * PostgreSQL 9.4+ (requires ["silverstripe/postgresql" module](http://silverstripe.org/postgresql-module))
+     * Warning: PostgreSQL has some known issues with collations when installed on Alpine, MacOS X and BSD derivatives
+     (see [PostgreSQL FAQ](https://wiki.postgresql.org/wiki/FAQ#Why_do_my_strings_sort_incorrectly.3F)).  
+     We do not support such installations, although they still may work correctly for you.  
+     As a workaround for PostgreSQL 10+ you could manually switch to ICU collations (e.g. und-x-icu).
+     There are no known workarounds for PostgreSQL <10.
+   * [SQL Server](http://silverstripe.org/microsoft-sql-server-database/),
+     [Oracle](https://github.com/smindel/silverstripe-oracle) and
+     [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
  * One of the following web server products: 
    * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
    * IIS 7+
