@@ -90,6 +90,8 @@ For doing security releases the following additional setup tasks are necessary:
 
 ## Security release process
 
+### Overview
+
 When doing a security release, typically one or more (or sometimes all) of the below
 steps will need to be performed manually. As such, this guide should not be followed
 exactly the same for these.
@@ -102,41 +104,52 @@ Security issues are never disclosed until a public stable release containing thi
 is available, or within a reasonable period of time of such a release.
 </div>
 
-Producing a security fix follows this general process:
+### When receiving a report
 
-* When a security issue is disclosed on security@silverstripe.com it should be given
-  a CVE (common vulnerability exposure) code. E.g. ss-2015-020. Make sure you thank
-  anyone who disclosed this issue, and confirm with them as soon as possible whether
-  this issue is a verified security issue.
-* Log this CVE, along with description, release version, and name of reporter in
-  the [security issues GitHub repository](https://github.com/silverstripe-security/security-issues/issues).
-* Create a similar record of this issue on the [security releases page](http://www.silverstripe.org/download/security-releases)
-  in draft mode.
-* Post a pre-announcement to the [security pre-announcement list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
-  It's normally ideal to include a [CVSS](https://nvd.nist.gov/CVSS-v2-Calculator)
-  (common vulnerability scoring system) along with this pre-announcement. If the
-  release date of the final stable is not known, then it's ok to give an estimated
-  release schedule.
-* Push the current upstream target branches (e.g. 3.2) to the corresponding security fork
-  to the equivalent branch on [silverstripe-security](https://github.com/silverstripe-security).
-  Security fixes should be applied to the branch on this private repository only.
-  Once a fix (or fixes) have been applied to this branch, then a tag can be applied,
-  and a private release can then be developed in order to test this release.
-* Once upstream branches are all pushed to the security forks, make sure to merge all
-  security fixes into those branches prior to running cow.
-* Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
+   * Perform initial criticality assessment, and ensure that the reporter is given a justification for all issues we classify or demote as non-security vulnerabilities.
+   * If encrypted information is provided, add pass phrases into the SilverStripe Ltd. LastPass account. Keep encrypted documents in Google Drive and only share directly with relevant participants
+   * Add a new issue in the "Backlog" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1).
+     Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
+   * Use the [CVSS Calculator](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator) to determine the issue severity
+   * Once the issue is confirmed, [request a CVE identifier](https://cveform.mitre.org/) under the security@silverstripe.org contact email (see "Acknowledgement and disclosure").
+   * Once a CVE has been assigned, respond to issue reporter and add it to the Github issue 
+   * Clarify who picks up owns the issue resolution (assign in Github)
+
+### When developing a fix
+
+   * Ensure you're working on the oldest supported minor release branch of every supported major release (see [Supported Versions](#supported-versions))
+   * Move the issue into "In Progress" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+   * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo. Don't forget to update branches from the upstream repo.
+   * Ensure that all security commit messages are prefixed with the CVE. E.g. "[CVE-2019-001] Fixed invalid XSS"
+   * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
+
+### Before release (or release candidate)
+
+   * For issues rated "high" or "critical" (CVSS of >=7.0), post a pre-announcement to the [security pre-announcement list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
+     It should include a basic "preannouncement description" which doesn't give away too much,
+     the CVSS score as well as the CVE identifier.
+   * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794).
+     Populate it with the information from the [Github project board](https://github.com/silverstripe-security/security-issues/projects/1).
+   * Link to silverstripe.org security release page in the changelog.
+   * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+
+### Perform release
+
+   * Public disclosure of security vulnerabilities need to happen in stable releases (not pre-releases)
+   * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
+   * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
+   * Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
   containing security fixes. See below for setting up a temporary satis repository.
-* Once release testing is completed and the release is ready for stabilisation, then these fixes
+   * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
-  Make sure to publish any draft security pages at the same time as the release is published (same day).
-* After the final release has been published, close related GitHub issues 
-  in the [security-issues repository](https://github.com/silverstripe-security/security-issues/issues).
+   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
+ 
+### After release
 
-<div class="warning" markdown="1">
-Note: It's not considered acceptable to disclose any security vulnerability until a fix exists in
-a public stable, not an RC or dev-branch. Security warnings that do not require a stable release
-can be published as soon as a workaround or usable resolution exists.
-</div>
+   * Publish silverstripe.org security release page
+   * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
+   * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+
 
 ### Setting up satis for hosting private security releases
 
