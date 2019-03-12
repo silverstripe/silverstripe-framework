@@ -1185,6 +1185,25 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * Returns a DataList of the same dataClass which will always yield empty results
+     *
+     * @return DataList
+     */
+    public function getEmptyList()
+    {
+        // clear any existing query conditions to make the query as lightweight as possible
+        $list = DataList::create($this->dataClass);
+
+        // set an impossible condition which targets indexed DB column
+        $list = $list->byIDs([0]);
+
+        // limit further minimizes the query (can't do limit 0 though T_T)
+        $list = $list->limit(1);
+
+        return $list;
+    }
+
+    /**
      * Reverses a list of items.
      *
      * @return static

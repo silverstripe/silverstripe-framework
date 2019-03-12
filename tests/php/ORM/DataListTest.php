@@ -1815,4 +1815,13 @@ class DataListTest extends SapphireTest
             $list->column("Title")
         );
     }
+
+    public function testGetEmptyList()
+    {
+        $players = Player::get();
+        $this->assertGreaterThan(0, (int) $players->count());
+
+        $players = $players->getEmptyList();
+        $this->assertEquals(0, (int) $players->count());
+    }
 }
