@@ -227,6 +227,15 @@ class Form extends ViewableData implements HasRequestHandler
     protected $validationExemptActions = array();
 
     /**
+     * Determines if the entire formwas transformed to readonly state.
+     * Even if this is false, fields or actions contained in this form
+     * might still contain readonly fields.
+     *
+     * @var bool
+     */
+    protected $readonly = false;
+
+    /**
      * @config
      * @var array
      */
@@ -570,13 +579,47 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Convert this form into a readonly form
+     * @return bool
+     */
+    public function isReadonly()
+    {
+        return $this->readonly;
+    }
+
+    /**
+     * Sets a read-only flag.
+     * Use makeReadonly() to transform this instance.
+     * Setting this to false has no effect.
+     *
+     * @param bool $readonly
+     *
+     * @return $this
+     */
+    public function setReadonly($readonly)
+    {
+        $this->readonly = $readonly;
+        return $this;
+    }
+
+    /**
+     * Convert this form into a readonly form.
+     * Returns the original instance if it's already marked as readonly.
+     * Only checks if the form itself has been marked readonly,
+     * not if the contained fields or actions are readonly.
      *
      * @return $this
      */
     public function makeReadonly()
     {
+        if ($this->isReadonly()) {
+            return $this;
+        }
+
         $this->transform(new ReadonlyTransformation());
+        $this->setReadonly(true);
+        $this->fields->setReadonly(true);
+        $this->actions->setReadonly(true);
+
         return $this;
     }
 
@@ -610,18 +653,8 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function transform(FormTransformation $trans)
     {
-        $newFields = new FieldList();
-        foreach ($this->fields as $field) {
-            $newFields->push($field->transform($trans));
-        }
-        $this->fields = $newFields;
-
-        $newActions = new FieldList();
-        foreach ($this->actions as $action) {
-            $newActions->push($action->transform($trans));
-        }
-        $this->actions = $newActions;
-
+        $this->fields = $this->fields->transform($trans);
+        $this->actions = $this->actions->transform($trans);
 
         // We have to remove validation, if the fields are not editable ;-)
         if ($this->validator) {

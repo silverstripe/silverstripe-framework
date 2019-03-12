@@ -35,6 +35,14 @@ class FieldList extends ArrayList
      */
     protected $containerField;
 
+    /**
+     * Determines if the entire field list was transformed to readonly state.
+     * Even if this is false, the list might still contain readonly fields.
+     *
+     * @var bool
+     */
+    protected $readonly = false;
+
     public function __construct($items = array())
     {
         if (!is_array($items) || func_num_args() > 1) {
@@ -808,13 +816,43 @@ class FieldList extends ArrayList
     }
 
     /**
-     * Transforms this FieldList instance to readonly.
+     * @return bool
+     */
+    public function isReadonly()
+    {
+        return $this->readonly;
+    }
+
+    /**
+     * Sets a read-only flag.
+     * Use makeReadonly() to transform this instance.
+     * Setting this to false has no effect.
+     *
+     * @param bool $readonly
+     *
+     * @return $this
+     */
+    public function setReadonly($readonly)
+    {
+        $this->readonly = $readonly;
+        return $this;
+    }
+
+    /**
+     * Transforms this FieldList instance to readonly, and returns a new instance.
+     * Returns the original instance if it's already marked as readonly.
      *
      * @return FieldList
      */
     public function makeReadonly()
     {
-        return $this->transform(new ReadonlyTransformation());
+        if ($this->isReadonly()) {
+            return $this;
+        }
+
+        $clone = $this->transform(new ReadonlyTransformation());
+        $clone->setReadonly(true);
+        return $clone;
     }
 
     /**

@@ -1141,6 +1141,26 @@ class FieldListTest extends SapphireTest
         );
     }
 
+    public function testIsReadonly()
+    {
+        $list = new FieldList(
+            new TextField('A')
+        );
+        $this->assertFalse($list->isReadonly());
+        $list->setReadonly(true);
+        $this->assertTrue($list->isReadonly());
+    }
+
+    public function testMakeReadonly()
+    {
+        $list = new FieldList(
+            $field = new TextField('A')
+        );
+        $readonlyList = $list->makeReadonly();
+        $this->assertTrue($readonlyList->isReadonly());
+        $this->assertTrue($readonlyList->fieldByName('A')->isReadonly());
+    }
+
     /**
      * Test VisibleFields and HiddenFields
      */

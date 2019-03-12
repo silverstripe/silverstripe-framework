@@ -148,6 +148,29 @@ class FormTest extends FunctionalTest
         $this->assertNotContains('hacxzored', $response->getBody());
     }
 
+    public function testMakeReadonly()
+    {
+        $form = new Form(
+            Controller::curr(),
+            'Form',
+            new FieldList(
+                new TextField('MyField')
+            ),
+            new FieldList(
+                new FormAction('MyAction')
+            )
+        );
+        $this->assertFalse($form->isReadonly());
+        $this->assertFalse($form->Fields()->isReadonly());
+        $this->assertFalse($form->Actions()->isReadonly());
+
+        $form = $form->makeReadonly();
+
+        $this->assertTrue($form->isReadonly());
+        $this->assertTrue($form->Fields()->isReadonly());
+        $this->assertTrue($form->Actions()->isReadonly());
+    }
+
     public function testLoadDataFromUnchangedHandling()
     {
         $form = new Form(
