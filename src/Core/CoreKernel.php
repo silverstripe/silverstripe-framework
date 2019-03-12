@@ -289,7 +289,7 @@ class CoreKernel implements Kernel
     {
         /** @skipUpgrade */
         $databaseConfig = [
-            "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
+            "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLPDODatabase',
             "server" => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
             "username" => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
             "password" => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
