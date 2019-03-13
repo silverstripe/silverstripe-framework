@@ -28,14 +28,11 @@ matrix:
       services:
        - mysql
 
-    - php: 7.3.0RC1
+    - php: 7.3
       env: DB=SQLITE
-      sudo: required
-      dist: xenial
-      addons:
-        apt:
-          packages:
-            - libzip4
+
+    - php: 7.4snapshot
+      env: DB=SQLITE
 
     # CMS test
     - php: 5.5
