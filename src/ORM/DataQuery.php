@@ -2,13 +2,15 @@
 
 namespace SilverStripe\ORM;
 
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
-use InvalidArgumentException;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
@@ -915,6 +917,19 @@ class DataQuery
             return;
         }
 
+        if (class_exists(Versioned::class)) {
+            /** @var Versioned $versioned */
+            $versioned = Injector::inst()->get(Versioned::class);
+            $stage = $versioned->get_stage();
+        } else {
+            $versioned = null;
+            $stage = null;
+        }
+
+        $foreignTableStaged = ($versioned && Extensible::has_extension($foreignClass, Versioned::class))
+            ? $versioned->stageTable($foreignTable, $stage)
+            : $foreignTable;
+
         // Join table with associated has_one
         /** @var DataObject $model */
         $foreignKey = $schema->getRemoteJoinField($localClass, $localField, $type, $polymorphic);
@@ -930,7 +945,7 @@ class DataQuery
             $joinExpression = "{$foreignKeyIDColumn} = {$localIDColumn}";
         }
         $this->query->addLeftJoin(
-            $foreignTable,
+            $foreignTableStaged,
             $joinExpression,
             $foreignTableAliased
         );
@@ -943,8 +958,12 @@ class DataQuery
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $foreignTable) {
                 $ancestorTableAliased = $foreignPrefix . $ancestorTable;
+                $ancestorTableStaged = ($versioned && Extensible::has_extension($ancestor, Versioned::class))
+                    ? $versioned->stageTable($ancestorTable, $stage)
+                    : $ancestorTable;
+
                 $this->query->addLeftJoin(
-                    $ancestorTable,
+                    $ancestorTableStaged,
                     "\"{$foreignTableAliased}\".\"ID\" = \"{$ancestorTableAliased}\".\"ID\"",
                     $ancestorTableAliased
                 );
@@ -986,11 +1005,24 @@ class DataQuery
             return;
         }
 
+        if (class_exists(Versioned::class)) {
+            /** @var Versioned $versioned */
+            $versioned = Injector::inst()->get(Versioned::class);
+            $stage = $versioned->get_stage();
+        } else {
+            $versioned = null;
+            $stage = null;
+        }
+
+        $foreignBaseTableStaged = ($versioned && Extensible::has_extension($foreignClass, Versioned::class))
+            ? $versioned->stageTable($foreignBaseTable, $stage)
+            : $foreignBaseTable;
+
         // Join base table
         $foreignIDColumn = $schema->sqlColumnForField($foreignBaseClass, 'ID', $foreignPrefix);
         $localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID", $localPrefix);
         $this->query->addLeftJoin(
-            $foreignBaseTable,
+            $foreignBaseTableStaged,
             "{$foreignIDColumn} = {$localColumn}",
             $foreignPrefix . $foreignBaseTable
         );
@@ -1004,8 +1036,12 @@ class DataQuery
                 $ancestorTable = $schema->tableName($ancestor);
                 if ($ancestorTable !== $foreignBaseTable) {
                     $ancestorTableAliased = $foreignPrefix . $ancestorTable;
+                    $ancestorTableStaged = ($versioned && Extensible::has_extension($ancestor, Versioned::class))
+                        ? $versioned->stageTable($ancestorTable, $stage)
+                        : $ancestorTable;
+
                     $this->query->addLeftJoin(
-                        $ancestorTable,
+                        $ancestorTableStaged,
                         "{$foreignIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
                         $ancestorTableAliased
                     );
@@ -1038,13 +1074,34 @@ class DataQuery
     ) {
         $schema = DataObject::getSchema();
 
+        if (class_exists(Versioned::class)) {
+            /** @var Versioned $versioned */
+            $versioned = Injector::inst()->get(Versioned::class);
+            $stage = $versioned->get_stage();
+        } else {
+            $versioned = null;
+            $stage = null;
+        }
+
+        $relationClassOrTableStaged = $relationClassOrTable;
         if (class_exists($relationClassOrTable)) {
             $relationClassOrTable = $schema->tableName($relationClassOrTable);
+            if ($versioned && Extensible::has_extension($relationClassOrTableStaged, Versioned::class)) {
+                $relationClassOrTableStaged = $versioned->stageTable($relationClassOrTable, $stage);
+            } else {
+                $relationClassOrTableStaged = $relationClassOrTable;
+            }
         }
 
         // Check if already joined to component alias (skip join table for the check)
         $componentBaseClass = $schema->baseDataClass($componentClass);
         $componentBaseTable = $schema->tableName($componentBaseClass);
+
+        $componentBaseTableStaged = $componentBaseTable;
+        if ($versioned && Extensible::has_extension($componentBaseClass, Versioned::class)) {
+            $componentBaseTableStaged = $versioned->stageTable($componentBaseTable, $stage);
+        }
+
         $componentAliasedTable = $componentPrefix . $componentBaseTable;
         if ($this->query->isJoinedTo($componentAliasedTable)) {
             return;
@@ -1054,7 +1111,7 @@ class DataQuery
         $relationAliasedTable = $componentPrefix . $relationClassOrTable;
         $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID', $parentPrefix);
         $this->query->addLeftJoin(
-            $relationClassOrTable,
+            $relationClassOrTableStaged,
             "\"{$relationAliasedTable}\".\"{$parentField}\" = {$parentIDColumn}",
             $relationAliasedTable
         );
@@ -1062,7 +1119,7 @@ class DataQuery
         // Join on base table of component class
         $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID', $componentPrefix);
             $this->query->addLeftJoin(
-                $componentBaseTable,
+                $componentBaseTableStaged,
                 "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
                 $componentAliasedTable
             );
@@ -1075,8 +1132,12 @@ class DataQuery
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $componentBaseTable) {
                 $ancestorTableAliased = $componentPrefix . $ancestorTable;
+                $ancestorTableStaged = ($versioned && Extensible::has_extension($ancestor, Versioned::class))
+                    ? $versioned->stageTable($ancestorTable, $stage)
+                    : $ancestorTable;
+
                 $this->query->addLeftJoin(
-                    $ancestorTable,
+                    $ancestorTableStaged,
                     "{$componentIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
                     $ancestorTableAliased
                 );
@@ -1142,16 +1203,51 @@ class DataQuery
 
     /**
      * Query the given field column from the database and return as an array.
+     * querying DB columns of related tables is supported but you need to make sure that the related table
+     * is already available in join
+     *
+     * @see DataList::applyRelation()
+     *
+     * example use:
+     *
+     * <code>
+     *  column("<table_name>"."<column_name>")
+     * </code>
      *
      * @param string $field See {@link expressionForField()}.
      * @return array List of column values for the specified column
+     * @throws InvalidArgumentException
      */
     public function column($field = 'ID')
     {
         $fieldExpression = $this->expressionForField($field);
-        $query = $this->getFinalisedQuery(array($field));
+        $query = $this->getFinalisedQuery([$field]);
         $originalSelect = $query->getSelect();
-        $query->setSelect(array());
+        $query->setSelect([]);
+
+        // field wasn't recognised as a valid field from the table class hierarchy
+        // check if the field is in format "<table_name>"."<column_name>"
+        // if that's the case we may want to query related table
+        if (!$fieldExpression) {
+            $exception = new InvalidArgumentException('Invalid column name ' . $field);
+
+            // standard column - nothing to process here
+            if (strpos($field, '.') === false) {
+                throw $exception;
+            }
+
+            $fieldData = explode('.', $field);
+            $tablePrefix = str_replace('"', '', $fieldData[0]);
+
+            // check if related table is available
+            if (!$query->isJoinedTo($tablePrefix)) {
+                throw $exception;
+            }
+
+            $fieldExpression = $field;
+            $field = null;
+        }
+
         $query->selectField($fieldExpression, $field);
         $this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 

@@ -4,33 +4,57 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\InjectorNotFoundException;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
+use SilverStripe\ORM\Tests\DataObjectTest\House;
+use SilverStripe\ORM\Tests\DataObjectTest\HouseVisit;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Roof;
 use SilverStripe\ORM\Tests\DataObjectTest\Sortable;
+use SilverStripe\ORM\Tests\DataObjectTest\Staff;
 use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
-use SilverStripe\ORM\Tests\DataObjectTest\Staff;
+use SilverStripe\ORM\Tests\DataObjectTest\Visitor;
+use SilverStripe\ORM\Tests\DataObjectTest\WoodenRoof;
+use SilverStripe\ORM\Tests\ManyManyListTest\Category;
+use SilverStripe\ORM\Tests\ManyManyListTest\Product;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * @skipUpgrade
  */
 class DataListTest extends SapphireTest
 {
-
     // Borrow the model from DataObjectTest
     protected static $fixture_file = 'DataObjectTest.yml';
+
+    /**
+     * @var array
+     */
+    protected static $required_extensions = [
+        House::class => [
+            Versioned::class,
+        ],
+        HouseVisit::class => [
+            Versioned::class,
+        ],
+        Visitor::class => [
+            Versioned::class,
+        ],
+        Roof::class => [
+            Versioned::class,
+        ],
+    ];
 
     public static function getExtraDataObjects()
     {
@@ -1843,5 +1867,171 @@ class DataListTest extends SapphireTest
         $list = Team::get()->shuffle();
 
         $this->assertSQLContains(DB::get_conn()->random() . ' AS "_SortColumn', $list->dataQuery()->sql());
+    }
+
+    public function testRelationCount()
+    {
+        $products = Product::get()
+            ->sort('ID', 'ASC')
+            ->column('ID');
+
+        $columnName = null;
+        $categoryProductIds = Category::get()
+            ->applyRelation('Products.ID', $columnName)
+            ->sort($columnName, 'ASC')
+            ->column($columnName);
+
+        $categoryProductIds = array_filter($categoryProductIds);
+        $categoryProductIds = array_values($categoryProductIds);
+
+        $this->assertEquals($products, $categoryProductIds);
+    }
+
+    public function testCountFailureInvalidColumn()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $categoryProductIds = Category::get()->column('ObviouslyInvalidColumn');
+    }
+
+    public function testCountFailureInvalidTable()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $columnName = null;
+        $categoryProductIds = Category::get()
+            ->applyRelation('Products.ID', $columnName)
+            ->column('"ObviouslyInvalidTable"."ID"');
+    }
+
+    public function testApplyRelationHasOneVersioned()
+    {
+        Versioned::withVersionedMode(function () {
+            Versioned::set_stage(Versioned::DRAFT);
+
+            /** @var House|Versioned $house1 */
+            $house1 = $this->objFromFixture(House::class, 'house-1');
+
+            /** @var WoodenRoof|Versioned $roof1 */
+            $roof1 = $this->objFromFixture(WoodenRoof::class, 'roof-1');
+
+            $house1->publishRecursive();
+
+            Versioned::withVersionedMode(function () {
+                Versioned::set_stage(Versioned::LIVE);
+
+                // check has one
+                $columnName = null;
+                $roofs = House::get()
+                    ->applyRelation('Roof.ID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(0, count($roofs));
+            });
+
+            $roof1->publishRecursive();
+
+            Versioned::withVersionedMode(function () {
+                Versioned::set_stage(Versioned::LIVE);
+
+                // check has one
+                $columnName = null;
+                $roofs = House::get()
+                    ->applyRelation('Roof.ID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(1, count($roofs));
+            });
+        });
+    }
+
+    public function testApplyRelationHasManyAndManyManyVersioned()
+    {
+        Versioned::withVersionedMode(function () {
+            Versioned::set_stage(Versioned::DRAFT);
+
+            /** @var House|Versioned $house1 */
+            $house1 = $this->objFromFixture(House::class, 'house-1');
+
+            /** @var HouseVisit|Versioned $houseVisit1 */
+            $houseVisit1 = $this->objFromFixture(HouseVisit::class, 'visit-1');
+
+            /** @var Visitor|Versioned $visitor1 */
+            $visitor1 = $this->objFromFixture(Visitor::class, 'visitor-1');
+
+            $house1->publishRecursive();
+
+            Versioned::withVersionedMode(function () {
+                Versioned::set_stage(Versioned::LIVE);
+
+                // check has many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('HouseVisits.VisitorID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(0, count($visitors));
+
+                // check many many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('Visitors.ID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(0, count($visitors));
+            });
+
+            $houseVisit1->publishRecursive();
+
+            Versioned::withVersionedMode(function () {
+                Versioned::set_stage(Versioned::LIVE);
+
+                // check has many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('HouseVisits.VisitorID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(1, count($visitors));
+
+                // check many many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('Visitors.ID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(0, count($visitors));
+            });
+
+            $visitor1->publishRecursive();
+
+            Versioned::withVersionedMode(function () {
+                Versioned::set_stage(Versioned::LIVE);
+
+                // check has many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('HouseVisits.VisitorID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(1, count($visitors));
+
+                // check many many
+                $columnName = null;
+                $visitors = House::get()
+                    ->applyRelation('Visitors.ID', $columnName)
+                    ->where(sprintf('%s IS NOT NULL', $columnName))
+                    ->columnUnique($columnName);
+
+                $this->assertEquals(1, count($visitors));
+            });
+        });
     }
 }

@@ -179,3 +179,21 @@ SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst:
     ManyNext:
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test1
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test3
+
+SilverStripe\ORM\Tests\DataObjectTest\WoodenRoof:
+  roof-1:
+    Title: 'Roof1'
+
+SilverStripe\ORM\Tests\DataObjectTest\House:
+  house-1:
+    Title: 'House1'
+    Roof: =>SilverStripe\ORM\Tests\DataObjectTest\WoodenRoof.roof-1
+
+SilverStripe\ORM\Tests\DataObjectTest\Visitor:
+  visitor-1:
+    Title: 'Visitor1'
+
+SilverStripe\ORM\Tests\DataObjectTest\HouseVisit:
+  visit-1:
+    House: =>SilverStripe\ORM\Tests\DataObjectTest\House.house-1
+    Visitor: =>SilverStripe\ORM\Tests\DataObjectTest\Visitor.visitor-1

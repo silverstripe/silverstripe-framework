@@ -4,8 +4,6 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use LogicException;
-use Page;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
@@ -20,11 +18,7 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
-use SilverStripe\ORM\Tests\DataObjectTest\Fan;
-use SilverStripe\ORM\Tests\DataObjectTest\OtherSubclassWithSameField;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
-use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
-use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -63,7 +57,12 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationParent::class,
         DataObjectTest\RelationChildFirst::class,
         DataObjectTest\RelationChildSecond::class,
-        DataObjectTest\MockDynamicAssignmentDataObject::class
+        DataObjectTest\MockDynamicAssignmentDataObject::class,
+        DataObjectTest\House::class,
+        DataObjectTest\HouseVisit::class,
+        DataObjectTest\Visitor::class,
+        DataObjectTest\Roof::class,
+        DataObjectTest\WoodenRoof::class,
     );
 
     public static function getExtraDataObjects()

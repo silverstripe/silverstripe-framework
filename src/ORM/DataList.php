@@ -501,6 +501,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Unlike getRelationName, this is immutable and will fallback to the quoted field
      * name if not a relation.
      *
+     * Example use (simple WHERE condition on data sitting in a related table):
+     *
+     * <code>
+     *  $columnName = null;
+     *  $list = Page::get()->applyRelation('TaxonomyTerms.ID', $columnName)->where([$columnName => <some_value>]);
+     * </code>
+     *
      * @param string $field Name of field or relation to apply
      * @param string &$columnName Quoted column name
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
