@@ -817,6 +817,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $results;
     }
 
+    /**
+     * @throws BadMethodCallException
+     */
     protected function performEagerLoading()
     {
         if (empty($this->getEagerLoader()->getRelations())) {
@@ -1207,6 +1210,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function with($relations = [])
     {
+        if (!is_array($relations)) {
+            $relations = [$relations];
+        }
         $this->getEagerLoader()->addRelations($relations);
 
         return $this;

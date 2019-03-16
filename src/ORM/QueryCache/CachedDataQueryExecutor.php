@@ -32,7 +32,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
     public function execute(DataQuery $dataQuery, $modifier = null)
     {
         $results = $this->getCachedResult($dataQuery, $modifier);
-        if ($results) {
+        if ($results !== null) {
             return $results;
         }
         $this->persist($dataQuery, $dataQuery->query()->execute(), $modifier);

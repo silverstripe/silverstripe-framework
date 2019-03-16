@@ -1,0 +1,77 @@
+SilverStripe\ORM\Tests\DataObjectTest\Team:
+  team1:
+    Title: 'The Tuis'
+    Captain: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
+  team2:
+    Title: 'The wetas'
+    Captain: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player2
+  team3:
+    Title: 'The kererus'
+    Captain: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player3
+
+SilverStripe\ORM\Tests\DataObjectTest\Player:
+  player1:
+    FirstName: 'Julian'
+    Surname: 'Edelman'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team3
+  player2:
+    FirstName: 'Rob'
+    Surname: 'Gronkowski'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team3
+  player3:
+    FirstName: 'Sony'
+    Surname: 'Michel'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  player4:
+    FirstName: 'Chris'
+    Surname: 'Hogan'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team3
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  player5:
+    FirstName: 'Stephon'
+    Surname: 'Gilmore'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team3
+  player6:
+    FirstName: 'Devon'
+    Surname: 'McCourty'
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+
+  SilverStripe\ORM\Tests\DataObjectTest\TeamComment:
+    comment1:
+      Name: 'Rob Ryan'
+      Comment: 'Worst team ever'
+      Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    comment2:
+      Name: 'Bill Bellichick'
+      Comment: "We're on to Cincinnati"
+      Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    comment3:
+      Name: 'Andy Reid'
+      Comment: "We'll get 'em next time"
+      Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    comment4:
+      Name: 'Tom Coughlin'
+      Comment: "Bunch of amateurs"
+      Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    comment5:
+      Name: 'Todd Bowles'
+      Comment: "What time is the game?"
+      Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+
+

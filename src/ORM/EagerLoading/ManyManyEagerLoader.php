@@ -3,6 +3,9 @@
 namespace SilverStripe\ORM\EagerLoading;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
 use SilverStripe\ORM\DataList;
 
@@ -10,30 +13,46 @@ class ManyManyEagerLoader implements RelationEagerLoaderInterface
 {
     public function eagerLoadRelation(DataList $list, $relation, DataQueryStoreInterface $store)
     {
-//        $parentClass = $list->dataClass();
-//        $schema = DataObject::getSchema();
-//        $joinField = $schema->getRemoteJoinField($parentClass, $relation, 'has_many');
-//        $relatedClass = $schema->hasManyComponent($parentClass, $relation);
-//        $ids = $list->map('ID', 'ID')->toArray();
-//        $relatedRecords = DataList::create($relatedClass)->filter([
-//            $joinField => array_values($ids)
-//        ]);
-//        $map = [];
-//
-//        foreach ($relatedRecords as $item) {
-//            $parentID = $item->$joinField;
-//            if (!isset($map[$parentID])) {
-//                $map[$parentID] = [];
-//            }
-//            $map[$parentID][] = $item;
-//        }
-//
-//        foreach ($map as $parentID => $records) {
-//            $query = HasManyList::create($relatedClass, $joinField)
-//                ->forForeignID($parentID);
-//            $store->persist($query->dataQuery(), $records);
-//        }
-//
-//        return $relatedRecords;
+        $parentClass = $list->dataClass();
+        $schema = DataObject::getSchema();
+        $mmData = $schema->manyManyComponent($parentClass, $relation);
+        if (!$mmData) {
+            return $list;
+        }
+        $relatedRecords = $list->relation($relation);
+        $childrenMap = $relatedRecords->map('ID', 'Me')->toArray();
+        $joinTable = $mmData['join'];
+        $parentField = $mmData['parentField'];
+        $childField = $mmData['childField'];
+        $childClass = $mmData['childClass'];
+        $extraFields = $schema->manyManyExtraFieldsForComponent($parentClass, $relation) ?: [];
+        $parentIDs = $list->map('ID', 'ID')->toArray();
+
+        $placeholders = DB::placeholders($parentIDs);
+        $query = new SQLSelect(
+            [$parentField, $childField],
+            $joinTable,
+            [
+                ["$parentField IN ($placeholders)" => $parentIDs]
+            ]
+        );
+        $result = $query->execute();
+        $map = [];
+        foreach ($list as $item) {
+            $map[$item->ID] = [];
+        }
+        while($row = $result->nextRecord()) {
+            $parentID = $row[$parentField];
+            $childID = $row[$childField];
+            $map[$parentID][] = $childrenMap[$childID];
+        }
+
+        foreach ($map as $parentID => $children) {
+            $query = ManyManyList::create($childClass, $joinTable, $childField, $parentField, $extraFields)
+                ->forForeignID($parentID);
+            $store->persist($query->dataQuery(), $children);
+        }
+
+        return $relatedRecords;
     }
 }

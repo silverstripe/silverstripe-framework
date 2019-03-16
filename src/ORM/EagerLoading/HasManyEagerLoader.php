@@ -15,17 +15,14 @@ class HasManyEagerLoader implements RelationEagerLoaderInterface
         $schema = DataObject::getSchema();
         $joinField = $schema->getRemoteJoinField($parentClass, $relation, 'has_many');
         $relatedClass = $schema->hasManyComponent($parentClass, $relation);
-        $ids = $list->map('ID', 'ID')->toArray();
-        $relatedRecords = DataList::create($relatedClass)->filter([
-            $joinField => array_values($ids)
-        ]);
-        $map = [];
+        $relatedRecords = $list->relation($relation);
 
+        $map = [];
+        foreach ($list as $item) {
+            $map[$item->ID] = [];
+        }
         foreach ($relatedRecords as $item) {
             $parentID = $item->$joinField;
-            if (!isset($map[$parentID])) {
-                $map[$parentID] = [];
-            }
             $map[$parentID][] = $item;
         }
 
