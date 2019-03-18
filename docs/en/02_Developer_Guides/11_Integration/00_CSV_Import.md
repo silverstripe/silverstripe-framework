@@ -61,7 +61,7 @@ class PlayerAdmin extends ModelAdmin
       Player::class
    ];
    private static $model_importers = [
-      'Player' => CsvBulkLoader::class,
+      Player::class => CsvBulkLoader::class,
    ];
    private static $url_segment = 'players';
 }
