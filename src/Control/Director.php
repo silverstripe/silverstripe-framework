@@ -352,12 +352,11 @@ class Director implements TemplateGlobalProvider
                 break;
             }
 
-            /** @var RequestHandler $controllerObj */
-            $controllerObj = Injector::inst()->create($arguments['Controller']);
-
-            // Handler for calling a controller
-            $handler = function (HTTPRequest $request) use ($controllerObj) {
+            // Handler for constructing and calling a controller
+            $handler = function (HTTPRequest $request) use ($arguments) {
                 try {
+                    /** @var RequestHandler $controllerObj */
+                    $controllerObj = Injector::inst()->create($arguments['Controller']);
                     return $controllerObj->handleRequest($request);
                 } catch (HTTPResponse_Exception $responseException) {
                     return $responseException->getResponse();
