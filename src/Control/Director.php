@@ -365,13 +365,12 @@ class Director implements TemplateGlobalProvider
             };
             break;
         }
-$start = time();
+
         // Call the handler with the configured middlewares
         $response = $this->callMiddleware($request, $handler);
-$end = time();
+
         // Note that if a different request was previously registered, this will now be lost
         // In these cases it's better to use Kernel::nest() prior to kicking off a nested request
-        $elapsed = $end - $start;
         Injector::inst()->unregisterNamedObject(HTTPRequest::class);
 
         return $response;

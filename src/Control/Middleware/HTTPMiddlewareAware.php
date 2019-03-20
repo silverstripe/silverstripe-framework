@@ -54,21 +54,12 @@ trait HTTPMiddlewareAware
      */
     protected function callMiddleware(HTTPRequest $request, callable $last)
     {
-        $classes = array_map(function ($middle) {
-            return get_class($middle);
-        }, $this->getMiddlewares());
-
-
         // Reverse middlewares
         $next = $last;
         /** @var HTTPMiddleware $middleware */
         foreach (array_reverse($this->getMiddlewares()) as $middleware) {
             $next = function ($request) use ($middleware, $next) {
-                $start = time();
-                $value = $middleware->process($request, $next);
-                $end = time();
-                $elapsed = $end - $start;
-                return $value;
+                return $middleware->process($request, $next);
             };
         }
         return $next($request);
