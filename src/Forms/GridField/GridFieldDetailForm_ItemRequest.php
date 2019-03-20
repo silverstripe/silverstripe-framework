@@ -206,7 +206,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         // If we are creating a new record in a has-many list, then
         // Disable the form field as it has no effect.
-        if ($list instanceof HasManyList) {
+        if ($list instanceof HasManyList && !$this->record->isInDB()) {
             $key = $list->getForeignKey();
 
             if ($field = $fields->dataFieldByName($key)) {
