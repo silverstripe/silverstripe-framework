@@ -483,7 +483,7 @@ class PDOConnector extends DBConnector implements TransactionManager
 
     public function getGeneratedID($table)
     {
-        return $this->pdoConnection->lastInsertId();
+        return intval($this->pdoConnection->lastInsertId());
     }
 
     public function affectedRows()
