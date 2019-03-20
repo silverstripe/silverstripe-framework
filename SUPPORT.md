@@ -14,6 +14,22 @@ You can find support via:
 - [Slack](https://silverstripe.org/slack)
 - [Stack Overflow (remember to tag as silverstripe)](http://stackoverflow.com/questions/tagged/silverstripe)
 
+We recommend choosing the support forum based on the nature of your question:
+
+##### Do you have some code you've tried that isn't working?
+
+Your question will likely be best on Stack Overflow. You can add some detail about what you're trying to achieve and include some code that you have tried. Stack Overflow is a good forum for answers to be detailed and become available in the future for other developers in your position. Remember to [follow the guidance on Stack Overflow](https://stackoverflow.com/help/how-to-ask) for asking good questions!
+
+##### Are you looking for an answer to a quick question or a recommendation for an approach or suitable SilverStripe module?
+
+The SilverStripe community Slack has a wealth of active SilverStripe developers active daily. Remember that those who contribute usually do so in their free time so be considerate when messaging people directly. Consider if your issue might benefit another developer before choosing Slack. An alternate forum like StackOverflow may help other developers that are experiencing the same issue find a resolution.
+
+##### Are you looking for detailed feedback on a suggestion or module you have developed?
+
+Try starting a discussion in the community forum. Developers and users alike use the forum to keep up to date with the SilverStripe community and contributions that people are making or discussing.
+
+##### More information
+
 For more information please see our [community page](http://www.silverstripe.org/community/#introduction).
 
 ## Commercial support
