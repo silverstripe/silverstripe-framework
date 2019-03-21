@@ -3154,9 +3154,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Return the first item matching the given query.
      * All calls to get_one() are cached.
      *
+     * The filter argument supports parameterised queries (see SQLSelect::addWhere() for syntax examples). Because
+     * of that (and differently from e.g. DataList::filter()) you need to manually escape the field names:
+     * <code>
+     * $member = DataObject::get_one('Member', [ '"FirstName"' => 'John' ]);
+     * </code>
+     *
      * @param string $callerClass The class of objects to be returned
      * @param string|array $filter A filter to be inserted into the WHERE clause.
-     * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
      * @param boolean $cache Use caching
      * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
      *
