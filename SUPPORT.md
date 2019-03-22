@@ -10,9 +10,9 @@ Community support is provided by members of our open source community and is pro
 
 You can find support via:
 
-- [Forum](https://forum.silverstripe.com)
-- [Slack](https://silverstripe.org/slack)
 - [Stack Overflow (remember to tag as silverstripe)](http://stackoverflow.com/questions/tagged/silverstripe)
+- [Slack](https://silverstripe.org/slack)
+- [Forum](https://forum.silverstripe.com)
 
 We recommend choosing the support forum based on the nature of your question:
 
