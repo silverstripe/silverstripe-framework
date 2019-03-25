@@ -338,42 +338,49 @@ You'll likely have some conflicts to resolve, whether you've updated your depend
 
 Running a `composer update` will tell you which modules are conflicted and suggested alternative combinations of modules that might work.
 
-The most typical reason for a conflict is that the maintainer of a module hasn't released a version compatible with SilverStripe 4.
+The most typical reason for a conflict is that the maintainer of a module has not released a version compatible with SilverStripe 4.
 
 If the maintainer of the module is in the process of upgrading to SilverStripe 4, a development version of the module might be available. In some cases, it can be worthwhile to look up the repository of the module or to reach out to the maintainer.
 
 <div class="info" markdown="1">
-If you're going to install development version of third party modules, you should consider adding the following entries to your `composer.json` file.
+If you're going to install a development version of third party modules, you should consider adding the following entries to your `composer.json` file:
 
 ```json
 {
   // ...
   "minimum-stability": "dev",
-  "prefer-stable": true,
+  "prefer-stable": true
   // ...
 } 
 ```
 </div>
 
-To resolve a conflict you can do any of the following:
+If no development release is available for SilverStripe 4, you can upgrade the module manually or remove the module from your project.
 
-#### Upgrade the module manually
+#### Upgrading the module manually
 
-In some cases a module may not be available for SilverStripe 4 yet.
-You can work around this issue by upgrading the module yourself.
+To upgrade an incompatible module yourself, follow these steps:
 
-First integrate the affected module into your project's codebase:
+1. Integrate the affected module into your project's codebase
 
-1. Remove the module from your dependencies: `composer remove <package>` or through `composer.json`.
-2. Recompose again, this should now work without the conflicting module: `bin/upgrade-code recompose`
-3. Clone the module repository into your project root: `git clone <repository>`
-
-Then fork the affected module and upgrade it yourself:
-
-1. Fork the repository: `git fork --remote-name <remote>`
-2. Upgrade the module so it works with version `4` of SilverStripe, commit and push your changes to your forked repository.
+    1. Remove the module from your dependencies: `composer remove <package>` or through `composer.json`
+    2. Recompose again, this should now work without the conflicting module: `bin/upgrade-code recompose`
+    3. Clone the module repository into your project root: `git clone <repository>`
 
 <div class="info" markdown="1">
+Another approach is to remove the `_config.php` file from the module and remove the module folder from your project roots `.gitignore` so it becomes version tracked by your project.
+</div>
+
+2. Fork the affected module and upgrade it yourself
+
+    1. Fork the repository: `git fork --remote-name <remote>`
+    2. Upgrade the module so it works with version `4` of SilverStripe, commit and push your changes to your forked repository. See [Upgrading a module](./upgrading_module) for more information on how to upgrade a SilverStripe module.
+
+<div class="info" markdown="1">
+If your module is a part of a private VCS repository, this will break when upgrading.
+
+When running the upgrade command on the project it will not include root module folders, so you must run the upgrade command separately for each root module.
+
 If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work or releasing your fork as a separate module.
 
 [Learn about how to publish a SilverStripe module](/developer_guides/extending/how_tos/publish_a_module)
@@ -381,8 +388,10 @@ If you're taking the time to upgrade a third party module, consider doing a pull
 Once your changes have been merged you can remove your forked module and add the dependency through composer again with: `composer require <package>`
 </div>
 
-#### Remove the module from your project, if it is not essential
+#### Removing the module from your project
+
 You can remove the module completely if you do not need it.
+
 This can be done simply by removing the dependency: `composer remove <package>`
 
 ### Finalising your dependency upgrade
