@@ -390,7 +390,7 @@ trait Extensible
             }
             $inst = Injector::inst()->get($extension);
             if ($inst instanceof $requiredExtension) {
-                return $strict ? get_class($inst) === $requiredExtension : true;
+                return $strict ? strcasecmp(get_class($inst), $requiredExtension) === 0 : true;
             }
         }
 
