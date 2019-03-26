@@ -336,37 +336,77 @@ Once you've updated your third-party modules constraints, try updating your depe
 
 You'll likely have some conflicts to resolve, whether you've updated your dependencies with the upgrader or manually.
 
-Running a `composer update` will tell you which modules are conflicted and suggested alternative combinations of modules that might work.
+Running a `composer update` will tell you which modules are conflicted and suggest alternative combinations of modules that might work.
 
-The most typical reason for a conflict is that the maintainer of a module hasn't released a version compatible with SilverStripe 4.
+The most typical reason for a conflict is that the maintainer of a module has not released a version compatible with SilverStripe 4.
 
 If the maintainer of the module is in the process of upgrading to SilverStripe 4, a development version of the module might be available. In some cases, it can be worthwhile to look up the repository of the module or to reach out to the maintainer.
 
-<div class="info" markdown="1">
-If you're going to install development version of third party modules, you should consider adding the following entries to your `composer.json` file.
+Another possible cause of a dependency conflict is the use of private packages. The `recompose` command does not take into consideration the `repositories` entries in your project's `composer.json` file. Constraints on private packages have to be defined manually.
+
+Read the [Composer Repositories](https://getcomposer.org/doc/05-repositories.md) documentation for more information on private repositories.
+
+If you're going to install a development version of third party modules, you should consider adding the following entries to your `composer.json` file:
 
 ```json
 {
   // ...
   "minimum-stability": "dev",
-  "prefer-stable": true,
+  "prefer-stable": true
   // ...
 } 
 ```
-</div>
 
-To resolve a conflict you can either:
-* fork the affected module and upgrade it yourself. Don't forget to send a pull request to the original module!
-* Integrate the affected module into your project's codebase
-* Remove the module from your project, if it is not essential
+If no development release is available for SilverStripe 4, you can upgrade the module manually or remove the module from your project.
 
-To integrate a third party module in your project, remove it from your `composer.json` file and from your `.gitignore` file. Then track the module's codebase in your project source control. You'll need to upgrade the module's code to be compatible with SilverStripe 4. 
+#### Upgrading the module manually
 
-<div class="info" markdown="1">
-If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work or releasing your fork as a seperate module.
+To upgrade an incompatible module yourself, you can try the options below.
+
+##### Fork the affected module and upgrade it yourself
+
+This approach has the advantage of keeping the module out of your codebase. It also makes it easy to reuse the code afterwards. This requires you to track the code in a separate repository.
+
+When forking the module, you should convert it to a vendor module.
+
+Upgrade the module so it works with version `4` of SilverStripe, commit and push your changes to your forked repository.
+ 
+See [Upgrading a module](./upgrading_module) for more information on how to upgrade a SilverStripe module.
+
+If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work. Or you can release your fork as a separate module.
+
+If you want to keep your fork private, you can include it in your project by adding a `vcs` repository entry in your composer file:
+
+```json
+    ...
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/username/myforkedmodule"
+        }
+    ]
+    ...
+```
 
 [Learn about how to publish a SilverStripe module](/developer_guides/extending/how_tos/publish_a_module)
-</div>
+
+##### Integrate the affected module into your project's codebase
+
+You can add the module codebase to your own project. This is the simplest option, but it increases the complexity of your project, and the amount of code you have to maintain, therefore it is discouraged.
+
+If you choose this option, the module will be treated as a root module, which is discouraged in SilverStripe 4.
+
+1. Remove the module from your dependencies by manually editing your `composer.json` file. Do not use `composer remove` as this will remove your folder.
+2. Update your `.gitignore` file to track the module.
+3. Remove the `composer.json` from the module.
+
+Note that all commands that need to be applied to `mysite` will also need to be applied to any root modules you are tracking in your project.
+
+#### Removing the module from your project
+
+You can remove the module completely if you do not need it.
+
+This can be done simply by removing the dependency: `composer remove <package>`
 
 ### Finalising your dependency upgrade
 
