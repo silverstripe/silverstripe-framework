@@ -397,7 +397,7 @@ You can add the module codebase to your own project. This is the simplest option
 If you choose this option, the module will be treated as a root module, which is discouraged in SilverStripe 4.
 
 1. Remove the module from your dependencies by manually editing your `composer.json` file. Do not use `composer remove` as this will remove your folder.
-2. Update your `.gitignore` file to track your module.
+2. Update your `.gitignore` file to track the module.
 3. Remove the `composer.json` from the module.
 
 Note that all commands that need to be applied to `mysite` will also need to be applied to any root modules you are tracking in your project.
