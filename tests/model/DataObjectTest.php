@@ -1803,6 +1803,17 @@ class DataObjectTest extends SapphireTest {
 
         $do->write();
     }
+
+    public function testSetFieldWithNonDBFieldObjectTwice()
+    {
+        try {
+            $dataObject = new DataObject();
+            $dataObject->NotADatabaseField = new stdClass();
+            $dataObject->NotADatabaseField = new stdClass();
+        } catch (Error $e) {
+            $this->fail($e->getMessage());
+        }
+    }
 }
 
 class DataObjectTest_Sortable extends DataObject implements TestOnly {
