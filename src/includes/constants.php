@@ -140,11 +140,11 @@ if (!defined('BASE_URL')) {
         ) {
             $requestURI = $_SERVER['REQUEST_URI'];
             // Check if /base/public or /base are in the request
-            foreach ([$baseURL, dirname($baseURL)] as $candidate) {
-                if (stripos($requestURI, $candidate) === 0) {
-                    return $candidate;
-                }
+        foreach ([$baseURL, dirname($baseURL)] as $candidate) {
+            if (stripos($requestURI, $candidate) === 0) {
+                return $candidate;
             }
+        }
             // Ambiguous
             return '';
         }

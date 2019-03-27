@@ -88,7 +88,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
             return array(
             'before' => $forTemplate->renderWith($template),
-        );
+            );
     }
 
     public function setAttributes($attrs)
