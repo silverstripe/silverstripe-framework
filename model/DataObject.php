@@ -3026,7 +3026,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function dbObject($fieldName) {
 		// If we have a CompositeDBField object in $this->record, then return that
-		if(isset($this->record[$fieldName]) && is_object($this->record[$fieldName])) {
+		if(
+			isset($this->record[$fieldName]) &&
+			is_object($this->record[$fieldName]) &&
+			$this->record[$fieldName] instanceof CompositeDBField
+		) {
 			return $this->record[$fieldName];
 
 		// Special case for ID field
