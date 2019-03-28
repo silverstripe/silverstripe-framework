@@ -171,7 +171,6 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $csvWriter->setDelimiter($this->getCsvSeparator());
         $csvWriter->setEnclosure($this->getCsvEnclosure());
         $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
-        $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
         if (!Config::inst()->get(get_class($this), 'xls_export_disabled')) {
             $csvWriter->addFormatter(function (array $row) {
