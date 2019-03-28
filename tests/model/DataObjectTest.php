@@ -1804,15 +1804,21 @@ class DataObjectTest extends SapphireTest {
         $do->write();
     }
 
-    public function testSetFieldWithNonDBFieldObjectTwice()
+    public function testDbObjectReturnsNullIfNotDBField()
     {
-        try {
-            $dataObject = new DataObject();
-            $dataObject->NotADatabaseField = new stdClass();
-            $dataObject->NotADatabaseField = new stdClass();
-        } catch (Error $e) {
-            $this->fail($e->getMessage());
-        }
+        $dataObject = new DataObject();
+
+        $this->assertNull(
+            $dataObject->dbObject('NotADatabaseField'),
+            'Should return null because this field doesn\'t exist and hasn\'t been set'
+        );
+
+        $dataObject->NotADatabaseField = new stdClass();
+
+        $this->assertNull(
+            $dataObject->dbObject('NotADatabaseField'),
+            'Should return null because it\'s not a DBField'
+        );
     }
 }
 
