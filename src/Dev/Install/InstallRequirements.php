@@ -283,6 +283,10 @@ class InstallRequirements
             array("File permissions", "Is the assets/ directory writeable?", null),
             true
         );
+        // Make sure asset path actually exists
+        if (!file_exists(ASSETS_PATH)) {
+            mkdir(ASSETS_PATH);
+        }
 
         // Ensure all assets files are writable
         $innerIterator = new RecursiveDirectoryIterator(ASSETS_PATH, RecursiveDirectoryIterator::SKIP_DOTS);
