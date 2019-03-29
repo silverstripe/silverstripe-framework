@@ -42,6 +42,8 @@ class TrustedProxyMiddlewareTest extends SapphireTest
 
     protected function getIdentityFn()
     {
-        return function ($response) { return $response; };
+        return function ($response) {
+            return $response;
+        };
     }
 }

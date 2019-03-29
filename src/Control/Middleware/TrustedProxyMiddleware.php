@@ -150,7 +150,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
                 $host = $hostList ? strtok($hostList, ',') : null;
 
                 // Ensure the host name is valid
-                $host = filter_var($host, FILTER_VALIDATE_DOMAIN, ['flags' => FILTER_FLAG_HOSTNAME]);
+                $host = $this->filterHostname($host);
 
                 if ($host) {
                     $request->addHeader('Host', $host);
@@ -181,6 +181,22 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         }
 
         return $delegate($request);
+    }
+
+    /**
+     * Make sure the provided value is a valid hostname
+     * @param string $hostname
+     * @return bool|string
+     */
+    private function filterHostname($hostname)
+    {
+        if (defined('FILTER_VALIDATE_DOMAIN') && defined('FILTER_FLAG_HOSTNAME')) {
+            // Only works on PHP 7
+            return filter_var($hostname, FILTER_VALIDATE_DOMAIN, ['flags' => FILTER_FLAG_HOSTNAME]);
+        } else {
+            $regex = "#^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])#i";
+            return preg_match($regex, $hostname) ? $hostname : false;
+        }
     }
 
     /**
