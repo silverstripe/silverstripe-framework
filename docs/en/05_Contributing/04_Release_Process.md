@@ -41,8 +41,9 @@ At any point in time, the core development team will support a set of releases t
  * API changes and major new features are applied to the master branch, to be included in the next major release
  * New APIs can be applied to the current minor release of major releases in "active development", but should usually be marked as "internal" APIs until they're considered stable
  * Enhancements are applied to the next minor release of major releases in "active development"
- * Non-critical bugfixes are applied to all supported minor releases of major releases in "active development" or "full support"
- * Critical bugfixes and security fixes are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
+ * Non-critical bugfixes and all security fixes are applied to all supported minor releases of major releases in "active development" or "full support"
+ * Critical bugfixes and [critical security fixes](#severity-rating) are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
+ * [Non-critical security fixes](#severity-rating) are backported to releases in "limited support" on a best effort basis
  * Any patches applied to older minor releases are merged up regularly to newer minor releases (in the same major release)
  * Any patches applied to older major releases are merged up regularly to newer major releases
 
@@ -144,6 +145,7 @@ webserver access logs (if a hack is suspected), any other services and web packa
 Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for 
 each vulnerability. The rating indicates how important an update is.
 It follows the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss). 
+This rating determines which release lines are targetd with security fixes.
 
 | Severity      | CVSS | Description |
 |---------------|------|-------------|
