@@ -70,6 +70,8 @@ class CsvBulkLoader extends BulkLoader
         $previousDetectLE = ini_get('auto_detect_line_endings');
 
         ini_set('auto_detect_line_endings', true);
+        $result = BulkLoader_Result::create();
+
         try {
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
@@ -110,8 +112,6 @@ class CsvBulkLoader extends BulkLoader
             } elseif ($this->columnMap) {
                 $rows = $csvReader->fetchAssoc($headerMap, $remapper);
             }
-
-            $result = BulkLoader_Result::create();
 
             foreach ($rows as $row) {
                 $this->processRecord($row, $this->columnMap, $result, $preview);
