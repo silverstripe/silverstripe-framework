@@ -4,13 +4,14 @@ summary: Trap, fire and report diagnostic logs, user exceptions, warnings and er
 # Logging and Error Handling
 
 SilverStripe uses Monolog for both error handling and logging. It comes with two default configurations: one for
-development environments, and another for test or live environments. On development environments, SilverStripe will
-deal harshly with any warnings or errors: a full call-stack is shown and execution stops for anything, giving you early
-warning of a potential issue to handle.
+logging, and another for core error handling. The core error handling implementation also comes with two default
+configurations: one for development environments, and another for test or live environments. On development
+environments, SilverStripe will deal harshly with any warnings or errors: a full call-stack is shown and execution
+stops for anything, giving you early warning of a potential issue to handle.
 
 ## Raising errors and logging diagnostic information.
 
-For informational and debug logs, you can use the Logger directly. The Logger is a PSR-3 compatible LoggerInterface and
+For general purpose logging, you can use the Logger directly. The Logger is a PSR-3 compatible LoggerInterface and
 can be accessed via the `Injector`:
 
 ```php
@@ -20,13 +21,15 @@ use SilverStripe\Security\Security;
 
 Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Security::getCurrentUser()->ID);
 Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
+Injector::inst()->get(LoggerInterface::class)->error('Something went wrong, but let\'s continue on...');
 ```
 
 Although you can raise more important levels of alerts in this way, we recommend using PHP's native error systems for
 these instead.
 
-For notice-level and warning-level issues, you should use [user_error](http://www.php.net/user_error) to throw errors
-where appropriate. These will not halt execution but will send a message to the PHP error log.
+For notice-level and warning-level issues, you can also use [user_error](http://www.php.net/user_error) to throw errors
+where appropriate. As with the default Logger implementation these will not halt execution, but will send a message
+to the PHP error log.
 
 ```php
 public function delete()
@@ -48,36 +51,51 @@ public function getRelatedObject()
 }
 ```
 
-For errors that should halt execution, you should use Exceptions. Normally, Exceptions will halt the flow of executuion,
+For errors that should halt execution, you should use Exceptions. Normally, Exceptions will halt the flow of execution,
 but they can be caught with a try/catch clause.
 
 ```php
 throw new \LogicException("Query failed: " . $sql);
 ```
 
-### Accessing the logger via dependency injection.
+### Accessing the logger via dependency injection
 
 It can be quite verbose to call `Injector::inst()->get(LoggerInterface::class)` all the time. More importantly,
 it also means that you're coupling your code to global state, which is a bad design practise. A better
-approach is to use depedency injection to pass the logger in for you. The [Injector](../extending/Injector)
+approach is to use dependency injection to pass the logger in for you. The [Injector](../extending/Injector)
 can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
 
 ```php
+use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Controller;
 
 class MyController extends Controller
 {
     private static $dependencies = [
-        'logger' => '%$Psr\Log\LoggerInterface',
+        'Logger' => '%$' . LoggerInterface::class,
     ];
 
-    // This will be set automatically, as long as MyController is instantiated via Injector
-    public $logger;
+    /**
+     * This will be set automatically, as long as MyController is instantiated via Injector
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     protected function init()
     {
         $this->logger->debug("MyController::init() called");
         parent::init();
+    }
+    
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
     }
 }
 ```
@@ -98,7 +116,7 @@ E_USER_ERROR if it's going to be **dangerous** or **impossible** to continue wit
 
 ## Configuring error logging
 
-You can configure your logging using Monolog handlers. The handlers should be provided int the `Logger.handlers`
+You can configure your logging using Monolog handlers. The handlers should be provided in the `Logger.handlers`
 configuration setting. Below we have a couple of common examples, but Monolog comes with [many different handlers](https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md#handlers)
 for you to try.
 
@@ -145,24 +163,27 @@ SilverStripe\Core\Injector\Injector:
       - "info"
 ```
 
-The log file will be relative to the framework/ path, so "../silverstripe.log" will create a file in your project root.
+The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will
+create a file in your project root.
+
+The `info` argument provides the minimum level to start logging at.
 
 ### Disabling the default handler
 
 You can disable a handler by removing its pushHandlers call from the calls option of the Logger service definition.
-The handler key of the default handler is `DisplayErrorHandler`, so you can disable it like this:
+The handler key of the default handler is `pushDisplayErrorHandler`, so you can disable it like this:
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  Psr\Log\LoggerInterface:
+  Psr\Log\LoggerInterface.errorhandler:
     calls:
-      DisplayErrorHandler:  %%remove%%
+      pushDisplayErrorHandler:  %%remove%%
 ```
 
 ### Setting a different configuration for dev
 
 In order to set different logging configuration on different environment types, we rely on the environment-specific
-configuration features that the config system proviers. For example, here we have different configuration for dev and
+configuration features that the config system providers. For example, here we have different configuration for dev and
 non-dev.
 
 ```yaml
@@ -172,7 +193,7 @@ Only:
   environment: dev
 ---
 SilverStripe\Core\Injector\Injector:
-  Psr\Log\LoggerInterface:
+  Psr\Log\LoggerInterface.errorhandler:
     calls:
       pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
   DisplayErrorHandler:
@@ -188,10 +209,21 @@ Except:
   environment: dev
 ---
 SilverStripe\Core\Injector\Injector:
+  # Default logger implementation for general purpose use
   Psr\Log\LoggerInterface:
     calls:
-      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]] 
+      # Save system logs to file
+      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]]
+  
+  # Core error handler for system use
+  Psr\Log\LoggerInterface.errorhandler:
+    calls:
+      # Save errors to file
+      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]]
+      # Format and display errors in the browser/CLI 
       pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
+  
+  # Custom handler to log to a file
   LogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
@@ -200,12 +232,16 @@ SilverStripe\Core\Injector\Injector:
     properties:
       Formatter: %$Monolog\Formatter\HtmlFormatter
       ContentType: text/html
+  
+  # Handler for displaying errors in the browser or CLI
   DisplayErrorHandler:
     class: SilverStripe\Logging\HTTPOutputHandler
     constructor:
       - "error"
     properties:
       Formatter: %$SilverStripe\Logging\DebugViewFriendlyErrorFormatter
+     
+  # Configuration for the "friendly" error formatter
   SilverStripe\Logging\DebugViewFriendlyErrorFormatter:
     class: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
     properties:
@@ -214,7 +250,7 @@ SilverStripe\Core\Injector\Injector:
 ```
 
 <div class="info" markdown="1">
-In addition to SilverStripe-integrated logging, it is advisable to fall back to PHPs native logging functionality. A
+In addition to SilverStripe-integrated logging, it is advisable to fall back to PHP's native logging functionality. A
 script might terminate before it reaches the SilverStripe error handling, for example in the case of a fatal error. Make
 sure `log_errors` and `error_log` in your PHP ini file are configured.
 </div>
@@ -228,11 +264,12 @@ others.
 ### Replacing the logger
 
 Monolog comes by default with SilverStripe, but you may use another PSR-3 compliant logger, if you wish. To do this,
-set the `Injector.Logger` configuration parameter, providing a new injector definition. For example:
+set the `SilverStripe\Core\Injector\Injector.Monolog\Logger` configuration parameter, providing a new injector
+definition. For example:
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  ErrorHandler:
+  SilverStripe\Logging\ErrorHandler:
     class: Logging\Logger
     constructor:
      - 'alternative-logger'
@@ -243,7 +280,8 @@ be ignored.
 
 ### Replacing the error handler
 
-The Injector service `ErrorHandler` is responsible for initialising the error handler. By default it 
+The Injector service `SilverStripe\Logging\ErrorHandler` is responsible for initialising the error handler. By default
+it: 
 
  * Create a `SilverStripe\Logging\MonologErrorHandler` object.
  * Attach the registered service `Psr\Log\LoggerInterface` to it, to start the error handler.
@@ -255,7 +293,7 @@ another. To replace this, you should registered a new service, `ErrorHandlerLoad
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  ErrorHandler: 
+  SilverStripe\Logging\ErrorHandler: 
     class: MyApp\CustomErrorHandlerLoader
 ```
 

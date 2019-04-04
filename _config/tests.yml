@@ -11,6 +11,7 @@ SilverStripe\Core\Injector\Injector:
         fixtures: '%$SilverStripe\Dev\State\FixtureTestState'
         requirements: '%$SilverStripe\View\Dev\RequirementsTestState'
         ssviewer: '%$SilverStripe\View\Dev\SSViewerTestState'
+        logstate: '%$SilverStripe\Dev\State\LoggerState'
 ---
 Name: kerneltest
 Before: '*'
