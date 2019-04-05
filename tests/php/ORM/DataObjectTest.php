@@ -1932,8 +1932,34 @@ class DataObjectTest extends SapphireTest
     {
         $obj = new DataObjectTest\Fixture();
         $obj->write();
-        
+
         $this->assertInternalType("int", $obj->ID);
+    }
+
+    /**
+     * Tests that zero values are returned with the correct types
+     */
+    public function testZeroIsFalse()
+    {
+        $obj = new DataObjectTest\Fixture();
+        $obj->MyInt = 0;
+        $obj->MyDecimal = 0.00;
+        $obj->MyCurrency = 0.00;
+        $obj->write();
+
+        $this->assertEquals(0, $obj->MyInt, 'DBInt fields should be integer on first assignment');
+        $this->assertEquals(0.00, $obj->MyDecimal, 'DBDecimal fields should be float on first assignment');
+        $this->assertEquals(0.00, $obj->MyCurrency, 'DBCurrency fields should be float on first assignment');
+
+        $obj2 = DataObjectTest\Fixture::get()->byId($obj->ID);
+
+        $this->assertEquals(0, $obj2->MyInt, 'DBInt fields should be integer');
+        $this->assertEquals(0.00, $obj2->MyDecimal, 'DBDecimal fields should be float');
+        $this->assertEquals(0.00, $obj2->MyCurrency, 'DBCurrency fields should be float');
+
+        $this->assertFalse((bool)$obj2->MyInt, 'DBInt zero fields should be falsey on fetch from DB');
+        $this->assertFalse((bool)$obj2->MyDecimal, 'DBDecimal zero fields should be falsey on fetch from DB');
+        $this->assertFalse((bool)$obj2->MyCurrency, 'DBCurrency zero fields should be falsey on fetch from DB');
     }
 
     public function testTwoSubclassesWithTheSameFieldNameWork()
