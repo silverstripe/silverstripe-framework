@@ -284,7 +284,7 @@ class MySQLSchemaManager extends DBSchemaManager
                 $fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
             }
 
-            if ($field['Default'] || $field['Default'] === "0") {
+            if ($field['Default'] || $field['Default'] === "0" || $field['Default'] === '') {
                 $fieldSpec .= " default " . $this->database->quoteString($field['Default']);
             }
             if ($field['Extra']) {
