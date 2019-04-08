@@ -62,6 +62,11 @@ class GridFieldLevelup implements GridField_HTMLProvider
 
         /** @var DataObject|Hierarchy $modelObj */
         $modelObj = DataObject::get_by_id($modelClass, $this->currentID);
+        if (!$modelObj) {
+            throw new \LogicException(
+                "Can't find object of class $modelClass ID #{$this->currentID} for GridFieldLevelup"
+            );
+        }
 
         $parent = null;
         if ($modelObj->hasMethod('getParent')) {
