@@ -51,6 +51,18 @@ Read the [Switching to recipes](#switching-to-recipes) section of this guide for
 We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help
 with the upgrade process. The upgrader is unlikely to completely upgrade your project, however it can take care of the most tedious part of the upgrade.
 It can also be used to upgrade your existing SilverStripe 4 project to a newer minor release.
+If you have previously used the upgrader tool, make sure to use its newest version.
+Since 1.4.0, there's a [self update feature](https://github.com/silverstripe/silverstripe-upgrader/blob/master/README.md#self-update).
+
+### Identify known issues
+
+It's sometimes hard to tell if an issue you're hitting is caused by upgrading project code,
+or is a known issue in SilverStripe. Often an issue is fixed already, but not
+yet packaged in the release you're upgrading to. Use our 
+[issue search across our core modules](https://silverstripe-github-issues.now.sh/?supported=0&status=all),
+and ensure you're including closed ones (they might be done but not released yet).
+If you're unsure, [report a bug](https://docs.silverstripe.org/en/4/contributing/issues_and_bugs/).
+
 
 ## Step 0 - Pre-requisites and background work {#step0}
 
