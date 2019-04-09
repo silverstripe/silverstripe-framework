@@ -1217,7 +1217,7 @@ This should migrate your existing data (non-destructively) to the new SilverStri
 #### Migrating files
 
 Since the structure of the `File` DataObject has changed, a new task `MigrateFileTask`
-has been added to assist in migration of legacy files (see [file migration documentation](/developer_guides/files/file_migration)).
+has been added to assist in migration of existing files (see [file migration documentation](/developer_guides/files/file_migration)).
 
 ```bash
 ./vendor/bin/sake dev/tasks/MigrateFileTask

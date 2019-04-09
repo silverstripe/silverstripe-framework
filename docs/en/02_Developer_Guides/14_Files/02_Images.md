@@ -210,6 +210,12 @@ SilverStripe\Core\Injector\Injector:
       - { driver: imagick }
 ```
 
+## Storage
+
+Manipulated images are stored as "file variants" in the same
+folder structure as the original image. The storage mechanism is described
+in the ["File Storage" guide](file_storage).
+
 ## API Documentation
 
  * [File](api:SilverStripe\Assets\File)

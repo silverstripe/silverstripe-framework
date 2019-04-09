@@ -66,7 +66,7 @@ of a page with a shortcode image:
 
 ```html
 <p>Welcome to SilverStripe! This is the default homepage.</p>
-<p>[image src="/assets/e43fb87dc0/12824172.jpeg" id="27" width="400" height="400" class="leftAlone ss-htmleditorfield-file image" title="My Image"]</p>
+<p>[image src="/assets/12824172.jpeg" id="27" width="400" height="400" class="leftAlone ss-htmleditorfield-file image" title="My Image"]</p>
 ```
 
 File shortcodes have the following properties:
@@ -137,7 +137,7 @@ SilverStripe\Assets\File:
 
 ## Modifying files
 
-In order to move or rename a file you can simply update the Name property, or assign the ParentID to a new
+In order to move or rename a file you can simply update the `Name` property, or assign the `ParentID` to a new
 folder. Please note that these modifications are made simply on the draft stage, and will not be copied
 to live until a publish is made (either on this object, or cascading from a parent).
 
