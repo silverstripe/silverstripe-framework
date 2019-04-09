@@ -59,7 +59,7 @@ Redirections](/developer_guides/controllers/redirection) for more information an
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
  | http://localhost**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://localhost**/admin/pages/publishall/**        | | Publish all pages on the site
+ | http://localhost**/admin/pages/publishall/**        | | Publish all pages on the site. Only works reliably on smaller sites.
 
 ###  /dev/build
 
