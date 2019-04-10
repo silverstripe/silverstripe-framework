@@ -65,6 +65,9 @@ class DBForeignKey extends DBInt
             if ($hasOneSingleton instanceof Image) {
                 $field->setAllowedFileCategories('image/supported');
             }
+            if ($field->hasMethod('setAllowedMaxFileNumber')) {
+                $field->setAllowedMaxFileNumber(1);
+            }
             return $field;
         }
 
