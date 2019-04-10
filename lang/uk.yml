@@ -39,7 +39,7 @@ uk:
     many_many_Members: Члени
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
-    BUTTONLOGIN: Увійти
+    BUTTONLOGIN: 'Увійти'
     BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
@@ -74,6 +74,6 @@ uk:
     CHANGEPASSWORDHEADER: 'Змінити свій пароль'
     ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
     ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
-    LOGIN: Увійти
+    LOGIN: 'Увійти'
     NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
     NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
