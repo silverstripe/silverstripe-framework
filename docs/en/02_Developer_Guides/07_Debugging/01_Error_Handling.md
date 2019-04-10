@@ -59,7 +59,7 @@ throw new \LogicException("Query failed: " . $sql);
 
 It can be quite verbose to call `Injector::inst()->get(LoggerInterface::class)` all the time. More importantly,
 it also means that you're coupling your code to global state, which is a bad design practise. A better
-approach is to use depedency injection to pass the logger in for you. The [Injector](../extending/Injector)
+approach is to use dependency injection to pass the logger in for you. The [Injector](../extending/Injector)
 can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
 
 ```php

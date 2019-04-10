@@ -1223,6 +1223,14 @@ has been added to assist in migration of legacy files (see [file migration docum
 ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
+##### Rewriting asset references
+
+Your `img` and `a` tag references to your assets may now be pointing to a location in your assets folder that has been moved. There is a task available which will look through all your tables containing `HTMLText` fields looking for broken references and then rewrite them to the new location of the file.
+
+```bash
+./vendor/bin/sake dev/tasks/TagsToShortcodeTask
+```
+
 ### Any other script that needs running.
 
 Some third party modules may include their own migration tasks. Take a minute to consult the release notes of your third party dependencies to make sure you haven't missed anything.
