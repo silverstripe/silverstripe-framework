@@ -22,8 +22,8 @@ eo:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Nekonata
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Ne
-    YESANSWER: Jes
+    NOANSWER: 'Ne'
+    YESANSWER: 'Jes'
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Mankas ebloj'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -121,8 +121,8 @@ eo:
     SINGULARNAME: 'Datuma Objekto'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ajna
-    NOANSWER: Ne
-    YESANSWER: Jes
+    NOANSWER: 'Ne'
+    YESANSWER: 'Jes'
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} tago'
@@ -173,7 +173,7 @@ eo:
     AddRole: 'Aldoni rolon por ĉi tiu grupo'
     Code: 'Grupa Kodo'
     DefaultGroupTitleAdministrators: Administrantoj
-    DefaultGroupTitleContentAuthors: Enhavaŭtoroj
+    DefaultGroupTitleContentAuthors: 'Enhavaŭtoroj'
     Description: Priskribo
     GROUPNAME: 'Nomo de grupo'
     GroupReminder: 'Se vi elektas patran grupon, ĉi tiu grupo prenos ĉiujn ĝiajn rolojn'
@@ -198,7 +198,7 @@ eo:
   SilverStripe\Security\LoginAttempt:
     Email: 'Retpoŝta adreso'
     EmailHashed: 'Retpoŝta adreso (haketa)'
-    IP: IP-Adreso
+    IP: 'IP-Adreso'
     PLURALNAME: 'Provoj ensaluti'
     PLURALS:
       one: 'Unu provo ensaluti'
@@ -208,9 +208,9 @@ eo:
   SilverStripe\Security\Member:
     ADDGROUP: 'Aldoni grupon'
     BUTTONCHANGEPASSWORD: 'Ŝanĝi pasvorton'
-    BUTTONLOGIN: Ensaluti
+    BUTTONLOGIN: 'Ensaluti'
     BUTTONLOGINOTHER: 'Ensaluti kiel alia homo'
-    BUTTONLOGOUT: Elsaluti
+    BUTTONLOGOUT: 'Elsaluti'
     BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
     CONFIRMPASSWORD: 'Konfirmu pasvorton'
@@ -223,7 +223,7 @@ eo:
     ERRORNEWPASSWORD: 'Via ricev enirita vian novan pasvorton malsame, prov denove'
     ERRORPASSWORDNOTMATCH: 'Via aktuala pasvorto ne matĉo, bonvolu prov denove'
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
-    FIRSTNAME: Antaŭnomo
+    FIRSTNAME: 'Antaŭnomo'
     INTERFACELANG: 'Interfaca Lingvo'
     KEEPMESIGNEDIN: 'Konservi mian ensaluton'
     LOGGEDINAS: 'Vi ensalutis kiel {name}.'
@@ -238,7 +238,7 @@ eo:
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
-    SURNAME: 'Familia nomo'
+    SURNAME: Familia nomo
     VALIDATIONADMINLOSTACCESS: 'Ne povas forigi ĉiujn administrajn grupojn el via profilo'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
@@ -252,7 +252,7 @@ eo:
     AUTHENTICATORNAME: 'CMS-membra ensaluta formularo'
     BUTTONFORGOTPASSWORD: 'Forgesis pasvorton'
     BUTTONLOGIN: 'Permesu min ree ensaluti'
-    BUTTONLOGOUT: Elsaluti
+    BUTTONLOGOUT: 'Elsaluti'
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
     NoPassword: 'Mankas pasvorto por ĉi tiu membro.'
@@ -270,8 +270,8 @@ eo:
     TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ {minimum} signojn longa'
   SilverStripe\Security\Permission:
     AdminGroup: Administranto
-    CMS_ACCESS_CATEGORY: CMS-aliro
-    CONTENT_CATEGORY: Enhavopermesoj
+    CMS_ACCESS_CATEGORY: 'CMS-aliro'
+    CONTENT_CATEGORY: 'Enhavopermesoj'
     FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
     FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
@@ -315,8 +315,8 @@ eo:
     CONFIRMLOGOUT: 'Bonvolu alklaki la suban butonon por konfirmi ke vi volas elsaluti'
     ENTERNEWPASSWORD: 'Bonvolu enigi novan pasvorton.'
     ERRORPASSWORDPERMISSION: 'Vi devas ensaluti por ŝanĝi vian pasvorton!'
-    LOGIN: Ensaluti
-    LOGOUT: Elsaluti
+    LOGIN: 'Ensaluti'
+    LOGOUT: 'Elsaluti'
     LOSTPASSWORDHEADER: 'Perdis pasvorton'
     NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
     NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'

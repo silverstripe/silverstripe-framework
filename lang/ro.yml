@@ -28,12 +28,12 @@ ro:
   SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
   SilverStripe\Security\Member:
-    BUTTONLOGIN: Autentificare
+    BUTTONLOGIN: 'Autentificare'
     BUTTONLOSTPASSWORD: 'Am uitat parola'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
-    FIRSTNAME: Prenume
+    FIRSTNAME: 'Prenume'
     INTERFACELANG: 'Limba interfetei'
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola

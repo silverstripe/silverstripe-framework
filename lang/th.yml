@@ -1,34 +1,34 @@
 th:
   SilverStripe\Forms\ConfirmedPasswordField:
     BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
-    SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
+    SHOWONCLICKTITLE: 'เปลี่ยนรหัสผ่าน'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (เลือก)
   SilverStripe\Forms\EmailField:
-    VALIDATION: กรุณากรอกที่อยู่อีเมล
+    VALIDATION: 'กรุณากรอกที่อยู่อีเมล'
   SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
-    VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
-    VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
+    VALIDATIONPASSWORDSDONTMATCH: 'รหัสผ่านไม่ตรงกัน'
+    VALIDATIONPASSWORDSNOTEMPTY: 'รหัสผ่านไม่สามารถเว้นว่างได้'
+    VALIDCURRENCY: 'กรุณากรอกสกุลเงินที่ถูกต้อง'
   SilverStripe\Forms\FormField:
     NONE: ไม่มี
   SilverStripe\Forms\GridField\GridField:
     Add: 'เพิ่ม {name}'
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     Filter: ตัวกรองข้อมูล
-    FilterBy: กรองข้อมูลจาก
+    FilterBy: 'กรองข้อมูลจาก'
     Find: ค้นหา
-    LinkExisting: ลิงก์ที่มีอยู่
+    LinkExisting: 'ลิงก์ที่มีอยู่'
     NewRecord: 'ใหม่ {type}'
-    NoItemsFound: ไม่พบรายการที่ต้องการ
-    PRINTEDAT: ถูกสั่งพิมพ์ที่
-    PRINTEDBY: พิมพ์โดย
+    NoItemsFound: 'ไม่พบรายการที่ต้องการ'
+    PRINTEDAT: 'ถูกสั่งพิมพ์ที่'
+    PRINTEDBY: 'พิมพ์โดย'
     PlaceHolder: 'ค้นหา {type}'
     Print: พิมพ์
     ResetFilter: รีเซ็ต
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: ลบ
-    DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
+    DeletePermissionsFailure: 'ไม่ได้รับสิทธิ์ให้ลบได้'
     UnlinkRelation: ยกเลิกการลิงก์
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: ยกเลิก
@@ -44,58 +44,58 @@ th:
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: ใดๆ
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
-    ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
+    ENTERINFO: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'
+    ERRORNOTADMIN: 'ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ'
   SilverStripe\Security\Group:
-    AddRole: เพิ่มบทบาทให้กับกลุ่มนี้
-    Code: รหัสกลุ่ม
+    AddRole: 'เพิ่มบทบาทให้กับกลุ่มนี้'
+    Code: 'รหัสกลุ่ม'
     DefaultGroupTitleAdministrators: ผู้ดูและระบบ
-    DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
+    DefaultGroupTitleContentAuthors: 'ผู้แต่งเนื้อหา'
     Description: คำอธิบาย
     GroupReminder: 'หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา'
     Locked: 'ล็อค?'
-    NoRoles: ไม่พบบทบาทที่ต้องการ
-    Parent: กลุ่มหลักต้นทาง
-    RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
-    Sort: จัดลำดับ
+    NoRoles: 'ไม่พบบทบาทที่ต้องการ'
+    Parent: 'กลุ่มหลักต้นทาง'
+    RolesAddEditLink: 'เพิ่ม/แก้ไขบทบาท'
+    Sort: 'จัดลำดับ'
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
   SilverStripe\Security\LoginAttempt:
-    IP: ไอพีเครื่อง
+    IP: 'ไอพีเครื่อง'
     Status: สถานะ
   SilverStripe\Security\Member:
-    ADDGROUP: เพิ่มกลุ่ม
-    BUTTONCHANGEPASSWORD: เปลี่ยนรหัสผ่าน
-    BUTTONLOGIN: เข้าสู่ระบบ
-    BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
-    CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
-    CONFIRMPASSWORD: ยืนยันรหัสผ่าน
+    ADDGROUP: 'เพิ่มกลุ่ม'
+    BUTTONCHANGEPASSWORD: 'เปลี่ยนรหัสผ่าน'
+    BUTTONLOGIN: 'เข้าสู่ระบบ'
+    BUTTONLOSTPASSWORD: 'ฉันลืมรหัสผ่านของฉัน'
+    CONFIRMNEWPASSWORD: 'ยืนยันรหัสผ่านใหม่'
+    CONFIRMPASSWORD: 'ยืนยันรหัสผ่าน'
     EMAIL: อีเมล
-    ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
+    ENTEREMAIL: 'กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่'
     ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
-    FIRSTNAME: ชื่อจริง
-    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
-    NEWPASSWORD: รหัสผ่านใหม่
+    FIRSTNAME: 'ชื่อจริง'
+    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
+    NEWPASSWORD: 'รหัสผ่านใหม่'
     PASSWORD: รหัสผ่าน
-    SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
-    SUBJECTPASSWORDRESET: ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ
+    SUBJECTPASSWORDCHANGED: 'รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว'
+    SUBJECTPASSWORDRESET: 'ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ'
     SURNAME: นามสกุล
-    YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
+    YOUROLDPASSWORD: 'รหัสผ่านเก่าของคุณ'
     belongs_many_many_Groups: กลุ่ม
-    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
-    db_LockedOutUntil: ออกจากระบบจนกว่า
+    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
+    db_LockedOutUntil: 'ออกจากระบบจนกว่า'
     db_Password: รหัสผ่าน
-    db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
+    db_PasswordExpiry: 'วันที่รหัสผ่านหมดอายุ'
   SilverStripe\Security\Permission:
     AdminGroup: ผู้ดูแลระบบ
-    CONTENT_CATEGORY: สิทธิ์อนุญาตของเนื้อหา
+    CONTENT_CATEGORY: 'สิทธิ์อนุญาตของเนื้อหา'
   SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
+    OnlyAdminCanApply: 'เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้'
     Title: หัวเรื่อง
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ เข้าสู่ระบบอีกครั้ง'
-    BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
-    CHANGEPASSWORDBELOW: คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง
-    ENTERNEWPASSWORD: กรุณากรอกรหัสผ่านใหม่ของคุณ
+    BUTTONSEND: 'ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน'
+    CHANGEPASSWORDBELOW: 'คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง'
+    ENTERNEWPASSWORD: 'กรุณากรอกรหัสผ่านใหม่ของคุณ'
     ERRORPASSWORDPERMISSION: 'คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้'
-    LOGIN: เข้าสู่ระบบ
+    LOGIN: 'เข้าสู่ระบบ'
