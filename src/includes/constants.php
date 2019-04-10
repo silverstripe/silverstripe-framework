@@ -41,11 +41,13 @@ if (!defined('BASE_PATH')) {
     define('BASE_PATH', call_user_func(function () {
         // Determine BASE_PATH based on the composer autoloader
         foreach (debug_backtrace() as $backtraceItem) {
-            if (isset($backtraceItem['file']) && preg_match(
-                '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
-                $backtraceItem['file'],
-                $matches
-            )) {
+            if (isset($backtraceItem['file'])
+                && preg_match(
+                    '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
+                    $backtraceItem['file'],
+                    $matches
+                )
+            ) {
                 return realpath($matches['base']) ?: DIRECTORY_SEPARATOR;
             }
         }
@@ -132,23 +134,24 @@ if (!defined('BASE_URL')) {
 
         // When htaccess redirects from /base to /base/public folder, we need to only include /public
         // in the BASE_URL if it's also present in the request
-        if ($baseURL
-            && PUBLIC_DIR
-            && isset($_SERVER['REQUEST_URI'])
-            && substr($baseURL, -strlen(PUBLIC_DIR)) === PUBLIC_DIR
+        if (!$baseURL
+            || !PUBLIC_DIR
+            || !isset($_SERVER['REQUEST_URI'])
+            || substr($baseURL, -strlen(PUBLIC_DIR)) !== PUBLIC_DIR
         ) {
-            $requestURI = $_SERVER['REQUEST_URI'];
-            // Check if /base/public or /base are in the request
+            return $baseURL;
+        }
+
+        $requestURI = $_SERVER['REQUEST_URI'];
+        // Check if /base/public or /base are in the request
         foreach ([$baseURL, dirname($baseURL)] as $candidate) {
             if (stripos($requestURI, $candidate) === 0) {
                 return $candidate;
             }
         }
-            // Ambiguous
-            return '';
-        }
 
-        return $baseURL;
+        // Ambiguous
+        return '';
     }));
 }
 

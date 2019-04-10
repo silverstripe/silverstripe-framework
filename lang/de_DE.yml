@@ -19,8 +19,8 @@ de_DE:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Unbekannt
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: Nein
-    YESANSWER: Ja
+    NOANSWER: 'Nein'
+    YESANSWER: 'Ja'
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Keine Optionen vorhanden'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -50,14 +50,14 @@ de_DE:
     FIELDLABELCURRENCY: Währung
     INVALID_CURRENCY: 'Die Währung {currency} ist nicht in der Liste der erlauben Währungen'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: DatenObjekte
+    PLURALNAME: 'DatenObjekte'
     PLURALS:
       one: 'Ein DatenObjekt'
       other: '{count} DatenObjekte'
-    SINGULARNAME: DatenObjekt
+    SINGULARNAME: 'DatenObjekt'
   SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: Nein
-    YESANSWER: Ja
+    NOANSWER: 'Nein'
+    YESANSWER: 'Ja'
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} Tag'
@@ -92,9 +92,9 @@ de_DE:
     DefaultAdminFirstname: 'Standard Administrator'
   SilverStripe\Security\Group:
     DefaultGroupTitleAdministrators: Administratoren
-    DefaultGroupTitleContentAuthors: Inhaltsautoren
+    DefaultGroupTitleContentAuthors: 'Inhaltsautoren'
     Description: Beschreibung
-    GROUPNAME: Gruppenname
+    GROUPNAME: 'Gruppenname'
     MEMBERS: Mitglieder
     NEWGROUP: 'Neue Gruppe'
     NoRoles: 'Keine Rollen gefunden'
@@ -103,25 +103,25 @@ de_DE:
       one: 'Eine Gruppe'
       other: '{count} Gruppen'
     SINGULARNAME: Gruppe
-    Sort: Sortierreihenfolge
+    Sort: 'Sortierreihenfolge'
     has_many_Permissions: Rechte
     many_many_Members: Mitglieder
   SilverStripe\Security\LoginAttempt:
     Email: 'E-Mail Adresse'
     EmailHashed: 'E-Mail Adresse (gehasht)'
     IP: 'IP Adresse'
-    PLURALNAME: Loginversuche
+    PLURALNAME: 'Loginversuche'
     PLURALS:
       one: 'Ein Loginversuch'
       other: '{count} Loginversuche'
-    SINGULARNAME: Loginversuch
+    SINGULARNAME: 'Loginversuch'
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
-    BUTTONLOGIN: Einloggen
+    BUTTONLOGIN: 'Einloggen'
     BUTTONLOGINOTHER: 'Als jemand anderes einloggen'
-    BUTTONLOGOUT: Ausloggen
+    BUTTONLOGOUT: 'Ausloggen'
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
@@ -130,7 +130,7 @@ de_DE:
     EMAIL: E-Mail
     EMPTYNEWPASSWORD: 'Das neue Passwort kann nicht leer sein, bitte versuchen Sie es erneut'
     ENTEREMAIL: 'Bitte geben Sie Ihre E-Mail Adresse an. Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts.'
-    FIRSTNAME: Vorname
+    FIRSTNAME: 'Vorname'
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
     PASSWORDEXPIRED: 'Ihr Passwort ist abgelaufen. Bitte wählen Sie ein neues Passwort.'
@@ -149,5 +149,5 @@ de_DE:
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
   SilverStripe\Security\Security:
-    LOGIN: Einloggen
-    LOGOUT: Ausloggen
+    LOGIN: 'Einloggen'
+    LOGOUT: 'Ausloggen'
