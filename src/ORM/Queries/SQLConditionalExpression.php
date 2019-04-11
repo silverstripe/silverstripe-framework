@@ -283,10 +283,16 @@ abstract class SQLConditionalExpression extends SQLExpression
             // array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1",
             // "Status = 'approved'", 'order' => 20))
             if (!is_array($join)) {
-                if (!empty($alias) && !is_numeric($alias) && $alias !== trim($join, '"')) {
-                    $trimmedAlias = trim($alias, '"');
+                if (empty($alias) || is_numeric($alias)) {
+                    continue;
+                }
+
+                $trimmedAlias = trim($alias, '"');
+
+                if ($trimmedAlias !== trim($join, '"')) {
                     $joins[$alias] = "{$join} AS \"{$trimmedAlias}\"";
                 }
+
                 continue;
             }
 
