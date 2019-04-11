@@ -197,6 +197,9 @@ class DatabaseTest extends SapphireTest
         $obj->MyField = "value";
         $obj->MyInt = 5;
         $obj->MyFloat = 6.0;
+
+        // Note: in non-PDO SQLite, whole numbers of a decimal field will be returned as integers rather than floats
+        $obj->MyDecimal = 7.1;
         $obj->MyBoolean = true;
         $obj->write();
 
@@ -206,20 +209,66 @@ class DatabaseTest extends SapphireTest
         )->record();
 
         // IDs and ints are returned as ints
-        $this->assertInternalType('int', $record['ID']);
-        $this->assertInternalType('int', $record['MyInt']);
+        $this->assertInternalType('int', $record['ID'], 'Primary key should be integer');
+        $this->assertInternalType('int', $record['MyInt'], 'DBInt fields should be integer');
 
-        $this->assertInternalType('float', $record['MyFloat']);
+        $this->assertInternalType('float', $record['MyFloat'], 'DBFloat fields should be float');
+        $this->assertInternalType('float', $record['MyDecimal'], 'DBDecimal fields should be float');
 
         // Booleans are returned as ints – we follow MySQL's lead
-        $this->assertInternalType('int', $record['MyBoolean']);
+        $this->assertInternalType('int', $record['MyBoolean'], 'DBBoolean fields should be int');
 
         // Strings and enums are returned as strings
-        $this->assertInternalType('string', $record['MyField']);
-        $this->assertInternalType('string', $record['ClassName']);
+        $this->assertInternalType('string', $record['MyField'], 'DBVarchar fields should be string');
+        $this->assertInternalType('string', $record['ClassName'], 'DBEnum fields should be string');
 
         // Dates are returned as strings
-        $this->assertInternalType('string', $record['Created']);
-        $this->assertInternalType('string', $record['LastEdited']);
+        $this->assertInternalType('string', $record['Created'], 'DBDatetime fields should be string');
+
+
+        // Ensure that the same is true when calling a query a second time (cached prepared statement)
+
+        $record = DB::prepared_query(
+            'SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ?',
+            [ $obj->ID ]
+        )->record();
+
+        // IDs and ints are returned as ints
+        $this->assertInternalType('int', $record['ID'], 'Primary key should be integer (2nd call)');
+        $this->assertInternalType('int', $record['MyInt'], 'DBInt fields should be integer (2nd call)');
+
+        $this->assertInternalType('float', $record['MyFloat'], 'DBFloat fields should be float (2nd call)');
+        $this->assertInternalType('float', $record['MyDecimal'], 'DBDecimal fields should be float (2nd call)');
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertInternalType('int', $record['MyBoolean'], 'DBBoolean fields should be int (2nd call)');
+
+        // Strings and enums are returned as strings
+        $this->assertInternalType('string', $record['MyField'], 'DBVarchar fields should be string (2nd call)');
+        $this->assertInternalType('string', $record['ClassName'], 'DBEnum fields should be string (2nd call)');
+
+        // Dates are returned as strings
+        $this->assertInternalType('string', $record['Created'], 'DBDatetime fields should be string (2nd call)');
+
+
+        // Ensure that the same is true when using non-prepared statements
+        $record = DB::query('SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ' . (int)$obj->ID)->record();
+
+        // IDs and ints are returned as ints
+        $this->assertInternalType('int', $record['ID'], 'Primary key should be integer (non-prepared)');
+        $this->assertInternalType('int', $record['MyInt'], 'DBInt fields should be integer (non-prepared)');
+
+        $this->assertInternalType('float', $record['MyFloat'], 'DBFloat fields should be float (non-prepared)');
+        $this->assertInternalType('float', $record['MyDecimal'], 'DBDecimal fields should be float (non-prepared)');
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertInternalType('int', $record['MyBoolean'], 'DBBoolean fields should be int (non-prepared)');
+
+        // Strings and enums are returned as strings
+        $this->assertInternalType('string', $record['MyField'], 'DBVarchar fields should be string (non-prepared)');
+        $this->assertInternalType('string', $record['ClassName'], 'DBEnum fields should be string (non-prepared)');
+
+        // Dates are returned as strings
+        $this->assertInternalType('string', $record['Created'], 'DBDatetime fields should be string (non-prepared)');
     }
 }

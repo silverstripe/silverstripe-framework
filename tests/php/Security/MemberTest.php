@@ -46,6 +46,17 @@ class MemberTest extends FunctionalTest
         //This is because the test relies on the yaml file being interpreted according to a particular date format
         //and this setup occurs before the setUp method is run
         i18n::config()->set('default_locale', 'en_US');
+
+        // Set the default authenticator to use for these tests
+        Injector::inst()->load([
+            Security::class => [
+                'properties' => [
+                    'Authenticators' => [
+                        'default' => '%$' . MemberAuthenticator::class,
+                    ],
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -397,6 +408,7 @@ class MemberTest extends FunctionalTest
         $member->PasswordExpiry = date('Y-m-d', time() + 86400);
         $this->assertFalse($member->isPasswordExpired());
     }
+
     public function testInGroups()
     {
         /** @var Member $staffmember */
@@ -852,8 +864,8 @@ class MemberTest extends FunctionalTest
         $fields = $member->getCMSFields();
 
         /**
- * @skipUpgrade
-*/
+         * @skipUpgrade
+         */
         $this->assertNotNull($fields->dataFieldByName('Email'), 'Scaffolded fields are retained');
         $this->assertNull($fields->dataFieldByName('Salt'), 'Field modifications run correctly');
         $this->assertNotNull($fields->dataFieldByName('TestMemberField'), 'Extension is applied correctly');

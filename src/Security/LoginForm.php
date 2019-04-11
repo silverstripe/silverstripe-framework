@@ -15,24 +15,54 @@ use SilverStripe\Forms\Form;
  */
 abstract class LoginForm extends Form
 {
-
     /**
-     * Authenticator class to use with this login form
-     *
-     * Set this variable to the authenticator class to use with this login
-     * form.
+     * @deprecated 4.4.0:5.0.0 Use getAuthenticatorClass() or setAuthenticatorClass() instead
      * @var string
      */
     protected $authenticator_class;
 
+    /**
+     * Authenticator class to use with this login form
+     *
+     * Set this variable to the authenticator class to use with this login form.
+     *
+     * @var string
+     */
+    protected $authenticatorClass;
+
+    /**
+     * Set the authenticator class name to use
+     *
+     * @param string $class
+     * @return $this
+     */
     public function setAuthenticatorClass($class)
     {
-        $this->authenticator_class = $class;
-        $authenticatorField = $this->Fields()->dataFieldByName('AuthenticationMethod');
+        $this->authenticatorClass = $class;
+
+        /** @var FieldList|null $fields */
+        $fields = $this->Fields();
+        if (!$fields) {
+            return $this;
+        }
+
+        $authenticatorField = $fields->dataFieldByName('AuthenticationMethod');
         if ($authenticatorField) {
             $authenticatorField->setValue($class);
         }
+
         return $this;
+    }
+
+    /**
+     * Returns the authenticator class name to use
+     *
+     * @return string
+     */
+    public function getAuthenticatorClass()
+    {
+        // B/C for deprecated authenticator_class property
+        return $this->authenticator_class ?: $this->authenticatorClass;
     }
 
     /**

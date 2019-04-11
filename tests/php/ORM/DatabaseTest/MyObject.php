@@ -16,6 +16,7 @@ class MyObject extends DataObject implements TestOnly
         'MyField' => 'Varchar',
         'MyInt' => 'Int',
         'MyFloat' => 'Float',
+        'MyDecimal' => 'Decimal',
         'MyBoolean' => 'Boolean',
     );
 }

@@ -343,4 +343,35 @@ class DataObjectSchemaTest extends SapphireTest
             'columns' => ['IndexedMoneyCurrency', 'IndexedMoneyAmount']
         ], $indexes['IndexedMoney']);
     }
+
+    /**
+     * Ensure that records with unique indexes can be written
+     */
+    public function testWriteUniqueIndexes()
+    {
+        // Create default object
+        $zeroObject = new AllIndexes();
+        $zeroObject->Number = 0;
+        $zeroObject->write();
+
+        $this->assertListEquals(
+            [
+                ['Number' => 0],
+            ],
+            AllIndexes::get()
+        );
+
+        // Test a new record can be created without clashing with default value
+        $validObject = new AllIndexes();
+        $validObject->Number = 1;
+        $validObject->write();
+
+        $this->assertListEquals(
+            [
+                ['Number' => 0],
+                ['Number' => 1],
+            ],
+            AllIndexes::get()
+        );
+    }
 }

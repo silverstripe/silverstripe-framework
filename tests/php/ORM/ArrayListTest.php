@@ -739,6 +739,7 @@ class ArrayListTest extends SapphireTest
         // This call will trigger a fatal error if there are issues with circular dependencies
         $this->assertInstanceOf(SS_List::class, $items->sort('Sort'));
     }
+
     /**
      * $list->filter('Name', 'bob'); // only bob in the list
      */
@@ -1223,5 +1224,17 @@ class ArrayListTest extends SapphireTest
 
         $element = $list->byID(1);
         $this->assertNull($element);
+    }
+
+    public function testDataClass()
+    {
+        $list = new ArrayList([
+            new DataObject(['Title' => 'one']),
+        ]);
+        $this->assertEquals(DataObject::class, $list->dataClass());
+        $list->pop();
+        $this->assertNull($list->dataClass());
+        $list->setDataClass(DataObject::class);
+        $this->assertEquals(DataObject::class, $list->dataClass());
     }
 }

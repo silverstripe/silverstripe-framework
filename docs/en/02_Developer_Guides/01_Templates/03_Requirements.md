@@ -11,6 +11,69 @@ The examples below are using certain folder naming conventions (CSS files in `cs
 SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
 The `Requirements` class can work with arbitrary file paths.
 
+## Exposing static assets
+
+Before requiring static asset files in PHP code or in a template, those assets need to be "exposed". This process allows SilverStripe projects and SilverStripe modules to make static asset files available via the web server from locations that would otherwise be blocked from web server access, such as the `vendor` folder.
+
+### Configuring your project "exposed" folders
+
+Exposed assets are made available in your web root in a dedicated "resources" directory. Prior to SilverStripe 4.4, the name of this directory was hardcoded to `resources`. In SilverStripe 4.4 and above, the name of the resources directory can be configured by defining the `extra.resources-dir` key in your `composer.json`. SilverStripe projects created from `silverstripe/installer` 4.4 and above will automatically be configured to use `_resources` as their resource directory.
+
+Each folder that needs to be exposed must be entered under the `extra.expose` key in your `composer.json` file. Module developers should use a path relative to the root of their module (don't include the "vendor/package-developer/package-name" path).
+
+This is a sample SilverStripe project `composer.json` file configured to expose some assets.
+
+```json
+{
+    "name": "app/myproject",
+    "type": "silverstripe-project",
+    "require": {
+        "silverstripe/recipe-cms": "4.4.x-dev"
+    },
+    "extra": {
+        "resources-dir": "_resources",
+        "expose": [
+            "app/client/dist",
+            "app/images"
+        ]
+    }
+}
+```
+
+Files contained inside the `app/client/dist` and `app/images` will be made publicly available under the `_resources` directory.
+
+SilverStripe projects should not track the "resources" directory in their source control system.
+
+### Exposing assets in the web root
+
+SilverStripe projects ship with `silverstripe/vendor-plugin`. This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
+
+Developers can explicitly expose static assets by calling `composer vendor-expose`. This is necessary after updating your `resources-dir` or `expose` configuration in your `composer.json` file.
+
+`composer vendor-expose` accepts an optional `method` argument (e.g.: `composer vendor-expose auto`). This controls how the files are exposed in the "resources" directory:
+* `none` disables all symlink / copy
+* `copy` copies the exposed files
+* `symlink` create symbolic links to the exposed folder
+* `junction` uses a junction (Windows only)
+* `auto` creates symbolic links (or junctions on Windows), but fails over to copy.
+
+### Referencing exposed assets
+
+When referencing exposed static assets, use either the project file path (relative to the project root folder) or a module name and relative file path to that module's root folder. E.g.:
+
+```php
+// When referencing project files, use the same path defined in your `composer.json` file.
+Requirements::javascript('app/client/dist/bundle.js');
+
+// When referencing theme files, use a path relative to the root of your project
+Requirements::javascript('themes/simple/javascript/script.js');
+
+// When referencing files from a module, you need to prefix the path with the module name.
+Requirements::javascript('silverstripe/admin:client/dist/js/bundle.js');
+```
+
+When rendered in HTML code, these URLs will be rewritten to their matching path inside the "resources" directory.
+
 ## Template Requirements API
 
 **<my-module-dir>/templates/SomeTemplate.ss**
@@ -179,7 +242,7 @@ is not appropriate. Normally a single backend is used for all site assets, so a 
 replaced. For instance, the below will set a new set of dependencies to write to `app/javascript/combined`
 
 
-```yaml
+```yml
 ---
 Name: myrequirements
 ---

@@ -22,7 +22,11 @@ class ManifestFileFinder extends FileFinder
     const LANG_DIR = 'lang';
     const TESTS_DIR = 'tests';
     const VENDOR_DIR = 'vendor';
-    const RESOURCES_DIR = 'resources';
+
+    /**
+     * @deprecated 4.4.0:5.0.0 Use global `RESOURCES_DIR` instead.
+     */
+    const RESOURCES_DIR = RESOURCES_DIR;
 
     protected static $default_options = array(
         'include_themes' => false,
@@ -241,7 +245,7 @@ class ManifestFileFinder extends FileFinder
         }
 
         // Ignore these dirs in the root only
-        if ($depth === 1 && in_array($basename, [ASSETS_DIR, self::RESOURCES_DIR])) {
+        if ($depth === 1 && in_array($basename, [ASSETS_DIR, RESOURCES_DIR])) {
             return true;
         }
 

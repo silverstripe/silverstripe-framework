@@ -17,8 +17,9 @@ class MigrateFileTask extends BuildTask
 
     protected $title = 'Migrate File dataobjects from 3.x';
 
-    protected $description
-        = 'Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0';
+    protected $description =
+        'Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0. ' .
+        'If the task fails or times out, run it again and it will start where it left off.';
 
     public function run($request)
     {
@@ -26,6 +27,11 @@ class MigrateFileTask extends BuildTask
             DB::alteration_message("No file migration helper detected", "notice");
             return;
         }
+
+        DB::alteration_message(
+            'If the task fails or times out, run it again and it will start where it left off.',
+            "info"
+        );
 
         $migrated = FileMigrationHelper::singleton()->run();
         if ($migrated) {
@@ -38,7 +44,6 @@ class MigrateFileTask extends BuildTask
             DB::alteration_message("No image thumbnail helper detected", "notice");
             return;
         }
-
         ImageThumbnailHelper::singleton()->run();
     }
 }

@@ -10,6 +10,8 @@ use SilverStripe\ORM\ManyManyList;
 /**
  * @property string Title
  * @property string DatabaseField
+ * @property array SalaryCap
+ * @property string FoundationYear
  * @method Player Captain()
  * @method Player Founder()
  * @method Player HasOneRelationship()
@@ -27,7 +29,7 @@ class Team extends DataObject implements TestOnly
 
     private static $db = array(
         'Title' => 'Varchar',
-        'DatabaseField' => 'HTMLVarchar'
+        'DatabaseField' => 'HTMLVarchar',
     );
 
     private static $has_one = array(

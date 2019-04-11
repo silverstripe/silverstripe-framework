@@ -106,7 +106,7 @@ class DropdownField extends SingleSelectField
         }
 
         return new ArrayData(array(
-            'Title' => $title,
+            'Title' => (string)$title,
             'Value' => $value,
             'Selected' => $selected,
             'Disabled' => $disabled,

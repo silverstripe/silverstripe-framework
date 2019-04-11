@@ -2,12 +2,13 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBPrimaryKey;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
-use Exception;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
 
 /**
  * Represents and handles all schema management for a database
@@ -678,6 +679,37 @@ abstract class DBSchemaManager
             $this->transCreateField($table, $field, $spec_orig);
             $this->alterationMessage("Field $table.$field: created as $spec_orig", "created");
         } elseif ($fieldValue != $specValue) {
+            // If enums/sets are being modified, then we need to fix existing data in the table.
+            // Update any records where the enum is set to a legacy value to be set to the default.
+            $enumValuesExpr = "/^(enum|set)\\s*\\(['\"](?<values>[^'\"]+)['\"]\\).*/i";
+            if (preg_match($enumValuesExpr, $specValue, $specMatches)
+                && preg_match($enumValuesExpr, $spec_orig, $oldMatches)
+            ) {
+                $new = preg_split("/'\\s*,\\s*'/", $specMatches['values']);
+                $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values']);
+
+                $holder = array();
+                foreach ($old as $check) {
+                    if (!in_array($check, $new)) {
+                        $holder[] = $check;
+                    }
+                }
+
+                if (count($holder)) {
+                    // Get default pre-escaped for SQL. We just use this directly, as we don't have a real way to
+                    // de-encode SQL values
+                        $default = explode('default ', $spec_orig);
+                    $defaultSQL = isset($default[1]) ? $default[1] : 'NULL';
+                    // Reset to default any value in that is in the old enum, but not the new one
+                    $placeholders = DB::placeholders($holder);
+                    $query = "UPDATE \"{$table}\" SET \"{$field}\" = {$defaultSQL} WHERE \"{$field}\" IN ({$placeholders})";
+                    $this->preparedQuery($query, $holder);
+                        $amount = $this->database->affectedRows();
+                    $this->alterationMessage(
+                        "Changed $amount rows to default value of field $field (Value: $defaultSQL)"
+                    );
+                }
+            }
             $this->transAlterField($table, $field, $spec_orig);
             $this->alterationMessage(
                 "Field $table.$field: changed to $specValue <i class=\"build-info-before\">(from {$fieldValue})</i>",

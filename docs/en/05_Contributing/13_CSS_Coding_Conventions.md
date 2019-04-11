@@ -31,9 +31,9 @@ Use BEM conventions where possible.
 
 ## Linting
 
-We use [sass-lint](hhttps://github.com/sasstools/sass-lint) to ensure all new SCSS
+We use [sass-lint](https://github.com/sasstools/sass-lint) to ensure all new SCSS
 written complies with the rules below. It will be provided as an npm dev dependency.
-There are also quite a few [sass-lint IDE integrations]https://github.com/sasstools/sass-lint#ide-integration) 
+There are also quite a few [sass-lint IDE integrations](https://github.com/sasstools/sass-lint#ide-integration) 
 which highlight any linting errors right in your code.
 
 We strongly recommend installing one of these into the editor of your choice, to
@@ -72,7 +72,7 @@ consider porting them over into the new structure. Otherwise, follow these conve
 - Class naming: Use the `cms-` class prefix for major components in the cms interface,
   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
 - Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
-  to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
+  to highlight a specific component. See the [jQuery UI Theming API](https://api.jqueryui.com/category/theming/) for a full list.
 
 ## Related
 

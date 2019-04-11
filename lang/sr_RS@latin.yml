@@ -18,7 +18,7 @@ sr_RS@latin:
     VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne poklapaju'
     VALIDATIONPASSWORDSNOTEMPTY: 'Polja za lozinke ne smeju da budu prazna'
     VALIDATIONSTRONGPASSWORD: 'Lozinke moraju ra sadrže bar jednu cifru i bar jedan alfanumerički znak'
-    VALIDATOR: 'Proverivač ispravnosti'
+    VALIDATOR: Proverivač ispravnosti
     VALIDCURRENCY: 'Unesite ispravnu valutu'
   SilverStripe\Forms\FormField:
     NONE: bez
@@ -31,18 +31,18 @@ sr_RS@latin:
     LinkExisting: 'Postojanje linka'
     NewRecord: 'Novi {type}'
     NoItemsFound: 'Nijedna stavka nije pronađena'
-    PRINTEDAT: Odštampano
-    PRINTEDBY: Odštampao
+    PRINTEDAT: 'Odštampano'
+    PRINTEDBY: 'Odštampao'
     PlaceHolder: 'Pronađi {type}'
     PlaceHolderWithLabels: 'Pronađi {type} po {name}'
     Print: Štampaj
     RelationSearch: 'Pretraživanje relacije'
-    ResetFilter: 'Vrati u pređašnje stanje'
+    ResetFilter: Vrati u pređašnje stanje
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Izbriši
     DeletePermissionsFailure: 'Nemate dozvolu za brisanje'
     EditPermissionsFailure: 'Nemate dozvolu da raskinete link sa zapisom'
-    UnlinkRelation: 'Raskini link'
+    UnlinkRelation: Raskini link
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Odustani
     Create: Kreiraj
@@ -60,13 +60,13 @@ sr_RS@latin:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: 'Bilo koja'
+    ANY: Bilo koja
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manje od minute'
     TIMEDIFFAGO: '{difference} ranije'
     TIMEDIFFIN: 'kroz {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: 'Bilo koji'
+    ANY: Bilo koji
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Otkrivena je beskonačna petlja u okviru "{type}" hijerarhije. Promenite roditelja da bi ste razrešili situaciju'
   SilverStripe\Security\BasicAuth:
@@ -106,7 +106,7 @@ sr_RS@latin:
     ERRORNEWPASSWORD: 'Nova lozinka koju ste uneli se ne poklapa. Pokušajte ponovo.'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne poklapa. Pokušajte ponovo.'
     ERRORWRONGCRED: 'Pruženi detalji izgleda nisu korektni. Pokušajte ponovo.'
-    FIRSTNAME: Ime
+    FIRSTNAME: 'Ime'
     INTERFACELANG: 'Jezik interfejsa'
     LOGGEDINAS: 'Prijavljeni ste kao {name}.'
     NEWPASSWORD: 'Nova lozinka'
@@ -149,6 +149,6 @@ sr_RS@latin:
     CHANGEPASSWORDHEADER: 'Promeni moju lozinku'
     ENTERNEWPASSWORD: 'Unesite novu lozinku.'
     ERRORPASSWORDPERMISSION: 'Morate da budete prijavljeni da biste promenili svoju lozinku!'
-    LOGIN: Prijavljivanje
+    LOGIN: 'Prijavljivanje'
     NOTEPAGESECURED: 'Ova strana je obezbeđena. Unesite svoje podatke i mi ćemo vam poslati sadržaj.'
     NOTERESETPASSWORD: 'Unesite svoju adresu e-pošte i mi ćemo vam poslati link pomoću kojeg možete da promenite svoju lozinku'

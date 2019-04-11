@@ -1014,6 +1014,7 @@ SilverStripe\GraphQL\Manager:
             fields: [ID, LastEdited]
             operations:
               readOne: true
+              rollback: true
           SilverStripe\Security\Member:
             fields: [ID, FirstName, Surname]
             operations:
@@ -1087,7 +1088,7 @@ const config = {
       variables: {
         limit,
         offset: ((page || 1) - 1) * limit,
-        block_id: recordId,
+        id: recordId,
       }
     };
   },
@@ -1125,7 +1126,7 @@ const config = {
             refetch({
               offset: ((page || 1) - 1) * limit,
               limit,
-              block_id: recordId,
+              id: recordId,
             });
           }
         },

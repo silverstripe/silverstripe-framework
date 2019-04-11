@@ -133,15 +133,15 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         $exists = $resource->exists();
         $absolutePath = $resource->getPath();
 
-        // Rewrite to resources with public directory
+        // Rewrite to _resources with public directory
         if (Director::publicDir()) {
-            // All resources mapped directly to resources/
-            $relativePath = Path::join(ManifestFileFinder::RESOURCES_DIR, $relativePath);
+            // All resources mapped directly to _resources/
+            $relativePath = Path::join(RESOURCES_DIR, $relativePath);
         } elseif (stripos($relativePath, ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
             // @todo Non-public dir support will be removed in 5.0, so remove this block there
-            // If there is no public folder, map to resources/ but trim leading vendor/ too (4.0 compat)
+            // If there is no public folder, map to _resources/ but trim leading vendor/ too (4.0 compat)
             $relativePath = Path::join(
-                ManifestFileFinder::RESOURCES_DIR,
+                RESOURCES_DIR,
                 substr($relativePath, strlen(ManifestFileFinder::VENDOR_DIR))
             );
         }
@@ -167,10 +167,10 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         $absolutePath = Path::join(Director::baseFolder(), $relativePath);
         $exists = file_exists($absolutePath);
 
-        // Rewrite vendor/ to resources/ folder
+        // Rewrite vendor/ to _resources/ folder
         if (stripos($relativePath, ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
             $relativePath = Path::join(
-                ManifestFileFinder::RESOURCES_DIR,
+                RESOURCES_DIR,
                 substr($relativePath, strlen(ManifestFileFinder::VENDOR_DIR))
             );
         }
@@ -200,7 +200,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
 
     /**
      * Resolve a resource that may either exist in a public/ folder, or be exposed from the base path to
-     * public/resources/
+     * public/_resources/
      *
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]
@@ -217,11 +217,11 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             return [true, $publicPath, $relativePath];
         }
 
-        // Fall back to private path (and assume expose will make this available to resources/)
+        // Fall back to private path (and assume expose will make this available to _resources/)
         $privatePath = Path::join(Director::baseFolder(), $relativePath);
         if (!$publicOnly && file_exists($privatePath)) {
-            // String is private but exposed to resources/, so rewrite to the symlinked base
-            $relativePath = Path::join(ManifestFileFinder::RESOURCES_DIR, $relativePath);
+            // String is private but exposed to _resources/, so rewrite to the symlinked base
+            $relativePath = Path::join(RESOURCES_DIR, $relativePath);
             return [true, $privatePath, $relativePath];
         }
 

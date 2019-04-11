@@ -30,7 +30,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     {
         $this->controller = $controller;
 
-        $this->authenticator_class = $authenticatorClass;
+        $this->setAuthenticatorClass($authenticatorClass);
 
         $fields = $this->getFormFields();
 
@@ -48,7 +48,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     {
         // Set default fields
         $fields = FieldList::create([
-            HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
+            HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         ]);

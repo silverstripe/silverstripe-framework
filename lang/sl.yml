@@ -31,7 +31,7 @@ sl:
     NewRecord: 'Novih {type}'
     NoItemsFound: 'Ni rezultatov'
     PRINTEDAT: 'Tiskano pri'
-    PRINTEDBY: Natisnil
+    PRINTEDBY: 'Natisnil'
     PlaceHolder: 'Poišči {type} '
     PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
     Print: Natisni
@@ -40,7 +40,7 @@ sl:
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-    UnlinkRelation: 'Odstrani povezavo'
+    UnlinkRelation: Odstrani povezavo
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -84,12 +84,12 @@ sl:
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
   SilverStripe\Security\LoginAttempt:
-    IP: IP-naslov
+    IP: 'IP-naslov'
     Status: Stanje
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
-    BUTTONLOGIN: Prijava
+    BUTTONLOGIN: 'Prijava'
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
@@ -100,8 +100,8 @@ sl:
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
-    FIRSTNAME: Ime
-    INTERFACELANG: Jezik
+    FIRSTNAME: 'Ime'
+    INTERFACELANG: 'Jezik'
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo
@@ -132,7 +132,7 @@ sl:
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
-    LOGIN: Prijava
+    LOGIN: 'Prijava'
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'

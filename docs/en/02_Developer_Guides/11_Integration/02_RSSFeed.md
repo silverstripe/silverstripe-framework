@@ -55,7 +55,7 @@ RSSFeed::linkToFeed($link, $title);
 You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a feed showing your latest Page updates. The following example adds a page
 `/home/rss/` which displays an XML file the latest updated pages.
 
-**app/code/Page.php**
+**app/code/PageController.php**
 
 ```php
 use SilverStripe\Control\RSS\RSSFeed;
@@ -71,7 +71,7 @@ class PageController extends ContentController
     {
         parent::init();
 
-        RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
+        RSSFeed::linkToFeed($this->Link("rss"), "10 Most Recently Updated Pages");
     }
 
     public function rss() 

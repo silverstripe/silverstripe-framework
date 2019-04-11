@@ -35,7 +35,11 @@ abstract class HTMLValue extends ViewableData
      */
     public function getContent()
     {
-        $doc = clone $this->getDocument();
+        $document = $this->getDocument();
+        if (!$document) {
+            return '';
+        }
+        $doc = clone $document;
         $xp = new DOMXPath($doc);
 
         // If there's no body, the content is empty string

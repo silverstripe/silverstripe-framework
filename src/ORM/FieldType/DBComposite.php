@@ -339,4 +339,9 @@ abstract class DBComposite extends DBField
             ];
         }
     }
+
+    public function scalarValueOnly()
+    {
+        return false;
+    }
 }

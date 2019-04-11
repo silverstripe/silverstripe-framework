@@ -1284,6 +1284,12 @@ warnings:
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
     'days_between()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
+    'SilverStripe\Security\Permission::get_declared_permissions_list()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::get_label_for_permission()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::traverse_declared_permissions()':
+      message: 'Deprecated'
     'SilverStripe\Control\Session::get_all()':
       message: 'Session can not be accessed statically and `get_all()` is now called `getAll()'
     'SilverStripe\Control\Session::clear_all()':
@@ -1319,6 +1325,12 @@ warnings:
       replacement: 'writeJavascriptToBody'
     'SilverStripe\Forms\Formfield->dontEscape':
       message: 'FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.'
+    'SilverStripe\Security\LoginForm->authenticator_class':
+      message: 'authenticator_class is deprecated. Use getAuthenticatorClass/setAuthenticatorClass.'
+    'SilverStripe\Security\Permission::$declared_permissions':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::$declared_permissions_list':
+      message: 'Deprecated'
   functions:
     'file_get_contents()':
       message: 'Use new asset abstraction'
@@ -1372,3 +1384,148 @@ warnings:
     'THIRDPARTY_DIR':
       message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'SilverStripe\Core\Manifest\ManifestFileFinder::RESOURCES_DIR':
+      message: 'Use global const RESOURCES_DIR'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.4.0#resources-dir'
+      replacement: 'RESOURCES_DIR'
+
+renameWarnings:
+  - Form
+
+visibilities:
+  'SilverStripe\ORM\DataObject::db':
+    visibility: private
+  'SilverStripe\ORM\DataObject::singular_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject::plural_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject::api_access':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_classname':
+    visibility: private
+  'SilverStripe\ORM\DataObject->destroyed':
+    visibility: public
+  'SilverStripe\ORM\DataObject->record':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->joinRecord':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->changed':
+    visibility: private
+  'SilverStripe\ORM\DataObject->changeForced':
+    visibility: private
+  'SilverStripe\ORM\DataObject->original':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->brokenOnDelete':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->brokenOnWrite':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::validation_enabled':
+    visibility: private
+  'SilverStripe\ORM\DataObject::_cache_get_one':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::_cache_field_labels':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::fixed_fields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::table_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject->components':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->unsavedRelations':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::cascade_deletes':
+    visibility: private
+  'SilverStripe\ORM\DataObject::cascade_duplicates':
+    visibility: private
+  'SilverStripe\ORM\DataObject::sourceQueryParams':
+    visibility: private
+  'SilverStripe\ORM\DataObject::subclass_access':
+    visibility: private
+  'SilverStripe\ORM\DataObject::casting':
+    visibility: private
+  'SilverStripe\ORM\DataObject::create_table_options':
+    visibility: private
+  'SilverStripe\ORM\DataObject::indexes':
+    visibility: private
+  'SilverStripe\ORM\DataObject::defaults':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_records':
+    visibility: private
+  'SilverStripe\ORM\DataObject::has_one':
+    visibility: private
+  'SilverStripe\ORM\DataObject::belongs_to':
+    visibility: private
+  'SilverStripe\ORM\DataObject::has_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::many_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::many_many_extraFields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::belongs_many_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_sort':
+    visibility: private
+  'SilverStripe\ORM\DataObject::searchable_fields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::field_labels':
+    visibility: private
+  'SilverStripe\ORM\DataObject::summary_fields':
+    visibility: private
+  'SilverStripe\Control\Director::rules':
+    visibility: private
+  'SilverStripe\Control\Director::current_page':
+    visibility: private
+  'SilverStripe\Control\Director::alternate_base_folder':
+    visibility: private
+  'SilverStripe\Control\Director::alternate_public_dir':
+    visibility: private
+  'SilverStripe\Control\Director::default_base_url':
+    visibility: private
+  'SilverStripe\Forms\GridField\GridFieldPaginator::default_items_per_page':
+    visibility: private
+  'SilverStripe\View\SSViewer::themes':
+    visibility: private
+  'SilverStripe\View\SSViewer::current_themes':
+    visibility: protected
+  'SilverStripe\View\SSViewer::theme':
+    visibility: private
+  'SilverStripe\View\SSViewer::theme_enabled':
+    visibility: private
+  'SilverStripe\View\SSViewer::global_key':
+    visibility: private
+  'SilverStripe\View\SSViewer::source_file_comments':
+    visibility: private
+  'SilverStripe\View\SSViewer::rewrite_hash_links':
+    visibility: private
+  'SilverStripe\View\SSViewer::current_rewrite_hash_links':
+    visibility: protected
+  'SilverStripe\View\SSViewer::rewriteHashlinks':
+    visibility: protected
+  'SilverStripe\View\SSViewer::template_cache_flushed':
+    visibility: private
+  'SilverStripe\View\SSViewer::cacheblock_cache_flushed':
+    visibility: private
+  'SilverStripe\View\SSViewer::topLevel':
+    visibility: protected
+  'SilverStripe\View\SSViewer::templates':
+    visibility: protected
+  'SilverStripe\View\SSViewer::chosen':
+    visibility: protected
+  'SilverStripe\View\SSViewer::subTemplates':
+    visibility: protected
+  'SilverStripe\View\SSViewer::includeRequirements':
+    visibility: protected
+  'SilverStripe\View\SSViewer::parser':
+    visibility: protected
+  'SilverStripe\View\SSViewer::partialCacheStore':
+    visibility: protected
+
+classToTraits:
+  SS_Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
+  Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'

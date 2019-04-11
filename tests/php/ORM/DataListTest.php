@@ -11,6 +11,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
@@ -950,6 +951,27 @@ class DataListTest extends SapphireTest
             'ID:GreaterThan' => 0,
         ));
         $this->assertCount(4, $list);
+    }
+
+    public function testFilterAnyWithTwoGreaterThanFilters()
+    {
+
+        for ($i=1; $i<=3; $i++) {
+            $f = new Fixture();
+            $f->MyDecimal = $i;
+            $f->write();
+
+            $f = new Fixture();
+            $f->MyInt = $i;
+            $f->write();
+        }
+
+        $list = Fixture::get()->filterAny([
+            'MyDecimal:GreaterThan' => 1, // 2 records
+            'MyInt:GreaterThan' => 2, // 1 record
+        ]);
+
+        $this->assertCount(3, $list);
     }
 
     public function testFilterAnyMultipleArray()

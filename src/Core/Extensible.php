@@ -374,6 +374,10 @@ trait Extensible
             if (!$strict && is_subclass_of($extension, $requiredExtension)) {
                 return true;
             }
+            $inst = Injector::inst()->get($extension);
+            if ($inst instanceof $requiredExtension) {
+                return $strict ? strcasecmp(get_class($inst), $requiredExtension) === 0 : true;
+            }
         }
 
         return false;

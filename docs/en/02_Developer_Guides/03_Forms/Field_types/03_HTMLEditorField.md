@@ -164,7 +164,7 @@ HtmlEditorConfig::get('cms')->setOption(
 
 <div class="notice" markdown="1">
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
-`vendor/silverstripe/framework/admin/_config.php`.
+`vendor/silverstripe/admin/_config.php`.
 </div>
 
 ## Writing custom plugins

@@ -252,7 +252,7 @@ class MyDataObject extends DataObject
         'HeroImage.CMSThumbnail' => 'Hero',
     ];
 }
-
+```
 ## Related Documentation
 
 * [SearchFilters](searchfilters)

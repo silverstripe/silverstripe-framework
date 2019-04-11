@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Logging;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Handler\AbstractProcessingHandler;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Formatter\FormatterInterface;
 
 /**
  * Output the error to the browser, with the given HTTP status code.
@@ -79,7 +79,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     /**
      * Set a formatter to use if Director::is_cli() is true
      *
-     * @param $cliFormatter
+     * @param FormatterInterface $cliFormatter
      * @return HTTPOutputHandler Return $this to allow chainable calls
      */
     public function setCLIFormatter(FormatterInterface $cliFormatter)
@@ -153,12 +153,12 @@ class HTTPOutputHandler extends AbstractProcessingHandler
             $response = new HTTPResponse();
         }
 
-        // If headers have been sent then these won't be used, and may throw errors that we wont' want to see.
+        // If headers have been sent then these won't be used, and may throw errors that we won't want to see.
         if (!headers_sent()) {
             $response->setStatusCode($this->getStatusCode());
             $response->addHeader('Content-Type', $this->getContentType());
         } else {
-            // To supress errors aboot errors
+            // To suppress errors about errors
             $response->setStatusCode(200);
         }
 

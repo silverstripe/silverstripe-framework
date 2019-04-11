@@ -284,7 +284,7 @@ SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
 ### Configuring: Archive behaviour
 
 By default, the default extension `AssetControlExtension` will control the disposal of assets
-attached to objects when those objects are archived. For example, unpublished versioned objects
+attached to objects when those objects are archived or replaced. For example, unpublished versioned objects
 will automatically have their attached assets moved to the protected store. The archive of 
 draft or (or deletion of unversioned objects) will have those assets permanantly deleted
 (along with all variants).

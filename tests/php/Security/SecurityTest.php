@@ -10,6 +10,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
@@ -51,6 +52,17 @@ class SecurityTest extends FunctionalTest
                 'default_authenticator',
                 MemberAuthenticator::class
             );
+
+        // Set the default authenticator to use for these tests
+        Injector::inst()->load([
+            Security::class => [
+                'properties' => [
+                    'Authenticators' => [
+                        'default' => '%$' . MemberAuthenticator::class,
+                    ],
+                ],
+            ],
+        ]);
 
         /**
          * @skipUpgrade

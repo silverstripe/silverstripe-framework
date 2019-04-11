@@ -30,9 +30,16 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
  * One of the following databases: 
-   * MySQL 5.0+
-   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
-   * [SQL Server 2008+](http://silverstripe.org/microsoft-sql-server-database/), [Oracle](https://github.com/smindel/silverstripe-oracle) and [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
+   * MySQL 5.6+
+   * PostgreSQL 9.4+ (requires ["silverstripe/postgresql" module](http://silverstripe.org/postgresql-module))
+     * Warning: PostgreSQL has some known issues with collations when installed on Alpine, MacOS X and BSD derivatives
+     (see [PostgreSQL FAQ](https://wiki.postgresql.org/wiki/FAQ#Why_do_my_strings_sort_incorrectly.3F)).  
+     We do not support such installations, although they still may work correctly for you.  
+     As a workaround for PostgreSQL 10+ you could manually switch to ICU collations (e.g. und-x-icu).
+     There are no known workarounds for PostgreSQL <10.
+   * [SQL Server](http://silverstripe.org/microsoft-sql-server-database/),
+     [Oracle](https://github.com/smindel/silverstripe-oracle) and
+     [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
  * One of the following web server products: 
    * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
    * IIS 7+
