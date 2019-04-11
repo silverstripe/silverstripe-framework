@@ -186,11 +186,11 @@ class Environment
     public static function getEnv($name)
     {
         switch (true) {
-            case  is_array(static::$env) && array_key_exists($name, static::$env):
+            case is_array(static::$env) && array_key_exists($name, static::$env):
                 return static::$env[$name];
-            case  is_array($_ENV) && array_key_exists($name, $_ENV):
+            case is_array($_ENV) && array_key_exists($name, $_ENV):
                 return $_ENV[$name];
-            case  is_array($_SERVER) && array_key_exists($name, $_SERVER):
+            case is_array($_SERVER) && array_key_exists($name, $_SERVER):
                 return $_SERVER[$name];
             default:
                 return getenv($name);

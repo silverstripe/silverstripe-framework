@@ -930,10 +930,19 @@ class DataObjectTest extends SapphireTest
 
         $obj->write();
         $obj->FirstName = null;
-        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Unchanged property was marked as changed');
+        $this->assertFalse(
+            $obj->isChanged('FirstName', DataObject::CHANGE_STRICT),
+            'Unchanged property was marked as changed'
+        );
         $obj->FirstName = 0;
-        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Strict (type) change was not detected');
-        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE), 'Type-only change was marked as a value change');
+        $this->assertTrue(
+            $obj->isChanged('FirstName', DataObject::CHANGE_STRICT),
+            'Strict (type) change was not detected'
+        );
+        $this->assertFalse(
+            $obj->isChanged('FirstName', DataObject::CHANGE_VALUE),
+            'Type-only change was marked as a value change'
+        );
 
         /* Test when there's not field provided */
         $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');

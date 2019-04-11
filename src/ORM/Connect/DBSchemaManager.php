@@ -702,7 +702,8 @@ abstract class DBSchemaManager
                     $defaultSQL = isset($default[1]) ? $default[1] : 'NULL';
                     // Reset to default any value in that is in the old enum, but not the new one
                     $placeholders = DB::placeholders($holder);
-                    $query = "UPDATE \"{$table}\" SET \"{$field}\" = {$defaultSQL} WHERE \"{$field}\" IN ({$placeholders})";
+                    $query = "UPDATE \"{$table}\" SET \"{$field}\" = {$defaultSQL} WHERE \"{$field}\" IN "
+                        . "({$placeholders})";
                     $this->preparedQuery($query, $holder);
                         $amount = $this->database->affectedRows();
                     $this->alterationMessage(
