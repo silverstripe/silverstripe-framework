@@ -283,6 +283,10 @@ abstract class SQLConditionalExpression extends SQLExpression
             // array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1",
             // "Status = 'approved'", 'order' => 20))
             if (!is_array($join)) {
+                if (!empty($alias) && !is_numeric($alias) && $alias !== trim($join, '"')) {
+                    $trimmedAlias = trim($alias, '"');
+                    $joins[$alias] = "{$join} AS \"{$trimmedAlias}\"";
+                }
                 continue;
             }
 
@@ -321,8 +325,15 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     protected function getOrderedJoins($from)
     {
+        if (count($from) <= 1) {
+            return $from;
+        }
+
         // shift the first FROM table out from so we only deal with the JOINs
+        reset($from);
+        $baseFromAlias = key($from);
         $baseFrom = array_shift($from);
+
         $this->mergesort($from, function ($firstJoin, $secondJoin) {
             if (!is_array($firstJoin)
                 || !is_array($secondJoin)
@@ -335,7 +346,12 @@ abstract class SQLConditionalExpression extends SQLExpression
         });
 
         // Put the first FROM table back into the results
-        array_unshift($from, $baseFrom);
+        if (!empty($baseFromAlias) && !is_numeric($baseFromAlias)) {
+            $from = array_merge([$baseFromAlias => $baseFrom], $from);
+        } else {
+            array_unshift($from, $baseFrom);
+        }
+
         return $from;
     }
 

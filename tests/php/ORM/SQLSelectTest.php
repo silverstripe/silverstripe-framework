@@ -830,5 +830,21 @@ class SQLSelectTest extends SapphireTest
         $sql = $query->sql();
 
         $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['MyTableAlias' => '"MyTable"']);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['"MyTableAlias"' => '"MyTable"']);
+        $query->addLeftJoin('OtherTable', '"Thing" = "OtherThing"', 'OtherTableAlias');
+        $sql = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT * 
+              FROM "MyTable" AS "MyTableAlias" 
+              LEFT JOIN "OtherTable" AS "OtherTableAlias" ON "Thing" = "OtherThing"',
+            $sql
+        );
     }
 }
