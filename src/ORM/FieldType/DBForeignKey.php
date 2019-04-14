@@ -87,12 +87,29 @@ class DBForeignKey extends DBInt
 
         // Add the count of the list to a cache for subsequent calls
         if (!isset(static::$foreignListCache[$hasOneClass])) {
+            // Let the DB do the threshold check as it will be faster - depending on the SQL engine it might only have
+            // to count indexes
+            $dataQuery = $list->dataQuery()->getFinalisedQuery();
+
+            $distinct = $dataQuery->getDistinct();
+            $count = '*';
+
+            if ($distinct) {
+                $dataQuery->setDistinct(false);
+                $count = 'DISTINCT *';
+            }
+
+            $dataQuery->setOrderBy(false);
+            $dataQuery->setSelect(['over_threshold' => 'count('. $count . ') > ' . (int) $threshold]);
+            $result = $dataQuery->execute()->column('over_threshold')[0];
             static::$foreignListCache[$hasOneClass] = [
-                'count' => $list->count(),
+                'overThreshold' => is_bool($result) ? $result : ($result === '1' || $result === 't'),
             ];
         }
 
-        if (static::$foreignListCache[$hasOneClass]['count'] < $threshold) {
+        $overThreshold = static::$foreignListCache[$hasOneClass]['overThreshold'];
+
+        if (!$overThreshold) {
             // Add the mapped list for the cache
             if (!isset(static::$foreignListCache[$hasOneClass]['map'])) {
                 static::$foreignListCache[$hasOneClass]['map'] = $list->map('ID', $titleField);
