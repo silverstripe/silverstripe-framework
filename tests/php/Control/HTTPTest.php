@@ -246,13 +246,13 @@ class HTTPTest extends FunctionalTest
         }, 'relative/url/');
 
         $this->assertEquals(
-            'relative/url?foo=bar',
+            '/relative/url?foo=bar',
             HTTP::setGetVar('foo', 'bar', 'relative/url'),
             'Relative URL without existing query params'
         );
 
         $this->assertEquals(
-            'relative/url?baz=buz&foo=bar',
+            '/relative/url?baz=buz&foo=bar',
             HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
             'Relative URL with existing query params, and new added key'
         );
