@@ -1242,4 +1242,50 @@ class DataObjectSchema
             );
         }
     }
+
+    /**
+     * @param string|object $baseClass
+     * @param bool $includeBaseClass Whether to include fields in the base class or not
+     * @param string|array $fieldNames The field to get mappings for, for example 'HTMLText'. Can also be an array.
+     * @return array Returns an array of the fields available for the provided class and its sub-classes as follows:
+     * <code>
+     * [
+     *  'ClassName' => [
+     *      'TableName' => [
+     *          'FieldName',
+     *          'FieldName2',
+     *      ],
+     *      'TableName2' => [
+     *          'FieldName3',
+     *      ],
+     *    ],
+     * ]
+     * </code>
+     * @throws \ReflectionException
+     */
+    public static function getFieldMap($baseClass, $includeBaseClass, $fieldNames)
+    {
+        $mapping = [];
+
+        foreach (ClassInfo::subclassesFor($baseClass, $includeBaseClass) as $class) {
+            /** @var DataObject $fields */
+            $fields = $class::singleton()->getSchema()->fieldSpecs($class);
+            foreach ($fields as $field => $type) {
+                if (in_array($type, $fieldNames)) {
+                    $table = $class::singleton()->getSchema()->tableForField($class, $field);
+                    if (!isset($mapping[$class])) {
+                        $mapping[$class] = [];
+                    }
+                    if (!isset($mapping[$class][$table])) {
+                        $mapping[$class][$table] = [];
+                    }
+                    if (!in_array($field, $mapping[$class][$table])) {
+                        $mapping[$class][$table][] = $field;
+                    }
+                }
+            }
+        }
+
+        return $mapping;
+    }
 }

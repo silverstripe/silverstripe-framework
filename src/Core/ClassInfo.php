@@ -560,49 +560,4 @@ class ClassInfo
         static::$_cache_parse[$classSpec] = $result;
         return $result;
     }
-
-    /**
-     * @param string|object $baseClass
-     * @param bool $includeBaseClass Whether to include fields in the base class or not
-     * @param string $fieldName The field to get mappings for, for example 'HTMLText'
-     * @return array Returns an array of the fields available for the provided class and its sub-classes as follows:
-     * <code>
-     * [
-     *  'ClassName' => [
-     *      'TableName' => [
-     *          'FieldName',
-     *          'FieldName2',
-     *      ],
-     *      'TableName2' => [
-     *          'FieldName3',
-     *      ],
-     *    ],
-     * ]
-     * </code>
-     * @throws \ReflectionException
-     */
-    public static function getFieldMap($baseClass, bool $includeBaseClass, string $fieldName)
-    {
-        $mapping = [];
-
-        foreach (static::subclassesFor($baseClass, $includeBaseClass) as $class) {
-            $fields = $class::singleton()->getSchema()->fieldSpecs($class);
-            foreach ($fields as $field => $type) {
-                if ($type == $fieldName) {
-                    $table = $class::singleton()->getSchema()->tableForField($class, $field);
-                    if (!isset($mapping[$class])) {
-                        $mapping[$class] = [];
-                    }
-                    if (!isset($mapping[$class][$table])) {
-                        $mapping[$class][$table] = [];
-                    }
-                    if (!in_array($field, $mapping[$class][$table])) {
-                        $mapping[$class][$table][] = $field;
-                    }
-                }
-            }
-        }
-
-        return $mapping;
-    }
 }
