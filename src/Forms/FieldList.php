@@ -379,14 +379,16 @@ class FieldList extends ArrayList
      *
      * @param string $fieldName The name of the field to replace
      * @param FormField $newField The field object to replace with
+     * @param boolean $dataFieldOnly If this is true, then a field will only be replaced if it's a data field.  Dataless
+     *                               fields, such as tabs, will be not be considered for replacement.
      * @return boolean TRUE field was successfully replaced
      *                   FALSE field wasn't found, nothing changed
      */
-    public function replaceField($fieldName, $newField)
+    public function replaceField($fieldName, $newField, $dataFieldOnly = true)
     {
         $this->flushFieldsCache();
         foreach ($this as $i => $field) {
-            if ($field->getName() == $fieldName && $field->hasData()) {
+            if ($field->getName() == $fieldName && (!$dataFieldOnly || $field->hasData())) {
                 $this->items[$i] = $newField;
                 return true;
             } elseif ($field instanceof CompositeField) {
