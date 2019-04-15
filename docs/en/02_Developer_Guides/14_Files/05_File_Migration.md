@@ -19,9 +19,25 @@ $ ./vendor/bin/sake dev/tasks/MigrateFileTask
 This task will also support migration of existing File objects to file versioning. Any
 pre-existing File objects will be automatically published to the live stage, to ensure
 that previously visible assets remain visible to the public site.
-
 If additional security or visibility rules should be applied to File dataobjects, then
 make sure to correctly extend `canView` via extensions.
+
+Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0.
+Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI.
+If the task fails or times out, run it again and it will start where it left off.
+
+Arguments:
+
+ - `only`: Comma separated list of tasks to run on the multi-step migration (see "Available subtasks").
+   Example: `only=move-files,move-thumbnails`
+
+Availabile subtasks:
+
+ - `move-files`: The main task, moves database and filesystem data
+ - `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
+    This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
+ - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
+    This can be a CPU and memory intensive task for large asset stores.
 
 ## Automatic migration
 
@@ -37,14 +53,12 @@ SilverStripe\Assets\File:
 
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
 
-## Migration of thumbnails
+## Migration of existing thumbnails
 
-If you have the [asset admin](https://github.com/silverstripe/silverstripe-asset-admin) module installed
-this will also ensure that thumbnails for these images are generated when running 'MigrateFileTask'.
-Existing thumbnails will not be migrated however, and must be re-generated for use in the CMS.
-
-Note: Thumbnails can be regenerated on a one-by-one basis within the CMS by re-saving it
-within the file edit details form.
+Thumbnails generated through SilverStripe's image manipulation layer can be created by authors
+resizing images in the rich text editor, through template or PHP code, or by SilverStripe's built-in CMS logic.
+They are now called "variants", and are placed in a different folder structure. In order to avoid re-generating those thumbnails,
+and cluttering up your asset store with orphaned files, the task will move them to the new location by default.
 
 ## Discarded files during migration
 
