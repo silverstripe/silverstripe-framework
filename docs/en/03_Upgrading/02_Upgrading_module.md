@@ -140,7 +140,7 @@ You can do this manually:
 -    }
 +    },
 +    "autoload": {
-+        "psr4": {
++        "psr-4": {
 +            "ExampleUser\\SilverstripeExampleModule\\": "code/",
 +            "ExampleUser\\SilverstripeExampleModule\\Tests\\": "tests/"
 +        }
@@ -270,12 +270,12 @@ You'll need to update your module's `composer.json` file with an `extra.expose` 
         "silverstripe/vendor-plugin": "^1"
     },
     "autoload": {
-        "psr4": {
+        "psr-4": {
             "ExampleUser\\SilverstripeExampleModule\\": "code/"
         }
     },
     "autoload-dev": {
-        "psr4": {
+        "psr-4": {
             "ExampleUser\\SilverstripeExampleModule\\Tests\\": "tests/"
         }
 -    }
