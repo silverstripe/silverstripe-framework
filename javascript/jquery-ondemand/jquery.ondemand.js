@@ -109,9 +109,12 @@
 					$.ajax({
 						dataType: 'script',
 						url: newJsInclude,
-						success: function() {
+						complete: function() {
 							self._ondemand_loaded_list[newJsInclude] = 1;
 							getScriptQueue();
+						},
+						error: function(xhr, status, error) {
+							console.error(error);
 						},
 						cache: false,
 						// jQuery seems to override the XHR objects if used in async mode
