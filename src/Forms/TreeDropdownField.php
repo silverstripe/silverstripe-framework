@@ -953,7 +953,7 @@ class TreeDropdownField extends FormField
 
         $item = DataObject::singleton($this->getSourceObject());
         $emptyString = _t(
-            'SilverStripe\\Forms\\DropdownField.CHOOSE_MODEL',
+            'SilverStripe\\Forms\\DropdownField.SEARCH_OR_CHOOSE_MODEL',
             '(Search or choose {name})',
             ['name' => $item->i18n_singular_name()]
         );
