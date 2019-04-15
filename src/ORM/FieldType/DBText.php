@@ -206,8 +206,8 @@ class DBText extends DBString
         if ($position > 0) {
             // We don't want to start mid-word
             $position = max(
-                (int) mb_strrpos(substr($text, 0, $position), ' '),
-                (int) mb_strrpos(substr($text, 0, $position), "\n")
+                (int) mb_strrpos(mb_substr($text, 0, $position), ' '),
+                (int) mb_strrpos(mb_substr($text, 0, $position), "\n")
             );
         }
 
