@@ -39,18 +39,6 @@ Availabile subtasks:
  - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
     This can be a CPU and memory intensive task for large asset stores.
 
-## Automatic migration
-
-Migration can be invoked by either this task, or can be configured to automatically run during dev build
-by setting the `File.migrate_legacy_file` config to true. However, it's recommended that this task is
-run manually during an explicit migration process, as this process could potentially consume large
-amounts of memory and run for an extended time.
-
-```yml
-SilverStripe\Assets\File:
-  migrate_legacy_file: true
-```
-
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
 
 ## Migration of existing thumbnails
