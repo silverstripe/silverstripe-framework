@@ -149,8 +149,9 @@ a single entity for access control, so specific variants cannot be individually 
 
 ## How file access is protected
 
-Public urls to files do not change, regardless of whether the file is protected or public. Similarly,
-operations which modify files do not normally need to be told whether the file is protected or public
+Filesystem paths can change depending if the file is protected or public,
+but its public URL stays the same. You just need to use SilverStripe's APIs to generate URLs to those files.
+Similarly, operations which modify files do not normally need to be told whether the file is protected or public
 either. This provides a consistent method for interacting with files.
 
 In day to day operation, moving assets to or between either of these stores does not normally
@@ -175,13 +176,13 @@ assets/
 
 The urls for these two files, however, do not reflect the physical structure directly.
 
-* `http://www.example.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
-  and will not invoke a php request.
-* `http://www.example.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
+* The public file at `http://www.example.com/assets/OldCompanyLogo.gif` will be served directly from the web server,
+  and will not invoke a PHP request.
+* The protected file at `http://www.example.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
   which will be passed to the `[ProtectedFileController](api:SilverStripe\Assets\Storage\ProtectedFileController)` controller, which will serve
   up the content of the hidden file, conditional on a permission check.
 
-When the file `NewCompanyLogo.gif` is made public, the url will not change, but the file location
+When the file `NewCompanyLogo.gif` is made public, the file
 will be moved to `assets/NewCompanyLogo.gif`, and will be served directly via
 the web server, bypassing the need for additional PHP requests.
 
