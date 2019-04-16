@@ -98,6 +98,8 @@ class DBForeignKey extends DBInt
 
             $dataQuery->setSelect(['over_threshold' => 'count(*) > ' . (int) $threshold]);
             $result = $dataQuery->execute()->column('over_threshold');
+
+            // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
             $overThreshold = !empty($result) && ($result[0] === 't' ||  (int) $result[0] === 1);
 
             static::$foreignListCache[$hasOneClass] = [
