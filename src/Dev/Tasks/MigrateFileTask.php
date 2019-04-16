@@ -2,21 +2,16 @@
 
 namespace SilverStripe\Dev\Tasks;
 
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
-use SilverStripe\Assets\LegacyThumbnailMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
+use SilverStripe\Assets\FileMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Tests\Injector\InjectorTest;
-use SilverStripe\Logging\HTTPOutputHandler;
 use SilverStripe\Logging\PreformattedEchoHandler;
-use SilverStripe\ORM\DB;
-use SilverStripe\Assets\FileMigrationHelper;
 use SilverStripe\Dev\BuildTask;
 
 /**
