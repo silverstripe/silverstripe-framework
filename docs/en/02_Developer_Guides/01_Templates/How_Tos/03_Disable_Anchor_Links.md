@@ -37,17 +37,19 @@ SilverStripe\View\SSViewer:
   rewrite_hash_links: false
 ```
 
-Or, a better way is to call this just for the rendering phase of this particular file:
+Alternatively, it's possible to disable anchor link rewriting for specific pages using the `SSViewer::setRewriteHashLinksDefault()` method in the page controller:
 
 ```php
+namespace Example\HashLink;
+
+use PageController;
 use SilverStripe\View\SSViewer;
 
-public function RenderCustomTemplate() 
+class ExamplePageController extends PageController
 {
-    SSViewer::setRewriteHashLinks(false);
-    $html = $this->renderWith('My/Namespace/MyCustomTemplate');
-    SSViewer::setRewriteHashLinks(true);
-
-    return $html;
+    protected function init() {
+        parent::init();
+        SSViewer::setRewriteHashLinksDefault(false);
+    }
 }
 ```
