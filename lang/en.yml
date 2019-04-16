@@ -48,7 +48,7 @@ en:
     VALIDDATETIMEMINDATE: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choose)
-    CHOOSE_MODEL: '(Choose {name})'
+    SEARCH_OR_CHOOSE_MODEL: '(Search or choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
