@@ -466,11 +466,16 @@ class DataQuery
         $statement = $this->getFinalisedQuery();
         $statement->setSelect('*');
 
-        // Clear limit, distinct, grouping, and order as it's not relevant for an exists query
+        // Clear limit, distinct, and order as it's not relevant for an exists query
         $statement->setDistinct(false);
         $statement->setOrderBy(null);
-        $statement->setGroupBy(null);
         $statement->setLimit(null);
+
+        // We can remove grouping if there's no "having" that might be relying on an aggregate
+        $having = $statement->getHaving();
+        if (empty($having)) {
+            $statement->setGroupBy(null);
+        }
 
         // Wrap the whole thing in an "EXISTS"
         $sql = 'SELECT EXISTS(' . $statement->sql($params) . ')';
