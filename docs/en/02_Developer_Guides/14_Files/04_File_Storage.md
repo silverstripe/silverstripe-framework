@@ -136,15 +136,29 @@ assets/
             my-file.jpg
 ```
 
-## Archived file paths
+## Versioned and archived files
 
-Archived files (deleted from both draft and live stages) are kept as well,
-following the same rules as [protected file paths](#protected-file-paths),
-if you have opted into keeping them via:
+By default, when files are replaced or removed, their original file contents
+aren't retained in order to avoid bloat on the filesystem.
+Changes are only tracked for file metadata (e.g. the `Title` attribute). 
+
+You can opt-in to retaining the file content for replaced or removed files.
 
 ```yml
 SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   keep_archived_assets: true
+```
+
+The filesystem structure follows the same rules as [protected file paths](#protected-file-paths):
+
+```
+assets/
+    my-file.jpg <- current published file
+    .protected/
+        dec83f348d/ <- old content hash of replaced file version
+            my-file.jpg
+        b63923d8d4/ <- old content hash of replaced file version
+            my-file.jpg
 ``` 
 
 ## Loading content into `DBFile`
