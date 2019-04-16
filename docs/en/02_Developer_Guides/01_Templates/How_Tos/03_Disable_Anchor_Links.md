@@ -47,7 +47,8 @@ use SilverStripe\View\SSViewer;
 
 class ExamplePageController extends PageController
 {
-    protected function init() {
+    protected function init()
+    {
         parent::init();
         SSViewer::setRewriteHashLinksDefault(false);
     }
