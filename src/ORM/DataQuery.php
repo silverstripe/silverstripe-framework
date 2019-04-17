@@ -484,7 +484,7 @@ class DataQuery
         $result = reset($row);
 
         // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
-        return $result === 1 || $result === 't';
+        return $result === true || $result === 1 || $result === 't';
     }
 
     /**
