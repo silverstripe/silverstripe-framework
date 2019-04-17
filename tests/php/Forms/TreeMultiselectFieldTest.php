@@ -157,7 +157,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]
@@ -235,7 +235,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]
@@ -285,7 +285,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]
