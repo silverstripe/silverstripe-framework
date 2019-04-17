@@ -12,7 +12,7 @@ use Monolog\Handler\AbstractProcessingHandler;
  *
  * See https://github.com/silverstripe/silverstripe-framework/issues/5542
  *
- * @experimental
+ * @internal
  */
 class PreformattedEchoHandler extends AbstractProcessingHandler
 {
