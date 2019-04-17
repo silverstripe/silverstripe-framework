@@ -9,7 +9,7 @@ in your system. As pages and dataobjects can be either versioned, or restricted 
 members, it is necessary at times to apply similar logic to any files which are attached to these objects
 in the same way.
 
-Out of the box, SilverStripe comes with an two asset stores: a public and a protected one.
+Out of the box, SilverStripe comes with two asset stores: a public and a protected one.
 Most operations which act on assets work independently of this mechanism,
 without having to consider whether any specific file is protected or public, but can normally be
 instructed to favour private or protected stores in some cases.
