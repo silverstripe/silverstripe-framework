@@ -1244,10 +1244,7 @@ class DataObjectSchema
     }
 
     /**
-     * @param string|object $baseClass
-     * @param bool $includeBaseClass Whether to include fields in the base class or not
-     * @param string|array $fieldNames The field to get mappings for, for example 'HTMLText'. Can also be an array.
-     * @return array Returns an array of the fields available for the provided class and its sub-classes as follows:
+     * Returns an array of the fields available for the provided class and its sub-classes as follows:
      * <code>
      * [
      *  'ClassName' => [
@@ -1261,6 +1258,11 @@ class DataObjectSchema
      *    ],
      * ]
      * </code>
+     *
+     * @param string|object $baseClass
+     * @param bool $includeBaseClass Whether to include fields in the base class or not
+     * @param string|array $fieldNames The field to get mappings for, for example 'HTMLText'. Can also be an array.
+     * @return array An array of fields that derivec from $baseClass.
      * @throws \ReflectionException
      */
     public static function getFieldMap($baseClass, $includeBaseClass, $fieldNames)
@@ -1268,11 +1270,13 @@ class DataObjectSchema
         $mapping = [];
 
         foreach (ClassInfo::subclassesFor($baseClass, $includeBaseClass) as $class) {
+            /** @var DataObjectSchema $schema */
+            $schema = singleton($class)->getSchema();
             /** @var DataObject $fields */
-            $fields = $class::singleton()->getSchema()->fieldSpecs($class);
+            $fields = $schema->fieldSpecs($class);
             foreach ($fields as $field => $type) {
                 if (in_array($type, $fieldNames)) {
-                    $table = $class::singleton()->getSchema()->tableForField($class, $field);
+                    $table = $schema->tableForField($class, $field);
                     if (!isset($mapping[$class])) {
                         $mapping[$class] = [];
                     }

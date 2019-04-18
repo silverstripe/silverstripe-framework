@@ -1225,7 +1225,7 @@ has been added to assist in migration of legacy files (see [file migration docum
 
 ##### Rewriting asset references
 
-Your `img` and `a` tag references to your assets may now be pointing to a location in your assets folder that has been moved. There is a task available which will look through all your tables containing `HTMLText` fields looking for broken references and then rewrite them to the new location of the file.
+Your `img` and `a` tag references to your assets may now be pointing to a location in your assets folder that has been moved. There is a task available which will look through all your tables containing `HTMLText` and `HTMLVarchar` fields looking for broken references and then rewrite them to the new location of the file.
 
 ```bash
 ./vendor/bin/sake dev/tasks/TagsToShortcodeTask
