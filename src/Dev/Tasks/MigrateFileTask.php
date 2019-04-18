@@ -2,7 +2,13 @@
 
 namespace SilverStripe\Dev\Tasks;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\FileMigrationHelper;
 use SilverStripe\Dev\BuildTask;
@@ -12,7 +18,6 @@ use SilverStripe\Dev\BuildTask;
  */
 class MigrateFileTask extends BuildTask
 {
-
     private static $segment = 'MigrateFileTask';
 
     protected $title = 'Migrate File dataobjects from 3.x';
@@ -23,6 +28,8 @@ class MigrateFileTask extends BuildTask
 
     public function run($request)
     {
+        $this->addLogHandlers();
+
         if (!class_exists(FileMigrationHelper::class)) {
             DB::alteration_message("No file migration helper detected", "notice");
             return;
@@ -45,5 +52,23 @@ class MigrateFileTask extends BuildTask
             return;
         }
         ImageThumbnailHelper::singleton()->run();
+    }
+
+    /**
+     * TODO Refactor this whole mess into Symfony Console on a TaskRunner level,
+     * with a thin wrapper to show coloured console output via a browser:
+     * https://github.com/silverstripe/silverstripe-framework/issues/5542
+     * @throws \Exception
+     */
+    protected function addLogHandlers()
+    {
+        if ($logger = Injector::inst()->get(LoggerInterface::class)) {
+            if (Director::is_cli()) {
+                $logger->pushHandler(new StreamHandler('php://stdout'));
+                $logger->pushHandler(new StreamHandler('php://stderr', Logger::WARNING));
+            } else {
+                $logger->pushHandler(new PreformattedEchoHandler());
+            }
+        }
     }
 }
