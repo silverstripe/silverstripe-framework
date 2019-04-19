@@ -25,10 +25,12 @@ class ManyManyThroughListTest extends SapphireTest
         ManyManyThroughListTest\Item::class,
         ManyManyThroughListTest\JoinObject::class,
         ManyManyThroughListTest\TestObject::class,
+        ManyManyThroughListTest\TestObjectSubclass::class,
         ManyManyThroughListTest\PolyItem::class,
         ManyManyThroughListTest\PolyJoinObject::class,
         ManyManyThroughListTest\PolyObjectA::class,
         ManyManyThroughListTest\PolyObjectB::class,
+        ManyManyThroughListTest\PseudoPolyJoinObject::class,
         ManyManyThroughListTest\Locale::class,
         ManyManyThroughListTest\FallbackLocale::class,
     ];
@@ -161,46 +163,82 @@ class ManyManyThroughListTest extends SapphireTest
         ];
     }
 
-    public function testAdd()
+    public function provideAdd(): array
     {
-        /** @var ManyManyThroughListTest\TestObject $parent */
-        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        return [
+            [
+                'parentClass' => ManyManyThroughListTest\TestObject::class,
+                'joinClass' => ManyManyThroughListTest\JoinObject::class,
+                'joinProperty' => 'ManyManyThroughListTest_JoinObject',
+                'relation' => 'Items',
+            ],
+            [
+                'parentClass' => ManyManyThroughListTest\TestObjectSubclass::class,
+                'joinClass' => ManyManyThroughListTest\PseudoPolyJoinObject::class,
+                'joinProperty' => 'ManyManyThroughListTest_PseudoPolyJoinObject',
+                'relation' => 'MoreItems',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideAdd
+     */
+    public function testAdd(string $parentClass, string $joinClass, string $joinProperty, string $relation)
+    {
+        $parent = $this->objFromFixture($parentClass, 'parent1');
         $newItem = new ManyManyThroughListTest\Item();
         $newItem->Title = 'my new item';
         $newItem->write();
-        $parent->Items()->add($newItem, ['Title' => 'new join record']);
+        $parent->$relation()->add($newItem, ['Title' => 'new join record']);
 
         // Check select
-        $newItem = $parent->Items()->filter(['Title' => 'my new item'])->first();
+        $newItem = $parent->$relation()->filter(['Title' => 'my new item'])->first();
         $this->assertNotNull($newItem);
         $this->assertEquals('my new item', $newItem->Title);
         $this->assertInstanceOf(
-            ManyManyThroughListTest\JoinObject::class,
+            $joinClass,
             $newItem->getJoin()
         );
         $this->assertInstanceOf(
-            ManyManyThroughListTest\JoinObject::class,
-            $newItem->ManyManyThroughListTest_JoinObject
+            $joinClass,
+            $newItem->$joinProperty
         );
-        $this->assertEquals('new join record', $newItem->ManyManyThroughListTest_JoinObject->Title);
+        $this->assertEquals('new join record', $newItem->$joinProperty->Title);
     }
 
-    public function testRemove()
+    public function provideRemove(): array
     {
-        /** @var ManyManyThroughListTest\TestObject $parent */
-        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        return [
+            [
+                'parentClass' => ManyManyThroughListTest\TestObject::class,
+                'relation' => 'Items',
+            ],
+            [
+                'parentClass' => ManyManyThroughListTest\TestObjectSubclass::class,
+                'relation' => 'MoreItems',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideRemove
+     */
+    public function testRemove(string $parentClass, string $relation)
+    {
+        $parent = $this->objFromFixture($parentClass, 'parent1');
         $this->assertListEquals(
             [
                 ['Title' => 'item 1'],
                 ['Title' => 'item 2']
             ],
-            $parent->Items()
+            $parent->$relation()
         );
-        $item1 = $parent->Items()->filter(['Title' => 'item 1'])->first();
-        $parent->Items()->remove($item1);
+        $item1 = $parent->$relation()->filter(['Title' => 'item 1'])->first();
+        $parent->$relation()->remove($item1);
         $this->assertListEquals(
             [['Title' => 'item 2']],
-            $parent->Items()
+            $parent->$relation()
         );
     }
 

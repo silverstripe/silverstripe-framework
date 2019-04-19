@@ -3,6 +3,11 @@ SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject:
     Title: 'my object'
   parent2:
     Title: 'my object2'
+SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObjectSubclass:
+  parent1:
+    Title: 'my object'
+  parent2:
+    Title: 'my object2'
 SilverStripe\ORM\Tests\ManyManyThroughListTest\Item:
   # Having this one first means the IDs of records aren't the same as the IDs of the join objects.
   child0:
@@ -29,6 +34,25 @@ SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject:
   join4:
     Title: 'join 4'
     Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent2
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
+SilverStripe\ORM\Tests\ManyManyThroughListTest\PseudoPolyJoinObject:
+  join1:
+    Title: 'join 1'
+    Sort: 4
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObjectSubclass.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child1
+  join2:
+    Title: 'join 2'
+    Sort: 2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObjectSubclass.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
+  join3:
+    Title: 'join 3'
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObjectSubclass.parent2
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child1
+  join4:
+    Title: 'join 4'
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObjectSubclass.parent2
     Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
 SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyObjectA:
   obja1:
