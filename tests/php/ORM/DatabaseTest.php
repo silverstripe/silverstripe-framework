@@ -270,5 +270,9 @@ class DatabaseTest extends SapphireTest
 
         // Dates are returned as strings
         $this->assertInternalType('string', $record['Created'], 'DBDatetime fields should be string (non-prepared)');
+
+        // Booleans selected directly are ints
+        $result = DB::query('SELECT TRUE')->first();
+        $this->assertInternalType('int', reset($result));
     }
 }

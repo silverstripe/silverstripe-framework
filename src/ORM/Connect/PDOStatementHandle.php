@@ -47,6 +47,7 @@ class PDOStatementHandle
         'float8' => 'float',
         'float16' => 'float',
         'numeric' => 'float',
+        'bool' => 'int', // Bools should be ints
 
         // MySQL
         'NEWDECIMAL' => 'float',

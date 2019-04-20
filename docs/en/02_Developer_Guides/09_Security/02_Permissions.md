@@ -23,6 +23,7 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 This method should return a map of permission code names with a human readable explanation of its purpose.
 
 ```php
+use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 
