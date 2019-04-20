@@ -23,6 +23,7 @@ Name: approutes
 After:
   - '#rootroutes'
   - '#coreroutes'
+  - '#modelascontrollerroutes'
 ---
 SilverStripe\Control\Director:
   rules:
