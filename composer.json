@@ -61,7 +61,7 @@
     },
     "extra": {
         "branch-alias": {
-            "4.x-dev": "4.4.x-dev"
+            "4.x-dev": "4.5.x-dev"
         },
         "expose": [
             "client/images",
