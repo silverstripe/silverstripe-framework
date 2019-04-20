@@ -1094,11 +1094,11 @@ If you are using a modified `index.php`, `.htaccess`, or `web.config`, you will 
 * Create a `public` folder in the root of your project
 * Move the following files and folder to your new public folder
   * `index.php`
-  * `.htaccess`
-  * `webconfig.php`
+  * `.htaccess` (if you're using Apache)
+  * `web.config` (if you're using IIS)
   * `assets`
   * Any `favicon` files
-  * Other common files that should be accssible in your project webroot (example: `robots.txt`)
+  * Other common files that should be accessible in your project webroot (e.g. `robots.txt`, or the `.well-known` directory)
 * Delete the root `resources` or `_resources` directories if present.
 * Run the following command `composer vendor-expose` to make static assets files accessible via the `public` directory.
 
