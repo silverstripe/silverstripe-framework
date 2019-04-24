@@ -9,8 +9,8 @@ in your system. As pages and dataobjects can be either versioned, or restricted 
 members, it is necessary at times to apply similar logic to any files which are attached to these objects
 in the same way.
 
-Out of the box SilverStripe Framework comes with an asset storage mechanism with two stores, a public
-store and a protected one. Most operations which act on assets work independently of this mechanism,
+Out of the box, SilverStripe comes with two asset stores: a public and a protected one.
+Most operations which act on assets work independently of this mechanism,
 without having to consider whether any specific file is protected or public, but can normally be
 instructed to favour private or protected stores in some cases.
 
@@ -20,7 +20,7 @@ config option:
 
 ```php
 $store = singleton(AssetStore::class);
-$store->setFromString('My protected content', 'Documents/Mydocument.txt', null, null, [
+$store->setFromString('My protected content', 'my-folder/my-file.jpg', null, null, [
     'visibility' => AssetStore::VISIBILITY_PROTECTED
 ]);
 ```
@@ -55,11 +55,9 @@ authorised by this code.
 In order to ensure protected assets are not leaked publicly, but are properly whitelisted for 
 authorised users, the following should be considered:
 
-* Caching mechanisms which prevent `$URL` being invoked for the user's request (such as `$URL` within a
-  partial cache block) will not whitelist those files automatically. You can manually whitelist a
-  file via PHP for the current user instead, by using the following code to grant access.
-
-
+Caching mechanisms which prevent `$URL` being invoked for the user's request (such as `$URL` within a
+partial cache block) will not whitelist those files automatically. You can manually whitelist a
+file via PHP for the current user instead, by using the following code to grant access.
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -79,9 +77,9 @@ class PageController extends ContentController
 }
 ```
 
-* If a user does not have access to a file, you can still generate the URL but suppress the default
-  permission whitelist by invoking the getter as a method, but pass in a falsey value as a parameter.
-  (or '0' in template as a workaround for all parameters being cast as string)
+If a user does not have access to a file, you can still generate the URL but suppress the default
+permission whitelist by invoking the getter as a method, but pass in a falsey value as a parameter.
+(or '0' in template as a workaround for all parameters being cast as string)
 
 
 ```php
@@ -91,8 +89,8 @@ class PageController extends ContentController
 <% else %>
 ```
 
-* Alternatively, if a user has already been granted access, you can explicitly revoke their access using
-  the `revokeFile` method.
+Alternatively, if a user has already been granted access, you can explicitly revoke their access using
+the `revokeFile` method.
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -151,8 +149,9 @@ a single entity for access control, so specific variants cannot be individually 
 
 ## How file access is protected
 
-Public urls to files do not change, regardless of whether the file is protected or public. Similarly,
-operations which modify files do not normally need to be told whether the file is protected or public
+Filesystem paths can change depending if the file is protected or public,
+but its public URL stays the same. You just need to use SilverStripe's APIs to generate URLs to those files.
+Similarly, operations which modify files do not normally need to be told whether the file is protected or public
 either. This provides a consistent method for interacting with files.
 
 In day to day operation, moving assets to or between either of these stores does not normally
@@ -168,25 +167,23 @@ Internally your folder structure would look something like:
 
 ```
 assets/
-    .htaccess
+    OldCompanyLogo.gif
     .protected/
         .htaccess
         a870de278b/
             NewCompanyLogo.gif
-    33be1b95cb/
-        OldCompanyLogo.gif
 ```
 
 The urls for these two files, however, do not reflect the physical structure directly.
 
-* `http://www.example.com/assets/33be1b95cb/OldCompanyLogo.gif` will be served directly from the web server,
-  and will not invoke a php request.
-* `http://www.example.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
+* The public file at `http://www.example.com/assets/OldCompanyLogo.gif` will be served directly from the web server,
+  and will not invoke a PHP request.
+* The protected file at `http://www.example.com/assets/a870de278b/NewCompanyLogo.gif` will be routed via a 404 handler to PHP,
   which will be passed to the `[ProtectedFileController](api:SilverStripe\Assets\Storage\ProtectedFileController)` controller, which will serve
   up the content of the hidden file, conditional on a permission check.
 
-When the file `NewCompanyLogo.gif` is made public, the url will not change, but the file location
-will be moved to `assets/a870de278b/NewCompanyLogo.gif`, and will be served directly via
+When the file `NewCompanyLogo.gif` is made public, the file
+will be moved to `assets/NewCompanyLogo.gif`, and will be served directly via
 the web server, bypassing the need for additional PHP requests.
 
 ```php
@@ -200,13 +197,11 @@ After this the filesystem will now look like below:
 
 ```
 assets/
-    .htaccess
+    NewCompanyLogo.gif
     .protected/
         .htaccess
-    33be1b95cb/
-        OldCompanyLogo.gif
-    a870de278b/
-        NewCompanyLogo.gif
+        33be1b95cb/
+            OldCompanyLogo.gif
 ```
 
 ## Performance considerations
@@ -346,9 +341,9 @@ RewriteRule .* ../index.php [QSA]
 ```
 
 You will need to ensure that your core apache configuration has the necessary `AllowOverride`
-settings to support the local .htaccess file.
+settings to support the local `.htaccess` file.
 
-Although assets have a 404 handler which routes to a PHP handler, .php files within assets itself
+Although assets have a 404 handler which routes to a PHP handler, `.php` files within assets itself
 should not be allowed to be marked as executable.
 
 When securing your server you should ensure that you protect against both files that can be uploaded as
