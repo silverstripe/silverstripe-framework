@@ -7,7 +7,7 @@ This section describes how to upgrade existing filesystems from earlier versions
 
 ## Running migration
 
-Since the structure of `File` dataobjects has changed between 3.0 and 4.0, a new task `MigrateFileTask`
+Since the structure of `File` dataobjects has changed between 3.x and 4.x, a new task `MigrateFileTask`
 has been added to assist in migration of legacy files.
 
 You can run this task on the command line:
@@ -16,15 +16,12 @@ You can run this task on the command line:
 $ ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
-This task will also support migration of existing File DataObjects to file versioning. Any
-pre-existing File DataObjects will be automatically published to the live stage, to ensure
+This task will also support migration of existing File objects to file versioning. Any
+pre-existing File objects will be automatically published to the live stage, to ensure
 that previously visible assets remain visible to the public site.
 
 If additional security or visibility rules should be applied to File dataobjects, then
 make sure to correctly extend `canView` via extensions.
-
-*IMPORTANT*: There is a [known bug](https://github.com/silverstripe/silverstripe-versioned/issues/177)
-which breaks existing direct links to asset URLs unless `legacy_filenames` is set to `true` (see below).
 
 ## Automatic migration
 
@@ -38,6 +35,8 @@ SilverStripe\Assets\File:
   migrate_legacy_file: true
 ```
 
+You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
+
 ## Migration of thumbnails
 
 If you have the [asset admin](https://github.com/silverstripe/silverstripe-asset-admin) module installed
@@ -49,7 +48,7 @@ within the file edit details form.
 
 ## Discarded files during migration
 
-Note that any File dataobject which is not in the `File.allowed_extensions` config will be deleted
+Note that any File object which is not in the `File.allowed_extensions` config will be deleted
 from the database during migration. Any invalid file on the filesystem will not be deleted,
 but will no longer be attached to a dataobject anymore, and should be cleaned up manually.
 
@@ -60,29 +59,21 @@ SilverStripe\Assets\FileMigrationHelper:
   delete_invalid_files: false
 ```
 
-Note that pre-existing security solutions for 3.x (such as
+Pre-existing file security solutions for 3.x (such as
 [secure assets module](https://github.com/silverstripe/silverstripe-secureassets))
-are incompatible with core file security.
+are likely incompatible with core file security. You should check the module README for potential upgrade paths.
 
-## Support existing paths
+## Keeping archived assets
 
-Because the filesystem now uses the hash of file contents in order to version multiple versions under the same
-filename, the default storage paths in 4.0 will not be the same as in 3.
-
-Although it is not recommended, it is possible to configure the backend to omit this hash url segment,
-meaning that file paths and urls will not be modified during the upgrade.
-This configuration needs to be chosen before starting the file migration,
-and can't be changed after migration.
+By default, "archived" assets (deleted from draft and live stage) retain their
+historical database entries with the file metadata, but the actual file contents are removed from the filesystem
+in order to avoid bloat. If you need to retain file contents (e.g. for auditing purposes),
+you can opt-in to this behaviour:
 
 ```yaml
 SilverStripe\Assets\Flysystem\FlysystemAssetStore:
-  legacy_filenames: true
+  keep_archived_assets: true
 ```
-
-This setting will still allow creation of protected (draft) files before publishing them.
-It'll also keep track of changes to file metadata (e.g. title and description).
-But it won't keep track of replaced file contents (not compatible with `keep_archived_assets=true`).
-When replacing an already published file, the new file will be public right away (no draft stage). 
 
 ## Migrating substantial number of files
 
