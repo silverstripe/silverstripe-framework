@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataQueryTest\ObjectE;
 use SilverStripe\Security\Member;
 
 /**
@@ -386,11 +387,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectC::class);
         $query->sort('"SortOrder"');
         $query->where(
-            [
-            '"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => [
-                'First', 2
-            ]
-            ]
+            ['"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => ['First', 2]]
         );
         $result = $query->getFinalisedQuery(['Title']);
         $from = $result->getFrom();
@@ -465,5 +462,12 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals('First', $titles[0]);
         $this->assertEquals('Second', $titles[1]);
         $this->assertEquals('Last', $titles[2]);
+    }
+
+    public function testExistsCreatesFunctionalQueries()
+    {
+        $this->assertTrue(ObjectE::get()->exists());
+        $this->assertFalse(ObjectE::get()->where(['"Title" = ?' => 'Foo'])->exists());
+        $this->assertTrue(ObjectE::get()->dataQuery()->groupby('"SortOrder"')->exists());
     }
 }

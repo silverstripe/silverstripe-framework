@@ -464,7 +464,6 @@ class DataQuery
         // Grab a statement selecting "everything" - the engine shouldn't care what's being selected in an "EXISTS"
         // statement anyway
         $statement = $this->getFinalisedQuery();
-        $statement->setSelect('*');
 
         // Clear limit, distinct, and order as it's not relevant for an exists query
         $statement->setDistinct(false);
@@ -472,8 +471,10 @@ class DataQuery
         $statement->setLimit(null);
 
         // We can remove grouping if there's no "having" that might be relying on an aggregate
+        // Additionally, the columns being selected no longer matter
         $having = $statement->getHaving();
         if (empty($having)) {
+            $statement->setSelect('*');
             $statement->setGroupBy(null);
         }
 
