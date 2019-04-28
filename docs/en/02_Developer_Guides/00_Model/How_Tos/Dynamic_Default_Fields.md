@@ -75,7 +75,7 @@ class Region extends DataObject
     private static $default_records = [
         ['Title' => 'Auckland'],
         ['Title' => 'Coromandel'],
-        ['Title' => 'Waikato']
+        ['Title' => 'Waikato'],
     ];
 }
 ```
