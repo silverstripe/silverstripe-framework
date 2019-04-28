@@ -62,7 +62,7 @@ public function populateDefaults()
 ## Static Default Records
 The [DataObject::$default_records](api:SilverStripe\ORM\DataObject::$default_records) array allows you to specify default records created on dev/build.
 
-A simple example of this is having a region model and wanting a list of regions created when the site is built
+A simple example of this is having a region model and wanting a list of regions created when the site is built:
 ```php
 use SilverStripe\ORM\DataObject;
 
