@@ -4,6 +4,8 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use LogicException;
+use Page;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
@@ -19,7 +21,6 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
-use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -1932,7 +1933,7 @@ class DataObjectTest extends SapphireTest
     {
         $obj = new DataObjectTest\Fixture();
         $obj->write();
-        
+
         $this->assertInternalType("int", $obj->ID);
     }
 
@@ -2377,5 +2378,18 @@ class DataObjectTest extends SapphireTest
         $do->DynamicField = false;
 
         $do->write();
+    }
+
+    public function testGetFieldMap()
+    {
+        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, ['HTMLText', 'HTMLVarchar']);
+
+        $this->assertEquals('Content', $classes[SiteTree::class]['SiteTree'][0]);
+        $this->assertEquals('Content', $classes[Page::class]['SiteTree'][0]);
+
+        $classes = DataObjectSchema::getFieldMap(Page::class, true, ['HTMLText', 'HTMLVarchar']);
+
+        $this->assertFalse(isset($classes[SiteTree::class]));
+        $this->assertEquals('Content', $classes[Page::class]['SiteTree'][0]);
     }
 }
