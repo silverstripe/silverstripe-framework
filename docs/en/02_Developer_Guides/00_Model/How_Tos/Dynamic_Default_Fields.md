@@ -3,7 +3,7 @@
 ## Static Default Values
 The [DataObject::$defaults](api:SilverStripe\ORM\DataObject::$defaults) array allows you to specify simple static values to be the default values when a record is created.
 
-A simple example is if you have a dog and by default it's bark is "Woof"
+A simple example is if you have a dog and by default it's bark is "Woof":
 ```php
 use SilverStripe\ORM\DataObject;
 
