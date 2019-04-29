@@ -20,7 +20,10 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
+use SilverStripe\ORM\Tests\DataObjectTest\OtherSubclassWithSameField;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -2382,14 +2385,17 @@ class DataObjectTest extends SapphireTest
 
     public function testGetFieldMap()
     {
-        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, ['HTMLText', 'HTMLVarchar']);
+        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, ['HTMLVarchar', 'Varchar']);
 
-        $this->assertEquals('Content', $classes[SiteTree::class]['SiteTree'][0]);
-        $this->assertEquals('Content', $classes[Page::class]['SiteTree'][0]);
+        $this->assertEquals('Title', $classes[Team::class]['DataObjectTest_Team'][1]);
+        $this->assertEquals(
+            'SubclassDatabaseField',
+            $classes[SubTeam::class]['DataObjectTest_SubTeam'][0]
+        );
 
-        $classes = DataObjectSchema::getFieldMap(Page::class, true, ['HTMLText', 'HTMLVarchar']);
+        $classes = DataObjectSchema::getFieldMap(SubTeam::class, true, ['HTMLVarchar']);
 
-        $this->assertFalse(isset($classes[SiteTree::class]));
-        $this->assertEquals('Content', $classes[Page::class]['SiteTree'][0]);
+        $this->assertFalse(isset($classes[Team::class]));
+        $this->assertEquals('DatabaseField', $classes[SubTeam::class]['DataObjectTest_Team'][0]);
     }
 }
