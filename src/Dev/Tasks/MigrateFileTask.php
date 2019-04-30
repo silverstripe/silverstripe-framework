@@ -101,17 +101,6 @@ Imports all files referenced by File dataobjects into the new Asset Persistence 
 Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI.
 If the task fails or times out, run it again and it will start where it left off.
 See https://docs.silverstripe.org/en/4/developer_guides/files/file_migration/.
-
-Arguments:
-- only: Comma separated list of tasks to run on the multi-step migration (see "Available subtasks").
-        Example: only=move-files,move-thumbnails
-
-Availabile subtasks:
-- move-files: The main task, moves database and filesystem data
-- move-thumbnails: Move existing thumbnails, rather than have them generated on the fly.
-  This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
-- generate-cms-thumbnails: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
-  This can be a CPU and memory intensive task for large asset stores.
 TXT;
     }
 
